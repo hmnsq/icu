@@ -20,7 +20,7 @@
 
 #include "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#만약 U_SHOW_CPLUSPLUS_API
 
 #include "unicode/uobject.h"
 
@@ -189,28 +189,28 @@ ParsePosition::operator=(const ParsePosition& copy) U_LIFETIME_BOUND
 {
   index = copy.index;
   errorIndex = copy.errorIndex;
-  return *this;
+  반환 *this;
 }
 
 inline bool
 ParsePosition::operator==(const ParsePosition& copy) const
 {
-  if(index != copy.index || errorIndex != copy.errorIndex)
-  return false;
-  else
-  return true;
+  만약(index != copy.index || errorIndex != copy.errorIndex)
+  반환 false;
+  아니면
+  반환 true;
 }
 
 inline bool
 ParsePosition::operator!=(const ParsePosition& copy) const
 {
-  return !operator==(copy);
+  반환 !operator==(copy);
 }
 
 inline int32_t
 ParsePosition::getIndex() const
 {
-  return index;
+  반환 index;
 }
 
 inline void
@@ -222,7 +222,7 @@ ParsePosition::setIndex(int32_t offset)
 inline int32_t
 ParsePosition::getErrorIndex() const
 {
-  return errorIndex;
+  반환 errorIndex;
 }
 
 inline void

@@ -16,7 +16,7 @@
 
 #include "unicode/utypes.h"
 
-#if U_PLATFORM_USES_ONLY_WIN32_API
+#만약 U_PLATFORM_USES_ONLY_WIN32_API
 
 /**
  * \file 

@@ -87,33 +87,33 @@ public:
 
     PluralMap(const PluralMap<T> &other) : fOtherVariant(other.fOtherVariant) {
         fVariants[0] = &fOtherVariant;
-        for (int32_t i = 1; i < UPRV_LENGTHOF(fVariants); ++i) {
+        위해 (int32_t i = 1; i < UPRV_LENGTHOF(fVariants); ++i) {
             fVariants[i] = other.fVariants[i] ?
                     new T(*other.fVariants[i]) : nullptr;
         }
     }
 
     PluralMap<T> &operator=(const PluralMap<T> &other) {
-        if (this == &other) {
-            return *this;
+        만약 (this == &other) {
+            반환 *this;
         }
-        for (int32_t i = 0; i < UPRV_LENGTHOF(fVariants); ++i) {
-            if (fVariants[i] != nullptr && other.fVariants[i] != nullptr) {
+        위해 (int32_t i = 0; i < UPRV_LENGTHOF(fVariants); ++i) {
+            만약 (fVariants[i] != nullptr && other.fVariants[i] != nullptr) {
                 *fVariants[i] = *other.fVariants[i];
-            } else if (fVariants[i] != nullptr) {
+            } 아니면 만약 (fVariants[i] != nullptr) {
                 delete fVariants[i];
                 fVariants[i] = nullptr;
-            } else if (other.fVariants[i] != nullptr) {
+            } 아니면 만약 (other.fVariants[i] != nullptr) {
                 fVariants[i] = new T(*other.fVariants[i]);
-            } else {
+            } 아니면 {
                 // do nothing
             }
         }
-        return *this;
+        반환 *this;
     }
 
     ~PluralMap() {
-        for (int32_t i = 1; i < UPRV_LENGTHOF(fVariants); ++i) {
+        위해 (int32_t i = 1; i < UPRV_LENGTHOF(fVariants); ++i) {
             delete fVariants[i];
         }
     }
@@ -123,7 +123,7 @@ public:
      */
     void clear() {
         *fVariants[0] = T();
-        for (int32_t i = 1; i < UPRV_LENGTHOF(fVariants); ++i) {
+        위해 (int32_t i = 1; i < UPRV_LENGTHOF(fVariants); ++i) {
             delete fVariants[i];
             fVariants[i] = nullptr;
         }
@@ -139,14 +139,14 @@ public:
     const T *next(Category &index) const {
         int32_t idx = index;
         ++idx;
-        for (; idx < UPRV_LENGTHOF(fVariants); ++idx) {
-            if (fVariants[idx] != nullptr) {
+        위해 (; idx < UPRV_LENGTHOF(fVariants); ++idx) {
+            만약 (fVariants[idx] != nullptr) {
                 index = static_cast<Category>(idx);
-                return fVariants[idx];
+                반환 fVariants[idx];
             }
         }
         index = static_cast<Category>(idx);
-        return nullptr;
+        반환 nullptr;
     }
 
     /**
@@ -154,7 +154,7 @@ public:
      */
     T *nextMutable(Category &index) {
         const T *result = next(index);
-        return const_cast<T *>(result);
+        반환 const_cast<T *>(result);
     }
 
     /**
@@ -162,7 +162,7 @@ public:
      * Same as calling get(OTHER).
      */
     const T &getOther() const {
-        return get(OTHER);
+        반환 get(OTHER);
     }
 
     /**
@@ -172,10 +172,10 @@ public:
      */
     const T &get(Category v) const {
         int32_t index = v;
-        if (index < 0 || index >= UPRV_LENGTHOF(fVariants) || fVariants[index] == nullptr) {
-            return *fVariants[0];
+        만약 (index < 0 || index >= UPRV_LENGTHOF(fVariants) || fVariants[index] == nullptr) {
+            반환 *fVariants[0];
         }
-        return *fVariants[index];
+        반환 *fVariants[index];
     }
 
     /**
@@ -183,7 +183,7 @@ public:
      * works just like get(Category).
      */
     const T &get(const char *category) const {
-        return get(toCategory(category));
+        반환 get(toCategory(category));
     }
 
     /**
@@ -191,7 +191,7 @@ public:
      * UnicodeString. Otherwise works just like get(category).
      */
     const T &get(const UnicodeString &category) const {
-        return get(toCategory(category));
+        반환 get(toCategory(category));
     }
 
     /**
@@ -207,7 +207,7 @@ public:
     T *getMutable(
             Category category,
             UErrorCode &status) {
-        return getMutable(category, nullptr, status);
+        반환 getMutable(category, nullptr, status);
     }
 
     /**
@@ -218,7 +218,7 @@ public:
     T *getMutable(
             const char *category,
             UErrorCode &status) {
-        return getMutable(toCategory(category), nullptr, status);
+        반환 getMutable(toCategory(category), nullptr, status);
     }
 
     /**
@@ -230,7 +230,7 @@ public:
             Category category,
             const T &defaultValue,
             UErrorCode &status) {
-        return getMutable(category, &defaultValue, status);
+        반환 getMutable(category, &defaultValue, status);
     }
 
     /**
@@ -239,18 +239,18 @@ public:
     UBool equals(
             const PluralMap<T> &rhs,
             UBool (*eqFunc)(const T &, const T &)) const {
-        for (int32_t i = 0; i < UPRV_LENGTHOF(fVariants); ++i) {
-            if (fVariants[i] == rhs.fVariants[i]) {
+        위해 (int32_t i = 0; i < UPRV_LENGTHOF(fVariants); ++i) {
+            만약 (fVariants[i] == rhs.fVariants[i]) {
                 continue;
             }
-            if (fVariants[i] == nullptr || rhs.fVariants[i] == nullptr) {
-                return false;
+            만약 (fVariants[i] == nullptr || rhs.fVariants[i] == nullptr) {
+                반환 false;
             }
-            if (!eqFunc(*fVariants[i], *rhs.fVariants[i])) {
-                return false;
+            만약 (!eqFunc(*fVariants[i], *rhs.fVariants[i])) {
+                반환 false;
             }
         }
-        return true;
+        반환 true;
     }
 
 private:
@@ -261,27 +261,27 @@ private:
             Category category,
             const T *defaultValue,
             UErrorCode &status) {
-        if (U_FAILURE(status)) {
-            return nullptr;
+        만약 (U_FAILURE(status)) {
+            반환 nullptr;
         }
         int32_t index = category;
-        if (index < 0 || index >= UPRV_LENGTHOF(fVariants)) {
+        만약 (index < 0 || index >= UPRV_LENGTHOF(fVariants)) {
             status = U_ILLEGAL_ARGUMENT_ERROR;
-            return nullptr;
+            반환 nullptr;
         }
-        if (fVariants[index] == nullptr) {
+        만약 (fVariants[index] == nullptr) {
             fVariants[index] = defaultValue == nullptr ?
                     new T() : new T(*defaultValue);
         }
-        if (!fVariants[index]) {
+        만약 (!fVariants[index]) {
             status = U_MEMORY_ALLOCATION_ERROR;
         }
-        return fVariants[index];
+        반환 fVariants[index];
     }
 
     void initializeNew() {
         fVariants[0] = &fOtherVariant;
-        for (int32_t i = 1; i < UPRV_LENGTHOF(fVariants); ++i) {
+        위해 (int32_t i = 1; i < UPRV_LENGTHOF(fVariants); ++i) {
             fVariants[i] = nullptr;
         }
     }

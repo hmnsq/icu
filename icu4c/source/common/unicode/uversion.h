@@ -98,10 +98,10 @@ typedef uint8_t UVersionInfo[U_MAX_VERSION_LENGTH];
  * @stable ICU 2.4
  */
 
-#   if U_DISABLE_RENAMING
+#   만약 U_DISABLE_RENAMING
 #       define U_ICU_NAMESPACE icu
         namespace U_ICU_NAMESPACE { }
-#   else
+#   아니면
 #       define U_ICU_NAMESPACE U_ICU_ENTRY_POINT_RENAME(icu)
         namespace U_ICU_NAMESPACE { }
         namespace icu = U_ICU_NAMESPACE;
@@ -113,15 +113,15 @@ typedef uint8_t UVersionInfo[U_MAX_VERSION_LENGTH];
 #   define U_NAMESPACE_QUALIFIER U_ICU_NAMESPACE::
 
 #   ifndef U_USING_ICU_NAMESPACE
-#       if defined(U_COMBINED_IMPLEMENTATION) || defined(U_COMMON_IMPLEMENTATION) || \
+#       만약 defined(U_COMBINED_IMPLEMENTATION) || defined(U_COMMON_IMPLEMENTATION) || \
                 defined(U_I18N_IMPLEMENTATION) || defined(U_IO_IMPLEMENTATION) || \
                 defined(U_LAYOUTEX_IMPLEMENTATION) || defined(U_TOOLUTIL_IMPLEMENTATION)
 #           define U_USING_ICU_NAMESPACE 0
-#       else
+#       아니면
 #           define U_USING_ICU_NAMESPACE 0
 #       endif
 #   endif
-#   if U_USING_ICU_NAMESPACE
+#   만약 U_USING_ICU_NAMESPACE
         U_NAMESPACE_USE
 #   endif
 
@@ -160,7 +160,7 @@ typedef uint8_t UVersionInfo[U_MAX_VERSION_LENGTH];
  */
 
 // The first test is the same as for defining U_EXPORT for Windows.
-#if defined(_MSC_VER) || (UPRV_HAS_DECLSPEC_ATTRIBUTE(__dllexport__) && \
+#만약 defined(_MSC_VER) || (UPRV_HAS_DECLSPEC_ATTRIBUTE(__dllexport__) && \
                           UPRV_HAS_DECLSPEC_ATTRIBUTE(__dllimport__))
 #   define U_HEADER_NESTED_NAMESPACE header
 #   define U_ICU_NAMESPACE_OR_INTERNAL U_ICU_NAMESPACE
@@ -171,7 +171,7 @@ typedef uint8_t UVersionInfo[U_MAX_VERSION_LENGTH];
 #   define U_ICU_NAMESPACE_OR_INTERNAL U_ICU_NAMESPACE::internal
     namespace U_ICU_NAMESPACE_OR_INTERNAL {}
     using namespace U_ICU_NAMESPACE_OR_INTERNAL;
-#else
+#아니면
 #   define U_HEADER_NESTED_NAMESPACE header
 #   define U_ICU_NAMESPACE_OR_INTERNAL U_ICU_NAMESPACE
 #endif

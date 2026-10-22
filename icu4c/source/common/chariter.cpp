@@ -26,41 +26,41 @@ CharacterIterator::CharacterIterator()
 
 CharacterIterator::CharacterIterator(int32_t length)
 : textLength(length), pos(0), begin(0), end(length) {
-    if(textLength < 0) {
+    만약(textLength < 0) {
         textLength = end = 0;
     }
 }
 
 CharacterIterator::CharacterIterator(int32_t length, int32_t position)
 : textLength(length), pos(position), begin(0), end(length) {
-    if(textLength < 0) {
+    만약(textLength < 0) {
         textLength = end = 0;
     }
-    if(pos < 0) {
+    만약(pos < 0) {
         pos = 0;
-    } else if(pos > end) {
+    } 아니면 만약(pos > end) {
         pos = end;
     }
 }
 
 CharacterIterator::CharacterIterator(int32_t length, int32_t textBegin, int32_t textEnd, int32_t position)
 : textLength(length), pos(position), begin(textBegin), end(textEnd) {
-    if(textLength < 0) {
+    만약(textLength < 0) {
         textLength = 0;
     }
-    if(begin < 0) {
+    만약(begin < 0) {
         begin = 0;
-    } else if(begin > textLength) {
+    } 아니면 만약(begin > textLength) {
         begin = textLength;
     }
-    if(end < begin) {
+    만약(end < begin) {
         end = begin;
-    } else if(end > textLength) {
+    } 아니면 만약(end > textLength) {
         end = textLength;
     }
-    if(pos < begin) {
+    만약(pos < begin) {
         pos = begin;
-    } else if(pos > end) {
+    } 아니면 만약(pos > end) {
         pos = end;
     }
 }
@@ -80,7 +80,7 @@ CharacterIterator::operator=(const CharacterIterator& that) U_LIFETIME_BOUND {
     pos = that.pos;
     begin = that.begin;
     end = that.end;
-    return *this;
+    반환 *this;
 }
 
 // implementing first[32]PostInc() directly in a subclass should be faster
@@ -88,13 +88,13 @@ CharacterIterator::operator=(const CharacterIterator& that) U_LIFETIME_BOUND {
 char16_t
 CharacterIterator::firstPostInc() {
     setToStart();
-    return nextPostInc();
+    반환 nextPostInc();
 }
 
 UChar32
 CharacterIterator::first32PostInc() {
     setToStart();
-    return next32PostInc();
+    반환 next32PostInc();
 }
 
 U_NAMESPACE_END

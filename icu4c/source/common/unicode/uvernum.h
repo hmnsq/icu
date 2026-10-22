@@ -107,21 +107,21 @@
 
 #ifndef U_ICU_ENTRY_POINT_RENAME
 #ifdef U_HAVE_LIB_SUFFIX
-#   if !U_DISABLE_VERSION_SUFFIX
+#   만약 !U_DISABLE_VERSION_SUFFIX
 #       define U_DEF_ICU_ENTRY_POINT_RENAME(x,y,z) x ## y ##  z
 #       define U_DEF2_ICU_ENTRY_POINT_RENAME(x,y,z) U_DEF_ICU_ENTRY_POINT_RENAME(x,y,z)
 #       define U_ICU_ENTRY_POINT_RENAME(x)    U_DEF2_ICU_ENTRY_POINT_RENAME(x,U_ICU_VERSION_SUFFIX,U_LIB_SUFFIX_C_NAME)
-#   else
+#   아니면
 #       define U_DEF_ICU_ENTRY_POINT_RENAME(x,y) x ## y
 #       define U_DEF2_ICU_ENTRY_POINT_RENAME(x,y) U_DEF_ICU_ENTRY_POINT_RENAME(x,y)
 #       define U_ICU_ENTRY_POINT_RENAME(x)    U_DEF2_ICU_ENTRY_POINT_RENAME(x,U_LIB_SUFFIX_C_NAME)
 #   endif
-#else
-#   if !U_DISABLE_VERSION_SUFFIX
+#아니면
+#   만약 !U_DISABLE_VERSION_SUFFIX
 #       define U_DEF_ICU_ENTRY_POINT_RENAME(x,y) x ## y
 #       define U_DEF2_ICU_ENTRY_POINT_RENAME(x,y) U_DEF_ICU_ENTRY_POINT_RENAME(x,y)
 #       define U_ICU_ENTRY_POINT_RENAME(x)    U_DEF2_ICU_ENTRY_POINT_RENAME(x,U_ICU_VERSION_SUFFIX)
-#   else
+#   아니면
 #       define U_ICU_ENTRY_POINT_RENAME(x)    x
 #   endif
 #endif

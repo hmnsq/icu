@@ -26,17 +26,17 @@ ErrorCode::~ErrorCode() {}
 UErrorCode ErrorCode::reset() {
     UErrorCode code = errorCode;
     errorCode = U_ZERO_ERROR;
-    return code;
+    반환 code;
 }
 
 void ErrorCode::assertSuccess() const {
-    if(isFailure()) {
+    만약(isFailure()) {
         handleFailure();
     }
 }
 
 const char* ErrorCode::errorName() const {
-  return u_errorName(errorCode);
+  반환 u_errorName(errorCode);
 }
 
 U_NAMESPACE_END

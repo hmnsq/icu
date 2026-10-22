@@ -12,7 +12,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#만약 !UCONFIG_NO_BREAK_ITERATION
 
 #include "unicode/unistr.h"
 #include "unicode/uniset.h"
@@ -47,8 +47,8 @@ RBBISymbolTable::RBBISymbolTable(RBBIRuleScanner *rs, const UnicodeString &rules
 
     fHashTable = uhash_open(uhash_hashUnicodeString, uhash_compareUnicodeString, nullptr, &status);
     // uhash_open checks status
-    if (U_FAILURE(status)) {
-        return;
+    만약 (U_FAILURE(status)) {
+        반환;
     }
     uhash_setValueDeleter(fHashTable, RBBISymbolTableEntry_deleter);
 }
@@ -72,8 +72,8 @@ const UnicodeString  *RBBISymbolTable::lookup(const UnicodeString& s) const
 {
     const RBBISymbolTableEntry* const el =
         static_cast<const RBBISymbolTableEntry*>(uhash_get(fHashTable, &s));
-    if (el == nullptr) {
-        return nullptr;
+    만약 (el == nullptr) {
+        반환 nullptr;
     }
     const RBBINode& exprNode = *el->val->fLeftChild; // Root node of expression for variable
     // Return the original source string for the expression.
@@ -90,19 +90,19 @@ const UnicodeString  *RBBISymbolTable::lookup(const UnicodeString& s) const
     // to lookup() never happens; instead, lookupSet("CaseIgnorable") is called when computing
     // $Cased and returns the non-null value of $CaseIgnorable, and then when computing $NotCased,
     // lookupSet("Cased") returns the value computed for $Cased.
-    return &exprNode.fText;
+    반환 &exprNode.fText;
 }
 
 const UnicodeSet* RBBISymbolTable::lookupSet(const UnicodeString& s) const {
     const RBBISymbolTableEntry* const el = static_cast<const RBBISymbolTableEntry*>(uhash_get(fHashTable, &s));
-    if (el == nullptr) {
-        return nullptr;
+    만약 (el == nullptr) {
+        반환 nullptr;
     }
     const RBBINode& exprNode = *el->val->fLeftChild;
-    if (exprNode.fType == RBBINode::setRef) {
-        return exprNode.fLeftChild->fInputSet;
-    } else {
-        return nullptr;
+    만약 (exprNode.fType == RBBINode::setRef) {
+        반환 exprNode.fLeftChild->fInputSet;
+    } 아니면 {
+        반환 nullptr;
     }
 }
 
@@ -110,7 +110,7 @@ const UnicodeSet* RBBISymbolTable::lookupSet(const UnicodeString& s) const {
 
 //  No longer used, see ICU-23297.
 const UnicodeFunctor* RBBISymbolTable::lookupMatcher(UChar32 /*ch*/) const {
-    return nullptr;
+    반환 nullptr;
 }
 
 //
@@ -129,19 +129,19 @@ UnicodeString   RBBISymbolTable::parseReference(const UnicodeString& text,
     int32_t start = pos.getIndex();
     int32_t i = start;
     UnicodeString result;
-    while (i < limit) {
+    동안 (i < limit) {
         char16_t c = text.charAt(i);
-        if ((i==start && !u_isIDStart(c)) || !u_isIDPart(c)) {
+        만약 ((i==start && !u_isIDStart(c)) || !u_isIDPart(c)) {
             break;
         }
         ++i;
     }
-    if (i == start) { // No valid name chars
-        return result; // Indicate failure with empty string
+    만약 (i == start) { // No valid name chars
+        반환 result; // Indicate failure with empty string
     }
     pos.setIndex(i);
     text.extractBetween(start, i, result);
-    return result;
+    반환 result;
 }
 
 
@@ -157,10 +157,10 @@ RBBINode       *RBBISymbolTable::lookupNode(const UnicodeString &key) const{
     RBBISymbolTableEntry *el;
 
     el = static_cast<RBBISymbolTableEntry*>(uhash_get(fHashTable, &key));
-    if (el != nullptr) {
+    만약 (el != nullptr) {
         retNode = el->val;
     }
-    return retNode;
+    반환 retNode;
 }
 
 
@@ -173,19 +173,19 @@ RBBINode       *RBBISymbolTable::lookupNode(const UnicodeString &key) const{
 void            RBBISymbolTable::addEntry  (const UnicodeString &key, RBBINode *val, UErrorCode &err) {
     RBBISymbolTableEntry *e;
     /* test for buffer overflows */
-    if (U_FAILURE(err)) {
-        return;
+    만약 (U_FAILURE(err)) {
+        반환;
     }
     e = static_cast<RBBISymbolTableEntry*>(uhash_get(fHashTable, &key));
-    if (e != nullptr) {
+    만약 (e != nullptr) {
         err = U_BRK_VARIABLE_REDFINITION;
-        return;
+        반환;
     }
 
     e = new RBBISymbolTableEntry;
-    if (e == nullptr) {
+    만약 (e == nullptr) {
         err = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        반환;
     }
     e->key = key;
     e->val = val;
@@ -220,9 +220,9 @@ void RBBISymbolTable::rbbiSymtablePrint() const {
 
     int32_t pos = UHASH_FIRST;
     const UHashElement  *e   = nullptr;
-    for (;;) {
+    위해 (;;) {
         e = uhash_nextElement(fHashTable,  &pos);
-        if (e == nullptr ) {
+        만약 (e == nullptr ) {
             break;
         }
         RBBISymbolTableEntry  *s   = (RBBISymbolTableEntry *)e->value.pointer;
@@ -233,9 +233,9 @@ void RBBISymbolTable::rbbiSymtablePrint() const {
 
     RBBIDebugPrintf("\nParsed Variable Definitions\n");
     pos = -1;
-    for (;;) {
+    위해 (;;) {
         e = uhash_nextElement(fHashTable,  &pos);
-        if (e == nullptr ) {
+        만약 (e == nullptr ) {
             break;
         }
         RBBISymbolTableEntry  *s   = (RBBISymbolTableEntry *)e->value.pointer;

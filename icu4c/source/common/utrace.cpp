@@ -32,7 +32,7 @@ utrace_level = UTRACE_ERROR;
 
 U_CAPI void U_EXPORT2
 utrace_entry(int32_t fnNumber) {
-    if (pTraceEntryFunc != nullptr) {
+    만약 (pTraceEntryFunc != nullptr) {
         (*pTraceEntryFunc)(gTraceContext, fnNumber);
     }
 }
@@ -46,7 +46,7 @@ static const char gExitFmtPtrStatus[]    = "Returns %d.  Status = %p.";
 
 U_CAPI void U_EXPORT2
 utrace_exit(int32_t fnNumber, int32_t returnType, ...) {
-    if (pTraceExitFunc != nullptr) {
+    만약 (pTraceExitFunc != nullptr) {
         va_list     args;
         const char *fmt;
 
@@ -80,7 +80,7 @@ utrace_exit(int32_t fnNumber, int32_t returnType, ...) {
  
 U_CAPI void U_EXPORT2 
 utrace_data(int32_t fnNumber, int32_t level, const char *fmt, ...) {
-    if (pTraceDataFunc != nullptr) {
+    만약 (pTraceDataFunc != nullptr) {
            va_list args;
            va_start(args, fmt ); 
            (*pTraceDataFunc)(gTraceContext, fnNumber, level, fmt, args);
@@ -100,23 +100,23 @@ static void outputChar(char c, char *outBuf, int32_t *outIx, int32_t capacity, i
      *       the preceding char was \n.  Meaning that we may overstimate the
      *       buffer size needed.  No harm done.
      */
-    if (*outIx==0 ||   /* case 1. */
+    만약 (*outIx==0 ||   /* case 1. */
         (c!='\n' && c!=0 && *outIx < capacity && outBuf[(*outIx)-1]=='\n') ||  /* case 2. */
         (c=='\n' && *outIx>=capacity))    /* case 3 */
     {
         /* At the start of a line.  Indent. */
-        for(i=0; i<indent; i++) {
-            if (*outIx < capacity) {
+        위해(i=0; i<indent; i++) {
+            만약 (*outIx < capacity) {
                 outBuf[*outIx] = ' ';
             }
             (*outIx)++;
         }
     }
 
-    if (*outIx < capacity) {
+    만약 (*outIx < capacity) {
         outBuf[*outIx] = c;
     }
-    if (c != 0) {
+    만약 (c != 0) {
         /* NULs only appear as end-of-string terminators.  Move them to the output
          *  buffer, but do not update the length of the buffer, so that any
          *  following output will overwrite the NUL. */
@@ -128,7 +128,7 @@ static void outputHexBytes(int64_t val, int32_t charsToOutput,
                            char *outBuf, int32_t *outIx, int32_t capacity) {
     static const char gHexChars[] = "0123456789abcdef";
     int32_t shiftCount;
-    for  (shiftCount=(charsToOutput-1)*4; shiftCount >= 0; shiftCount-=4) {
+    위해  (shiftCount=(charsToOutput-1)*4; shiftCount >= 0; shiftCount-=4) {
         char c = gHexChars[(val >> shiftCount) & 0xf];
         outputChar(c, outBuf, outIx, capacity, 0);
     }
@@ -140,7 +140,7 @@ static void outputPtrBytes(void *val, char *outBuf, int32_t *outIx, int32_t capa
     int32_t  incVal = 1;              /* +1 for big endian, -1 for little endian          */
     char* p = reinterpret_cast<char*>(&val); /* point to current byte to output in the ptr val  */
 
-#if !U_IS_BIG_ENDIAN
+#만약 !U_IS_BIG_ENDIAN
     /* Little Endian.  Move p to most significant end of the value      */
     incVal = -1;
     p += sizeof(void *) - 1;
@@ -148,7 +148,7 @@ static void outputPtrBytes(void *val, char *outBuf, int32_t *outIx, int32_t capa
 
     /* Loop through the bytes of the ptr as it sits in memory, from 
      * most significant to least significant end                    */
-    for (i=0; i<sizeof(void *); i++) {
+    위해 (i=0; i<sizeof(void *); i++) {
         outputHexBytes(*p, 2, outBuf, outIx, capacity);
         p += incVal;
     }
@@ -157,13 +157,13 @@ static void outputPtrBytes(void *val, char *outBuf, int32_t *outIx, int32_t capa
 static void outputString(const char *s, char *outBuf, int32_t *outIx, int32_t capacity, int32_t indent) {
     int32_t i = 0;
     char    c;
-    if (s==nullptr) {
+    만약 (s==nullptr) {
         s = "*NULL*";
     }
     do {
         c = s[i++];
         outputChar(c, outBuf, outIx, capacity, indent);
-    } while (c != 0);
+    } 동안 (c != 0);
 }
         
 
@@ -172,16 +172,16 @@ static void outputUString(const char16_t *s, int32_t len,
                           char *outBuf, int32_t *outIx, int32_t capacity, int32_t indent) {
     int32_t i = 0;
     char16_t   c;
-    if (s==nullptr) {
+    만약 (s==nullptr) {
         outputString(nullptr, outBuf, outIx, capacity, indent);
-        return;
+        반환;
     }
 
-    for (i=0; i<len || len==-1; i++) {
+    위해 (i=0; i<len || len==-1; i++) {
         c = s[i];
         outputHexBytes(c, 4, outBuf, outIx, capacity);
         outputChar(' ', outBuf, outIx, capacity, indent);
-        if (len == -1 && c==0) {
+        만약 (len == -1 && c==0) {
             break;
         }
     }
@@ -199,12 +199,12 @@ utrace_vformat(char *outBuf, int32_t capacity, int32_t indent, const char *fmt, 
 
     /*   Loop runs once for each character in the format string.
      */
-    for (;;) {
+    위해 (;;) {
         fmtC = fmt[fmtIx++];
-        if (fmtC != '%') {
+        만약 (fmtC != '%') {
             /* Literal character, not part of a %sequence.  Just copy it to the output. */
             outputChar(fmtC, outBuf, &outIx, capacity, indent);
-            if (fmtC == 0) {
+            만약 (fmtC == 0) {
                 /* We hit the NUL that terminates the format string.
                  * This is the normal (and only) exit from the loop that
                  * interprets the format
@@ -239,19 +239,19 @@ utrace_vformat(char *outBuf, int32_t capacity, int32_t indent, const char *fmt, 
 
         case 'b':
             /*  8 bit int  */
-            intArg = va_arg(args, int);
+            intArg = va_arg(args, 정수);
             outputHexBytes(intArg, 2, outBuf, &outIx, capacity);
             break;
 
         case 'h':
             /*  16 bit int  */
-            intArg = va_arg(args, int);
+            intArg = va_arg(args, 정수);
             outputHexBytes(intArg, 4, outBuf, &outIx, capacity);
             break;
 
         case 'd':
             /*  32 bit int  */
-            intArg = va_arg(args, int);
+            intArg = va_arg(args, 정수);
             outputHexBytes(intArg, 8, outBuf, &outIx, capacity);
             break;
 
@@ -290,7 +290,7 @@ utrace_vformat(char *outBuf, int32_t capacity, int32_t indent, const char *fmt, 
                 int32_t   i;
                 
                 vectorType = fmt[fmtIx];    /* b, h, d, l, p, etc. */
-                if (vectorType != 0) {
+                만약 (vectorType != 0) {
                     fmtIx++;
                 }
                 i8Ptr = (const char *)va_arg(args, void*);
@@ -299,10 +299,10 @@ utrace_vformat(char *outBuf, int32_t capacity, int32_t indent, const char *fmt, 
                 i64Ptr = (int64_t *)i8Ptr;
                 ptrPtr = (void **)i8Ptr;
                 vectorLen = va_arg(args, int32_t);
-                if (ptrPtr == nullptr) {
+                만약 (ptrPtr == nullptr) {
                     outputString("*NULL* ", outBuf, &outIx, capacity, indent);
-                } else {
-                    for (i=0; i<vectorLen || vectorLen==-1; i++) { 
+                } 아니면 {
+                    위해 (i=0; i<vectorLen || vectorLen==-1; i++) { 
                         switch (vectorType) {
                         case 'b':
                             charsToOutput = 2;
@@ -350,11 +350,11 @@ utrace_vformat(char *outBuf, int32_t capacity, int32_t indent, const char *fmt, 
 
                             
                         }
-                        if (charsToOutput > 0) {
+                        만약 (charsToOutput > 0) {
                             outputHexBytes(longArg, charsToOutput, outBuf, &outIx, capacity);
                             outputChar(' ', outBuf, &outIx, capacity, indent);
                         }
-                        if (vectorLen == -1 && longArg == 0) {
+                        만약 (vectorLen == -1 && longArg == 0) {
                             break;
                         }
                     }
@@ -375,7 +375,7 @@ utrace_vformat(char *outBuf, int32_t capacity, int32_t indent, const char *fmt, 
         }
     }
     outputChar(0, outBuf, &outIx, capacity, indent);  /* Make sure that output is NUL terminated   */
-    return outIx + 1;     /* outIx + 1 because outIx does not increment when outputting final NUL. */
+    반환 outIx + 1;     /* outIx + 1 because outIx does not increment when outputting final NUL. */
 }
 
 
@@ -389,7 +389,7 @@ utrace_format(char *outBuf, int32_t capacity,
     va_start(args, fmt ); 
     retVal = utrace_vformat(outBuf, capacity, indent, fmt, args);
     va_end(args);
-    return retVal;
+    반환 retVal;
 }
 
 
@@ -414,10 +414,10 @@ utrace_getFunctions(const void **context,
 
 U_CAPI void U_EXPORT2
 utrace_setLevel(int32_t level) {
-    if (level < UTRACE_OFF) {
+    만약 (level < UTRACE_OFF) {
         level = UTRACE_OFF;
     }
-    if (level > UTRACE_VERBOSE) {
+    만약 (level > UTRACE_VERBOSE) {
         level = UTRACE_VERBOSE;
     }
     utrace_level = level;
@@ -425,7 +425,7 @@ utrace_setLevel(int32_t level) {
 
 U_CAPI int32_t U_EXPORT2
 utrace_getLevel() {
-    return utrace_level;
+    반환 utrace_level;
 }
 
 
@@ -436,7 +436,7 @@ utrace_cleanup() {
     pTraceDataFunc  = nullptr;
     utrace_level    = UTRACE_OFF;
     gTraceContext   = nullptr;
-    return true;
+    반환 true;
 }
 
 
@@ -489,16 +489,16 @@ trResDataNames[] = {
                 
 U_CAPI const char * U_EXPORT2
 utrace_functionName(int32_t fnNumber) {
-    if(UTRACE_FUNCTION_START <= fnNumber && fnNumber < UTRACE_FUNCTION_LIMIT) {
-        return trFnName[fnNumber];
-    } else if(UTRACE_CONVERSION_START <= fnNumber && fnNumber < UTRACE_CONVERSION_LIMIT) {
-        return trConvNames[fnNumber - UTRACE_CONVERSION_START];
-    } else if(UTRACE_COLLATION_START <= fnNumber && fnNumber < UTRACE_COLLATION_LIMIT){
-        return trCollNames[fnNumber - UTRACE_COLLATION_START];
-    } else if(UTRACE_UDATA_START <= fnNumber && fnNumber < UTRACE_RES_DATA_LIMIT){
-        return trResDataNames[fnNumber - UTRACE_UDATA_START];
-    } else {
-        return "[BOGUS Trace Function Number]";
+    만약(UTRACE_FUNCTION_START <= fnNumber && fnNumber < UTRACE_FUNCTION_LIMIT) {
+        반환 trFnName[fnNumber];
+    } 아니면 만약(UTRACE_CONVERSION_START <= fnNumber && fnNumber < UTRACE_CONVERSION_LIMIT) {
+        반환 trConvNames[fnNumber - UTRACE_CONVERSION_START];
+    } 아니면 만약(UTRACE_COLLATION_START <= fnNumber && fnNumber < UTRACE_COLLATION_LIMIT){
+        반환 trCollNames[fnNumber - UTRACE_COLLATION_START];
+    } 아니면 만약(UTRACE_UDATA_START <= fnNumber && fnNumber < UTRACE_RES_DATA_LIMIT){
+        반환 trResDataNames[fnNumber - UTRACE_UDATA_START];
+    } 아니면 {
+        반환 "[BOGUS Trace Function Number]";
     }
 }
 

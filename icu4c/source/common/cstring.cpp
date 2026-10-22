@@ -50,31 +50,31 @@
 
 U_CAPI UBool U_EXPORT2
 uprv_isASCIILetter(char c) {
-#if U_CHARSET_FAMILY==U_EBCDIC_FAMILY
-    return
+#만약 U_CHARSET_FAMILY==U_EBCDIC_FAMILY
+    반환
         ('a'<=c && c<='i') || ('j'<=c && c<='r') || ('s'<=c && c<='z') ||
         ('A'<=c && c<='I') || ('J'<=c && c<='R') || ('S'<=c && c<='Z');
-#else
-    return ('a'<=c && c<='z') || ('A'<=c && c<='Z');
+#아니면
+    반환 ('a'<=c && c<='z') || ('A'<=c && c<='Z');
 #endif
 }
 
 U_CAPI char U_EXPORT2
 uprv_toupper(char c) {
-#if U_CHARSET_FAMILY==U_EBCDIC_FAMILY
-    if(('a'<=c && c<='i') || ('j'<=c && c<='r') || ('s'<=c && c<='z')) {
+#만약 U_CHARSET_FAMILY==U_EBCDIC_FAMILY
+    만약(('a'<=c && c<='i') || ('j'<=c && c<='r') || ('s'<=c && c<='z')) {
         c=(char)(c+('A'-'a'));
     }
-#else
-    if('a'<=c && c<='z') {
+#아니면
+    만약('a'<=c && c<='z') {
         c=(char)(c+('A'-'a'));
     }
 #endif
-    return c;
+    반환 c;
 }
 
 
-#if 0
+#만약 0
 /*
  * Commented out because cstring.h defines uprv_tolower() to be
  * the same as either uprv_asciitolower() or uprv_ebcdictolower()
@@ -86,36 +86,36 @@ uprv_toupper(char c) {
  */
 U_CAPI char U_EXPORT2
 uprv_tolower(char c) {
-#if U_CHARSET_FAMILY==U_EBCDIC_FAMILY
-    if(('A'<=c && c<='I') || ('J'<=c && c<='R') || ('S'<=c && c<='Z')) {
+#만약 U_CHARSET_FAMILY==U_EBCDIC_FAMILY
+    만약(('A'<=c && c<='I') || ('J'<=c && c<='R') || ('S'<=c && c<='Z')) {
         c=(char)(c+('a'-'A'));
     }
-#else
-    if('A'<=c && c<='Z') {
+#아니면
+    만약('A'<=c && c<='Z') {
         c=(char)(c+('a'-'A'));
     }
 #endif
-    return c;
+    반환 c;
 }
 #endif
 
 U_CAPI char U_EXPORT2
 uprv_asciitolower(char c) {
-    if(0x41<=c && c<=0x5a) {
+    만약(0x41<=c && c<=0x5a) {
         c=(char)(c+0x20);
     }
-    return c;
+    반환 c;
 }
 
 U_CAPI char U_EXPORT2
 uprv_ebcdictolower(char c) {
-    if( (0xc1<=(uint8_t)c && (uint8_t)c<=0xc9) ||
+    만약( (0xc1<=(uint8_t)c && (uint8_t)c<=0xc9) ||
         (0xd1<=(uint8_t)c && (uint8_t)c<=0xd9) ||
         (0xe2<=(uint8_t)c && (uint8_t)c<=0xe9)
     ) {
         c=(char)(c-0x40);
     }
-    return c;
+    반환 c;
 }
 
 
@@ -124,13 +124,13 @@ T_CString_toLowerCase(char* str)
 {
     char* origPtr = str;
 
-    if (str) {
+    만약 (str) {
         do
             *str = uprv_tolower(*str);
-        while (*(str++));
+        동안 (*(str++));
     }
 
-    return origPtr;
+    반환 origPtr;
 }
 
 U_CAPI char* U_EXPORT2
@@ -138,13 +138,13 @@ T_CString_toUpperCase(char* str)
 {
     char* origPtr = str;
 
-    if (str) {
+    만약 (str) {
         do
             *str = uprv_toupper(*str);
-        while (*(str++));
+        동안 (*(str++));
     }
 
-    return origPtr;
+    반환 origPtr;
 }
 
 /*
@@ -164,7 +164,7 @@ T_CString_integerToString(char* buffer, int32_t v, int32_t radix)
     
     U_ASSERT(radix>=2 && radix<=16);
     uval = (uint32_t) v;
-    if(v<0 && radix == 10) {
+    만약(v<0 && radix == 10) {
         /* Only in base 10 do we conside numbers to be signed. */
         uval = (uint32_t)(-v); 
         buffer[length++] = '-';
@@ -176,12 +176,12 @@ T_CString_integerToString(char* buffer, int32_t v, int32_t radix)
         digit = (uint8_t)(uval % radix);
         tbuf[--tbx] = (char)(T_CString_itosOffset(digit));
         uval  = uval / radix;
-    } while (uval != 0);
+    } 동안 (uval != 0);
     
     /* copy converted number into user buffer  */
     uprv_strcpy(buffer+length, tbuf+tbx);
     length += sizeof(tbuf) - tbx -1;
-    return length;
+    반환 length;
 }
 
 
@@ -202,7 +202,7 @@ T_CString_int64ToString(char* buffer, int64_t v, uint32_t radix)
     
     U_ASSERT(radix>=2 && radix<=16);
     uval = (uint64_t) v;
-    if(v<0 && radix == 10) {
+    만약(v<0 && radix == 10) {
         /* Only in base 10 do we conside numbers to be signed. */
         uval = (uint64_t)(-v); 
         buffer[length++] = '-';
@@ -214,12 +214,12 @@ T_CString_int64ToString(char* buffer, int64_t v, uint32_t radix)
         digit = (uint8_t)(uval % radix);
         tbuf[--tbx] = (char)(T_CString_itosOffset(digit));
         uval  = uval / radix;
-    } while (uval != 0);
+    } 동안 (uval != 0);
     
     /* copy converted number into user buffer  */
     uprv_strcpy(buffer+length, tbuf+tbx);
     length += sizeof(tbuf) - tbx -1;
-    return length;
+    반환 length;
 }
 
 
@@ -227,41 +227,41 @@ U_CAPI int32_t U_EXPORT2
 T_CString_stringToInteger(const char *integerString, int32_t radix)
 {
     char *end;
-    return uprv_strtoul(integerString, &end, radix);
+    반환 uprv_strtoul(integerString, &end, radix);
 
 }
 
-U_CAPI int U_EXPORT2
+U_CAPI 정수 U_EXPORT2
 uprv_stricmp(const char *str1, const char *str2) {
-    if(str1==nullptr) {
-        if(str2==nullptr) {
-            return 0;
-        } else {
-            return -1;
+    만약(str1==nullptr) {
+        만약(str2==nullptr) {
+            반환 0;
+        } 아니면 {
+            반환 -1;
         }
-    } else if(str2==nullptr) {
-        return 1;
-    } else {
+    } 아니면 만약(str2==nullptr) {
+        반환 1;
+    } 아니면 {
         /* compare non-nullptr strings lexically with lowercase */
-        int rc;
+        정수 rc;
         unsigned char c1, c2;
 
-        for(;;) {
+        위해(;;) {
             c1=(unsigned char)*str1;
             c2=(unsigned char)*str2;
-            if(c1==0) {
-                if(c2==0) {
-                    return 0;
-                } else {
-                    return -1;
+            만약(c1==0) {
+                만약(c2==0) {
+                    반환 0;
+                } 아니면 {
+                    반환 -1;
                 }
-            } else if(c2==0) {
-                return 1;
-            } else {
+            } 아니면 만약(c2==0) {
+                반환 1;
+            } 아니면 {
                 /* compare non-zero characters with lowercase */
-                rc=(int)(unsigned char)uprv_tolower(c1)-(int)(unsigned char)uprv_tolower(c2);
-                if(rc!=0) {
-                    return rc;
+                rc=(정수)(unsigned char)uprv_tolower(c1)-(정수)(unsigned char)uprv_tolower(c2);
+                만약(rc!=0) {
+                    반환 rc;
                 }
             }
             ++str1;
@@ -270,37 +270,37 @@ uprv_stricmp(const char *str1, const char *str2) {
     }
 }
 
-U_CAPI int U_EXPORT2
+U_CAPI 정수 U_EXPORT2
 uprv_strnicmp(const char *str1, const char *str2, uint32_t n) {
-    if(str1==nullptr) {
-        if(str2==nullptr) {
-            return 0;
-        } else {
-            return -1;
+    만약(str1==nullptr) {
+        만약(str2==nullptr) {
+            반환 0;
+        } 아니면 {
+            반환 -1;
         }
-    } else if(str2==nullptr) {
-        return 1;
-    } else {
+    } 아니면 만약(str2==nullptr) {
+        반환 1;
+    } 아니면 {
         /* compare non-nullptr strings lexically with lowercase */
-        int rc;
+        정수 rc;
         unsigned char c1, c2;
 
-        for(; n--;) {
+        위해(; n--;) {
             c1=(unsigned char)*str1;
             c2=(unsigned char)*str2;
-            if(c1==0) {
-                if(c2==0) {
-                    return 0;
-                } else {
-                    return -1;
+            만약(c1==0) {
+                만약(c2==0) {
+                    반환 0;
+                } 아니면 {
+                    반환 -1;
                 }
-            } else if(c2==0) {
-                return 1;
-            } else {
+            } 아니면 만약(c2==0) {
+                반환 1;
+            } 아니면 {
                 /* compare non-zero characters with lowercase */
-                rc=(int)(unsigned char)uprv_tolower(c1)-(int)(unsigned char)uprv_tolower(c2);
-                if(rc!=0) {
-                    return rc;
+                rc=(정수)(unsigned char)uprv_tolower(c1)-(정수)(unsigned char)uprv_tolower(c2);
+                만약(rc!=0) {
+                    반환 rc;
                 }
             }
             ++str1;
@@ -308,7 +308,7 @@ uprv_strnicmp(const char *str1, const char *str2, uint32_t n) {
         }
     }
 
-    return 0;
+    반환 0;
 }
 
 U_CAPI char* U_EXPORT2
@@ -316,26 +316,26 @@ uprv_strdup(const char *src) {
     size_t len = uprv_strlen(src) + 1;
     char *dup = (char *) uprv_malloc(len);
 
-    if (dup) {
+    만약 (dup) {
         uprv_memcpy(dup, src, len);
     }
 
-    return dup;
+    반환 dup;
 }
 
 U_CAPI char* U_EXPORT2
 uprv_strndup(const char *src, int32_t n) {
     char *dup;
 
-    if(n < 0) {
+    만약(n < 0) {
         dup = uprv_strdup(src);
-    } else {
+    } 아니면 {
         dup = (char*)uprv_malloc(n+1);
-        if (dup) { 
+        만약 (dup) { 
             uprv_memcpy(dup, src, n);
             dup[n] = 0;
         }
     }
 
-    return dup;
+    반환 dup;
 }

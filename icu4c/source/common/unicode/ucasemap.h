@@ -25,7 +25,7 @@
 #include "unicode/stringoptions.h"
 #include "unicode/ustring.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#만약 U_SHOW_CPLUSPLUS_API
 #include "unicode/localpointer.h"
 #endif   // U_SHOW_CPLUSPLUS_API
 
@@ -83,7 +83,7 @@ ucasemap_open(const char *locale, uint32_t options, UErrorCode *pErrorCode);
 U_CAPI void U_EXPORT2
 ucasemap_close(UCaseMap *csm);
 
-#if U_SHOW_CPLUSPLUS_API
+#만약 U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -148,7 +148,7 @@ ucasemap_setLocale(UCaseMap *csm, const char *locale, UErrorCode *pErrorCode);
 U_CAPI void U_EXPORT2
 ucasemap_setOptions(UCaseMap *csm, uint32_t options, UErrorCode *pErrorCode);
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#만약 !UCONFIG_NO_BREAK_ITERATION
 
 /**
  * Get the break iterator that is used for titlecasing.
@@ -295,7 +295,7 @@ ucasemap_utf8ToUpper(const UCaseMap *csm,
                      const char *src, int32_t srcLength,
                      UErrorCode *pErrorCode);
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#만약 !UCONFIG_NO_BREAK_ITERATION
 
 /**
  * Titlecase a UTF-8 string.

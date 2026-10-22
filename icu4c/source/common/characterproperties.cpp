@@ -25,7 +25,7 @@
 #include "uprops.h"
 
 using icu::LocalPointer;
-#if !UCONFIG_NO_NORMALIZATION
+#만약 !UCONFIG_NO_NORMALIZATION
 using icu::Normalizer2Factory;
 using icu::Normalizer2Impl;
 #endif
@@ -72,35 +72,35 @@ _set_addString(USet *set, const char16_t *str, int32_t length) {
 }
 
 UBool U_CALLCONV characterproperties_cleanup() {
-    for (Inclusion &in: gInclusions) {
+    위해 (Inclusion &in: gInclusions) {
         delete in.fSet;
         in.fSet = nullptr;
         in.fInitOnce.reset();
     }
-    for (int32_t i = 0; i < UPRV_LENGTHOF(sets); ++i) {
+    위해 (int32_t i = 0; i < UPRV_LENGTHOF(sets); ++i) {
         delete sets[i];
         sets[i] = nullptr;
     }
-    for (int32_t i = 0; i < UPRV_LENGTHOF(maps); ++i) {
+    위해 (int32_t i = 0; i < UPRV_LENGTHOF(maps); ++i) {
         ucptrie_close(reinterpret_cast<UCPTrie *>(maps[i]));
         maps[i] = nullptr;
     }
-    return true;
+    반환 true;
 }
 
 void U_CALLCONV initInclusion(UPropertySource src, UErrorCode &errorCode) {
     // This function is invoked only via umtx_initOnce().
     U_ASSERT(0 <= src && src < UPROPS_SRC_COUNT);
-    if (src == UPROPS_SRC_NONE) {
+    만약 (src == UPROPS_SRC_NONE) {
         errorCode = U_INTERNAL_PROGRAM_ERROR;
-        return;
+        반환;
     }
     U_ASSERT(gInclusions[src].fSet == nullptr);
 
     LocalPointer<UnicodeSet> incl(new UnicodeSet());
-    if (incl.isNull()) {
+    만약 (incl.isNull()) {
         errorCode = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        반환;
     }
     USetAdder sa = {
         reinterpret_cast<USet*>(incl.getAlias()),
@@ -122,10 +122,10 @@ void U_CALLCONV initInclusion(UPropertySource src, UErrorCode &errorCode) {
         uchar_addPropertyStarts(&sa, &errorCode);
         upropsvec_addPropertyStarts(&sa, &errorCode);
         break;
-#if !UCONFIG_NO_NORMALIZATION
+#만약 !UCONFIG_NO_NORMALIZATION
     case UPROPS_SRC_CASE_AND_NORM: {
         const Normalizer2Impl *impl=Normalizer2Factory::getNFCImpl(errorCode);
-        if(U_SUCCESS(errorCode)) {
+        만약(U_SUCCESS(errorCode)) {
             impl->addPropertyStarts(&sa, errorCode);
         }
         ucase_addPropertyStarts(&sa, &errorCode);
@@ -133,28 +133,28 @@ void U_CALLCONV initInclusion(UPropertySource src, UErrorCode &errorCode) {
     }
     case UPROPS_SRC_NFC: {
         const Normalizer2Impl *impl=Normalizer2Factory::getNFCImpl(errorCode);
-        if(U_SUCCESS(errorCode)) {
+        만약(U_SUCCESS(errorCode)) {
             impl->addPropertyStarts(&sa, errorCode);
         }
         break;
     }
     case UPROPS_SRC_NFKC: {
         const Normalizer2Impl *impl=Normalizer2Factory::getNFKCImpl(errorCode);
-        if(U_SUCCESS(errorCode)) {
+        만약(U_SUCCESS(errorCode)) {
             impl->addPropertyStarts(&sa, errorCode);
         }
         break;
     }
     case UPROPS_SRC_NFKC_CF: {
         const Normalizer2Impl *impl=Normalizer2Factory::getNFKC_CFImpl(errorCode);
-        if(U_SUCCESS(errorCode)) {
+        만약(U_SUCCESS(errorCode)) {
             impl->addPropertyStarts(&sa, errorCode);
         }
         break;
     }
     case UPROPS_SRC_NFC_CANON_ITER: {
         const Normalizer2Impl *impl=Normalizer2Factory::getNFCImpl(errorCode);
-        if(U_SUCCESS(errorCode)) {
+        만약(U_SUCCESS(errorCode)) {
             impl->addCanonIterPropertyStarts(&sa, errorCode);
         }
         break;
@@ -173,7 +173,7 @@ void U_CALLCONV initInclusion(UPropertySource src, UErrorCode &errorCode) {
         break;
     case UPROPS_SRC_EMOJI: {
         const icu::EmojiProps *ep = icu::EmojiProps::getSingleton(errorCode);
-        if (U_SUCCESS(errorCode)) {
+        만약 (U_SUCCESS(errorCode)) {
             ep->addPropertyStarts(&sa, errorCode);
         }
         break;
@@ -195,12 +195,12 @@ void U_CALLCONV initInclusion(UPropertySource src, UErrorCode &errorCode) {
         break;
     }
 
-    if (U_FAILURE(errorCode)) {
-        return;
+    만약 (U_FAILURE(errorCode)) {
+        반환;
     }
-    if (incl->isBogus()) {
+    만약 (incl->isBogus()) {
         errorCode = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        반환;
     }
     // Compact for caching.
     incl->compact();
@@ -209,14 +209,14 @@ void U_CALLCONV initInclusion(UPropertySource src, UErrorCode &errorCode) {
 }
 
 const UnicodeSet *getInclusionsForSource(UPropertySource src, UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return nullptr; }
-    if (src < 0 || UPROPS_SRC_COUNT <= src) {
+    만약 (U_FAILURE(errorCode)) { 반환 nullptr; }
+    만약 (src < 0 || UPROPS_SRC_COUNT <= src) {
         errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        반환 nullptr;
     }
     Inclusion &i = gInclusions[src];
     umtx_initOnce(i.fInitOnce, &initInclusion, src, errorCode);
-    return i.fSet;
+    반환 i.fSet;
 }
 
 void U_CALLCONV initIntPropInclusion(UProperty prop, UErrorCode &errorCode) {
@@ -226,32 +226,32 @@ void U_CALLCONV initIntPropInclusion(UProperty prop, UErrorCode &errorCode) {
     U_ASSERT(gInclusions[inclIndex].fSet == nullptr);
     UPropertySource src = uprops_getSource(prop);
     const UnicodeSet *incl = getInclusionsForSource(src, errorCode);
-    if (U_FAILURE(errorCode)) {
-        return;
+    만약 (U_FAILURE(errorCode)) {
+        반환;
     }
 
     LocalPointer<UnicodeSet> intPropIncl(new UnicodeSet(0, 0));
-    if (intPropIncl.isNull()) {
+    만약 (intPropIncl.isNull()) {
         errorCode = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        반환;
     }
     int32_t numRanges = incl->getRangeCount();
     int32_t prevValue = 0;
-    for (int32_t i = 0; i < numRanges; ++i) {
+    위해 (int32_t i = 0; i < numRanges; ++i) {
         UChar32 rangeEnd = incl->getRangeEnd(i);
-        for (UChar32 c = incl->getRangeStart(i); c <= rangeEnd; ++c) {
+        위해 (UChar32 c = incl->getRangeStart(i); c <= rangeEnd; ++c) {
             // TODO: Get a UCharacterProperty.IntProperty to avoid the property dispatch.
             int32_t value = u_getIntPropertyValue(c, prop);
-            if (value != prevValue) {
+            만약 (value != prevValue) {
                 intPropIncl->add(c);
                 prevValue = value;
             }
         }
     }
 
-    if (intPropIncl->isBogus()) {
+    만약 (intPropIncl->isBogus()) {
         errorCode = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        반환;
     }
     // Compact for caching.
     intPropIncl->compact();
@@ -265,15 +265,15 @@ U_NAMESPACE_BEGIN
 
 const UnicodeSet *CharacterProperties::getInclusionsForProperty(
         UProperty prop, UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return nullptr; }
-    if (UCHAR_INT_START <= prop && prop < UCHAR_INT_LIMIT) {
+    만약 (U_FAILURE(errorCode)) { 반환 nullptr; }
+    만약 (UCHAR_INT_START <= prop && prop < UCHAR_INT_LIMIT) {
         int32_t inclIndex = UPROPS_SRC_COUNT + (prop - UCHAR_INT_START);
         Inclusion &i = gInclusions[inclIndex];
         umtx_initOnce(i.fInitOnce, &initIntPropInclusion, prop, errorCode);
-        return i.fSet;
-    } else {
+        반환 i.fSet;
+    } 아니면 {
         UPropertySource src = uprops_getSource(prop);
-        return getInclusionsForSource(src, errorCode);
+        반환 getInclusionsForSource(src, errorCode);
     }
 }
 
@@ -282,16 +282,16 @@ U_NAMESPACE_END
 namespace {
 
 UnicodeSet *makeSet(UProperty property, UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return nullptr; }
+    만약 (U_FAILURE(errorCode)) { 반환 nullptr; }
     LocalPointer<UnicodeSet> set(new UnicodeSet());
-    if (set.isNull()) {
+    만약 (set.isNull()) {
         errorCode = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        반환 nullptr;
     }
-    if (UCHAR_BASIC_EMOJI <= property && property <= UCHAR_RGI_EMOJI) {
+    만약 (UCHAR_BASIC_EMOJI <= property && property <= UCHAR_RGI_EMOJI) {
         // property of strings
         const icu::EmojiProps *ep = icu::EmojiProps::getSingleton(errorCode);
-        if (U_FAILURE(errorCode)) { return nullptr; }
+        만약 (U_FAILURE(errorCode)) { 반환 nullptr; }
         USetAdder sa = {
             reinterpret_cast<USet*>(set.getAlias()),
             _set_add,
@@ -301,61 +301,61 @@ UnicodeSet *makeSet(UProperty property, UErrorCode &errorCode) {
             nullptr // don't need removeRange()
         };
         ep->addStrings(&sa, property, errorCode);
-        if (property != UCHAR_BASIC_EMOJI && property != UCHAR_RGI_EMOJI) {
+        만약 (property != UCHAR_BASIC_EMOJI && property != UCHAR_RGI_EMOJI) {
             // property of _only_ strings
             set->freeze();
-            return set.orphan();
+            반환 set.orphan();
         }
     }
 
     const UnicodeSet *inclusions =
         icu::CharacterProperties::getInclusionsForProperty(property, errorCode);
-    if (U_FAILURE(errorCode)) { return nullptr; }
+    만약 (U_FAILURE(errorCode)) { 반환 nullptr; }
     int32_t numRanges = inclusions->getRangeCount();
     UChar32 startHasProperty = -1;
 
-    for (int32_t i = 0; i < numRanges; ++i) {
+    위해 (int32_t i = 0; i < numRanges; ++i) {
         UChar32 rangeEnd = inclusions->getRangeEnd(i);
-        for (UChar32 c = inclusions->getRangeStart(i); c <= rangeEnd; ++c) {
+        위해 (UChar32 c = inclusions->getRangeStart(i); c <= rangeEnd; ++c) {
             // TODO: Get a UCharacterProperty.BinaryProperty to avoid the property dispatch.
-            if (u_hasBinaryProperty(c, property)) {
-                if (startHasProperty < 0) {
+            만약 (u_hasBinaryProperty(c, property)) {
+                만약 (startHasProperty < 0) {
                     // Transition from false to true.
                     startHasProperty = c;
                 }
-            } else if (startHasProperty >= 0) {
+            } 아니면 만약 (startHasProperty >= 0) {
                 // Transition from true to false.
                 set->add(startHasProperty, c - 1);
                 startHasProperty = -1;
             }
         }
     }
-    if (startHasProperty >= 0) {
+    만약 (startHasProperty >= 0) {
         set->add(startHasProperty, 0x10FFFF);
     }
     set->freeze();
-    return set.orphan();
+    반환 set.orphan();
 }
 
 UCPMap *makeMap(UProperty property, UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return nullptr; }
+    만약 (U_FAILURE(errorCode)) { 반환 nullptr; }
     uint32_t nullValue = property == UCHAR_SCRIPT ? USCRIPT_UNKNOWN : 0;
     icu::LocalUMutableCPTriePointer mutableTrie(
         umutablecptrie_open(nullValue, nullValue, &errorCode));
     const UnicodeSet *inclusions =
         icu::CharacterProperties::getInclusionsForProperty(property, errorCode);
-    if (U_FAILURE(errorCode)) { return nullptr; }
+    만약 (U_FAILURE(errorCode)) { 반환 nullptr; }
     int32_t numRanges = inclusions->getRangeCount();
     UChar32 start = 0;
     uint32_t value = nullValue;
 
-    for (int32_t i = 0; i < numRanges; ++i) {
+    위해 (int32_t i = 0; i < numRanges; ++i) {
         UChar32 rangeEnd = inclusions->getRangeEnd(i);
-        for (UChar32 c = inclusions->getRangeStart(i); c <= rangeEnd; ++c) {
+        위해 (UChar32 c = inclusions->getRangeStart(i); c <= rangeEnd; ++c) {
             // TODO: Get a UCharacterProperty.IntProperty to avoid the property dispatch.
             uint32_t nextValue = u_getIntPropertyValue(c, property);
-            if (value != nextValue) {
-                if (value != nullValue) {
+            만약 (value != nextValue) {
+                만약 (value != nullValue) {
                     umutablecptrie_setRange(mutableTrie.getAlias(), start, c - 1, value, &errorCode);
                 }
                 start = c;
@@ -363,27 +363,27 @@ UCPMap *makeMap(UProperty property, UErrorCode &errorCode) {
             }
         }
     }
-    if (value != 0) {
+    만약 (value != 0) {
         umutablecptrie_setRange(mutableTrie.getAlias(), start, 0x10FFFF, value, &errorCode);
     }
 
     UCPTrieType type;
-    if (property == UCHAR_BIDI_CLASS || property == UCHAR_GENERAL_CATEGORY) {
+    만약 (property == UCHAR_BIDI_CLASS || property == UCHAR_GENERAL_CATEGORY) {
         type = UCPTRIE_TYPE_FAST;
-    } else {
+    } 아니면 {
         type = UCPTRIE_TYPE_SMALL;
     }
     UCPTrieValueWidth valueWidth;
     // TODO: UCharacterProperty.IntProperty
     int32_t max = u_getIntPropertyMaxValue(property);
-    if (max <= 0xff) {
+    만약 (max <= 0xff) {
         valueWidth = UCPTRIE_VALUE_BITS_8;
-    } else if (max <= 0xffff) {
+    } 아니면 만약 (max <= 0xffff) {
         valueWidth = UCPTRIE_VALUE_BITS_16;
-    } else {
+    } 아니면 {
         valueWidth = UCPTRIE_VALUE_BITS_32;
     }
-    return reinterpret_cast<UCPMap *>(
+    반환 reinterpret_cast<UCPMap *>(
         umutablecptrie_buildImmutable(mutableTrie.getAlias(), type, valueWidth, &errorCode));
 }
 
@@ -392,17 +392,17 @@ UCPMap *makeMap(UProperty property, UErrorCode &errorCode) {
 U_NAMESPACE_BEGIN
 
 const UnicodeSet *CharacterProperties::getBinaryPropertySet(UProperty property, UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return nullptr; }
-    if (property < 0 || UCHAR_BINARY_LIMIT <= property) {
+    만약 (U_FAILURE(errorCode)) { 반환 nullptr; }
+    만약 (property < 0 || UCHAR_BINARY_LIMIT <= property) {
         errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        반환 nullptr;
     }
     Mutex m(&cpMutex);
     UnicodeSet *set = sets[property];
-    if (set == nullptr) {
+    만약 (set == nullptr) {
         sets[property] = set = makeSet(property, errorCode);
     }
-    return set;
+    반환 set;
 }
 
 U_NAMESPACE_END
@@ -412,20 +412,20 @@ U_NAMESPACE_USE
 U_CAPI const USet * U_EXPORT2
 u_getBinaryPropertySet(UProperty property, UErrorCode *pErrorCode) {
     const UnicodeSet *set = CharacterProperties::getBinaryPropertySet(property, *pErrorCode);
-    return U_SUCCESS(*pErrorCode) ? set->toUSet() : nullptr;
+    반환 U_SUCCESS(*pErrorCode) ? set->toUSet() : nullptr;
 }
 
 U_CAPI const UCPMap * U_EXPORT2
 u_getIntPropertyMap(UProperty property, UErrorCode *pErrorCode) {
-    if (U_FAILURE(*pErrorCode)) { return nullptr; }
-    if (property < UCHAR_INT_START || UCHAR_INT_LIMIT <= property) {
+    만약 (U_FAILURE(*pErrorCode)) { 반환 nullptr; }
+    만약 (property < UCHAR_INT_START || UCHAR_INT_LIMIT <= property) {
         *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        반환 nullptr;
     }
     Mutex m(&cpMutex);
     UCPMap *map = maps[property - UCHAR_INT_START];
-    if (map == nullptr) {
+    만약 (map == nullptr) {
         maps[property - UCHAR_INT_START] = map = makeMap(property, *pErrorCode);
     }
-    return map;
+    반환 map;
 }

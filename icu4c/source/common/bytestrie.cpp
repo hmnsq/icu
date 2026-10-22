@@ -31,48 +31,48 @@ BytesTrie::~BytesTrie() {
 int32_t
 BytesTrie::readValue(const uint8_t *pos, int32_t leadByte) {
     int32_t value;
-    if(leadByte<kMinTwoByteValueLead) {
+    만약(leadByte<kMinTwoByteValueLead) {
         value=leadByte-kMinOneByteValueLead;
-    } else if(leadByte<kMinThreeByteValueLead) {
+    } 아니면 만약(leadByte<kMinThreeByteValueLead) {
         value=((leadByte-kMinTwoByteValueLead)<<8)|*pos;
-    } else if(leadByte<kFourByteValueLead) {
+    } 아니면 만약(leadByte<kFourByteValueLead) {
         value=((leadByte-kMinThreeByteValueLead)<<16)|(pos[0]<<8)|pos[1];
-    } else if(leadByte==kFourByteValueLead) {
+    } 아니면 만약(leadByte==kFourByteValueLead) {
         value=(pos[0]<<16)|(pos[1]<<8)|pos[2];
-    } else {
+    } 아니면 {
         value=(pos[0]<<24)|(pos[1]<<16)|(pos[2]<<8)|pos[3];
     }
-    return value;
+    반환 value;
 }
 
 const uint8_t*
 BytesTrie::jumpByDelta(const uint8_t* pos U_LIFETIME_BOUND) {
     int32_t delta=*pos++;
-    if(delta<kMinTwoByteDeltaLead) {
+    만약(delta<kMinTwoByteDeltaLead) {
         // nothing to do
-    } else if(delta<kMinThreeByteDeltaLead) {
+    } 아니면 만약(delta<kMinThreeByteDeltaLead) {
         delta=((delta-kMinTwoByteDeltaLead)<<8)|*pos++;
-    } else if(delta<kFourByteDeltaLead) {
+    } 아니면 만약(delta<kFourByteDeltaLead) {
         delta=((delta-kMinThreeByteDeltaLead)<<16)|(pos[0]<<8)|pos[1];
         pos+=2;
-    } else if(delta==kFourByteDeltaLead) {
+    } 아니면 만약(delta==kFourByteDeltaLead) {
         delta=(pos[0]<<16)|(pos[1]<<8)|pos[2];
         pos+=3;
-    } else {
+    } 아니면 {
         delta=(pos[0]<<24)|(pos[1]<<16)|(pos[2]<<8)|pos[3];
         pos+=4;
     }
-    return pos+delta;
+    반환 pos+delta;
 }
 
 UStringTrieResult
 BytesTrie::current() const {
     const uint8_t *pos=pos_;
-    if(pos==nullptr) {
-        return USTRINGTRIE_NO_MATCH;
-    } else {
+    만약(pos==nullptr) {
+        반환 USTRINGTRIE_NO_MATCH;
+    } 아니면 {
         int32_t node;
-        return (remainingMatchLength_<0 && (node=*pos)>=kMinValueLead) ?
+        반환 (remainingMatchLength_<0 && (node=*pos)>=kMinValueLead) ?
                 valueResult(node) : USTRINGTRIE_NO_VALUE;
     }
 }
@@ -80,17 +80,17 @@ BytesTrie::current() const {
 UStringTrieResult
 BytesTrie::branchNext(const uint8_t *pos, int32_t length, int32_t inByte) {
     // Branch according to the current byte.
-    if(length==0) {
+    만약(length==0) {
         length=*pos++;
     }
     ++length;
     // The length of the branch is the number of bytes to select from.
     // The data structure encodes a binary search.
-    while(length>kMaxBranchLinearSubNodeLength) {
-        if(inByte<*pos++) {
+    동안(length>kMaxBranchLinearSubNodeLength) {
+        만약(inByte<*pos++) {
             length>>=1;
             pos=jumpByDelta(pos);
-        } else {
+        } 아니면 {
             length=length-(length>>1);
             pos=skipDelta(pos);
         }
@@ -99,30 +99,30 @@ BytesTrie::branchNext(const uint8_t *pos, int32_t length, int32_t inByte) {
     // length>=2 because the loop body above sees length>kMaxBranchLinearSubNodeLength>=3
     // and divides length by 2.
     do {
-        if(inByte==*pos++) {
+        만약(inByte==*pos++) {
             UStringTrieResult result;
             int32_t node=*pos;
             U_ASSERT(node>=kMinValueLead);
-            if(node&kValueIsFinal) {
+            만약(node&kValueIsFinal) {
                 // Leave the final value for getValue() to read.
                 result=USTRINGTRIE_FINAL_VALUE;
-            } else {
+            } 아니면 {
                 // Use the non-final value as the jump delta.
                 ++pos;
                 // int32_t delta=readValue(pos, node>>1);
                 node>>=1;
                 int32_t delta;
-                if(node<kMinTwoByteValueLead) {
+                만약(node<kMinTwoByteValueLead) {
                     delta=node-kMinOneByteValueLead;
-                } else if(node<kMinThreeByteValueLead) {
+                } 아니면 만약(node<kMinThreeByteValueLead) {
                     delta=((node-kMinTwoByteValueLead)<<8)|*pos++;
-                } else if(node<kFourByteValueLead) {
+                } 아니면 만약(node<kFourByteValueLead) {
                     delta=((node-kMinThreeByteValueLead)<<16)|(pos[0]<<8)|pos[1];
                     pos+=2;
-                } else if(node==kFourByteValueLead) {
+                } 아니면 만약(node==kFourByteValueLead) {
                     delta=(pos[0]<<16)|(pos[1]<<8)|pos[2];
                     pos+=3;
-                } else {
+                } 아니면 {
                     delta=(pos[0]<<24)|(pos[1]<<16)|(pos[2]<<8)|pos[3];
                     pos+=4;
                 }
@@ -132,43 +132,43 @@ BytesTrie::branchNext(const uint8_t *pos, int32_t length, int32_t inByte) {
                 result= node>=kMinValueLead ? valueResult(node) : USTRINGTRIE_NO_VALUE;
             }
             pos_=pos;
-            return result;
+            반환 result;
         }
         --length;
         pos=skipValue(pos);
-    } while(length>1);
-    if(inByte==*pos++) {
+    } 동안(length>1);
+    만약(inByte==*pos++) {
         pos_=pos;
         int32_t node=*pos;
-        return node>=kMinValueLead ? valueResult(node) : USTRINGTRIE_NO_VALUE;
-    } else {
+        반환 node>=kMinValueLead ? valueResult(node) : USTRINGTRIE_NO_VALUE;
+    } 아니면 {
         stop();
-        return USTRINGTRIE_NO_MATCH;
+        반환 USTRINGTRIE_NO_MATCH;
     }
 }
 
 UStringTrieResult
 BytesTrie::nextImpl(const uint8_t *pos, int32_t inByte) {
-    for(;;) {
+    위해(;;) {
         int32_t node=*pos++;
-        if(node<kMinLinearMatch) {
-            return branchNext(pos, node, inByte);
-        } else if(node<kMinValueLead) {
+        만약(node<kMinLinearMatch) {
+            반환 branchNext(pos, node, inByte);
+        } 아니면 만약(node<kMinValueLead) {
             // Match the first of length+1 bytes.
             int32_t length=node-kMinLinearMatch;  // Actual match length minus 1.
-            if(inByte==*pos++) {
+            만약(inByte==*pos++) {
                 remainingMatchLength_=--length;
                 pos_=pos;
-                return (length<0 && (node=*pos)>=kMinValueLead) ?
+                반환 (length<0 && (node=*pos)>=kMinValueLead) ?
                         valueResult(node) : USTRINGTRIE_NO_VALUE;
-            } else {
+            } 아니면 {
                 // No match.
                 break;
             }
-        } else if(node&kValueIsFinal) {
+        } 아니면 만약(node&kValueIsFinal) {
             // No further matching bytes.
             break;
-        } else {
+        } 아니면 {
             // Skip intermediate value.
             pos=skipValue(pos, node);
             // The next node must not also be a value node.
@@ -176,133 +176,133 @@ BytesTrie::nextImpl(const uint8_t *pos, int32_t inByte) {
         }
     }
     stop();
-    return USTRINGTRIE_NO_MATCH;
+    반환 USTRINGTRIE_NO_MATCH;
 }
 
 UStringTrieResult
 BytesTrie::next(int32_t inByte) {
     const uint8_t *pos=pos_;
-    if(pos==nullptr) {
-        return USTRINGTRIE_NO_MATCH;
+    만약(pos==nullptr) {
+        반환 USTRINGTRIE_NO_MATCH;
     }
-    if(inByte<0) {
+    만약(inByte<0) {
         inByte+=0x100;
     }
     int32_t length=remainingMatchLength_;  // Actual remaining match length minus 1.
-    if(length>=0) {
+    만약(length>=0) {
         // Remaining part of a linear-match node.
-        if(inByte==*pos++) {
+        만약(inByte==*pos++) {
             remainingMatchLength_=--length;
             pos_=pos;
             int32_t node;
-            return (length<0 && (node=*pos)>=kMinValueLead) ?
+            반환 (length<0 && (node=*pos)>=kMinValueLead) ?
                     valueResult(node) : USTRINGTRIE_NO_VALUE;
-        } else {
+        } 아니면 {
             stop();
-            return USTRINGTRIE_NO_MATCH;
+            반환 USTRINGTRIE_NO_MATCH;
         }
     }
-    return nextImpl(pos, inByte);
+    반환 nextImpl(pos, inByte);
 }
 
 UStringTrieResult
 BytesTrie::next(const char *s, int32_t sLength) {
-    if(sLength<0 ? *s==0 : sLength==0) {
+    만약(sLength<0 ? *s==0 : sLength==0) {
         // Empty input.
-        return current();
+        반환 current();
     }
     const uint8_t *pos=pos_;
-    if(pos==nullptr) {
-        return USTRINGTRIE_NO_MATCH;
+    만약(pos==nullptr) {
+        반환 USTRINGTRIE_NO_MATCH;
     }
     int32_t length=remainingMatchLength_;  // Actual remaining match length minus 1.
-    for(;;) {
+    위해(;;) {
         // Fetch the next input byte, if there is one.
         // Continue a linear-match node without rechecking sLength<0.
         int32_t inByte;
-        if(sLength<0) {
-            for(;;) {
-                if((inByte=*s++)==0) {
+        만약(sLength<0) {
+            위해(;;) {
+                만약((inByte=*s++)==0) {
                     remainingMatchLength_=length;
                     pos_=pos;
                     int32_t node;
-                    return (length<0 && (node=*pos)>=kMinValueLead) ?
+                    반환 (length<0 && (node=*pos)>=kMinValueLead) ?
                             valueResult(node) : USTRINGTRIE_NO_VALUE;
                 }
-                if(length<0) {
+                만약(length<0) {
                     remainingMatchLength_=length;
                     break;
                 }
-                if(inByte!=*pos) {
+                만약(inByte!=*pos) {
                     stop();
-                    return USTRINGTRIE_NO_MATCH;
+                    반환 USTRINGTRIE_NO_MATCH;
                 }
                 ++pos;
                 --length;
             }
-        } else {
-            for(;;) {
-                if(sLength==0) {
+        } 아니면 {
+            위해(;;) {
+                만약(sLength==0) {
                     remainingMatchLength_=length;
                     pos_=pos;
                     int32_t node;
-                    return (length<0 && (node=*pos)>=kMinValueLead) ?
+                    반환 (length<0 && (node=*pos)>=kMinValueLead) ?
                             valueResult(node) : USTRINGTRIE_NO_VALUE;
                 }
                 inByte=*s++;
                 --sLength;
-                if(length<0) {
+                만약(length<0) {
                     remainingMatchLength_=length;
                     break;
                 }
-                if(inByte!=*pos) {
+                만약(inByte!=*pos) {
                     stop();
-                    return USTRINGTRIE_NO_MATCH;
+                    반환 USTRINGTRIE_NO_MATCH;
                 }
                 ++pos;
                 --length;
             }
         }
-        for(;;) {
+        위해(;;) {
             int32_t node=*pos++;
-            if(node<kMinLinearMatch) {
+            만약(node<kMinLinearMatch) {
                 UStringTrieResult result=branchNext(pos, node, inByte);
-                if(result==USTRINGTRIE_NO_MATCH) {
-                    return USTRINGTRIE_NO_MATCH;
+                만약(result==USTRINGTRIE_NO_MATCH) {
+                    반환 USTRINGTRIE_NO_MATCH;
                 }
                 // Fetch the next input byte, if there is one.
-                if(sLength<0) {
-                    if((inByte=*s++)==0) {
-                        return result;
+                만약(sLength<0) {
+                    만약((inByte=*s++)==0) {
+                        반환 result;
                     }
-                } else {
-                    if(sLength==0) {
-                        return result;
+                } 아니면 {
+                    만약(sLength==0) {
+                        반환 result;
                     }
                     inByte=*s++;
                     --sLength;
                 }
-                if(result==USTRINGTRIE_FINAL_VALUE) {
+                만약(result==USTRINGTRIE_FINAL_VALUE) {
                     // No further matching bytes.
                     stop();
-                    return USTRINGTRIE_NO_MATCH;
+                    반환 USTRINGTRIE_NO_MATCH;
                 }
                 pos=pos_;  // branchNext() advanced pos and wrote it to pos_ .
-            } else if(node<kMinValueLead) {
+            } 아니면 만약(node<kMinValueLead) {
                 // Match length+1 bytes.
                 length=node-kMinLinearMatch;  // Actual match length minus 1.
-                if(inByte!=*pos) {
+                만약(inByte!=*pos) {
                     stop();
-                    return USTRINGTRIE_NO_MATCH;
+                    반환 USTRINGTRIE_NO_MATCH;
                 }
                 ++pos;
                 --length;
                 break;
-            } else if(node&kValueIsFinal) {
+            } 아니면 만약(node&kValueIsFinal) {
                 // No further matching bytes.
                 stop();
-                return USTRINGTRIE_NO_MATCH;
-            } else {
+                반환 USTRINGTRIE_NO_MATCH;
+            } 아니면 {
                 // Skip intermediate value.
                 pos=skipValue(pos, node);
                 // The next node must not also be a value node.
@@ -317,10 +317,10 @@ BytesTrie::findUniqueValueFromBranch(const uint8_t* pos U_LIFETIME_BOUND,
                                      int32_t length,
                                      UBool haveUniqueValue,
                                      int32_t& uniqueValue) {
-    while(length>kMaxBranchLinearSubNodeLength) {
+    동안(length>kMaxBranchLinearSubNodeLength) {
         ++pos;  // ignore the comparison byte
-        if(nullptr==findUniqueValueFromBranch(jumpByDelta(pos), length>>1, haveUniqueValue, uniqueValue)) {
-            return nullptr;
+        만약(nullptr==findUniqueValueFromBranch(jumpByDelta(pos), length>>1, haveUniqueValue, uniqueValue)) {
+            반환 nullptr;
         }
         length=length-(length>>1);
         pos=skipDelta(pos);
@@ -332,54 +332,54 @@ BytesTrie::findUniqueValueFromBranch(const uint8_t* pos U_LIFETIME_BOUND,
         UBool isFinal = static_cast<UBool>(node & kValueIsFinal);
         int32_t value=readValue(pos, node>>1);
         pos=skipValue(pos, node);
-        if(isFinal) {
-            if(haveUniqueValue) {
-                if(value!=uniqueValue) {
-                    return nullptr;
+        만약(isFinal) {
+            만약(haveUniqueValue) {
+                만약(value!=uniqueValue) {
+                    반환 nullptr;
                 }
-            } else {
+            } 아니면 {
                 uniqueValue=value;
                 haveUniqueValue=true;
             }
-        } else {
-            if(!findUniqueValue(pos+value, haveUniqueValue, uniqueValue)) {
-                return nullptr;
+        } 아니면 {
+            만약(!findUniqueValue(pos+value, haveUniqueValue, uniqueValue)) {
+                반환 nullptr;
             }
             haveUniqueValue=true;
         }
-    } while(--length>1);
-    return pos+1;  // ignore the last comparison byte
+    } 동안(--length>1);
+    반환 pos+1;  // ignore the last comparison byte
 }
 
 UBool
 BytesTrie::findUniqueValue(const uint8_t *pos, UBool haveUniqueValue, int32_t &uniqueValue) {
-    for(;;) {
+    위해(;;) {
         int32_t node=*pos++;
-        if(node<kMinLinearMatch) {
-            if(node==0) {
+        만약(node<kMinLinearMatch) {
+            만약(node==0) {
                 node=*pos++;
             }
             pos=findUniqueValueFromBranch(pos, node+1, haveUniqueValue, uniqueValue);
-            if(pos==nullptr) {
-                return false;
+            만약(pos==nullptr) {
+                반환 false;
             }
             haveUniqueValue=true;
-        } else if(node<kMinValueLead) {
+        } 아니면 만약(node<kMinValueLead) {
             // linear-match node
             pos+=node-kMinLinearMatch+1;  // Ignore the match bytes.
-        } else {
+        } 아니면 {
             UBool isFinal = static_cast<UBool>(node & kValueIsFinal);
             int32_t value=readValue(pos, node>>1);
-            if(haveUniqueValue) {
-                if(value!=uniqueValue) {
-                    return false;
+            만약(haveUniqueValue) {
+                만약(value!=uniqueValue) {
+                    반환 false;
                 }
-            } else {
+            } 아니면 {
                 uniqueValue=value;
                 haveUniqueValue=true;
             }
-            if(isFinal) {
-                return true;
+            만약(isFinal) {
+                반환 true;
             }
             pos=skipValue(pos, node);
         }
@@ -389,39 +389,39 @@ BytesTrie::findUniqueValue(const uint8_t *pos, UBool haveUniqueValue, int32_t &u
 int32_t
 BytesTrie::getNextBytes(ByteSink &out) const {
     const uint8_t *pos=pos_;
-    if(pos==nullptr) {
-        return 0;
+    만약(pos==nullptr) {
+        반환 0;
     }
-    if(remainingMatchLength_>=0) {
+    만약(remainingMatchLength_>=0) {
         append(out, *pos);  // Next byte of a pending linear-match node.
-        return 1;
+        반환 1;
     }
     int32_t node=*pos++;
-    if(node>=kMinValueLead) {
-        if(node&kValueIsFinal) {
-            return 0;
-        } else {
+    만약(node>=kMinValueLead) {
+        만약(node&kValueIsFinal) {
+            반환 0;
+        } 아니면 {
             pos=skipValue(pos, node);
             node=*pos++;
             U_ASSERT(node<kMinValueLead);
         }
     }
-    if(node<kMinLinearMatch) {
-        if(node==0) {
+    만약(node<kMinLinearMatch) {
+        만약(node==0) {
             node=*pos++;
         }
         getNextBranchBytes(pos, ++node, out);
-        return node;
-    } else {
+        반환 node;
+    } 아니면 {
         // First byte of the linear-match node.
         append(out, *pos);
-        return 1;
+        반환 1;
     }
 }
 
 void
 BytesTrie::getNextBranchBytes(const uint8_t *pos, int32_t length, ByteSink &out) {
-    while(length>kMaxBranchLinearSubNodeLength) {
+    동안(length>kMaxBranchLinearSubNodeLength) {
         ++pos;  // ignore the comparison byte
         getNextBranchBytes(jumpByDelta(pos), length>>1, out);
         length=length-(length>>1);
@@ -430,12 +430,12 @@ BytesTrie::getNextBranchBytes(const uint8_t *pos, int32_t length, ByteSink &out)
     do {
         append(out, *pos++);
         pos=skipValue(pos);
-    } while(--length>1);
+    } 동안(--length>1);
     append(out, *pos);
 }
 
 void
-BytesTrie::append(ByteSink &out, int c) {
+BytesTrie::append(ByteSink &out, 정수 c) {
     char ch = static_cast<char>(c);
     out.Append(&ch, 1);
 }

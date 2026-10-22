@@ -117,7 +117,7 @@ public:
     /**
      * Equivalent to !operator==()
      */
-    inline bool operator!=(const UVector& other) const {return !operator==(other);}
+    inline bool operator!=(const UVector& other) const {반환 !operator==(other);}
 
     //------------------------------------------------------------
     // java.util.Vector API
@@ -161,19 +161,19 @@ public:
 
     UBool equals(const UVector &other) const;
 
-    inline void* firstElement() const {return elementAt(0);}
+    inline void* firstElement() const {반환 elementAt(0);}
 
-    inline void* lastElement() const {return elementAt(count-1);}
+    inline void* lastElement() const {반환 elementAt(count-1);}
 
-    inline int32_t lastElementi() const {return elementAti(count-1);}
+    inline int32_t lastElementi() const {반환 elementAti(count-1);}
 
     int32_t indexOf(void* obj, int32_t startIndex = 0) const;
 
     int32_t indexOf(int32_t obj, int32_t startIndex = 0) const;
 
-    inline UBool contains(void* obj) const {return indexOf(obj) >= 0;}
+    inline UBool contains(void* obj) const {반환 indexOf(obj) >= 0;}
 
-    inline UBool contains(int32_t obj) const {return indexOf(obj) >= 0;}
+    inline UBool contains(int32_t obj) const {반환 indexOf(obj) >= 0;}
 
     UBool containsAll(const UVector& other) const;
 
@@ -187,9 +187,9 @@ public:
 
     void removeAllElements();
 
-    inline int32_t size() const {return count;}
+    inline int32_t size() const {반환 count;}
 
-    inline UBool isEmpty() const {return count == 0;}
+    inline UBool isEmpty() const {반환 count == 0;}
 
     UBool ensureCapacity(int32_t minimumCapacity, UErrorCode &status);
 
@@ -211,11 +211,11 @@ public:
     //------------------------------------------------------------
 
     UObjectDeleter *setDeleter(UObjectDeleter *d);
-    bool hasDeleter() {return deleter != nullptr;}
+    bool hasDeleter() {반환 deleter != nullptr;}
 
     UElementsAreEqual *setComparer(UElementsAreEqual *c);
 
-    inline void* operator[](int32_t index) const {return elementAt(index);}
+    inline void* operator[](int32_t index) const {반환 elementAt(index);}
 
     /**
      * Removes the element at the given index from this vector and
@@ -328,11 +328,11 @@ public:
     // It's okay not to have a virtual destructor (in UVector)
     // because UStack has no special cleanup to do.
 
-    inline UBool empty() const {return isEmpty();}
+    inline UBool empty() const {반환 isEmpty();}
 
-    inline void* peek() const {return lastElement();}
+    inline void* peek() const {반환 lastElement();}
 
-    inline int32_t peeki() const {return lastElementi();}
+    inline int32_t peeki() const {반환 lastElementi();}
     
     /**
      * Pop and return an element from the stack.
@@ -344,18 +344,18 @@ public:
     int32_t popi();
     
     inline void* push(void* obj, UErrorCode &status) {
-        if (hasDeleter()) {
+        만약 (hasDeleter()) {
             adoptElement(obj, status);
-            return (U_SUCCESS(status)) ? obj : nullptr;
-        } else {
+            반환 (U_SUCCESS(status)) ? obj : nullptr;
+        } 아니면 {
             addElement(obj, status);
-            return obj;
+            반환 obj;
         }
     }
 
     inline int32_t push(int32_t i, UErrorCode &status) {
         addElement(i, status);
-        return i;
+        반환 i;
     }
 
     /*

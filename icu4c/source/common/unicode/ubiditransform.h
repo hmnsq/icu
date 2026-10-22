@@ -22,7 +22,7 @@
 #include "unicode/ubidi.h"
 #include "unicode/uchar.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#만약 U_SHOW_CPLUSPLUS_API
 #include "unicode/localpointer.h"
 #endif   // U_SHOW_CPLUSPLUS_API
 
@@ -304,7 +304,7 @@ ubiditransform_open(UErrorCode *pErrorCode);
 U_CAPI void U_EXPORT2
 ubiditransform_close(UBiDiTransform *pBidiTransform);
 
-#if U_SHOW_CPLUSPLUS_API
+#만약 U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 

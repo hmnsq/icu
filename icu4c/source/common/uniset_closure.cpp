@@ -70,19 +70,19 @@ UnicodeSet& UnicodeSet::applyPattern(const UnicodeString& pattern,
                                      UErrorCode& status) U_LIFETIME_BOUND {
     ParsePosition pos(0);
     applyPattern(pattern, pos, options, symbols, status);
-    if (U_FAILURE(status)) return *this;
+    만약 (U_FAILURE(status)) 반환 *this;
 
     int32_t i = pos.getIndex();
 
-    if (options & USET_IGNORE_SPACE) {
+    만약 (options & USET_IGNORE_SPACE) {
         // Skip over trailing whitespace
         ICU_Utility::skipWhitespace(pattern, i, true);
     }
 
-    if (i != pattern.length()) {
+    만약 (i != pattern.length()) {
         status = U_ILLEGAL_ARGUMENT_ERROR;
     }
-    return *this;
+    반환 *this;
 }
 
 UnicodeSet& UnicodeSet::applyPattern(const UnicodeString& pattern,
@@ -90,26 +90,26 @@ UnicodeSet& UnicodeSet::applyPattern(const UnicodeString& pattern,
                                      uint32_t options,
                                      const SymbolTable* symbols,
                                      UErrorCode& status) U_LIFETIME_BOUND {
-    if (U_FAILURE(status)) {
-        return *this;
+    만약 (U_FAILURE(status)) {
+        반환 *this;
     }
-    if (isFrozen()) {
+    만약 (isFrozen()) {
         status = U_NO_WRITE_PERMISSION;
-        return *this;
+        반환 *this;
     }
     // Need to build the pattern in a temporary string because
     // _applyPattern calls add() etc., which set pat to empty.
     UnicodeString rebuiltPat;
     RuleCharacterIterator chars(pattern, symbols, pos);
     applyPattern(pattern, pos, chars, symbols, rebuiltPat, options, &UnicodeSet::closeOver, status);
-    if (U_FAILURE(status)) return *this;
-    if (chars.inVariable()) {
+    만약 (U_FAILURE(status)) 반환 *this;
+    만약 (chars.inVariable()) {
         // syntaxError(chars, "Extra chars in variable value");
         status = U_MALFORMED_SET;
-        return *this;
+        반환 *this;
     }
     setPattern(rebuiltPat);
-    return *this;
+    반환 *this;
 }
 
 // USetAdder implementation
@@ -137,11 +137,11 @@ _set_addString(USet *set, const char16_t *str, int32_t length) {
 // use str as a temporary string to avoid constructing one
 static inline void
 addCaseMapping(UnicodeSet &set, int32_t result, const char16_t *full, UnicodeString &str) {
-    if(result >= 0) {
-        if(result > UCASE_MAX_STRING_LENGTH) {
+    만약(result >= 0) {
+        만약(result > UCASE_MAX_STRING_LENGTH) {
             // add a single-code point case mapping
             set.add(result);
-        } else {
+        } 아니면 {
             // add a string case mapping from full with length result
             str.setTo(static_cast<UBool>(false), full, result);
             set.add(str);
@@ -159,27 +159,27 @@ const UnicodeSet &maybeOnlyCaseSensitive(const UnicodeSet &src U_LIFETIME_BOUND,
     // The subset must have been constructed with all code points,
     // so that the retainAll() intersection effectively copies all single code points from src.
     U_ASSERT(subset.contains(0, 0x10ffff));
-    if (src.size() < 30) {
-        return src;
+    만약 (src.size() < 30) {
+        반환 src;
     }
     // Return the intersection of the src code points with Case_Sensitive ones.
     UErrorCode errorCode = U_ZERO_ERROR;
     const UnicodeSet *sensitive =
         CharacterProperties::getBinaryPropertySet(UCHAR_CASE_SENSITIVE, errorCode);
-    if (U_FAILURE(errorCode)) {
-        return src;
+    만약 (U_FAILURE(errorCode)) {
+        반환 src;
     }
     // Start by copying the "smaller" set.
     // (We "copy" by intersecting all Unicode *code points* with the first set,
     // which omits any strings.)
-    if (src.getRangeCount() > sensitive->getRangeCount()) {
+    만약 (src.getRangeCount() > sensitive->getRangeCount()) {
         subset.retainAll(*sensitive);
         subset.retainAll(src);
-    } else {
+    } 아니면 {
         subset.retainAll(src);
         subset.retainAll(*sensitive);
     }
-    return subset;
+    반환 subset;
 }
 
 // Per-character scf = Simple_Case_Folding of a string.
@@ -189,32 +189,32 @@ bool scfString(const UnicodeString &s, UnicodeString &scf) {
     const char16_t *p = s.getBuffer();
     int32_t length = s.length();
     // Loop while not needing modification.
-    for (int32_t i = 0; i < length;) {
+    위해 (int32_t i = 0; i < length;) {
         UChar32 c;
         U16_NEXT(p, i, length, c);  // post-increments i
         UChar32 scfChar = u_foldCase(c, U_FOLD_CASE_DEFAULT);
-        if (scfChar != c) {
+        만약 (scfChar != c) {
             // Copy the characters before c.
             scf.setTo(p, i - U16_LENGTH(c));
             // Loop over the rest of the string and keep case-folding.
-            for (;;) {
+            위해 (;;) {
                 scf.append(scfChar);
-                if (i == length) {
-                    return true;
+                만약 (i == length) {
+                    반환 true;
                 }
                 U16_NEXT(p, i, length, c);  // post-increments i
                 scfChar = u_foldCase(c, U_FOLD_CASE_DEFAULT);
             }
         }
     }
-    return false;
+    반환 false;
 }
 
 }  // namespace
 
 UnicodeSet& UnicodeSet::closeOver(int32_t attribute) U_LIFETIME_BOUND {
-    if (isFrozen() || isBogus()) {
-        return *this;
+    만약 (isFrozen() || isBogus()) {
+        반환 *this;
     }
     switch (attribute & USET_CASE_MASK) {
     case 0:
@@ -232,7 +232,7 @@ UnicodeSet& UnicodeSet::closeOver(int32_t attribute) U_LIFETIME_BOUND {
         // bad option (unreachable)
         break;
     }
-    return *this;
+    반환 *this;
 }
 
 void UnicodeSet::closeOverCaseInsensitive(bool simple) {
@@ -242,7 +242,7 @@ void UnicodeSet::closeOverCaseInsensitive(bool simple) {
     // Remove strings because the strings will actually be reduced (folded);
     // therefore, start with no strings and add only those needed.
     // Do this before processing code points, because they may add strings.
-    if (!simple && foldSet.hasStrings()) {
+    만약 (!simple && foldSet.hasStrings()) {
         foldSet.strings_->removeAllElements();
     }
 
@@ -261,32 +261,32 @@ void UnicodeSet::closeOverCaseInsensitive(bool simple) {
     // Iterate over the ranges of single code points. Nested loop for each code point.
     int32_t n = codePoints.getRangeCount();
 
-    for (int32_t i=0; i<n; ++i) {
+    위해 (int32_t i=0; i<n; ++i) {
         UChar32 start = codePoints.getRangeStart(i);
         UChar32 end   = codePoints.getRangeEnd(i);
 
-        if (simple) {
-            for (UChar32 cp=start; cp<=end; ++cp) {
+        만약 (simple) {
+            위해 (UChar32 cp=start; cp<=end; ++cp) {
                 ucase_addSimpleCaseClosure(cp, &sa);
             }
-        } else {
-            for (UChar32 cp=start; cp<=end; ++cp) {
+        } 아니면 {
+            위해 (UChar32 cp=start; cp<=end; ++cp) {
                 ucase_addCaseClosure(cp, &sa);
             }
         }
     }
-    if (hasStrings()) {
+    만약 (hasStrings()) {
         UnicodeString str;
-        for (int32_t j=0; j<strings_->size(); ++j) {
+        위해 (int32_t j=0; j<strings_->size(); ++j) {
             const UnicodeString* pStr = static_cast<const UnicodeString*>(strings_->elementAt(j));
-            if (simple) {
-                if (scfString(*pStr, str)) {
+            만약 (simple) {
+                만약 (scfString(*pStr, str)) {
                     foldSet.remove(*pStr).add(str);
                 }
-            } else {
+            } 아니면 {
                 str = *pStr;
                 str.foldCase();
-                if(!ucase_addStringCaseClosure(str.getBuffer(), str.length(), &sa)) {
+                만약(!ucase_addStringCaseClosure(str.getBuffer(), str.length(), &sa)) {
                     foldSet.add(str); // does not map to code points: add the folded string itself
                 }
             }
@@ -308,13 +308,13 @@ void UnicodeSet::closeOverAddCaseMappings() {
     const char16_t *full;
     UnicodeString str;
 
-    for (int32_t i=0; i<n; ++i) {
+    위해 (int32_t i=0; i<n; ++i) {
         UChar32 start = codePoints.getRangeStart(i);
         UChar32 end   = codePoints.getRangeEnd(i);
 
         // add case mappings
         // (does not add long s for regular s, or Kelvin for k, for example)
-        for (UChar32 cp=start; cp<=end; ++cp) {
+        위해 (UChar32 cp=start; cp<=end; ++cp) {
             result = ucase_toFullLower(cp, nullptr, nullptr, &full, UCASE_LOC_ROOT);
             addCaseMapping(foldSet, result, full, str);
 
@@ -328,18 +328,18 @@ void UnicodeSet::closeOverAddCaseMappings() {
             addCaseMapping(foldSet, result, full, str);
         }
     }
-    if (hasStrings()) {
+    만약 (hasStrings()) {
         Locale root("");
-#if !UCONFIG_NO_BREAK_ITERATION
+#만약 !UCONFIG_NO_BREAK_ITERATION
         UErrorCode status = U_ZERO_ERROR;
         BreakIterator *bi = BreakIterator::createWordInstance(root, status);
-        if (U_SUCCESS(status)) {
+        만약 (U_SUCCESS(status)) {
 #endif
-            for (int32_t j=0; j<strings_->size(); ++j) {
+            위해 (int32_t j=0; j<strings_->size(); ++j) {
                 const UnicodeString* pStr = static_cast<const UnicodeString*>(strings_->elementAt(j));
                 (str = *pStr).toLower(root);
                 foldSet.add(str);
-#if !UCONFIG_NO_BREAK_ITERATION
+#만약 !UCONFIG_NO_BREAK_ITERATION
                 (str = *pStr).toTitle(bi, root);
                 foldSet.add(str);
 #endif
@@ -348,7 +348,7 @@ void UnicodeSet::closeOverAddCaseMappings() {
                 (str = *pStr).foldCase();
                 foldSet.add(str);
             }
-#if !UCONFIG_NO_BREAK_ITERATION
+#만약 !UCONFIG_NO_BREAK_ITERATION
         }
         delete bi;
 #endif

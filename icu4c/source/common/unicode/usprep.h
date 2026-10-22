@@ -26,7 +26,7 @@
 
 #include "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#만약 U_SHOW_CPLUSPLUS_API
 #include "unicode/localpointer.h"
 #endif   // U_SHOW_CPLUSPLUS_API
 
@@ -62,7 +62,7 @@
  * </ol>
  * @author Ram Viswanadha
  */
-#if !UCONFIG_NO_IDNA
+#만약 !UCONFIG_NO_IDNA
 
 #include "unicode/parseerr.h"
 
@@ -212,7 +212,7 @@ usprep_openByType(UStringPrepProfileType type,
 U_CAPI void U_EXPORT2
 usprep_close(UStringPrepProfile* profile);
 
-#if U_SHOW_CPLUSPLUS_API
+#만약 U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 

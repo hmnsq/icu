@@ -23,7 +23,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#만약 !UCONFIG_NO_CONVERSION
 
 #include <memory>
 
@@ -75,18 +75,18 @@ ucnv_open (const char *name,
 {
     UConverter *r;
 
-    if (err == nullptr || U_FAILURE (*err)) {
-        return nullptr;
+    만약 (err == nullptr || U_FAILURE (*err)) {
+        반환 nullptr;
     }
 
     r =  ucnv_createConverter(nullptr, name, err);
-    return r;
+    반환 r;
 }
 
 U_CAPI UConverter* U_EXPORT2 
 ucnv_openPackage   (const char *packageName, const char *converterName, UErrorCode * err)
 {
-    return ucnv_createConverterFromPackage(packageName, converterName,  err);
+    반환 ucnv_createConverterFromPackage(packageName, converterName,  err);
 }
 
 /*Extracts the char16_t* to a char* and calls through createConverter */
@@ -96,16 +96,16 @@ ucnv_openU (const char16_t * name,
 {
     char asciiName[UCNV_MAX_CONVERTER_NAME_LENGTH];
 
-    if (err == nullptr || U_FAILURE(*err))
-        return nullptr;
-    if (name == nullptr)
-        return ucnv_open (nullptr, err);
-    if (u_strlen(name) >= UCNV_MAX_CONVERTER_NAME_LENGTH)
+    만약 (err == nullptr || U_FAILURE(*err))
+        반환 nullptr;
+    만약 (name == nullptr)
+        반환 ucnv_open (nullptr, err);
+    만약 (u_strlen(name) >= UCNV_MAX_CONVERTER_NAME_LENGTH)
     {
         *err = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        반환 nullptr;
     }
-    return ucnv_open(u_austrcpy(asciiName, name), err);
+    반환 ucnv_open(u_austrcpy(asciiName, name), err);
 }
 
 /* Copy the string that is represented by the UConverterPlatform enum
@@ -120,14 +120,14 @@ ucnv_copyPlatformString(char *platformString, UConverterPlatform pltfrm)
     {
     case UCNV_IBM:
         uprv_strcpy(platformString, "ibm-");
-        return 4;
+        반환 4;
     case UCNV_UNKNOWN:
         break;
     }
 
     /* default to empty string */
     *platformString = 0;
-    return 0;
+    반환 0;
 }
 
 /*Assumes a $platform-#codepage.$CONVERTER_FILE_EXTENSION scheme and calls
@@ -140,14 +140,14 @@ ucnv_openCCSID (int32_t codepage,
     char myName[UCNV_MAX_CONVERTER_NAME_LENGTH];
     int32_t myNameLen;
 
-    if (err == nullptr || U_FAILURE (*err))
-        return nullptr;
+    만약 (err == nullptr || U_FAILURE (*err))
+        반환 nullptr;
 
     /* ucnv_copyPlatformString could return "ibm-" or "cp" */
     myNameLen = ucnv_copyPlatformString(myName, platform);
     T_CString_integerToString(myName + myNameLen, codepage, 10);
 
-    return ucnv_createConverter(nullptr, myName, err);
+    반환 ucnv_createConverter(nullptr, myName, err);
 }
 
 /* Creating a temporary stack-based object that can be used in one thread, 
@@ -187,82 +187,82 @@ ucnv_safeClone(const UConverter* cnv,
 
     UTRACE_ENTRY_OC(UTRACE_UCNV_CLONE);
 
-    if (status == nullptr || U_FAILURE(*status)){
+    만약 (status == nullptr || U_FAILURE(*status)){
         UTRACE_EXIT_STATUS(status? *status: U_ILLEGAL_ARGUMENT_ERROR);
-        return nullptr;
+        반환 nullptr;
     }
 
-    if (cnv == nullptr) {
+    만약 (cnv == nullptr) {
         *status = U_ILLEGAL_ARGUMENT_ERROR;
         UTRACE_EXIT_STATUS(*status);
-        return nullptr;
+        반환 nullptr;
     }
 
     UTRACE_DATA3(UTRACE_OPEN_CLOSE, "clone converter %s at %p into stackBuffer %p",
                                     ucnv_getName(cnv, status), cnv, stackBuffer);
 
-    if (cnv->sharedData->impl->safeClone != nullptr) {
+    만약 (cnv->sharedData->impl->safeClone != nullptr) {
         /* call the custom safeClone function for sizing */
         bufferSizeNeeded = 0;
         cnv->sharedData->impl->safeClone(cnv, nullptr, &bufferSizeNeeded, status);
-        if (U_FAILURE(*status)) {
+        만약 (U_FAILURE(*status)) {
             UTRACE_EXIT_STATUS(*status);
-            return nullptr;
+            반환 nullptr;
         }
     }
-    else
+    아니면
     {
         /* inherent sizing */
         bufferSizeNeeded = sizeof(UConverter);
     }
 
-    if (pBufferSize == nullptr) {
+    만약 (pBufferSize == nullptr) {
         stackBufferSize = 1;
         pBufferSize = &stackBufferSize;
-    } else {
+    } 아니면 {
         stackBufferSize = *pBufferSize;
-        if (stackBufferSize <= 0){ /* 'preflighting' request - set needed size into *pBufferSize */
+        만약 (stackBufferSize <= 0){ /* 'preflighting' request - set needed size into *pBufferSize */
             *pBufferSize = bufferSizeNeeded;
             UTRACE_EXIT_VALUE(bufferSizeNeeded);
-            return nullptr;
+            반환 nullptr;
         }
     }
 
     /* Adjust (if necessary) the stackBuffer pointer to be aligned correctly for a UConverter.
      * TODO(Jira ICU-20736) Redo this using std::align() once g++4.9 compatibility is no longer needed.
      */
-    if (stackBuffer) {
+    만약 (stackBuffer) {
         uintptr_t p = reinterpret_cast<uintptr_t>(stackBuffer);
         uintptr_t aligned_p = (p + alignof(UConverter) - 1) & ~(alignof(UConverter) - 1);
         ptrdiff_t pointerAdjustment = aligned_p - p;
-        if (bufferSizeNeeded + pointerAdjustment <= stackBufferSize) {
+        만약 (bufferSizeNeeded + pointerAdjustment <= stackBufferSize) {
             stackBuffer = reinterpret_cast<void *>(aligned_p);
             stackBufferSize -= static_cast<int32_t>(pointerAdjustment);
-        } else {
+        } 아니면 {
             /* prevent using the stack buffer but keep the size > 0 so that we do not just preflight */
             stackBufferSize = 1;
         }
     }
 
     /* Now, see if we must allocate any memory */
-    if (stackBufferSize < bufferSizeNeeded || stackBuffer == nullptr)
+    만약 (stackBufferSize < bufferSizeNeeded || stackBuffer == nullptr)
     {
         /* allocate one here...*/
         localConverter = allocatedConverter = (UConverter *) uprv_malloc (bufferSizeNeeded);
 
-        if(localConverter == nullptr) {
+        만약(localConverter == nullptr) {
             *status = U_MEMORY_ALLOCATION_ERROR;
             UTRACE_EXIT_STATUS(*status);
-            return nullptr;
+            반환 nullptr;
         }
         // If pBufferSize was nullptr as the input, pBufferSize is set to &stackBufferSize in this function.
-        if (pBufferSize != &stackBufferSize) {
+        만약 (pBufferSize != &stackBufferSize) {
             *status = U_SAFECLONE_ALLOCATED_WARNING;
         }
 
         /* record the fact that memory was allocated */
         *pBufferSize = bufferSizeNeeded;
-    } else {
+    } 아니면 {
         /* just use the stack buffer */
         localConverter = (UConverter*) stackBuffer;
         allocatedConverter = nullptr;
@@ -275,39 +275,39 @@ ucnv_safeClone(const UConverter* cnv,
     localConverter->isCopyLocal = localConverter->isExtraLocal = false;
 
     /* copy the substitution string */
-    if (cnv->subChars == (uint8_t *)cnv->subUChars) {
+    만약 (cnv->subChars == (uint8_t *)cnv->subUChars) {
         localConverter->subChars = (uint8_t *)localConverter->subUChars;
-    } else {
+    } 아니면 {
         localConverter->subChars = (uint8_t *)uprv_malloc(UCNV_ERROR_BUFFER_LENGTH * U_SIZEOF_UCHAR);
-        if (localConverter->subChars == nullptr) {
+        만약 (localConverter->subChars == nullptr) {
             uprv_free(allocatedConverter);
             UTRACE_EXIT_STATUS(*status);
-            return nullptr;
+            반환 nullptr;
         }
         uprv_memcpy(localConverter->subChars, cnv->subChars, UCNV_ERROR_BUFFER_LENGTH * U_SIZEOF_UCHAR);
     }
 
     /* now either call the safeclone fcn or not */
-    if (cnv->sharedData->impl->safeClone != nullptr) {
+    만약 (cnv->sharedData->impl->safeClone != nullptr) {
         /* call the custom safeClone function */
         localConverter = cnv->sharedData->impl->safeClone(cnv, localConverter, pBufferSize, status);
     }
 
-    if(localConverter==nullptr || U_FAILURE(*status)) {
-        if (allocatedConverter != nullptr && allocatedConverter->subChars != (uint8_t *)allocatedConverter->subUChars) {
+    만약(localConverter==nullptr || U_FAILURE(*status)) {
+        만약 (allocatedConverter != nullptr && allocatedConverter->subChars != (uint8_t *)allocatedConverter->subUChars) {
             uprv_free(allocatedConverter->subChars);
         }
         uprv_free(allocatedConverter);
         UTRACE_EXIT_STATUS(*status);
-        return nullptr;
+        반환 nullptr;
     }
 
     /* increment refcount of shared data if needed */
-    if (cnv->sharedData->isReferenceCounted) {
+    만약 (cnv->sharedData->isReferenceCounted) {
         ucnv_incrementRefCount(cnv->sharedData);
     }
 
-    if(localConverter == (UConverter*)stackBuffer) {
+    만약(localConverter == (UConverter*)stackBuffer) {
         /* we're using user provided data - set to not destroy */
         localConverter->isCopyLocal = true;
     }
@@ -320,13 +320,13 @@ ucnv_safeClone(const UConverter* cnv,
     cnv->fromUCharErrorBehaviour(cnv->fromUContext, &fromUArgs, nullptr, 0, 0, UCNV_CLONE, &cbErr);
 
     UTRACE_EXIT_PTR_STATUS(localConverter, *status);
-    return localConverter;
+    반환 localConverter;
 }
 
 U_CAPI UConverter* U_EXPORT2
 ucnv_clone(const UConverter* cnv, UErrorCode *status)
 {
-    return ucnv_safeClone(cnv, nullptr, nullptr, status);
+    반환 ucnv_safeClone(cnv, nullptr, nullptr, status);
 }
 
 /*Decreases the reference counter in the shared immutable section of the object
@@ -339,10 +339,10 @@ ucnv_close (UConverter * converter)
 
     UTRACE_ENTRY_OC(UTRACE_UCNV_CLOSE);
 
-    if (converter == nullptr)
+    만약 (converter == nullptr)
     {
         UTRACE_EXIT();
-        return;
+        반환;
     }
 
     UTRACE_DATA3(UTRACE_OPEN_CLOSE, "close converter %s at %p, isCopyLocal=%b",
@@ -352,7 +352,7 @@ ucnv_close (UConverter * converter)
     This performance check will only work when the callbacks are set within a shared library
     or from user code that statically links this code. */
     /* first, notify the callback functions that the converter is closed */
-    if (converter->fromCharErrorBehaviour != UCNV_TO_U_DEFAULT_CALLBACK) {
+    만약 (converter->fromCharErrorBehaviour != UCNV_TO_U_DEFAULT_CALLBACK) {
         UConverterToUnicodeArgs toUArgs = {
             sizeof(UConverterToUnicodeArgs),
                 true,
@@ -368,7 +368,7 @@ ucnv_close (UConverter * converter)
         errorCode = U_ZERO_ERROR;
         converter->fromCharErrorBehaviour(converter->toUContext, &toUArgs, nullptr, 0, UCNV_CLOSE, &errorCode);
     }
-    if (converter->fromUCharErrorBehaviour != UCNV_FROM_U_DEFAULT_CALLBACK) {
+    만약 (converter->fromUCharErrorBehaviour != UCNV_FROM_U_DEFAULT_CALLBACK) {
         UConverterFromUnicodeArgs fromUArgs = {
             sizeof(UConverterFromUnicodeArgs),
                 true,
@@ -384,19 +384,19 @@ ucnv_close (UConverter * converter)
         converter->fromUCharErrorBehaviour(converter->fromUContext, &fromUArgs, nullptr, 0, 0, UCNV_CLOSE, &errorCode);
     }
 
-    if (converter->sharedData->impl->close != nullptr) {
+    만약 (converter->sharedData->impl->close != nullptr) {
         converter->sharedData->impl->close(converter);
     }
 
-    if (converter->subChars != (uint8_t *)converter->subUChars) {
+    만약 (converter->subChars != (uint8_t *)converter->subUChars) {
         uprv_free(converter->subChars);
     }
 
-    if (converter->sharedData->isReferenceCounted) {
+    만약 (converter->sharedData->isReferenceCounted) {
         ucnv_unloadSharedDataIfReady(converter->sharedData);
     }
 
-    if(!converter->isCopyLocal){
+    만약(!converter->isCopyLocal){
         uprv_free(converter);
     }
 
@@ -408,21 +408,21 @@ ucnv_close (UConverter * converter)
 U_CAPI const char*   U_EXPORT2
 ucnv_getAvailableName (int32_t n)
 {
-    if (0 <= n && n <= 0xffff) {
+    만약 (0 <= n && n <= 0xffff) {
         UErrorCode err = U_ZERO_ERROR;
         const char *name = ucnv_bld_getAvailableConverter((uint16_t)n, &err);
-        if (U_SUCCESS(err)) {
-            return name;
+        만약 (U_SUCCESS(err)) {
+            반환 name;
         }
     }
-    return nullptr;
+    반환 nullptr;
 }
 
 U_CAPI int32_t   U_EXPORT2
 ucnv_countAvailable ()
 {
     UErrorCode err = U_ZERO_ERROR;
-    return ucnv_bld_countAvailableConverters(&err);
+    반환 ucnv_bld_countAvailableConverters(&err);
 }
 
 U_CAPI void    U_EXPORT2
@@ -431,19 +431,19 @@ ucnv_getSubstChars (const UConverter * converter,
                     int8_t * len,
                     UErrorCode * err)
 {
-    if (U_FAILURE (*err))
-        return;
+    만약 (U_FAILURE (*err))
+        반환;
 
-    if (converter->subCharLen <= 0) {
+    만약 (converter->subCharLen <= 0) {
         /* Unicode string or empty string from ucnv_setSubstString(). */
         *len = 0;
-        return;
+        반환;
     }
 
-    if (*len < converter->subCharLen) /*not enough space in subChars */
+    만약 (*len < converter->subCharLen) /*not enough space in subChars */
     {
         *err = U_INDEX_OUTOFBOUNDS_ERROR;
-        return;
+        반환;
     }
 
     uprv_memcpy (mySubChar, converter->subChars, converter->subCharLen);   /*fills in the subchars */
@@ -456,15 +456,15 @@ ucnv_setSubstChars (UConverter * converter,
                     int8_t len,
                     UErrorCode * err)
 {
-    if (U_FAILURE (*err))
-        return;
+    만약 (U_FAILURE (*err))
+        반환;
     
     /*Makes sure that the subChar is within the codepages char length boundaries */
-    if ((len > converter->sharedData->staticData->maxBytesPerChar)
+    만약 ((len > converter->sharedData->staticData->maxBytesPerChar)
      || (len < converter->sharedData->staticData->minBytesPerChar))
     {
         *err = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        반환;
     }
     
     uprv_memcpy (converter->subChars, mySubChar, len); /*copies the subchars */
@@ -496,36 +496,36 @@ ucnv_setSubstString(UConverter *cnv,
     ucnv_setFromUCallBack(clone, UCNV_FROM_U_CALLBACK_STOP, nullptr, nullptr, nullptr, err);
     length8 = ucnv_fromUChars(clone, chars, (int32_t)sizeof(chars), s, length, err);
     ucnv_close(clone);
-    if (U_FAILURE(*err)) {
-        return;
+    만약 (U_FAILURE(*err)) {
+        반환;
     }
 
-    if (cnv->sharedData->impl->writeSub == nullptr
-#if !UCONFIG_NO_LEGACY_CONVERSION
+    만약 (cnv->sharedData->impl->writeSub == nullptr
+#만약 !UCONFIG_NO_LEGACY_CONVERSION
         || (cnv->sharedData->staticData->conversionType == UCNV_MBCS &&
          ucnv_MBCSGetType(cnv) != UCNV_EBCDIC_STATEFUL)
 #endif
     ) {
         /* The converter is not stateful. Store the charset bytes as a fixed string. */
         subChars = (uint8_t *)chars;
-    } else {
+    } 아니면 {
         /*
          * The converter has a non-default writeSub() function, indicating
          * that it is stateful.
          * Store the Unicode string for on-the-fly conversion for correct
          * state handling.
          */
-        if (length > UCNV_ERROR_BUFFER_LENGTH) {
+        만약 (length > UCNV_ERROR_BUFFER_LENGTH) {
             /*
              * Should not occur. The converter should output at least one byte
              * per char16_t, which means that ucnv_fromUChars() should catch all
              * overflows.
              */
             *err = U_BUFFER_OVERFLOW_ERROR;
-            return;
+            반환;
         }
         subChars = (uint8_t *)s;
-        if (length < 0) {
+        만약 (length < 0) {
             length = u_strlen(s);
         }
         length8 = length * U_SIZEOF_UCHAR;
@@ -535,28 +535,28 @@ ucnv_setSubstString(UConverter *cnv,
      * For storing the substitution string, select either the small buffer inside
      * UConverter or allocate a subChars buffer.
      */
-    if (length8 > UCNV_MAX_SUBCHAR_LEN) {
+    만약 (length8 > UCNV_MAX_SUBCHAR_LEN) {
         /* Use a separate buffer for the string. Outside UConverter to not make it too large. */
-        if (cnv->subChars == (uint8_t *)cnv->subUChars) {
+        만약 (cnv->subChars == (uint8_t *)cnv->subUChars) {
             /* Allocate a new buffer for the string. */
             cnv->subChars = (uint8_t *)uprv_malloc(UCNV_ERROR_BUFFER_LENGTH * U_SIZEOF_UCHAR);
-            if (cnv->subChars == nullptr) {
+            만약 (cnv->subChars == nullptr) {
                 cnv->subChars = (uint8_t *)cnv->subUChars;
                 *err = U_MEMORY_ALLOCATION_ERROR;
-                return;
+                반환;
             }
             uprv_memset(cnv->subChars, 0, UCNV_ERROR_BUFFER_LENGTH * U_SIZEOF_UCHAR);
         }
     }
 
     /* Copy the substitution string into the UConverter or its subChars buffer. */
-    if (length8 == 0) {
+    만약 (length8 == 0) {
         cnv->subCharLen = 0;
-    } else {
+    } 아니면 {
         uprv_memcpy(cnv->subChars, subChars, length8);
-        if (subChars == (uint8_t *)chars) {
+        만약 (subChars == (uint8_t *)chars) {
             cnv->subCharLen = (int8_t)length8;
-        } else /* subChars == s */ {
+        } 아니면 /* subChars == s */ {
             cnv->subCharLen = (int8_t)-length;
         }
     }
@@ -570,15 +570,15 @@ ucnv_setSubstString(UConverter *cnv,
  */
 static void _reset(UConverter *converter, UConverterResetChoice choice,
                    UBool callCallback) {
-    if(converter == nullptr) {
-        return;
+    만약(converter == nullptr) {
+        반환;
     }
 
-    if(callCallback) {
+    만약(callCallback) {
         /* first, notify the callback functions that the converter is reset */
         UErrorCode errorCode;
 
-        if(choice<=UCNV_RESET_TO_UNICODE && converter->fromCharErrorBehaviour != UCNV_TO_U_DEFAULT_CALLBACK) {
+        만약(choice<=UCNV_RESET_TO_UNICODE && converter->fromCharErrorBehaviour != UCNV_TO_U_DEFAULT_CALLBACK) {
             UConverterToUnicodeArgs toUArgs = {
                 sizeof(UConverterToUnicodeArgs),
                 true,
@@ -593,7 +593,7 @@ static void _reset(UConverter *converter, UConverterResetChoice choice,
             errorCode = U_ZERO_ERROR;
             converter->fromCharErrorBehaviour(converter->toUContext, &toUArgs, nullptr, 0, UCNV_RESET, &errorCode);
         }
-        if(choice!=UCNV_RESET_TO_UNICODE && converter->fromUCharErrorBehaviour != UCNV_FROM_U_DEFAULT_CALLBACK) {
+        만약(choice!=UCNV_RESET_TO_UNICODE && converter->fromUCharErrorBehaviour != UCNV_FROM_U_DEFAULT_CALLBACK) {
             UConverterFromUnicodeArgs fromUArgs = {
                 sizeof(UConverterFromUnicodeArgs),
                 true,
@@ -611,14 +611,14 @@ static void _reset(UConverter *converter, UConverterResetChoice choice,
     }
 
     /* now reset the converter itself */
-    if(choice<=UCNV_RESET_TO_UNICODE) {
+    만약(choice<=UCNV_RESET_TO_UNICODE) {
         converter->toUnicodeStatus = converter->sharedData->toUnicodeStatus;
         converter->mode = 0;
         converter->toULength = 0;
         converter->invalidCharLength = converter->UCharErrorBufferLength = 0;
         converter->preToULength = 0;
     }
-    if(choice!=UCNV_RESET_TO_UNICODE) {
+    만약(choice!=UCNV_RESET_TO_UNICODE) {
         converter->fromUnicodeStatus = 0;
         converter->fromUChar32 = 0;
         converter->invalidUCharLength = converter->charErrorBufferLength = 0;
@@ -626,7 +626,7 @@ static void _reset(UConverter *converter, UConverterResetChoice choice,
         converter->preFromULength = 0;
     }
 
-    if (converter->sharedData->impl->reset != nullptr) {
+    만약 (converter->sharedData->impl->reset != nullptr) {
         /* call the custom reset function */
         converter->sharedData->impl->reset(converter, choice);
     }
@@ -653,27 +653,27 @@ ucnv_resetFromUnicode(UConverter *converter)
 U_CAPI int8_t   U_EXPORT2
 ucnv_getMaxCharSize (const UConverter * converter)
 {
-    return converter->maxBytesPerUChar;
+    반환 converter->maxBytesPerUChar;
 }
 
 
 U_CAPI int8_t   U_EXPORT2
 ucnv_getMinCharSize (const UConverter * converter)
 {
-    return converter->sharedData->staticData->minBytesPerChar;
+    반환 converter->sharedData->staticData->minBytesPerChar;
 }
 
 U_CAPI const char* U_EXPORT2
 ucnv_getName(const UConverter* converter U_LIFETIME_BOUND, UErrorCode* err)
 {
-    if (U_FAILURE (*err))
-        return nullptr;
-    if(converter->sharedData->impl->getName){
+    만약 (U_FAILURE (*err))
+        반환 nullptr;
+    만약(converter->sharedData->impl->getName){
         const char* temp= converter->sharedData->impl->getName(converter);
-        if(temp)
-            return temp;
+        만약(temp)
+            반환 temp;
     }
-    return converter->sharedData->staticData->name;
+    반환 converter->sharedData->staticData->name;
 }
 
 U_CAPI int32_t U_EXPORT2
@@ -681,22 +681,22 @@ ucnv_getCCSID(const UConverter * converter,
               UErrorCode * err)
 {
     int32_t ccsid;
-    if (U_FAILURE (*err))
-        return -1;
+    만약 (U_FAILURE (*err))
+        반환 -1;
 
     ccsid = converter->sharedData->staticData->codepage;
-    if (ccsid == 0) {
+    만약 (ccsid == 0) {
         /* Rare case. This is for cases like gb18030,
         which doesn't have an IBM canonical name, but does have an IBM alias. */
         const char *standardName = ucnv_getStandardName(ucnv_getName(converter, err), "IBM", err);
-        if (U_SUCCESS(*err) && standardName) {
+        만약 (U_SUCCESS(*err) && standardName) {
             const char *ccsidStr = uprv_strchr(standardName, '-');
-            if (ccsidStr) {
+            만약 (ccsidStr) {
                 ccsid = (int32_t)atol(ccsidStr+1);  /* +1 to skip '-' */
             }
         }
     }
-    return ccsid;
+    반환 ccsid;
 }
 
 
@@ -704,10 +704,10 @@ U_CAPI UConverterPlatform   U_EXPORT2
 ucnv_getPlatform (const UConverter * converter,
                                       UErrorCode * err)
 {
-    if (U_FAILURE (*err))
-        return UCNV_UNKNOWN;
+    만약 (U_FAILURE (*err))
+        반환 UCNV_UNKNOWN;
 
-    return (UConverterPlatform)converter->sharedData->staticData->platform;
+    반환 (UConverterPlatform)converter->sharedData->staticData->platform;
 }
 
 U_CAPI void U_EXPORT2
@@ -736,11 +736,11 @@ ucnv_setToUCallBack (UConverter * converter,
                             const void** oldContext,
                             UErrorCode * err)
 {
-    if (U_FAILURE (*err))
-        return;
-    if (oldAction) *oldAction = converter->fromCharErrorBehaviour;
+    만약 (U_FAILURE (*err))
+        반환;
+    만약 (oldAction) *oldAction = converter->fromCharErrorBehaviour;
     converter->fromCharErrorBehaviour = newAction;
-    if (oldContext) *oldContext = converter->toUContext;
+    만약 (oldContext) *oldContext = converter->toUContext;
     converter->toUContext = newContext;
 }
 
@@ -752,11 +752,11 @@ ucnv_setFromUCallBack (UConverter * converter,
                             const void** oldContext,
                             UErrorCode * err)
 {
-    if (U_FAILURE (*err))
-        return;
-    if (oldAction) *oldAction = converter->fromUCharErrorBehaviour;
+    만약 (U_FAILURE (*err))
+        반환;
+    만약 (oldAction) *oldAction = converter->fromUCharErrorBehaviour;
     converter->fromUCharErrorBehaviour = newAction;
-    if (oldContext) *oldContext = converter->fromUContext;
+    만약 (oldContext) *oldContext = converter->fromUContext;
     converter->fromUContext = newContext;
 }
 
@@ -766,14 +766,14 @@ _updateOffsets(int32_t *offsets, int32_t length,
     int32_t *limit;
     int32_t delta, offset;
 
-    if(sourceIndex>=0) {
+    만약(sourceIndex>=0) {
         /*
          * adjust each offset by adding the previous sourceIndex
          * minus the length of the input sequence that caused an
          * error, if any
          */
         delta=sourceIndex-errorInputLength;
-    } else {
+    } 아니면 {
         /*
          * set each offset to -1 because this conversion function
          * does not handle offsets
@@ -782,24 +782,24 @@ _updateOffsets(int32_t *offsets, int32_t length,
     }
 
     limit=offsets+length;
-    if(delta==0) {
+    만약(delta==0) {
         /* most common case, nothing to do */
-    } else if(delta>0) {
+    } 아니면 만약(delta>0) {
         /* add the delta to each offset (but not if the offset is <0) */
-        while(offsets<limit) {
+        동안(offsets<limit) {
             offset=*offsets;
-            if(offset>=0) {
+            만약(offset>=0) {
                 *offsets=offset+delta;
             }
             ++offsets;
         }
-    } else /* delta<0 */ {
+    } 아니면 /* delta<0 */ {
         /*
          * set each offset to -1 because this conversion function
          * does not handle offsets
          * or the error input sequence started in a previous buffer
          */
-        while(offsets<limit) {
+        동안(offsets<limit) {
             *offsets++=-1;
         }
     }
@@ -853,11 +853,11 @@ _fromUnicodeWithCallback(UConverterFromUnicodeArgs *pArgs, UErrorCode *err) {
 
     /* get the converter implementation function */
     sourceIndex=0;
-    if(offsets==nullptr) {
+    만약(offsets==nullptr) {
         fromUnicode=cnv->sharedData->impl->fromUnicode;
-    } else {
+    } 아니면 {
         fromUnicode=cnv->sharedData->impl->fromUnicodeWithOffsets;
-        if(fromUnicode==nullptr) {
+        만약(fromUnicode==nullptr) {
             /* there is no WithOffsets implementation */
             fromUnicode=cnv->sharedData->impl->fromUnicode;
             /* we will write -1 for each offset */
@@ -865,7 +865,7 @@ _fromUnicodeWithCallback(UConverterFromUnicodeArgs *pArgs, UErrorCode *err) {
         }
     }
 
-    if(cnv->preFromULength>=0) {
+    만약(cnv->preFromULength>=0) {
         /* normal mode */
         realSource=nullptr;
 
@@ -873,15 +873,15 @@ _fromUnicodeWithCallback(UConverterFromUnicodeArgs *pArgs, UErrorCode *err) {
         realSourceLimit=nullptr;
         realFlush=false;
         realSourceIndex=0;
-    } else {
+    } 아니면 {
         /*
          * Previous m:n conversion stored source units from a partial match
          * and failed to consume all of them.
          * We need to "replay" them from a temporary buffer and convert them first.
          */
-        if (!pArgs->source) {
+        만약 (!pArgs->source) {
             *err=U_ILLEGAL_ARGUMENT_ERROR;
-            return;
+            반환;
         }
         realSource=pArgs->source;
         realSourceLimit=pArgs->sourceLimit;
@@ -909,8 +909,8 @@ _fromUnicodeWithCallback(UConverterFromUnicodeArgs *pArgs, UErrorCode *err) {
      *   }
      * }
      */
-    for(;;) {
-        if(U_SUCCESS(*err)) {
+    위해(;;) {
+        만약(U_SUCCESS(*err)) {
             /* convert */
             fromUnicode(pArgs, err);
 
@@ -925,7 +925,7 @@ _fromUnicodeWithCallback(UConverterFromUnicodeArgs *pArgs, UErrorCode *err) {
                 static_cast<UBool>(U_SUCCESS(*err) &&
                         pArgs->flush && pArgs->source==pArgs->sourceLimit &&
                         cnv->fromUChar32==0);
-        } else {
+        } 아니면 {
             /* handle error from ucnv_convertEx() */
             converterSawEndOfInput=false;
         }
@@ -944,11 +944,11 @@ _fromUnicodeWithCallback(UConverterFromUnicodeArgs *pArgs, UErrorCode *err) {
          * 2. after the callback
          * 3. after the callback again if there was truncated input
          */
-        for(;;) {
+        위해(;;) {
             /* update offsets if we write any */
-            if(offsets!=nullptr) {
+            만약(offsets!=nullptr) {
                 int32_t length = static_cast<int32_t>(pArgs->target - t);
-                if(length>0) {
+                만약(length>0) {
                     _updateOffsets(offsets, length, sourceIndex, errorInputLength);
 
                     /*
@@ -961,17 +961,17 @@ _fromUnicodeWithCallback(UConverterFromUnicodeArgs *pArgs, UErrorCode *err) {
                     pArgs->offsets=offsets+=length;
                 }
 
-                if(sourceIndex>=0) {
+                만약(sourceIndex>=0) {
                     sourceIndex += static_cast<int32_t>(pArgs->source - s);
                 }
             }
 
-            if(cnv->preFromULength<0) {
+            만약(cnv->preFromULength<0) {
                 /*
                  * switch the source to new replay units (cannot occur while replaying)
                  * after offset handling and before end-of-input and callback handling
                  */
-                if(realSource==nullptr) {
+                만약(realSource==nullptr) {
                     realSource=pArgs->source;
                     realSourceLimit=pArgs->sourceLimit;
                     realFlush=pArgs->flush;
@@ -981,12 +981,12 @@ _fromUnicodeWithCallback(UConverterFromUnicodeArgs *pArgs, UErrorCode *err) {
                     pArgs->source=replay;
                     pArgs->sourceLimit=replay-cnv->preFromULength;
                     pArgs->flush=false;
-                    if((sourceIndex+=cnv->preFromULength)<0) {
+                    만약((sourceIndex+=cnv->preFromULength)<0) {
                         sourceIndex=-1;
                     }
 
                     cnv->preFromULength=0;
-                } else {
+                } 아니면 {
                     /* see implementation note before _fromUnicodeWithCallback() */
                     U_ASSERT(realSource==nullptr);
                     *err=U_INTERNAL_PROGRAM_ERROR;
@@ -997,14 +997,14 @@ _fromUnicodeWithCallback(UConverterFromUnicodeArgs *pArgs, UErrorCode *err) {
             s=pArgs->source;
             t=pArgs->target;
 
-            if(U_SUCCESS(*err)) {
-                if(s<pArgs->sourceLimit) {
+            만약(U_SUCCESS(*err)) {
+                만약(s<pArgs->sourceLimit) {
                     /*
                      * continue with the conversion loop while there is still input left
                      * (continue converting by breaking out of only the inner loop)
                      */
                     break;
-                } else if(realSource!=nullptr) {
+                } 아니면 만약(realSource!=nullptr) {
                     /* switch back from replaying to the real source and continue */
                     pArgs->source=realSource;
                     pArgs->sourceLimit=realSourceLimit;
@@ -1013,7 +1013,7 @@ _fromUnicodeWithCallback(UConverterFromUnicodeArgs *pArgs, UErrorCode *err) {
 
                     realSource=nullptr;
                     break;
-                } else if(pArgs->flush && cnv->fromUChar32!=0) {
+                } 아니면 만약(pArgs->flush && cnv->fromUChar32!=0) {
                     /*
                      * the entire input stream is consumed
                      * and there is a partial, truncated input sequence left
@@ -1022,9 +1022,9 @@ _fromUnicodeWithCallback(UConverterFromUnicodeArgs *pArgs, UErrorCode *err) {
                     /* inject an error and continue with callback handling */
                     *err=U_TRUNCATED_CHAR_FOUND;
                     calledCallback=false; /* new error condition */
-                } else {
+                } 아니면 {
                     /* input consumed */
-                    if(pArgs->flush) {
+                    만약(pArgs->flush) {
                         /*
                          * return to the conversion loop once more if the flush
                          * flag is set and the conversion function has not
@@ -1032,7 +1032,7 @@ _fromUnicodeWithCallback(UConverterFromUnicodeArgs *pArgs, UErrorCode *err) {
                          *
                          * (continue converting by breaking out of only the inner loop)
                          */
-                        if(!converterSawEndOfInput) {
+                        만약(!converterSawEndOfInput) {
                             break;
                         }
 
@@ -1041,7 +1041,7 @@ _fromUnicodeWithCallback(UConverterFromUnicodeArgs *pArgs, UErrorCode *err) {
                     }
 
                     /* done successfully */
-                    return;
+                    반환;
                 }
             }
 
@@ -1049,7 +1049,7 @@ _fromUnicodeWithCallback(UConverterFromUnicodeArgs *pArgs, UErrorCode *err) {
             {
                 UErrorCode e;
 
-                if( calledCallback ||
+                만약( calledCallback ||
                     (e=*err)==U_BUFFER_OVERFLOW_ERROR ||
                     (e!=U_INVALID_CHAR_FOUND &&
                      e!=U_ILLEGAL_CHAR_FOUND &&
@@ -1067,13 +1067,13 @@ _fromUnicodeWithCallback(UConverterFromUnicodeArgs *pArgs, UErrorCode *err) {
                      * copied back into the UConverter
                      * and the real arguments must be restored
                      */
-                    if(realSource!=nullptr) {
+                    만약(realSource!=nullptr) {
                         int32_t length;
 
                         U_ASSERT(cnv->preFromULength==0);
 
                         length = static_cast<int32_t>(pArgs->sourceLimit - pArgs->source);
-                        if(length>0) {
+                        만약(length>0) {
                             u_memcpy(cnv->preFromU, pArgs->source, length);
                             cnv->preFromULength = static_cast<int8_t>(-length);
                         }
@@ -1083,7 +1083,7 @@ _fromUnicodeWithCallback(UConverterFromUnicodeArgs *pArgs, UErrorCode *err) {
                         pArgs->flush=realFlush;
                     }
 
-                    return;
+                    반환;
                 }
             }
 
@@ -1134,36 +1134,36 @@ ucnv_outputOverflowFromUnicode(UConverter *cnv,
     int32_t i, length;
 
     t=*target;
-    if(pOffsets!=nullptr) {
+    만약(pOffsets!=nullptr) {
         offsets=*pOffsets;
-    } else {
+    } 아니면 {
         offsets=nullptr;
     }
 
     overflow = reinterpret_cast<char*>(cnv->charErrorBuffer);
     length=cnv->charErrorBufferLength;
     i=0;
-    while(i<length) {
-        if(t==targetLimit) {
+    동안(i<length) {
+        만약(t==targetLimit) {
             /* the overflow buffer contains too much, keep the rest */
             int32_t j=0;
 
             do {
                 overflow[j++]=overflow[i++];
-            } while(i<length);
+            } 동안(i<length);
 
             cnv->charErrorBufferLength = static_cast<int8_t>(j);
             *target=t;
-            if(offsets!=nullptr) {
+            만약(offsets!=nullptr) {
                 *pOffsets=offsets;
             }
             *err=U_BUFFER_OVERFLOW_ERROR;
-            return true;
+            반환 true;
         }
 
         /* copy the overflow contents to the target */
         *t++=overflow[i++];
-        if(offsets!=nullptr) {
+        만약(offsets!=nullptr) {
             *offsets++=-1; /* no source index available for old output */
         }
     }
@@ -1171,10 +1171,10 @@ ucnv_outputOverflowFromUnicode(UConverter *cnv,
     /* the overflow buffer is completely copied to the target */
     cnv->charErrorBufferLength=0;
     *target=t;
-    if(offsets!=nullptr) {
+    만약(offsets!=nullptr) {
         *pOffsets=offsets;
     }
-    return false;
+    반환 false;
 }
 
 U_CAPI void U_EXPORT2
@@ -1189,19 +1189,19 @@ ucnv_fromUnicode(UConverter *cnv,
     char *t;
 
     /* check parameters */
-    if(err==nullptr || U_FAILURE(*err)) {
-        return;
+    만약(err==nullptr || U_FAILURE(*err)) {
+        반환;
     }
 
-    if(cnv==nullptr || target==nullptr || source==nullptr) {
+    만약(cnv==nullptr || target==nullptr || source==nullptr) {
         *err=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        반환;
     }
 
     s=*source;
     t=*target;
 
-    if ((const void *)U_MAX_PTR(sourceLimit) == (const void *)sourceLimit) {
+    만약 ((const void *)U_MAX_PTR(sourceLimit) == (const void *)sourceLimit) {
         /*
         Prevent code from going into an infinite loop in case we do hit this
         limit. The limit pointer is expected to be on a char16_t * boundary.
@@ -1229,27 +1229,27 @@ ucnv_fromUnicode(UConverter *cnv,
      * 3) Make sure that the user didn't incorrectly cast a char16_t * pointer
      * to a char * pointer and provide an incomplete char16_t code unit.
      */
-    if (sourceLimit<s || targetLimit<t ||
+    만약 (sourceLimit<s || targetLimit<t ||
         ((size_t)(sourceLimit-s)>(size_t)0x3fffffff && sourceLimit>s) ||
         ((size_t)(targetLimit-t)>(size_t)0x7fffffff && targetLimit>t) ||
         (((const char *)sourceLimit-(const char *)s) & 1) != 0)
     {
         *err=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        반환;
     }
     
     /* output the target overflow buffer */
-    if( cnv->charErrorBufferLength>0 &&
+    만약( cnv->charErrorBufferLength>0 &&
         ucnv_outputOverflowFromUnicode(cnv, target, targetLimit, &offsets, err)
     ) {
         /* U_BUFFER_OVERFLOW_ERROR */
-        return;
+        반환;
     }
     /* *target may have moved, therefore stop using t */
 
-    if(!flush && s==sourceLimit && cnv->preFromULength>=0) {
+    만약(!flush && s==sourceLimit && cnv->preFromULength>=0) {
         /* the overflow buffer is emptied and there is no new input: we are done */
-        return;
+        반환;
     }
 
     /*
@@ -1302,11 +1302,11 @@ _toUnicodeWithCallback(UConverterToUnicodeArgs *pArgs, UErrorCode *err) {
 
     /* get the converter implementation function */
     sourceIndex=0;
-    if(offsets==nullptr) {
+    만약(offsets==nullptr) {
         toUnicode=cnv->sharedData->impl->toUnicode;
-    } else {
+    } 아니면 {
         toUnicode=cnv->sharedData->impl->toUnicodeWithOffsets;
-        if(toUnicode==nullptr) {
+        만약(toUnicode==nullptr) {
             /* there is no WithOffsets implementation */
             toUnicode=cnv->sharedData->impl->toUnicode;
             /* we will write -1 for each offset */
@@ -1314,7 +1314,7 @@ _toUnicodeWithCallback(UConverterToUnicodeArgs *pArgs, UErrorCode *err) {
         }
     }
 
-    if(cnv->preToULength>=0) {
+    만약(cnv->preToULength>=0) {
         /* normal mode */
         realSource=nullptr;
 
@@ -1322,15 +1322,15 @@ _toUnicodeWithCallback(UConverterToUnicodeArgs *pArgs, UErrorCode *err) {
         realSourceLimit=nullptr;
         realFlush=false;
         realSourceIndex=0;
-    } else {
+    } 아니면 {
         /*
          * Previous m:n conversion stored source units from a partial match
          * and failed to consume all of them.
          * We need to "replay" them from a temporary buffer and convert them first.
          */
-        if (!pArgs->source) {
+        만약 (!pArgs->source) {
             *err=U_ILLEGAL_ARGUMENT_ERROR;
-            return;
+            반환;
         }
         realSource=pArgs->source;
         realSourceLimit=pArgs->sourceLimit;
@@ -1358,8 +1358,8 @@ _toUnicodeWithCallback(UConverterToUnicodeArgs *pArgs, UErrorCode *err) {
      *   }
      * }
      */
-    for(;;) {
-        if(U_SUCCESS(*err)) {
+    위해(;;) {
+        만약(U_SUCCESS(*err)) {
             /* convert */
             toUnicode(pArgs, err);
 
@@ -1374,7 +1374,7 @@ _toUnicodeWithCallback(UConverterToUnicodeArgs *pArgs, UErrorCode *err) {
                 static_cast<UBool>(U_SUCCESS(*err) &&
                         pArgs->flush && pArgs->source==pArgs->sourceLimit &&
                         cnv->toULength==0);
-        } else {
+        } 아니면 {
             /* handle error from getNextUChar() or ucnv_convertEx() */
             converterSawEndOfInput=false;
         }
@@ -1393,11 +1393,11 @@ _toUnicodeWithCallback(UConverterToUnicodeArgs *pArgs, UErrorCode *err) {
          * 2. after the callback
          * 3. after the callback again if there was truncated input
          */
-        for(;;) {
+        위해(;;) {
             /* update offsets if we write any */
-            if(offsets!=nullptr) {
+            만약(offsets!=nullptr) {
                 int32_t length = static_cast<int32_t>(pArgs->target - t);
-                if(length>0) {
+                만약(length>0) {
                     _updateOffsets(offsets, length, sourceIndex, errorInputLength);
 
                     /*
@@ -1410,17 +1410,17 @@ _toUnicodeWithCallback(UConverterToUnicodeArgs *pArgs, UErrorCode *err) {
                     pArgs->offsets=offsets+=length;
                 }
 
-                if(sourceIndex>=0) {
+                만약(sourceIndex>=0) {
                     sourceIndex += static_cast<int32_t>(pArgs->source - s);
                 }
             }
 
-            if(cnv->preToULength<0) {
+            만약(cnv->preToULength<0) {
                 /*
                  * switch the source to new replay units (cannot occur while replaying)
                  * after offset handling and before end-of-input and callback handling
                  */
-                if(realSource==nullptr) {
+                만약(realSource==nullptr) {
                     realSource=pArgs->source;
                     realSourceLimit=pArgs->sourceLimit;
                     realFlush=pArgs->flush;
@@ -1430,12 +1430,12 @@ _toUnicodeWithCallback(UConverterToUnicodeArgs *pArgs, UErrorCode *err) {
                     pArgs->source=replay;
                     pArgs->sourceLimit=replay-cnv->preToULength;
                     pArgs->flush=false;
-                    if((sourceIndex+=cnv->preToULength)<0) {
+                    만약((sourceIndex+=cnv->preToULength)<0) {
                         sourceIndex=-1;
                     }
 
                     cnv->preToULength=0;
-                } else {
+                } 아니면 {
                     /* see implementation note before _fromUnicodeWithCallback() */
                     U_ASSERT(realSource==nullptr);
                     *err=U_INTERNAL_PROGRAM_ERROR;
@@ -1446,14 +1446,14 @@ _toUnicodeWithCallback(UConverterToUnicodeArgs *pArgs, UErrorCode *err) {
             s=pArgs->source;
             t=pArgs->target;
 
-            if(U_SUCCESS(*err)) {
-                if(s<pArgs->sourceLimit) {
+            만약(U_SUCCESS(*err)) {
+                만약(s<pArgs->sourceLimit) {
                     /*
                      * continue with the conversion loop while there is still input left
                      * (continue converting by breaking out of only the inner loop)
                      */
                     break;
-                } else if(realSource!=nullptr) {
+                } 아니면 만약(realSource!=nullptr) {
                     /* switch back from replaying to the real source and continue */
                     pArgs->source=realSource;
                     pArgs->sourceLimit=realSourceLimit;
@@ -1462,7 +1462,7 @@ _toUnicodeWithCallback(UConverterToUnicodeArgs *pArgs, UErrorCode *err) {
 
                     realSource=nullptr;
                     break;
-                } else if(pArgs->flush && cnv->toULength>0) {
+                } 아니면 만약(pArgs->flush && cnv->toULength>0) {
                     /*
                      * the entire input stream is consumed
                      * and there is a partial, truncated input sequence left
@@ -1471,9 +1471,9 @@ _toUnicodeWithCallback(UConverterToUnicodeArgs *pArgs, UErrorCode *err) {
                     /* inject an error and continue with callback handling */
                     *err=U_TRUNCATED_CHAR_FOUND;
                     calledCallback=false; /* new error condition */
-                } else {
+                } 아니면 {
                     /* input consumed */
-                    if(pArgs->flush) {
+                    만약(pArgs->flush) {
                         /*
                          * return to the conversion loop once more if the flush
                          * flag is set and the conversion function has not
@@ -1481,7 +1481,7 @@ _toUnicodeWithCallback(UConverterToUnicodeArgs *pArgs, UErrorCode *err) {
                          *
                          * (continue converting by breaking out of only the inner loop)
                          */
-                        if(!converterSawEndOfInput) {
+                        만약(!converterSawEndOfInput) {
                             break;
                         }
 
@@ -1490,7 +1490,7 @@ _toUnicodeWithCallback(UConverterToUnicodeArgs *pArgs, UErrorCode *err) {
                     }
 
                     /* done successfully */
-                    return;
+                    반환;
                 }
             }
 
@@ -1498,7 +1498,7 @@ _toUnicodeWithCallback(UConverterToUnicodeArgs *pArgs, UErrorCode *err) {
             {
                 UErrorCode e;
 
-                if( calledCallback ||
+                만약( calledCallback ||
                     (e=*err)==U_BUFFER_OVERFLOW_ERROR ||
                     (e!=U_INVALID_CHAR_FOUND &&
                      e!=U_ILLEGAL_CHAR_FOUND &&
@@ -1518,13 +1518,13 @@ _toUnicodeWithCallback(UConverterToUnicodeArgs *pArgs, UErrorCode *err) {
                      * copied back into the UConverter
                      * and the real arguments must be restored
                      */
-                    if(realSource!=nullptr) {
+                    만약(realSource!=nullptr) {
                         int32_t length;
 
                         U_ASSERT(cnv->preToULength==0);
 
                         length = static_cast<int32_t>(pArgs->sourceLimit - pArgs->source);
-                        if(length>0) {
+                        만약(length>0) {
                             uprv_memcpy(cnv->preToU, pArgs->source, length);
                             cnv->preToULength = static_cast<int8_t>(-length);
                         }
@@ -1534,13 +1534,13 @@ _toUnicodeWithCallback(UConverterToUnicodeArgs *pArgs, UErrorCode *err) {
                         pArgs->flush=realFlush;
                     }
 
-                    return;
+                    반환;
                 }
             }
 
             /* copy toUBytes[] to invalidCharBuffer[] */
             errorInputLength=cnv->invalidCharLength=cnv->toULength;
-            if(errorInputLength>0) {
+            만약(errorInputLength>0) {
                 uprv_memcpy(cnv->invalidCharBuffer, cnv->toUBytes, errorInputLength);
             }
 
@@ -1548,7 +1548,7 @@ _toUnicodeWithCallback(UConverterToUnicodeArgs *pArgs, UErrorCode *err) {
             cnv->toULength=0;
 
             /* call the callback function */
-            if(cnv->toUCallbackReason==UCNV_ILLEGAL && *err==U_INVALID_CHAR_FOUND) {
+            만약(cnv->toUCallbackReason==UCNV_ILLEGAL && *err==U_INVALID_CHAR_FOUND) {
                 cnv->toUCallbackReason = UCNV_UNASSIGNED;
             }
             cnv->fromCharErrorBehaviour(cnv->toUContext, pArgs,
@@ -1584,36 +1584,36 @@ ucnv_outputOverflowToUnicode(UConverter *cnv,
     int32_t i, length;
 
     t=*target;
-    if(pOffsets!=nullptr) {
+    만약(pOffsets!=nullptr) {
         offsets=*pOffsets;
-    } else {
+    } 아니면 {
         offsets=nullptr;
     }
 
     overflow=cnv->UCharErrorBuffer;
     length=cnv->UCharErrorBufferLength;
     i=0;
-    while(i<length) {
-        if(t==targetLimit) {
+    동안(i<length) {
+        만약(t==targetLimit) {
             /* the overflow buffer contains too much, keep the rest */
             int32_t j=0;
 
             do {
                 overflow[j++]=overflow[i++];
-            } while(i<length);
+            } 동안(i<length);
 
             cnv->UCharErrorBufferLength = static_cast<int8_t>(j);
             *target=t;
-            if(offsets!=nullptr) {
+            만약(offsets!=nullptr) {
                 *pOffsets=offsets;
             }
             *err=U_BUFFER_OVERFLOW_ERROR;
-            return true;
+            반환 true;
         }
 
         /* copy the overflow contents to the target */
         *t++=overflow[i++];
-        if(offsets!=nullptr) {
+        만약(offsets!=nullptr) {
             *offsets++=-1; /* no source index available for old output */
         }
     }
@@ -1621,10 +1621,10 @@ ucnv_outputOverflowToUnicode(UConverter *cnv,
     /* the overflow buffer is completely copied to the target */
     cnv->UCharErrorBufferLength=0;
     *target=t;
-    if(offsets!=nullptr) {
+    만약(offsets!=nullptr) {
         *pOffsets=offsets;
     }
-    return false;
+    반환 false;
 }
 
 U_CAPI void U_EXPORT2
@@ -1639,19 +1639,19 @@ ucnv_toUnicode(UConverter *cnv,
     char16_t *t;
 
     /* check parameters */
-    if(err==nullptr || U_FAILURE(*err)) {
-        return;
+    만약(err==nullptr || U_FAILURE(*err)) {
+        반환;
     }
 
-    if(cnv==nullptr || target==nullptr || source==nullptr) {
+    만약(cnv==nullptr || target==nullptr || source==nullptr) {
         *err=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        반환;
     }
 
     s=*source;
     t=*target;
 
-    if ((const void *)U_MAX_PTR(targetLimit) == (const void *)targetLimit) {
+    만약 ((const void *)U_MAX_PTR(targetLimit) == (const void *)targetLimit) {
         /*
         Prevent code from going into an infinite loop in case we do hit this
         limit. The limit pointer is expected to be on a char16_t * boundary.
@@ -1679,27 +1679,27 @@ ucnv_toUnicode(UConverter *cnv,
      * 3) Make sure that the user didn't incorrectly cast a char16_t * pointer
      * to a char * pointer and provide an incomplete char16_t code unit.
      */
-    if (sourceLimit<s || targetLimit<t ||
+    만약 (sourceLimit<s || targetLimit<t ||
         ((size_t)(sourceLimit-s)>(size_t)0x7fffffff && sourceLimit>s) ||
         ((size_t)(targetLimit-t)>(size_t)0x3fffffff && targetLimit>t) ||
         (((const char *)targetLimit-(const char *)t) & 1) != 0
     ) {
         *err=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        반환;
     }
     
     /* output the target overflow buffer */
-    if( cnv->UCharErrorBufferLength>0 &&
+    만약( cnv->UCharErrorBufferLength>0 &&
         ucnv_outputOverflowToUnicode(cnv, target, targetLimit, &offsets, err)
     ) {
         /* U_BUFFER_OVERFLOW_ERROR */
-        return;
+        반환;
     }
     /* *target may have moved, therefore stop using t */
 
-    if(!flush && s==sourceLimit && cnv->preToULength>=0) {
+    만약(!flush && s==sourceLimit && cnv->preToULength>=0) {
         /* the overflow buffer is emptied and there is no new input: we are done */
-        return;
+        반환;
     }
 
     /*
@@ -1738,25 +1738,25 @@ ucnv_fromUChars(UConverter *cnv,
     int32_t destLength;
 
     /* check arguments */
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    만약(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
+        반환 0;
     }
 
-    if( cnv==nullptr ||
+    만약( cnv==nullptr ||
         destCapacity<0 || (destCapacity>0 && dest==nullptr) ||
         srcLength<-1 || (srcLength!=0 && src==nullptr)
     ) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        반환 0;
     }
 
     /* initialize */
     ucnv_resetFromUnicode(cnv);
     originalDest=dest;
-    if(srcLength==-1) {
+    만약(srcLength==-1) {
         srcLength=u_strlen(src);
     }
-    if(srcLength>0) {
+    만약(srcLength>0) {
         srcLimit=src+srcLength;
         destCapacity=pinCapacity(dest, destCapacity);
         destLimit=dest+destCapacity;
@@ -1767,7 +1767,7 @@ ucnv_fromUChars(UConverter *cnv,
         destLength=(int32_t)(dest-originalDest);
 
         /* if an overflow occurs, then get the preflighting length */
-        if(bufferStatus==U_BUFFER_OVERFLOW_ERROR) {
+        만약(bufferStatus==U_BUFFER_OVERFLOW_ERROR) {
             char buffer[1024];
 
             destLimit=buffer+sizeof(buffer);
@@ -1776,16 +1776,16 @@ ucnv_fromUChars(UConverter *cnv,
                 bufferStatus=U_ZERO_ERROR;
                 ucnv_fromUnicode(cnv, &dest, destLimit, &src, srcLimit, nullptr, true, &bufferStatus);
                 destLength+=(int32_t)(dest-buffer);
-            } while(bufferStatus==U_BUFFER_OVERFLOW_ERROR);
+            } 동안(bufferStatus==U_BUFFER_OVERFLOW_ERROR);
         }
-        if (U_FAILURE(bufferStatus)) {
+        만약 (U_FAILURE(bufferStatus)) {
             *pErrorCode = bufferStatus;
         }
-    } else {
+    } 아니면 {
         destLength=0;
     }
 
-    return u_terminateChars(originalDest, destCapacity, destLength, pErrorCode);
+    반환 u_terminateChars(originalDest, destCapacity, destLength, pErrorCode);
 }
 
 U_CAPI int32_t U_EXPORT2
@@ -1798,25 +1798,25 @@ ucnv_toUChars(UConverter *cnv,
     int32_t destLength;
 
     /* check arguments */
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    만약(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
+        반환 0;
     }
 
-    if( cnv==nullptr ||
+    만약( cnv==nullptr ||
         destCapacity<0 || (destCapacity>0 && dest==nullptr) ||
         srcLength<-1 || (srcLength!=0 && src==nullptr))
     {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        반환 0;
     }
 
     /* initialize */
     ucnv_resetToUnicode(cnv);
     originalDest=dest;
-    if(srcLength==-1) {
+    만약(srcLength==-1) {
         srcLength=(int32_t)uprv_strlen(src);
     }
-    if(srcLength>0) {
+    만약(srcLength>0) {
         srcLimit=src+srcLength;
         destCapacity=pinCapacity(dest, destCapacity);
         destLimit=dest+destCapacity;
@@ -1827,7 +1827,7 @@ ucnv_toUChars(UConverter *cnv,
         destLength=(int32_t)(dest-originalDest);
 
         /* if an overflow occurs, then get the preflighting length */
-        if(bufferStatus==U_BUFFER_OVERFLOW_ERROR)
+        만약(bufferStatus==U_BUFFER_OVERFLOW_ERROR)
         {
             char16_t buffer[1024];
 
@@ -1838,16 +1838,16 @@ ucnv_toUChars(UConverter *cnv,
                 ucnv_toUnicode(cnv, &dest, destLimit, &src, srcLimit, nullptr, true, &bufferStatus);
                 destLength+=(int32_t)(dest-buffer);
             }
-            while(bufferStatus==U_BUFFER_OVERFLOW_ERROR);
+            동안(bufferStatus==U_BUFFER_OVERFLOW_ERROR);
         }
-        if (U_FAILURE(bufferStatus)) {
+        만약 (U_FAILURE(bufferStatus)) {
             *pErrorCode = bufferStatus;
         }
-    } else {
+    } 아니면 {
         destLength=0;
     }
 
-    return u_terminateUChars(originalDest, destCapacity, destLength, pErrorCode);
+    반환 u_terminateUChars(originalDest, destCapacity, destLength, pErrorCode);
 }
 
 /* ucnv_getNextUChar() ------------------------------------------------------ */
@@ -1863,19 +1863,19 @@ ucnv_getNextUChar(UConverter *cnv,
     int32_t i, length;
 
     /* check parameters */
-    if(err==nullptr || U_FAILURE(*err)) {
-        return 0xffff;
+    만약(err==nullptr || U_FAILURE(*err)) {
+        반환 0xffff;
     }
 
-    if(cnv==nullptr || source==nullptr) {
+    만약(cnv==nullptr || source==nullptr) {
         *err=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0xffff;
+        반환 0xffff;
     }
 
     s=*source;
-    if(sourceLimit<s) {
+    만약(sourceLimit<s) {
         *err=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0xffff;
+        반환 0xffff;
     }
 
     /*
@@ -1890,15 +1890,15 @@ ucnv_getNextUChar(UConverter *cnv,
      * consumed or the target filled (unless an error occurs).
      * An adjustment would be sourceLimit=t+0x7fffffff; for example.
      */
-    if(((size_t)(sourceLimit-s)>(size_t)0x7fffffff && sourceLimit>s)) {
+    만약(((size_t)(sourceLimit-s)>(size_t)0x7fffffff && sourceLimit>s)) {
         *err=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0xffff;
+        반환 0xffff;
     }
 
     c=U_SENTINEL;
 
     /* flush the target overflow buffer */
-    if(cnv->UCharErrorBufferLength>0) {
+    만약(cnv->UCharErrorBufferLength>0) {
         char16_t *overflow;
 
         overflow=cnv->UCharErrorBuffer;
@@ -1907,13 +1907,13 @@ ucnv_getNextUChar(UConverter *cnv,
         U16_NEXT(overflow, i, length, c);
 
         /* move the remaining overflow contents up to the beginning */
-        if((cnv->UCharErrorBufferLength=(int8_t)(length-i))>0) {
+        만약((cnv->UCharErrorBufferLength=(int8_t)(length-i))>0) {
             uprv_memmove(cnv->UCharErrorBuffer, cnv->UCharErrorBuffer+i,
                          cnv->UCharErrorBufferLength*U_SIZEOF_UCHAR);
         }
 
-        if(!U16_IS_LEAD(c) || i<length) {
-            return c;
+        만약(!U16_IS_LEAD(c) || i<length) {
+            반환 c;
         }
         /*
          * Continue if the overflow buffer contained only a lead surrogate,
@@ -1939,7 +1939,7 @@ ucnv_getNextUChar(UConverter *cnv,
     args.targetLimit=buffer+1;
     args.size=sizeof(args);
 
-    if(c<0) {
+    만약(c<0) {
         /*
          * call the native getNextUChar() implementation if we are
          * at a character boundary (toULength==0)
@@ -1948,15 +1948,15 @@ ucnv_getNextUChar(UConverter *cnv,
          * U_TRUNCATED_CHAR_FOUND for truncated input,
          * in addition to setting toULength/toUBytes[]
          */
-        if(cnv->toULength==0 && cnv->sharedData->impl->getNextUChar!=nullptr) {
+        만약(cnv->toULength==0 && cnv->sharedData->impl->getNextUChar!=nullptr) {
             c=cnv->sharedData->impl->getNextUChar(&args, err);
             *source=s=args.source;
-            if(*err==U_INDEX_OUTOFBOUNDS_ERROR) {
+            만약(*err==U_INDEX_OUTOFBOUNDS_ERROR) {
                 /* reset the converter without calling the callback function */
                 _reset(cnv, UCNV_RESET_TO_UNICODE, false);
-                return 0xffff; /* no output */
-            } else if(U_SUCCESS(*err) && c>=0) {
-                return c;
+                반환 0xffff; /* no output */
+            } 아니면 만약(U_SUCCESS(*err) && c>=0) {
+                반환 c;
             /*
              * else fall through to use _toUnicode() because
              *   UCNV_GET_NEXT_UCHAR_USE_TO_U: the native function did not want to handle it after all
@@ -1968,13 +1968,13 @@ ucnv_getNextUChar(UConverter *cnv,
         /* convert to one char16_t in buffer[0], or handle getNextUChar() errors */
         _toUnicodeWithCallback(&args, err);
 
-        if(*err==U_BUFFER_OVERFLOW_ERROR) {
+        만약(*err==U_BUFFER_OVERFLOW_ERROR) {
             *err=U_ZERO_ERROR;
         }
 
         i=0;
         length=(int32_t)(args.target-buffer);
-    } else {
+    } 아니면 {
         /* write the lead surrogate from the overflow buffer */
         buffer[0]=(char16_t)c;
         args.target=buffer+1;
@@ -1984,46 +1984,46 @@ ucnv_getNextUChar(UConverter *cnv,
 
     /* buffer contents starts at i and ends before length */
 
-    if(U_FAILURE(*err)) {
+    만약(U_FAILURE(*err)) {
         c=0xffff; /* no output */
-    } else if(length==0) {
+    } 아니면 만약(length==0) {
         /* no input or only state changes */
         *err=U_INDEX_OUTOFBOUNDS_ERROR;
         /* no need to reset explicitly because _toUnicodeWithCallback() did it */
         c=0xffff; /* no output */
-    } else {
+    } 아니면 {
         c=buffer[0];
         i=1;
-        if(!U16_IS_LEAD(c)) {
+        만약(!U16_IS_LEAD(c)) {
             /* consume c=buffer[0], done */
-        } else {
+        } 아니면 {
             /* got a lead surrogate, see if a trail surrogate follows */
             char16_t c2;
 
-            if(cnv->UCharErrorBufferLength>0) {
+            만약(cnv->UCharErrorBufferLength>0) {
                 /* got overflow output from the conversion */
-                if(U16_IS_TRAIL(c2=cnv->UCharErrorBuffer[0])) {
+                만약(U16_IS_TRAIL(c2=cnv->UCharErrorBuffer[0])) {
                     /* got a trail surrogate, too */
                     c=U16_GET_SUPPLEMENTARY(c, c2);
 
                     /* move the remaining overflow contents up to the beginning */
-                    if((--cnv->UCharErrorBufferLength)>0) {
+                    만약((--cnv->UCharErrorBufferLength)>0) {
                         uprv_memmove(cnv->UCharErrorBuffer, cnv->UCharErrorBuffer+1,
                                      cnv->UCharErrorBufferLength*U_SIZEOF_UCHAR);
                     }
-                } else {
+                } 아니면 {
                     /* c is an unpaired lead surrogate, just return it */
                 }
-            } else if(args.source<sourceLimit) {
+            } 아니면 만약(args.source<sourceLimit) {
                 /* convert once more, to buffer[1] */
                 args.targetLimit=buffer+2;
                 _toUnicodeWithCallback(&args, err);
-                if(*err==U_BUFFER_OVERFLOW_ERROR) {
+                만약(*err==U_BUFFER_OVERFLOW_ERROR) {
                     *err=U_ZERO_ERROR;
                 }
 
                 length=(int32_t)(args.target-buffer);
-                if(U_SUCCESS(*err) && length==2 && U16_IS_TRAIL(c2=buffer[1])) {
+                만약(U_SUCCESS(*err) && length==2 && U16_IS_TRAIL(c2=buffer[1])) {
                     /* got a trail surrogate, too */
                     c=U16_GET_SUPPLEMENTARY(c, c2);
                     i=2;
@@ -2036,23 +2036,23 @@ ucnv_getNextUChar(UConverter *cnv,
      * move leftover output from buffer[i..length[
      * into the beginning of the overflow buffer
      */
-    if(i<length) {
+    만약(i<length) {
         /* move further overflow back */
         int32_t delta=length-i;
-        if((length=cnv->UCharErrorBufferLength)>0) {
+        만약((length=cnv->UCharErrorBufferLength)>0) {
             uprv_memmove(cnv->UCharErrorBuffer+delta, cnv->UCharErrorBuffer,
                          length*U_SIZEOF_UCHAR);
         }
         cnv->UCharErrorBufferLength=(int8_t)(length+delta);
 
         cnv->UCharErrorBuffer[0]=buffer[i++];
-        if(delta>1) {
+        만약(delta>1) {
             cnv->UCharErrorBuffer[1]=buffer[i];
         }
     }
 
     *source=args.source;
-    return c;
+    반환 c;
 }
 
 /* ucnv_convert() and siblings ---------------------------------------------- */
@@ -2076,42 +2076,42 @@ ucnv_convertEx(UConverter *targetCnv, UConverter *sourceCnv,
     UConverterConvert convert;
 
     /* error checking */
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return;
+    만약(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
+        반환;
     }
 
-    if( targetCnv==nullptr || sourceCnv==nullptr ||
+    만약( targetCnv==nullptr || sourceCnv==nullptr ||
         source==nullptr || *source==nullptr ||
         target==nullptr || *target==nullptr || targetLimit==nullptr
     ) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        반환;
     }
 
     s=*source;
     t=*target;
-    if((sourceLimit!=nullptr && sourceLimit<s) || targetLimit<t) {
+    만약((sourceLimit!=nullptr && sourceLimit<s) || targetLimit<t) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        반환;
     }
 
     /*
      * Make sure that the buffer sizes do not exceed the number range for
      * int32_t. See ucnv_toUnicode() for a more detailed comment.
      */
-    if(
+    만약(
         (sourceLimit!=nullptr && ((size_t)(sourceLimit-s)>(size_t)0x7fffffff && sourceLimit>s)) ||
         ((size_t)(targetLimit-t)>(size_t)0x7fffffff && targetLimit>t)
     ) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        반환;
     }
     
-    if(pivotStart==nullptr) {
-        if(!flush) {
+    만약(pivotStart==nullptr) {
+        만약(!flush) {
             /* streaming conversion requires an explicit pivot buffer */
             *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-            return;
+            반환;
         }
 
         /* use the stack pivot buffer */
@@ -2119,51 +2119,51 @@ ucnv_convertEx(UConverter *targetCnv, UConverter *sourceCnv,
         pivotSource=(char16_t **)&myPivotSource;
         pivotTarget=&myPivotTarget;
         pivotLimit=pivotBuffer+CHUNK_SIZE;
-    } else if(  pivotStart>=pivotLimit ||
+    } 아니면 만약(  pivotStart>=pivotLimit ||
                 pivotSource==nullptr || *pivotSource==nullptr ||
                 pivotTarget==nullptr || *pivotTarget==nullptr ||
                 pivotLimit==nullptr
     ) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        반환;
     }
 
-    if(sourceLimit==nullptr) {
+    만약(sourceLimit==nullptr) {
         /* get limit of single-byte-NUL-terminated source string */
         sourceLimit=uprv_strchr(*source, 0);
     }
 
-    if(reset) {
+    만약(reset) {
         ucnv_resetToUnicode(sourceCnv);
         ucnv_resetFromUnicode(targetCnv);
         *pivotSource=*pivotTarget=pivotStart;
-    } else if(targetCnv->charErrorBufferLength>0) {
+    } 아니면 만약(targetCnv->charErrorBufferLength>0) {
         /* output the targetCnv overflow buffer */
-        if(ucnv_outputOverflowFromUnicode(targetCnv, target, targetLimit, nullptr, pErrorCode)) {
+        만약(ucnv_outputOverflowFromUnicode(targetCnv, target, targetLimit, nullptr, pErrorCode)) {
             /* U_BUFFER_OVERFLOW_ERROR */
-            return;
+            반환;
         }
         /* *target has moved, therefore stop using t */
 
-        if( !flush &&
+        만약( !flush &&
             targetCnv->preFromULength>=0 && *pivotSource==*pivotTarget &&
             sourceCnv->UCharErrorBufferLength==0 && sourceCnv->preToULength>=0 && s==sourceLimit
         ) {
             /* the fromUnicode overflow buffer is emptied and there is no new input: we are done */
-            return;
+            반환;
         }
     }
 
     /* Is direct-UTF-8 conversion available? */
-    if( sourceCnv->sharedData->staticData->conversionType==UCNV_UTF8 &&
+    만약( sourceCnv->sharedData->staticData->conversionType==UCNV_UTF8 &&
         targetCnv->sharedData->impl->fromUTF8!=nullptr
     ) {
         convert=targetCnv->sharedData->impl->fromUTF8;
-    } else if( targetCnv->sharedData->staticData->conversionType==UCNV_UTF8 &&
+    } 아니면 만약( targetCnv->sharedData->staticData->conversionType==UCNV_UTF8 &&
                sourceCnv->sharedData->impl->toUTF8!=nullptr
     ) {
         convert=sourceCnv->sharedData->impl->toUTF8;
-    } else {
+    } 아니면 {
         convert=nullptr;
     }
 
@@ -2186,7 +2186,7 @@ ucnv_convertEx(UConverter *targetCnv, UConverter *sourceCnv,
      * conversion, with function call overhead outweighing the benefits
      * of direct conversion.
      */
-    if(convert!=nullptr && (pivotLimit-pivotStart)>32) {
+    만약(convert!=nullptr && (pivotLimit-pivotStart)>32) {
         pivotLimit=pivotStart+32;
     }
 
@@ -2226,7 +2226,7 @@ ucnv_convertEx(UConverter *targetCnv, UConverter *sourceCnv,
      *
      * The targetCnv overflow buffer is flushed out only once before the loop.
      */
-    for(;;) {
+    위해(;;) {
         /*
          * if(pivot not empty or error or replay or flush fromUnicode) {
          *   fromUnicode(pivot -> target);
@@ -2235,7 +2235,7 @@ ucnv_convertEx(UConverter *targetCnv, UConverter *sourceCnv,
          * For pivoting conversion; and for direct conversion for
          * error callback handling and flushing the replay buffer.
          */
-        if( *pivotSource<*pivotTarget ||
+        만약( *pivotSource<*pivotTarget ||
             U_FAILURE(*pErrorCode) ||
             targetCnv->preFromULength<0 ||
             fromUArgs.flush
@@ -2243,7 +2243,7 @@ ucnv_convertEx(UConverter *targetCnv, UConverter *sourceCnv,
             fromUArgs.source=*pivotSource;
             fromUArgs.sourceLimit=*pivotTarget;
             _fromUnicodeWithCallback(&fromUArgs, pErrorCode);
-            if(U_FAILURE(*pErrorCode)) {
+            만약(U_FAILURE(*pErrorCode)) {
                 /* target overflow, or conversion error */
                 *pivotSource=(char16_t *)fromUArgs.source;
                 break;
@@ -2265,8 +2265,8 @@ ucnv_convertEx(UConverter *targetCnv, UConverter *sourceCnv,
          * }
          */
         /* output the sourceCnv overflow buffer */
-        if(sourceCnv->UCharErrorBufferLength>0) {
-            if(ucnv_outputOverflowToUnicode(sourceCnv, pivotTarget, pivotLimit, nullptr, pErrorCode)) {
+        만약(sourceCnv->UCharErrorBufferLength>0) {
+            만약(ucnv_outputOverflowToUnicode(sourceCnv, pivotTarget, pivotLimit, nullptr, pErrorCode)) {
                 /* U_BUFFER_OVERFLOW_ERROR */
                 *pErrorCode=U_ZERO_ERROR;
             }
@@ -2280,7 +2280,7 @@ ucnv_convertEx(UConverter *targetCnv, UConverter *sourceCnv,
          * have been called with the flush flag set if the ucnv_convertEx()
          * caller set it.
          */
-        if( toUArgs.source==sourceLimit &&
+        만약( toUArgs.source==sourceLimit &&
             sourceCnv->preToULength>=0 && sourceCnv->toULength==0 &&
             (!flush || fromUArgs.flush)
         ) {
@@ -2293,16 +2293,16 @@ ucnv_convertEx(UConverter *targetCnv, UConverter *sourceCnv,
          * but not if continuing a partial match
          * or flushing the toUnicode replay buffer
          */
-        if(convert!=nullptr && targetCnv->preFromUFirstCP<0 && sourceCnv->preToULength==0) {
-            if(*pErrorCode==U_USING_DEFAULT_WARNING) {
+        만약(convert!=nullptr && targetCnv->preFromUFirstCP<0 && sourceCnv->preToULength==0) {
+            만약(*pErrorCode==U_USING_DEFAULT_WARNING) {
                 /* remove a warning that may be set by this function */
                 *pErrorCode=U_ZERO_ERROR;
             }
             convert(&fromUArgs, &toUArgs, pErrorCode);
-            if(*pErrorCode==U_BUFFER_OVERFLOW_ERROR) {
+            만약(*pErrorCode==U_BUFFER_OVERFLOW_ERROR) {
                 break;
-            } else if(U_FAILURE(*pErrorCode)) {
-                if(sourceCnv->toULength>0) {
+            } 아니면 만약(U_FAILURE(*pErrorCode)) {
+                만약(sourceCnv->toULength>0) {
                     /*
                      * Fall through to calling _toUnicodeWithCallback()
                      * for callback handling.
@@ -2312,7 +2312,7 @@ ucnv_convertEx(UConverter *targetCnv, UConverter *sourceCnv,
                      * which indicates a toUnicode error to the caller
                      * (*pivotSource==pivotStart shows no pivot UChars consumed).
                      */
-                } else {
+                } 아니면 {
                     /*
                      * Indicate a fromUnicode error to the caller
                      * (*pivotSource>pivotStart shows some pivot UChars consumed).
@@ -2324,7 +2324,7 @@ ucnv_convertEx(UConverter *targetCnv, UConverter *sourceCnv,
                      */
                     continue;
                 }
-            } else if(*pErrorCode==U_USING_DEFAULT_WARNING) {
+            } 아니면 만약(*pErrorCode==U_USING_DEFAULT_WARNING) {
                 /*
                  * No error, but the implementation requested to temporarily
                  * fall back to pivoting.
@@ -2335,7 +2335,7 @@ ucnv_convertEx(UConverter *targetCnv, UConverter *sourceCnv,
              * handling in _toUnicodeWithCallback().
              * Avoid calling it just for the end of input.
              */
-            } else if(flush && sourceCnv->toULength>0) { /* flush==toUArgs.flush */
+            } 아니면 만약(flush && sourceCnv->toULength>0) { /* flush==toUArgs.flush */
                 /*
                  * the entire input stream is consumed
                  * and there is a partial, truncated input sequence left
@@ -2343,9 +2343,9 @@ ucnv_convertEx(UConverter *targetCnv, UConverter *sourceCnv,
 
                 /* inject an error and continue with callback handling */
                 *pErrorCode=U_TRUNCATED_CHAR_FOUND;
-            } else {
+            } 아니면 {
                 /* input consumed */
-                if(flush) {
+                만약(flush) {
                     /* reset the converters without calling the callback functions */
                     _reset(sourceCnv, UCNV_RESET_TO_UNICODE, false);
                     _reset(targetCnv, UCNV_RESET_FROM_UNICODE, false);
@@ -2369,10 +2369,10 @@ ucnv_convertEx(UConverter *targetCnv, UConverter *sourceCnv,
         /* toUArgs.targetLimit=pivotLimit; already set before the loop */
         _toUnicodeWithCallback(&toUArgs, pErrorCode);
         *pivotTarget=toUArgs.target;
-        if(*pErrorCode==U_BUFFER_OVERFLOW_ERROR) {
+        만약(*pErrorCode==U_BUFFER_OVERFLOW_ERROR) {
             /* pivot overflow: continue with the conversion loop */
             *pErrorCode=U_ZERO_ERROR;
-        } else if(U_FAILURE(*pErrorCode) || (!flush && *pivotTarget==pivotStart)) {
+        } 아니면 만약(U_FAILURE(*pErrorCode) || (!flush && *pivotTarget==pivotStart)) {
             /* conversion error, or there was nothing left to convert */
             break;
         }
@@ -2384,7 +2384,7 @@ ucnv_convertEx(UConverter *targetCnv, UConverter *sourceCnv,
          * Set the fromUnicode flush flag if we flush and if toUnicode has
          * processed the end of the input.
          */
-        if( flush && toUArgs.source==sourceLimit &&
+        만약( flush && toUArgs.source==sourceLimit &&
             sourceCnv->preToULength>=0 &&
             sourceCnv->UCharErrorBufferLength==0
         ) {
@@ -2403,13 +2403,13 @@ ucnv_convertEx(UConverter *targetCnv, UConverter *sourceCnv,
     *target=fromUArgs.target;
 
     /* terminate the target buffer if possible */
-    if(flush && U_SUCCESS(*pErrorCode)) {
-        if(*target!=targetLimit) {
+    만약(flush && U_SUCCESS(*pErrorCode)) {
+        만약(*target!=targetLimit) {
             **target=0;
-            if(*pErrorCode==U_STRING_NOT_TERMINATED_WARNING) {
+            만약(*pErrorCode==U_STRING_NOT_TERMINATED_WARNING) {
                 *pErrorCode=U_ZERO_ERROR;
             }
-        } else {
+        } 아니면 {
             *pErrorCode=U_STRING_NOT_TERMINATED_WARNING;
         }
     }
@@ -2430,22 +2430,22 @@ ucnv_internalConvert(UConverter *outConverter, UConverter *inConverter,
     int32_t targetLength=0;
 
     /* set up */
-    if(sourceLength<0) {
+    만약(sourceLength<0) {
         sourceLimit=uprv_strchr(source, 0);
-    } else {
+    } 아니면 {
         sourceLimit=source+sourceLength;
     }
 
     /* if there is no input data, we're done */
-    if(source==sourceLimit) {
-        return u_terminateChars(target, targetCapacity, 0, pErrorCode);
+    만약(source==sourceLimit) {
+        반환 u_terminateChars(target, targetCapacity, 0, pErrorCode);
     }
 
     pivot=pivot2=pivotBuffer;
     myTarget=target;
     targetLength=0;
 
-    if(targetCapacity>0) {
+    만약(targetCapacity>0) {
         /* perform real conversion */
         targetLimit=target+targetCapacity;
         ucnv_convertEx(outConverter, inConverter,
@@ -2463,7 +2463,7 @@ ucnv_internalConvert(UConverter *outConverter, UConverter *inConverter,
      * to it but continue the conversion in order to store in targetCapacity
      * the number of bytes that was required.
      */
-    if(*pErrorCode==U_BUFFER_OVERFLOW_ERROR || targetCapacity==0)
+    만약(*pErrorCode==U_BUFFER_OVERFLOW_ERROR || targetCapacity==0)
     {
         char targetBuffer[CHUNK_SIZE];
 
@@ -2479,14 +2479,14 @@ ucnv_internalConvert(UConverter *outConverter, UConverter *inConverter,
                            true,
                            pErrorCode);
             targetLength += static_cast<int32_t>(myTarget - targetBuffer);
-        } while(*pErrorCode==U_BUFFER_OVERFLOW_ERROR);
+        } 동안(*pErrorCode==U_BUFFER_OVERFLOW_ERROR);
 
         /* done with preflighting, set warnings and errors as appropriate */
-        return u_terminateChars(target, targetCapacity, targetLength, pErrorCode);
+        반환 u_terminateChars(target, targetCapacity, targetLength, pErrorCode);
     }
 
     /* no need to call u_terminateChars() because ucnv_convertEx() took care of that */
-    return targetLength;
+    반환 targetLength;
 }
 
 U_CAPI int32_t U_EXPORT2
@@ -2498,32 +2498,32 @@ ucnv_convert(const char *toConverterName, const char *fromConverterName,
     UConverter *inConverter, *outConverter;
     int32_t targetLength;
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    만약(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
+        반환 0;
     }
 
-    if( source==nullptr || sourceLength<-1 ||
+    만약( source==nullptr || sourceLength<-1 ||
         targetCapacity<0 || (targetCapacity>0 && target==nullptr)
     ) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        반환 0;
     }
 
     /* if there is no input data, we're done */
-    if(sourceLength==0 || (sourceLength<0 && *source==0)) {
-        return u_terminateChars(target, targetCapacity, 0, pErrorCode);
+    만약(sourceLength==0 || (sourceLength<0 && *source==0)) {
+        반환 u_terminateChars(target, targetCapacity, 0, pErrorCode);
     }
 
     /* create the converters */
     inConverter=ucnv_createConverter(&in, fromConverterName, pErrorCode);
-    if(U_FAILURE(*pErrorCode)) {
-        return 0;
+    만약(U_FAILURE(*pErrorCode)) {
+        반환 0;
     }
 
     outConverter=ucnv_createConverter(&out, toConverterName, pErrorCode);
-    if(U_FAILURE(*pErrorCode)) {
+    만약(U_FAILURE(*pErrorCode)) {
         ucnv_close(inConverter);
-        return 0;
+        반환 0;
     }
 
     targetLength=ucnv_internalConvert(outConverter, inConverter,
@@ -2534,7 +2534,7 @@ ucnv_convert(const char *toConverterName, const char *fromConverterName,
     ucnv_close(inConverter);
     ucnv_close(outConverter);
 
-    return targetLength;
+    반환 targetLength;
 }
 
 /* @internal */
@@ -2549,36 +2549,36 @@ ucnv_convertAlgorithmic(UBool convertToAlgorithmic,
     UConverter *algoConverter, *to, *from;
     int32_t targetLength;
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    만약(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
+        반환 0;
     }
 
-    if( cnv==nullptr || source==nullptr || sourceLength<-1 ||
+    만약( cnv==nullptr || source==nullptr || sourceLength<-1 ||
         targetCapacity<0 || (targetCapacity>0 && target==nullptr)
     ) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        반환 0;
     }
 
     /* if there is no input data, we're done */
-    if(sourceLength==0 || (sourceLength<0 && *source==0)) {
-        return u_terminateChars(target, targetCapacity, 0, pErrorCode);
+    만약(sourceLength==0 || (sourceLength<0 && *source==0)) {
+        반환 u_terminateChars(target, targetCapacity, 0, pErrorCode);
     }
 
     /* create the algorithmic converter */
     algoConverter=ucnv_createAlgorithmicConverter(&algoConverterStatic, algorithmicType,
                                                   "", 0, pErrorCode);
-    if(U_FAILURE(*pErrorCode)) {
-        return 0;
+    만약(U_FAILURE(*pErrorCode)) {
+        반환 0;
     }
 
     /* reset the other converter */
-    if(convertToAlgorithmic) {
+    만약(convertToAlgorithmic) {
         /* cnv->Unicode->algo */
         ucnv_resetToUnicode(cnv);
         to=algoConverter;
         from=cnv;
-    } else {
+    } 아니면 {
         /* algo->Unicode->cnv */
         ucnv_resetFromUnicode(cnv);
         from=algoConverter;
@@ -2592,7 +2592,7 @@ ucnv_convertAlgorithmic(UBool convertToAlgorithmic,
 
     ucnv_close(algoConverter);
 
-    return targetLength;
+    반환 targetLength;
 }
 
 U_CAPI int32_t U_EXPORT2
@@ -2601,7 +2601,7 @@ ucnv_toAlgorithmic(UConverterType algorithmicType,
                    char *target, int32_t targetCapacity,
                    const char *source, int32_t sourceLength,
                    UErrorCode *pErrorCode) {
-    return ucnv_convertAlgorithmic(true, algorithmicType, cnv,
+    반환 ucnv_convertAlgorithmic(true, algorithmicType, cnv,
                                    target, targetCapacity,
                                    source, sourceLength,
                                    pErrorCode);
@@ -2614,11 +2614,11 @@ ucnv_fromAlgorithmic(UConverter *cnv,
                      const char *source, int32_t sourceLength,
                      UErrorCode *pErrorCode) UPRV_NO_SANITIZE_UNDEFINED {
 
-    if(algorithmicType<0 || UCNV_NUMBER_OF_SUPPORTED_CONVERTER_TYPES<=algorithmicType) {
+    만약(algorithmicType<0 || UCNV_NUMBER_OF_SUPPORTED_CONVERTER_TYPES<=algorithmicType) {
         *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        반환 0;
     }
-    return ucnv_convertAlgorithmic(false, algorithmicType, cnv,
+    반환 ucnv_convertAlgorithmic(false, algorithmicType, cnv,
                                    target, targetCapacity,
                                    source, sourceLength,
                                    pErrorCode);
@@ -2628,12 +2628,12 @@ U_CAPI UConverterType  U_EXPORT2
 ucnv_getType(const UConverter* converter)
 {
     int8_t type = converter->sharedData->staticData->conversionType;
-#if !UCONFIG_NO_LEGACY_CONVERSION
-    if(type == UCNV_MBCS) {
-        return ucnv_MBCSGetType(converter);
+#만약 !UCONFIG_NO_LEGACY_CONVERSION
+    만약(type == UCNV_MBCS) {
+        반환 ucnv_MBCSGetType(converter);
     }
 #endif
-    return (UConverterType)type;
+    반환 (UConverterType)type;
 }
 
 U_CAPI void  U_EXPORT2
@@ -2641,13 +2641,13 @@ ucnv_getStarters(const UConverter* converter,
                  UBool starters[256],
                  UErrorCode* err)
 {
-    if (err == nullptr || U_FAILURE(*err)) {
-        return;
+    만약 (err == nullptr || U_FAILURE(*err)) {
+        반환;
     }
 
-    if(converter->sharedData->impl->getStarters != nullptr) {
+    만약(converter->sharedData->impl->getStarters != nullptr) {
         converter->sharedData->impl->getStarters(converter, starters, err);
-    } else {
+    } 아니면 {
         *err = U_ILLEGAL_ARGUMENT_ERROR;
     }
 }
@@ -2658,25 +2658,25 @@ static const UAmbiguousConverter *ucnv_getAmbiguous(const UConverter *cnv)
     const char *name;
     int32_t i;
 
-    if(cnv==nullptr) {
-        return nullptr;
+    만약(cnv==nullptr) {
+        반환 nullptr;
     }
 
     errorCode=U_ZERO_ERROR;
     name=ucnv_getName(cnv, &errorCode);
-    if(U_FAILURE(errorCode)) {
-        return nullptr;
+    만약(U_FAILURE(errorCode)) {
+        반환 nullptr;
     }
 
-    for(i=0; i<UPRV_LENGTHOF(ambiguousConverters); ++i)
+    위해(i=0; i<UPRV_LENGTHOF(ambiguousConverters); ++i)
     {
-        if(0==uprv_strcmp(name, ambiguousConverters[i].name))
+        만약(0==uprv_strcmp(name, ambiguousConverters[i].name))
         {
-            return ambiguousConverters+i;
+            반환 ambiguousConverters+i;
         }
     }
 
-    return nullptr;
+    반환 nullptr;
 }
 
 U_CAPI void  U_EXPORT2
@@ -2687,14 +2687,14 @@ ucnv_fixFileSeparator(const UConverter *cnv,
     int32_t i;
     char16_t variant5c;
 
-    if(cnv==nullptr || source==nullptr || sourceLength<=0 || (a=ucnv_getAmbiguous(cnv))==nullptr)
+    만약(cnv==nullptr || source==nullptr || sourceLength<=0 || (a=ucnv_getAmbiguous(cnv))==nullptr)
     {
-        return;
+        반환;
     }
 
     variant5c=a->variant5c;
-    for(i=0; i<sourceLength; ++i) {
-        if(source[i]==variant5c) {
+    위해(i=0; i<sourceLength; ++i) {
+        만약(source[i]==variant5c) {
             source[i]=0x5c;
         }
     }
@@ -2702,7 +2702,7 @@ ucnv_fixFileSeparator(const UConverter *cnv,
 
 U_CAPI UBool  U_EXPORT2
 ucnv_isAmbiguous(const UConverter *cnv) {
-    return ucnv_getAmbiguous(cnv)!=nullptr;
+    반환 ucnv_getAmbiguous(cnv)!=nullptr;
 }
 
 U_CAPI void  U_EXPORT2
@@ -2714,7 +2714,7 @@ ucnv_setFallback(UConverter *cnv, UBool usesFallback)
 U_CAPI UBool  U_EXPORT2
 ucnv_usesFallback(const UConverter *cnv)
 {
-    return cnv->useFallback;
+    반환 cnv->useFallback;
 }
 
 U_CAPI void  U_EXPORT2
@@ -2723,21 +2723,21 @@ ucnv_getInvalidChars (const UConverter * converter,
                       int8_t * len,
                       UErrorCode * err)
 {
-    if (err == nullptr || U_FAILURE(*err))
+    만약 (err == nullptr || U_FAILURE(*err))
     {
-        return;
+        반환;
     }
-    if (len == nullptr || errBytes == nullptr || converter == nullptr)
+    만약 (len == nullptr || errBytes == nullptr || converter == nullptr)
     {
         *err = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        반환;
     }
-    if (*len < converter->invalidCharLength)
+    만약 (*len < converter->invalidCharLength)
     {
         *err = U_INDEX_OUTOFBOUNDS_ERROR;
-        return;
+        반환;
     }
-    if ((*len = converter->invalidCharLength) > 0)
+    만약 ((*len = converter->invalidCharLength) > 0)
     {
         uprv_memcpy (errBytes, converter->invalidCharBuffer, *len);
     }
@@ -2749,21 +2749,21 @@ ucnv_getInvalidUChars (const UConverter * converter,
                        int8_t * len,
                        UErrorCode * err)
 {
-    if (err == nullptr || U_FAILURE(*err))
+    만약 (err == nullptr || U_FAILURE(*err))
     {
-        return;
+        반환;
     }
-    if (len == nullptr || errChars == nullptr || converter == nullptr)
+    만약 (len == nullptr || errChars == nullptr || converter == nullptr)
     {
         *err = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        반환;
     }
-    if (*len < converter->invalidUCharLength)
+    만약 (*len < converter->invalidUCharLength)
     {
         *err = U_INDEX_OUTOFBOUNDS_ERROR;
-        return;
+        반환;
     }
-    if ((*len = converter->invalidUCharLength) > 0)
+    만약 ((*len = converter->invalidUCharLength) > 0)
     {
         u_memcpy (errChars, converter->invalidUCharBuffer, *len);
     }
@@ -2782,56 +2782,56 @@ ucnv_detectUnicodeSignature( const char* source,
      * bytes we don't misdetect something 
      */
     char start[SIG_MAX_LEN]={ '\xa5', '\xa5', '\xa5', '\xa5', '\xa5' };
-    int i = 0;
+    정수 i = 0;
 
-    if((pErrorCode==nullptr) || U_FAILURE(*pErrorCode)){
-        return nullptr;
+    만약((pErrorCode==nullptr) || U_FAILURE(*pErrorCode)){
+        반환 nullptr;
     }
     
-    if(source == nullptr || sourceLength < -1){
+    만약(source == nullptr || sourceLength < -1){
         *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        반환 nullptr;
     }
 
-    if(signatureLength == nullptr) {
+    만약(signatureLength == nullptr) {
         signatureLength = &dummy;
     }
 
-    if(sourceLength==-1){
+    만약(sourceLength==-1){
         sourceLength=(int32_t)uprv_strlen(source);
     }
 
     
-    while(i<sourceLength&& i<SIG_MAX_LEN){
+    동안(i<sourceLength&& i<SIG_MAX_LEN){
         start[i]=source[i];
         i++;
     }
 
-    if(start[0] == '\xFE' && start[1] == '\xFF') {
+    만약(start[0] == '\xFE' && start[1] == '\xFF') {
         *signatureLength=2;
-        return  "UTF-16BE";
-    } else if(start[0] == '\xFF' && start[1] == '\xFE') {
-        if(start[2] == '\x00' && start[3] =='\x00') {
+        반환  "UTF-16BE";
+    } 아니면 만약(start[0] == '\xFF' && start[1] == '\xFE') {
+        만약(start[2] == '\x00' && start[3] =='\x00') {
             *signatureLength=4;
-            return "UTF-32LE";
-        } else {
+            반환 "UTF-32LE";
+        } 아니면 {
             *signatureLength=2;
-            return  "UTF-16LE";
+            반환  "UTF-16LE";
         }
-    } else if(start[0] == '\xEF' && start[1] == '\xBB' && start[2] == '\xBF') {
+    } 아니면 만약(start[0] == '\xEF' && start[1] == '\xBB' && start[2] == '\xBF') {
         *signatureLength=3;
-        return  "UTF-8";
-    } else if(start[0] == '\x00' && start[1] == '\x00' && 
+        반환  "UTF-8";
+    } 아니면 만약(start[0] == '\x00' && start[1] == '\x00' && 
               start[2] == '\xFE' && start[3]=='\xFF') {
         *signatureLength=4;
-        return  "UTF-32BE";
-    } else if(start[0] == '\x0E' && start[1] == '\xFE' && start[2] == '\xFF') {
+        반환  "UTF-32BE";
+    } 아니면 만약(start[0] == '\x0E' && start[1] == '\xFE' && start[2] == '\xFF') {
         *signatureLength=3;
-        return "SCSU";
-    } else if(start[0] == '\xFB' && start[1] == '\xEE' && start[2] == '\x28') {
+        반환 "SCSU";
+    } 아니면 만약(start[0] == '\xFB' && start[1] == '\xEE' && start[2] == '\x28') {
         *signatureLength=3;
-        return "BOCU-1";
-    } else if(start[0] == '\x2B' && start[1] == '\x2F' && start[2] == '\x76') {
+        반환 "BOCU-1";
+    } 아니면 만약(start[0] == '\x2B' && start[1] == '\x2F' && start[2] == '\x76') {
         /*
          * UTF-7: Initial U+FEFF is encoded as +/v8  or  +/v9  or  +/v+  or  +/v/
          * depending on the second UTF-16 code unit.
@@ -2840,78 +2840,78 @@ ucnv_detectUnicodeSignature( const char* source,
          *
          * So far we have +/v
          */
-        if(start[3] == '\x38' && start[4] == '\x2D') {
+        만약(start[3] == '\x38' && start[4] == '\x2D') {
             /* 5 bytes +/v8- */
             *signatureLength=5;
-            return "UTF-7";
-        } else if(start[3] == '\x38' || start[3] == '\x39' || start[3] == '\x2B' || start[3] == '\x2F') {
+            반환 "UTF-7";
+        } 아니면 만약(start[3] == '\x38' || start[3] == '\x39' || start[3] == '\x2B' || start[3] == '\x2F') {
             /* 4 bytes +/v8  or  +/v9  or  +/v+  or  +/v/ */
             *signatureLength=4;
-            return "UTF-7";
+            반환 "UTF-7";
         }
-    }else if(start[0]=='\xDD' && start[1]== '\x73'&& start[2]=='\x66' && start[3]=='\x73'){
+    }아니면 만약(start[0]=='\xDD' && start[1]== '\x73'&& start[2]=='\x66' && start[3]=='\x73'){
         *signatureLength=4;
-        return "UTF-EBCDIC";
+        반환 "UTF-EBCDIC";
     }
 
 
     /* no known Unicode signature byte sequence recognized */
     *signatureLength=0;
-    return nullptr;
+    반환 nullptr;
 }
 
 U_CAPI int32_t U_EXPORT2
 ucnv_fromUCountPending(const UConverter* cnv, UErrorCode* status)
 {
-    if(status == nullptr || U_FAILURE(*status)){
-        return -1;
+    만약(status == nullptr || U_FAILURE(*status)){
+        반환 -1;
     }
-    if(cnv == nullptr){
+    만약(cnv == nullptr){
         *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return -1;
+        반환 -1;
     }
 
-    if(cnv->preFromUFirstCP >= 0){
-        return U16_LENGTH(cnv->preFromUFirstCP)+cnv->preFromULength ;
-    }else if(cnv->preFromULength < 0){
-        return -cnv->preFromULength ;
-    }else if(cnv->fromUChar32 > 0){
-        return 1;
+    만약(cnv->preFromUFirstCP >= 0){
+        반환 U16_LENGTH(cnv->preFromUFirstCP)+cnv->preFromULength ;
+    }아니면 만약(cnv->preFromULength < 0){
+        반환 -cnv->preFromULength ;
+    }아니면 만약(cnv->fromUChar32 > 0){
+        반환 1;
     }
-    return 0; 
+    반환 0; 
 
 }
 
 U_CAPI int32_t U_EXPORT2
 ucnv_toUCountPending(const UConverter* cnv, UErrorCode* status){
 
-    if(status == nullptr || U_FAILURE(*status)){
-        return -1;
+    만약(status == nullptr || U_FAILURE(*status)){
+        반환 -1;
     }
-    if(cnv == nullptr){
+    만약(cnv == nullptr){
         *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return -1;
+        반환 -1;
     }
 
-    if(cnv->preToULength > 0){
-        return cnv->preToULength ;
-    }else if(cnv->preToULength < 0){
-        return -cnv->preToULength;
-    }else if(cnv->toULength > 0){
-        return cnv->toULength;
+    만약(cnv->preToULength > 0){
+        반환 cnv->preToULength ;
+    }아니면 만약(cnv->preToULength < 0){
+        반환 -cnv->preToULength;
+    }아니면 만약(cnv->toULength > 0){
+        반환 cnv->toULength;
     }
-    return 0;
+    반환 0;
 }
 
 U_CAPI UBool U_EXPORT2
 ucnv_isFixedWidth(UConverter *cnv, UErrorCode *status){
-    if (U_FAILURE(*status)) {
-        return false;
+    만약 (U_FAILURE(*status)) {
+        반환 false;
     }
 
-    if (cnv == nullptr) {
+    만약 (cnv == nullptr) {
         *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return false;
+        반환 false;
     }
 
     switch (ucnv_getType(cnv)) {
@@ -2921,9 +2921,9 @@ ucnv_isFixedWidth(UConverter *cnv, UErrorCode *status){
         case UCNV_UTF32_LittleEndian:
         case UCNV_UTF32:
         case UCNV_US_ASCII:
-            return true;
+            반환 true;
         default:
-            return false;
+            반환 false;
     }
 }
 #endif

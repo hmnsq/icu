@@ -13,7 +13,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_NORMALIZATION
+#만약 !UCONFIG_NO_NORMALIZATION
 
 #include "unicode/udata.h"
 #include "unicode/localpointer.h"
@@ -55,7 +55,7 @@ UBool U_CALLCONV
 LoadedNormalizer2Impl::isAcceptable(void * /*context*/,
                                     const char * /* type */, const char * /*name*/,
                                     const UDataInfo *pInfo) {
-    if(
+    만약(
         pInfo->size>=20 &&
         pInfo->isBigEndian==U_IS_BIG_ENDIAN &&
         pInfo->charsetFamily==U_CHARSET_FAMILY &&
@@ -67,27 +67,27 @@ LoadedNormalizer2Impl::isAcceptable(void * /*context*/,
     ) {
         // Normalizer2Impl *me=(Normalizer2Impl *)context;
         // uprv_memcpy(me->dataVersion, pInfo->dataVersion, 4);
-        return true;
-    } else {
-        return false;
+        반환 true;
+    } 아니면 {
+        반환 false;
     }
 }
 
 void
 LoadedNormalizer2Impl::load(const char *packageName, const char *name, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return;
+    만약(U_FAILURE(errorCode)) {
+        반환;
     }
     memory=udata_openChoice(packageName, "nrm", name, isAcceptable, this, &errorCode);
-    if(U_FAILURE(errorCode)) {
-        return;
+    만약(U_FAILURE(errorCode)) {
+        반환;
     }
     const uint8_t* inBytes = static_cast<const uint8_t*>(udata_getMemory(memory));
     const int32_t* inIndexes = reinterpret_cast<const int32_t*>(inBytes);
     int32_t indexesLength=inIndexes[IX_NORM_TRIE_OFFSET]/4;
-    if(indexesLength<=IX_MIN_LCCC_CP) {
+    만약(indexesLength<=IX_MIN_LCCC_CP) {
         errorCode=U_INVALID_FORMAT_ERROR;  // Not enough indexes.
-        return;
+        반환;
     }
 
     int32_t offset=inIndexes[IX_NORM_TRIE_OFFSET];
@@ -95,8 +95,8 @@ LoadedNormalizer2Impl::load(const char *packageName, const char *name, UErrorCod
     ownedTrie=ucptrie_openFromBinary(UCPTRIE_TYPE_FAST, UCPTRIE_VALUE_BITS_16,
                                      inBytes+offset, nextOffset-offset, nullptr,
                                      &errorCode);
-    if(U_FAILURE(errorCode)) {
-        return;
+    만약(U_FAILURE(errorCode)) {
+        반환;
     }
 
     offset=nextOffset;
@@ -116,23 +116,23 @@ Norm2AllModes *
 Norm2AllModes::createInstance(const char *packageName,
                               const char *name,
                               UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return nullptr;
+    만약(U_FAILURE(errorCode)) {
+        반환 nullptr;
     }
     LoadedNormalizer2Impl *impl=new LoadedNormalizer2Impl;
-    if(impl==nullptr) {
+    만약(impl==nullptr) {
         errorCode=U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        반환 nullptr;
     }
     impl->load(packageName, name, errorCode);
-    return createInstance(impl, errorCode);
+    반환 createInstance(impl, errorCode);
 }
 
 U_CDECL_BEGIN
 static UBool U_CALLCONV uprv_loaded_normalizer2_cleanup();
 U_CDECL_END
 
-#if !NORM2_HARDCODE_NFC_DATA
+#만약 !NORM2_HARDCODE_NFC_DATA
 static Norm2AllModes *nfcSingleton;
 static icu::UInitOnce nfcInitOnce {};
 #endif
@@ -150,18 +150,18 @@ static UHashtable    *cache=nullptr;
 
 // UInitOnce singleton initialization function
 static void U_CALLCONV initSingletons(const char *what, UErrorCode &errorCode) {
-#if !NORM2_HARDCODE_NFC_DATA
-    if (uprv_strcmp(what, "nfc") == 0) {
+#만약 !NORM2_HARDCODE_NFC_DATA
+    만약 (uprv_strcmp(what, "nfc") == 0) {
         nfcSingleton    = Norm2AllModes::createInstance(nullptr, "nfc", errorCode);
-    } else
+    } 아니면
 #endif
-    if (uprv_strcmp(what, "nfkc") == 0) {
+    만약 (uprv_strcmp(what, "nfkc") == 0) {
         nfkcSingleton    = Norm2AllModes::createInstance(nullptr, "nfkc", errorCode);
-    } else if (uprv_strcmp(what, "nfkc_cf") == 0) {
+    } 아니면 만약 (uprv_strcmp(what, "nfkc_cf") == 0) {
         nfkc_cfSingleton = Norm2AllModes::createInstance(nullptr, "nfkc_cf", errorCode);
-    } else if (uprv_strcmp(what, "nfkc_scf") == 0) {
+    } 아니면 만약 (uprv_strcmp(what, "nfkc_scf") == 0) {
         nfkc_scfSingleton = Norm2AllModes::createInstance(nullptr, "nfkc_scf", errorCode);
-    } else {
+    } 아니면 {
         UPRV_UNREACHABLE_EXIT;   // Unknown singleton
     }
     ucln_common_registerCleanup(UCLN_COMMON_LOADED_NORMALIZER2, uprv_loaded_normalizer2_cleanup);
@@ -174,7 +174,7 @@ static void U_CALLCONV deleteNorm2AllModes(void *allModes) {
 }
 
 static UBool U_CALLCONV uprv_loaded_normalizer2_cleanup() {
-#if !NORM2_HARDCODE_NFC_DATA
+#만약 !NORM2_HARDCODE_NFC_DATA
     delete nfcSingleton;
     nfcSingleton = nullptr;
     nfcInitOnce.reset();
@@ -194,93 +194,93 @@ static UBool U_CALLCONV uprv_loaded_normalizer2_cleanup() {
 
     uhash_close(cache);
     cache=nullptr;
-    return true;
+    반환 true;
 }
 
 U_CDECL_END
 
-#if !NORM2_HARDCODE_NFC_DATA
+#만약 !NORM2_HARDCODE_NFC_DATA
 const Norm2AllModes *
 Norm2AllModes::getNFCInstance(UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) { return nullptr; }
+    만약(U_FAILURE(errorCode)) { 반환 nullptr; }
     umtx_initOnce(nfcInitOnce, &initSingletons, "nfc", errorCode);
-    return nfcSingleton;
+    반환 nfcSingleton;
 }
 #endif
 
 const Norm2AllModes *
 Norm2AllModes::getNFKCInstance(UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) { return nullptr; }
+    만약(U_FAILURE(errorCode)) { 반환 nullptr; }
     umtx_initOnce(nfkcInitOnce, &initSingletons, "nfkc", errorCode);
-    return nfkcSingleton;
+    반환 nfkcSingleton;
 }
 
 const Norm2AllModes *
 Norm2AllModes::getNFKC_CFInstance(UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) { return nullptr; }
+    만약(U_FAILURE(errorCode)) { 반환 nullptr; }
     umtx_initOnce(nfkc_cfInitOnce, &initSingletons, "nfkc_cf", errorCode);
-    return nfkc_cfSingleton;
+    반환 nfkc_cfSingleton;
 }
 
 const Norm2AllModes *
 Norm2AllModes::getNFKC_SCFInstance(UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) { return nullptr; }
+    만약(U_FAILURE(errorCode)) { 반환 nullptr; }
     umtx_initOnce(nfkc_scfInitOnce, &initSingletons, "nfkc_scf", errorCode);
-    return nfkc_scfSingleton;
+    반환 nfkc_scfSingleton;
 }
 
-#if !NORM2_HARDCODE_NFC_DATA
+#만약 !NORM2_HARDCODE_NFC_DATA
 const Normalizer2 *
 Normalizer2::getNFCInstance(UErrorCode &errorCode) {
     const Norm2AllModes *allModes=Norm2AllModes::getNFCInstance(errorCode);
-    return allModes!=nullptr ? &allModes->comp : nullptr;
+    반환 allModes!=nullptr ? &allModes->comp : nullptr;
 }
 
 const Normalizer2 *
 Normalizer2::getNFDInstance(UErrorCode &errorCode) {
     const Norm2AllModes *allModes=Norm2AllModes::getNFCInstance(errorCode);
-    return allModes!=nullptr ? &allModes->decomp : nullptr;
+    반환 allModes!=nullptr ? &allModes->decomp : nullptr;
 }
 
 const Normalizer2 *Normalizer2Factory::getFCDInstance(UErrorCode &errorCode) {
     const Norm2AllModes *allModes=Norm2AllModes::getNFCInstance(errorCode);
-    return allModes!=nullptr ? &allModes->fcd : nullptr;
+    반환 allModes!=nullptr ? &allModes->fcd : nullptr;
 }
 
 const Normalizer2 *Normalizer2Factory::getFCCInstance(UErrorCode &errorCode) {
     const Norm2AllModes *allModes=Norm2AllModes::getNFCInstance(errorCode);
-    return allModes!=nullptr ? &allModes->fcc : nullptr;
+    반환 allModes!=nullptr ? &allModes->fcc : nullptr;
 }
 
 const Normalizer2Impl *
 Normalizer2Factory::getNFCImpl(UErrorCode &errorCode) {
     const Norm2AllModes *allModes=Norm2AllModes::getNFCInstance(errorCode);
-    return allModes!=nullptr ? allModes->impl : nullptr;
+    반환 allModes!=nullptr ? allModes->impl : nullptr;
 }
 #endif
 
 const Normalizer2 *
 Normalizer2::getNFKCInstance(UErrorCode &errorCode) {
     const Norm2AllModes *allModes=Norm2AllModes::getNFKCInstance(errorCode);
-    return allModes!=nullptr ? &allModes->comp : nullptr;
+    반환 allModes!=nullptr ? &allModes->comp : nullptr;
 }
 
 const Normalizer2 *
 Normalizer2::getNFKDInstance(UErrorCode &errorCode) {
     const Norm2AllModes *allModes=Norm2AllModes::getNFKCInstance(errorCode);
-    return allModes!=nullptr ? &allModes->decomp : nullptr;
+    반환 allModes!=nullptr ? &allModes->decomp : nullptr;
 }
 
 const Normalizer2 *
 Normalizer2::getNFKCCasefoldInstance(UErrorCode &errorCode) {
     const Norm2AllModes *allModes=Norm2AllModes::getNFKC_CFInstance(errorCode);
-    return allModes!=nullptr ? &allModes->comp : nullptr;
+    반환 allModes!=nullptr ? &allModes->comp : nullptr;
 }
 
 const Normalizer2 *
 Normalizer2::getNFKCSimpleCasefoldInstance(UErrorCode &errorCode) {
     const Norm2AllModes *allModes=Norm2AllModes::getNFKC_SCFInstance(errorCode);
-    return allModes!=nullptr ? &allModes->comp : nullptr;
+    반환 allModes!=nullptr ? &allModes->comp : nullptr;
 }
 
 const Normalizer2 *
@@ -288,112 +288,112 @@ Normalizer2::getInstance(const char *packageName,
                          const char *name,
                          UNormalization2Mode mode,
                          UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return nullptr;
+    만약(U_FAILURE(errorCode)) {
+        반환 nullptr;
     }
-    if(name==nullptr || *name==0) {
+    만약(name==nullptr || *name==0) {
         errorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        반환 nullptr;
     }
     const Norm2AllModes *allModes=nullptr;
-    if(packageName==nullptr) {
-        if(0==uprv_strcmp(name, "nfc")) {
+    만약(packageName==nullptr) {
+        만약(0==uprv_strcmp(name, "nfc")) {
             allModes=Norm2AllModes::getNFCInstance(errorCode);
-        } else if(0==uprv_strcmp(name, "nfkc")) {
+        } 아니면 만약(0==uprv_strcmp(name, "nfkc")) {
             allModes=Norm2AllModes::getNFKCInstance(errorCode);
-        } else if(0==uprv_strcmp(name, "nfkc_cf")) {
+        } 아니면 만약(0==uprv_strcmp(name, "nfkc_cf")) {
             allModes=Norm2AllModes::getNFKC_CFInstance(errorCode);
-        } else if(0==uprv_strcmp(name, "nfkc_scf")) {
+        } 아니면 만약(0==uprv_strcmp(name, "nfkc_scf")) {
             allModes=Norm2AllModes::getNFKC_SCFInstance(errorCode);
         }
     }
-    if(allModes==nullptr && U_SUCCESS(errorCode)) {
+    만약(allModes==nullptr && U_SUCCESS(errorCode)) {
         {
             Mutex lock;
-            if(cache!=nullptr) {
+            만약(cache!=nullptr) {
                 allModes = static_cast<Norm2AllModes*>(uhash_get(cache, name));
             }
         }
-        if(allModes==nullptr) {
+        만약(allModes==nullptr) {
             ucln_common_registerCleanup(UCLN_COMMON_LOADED_NORMALIZER2, uprv_loaded_normalizer2_cleanup);
             LocalPointer<Norm2AllModes> localAllModes(
                 Norm2AllModes::createInstance(packageName, name, errorCode));
-            if(U_SUCCESS(errorCode)) {
+            만약(U_SUCCESS(errorCode)) {
                 Mutex lock;
-                if(cache==nullptr) {
+                만약(cache==nullptr) {
                     cache=uhash_open(uhash_hashChars, uhash_compareChars, nullptr, &errorCode);
-                    if(U_FAILURE(errorCode)) {
-                        return nullptr;
+                    만약(U_FAILURE(errorCode)) {
+                        반환 nullptr;
                     }
                     uhash_setKeyDeleter(cache, uprv_free);
                     uhash_setValueDeleter(cache, deleteNorm2AllModes);
                 }
                 void *temp=uhash_get(cache, name);
-                if(temp==nullptr) {
+                만약(temp==nullptr) {
                     int32_t keyLength= static_cast<int32_t>(uprv_strlen(name)+1);
                     char* nameCopy = static_cast<char*>(uprv_malloc(keyLength));
-                    if(nameCopy==nullptr) {
+                    만약(nameCopy==nullptr) {
                         errorCode=U_MEMORY_ALLOCATION_ERROR;
-                        return nullptr;
+                        반환 nullptr;
                     }
                     uprv_memcpy(nameCopy, name, keyLength);
                     allModes=localAllModes.getAlias();
                     uhash_put(cache, nameCopy, localAllModes.orphan(), &errorCode);
-                } else {
+                } 아니면 {
                     // race condition
                     allModes = static_cast<Norm2AllModes*>(temp);
                 }
             }
         }
     }
-    if(allModes!=nullptr && U_SUCCESS(errorCode)) {
+    만약(allModes!=nullptr && U_SUCCESS(errorCode)) {
         switch(mode) {
         case UNORM2_COMPOSE:
-            return &allModes->comp;
+            반환 &allModes->comp;
         case UNORM2_DECOMPOSE:
-            return &allModes->decomp;
+            반환 &allModes->decomp;
         case UNORM2_FCD:
-            return &allModes->fcd;
+            반환 &allModes->fcd;
         case UNORM2_COMPOSE_CONTIGUOUS:
-            return &allModes->fcc;
+            반환 &allModes->fcc;
         default:
             break;  // do nothing
         }
     }
-    return nullptr;
+    반환 nullptr;
 }
 
 const Normalizer2 *
 Normalizer2Factory::getInstance(UNormalizationMode mode, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return nullptr;
+    만약(U_FAILURE(errorCode)) {
+        반환 nullptr;
     }
     switch(mode) {
     case UNORM_NFD:
-        return Normalizer2::getNFDInstance(errorCode);
+        반환 Normalizer2::getNFDInstance(errorCode);
     case UNORM_NFKD:
-        return Normalizer2::getNFKDInstance(errorCode);
+        반환 Normalizer2::getNFKDInstance(errorCode);
     case UNORM_NFC:
-        return Normalizer2::getNFCInstance(errorCode);
+        반환 Normalizer2::getNFCInstance(errorCode);
     case UNORM_NFKC:
-        return Normalizer2::getNFKCInstance(errorCode);
+        반환 Normalizer2::getNFKCInstance(errorCode);
     case UNORM_FCD:
-        return getFCDInstance(errorCode);
+        반환 getFCDInstance(errorCode);
     default:  // UNORM_NONE
-        return getNoopInstance(errorCode);
+        반환 getNoopInstance(errorCode);
     }
 }
 
 const Normalizer2Impl *
 Normalizer2Factory::getNFKCImpl(UErrorCode &errorCode) {
     const Norm2AllModes *allModes=Norm2AllModes::getNFKCInstance(errorCode);
-    return allModes!=nullptr ? allModes->impl : nullptr;
+    반환 allModes!=nullptr ? allModes->impl : nullptr;
 }
 
 const Normalizer2Impl *
 Normalizer2Factory::getNFKC_CFImpl(UErrorCode &errorCode) {
     const Norm2AllModes *allModes=Norm2AllModes::getNFKC_CFInstance(errorCode);
-    return allModes!=nullptr ? allModes->impl : nullptr;
+    반환 allModes!=nullptr ? allModes->impl : nullptr;
 }
 
 U_NAMESPACE_END
@@ -404,22 +404,22 @@ U_NAMESPACE_USE
 
 U_CAPI const UNormalizer2 * U_EXPORT2
 unorm2_getNFKCInstance(UErrorCode *pErrorCode) {
-    return (const UNormalizer2 *)Normalizer2::getNFKCInstance(*pErrorCode);
+    반환 (const UNormalizer2 *)Normalizer2::getNFKCInstance(*pErrorCode);
 }
 
 U_CAPI const UNormalizer2 * U_EXPORT2
 unorm2_getNFKDInstance(UErrorCode *pErrorCode) {
-    return (const UNormalizer2 *)Normalizer2::getNFKDInstance(*pErrorCode);
+    반환 (const UNormalizer2 *)Normalizer2::getNFKDInstance(*pErrorCode);
 }
 
 U_CAPI const UNormalizer2 * U_EXPORT2
 unorm2_getNFKCCasefoldInstance(UErrorCode *pErrorCode) {
-    return (const UNormalizer2 *)Normalizer2::getNFKCCasefoldInstance(*pErrorCode);
+    반환 (const UNormalizer2 *)Normalizer2::getNFKCCasefoldInstance(*pErrorCode);
 }
 
 U_CAPI const UNormalizer2 * U_EXPORT2
 unorm2_getNFKCSimpleCasefoldInstance(UErrorCode *pErrorCode) {
-    return (const UNormalizer2 *)Normalizer2::getNFKCSimpleCasefoldInstance(*pErrorCode);
+    반환 (const UNormalizer2 *)Normalizer2::getNFKCSimpleCasefoldInstance(*pErrorCode);
 }
 
 U_CAPI const UNormalizer2 * U_EXPORT2
@@ -427,20 +427,20 @@ unorm2_getInstance(const char *packageName,
                    const char *name,
                    UNormalization2Mode mode,
                    UErrorCode *pErrorCode) {
-    return (const UNormalizer2 *)Normalizer2::getInstance(packageName, name, mode, *pErrorCode);
+    반환 (const UNormalizer2 *)Normalizer2::getInstance(packageName, name, mode, *pErrorCode);
 }
 
 U_CFUNC UNormalizationCheckResult
 unorm_getQuickCheck(UChar32 c, UNormalizationMode mode) {
-    if(mode<=UNORM_NONE || UNORM_FCD<=mode) {
-        return UNORM_YES;
+    만약(mode<=UNORM_NONE || UNORM_FCD<=mode) {
+        반환 UNORM_YES;
     }
     UErrorCode errorCode=U_ZERO_ERROR;
     const Normalizer2 *norm2=Normalizer2Factory::getInstance(mode, errorCode);
-    if(U_SUCCESS(errorCode)) {
-        return ((const Normalizer2WithImpl *)norm2)->getQuickCheck(c);
-    } else {
-        return UNORM_MAYBE;
+    만약(U_SUCCESS(errorCode)) {
+        반환 ((const Normalizer2WithImpl *)norm2)->getQuickCheck(c);
+    } 아니면 {
+        반환 UNORM_MAYBE;
     }
 }
 

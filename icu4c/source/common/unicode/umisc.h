@@ -49,7 +49,7 @@ typedef struct UFieldPosition {
   int32_t endIndex;
 } UFieldPosition;
 
-#if !UCONFIG_NO_SERVICE
+#만약 !UCONFIG_NO_SERVICE
 /**
  * Opaque type returned by registerInstance, registerFactory and unregister for service registration.
  * @stable ICU 2.6

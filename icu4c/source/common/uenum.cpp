@@ -33,38 +33,38 @@ static const int32_t PAD = 8;
    or reallocating it if at least 'capacity' bytes are not available. */
 static void* _getBuffer(UEnumeration* en U_LIFETIME_BOUND, int32_t capacity) {
 
-    if (en->baseContext != nullptr) {
-        if (static_cast<_UEnumBuffer*>(en->baseContext)->len < capacity) {
+    만약 (en->baseContext != nullptr) {
+        만약 (static_cast<_UEnumBuffer*>(en->baseContext)->len < capacity) {
             capacity += PAD;
             en->baseContext = uprv_realloc(en->baseContext,
                                            sizeof(int32_t) + capacity);
-            if (en->baseContext == nullptr) {
-                return nullptr;
+            만약 (en->baseContext == nullptr) {
+                반환 nullptr;
             }
             static_cast<_UEnumBuffer*>(en->baseContext)->len = capacity;
         }
-    } else {
+    } 아니면 {
         capacity += PAD;
         en->baseContext = uprv_malloc(sizeof(int32_t) + capacity);
-        if (en->baseContext == nullptr) {
-            return nullptr;
+        만약 (en->baseContext == nullptr) {
+            반환 nullptr;
         }
         static_cast<_UEnumBuffer*>(en->baseContext)->len = capacity;
     }
     
-    return static_cast<void*>(&static_cast<_UEnumBuffer*>(en->baseContext)->data);
+    반환 static_cast<void*>(&static_cast<_UEnumBuffer*>(en->baseContext)->data);
 }
 
 U_CAPI void U_EXPORT2
 uenum_close(UEnumeration* en)
 {
-    if (en) {
-        if (en->close != nullptr) {
-            if (en->baseContext) {
+    만약 (en) {
+        만약 (en->close != nullptr) {
+            만약 (en->baseContext) {
                 uprv_free(en->baseContext);
             }
             en->close(en);
-        } else { /* this seems dangerous, but we better kill the object */
+        } 아니면 { /* this seems dangerous, but we better kill the object */
             uprv_free(en);
         }
     }
@@ -73,14 +73,14 @@ uenum_close(UEnumeration* en)
 U_CAPI int32_t U_EXPORT2
 uenum_count(UEnumeration* en, UErrorCode* status)
 {
-    if (!en || U_FAILURE(*status)) {
-        return -1;
+    만약 (!en || U_FAILURE(*status)) {
+        반환 -1;
     }
-    if (en->count != nullptr) {
-        return en->count(en, status);
-    } else {
+    만약 (en->count != nullptr) {
+        반환 en->count(en, status);
+    } 아니면 {
         *status = U_UNSUPPORTED_ERROR;
-        return -1;
+        반환 -1;
     }
 }
 
@@ -92,24 +92,24 @@ uenum_unextDefault(UEnumeration* en U_LIFETIME_BOUND,
 {
     char16_t *ustr = nullptr;
     int32_t len = 0;
-    if (en->next != nullptr) {
+    만약 (en->next != nullptr) {
         const char *cstr = en->next(en, &len, status);
-        if (cstr != nullptr) {
+        만약 (cstr != nullptr) {
             ustr = (char16_t*) _getBuffer(en, (len+1) * sizeof(char16_t));
-            if (ustr == nullptr) {
+            만약 (ustr == nullptr) {
                 *status = U_MEMORY_ALLOCATION_ERROR;
-            } else {
+            } 아니면 {
                 u_charsToUChars(cstr, ustr, len);
                 ustr[len] = 0;
             }
         }
-    } else {
+    } 아니면 {
         *status = U_UNSUPPORTED_ERROR;
     }
-    if (resultLength) {
+    만약 (resultLength) {
         *resultLength = len;
     }
-    return ustr;
+    반환 ustr;
 }
 
 /* Don't call this directly. Only uenum_next should be calling this. */
@@ -118,24 +118,24 @@ uenum_nextDefault(UEnumeration* en U_LIFETIME_BOUND,
                   int32_t* resultLength,
                   UErrorCode* status)
 {
-    if (en->uNext != nullptr) {
+    만약 (en->uNext != nullptr) {
         char *tempCharVal;
         const char16_t *tempUCharVal = en->uNext(en, resultLength, status);
-        if (tempUCharVal == nullptr) {
-            return nullptr;
+        만약 (tempUCharVal == nullptr) {
+            반환 nullptr;
         }
         tempCharVal = (char*)
             _getBuffer(en, (*resultLength+1) * sizeof(char));
-        if (!tempCharVal) {
+        만약 (!tempCharVal) {
             *status = U_MEMORY_ALLOCATION_ERROR;
-            return nullptr;
+            반환 nullptr;
         }
         u_UCharsToChars(tempUCharVal, tempCharVal, *resultLength);
         tempCharVal[*resultLength] = 0;
-        return tempCharVal;
-    } else {
+        반환 tempCharVal;
+    } 아니면 {
         *status = U_UNSUPPORTED_ERROR;
-        return nullptr;
+        반환 nullptr;
     }
 }
 
@@ -144,14 +144,14 @@ uenum_unext(UEnumeration* en U_LIFETIME_BOUND,
             int32_t* resultLength,
             UErrorCode* status)
 {
-    if (!en || U_FAILURE(*status)) {
-        return nullptr;
+    만약 (!en || U_FAILURE(*status)) {
+        반환 nullptr;
     }
-    if (en->uNext != nullptr) {
-        return en->uNext(en, resultLength, status);
-    } else {
+    만약 (en->uNext != nullptr) {
+        반환 en->uNext(en, resultLength, status);
+    } 아니면 {
         *status = U_UNSUPPORTED_ERROR;
-        return nullptr;
+        반환 nullptr;
     }
 }
 
@@ -160,32 +160,32 @@ uenum_next(UEnumeration* en U_LIFETIME_BOUND,
            int32_t* resultLength,
            UErrorCode* status)
 {
-    if (!en || U_FAILURE(*status)) {
-        return nullptr;
+    만약 (!en || U_FAILURE(*status)) {
+        반환 nullptr;
     }
-    if (en->next != nullptr) {
-        if (resultLength != nullptr) {
-            return en->next(en, resultLength, status);
+    만약 (en->next != nullptr) {
+        만약 (resultLength != nullptr) {
+            반환 en->next(en, resultLength, status);
         }
-        else {
+        아니면 {
             int32_t dummyLength=0;
-            return en->next(en, &dummyLength, status);
+            반환 en->next(en, &dummyLength, status);
         }
-    } else {
+    } 아니면 {
         *status = U_UNSUPPORTED_ERROR;
-        return nullptr;
+        반환 nullptr;
     }
 }
 
 U_CAPI void U_EXPORT2
 uenum_reset(UEnumeration* en, UErrorCode* status)
 {
-    if (!en || U_FAILURE(*status)) {
-        return;
+    만약 (!en || U_FAILURE(*status)) {
+        반환;
     }
-    if (en->reset != nullptr) {
+    만약 (en->reset != nullptr) {
         en->reset(en, status);
-    } else {
+    } 아니면 {
         *status = U_UNSUPPORTED_ERROR;
     }
 }

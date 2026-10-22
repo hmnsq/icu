@@ -6,7 +6,7 @@
 
 #include "unicode/utypes.h"
 
-#if U_ENABLE_TRACING
+#만약 U_ENABLE_TRACING
 
 struct UResourceBundle;
 
@@ -73,7 +73,7 @@ public:
      * non-null; otherwise, does nothing.
      */
     void maybeTrace(const char* type) const {
-        if (fResB || fParent) {
+        만약 (fResB || fParent) {
             trace(type);
         }
     }
@@ -104,7 +104,7 @@ private:
 
 U_NAMESPACE_END
 
-#else // U_ENABLE_TRACING
+#아니면 // U_ENABLE_TRACING
 
 U_NAMESPACE_BEGIN
 

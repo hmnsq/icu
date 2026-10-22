@@ -10,7 +10,7 @@
 #include "unicode/utypes.h"
 #include "unicode/localpointer.h"
 
-#if !UCONFIG_NO_SERVICE
+#만약 !UCONFIG_NO_SERVICE
 
 #include "serv.h"
 #include "umutex.h"
@@ -38,19 +38,19 @@ ICUServiceKey::~ICUServiceKey()
 const UnicodeString& 
 ICUServiceKey::getID() const 
 {
-    return _id;
+    반환 _id;
 }
 
 UnicodeString& 
 ICUServiceKey::canonicalID(UnicodeString& result) const 
 {
-    return result.append(_id);
+    반환 result.append(_id);
 }
 
 UnicodeString& 
 ICUServiceKey::currentID(UnicodeString& result) const 
 {
-    return canonicalID(result);
+    반환 canonicalID(result);
 }
 
 UnicodeString& 
@@ -58,46 +58,46 @@ ICUServiceKey::currentDescriptor(UnicodeString& result) const
 {
     prefix(result);
     result.append(PREFIX_DELIMITER);
-    return currentID(result);
+    반환 currentID(result);
 }
 
 UBool 
 ICUServiceKey::fallback() 
 {
-    return false;
+    반환 false;
 }
 
 UBool 
 ICUServiceKey::isFallbackOf(const UnicodeString& id) const 
 {
-    return id == _id;
+    반환 id == _id;
 }
 
 UnicodeString& 
 ICUServiceKey::prefix(UnicodeString& result) const 
 {
-    return result;
+    반환 result;
 }
 
 UnicodeString& 
 ICUServiceKey::parsePrefix(UnicodeString& result) 
 {
     int32_t n = result.indexOf(PREFIX_DELIMITER);
-    if (n < 0) {
+    만약 (n < 0) {
         n = 0;
     }
     result.remove(n);
-    return result;
+    반환 result;
 }
 
 UnicodeString& 
 ICUServiceKey::parseSuffix(UnicodeString& result) 
 {
     int32_t n = result.indexOf(PREFIX_DELIMITER);
-    if (n >= 0) {
+    만약 (n >= 0) {
         result.remove(0, n+1);
     }
-    return result;
+    반환 result;
 }
 
 #ifdef SERVICE_DEBUG
@@ -107,13 +107,13 @@ ICUServiceKey::debug(UnicodeString& result) const
     debugClass(result);
     result.append((UnicodeString)" id: ");
     result.append(_id);
-    return result;
+    반환 result;
 }
 
 UnicodeString& 
 ICUServiceKey::debugClass(UnicodeString& result) const 
 {
-    return result.append((UnicodeString)"ICUServiceKey");
+    반환 result.append((UnicodeString)"ICUServiceKey");
 }
 #endif
 
@@ -138,21 +138,21 @@ SimpleFactory::~SimpleFactory()
 UObject* 
 SimpleFactory::create(const ICUServiceKey& key, const ICUService* service, UErrorCode& status) const 
 {
-    if (U_SUCCESS(status)) {
+    만약 (U_SUCCESS(status)) {
         UnicodeString temp;
-        if (_id == key.currentID(temp)) {
-            return service->cloneInstance(_instance); 
+        만약 (_id == key.currentID(temp)) {
+            반환 service->cloneInstance(_instance); 
         }
     }
-    return nullptr;
+    반환 nullptr;
 }
 
 void 
 SimpleFactory::updateVisibleIDs(Hashtable& result, UErrorCode& status) const 
 {
-    if (_visible) {
+    만약 (_visible) {
         result.put(_id, (void*)this, status); // cast away const
-    } else {
+    } 아니면 {
         result.remove(_id);
     }
 }
@@ -160,12 +160,12 @@ SimpleFactory::updateVisibleIDs(Hashtable& result, UErrorCode& status) const
 UnicodeString& 
 SimpleFactory::getDisplayName(const UnicodeString& id, const Locale& /* locale */, UnicodeString& result) const 
 {
-    if (_visible && _id == id) {
+    만약 (_visible && _id == id) {
         result = _id;
-    } else {
+    } 아니면 {
         result.setToBogus();
     }
-    return result;
+    반환 result;
 }
 
 #ifdef SERVICE_DEBUG
@@ -177,13 +177,13 @@ SimpleFactory::debug(UnicodeString& toAppendTo) const
     toAppendTo.append(_id);
     toAppendTo.append((UnicodeString)", visible: ");
     toAppendTo.append(_visible ? (UnicodeString)"T" : (UnicodeString)"F");
-    return toAppendTo;
+    반환 toAppendTo;
 }
 
 UnicodeString& 
 SimpleFactory::debugClass(UnicodeString& toAppendTo) const 
 {
-    return toAppendTo.append((UnicodeString)"SimpleFactory");
+    반환 toAppendTo.append((UnicodeString)"SimpleFactory");
 }
 #endif
 
@@ -230,7 +230,7 @@ public:
     */
     CacheEntry* ref() {
         ++refcount;
-        return this;
+        반환 this;
     }
 
     /**
@@ -241,11 +241,11 @@ public:
     * false if the resource has been released.
     */
     CacheEntry* unref() {
-        if ((--refcount) == 0) {
+        만약 ((--refcount) == 0) {
             delete this;
-            return nullptr;
+            반환 nullptr;
         }
-        return this;
+        반환 this;
     }
 
     /**
@@ -253,7 +253,7 @@ public:
     * resource has not been released.
     */
     UBool isShared() const {
-        return refcount > 1;
+        반환 refcount > 1;
     }
 };
 
@@ -292,21 +292,21 @@ StringPair::create(const UnicodeString& displayName,
                    const UnicodeString& id,
                    UErrorCode& status)
 {
-    if (U_SUCCESS(status)) {
+    만약 (U_SUCCESS(status)) {
         StringPair* sp = new StringPair(displayName, id);
-        if (sp == nullptr || sp->isBogus()) {
+        만약 (sp == nullptr || sp->isBogus()) {
             status = U_MEMORY_ALLOCATION_ERROR;
             delete sp;
-            return nullptr;
+            반환 nullptr;
         }
-        return sp;
+        반환 sp;
     }
-    return nullptr;
+    반환 nullptr;
 }
 
 UBool 
 StringPair::isBogus() const {
-    return displayName.isBogus() || id.isBogus();
+    반환 displayName.isBogus() || id.isBogus();
 }
 
 StringPair::StringPair(const UnicodeString& _displayName, 
@@ -362,7 +362,7 @@ ICUService::~ICUService()
 UObject* 
 ICUService::get(const UnicodeString& descriptor, UErrorCode& status) const 
 {
-    return get(descriptor, nullptr, status);
+    반환 get(descriptor, nullptr, status);
 }
 
 UObject* 
@@ -370,17 +370,17 @@ ICUService::get(const UnicodeString& descriptor, UnicodeString* actualReturn, UE
 {
     UObject* result = nullptr;
     ICUServiceKey* key = createKey(&descriptor, status);
-    if (key) {
+    만약 (key) {
         result = getKey(*key, actualReturn, status);
         delete key;
     }
-    return result;
+    반환 result;
 }
 
 UObject* 
 ICUService::getKey(ICUServiceKey& key, UErrorCode& status) const 
 {
-    return getKey(key, nullptr, status);
+    반환 getKey(key, nullptr, status);
 }
 
 // this is a vector that subclasses of ICUService can override to further customize the result object
@@ -389,7 +389,7 @@ ICUService::getKey(ICUServiceKey& key, UErrorCode& status) const
 UObject* 
 ICUService::getKey(ICUServiceKey& key, UnicodeString* actualReturn, UErrorCode& status) const 
 {
-    return getKey(key, actualReturn, nullptr, status);
+    반환 getKey(key, actualReturn, nullptr, status);
 }
 
 // make it possible to call reentrantly on systems that don't have reentrant mutexes.
@@ -401,10 +401,10 @@ public:
         : fMutex(mutex)
         , fActive(!reentering) 
     {
-        if (fActive) umtx_lock(fMutex);
+        만약 (fActive) umtx_lock(fMutex);
     }
     inline ~XMutex() {
-        if (fActive) umtx_unlock(fMutex);
+        만약 (fActive) umtx_unlock(fMutex);
     }
 
 private:
@@ -416,12 +416,12 @@ private:
 UObject* 
 ICUService::getKey(ICUServiceKey& key, UnicodeString* actualReturn, const ICUServiceFactory* factory, UErrorCode& status) const 
 {
-    if (U_FAILURE(status)) {
-        return nullptr;
+    만약 (U_FAILURE(status)) {
+        반환 nullptr;
     }
 
-    if (isDefault()) {
-        return handleDefault(key, actualReturn, status);
+    만약 (isDefault()) {
+        반환 handleDefault(key, actualReturn, status);
     }
 
     ICUService* ncthis = const_cast<ICUService*>(this); // cast away semantic const
@@ -439,15 +439,15 @@ ICUService::getKey(ICUServiceKey& key, UnicodeString* actualReturn, const ICUSer
         // need to make sure not to try to lock it again.
         XMutex mutex(&lock, factory != nullptr);
 
-        if (serviceCache == nullptr) {
+        만약 (serviceCache == nullptr) {
             ncthis->serviceCache = new Hashtable(status);
-            if (ncthis->serviceCache == nullptr) {
+            만약 (ncthis->serviceCache == nullptr) {
                 status = U_MEMORY_ALLOCATION_ERROR;
-                return nullptr;
+                반환 nullptr;
             }
-            if (U_FAILURE(status)) {
+            만약 (U_FAILURE(status)) {
                 delete serviceCache;
-                return nullptr;
+                반환 nullptr;
             }
             serviceCache->setValueDeleter(cacheDeleter);
         }
@@ -460,17 +460,17 @@ ICUService::getKey(ICUServiceKey& key, UnicodeString* actualReturn, const ICUSer
         int32_t limit = factories->size();
         UBool cacheResult = true;
 
-        if (factory != nullptr) {
-            for (int32_t i = 0; i < limit; ++i) {
-                if (factory == static_cast<const ICUServiceFactory*>(factories->elementAt(i))) {
+        만약 (factory != nullptr) {
+            위해 (int32_t i = 0; i < limit; ++i) {
+                만약 (factory == static_cast<const ICUServiceFactory*>(factories->elementAt(i))) {
                     startIndex = i + 1;
                     break;
                 }
             }
-            if (startIndex == 0) {
+            만약 (startIndex == 0) {
                 // throw new InternalError("Factory " + factory + "not registered with service: " + this);
                 status = U_ILLEGAL_ARGUMENT_ERROR;
-                return nullptr;
+                반환 nullptr;
             }
             cacheResult = false;
         }
@@ -479,7 +479,7 @@ ICUService::getKey(ICUServiceKey& key, UnicodeString* actualReturn, const ICUSer
             currentDescriptor.remove();
             key.currentDescriptor(currentDescriptor);
             result = static_cast<CacheEntry*>(serviceCache->get(currentDescriptor));
-            if (result != nullptr) {
+            만약 (result != nullptr) {
                 break;
             }
 
@@ -489,17 +489,17 @@ ICUService::getKey(ICUServiceKey& key, UnicodeString* actualReturn, const ICUSer
             putInCache = true;
 
             int32_t index = startIndex;
-            while (index < limit) {
+            동안 (index < limit) {
                 ICUServiceFactory* f = static_cast<ICUServiceFactory*>(factories->elementAt(index++));
                 LocalPointer<UObject> service(f->create(key, this, status));
-                if (U_FAILURE(status)) {
-                    return nullptr;
+                만약 (U_FAILURE(status)) {
+                    반환 nullptr;
                 }
-                if (service.isValid()) {
+                만약 (service.isValid()) {
                     result = new CacheEntry(currentDescriptor, service.getAlias());
-                    if (result == nullptr) {
+                    만약 (result == nullptr) {
                         status = U_MEMORY_ALLOCATION_ERROR;
-                        return nullptr;
+                        반환 nullptr;
                     }
                     service.orphan(); // result now owns service.
 
@@ -512,42 +512,42 @@ ICUService::getKey(ICUServiceKey& key, UnicodeString* actualReturn, const ICUSer
             // don't want to keep querying on an id that's going to
             // fallback to the one that succeeded, we want to hit the
             // cache the first time next goaround.
-            if (cacheDescriptorList.isNull()) {
+            만약 (cacheDescriptorList.isNull()) {
                 cacheDescriptorList.adoptInsteadAndCheckErrorCode(new UVector(uprv_deleteUObject, nullptr, 5, status), status);
-                if (U_FAILURE(status)) {
-                    return nullptr;
+                만약 (U_FAILURE(status)) {
+                    반환 nullptr;
                 }
             }
 
             LocalPointer<UnicodeString> idToCache(new UnicodeString(currentDescriptor), status);
-            if (U_FAILURE(status)) {
-                return nullptr;
+            만약 (U_FAILURE(status)) {
+                반환 nullptr;
             }
-            if (idToCache->isBogus()) {
+            만약 (idToCache->isBogus()) {
                 status = U_MEMORY_ALLOCATION_ERROR;
-                return nullptr;
+                반환 nullptr;
             }
             cacheDescriptorList->adoptElement(idToCache.orphan(), status);
-            if (U_FAILURE(status)) {
-                return nullptr;
+            만약 (U_FAILURE(status)) {
+                반환 nullptr;
             }
-        } while (key.fallback());
+        } 동안 (key.fallback());
 outerEnd:
 
-        if (result != nullptr) {
-            if (putInCache && cacheResult) {
+        만약 (result != nullptr) {
+            만약 (putInCache && cacheResult) {
                 serviceCache->put(result->actualDescriptor, result, status);
-                if (U_FAILURE(status)) {
-                    return nullptr;
+                만약 (U_FAILURE(status)) {
+                    반환 nullptr;
                 }
 
-                if (cacheDescriptorList.isValid()) {
-                    for (int32_t i = cacheDescriptorList->size(); --i >= 0;) {
+                만약 (cacheDescriptorList.isValid()) {
+                    위해 (int32_t i = cacheDescriptorList->size(); --i >= 0;) {
                         UnicodeString* desc = static_cast<UnicodeString*>(cacheDescriptorList->elementAt(i));
 
                         serviceCache->put(*desc, result, status);
-                        if (U_FAILURE(status)) {
-                            return nullptr;
+                        만약 (U_FAILURE(status)) {
+                            반환 nullptr;
                         }
 
                         result->ref();
@@ -556,44 +556,44 @@ outerEnd:
                 }
             }
 
-            if (actualReturn != nullptr) {
+            만약 (actualReturn != nullptr) {
                 // strip null prefix
-                if (result->actualDescriptor.indexOf(static_cast<char16_t>(0x2f)) == 0) { // U+002f=slash (/)
+                만약 (result->actualDescriptor.indexOf(static_cast<char16_t>(0x2f)) == 0) { // U+002f=slash (/)
                     actualReturn->remove();
                     actualReturn->append(result->actualDescriptor, 
                         1, 
                         result->actualDescriptor.length() - 1);
-                } else {
+                } 아니면 {
                     *actualReturn = result->actualDescriptor;
                 }
 
-                if (actualReturn->isBogus()) {
+                만약 (actualReturn->isBogus()) {
                     status = U_MEMORY_ALLOCATION_ERROR;
                     delete result;
-                    return nullptr;
+                    반환 nullptr;
                 }
             }
 
             UObject* service = cloneInstance(result->service);
-            if (putInCache && !cacheResult) {
+            만약 (putInCache && !cacheResult) {
                 delete result;
             }
-            return service;
+            반환 service;
         }
     }
 
-    return handleDefault(key, actualReturn, status);
+    반환 handleDefault(key, actualReturn, status);
 }
 
 UObject* 
 ICUService::handleDefault(const ICUServiceKey& /* key */, UnicodeString* /* actualIDReturn */, UErrorCode& /* status */) const 
 {
-    return nullptr;
+    반환 nullptr;
 }
 
 UVector& 
 ICUService::getVisibleIDs(UVector& result, UErrorCode& status) const {
-    return getVisibleIDs(result, nullptr, status);
+    반환 getVisibleIDs(result, nullptr, status);
 }
 
 UVector& 
@@ -601,26 +601,26 @@ ICUService::getVisibleIDs(UVector& result, const UnicodeString* matchID, UErrorC
 {
     result.removeAllElements();
 
-    if (U_FAILURE(status)) {
-        return result;
+    만약 (U_FAILURE(status)) {
+        반환 result;
     }
     UObjectDeleter *savedDeleter = result.setDeleter(uprv_deleteUObject);
 
     {
         Mutex mutex(&lock);
         const Hashtable* map = getVisibleIDMap(status);
-        if (map != nullptr) {
+        만약 (map != nullptr) {
             ICUServiceKey* fallbackKey = createKey(matchID, status);
 
-            for (int32_t pos = UHASH_FIRST; U_SUCCESS(status); ) {
+            위해 (int32_t pos = UHASH_FIRST; U_SUCCESS(status); ) {
                 const UHashElement* e = map->nextElement(pos);
-                if (e == nullptr) {
+                만약 (e == nullptr) {
                     break;
                 }
 
                 const UnicodeString* id = static_cast<const UnicodeString*>(e->key.pointer);
-                if (fallbackKey != nullptr) {
-                    if (!fallbackKey->isFallbackOf(*id)) {
+                만약 (fallbackKey != nullptr) {
+                    만약 (!fallbackKey->isFallbackOf(*id)) {
                         continue;
                     }
                 }
@@ -631,44 +631,44 @@ ICUService::getVisibleIDs(UVector& result, const UnicodeString* matchID, UErrorC
             delete fallbackKey;
         }
     }
-    if (U_FAILURE(status)) {
+    만약 (U_FAILURE(status)) {
         result.removeAllElements();
     }
     result.setDeleter(savedDeleter);
-    return result;
+    반환 result;
 }
 
 const Hashtable* 
 ICUService::getVisibleIDMap(UErrorCode& status) const {
-    if (U_FAILURE(status)) return nullptr;
+    만약 (U_FAILURE(status)) 반환 nullptr;
 
     // must only be called when lock is already held
 
     ICUService* ncthis = const_cast<ICUService*>(this); // cast away semantic const
-    if (idCache == nullptr) {
+    만약 (idCache == nullptr) {
         ncthis->idCache = new Hashtable(status);
-        if (idCache == nullptr) {
+        만약 (idCache == nullptr) {
             status = U_MEMORY_ALLOCATION_ERROR;
-        } else if (factories != nullptr) {
-            for (int32_t pos = factories->size(); --pos >= 0;) {
+        } 아니면 만약 (factories != nullptr) {
+            위해 (int32_t pos = factories->size(); --pos >= 0;) {
                 ICUServiceFactory* f = static_cast<ICUServiceFactory*>(factories->elementAt(pos));
                 f->updateVisibleIDs(*idCache, status);
             }
-            if (U_FAILURE(status)) {
+            만약 (U_FAILURE(status)) {
                 delete idCache;
                 ncthis->idCache = nullptr;
             }
         }
     }
 
-    return idCache;
+    반환 idCache;
 }
 
 
 UnicodeString& 
 ICUService::getDisplayName(const UnicodeString& id, UnicodeString& result) const 
 {
-    return getDisplayName(id, result, Locale::getDefault());
+    반환 getDisplayName(id, result, Locale::getDefault());
 }
 
 UnicodeString& 
@@ -678,44 +678,44 @@ ICUService::getDisplayName(const UnicodeString& id, UnicodeString& result, const
         UErrorCode status = U_ZERO_ERROR;
         Mutex mutex(&lock);
         const Hashtable* map = getVisibleIDMap(status);
-        if (map != nullptr) {
+        만약 (map != nullptr) {
             ICUServiceFactory* f = static_cast<ICUServiceFactory*>(map->get(id));
-            if (f != nullptr) {
+            만약 (f != nullptr) {
                 f->getDisplayName(id, locale, result);
-                return result;
+                반환 result;
             }
 
             // fallback
             status = U_ZERO_ERROR;
             ICUServiceKey* fallbackKey = createKey(&id, status);
-            while (fallbackKey != nullptr && fallbackKey->fallback()) {
+            동안 (fallbackKey != nullptr && fallbackKey->fallback()) {
                 UnicodeString us;
                 fallbackKey->currentID(us);
                 f = static_cast<ICUServiceFactory*>(map->get(us));
-                if (f != nullptr) {
+                만약 (f != nullptr) {
                     f->getDisplayName(id, locale, result);
                     delete fallbackKey;
-                    return result;
+                    반환 result;
                 }
             }
             delete fallbackKey;
         }
     }
     result.setToBogus();
-    return result;
+    반환 result;
 }
 
 UVector& 
 ICUService::getDisplayNames(UVector& result, UErrorCode& status) const 
 {
-    return getDisplayNames(result, Locale::getDefault(), nullptr, status);
+    반환 getDisplayNames(result, Locale::getDefault(), nullptr, status);
 }
 
 
 UVector& 
 ICUService::getDisplayNames(UVector& result, const Locale& locale, UErrorCode& status) const 
 {
-    return getDisplayNames(result, locale, nullptr, status);
+    반환 getDisplayNames(result, locale, nullptr, status);
 }
 
 UVector& 
@@ -726,44 +726,44 @@ ICUService::getDisplayNames(UVector& result,
 {
     result.removeAllElements();
     result.setDeleter(userv_deleteStringPair);
-    if (U_SUCCESS(status)) {
+    만약 (U_SUCCESS(status)) {
         ICUService* ncthis = const_cast<ICUService*>(this); // cast away semantic const
         Mutex mutex(&lock);
 
-        if (dnCache != nullptr && dnCache->locale != locale) {
+        만약 (dnCache != nullptr && dnCache->locale != locale) {
             delete dnCache;
             ncthis->dnCache = nullptr;
         }
 
-        if (dnCache == nullptr) {
+        만약 (dnCache == nullptr) {
             const Hashtable* m = getVisibleIDMap(status);
-            if (U_FAILURE(status)) {
-                return result;
+            만약 (U_FAILURE(status)) {
+                반환 result;
             }
             ncthis->dnCache = new DNCache(locale); 
-            if (dnCache == nullptr) {
+            만약 (dnCache == nullptr) {
                 status = U_MEMORY_ALLOCATION_ERROR;
-                return result;
+                반환 result;
             }
 
             int32_t pos = UHASH_FIRST;
             const UHashElement* entry = nullptr;
-            while ((entry = m->nextElement(pos)) != nullptr) {
+            동안 ((entry = m->nextElement(pos)) != nullptr) {
                 const UnicodeString* id = static_cast<const UnicodeString*>(entry->key.pointer);
                 ICUServiceFactory* f = static_cast<ICUServiceFactory*>(entry->value.pointer);
                 UnicodeString dname;
                 f->getDisplayName(*id, locale, dname);
-                if (dname.isBogus()) {
+                만약 (dname.isBogus()) {
                     status = U_MEMORY_ALLOCATION_ERROR;
-                } else {
+                } 아니면 {
                     dnCache->cache.put(dname, (void*)id, status); // share pointer with visibleIDMap
-                    if (U_SUCCESS(status)) {
+                    만약 (U_SUCCESS(status)) {
                         continue;
                     }
                 }
                 delete dnCache;
                 ncthis->dnCache = nullptr;
-                return result;
+                반환 result;
             }
         }
     }
@@ -775,88 +775,88 @@ ICUService::getDisplayNames(UVector& result,
      */
     int32_t pos = UHASH_FIRST; 
     const UHashElement *entry = nullptr;
-    while ((entry = dnCache->cache.nextElement(pos)) != nullptr) {
+    동안 ((entry = dnCache->cache.nextElement(pos)) != nullptr) {
         const UnicodeString* id = static_cast<const UnicodeString*>(entry->value.pointer);
-        if (matchKey != nullptr && !matchKey->isFallbackOf(*id)) {
+        만약 (matchKey != nullptr && !matchKey->isFallbackOf(*id)) {
             continue;
         }
         const UnicodeString* dn = static_cast<const UnicodeString*>(entry->key.pointer);
         StringPair* sp = StringPair::create(*id, *dn, status);
         result.adoptElement(sp, status);
-        if (U_FAILURE(status)) {
+        만약 (U_FAILURE(status)) {
             result.removeAllElements();
             break;
         }
     }
     delete matchKey;
 
-    return result;
+    반환 result;
 }
 
 URegistryKey
 ICUService::registerInstance(UObject* objToAdopt, const UnicodeString& id, UErrorCode& status) 
 {
-    return registerInstance(objToAdopt, id, true, status);
+    반환 registerInstance(objToAdopt, id, true, status);
 }
 
 URegistryKey
 ICUService::registerInstance(UObject* objToAdopt, const UnicodeString& id, UBool visible, UErrorCode& status) 
 {
     ICUServiceKey* key = createKey(&id, status);
-    if (key != nullptr) {
+    만약 (key != nullptr) {
         UnicodeString canonicalID;
         key->canonicalID(canonicalID);
         delete key;
 
         ICUServiceFactory* f = createSimpleFactory(objToAdopt, canonicalID, visible, status);
-        if (f != nullptr) {
-            return registerFactory(f, status);
+        만약 (f != nullptr) {
+            반환 registerFactory(f, status);
         }
     }
     delete objToAdopt;
-    return nullptr;
+    반환 nullptr;
 }
 
 ICUServiceFactory* 
 ICUService::createSimpleFactory(UObject* objToAdopt, const UnicodeString& id, UBool visible, UErrorCode& status)
 {
-    if (U_SUCCESS(status)) {
-        if ((objToAdopt != nullptr) && (!id.isBogus())) {
-            return new SimpleFactory(objToAdopt, id, visible);
+    만약 (U_SUCCESS(status)) {
+        만약 ((objToAdopt != nullptr) && (!id.isBogus())) {
+            반환 new SimpleFactory(objToAdopt, id, visible);
         }
         status = U_ILLEGAL_ARGUMENT_ERROR;
     }
-    return nullptr;
+    반환 nullptr;
 }
 
 URegistryKey
 ICUService::registerFactory(ICUServiceFactory* factoryToAdopt, UErrorCode& status)
 {
     LocalPointer<ICUServiceFactory>lpFactoryToAdopt(factoryToAdopt);
-    if (U_FAILURE(status) || factoryToAdopt == nullptr) {
-        return nullptr;
+    만약 (U_FAILURE(status) || factoryToAdopt == nullptr) {
+        반환 nullptr;
     }
     {
         Mutex mutex(&lock);
 
-        if (factories == nullptr) {
+        만약 (factories == nullptr) {
             LocalPointer<UVector> lpFactories(new UVector(uprv_deleteUObject, nullptr, status), status);
-            if (U_FAILURE(status)) {
-                return nullptr;
+            만약 (U_FAILURE(status)) {
+                반환 nullptr;
             }
             factories = lpFactories.orphan();
         }
         factories->insertElementAt(lpFactoryToAdopt.orphan(), 0, status);
-        if (U_SUCCESS(status)) {
+        만약 (U_SUCCESS(status)) {
             clearCaches();
         }
     }   // Close of mutex lock block.
 
-    if (U_SUCCESS(status)) {
+    만약 (U_SUCCESS(status)) {
         notifyChanged();
-        return (URegistryKey)factoryToAdopt;
-    } else {
-        return nullptr;
+        반환 (URegistryKey)factoryToAdopt;
+    } 아니면 {
+        반환 nullptr;
     }
 }
 
@@ -865,21 +865,21 @@ ICUService::unregister(URegistryKey rkey, UErrorCode& status)
 {
     ICUServiceFactory *factory = (ICUServiceFactory*)rkey;
     UBool result = false;
-    if (factory != nullptr && factories != nullptr) {
+    만약 (factory != nullptr && factories != nullptr) {
         Mutex mutex(&lock);
 
-        if (factories->removeElement(factory)) {
+        만약 (factories->removeElement(factory)) {
             clearCaches();
             result = true;
-        } else {
+        } 아니면 {
             status = U_ILLEGAL_ARGUMENT_ERROR;
             delete factory;
         }
     }
-    if (result) {
+    만약 (result) {
         notifyChanged();
     }
-    return result;
+    반환 result;
 }
 
 void 
@@ -896,7 +896,7 @@ ICUService::reset()
 void 
 ICUService::reInitializeFactories() 
 {
-    if (factories != nullptr) {
+    만약 (factories != nullptr) {
         factories->removeAllElements();
     }
 }
@@ -904,13 +904,13 @@ ICUService::reInitializeFactories()
 UBool 
 ICUService::isDefault() const 
 {
-    return countFactories() == 0;
+    반환 countFactories() == 0;
 }
 
 ICUServiceKey* 
 ICUService::createKey(const UnicodeString* id, UErrorCode& status) const 
 {
-    return (U_FAILURE(status) || id == nullptr) ? nullptr : new ICUServiceKey(*id);
+    반환 (U_FAILURE(status) || id == nullptr) ? nullptr : new ICUServiceKey(*id);
 }
 
 void 
@@ -935,7 +935,7 @@ ICUService::clearServiceCache()
 UBool 
 ICUService::acceptsListener(const EventListener& l) const 
 {
-    return dynamic_cast<const ServiceListener*>(&l) != nullptr;
+    반환 dynamic_cast<const ServiceListener*>(&l) != nullptr;
 }
 
 void 
@@ -947,19 +947,19 @@ ICUService::notifyListener(EventListener& l) const
 UnicodeString&
 ICUService::getName(UnicodeString& result) const 
 {
-    return result.append(name);
+    반환 result.append(name);
 }
 
 int32_t 
 ICUService::countFactories() const 
 {
-    return factories == nullptr ? 0 : factories->size();
+    반환 factories == nullptr ? 0 : factories->size();
 }
 
 int32_t
 ICUService::getTimestamp() const
 {
-    return timestamp;
+    반환 timestamp;
 }
 
 U_NAMESPACE_END

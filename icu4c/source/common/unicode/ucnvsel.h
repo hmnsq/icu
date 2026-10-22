@@ -23,14 +23,14 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#만약 !UCONFIG_NO_CONVERSION
 
 #include "unicode/uset.h"
 #include "unicode/utf16.h"
 #include "unicode/uenum.h"
 #include "unicode/ucnv.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#만약 U_SHOW_CPLUSPLUS_API
 #include "unicode/localpointer.h"
 #endif   // U_SHOW_CPLUSPLUS_API
 
@@ -97,7 +97,7 @@ ucnvsel_open(const char* const*  converterList, int32_t converterListSize,
 U_CAPI void U_EXPORT2
 ucnvsel_close(UConverterSelector *sel);
 
-#if U_SHOW_CPLUSPLUS_API
+#만약 U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 

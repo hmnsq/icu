@@ -15,7 +15,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_FORMATTING
+#만약 !UCONFIG_NO_FORMATTING
 #ifndef __STATIC_UNICODE_SETS_H__
 #define __STATIC_UNICODE_SETS_H__
 

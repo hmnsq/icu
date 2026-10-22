@@ -44,7 +44,7 @@ U_NAMESPACE_BEGIN
 UnicodeString&
 Locale::getDisplayLanguage(UnicodeString& dispLang U_LIFETIME_BOUND) const
 {
-    return this->getDisplayLanguage(getDefault(), dispLang);
+    반환 this->getDisplayLanguage(getDefault(), dispLang);
 }
 
 /*We cannot make any assumptions on the size of the output display strings
@@ -61,9 +61,9 @@ Locale::getDisplayLanguage(const Locale& displayLocale,
     int32_t length;
 
     buffer=result.getBuffer(ULOC_FULLNAME_CAPACITY);
-    if (buffer == nullptr) {
+    만약 (buffer == nullptr) {
         result.truncate(0);
-        return result;
+        반환 result;
     }
 
     length=uloc_getDisplayLanguage(getName(), displayLocale.getName(),
@@ -71,11 +71,11 @@ Locale::getDisplayLanguage(const Locale& displayLocale,
                                    &errorCode);
     result.releaseBuffer(U_SUCCESS(errorCode) ? length : 0);
 
-    if(errorCode==U_BUFFER_OVERFLOW_ERROR) {
+    만약(errorCode==U_BUFFER_OVERFLOW_ERROR) {
         buffer=result.getBuffer(length);
-        if (buffer == nullptr) {
+        만약 (buffer == nullptr) {
             result.truncate(0);
-            return result;
+            반환 result;
         }
         errorCode=U_ZERO_ERROR;
         length=uloc_getDisplayLanguage(getName(), displayLocale.getName(),
@@ -84,13 +84,13 @@ Locale::getDisplayLanguage(const Locale& displayLocale,
         result.releaseBuffer(U_SUCCESS(errorCode) ? length : 0);
     }
 
-    return result;
+    반환 result;
 }
 
 UnicodeString&
 Locale::getDisplayScript(UnicodeString& dispScript U_LIFETIME_BOUND) const
 {
-    return this->getDisplayScript(getDefault(), dispScript);
+    반환 this->getDisplayScript(getDefault(), dispScript);
 }
 
 UnicodeString&
@@ -101,9 +101,9 @@ Locale::getDisplayScript(const Locale& displayLocale,
     int32_t length;
 
     buffer=result.getBuffer(ULOC_FULLNAME_CAPACITY);
-    if (buffer == nullptr) {
+    만약 (buffer == nullptr) {
         result.truncate(0);
-        return result;
+        반환 result;
     }
 
     length=uloc_getDisplayScript(getName(), displayLocale.getName(),
@@ -111,11 +111,11 @@ Locale::getDisplayScript(const Locale& displayLocale,
                                   &errorCode);
     result.releaseBuffer(U_SUCCESS(errorCode) ? length : 0);
 
-    if(errorCode==U_BUFFER_OVERFLOW_ERROR) {
+    만약(errorCode==U_BUFFER_OVERFLOW_ERROR) {
         buffer=result.getBuffer(length);
-        if (buffer == nullptr) {
+        만약 (buffer == nullptr) {
             result.truncate(0);
-            return result;
+            반환 result;
         }
         errorCode=U_ZERO_ERROR;
         length=uloc_getDisplayScript(getName(), displayLocale.getName(),
@@ -124,13 +124,13 @@ Locale::getDisplayScript(const Locale& displayLocale,
         result.releaseBuffer(U_SUCCESS(errorCode) ? length : 0);
     }
 
-    return result;
+    반환 result;
 }
 
 UnicodeString&
 Locale::getDisplayCountry(UnicodeString& dispCntry U_LIFETIME_BOUND) const
 {
-    return this->getDisplayCountry(getDefault(), dispCntry);
+    반환 this->getDisplayCountry(getDefault(), dispCntry);
 }
 
 UnicodeString&
@@ -141,9 +141,9 @@ Locale::getDisplayCountry(const Locale& displayLocale,
     int32_t length;
 
     buffer=result.getBuffer(ULOC_FULLNAME_CAPACITY);
-    if (buffer == nullptr) {
+    만약 (buffer == nullptr) {
         result.truncate(0);
-        return result;
+        반환 result;
     }
 
     length=uloc_getDisplayCountry(getName(), displayLocale.getName(),
@@ -151,11 +151,11 @@ Locale::getDisplayCountry(const Locale& displayLocale,
                                   &errorCode);
     result.releaseBuffer(U_SUCCESS(errorCode) ? length : 0);
 
-    if(errorCode==U_BUFFER_OVERFLOW_ERROR) {
+    만약(errorCode==U_BUFFER_OVERFLOW_ERROR) {
         buffer=result.getBuffer(length);
-        if (buffer == nullptr) {
+        만약 (buffer == nullptr) {
             result.truncate(0);
-            return result;
+            반환 result;
         }
         errorCode=U_ZERO_ERROR;
         length=uloc_getDisplayCountry(getName(), displayLocale.getName(),
@@ -164,13 +164,13 @@ Locale::getDisplayCountry(const Locale& displayLocale,
         result.releaseBuffer(U_SUCCESS(errorCode) ? length : 0);
     }
 
-    return result;
+    반환 result;
 }
 
 UnicodeString&
 Locale::getDisplayVariant(UnicodeString& dispVar U_LIFETIME_BOUND) const
 {
-    return this->getDisplayVariant(getDefault(), dispVar);
+    반환 this->getDisplayVariant(getDefault(), dispVar);
 }
 
 UnicodeString&
@@ -181,9 +181,9 @@ Locale::getDisplayVariant(const Locale& displayLocale,
     int32_t length;
 
     buffer=result.getBuffer(ULOC_FULLNAME_CAPACITY);
-    if (buffer == nullptr) {
+    만약 (buffer == nullptr) {
         result.truncate(0);
-        return result;
+        반환 result;
     }
 
     length=uloc_getDisplayVariant(getName(), displayLocale.getName(),
@@ -191,11 +191,11 @@ Locale::getDisplayVariant(const Locale& displayLocale,
                                   &errorCode);
     result.releaseBuffer(U_SUCCESS(errorCode) ? length : 0);
 
-    if(errorCode==U_BUFFER_OVERFLOW_ERROR) {
+    만약(errorCode==U_BUFFER_OVERFLOW_ERROR) {
         buffer=result.getBuffer(length);
-        if (buffer == nullptr) {
+        만약 (buffer == nullptr) {
             result.truncate(0);
-            return result;
+            반환 result;
         }
         errorCode=U_ZERO_ERROR;
         length=uloc_getDisplayVariant(getName(), displayLocale.getName(),
@@ -204,13 +204,13 @@ Locale::getDisplayVariant(const Locale& displayLocale,
         result.releaseBuffer(U_SUCCESS(errorCode) ? length : 0);
     }
 
-    return result;
+    반환 result;
 }
 
 UnicodeString&
 Locale::getDisplayName(UnicodeString& name U_LIFETIME_BOUND) const
 {
-    return this->getDisplayName(getDefault(), name);
+    반환 this->getDisplayName(getDefault(), name);
 }
 
 UnicodeString&
@@ -221,9 +221,9 @@ Locale::getDisplayName(const Locale& displayLocale,
     int32_t length;
 
     buffer=result.getBuffer(ULOC_FULLNAME_CAPACITY);
-    if (buffer == nullptr) {
+    만약 (buffer == nullptr) {
         result.truncate(0);
-        return result;
+        반환 result;
     }
 
     length=uloc_getDisplayName(getName(), displayLocale.getName(),
@@ -231,11 +231,11 @@ Locale::getDisplayName(const Locale& displayLocale,
                                &errorCode);
     result.releaseBuffer(U_SUCCESS(errorCode) ? length : 0);
 
-    if(errorCode==U_BUFFER_OVERFLOW_ERROR) {
+    만약(errorCode==U_BUFFER_OVERFLOW_ERROR) {
         buffer=result.getBuffer(length);
-        if (buffer == nullptr) {
+        만약 (buffer == nullptr) {
             result.truncate(0);
-            return result;
+            반환 result;
         }
         errorCode=U_ZERO_ERROR;
         length=uloc_getDisplayName(getName(), displayLocale.getName(),
@@ -244,10 +244,10 @@ Locale::getDisplayName(const Locale& displayLocale,
         result.releaseBuffer(U_SUCCESS(errorCode) ? length : 0);
     }
 
-    return result;
+    반환 result;
 }
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#만약 !UCONFIG_NO_BREAK_ITERATION
 
 // -------------------------------------
 // Gets the objectLocale display name in the default locale language.
@@ -255,7 +255,7 @@ UnicodeString& U_EXPORT2
 BreakIterator::getDisplayName(const Locale& objectLocale,
                               UnicodeString& name U_LIFETIME_BOUND)
 {
-    return objectLocale.getDisplayName(name);
+    반환 objectLocale.getDisplayName(name);
 }
 
 // -------------------------------------
@@ -265,7 +265,7 @@ BreakIterator::getDisplayName(const Locale& objectLocale,
                               const Locale& displayLocale,
                               UnicodeString& name U_LIFETIME_BOUND)
 {
-    return objectLocale.getDisplayName(displayLocale, name);
+    반환 objectLocale.getDisplayName(displayLocale, name);
 }
 
 #endif
@@ -307,24 +307,24 @@ _getStringOrCopyKey(const char *path, const char *locale,
                     const char *substitute,
                     char16_t *dest, int32_t destCapacity,
                     UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return 0; }
+    만약 (U_FAILURE(errorCode)) { 반환 0; }
     const char16_t *s = nullptr;
     int32_t length = 0;
 
-    if(itemKey==nullptr) {
+    만약(itemKey==nullptr) {
         /* top-level item: normal resource bundle access */
         icu::LocalUResourceBundlePointer rb(ures_open(path, locale, &errorCode));
 
-        if(U_SUCCESS(errorCode)) {
+        만약(U_SUCCESS(errorCode)) {
             s=ures_getStringByKey(rb.getAlias(), tableKey, &length, &errorCode);
             /* see comment about closing rb near "return item;" in _res_getTableStringWithFallback() */
         }
-    } else {
+    } 아니면 {
         bool isLanguageCode = (uprv_strncmp(tableKey, _kLanguages, 9) == 0);
         /* Language code should not be a number. If it is, set the error code. */
-        if (isLanguageCode && uprv_strtol(itemKey, nullptr, 10)) {
+        만약 (isLanguageCode && uprv_strtol(itemKey, nullptr, 10)) {
             errorCode = U_MISSING_RESOURCE_ERROR;
-        } else {
+        } 아니면 {
             /* second-level item, use special fallback */
             s=uloc_getTableStringWithFallback(path, locale,
                                                tableKey,
@@ -332,7 +332,7 @@ _getStringOrCopyKey(const char *path, const char *locale,
                                                itemKey,
                                                &length,
                                                &errorCode);
-            if (U_FAILURE(errorCode) && isLanguageCode && itemKey != nullptr) {
+            만약 (U_FAILURE(errorCode) && isLanguageCode && itemKey != nullptr) {
                 // convert itemKey locale code to canonical form and try again, ICU-20870
                 errorCode = U_ZERO_ERROR;
                 Locale canonKey = Locale::createCanonical(itemKey);
@@ -346,19 +346,19 @@ _getStringOrCopyKey(const char *path, const char *locale,
         }
     }
 
-    if(U_SUCCESS(errorCode)) {
+    만약(U_SUCCESS(errorCode)) {
         int32_t copyLength=uprv_min(length, destCapacity);
-        if(copyLength>0 && s != nullptr) {
+        만약(copyLength>0 && s != nullptr) {
             u_memcpy(dest, s, copyLength);
         }
-    } else {
+    } 아니면 {
         /* no string from a resource bundle: convert the substitute */
         length = static_cast<int32_t>(uprv_strlen(substitute));
         u_charsToUChars(substitute, dest, uprv_min(length, destCapacity));
         errorCode = U_USING_DEFAULT_WARNING;
     }
 
-    return u_terminateUChars(dest, destCapacity, length, &errorCode);
+    반환 u_terminateUChars(dest, destCapacity, length, &errorCode);
 }
 
 using UDisplayNameGetter = icu::CharString(std::string_view, UErrorCode&);
@@ -370,37 +370,37 @@ _getDisplayNameForComponent(const char *locale,
                             UDisplayNameGetter *getter,
                             const char *tag,
                             UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return 0; }
+    만약 (U_FAILURE(errorCode)) { 반환 0; }
     UErrorCode localStatus;
     const char* root = nullptr;
 
-    if(destCapacity<0 || (destCapacity>0 && dest==nullptr)) {
+    만약(destCapacity<0 || (destCapacity>0 && dest==nullptr)) {
         errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        반환 0;
     }
 
-    if (locale == nullptr) {
+    만약 (locale == nullptr) {
         locale = uloc_getDefault();
     }
 
     localStatus = U_ZERO_ERROR;
     icu::CharString localeBuffer = (*getter)(locale, localStatus);
-    if (U_FAILURE(localStatus)) {
+    만약 (U_FAILURE(localStatus)) {
         errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        반환 0;
     }
-    if (localeBuffer.isEmpty()) {
+    만약 (localeBuffer.isEmpty()) {
         // For the display name, we treat this as unknown language (ICU-20273).
-        if (getter == ulocimp_getLanguage) {
+        만약 (getter == ulocimp_getLanguage) {
             localeBuffer.append("und", errorCode);
-        } else {
-            return u_terminateUChars(dest, destCapacity, 0, &errorCode);
+        } 아니면 {
+            반환 u_terminateUChars(dest, destCapacity, 0, &errorCode);
         }
     }
 
     root = tag == _kCountries ? U_ICUDATA_REGION : U_ICUDATA_LANG;
 
-    return _getStringOrCopyKey(root, displayLocale,
+    반환 _getStringOrCopyKey(root, displayLocale,
                                tag, nullptr, localeBuffer.data(),
                                localeBuffer.data(),
                                dest, destCapacity,
@@ -414,7 +414,7 @@ uloc_getDisplayLanguage(const char *locale,
                         const char *displayLocale,
                         char16_t *dest, int32_t destCapacity,
                         UErrorCode *pErrorCode) {
-    return _getDisplayNameForComponent(locale, displayLocale, dest, destCapacity,
+    반환 _getDisplayNameForComponent(locale, displayLocale, dest, destCapacity,
                 ulocimp_getLanguage, _kLanguages, *pErrorCode);
 }
 
@@ -424,23 +424,23 @@ uloc_getDisplayScript(const char* locale,
                       char16_t *dest, int32_t destCapacity,
                       UErrorCode *pErrorCode)
 {
-    if (U_FAILURE(*pErrorCode)) { return 0; }
+    만약 (U_FAILURE(*pErrorCode)) { 반환 0; }
     UErrorCode err = U_ZERO_ERROR;
     int32_t res = _getDisplayNameForComponent(locale, displayLocale, dest, destCapacity,
                 ulocimp_getScript, _kScriptsStandAlone, err);
 
-    if (destCapacity == 0 && err == U_BUFFER_OVERFLOW_ERROR) {
+    만약 (destCapacity == 0 && err == U_BUFFER_OVERFLOW_ERROR) {
         // For preflight, return the max of the value and the fallback.
         int32_t fallback_res = _getDisplayNameForComponent(locale, displayLocale, dest, destCapacity,
                                                            ulocimp_getScript, _kScripts, *pErrorCode);
-        return (fallback_res > res) ? fallback_res : res;
+        반환 (fallback_res > res) ? fallback_res : res;
     }
-    if ( err == U_USING_DEFAULT_WARNING ) {
-        return _getDisplayNameForComponent(locale, displayLocale, dest, destCapacity,
+    만약 ( err == U_USING_DEFAULT_WARNING ) {
+        반환 _getDisplayNameForComponent(locale, displayLocale, dest, destCapacity,
                                            ulocimp_getScript, _kScripts, *pErrorCode);
-    } else {
+    } 아니면 {
         *pErrorCode = err;
-        return res;
+        반환 res;
     }
 }
 
@@ -450,7 +450,7 @@ uloc_getDisplayScriptInContext(const char* locale,
                       char16_t *dest, int32_t destCapacity,
                       UErrorCode *pErrorCode)
 {
-    return _getDisplayNameForComponent(locale, displayLocale, dest, destCapacity,
+    반환 _getDisplayNameForComponent(locale, displayLocale, dest, destCapacity,
                     ulocimp_getScript, _kScripts, *pErrorCode);
 }
 
@@ -459,7 +459,7 @@ uloc_getDisplayCountry(const char *locale,
                        const char *displayLocale,
                        char16_t *dest, int32_t destCapacity,
                        UErrorCode *pErrorCode) {
-    return _getDisplayNameForComponent(locale, displayLocale, dest, destCapacity,
+    반환 _getDisplayNameForComponent(locale, displayLocale, dest, destCapacity,
                 ulocimp_getRegion, _kCountries, *pErrorCode);
 }
 
@@ -473,7 +473,7 @@ uloc_getDisplayVariant(const char *locale,
                        const char *displayLocale,
                        char16_t *dest, int32_t destCapacity,
                        UErrorCode *pErrorCode) {
-    return _getDisplayNameForComponent(locale, displayLocale, dest, destCapacity,
+    반환 _getDisplayNameForComponent(locale, displayLocale, dest, destCapacity,
                 ulocimp_getVariant, _kVariants, *pErrorCode);
 }
 
@@ -527,13 +527,13 @@ uloc_getDisplayName(const char *locale,
 
     int32_t langi = 0; /* index of the language substitution (0 or 1), virtually always 0 */
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    만약(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
+        반환 0;
     }
 
-    if(destCapacity<0 || (destCapacity>0 && dest==nullptr)) {
+    만약(destCapacity<0 || (destCapacity>0 && dest==nullptr)) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        반환 0;
     }
 
     {
@@ -549,7 +549,7 @@ uloc_getDisplayName(const char *locale,
     }
 
     /* If we couldn't find any data, then use the defaults */
-    if(sepLen == 0) {
+    만약(sepLen == 0) {
        separator = defaultSeparator;
     }
     /* #10244: Even though separator is now a pattern, it is awkward to handle it as such
@@ -564,34 +564,34 @@ uloc_getDisplayName(const char *locale,
     {
         char16_t *p0=u_strstr(separator, sub0);
         char16_t *p1=u_strstr(separator, sub1);
-        if (p0==nullptr || p1==nullptr || p1<p0) {
+        만약 (p0==nullptr || p1==nullptr || p1<p0) {
             *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-            return 0;
+            반환 0;
         }
         separator = (const char16_t *)p0 + subLen;
         sepLen = static_cast<int32_t>(p1 - separator);
     }
 
-    if(patLen==0 || (patLen==defaultPatLen && !u_strncmp(pattern, defaultPattern, patLen))) {
+    만약(patLen==0 || (patLen==defaultPatLen && !u_strncmp(pattern, defaultPattern, patLen))) {
         pattern=defaultPattern;
         patLen=defaultPatLen;
         sub0Pos=defaultSub0Pos;
         sub1Pos=defaultSub1Pos;
         // use default formatOpenParen etc. set above
-    } else { /* non-default pattern */
+    } 아니면 { /* non-default pattern */
         char16_t *p0=u_strstr(pattern, sub0);
         char16_t *p1=u_strstr(pattern, sub1);
-        if (p0==nullptr || p1==nullptr) {
+        만약 (p0==nullptr || p1==nullptr) {
             *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-            return 0;
+            반환 0;
         }
         sub0Pos = static_cast<int32_t>(p0-pattern);
         sub1Pos = static_cast<int32_t>(p1-pattern);
-        if (sub1Pos < sub0Pos) { /* a very odd pattern */
+        만약 (sub1Pos < sub0Pos) { /* a very odd pattern */
             int32_t t=sub0Pos; sub0Pos=sub1Pos; sub1Pos=t;
             langi=1;
         }
-        if (u_strchr(pattern, 0xFF08) != nullptr) {
+        만약 (u_strchr(pattern, 0xFF08) != nullptr) {
             formatOpenParen         = 0xFF08; // fullwidth (
             formatReplaceOpenParen  = 0xFF3B; // fullwidth [
             formatCloseParen        = 0xFF09; // fullwidth )
@@ -616,43 +616,43 @@ uloc_getDisplayName(const char *locale,
         icu::LocalUEnumerationPointer kenum; /* keyword enumeration */
 
         /* prefix of pattern, extremely likely to be empty */
-        if(sub0Pos) {
-            if(destCapacity >= sub0Pos) {
-                while (patPos < sub0Pos) {
+        만약(sub0Pos) {
+            만약(destCapacity >= sub0Pos) {
+                동안 (patPos < sub0Pos) {
                     *p++ = pattern[patPos++];
                 }
-            } else {
+            } 아니면 {
                 patPos=sub0Pos;
             }
             length=sub0Pos;
-        } else {
+        } 아니면 {
             length=0;
         }
 
-        for(int32_t subi=0,resti=0;subi<2;) { /* iterate through patterns 0 and 1*/
+        위해(int32_t subi=0,resti=0;subi<2;) { /* iterate through patterns 0 and 1*/
             UBool subdone = false; /* set true when ready to move to next substitution */
 
             /* prep p and cap for calls to get display components, pin cap to 0 since
                they complain if cap is negative */
             int32_t cap=destCapacity-length;
-            if (cap <= 0) {
+            만약 (cap <= 0) {
                 cap=0;
-            } else {
+            } 아니면 {
                 p=dest+length;
             }
 
-            if (subi == langi) { /* {0}*/
-                if(haveLang) {
+            만약 (subi == langi) { /* {0}*/
+                만약(haveLang) {
                     langPos=length;
                     langLen=uloc_getDisplayLanguage(locale, displayLocale, p, cap, pErrorCode);
                     length+=langLen;
                     haveLang=langLen>0;
                 }
                 subdone=true;
-            } else { /* {1} */
-                if(!haveRest) {
+            } 아니면 { /* {1} */
+                만약(!haveRest) {
                     subdone=true;
-                } else {
+                } 아니면 {
                     int32_t len; /* length of component (plus other stuff) we just fetched */
                     switch(resti++) {
                         case 0:
@@ -670,42 +670,42 @@ uloc_getDisplayName(const char *locale,
                             U_FALLTHROUGH;
                         default: {
                             const char* kw=uenum_next(kenum.getAlias(), &len, pErrorCode);
-                            if (kw == nullptr) {
+                            만약 (kw == nullptr) {
                                 len=0; /* mark that we didn't add a component */
                                 subdone=true;
-                            } else {
+                            } 아니면 {
                                 /* incorporating this behavior into the loop made it even more complex,
                                    so just special case it here */
                                 len = uloc_getDisplayKeyword(kw, displayLocale, p, cap, pErrorCode);
-                                if(len) {
-                                    if(len < cap) {
+                                만약(len) {
+                                    만약(len < cap) {
                                         p[len]=0x3d; /* '=', assume we'll need it */
                                     }
                                     len+=1;
 
                                     /* adjust for call to get keyword */
                                     cap-=len;
-                                    if(cap <= 0) {
+                                    만약(cap <= 0) {
                                         cap=0;
-                                    } else {
+                                    } 아니면 {
                                         p+=len;
                                     }
                                 }
                                 /* reset for call below */
-                                if(*pErrorCode == U_BUFFER_OVERFLOW_ERROR) {
+                                만약(*pErrorCode == U_BUFFER_OVERFLOW_ERROR) {
                                     *pErrorCode=U_ZERO_ERROR;
                                 }
                                 int32_t vlen = uloc_getDisplayKeywordValue(locale, kw, displayLocale,
                                                                            p, cap, pErrorCode);
-                                if(len) {
-                                    if(vlen==0) {
+                                만약(len) {
+                                    만약(vlen==0) {
                                         --len; /* remove unneeded '=' */
                                     }
                                     /* restore cap and p to what they were at start */
                                     cap=destCapacity-length;
-                                    if(cap <= 0) {
+                                    만약(cap <= 0) {
                                         cap=0;
-                                    } else {
+                                    } 아니면 {
                                         p=dest+length;
                                     }
                                 }
@@ -714,25 +714,25 @@ uloc_getDisplayName(const char *locale,
                         } break;
                     } /* end switch */
 
-                    if (len>0) {
+                    만약 (len>0) {
                         /* we added a component, so add separator and write it if there's room. */
-                        if(len+sepLen<=cap) {
+                        만약(len+sepLen<=cap) {
                             const char16_t * plimit = p + len;
-                            for (; p < plimit; p++) {
-                                if (*p == formatOpenParen) {
+                            위해 (; p < plimit; p++) {
+                                만약 (*p == formatOpenParen) {
                                     *p = formatReplaceOpenParen;
-                                } else if (*p == formatCloseParen) {
+                                } 아니면 만약 (*p == formatCloseParen) {
                                     *p = formatReplaceCloseParen;
                                 }
                             }
-                            for(int32_t i=0;i<sepLen;++i) {
+                            위해(int32_t i=0;i<sepLen;++i) {
                                 *p++=separator[i];
                             }
                         }
                         length+=len+sepLen;
-                    } else if(subdone) {
+                    } 아니면 만약(subdone) {
                         /* remove separator if we added it */
-                        if (length!=restPos) {
+                        만약 (length!=restPos) {
                             length-=sepLen;
                         }
                         restLen=length-restPos;
@@ -741,39 +741,39 @@ uloc_getDisplayName(const char *locale,
                 }
             }
 
-            if(*pErrorCode == U_BUFFER_OVERFLOW_ERROR) {
+            만약(*pErrorCode == U_BUFFER_OVERFLOW_ERROR) {
                 *pErrorCode=U_ZERO_ERROR;
             }
 
-            if(subdone) {
-                if(haveLang && haveRest) {
+            만약(subdone) {
+                만약(haveLang && haveRest) {
                     /* append internal portion of pattern, the first time,
                        or last portion of pattern the second time */
                     int32_t padLen;
                     patPos+=subLen;
                     padLen=(subi==0 ? sub1Pos : patLen)-patPos;
-                    if(length+padLen <= destCapacity) {
+                    만약(length+padLen <= destCapacity) {
                         p=dest+length;
-                        for(int32_t i=0;i<padLen;++i) {
+                        위해(int32_t i=0;i<padLen;++i) {
                             *p++=pattern[patPos++];
                         }
-                    } else {
+                    } 아니면 {
                         patPos+=padLen;
                     }
                     length+=padLen;
-                } else if(subi==0) {
+                } 아니면 만약(subi==0) {
                     /* don't have first component, reset for second component */
                     sub0Pos=0;
                     length=0;
-                } else if(length>0) {
+                } 아니면 만약(length>0) {
                     /* true length is the length of just the component we got. */
                     length=haveLang?langLen:restLen;
-                    if(dest && sub0Pos!=0) {
-                        if (sub0Pos+length<=destCapacity) {
+                    만약(dest && sub0Pos!=0) {
+                        만약 (sub0Pos+length<=destCapacity) {
                             /* first component not at start of result,
                                but we have full component in buffer. */
                             u_memmove(dest, dest+(haveLang?langPos:restPos), length);
-                        } else {
+                        } 아니면 {
                             /* would have fit, but didn't because of pattern prefix. */
                             sub0Pos=0; /* stops initial padding (and a second retry,
                                           so we won't end up here again) */
@@ -785,9 +785,9 @@ uloc_getDisplayName(const char *locale,
                 ++subi; /* move on to next substitution */
             }
         }
-    } while(retry);
+    } 동안(retry);
 
-    return u_terminateUChars(dest, destCapacity, length, pErrorCode);
+    반환 u_terminateUChars(dest, destCapacity, length, pErrorCode);
 }
 
 U_CAPI int32_t U_EXPORT2
@@ -798,18 +798,18 @@ uloc_getDisplayKeyword(const char* keyword,
                        UErrorCode* status){
 
     /* argument checking */
-    if(status==nullptr || U_FAILURE(*status)) {
-        return 0;
+    만약(status==nullptr || U_FAILURE(*status)) {
+        반환 0;
     }
 
-    if(destCapacity<0 || (destCapacity>0 && dest==nullptr)) {
+    만약(destCapacity<0 || (destCapacity>0 && dest==nullptr)) {
         *status=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        반환 0;
     }
 
 
     /* pass itemKey=nullptr to look for a top-level item */
-    return _getStringOrCopyKey(U_ICUDATA_LANG, displayLocale,
+    반환 _getStringOrCopyKey(U_ICUDATA_LANG, displayLocale,
                                _kKeys, nullptr,
                                keyword, 
                                keyword,      
@@ -831,18 +831,18 @@ uloc_getDisplayKeywordValue(   const char* locale,
 
 
     /* argument checking */
-    if(status==nullptr || U_FAILURE(*status)) {
-        return 0;
+    만약(status==nullptr || U_FAILURE(*status)) {
+        반환 0;
     }
 
-    if(destCapacity<0 || (destCapacity>0 && dest==nullptr)) {
+    만약(destCapacity<0 || (destCapacity>0 && dest==nullptr)) {
         *status=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        반환 0;
     }
 
     /* get the keyword value */
     CharString keywordValue;
-    if (keyword != nullptr && *keyword != '\0') {
+    만약 (keyword != nullptr && *keyword != '\0') {
         keywordValue = ulocimp_getKeywordValue(locale, keyword, *status);
     }
 
@@ -850,7 +850,7 @@ uloc_getDisplayKeywordValue(   const char* locale,
      * if the keyword is equal to currency .. then to get the display name 
      * we need to do the fallback ourselves
      */
-    if(uprv_stricmp(keyword, _kCurrency)==0){
+    만약(uprv_stricmp(keyword, _kCurrency)==0){
 
         int32_t dispNameLen = 0;
         const char16_t *dispName = nullptr;
@@ -864,39 +864,39 @@ uloc_getDisplayKeywordValue(   const char* locale,
 
         dispName = ures_getStringByIndex(currency.getAlias(), UCURRENCY_DISPLAY_NAME_INDEX, &dispNameLen, status);
 
-        if(U_FAILURE(*status)){
-            if(*status == U_MISSING_RESOURCE_ERROR){
+        만약(U_FAILURE(*status)){
+            만약(*status == U_MISSING_RESOURCE_ERROR){
                 /* we just want to write the value over if nothing is available */
                 *status = U_USING_DEFAULT_WARNING;
-            }else{
-                return 0;
+            }아니면{
+                반환 0;
             }
         }
 
         /* now copy the dispName over if not nullptr */
-        if(dispName != nullptr){
-            if(dispNameLen <= destCapacity){
+        만약(dispName != nullptr){
+            만약(dispNameLen <= destCapacity){
                 u_memcpy(dest, dispName, dispNameLen);
-                return u_terminateUChars(dest, destCapacity, dispNameLen, status);
-            }else{
+                반환 u_terminateUChars(dest, destCapacity, dispNameLen, status);
+            }아니면{
                 *status = U_BUFFER_OVERFLOW_ERROR;
-                return dispNameLen;
+                반환 dispNameLen;
             }
-        }else{
+        }아니면{
             /* we have not found the display name for the value .. just copy over */
-            if(keywordValue.length() <= destCapacity){
+            만약(keywordValue.length() <= destCapacity){
                 u_charsToUChars(keywordValue.data(), dest, keywordValue.length());
-                return u_terminateUChars(dest, destCapacity, keywordValue.length(), status);
-            }else{
+                반환 u_terminateUChars(dest, destCapacity, keywordValue.length(), status);
+            }아니면{
                  *status = U_BUFFER_OVERFLOW_ERROR;
-                return keywordValue.length();
+                반환 keywordValue.length();
             }
         }
 
         
-    }else{
+    }아니면{
 
-        return _getStringOrCopyKey(U_ICUDATA_LANG, displayLocale,
+        반환 _getStringOrCopyKey(U_ICUDATA_LANG, displayLocale,
                                    _kTypes, keyword, 
                                    keywordValue.data(),
                                    keywordValue.data(),

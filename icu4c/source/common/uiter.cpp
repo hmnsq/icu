@@ -37,27 +37,27 @@ U_CDECL_BEGIN
 
 static int32_t U_CALLCONV
 noopGetIndex(UCharIterator * /*iter*/, UCharIteratorOrigin /*origin*/) {
-    return 0;
+    반환 0;
 }
 
 static int32_t U_CALLCONV
 noopMove(UCharIterator * /*iter*/, int32_t /*delta*/, UCharIteratorOrigin /*origin*/) {
-    return 0;
+    반환 0;
 }
 
 static UBool U_CALLCONV
 noopHasNext(UCharIterator * /*iter*/) {
-    return false;
+    반환 false;
 }
 
 static UChar32 U_CALLCONV
 noopCurrent(UCharIterator * /*iter*/) {
-    return U_SENTINEL;
+    반환 U_SENTINEL;
 }
 
 static uint32_t U_CALLCONV
 noopGetState(const UCharIterator * /*iter*/) {
-    return UITER_NO_STATE;
+    반환 UITER_NO_STATE;
 }
 
 static void U_CALLCONV
@@ -92,19 +92,19 @@ static int32_t U_CALLCONV
 stringIteratorGetIndex(UCharIterator *iter, UCharIteratorOrigin origin) UPRV_NO_SANITIZE_UNDEFINED {
     switch(origin) {
     case UITER_ZERO:
-        return 0;
+        반환 0;
     case UITER_START:
-        return iter->start;
+        반환 iter->start;
     case UITER_CURRENT:
-        return iter->index;
+        반환 iter->index;
     case UITER_LIMIT:
-        return iter->limit;
+        반환 iter->limit;
     case UITER_LENGTH:
-        return iter->length;
+        반환 iter->length;
     default:
         /* not a valid origin */
         /* Should never get here! */
-        return -1;
+        반환 -1;
     }
 }
 
@@ -129,69 +129,69 @@ stringIteratorMove(UCharIterator *iter, int32_t delta, UCharIteratorOrigin origi
         pos=iter->length+delta;
         break;
     default:
-        return -1;  /* Error */
+        반환 -1;  /* Error */
     }
 
-    if(pos<iter->start) {
+    만약(pos<iter->start) {
         pos=iter->start;
-    } else if(pos>iter->limit) {
+    } 아니면 만약(pos>iter->limit) {
         pos=iter->limit;
     }
 
-    return iter->index=pos;
+    반환 iter->index=pos;
 }
 
 static UBool U_CALLCONV
 stringIteratorHasNext(UCharIterator *iter) {
-    return iter->index<iter->limit;
+    반환 iter->index<iter->limit;
 }
 
 static UBool U_CALLCONV
 stringIteratorHasPrevious(UCharIterator *iter) {
-    return iter->index>iter->start;
+    반환 iter->index>iter->start;
 }
 
 static UChar32 U_CALLCONV
 stringIteratorCurrent(UCharIterator *iter) {
-    if(iter->index<iter->limit) {
-        return ((const char16_t *)(iter->context))[iter->index];
-    } else {
-        return U_SENTINEL;
+    만약(iter->index<iter->limit) {
+        반환 ((const char16_t *)(iter->context))[iter->index];
+    } 아니면 {
+        반환 U_SENTINEL;
     }
 }
 
 static UChar32 U_CALLCONV
 stringIteratorNext(UCharIterator *iter) {
-    if(iter->index<iter->limit) {
-        return ((const char16_t *)(iter->context))[iter->index++];
-    } else {
-        return U_SENTINEL;
+    만약(iter->index<iter->limit) {
+        반환 ((const char16_t *)(iter->context))[iter->index++];
+    } 아니면 {
+        반환 U_SENTINEL;
     }
 }
 
 static UChar32 U_CALLCONV
 stringIteratorPrevious(UCharIterator *iter) {
-    if(iter->index>iter->start) {
-        return ((const char16_t *)(iter->context))[--iter->index];
-    } else {
-        return U_SENTINEL;
+    만약(iter->index>iter->start) {
+        반환 ((const char16_t *)(iter->context))[--iter->index];
+    } 아니면 {
+        반환 U_SENTINEL;
     }
 }
 
 static uint32_t U_CALLCONV
 stringIteratorGetState(const UCharIterator *iter) {
-    return (uint32_t)iter->index;
+    반환 (uint32_t)iter->index;
 }
 
 static void U_CALLCONV
 stringIteratorSetState(UCharIterator *iter, uint32_t state, UErrorCode *pErrorCode) {
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
+    만약(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
         /* do nothing */
-    } else if(iter==nullptr) {
+    } 아니면 만약(iter==nullptr) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-    } else if((int32_t)state<iter->start || iter->limit<(int32_t)state) {
+    } 아니면 만약((int32_t)state<iter->start || iter->limit<(int32_t)state) {
         *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-    } else {
+    } 아니면 {
         iter->index=(int32_t)state;
     }
 }
@@ -212,17 +212,17 @@ static const UCharIterator stringIterator={
 
 U_CAPI void U_EXPORT2
 uiter_setString(UCharIterator *iter, const char16_t *s, int32_t length) {
-    if (iter != nullptr) {
-        if (s != nullptr && length >= -1) {
+    만약 (iter != nullptr) {
+        만약 (s != nullptr && length >= -1) {
             *iter=stringIterator;
             iter->context=s;
-            if(length>=0) {
+            만약(length>=0) {
                 iter->length=length;
-            } else {
+            } 아니면 {
                 iter->length=u_strlen(s);
             }
             iter->limit=iter->length;
-        } else {
+        } 아니면 {
             *iter=noopIterator;
         }
     }
@@ -244,17 +244,17 @@ uiter_setString(UCharIterator *iter, const char16_t *s, int32_t length) {
 static inline UChar32
 utf16BEIteratorGet(UCharIterator *iter, int32_t index) {
     const uint8_t *p=(const uint8_t *)iter->context;
-    return ((char16_t)p[2*index]<<8)|(char16_t)p[2*index+1];
+    반환 ((char16_t)p[2*index]<<8)|(char16_t)p[2*index+1];
 }
 
 static UChar32 U_CALLCONV
 utf16BEIteratorCurrent(UCharIterator *iter) {
     int32_t index;
 
-    if((index=iter->index)<iter->limit) {
-        return utf16BEIteratorGet(iter, index);
-    } else {
-        return U_SENTINEL;
+    만약((index=iter->index)<iter->limit) {
+        반환 utf16BEIteratorGet(iter, index);
+    } 아니면 {
+        반환 U_SENTINEL;
     }
 }
 
@@ -262,11 +262,11 @@ static UChar32 U_CALLCONV
 utf16BEIteratorNext(UCharIterator *iter) {
     int32_t index;
 
-    if((index=iter->index)<iter->limit) {
+    만약((index=iter->index)<iter->limit) {
         iter->index=index+1;
-        return utf16BEIteratorGet(iter, index);
-    } else {
-        return U_SENTINEL;
+        반환 utf16BEIteratorGet(iter, index);
+    } 아니면 {
+        반환 U_SENTINEL;
     }
 }
 
@@ -274,11 +274,11 @@ static UChar32 U_CALLCONV
 utf16BEIteratorPrevious(UCharIterator *iter) {
     int32_t index;
 
-    if((index=iter->index)>iter->start) {
+    만약((index=iter->index)>iter->start) {
         iter->index=--index;
-        return utf16BEIteratorGet(iter, index);
-    } else {
-        return U_SENTINEL;
+        반환 utf16BEIteratorGet(iter, index);
+    } 아니면 {
+        반환 U_SENTINEL;
     }
 }
 
@@ -303,47 +303,47 @@ static const UCharIterator utf16BEIterator={
  */
 static int32_t
 utf16BE_strlen(const char *s) {
-    if(IS_POINTER_EVEN(s)) {
+    만약(IS_POINTER_EVEN(s)) {
         /*
          * even-aligned, call u_strlen(s)
          * we are probably on a little-endian machine, but searching for char16_t NUL
          * does not care about endianness
          */
-        return u_strlen((const char16_t *)s);
-    } else {
+        반환 u_strlen((const char16_t *)s);
+    } 아니면 {
         /* odd-aligned, search for pair of 0 bytes */
         const char *p=s;
 
-        while(!(*p==0 && p[1]==0)) {
+        동안(!(*p==0 && p[1]==0)) {
             p+=2;
         }
-        return (int32_t)((p-s)/2);
+        반환 (int32_t)((p-s)/2);
     }
 }
 
 U_CAPI void U_EXPORT2
 uiter_setUTF16BE(UCharIterator *iter, const char *s, int32_t length) {
-    if(iter!=nullptr) {
+    만약(iter!=nullptr) {
         /* allow only even-length strings (the input length counts bytes) */
-        if(s!=nullptr && (length==-1 || (length>=0 && IS_EVEN(length)))) {
+        만약(s!=nullptr && (length==-1 || (length>=0 && IS_EVEN(length)))) {
             /* length/=2, except that >>=1 also works for -1 (-1/2==0, -1>>1==-1) */
             length>>=1;
 
-            if(U_IS_BIG_ENDIAN && IS_POINTER_EVEN(s)) {
+            만약(U_IS_BIG_ENDIAN && IS_POINTER_EVEN(s)) {
                 /* big-endian machine and 2-aligned UTF-16BE string: use normal char16_t iterator */
                 uiter_setString(iter, (const char16_t *)s, length);
-                return;
+                반환;
             }
 
             *iter=utf16BEIterator;
             iter->context=s;
-            if(length>=0) {
+            만약(length>=0) {
                 iter->length=length;
-            } else {
+            } 아니면 {
                 iter->length=utf16BE_strlen(s);
             }
             iter->limit=iter->length;
-        } else {
+        } 아니면 {
             *iter=noopIterator;
         }
     }
@@ -362,19 +362,19 @@ static int32_t U_CALLCONV
 characterIteratorGetIndex(UCharIterator *iter, UCharIteratorOrigin origin) UPRV_NO_SANITIZE_UNDEFINED {
     switch(origin) {
     case UITER_ZERO:
-        return 0;
+        반환 0;
     case UITER_START:
-        return ((CharacterIterator *)(iter->context))->startIndex();
+        반환 ((CharacterIterator *)(iter->context))->startIndex();
     case UITER_CURRENT:
-        return ((CharacterIterator *)(iter->context))->getIndex();
+        반환 ((CharacterIterator *)(iter->context))->getIndex();
     case UITER_LIMIT:
-        return ((CharacterIterator *)(iter->context))->endIndex();
+        반환 ((CharacterIterator *)(iter->context))->endIndex();
     case UITER_LENGTH:
-        return ((CharacterIterator *)(iter->context))->getLength();
+        반환 ((CharacterIterator *)(iter->context))->getLength();
     default:
         /* not a valid origin */
         /* Should never get here! */
-        return -1;
+        반환 -1;
     }
 }
 
@@ -383,29 +383,29 @@ characterIteratorMove(UCharIterator *iter, int32_t delta, UCharIteratorOrigin or
     switch(origin) {
     case UITER_ZERO:
         ((CharacterIterator *)(iter->context))->setIndex(delta);
-        return ((CharacterIterator *)(iter->context))->getIndex();
+        반환 ((CharacterIterator *)(iter->context))->getIndex();
     case UITER_START:
     case UITER_CURRENT:
     case UITER_LIMIT:
-        return ((CharacterIterator *)(iter->context))->move(delta, (CharacterIterator::EOrigin)origin);
+        반환 ((CharacterIterator *)(iter->context))->move(delta, (CharacterIterator::EOrigin)origin);
     case UITER_LENGTH:
         ((CharacterIterator *)(iter->context))->setIndex(((CharacterIterator *)(iter->context))->getLength()+delta);
-        return ((CharacterIterator *)(iter->context))->getIndex();
+        반환 ((CharacterIterator *)(iter->context))->getIndex();
     default:
         /* not a valid origin */
         /* Should never get here! */
-        return -1;
+        반환 -1;
     }
 }
 
 static UBool U_CALLCONV
 characterIteratorHasNext(UCharIterator *iter) {
-    return ((CharacterIterator *)(iter->context))->hasNext();
+    반환 ((CharacterIterator *)(iter->context))->hasNext();
 }
 
 static UBool U_CALLCONV
 characterIteratorHasPrevious(UCharIterator *iter) {
-    return ((CharacterIterator *)(iter->context))->hasPrevious();
+    반환 ((CharacterIterator *)(iter->context))->hasPrevious();
 }
 
 static UChar32 U_CALLCONV
@@ -413,45 +413,45 @@ characterIteratorCurrent(UCharIterator *iter) {
     UChar32 c;
 
     c=((CharacterIterator *)(iter->context))->current();
-    if(c!=0xffff || ((CharacterIterator *)(iter->context))->hasNext()) {
-        return c;
-    } else {
-        return U_SENTINEL;
+    만약(c!=0xffff || ((CharacterIterator *)(iter->context))->hasNext()) {
+        반환 c;
+    } 아니면 {
+        반환 U_SENTINEL;
     }
 }
 
 static UChar32 U_CALLCONV
 characterIteratorNext(UCharIterator *iter) {
-    if(((CharacterIterator *)(iter->context))->hasNext()) {
-        return ((CharacterIterator *)(iter->context))->nextPostInc();
-    } else {
-        return U_SENTINEL;
+    만약(((CharacterIterator *)(iter->context))->hasNext()) {
+        반환 ((CharacterIterator *)(iter->context))->nextPostInc();
+    } 아니면 {
+        반환 U_SENTINEL;
     }
 }
 
 static UChar32 U_CALLCONV
 characterIteratorPrevious(UCharIterator *iter) {
-    if(((CharacterIterator *)(iter->context))->hasPrevious()) {
-        return ((CharacterIterator *)(iter->context))->previous();
-    } else {
-        return U_SENTINEL;
+    만약(((CharacterIterator *)(iter->context))->hasPrevious()) {
+        반환 ((CharacterIterator *)(iter->context))->previous();
+    } 아니면 {
+        반환 U_SENTINEL;
     }
 }
 
 static uint32_t U_CALLCONV
 characterIteratorGetState(const UCharIterator *iter) {
-    return ((CharacterIterator *)(iter->context))->getIndex();
+    반환 ((CharacterIterator *)(iter->context))->getIndex();
 }
 
 static void U_CALLCONV
 characterIteratorSetState(UCharIterator *iter, uint32_t state, UErrorCode *pErrorCode) {
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
+    만약(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
         /* do nothing */
-    } else if(iter==nullptr || iter->context==nullptr) {
+    } 아니면 만약(iter==nullptr || iter->context==nullptr) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-    } else if((int32_t)state<((CharacterIterator *)(iter->context))->startIndex() || ((CharacterIterator *)(iter->context))->endIndex()<(int32_t)state) {
+    } 아니면 만약((int32_t)state<((CharacterIterator *)(iter->context))->startIndex() || ((CharacterIterator *)(iter->context))->endIndex()<(int32_t)state) {
         *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-    } else {
+    } 아니면 {
         ((CharacterIterator *)(iter->context))->setIndex((int32_t)state);
     }
 }
@@ -472,11 +472,11 @@ static const UCharIterator characterIteratorWrapper={
 
 U_CAPI void U_EXPORT2
 uiter_setCharacterIterator(UCharIterator *iter, CharacterIterator *charIter) {
-    if (iter != nullptr) {
-        if (charIter != nullptr) {
+    만약 (iter != nullptr) {
+        만약 (charIter != nullptr) {
             *iter=characterIteratorWrapper;
             iter->context=charIter;
-        } else {
+        } 아니면 {
             *iter=noopIterator;
         }
     }
@@ -495,28 +495,28 @@ uiter_setCharacterIterator(UCharIterator *iter, CharacterIterator *charIter) {
 
 static UChar32 U_CALLCONV
 replaceableIteratorCurrent(UCharIterator *iter) {
-    if(iter->index<iter->limit) {
-        return ((Replaceable *)(iter->context))->charAt(iter->index);
-    } else {
-        return U_SENTINEL;
+    만약(iter->index<iter->limit) {
+        반환 ((Replaceable *)(iter->context))->charAt(iter->index);
+    } 아니면 {
+        반환 U_SENTINEL;
     }
 }
 
 static UChar32 U_CALLCONV
 replaceableIteratorNext(UCharIterator *iter) {
-    if(iter->index<iter->limit) {
-        return ((Replaceable *)(iter->context))->charAt(iter->index++);
-    } else {
-        return U_SENTINEL;
+    만약(iter->index<iter->limit) {
+        반환 ((Replaceable *)(iter->context))->charAt(iter->index++);
+    } 아니면 {
+        반환 U_SENTINEL;
     }
 }
 
 static UChar32 U_CALLCONV
 replaceableIteratorPrevious(UCharIterator *iter) {
-    if(iter->index>iter->start) {
-        return ((Replaceable *)(iter->context))->charAt(--iter->index);
-    } else {
-        return U_SENTINEL;
+    만약(iter->index>iter->start) {
+        반환 ((Replaceable *)(iter->context))->charAt(--iter->index);
+    } 아니면 {
+        반환 U_SENTINEL;
     }
 }
 
@@ -536,12 +536,12 @@ static const UCharIterator replaceableIterator={
 
 U_CAPI void U_EXPORT2
 uiter_setReplaceable(UCharIterator *iter, const Replaceable *rep) {
-    if (iter != nullptr) {
-        if (rep != nullptr) {
+    만약 (iter != nullptr) {
+        만약 (rep != nullptr) {
             *iter=replaceableIterator;
             iter->context=rep;
             iter->limit=iter->length=rep->length();
-        } else {
+        } 아니면 {
             *iter=noopIterator;
         }
     }
@@ -590,9 +590,9 @@ utf8IteratorGetIndex(UCharIterator *iter, UCharIteratorOrigin origin) UPRV_NO_SA
     switch(origin) {
     case UITER_ZERO:
     case UITER_START:
-        return 0;
+        반환 0;
     case UITER_CURRENT:
-        if(iter->index<0) {
+        만약(iter->index<0) {
             /* the current UTF-16 index is unknown after setState(), count from the beginning */
             const uint8_t *s;
             UChar32 c;
@@ -601,30 +601,30 @@ utf8IteratorGetIndex(UCharIterator *iter, UCharIteratorOrigin origin) UPRV_NO_SA
             s=(const uint8_t *)iter->context;
             i=index=0;
             limit=iter->start; /* count up to the UTF-8 index */
-            while(i<limit) {
+            동안(i<limit) {
                 U8_NEXT_OR_FFFD(s, i, limit, c);
                 index+=U16_LENGTH(c);
             }
 
             iter->start=i; /* just in case setState() did not get us to a code point boundary */
-            if(i==iter->limit) {
+            만약(i==iter->limit) {
                 iter->length=index; /* in case it was <0 or wrong */
             }
-            if(iter->reservedField!=0) {
+            만약(iter->reservedField!=0) {
                 --index; /* we are in the middle of a supplementary code point */
             }
             iter->index=index;
         }
-        return iter->index;
+        반환 iter->index;
     case UITER_LIMIT:
     case UITER_LENGTH:
-        if(iter->length<0) {
+        만약(iter->length<0) {
             const uint8_t *s;
             UChar32 c;
             int32_t i, limit, length;
 
             s=(const uint8_t *)iter->context;
-            if(iter->index<0) {
+            만약(iter->index<0) {
                 /*
                  * the current UTF-16 index is unknown after setState(),
                  * we must first count from the beginning to here
@@ -633,7 +633,7 @@ utf8IteratorGetIndex(UCharIterator *iter, UCharIteratorOrigin origin) UPRV_NO_SA
                 limit=iter->start;
 
                 /* count from the beginning to the current index */
-                while(i<limit) {
+                동안(i<limit) {
                     U8_NEXT_OR_FFFD(s, i, limit, c);
                     length+=U16_LENGTH(c);
                 }
@@ -641,27 +641,27 @@ utf8IteratorGetIndex(UCharIterator *iter, UCharIteratorOrigin origin) UPRV_NO_SA
                 /* assume i==limit==iter->start, set the UTF-16 index */
                 iter->start=i; /* just in case setState() did not get us to a code point boundary */
                 iter->index= iter->reservedField!=0 ? length-1 : length;
-            } else {
+            } 아니면 {
                 i=iter->start;
                 length=iter->index;
-                if(iter->reservedField!=0) {
+                만약(iter->reservedField!=0) {
                     ++length;
                 }
             }
 
             /* count from the current index to the end */
             limit=iter->limit;
-            while(i<limit) {
+            동안(i<limit) {
                 U8_NEXT_OR_FFFD(s, i, limit, c);
                 length+=U16_LENGTH(c);
             }
             iter->length=length;
         }
-        return iter->length;
+        반환 iter->length;
     default:
         /* not a valid origin */
         /* Should never get here! */
-        return -1;
+        반환 -1;
     }
 }
 
@@ -682,10 +682,10 @@ utf8IteratorMove(UCharIterator *iter, int32_t delta, UCharIteratorOrigin origin)
         /* iter->index<0 (unknown) is possible */
         break;
     case UITER_CURRENT:
-        if(iter->index>=0) {
+        만약(iter->index>=0) {
             pos=iter->index+delta;
             havePos=true;
-        } else {
+        } 아니면 {
             /* the current UTF-16 index is unknown after setState(), use only delta */
             pos=0;
             havePos=false;
@@ -693,17 +693,17 @@ utf8IteratorMove(UCharIterator *iter, int32_t delta, UCharIteratorOrigin origin)
         break;
     case UITER_LIMIT:
     case UITER_LENGTH:
-        if(iter->length>=0) {
+        만약(iter->length>=0) {
             pos=iter->length+delta;
             havePos=true;
-        } else {
+        } 아니면 {
             /* pin to the end, avoid counting the length */
             iter->index=-1;
             iter->start=iter->limit;
             iter->reservedField=0;
-            if(delta>=0) {
-                return UITER_UNKNOWN_INDEX;
-            } else {
+            만약(delta>=0) {
+                반환 UITER_UNKNOWN_INDEX;
+            } 아니면 {
                 /* the current UTF-16 index is unknown, use only delta */
                 pos=0;
                 havePos=false;
@@ -711,26 +711,26 @@ utf8IteratorMove(UCharIterator *iter, int32_t delta, UCharIteratorOrigin origin)
         }
         break;
     default:
-        return -1;  /* Error */
+        반환 -1;  /* Error */
     }
 
-    if(havePos) {
+    만약(havePos) {
         /* shortcuts: pinning to the edges of the string */
-        if(pos<=0) {
+        만약(pos<=0) {
             iter->index=iter->start=iter->reservedField=0;
-            return 0;
-        } else if(iter->length>=0 && pos>=iter->length) {
+            반환 0;
+        } 아니면 만약(iter->length>=0 && pos>=iter->length) {
             iter->index=iter->length;
             iter->start=iter->limit;
             iter->reservedField=0;
-            return iter->index;
+            반환 iter->index;
         }
 
         /* minimize the number of U8_NEXT/PREV operations */
-        if(iter->index<0 || pos<iter->index/2) {
+        만약(iter->index<0 || pos<iter->index/2) {
             /* go forward from the start instead of backward from the current index */
             iter->index=iter->start=iter->reservedField=0;
-        } else if(iter->length>=0 && (iter->length-pos)<(pos-iter->index)) {
+        } 아니면 만약(iter->length>=0 && (iter->length-pos)<(pos-iter->index)) {
             /*
              * if we have the UTF-16 index and length and the new position is
              * closer to the end than the current index,
@@ -742,23 +742,23 @@ utf8IteratorMove(UCharIterator *iter, int32_t delta, UCharIteratorOrigin origin)
         }
 
         delta=pos-iter->index;
-        if(delta==0) {
-            return iter->index; /* nothing to do */
+        만약(delta==0) {
+            반환 iter->index; /* nothing to do */
         }
-    } else {
+    } 아니면 {
         /* move relative to unknown UTF-16 index */
-        if(delta==0) {
-            return UITER_UNKNOWN_INDEX; /* nothing to do */
-        } else if(-delta>=iter->start) {
+        만약(delta==0) {
+            반환 UITER_UNKNOWN_INDEX; /* nothing to do */
+        } 아니면 만약(-delta>=iter->start) {
             /* moving backwards by more UChars than there are UTF-8 bytes, pin to 0 */
             iter->index=iter->start=iter->reservedField=0;
-            return 0;
-        } else if(delta>=(iter->limit-iter->start)) {
+            반환 0;
+        } 아니면 만약(delta>=(iter->limit-iter->start)) {
             /* moving forward by more UChars than the remaining UTF-8 bytes, pin to the end */
             iter->index=iter->length; /* may or may not be <0 (unknown) */
             iter->start=iter->limit;
             iter->reservedField=0;
-            return iter->index>=0 ? iter->index : (int32_t)UITER_UNKNOWN_INDEX;
+            반환 iter->index>=0 ? iter->index : (int32_t)UITER_UNKNOWN_INDEX;
         }
     }
 
@@ -768,53 +768,53 @@ utf8IteratorMove(UCharIterator *iter, int32_t delta, UCharIteratorOrigin origin)
     s=(const uint8_t *)iter->context;
     pos=iter->index; /* could be <0 (unknown) */
     i=iter->start;
-    if(delta>0) {
+    만약(delta>0) {
         /* go forward */
         int32_t limit=iter->limit;
-        if(iter->reservedField!=0) {
+        만약(iter->reservedField!=0) {
             iter->reservedField=0;
             ++pos;
             --delta;
         }
-        while(delta>0 && i<limit) {
+        동안(delta>0 && i<limit) {
             U8_NEXT_OR_FFFD(s, i, limit, c);
-            if(c<=0xffff) {
+            만약(c<=0xffff) {
                 ++pos;
                 --delta;
-            } else if(delta>=2) {
+            } 아니면 만약(delta>=2) {
                 pos+=2;
                 delta-=2;
-            } else /* delta==1 */ {
+            } 아니면 /* delta==1 */ {
                 /* stop in the middle of a supplementary code point */
                 iter->reservedField=c;
                 ++pos;
                 break; /* delta=0; */
             }
         }
-        if(i==limit) {
-            if(iter->length<0 && iter->index>=0) {
+        만약(i==limit) {
+            만약(iter->length<0 && iter->index>=0) {
                 iter->length= iter->reservedField==0 ? pos : pos+1;
-            } else if(iter->index<0 && iter->length>=0) {
+            } 아니면 만약(iter->index<0 && iter->length>=0) {
                 iter->index= iter->reservedField==0 ? iter->length : iter->length-1;
             }
         }
-    } else /* delta<0 */ {
+    } 아니면 /* delta<0 */ {
         /* go backward */
-        if(iter->reservedField!=0) {
+        만약(iter->reservedField!=0) {
             iter->reservedField=0;
             i-=4; /* we stayed behind the supplementary code point; go before it now */
             --pos;
             ++delta;
         }
-        while(delta<0 && i>0) {
+        동안(delta<0 && i>0) {
             U8_PREV_OR_FFFD(s, 0, i, c);
-            if(c<=0xffff) {
+            만약(c<=0xffff) {
                 --pos;
                 ++delta;
-            } else if(delta<=-2) {
+            } 아니면 만약(delta<=-2) {
                 pos-=2;
                 delta+=2;
-            } else /* delta==-1 */ {
+            } 아니면 /* delta==-1 */ {
                 /* stop in the middle of a supplementary code point */
                 i+=4; /* back to behind this supplementary code point for consistent state */
                 iter->reservedField=c;
@@ -825,46 +825,46 @@ utf8IteratorMove(UCharIterator *iter, int32_t delta, UCharIteratorOrigin origin)
     }
 
     iter->start=i;
-    if(iter->index>=0) {
-        return iter->index=pos;
-    } else {
+    만약(iter->index>=0) {
+        반환 iter->index=pos;
+    } 아니면 {
         /* we started with index<0 (unknown) so pos is bogus */
-        if(i<=1) {
-            return iter->index=i; /* reached the beginning */
-        } else {
+        만약(i<=1) {
+            반환 iter->index=i; /* reached the beginning */
+        } 아니면 {
             /* we still don't know the UTF-16 index */
-            return UITER_UNKNOWN_INDEX;
+            반환 UITER_UNKNOWN_INDEX;
         }
     }
 }
 
 static UBool U_CALLCONV
 utf8IteratorHasNext(UCharIterator *iter) {
-    return iter->start<iter->limit || iter->reservedField!=0;
+    반환 iter->start<iter->limit || iter->reservedField!=0;
 }
 
 static UBool U_CALLCONV
 utf8IteratorHasPrevious(UCharIterator *iter) {
-    return iter->start>0;
+    반환 iter->start>0;
 }
 
 static UChar32 U_CALLCONV
 utf8IteratorCurrent(UCharIterator *iter) {
-    if(iter->reservedField!=0) {
-        return U16_TRAIL(iter->reservedField);
-    } else if(iter->start<iter->limit) {
+    만약(iter->reservedField!=0) {
+        반환 U16_TRAIL(iter->reservedField);
+    } 아니면 만약(iter->start<iter->limit) {
         const uint8_t *s=(const uint8_t *)iter->context;
         UChar32 c;
         int32_t i=iter->start;
 
         U8_NEXT_OR_FFFD(s, i, iter->limit, c);
-        if(c<=0xffff) {
-            return c;
-        } else {
-            return U16_LEAD(c);
+        만약(c<=0xffff) {
+            반환 c;
+        } 아니면 {
+            반환 U16_LEAD(c);
         }
-    } else {
-        return U_SENTINEL;
+    } 아니면 {
+        반환 U_SENTINEL;
     }
 }
 
@@ -872,34 +872,34 @@ static UChar32 U_CALLCONV
 utf8IteratorNext(UCharIterator *iter) {
     int32_t index;
 
-    if(iter->reservedField!=0) {
+    만약(iter->reservedField!=0) {
         char16_t trail=U16_TRAIL(iter->reservedField);
         iter->reservedField=0;
-        if((index=iter->index)>=0) {
+        만약((index=iter->index)>=0) {
             iter->index=index+1;
         }
-        return trail;
-    } else if(iter->start<iter->limit) {
+        반환 trail;
+    } 아니면 만약(iter->start<iter->limit) {
         const uint8_t *s=(const uint8_t *)iter->context;
         UChar32 c;
 
         U8_NEXT_OR_FFFD(s, iter->start, iter->limit, c);
-        if((index=iter->index)>=0) {
+        만약((index=iter->index)>=0) {
             iter->index=++index;
-            if(iter->length<0 && iter->start==iter->limit) {
+            만약(iter->length<0 && iter->start==iter->limit) {
                 iter->length= c<=0xffff ? index : index+1;
             }
-        } else if(iter->start==iter->limit && iter->length>=0) {
+        } 아니면 만약(iter->start==iter->limit && iter->length>=0) {
             iter->index= c<=0xffff ? iter->length : iter->length-1;
         }
-        if(c<=0xffff) {
-            return c;
-        } else {
+        만약(c<=0xffff) {
+            반환 c;
+        } 아니면 {
             iter->reservedField=c;
-            return U16_LEAD(c);
+            반환 U16_LEAD(c);
         }
-    } else {
-        return U_SENTINEL;
+    } 아니면 {
+        반환 U_SENTINEL;
     }
 }
 
@@ -907,43 +907,43 @@ static UChar32 U_CALLCONV
 utf8IteratorPrevious(UCharIterator *iter) {
     int32_t index;
 
-    if(iter->reservedField!=0) {
+    만약(iter->reservedField!=0) {
         char16_t lead=U16_LEAD(iter->reservedField);
         iter->reservedField=0;
         iter->start-=4; /* we stayed behind the supplementary code point; go before it now */
-        if((index=iter->index)>0) {
+        만약((index=iter->index)>0) {
             iter->index=index-1;
         }
-        return lead;
-    } else if(iter->start>0) {
+        반환 lead;
+    } 아니면 만약(iter->start>0) {
         const uint8_t *s=(const uint8_t *)iter->context;
         UChar32 c;
 
         U8_PREV_OR_FFFD(s, 0, iter->start, c);
-        if((index=iter->index)>0) {
+        만약((index=iter->index)>0) {
             iter->index=index-1;
-        } else if(iter->start<=1) {
+        } 아니면 만약(iter->start<=1) {
             iter->index= c<=0xffff ? iter->start : iter->start+1;
         }
-        if(c<=0xffff) {
-            return c;
-        } else {
+        만약(c<=0xffff) {
+            반환 c;
+        } 아니면 {
             iter->start+=4; /* back to behind this supplementary code point for consistent state */
             iter->reservedField=c;
-            return U16_TRAIL(c);
+            반환 U16_TRAIL(c);
         }
-    } else {
-        return U_SENTINEL;
+    } 아니면 {
+        반환 U_SENTINEL;
     }
 }
 
 static uint32_t U_CALLCONV
 utf8IteratorGetState(const UCharIterator *iter) {
     uint32_t state=(uint32_t)(iter->start<<1);
-    if(iter->reservedField!=0) {
+    만약(iter->reservedField!=0) {
         state|=1;
     }
-    return state;
+    반환 state;
 }
 
 static void U_CALLCONV
@@ -951,34 +951,34 @@ utf8IteratorSetState(UCharIterator *iter,
                      uint32_t state,
                      UErrorCode *pErrorCode)
 {
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
+    만약(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
         /* do nothing */
-    } else if(iter==nullptr) {
+    } 아니면 만약(iter==nullptr) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-    } else if(state==utf8IteratorGetState(iter)) {
+    } 아니면 만약(state==utf8IteratorGetState(iter)) {
         /* setting to the current state: no-op */
-    } else {
+    } 아니면 {
         int32_t index=(int32_t)(state>>1); /* UTF-8 index */
         state&=1; /* 1 if in surrogate pair, must be index>=4 */
 
-        if((state==0 ? index<0 : index<4) || iter->limit<index) {
+        만약((state==0 ? index<0 : index<4) || iter->limit<index) {
             *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-        } else {
+        } 아니면 {
             iter->start=index; /* restore UTF-8 byte index */
-            if(index<=1) {
+            만약(index<=1) {
                 iter->index=index;
-            } else {
+            } 아니면 {
                 iter->index=-1; /* unknown UTF-16 index */
             }
-            if(state==0) {
+            만약(state==0) {
                 iter->reservedField=0;
-            } else {
+            } 아니면 {
                 /* verified index>=4 above */
                 UChar32 c;
                 U8_PREV_OR_FFFD((const uint8_t *)iter->context, 0, index, c);
-                if(c<=0xffff) {
+                만약(c<=0xffff) {
                     *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-                } else {
+                } 아니면 {
                     iter->reservedField=c;
                 }
             }
@@ -1002,17 +1002,17 @@ static const UCharIterator utf8Iterator={
 
 U_CAPI void U_EXPORT2
 uiter_setUTF8(UCharIterator *iter, const char *s, int32_t length) {
-    if (iter != nullptr) {
-        if (s != nullptr && length >= -1) {
+    만약 (iter != nullptr) {
+        만약 (s != nullptr && length >= -1) {
             *iter=utf8Iterator;
             iter->context=s;
-            if(length>=0) {
+            만약(length>=0) {
                 iter->limit=length;
-            } else {
+            } 아니면 {
                 iter->limit=(int32_t)uprv_strlen(s);
             }
             iter->length= iter->limit<=1 ? iter->limit : -1;
-        } else {
+        } 아니면 {
             *iter=noopIterator;
         }
     }
@@ -1025,30 +1025,30 @@ uiter_current32(UCharIterator *iter) {
     UChar32 c, c2;
 
     c=iter->current(iter);
-    if(U16_IS_SURROGATE(c)) {
-        if(U16_IS_SURROGATE_LEAD(c)) {
+    만약(U16_IS_SURROGATE(c)) {
+        만약(U16_IS_SURROGATE_LEAD(c)) {
             /*
              * go to the next code unit
              * we know that we are not at the limit because c!=U_SENTINEL
              */
             iter->move(iter, 1, UITER_CURRENT);
-            if(U16_IS_TRAIL(c2=iter->current(iter))) {
+            만약(U16_IS_TRAIL(c2=iter->current(iter))) {
                 c=U16_GET_SUPPLEMENTARY(c, c2);
             }
 
             /* undo index movement */
             iter->move(iter, -1, UITER_CURRENT);
-        } else {
-            if(U16_IS_LEAD(c2=iter->previous(iter))) {
+        } 아니면 {
+            만약(U16_IS_LEAD(c2=iter->previous(iter))) {
                 c=U16_GET_SUPPLEMENTARY(c2, c);
             }
-            if(c2>=0) {
+            만약(c2>=0) {
                 /* undo index movement */
                 iter->move(iter, 1, UITER_CURRENT);
             }
         }
     }
-    return c;
+    반환 c;
 }
 
 U_CAPI UChar32 U_EXPORT2
@@ -1056,15 +1056,15 @@ uiter_next32(UCharIterator *iter) {
     UChar32 c, c2;
 
     c=iter->next(iter);
-    if(U16_IS_LEAD(c)) {
-        if(U16_IS_TRAIL(c2=iter->next(iter))) {
+    만약(U16_IS_LEAD(c)) {
+        만약(U16_IS_TRAIL(c2=iter->next(iter))) {
             c=U16_GET_SUPPLEMENTARY(c, c2);
-        } else if(c2>=0) {
+        } 아니면 만약(c2>=0) {
             /* unmatched first surrogate, undo index movement */
             iter->move(iter, -1, UITER_CURRENT);
         }
     }
-    return c;
+    반환 c;
 }
 
 U_CAPI UChar32 U_EXPORT2
@@ -1072,35 +1072,35 @@ uiter_previous32(UCharIterator *iter) {
     UChar32 c, c2;
 
     c=iter->previous(iter);
-    if(U16_IS_TRAIL(c)) {
-        if(U16_IS_LEAD(c2=iter->previous(iter))) {
+    만약(U16_IS_TRAIL(c)) {
+        만약(U16_IS_LEAD(c2=iter->previous(iter))) {
             c=U16_GET_SUPPLEMENTARY(c2, c);
-        } else if(c2>=0) {
+        } 아니면 만약(c2>=0) {
             /* unmatched second surrogate, undo index movement */
             iter->move(iter, 1, UITER_CURRENT);
         }
     }
-    return c;
+    반환 c;
 }
 
 U_CAPI uint32_t U_EXPORT2
 uiter_getState(const UCharIterator *iter) {
-    if(iter==nullptr || iter->getState==nullptr) {
-        return UITER_NO_STATE;
-    } else {
-        return iter->getState(iter);
+    만약(iter==nullptr || iter->getState==nullptr) {
+        반환 UITER_NO_STATE;
+    } 아니면 {
+        반환 iter->getState(iter);
     }
 }
 
 U_CAPI void U_EXPORT2
 uiter_setState(UCharIterator *iter, uint32_t state, UErrorCode *pErrorCode) {
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
+    만약(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
         /* do nothing */
-    } else if(iter==nullptr) {
+    } 아니면 만약(iter==nullptr) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-    } else if(iter->setState==nullptr) {
+    } 아니면 만약(iter->setState==nullptr) {
         *pErrorCode=U_UNSUPPORTED_ERROR;
-    } else {
+    } 아니면 {
         iter->setState(iter, state, pErrorCode);
     }
 }

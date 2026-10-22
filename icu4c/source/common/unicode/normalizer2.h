@@ -26,9 +26,9 @@
 
 #include "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#만약 U_SHOW_CPLUSPLUS_API
 
-#if !UCONFIG_NO_NORMALIZATION
+#만약 !UCONFIG_NO_NORMALIZATION
 
 #include "unicode/stringpiece.h"
 #include "unicode/uniset.h"
@@ -221,7 +221,7 @@ public:
     normalize(const UnicodeString &src, UErrorCode &errorCode) const {
         UnicodeString result;
         normalize(src, result, errorCode);
-        return result;
+        반환 result;
     }
     /**
      * Writes the normalized form of the source string to the destination string

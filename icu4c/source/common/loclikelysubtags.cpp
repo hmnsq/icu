@@ -70,52 +70,52 @@ struct LikelySubtagsData {
     }
 
     void load(UErrorCode &errorCode) {
-        if (U_FAILURE(errorCode)) { return; }
+        만약 (U_FAILURE(errorCode)) { 반환; }
         langInfoBundle = ures_openDirect(nullptr, "langInfo", &errorCode);
-        if (U_FAILURE(errorCode)) { return; }
+        만약 (U_FAILURE(errorCode)) { 반환; }
         StackUResourceBundle stackTempBundle;
         ResourceDataValue value;
         ures_getValueWithFallback(langInfoBundle, "likely", stackTempBundle.getAlias(),
                                   value, errorCode);
         ResourceTable likelyTable = value.getTable(errorCode);
-        if (U_FAILURE(errorCode)) { return; }
+        만약 (U_FAILURE(errorCode)) { 반환; }
 
         // Read all strings in the resource bundle and convert them to invariant char *.
         LocalMemory<int32_t> languageIndexes, regionIndexes, lsrSubtagIndexes;
         int32_t languagesLength = 0, regionsLength = 0, lsrSubtagsLength = 0;
         ResourceArray m49Array;
-        if (likelyTable.findValue("m49", value)) {
+        만약 (likelyTable.findValue("m49", value)) {
             m49Array = value.getArray(errorCode);
-        } else {
+        } 아니면 {
             errorCode = U_MISSING_RESOURCE_ERROR;
-            return;
+            반환;
         }
-        if (!readStrings(likelyTable, "languageAliases", value,
+        만약 (!readStrings(likelyTable, "languageAliases", value,
                          languageIndexes, languagesLength, errorCode) ||
                 !readStrings(likelyTable, "regionAliases", value,
                              regionIndexes, regionsLength, errorCode) ||
                 !readLSREncodedStrings(likelyTable, "lsrnum", value, m49Array,
                              lsrSubtagIndexes,lsrSubtagsLength, errorCode)) {
-            return;
+            반환;
         }
-        if ((languagesLength & 1) != 0 ||
+        만약 ((languagesLength & 1) != 0 ||
                 (regionsLength & 1) != 0 ||
                 (lsrSubtagsLength % 3) != 0) {
             errorCode = U_INVALID_FORMAT_ERROR;
-            return;
+            반환;
         }
-        if (lsrSubtagsLength == 0) {
+        만약 (lsrSubtagsLength == 0) {
             errorCode = U_MISSING_RESOURCE_ERROR;
-            return;
+            반환;
         }
 
-        if (!likelyTable.findValue("trie", value)) {
+        만약 (!likelyTable.findValue("trie", value)) {
             errorCode = U_MISSING_RESOURCE_ERROR;
-            return;
+            반환;
         }
         int32_t length;
         trieBytes = value.getBinary(length, errorCode);
-        if (U_FAILURE(errorCode)) { return; }
+        만약 (U_FAILURE(errorCode)) { 반환; }
 
         // Also read distance/matcher data if available,
         // to open & keep only one resource bundle pointer
@@ -125,48 +125,48 @@ struct LikelySubtagsData {
                                   value, matchErrorCode);
         LocalMemory<int32_t> partitionIndexes, paradigmSubtagIndexes;
         int32_t partitionsLength = 0, paradigmSubtagsLength = 0;
-        if (U_SUCCESS(matchErrorCode)) {
+        만약 (U_SUCCESS(matchErrorCode)) {
             ResourceTable matchTable = value.getTable(errorCode);
-            if (U_FAILURE(errorCode)) { return; }
+            만약 (U_FAILURE(errorCode)) { 반환; }
 
-            if (matchTable.findValue("trie", value)) {
+            만약 (matchTable.findValue("trie", value)) {
                 distanceData.distanceTrieBytes = value.getBinary(length, errorCode);
-                if (U_FAILURE(errorCode)) { return; }
+                만약 (U_FAILURE(errorCode)) { 반환; }
             }
 
-            if (matchTable.findValue("regionToPartitions", value)) {
+            만약 (matchTable.findValue("regionToPartitions", value)) {
                 distanceData.regionToPartitions = value.getBinary(length, errorCode);
-                if (U_FAILURE(errorCode)) { return; }
-                if (length < LSR::REGION_INDEX_LIMIT) {
+                만약 (U_FAILURE(errorCode)) { 반환; }
+                만약 (length < LSR::REGION_INDEX_LIMIT) {
                     errorCode = U_INVALID_FORMAT_ERROR;
-                    return;
+                    반환;
                 }
             }
 
-            if (!readStrings(matchTable, "partitions", value,
+            만약 (!readStrings(matchTable, "partitions", value,
                              partitionIndexes, partitionsLength, errorCode) ||
                     !readLSREncodedStrings(matchTable, "paradigmnum", value, m49Array,
                                  paradigmSubtagIndexes, paradigmSubtagsLength, errorCode)) {
-                return;
+                반환;
             }
-            if ((paradigmSubtagsLength % 3) != 0) {
+            만약 ((paradigmSubtagsLength % 3) != 0) {
                 errorCode = U_INVALID_FORMAT_ERROR;
-                return;
+                반환;
             }
 
-            if (matchTable.findValue("distances", value)) {
+            만약 (matchTable.findValue("distances", value)) {
                 distanceData.distances = value.getIntVector(length, errorCode);
-                if (U_FAILURE(errorCode)) { return; }
-                if (length < 4) {  // LocaleDistance IX_LIMIT
+                만약 (U_FAILURE(errorCode)) { 반환; }
+                만약 (length < 4) {  // LocaleDistance IX_LIMIT
                     errorCode = U_INVALID_FORMAT_ERROR;
-                    return;
+                    반환;
                 }
             }
-        } else if (matchErrorCode == U_MISSING_RESOURCE_ERROR) {
+        } 아니면 만약 (matchErrorCode == U_MISSING_RESOURCE_ERROR) {
             // ok for likely subtags
-        } else {  // error other than missing resource
+        } 아니면 {  // error other than missing resource
             errorCode = matchErrorCode;
-            return;
+            반환;
         }
 
         // Fetch & store invariant-character versions of strings
@@ -174,51 +174,51 @@ struct LikelySubtagsData {
         strings.freeze();
 
         languageAliases = CharStringMap(languagesLength / 2, errorCode);
-        for (int32_t i = 0; i < languagesLength; i += 2) {
+        위해 (int32_t i = 0; i < languagesLength; i += 2) {
             languageAliases.put(strings.get(languageIndexes[i]),
                                 strings.get(languageIndexes[i + 1]), errorCode);
         }
 
         regionAliases = CharStringMap(regionsLength / 2, errorCode);
-        for (int32_t i = 0; i < regionsLength; i += 2) {
+        위해 (int32_t i = 0; i < regionsLength; i += 2) {
             regionAliases.put(strings.get(regionIndexes[i]),
                               strings.get(regionIndexes[i + 1]), errorCode);
         }
-        if (U_FAILURE(errorCode)) { return; }
+        만약 (U_FAILURE(errorCode)) { 반환; }
 
         lsrsLength = lsrSubtagsLength / 3;
         lsrs = new LSR[lsrsLength];
-        if (lsrs == nullptr) {
+        만약 (lsrs == nullptr) {
             errorCode = U_MEMORY_ALLOCATION_ERROR;
-            return;
+            반환;
         }
-        for (int32_t i = 0, j = 0; i < lsrSubtagsLength; i += 3, ++j) {
+        위해 (int32_t i = 0, j = 0; i < lsrSubtagsLength; i += 3, ++j) {
             lsrs[j] = LSR(strings.get(lsrSubtagIndexes[i]),
                           strings.get(lsrSubtagIndexes[i + 1]),
                           strings.get(lsrSubtagIndexes[i + 2]),
                           LSR::IMPLICIT_LSR);
         }
 
-        if (partitionsLength > 0) {
+        만약 (partitionsLength > 0) {
             distanceData.partitions = static_cast<const char **>(
                 uprv_malloc(partitionsLength * sizeof(const char *)));
-            if (distanceData.partitions == nullptr) {
+            만약 (distanceData.partitions == nullptr) {
                 errorCode = U_MEMORY_ALLOCATION_ERROR;
-                return;
+                반환;
             }
-            for (int32_t i = 0; i < partitionsLength; ++i) {
+            위해 (int32_t i = 0; i < partitionsLength; ++i) {
                 distanceData.partitions[i] = strings.get(partitionIndexes[i]);
             }
         }
 
-        if (paradigmSubtagsLength > 0) {
+        만약 (paradigmSubtagsLength > 0) {
             distanceData.paradigmsLength = paradigmSubtagsLength / 3;
             LSR *paradigms = new LSR[distanceData.paradigmsLength];
-            if (paradigms == nullptr) {
+            만약 (paradigms == nullptr) {
                 errorCode = U_MEMORY_ALLOCATION_ERROR;
-                return;
+                반환;
             }
-            for (int32_t i = 0, j = 0; i < paradigmSubtagsLength; i += 3, ++j) {
+            위해 (int32_t i = 0, j = 0; i < paradigmSubtagsLength; i += 3, ++j) {
                 paradigms[j] = LSR(strings.get(paradigmSubtagIndexes[i]),
                                    strings.get(paradigmSubtagIndexes[i + 1]),
                                    strings.get(paradigmSubtagIndexes[i + 2]),
@@ -231,111 +231,111 @@ struct LikelySubtagsData {
 private:
     bool readStrings(const ResourceTable &table, const char *key, ResourceValue &value,
                      LocalMemory<int32_t> &indexes, int32_t &length, UErrorCode &errorCode) {
-        if (U_FAILURE(errorCode)) { return false; }
-        if (table.findValue(key, value)) {
+        만약 (U_FAILURE(errorCode)) { 반환 false; }
+        만약 (table.findValue(key, value)) {
             ResourceArray stringArray = value.getArray(errorCode);
-            if (U_FAILURE(errorCode)) { return false; }
+            만약 (U_FAILURE(errorCode)) { 반환 false; }
             length = stringArray.getSize();
-            if (length == 0) { return true; }
+            만약 (length == 0) { 반환 true; }
             int32_t *rawIndexes = indexes.allocateInsteadAndCopy(length);
-            if (rawIndexes == nullptr) {
+            만약 (rawIndexes == nullptr) {
                 errorCode = U_MEMORY_ALLOCATION_ERROR;
-                return false;
+                반환 false;
             }
-            for (int i = 0; i < length; ++i) {
-                if (stringArray.getValue(i, value)) {  // returns true because i < length
+            위해 (정수 i = 0; i < length; ++i) {
+                만약 (stringArray.getValue(i, value)) {  // returns true because i < length
                     int32_t strLength = 0;
                     rawIndexes[i] = strings.add(value.getString(strLength, errorCode), errorCode);
-                    if (U_FAILURE(errorCode)) { return false; }
+                    만약 (U_FAILURE(errorCode)) { 반환 false; }
                 }
             }
         }
-        return true;
+        반환 true;
     }
-    UnicodeString toLanguage(int encoded) {
-        if (encoded == 0) {
-            return UNICODE_STRING_SIMPLE("");
+    UnicodeString toLanguage(정수 encoded) {
+        만약 (encoded == 0) {
+            반환 UNICODE_STRING_SIMPLE("");
         }
-        if (encoded == 1) {
-            return UNICODE_STRING_SIMPLE("skip");
+        만약 (encoded == 1) {
+            반환 UNICODE_STRING_SIMPLE("skip");
         }
         encoded &= 0x00ffffff;
         encoded %= 27*27*27;
         char lang[3];
         lang[0] = 'a' + ((encoded % 27) - 1);
         lang[1] = 'a' + (((encoded / 27 ) % 27) - 1);
-        if (encoded / (27 * 27) == 0) {
-            return UnicodeString(lang, 2, US_INV);
+        만약 (encoded / (27 * 27) == 0) {
+            반환 UnicodeString(lang, 2, US_INV);
         }
         lang[2] = 'a' + ((encoded / (27 * 27)) - 1);
-        return UnicodeString(lang, 3, US_INV);
+        반환 UnicodeString(lang, 3, US_INV);
     }
-    UnicodeString toScript(int encoded) {
-        if (encoded == 0) {
-            return UNICODE_STRING_SIMPLE("");
+    UnicodeString toScript(정수 encoded) {
+        만약 (encoded == 0) {
+            반환 UNICODE_STRING_SIMPLE("");
         }
-        if (encoded == 1) {
-            return UNICODE_STRING_SIMPLE("script");
+        만약 (encoded == 1) {
+            반환 UNICODE_STRING_SIMPLE("script");
         }
         encoded = (encoded >> 24) & 0x000000ff;
         const char* script = uscript_getShortName(static_cast<UScriptCode>(encoded));
-        if (script == nullptr) {
-            return UNICODE_STRING_SIMPLE("");
+        만약 (script == nullptr) {
+            반환 UNICODE_STRING_SIMPLE("");
         }
         U_ASSERT(uprv_strlen(script) == 4);
-        return UnicodeString(script, 4, US_INV);
+        반환 UnicodeString(script, 4, US_INV);
     }
-    UnicodeString m49IndexToCode(const ResourceArray &m49Array, ResourceValue &value, int index, UErrorCode &errorCode) {
-        if (U_FAILURE(errorCode)) {
-            return UNICODE_STRING_SIMPLE("");
+    UnicodeString m49IndexToCode(const ResourceArray &m49Array, ResourceValue &value, 정수 index, UErrorCode &errorCode) {
+        만약 (U_FAILURE(errorCode)) {
+            반환 UNICODE_STRING_SIMPLE("");
         }
-        if (m49Array.getValue(index, value)) {
-            return value.getUnicodeString(errorCode);
+        만약 (m49Array.getValue(index, value)) {
+            반환 value.getUnicodeString(errorCode);
         }
         // "m49" does not include the index.
         errorCode = U_MISSING_RESOURCE_ERROR;
-        return UNICODE_STRING_SIMPLE("");
+        반환 UNICODE_STRING_SIMPLE("");
     }
 
-    UnicodeString toRegion(const ResourceArray& m49Array, ResourceValue &value, int encoded, UErrorCode &errorCode) {
-        if (U_FAILURE(errorCode) || encoded == 0 || encoded == 1) {
-            return UNICODE_STRING_SIMPLE("");
+    UnicodeString toRegion(const ResourceArray& m49Array, ResourceValue &value, 정수 encoded, UErrorCode &errorCode) {
+        만약 (U_FAILURE(errorCode) || encoded == 0 || encoded == 1) {
+            반환 UNICODE_STRING_SIMPLE("");
         }
         encoded &= 0x00ffffff;
         encoded /= 27 * 27 * 27;
         encoded %= 27 * 27;
-        if (encoded < 27) {
+        만약 (encoded < 27) {
             // Selected M49 code index, find the code from "m49" resource.
-            return  m49IndexToCode(m49Array, value, encoded, errorCode);
+            반환  m49IndexToCode(m49Array, value, encoded, errorCode);
         }
         char region[2];
         region[0] = 'A' + ((encoded % 27) - 1);
         region[1] = 'A' + (((encoded / 27) % 27) - 1);
-        return UnicodeString(region, 2, US_INV);
+        반환 UnicodeString(region, 2, US_INV);
     }
 
     bool readLSREncodedStrings(const ResourceTable &table, const char* key, ResourceValue &value, const ResourceArray& m49Array,
                      LocalMemory<int32_t> &indexes, int32_t &length, UErrorCode &errorCode) {
-        if (U_FAILURE(errorCode)) { return false; }
-        if (table.findValue(key, value)) {
+        만약 (U_FAILURE(errorCode)) { 반환 false; }
+        만약 (table.findValue(key, value)) {
             const int32_t* vectors = value.getIntVector(length, errorCode);
-            if (U_FAILURE(errorCode)) { return false; }
-            if (length == 0) { return true; }
+            만약 (U_FAILURE(errorCode)) { 반환 false; }
+            만약 (length == 0) { 반환 true; }
             int32_t *rawIndexes = indexes.allocateInsteadAndCopy(length * 3);
-            if (rawIndexes == nullptr) {
+            만약 (rawIndexes == nullptr) {
                 errorCode = U_MEMORY_ALLOCATION_ERROR;
-                return false;
+                반환 false;
             }
-            for (int i = 0; i < length; ++i) {
+            위해 (정수 i = 0; i < length; ++i) {
                 rawIndexes[i*3] = strings.addByValue(toLanguage(vectors[i]), errorCode);
                 rawIndexes[i*3+1] = strings.addByValue(toScript(vectors[i]), errorCode);
                 rawIndexes[i*3+2] = strings.addByValue(
                     toRegion(m49Array, value, vectors[i], errorCode), errorCode);
-                if (U_FAILURE(errorCode)) { return false; }
+                만약 (U_FAILURE(errorCode)) { 반환 false; }
             }
             length *= 3;
         }
-        return true;
+        반환 true;
     }
 };
 
@@ -351,7 +351,7 @@ UBool U_CALLCONV cleanup() {
     delete gMacroregions;
     gMacroregions = nullptr;
     gInitOnce.reset();
-    return true;
+    반환 true;
 }
 
 constexpr const char16_t* MACROREGION_HARDCODE[] = {
@@ -383,27 +383,27 @@ constexpr const char16_t* MACROREGION_HARDCODE[] = {
 
 constexpr char16_t RANGE_MARKER = 0x7E; /* '~' */
 void processMacroregionRange(const UnicodeString& regionName, UVector* newMacroRegions, UErrorCode& status) {
-    if (U_FAILURE(status)) { return; }
+    만약 (U_FAILURE(status)) { 반환; }
     int32_t rangeMarkerLocation = regionName.indexOf(RANGE_MARKER);
     char16_t buf[6];
     regionName.extract(buf,6,status);
-    if ( rangeMarkerLocation > 0 ) {
+    만약 ( rangeMarkerLocation > 0 ) {
         char16_t endRange = regionName.charAt(rangeMarkerLocation+1);
         buf[rangeMarkerLocation] = 0;
-        while ( buf[rangeMarkerLocation-1] <= endRange && U_SUCCESS(status)) {
+        동안 ( buf[rangeMarkerLocation-1] <= endRange && U_SUCCESS(status)) {
             LocalPointer<UnicodeString> newRegion(new UnicodeString(buf), status);
             newMacroRegions->adoptElement(newRegion.orphan(),status);
             buf[rangeMarkerLocation-1]++;
         }
-    } else {
+    } 아니면 {
         LocalPointer<UnicodeString> newRegion(new UnicodeString(regionName), status);
         newMacroRegions->adoptElement(newRegion.orphan(),status);
     }
 }
 
-#if U_DEBUG
+#만약 U_DEBUG
 UVector* loadMacroregions(UErrorCode &status) {
-    if (U_FAILURE(status)) { return nullptr; }
+    만약 (U_FAILURE(status)) { 반환 nullptr; }
     LocalPointer<UVector> newMacroRegions(new UVector(uprv_deleteUObject, uhash_compareUnicodeString, status), status);
 
     LocalUResourceBundlePointer supplementalData(ures_openDirect(nullptr,"supplementalData",&status));
@@ -411,39 +411,39 @@ UVector* loadMacroregions(UErrorCode &status) {
     LocalUResourceBundlePointer regionList(ures_getByKey(idValidity.getAlias(),"region",nullptr,&status));
     LocalUResourceBundlePointer regionMacro(ures_getByKey(regionList.getAlias(),"macroregion",nullptr,&status));
 
-    if (U_FAILURE(status)) {
-        return nullptr;
+    만약 (U_FAILURE(status)) {
+        반환 nullptr;
     }
 
-    while (ures_hasNext(regionMacro.getAlias())) {
+    동안 (ures_hasNext(regionMacro.getAlias())) {
         UnicodeString regionName = ures_getNextUnicodeString(regionMacro.getAlias(),nullptr,&status);
         processMacroregionRange(regionName, newMacroRegions.getAlias(), status);
-        if (U_FAILURE(status)) {
-            return nullptr;
+        만약 (U_FAILURE(status)) {
+            반환 nullptr;
         }
     }
 
-    return newMacroRegions.orphan();
+    반환 newMacroRegions.orphan();
 }
 #endif // U_DEBUG
 
 UVector* getStaticMacroregions(UErrorCode &status) {
-    if (U_FAILURE(status)) { return nullptr; }
+    만약 (U_FAILURE(status)) { 반환 nullptr; }
     LocalPointer<UVector> newMacroRegions(new UVector(uprv_deleteUObject, uhash_compareUnicodeString, status), status);
 
-    if (U_FAILURE(status)) {
-        return nullptr;
+    만약 (U_FAILURE(status)) {
+        반환 nullptr;
     }
 
-    for (const auto *region : MACROREGION_HARDCODE) {
+    위해 (const auto *region : MACROREGION_HARDCODE) {
         UnicodeString regionName(region);
         processMacroregionRange(regionName, newMacroRegions.getAlias(), status);
-        if (U_FAILURE(status)) {
-            return nullptr;
+        만약 (U_FAILURE(status)) {
+            반환 nullptr;
         }
     }
 
-    return newMacroRegions.orphan();
+    반환 newMacroRegions.orphan();
 }
 
 }  // namespace
@@ -453,28 +453,28 @@ void U_CALLCONV LikelySubtags::initLikelySubtags(UErrorCode &errorCode) {
     U_ASSERT(gLikelySubtags == nullptr);
     LikelySubtagsData data(errorCode);
     data.load(errorCode);
-    if (U_FAILURE(errorCode)) { return; }
+    만약 (U_FAILURE(errorCode)) { 반환; }
     gLikelySubtags = new LikelySubtags(data);
     gMacroregions = getStaticMacroregions(errorCode);
-#if U_DEBUG
+#만약 U_DEBUG
     auto macroregionsFromData = loadMacroregions(errorCode);
     U_ASSERT((*gMacroregions) == (*macroregionsFromData));
     delete macroregionsFromData;
 #endif
-    if (U_FAILURE(errorCode) || gLikelySubtags == nullptr || gMacroregions == nullptr) {
+    만약 (U_FAILURE(errorCode) || gLikelySubtags == nullptr || gMacroregions == nullptr) {
         delete gLikelySubtags;
         delete gMacroregions;
         errorCode = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        반환;
     }
 
     ucln_common_registerCleanup(UCLN_COMMON_LIKELY_SUBTAGS, cleanup);
 }
 
 const LikelySubtags *LikelySubtags::getSingleton(UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return nullptr; }
+    만약 (U_FAILURE(errorCode)) { 반환 nullptr; }
     umtx_initOnce(gInitOnce, &LikelySubtags::initLikelySubtags, errorCode);
-    return gLikelySubtags;
+    반환 gLikelySubtags;
 }
 
 LikelySubtags::LikelySubtags(LikelySubtagsData &data) :
@@ -484,7 +484,7 @@ LikelySubtags::LikelySubtags(LikelySubtagsData &data) :
         regionAliases(std::move(data.regionAliases)),
         trie(data.trieBytes),
         lsrs(data.lsrs),
-#if U_DEBUG
+#만약 U_DEBUG
         lsrsLength(data.lsrsLength),
 #endif // U_DEBUG
         distanceData(std::move(data.distanceData)) {
@@ -503,9 +503,9 @@ LikelySubtags::LikelySubtags(LikelySubtagsData &data) :
     defaultLsrIndex = trie.getValue();
     trie.reset();
 
-    for (char16_t c = u'a'; c <= u'z'; ++c) {
+    위해 (char16_t c = u'a'; c <= u'z'; ++c) {
         result = trie.next(c);
-        if (result == USTRINGTRIE_NO_VALUE) {
+        만약 (result == USTRINGTRIE_NO_VALUE) {
             trieFirstLetterStates[c - u'a'] = trie.getState64();
         }
         trie.reset();
@@ -521,37 +521,37 @@ LikelySubtags::~LikelySubtags() {
 LSR LikelySubtags::makeMaximizedLsrFrom(const Locale &locale,
                                          bool returnInputIfUnmatch,
                                          UErrorCode &errorCode) const {
-    if (U_FAILURE(errorCode)) { return {}; }
-    if (locale.isBogus()) {
+    만약 (U_FAILURE(errorCode)) { 반환 {}; }
+    만약 (locale.isBogus()) {
         errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return {};
+        반환 {};
     }
     const char *name = locale.getName();
-    if (!returnInputIfUnmatch && uprv_isAtSign(name[0]) && name[1] == 'x' && name[2] == '=') {  // name.startsWith("@x=")
+    만약 (!returnInputIfUnmatch && uprv_isAtSign(name[0]) && name[1] == 'x' && name[2] == '=') {  // name.startsWith("@x=")
         // Private use language tag x-subtag-subtag... which CLDR changes to
         // und-x-subtag-subtag...
-        return LSR(name, "", "", LSR::EXPLICIT_LSR);
+        반환 LSR(name, "", "", LSR::EXPLICIT_LSR);
     }
     LSR max = makeMaximizedLsr(locale.getLanguage(), locale.getScript(), locale.getCountry(),
                             locale.getVariant(), returnInputIfUnmatch, errorCode);
 
-    if (uprv_strlen(max.language) == 0 &&
+    만약 (uprv_strlen(max.language) == 0 &&
         uprv_strlen(max.script) == 0 &&
         uprv_strlen(max.region) == 0) {
         // No match. ICU API mandate us to
         // If the provided ULocale instance is already in the maximal form, or
         // there is no data available available for maximization, it will be
         // returned.
-        return LSR(locale.getLanguage(), locale.getScript(), locale.getCountry(), LSR::EXPLICIT_LSR, errorCode);
+        반환 LSR(locale.getLanguage(), locale.getScript(), locale.getCountry(), LSR::EXPLICIT_LSR, errorCode);
     }
-    return max;
+    반환 max;
 }
 
 namespace {
 
 const char *getCanonical(const CharStringMap &aliases, const char *alias) {
     const char *canonical = aliases.get(alias);
-    return canonical == nullptr ? alias : canonical;
+    반환 canonical == nullptr ? alias : canonical;
 }
 
 }  // namespace
@@ -560,39 +560,39 @@ LSR LikelySubtags::makeMaximizedLsr(const char *language, const char *script, co
                                      const char *variant,
                                      bool returnInputIfUnmatch,
                                      UErrorCode &errorCode) const {
-    if (U_FAILURE(errorCode)) { return {}; }
+    만약 (U_FAILURE(errorCode)) { 반환 {}; }
     // Handle pseudolocales like en-XA, ar-XB, fr-PSCRACK.
     // They should match only themselves,
     // not other locales with what looks like the same language and script subtags.
-    if (!returnInputIfUnmatch) {
+    만약 (!returnInputIfUnmatch) {
         char c1;
-        if (region[0] == 'X' && (c1 = region[1]) != 0 && region[2] == 0) {
+        만약 (region[0] == 'X' && (c1 = region[1]) != 0 && region[2] == 0) {
             switch (c1) {
             case 'A':
-                return LSR(PSEUDO_ACCENTS_PREFIX, language, script, region,
+                반환 LSR(PSEUDO_ACCENTS_PREFIX, language, script, region,
                            LSR::EXPLICIT_LSR, errorCode);
             case 'B':
-                return LSR(PSEUDO_BIDI_PREFIX, language, script, region,
+                반환 LSR(PSEUDO_BIDI_PREFIX, language, script, region,
                            LSR::EXPLICIT_LSR, errorCode);
             case 'C':
-                return LSR(PSEUDO_CRACKED_PREFIX, language, script, region,
+                반환 LSR(PSEUDO_CRACKED_PREFIX, language, script, region,
                            LSR::EXPLICIT_LSR, errorCode);
             default:  // normal locale
                 break;
             }
         }
 
-        if (variant[0] == 'P' && variant[1] == 'S') {
+        만약 (variant[0] == 'P' && variant[1] == 'S') {
             int32_t lsrFlags = *region == 0 ?
                 LSR::EXPLICIT_LANGUAGE | LSR::EXPLICIT_SCRIPT : LSR::EXPLICIT_LSR;
-            if (uprv_strcmp(variant, "PSACCENT") == 0) {
-                return LSR(PSEUDO_ACCENTS_PREFIX, language, script,
+            만약 (uprv_strcmp(variant, "PSACCENT") == 0) {
+                반환 LSR(PSEUDO_ACCENTS_PREFIX, language, script,
                            *region == 0 ? "XA" : region, lsrFlags, errorCode);
-            } else if (uprv_strcmp(variant, "PSBIDI") == 0) {
-                return LSR(PSEUDO_BIDI_PREFIX, language, script,
+            } 아니면 만약 (uprv_strcmp(variant, "PSBIDI") == 0) {
+                반환 LSR(PSEUDO_BIDI_PREFIX, language, script,
                            *region == 0 ? "XB" : region, lsrFlags, errorCode);
-            } else if (uprv_strcmp(variant, "PSCRACK") == 0) {
-                return LSR(PSEUDO_CRACKED_PREFIX, language, script,
+            } 아니면 만약 (uprv_strcmp(variant, "PSCRACK") == 0) {
+                반환 LSR(PSEUDO_CRACKED_PREFIX, language, script,
                            *region == 0 ? "XC" : region, lsrFlags, errorCode);
             }
             // else normal locale
@@ -602,14 +602,14 @@ LSR LikelySubtags::makeMaximizedLsr(const char *language, const char *script, co
     language = getCanonical(languageAliases, language);
     // (We have no script mappings.)
     region = getCanonical(regionAliases, region);
-    return maximize(language, script, region, returnInputIfUnmatch, errorCode);
+    반환 maximize(language, script, region, returnInputIfUnmatch, errorCode);
 }
 
 LSR LikelySubtags::maximize(const char *language, const char *script, const char *region,
                              bool returnInputIfUnmatch,
                              UErrorCode &errorCode) const {
-    if (U_FAILURE(errorCode)) { return {}; }
-    return maximize({language, static_cast<int32_t>(uprv_strlen(language))},
+    만약 (U_FAILURE(errorCode)) { 반환 {}; }
+    반환 maximize({language, static_cast<int32_t>(uprv_strlen(language))},
                     {script, static_cast<int32_t>(uprv_strlen(script))},
                     {region, static_cast<int32_t>(uprv_strlen(region))},
                     returnInputIfUnmatch,
@@ -617,31 +617,31 @@ LSR LikelySubtags::maximize(const char *language, const char *script, const char
 }
 
 bool LikelySubtags::isMacroregion(StringPiece& region, UErrorCode& errorCode) const {
-    if (U_FAILURE(errorCode)) { return false; }
+    만약 (U_FAILURE(errorCode)) { 반환 false; }
     // In Java, we use Region class. In C++, since Region is under i18n,
     // we read the same data used by Region into gMacroregions avoid dependency
     // from common to i18n/region.cpp
     umtx_initOnce(gInitOnce, &LikelySubtags::initLikelySubtags, errorCode);
-    if (U_FAILURE(errorCode)) { return false; }
+    만약 (U_FAILURE(errorCode)) { 반환 false; }
     UnicodeString str(UnicodeString::fromUTF8(region));
-    return gMacroregions->contains((void *)&str);
+    반환 gMacroregions->contains((void *)&str);
 }
 
 LSR LikelySubtags::maximize(StringPiece language, StringPiece script, StringPiece region,
                              bool returnInputIfUnmatch,
                              UErrorCode &errorCode) const {
-    if (U_FAILURE(errorCode)) { return {}; }
-    if (language.compare("und") == 0) {
+    만약 (U_FAILURE(errorCode)) { 반환 {}; }
+    만약 (language.compare("und") == 0) {
         language = "";
     }
-    if (script.compare("Zzzz") == 0) {
+    만약 (script.compare("Zzzz") == 0) {
         script = "";
     }
-    if (region.compare("ZZ") == 0) {
+    만약 (region.compare("ZZ") == 0) {
         region = "";
     }
-    if (!script.empty() && !region.empty() && !language.empty()) {
-        return LSR(language, script, region, LSR::EXPLICIT_LSR, errorCode);  // already maximized
+    만약 (!script.empty() && !region.empty() && !language.empty()) {
+        반환 LSR(language, script, region, LSR::EXPLICIT_LSR, errorCode);  // already maximized
     }
     bool retainLanguage = false;
     bool retainScript = false;
@@ -652,43 +652,43 @@ LSR LikelySubtags::maximize(StringPiece language, StringPiece script, StringPiec
     int32_t value;
     // Small optimization: Array lookup for first language letter.
     int32_t c0;
-    if (0 <= (c0 = uprv_lowerOrdinal(language.data()[0])) && c0 <= 25 &&
+    만약 (0 <= (c0 = uprv_lowerOrdinal(language.data()[0])) && c0 <= 25 &&
             language.length() >= 2 &&
             (state = trieFirstLetterStates[c0]) != 0) {
         value = trieNext(iter.resetToState64(state), language, 1);
-    } else {
+    } 아니면 {
         value = trieNext(iter, language, 0);
     }
     bool matchLanguage = (value >= 0);
     bool matchScript = false;
-    if (value >= 0) {
+    만약 (value >= 0) {
         retainLanguage = !language.empty();
         state = iter.getState64();
-    } else {
+    } 아니면 {
         retainLanguage = true;
         iter.resetToState64(trieUndState);  // "und" ("*")
         state = 0;
     }
 
-    if (value >= 0 && !script.empty()) {
+    만약 (value >= 0 && !script.empty()) {
         matchScript = true;
     }
-    if (value > 0) {
+    만약 (value > 0) {
         // Intermediate or final value from just language.
-        if (value == SKIP_SCRIPT) {
+        만약 (value == SKIP_SCRIPT) {
             value = 0;
         }
         retainScript = !script.empty();
-    } else {
+    } 아니면 {
         value = trieNext(iter, script, 0);
-        if (value >= 0) {
+        만약 (value >= 0) {
             retainScript = !script.empty();
             state = iter.getState64();
-        } else {
+        } 아니면 {
             retainScript = true;
-            if (state == 0) {
+            만약 (state == 0) {
                 iter.resetToState64(trieUndZzzzState);  // "und-Zzzz" ("**")
-            } else {
+            } 아니면 {
                 iter.resetToState64(state);
                 value = trieNext(iter, "", 0);
                 U_ASSERT(value >= 0);
@@ -698,26 +698,26 @@ LSR LikelySubtags::maximize(StringPiece language, StringPiece script, StringPiec
     }
 
     bool matchRegion = false;
-    if (value > 0) {
+    만약 (value > 0) {
         // Final value from just language or language+script.
         retainRegion = !region.empty();
-    } else {
+    } 아니면 {
         value = trieNext(iter, region, 0);
-        if (value >= 0) {
-            if (!region.empty() && !isMacroregion(region, errorCode)) {
+        만약 (value >= 0) {
+            만약 (!region.empty() && !isMacroregion(region, errorCode)) {
                 retainRegion = true;
                 matchRegion = true;
             }
-        } else {
+        } 아니면 {
             retainRegion = true;
-            if (state == 0) {
+            만약 (state == 0) {
                 value = defaultLsrIndex;
-            } else {
+            } 아니면 {
                 iter.resetToState64(state);
                 value = trieNext(iter, "", 0);
                 U_ASSERT(value != 0);
                 // For the case of und_Latn
-                if (value < 0) {
+                만약 (value < 0) {
                     retainLanguage = !language.empty();
                     retainScript = !script.empty();
                     retainRegion = !region.empty();
@@ -728,7 +728,7 @@ LSR LikelySubtags::maximize(StringPiece language, StringPiece script, StringPiec
                     int64_t trieUndEmptyState = iter.getState64();
                     value = trieNext(iter, region, 0);
                     // Fallback to und =>
-                    if (value < 0) {
+                    만약 (value < 0) {
                         iter.resetToState64(trieUndEmptyState);
                         value = trieNext(iter, "", 0);
                         U_ASSERT(value > 0);
@@ -738,36 +738,36 @@ LSR LikelySubtags::maximize(StringPiece language, StringPiece script, StringPiec
         }
     }
     U_ASSERT(value < lsrsLength);
-    if (returnInputIfUnmatch &&
+    만약 (returnInputIfUnmatch &&
         (!(matchLanguage || matchScript || (matchRegion && language.empty())))) {
-      return LSR("", "", "", LSR::EXPLICIT_LSR, errorCode);  // no matching.
+      반환 LSR("", "", "", LSR::EXPLICIT_LSR, errorCode);  // no matching.
     }
-    if (language.empty()) {
+    만약 (language.empty()) {
         language = StringPiece("und");
     }
 
-    if (!(retainLanguage || retainScript || retainRegion)) {
+    만약 (!(retainLanguage || retainScript || retainRegion)) {
         U_ASSERT(value >= 0);
         // Quickly return a copy of the lookup-result LSR
         // without new allocation of the subtags.
         const LSR &matched = lsrs[value];
-        return LSR(matched.language, matched.script, matched.region, matched.flags);
+        반환 LSR(matched.language, matched.script, matched.region, matched.flags);
     }
-    if (!retainLanguage) {
+    만약 (!retainLanguage) {
         U_ASSERT(value >= 0);
         language = lsrs[value].language;
     }
-    if (!retainScript) {
+    만약 (!retainScript) {
         U_ASSERT(value >= 0);
         script = lsrs[value].script;
     }
-    if (!retainRegion) {
+    만약 (!retainRegion) {
         U_ASSERT(value >= 0);
         region = lsrs[value].region;
     }
     int32_t retainMask = (retainLanguage ? 4 : 0) + (retainScript ? 2 : 0) + (retainRegion ? 1 : 0);
     // retainOldMask flags = LSR explicit-subtag flags
-    return LSR(language, script, region, retainMask, errorCode);
+    반환 LSR(language, script, region, retainMask, errorCode);
 }
 
 int32_t LikelySubtags::compareLikely(const LSR &lsr, const LSR &other, int32_t likelyInfo) const {
@@ -775,48 +775,48 @@ int32_t LikelySubtags::compareLikely(const LSR &lsr, const LSR &other, int32_t l
     // likelyInfo bit 1 is set if the previous comparison with lsr
     // was for equal language and script.
     // Otherwise the scripts differed.
-    if (uprv_strcmp(lsr.language, other.language) != 0) {
-        return 0xfffffffc;  // negative, lsr not better than other
+    만약 (uprv_strcmp(lsr.language, other.language) != 0) {
+        반환 0xfffffffc;  // negative, lsr not better than other
     }
-    if (uprv_strcmp(lsr.script, other.script) != 0) {
+    만약 (uprv_strcmp(lsr.script, other.script) != 0) {
         int32_t index;
-        if (likelyInfo >= 0 && (likelyInfo & 2) == 0) {
+        만약 (likelyInfo >= 0 && (likelyInfo & 2) == 0) {
             index = likelyInfo >> 2;
-        } else {
+        } 아니면 {
             index = getLikelyIndex(lsr.language, "");
             likelyInfo = index << 2;
         }
         const LSR &likely = lsrs[index];
-        if (uprv_strcmp(lsr.script, likely.script) == 0) {
-            return likelyInfo | 1;
-        } else {
-            return likelyInfo & ~1;
+        만약 (uprv_strcmp(lsr.script, likely.script) == 0) {
+            반환 likelyInfo | 1;
+        } 아니면 {
+            반환 likelyInfo & ~1;
         }
     }
-    if (uprv_strcmp(lsr.region, other.region) != 0) {
+    만약 (uprv_strcmp(lsr.region, other.region) != 0) {
         int32_t index;
-        if (likelyInfo >= 0 && (likelyInfo & 2) != 0) {
+        만약 (likelyInfo >= 0 && (likelyInfo & 2) != 0) {
             index = likelyInfo >> 2;
-        } else {
+        } 아니면 {
             index = getLikelyIndex(lsr.language, lsr.region);
             likelyInfo = (index << 2) | 2;
         }
         const LSR &likely = lsrs[index];
-        if (uprv_strcmp(lsr.region, likely.region) == 0) {
-            return likelyInfo | 1;
-        } else {
-            return likelyInfo & ~1;
+        만약 (uprv_strcmp(lsr.region, likely.region) == 0) {
+            반환 likelyInfo | 1;
+        } 아니면 {
+            반환 likelyInfo & ~1;
         }
     }
-    return likelyInfo & ~1;  // lsr not better than other
+    반환 likelyInfo & ~1;  // lsr not better than other
 }
 
 // Subset of maximize().
 int32_t LikelySubtags::getLikelyIndex(const char *language, const char *script) const {
-    if (uprv_strcmp(language, "und") == 0) {
+    만약 (uprv_strcmp(language, "und") == 0) {
         language = "";
     }
-    if (uprv_strcmp(script, "Zzzz") == 0) {
+    만약 (uprv_strcmp(script, "Zzzz") == 0) {
         script = "";
     }
 
@@ -825,33 +825,33 @@ int32_t LikelySubtags::getLikelyIndex(const char *language, const char *script) 
     int32_t value;
     // Small optimization: Array lookup for first language letter.
     int32_t c0;
-    if (0 <= (c0 = uprv_lowerOrdinal(language[0])) && c0 <= 25 &&
+    만약 (0 <= (c0 = uprv_lowerOrdinal(language[0])) && c0 <= 25 &&
             language[1] != 0 &&  // language.length() >= 2
             (state = trieFirstLetterStates[c0]) != 0) {
         value = trieNext(iter.resetToState64(state), language, 1);
-    } else {
+    } 아니면 {
         value = trieNext(iter, language, 0);
     }
-    if (value >= 0) {
+    만약 (value >= 0) {
         state = iter.getState64();
-    } else {
+    } 아니면 {
         iter.resetToState64(trieUndState);  // "und" ("*")
         state = 0;
     }
 
-    if (value > 0) {
+    만약 (value > 0) {
         // Intermediate or final value from just language.
-        if (value == SKIP_SCRIPT) {
+        만약 (value == SKIP_SCRIPT) {
             value = 0;
         }
-    } else {
+    } 아니면 {
         value = trieNext(iter, script, 0);
-        if (value >= 0) {
+        만약 (value >= 0) {
             state = iter.getState64();
-        } else {
-            if (state == 0) {
+        } 아니면 {
+            만약 (state == 0) {
                 iter.resetToState64(trieUndZzzzState);  // "und-Zzzz" ("**")
-            } else {
+            } 아니면 {
                 iter.resetToState64(state);
                 value = trieNext(iter, "", 0);
                 U_ASSERT(value >= 0);
@@ -860,32 +860,32 @@ int32_t LikelySubtags::getLikelyIndex(const char *language, const char *script) 
         }
     }
 
-    if (value > 0) {
+    만약 (value > 0) {
         // Final value from just language or language+script.
-    } else {
+    } 아니면 {
         value = trieNext(iter, "", 0);
         U_ASSERT(value > 0);
     }
     U_ASSERT(value < lsrsLength);
-    return value;
+    반환 value;
 }
 
 int32_t LikelySubtags::trieNext(BytesTrie &iter, const char *s, int32_t i) {
     UStringTrieResult result;
     uint8_t c;
-    if ((c = s[i]) == 0) {
+    만약 ((c = s[i]) == 0) {
         result = iter.next(u'*');
-    } else {
-        for (;;) {
+    } 아니면 {
+        위해 (;;) {
             c = uprv_invCharToAscii(c);
             // EBCDIC: If s[i] is not an invariant character,
             // then c is now 0 and will simply not match anything, which is harmless.
             uint8_t next = s[++i];
-            if (next != 0) {
-                if (!USTRINGTRIE_HAS_NEXT(iter.next(c))) {
-                    return -1;
+            만약 (next != 0) {
+                만약 (!USTRINGTRIE_HAS_NEXT(iter.next(c))) {
+                    반환 -1;
                 }
-            } else {
+            } 아니면 {
                 // last character of this subtag
                 result = iter.next(c | 0x80);
                 break;
@@ -894,32 +894,32 @@ int32_t LikelySubtags::trieNext(BytesTrie &iter, const char *s, int32_t i) {
         }
     }
     switch (result) {
-    case USTRINGTRIE_NO_MATCH: return -1;
-    case USTRINGTRIE_NO_VALUE: return 0;
+    case USTRINGTRIE_NO_MATCH: 반환 -1;
+    case USTRINGTRIE_NO_VALUE: 반환 0;
     case USTRINGTRIE_INTERMEDIATE_VALUE:
         U_ASSERT(iter.getValue() == SKIP_SCRIPT);
-        return SKIP_SCRIPT;
-    case USTRINGTRIE_FINAL_VALUE: return iter.getValue();
-    default: return -1;
+        반환 SKIP_SCRIPT;
+    case USTRINGTRIE_FINAL_VALUE: 반환 iter.getValue();
+    default: 반환 -1;
     }
 }
 int32_t LikelySubtags::trieNext(BytesTrie &iter, StringPiece s, int32_t i) {
     UStringTrieResult result;
     uint8_t c;
-    if (s.length() == i) {
+    만약 (s.length() == i) {
         result = iter.next(u'*');
-    } else {
+    } 아니면 {
         c = s.data()[i];
-        for (;;) {
+        위해 (;;) {
             c = uprv_invCharToAscii(c);
             // EBCDIC: If s[i] is not an invariant character,
             // then c is now 0 and will simply not match anything, which is harmless.
-            if (i+1 != s.length()) {
-                if (!USTRINGTRIE_HAS_NEXT(iter.next(c))) {
-                    return -1;
+            만약 (i+1 != s.length()) {
+                만약 (!USTRINGTRIE_HAS_NEXT(iter.next(c))) {
+                    반환 -1;
                 }
                 c = s.data()[++i];
-            } else {
+            } 아니면 {
                 // last character of this subtag
                 result = iter.next(c | 0x80);
                 break;
@@ -927,13 +927,13 @@ int32_t LikelySubtags::trieNext(BytesTrie &iter, StringPiece s, int32_t i) {
         }
     }
     switch (result) {
-    case USTRINGTRIE_NO_MATCH: return -1;
-    case USTRINGTRIE_NO_VALUE: return 0;
+    case USTRINGTRIE_NO_MATCH: 반환 -1;
+    case USTRINGTRIE_NO_VALUE: 반환 0;
     case USTRINGTRIE_INTERMEDIATE_VALUE:
         U_ASSERT(iter.getValue() == SKIP_SCRIPT);
-        return SKIP_SCRIPT;
-    case USTRINGTRIE_FINAL_VALUE: return iter.getValue();
-    default: return -1;
+        반환 SKIP_SCRIPT;
+    case USTRINGTRIE_FINAL_VALUE: 반환 iter.getValue();
+    default: 반환 -1;
     }
 }
 
@@ -941,50 +941,50 @@ LSR LikelySubtags::minimizeSubtags(StringPiece language, StringPiece script,
                                     StringPiece region,
                                     bool favorScript,
                                     UErrorCode &errorCode) const {
-    if (U_FAILURE(errorCode)) { return {}; }
+    만약 (U_FAILURE(errorCode)) { 반환 {}; }
     LSR max = maximize(language, script, region, true, errorCode);
-    if (U_FAILURE(errorCode)) { return {}; }
+    만약 (U_FAILURE(errorCode)) { 반환 {}; }
     // If no match, return it.
-    if (uprv_strlen(max.language) == 0 &&
+    만약 (uprv_strlen(max.language) == 0 &&
         uprv_strlen(max.script) == 0 &&
         uprv_strlen(max.region) == 0) {
         // No match. ICU API mandate us to
         // "If this Locale is already in the minimal form, or not valid, or
         // there is no data available for minimization, the Locale will be
         // unchanged."
-        return LSR(language, script, region, LSR::EXPLICIT_LSR, errorCode);
+        반환 LSR(language, script, region, LSR::EXPLICIT_LSR, errorCode);
     }
     // try language
     LSR test = maximize(max.language, "", "", true, errorCode);
-    if (U_FAILURE(errorCode)) { return {}; }
-    if (test.isEquivalentTo(max)) {
-        return LSR(max.language, "", "", LSR::DONT_CARE_FLAGS, errorCode);
+    만약 (U_FAILURE(errorCode)) { 반환 {}; }
+    만약 (test.isEquivalentTo(max)) {
+        반환 LSR(max.language, "", "", LSR::DONT_CARE_FLAGS, errorCode);
     }
 
-    if (!favorScript) {
+    만약 (!favorScript) {
         // favor Region
         // try language and region
         test = maximize(max.language, "", max.region, true, errorCode);
-        if (U_FAILURE(errorCode)) { return {}; }
-        if (test.isEquivalentTo(max)) {
-            return LSR(max.language, "", max.region, LSR::DONT_CARE_FLAGS, errorCode);
+        만약 (U_FAILURE(errorCode)) { 반환 {}; }
+        만약 (test.isEquivalentTo(max)) {
+            반환 LSR(max.language, "", max.region, LSR::DONT_CARE_FLAGS, errorCode);
         }
     }
     // try language and script
     test = maximize(max.language, max.script, "", true, errorCode);
-    if (U_FAILURE(errorCode)) { return {}; }
-    if (test.isEquivalentTo(max)) {
-        return LSR(max.language, max.script, "", LSR::DONT_CARE_FLAGS, errorCode);
+    만약 (U_FAILURE(errorCode)) { 반환 {}; }
+    만약 (test.isEquivalentTo(max)) {
+        반환 LSR(max.language, max.script, "", LSR::DONT_CARE_FLAGS, errorCode);
     }
-    if (favorScript) {
+    만약 (favorScript) {
         // try language and region
         test = maximize(max.language, "", max.region, true, errorCode);
-        if (U_FAILURE(errorCode)) { return {}; }
-        if (test.isEquivalentTo(max)) {
-            return LSR(max.language, "", max.region, LSR::DONT_CARE_FLAGS, errorCode);
+        만약 (U_FAILURE(errorCode)) { 반환 {}; }
+        만약 (test.isEquivalentTo(max)) {
+            반환 LSR(max.language, "", max.region, LSR::DONT_CARE_FLAGS, errorCode);
         }
     }
-    return LSR(max.language, max.script, max.region, LSR::DONT_CARE_FLAGS, errorCode);
+    반환 LSR(max.language, max.script, max.region, LSR::DONT_CARE_FLAGS, errorCode);
 }
 
 U_NAMESPACE_END

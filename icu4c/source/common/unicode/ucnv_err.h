@@ -87,7 +87,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#만약 !UCONFIG_NO_CONVERSION
 
 /** Forward declaring the UConverter structure. @stable ICU 2.0 */
 struct UConverter;

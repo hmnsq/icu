@@ -31,61 +31,61 @@ static int32_t
 setCodes(const UScriptCode *src, int32_t length,
          UScriptCode *dest, int32_t capacity, UErrorCode *err) {
     int32_t i;
-    if(U_FAILURE(*err)) { return 0; }
-    if(length > capacity) {
+    만약(U_FAILURE(*err)) { 반환 0; }
+    만약(length > capacity) {
         *err = U_BUFFER_OVERFLOW_ERROR;
-        return length;
+        반환 length;
     }
-    for(i = 0; i < length; ++i) {
+    위해(i = 0; i < length; ++i) {
         dest[i] = src[i];
     }
-    return length;
+    반환 length;
 }
 
 static int32_t
 setOneCode(UScriptCode script, UScriptCode *scripts, int32_t capacity, UErrorCode *err) {
-    if(U_FAILURE(*err)) { return 0; }
-    if(1 > capacity) {
+    만약(U_FAILURE(*err)) { 반환 0; }
+    만약(1 > capacity) {
         *err = U_BUFFER_OVERFLOW_ERROR;
-        return 1;
+        반환 1;
     }
     scripts[0] = script;
-    return 1;
+    반환 1;
 }
 
 static int32_t
 getCodesFromLocale(const char *locale,
                    UScriptCode *scripts, int32_t capacity, UErrorCode *err) {
-    if (U_FAILURE(*err)) { return 0; }
+    만약 (U_FAILURE(*err)) { 반환 0; }
     icu::CharString lang;
     icu::CharString script;
-    if (locale == nullptr) {
+    만약 (locale == nullptr) {
         locale = uloc_getDefault();
     }
     ulocimp_getSubtags(locale, &lang, &script, nullptr, nullptr, nullptr, *err);
-    if (U_FAILURE(*err)) { return 0; }
+    만약 (U_FAILURE(*err)) { 반환 0; }
     // Multi-script languages, equivalent to the LocaleScript data
     // that we used to load from locale resource bundles.
-    if (lang == "ja") {
-        return setCodes(JAPANESE, UPRV_LENGTHOF(JAPANESE), scripts, capacity, err);
+    만약 (lang == "ja") {
+        반환 setCodes(JAPANESE, UPRV_LENGTHOF(JAPANESE), scripts, capacity, err);
     }
-    if (lang == "ko") {
-        return setCodes(KOREAN, UPRV_LENGTHOF(KOREAN), scripts, capacity, err);
+    만약 (lang == "ko") {
+        반환 setCodes(KOREAN, UPRV_LENGTHOF(KOREAN), scripts, capacity, err);
     }
-    if (lang == "zh" && script == "Hant") {
-        return setCodes(HAN_BOPO, UPRV_LENGTHOF(HAN_BOPO), scripts, capacity, err);
+    만약 (lang == "zh" && script == "Hant") {
+        반환 setCodes(HAN_BOPO, UPRV_LENGTHOF(HAN_BOPO), scripts, capacity, err);
     }
     // Explicit script code.
-    if (!script.isEmpty()) {
+    만약 (!script.isEmpty()) {
         UScriptCode scriptCode = static_cast<UScriptCode>(u_getPropertyValueEnum(UCHAR_SCRIPT, script.data()));
-        if(scriptCode != USCRIPT_INVALID_CODE) {
-            if(scriptCode == USCRIPT_SIMPLIFIED_HAN || scriptCode == USCRIPT_TRADITIONAL_HAN) {
+        만약(scriptCode != USCRIPT_INVALID_CODE) {
+            만약(scriptCode == USCRIPT_SIMPLIFIED_HAN || scriptCode == USCRIPT_TRADITIONAL_HAN) {
                 scriptCode = USCRIPT_HAN;
             }
-            return setOneCode(scriptCode, scripts, capacity, err);
+            반환 setOneCode(scriptCode, scripts, capacity, err);
         }
     }
-    return 0;
+    반환 0;
 }
 
 /* TODO: this is a bad API and should be deprecated, ticket #11141 */
@@ -98,18 +98,18 @@ uscript_getCode(const char* nameOrAbbrOrLocale,
     UErrorCode internalErrorCode;
     int32_t length;
 
-    if(U_FAILURE(*err)) {
-        return 0;
+    만약(U_FAILURE(*err)) {
+        반환 0;
     }
-    if(nameOrAbbrOrLocale==nullptr ||
+    만약(nameOrAbbrOrLocale==nullptr ||
             (fillIn == nullptr ? capacity != 0 : capacity < 0)) {
         *err = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        반환 0;
     }
 
     triedCode = false;
     const char* lastSepPtr = uprv_strrchr(nameOrAbbrOrLocale, '-');
-    if (lastSepPtr==nullptr) {
+    만약 (lastSepPtr==nullptr) {
         lastSepPtr = uprv_strrchr(nameOrAbbrOrLocale, '_');
     }
     // Favor interpretation of nameOrAbbrOrLocale as a script alias if either
@@ -119,34 +119,34 @@ uscript_getCode(const char* nameOrAbbrOrLocale,
     //    Old_Hungarian, Old_Italic, etc. ("old" is a valid language code)
     // 3. The last instance of -/_ is at offset 7, and the portion after that is
     //    3 characters. This handles New_Tai_Lue ("new" is a valid language code).
-    if (lastSepPtr==nullptr
+    만약 (lastSepPtr==nullptr
             || (lastSepPtr-nameOrAbbrOrLocale == 3 && uprv_strlen(nameOrAbbrOrLocale) > 8)
             || (lastSepPtr-nameOrAbbrOrLocale == 7 && uprv_strlen(nameOrAbbrOrLocale) == 11) ) {
         /* try long and abbreviated script names first */
         UScriptCode code = (UScriptCode) u_getPropertyValueEnum(UCHAR_SCRIPT, nameOrAbbrOrLocale);
-        if(code!=USCRIPT_INVALID_CODE) {
-            return setOneCode(code, fillIn, capacity, err);
+        만약(code!=USCRIPT_INVALID_CODE) {
+            반환 setOneCode(code, fillIn, capacity, err);
         }
         triedCode = true;
     }
     internalErrorCode = U_ZERO_ERROR;
     length = getCodesFromLocale(nameOrAbbrOrLocale, fillIn, capacity, err);
-    if(U_FAILURE(*err) || length != 0) {
-        return length;
+    만약(U_FAILURE(*err) || length != 0) {
+        반환 length;
     }
     icu::CharString likely = ulocimp_addLikelySubtags(nameOrAbbrOrLocale, internalErrorCode);
-    if(U_SUCCESS(internalErrorCode) && internalErrorCode != U_STRING_NOT_TERMINATED_WARNING) {
+    만약(U_SUCCESS(internalErrorCode) && internalErrorCode != U_STRING_NOT_TERMINATED_WARNING) {
         length = getCodesFromLocale(likely.data(), fillIn, capacity, err);
-        if(U_FAILURE(*err) || length != 0) {
-            return length;
+        만약(U_FAILURE(*err) || length != 0) {
+            반환 length;
         }
     }
-    if(!triedCode) {
+    만약(!triedCode) {
         /* still not found .. try long and abbreviated script names again */
         UScriptCode code = (UScriptCode) u_getPropertyValueEnum(UCHAR_SCRIPT, nameOrAbbrOrLocale);
-        if(code!=USCRIPT_INVALID_CODE) {
-            return setOneCode(code, fillIn, capacity, err);
+        만약(code!=USCRIPT_INVALID_CODE) {
+            반환 setOneCode(code, fillIn, capacity, err);
         }
     }
-    return 0;
+    반환 0;
 }

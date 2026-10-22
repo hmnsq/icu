@@ -138,12 +138,12 @@ public:
     static inline UBool isValidTrail(int32_t prev, uint8_t t, int32_t i, int32_t length) {
         // The first trail byte after a 3- or 4-byte lead byte
         // needs to be validated together with its lead byte.
-        if (length <= 2 || i > 1) {
-            return U8_IS_TRAIL(t);
-        } else if (length == 3) {
-            return U8_IS_VALID_LEAD3_AND_T1(prev, t);
-        } else {  // length == 4
-            return U8_IS_VALID_LEAD4_AND_T1(prev, t);
+        만약 (length <= 2 || i > 1) {
+            반환 U8_IS_TRAIL(t);
+        } 아니면 만약 (length == 3) {
+            반환 U8_IS_VALID_LEAD3_AND_T1(prev, t);
+        } 아니면 {  // length == 4
+            반환 U8_IS_VALID_LEAD4_AND_T1(prev, t);
         }
     }
 };

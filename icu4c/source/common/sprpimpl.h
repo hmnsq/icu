@@ -21,7 +21,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_IDNA
+#만약 !UCONFIG_NO_IDNA
 
 #include "unicode/ustring.h"
 #include "unicode/parseerr.h"

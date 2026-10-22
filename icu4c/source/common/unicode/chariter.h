@@ -14,7 +14,7 @@
 
 #include "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#만약 U_SHOW_CPLUSPLUS_API
 
 #include "unicode/uobject.h"
 #include "unicode/unistr.h"
@@ -187,7 +187,7 @@ protected:
      * @stable ICU 2.0
      */
     ForwardCharacterIterator& operator=(const ForwardCharacterIterator&) U_LIFETIME_BOUND {
-        return *this;
+        반환 *this;
     }
 };
 
@@ -696,37 +696,37 @@ protected:
 
 inline bool
 ForwardCharacterIterator::operator!=(const ForwardCharacterIterator& that) const {
-    return !operator==(that);
+    반환 !operator==(that);
 }
 
 inline int32_t
 CharacterIterator::setToStart() {
-    return move(0, kStart);
+    반환 move(0, kStart);
 }
 
 inline int32_t
 CharacterIterator::setToEnd() {
-    return move(0, kEnd);
+    반환 move(0, kEnd);
 }
 
 inline int32_t
 CharacterIterator::startIndex() const {
-    return begin;
+    반환 begin;
 }
 
 inline int32_t
 CharacterIterator::endIndex() const {
-    return end;
+    반환 end;
 }
 
 inline int32_t
 CharacterIterator::getIndex() const {
-    return pos;
+    반환 pos;
 }
 
 inline int32_t
 CharacterIterator::getLength() const {
-    return textLength;
+    반환 textLength;
 }
 
 U_NAMESPACE_END

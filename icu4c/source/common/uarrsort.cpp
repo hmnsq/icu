@@ -37,7 +37,7 @@ enum {
 };
 
 static constexpr int32_t sizeInMaxAlignTs(int32_t sizeInBytes) {
-    return (sizeInBytes + sizeof(std::max_align_t) - 1) / sizeof(std::max_align_t);
+    반환 (sizeInBytes + sizeof(std::max_align_t) - 1) / sizeof(std::max_align_t);
 }
 
 /* UComparator convenience implementations ---------------------------------- */
@@ -45,13 +45,13 @@ static constexpr int32_t sizeInMaxAlignTs(int32_t sizeInBytes) {
 U_CAPI int32_t U_EXPORT2
 uprv_uint16Comparator(const void *context, const void *left, const void *right) {
     (void)context;
-    return (int32_t)*(const uint16_t *)left - (int32_t)*(const uint16_t *)right;
+    반환 (int32_t)*(const uint16_t *)left - (int32_t)*(const uint16_t *)right;
 }
 
 U_CAPI int32_t U_EXPORT2
 uprv_int32Comparator(const void *context, const void *left, const void *right) {
     (void)context;
-    return *(const int32_t *)left - *(const int32_t *)right;
+    반환 *(const int32_t *)left - *(const int32_t *)right;
 }
 
 U_CAPI int32_t U_EXPORT2
@@ -60,12 +60,12 @@ uprv_uint32Comparator(const void *context, const void *left, const void *right) 
     uint32_t l=*(const uint32_t *)left, r=*(const uint32_t *)right;
 
     /* compare directly because (l-r) would overflow the int32_t result */
-    if(l<r) {
-        return -1;
-    } else if(l==r) {
-        return 0;
-    } else /* l>r */ {
-        return 1;
+    만약(l<r) {
+        반환 -1;
+    } 아니면 만약(l==r) {
+        반환 0;
+    } 아니면 /* l>r */ {
+        반환 1;
     }
 }
 
@@ -78,10 +78,10 @@ uprv_stableBinarySearch(char *array, int32_t limit, void *item, int32_t itemSize
     UBool found=false;
 
     /* Binary search until we get down to a tiny sub-array. */
-    while((limit-start)>=MIN_QSORT) {
+    동안((limit-start)>=MIN_QSORT) {
         int32_t i=(start+limit)/2;
         int32_t diff=cmp(context, item, array+i*itemSize);
-        if(diff==0) {
+        만약(diff==0) {
             /*
              * Found the item. We look for the *last* occurrence of such
              * an item, for stable sorting.
@@ -95,24 +95,24 @@ uprv_stableBinarySearch(char *array, int32_t limit, void *item, int32_t itemSize
              */
             found=true;
             start=i+1;
-        } else if(diff<0) {
+        } 아니면 만약(diff<0) {
             limit=i;
-        } else {
+        } 아니면 {
             start=i;
         }
     }
 
     /* Linear search over the remaining tiny sub-array. */
-    while(start<limit) {
+    동안(start<limit) {
         int32_t diff=cmp(context, item, array+start*itemSize);
-        if(diff==0) {
+        만약(diff==0) {
             found=true;
-        } else if(diff<0) {
+        } 아니면 만약(diff<0) {
             break;
         }
         ++start;
     }
-    return found ? (start-1) : ~start;
+    반환 found ? (start-1) : ~start;
 }
 
 static void
@@ -120,15 +120,15 @@ doInsertionSort(char *array, int32_t length, int32_t itemSize,
                 UComparator *cmp, const void *context, void *pv) {
     int32_t j;
 
-    for(j=1; j<length; ++j) {
+    위해(j=1; j<length; ++j) {
         char *item=array+j*itemSize;
         int32_t insertionPoint=uprv_stableBinarySearch(array, j, item, itemSize, cmp, context);
-        if(insertionPoint<0) {
+        만약(insertionPoint<0) {
             insertionPoint=~insertionPoint;
-        } else {
+        } 아니면 {
             ++insertionPoint;  /* one past the last equal item */
         }
-        if(insertionPoint<j) {
+        만약(insertionPoint<j) {
             char *dest=array+insertionPoint*itemSize;
             uprv_memcpy(pv, item, itemSize);  /* v=array[j] */
             uprv_memmove(dest+itemSize, dest, (j-insertionPoint)*(size_t)itemSize);
@@ -142,10 +142,10 @@ insertionSort(char *array, int32_t length, int32_t itemSize,
               UComparator *cmp, const void *context, UErrorCode *pErrorCode) {
 
     icu::MaybeStackArray<std::max_align_t, sizeInMaxAlignTs(STACK_ITEM_SIZE)> v;
-    if (sizeInMaxAlignTs(itemSize) > v.getCapacity() &&
+    만약 (sizeInMaxAlignTs(itemSize) > v.getCapacity() &&
             v.resize(sizeInMaxAlignTs(itemSize)) == nullptr) {
         *pErrorCode = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        반환;
     }
 
     doInsertionSort(array, length, itemSize, cmp, context, v.getAlias());
@@ -173,7 +173,7 @@ subQuickSort(char *array, int32_t start, int32_t limit, int32_t itemSize,
 
     /* start and left are inclusive, limit and right are exclusive */
     do {
-        if((start+MIN_QSORT)>=limit) {
+        만약((start+MIN_QSORT)>=limit) {
             doInsertionSort(array+start*itemSize, limit-start, itemSize, cmp, context, px);
             break;
         }
@@ -185,22 +185,22 @@ subQuickSort(char *array, int32_t start, int32_t limit, int32_t itemSize,
         uprv_memcpy(px, array+(size_t)((start+limit)/2)*itemSize, itemSize);
 
         do {
-            while(/* array[left]<x */
+            동안(/* array[left]<x */
                   cmp(context, array+left*itemSize, px)<0
             ) {
                 ++left;
             }
-            while(/* x<array[right-1] */
+            동안(/* x<array[right-1] */
                   cmp(context, px, array+(right-1)*itemSize)<0
             ) {
                 --right;
             }
 
             /* swap array[left] and array[right-1] via w; ++left; --right */
-            if(left<right) {
+            만약(left<right) {
                 --right;
 
-                if(left<right) {
+                만약(left<right) {
                     uprv_memcpy(pw, array+(size_t)left*itemSize, itemSize);
                     uprv_memcpy(array+(size_t)left*itemSize, array+(size_t)right*itemSize, itemSize);
                     uprv_memcpy(array+(size_t)right*itemSize, pw, itemSize);
@@ -208,27 +208,27 @@ subQuickSort(char *array, int32_t start, int32_t limit, int32_t itemSize,
 
                 ++left;
             }
-        } while(left<right);
+        } 동안(left<right);
 
         /* sort sub-arrays */
-        if((right-start)<(limit-left)) {
+        만약((right-start)<(limit-left)) {
             /* sort [start..right[ */
-            if(start<(right-1)) {
+            만약(start<(right-1)) {
                 subQuickSort(array, start, right, itemSize, cmp, context, px, pw);
             }
 
             /* sort [left..limit[ */
             start=left;
-        } else {
+        } 아니면 {
             /* sort [left..limit[ */
-            if(left<(limit-1)) {
+            만약(left<(limit-1)) {
                 subQuickSort(array, left, limit, itemSize, cmp, context, px, pw);
             }
 
             /* sort [start..right[ */
             limit=right;
         }
-    } while(start<(limit-1));
+    } 동안(start<(limit-1));
 }
 
 static void
@@ -236,10 +236,10 @@ quickSort(char *array, int32_t length, int32_t itemSize,
             UComparator *cmp, const void *context, UErrorCode *pErrorCode) {
     /* allocate two intermediate item variables (x and w) */
     icu::MaybeStackArray<std::max_align_t, sizeInMaxAlignTs(STACK_ITEM_SIZE) * 2> xw;
-    if(sizeInMaxAlignTs(itemSize)*2 > xw.getCapacity() &&
+    만약(sizeInMaxAlignTs(itemSize)*2 > xw.getCapacity() &&
             xw.resize(sizeInMaxAlignTs(itemSize) * 2) == nullptr) {
         *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-        return;
+        반환;
     }
 
     subQuickSort(array, 0, length, itemSize, cmp, context,
@@ -256,19 +256,19 @@ U_CAPI void U_EXPORT2
 uprv_sortArray(void *array, int32_t length, int32_t itemSize,
                UComparator *cmp, const void *context,
                UBool sortStable, UErrorCode *pErrorCode) {
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return;
+    만약(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
+        반환;
     }
-    if((length>0 && array==nullptr) || length<0 || itemSize<=0 || cmp==nullptr) {
+    만약((length>0 && array==nullptr) || length<0 || itemSize<=0 || cmp==nullptr) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        반환;
     }
 
-    if(length<=1) {
-        return;
-    } else if(length<MIN_QSORT || sortStable) {
+    만약(length<=1) {
+        반환;
+    } 아니면 만약(length<MIN_QSORT || sortStable) {
         insertionSort((char *)array, length, itemSize, cmp, context, pErrorCode);
-    } else {
+    } 아니면 {
         quickSort((char *)array, length, itemSize, cmp, context, pErrorCode);
     }
 }
