@@ -7,7 +7,7 @@
 **********************************************************************
 */
 
-#include "uvector.h"
+#अन्तर्भाव "uvector.h"
 
 U_NAMESPACE_BEGIN
 
@@ -35,28 +35,28 @@ UStack::UStack(UObjectDeleter *d, UElementsAreEqual *c, int32_t initialCapacity,
 
 UStack::~UStack() {}
 
-void* UStack::pop() {
+शून्य* UStack::pop() {
     int32_t n = size() - 1;
-    void* result = nullptr;
-    if (n >= 0) {
+    शून्य* result = nullptr;
+    यदि (n >= 0) {
         result = orphanElementAt(n);
     }
-    return result;
+    प्रत्यागम result;
 }
 
 int32_t UStack::popi() {
     int32_t n = size() - 1;
     int32_t result = 0;
-    if (n >= 0) {
+    यदि (n >= 0) {
         result = elementAti(n);
         removeElementAt(n);
     }
-    return result;
+    प्रत्यागम result;
 }
 
-int32_t UStack::search(void* obj) const {
+int32_t UStack::search(शून्य* obj) ध्रुव {
     int32_t i = indexOf(obj);
-    return (i >= 0) ? size() - i : i;
+    प्रत्यागम (i >= 0) ? size() - i : i;
 }
 
 U_NAMESPACE_END
