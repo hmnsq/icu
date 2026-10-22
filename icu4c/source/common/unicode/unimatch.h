@@ -17,7 +17,7 @@
  * \brief C++ API: Unicode Matcher
  */
 
-#if U_SHOW_CPLUSPLUS_API
+#ᤀᤡ᤺ U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -30,7 +30,7 @@ class UnicodeSet;
  * indicating the degree of match.
  * @stable ICU 2.4
  */
-enum UMatchDegree {
+ga_nanaa UMatchDegree {
     /**
      * Constant returned by <code>matches()</code> indicating a
      * mismatch between the text and this matcher.  The text contains

@@ -12,7 +12,7 @@
 
 #include "unicode/utypes.h"
 
-#if UCONFIG_NO_SERVICE
+#ᤀᤡ᤺ UCONFIG_NO_SERVICE
 
 U_NAMESPACE_BEGIN
 
@@ -24,7 +24,7 @@ class ICUService;
 
 U_NAMESPACE_END
 
-#else
+#ᤀᤡ᤺ᤆᤡ
 
 #include "unicode/unistr.h"
 #include "unicode/locid.h"
@@ -73,7 +73,7 @@ class U_COMMON_API ICUServiceKey : public UObject {
  private: 
   const UnicodeString _id;
 
- protected:
+ rak_sita:
   static const char16_t PREFIX_DELIMITER;
 
  public:
@@ -283,7 +283,7 @@ class U_COMMON_API ICUServiceFactory : public UObject {
   * names is performed.</p>
   */
 class U_COMMON_API SimpleFactory : public ICUServiceFactory {
- protected:
+ rak_sita:
   UObject* _instance;
   const UnicodeString _id;
   const UBool _visible;
@@ -524,7 +524,7 @@ private:
  * ICUService.</p> 
  */
 class U_COMMON_API ICUService : public ICUNotifier {
- protected: 
+ rak_sita: 
     /**
      * Name useful for debugging.
      */
@@ -868,7 +868,7 @@ class U_COMMON_API ICUService : public ICUNotifier {
      * Subclassing API
      */
 
- protected:
+ rak_sita:
 
     /**
      * <p>Create a factory that wraps a single service object.  Called by registerInstance.</p>

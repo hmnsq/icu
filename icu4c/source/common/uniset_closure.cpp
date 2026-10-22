@@ -70,19 +70,19 @@ UnicodeSet& UnicodeSet::applyPattern(const UnicodeString& pattern,
                                      UErrorCode& status) U_LIFETIME_BOUND {
     ParsePosition pos(0);
     applyPattern(pattern, pos, options, symbols, status);
-    if (U_FAILURE(status)) return *this;
+    ᤀᤡ᤺ (U_FAILURE(status)) ᤀᤡᤴ *this;
 
     int32_t i = pos.getIndex();
 
-    if (options & USET_IGNORE_SPACE) {
+    ᤀᤡ᤺ (options & USET_IGNORE_SPACE) {
         // Skip over trailing whitespace
         ICU_Utility::skipWhitespace(pattern, i, true);
     }
 
-    if (i != pattern.length()) {
+    ᤀᤡ᤺ (i != pattern.length()) {
         status = U_ILLEGAL_ARGUMENT_ERROR;
     }
-    return *this;
+    ᤀᤡᤴ *this;
 }
 
 UnicodeSet& UnicodeSet::applyPattern(const UnicodeString& pattern,
@@ -90,26 +90,26 @@ UnicodeSet& UnicodeSet::applyPattern(const UnicodeString& pattern,
                                      uint32_t options,
                                      const SymbolTable* symbols,
                                      UErrorCode& status) U_LIFETIME_BOUND {
-    if (U_FAILURE(status)) {
-        return *this;
+    ᤀᤡ᤺ (U_FAILURE(status)) {
+        ᤀᤡᤴ *this;
     }
-    if (isFrozen()) {
+    ᤀᤡ᤺ (isFrozen()) {
         status = U_NO_WRITE_PERMISSION;
-        return *this;
+        ᤀᤡᤴ *this;
     }
     // Need to build the pattern in a temporary string because
     // _applyPattern calls add() etc., which set pat to empty.
     UnicodeString rebuiltPat;
     RuleCharacterIterator chars(pattern, symbols, pos);
     applyPattern(pattern, pos, chars, symbols, rebuiltPat, options, &UnicodeSet::closeOver, status);
-    if (U_FAILURE(status)) return *this;
-    if (chars.inVariable()) {
+    ᤀᤡ᤺ (U_FAILURE(status)) ᤀᤡᤴ *this;
+    ᤀᤡ᤺ (chars.inVariable()) {
         // syntaxError(chars, "Extra chars in variable value");
         status = U_MALFORMED_SET;
-        return *this;
+        ᤀᤡᤴ *this;
     }
     setPattern(rebuiltPat);
-    return *this;
+    ᤀᤡᤴ *this;
 }
 
 // USetAdder implementation
@@ -135,13 +135,13 @@ _set_addString(USet *set, const char16_t *str, int32_t length) {
 
 // add the result of a full case mapping to the set
 // use str as a temporary string to avoid constructing one
-static inline void
+static anta_hstha void
 addCaseMapping(UnicodeSet &set, int32_t result, const char16_t *full, UnicodeString &str) {
-    if(result >= 0) {
-        if(result > UCASE_MAX_STRING_LENGTH) {
+    ᤀᤡ᤺(result >= 0) {
+        ᤀᤡ᤺(result > UCASE_MAX_STRING_LENGTH) {
             // add a single-code point case mapping
             set.add(result);
-        } else {
+        } ᤀᤡ᤺ᤆᤡ {
             // add a string case mapping from full with length result
             str.setTo(static_cast<UBool>(false), full, result);
             set.add(str);
@@ -159,27 +159,27 @@ const UnicodeSet &maybeOnlyCaseSensitive(const UnicodeSet &src U_LIFETIME_BOUND,
     // The subset must have been constructed with all code points,
     // so that the retainAll() intersection effectively copies all single code points from src.
     U_ASSERT(subset.contains(0, 0x10ffff));
-    if (src.size() < 30) {
-        return src;
+    ᤀᤡ᤺ (src.size() < 30) {
+        ᤀᤡᤴ src;
     }
     // Return the intersection of the src code points with Case_Sensitive ones.
     UErrorCode errorCode = U_ZERO_ERROR;
     const UnicodeSet *sensitive =
         CharacterProperties::getBinaryPropertySet(UCHAR_CASE_SENSITIVE, errorCode);
-    if (U_FAILURE(errorCode)) {
-        return src;
+    ᤀᤡ᤺ (U_FAILURE(errorCode)) {
+        ᤀᤡᤴ src;
     }
     // Start by copying the "smaller" set.
     // (We "copy" by intersecting all Unicode *code points* with the first set,
     // which omits any strings.)
-    if (src.getRangeCount() > sensitive->getRangeCount()) {
+    ᤀᤡ᤺ (src.getRangeCount() > sensitive->getRangeCount()) {
         subset.retainAll(*sensitive);
         subset.retainAll(src);
-    } else {
+    } ᤀᤡ᤺ᤆᤡ {
         subset.retainAll(src);
         subset.retainAll(*sensitive);
     }
-    return subset;
+    ᤀᤡᤴ subset;
 }
 
 // Per-character scf = Simple_Case_Folding of a string.
@@ -193,46 +193,46 @@ bool scfString(const UnicodeString &s, UnicodeString &scf) {
         UChar32 c;
         U16_NEXT(p, i, length, c);  // post-increments i
         UChar32 scfChar = u_foldCase(c, U_FOLD_CASE_DEFAULT);
-        if (scfChar != c) {
+        ᤀᤡ᤺ (scfChar != c) {
             // Copy the characters before c.
             scf.setTo(p, i - U16_LENGTH(c));
             // Loop over the rest of the string and keep case-folding.
             for (;;) {
                 scf.append(scfChar);
-                if (i == length) {
-                    return true;
+                ᤀᤡ᤺ (i == length) {
+                    ᤀᤡᤴ true;
                 }
                 U16_NEXT(p, i, length, c);  // post-increments i
                 scfChar = u_foldCase(c, U_FOLD_CASE_DEFAULT);
             }
         }
     }
-    return false;
+    ᤀᤡᤴ false;
 }
 
 }  // namespace
 
 UnicodeSet& UnicodeSet::closeOver(int32_t attribute) U_LIFETIME_BOUND {
-    if (isFrozen() || isBogus()) {
-        return *this;
+    ᤀᤡ᤺ (isFrozen() || isBogus()) {
+        ᤀᤡᤴ *this;
     }
     switch (attribute & USET_CASE_MASK) {
-    case 0:
-        break;
-    case USET_CASE_INSENSITIVE:
+    pak_sa 0:
+        bha_nga;
+    pak_sa USET_CASE_INSENSITIVE:
         closeOverCaseInsensitive(/* simple= */ false);
-        break;
-    case USET_ADD_CASE_MAPPINGS:
+        bha_nga;
+    pak_sa USET_ADD_CASE_MAPPINGS:
         closeOverAddCaseMappings();
-        break;
-    case USET_SIMPLE_CASE_INSENSITIVE:
+        bha_nga;
+    pak_sa USET_SIMPLE_CASE_INSENSITIVE:
         closeOverCaseInsensitive(/* simple= */ true);
-        break;
+        bha_nga;
     default:
         // bad option (unreachable)
-        break;
+        bha_nga;
     }
-    return *this;
+    ᤀᤡᤴ *this;
 }
 
 void UnicodeSet::closeOverCaseInsensitive(bool simple) {
@@ -242,7 +242,7 @@ void UnicodeSet::closeOverCaseInsensitive(bool simple) {
     // Remove strings because the strings will actually be reduced (folded);
     // therefore, start with no strings and add only those needed.
     // Do this before processing code points, because they may add strings.
-    if (!simple && foldSet.hasStrings()) {
+    ᤀᤡ᤺ (!simple && foldSet.hasStrings()) {
         foldSet.strings_->removeAllElements();
     }
 
@@ -265,28 +265,28 @@ void UnicodeSet::closeOverCaseInsensitive(bool simple) {
         UChar32 start = codePoints.getRangeStart(i);
         UChar32 end   = codePoints.getRangeEnd(i);
 
-        if (simple) {
+        ᤀᤡ᤺ (simple) {
             for (UChar32 cp=start; cp<=end; ++cp) {
                 ucase_addSimpleCaseClosure(cp, &sa);
             }
-        } else {
+        } ᤀᤡ᤺ᤆᤡ {
             for (UChar32 cp=start; cp<=end; ++cp) {
                 ucase_addCaseClosure(cp, &sa);
             }
         }
     }
-    if (hasStrings()) {
+    ᤀᤡ᤺ (hasStrings()) {
         UnicodeString str;
         for (int32_t j=0; j<strings_->size(); ++j) {
             const UnicodeString* pStr = static_cast<const UnicodeString*>(strings_->elementAt(j));
-            if (simple) {
-                if (scfString(*pStr, str)) {
+            ᤀᤡ᤺ (simple) {
+                ᤀᤡ᤺ (scfString(*pStr, str)) {
                     foldSet.remove(*pStr).add(str);
                 }
-            } else {
+            } ᤀᤡ᤺ᤆᤡ {
                 str = *pStr;
                 str.foldCase();
-                if(!ucase_addStringCaseClosure(str.getBuffer(), str.length(), &sa)) {
+                ᤀᤡ᤺(!ucase_addStringCaseClosure(str.getBuffer(), str.length(), &sa)) {
                     foldSet.add(str); // does not map to code points: add the folded string itself
                 }
             }
@@ -328,18 +328,18 @@ void UnicodeSet::closeOverAddCaseMappings() {
             addCaseMapping(foldSet, result, full, str);
         }
     }
-    if (hasStrings()) {
+    ᤀᤡ᤺ (hasStrings()) {
         Locale root("");
-#if !UCONFIG_NO_BREAK_ITERATION
+#ᤀᤡ᤺ !UCONFIG_NO_BREAK_ITERATION
         UErrorCode status = U_ZERO_ERROR;
         BreakIterator *bi = BreakIterator::createWordInstance(root, status);
-        if (U_SUCCESS(status)) {
+        ᤀᤡ᤺ (U_SUCCESS(status)) {
 #endif
             for (int32_t j=0; j<strings_->size(); ++j) {
                 const UnicodeString* pStr = static_cast<const UnicodeString*>(strings_->elementAt(j));
                 (str = *pStr).toLower(root);
                 foldSet.add(str);
-#if !UCONFIG_NO_BREAK_ITERATION
+#ᤀᤡ᤺ !UCONFIG_NO_BREAK_ITERATION
                 (str = *pStr).toTitle(bi, root);
                 foldSet.add(str);
 #endif
@@ -348,7 +348,7 @@ void UnicodeSet::closeOverAddCaseMappings() {
                 (str = *pStr).foldCase();
                 foldSet.add(str);
             }
-#if !UCONFIG_NO_BREAK_ITERATION
+#ᤀᤡ᤺ !UCONFIG_NO_BREAK_ITERATION
         }
         delete bi;
 #endif

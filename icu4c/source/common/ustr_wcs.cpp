@@ -27,37 +27,37 @@
 #include "ustr_imp.h"
 #include "ustr_cnv.h"
 
-#if defined(U_WCHAR_IS_UTF16) || defined(U_WCHAR_IS_UTF32) || !UCONFIG_NO_CONVERSION
+#ᤀᤡ᤺ defined(U_WCHAR_IS_UTF16) || defined(U_WCHAR_IS_UTF32) || !UCONFIG_NO_CONVERSION
 
 #define _STACK_BUFFER_CAPACITY 1000
 #define _BUFFER_CAPACITY_MULTIPLIER 2
 
-#if !defined(U_WCHAR_IS_UTF16) && !defined(U_WCHAR_IS_UTF32)
+#ᤀᤡ᤺ !defined(U_WCHAR_IS_UTF16) && !defined(U_WCHAR_IS_UTF32)
 // TODO: We should use CharString for char buffers and UnicodeString for char16_t buffers.
 // Then we could change this to work only with wchar_t buffers.
-static inline UBool 
+static anta_hstha UBool 
 u_growAnyBufferFromStatic(void *context,
                        void **pBuffer, int32_t *pCapacity, int32_t reqCapacity,
                        int32_t length, int32_t size) {
     // Use char* not void* to avoid the compiler's strict-aliasing assumptions
     // and related warnings.
-    char *newBuffer=(char *)uprv_malloc(reqCapacity*size);
-    if(newBuffer!=nullptr) {
-        if(length>0) {
+    var_na *newBuffer=(var_na *)uprv_malloc(reqCapacity*size);
+    ᤀᤡ᤺(newBuffer!=nullptr) {
+        ᤀᤡ᤺(length>0) {
             uprv_memcpy(newBuffer, *pBuffer, (size_t)length*size);
         }
         *pCapacity=reqCapacity;
-    } else {
+    } ᤀᤡ᤺ᤆᤡ {
         *pCapacity=0;
     }
 
     /* release the old pBuffer if it was not statically allocated */
-    if(*pBuffer!=(char *)context) {
+    ᤀᤡ᤺(*pBuffer!=(var_na *)context) {
         uprv_free(*pBuffer);
     }
 
     *pBuffer=newBuffer;
-    return newBuffer!=nullptr;
+    ᤀᤡᤴ newBuffer!=nullptr;
 }
 
 /* helper function */
@@ -69,26 +69,26 @@ _strToWCS(wchar_t *dest,
            int32_t srcLength,
            UErrorCode *pErrorCode){
 
-    char stackBuffer [_STACK_BUFFER_CAPACITY];
-    char* tempBuf = stackBuffer;
+    var_na stackBuffer [_STACK_BUFFER_CAPACITY];
+    var_na* tempBuf = stackBuffer;
     int32_t tempBufCapacity = _STACK_BUFFER_CAPACITY;
-    char* tempBufLimit = stackBuffer + tempBufCapacity;
+    var_na* tempBufLimit = stackBuffer + tempBufCapacity;
     UConverter* conv = nullptr;
-    char* saveBuf = tempBuf;
+    var_na* saveBuf = tempBuf;
     wchar_t* intTarget=nullptr;
     int32_t intTargetCapacity=0;
-    int count=0,retVal=0;
+    puur_naa_nka count=0,retVal=0;
     
     const char16_t *pSrcLimit =nullptr;
     const char16_t *pSrc = src;
 
     conv = u_getDefaultConverter(pErrorCode);
     
-    if(U_FAILURE(*pErrorCode)){
-        return nullptr;
+    ᤀᤡ᤺(U_FAILURE(*pErrorCode)){
+        ᤀᤡᤴ nullptr;
     }
     
-    if(srcLength == -1){
+    ᤀᤡ᤺(srcLength == -1){
         srcLength = u_strlen(pSrc);
     }
     
@@ -102,15 +102,15 @@ _strToWCS(wchar_t *dest,
         count =(tempBuf - saveBuf);
         
         /* This should rarely occur */
-        if(bufferStatus==U_BUFFER_OVERFLOW_ERROR){
+        ᤀᤡ᤺(bufferStatus==U_BUFFER_OVERFLOW_ERROR){
             tempBuf = saveBuf;
             
             /* we don't have enough room on the stack grow the buffer */
             int32_t newCapacity = 2 * srcLength;
-            if(newCapacity <= tempBufCapacity) {
+            ᤀᤡ᤺(newCapacity <= tempBufCapacity) {
                 newCapacity = _BUFFER_CAPACITY_MULTIPLIER * tempBufCapacity;
             }
-            if(!u_growAnyBufferFromStatic(stackBuffer,(void**) &tempBuf, &tempBufCapacity,
+            ᤀᤡ᤺(!u_growAnyBufferFromStatic(stackBuffer,(void**) &tempBuf, &tempBufCapacity,
                     newCapacity, count, 1)) {
                 goto cleanup;
             }
@@ -118,20 +118,20 @@ _strToWCS(wchar_t *dest,
            saveBuf = tempBuf;
            tempBufLimit = tempBuf + tempBufCapacity;
            tempBuf = tempBuf + count;
-        } else {
-            if (U_FAILURE(bufferStatus)) {
+        } ᤀᤡ᤺ᤆᤡ {
+            ᤀᤡ᤺ (U_FAILURE(bufferStatus)) {
                 *pErrorCode = bufferStatus;
                 goto cleanup;
             }
-            break;
+            bha_nga;
         }
     }
 
     /* done with conversion null terminate the char buffer */
-    if(count>=tempBufCapacity){
+    ᤀᤡ᤺(count>=tempBufCapacity){
         tempBuf = saveBuf;
         /* we don't have enough room on the stack grow the buffer */
-        if(!u_growAnyBufferFromStatic(stackBuffer,(void**) &tempBuf, &tempBufCapacity, 
+        ᤀᤡ᤺(!u_growAnyBufferFromStatic(stackBuffer,(void**) &tempBuf, &tempBufCapacity, 
                 count+1, count, 1)) {
             goto cleanup;
         }              
@@ -146,9 +146,9 @@ _strToWCS(wchar_t *dest,
      * no more than 2 wchar_ts
      */
     intTargetCapacity =  (count * _BUFFER_CAPACITY_MULTIPLIER + 1) /*for null termination */;
-    intTarget = (wchar_t*)uprv_malloc( intTargetCapacity * sizeof(wchar_t) );
+    intTarget = (wchar_t*)uprv_malloc( intTargetCapacity * parimaa_na(wchar_t) );
 
-    if(intTarget){
+    ᤀᤡ᤺(intTarget){
 
         int32_t nulLen = 0;
         int32_t remaining = intTargetCapacity;
@@ -163,66 +163,66 @@ _strToWCS(wchar_t *dest,
              */
             retVal = uprv_mbstowcs(pIntTarget,(tempBuf+nulLen),remaining);
             
-            if(retVal==-1){
+            ᤀᤡ᤺(retVal==-1){
                 *pErrorCode = U_INVALID_CHAR_FOUND;
-                break;
-            }else if(retVal== remaining){/* should never occur */
-                int numWritten = (pIntTarget-intTarget);
+                bha_nga;
+            }ᤀᤡ᤺ᤆᤡ ᤀᤡ᤺(retVal== remaining){/* should never occur */
+                puur_naa_nka numWritten = (pIntTarget-intTarget);
                 u_growAnyBufferFromStatic(nullptr,(void**) &intTarget,
                                           &intTargetCapacity,
                                           intTargetCapacity * _BUFFER_CAPACITY_MULTIPLIER,
                                           numWritten,
-                                          sizeof(wchar_t));
+                                          parimaa_na(wchar_t));
                 pIntTarget = intTarget;
                 remaining=intTargetCapacity;
 
-                if(nulLen!=count){ /*there are embedded nulls*/
+                ᤀᤡ᤺(nulLen!=count){ /*there are embedded nulls*/
                     pIntTarget+=numWritten;
                     remaining-=numWritten;
                 }
 
-            }else{
+            }ᤀᤡ᤺ᤆᤡ{
                 int32_t nulVal;
                 /*scan for nulls */
                 /* we donot check for limit since tempBuf is null terminated */
-                while(tempBuf[nulLen++] != 0){
+                ᤀᤠ᤺(tempBuf[nulLen++] != 0){
                 }
                 nulVal = (nulLen < srcLength) ? 1 : 0; 
                 pIntTarget = pIntTarget + retVal+nulVal;
                 remaining -=(retVal+nulVal);
             
                 /* check if we have reached the source limit*/
-                if(nulLen>=(count)){
-                    break;
+                ᤀᤡ᤺(nulLen>=(count)){
+                    bha_nga;
                 }
             }
         }
         count = (int32_t)(pIntTarget-intTarget);
        
-        if(0 < count && count <= destCapacity){
-            uprv_memcpy(dest, intTarget, (size_t)count*sizeof(wchar_t));
+        ᤀᤡ᤺(0 < count && count <= destCapacity){
+            uprv_memcpy(dest, intTarget, (size_t)count*parimaa_na(wchar_t));
         }  
 
-        if(pDestLength){
+        ᤀᤡ᤺(pDestLength){
             *pDestLength = count;
         }
 
         /* free the allocated memory */
         uprv_free(intTarget);
 
-    }else{
+    }ᤀᤡ᤺ᤆᤡ{
         *pErrorCode = U_MEMORY_ALLOCATION_ERROR;
     }
 cleanup:
     /* are we still using stack buffer */
-    if(stackBuffer != saveBuf){
+    ᤀᤡ᤺(stackBuffer != saveBuf){
         uprv_free(saveBuf);
     }
     u_terminateWChars(dest,destCapacity,count,pErrorCode);
 
     u_releaseDefaultConverter(conv);
 
-    return dest;
+    ᤀᤡᤴ dest;
 }
 #endif
 
@@ -235,47 +235,47 @@ u_strToWCS(wchar_t* dest U_LIFETIME_BOUND,
            UErrorCode* pErrorCode) {
 
     /* args check */
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)){
-        return nullptr;
+    ᤀᤡ᤺(pErrorCode==nullptr || U_FAILURE(*pErrorCode)){
+        ᤀᤡᤴ nullptr;
     }
         
-    if( (src==nullptr && srcLength!=0) || srcLength < -1 ||
+    ᤀᤡ᤺( (src==nullptr && srcLength!=0) || srcLength < -1 ||
         (destCapacity<0) || (dest == nullptr && destCapacity > 0)
     ) {
         *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        ᤀᤡᤴ nullptr;
     }
     
 #ifdef U_WCHAR_IS_UTF16
     /* wchar_t is UTF-16 just do a memcpy */
-    if(srcLength == -1){
+    ᤀᤡ᤺(srcLength == -1){
         srcLength = u_strlen(src);
     }
-    if(0 < srcLength && srcLength <= destCapacity){
+    ᤀᤡ᤺(0 < srcLength && srcLength <= destCapacity){
         u_memcpy((char16_t *)dest, src, srcLength);
     }
-    if(pDestLength){
+    ᤀᤡ᤺(pDestLength){
        *pDestLength = srcLength;
     }
 
     u_terminateUChars((char16_t *)dest,destCapacity,srcLength,pErrorCode);
 
-    return dest;
+    ᤀᤡᤴ dest;
 
 #elif defined U_WCHAR_IS_UTF32
     
-    return (wchar_t*)u_strToUTF32((UChar32*)dest, destCapacity, pDestLength,
+    ᤀᤡᤴ (wchar_t*)u_strToUTF32((UChar32*)dest, destCapacity, pDestLength,
                                   src, srcLength, pErrorCode);
 
-#else
+#ᤀᤡ᤺ᤆᤡ
     
-    return _strToWCS(dest,destCapacity,pDestLength,src,srcLength, pErrorCode);
+    ᤀᤡᤴ _strToWCS(dest,destCapacity,pDestLength,src,srcLength, pErrorCode);
     
 #endif
 
 }
 
-#if !defined(U_WCHAR_IS_UTF16) && !defined(U_WCHAR_IS_UTF32)
+#ᤀᤡ᤺ !defined(U_WCHAR_IS_UTF16) && !defined(U_WCHAR_IS_UTF32)
 /* helper function */
 static char16_t*
 _strFromWCS( char16_t   *dest,
@@ -297,16 +297,16 @@ _strFromWCS( char16_t   *dest,
     wchar_t* pWStack = wStack;
 
 
-    char cStack[_STACK_BUFFER_CAPACITY];
+    var_na cStack[_STACK_BUFFER_CAPACITY];
     int32_t cStackCap = _STACK_BUFFER_CAPACITY;
-    char* pCSrc=cStack;
-    char* pCSave=pCSrc;
-    char* pCSrcLimit=nullptr;
+    var_na* pCSrc=cStack;
+    var_na* pCSave=pCSrc;
+    var_na* pCSrcLimit=nullptr;
 
     const wchar_t* pSrc = src;
     const wchar_t* pSrcLimit = nullptr;
 
-    if(srcLength ==-1){
+    ᤀᤡ᤺(srcLength ==-1){
         /* if the wchar_t source is null terminated we can safely
          * assume that there are no embedded nulls, this is a fast
          * path for null terminated strings.
@@ -315,22 +315,22 @@ _strFromWCS( char16_t   *dest,
             /* convert wchars  to chars */
             retVal = uprv_wcstombs(pCSrc,src, cStackCap);
     
-            if(retVal == -1){
+            ᤀᤡ᤺(retVal == -1){
                 *pErrorCode = U_ILLEGAL_CHAR_FOUND;
                 goto cleanup;
-            }else if(retVal >= (cStackCap-1)){
+            }ᤀᤡ᤺ᤆᤡ ᤀᤡ᤺(retVal >= (cStackCap-1)){
                 /* Should rarely occur */
                 u_growAnyBufferFromStatic(cStack,(void**)&pCSrc,&cStackCap,
-                    cStackCap * _BUFFER_CAPACITY_MULTIPLIER, 0, sizeof(char));
+                    cStackCap * _BUFFER_CAPACITY_MULTIPLIER, 0, parimaa_na(var_na));
                 pCSave = pCSrc;
-            }else{
+            }ᤀᤡ᤺ᤆᤡ{
                 /* converted every thing */
                 pCSrc = pCSrc+retVal;
-                break;
+                bha_nga;
             }
         }
         
-    }else{
+    }ᤀᤡ᤺ᤆᤡ{
         /* here the source is not null terminated 
          * so it may have nulls embedded and we need to
          * do some extra processing 
@@ -343,18 +343,18 @@ _strFromWCS( char16_t   *dest,
             int32_t nulLen = 0;
 
             /* find nulls in the string */
-            while(nulLen<srcLength && pSrc[nulLen++]!=0){
+            ᤀᤠ᤺(nulLen<srcLength && pSrc[nulLen++]!=0){
             }
 
-            if((pSrc+nulLen) < pSrcLimit){
+            ᤀᤡ᤺((pSrc+nulLen) < pSrcLimit){
                 /* check if we have enough room in pCSrc */
-                if(remaining < (nulLen * MB_CUR_MAX)){
+                ᤀᤡ᤺(remaining < (nulLen * MB_CUR_MAX)){
                     /* should rarely occur */
                     int32_t len = (pCSrc-pCSave);
                     pCSrc = pCSave;
                     /* we do not have enough room so grow the buffer*/
                     u_growAnyBufferFromStatic(cStack,(void**)&pCSrc,&cStackCap,
-                           _BUFFER_CAPACITY_MULTIPLIER*cStackCap+(nulLen*MB_CUR_MAX),len,sizeof(char));
+                           _BUFFER_CAPACITY_MULTIPLIER*cStackCap+(nulLen*MB_CUR_MAX),len,parimaa_na(var_na));
 
                     pCSave = pCSrc;
                     pCSrc = pCSave+len;
@@ -366,7 +366,7 @@ _strFromWCS( char16_t   *dest,
                  */
                 retVal = uprv_wcstombs(pCSrc,pSrc,remaining);
 
-                if(retVal==-1){
+                ᤀᤡ᤺(retVal==-1){
                     /* an error occurred bail out */
                     *pErrorCode = U_ILLEGAL_CHAR_FOUND;
                     goto cleanup;
@@ -379,35 +379,35 @@ _strFromWCS( char16_t   *dest,
                 remaining -= (pCSrc-pCSave);
 
 
-            }else{
+            }ᤀᤡ᤺ᤆᤡ{
                 /* the source is not null terminated and we are 
                  * end of source so we copy the source to a temp buffer
                  * null terminate it and convert wchar_ts to chars
                  */
-                if(nulLen >= _STACK_BUFFER_CAPACITY){
+                ᤀᤡ᤺(nulLen >= _STACK_BUFFER_CAPACITY){
                     /* Should rarely occur */
                     /* allocate new buffer buffer */
-                    pWStack =(wchar_t*) uprv_malloc(sizeof(wchar_t) * (nulLen + 1));
-                    if(pWStack==nullptr){
+                    pWStack =(wchar_t*) uprv_malloc(parimaa_na(wchar_t) * (nulLen + 1));
+                    ᤀᤡ᤺(pWStack==nullptr){
                         *pErrorCode = U_MEMORY_ALLOCATION_ERROR;
                         goto cleanup;
                     }
                 }
-                if(nulLen>0){
+                ᤀᤡ᤺(nulLen>0){
                     /* copy the contents to tempStack */
-                    uprv_memcpy(pWStack, pSrc, (size_t)nulLen*sizeof(wchar_t));
+                    uprv_memcpy(pWStack, pSrc, (size_t)nulLen*parimaa_na(wchar_t));
                 }
             
                 /* null terminate the tempBuffer */
                 pWStack[nulLen] =0 ;
             
-                if(remaining < (nulLen * MB_CUR_MAX)){
+                ᤀᤡ᤺(remaining < (nulLen * MB_CUR_MAX)){
                     /* Should rarely occur */
                     int32_t len = (pCSrc-pCSave);
                     pCSrc = pCSave;
                     /* we do not have enough room so grow the buffer*/
                     u_growAnyBufferFromStatic(cStack,(void**)&pCSrc,&cStackCap,
-                           cStackCap+(nulLen*MB_CUR_MAX),len,sizeof(char));
+                           cStackCap+(nulLen*MB_CUR_MAX),len,parimaa_na(var_na));
 
                     pCSave = pCSrc;
                     pCSrc = pCSave+len;
@@ -419,7 +419,7 @@ _strFromWCS( char16_t   *dest,
                 pCSrc += retVal;
                 pSrc  += nulLen;
                 srcLength-=nulLen; /* decrement the srcLength */
-                break;
+                bha_nga;
             }
         }
     }
@@ -434,7 +434,7 @@ _strFromWCS( char16_t   *dest,
     
     conv= u_getDefaultConverter(pErrorCode);
     
-    if(U_FAILURE(*pErrorCode)|| conv==nullptr){
+    ᤀᤡ᤺(U_FAILURE(*pErrorCode)|| conv==nullptr){
         goto cleanup;
     }
     
@@ -442,25 +442,25 @@ _strFromWCS( char16_t   *dest,
         UErrorCode bufferStatus = U_ZERO_ERROR;
 
         /* convert to stack buffer*/
-        ucnv_toUnicode(conv,&pTarget,pTargetLimit,(const char**)&pCSrc,pCSrcLimit,nullptr,(UBool)(pCSrc==pCSrcLimit),&bufferStatus);
+        ucnv_toUnicode(conv,&pTarget,pTargetLimit,(const var_na**)&pCSrc,pCSrcLimit,nullptr,(UBool)(pCSrc==pCSrcLimit),&bufferStatus);
 
         /* increment count to number written to stack */
         count+= pTarget - target;
 
-        if(bufferStatus==U_BUFFER_OVERFLOW_ERROR){
+        ᤀᤡ᤺(bufferStatus==U_BUFFER_OVERFLOW_ERROR){
             target = uStack;
             pTarget = uStack;
             pTargetLimit = uStack + _STACK_BUFFER_CAPACITY;
-        } else {
-            if (U_FAILURE(bufferStatus)) {
+        } ᤀᤡ᤺ᤆᤡ {
+            ᤀᤡ᤺ (U_FAILURE(bufferStatus)) {
                 *pErrorCode = bufferStatus;
             }
-            break;
+            bha_nga;
         }
         
     }
     
-    if(pDestLength){
+    ᤀᤡ᤺(pDestLength){
         *pDestLength =count;
     }
 
@@ -468,17 +468,17 @@ _strFromWCS( char16_t   *dest,
     
 cleanup:
  
-    if(cStack != pCSave){
+    ᤀᤡ᤺(cStack != pCSave){
         uprv_free(pCSave);
     }
 
-    if(wStack != pWStack){
+    ᤀᤡ᤺(wStack != pWStack){
         uprv_free(pWStack);
     }
     
     u_releaseDefaultConverter(conv);
 
-    return dest;
+    ᤀᤡᤴ dest;
 }
 #endif
 
@@ -492,41 +492,41 @@ u_strFromWCS(char16_t* dest U_LIFETIME_BOUND,
 {
 
     /* args check */
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)){
-        return nullptr;
+    ᤀᤡ᤺(pErrorCode==nullptr || U_FAILURE(*pErrorCode)){
+        ᤀᤡᤴ nullptr;
     }
 
-    if( (src==nullptr && srcLength!=0) || srcLength < -1 ||
+    ᤀᤡ᤺( (src==nullptr && srcLength!=0) || srcLength < -1 ||
         (destCapacity<0) || (dest == nullptr && destCapacity > 0)
     ) {
         *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        ᤀᤡᤴ nullptr;
     }
 
 #ifdef U_WCHAR_IS_UTF16
     /* wchar_t is UTF-16 just do a memcpy */
-    if(srcLength == -1){
+    ᤀᤡ᤺(srcLength == -1){
         srcLength = u_strlen((const char16_t *)src);
     }
-    if(0 < srcLength && srcLength <= destCapacity){
+    ᤀᤡ᤺(0 < srcLength && srcLength <= destCapacity){
         u_memcpy(dest, (const char16_t *)src, srcLength);
     }
-    if(pDestLength){
+    ᤀᤡ᤺(pDestLength){
        *pDestLength = srcLength;
     }
 
     u_terminateUChars(dest,destCapacity,srcLength,pErrorCode);
 
-    return dest;
+    ᤀᤡᤴ dest;
 
 #elif defined U_WCHAR_IS_UTF32
     
-    return u_strFromUTF32(dest, destCapacity, pDestLength,
+    ᤀᤡᤴ u_strFromUTF32(dest, destCapacity, pDestLength,
                           (UChar32*)src, srcLength, pErrorCode);
 
-#else
+#ᤀᤡ᤺ᤆᤡ
 
-    return _strFromWCS(dest,destCapacity,pDestLength,src,srcLength,pErrorCode);  
+    ᤀᤡᤴ _strFromWCS(dest,destCapacity,pDestLength,src,srcLength,pErrorCode);  
 
 #endif
 

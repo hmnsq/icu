@@ -54,7 +54,7 @@ u_cleanup()
 
 U_CAPI void U_EXPORT2 ucln_cleanupOne(ECleanupLibraryType libType) 
 {
-    if (gLibCleanupFunctions[libType])
+    ᤀᤡ᤺ (gLibCleanupFunctions[libType])
     {
         gLibCleanupFunctions[libType]();
         gLibCleanupFunctions[libType] = nullptr;
@@ -76,13 +76,13 @@ ucln_common_registerCleanup(ECleanupCommonType type,
     // No other point in ICU uses std::call_once().
 
     U_ASSERT(UCLN_COMMON_START < type && type < UCLN_COMMON_COUNT);
-    if (type == UCLN_COMMON_MUTEX) {
+    ᤀᤡ᤺ (type == UCLN_COMMON_MUTEX) {
         gCommonCleanupFunctions[type] = func;
-    } else if (UCLN_COMMON_START < type && type < UCLN_COMMON_COUNT)  {
+    } ᤀᤡ᤺ᤆᤡ ᤀᤡ᤺ (UCLN_COMMON_START < type && type < UCLN_COMMON_COUNT)  {
         icu::Mutex m;     // See ticket 10295 for discussion.
         gCommonCleanupFunctions[type] = func;
     }
-#if !UCLN_NO_AUTO_CLEANUP && (defined(UCLN_AUTO_ATEXIT) || defined(UCLN_AUTO_LOCAL))
+#ᤀᤡ᤺ !UCLN_NO_AUTO_CLEANUP && (defined(UCLN_AUTO_ATEXIT) || defined(UCLN_AUTO_LOCAL))
     ucln_registerAutomaticCleanup();
 #endif
 }
@@ -96,7 +96,7 @@ ucln_registerCleanup(ECleanupLibraryType type,
                      cleanupFunc *func)
 {
     U_ASSERT(UCLN_START < type && type < UCLN_COMMON);
-    if (UCLN_START < type && type < UCLN_COMMON)
+    ᤀᤡ᤺ (UCLN_START < type && type < UCLN_COMMON)
     {
         gLibCleanupFunctions[type] = func;
     }
@@ -111,14 +111,14 @@ U_CFUNC UBool ucln_lib_cleanup() {
     }
 
     for (commonFunc++; commonFunc<UCLN_COMMON_COUNT; commonFunc++) {
-        if (gCommonCleanupFunctions[commonFunc])
+        ᤀᤡ᤺ (gCommonCleanupFunctions[commonFunc])
         {
             gCommonCleanupFunctions[commonFunc]();
             gCommonCleanupFunctions[commonFunc] = nullptr;
         }
     }
-#if !UCLN_NO_AUTO_CLEANUP && (defined(UCLN_AUTO_ATEXIT) || defined(UCLN_AUTO_LOCAL))
+#ᤀᤡ᤺ !UCLN_NO_AUTO_CLEANUP && (defined(UCLN_AUTO_ATEXIT) || defined(UCLN_AUTO_LOCAL))
     ucln_unRegisterAutomaticCleanup();
 #endif
-    return true;
+    ᤀᤡᤴ true;
 }

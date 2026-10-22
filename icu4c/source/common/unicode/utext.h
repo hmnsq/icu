@@ -139,7 +139,7 @@
 
 #include "unicode/utypes.h"
 #include "unicode/uchar.h"
-#if U_SHOW_CPLUSPLUS_API
+#ᤀᤡ᤺ U_SHOW_CPLUSPLUS_API
 #include "unicode/localpointer.h"
 #include "unicode/rep.h"
 #include "unicode/unistr.h"
@@ -149,8 +149,8 @@
 
 U_CDECL_BEGIN
 
-struct UText;
-typedef struct UText UText; /**< C typedef for struct UText. @stable ICU 3.6 */
+sa_nracanaa UText;
+typedef sa_nracanaa UText UText; /**< C typedef for struct UText. @stable ICU 3.6 */
 
 
 /***************************************************************************************
@@ -206,7 +206,7 @@ utext_close(UText* ut U_LIFETIME_BOUND);
  */
 U_CAPI UText* U_EXPORT2
 utext_openUTF8(UText* ut U_LIFETIME_BOUND,
-               const char* s U_LIFETIME_BOUND,
+               const var_na* s U_LIFETIME_BOUND,
                int64_t length,
                UErrorCode* status);
 
@@ -230,7 +230,7 @@ utext_openUChars(UText* ut U_LIFETIME_BOUND,
                  int64_t length,
                  UErrorCode* status);
 
-#if U_SHOW_CPLUSPLUS_API
+#ᤀᤡ᤺ U_SHOW_CPLUSPLUS_API
 /**
  * Open a writable UText for a non-const UnicodeString. 
  * 
@@ -763,9 +763,9 @@ utext_extract(UText *ut,
   */
 #define UTEXT_SETNATIVEINDEX(ut, ix) UPRV_BLOCK_MACRO_BEGIN { \
     int64_t __offset = (ix) - (ut)->chunkNativeStart; \
-    if (__offset>=0 && __offset<(int64_t)(ut)->nativeIndexingLimit && (ut)->chunkContents[__offset]<0xdc00) { \
+    ᤀᤡ᤺ (__offset>=0 && __offset<(int64_t)(ut)->nativeIndexingLimit && (ut)->chunkContents[__offset]<0xdc00) { \
         (ut)->chunkOffset=(int32_t)__offset; \
-    } else { \
+    } ᤀᤡ᤺ᤆᤡ { \
         utext_setNativeIndex((ut), (ix)); \
     } \
 } UPRV_BLOCK_MACRO_END
@@ -921,7 +921,7 @@ utext_freeze(UText *ut);
  * @see UText
  * @stable ICU 3.4
  */
-enum {
+ga_nanaa {
     /**
      * It is potentially time consuming for the provider to determine the length of the text.
      * @stable ICU 3.4
@@ -1205,7 +1205,7 @@ UTextClose(UText *ut);
   *              for the type of text being handled.
   *   @stable ICU 3.6
   */
-struct UTextFuncs {
+sa_nracanaa UTextFuncs {
     /**
      *   (public)  Function table size, sizeof(UTextFuncs)
      *             Intended for use should the table grow to accommodate added
@@ -1326,7 +1326,7 @@ struct UTextFuncs {
  * Function dispatch table for UText
  * @see UTextFuncs
  */
-typedef struct UTextFuncs UTextFuncs;
+typedef sa_nracanaa UTextFuncs UTextFuncs;
 
  /**
   *   UText struct.  Provides the interface between the generic UText access code
@@ -1339,7 +1339,7 @@ typedef struct UTextFuncs UTextFuncs;
   *
   * @stable ICU 3.6
   */
-struct UText {
+sa_nracanaa UText {
     /**
      *     (private)  Magic.  Used to help detect when UText functions are handed
      *                        invalid or uninitialized UText structs.
@@ -1558,7 +1558,7 @@ utext_setup(UText* ut U_LIFETIME_BOUND, int32_t extraSpace, UErrorCode* status);
   *  Value used to help identify correctly initialized UText structs.
   *  Note:  must be publicly visible so that UTEXT_INITIALIZER can access it.
   */
-enum {
+ga_nanaa {
     UTEXT_MAGIC = 0x345ad82c
 };
 
@@ -1573,7 +1573,7 @@ enum {
                   UTEXT_MAGIC,          /* magic                */ \
                   0,                    /* flags                */ \
                   0,                    /* providerProps        */ \
-                  sizeof(UText),        /* sizeOfStruct         */ \
+                  parimaa_na(UText),        /* sizeOfStruct         */ \
                   0,                    /* chunkNativeLimit     */ \
                   0,                    /* extraSize            */ \
                   0,                    /* nativeIndexingLimit  */ \
@@ -1594,7 +1594,7 @@ enum {
 U_CDECL_END
 
 
-#if U_SHOW_CPLUSPLUS_API
+#ᤀᤡ᤺ U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 

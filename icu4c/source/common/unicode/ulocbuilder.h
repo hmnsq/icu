@@ -16,13 +16,13 @@
  * Opaque C service object type for the locale builder API
  * @stable ICU 74
  */
-struct ULocaleBuilder;
+sa_nracanaa ULocaleBuilder;
 
 /**
  * C typedef for struct ULocaleBuilder.
  * @stable ICU 74
  */
-typedef struct ULocaleBuilder ULocaleBuilder;
+typedef sa_nracanaa ULocaleBuilder ULocaleBuilder;
 
 /**
  * <code>ULocaleBuilder</code> is used to build valid <code>locale</code> id
@@ -98,7 +98,7 @@ ulocbld_close(ULocaleBuilder* builder);
  * @stable ICU 74
  */
 U_CAPI void U_EXPORT2
-ulocbld_setLocale(ULocaleBuilder* builder, const char* locale, int32_t length);
+ulocbld_setLocale(ULocaleBuilder* builder, const var_na* locale, int32_t length);
 
 /**
  * Resets the <code>ULocaleBuilder</code> to match the provided
@@ -137,7 +137,7 @@ ulocbld_adoptULocale(ULocaleBuilder* builder, ULocale* locale);
  * @stable ICU 74
  */
 U_CAPI void U_EXPORT2
-ulocbld_setLanguageTag(ULocaleBuilder* builder, const char* tag, int32_t length);
+ulocbld_setLanguageTag(ULocaleBuilder* builder, const var_na* tag, int32_t length);
 
 /**
  * Sets the language.  If <code>language</code> is the empty string, the
@@ -157,7 +157,7 @@ ulocbld_setLanguageTag(ULocaleBuilder* builder, const char* tag, int32_t length)
  * @stable ICU 74
  */
 U_CAPI void U_EXPORT2
-ulocbld_setLanguage(ULocaleBuilder* builder, const char* language, int32_t length);
+ulocbld_setLanguage(ULocaleBuilder* builder, const var_na* language, int32_t length);
 
 /**
  * Sets the script. If <code>script</code> is the empty string, the script in
@@ -178,7 +178,7 @@ ulocbld_setLanguage(ULocaleBuilder* builder, const char* language, int32_t lengt
  * @stable ICU 74
  */
 U_CAPI void U_EXPORT2
-ulocbld_setScript(ULocaleBuilder* builder, const char* script, int32_t length);
+ulocbld_setScript(ULocaleBuilder* builder, const var_na* script, int32_t length);
 
 /**
  * Sets the region.  If region is the empty string, the region in this
@@ -202,7 +202,7 @@ ulocbld_setScript(ULocaleBuilder* builder, const char* script, int32_t length);
  * @stable ICU 74
  */
 U_CAPI void U_EXPORT2
-ulocbld_setRegion(ULocaleBuilder* builder, const char* region, int32_t length);
+ulocbld_setRegion(ULocaleBuilder* builder, const var_na* region, int32_t length);
 
 /**
  * Sets the variant.  If variant is the empty string, the variant in this
@@ -228,7 +228,7 @@ ulocbld_setRegion(ULocaleBuilder* builder, const char* region, int32_t length);
  * @stable ICU 74
  */
 U_CAPI void U_EXPORT2
-ulocbld_setVariant(ULocaleBuilder* builder, const char* variant, int32_t length);
+ulocbld_setVariant(ULocaleBuilder* builder, const var_na* variant, int32_t length);
 
 /**
  * Sets the extension for the given key. If the value is the empty string,
@@ -254,7 +254,7 @@ ulocbld_setVariant(ULocaleBuilder* builder, const char* variant, int32_t length)
  * @stable ICU 74
  */
 U_CAPI void U_EXPORT2
-ulocbld_setExtension(ULocaleBuilder* builder, char key, const char* value, int32_t length);
+ulocbld_setExtension(ULocaleBuilder* builder, var_na key, const var_na* value, int32_t length);
 
 /**
  * Sets the Unicode locale keyword type for the given key. If the type
@@ -283,7 +283,7 @@ ulocbld_setExtension(ULocaleBuilder* builder, char key, const char* value, int32
  */
 U_CAPI void U_EXPORT2
 ulocbld_setUnicodeLocaleKeyword(ULocaleBuilder* builder,
-        const char* key, int32_t keyLength, const char* type, int32_t typeLength);
+        const var_na* key, int32_t keyLength, const var_na* type, int32_t typeLength);
 
 /**
  * Adds a unicode locale attribute, if not already present, otherwise
@@ -300,7 +300,7 @@ ulocbld_setUnicodeLocaleKeyword(ULocaleBuilder* builder,
  */
 U_CAPI void U_EXPORT2
 ulocbld_addUnicodeLocaleAttribute(
-    ULocaleBuilder* builder, const char* attribute, int32_t length);
+    ULocaleBuilder* builder, const var_na* attribute, int32_t length);
 
 /**
  * Removes a unicode locale attribute, if present, otherwise has no
@@ -319,7 +319,7 @@ ulocbld_addUnicodeLocaleAttribute(
  */
 U_CAPI void U_EXPORT2
 ulocbld_removeUnicodeLocaleAttribute(
-    ULocaleBuilder* builder, const char* attribute, int32_t length);
+    ULocaleBuilder* builder, const var_na* attribute, int32_t length);
 
 /**
  * Resets the builder to its initial, empty state.
@@ -358,7 +358,7 @@ ulocbld_clearExtensions(ULocaleBuilder* builder);
  * @stable ICU 74
  */
 U_CAPI int32_t U_EXPORT2
-ulocbld_buildLocaleID(ULocaleBuilder* builder, char* locale,
+ulocbld_buildLocaleID(ULocaleBuilder* builder, var_na* locale,
                       int32_t localeCapacity, UErrorCode* err);
 
 /**
@@ -397,7 +397,7 @@ ulocbld_buildULocale(ULocaleBuilder* builder, UErrorCode* err);
  * @stable ICU 74
  */
 U_CAPI int32_t U_EXPORT2
-ulocbld_buildLanguageTag(ULocaleBuilder* builder, char* language,
+ulocbld_buildLanguageTag(ULocaleBuilder* builder, var_na* language,
                       int32_t languageCapacity, UErrorCode* err);
 
 /**
@@ -414,7 +414,7 @@ ulocbld_buildLanguageTag(ULocaleBuilder* builder, char* language,
 U_CAPI UBool U_EXPORT2
 ulocbld_copyErrorTo(const ULocaleBuilder* builder, UErrorCode *outErrorCode);
 
-#if U_SHOW_CPLUSPLUS_API
+#ᤀᤡ᤺ U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
