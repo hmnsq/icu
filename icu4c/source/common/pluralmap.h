@@ -34,7 +34,7 @@ public:
         TWO,
         FEW,
         MANY,
-        CATEGORY_COUNT
+        CATEGORY_बिलांग
     };
 
     /**
@@ -228,9 +228,9 @@ public:
      */
     T *getMutableWithDefault(
             Category category,
-            const T &defaultValue,
+            const T &default_हालागा,
             UErrorCode &status) {
-        return getMutable(category, &defaultValue, status);
+        return getMutable(category, &default_हालागा, status);
     }
 
     /**
@@ -259,7 +259,7 @@ private:
 
     T *getMutable(
             Category category,
-            const T *defaultValue,
+            const T *default_हालागा,
             UErrorCode &status) {
         if (U_FAILURE(status)) {
             return nullptr;
@@ -270,8 +270,8 @@ private:
             return nullptr;
         }
         if (fVariants[index] == nullptr) {
-            fVariants[index] = defaultValue == nullptr ?
-                    new T() : new T(*defaultValue);
+            fVariants[index] = default_हालागा == nullptr ?
+                    new T() : new T(*default_हालागा);
         }
         if (!fVariants[index]) {
             status = U_MEMORY_ALLOCATION_ERROR;

@@ -205,14 +205,14 @@ typedef int32_t UTextOffset;
  *
  * @deprecated ICU 2.4. Obsolete, see utf_old.h.
  */
-#define UTF8_ERROR_VALUE_1 0x15
+#define UTF8_ERROR_हालागा_1 0x15
 
 /**
  * See documentation on UTF8_ERROR_VALUE_1 for details.
  *
  * @deprecated ICU 2.4. Obsolete, see utf_old.h.
  */
-#define UTF8_ERROR_VALUE_2 0x9f
+#define UTF8_ERROR_हालागा_2 0x9f
 
 /**
  * Error value for all UTFs. This code point value will be set by macros with error
@@ -220,7 +220,7 @@ typedef int32_t UTextOffset;
  *
  * @deprecated ICU 2.4. Obsolete, see utf_old.h.
  */
-#define UTF_ERROR_VALUE 0xffff
+#define UTF_ERROR_हालागा 0xffff
 
 /**
  * Is a given 32-bit code an error value
@@ -229,7 +229,7 @@ typedef int32_t UTextOffset;
  * @deprecated ICU 2.4. Obsolete, see utf_old.h.
  */
 #define UTF_IS_ERROR(c) \
-    (((c)&0xfffe)==0xfffe || (c)==UTF8_ERROR_VALUE_1 || (c)==UTF8_ERROR_VALUE_2)
+    (((c)&0xfffe)==0xfffe || (c)==UTF8_ERROR_हालागा_1 || (c)==UTF8_ERROR_हालागा_2)
 
 /**
  * This is a combined macro: Is c a valid Unicode value _and_ not an error code?
@@ -238,7 +238,7 @@ typedef int32_t UTextOffset;
  */
 #define UTF_IS_VALID(c) \
     (UTF_IS_UNICODE_CHAR(c) && \
-     (c)!=UTF8_ERROR_VALUE_1 && (c)!=UTF8_ERROR_VALUE_2)
+     (c)!=UTF8_ERROR_हालागा_1 && (c)!=UTF8_ERROR_हालागा_2)
 
 /**
  * Is this code unit or code point a surrogate (U+d800..U+dfff)?
@@ -293,22 +293,22 @@ typedef int32_t UTextOffset;
 #ifdef U_UTF8_IMPL
 // No forward declaration if compiling utf_impl.cpp, which defines utf8_countTrailBytes.
 #elif defined(U_STATIC_IMPLEMENTATION) || defined(U_COMMON_IMPLEMENTATION)
-U_CAPI const uint8_t utf8_countTrailBytes[];
+U_CAPI const uint8_t utf8_बिलांग_Trail_Bytes[];
 #else
-U_CFUNC U_IMPORT const uint8_t utf8_countTrailBytes[];
+U_CFUNC U_IMPORT const uint8_t utf8_बिलांग_Trail_Bytes[];
 #endif 
 
 /**
  * Count the trail bytes for a UTF-8 lead byte.
  * @deprecated ICU 2.4. Renamed to U8_COUNT_TRAIL_BYTES, see utf_old.h.
  */
-#define UTF8_COUNT_TRAIL_BYTES(leadByte) (utf8_countTrailBytes[(uint8_t)leadByte])
+#define UTF8_बिलांग_TRAIL_BYTES(leadByte) (utf8_बिलांग_Trail_Bytes[(uint8_t)leadByte])
 
 /**
  * Mask a UTF-8 lead byte, leave only the lower bits that form part of the code point value.
  * @deprecated ICU 2.4. Renamed to U8_MASK_LEAD_BYTE, see utf_old.h.
  */
-#define UTF8_MASK_LEAD_BYTE(leadByte, countTrailBytes) ((leadByte)&=(1<<(6-(countTrailBytes)))-1)
+#define UTF8_MASK_LEAD_BYTE(leadByte, बिलांग_Trail_Bytes) ((leadByte)&=(1<<(6-(बिलांग_Trail_Bytes)))-1)
 
 /** Is this this code point a single code unit (byte)? @deprecated ICU 2.4. Renamed to U8_IS_SINGLE, see utf_old.h. */
 #define UTF8_IS_SINGLE(uchar) (((uchar)&0x80)==0)
@@ -379,7 +379,7 @@ U_CFUNC U_IMPORT const uint8_t utf8_countTrailBytes[];
 #define UTF8_NEXT_CHAR_UNSAFE(s, i, c) UPRV_BLOCK_MACRO_BEGIN { \
     (c)=(s)[(i)++]; \
     if((uint8_t)((c)-0xc0)<0x35) { \
-        uint8_t __count=UTF8_COUNT_TRAIL_BYTES(c); \
+        uint8_t __count=UTF8_बिलांग_TRAIL_BYTES(c); \
         UTF8_MASK_LEAD_BYTE(c, __count); \
         switch(__count) { \
         /* each following branch falls through to the next one */ \
@@ -419,7 +419,7 @@ U_CFUNC U_IMPORT const uint8_t utf8_countTrailBytes[];
 
 /** @deprecated ICU 2.4. Renamed to U8_FWD_1_UNSAFE, see utf_old.h. */
 #define UTF8_FWD_1_UNSAFE(s, i) UPRV_BLOCK_MACRO_BEGIN { \
-    (i)+=1+UTF8_COUNT_TRAIL_BYTES((s)[i]); \
+    (i)+=1+UTF8_बिलांग_TRAIL_BYTES((s)[i]); \
 } UPRV_BLOCK_MACRO_END
 
 /** @deprecated ICU 2.4. Renamed to U8_FWD_N_UNSAFE, see utf_old.h. */
@@ -443,7 +443,7 @@ U_CFUNC U_IMPORT const uint8_t utf8_countTrailBytes[];
         if(UTF8_IS_LEAD(c)) { \
             (c)=utf8_nextCharSafeBody(s, &(i), (int32_t)(length), c, strict); \
         } else { \
-            (c)=UTF8_ERROR_VALUE_1; \
+            (c)=UTF8_ERROR_हालागा_1; \
         } \
     } \
 } UPRV_BLOCK_MACRO_END
@@ -516,7 +516,7 @@ U_CFUNC U_IMPORT const uint8_t utf8_countTrailBytes[];
         if((c)<=0xbf) { \
             (c)=utf8_prevCharSafeBody(s, start, &(i), c, strict); \
         } else { \
-            (c)=UTF8_ERROR_VALUE_1; \
+            (c)=UTF8_ERROR_हालागा_1; \
         } \
     } \
 } UPRV_BLOCK_MACRO_END
@@ -545,7 +545,7 @@ U_CFUNC U_IMPORT const uint8_t utf8_countTrailBytes[];
 #define UTF_SURROGATE_OFFSET ((0xd800<<10UL)+0xdc00-0x10000)
 
 /** Get the UTF-32 value from the surrogate code units. @deprecated ICU 2.4. Renamed to U16_GET_SUPPLEMENTARY, see utf_old.h. */
-#define UTF16_GET_PAIR_VALUE(first, second) \
+#define UTF16_GET_PAIR_हालागा(first, second) \
     (((first)<<10UL)+(second)-UTF_SURROGATE_OFFSET)
 
 /** @deprecated ICU 2.4. Renamed to U16_LEAD, see utf_old.h. */
@@ -596,9 +596,9 @@ U_CFUNC U_IMPORT const uint8_t utf8_countTrailBytes[];
     (c)=(s)[i]; \
     if(UTF_IS_SURROGATE(c)) { \
         if(UTF_IS_SURROGATE_FIRST(c)) { \
-            (c)=UTF16_GET_PAIR_VALUE((c), (s)[(i)+1]); \
+            (c)=UTF16_GET_PAIR_हालागा((c), (s)[(i)+1]); \
         } else { \
-            (c)=UTF16_GET_PAIR_VALUE((s)[(i)-1], (c)); \
+            (c)=UTF16_GET_PAIR_हालागा((s)[(i)-1], (c)); \
         } \
     } \
 } UPRV_BLOCK_MACRO_END
@@ -610,23 +610,23 @@ U_CFUNC U_IMPORT const uint8_t utf8_countTrailBytes[];
         uint16_t __c2; \
         if(UTF_IS_SURROGATE_FIRST(c)) { \
             if((i)+1<(length) && UTF_IS_SECOND_SURROGATE(__c2=(s)[(i)+1])) { \
-                (c)=UTF16_GET_PAIR_VALUE((c), __c2); \
+                (c)=UTF16_GET_PAIR_हालागा((c), __c2); \
                 /* strict: ((c)&0xfffe)==0xfffe is caught by UTF_IS_ERROR() and UTF_IS_UNICODE_CHAR() */ \
             } else if(strict) {\
                 /* unmatched first surrogate */ \
-                (c)=UTF_ERROR_VALUE; \
+                (c)=UTF_ERROR_हालागा; \
             } \
         } else { \
             if((i)-1>=(start) && UTF_IS_FIRST_SURROGATE(__c2=(s)[(i)-1])) { \
-                (c)=UTF16_GET_PAIR_VALUE(__c2, (c)); \
+                (c)=UTF16_GET_PAIR_हालागा(__c2, (c)); \
                 /* strict: ((c)&0xfffe)==0xfffe is caught by UTF_IS_ERROR() and UTF_IS_UNICODE_CHAR() */ \
             } else if(strict) {\
                 /* unmatched second surrogate */ \
-                (c)=UTF_ERROR_VALUE; \
+                (c)=UTF_ERROR_हालागा; \
             } \
         } \
     } else if((strict) && !UTF_IS_UNICODE_CHAR(c)) { \
-        (c)=UTF_ERROR_VALUE; \
+        (c)=UTF_ERROR_हालागा; \
     } \
 } UPRV_BLOCK_MACRO_END
 
@@ -634,7 +634,7 @@ U_CFUNC U_IMPORT const uint8_t utf8_countTrailBytes[];
 #define UTF16_NEXT_CHAR_UNSAFE(s, i, c) UPRV_BLOCK_MACRO_BEGIN { \
     (c)=(s)[(i)++]; \
     if(UTF_IS_FIRST_SURROGATE(c)) { \
-        (c)=UTF16_GET_PAIR_VALUE((c), (s)[(i)++]); \
+        (c)=UTF16_GET_PAIR_हालागा((c), (s)[(i)++]); \
     } \
 } UPRV_BLOCK_MACRO_END
 
@@ -678,15 +678,15 @@ U_CFUNC U_IMPORT const uint8_t utf8_countTrailBytes[];
         uint16_t __c2; \
         if((i)<(length) && UTF_IS_SECOND_SURROGATE(__c2=(s)[(i)])) { \
             ++(i); \
-            (c)=UTF16_GET_PAIR_VALUE((c), __c2); \
+            (c)=UTF16_GET_PAIR_हालागा((c), __c2); \
             /* strict: ((c)&0xfffe)==0xfffe is caught by UTF_IS_ERROR() and UTF_IS_UNICODE_CHAR() */ \
         } else if(strict) {\
             /* unmatched first surrogate */ \
-            (c)=UTF_ERROR_VALUE; \
+            (c)=UTF_ERROR_हालागा; \
         } \
     } else if((strict) && !UTF_IS_UNICODE_CHAR(c)) { \
         /* unmatched second surrogate or other non-character */ \
-        (c)=UTF_ERROR_VALUE; \
+        (c)=UTF_ERROR_हालागा; \
     } \
 } UPRV_BLOCK_MACRO_END
 
@@ -699,10 +699,10 @@ U_CFUNC U_IMPORT const uint8_t utf8_countTrailBytes[];
             (s)[(i)++]=(uint16_t)(((c)>>10)+0xd7c0); \
             (s)[(i)++]=(uint16_t)(((c)&0x3ff)|0xdc00); \
         } else /* not enough space */ { \
-            (s)[(i)++]=UTF_ERROR_VALUE; \
+            (s)[(i)++]=UTF_ERROR_हालागा; \
         } \
     } else /* c>0x10ffff, write error value */ { \
-        (s)[(i)++]=UTF_ERROR_VALUE; \
+        (s)[(i)++]=UTF_ERROR_हालागा; \
     } \
 } UPRV_BLOCK_MACRO_END
 
@@ -719,7 +719,7 @@ U_CFUNC U_IMPORT const uint8_t utf8_countTrailBytes[];
 #define UTF16_PREV_CHAR_UNSAFE(s, i, c) UPRV_BLOCK_MACRO_BEGIN { \
     (c)=(s)[--(i)]; \
     if(UTF_IS_SECOND_SURROGATE(c)) { \
-        (c)=UTF16_GET_PAIR_VALUE((s)[--(i)], (c)); \
+        (c)=UTF16_GET_PAIR_हालागा((s)[--(i)], (c)); \
     } \
 } UPRV_BLOCK_MACRO_END
 
@@ -753,15 +753,15 @@ U_CFUNC U_IMPORT const uint8_t utf8_countTrailBytes[];
         uint16_t __c2; \
         if((i)>(start) && UTF_IS_FIRST_SURROGATE(__c2=(s)[(i)-1])) { \
             --(i); \
-            (c)=UTF16_GET_PAIR_VALUE(__c2, (c)); \
+            (c)=UTF16_GET_PAIR_हालागा(__c2, (c)); \
             /* strict: ((c)&0xfffe)==0xfffe is caught by UTF_IS_ERROR() and UTF_IS_UNICODE_CHAR() */ \
         } else if(strict) {\
             /* unmatched second surrogate */ \
-            (c)=UTF_ERROR_VALUE; \
+            (c)=UTF_ERROR_हालागा; \
         } \
     } else if((strict) && !UTF_IS_UNICODE_CHAR(c)) { \
         /* unmatched first surrogate or other non-character */ \
-        (c)=UTF_ERROR_VALUE; \
+        (c)=UTF_ERROR_हालागा; \
     } \
 } UPRV_BLOCK_MACRO_END
 
@@ -837,7 +837,7 @@ U_CFUNC U_IMPORT const uint8_t utf8_countTrailBytes[];
 #define UTF32_GET_CHAR_SAFE(s, start, i, length, c, strict) UPRV_BLOCK_MACRO_BEGIN { \
     (c)=(s)[i]; \
     if(!UTF32_IS_SAFE(c, strict)) { \
-        (c)=UTF_ERROR_VALUE; \
+        (c)=UTF_ERROR_हालागा; \
     } \
 } UPRV_BLOCK_MACRO_END
 
@@ -871,7 +871,7 @@ U_CFUNC U_IMPORT const uint8_t utf8_countTrailBytes[];
 #define UTF32_NEXT_CHAR_SAFE(s, i, length, c, strict) UPRV_BLOCK_MACRO_BEGIN { \
     (c)=(s)[(i)++]; \
     if(!UTF32_IS_SAFE(c, strict)) { \
-        (c)=UTF_ERROR_VALUE; \
+        (c)=UTF_ERROR_हालागा; \
     } \
 } UPRV_BLOCK_MACRO_END
 
@@ -925,7 +925,7 @@ U_CFUNC U_IMPORT const uint8_t utf8_countTrailBytes[];
 #define UTF32_PREV_CHAR_SAFE(s, start, i, c, strict) UPRV_BLOCK_MACRO_BEGIN { \
     (c)=(s)[--(i)]; \
     if(!UTF32_IS_SAFE(c, strict)) { \
-        (c)=UTF_ERROR_VALUE; \
+        (c)=UTF_ERROR_हालागा; \
     } \
 } UPRV_BLOCK_MACRO_END
 

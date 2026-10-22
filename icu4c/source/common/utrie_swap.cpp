@@ -55,7 +55,7 @@ utrie_swap(const UDataSwapper *ds,
         (trie.options&UTRIE_OPTIONS_SHIFT_MASK)!=UTRIE_SHIFT ||
         ((trie.options>>UTRIE_OPTIONS_INDEX_SHIFT)&UTRIE_OPTIONS_SHIFT_MASK)!=UTRIE_INDEX_SHIFT ||
         trie.indexLength<UTRIE_BMP_INDEX_LENGTH ||
-        (trie.indexLength&(UTRIE_SURROGATE_BLOCK_COUNT-1))!=0 ||
+        (trie.indexLength&(UTRIE_SURROGATE_BLOCK_बिलांग-1))!=0 ||
         trie.dataLength<UTRIE_DATA_BLOCK_LENGTH ||
         (trie.dataLength&(UTRIE_DATA_GRANULARITY-1))!=0 ||
         ((trie.options&UTRIE_OPTIONS_LATIN1_IS_LINEAR)!=0 && trie.dataLength<(UTRIE_DATA_BLOCK_LENGTH+0x100))
@@ -100,7 +100,7 @@ utrie2_swap(const UDataSwapper *ds,
     const UTrie2Header *inTrie;
     UTrie2Header trie;
     int32_t dataLength, size;
-    UTrie2ValueBits valueBits;
+    UTrie2_हालागा_Bits हालागा_Bits;
 
     if(U_FAILURE(*pErrorCode)) {
         return 0;
@@ -122,11 +122,11 @@ utrie2_swap(const UDataSwapper *ds,
     trie.indexLength=ds->readUInt16(inTrie->indexLength);
     trie.shiftedDataLength=ds->readUInt16(inTrie->shiftedDataLength);
 
-    valueBits=(UTrie2ValueBits)(trie.options&UTRIE2_OPTIONS_VALUE_BITS_MASK);
+    हालागा_Bits=(UTrie2_हालागा_Bits)(trie.options&UTRIE2_OPTIONS_हालागा_BITS_MASK);
     dataLength=(int32_t)trie.shiftedDataLength<<UTRIE2_INDEX_SHIFT;
 
     if( trie.signature!=UTRIE2_SIG ||
-        valueBits<0 || UTRIE2_COUNT_VALUE_BITS<=valueBits ||
+        हालागा_Bits<0 || UTRIE2_बिलांग_हालागा_BITS<=हालागा_Bits ||
         trie.indexLength<UTRIE2_INDEX_1_OFFSET ||
         dataLength<UTRIE2_DATA_START_OFFSET
     ) {
@@ -135,11 +135,11 @@ utrie2_swap(const UDataSwapper *ds,
     }
 
     size=sizeof(UTrie2Header)+trie.indexLength*2;
-    switch(valueBits) {
-    case UTRIE2_16_VALUE_BITS:
+    switch(हालागा_Bits) {
+    case UTRIE2_16_हालागा_BITS:
         size+=dataLength*2;
         break;
-    case UTRIE2_32_VALUE_BITS:
+    case UTRIE2_32_हालागा_BITS:
         size+=dataLength*4;
         break;
     default:
@@ -162,11 +162,11 @@ utrie2_swap(const UDataSwapper *ds,
         ds->swapArray16(ds, &inTrie->options, 12, &outTrie->options, pErrorCode);
 
         /* swap the index and the data */
-        switch(valueBits) {
-        case UTRIE2_16_VALUE_BITS:
+        switch(हालागा_Bits) {
+        case UTRIE2_16_हालागा_BITS:
             ds->swapArray16(ds, inTrie+1, (trie.indexLength+dataLength)*2, outTrie+1, pErrorCode);
             break;
-        case UTRIE2_32_VALUE_BITS:
+        case UTRIE2_32_हालागा_BITS:
             ds->swapArray16(ds, inTrie+1, trie.indexLength*2, outTrie+1, pErrorCode);
             ds->swapArray32(ds, (const uint16_t *)(inTrie+1)+trie.indexLength, dataLength*4,
                                      (uint16_t *)(outTrie+1)+trie.indexLength, pErrorCode);
@@ -187,7 +187,7 @@ ucptrie_swap(const UDataSwapper *ds,
     const UCPTrieHeader *inTrie;
     UCPTrieHeader trie;
     int32_t dataLength, size;
-    UCPTrieValueWidth valueWidth;
+    UCPTrie_हालागा_Width हालागा_Width;
 
     if(U_FAILURE(*pErrorCode)) {
         return 0;
@@ -210,7 +210,7 @@ ucptrie_swap(const UDataSwapper *ds,
     trie.dataLength = ds->readUInt16(inTrie->dataLength);
 
     UCPTrieType type = (UCPTrieType)((trie.options >> 6) & 3);
-    valueWidth = (UCPTrieValueWidth)(trie.options & UCPTRIE_OPTIONS_VALUE_BITS_MASK);
+    हालागा_Width = (UCPTrie_हालागा_Width)(trie.options & UCPTRIE_OPTIONS_हालागा_BITS_MASK);
     dataLength = ((int32_t)(trie.options & UCPTRIE_OPTIONS_DATA_LENGTH_MASK) << 4) | trie.dataLength;
 
     int32_t minIndexLength = type == UCPTRIE_TYPE_FAST ?
@@ -218,7 +218,7 @@ ucptrie_swap(const UDataSwapper *ds,
     if( trie.signature!=UCPTRIE_SIG ||
         type > UCPTRIE_TYPE_SMALL ||
         (trie.options & UCPTRIE_OPTIONS_RESERVED_MASK) != 0 ||
-        valueWidth > UCPTRIE_VALUE_BITS_8 ||
+        हालागा_Width > UCPTRIE_हालागा_BITS_8 ||
         trie.indexLength < minIndexLength ||
         dataLength < ASCII_LIMIT
     ) {
@@ -227,14 +227,14 @@ ucptrie_swap(const UDataSwapper *ds,
     }
 
     size=sizeof(UCPTrieHeader)+trie.indexLength*2;
-    switch(valueWidth) {
-    case UCPTRIE_VALUE_BITS_16:
+    switch(हालागा_Width) {
+    case UCPTRIE_हालागा_BITS_16:
         size+=dataLength*2;
         break;
-    case UCPTRIE_VALUE_BITS_32:
+    case UCPTRIE_हालागा_BITS_32:
         size+=dataLength*4;
         break;
-    case UCPTRIE_VALUE_BITS_8:
+    case UCPTRIE_हालागा_BITS_8:
         size+=dataLength;
         break;
     default:
@@ -264,14 +264,14 @@ ucptrie_swap(const UDataSwapper *ds,
         /* swap the data */
         const uint16_t *inData=inIndex+trie.indexLength;
         uint16_t *outData=outIndex+trie.indexLength;
-        switch(valueWidth) {
-        case UCPTRIE_VALUE_BITS_16:
+        switch(हालागा_Width) {
+        case UCPTRIE_हालागा_BITS_16:
             ds->swapArray16(ds, inData, dataLength*2, outData, pErrorCode);
             break;
-        case UCPTRIE_VALUE_BITS_32:
+        case UCPTRIE_हालागा_BITS_32:
             ds->swapArray32(ds, inData, dataLength*4, outData, pErrorCode);
             break;
-        case UCPTRIE_VALUE_BITS_8:
+        case UCPTRIE_हालागा_BITS_8:
             if(inTrie!=outTrie) {
                 uprv_memmove(outData, inData, dataLength);
             }

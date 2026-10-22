@@ -29,13 +29,13 @@
 U_NAMESPACE_BEGIN
 
 ICUResourceBundleFactory::ICUResourceBundleFactory()
-  : LocaleKeyFactory(VISIBLE)
+  : Locale_सुसि_Factory(VISIBLE)
   , _bundleName()
 {
 }
 
 ICUResourceBundleFactory::ICUResourceBundleFactory(const UnicodeString& bundleName)
-  : LocaleKeyFactory(VISIBLE)
+  : Locale_सुसि_Factory(VISIBLE)
   , _bundleName(bundleName)
 {
 }
@@ -74,7 +74,7 @@ ICUResourceBundleFactory::handleCreate(const Locale& loc, int32_t /* kind */, co
 UnicodeString&
 ICUResourceBundleFactory::debug(UnicodeString& result) const
 {
-    LocaleKeyFactory::debug(result);
+    Locale_सुसि_Factory::debug(result);
     result.append((UnicodeString)", bundle: ");
     return result.append(_bundleName);
 }

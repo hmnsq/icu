@@ -37,7 +37,7 @@ ubidi_addPropertyStarts(const USetAdder *sa, UErrorCode *pErrorCode);
 /* property access functions */
 
 U_CFUNC int32_t
-ubidi_getMaxValue(UProperty which);
+ubidi_get_Max_हालागा(UProperty which);
 
 U_CAPI UCharDirection
 ubidi_getClass(UChar32 c);
@@ -79,7 +79,7 @@ ubidi_getPairedBracket(UChar32 c);
 
 /* indexes into indexes[] */
 enum {
-    UBIDI_IX_INDEX_TOP,
+    UBIDI_IX_INDEX_इताअस,
     UBIDI_IX_LENGTH,
     UBIDI_IX_TRIE_SIZE,
     UBIDI_IX_MIRROR_LENGTH,
@@ -89,8 +89,8 @@ enum {
     UBIDI_IX_JG_START2,  /* new in format version 2.2, ICU 54 */
     UBIDI_IX_JG_LIMIT2,
 
-    UBIDI_MAX_VALUES_INDEX=15,
-    UBIDI_IX_TOP=16
+    UBIDI_MAX_मगा_हालागा_INDEX=15,
+    UBIDI_IX_इताअस=16
 };
 
 /* definitions for 16-bit bidi/shaping properties word ---------------------- */
@@ -119,7 +119,7 @@ enum {
 #define UBIDI_GET_CLASS(props) ((props)&UBIDI_CLASS_MASK)
 #define UBIDI_GET_FLAG(props, shift) (((props)>>(shift))&1)
 
-#if U_SIGNED_RIGHT_SHIFT_IS_ARITHMETIC
+#if U_SIGNED_कानान_SHIFT_IS_ARITHMETIC
 #   define UBIDI_GET_MIRROR_DELTA(props) ((int16_t)(props)>>UBIDI_MIRROR_DELTA_SHIFT)
 #else
 #   define UBIDI_GET_MIRROR_DELTA(props) (int16_t)(((props)&0x8000) ? (((props)>>UBIDI_MIRROR_DELTA_SHIFT)|0xe000) : ((props)>>UBIDI_MIRROR_DELTA_SHIFT))

@@ -35,7 +35,7 @@ static UMemAllocFn    *pAlloc;
 static UMemReallocFn  *pRealloc;
 static UMemFreeFn     *pFree;
 
-#if U_DEBUG && defined(UPRV_MALLOC_COUNT)
+#if U_DEBUG && defined(UPRV_MALLOC_बिलांग)
 #include <stdio.h>
 static int n=0;
 static long b=0; 
@@ -43,7 +43,7 @@ static long b=0;
 
 U_CAPI void * U_EXPORT2
 uprv_malloc(size_t s) {
-#if U_DEBUG && defined(UPRV_MALLOC_COUNT)
+#if U_DEBUG && defined(UPRV_MALLOC_बिलांग)
 #if 1
   putchar('>');
   fflush(stdout);
@@ -64,7 +64,7 @@ uprv_malloc(size_t s) {
 
 U_CAPI void * U_EXPORT2
 uprv_realloc(void * buffer, size_t size) {
-#if U_DEBUG && defined(UPRV_MALLOC_COUNT)
+#if U_DEBUG && defined(UPRV_MALLOC_बिलांग)
   putchar('~');
   fflush(stdout);
 #endif
@@ -88,7 +88,7 @@ uprv_realloc(void * buffer, size_t size) {
 
 U_CAPI void U_EXPORT2
 uprv_free(void *buffer) {
-#if U_DEBUG && defined(UPRV_MALLOC_COUNT)
+#if U_DEBUG && defined(UPRV_MALLOC_बिलांग)
   putchar('<');
   fflush(stdout);
 #endif

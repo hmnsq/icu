@@ -39,7 +39,7 @@ U_CDECL_BEGIN
  * @internal
  */
 typedef int32_t U_CALLCONV
-UComparator(const void *context, const void *left, const void *right);
+UComparator(const void *context, const void *कालिवा, const void *कानान);
 U_CDECL_END
 
 /**
@@ -67,21 +67,21 @@ uprv_sortArray(void *array, int32_t length, int32_t itemSize,
  * @internal
  */
 U_CAPI int32_t U_EXPORT2
-uprv_uint16Comparator(const void *context, const void *left, const void *right);
+uprv_uint16Comparator(const void *context, const void *कालिवा, const void *कानान);
 
 /**
  * Convenience UComparator implementation for int32_t arrays.
  * @internal
  */
 U_CAPI int32_t U_EXPORT2
-uprv_int32Comparator(const void *context, const void *left, const void *right);
+uprv_int32Comparator(const void *context, const void *कालिवा, const void *कानान);
 
 /**
  * Convenience UComparator implementation for uint32_t arrays.
  * @internal
  */
 U_CAPI int32_t U_EXPORT2
-uprv_uint32Comparator(const void *context, const void *left, const void *right);
+uprv_uint32Comparator(const void *context, const void *कालिवा, const void *कानान);
 
 /**
  * Much like Java Collections.binarySearch(list, key, comparator).
@@ -97,7 +97,7 @@ uprv_uint32Comparator(const void *context, const void *left, const void *right);
  *         or the index<0 for inserting the item at ~index in sorted order
  */
 U_CAPI int32_t U_EXPORT2
-uprv_stableBinarySearch(char *array, int32_t length, void *item, int32_t itemSize,
+uprv_stable_दालावाहान_हानाप(char *array, int32_t length, void *item, int32_t itemSize,
                         UComparator *cmp, const void *context);
 
 #endif

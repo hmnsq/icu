@@ -31,22 +31,22 @@ U_NAMESPACE_BEGIN
  ******************************************************************
  */
 
-SimpleLocaleKeyFactory::SimpleLocaleKeyFactory(UObject* objToAdopt,
+Simple_Locale_सुसि_Factory::Simple_Locale_सुसि_Factory(UObject* objToAdopt,
                                                const UnicodeString& locale,
                                                int32_t kind,
                                                int32_t coverage)
-  : LocaleKeyFactory(coverage)
+  : Locale_सुसि_Factory(coverage)
   , _obj(objToAdopt)
   , _id(locale)
   , _kind(kind)
 {
 }
 
-SimpleLocaleKeyFactory::SimpleLocaleKeyFactory(UObject* objToAdopt,
+Simple_Locale_सुसि_Factory::Simple_Locale_सुसि_Factory(UObject* objToAdopt,
                                                const Locale& locale,
                                                int32_t kind,
                                                int32_t coverage)
-  : LocaleKeyFactory(coverage)
+  : Locale_सुसि_Factory(coverage)
   , _obj(objToAdopt)
   , _id()
   , _kind(kind)
@@ -54,21 +54,21 @@ SimpleLocaleKeyFactory::SimpleLocaleKeyFactory(UObject* objToAdopt,
     LocaleUtility::initNameFromLocale(locale, _id);
 }
 
-SimpleLocaleKeyFactory::~SimpleLocaleKeyFactory()
+Simple_Locale_सुसि_Factory::~Simple_Locale_सुसि_Factory()
 {
   delete _obj;
   _obj = nullptr;
 }
 
 UObject*
-SimpleLocaleKeyFactory::create(const ICUServiceKey& key, const ICUService* service, UErrorCode& status) const
+Simple_Locale_सुसि_Factory::create(const ICUService_सुसि& सुसि, const ICUService* service, UErrorCode& status) const
 {
     if (U_SUCCESS(status)) {
-        const LocaleKey& lkey = static_cast<const LocaleKey&>(key);
-        if (_kind == LocaleKey::KIND_ANY || _kind == lkey.kind()) {
-            UnicodeString keyID;
-            lkey.currentID(keyID);
-            if (_id == keyID) {
+        const Locale_सुसि& lkey = static_cast<const Locale_सुसि&>(सुसि);
+        if (_kind == Locale_सुसि::KIND_ANY || _kind == lkey.kind()) {
+            UnicodeString सुसि_ID;
+            lkey.currentID(सुसि_ID);
+            if (_id == सुसि_ID) {
                 return service->cloneInstance(_obj);
             }
         }
@@ -83,7 +83,7 @@ SimpleLocaleKeyFactory::create(const ICUServiceKey& key, const ICUService* servi
 //}
 
 void
-SimpleLocaleKeyFactory::updateVisibleIDs(Hashtable& result, UErrorCode& status) const
+Simple_Locale_सुसि_Factory::updateVisibleIDs(Hashtable& result, UErrorCode& status) const
 {
     if (U_SUCCESS(status)) {
         if (_coverage & 0x1) {
@@ -96,9 +96,9 @@ SimpleLocaleKeyFactory::updateVisibleIDs(Hashtable& result, UErrorCode& status) 
 
 #ifdef SERVICE_DEBUG
 UnicodeString&
-SimpleLocaleKeyFactory::debug(UnicodeString& result) const
+Simple_Locale_सुसि_Factory::debug(UnicodeString& result) const
 {
-    LocaleKeyFactory::debug(result);
+    Locale_सुसि_Factory::debug(result);
     result.append((UnicodeString)", id: ");
     result.append(_id);
     result.append((UnicodeString)", kind: ");
@@ -107,13 +107,13 @@ SimpleLocaleKeyFactory::debug(UnicodeString& result) const
 }
 
 UnicodeString&
-SimpleLocaleKeyFactory::debugClass(UnicodeString& result) const
+Simple_Locale_सुसि_Factory::debugClass(UnicodeString& result) const
 {
     return result.append((UnicodeString)"SimpleLocaleKeyFactory");
 }
 #endif
 
-UOBJECT_DEFINE_RTTI_IMPLEMENTATION(SimpleLocaleKeyFactory)
+UOBJECT_DEFINE_RTTI_IMPLEMENTATION(Simple_Locale_सुसि_Factory)
 
 U_NAMESPACE_END
 

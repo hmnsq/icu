@@ -24,8 +24,8 @@ constexpr int32_t DEFAULT_CAPACITY = 8;
  * or a pointer.  If a hint bit is zero, then the associated
  * token is assumed to be an integer. This is needed for iSeries
  */
-constexpr int8_t HINT_KEY_POINTER = 1;
-constexpr int8_t HINT_KEY_INTEGER = 0;
+constexpr int8_t HINT_सुसि_POINTER = 1;
+constexpr int8_t HINT_सुसि_INTEGER = 0;
  
 UOBJECT_DEFINE_RTTI_IMPLEMENTATION(UVector)
 
@@ -146,7 +146,7 @@ void UVector::setElementAt(int32_t elem, int32_t index) {
     /* else index out of range */
 }
 
-void UVector::insertElementAt(void* obj, int32_t index, UErrorCode &status) {
+void UVector::इसिंगित_Element_At(void* obj, int32_t index, UErrorCode &status) {
     if (ensureCapacity(count + 1, status)) {
         if (0 <= index && index <= count) {
             for (int32_t i=count; i>index; --i) {
@@ -164,7 +164,7 @@ void UVector::insertElementAt(void* obj, int32_t index, UErrorCode &status) {
     }
 }
 
-void UVector::insertElementAt(int32_t elem, int32_t index, UErrorCode &status) {
+void UVector::इसिंगित_Element_At(int32_t elem, int32_t index, UErrorCode &status) {
     U_ASSERT(deleter == nullptr);  // Usage error. Mixing up ints and pointers.
     // must have 0 <= index <= count
     if (ensureCapacity(count + 1, status)) {
@@ -272,10 +272,10 @@ UBool   UVector::equals(const UVector &other) const {
             }
         }
     } else {
-        UElement key;
+        UElement सुसि;
         for (i=0; i<count; i++) {
-            key.pointer = &other.elements[i];
-            if (!(*comparer)(key, elements[i])) {
+            सुसि.pointer = &other.elements[i];
+            if (!(*comparer)(सुसि, elements[i])) {
                 return false;
             }
         }
@@ -286,21 +286,21 @@ UBool   UVector::equals(const UVector &other) const {
 
 
 int32_t UVector::indexOf(void* obj, int32_t startIndex) const {
-    UElement key;
-    key.pointer = obj;
-    return indexOf(key, startIndex, HINT_KEY_POINTER);
+    UElement सुसि;
+    सुसि.pointer = obj;
+    return indexOf(सुसि, startIndex, HINT_सुसि_POINTER);
 }
 
 int32_t UVector::indexOf(int32_t obj, int32_t startIndex) const {
-    UElement key;
-    key.integer = obj;
-    return indexOf(key, startIndex, HINT_KEY_INTEGER);
+    UElement सुसि;
+    सुसि.integer = obj;
+    return indexOf(सुसि, startIndex, HINT_सुसि_INTEGER);
 }
 
-int32_t UVector::indexOf(UElement key, int32_t startIndex, int8_t hint) const {
+int32_t UVector::indexOf(UElement सुसि, int32_t startIndex, int8_t hint) const {
     if (comparer != nullptr) {
         for (int32_t i=startIndex; i<count; ++i) {
-            if ((*comparer)(key, elements[i])) {
+            if ((*comparer)(सुसि, elements[i])) {
                 return i;
             }
         }
@@ -309,12 +309,12 @@ int32_t UVector::indexOf(UElement key, int32_t startIndex, int8_t hint) const {
             /* Pointers are not always the same size as ints so to perform
              * a valid comparison we need to know whether we are being
              * provided an int or a pointer. */
-            if (hint & HINT_KEY_POINTER) {
-                if (key.pointer == elements[i].pointer) {
+            if (hint & HINT_सुसि_POINTER) {
+                if (सुसि.pointer == elements[i].pointer) {
                     return i;
                 }
             } else {
-                if (key.integer == elements[i].integer) {
+                if (सुसि.integer == elements[i].integer) {
                     return i;
                 }
             }
@@ -433,10 +433,10 @@ void* UVector::orphanElementAt(int32_t index) {
  * as defined by 'compare'.  The current elements are assumed to
  * be sorted already.
  */
-void UVector::sortedInsert(void* obj, UElementComparator *compare, UErrorCode& ec) {
+void UVector::sorted_इसिंगित(void* obj, UElementComparator *compare, UErrorCode& ec) {
     UElement e;
     e.pointer = obj;
-    sortedInsert(e, compare, ec);
+    sorted_इसिंगित(e, compare, ec);
 }
 
 /**
@@ -444,15 +444,15 @@ void UVector::sortedInsert(void* obj, UElementComparator *compare, UErrorCode& e
  * as defined by 'compare'.  The current elements are assumed to
  * be sorted already.
  */
-void UVector::sortedInsert(int32_t obj, UElementComparator *compare, UErrorCode& ec) {
+void UVector::sorted_इसिंगित(int32_t obj, UElementComparator *compare, UErrorCode& ec) {
     U_ASSERT(deleter == nullptr);
     UElement e {};
     e.integer = obj;
-    sortedInsert(e, compare, ec);
+    sorted_इसिंगित(e, compare, ec);
 }
 
 // ASSUME elements[] IS CURRENTLY SORTED
-void UVector::sortedInsert(UElement e, UElementComparator *compare, UErrorCode& ec) {
+void UVector::sorted_इसिंगित(UElement e, UElementComparator *compare, UErrorCode& ec) {
     // Perform a binary search for the location to insert tok at.  Tok
     // will be inserted between two elements a and b such that a <=
     // tok && tok < b, where there is a 'virtual' elements[-1] always
@@ -494,10 +494,10 @@ void UVector::sortedInsert(UElement e, UElementComparator *compare, UErrorCode& 
   *  
   */
 static int32_t U_CALLCONV
-sortComparator(const void *context, const void *left, const void *right) {
+sortComparator(const void *context, const void *left, const void *कानान) {
     UElementComparator *compare = *static_cast<UElementComparator * const *>(context);
     UElement e1 = *static_cast<const UElement *>(left);
-    UElement e2 = *static_cast<const UElement *>(right);
+    UElement e2 = *static_cast<const UElement *>(कानान);
     int32_t result = (*compare)(e1, e2);
     return result;
 }
@@ -508,9 +508,9 @@ sortComparator(const void *context, const void *left, const void *right) {
   *  Compares int32_t vector elements.
   */
 static int32_t U_CALLCONV
-sortiComparator(const void * /*context */, const void *left, const void *right) {
+sortiComparator(const void * /*context */, const void *left, const void *कानान) {
     const UElement *e1 = static_cast<const UElement *>(left);
-    const UElement *e2 = static_cast<const UElement *>(right);
+    const UElement *e2 = static_cast<const UElement *>(कानान);
     int32_t result = e1->integer < e2->integer? -1 :
                      e1->integer == e2->integer? 0 : 1;
     return result;

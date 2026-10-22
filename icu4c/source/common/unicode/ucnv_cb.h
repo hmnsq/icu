@@ -85,7 +85,7 @@
  * @stable ICU 2.0
  */
 U_CAPI void U_EXPORT2
-ucnv_cbFromUWriteBytes (UConverterFromUnicodeArgs *args,
+ucnv_cbFromUWriteBytes (UConverter_From_Unicode_मगा_कातविरान *मगा_कातविरान_2,
                         const char* source,
                         int32_t length,
                         int32_t offsetIndex,
@@ -105,7 +105,7 @@ ucnv_cbFromUWriteBytes (UConverterFromUnicodeArgs *args,
  * @stable ICU 2.0
  */
 U_CAPI void U_EXPORT2 
-ucnv_cbFromUWriteSub (UConverterFromUnicodeArgs *args,
+ucnv_cbFromUWriteSub (UConverter_From_Unicode_मगा_कातविरान *मगा_कातविरान_2,
                       int32_t offsetIndex,
                       UErrorCode * err);
 
@@ -121,7 +121,7 @@ ucnv_cbFromUWriteSub (UConverterFromUnicodeArgs *args,
  * @see ucnv_cbToUWriteSub
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2 ucnv_cbFromUWriteUChars(UConverterFromUnicodeArgs *args,
+U_CAPI void U_EXPORT2 ucnv_cbFromUWriteUChars(UConverter_From_Unicode_मगा_कातविरान *मगा_कातविरान_2,
                              const UChar** source,
                              const UChar*  sourceLimit,
                              int32_t offsetIndex,
@@ -140,7 +140,7 @@ U_CAPI void U_EXPORT2 ucnv_cbFromUWriteUChars(UConverterFromUnicodeArgs *args,
  * @see ucnv_cbToUWriteSub
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2 ucnv_cbToUWriteUChars (UConverterToUnicodeArgs *args,
+U_CAPI void U_EXPORT2 ucnv_cbToUWriteUChars (UConverter_To_Unicode_मगा_कातविरान *मगा_कातविरान_2,
                                              const UChar* source,
                                              int32_t length,
                                              int32_t offsetIndex,
@@ -156,7 +156,7 @@ U_CAPI void U_EXPORT2 ucnv_cbToUWriteUChars (UConverterToUnicodeArgs *args,
  * @see ucnv_cbToUWriteUChars
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2 ucnv_cbToUWriteSub (UConverterToUnicodeArgs *args,
+U_CAPI void U_EXPORT2 ucnv_cbToUWriteSub (UConverter_To_Unicode_मगा_कातविरान *मगा_कातविरान_2,
                        int32_t offsetIndex,
                        UErrorCode * err);
 #endif

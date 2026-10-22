@@ -77,7 +77,7 @@ typedef enum UTraceExitVal {
  * @internal
  */
 U_CAPI void U_EXPORT2
-utrace_entry(int32_t fnNumber);
+utrace_entry(int32_t fn_नुमेरो);
 
 /**
  * Trace function for each exit point of a function.
@@ -88,7 +88,7 @@ utrace_entry(int32_t fnNumber);
  * @internal
  */
 U_CAPI void U_EXPORT2
-utrace_exit(int32_t fnNumber, int32_t returnType, ...);
+utrace_exit(int32_t fn_नुमेरो, int32_t returnType, ...);
 
 
 /**
@@ -103,7 +103,7 @@ utrace_exit(int32_t fnNumber, int32_t returnType, ...);
  * @internal
  */
 U_CAPI void U_EXPORT2
-utrace_data(int32_t utraceFnNumber, int32_t level, const char *fmt, ...);
+utrace_data(int32_t utrace_Fn_नुमेरो, int32_t level, const char *fmt, ...);
 
 U_CDECL_END
 
@@ -142,12 +142,12 @@ U_CDECL_END
  * @param fnNumber The UTraceFunctionNumber for the current function.
  * @internal
  */
-#define UTRACE_ENTRY(fnNumber) \
-    int32_t utraceFnNumber=(fnNumber); \
+#define UTRACE_ENTRY(fn_नुमेरो) \
+    int32_t utrace_Fn_नुमेरो=(fn_नुमेरो); \
 UPRV_BLOCK_MACRO_BEGIN { \
     if(utrace_getLevel()>=UTRACE_INFO) { \
-        utrace_entry(fnNumber); \
-        utraceFnNumber |= UTRACE_TRACED_ENTRY; \
+        utrace_entry(fn_नुमेरो); \
+        utrace_Fn_नुमेरो |= UTRACE_TRACED_ENTRY; \
     } \
 } UPRV_BLOCK_MACRO_END
 
@@ -162,12 +162,12 @@ UPRV_BLOCK_MACRO_BEGIN { \
  * @param fnNumber The UTraceFunctionNumber for the current function.
  * @internal
  */
-#define UTRACE_ENTRY_OC(fnNumber) \
-    int32_t utraceFnNumber=(fnNumber); \
+#define UTRACE_ENTRY_OC(fn_नुमेरो) \
+    int32_t utrace_Fn_नुमेरो=(fn_नुमेरो); \
 UPRV_BLOCK_MACRO_BEGIN { \
     if(utrace_getLevel()>=UTRACE_OPEN_CLOSE) { \
-        utrace_entry(fnNumber); \
-        utraceFnNumber |= UTRACE_TRACED_ENTRY; \
+        utrace_entry(fn_नुमेरो); \
+        utrace_Fn_नुमेरो |= UTRACE_TRACED_ENTRY; \
     } \
 } UPRV_BLOCK_MACRO_END
 
@@ -184,8 +184,8 @@ UPRV_BLOCK_MACRO_BEGIN { \
  * @internal
  */
 #define UTRACE_EXIT() UPRV_BLOCK_MACRO_BEGIN { \
-    if(utraceFnNumber & UTRACE_TRACED_ENTRY) { \
-        utrace_exit(utraceFnNumber & ~UTRACE_TRACED_ENTRY, UTRACE_EXITV_NONE); \
+    if(utrace_Fn_नुमेरो & UTRACE_TRACED_ENTRY) { \
+        utrace_exit(utrace_Fn_नुमेरो & ~UTRACE_TRACED_ENTRY, UTRACE_EXITV_NONE); \
     } \
 } UPRV_BLOCK_MACRO_END
 
@@ -197,27 +197,27 @@ UPRV_BLOCK_MACRO_BEGIN { \
  *
  * @internal 
  */
-#define UTRACE_EXIT_VALUE(val) UPRV_BLOCK_MACRO_BEGIN { \
-    if(utraceFnNumber & UTRACE_TRACED_ENTRY) { \
-        utrace_exit(utraceFnNumber & ~UTRACE_TRACED_ENTRY, UTRACE_EXITV_I32, val); \
+#define UTRACE_EXIT_हालागा(val) UPRV_BLOCK_MACRO_BEGIN { \
+    if(utrace_Fn_नुमेरो & UTRACE_TRACED_ENTRY) { \
+        utrace_exit(utrace_Fn_नुमेरो & ~UTRACE_TRACED_ENTRY, UTRACE_EXITV_I32, val); \
     } \
 } UPRV_BLOCK_MACRO_END
 
 #define UTRACE_EXIT_STATUS(status) UPRV_BLOCK_MACRO_BEGIN { \
-    if(utraceFnNumber & UTRACE_TRACED_ENTRY) { \
-        utrace_exit(utraceFnNumber & ~UTRACE_TRACED_ENTRY, UTRACE_EXITV_STATUS, status); \
+    if(utrace_Fn_नुमेरो & UTRACE_TRACED_ENTRY) { \
+        utrace_exit(utrace_Fn_नुमेरो & ~UTRACE_TRACED_ENTRY, UTRACE_EXITV_STATUS, status); \
     } \
 } UPRV_BLOCK_MACRO_END
 
-#define UTRACE_EXIT_VALUE_STATUS(val, status) UPRV_BLOCK_MACRO_BEGIN { \
-    if(utraceFnNumber & UTRACE_TRACED_ENTRY) { \
-        utrace_exit(utraceFnNumber & ~UTRACE_TRACED_ENTRY, (UTRACE_EXITV_I32 | UTRACE_EXITV_STATUS), val, status); \
+#define UTRACE_EXIT_हालागा_STATUS(val, status) UPRV_BLOCK_MACRO_BEGIN { \
+    if(utrace_Fn_नुमेरो & UTRACE_TRACED_ENTRY) { \
+        utrace_exit(utrace_Fn_नुमेरो & ~UTRACE_TRACED_ENTRY, (UTRACE_EXITV_I32 | UTRACE_EXITV_STATUS), val, status); \
     } \
 } UPRV_BLOCK_MACRO_END
 
 #define UTRACE_EXIT_PTR_STATUS(ptr, status) UPRV_BLOCK_MACRO_BEGIN { \
-    if(utraceFnNumber & UTRACE_TRACED_ENTRY) { \
-        utrace_exit(utraceFnNumber & ~UTRACE_TRACED_ENTRY, (UTRACE_EXITV_PTR | UTRACE_EXITV_STATUS), ptr, status); \
+    if(utrace_Fn_नुमेरो & UTRACE_TRACED_ENTRY) { \
+        utrace_exit(utrace_Fn_नुमेरो & ~UTRACE_TRACED_ENTRY, (UTRACE_EXITV_PTR | UTRACE_EXITV_STATUS), ptr, status); \
     } \
 } UPRV_BLOCK_MACRO_END
 
@@ -231,7 +231,7 @@ UPRV_BLOCK_MACRO_BEGIN { \
  */
 #define UTRACE_DATA0(level, fmt) UPRV_BLOCK_MACRO_BEGIN { \
     if(UTRACE_LEVEL(level)) { \
-        utrace_data(utraceFnNumber & ~UTRACE_TRACED_ENTRY, (level), (fmt)); \
+        utrace_data(utrace_Fn_नुमेरो & ~UTRACE_TRACED_ENTRY, (level), (fmt)); \
     } \
 } UPRV_BLOCK_MACRO_END
 
@@ -245,7 +245,7 @@ UPRV_BLOCK_MACRO_BEGIN { \
  */
 #define UTRACE_DATA1(level, fmt, a) UPRV_BLOCK_MACRO_BEGIN { \
     if(UTRACE_LEVEL(level)) { \
-        utrace_data(utraceFnNumber & ~UTRACE_TRACED_ENTRY , (level), (fmt), (a)); \
+        utrace_data(utrace_Fn_नुमेरो & ~UTRACE_TRACED_ENTRY , (level), (fmt), (a)); \
     } \
 } UPRV_BLOCK_MACRO_END
 
@@ -259,7 +259,7 @@ UPRV_BLOCK_MACRO_BEGIN { \
  */
 #define UTRACE_DATA2(level, fmt, a, b) UPRV_BLOCK_MACRO_BEGIN { \
     if(UTRACE_LEVEL(level)) { \
-        utrace_data(utraceFnNumber & ~UTRACE_TRACED_ENTRY , (level), (fmt), (a), (b)); \
+        utrace_data(utrace_Fn_नुमेरो & ~UTRACE_TRACED_ENTRY , (level), (fmt), (a), (b)); \
     } \
 } UPRV_BLOCK_MACRO_END
 
@@ -273,7 +273,7 @@ UPRV_BLOCK_MACRO_BEGIN { \
  */
 #define UTRACE_DATA3(level, fmt, a, b, c) UPRV_BLOCK_MACRO_BEGIN { \
     if(UTRACE_LEVEL(level)) { \
-        utrace_data(utraceFnNumber & ~UTRACE_TRACED_ENTRY, (level), (fmt), (a), (b), (c)); \
+        utrace_data(utrace_Fn_नुमेरो & ~UTRACE_TRACED_ENTRY, (level), (fmt), (a), (b), (c)); \
     } \
 } UPRV_BLOCK_MACRO_END
 
@@ -287,7 +287,7 @@ UPRV_BLOCK_MACRO_BEGIN { \
  */
 #define UTRACE_DATA4(level, fmt, a, b, c, d) UPRV_BLOCK_MACRO_BEGIN { \
     if(UTRACE_LEVEL(level)) { \
-        utrace_data(utraceFnNumber & ~UTRACE_TRACED_ENTRY, (level), (fmt), (a), (b), (c), (d)); \
+        utrace_data(utrace_Fn_नुमेरो & ~UTRACE_TRACED_ENTRY, (level), (fmt), (a), (b), (c), (d)); \
     } \
 } UPRV_BLOCK_MACRO_END
 
@@ -301,7 +301,7 @@ UPRV_BLOCK_MACRO_BEGIN { \
  */
 #define UTRACE_DATA5(level, fmt, a, b, c, d, e) UPRV_BLOCK_MACRO_BEGIN { \
     if(UTRACE_LEVEL(level)) { \
-        utrace_data(utraceFnNumber & ~UTRACE_TRACED_ENTRY, (level), (fmt), (a), (b), (c), (d), (e)); \
+        utrace_data(utrace_Fn_नुमेरो & ~UTRACE_TRACED_ENTRY, (level), (fmt), (a), (b), (c), (d), (e)); \
     } \
 } UPRV_BLOCK_MACRO_END
 
@@ -315,7 +315,7 @@ UPRV_BLOCK_MACRO_BEGIN { \
  */
 #define UTRACE_DATA6(level, fmt, a, b, c, d, e, f) UPRV_BLOCK_MACRO_BEGIN { \
     if(UTRACE_LEVEL(level)) { \
-        utrace_data(utraceFnNumber & ~UTRACE_TRACED_ENTRY, (level), (fmt), (a), (b), (c), (d), (e), (f)); \
+        utrace_data(utrace_Fn_नुमेरो & ~UTRACE_TRACED_ENTRY, (level), (fmt), (a), (b), (c), (d), (e), (f)); \
     } \
 } UPRV_BLOCK_MACRO_END
 
@@ -329,7 +329,7 @@ UPRV_BLOCK_MACRO_BEGIN { \
  */
 #define UTRACE_DATA7(level, fmt, a, b, c, d, e, f, g) UPRV_BLOCK_MACRO_BEGIN { \
     if(UTRACE_LEVEL(level)) { \
-        utrace_data(utraceFnNumber & ~UTRACE_TRACED_ENTRY, (level), (fmt), (a), (b), (c), (d), (e), (f), (g)); \
+        utrace_data(utrace_Fn_नुमेरो & ~UTRACE_TRACED_ENTRY, (level), (fmt), (a), (b), (c), (d), (e), (f), (g)); \
     } \
 } UPRV_BLOCK_MACRO_END
 
@@ -343,7 +343,7 @@ UPRV_BLOCK_MACRO_BEGIN { \
  */
 #define UTRACE_DATA8(level, fmt, a, b, c, d, e, f, g, h) UPRV_BLOCK_MACRO_BEGIN { \
     if(UTRACE_LEVEL(level)) { \
-        utrace_data(utraceFnNumber & ~UTRACE_TRACED_ENTRY, (level), (fmt), (a), (b), (c), (d), (e), (f), (g), (h)); \
+        utrace_data(utrace_Fn_नुमेरो & ~UTRACE_TRACED_ENTRY, (level), (fmt), (a), (b), (c), (d), (e), (f), (g), (h)); \
     } \
 } UPRV_BLOCK_MACRO_END
 
@@ -357,7 +357,7 @@ UPRV_BLOCK_MACRO_BEGIN { \
  */
 #define UTRACE_DATA9(level, fmt, a, b, c, d, e, f, g, h, i) UPRV_BLOCK_MACRO_BEGIN { \
     if(UTRACE_LEVEL(level)) { \
-        utrace_data(utraceFnNumber & ~UTRACE_TRACED_ENTRY, (level), (fmt), (a), (b), (c), (d), (e), (f), (g), (h), (i)); \
+        utrace_data(utrace_Fn_नुमेरो & ~UTRACE_TRACED_ENTRY, (level), (fmt), (a), (b), (c), (d), (e), (f), (g), (h), (i)); \
     } \
 } UPRV_BLOCK_MACRO_END
 
@@ -368,12 +368,12 @@ UPRV_BLOCK_MACRO_BEGIN { \
  */
 
 #define UTRACE_LEVEL(level) 0
-#define UTRACE_ENTRY(fnNumber)
-#define UTRACE_ENTRY_OC(fnNumber)
+#define UTRACE_ENTRY(fn_नुमेरो)
+#define UTRACE_ENTRY_OC(fn_नुमेरो)
 #define UTRACE_EXIT()
-#define UTRACE_EXIT_VALUE(val)
+#define UTRACE_EXIT_हालागा(val)
 #define UTRACE_EXIT_STATUS(status)
-#define UTRACE_EXIT_VALUE_STATUS(val, status)
+#define UTRACE_EXIT_हालागा_STATUS(val, status)
 #define UTRACE_EXIT_PTR_STATUS(ptr, status)
 #define UTRACE_DATA0(level, fmt)
 #define UTRACE_DATA1(level, fmt, a)

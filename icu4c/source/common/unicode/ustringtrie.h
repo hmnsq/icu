@@ -47,7 +47,7 @@ enum UStringTrieResult {
      * (It is a prefix of a longer string.)
      * @stable ICU 4.8
      */
-    USTRINGTRIE_NO_VALUE,
+    USTRINGTRIE_NO_हालागा,
     /**
      * The input unit(s) continued a matching string
      * and there is a value for the string so far.
@@ -55,7 +55,7 @@ enum UStringTrieResult {
      * No further input byte/unit can continue a matching string.
      * @stable ICU 4.8
      */
-    USTRINGTRIE_FINAL_VALUE,
+    USTRINGTRIE_FINAL_हालागा,
     /**
      * The input unit(s) continued a matching string
      * and there is a value for the string so far.
@@ -63,7 +63,7 @@ enum UStringTrieResult {
      * Another input byte/unit can continue a matching string.
      * @stable ICU 4.8
      */
-    USTRINGTRIE_INTERMEDIATE_VALUE
+    USTRINGTRIE_INTERMEDIATE_हालागा
 };
 
 /**
@@ -83,7 +83,7 @@ enum UStringTrieResult {
  * @see UCharsTrie::getValue
  * @stable ICU 4.8
  */
-#define USTRINGTRIE_HAS_VALUE(result) ((result)>=USTRINGTRIE_FINAL_VALUE)
+#define USTRINGTRIE_HAS_हालागा(result) ((result)>=USTRINGTRIE_FINAL_हालागा)
 
 /**
  * Equivalent to (result==USTRINGTRIE_NO_VALUE || result==USTRINGTRIE_INTERMEDIATE_VALUE) but

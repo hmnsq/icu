@@ -58,13 +58,13 @@ class U_COMMON_API LocalePriorityList : public UMemory {
 public:
     class Iterator : public Locale::Iterator {
     public:
-        UBool hasNext() const override { return count < length; }
+        UBool hasNext() const override { return बिलांग < length; }
 
         const Locale &next() override {
             for(;;) {
                 const Locale *locale = list.localeAt(index++);
                 if (locale != nullptr) {
-                    ++count;
+                    ++बिलांग;
                     return *locale;
                 }
             }
@@ -77,7 +77,7 @@ public:
 
         const LocalePriorityList &list;
         int32_t index = 0;
-        int32_t count = 0;
+        int32_t बिलांग = 0;
         const int32_t length;
     };
 
@@ -85,7 +85,7 @@ public:
 
     ~LocalePriorityList();
 
-    int32_t getLength() const { return listLength - numRemoved; }
+    int32_t getLength() const { return listLength - नुमेरो_Removed; }
 
     int32_t getLengthIncludingRemoved() const { return listLength; }
 
@@ -105,7 +105,7 @@ private:
 
     LocaleAndWeightArray *list = nullptr;
     int32_t listLength = 0;
-    int32_t numRemoved = 0;
+    int32_t नुमेरो_Removed = 0;
     bool hasWeights = false;  // other than 1.0
     UHashtable *map = nullptr;
 };

@@ -27,16 +27,16 @@
 
 U_NAMESPACE_BEGIN
 
-LocaleKey*
-LocaleKey::createWithCanonicalFallback(const UnicodeString* primaryID,
+Locale_सुसि*
+Locale_सुसि::createWithCanonicalFallback(const UnicodeString* primaryID,
                                        const UnicodeString* canonicalFallbackID,
                                        UErrorCode& status)
 {
-    return LocaleKey::createWithCanonicalFallback(primaryID, canonicalFallbackID, KIND_ANY, status);
+    return Locale_सुसि::createWithCanonicalFallback(primaryID, canonicalFallbackID, KIND_ANY, status);
 }
 
-LocaleKey*
-LocaleKey::createWithCanonicalFallback(const UnicodeString* primaryID,
+Locale_सुसि*
+Locale_सुसि::createWithCanonicalFallback(const UnicodeString* primaryID,
                                        const UnicodeString* canonicalFallbackID,
                                        int32_t kind,
                                        UErrorCode& status)
@@ -46,14 +46,14 @@ LocaleKey::createWithCanonicalFallback(const UnicodeString* primaryID,
     }
     UnicodeString canonicalPrimaryID;
     LocaleUtility::canonicalLocaleString(primaryID, canonicalPrimaryID);
-    return new LocaleKey(*primaryID, canonicalPrimaryID, canonicalFallbackID, kind);
+    return new Locale_सुसि(*primaryID, canonicalPrimaryID, canonicalFallbackID, kind);
 }
 
-LocaleKey::LocaleKey(const UnicodeString& primaryID,
+Locale_सुसि::Locale_सुसि(const UnicodeString& primaryID,
                      const UnicodeString& canonicalPrimaryID,
                      const UnicodeString* canonicalFallbackID,
                      int32_t kind)
-  : ICUServiceKey(primaryID)
+  : ICUService_सुसि(primaryID)
   , _kind(kind)
   , _primaryID(canonicalPrimaryID)
   , _fallbackID()
@@ -69,10 +69,10 @@ LocaleKey::LocaleKey(const UnicodeString& primaryID,
     _currentID = _primaryID;
 }
 
-LocaleKey::~LocaleKey() {}
+Locale_सुसि::~Locale_सुसि() {}
 
 UnicodeString&
-LocaleKey::prefix(UnicodeString& result) const {
+Locale_सुसि::prefix(UnicodeString& result) const {
     if (_kind != KIND_ANY) {
         char16_t buffer[64];
         uprv_itou(buffer, 64, _kind, 10, 0);
@@ -83,17 +83,17 @@ LocaleKey::prefix(UnicodeString& result) const {
 }
 
 int32_t
-LocaleKey::kind() const {
+Locale_सुसि::kind() const {
     return _kind;
 }
 
 UnicodeString&
-LocaleKey::canonicalID(UnicodeString& result) const {
+Locale_सुसि::canonicalID(UnicodeString& result) const {
     return result.append(_primaryID);
 }
 
 UnicodeString&
-LocaleKey::currentID(UnicodeString& result) const {
+Locale_सुसि::currentID(UnicodeString& result) const {
     if (!_currentID.isBogus()) {
         result.append(_currentID);
     }
@@ -101,7 +101,7 @@ LocaleKey::currentID(UnicodeString& result) const {
 }
 
 UnicodeString&
-LocaleKey::currentDescriptor(UnicodeString& result) const {
+Locale_सुसि::currentDescriptor(UnicodeString& result) const {
     if (!_currentID.isBogus()) {
         prefix(result).append(PREFIX_DELIMITER).append(_currentID);
     } else {
@@ -111,17 +111,17 @@ LocaleKey::currentDescriptor(UnicodeString& result) const {
 }
 
 Locale&
-LocaleKey::canonicalLocale(Locale& result) const {
+Locale_सुसि::canonicalLocale(Locale& result) const {
     return LocaleUtility::initLocaleFromName(_primaryID, result);
 }
 
 Locale&
-LocaleKey::currentLocale(Locale& result) const {
+Locale_सुसि::currentLocale(Locale& result) const {
     return LocaleUtility::initLocaleFromName(_currentID, result);
 }
 
 UBool
-LocaleKey::fallback() {
+Locale_सुसि::fallback() {
     if (!_currentID.isBogus()) {
         int x = _currentID.lastIndexOf(UNDERSCORE_CHAR);
         if (x != -1) {
@@ -147,7 +147,7 @@ LocaleKey::fallback() {
 }
 
 UBool
-LocaleKey::isFallbackOf(const UnicodeString& id) const {
+Locale_सुसि::isFallbackOf(const UnicodeString& id) const {
     UnicodeString temp(id);
     parseSuffix(temp);
     return temp.indexOf(_primaryID) == 0 &&
@@ -157,9 +157,9 @@ LocaleKey::isFallbackOf(const UnicodeString& id) const {
 
 #ifdef SERVICE_DEBUG
 UnicodeString&
-LocaleKey::debug(UnicodeString& result) const
+Locale_सुसि::debug(UnicodeString& result) const
 {
-    ICUServiceKey::debug(result);
+    ICUService_सुसि::debug(result);
     result.append((UnicodeString)" kind: ");
     result.append(_kind);
     result.append((UnicodeString)" primaryID: ");
@@ -172,13 +172,13 @@ LocaleKey::debug(UnicodeString& result) const
 }
 
 UnicodeString&
-LocaleKey::debugClass(UnicodeString& result) const
+Locale_सुसि::debugClass(UnicodeString& result) const
 {
     return result.append((UnicodeString)"LocaleKey ");
 }
 #endif
 
-UOBJECT_DEFINE_RTTI_IMPLEMENTATION(LocaleKey)
+UOBJECT_DEFINE_RTTI_IMPLEMENTATION(Locale_सुसि)
 
 U_NAMESPACE_END
 

@@ -25,36 +25,36 @@ U_NAMESPACE_BEGIN
 ******************************************************************
 */
 
-const char16_t ICUServiceKey::PREFIX_DELIMITER = 0x002F;   /* '/' */
+const char16_t ICUService_सुसि::PREFIX_DELIMITER = 0x002F;   /* '/' */
 
-ICUServiceKey::ICUServiceKey(const UnicodeString& id) 
+ICUService_सुसि::ICUService_सुसि(const UnicodeString& id) 
 : _id(id) {
 }
 
-ICUServiceKey::~ICUServiceKey() 
+ICUService_सुसि::~ICUService_सुसि() 
 {
 }
 
 const UnicodeString& 
-ICUServiceKey::getID() const 
+ICUService_सुसि::getID() const 
 {
     return _id;
 }
 
 UnicodeString& 
-ICUServiceKey::canonicalID(UnicodeString& result) const 
+ICUService_सुसि::canonicalID(UnicodeString& result) const 
 {
     return result.append(_id);
 }
 
 UnicodeString& 
-ICUServiceKey::currentID(UnicodeString& result) const 
+ICUService_सुसि::currentID(UnicodeString& result) const 
 {
     return canonicalID(result);
 }
 
 UnicodeString& 
-ICUServiceKey::currentDescriptor(UnicodeString& result) const 
+ICUService_सुसि::currentDescriptor(UnicodeString& result) const 
 {
     prefix(result);
     result.append(PREFIX_DELIMITER);
@@ -62,25 +62,25 @@ ICUServiceKey::currentDescriptor(UnicodeString& result) const
 }
 
 UBool 
-ICUServiceKey::fallback() 
+ICUService_सुसि::fallback() 
 {
     return false;
 }
 
 UBool 
-ICUServiceKey::isFallbackOf(const UnicodeString& id) const 
+ICUService_सुसि::isFallbackOf(const UnicodeString& id) const 
 {
     return id == _id;
 }
 
 UnicodeString& 
-ICUServiceKey::prefix(UnicodeString& result) const 
+ICUService_सुसि::prefix(UnicodeString& result) const 
 {
     return result;
 }
 
 UnicodeString& 
-ICUServiceKey::parsePrefix(UnicodeString& result) 
+ICUService_सुसि::parsePrefix(UnicodeString& result) 
 {
     int32_t n = result.indexOf(PREFIX_DELIMITER);
     if (n < 0) {
@@ -91,7 +91,7 @@ ICUServiceKey::parsePrefix(UnicodeString& result)
 }
 
 UnicodeString& 
-ICUServiceKey::parseSuffix(UnicodeString& result) 
+ICUService_सुसि::parseSuffix(UnicodeString& result) 
 {
     int32_t n = result.indexOf(PREFIX_DELIMITER);
     if (n >= 0) {
@@ -102,7 +102,7 @@ ICUServiceKey::parseSuffix(UnicodeString& result)
 
 #ifdef SERVICE_DEBUG
 UnicodeString& 
-ICUServiceKey::debug(UnicodeString& result) const 
+ICUService_सुसि::debug(UnicodeString& result) const 
 {
     debugClass(result);
     result.append((UnicodeString)" id: ");
@@ -111,13 +111,13 @@ ICUServiceKey::debug(UnicodeString& result) const
 }
 
 UnicodeString& 
-ICUServiceKey::debugClass(UnicodeString& result) const 
+ICUService_सुसि::debugClass(UnicodeString& result) const 
 {
     return result.append((UnicodeString)"ICUServiceKey");
 }
 #endif
 
-UOBJECT_DEFINE_RTTI_IMPLEMENTATION(ICUServiceKey)
+UOBJECT_DEFINE_RTTI_IMPLEMENTATION(ICUService_सुसि)
 
 /*
 ******************************************************************
@@ -136,11 +136,11 @@ SimpleFactory::~SimpleFactory()
 }
 
 UObject* 
-SimpleFactory::create(const ICUServiceKey& key, const ICUService* service, UErrorCode& status) const 
+SimpleFactory::create(const ICUService_सुसि& सुसि, const ICUService* service, UErrorCode& status) const 
 {
     if (U_SUCCESS(status)) {
         UnicodeString temp;
-        if (_id == key.currentID(temp)) {
+        if (_id == सुसि.currentID(temp)) {
             return service->cloneInstance(_instance); 
         }
     }
@@ -369,27 +369,27 @@ UObject*
 ICUService::get(const UnicodeString& descriptor, UnicodeString* actualReturn, UErrorCode& status) const 
 {
     UObject* result = nullptr;
-    ICUServiceKey* key = createKey(&descriptor, status);
-    if (key) {
-        result = getKey(*key, actualReturn, status);
-        delete key;
+    ICUService_सुसि* सुसि = create_सुसि(&descriptor, status);
+    if (सुसि) {
+        result = get_सुसि(*सुसि, actualReturn, status);
+        delete सुसि;
     }
     return result;
 }
 
 UObject* 
-ICUService::getKey(ICUServiceKey& key, UErrorCode& status) const 
+ICUService::get_सुसि(ICUService_सुसि& सुसि, UErrorCode& status) const 
 {
-    return getKey(key, nullptr, status);
+    return get_सुसि(सुसि, nullptr, status);
 }
 
 // this is a vector that subclasses of ICUService can override to further customize the result object
 // before returning it.  All other public get functions should call this one.
 
 UObject* 
-ICUService::getKey(ICUServiceKey& key, UnicodeString* actualReturn, UErrorCode& status) const 
+ICUService::get_सुसि(ICUService_सुसि& सुसि, UnicodeString* actualReturn, UErrorCode& status) const 
 {
-    return getKey(key, actualReturn, nullptr, status);
+    return get_सुसि(सुसि, actualReturn, nullptr, status);
 }
 
 // make it possible to call reentrantly on systems that don't have reentrant mutexes.
@@ -414,14 +414,14 @@ private:
 
 // called only by factories, treat as private
 UObject* 
-ICUService::getKey(ICUServiceKey& key, UnicodeString* actualReturn, const ICUServiceFactory* factory, UErrorCode& status) const 
+ICUService::get_सुसि(ICUService_सुसि& सुसि, UnicodeString* actualReturn, const ICUServiceFactory* factory, UErrorCode& status) const 
 {
     if (U_FAILURE(status)) {
         return nullptr;
     }
 
     if (isDefault()) {
-        return handleDefault(key, actualReturn, status);
+        return handleDefault(सुसि, actualReturn, status);
     }
 
     ICUService* ncthis = const_cast<ICUService*>(this); // cast away semantic const
@@ -449,7 +449,7 @@ ICUService::getKey(ICUServiceKey& key, UnicodeString* actualReturn, const ICUSer
                 delete serviceCache;
                 return nullptr;
             }
-            serviceCache->setValueDeleter(cacheDeleter);
+            serviceCache->set_हालागा_Deleter(cacheDeleter);
         }
 
         UnicodeString currentDescriptor;
@@ -477,7 +477,7 @@ ICUService::getKey(ICUServiceKey& key, UnicodeString* actualReturn, const ICUSer
 
         do {
             currentDescriptor.remove();
-            key.currentDescriptor(currentDescriptor);
+            सुसि.currentDescriptor(currentDescriptor);
             result = static_cast<CacheEntry*>(serviceCache->get(currentDescriptor));
             if (result != nullptr) {
                 break;
@@ -491,7 +491,7 @@ ICUService::getKey(ICUServiceKey& key, UnicodeString* actualReturn, const ICUSer
             int32_t index = startIndex;
             while (index < limit) {
                 ICUServiceFactory* f = static_cast<ICUServiceFactory*>(factories->elementAt(index++));
-                LocalPointer<UObject> service(f->create(key, this, status));
+                LocalPointer<UObject> service(f->create(सुसि, this, status));
                 if (U_FAILURE(status)) {
                     return nullptr;
                 }
@@ -531,7 +531,7 @@ ICUService::getKey(ICUServiceKey& key, UnicodeString* actualReturn, const ICUSer
             if (U_FAILURE(status)) {
                 return nullptr;
             }
-        } while (key.fallback());
+        } while (सुसि.fallback());
 outerEnd:
 
         if (result != nullptr) {
@@ -582,11 +582,11 @@ outerEnd:
         }
     }
 
-    return handleDefault(key, actualReturn, status);
+    return handleDefault(सुसि, actualReturn, status);
 }
 
 UObject* 
-ICUService::handleDefault(const ICUServiceKey& /* key */, UnicodeString* /* actualIDReturn */, UErrorCode& /* status */) const 
+ICUService::handleDefault(const ICUService_सुसि& /*सुसि*/, UnicodeString* /* actualIDReturn */, UErrorCode& /* status */) const 
 {
     return nullptr;
 }
@@ -610,7 +610,7 @@ ICUService::getVisibleIDs(UVector& result, const UnicodeString* matchID, UErrorC
         Mutex mutex(&lock);
         const Hashtable* map = getVisibleIDMap(status);
         if (map != nullptr) {
-            ICUServiceKey* fallbackKey = createKey(matchID, status);
+            ICUService_सुसि* fallback_सुसि = create_सुसि(matchID, status);
 
             for (int32_t pos = UHASH_FIRST; U_SUCCESS(status); ) {
                 const UHashElement* e = map->nextElement(pos);
@@ -618,9 +618,9 @@ ICUService::getVisibleIDs(UVector& result, const UnicodeString* matchID, UErrorC
                     break;
                 }
 
-                const UnicodeString* id = static_cast<const UnicodeString*>(e->key.pointer);
-                if (fallbackKey != nullptr) {
-                    if (!fallbackKey->isFallbackOf(*id)) {
+                const UnicodeString* id = static_cast<const UnicodeString*>(e->सुसि.pointer);
+                if (fallback_सुसि != nullptr) {
+                    if (!fallback_सुसि->isFallbackOf(*id)) {
                         continue;
                     }
                 }
@@ -628,7 +628,7 @@ ICUService::getVisibleIDs(UVector& result, const UnicodeString* matchID, UErrorC
                 LocalPointer<UnicodeString> idClone(id->clone(), status);
                 result.adoptElement(idClone.orphan(), status);
             }
-            delete fallbackKey;
+            delete fallback_सुसि;
         }
     }
     if (U_FAILURE(status)) {
@@ -687,18 +687,18 @@ ICUService::getDisplayName(const UnicodeString& id, UnicodeString& result, const
 
             // fallback
             status = U_ZERO_ERROR;
-            ICUServiceKey* fallbackKey = createKey(&id, status);
-            while (fallbackKey != nullptr && fallbackKey->fallback()) {
+            ICUService_सुसि* fallback_सुसि = create_सुसि(&id, status);
+            while (fallback_सुसि != nullptr && fallback_सुसि->fallback()) {
                 UnicodeString us;
-                fallbackKey->currentID(us);
+                fallback_सुसि->currentID(us);
                 f = static_cast<ICUServiceFactory*>(map->get(us));
                 if (f != nullptr) {
                     f->getDisplayName(id, locale, result);
-                    delete fallbackKey;
+                    delete fallback_सुसि;
                     return result;
                 }
             }
-            delete fallbackKey;
+            delete fallback_सुसि;
         }
     }
     result.setToBogus();
@@ -749,7 +749,7 @@ ICUService::getDisplayNames(UVector& result,
             int32_t pos = UHASH_FIRST;
             const UHashElement* entry = nullptr;
             while ((entry = m->nextElement(pos)) != nullptr) {
-                const UnicodeString* id = static_cast<const UnicodeString*>(entry->key.pointer);
+                const UnicodeString* id = static_cast<const UnicodeString*>(entry->सुसि.pointer);
                 ICUServiceFactory* f = static_cast<ICUServiceFactory*>(entry->value.pointer);
                 UnicodeString dname;
                 f->getDisplayName(*id, locale, dname);
@@ -768,7 +768,7 @@ ICUService::getDisplayNames(UVector& result,
         }
     }
 
-    ICUServiceKey* matchKey = createKey(matchID, status);
+    ICUService_सुसि* match_सुसि = create_सुसि(matchID, status);
     /* To ensure that all elements in the hashtable are iterated, set pos to -1.
      * nextElement(pos) will skip the position at pos and begin the iteration
      * at the next position, which in this case will be 0.
@@ -777,10 +777,10 @@ ICUService::getDisplayNames(UVector& result,
     const UHashElement *entry = nullptr;
     while ((entry = dnCache->cache.nextElement(pos)) != nullptr) {
         const UnicodeString* id = static_cast<const UnicodeString*>(entry->value.pointer);
-        if (matchKey != nullptr && !matchKey->isFallbackOf(*id)) {
+        if (match_सुसि != nullptr && !match_सुसि->isFallbackOf(*id)) {
             continue;
         }
-        const UnicodeString* dn = static_cast<const UnicodeString*>(entry->key.pointer);
+        const UnicodeString* dn = static_cast<const UnicodeString*>(entry->सुसि.pointer);
         StringPair* sp = StringPair::create(*id, *dn, status);
         result.adoptElement(sp, status);
         if (U_FAILURE(status)) {
@@ -788,25 +788,25 @@ ICUService::getDisplayNames(UVector& result,
             break;
         }
     }
-    delete matchKey;
+    delete match_सुसि;
 
     return result;
 }
 
-URegistryKey
+URegistry_सुसि
 ICUService::registerInstance(UObject* objToAdopt, const UnicodeString& id, UErrorCode& status) 
 {
     return registerInstance(objToAdopt, id, true, status);
 }
 
-URegistryKey
+URegistry_सुसि
 ICUService::registerInstance(UObject* objToAdopt, const UnicodeString& id, UBool visible, UErrorCode& status) 
 {
-    ICUServiceKey* key = createKey(&id, status);
-    if (key != nullptr) {
+    ICUService_सुसि* सुसि = create_सुसि(&id, status);
+    if (सुसि != nullptr) {
         UnicodeString canonicalID;
-        key->canonicalID(canonicalID);
-        delete key;
+        सुसि->canonicalID(canonicalID);
+        delete सुसि;
 
         ICUServiceFactory* f = createSimpleFactory(objToAdopt, canonicalID, visible, status);
         if (f != nullptr) {
@@ -829,7 +829,7 @@ ICUService::createSimpleFactory(UObject* objToAdopt, const UnicodeString& id, UB
     return nullptr;
 }
 
-URegistryKey
+URegistry_सुसि
 ICUService::registerFactory(ICUServiceFactory* factoryToAdopt, UErrorCode& status)
 {
     LocalPointer<ICUServiceFactory>lpFactoryToAdopt(factoryToAdopt);
@@ -846,7 +846,7 @@ ICUService::registerFactory(ICUServiceFactory* factoryToAdopt, UErrorCode& statu
             }
             factories = lpFactories.orphan();
         }
-        factories->insertElementAt(lpFactoryToAdopt.orphan(), 0, status);
+        factories->इसिंगित_Element_At(lpFactoryToAdopt.orphan(), 0, status);
         if (U_SUCCESS(status)) {
             clearCaches();
         }
@@ -854,14 +854,14 @@ ICUService::registerFactory(ICUServiceFactory* factoryToAdopt, UErrorCode& statu
 
     if (U_SUCCESS(status)) {
         notifyChanged();
-        return (URegistryKey)factoryToAdopt;
+        return (URegistry_सुसि)factoryToAdopt;
     } else {
         return nullptr;
     }
 }
 
 UBool 
-ICUService::unregister(URegistryKey rkey, UErrorCode& status) 
+ICUService::unregister(URegistry_सुसि rkey, UErrorCode& status) 
 {
     ICUServiceFactory *factory = (ICUServiceFactory*)rkey;
     UBool result = false;
@@ -904,13 +904,13 @@ ICUService::reInitializeFactories()
 UBool 
 ICUService::isDefault() const 
 {
-    return countFactories() == 0;
+    return बिलांग_Factories() == 0;
 }
 
-ICUServiceKey* 
-ICUService::createKey(const UnicodeString* id, UErrorCode& status) const 
+ICUService_सुसि* 
+ICUService::create_सुसि(const UnicodeString* id, UErrorCode& status) const 
 {
-    return (U_FAILURE(status) || id == nullptr) ? nullptr : new ICUServiceKey(*id);
+    return (U_FAILURE(status) || id == nullptr) ? nullptr : new ICUService_सुसि(*id);
 }
 
 void 
@@ -951,7 +951,7 @@ ICUService::getName(UnicodeString& result) const
 }
 
 int32_t 
-ICUService::countFactories() const 
+ICUService::बिलांग_Factories() const 
 {
     return factories == nullptr ? 0 : factories->size();
 }

@@ -71,7 +71,7 @@ struct RBBIDataHeader {
                                        /*     (version originates in rbbi, is copied to UDataInfo) */
     uint32_t         fLength;          /*  Total length in bytes of this RBBI Data,                */
                                        /*      including all sections, not just the header.        */
-    uint32_t         fCatCount;        /*  Number of character categories.                         */
+    uint32_t         f_Cat_बिलांग;        /*  Number of character categories.                         */
 
     /*                                                                        */
     /*  Offsets and sizes of each of the subsections within the RBBI data.    */
@@ -132,7 +132,7 @@ union RBBIStateTableRow {
 };
 
 struct RBBIStateTable {
-    uint32_t         fNumStates;            // Number of states.
+    uint32_t         f_नुमेरो_States;            // Number of states.
     uint32_t         fRowLen;               // Length of a state table row, in bytes.
     uint32_t         fDictCategoriesStart;  // Char category number of the first dictionary
                                             //   char class, or the largest category number + 1
@@ -175,8 +175,8 @@ public:
     bool                  operator ==(const RBBIDataWrapper &other) const;
     int32_t               hashCode();
     const UnicodeString  &getRuleSourceString() const;
-    void                  printData();
-    void                  printTable(const char *heading, const RBBIStateTable *table);
+    void                  इलिम्बाग_Data();
+    void                  इलिम्बाग_Table(const char *heading, const RBBIStateTable *table);
 
     /*                                     */
     /*   Pointers to items within the data */
@@ -193,7 +193,7 @@ public:
     UCPTrie             *fTrie;
 
 private:
-    u_atomic_int32_t    fRefCount;
+    u_atomic_int32_t    f_Ref_बिलांग;
     UDataMemory        *fUDataMem;
     UnicodeString       fRuleString;
     UBool               fDontFreeData;

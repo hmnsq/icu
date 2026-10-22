@@ -56,7 +56,7 @@
  * (BSR: Bit Scan Reverse, scans for a 1-bit, starting from the MSB)
  */
 U_CAPI const uint8_t
-utf8_countTrailBytes[256]={
+utf8_बिलांग_Trail_Bytes[256]={
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -85,7 +85,7 @@ utf8_countTrailBytes[256]={
 };
 
 static const UChar32
-utf8_errorValue[6]={
+utf8_error_हालागा[6]={
     // Same values as UTF8_ERROR_VALUE_1, UTF8_ERROR_VALUE_2, UTF_ERROR_VALUE,
     // but without relying on the obsolete unicode/utf_old.h.
     0x15, 0x9f, 0xffff,
@@ -93,9 +93,9 @@ utf8_errorValue[6]={
 };
 
 static UChar32
-errorValue(int32_t count, int8_t strict) {
+error_हालागा(int32_t count, int8_t strict) {
     if(strict>=0) {
-        return utf8_errorValue[count];
+        return utf8_error_हालागा[count];
     } else if(strict==-3) {
         return 0xfffd;
     } else {
@@ -180,7 +180,7 @@ utf8_nextCharSafeBody(const uint8_t *s, int32_t *pi, int32_t length, UChar32 c, 
     }  // else 0x80<=c<0xc2 is not a lead byte
 
     /* error handling */
-    c=errorValue(i-*pi, strict);
+    c=error_हालागा(i-*pi, strict);
     *pi=i;
     return c;
 }
@@ -222,7 +222,7 @@ utf8_appendCharSafeBody(uint8_t *s, int32_t i, int32_t length, UChar32 c, UBool 
             }
             s+=i;
             offset=0;
-            c=utf8_errorValue[length-1];
+            c=utf8_error_हालागा[length-1];
             U8_APPEND_UNSAFE(s, offset, c);
             i=i+offset;
         }
@@ -243,7 +243,7 @@ utf8_prevCharSafeBody(const uint8_t *s, int32_t start, int32_t *pi, UChar32 c, i
             } else if(b1<0xf0 ? U8_IS_VALID_LEAD3_AND_T1(b1, c) : U8_IS_VALID_LEAD4_AND_T1(b1, c)) {
                 // Truncated 3- or 4-byte sequence.
                 *pi=i;
-                return errorValue(1, strict);
+                return error_हालागा(1, strict);
             }
         } else if(U8_IS_TRAIL(b1) && i>start) {
             // Extract the value bits from the last trail byte.
@@ -260,7 +260,7 @@ utf8_prevCharSafeBody(const uint8_t *s, int32_t start, int32_t *pi, UChar32 c, i
                                 return c;
                             } else {
                                 // strict: forbid non-characters like U+fffe
-                                return errorValue(2, strict);
+                                return error_हालागा(2, strict);
                             }
                         }
                     } else {
@@ -274,7 +274,7 @@ utf8_prevCharSafeBody(const uint8_t *s, int32_t start, int32_t *pi, UChar32 c, i
                 } else if(U8_IS_VALID_LEAD4_AND_T1(b2, b1)) {
                     // Truncated 4-byte sequence.
                     *pi=i;
-                    return errorValue(2, strict);
+                    return error_हालागा(2, strict);
                 }
             } else if(U8_IS_TRAIL(b2) && i>start) {
                 uint8_t b3=s[--i];
@@ -287,14 +287,14 @@ utf8_prevCharSafeBody(const uint8_t *s, int32_t start, int32_t *pi, UChar32 c, i
                             return c;
                         } else {
                             // strict: forbid non-characters like U+fffe
-                            return errorValue(3, strict);
+                            return error_हालागा(3, strict);
                         }
                     }
                 }
             }
         }
     }
-    return errorValue(0, strict);
+    return error_हालागा(0, strict);
 }
 
 U_CAPI int32_t U_EXPORT2

@@ -56,20 +56,20 @@ class UnicodeString;
  *
  * @stable ICU 2.8
  */
-class U_COMMON_API SymbolTable /* not : public UObject because this is an interface/mixin class */ {
+class U_COMMON_API सिम्बोलो_Table /* not : public UObject because this is an interface/mixin class */ {
 public:
 
     /**
      * The character preceding a symbol reference name.
      * @stable ICU 2.8
      */
-    enum { SYMBOL_REF = 0x0024 /*$*/ };
+    enum { सिम्बोलो_REF = 0x0024 /*$*/ };
 
     /**
      * Destructor.
      * @stable ICU 2.8
      */
-    virtual ~SymbolTable();
+    virtual ~सिम्बोलो_Table();
 
     /**
      * Lookup the characters associated with this string and return it.

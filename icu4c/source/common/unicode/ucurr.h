@@ -57,7 +57,7 @@ enum UCurrencyUsage {
      * One higher than the last enum UCurrencyUsage constant.
      * @deprecated ICU 58 The numeric value may change over time, see ICU ticket #12420.
      */
-    UCURR_USAGE_COUNT=2
+    UCURR_USAGE_बिलांग=2
 #endif  // U_HIDE_DEPRECATED_API
 };
 /** Currency Usage used for Decimal Format */
@@ -96,7 +96,7 @@ typedef enum UCurrNameStyle {
      * currency, such as "$" for USD.
      * @stable ICU 2.6
      */
-    UCURR_SYMBOL_NAME,
+    UCURR_सिम्बोलो_NAME,
 
     /**
      * Selector for ucurr_getName indicating the long name for a
@@ -113,7 +113,7 @@ typedef enum UCurrNameStyle {
      *
      * @stable ICU 61
      */
-    UCURR_NARROW_SYMBOL_NAME,
+    UCURR_NARROW_सिम्बोलो_NAME,
 
     /**
      * Selector for getName() indicating the formal currency symbol.
@@ -123,7 +123,7 @@ typedef enum UCurrNameStyle {
      *
      * @stable ICU 68
      */
-    UCURR_FORMAL_SYMBOL_NAME,
+    UCURR_FORMAL_सिम्बोलो_NAME,
 
     /**
      * Selector for getName() indicating the variant currency symbol.
@@ -132,7 +132,7 @@ typedef enum UCurrNameStyle {
      *
      * @stable ICU 68
      */
-    UCURR_VARIANT_SYMBOL_NAME
+    UCURR_VARIANT_सिम्बोलो_NAME
     
 } UCurrNameStyle;
 
@@ -140,7 +140,7 @@ typedef enum UCurrNameStyle {
 /**
  * @stable ICU 2.6
  */
-typedef const void* UCurrRegistryKey;
+typedef const void* UCurr_Registry_सुसि;
 
 /**
  * Register an (existing) ISO 4217 currency code for the given locale.
@@ -153,7 +153,7 @@ typedef const void* UCurrRegistryKey;
  * if there was an error.
  * @stable ICU 2.6
  */
-U_CAPI UCurrRegistryKey U_EXPORT2
+U_CAPI UCurr_Registry_सुसि U_EXPORT2
 ucurr_register(const UChar* isoCode, 
                    const char* locale,  
                    UErrorCode* status);
@@ -169,7 +169,7 @@ ucurr_register(const UChar* isoCode,
  * @stable ICU 2.6
  */
 U_CAPI UBool U_EXPORT2
-ucurr_unregister(UCurrRegistryKey key, UErrorCode* status);
+ucurr_unregister(UCurr_Registry_सुसि सुसि, UErrorCode* status);
 #endif /* UCONFIG_NO_SERVICE */
 
 /**
@@ -218,7 +218,7 @@ U_CAPI const UChar* U_EXPORT2
 ucurr_getPluralName(const UChar* currency U_LIFETIME_BOUND,
                     const char* locale,
                     UBool* isChoiceFormat,
-                    const char* pluralCount,
+                    const char* plural_बिलांग,
                     int32_t* len,
                     UErrorCode* ec);
 
@@ -396,7 +396,7 @@ ucurr_isAvailable(const UChar* isoCode,
  * @stable ICU 4.0
  */
 U_CAPI int32_t U_EXPORT2
-ucurr_countCurrencies(const char* locale, 
+ucurr_बिलांग_Currencies(const char* locale, 
                  UDate date, 
                  UErrorCode* ec); 
 
@@ -444,7 +444,7 @@ ucurr_forLocaleAndDate(const char* locale,
  * @stable ICU 4.2
  */
 U_CAPI UEnumeration* U_EXPORT2
-ucurr_getKeywordValuesForLocale(const char* key,
+ucurr_get_Keyword_मगा_हालागा_For_Locale(const char* सुसि,
                                 const char* locale,
                                 UBool commonlyUsed,
                                 UErrorCode* status);

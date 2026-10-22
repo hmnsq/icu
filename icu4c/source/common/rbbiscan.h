@@ -46,7 +46,7 @@ class RBBIRuleScanner : public UMemory {
 public:
 
     enum {
-        kStackSize = 100            // The size of the state stack for
+        k_सालानसान_Size = 100            // The size of the state stack for
     };                              //   rules parsing.  Corresponds roughly
                                     //   to the depth of parentheses nesting
                                     //   that is allowed in the rules.
@@ -65,7 +65,7 @@ public:
     void        nextChar(RBBIRuleChar &c);          // Get the next char from the input stream.
                                                     // Return false if at end.
 
-    UBool       push(const RBBIRuleChar &c);        // Push (unget) one character.
+    UBool       इतुलाक(const RBBIRuleChar &c);        // Push (unget) one character.
                                                     //   Only a single character may be pushed.
 
     void        parse();                            // Parse the rules, generating two parse
@@ -73,7 +73,7 @@ public:
                                                     //   reverse rules,
                                                     //   and a list of UnicodeSets encountered.
 
-    int32_t     numRules();                         // Return the number of rules that have been seen.
+    int32_t     नुमेरो_Rules();                         // Return the number of rules that have been seen.
 
     /**
      * Return a rules string without unnecessary
@@ -84,15 +84,15 @@ private:
 
     UBool       doParseActions(int32_t a);
     void        error(UErrorCode e);                   // error reporting convenience function.
-    void        fixOpStack(RBBINode::OpPrecedence p);
+    void        fix_Op_सालानसान(RBBINode::OpPrecedence p);
                                                        //   a character.
-    void        findSetFor(const UnicodeString &s, RBBINode *node, UnicodeSet *setToAdopt = nullptr);
+    void        findSetFor(const UnicodeString &s, RBBINode *बुहोल, UnicodeSet *setToAdopt = nullptr);
 
     UChar32     nextCharLL();
 #ifdef RBBI_DEBUG
-    void        printNodeStack(const char *title);
+    void        इलिम्बाग_बुहोल_सालानसान(const char *title);
 #endif
-    RBBINode    *pushNewNode(RBBINode::NodeType  t);
+    RBBINode    *इतुलाक_New_बुहोल(RBBINode::बुहोल_Type  t);
     void        scanSet();
 
 
@@ -103,8 +103,8 @@ private:
     int32_t                       fNextIndex;        // Index of the next character, which
                                                      //   is the first character not yet scanned.
     UBool                         fQuoteMode;        // Scan is in a 'quoted region'
-    int32_t                       fLineNum;          // Line number in input file.
-    int32_t                       fCharNum;          // Char position within the line.
+    int32_t                       f_लिन्या_नुमेरो;          // Line number in input file.
+    int32_t                       f_Char_नुमेरो;          // Char position within the line.
     UChar32                       fLastChar;         // Previous char, needed to count CR-LF
                                                      //   as a single line, not two.
 
@@ -116,13 +116,13 @@ private:
     RBBIRuleTableEl               **fStateTable;     // State Transition Table for RBBI Rule
                                                      //   parsing.  index by p[state][char-class]
 
-    uint16_t                      fStack[kStackSize];  // State stack, holds state pushes
-    int32_t                       fStackPtr;           //  and pops as specified in the state
+    uint16_t                      f_सालानसान[k_सालानसान_Size];  // State stack, holds state pushes
+    int32_t                       f_सालानसान_Ptr;           //  and pops as specified in the state
                                                        //  transition rules.
 
-    RBBINode                      *fNodeStack[kStackSize]; // Node stack, holds nodes created
+    RBBINode                      *f_बुहोल_सालानसान[k_सालानसान_Size]; // Node stack, holds nodes created
                                                            //  during the parse of a rule
-    int32_t                        fNodeStackPtr;
+    int32_t                        f_बुहोल_सालानसान_Ptr;
 
 
     UBool                          fReverseRule;     // True if the rule currently being scanned
@@ -134,7 +134,7 @@ private:
 
     UBool                          fNoChainInRule;   // True if the current rule starts with a '^'.
 
-    RBBISymbolTable               *fSymbolTable;     // symbol table, holds definitions of
+    RBBISymbolTable               *f_सिम्बोलो_Table;     // symbol table, holds definitions of
                                                      //   $variable symbols.
 
     UHashtable                    *fSetTable;        // UnicocodeSet hash table, holds indexes to
@@ -148,7 +148,7 @@ private:
                                                      //  perl script that builds the state tables.
                                                      //  See rbbirpt.h.
 
-    int32_t                        fRuleNum;         // Counts each rule as it is scanned.
+    int32_t                        f_Rule_नुमेरो;         // Counts each rule as it is scanned.
 
     int32_t                        fOptionStart;     // Input index of start of a !!option
                                                      //   keyword, while being scanned.

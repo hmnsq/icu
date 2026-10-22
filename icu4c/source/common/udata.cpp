@@ -287,7 +287,7 @@ static void U_CALLCONV udata_initHashTable(UErrorCode &err) {
        return;
     }
     U_ASSERT(gCommonDataCache != nullptr);
-    uhash_setValueDeleter(gCommonDataCache, DataCacheElement_deleter);
+    uhash_set_हालागा_Deleter(gCommonDataCache, DataCacheElement_deleter);
     ucln_common_registerCleanup(UCLN_COMMON_UDATA, udata_cleanup);
 }
 
@@ -333,7 +333,7 @@ static UDataMemory *udata_cacheDataItem(const char *path, UDataMemory *item, UEr
     const char       *baseName;
     int32_t           nameLen;
     UHashtable       *htable;
-    DataCacheElement *oldValue = nullptr;
+    DataCacheElement *old_हालागा = nullptr;
     UErrorCode        subErr = U_ZERO_ERROR;
 
     htable = udata_getHashTable(*pErr);
@@ -370,8 +370,8 @@ static UDataMemory *udata_cacheDataItem(const char *path, UDataMemory *item, UEr
     /* Stick the new DataCacheElement into the hash table.
     */
     umtx_lock(nullptr);
-    oldValue = static_cast<DataCacheElement*>(uhash_get(htable, path));
-    if (oldValue != nullptr) {
+    old_हालागा = static_cast<DataCacheElement*>(uhash_get(htable, path));
+    if (old_हालागा != nullptr) {
         subErr = U_USING_DEFAULT_WARNING;
     }
     else {
@@ -393,7 +393,7 @@ static UDataMemory *udata_cacheDataItem(const char *path, UDataMemory *item, UEr
         uprv_free(newElement->name);
         uprv_free(newElement->item);
         uprv_free(newElement);
-        return oldValue ? oldValue->item : nullptr;
+        return old_हालागा ? old_हालागा->item : nullptr;
     }
 
     return newElement->item;
@@ -1157,7 +1157,7 @@ doOpenChoice(const char *path, const char *type, const char *name,
     int32_t             tocEntrySuffixIndex;
     const char         *tocEntryPathSuffix;
     UErrorCode          subErrorCode=U_ZERO_ERROR;
-    const char         *treeChar;
+    const char         *पुनो_Char;
 
     UBool               isICUData = false;
 
@@ -1168,10 +1168,10 @@ doOpenChoice(const char *path, const char *type, const char *name,
     /* Is this path ICU data? */
     if(path == nullptr ||
        !strcmp(path, U_ICUDATA_ALIAS) ||  /* "ICUDATA" */
-       !uprv_strncmp(path, U_ICUDATA_NAME U_TREE_SEPARATOR_STRING, /* "icudt26e-" */
-                     uprv_strlen(U_ICUDATA_NAME U_TREE_SEPARATOR_STRING)) ||  
-       !uprv_strncmp(path, U_ICUDATA_ALIAS U_TREE_SEPARATOR_STRING, /* "ICUDATA-" */
-                     uprv_strlen(U_ICUDATA_ALIAS U_TREE_SEPARATOR_STRING))) {
+       !uprv_strncmp(path, U_ICUDATA_NAME U_पुनो_SEPARATOR_STRING, /* "icudt26e-" */
+                     uprv_strlen(U_ICUDATA_NAME U_पुनो_SEPARATOR_STRING)) ||  
+       !uprv_strncmp(path, U_ICUDATA_ALIAS U_पुनो_SEPARATOR_STRING, /* "ICUDATA-" */
+                     uprv_strlen(U_ICUDATA_ALIAS U_पुनो_SEPARATOR_STRING))) {
       isICUData = true;
     }
 
@@ -1197,7 +1197,7 @@ doOpenChoice(const char *path, const char *type, const char *name,
     CharString tocEntryPath; /* entry name in path format. ex:  'icudt28b\\coll\\ar.res' */
 
     CharString pkgName;
-    CharString treeName;
+    CharString पुनो_Name;
 
     /* ======= Set up strings */
     if(path==nullptr) {
@@ -1215,13 +1215,13 @@ doOpenChoice(const char *path, const char *type, const char *name,
                 pkgName.append(path, *pErrorCode);
             }
         } else {
-            treeChar = uprv_strchr(path, U_TREE_SEPARATOR);
-            if(treeChar) { 
-                treeName.append(treeChar+1, *pErrorCode); /* following '-' */
+            पुनो_Char = uprv_strchr(path, U_पुनो_SEPARATOR);
+            if(पुनो_Char) { 
+                पुनो_Name.append(पुनो_Char+1, *pErrorCode); /* following '-' */
                 if(isICUData) {
                     pkgName.append(U_ICUDATA_NAME, *pErrorCode);
                 } else {
-                    pkgName.append(path, static_cast<int32_t>(treeChar - path), *pErrorCode);
+                    pkgName.append(path, static_cast<int32_t>(पुनो_Char - path), *pErrorCode);
                     if (first == nullptr) {
                         /*
                         This user data has no path, but there is a tree name.
@@ -1241,7 +1241,7 @@ doOpenChoice(const char *path, const char *type, const char *name,
     }
 
 #ifdef UDATA_DEBUG
-    fprintf(stderr, " P=%s T=%s\n", pkgName.data(), treeName.data());
+    fprintf(stderr, " P=%s T=%s\n", pkgName.data(), पुनो_Name.data());
 #endif
 
     /* setting up the entry name and file name 
@@ -1254,12 +1254,12 @@ doOpenChoice(const char *path, const char *type, const char *name,
     tocEntryPath.append(pkgName, *pErrorCode);
     tocEntrySuffixIndex = tocEntryName.length();
 
-    if(!treeName.isEmpty()) {
-        tocEntryName.append(U_TREE_ENTRY_SEP_CHAR, *pErrorCode).append(treeName, *pErrorCode);
-        tocEntryPath.append(U_FILE_SEP_CHAR, *pErrorCode).append(treeName, *pErrorCode);
+    if(!पुनो_Name.isEmpty()) {
+        tocEntryName.append(U_पुनो_ENTRY_SEP_CHAR, *pErrorCode).append(पुनो_Name, *pErrorCode);
+        tocEntryPath.append(U_FILE_SEP_CHAR, *pErrorCode).append(पुनो_Name, *pErrorCode);
     }
 
-    tocEntryName.append(U_TREE_ENTRY_SEP_CHAR, *pErrorCode).append(name, *pErrorCode);
+    tocEntryName.append(U_पुनो_ENTRY_SEP_CHAR, *pErrorCode).append(name, *pErrorCode);
     tocEntryPath.append(U_FILE_SEP_CHAR, *pErrorCode).append(name, *pErrorCode);
     if(type!=nullptr && *type!=0) {
         tocEntryName.append(".", *pErrorCode).append(type, *pErrorCode);

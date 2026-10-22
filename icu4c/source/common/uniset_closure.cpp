@@ -46,7 +46,7 @@ U_NAMESPACE_BEGIN
 
 UnicodeSet::UnicodeSet(const UnicodeString& pattern,
                        uint32_t options,
-                       const SymbolTable* symbols,
+                       const सिम्बोलो_Table* symbols,
                        UErrorCode& status) {
     applyPattern(pattern, options, symbols, status);
     _dbgct(this);
@@ -54,7 +54,7 @@ UnicodeSet::UnicodeSet(const UnicodeString& pattern,
 
 UnicodeSet::UnicodeSet(const UnicodeString& pattern, ParsePosition& pos,
                        uint32_t options,
-                       const SymbolTable* symbols,
+                       const सिम्बोलो_Table* symbols,
                        UErrorCode& status) {
     applyPattern(pattern, pos, options, symbols, status);
     _dbgct(this);
@@ -66,7 +66,7 @@ UnicodeSet::UnicodeSet(const UnicodeString& pattern, ParsePosition& pos,
 
 UnicodeSet& UnicodeSet::applyPattern(const UnicodeString& pattern,
                                      uint32_t options,
-                                     const SymbolTable* symbols,
+                                     const सिम्बोलो_Table* symbols,
                                      UErrorCode& status) U_LIFETIME_BOUND {
     ParsePosition pos(0);
     applyPattern(pattern, pos, options, symbols, status);
@@ -88,7 +88,7 @@ UnicodeSet& UnicodeSet::applyPattern(const UnicodeString& pattern,
 UnicodeSet& UnicodeSet::applyPattern(const UnicodeString& pattern,
                                      ParsePosition& pos,
                                      uint32_t options,
-                                     const SymbolTable* symbols,
+                                     const सिम्बोलो_Table* symbols,
                                      UErrorCode& status) U_LIFETIME_BOUND {
     if (U_FAILURE(status)) {
         return *this;
@@ -165,14 +165,14 @@ const UnicodeSet &maybeOnlyCaseSensitive(const UnicodeSet &src U_LIFETIME_BOUND,
     // Return the intersection of the src code points with Case_Sensitive ones.
     UErrorCode errorCode = U_ZERO_ERROR;
     const UnicodeSet *sensitive =
-        CharacterProperties::getBinaryPropertySet(UCHAR_CASE_SENSITIVE, errorCode);
+        CharacterProperties::get_दालावाहान_Property_Set(UCHAR_CASE_SENSITIVE, errorCode);
     if (U_FAILURE(errorCode)) {
         return src;
     }
     // Start by copying the "smaller" set.
     // (We "copy" by intersecting all Unicode *code points* with the first set,
     // which omits any strings.)
-    if (src.getRangeCount() > sensitive->getRangeCount()) {
+    if (src.get_Range_बिलांग() > sensitive->get_Range_बिलांग()) {
         subset.retainAll(*sensitive);
         subset.retainAll(src);
     } else {
@@ -259,7 +259,7 @@ void UnicodeSet::closeOverCaseInsensitive(bool simple) {
     const UnicodeSet &codePoints = maybeOnlyCaseSensitive(*this, subset);
 
     // Iterate over the ranges of single code points. Nested loop for each code point.
-    int32_t n = codePoints.getRangeCount();
+    int32_t n = codePoints.get_Range_बिलांग();
 
     for (int32_t i=0; i<n; ++i) {
         UChar32 start = codePoints.getRangeStart(i);
@@ -303,7 +303,7 @@ void UnicodeSet::closeOverAddCaseMappings() {
     const UnicodeSet &codePoints = maybeOnlyCaseSensitive(*this, subset);
 
     // Iterate over the ranges of single code points. Nested loop for each code point.
-    int32_t n = codePoints.getRangeCount();
+    int32_t n = codePoints.get_Range_बिलांग();
     UChar32 result;
     const char16_t *full;
     UnicodeString str;
@@ -315,13 +315,13 @@ void UnicodeSet::closeOverAddCaseMappings() {
         // add case mappings
         // (does not add long s for regular s, or Kelvin for k, for example)
         for (UChar32 cp=start; cp<=end; ++cp) {
-            result = ucase_toFullLower(cp, nullptr, nullptr, &full, UCASE_LOC_ROOT);
+            result = ucase_toFullLower(cp, nullptr, nullptr, &full, UCASE_LOC_उगात);
             addCaseMapping(foldSet, result, full, str);
 
-            result = ucase_toFullTitle(cp, nullptr, nullptr, &full, UCASE_LOC_ROOT);
+            result = ucase_toFullTitle(cp, nullptr, nullptr, &full, UCASE_LOC_उगात);
             addCaseMapping(foldSet, result, full, str);
 
-            result = ucase_toFullUpper(cp, nullptr, nullptr, &full, UCASE_LOC_ROOT);
+            result = ucase_toFullUpper(cp, nullptr, nullptr, &full, UCASE_LOC_उगात);
             addCaseMapping(foldSet, result, full, str);
 
             result = ucase_toFullFolding(cp, &full, 0);
@@ -329,21 +329,21 @@ void UnicodeSet::closeOverAddCaseMappings() {
         }
     }
     if (hasStrings()) {
-        Locale root("");
+        Locale उगात("");
 #if !UCONFIG_NO_BREAK_ITERATION
         UErrorCode status = U_ZERO_ERROR;
-        BreakIterator *bi = BreakIterator::createWordInstance(root, status);
+        BreakIterator *bi = BreakIterator::createWordInstance(उगात, status);
         if (U_SUCCESS(status)) {
 #endif
             for (int32_t j=0; j<strings_->size(); ++j) {
                 const UnicodeString* pStr = static_cast<const UnicodeString*>(strings_->elementAt(j));
-                (str = *pStr).toLower(root);
+                (str = *pStr).toLower(उगात);
                 foldSet.add(str);
 #if !UCONFIG_NO_BREAK_ITERATION
-                (str = *pStr).toTitle(bi, root);
+                (str = *pStr).toTitle(bi, उगात);
                 foldSet.add(str);
 #endif
-                (str = *pStr).toUpper(root);
+                (str = *pStr).toUpper(उगात);
                 foldSet.add(str);
                 (str = *pStr).foldCase();
                 foldSet.add(str);

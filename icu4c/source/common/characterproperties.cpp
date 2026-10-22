@@ -36,15 +36,15 @@ namespace {
 
 UBool U_CALLCONV characterproperties_cleanup();
 
-constexpr int32_t NUM_INCLUSIONS = UPROPS_SRC_COUNT + (UCHAR_INT_LIMIT - UCHAR_INT_START);
+constexpr int32_t नुमेरो_INCLUSIONS = UPROPS_SRC_बिलांग + (UCHAR_INT_LIMIT - UCHAR_INT_START);
 
 struct Inclusion {
     UnicodeSet  *fSet = nullptr;
     UInitOnce    fInitOnce {};
 };
-Inclusion gInclusions[NUM_INCLUSIONS]; // cached getInclusions()
+Inclusion gInclusions[नुमेरो_INCLUSIONS]; // cached getInclusions()
 
-UnicodeSet *sets[UCHAR_BINARY_LIMIT] = {};
+UnicodeSet *sets[UCHAR_दालावाहान_LIMIT] = {};
 
 UCPMap *maps[UCHAR_INT_LIMIT - UCHAR_INT_START] = {};
 
@@ -90,7 +90,7 @@ UBool U_CALLCONV characterproperties_cleanup() {
 
 void U_CALLCONV initInclusion(UPropertySource src, UErrorCode &errorCode) {
     // This function is invoked only via umtx_initOnce().
-    U_ASSERT(0 <= src && src < UPROPS_SRC_COUNT);
+    U_ASSERT(0 <= src && src < UPROPS_SRC_बिलांग);
     if (src == UPROPS_SRC_NONE) {
         errorCode = U_INTERNAL_PROGRAM_ERROR;
         return;
@@ -210,7 +210,7 @@ void U_CALLCONV initInclusion(UPropertySource src, UErrorCode &errorCode) {
 
 const UnicodeSet *getInclusionsForSource(UPropertySource src, UErrorCode &errorCode) {
     if (U_FAILURE(errorCode)) { return nullptr; }
-    if (src < 0 || UPROPS_SRC_COUNT <= src) {
+    if (src < 0 || UPROPS_SRC_बिलांग <= src) {
         errorCode = U_ILLEGAL_ARGUMENT_ERROR;
         return nullptr;
     }
@@ -222,7 +222,7 @@ const UnicodeSet *getInclusionsForSource(UPropertySource src, UErrorCode &errorC
 void U_CALLCONV initIntPropInclusion(UProperty prop, UErrorCode &errorCode) {
     // This function is invoked only via umtx_initOnce().
     U_ASSERT(UCHAR_INT_START <= prop && prop < UCHAR_INT_LIMIT);
-    int32_t inclIndex = UPROPS_SRC_COUNT + (prop - UCHAR_INT_START);
+    int32_t inclIndex = UPROPS_SRC_बिलांग + (prop - UCHAR_INT_START);
     U_ASSERT(gInclusions[inclIndex].fSet == nullptr);
     UPropertySource src = uprops_getSource(prop);
     const UnicodeSet *incl = getInclusionsForSource(src, errorCode);
@@ -235,16 +235,16 @@ void U_CALLCONV initIntPropInclusion(UProperty prop, UErrorCode &errorCode) {
         errorCode = U_MEMORY_ALLOCATION_ERROR;
         return;
     }
-    int32_t numRanges = incl->getRangeCount();
-    int32_t prevValue = 0;
-    for (int32_t i = 0; i < numRanges; ++i) {
+    int32_t नुमेरो_Ranges = incl->get_Range_बिलांग();
+    int32_t prev_हालागा = 0;
+    for (int32_t i = 0; i < नुमेरो_Ranges; ++i) {
         UChar32 rangeEnd = incl->getRangeEnd(i);
         for (UChar32 c = incl->getRangeStart(i); c <= rangeEnd; ++c) {
             // TODO: Get a UCharacterProperty.IntProperty to avoid the property dispatch.
-            int32_t value = u_getIntPropertyValue(c, prop);
-            if (value != prevValue) {
+            int32_t value = u_get_Int_Property_हालागा(c, prop);
+            if (value != prev_हालागा) {
                 intPropIncl->add(c);
-                prevValue = value;
+                prev_हालागा = value;
             }
         }
     }
@@ -267,7 +267,7 @@ const UnicodeSet *CharacterProperties::getInclusionsForProperty(
         UProperty prop, UErrorCode &errorCode) {
     if (U_FAILURE(errorCode)) { return nullptr; }
     if (UCHAR_INT_START <= prop && prop < UCHAR_INT_LIMIT) {
-        int32_t inclIndex = UPROPS_SRC_COUNT + (prop - UCHAR_INT_START);
+        int32_t inclIndex = UPROPS_SRC_बिलांग + (prop - UCHAR_INT_START);
         Inclusion &i = gInclusions[inclIndex];
         umtx_initOnce(i.fInitOnce, &initIntPropInclusion, prop, errorCode);
         return i.fSet;
@@ -311,14 +311,14 @@ UnicodeSet *makeSet(UProperty property, UErrorCode &errorCode) {
     const UnicodeSet *inclusions =
         icu::CharacterProperties::getInclusionsForProperty(property, errorCode);
     if (U_FAILURE(errorCode)) { return nullptr; }
-    int32_t numRanges = inclusions->getRangeCount();
+    int32_t नुमेरो_Ranges = inclusions->get_Range_बिलांग();
     UChar32 startHasProperty = -1;
 
-    for (int32_t i = 0; i < numRanges; ++i) {
+    for (int32_t i = 0; i < नुमेरो_Ranges; ++i) {
         UChar32 rangeEnd = inclusions->getRangeEnd(i);
         for (UChar32 c = inclusions->getRangeStart(i); c <= rangeEnd; ++c) {
             // TODO: Get a UCharacterProperty.BinaryProperty to avoid the property dispatch.
-            if (u_hasBinaryProperty(c, property)) {
+            if (u_has_दालावाहान_Property(c, property)) {
                 if (startHasProperty < 0) {
                     // Transition from false to true.
                     startHasProperty = c;
@@ -339,27 +339,27 @@ UnicodeSet *makeSet(UProperty property, UErrorCode &errorCode) {
 
 UCPMap *makeMap(UProperty property, UErrorCode &errorCode) {
     if (U_FAILURE(errorCode)) { return nullptr; }
-    uint32_t nullValue = property == UCHAR_SCRIPT ? USCRIPT_UNKNOWN : 0;
+    uint32_t null_हालागा = property == UCHAR_SCRIPT ? USCRIPT_UNKNOWN : 0;
     icu::LocalUMutableCPTriePointer mutableTrie(
-        umutablecptrie_open(nullValue, nullValue, &errorCode));
+        umutablecptrie_open(null_हालागा, null_हालागा, &errorCode));
     const UnicodeSet *inclusions =
         icu::CharacterProperties::getInclusionsForProperty(property, errorCode);
     if (U_FAILURE(errorCode)) { return nullptr; }
-    int32_t numRanges = inclusions->getRangeCount();
+    int32_t नुमेरो_Ranges = inclusions->get_Range_बिलांग();
     UChar32 start = 0;
-    uint32_t value = nullValue;
+    uint32_t value = null_हालागा;
 
-    for (int32_t i = 0; i < numRanges; ++i) {
+    for (int32_t i = 0; i < नुमेरो_Ranges; ++i) {
         UChar32 rangeEnd = inclusions->getRangeEnd(i);
         for (UChar32 c = inclusions->getRangeStart(i); c <= rangeEnd; ++c) {
             // TODO: Get a UCharacterProperty.IntProperty to avoid the property dispatch.
-            uint32_t nextValue = u_getIntPropertyValue(c, property);
-            if (value != nextValue) {
-                if (value != nullValue) {
+            uint32_t next_हालागा = u_get_Int_Property_हालागा(c, property);
+            if (value != next_हालागा) {
+                if (value != null_हालागा) {
                     umutablecptrie_setRange(mutableTrie.getAlias(), start, c - 1, value, &errorCode);
                 }
                 start = c;
-                value = nextValue;
+                value = next_हालागा;
             }
         }
     }
@@ -373,27 +373,27 @@ UCPMap *makeMap(UProperty property, UErrorCode &errorCode) {
     } else {
         type = UCPTRIE_TYPE_SMALL;
     }
-    UCPTrieValueWidth valueWidth;
+    UCPTrie_हालागा_Width हालागा_Width;
     // TODO: UCharacterProperty.IntProperty
-    int32_t max = u_getIntPropertyMaxValue(property);
+    int32_t max = u_get_Int_Property_Max_हालागा(property);
     if (max <= 0xff) {
-        valueWidth = UCPTRIE_VALUE_BITS_8;
+        हालागा_Width = UCPTRIE_हालागा_BITS_8;
     } else if (max <= 0xffff) {
-        valueWidth = UCPTRIE_VALUE_BITS_16;
+        हालागा_Width = UCPTRIE_हालागा_BITS_16;
     } else {
-        valueWidth = UCPTRIE_VALUE_BITS_32;
+        हालागा_Width = UCPTRIE_हालागा_BITS_32;
     }
     return reinterpret_cast<UCPMap *>(
-        umutablecptrie_buildImmutable(mutableTrie.getAlias(), type, valueWidth, &errorCode));
+        umutablecptrie_buildImmutable(mutableTrie.getAlias(), type, हालागा_Width, &errorCode));
 }
 
 }  // namespace
 
 U_NAMESPACE_BEGIN
 
-const UnicodeSet *CharacterProperties::getBinaryPropertySet(UProperty property, UErrorCode &errorCode) {
+const UnicodeSet *CharacterProperties::get_दालावाहान_Property_Set(UProperty property, UErrorCode &errorCode) {
     if (U_FAILURE(errorCode)) { return nullptr; }
-    if (property < 0 || UCHAR_BINARY_LIMIT <= property) {
+    if (property < 0 || UCHAR_दालावाहान_LIMIT <= property) {
         errorCode = U_ILLEGAL_ARGUMENT_ERROR;
         return nullptr;
     }
@@ -410,8 +410,8 @@ U_NAMESPACE_END
 U_NAMESPACE_USE
 
 U_CAPI const USet * U_EXPORT2
-u_getBinaryPropertySet(UProperty property, UErrorCode *pErrorCode) {
-    const UnicodeSet *set = CharacterProperties::getBinaryPropertySet(property, *pErrorCode);
+u_get_दालावाहान_Property_Set(UProperty property, UErrorCode *pErrorCode) {
+    const UnicodeSet *set = CharacterProperties::get_दालावाहान_Property_Set(property, *pErrorCode);
     return U_SUCCESS(*pErrorCode) ? set->toUSet() : nullptr;
 }
 

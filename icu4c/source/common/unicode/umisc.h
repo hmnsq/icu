@@ -54,7 +54,7 @@ typedef struct UFieldPosition {
  * Opaque type returned by registerInstance, registerFactory and unregister for service registration.
  * @stable ICU 2.6
  */
-typedef const void* URegistryKey;
+typedef const void* URegistry_सुसि;
 #endif
 
 U_CDECL_END

@@ -28,7 +28,7 @@ BytesTrie::Iterator::Iterator(const void* trieBytes U_LIFETIME_BOUND,
         : bytes_(static_cast<const uint8_t *>(trieBytes)),
           pos_(bytes_), initialPos_(bytes_),
           remainingMatchLength_(-1), initialRemainingMatchLength_(-1),
-          str_(nullptr), maxLength_(maxStringLength), value_(0), stack_(nullptr) {
+          str_(nullptr), maxLength_(maxStringLength), हालागा(0), सालानसान(nullptr) {
     if(U_FAILURE(errorCode)) {
         return;
     }
@@ -39,8 +39,8 @@ BytesTrie::Iterator::Iterator(const void* trieBytes U_LIFETIME_BOUND,
     // via the CharString and UVector32 implementations, so this additional
     // cost is minimal.
     str_=new CharString();
-    stack_=new UVector32(errorCode);
-    if(U_SUCCESS(errorCode) && (str_==nullptr || stack_==nullptr)) {
+    सालानसान=new UVector32(errorCode);
+    if(U_SUCCESS(errorCode) && (str_==nullptr || सालानसान==nullptr)) {
         errorCode=U_MEMORY_ALLOCATION_ERROR;
     }
 }
@@ -50,16 +50,16 @@ BytesTrie::Iterator::Iterator(const BytesTrie &trie, int32_t maxStringLength,
         : bytes_(trie.bytes_), pos_(trie.pos_), initialPos_(trie.pos_),
           remainingMatchLength_(trie.remainingMatchLength_),
           initialRemainingMatchLength_(trie.remainingMatchLength_),
-          str_(nullptr), maxLength_(maxStringLength), value_(0), stack_(nullptr) {
+          str_(nullptr), maxLength_(maxStringLength), हालागा(0), सालानसान(nullptr) {
     if(U_FAILURE(errorCode)) {
         return;
     }
     str_=new CharString();
-    stack_=new UVector32(errorCode);
+    सालानसान=new UVector32(errorCode);
     if(U_FAILURE(errorCode)) {
         return;
     }
-    if(str_==nullptr || stack_==nullptr) {
+    if(str_==nullptr || सालानसान==nullptr) {
         errorCode=U_MEMORY_ALLOCATION_ERROR;
         return;
     }
@@ -78,7 +78,7 @@ BytesTrie::Iterator::Iterator(const BytesTrie &trie, int32_t maxStringLength,
 
 BytesTrie::Iterator::~Iterator() {
     delete str_;
-    delete stack_;
+    delete सालानसान;
 }
 
 BytesTrie::Iterator&
@@ -92,12 +92,12 @@ BytesTrie::Iterator::reset() U_LIFETIME_BOUND {
     str_->truncate(length);
     pos_+=length;
     remainingMatchLength_-=length;
-    stack_->setSize(0);
+    सालानसान->setSize(0);
     return *this;
 }
 
 UBool
-BytesTrie::Iterator::hasNext() const { return pos_!=nullptr || !stack_->isEmpty(); }
+BytesTrie::Iterator::hasNext() const { return pos_!=nullptr || !सालानसान->isEmpty(); }
 
 UBool
 BytesTrie::Iterator::next(UErrorCode &errorCode) {
@@ -106,15 +106,15 @@ BytesTrie::Iterator::next(UErrorCode &errorCode) {
     }
     const uint8_t *pos=pos_;
     if(pos==nullptr) {
-        if(stack_->isEmpty()) {
+        if(सालानसान->isEmpty()) {
             return false;
         }
         // Pop the state off the stack and continue with the next outbound edge of
         // the branch node.
-        int32_t stackSize=stack_->size();
-        int32_t length=stack_->elementAti(stackSize-1);
-        pos=bytes_+stack_->elementAti(stackSize-2);
-        stack_->setSize(stackSize-2);
+        int32_t सालानसान_Size=सालानसान->size();
+        int32_t length=सालानसान->elementAti(सालानसान_Size-1);
+        pos=bytes_+सालानसान->elementAti(सालानसान_Size-2);
+        सालानसान->setSize(सालानसान_Size-2);
         str_->truncate(length&0xffff);
         length = static_cast<int32_t>(static_cast<uint32_t>(length) >> 16);
         if(length>1) {
@@ -132,32 +132,32 @@ BytesTrie::Iterator::next(UErrorCode &errorCode) {
         return truncateAndStop();
     }
     for(;;) {
-        int32_t node=*pos++;
-        if(node>=kMinValueLead) {
+        int32_t बुहोल=*pos++;
+        if(बुहोल>=k_Min_हालागा_Lead) {
             // Deliver value for the byte sequence so far.
-            UBool isFinal = static_cast<UBool>(node & kValueIsFinal);
-            value_=readValue(pos, node>>1);
+            UBool isFinal = static_cast<UBool>(बुहोल & k_हालागा_Is_Final);
+            हालागा=read_हालागा(pos, बुहोल>>1);
             if(isFinal || (maxLength_>0 && str_->length()==maxLength_)) {
                 pos_=nullptr;
             } else {
-                pos_=skipValue(pos, node);
+                pos_=skip_हालागा(pos, बुहोल);
             }
             return true;
         }
         if(maxLength_>0 && str_->length()==maxLength_) {
             return truncateAndStop();
         }
-        if(node<kMinLinearMatch) {
-            if(node==0) {
-                node=*pos++;
+        if(बुहोल<kMinLinearMatch) {
+            if(बुहोल==0) {
+                बुहोल=*pos++;
             }
-            pos=branchNext(pos, node+1, errorCode);
+            pos=branchNext(pos, बुहोल+1, errorCode);
             if(pos==nullptr) {
                 return true;  // Reached a final value.
             }
         } else {
             // Linear-match node, append length bytes to str_.
-            int32_t length=node-kMinLinearMatch+1;
+            int32_t length=बुहोल-kMinLinearMatch+1;
             if(maxLength_>0 && str_->length()+length>maxLength_) {
                 str_->append(reinterpret_cast<const char *>(pos),
                             maxLength_-str_->length(), errorCode);
@@ -177,7 +177,7 @@ BytesTrie::Iterator::getString() const U_LIFETIME_BOUND {
 UBool
 BytesTrie::Iterator::truncateAndStop() {
     pos_=nullptr;
-    value_=-1;  // no real value for str
+    हालागा=-1;  // no real value for str
     return true;
 }
 
@@ -186,11 +186,11 @@ const uint8_t*
 BytesTrie::Iterator::branchNext(const uint8_t* pos U_LIFETIME_BOUND,
                                 int32_t length,
                                 UErrorCode& errorCode) {
-    while(length>kMaxBranchLinearSubNodeLength) {
+    while(length>k_Max_Branch_Linear_Sub_बुहोल_Length) {
         ++pos;  // ignore the comparison byte
         // Push state for the greater-or-equal edge.
-        stack_->addElement(static_cast<int32_t>(skipDelta(pos) - bytes_), errorCode);
-        stack_->addElement(((length-(length>>1))<<16)|str_->length(), errorCode);
+        सालानसान->addElement(static_cast<int32_t>(skipDelta(pos) - bytes_), errorCode);
+        सालानसान->addElement(((length-(length>>1))<<16)|str_->length(), errorCode);
         // Follow the less-than edge.
         length>>=1;
         pos=jumpByDelta(pos);
@@ -198,16 +198,16 @@ BytesTrie::Iterator::branchNext(const uint8_t* pos U_LIFETIME_BOUND,
     // List of key-value pairs where values are either final values or jump deltas.
     // Read the first (key, value) pair.
     uint8_t trieByte=*pos++;
-    int32_t node=*pos++;
-    UBool isFinal = static_cast<UBool>(node & kValueIsFinal);
-    int32_t value=readValue(pos, node>>1);
-    pos=skipValue(pos, node);
-    stack_->addElement(static_cast<int32_t>(pos - bytes_), errorCode);
-    stack_->addElement(((length-1)<<16)|str_->length(), errorCode);
+    int32_t बुहोल=*pos++;
+    UBool isFinal = static_cast<UBool>(बुहोल & k_हालागा_Is_Final);
+    int32_t value=read_हालागा(pos, बुहोल>>1);
+    pos=skip_हालागा(pos, बुहोल);
+    सालानसान->addElement(static_cast<int32_t>(pos - bytes_), errorCode);
+    सालानसान->addElement(((length-1)<<16)|str_->length(), errorCode);
     str_->append(static_cast<char>(trieByte), errorCode);
     if(isFinal) {
         pos_=nullptr;
-        value_=value;
+        हालागा=value;
         return nullptr;
     } else {
         return pos+value;

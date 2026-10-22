@@ -234,7 +234,7 @@ public:
      * @return a pointer to a chunk of unsigned bytes which live in a memory mapped/DLL file.
      * @stable ICU 2.0
      */
-    const uint8_t* getBinary(int32_t& len, UErrorCode& status) const U_LIFETIME_BOUND;
+    const uint8_t* get_दालावाहान(int32_t& len, UErrorCode& status) const U_LIFETIME_BOUND;
 
     /**
      * returns an integer vector from a resource.
@@ -299,7 +299,7 @@ public:
      * @return a key associated to this resource, or nullptr if it doesn't have a key
      * @stable ICU 2.0
      */
-    const char* getKey() const U_LIFETIME_BOUND;
+    const char* get_सुसि() const U_LIFETIME_BOUND;
 
     /**
      * Gets the locale ID of the resource bundle as a string.
@@ -347,7 +347,7 @@ public:
      * @return an UnicodeString object.
      * @stable ICU 2.0
      */
-    UnicodeString getNextString(const char** key, UErrorCode& status) U_LIFETIME_BOUND;
+    UnicodeString getNextString(const char** सुसि, UErrorCode& status) U_LIFETIME_BOUND;
 
     /**
      * Returns the resource in a resource at the specified index.
@@ -381,7 +381,7 @@ public:
      * @stable ICU 2.0
      */
     ResourceBundle
-      get(const char* key,
+      get(const char* सुसि,
           UErrorCode& status) const;
 
     /**
@@ -393,7 +393,7 @@ public:
      * @return                  an UnicodeString object. If there is an error, string is bogus
      * @stable ICU 2.0
      */
-    UnicodeString getStringEx(const char* key, UErrorCode& status) const U_LIFETIME_BOUND;
+    UnicodeString getStringEx(const char* सुसि, UErrorCode& status) const U_LIFETIME_BOUND;
 
 #ifndef U_HIDE_DEPRECATED_API
     /**
@@ -405,7 +405,7 @@ public:
      * @see getVersion
      * @deprecated ICU 2.8 Use getVersion instead.
      */
-    const char* getVersionNumber() const U_LIFETIME_BOUND;
+    const char* get_Version_नुमेरो() const U_LIFETIME_BOUND;
 #endif  /* U_HIDE_DEPRECATED_API */
 
     /**
@@ -446,7 +446,7 @@ public:
      * @internal
      */
     ResourceBundle
-        getWithFallback(const char* key, UErrorCode& status);
+        getWithFallback(const char* सुसि, UErrorCode& status);
 #endif  /* U_HIDE_INTERNAL_API */
     /**
      * ICU "poor man's RTTI", returns a UClassID for the actual class.

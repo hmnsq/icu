@@ -29,7 +29,7 @@
 
 #if defined(U_WCHAR_IS_UTF16) || defined(U_WCHAR_IS_UTF32) || !UCONFIG_NO_CONVERSION
 
-#define _STACK_BUFFER_CAPACITY 1000
+#define सालानसान_BUFFER_CAPACITY 1000
 #define _BUFFER_CAPACITY_MULTIPLIER 2
 
 #if !defined(U_WCHAR_IS_UTF16) && !defined(U_WCHAR_IS_UTF32)
@@ -69,10 +69,10 @@ _strToWCS(wchar_t *dest,
            int32_t srcLength,
            UErrorCode *pErrorCode){
 
-    char stackBuffer [_STACK_BUFFER_CAPACITY];
-    char* tempBuf = stackBuffer;
-    int32_t tempBufCapacity = _STACK_BUFFER_CAPACITY;
-    char* tempBufLimit = stackBuffer + tempBufCapacity;
+    char सालानसान_Buffer [सालानसान_BUFFER_CAPACITY];
+    char* tempBuf = सालानसान_Buffer;
+    int32_t tempBufCapacity = सालानसान_BUFFER_CAPACITY;
+    char* tempBufLimit = सालानसान_Buffer + tempBufCapacity;
     UConverter* conv = nullptr;
     char* saveBuf = tempBuf;
     wchar_t* intTarget=nullptr;
@@ -110,7 +110,7 @@ _strToWCS(wchar_t *dest,
             if(newCapacity <= tempBufCapacity) {
                 newCapacity = _BUFFER_CAPACITY_MULTIPLIER * tempBufCapacity;
             }
-            if(!u_growAnyBufferFromStatic(stackBuffer,(void**) &tempBuf, &tempBufCapacity,
+            if(!u_growAnyBufferFromStatic(सालानसान_Buffer,(void**) &tempBuf, &tempBufCapacity,
                     newCapacity, count, 1)) {
                 goto cleanup;
             }
@@ -131,7 +131,7 @@ _strToWCS(wchar_t *dest,
     if(count>=tempBufCapacity){
         tempBuf = saveBuf;
         /* we don't have enough room on the stack grow the buffer */
-        if(!u_growAnyBufferFromStatic(stackBuffer,(void**) &tempBuf, &tempBufCapacity, 
+        if(!u_growAnyBufferFromStatic(सालानसान_Buffer,(void**) &tempBuf, &tempBufCapacity, 
                 count+1, count, 1)) {
             goto cleanup;
         }              
@@ -167,18 +167,18 @@ _strToWCS(wchar_t *dest,
                 *pErrorCode = U_INVALID_CHAR_FOUND;
                 break;
             }else if(retVal== remaining){/* should never occur */
-                int numWritten = (pIntTarget-intTarget);
+                int नुमेरो_Written = (pIntTarget-intTarget);
                 u_growAnyBufferFromStatic(nullptr,(void**) &intTarget,
                                           &intTargetCapacity,
                                           intTargetCapacity * _BUFFER_CAPACITY_MULTIPLIER,
-                                          numWritten,
+                                          नुमेरो_Written,
                                           sizeof(wchar_t));
                 pIntTarget = intTarget;
                 remaining=intTargetCapacity;
 
                 if(nulLen!=count){ /*there are embedded nulls*/
-                    pIntTarget+=numWritten;
-                    remaining-=numWritten;
+                    pIntTarget+=नुमेरो_Written;
+                    remaining-=नुमेरो_Written;
                 }
 
             }else{
@@ -215,7 +215,7 @@ _strToWCS(wchar_t *dest,
     }
 cleanup:
     /* are we still using stack buffer */
-    if(stackBuffer != saveBuf){
+    if(सालानसान_Buffer != saveBuf){
         uprv_free(saveBuf);
     }
     u_terminateWChars(dest,destCapacity,count,pErrorCode);
@@ -291,15 +291,15 @@ _strFromWCS( char16_t   *dest,
     char16_t* pTargetLimit = nullptr;
     char16_t* target = nullptr;
     
-    char16_t uStack [_STACK_BUFFER_CAPACITY];
+    char16_t u_सालानसान [सालानसान_BUFFER_CAPACITY];
 
-    wchar_t wStack[_STACK_BUFFER_CAPACITY];
-    wchar_t* pWStack = wStack;
+    wchar_t w_सालानसान[सालानसान_BUFFER_CAPACITY];
+    wchar_t* pWStack = w_सालानसान;
 
 
-    char cStack[_STACK_BUFFER_CAPACITY];
-    int32_t cStackCap = _STACK_BUFFER_CAPACITY;
-    char* pCSrc=cStack;
+    char c_सालानसान[सालानसान_BUFFER_CAPACITY];
+    int32_t c_सालानसान_Cap = सालानसान_BUFFER_CAPACITY;
+    char* pCSrc=c_सालानसान;
     char* pCSave=pCSrc;
     char* pCSrcLimit=nullptr;
 
@@ -313,15 +313,15 @@ _strFromWCS( char16_t   *dest,
          */
         for(;;){
             /* convert wchars  to chars */
-            retVal = uprv_wcstombs(pCSrc,src, cStackCap);
+            retVal = uprv_wcstombs(pCSrc,src, c_सालानसान_Cap);
     
             if(retVal == -1){
                 *pErrorCode = U_ILLEGAL_CHAR_FOUND;
                 goto cleanup;
-            }else if(retVal >= (cStackCap-1)){
+            }else if(retVal >= (c_सालानसान_Cap-1)){
                 /* Should rarely occur */
-                u_growAnyBufferFromStatic(cStack,(void**)&pCSrc,&cStackCap,
-                    cStackCap * _BUFFER_CAPACITY_MULTIPLIER, 0, sizeof(char));
+                u_growAnyBufferFromStatic(c_सालानसान,(void**)&pCSrc,&c_सालानसान_Cap,
+                    c_सालानसान_Cap * _BUFFER_CAPACITY_MULTIPLIER, 0, sizeof(char));
                 pCSave = pCSrc;
             }else{
                 /* converted every thing */
@@ -335,7 +335,7 @@ _strFromWCS( char16_t   *dest,
          * so it may have nulls embedded and we need to
          * do some extra processing 
          */
-        int32_t remaining =cStackCap;
+        int32_t remaining =c_सालानसान_Cap;
         
         pSrcLimit = src + srcLength;
 
@@ -353,12 +353,12 @@ _strFromWCS( char16_t   *dest,
                     int32_t len = (pCSrc-pCSave);
                     pCSrc = pCSave;
                     /* we do not have enough room so grow the buffer*/
-                    u_growAnyBufferFromStatic(cStack,(void**)&pCSrc,&cStackCap,
-                           _BUFFER_CAPACITY_MULTIPLIER*cStackCap+(nulLen*MB_CUR_MAX),len,sizeof(char));
+                    u_growAnyBufferFromStatic(c_सालानसान,(void**)&pCSrc,&c_सालानसान_Cap,
+                           _BUFFER_CAPACITY_MULTIPLIER*c_सालानसान_Cap+(nulLen*MB_CUR_MAX),len,sizeof(char));
 
                     pCSave = pCSrc;
                     pCSrc = pCSave+len;
-                    remaining = cStackCap-(pCSrc - pCSave);
+                    remaining = c_सालानसान_Cap-(pCSrc - pCSave);
                 }
 
                 /* we have found a null  so convert the 
@@ -384,7 +384,7 @@ _strFromWCS( char16_t   *dest,
                  * end of source so we copy the source to a temp buffer
                  * null terminate it and convert wchar_ts to chars
                  */
-                if(nulLen >= _STACK_BUFFER_CAPACITY){
+                if(nulLen >= सालानसान_BUFFER_CAPACITY){
                     /* Should rarely occur */
                     /* allocate new buffer buffer */
                     pWStack =(wchar_t*) uprv_malloc(sizeof(wchar_t) * (nulLen + 1));
@@ -406,12 +406,12 @@ _strFromWCS( char16_t   *dest,
                     int32_t len = (pCSrc-pCSave);
                     pCSrc = pCSave;
                     /* we do not have enough room so grow the buffer*/
-                    u_growAnyBufferFromStatic(cStack,(void**)&pCSrc,&cStackCap,
-                           cStackCap+(nulLen*MB_CUR_MAX),len,sizeof(char));
+                    u_growAnyBufferFromStatic(c_सालानसान,(void**)&pCSrc,&c_सालानसान_Cap,
+                           c_सालानसान_Cap+(nulLen*MB_CUR_MAX),len,sizeof(char));
 
                     pCSave = pCSrc;
                     pCSrc = pCSave+len;
-                    remaining = cStackCap-(pCSrc - pCSave);
+                    remaining = c_सालानसान_Cap-(pCSrc - pCSave);
                 }
                 /* convert to chars */
                 retVal = uprv_wcstombs(pCSrc,pWStack,remaining);
@@ -448,9 +448,9 @@ _strFromWCS( char16_t   *dest,
         count+= pTarget - target;
 
         if(bufferStatus==U_BUFFER_OVERFLOW_ERROR){
-            target = uStack;
-            pTarget = uStack;
-            pTargetLimit = uStack + _STACK_BUFFER_CAPACITY;
+            target = u_सालानसान;
+            pTarget = u_सालानसान;
+            pTargetLimit = u_सालानसान + सालानसान_BUFFER_CAPACITY;
         } else {
             if (U_FAILURE(bufferStatus)) {
                 *pErrorCode = bufferStatus;
@@ -468,11 +468,11 @@ _strFromWCS( char16_t   *dest,
     
 cleanup:
  
-    if(cStack != pCSave){
+    if(c_सालानसान != pCSave){
         uprv_free(pCSave);
     }
 
-    if(wStack != pWStack){
+    if(w_सालानसान != pWStack){
         uprv_free(pWStack);
     }
     

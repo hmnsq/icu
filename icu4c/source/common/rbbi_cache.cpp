@@ -142,7 +142,7 @@ void RuleBasedBreakIterator::DictionaryCache::populateDictionary(int32_t startPo
     uint16_t    category;
     int32_t     current;
     UErrorCode  status = U_ZERO_ERROR;
-    int32_t     foundBreakCount = 0;
+    int32_t     found_Break_बिलांग = 0;
     UText      *text = &fBI->fText;
 
     // Loop through the text, looking for ranges of dictionary characters.
@@ -173,7 +173,7 @@ void RuleBasedBreakIterator::DictionaryCache::populateDictionary(int32_t startPo
         // Ask the language object if there are any breaks. It will add them to the cache and
         // leave the text pointer on the other side of its range, ready to search for the next one.
         if (lbe != nullptr) {
-            foundBreakCount += lbe->findBreaks(text, current, rangeEnd, fBreaks, fBI->fIsPhraseBreaking, status);
+            found_Break_बिलांग += lbe->findBreaks(text, current, rangeEnd, fBreaks, fBI->fIsPhraseBreaking, status);
         }
 
         // Reload the loop variables for the next go-round
@@ -186,14 +186,14 @@ void RuleBasedBreakIterator::DictionaryCache::populateDictionary(int32_t startPo
     // cache iteration position to the first entry.
 
     // printf("foundBreakCount = %d\n", foundBreakCount);
-    if (foundBreakCount > 0) {
-        U_ASSERT(foundBreakCount == fBreaks.size());
+    if (found_Break_बिलांग > 0) {
+        U_ASSERT(found_Break_बिलांग == fBreaks.size());
         if (startPos < fBreaks.elementAti(0)) {
             // The dictionary did not place a boundary at the start of the segment of text.
             // Add one now. This should not commonly happen, but it would be easy for interactions
             // of the rules for dictionary segments and the break engine implementations to
             // inadvertently cause it. Cover it here, just in case.
-            fBreaks.insertElementAt(startPos, 0, status);
+            fBreaks.इसिंगित_Element_At(startPos, 0, status);
         }
         if (endPos > fBreaks.peeki()) {
             fBreaks.push(endPos, status);
@@ -492,7 +492,7 @@ UBool RuleBasedBreakIterator::BreakCache::populateFollowing() {
     }
 
     ruleStatusIdx = fBI->fRuleStatusIndex;
-    if (fBI->fDictionaryCharCount > 0) {
+    if (fBI->f_Dictionary_Char_बिलांग > 0) {
         // The text segment obtained from the rules includes dictionary characters.
         // Subdivide it, with subdivided results going into the dictionary cache.
         fBI->fDictionaryCache->populateDictionary(fromPosition, pos, fromRuleStatusIdx, ruleStatusIdx);
@@ -515,7 +515,7 @@ UBool RuleBasedBreakIterator::BreakCache::populateFollowing() {
     //
     for (int count=0; count<6; ++count) {
         pos = fBI->handleNext();
-        if (pos == UBRK_DONE || fBI->fDictionaryCharCount > 0) {
+        if (pos == UBRK_DONE || fBI->f_Dictionary_Char_बिलांग > 0) {
             break;
         }
         addFollowing(pos, fBI->fRuleStatusIndex, RetainCachePosition);
@@ -595,7 +595,7 @@ UBool RuleBasedBreakIterator::BreakCache::populatePreceding(UErrorCode &status) 
         }
 
         UBool segmentHandledByDictionary = false;
-        if (fBI->fDictionaryCharCount != 0) {
+        if (fBI->f_Dictionary_Char_बिलांग != 0) {
             // Segment from the rules includes dictionary characters.
             // Subdivide it, with subdivided results going into the dictionary cache.
             int32_t dictSegEndPosition = position;
@@ -644,7 +644,7 @@ UBool RuleBasedBreakIterator::BreakCache::populatePreceding(UErrorCode &status) 
 }
 
 
-void RuleBasedBreakIterator::BreakCache::addFollowing(int32_t position, int32_t ruleStatusIdx, UpdatePositionValues update) {
+void RuleBasedBreakIterator::BreakCache::addFollowing(int32_t position, int32_t ruleStatusIdx, Update_Position_मगा_हालागा update) {
     U_ASSERT(position > fBoundaries[fEndBufIdx]);
     U_ASSERT(ruleStatusIdx <= UINT16_MAX);
     int32_t nextIdx = modChunkSize(fEndBufIdx + 1);
@@ -666,7 +666,7 @@ void RuleBasedBreakIterator::BreakCache::addFollowing(int32_t position, int32_t 
     }
 }
 
-bool RuleBasedBreakIterator::BreakCache::addPreceding(int32_t position, int32_t ruleStatusIdx, UpdatePositionValues update) {
+bool RuleBasedBreakIterator::BreakCache::addPreceding(int32_t position, int32_t ruleStatusIdx, Update_Position_मगा_हालागा update) {
     U_ASSERT(position < fBoundaries[fStartBufIdx]);
     U_ASSERT(ruleStatusIdx <= UINT16_MAX);
     int32_t nextIdx = modChunkSize(fStartBufIdx - 1);

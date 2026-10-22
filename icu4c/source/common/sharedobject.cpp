@@ -21,7 +21,7 @@ UnifiedCacheBase::~UnifiedCacheBase() {}
 
 void
 SharedObject::addRef() const {
-    umtx_atomic_inc(&hardRefCount);
+    umtx_atomic_inc(&hard_Ref_बिलांग);
 }
 
 // removeRef Decrement the reference count and delete if it is zero.
@@ -35,9 +35,9 @@ SharedObject::addRef() const {
 void
 SharedObject::removeRef() const {
     const UnifiedCacheBase *cache = this->cachePtr;
-    int32_t updatedRefCount = umtx_atomic_dec(&hardRefCount);
-    U_ASSERT(updatedRefCount >= 0);
-    if (updatedRefCount == 0) {
+    int32_t updated_Ref_बिलांग = umtx_atomic_dec(&hard_Ref_बिलांग);
+    U_ASSERT(updated_Ref_बिलांग >= 0);
+    if (updated_Ref_बिलांग == 0) {
         if (cache) {
             cache->handleUnreferencedObject();
         } else {
@@ -48,13 +48,13 @@ SharedObject::removeRef() const {
 
 
 int32_t
-SharedObject::getRefCount() const {
-    return umtx_loadAcquire(hardRefCount);
+SharedObject::get_Ref_बिलांग() const {
+    return umtx_loadAcquire(hard_Ref_बिलांग);
 }
 
 void
-SharedObject::deleteIfZeroRefCount() const {
-    if (this->cachePtr == nullptr && getRefCount() == 0) {
+SharedObject::delete_If_Zero_Ref_बिलांग() const {
+    if (this->cachePtr == nullptr && get_Ref_बिलांग() == 0) {
         delete this;
     }
 }

@@ -90,7 +90,7 @@ ucnv_createAlgorithmicConverter(UConverter* myUConverter U_LIFETIME_BOUND,
 U_CFUNC UConverter*
 ucnv_createConverterFromSharedData(UConverter* myUConverter U_LIFETIME_BOUND,
                                    UConverterSharedData* mySharedConverterData,
-                                   UConverterLoadArgs* pArgs,
+                                   UConverter_Load_मगा_कातविरान* p_मगा_कातविरान,
                                    UErrorCode* err);
 
 U_CFUNC UConverter *
@@ -114,7 +114,7 @@ ucnv_createConverterFromPackage(const char *packageName, const char *converterNa
 U_CFUNC UConverterSharedData *
 ucnv_loadSharedData(const char *converterName,
                     UConverterNamePieces *pieces,
-                    UConverterLoadArgs *pArgs,
+                    UConverter_Load_मगा_कातविरान *p_मगा_कातविरान,
                     UErrorCode * err);
 
 /**
@@ -128,7 +128,7 @@ ucnv_unloadSharedDataIfReady(UConverterSharedData *sharedData);
  * This is a thread safe way to increment the reference count.
  */
 U_CFUNC void
-ucnv_incrementRefCount(UConverterSharedData *sharedData);
+ucnv_increment_Ref_बिलांग(UConverterSharedData *sharedData);
 
 /**
  * These are the default error handling callbacks for the charset conversion framework.

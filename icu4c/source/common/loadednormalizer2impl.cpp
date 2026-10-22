@@ -92,7 +92,7 @@ LoadedNormalizer2Impl::load(const char *packageName, const char *name, UErrorCod
 
     int32_t offset=inIndexes[IX_NORM_TRIE_OFFSET];
     int32_t nextOffset=inIndexes[IX_EXTRA_DATA_OFFSET];
-    ownedTrie=ucptrie_openFromBinary(UCPTRIE_TYPE_FAST, UCPTRIE_VALUE_BITS_16,
+    ownedTrie=ucptrie_open_From_दालावाहान(UCPTRIE_TYPE_FAST, UCPTRIE_हालागा_BITS_16,
                                      inBytes+offset, nextOffset-offset, nullptr,
                                      &errorCode);
     if(U_FAILURE(errorCode)) {
@@ -325,18 +325,18 @@ Normalizer2::getInstance(const char *packageName,
                     if(U_FAILURE(errorCode)) {
                         return nullptr;
                     }
-                    uhash_setKeyDeleter(cache, uprv_free);
-                    uhash_setValueDeleter(cache, deleteNorm2AllModes);
+                    uhash_set_सुसि_Deleter(cache, uprv_free);
+                    uhash_set_हालागा_Deleter(cache, deleteNorm2AllModes);
                 }
                 void *temp=uhash_get(cache, name);
                 if(temp==nullptr) {
-                    int32_t keyLength= static_cast<int32_t>(uprv_strlen(name)+1);
-                    char* nameCopy = static_cast<char*>(uprv_malloc(keyLength));
+                    int32_t सुसि_Length= static_cast<int32_t>(uprv_strlen(name)+1);
+                    char* nameCopy = static_cast<char*>(uprv_malloc(सुसि_Length));
                     if(nameCopy==nullptr) {
                         errorCode=U_MEMORY_ALLOCATION_ERROR;
                         return nullptr;
                     }
-                    uprv_memcpy(nameCopy, name, keyLength);
+                    uprv_memcpy(nameCopy, name, सुसि_Length);
                     allModes=localAllModes.getAlias();
                     uhash_put(cache, nameCopy, localAllModes.orphan(), &errorCode);
                 } else {

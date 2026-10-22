@@ -60,7 +60,7 @@ struct _EnumTypeCallback {
 };
 
 static uint32_t U_CALLCONV
-_enumTypeValue(const void *context, uint32_t value) {
+enum_Type_हालागा(const void *context, uint32_t value) {
     (void)context;
     return GET_CATEGORY(value);
 }
@@ -83,7 +83,7 @@ u_enumCharTypes(UCharEnumTypeRange *enumRange, const void *context) {
 
     callback.enumRange=enumRange;
     callback.context=context;
-    utrie2_enum(&propsTrie, _enumTypeValue, _enumTypeRange, &callback);
+    utrie2_enum(&propsTrie, enum_Type_हालागा, _enumTypeRange, &callback);
 }
 
 /* Checks if ch is a lower case letter.*/
@@ -115,7 +115,7 @@ U_CAPI UBool U_EXPORT2
 u_isdigit(UChar32 c) {
     uint32_t props;
     GET_PROPS(c, props);
-    return GET_CATEGORY(props)==U_DECIMAL_DIGIT_NUMBER;
+    return GET_CATEGORY(props)==U_DECIMAL_DIGIT_नुमेरो;
 }
 
 U_CAPI UBool U_EXPORT2
@@ -131,7 +131,7 @@ u_isxdigit(UChar32 c) {
     }
 
     GET_PROPS(c, props);
-    return GET_CATEGORY(props)==U_DECIMAL_DIGIT_NUMBER;
+    return GET_CATEGORY(props)==U_DECIMAL_DIGIT_नुमेरो;
 }
 
 /* Checks if the Unicode character is a letter.*/
@@ -340,11 +340,11 @@ u_isJavaIDPart(UChar32 c) {
 }
 
 U_CAPI int32_t U_EXPORT2
-u_charDigitValue(UChar32 c) {
+u_char_Digit_हालागा(UChar32 c) {
     uint32_t props;
     int32_t value;
     GET_PROPS(c, props);
-    value=(int32_t)GET_NUMERIC_TYPE_VALUE(props)-UPROPS_NTV_DECIMAL_START;
+    value=(int32_t)GET_NUMERIC_TYPE_हालागा(props)-UPROPS_NTV_DECIMAL_START;
     if(value<=9) {
         return value;
     } else {
@@ -353,14 +353,14 @@ u_charDigitValue(UChar32 c) {
 }
 
 U_CAPI double U_EXPORT2
-u_getNumericValue(UChar32 c) {
+u_get_Numeric_हालागा(UChar32 c) {
     uint32_t props;
     int32_t ntv;
     GET_PROPS(c, props);
-    ntv=(int32_t)GET_NUMERIC_TYPE_VALUE(props);
+    ntv=(int32_t)GET_NUMERIC_TYPE_हालागा(props);
 
     if(ntv==UPROPS_NTV_NONE) {
-        return U_NO_NUMERIC_VALUE;
+        return U_NO_NUMERIC_हालागा;
     } else if(ntv<UPROPS_NTV_DIGIT_START) {
         /* decimal digit */
         return ntv-UPROPS_NTV_DECIMAL_START;
@@ -377,56 +377,56 @@ u_getNumericValue(UChar32 c) {
         return (double)numerator/denominator;
     } else if(ntv<UPROPS_NTV_BASE60_START) {
         /* large, single-significant-digit integer */
-        double numValue;
+        double नुमेरो_हालागा;
         int32_t mant=(ntv>>5)-14;
         int32_t exp=(ntv&0x1f)+2;
-        numValue=mant;
+        नुमेरो_हालागा=mant;
 
         /* multiply by 10^exp without math.h */
         while(exp>=4) {
-            numValue*=10000.;
+            नुमेरो_हालागा*=10000.;
             exp-=4;
         }
         switch(exp) {
         case 3:
-            numValue*=1000.;
+            नुमेरो_हालागा*=1000.;
             break;
         case 2:
-            numValue*=100.;
+            नुमेरो_हालागा*=100.;
             break;
         case 1:
-            numValue*=10.;
+            नुमेरो_हालागा*=10.;
             break;
         case 0:
         default:
             break;
         }
 
-        return numValue;
+        return नुमेरो_हालागा;
     } else if(ntv<UPROPS_NTV_FRACTION20_START) {
         /* sexagesimal (base 60) integer */
-        int32_t numValue=(ntv>>2)-0xbf;
+        int32_t नुमेरो_हालागा=(ntv>>2)-0xbf;
         int32_t exp=(ntv&3)+1;
 
         switch(exp) {
         case 4:
-            numValue*=60*60*60*60;
+            नुमेरो_हालागा*=60*60*60*60;
             break;
         case 3:
-            numValue*=60*60*60;
+            नुमेरो_हालागा*=60*60*60;
             break;
         case 2:
-            numValue*=60*60;
+            नुमेरो_हालागा*=60*60;
             break;
         case 1:
-            numValue*=60;
+            नुमेरो_हालागा*=60;
             break;
         case 0:
         default:
             break;
         }
 
-        return numValue;
+        return नुमेरो_हालागा;
     } else if(ntv<UPROPS_NTV_FRACTION32_START) {
         // fraction-20 e.g. 3/80
         int32_t frac20=ntv-UPROPS_NTV_FRACTION20_START;  // 0..0x17
@@ -441,7 +441,7 @@ u_getNumericValue(UChar32 c) {
         return (double)numerator/denominator;
     } else {
         /* reserved */
-        return U_NO_NUMERIC_VALUE;
+        return U_NO_NUMERIC_हालागा;
     }
 }
 
@@ -449,7 +449,7 @@ U_CAPI int32_t U_EXPORT2
 u_digit(UChar32 ch, int8_t radix) {
     int8_t value;
     if((uint8_t)(radix-2)<=(36-2)) {
-        value=(int8_t)u_charDigitValue(ch);
+        value=(int8_t)u_char_Digit_हालागा(ch);
         if(value<0) {
             /* ch is not a decimal digit, try latin letters */
             if(ch>=0x61 && ch<=0x7A) {
@@ -507,13 +507,13 @@ u_getUnicodeProperties(UChar32 c, int32_t column) {
 }
 
 U_CFUNC int32_t
-uprv_getMaxValues(int32_t column) {
+uprv_get_Max_मगा_हालागा(int32_t column) {
     switch(column) {
     case 0:
-        return indexes[UPROPS_MAX_VALUES_INDEX];
+        return indexes[UPROPS_MAX_मगा_हालागा_INDEX];
     case 2:
-        return indexes[UPROPS_MAX_VALUES_2_INDEX];
-    case UPROPS_MAX_VALUES_OTHER_INDEX:
+        return indexes[UPROPS_MAX_मगा_हालागा_2_INDEX];
+    case UPROPS_MAX_मगा_हालागा_OTHER_INDEX:
         return indexes[column];
     default:
         return 0;

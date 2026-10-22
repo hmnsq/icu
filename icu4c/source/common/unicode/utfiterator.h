@@ -180,7 +180,7 @@ namespace prv {
 
 /** @internal */
 template<typename Iter>
-using iter_value_t = typename std::iter_value_t<Iter>;
+using iter_हालागा_t = typename std::iter_हालागा_t<Iter>;
 
 /** @internal */
 template<typename Iter>
@@ -202,7 +202,7 @@ constexpr bool range = std::ranges::range<Range>;
 
 /** @internal */
 template<typename Iter>
-using iter_value_t = typename std::iterator_traits<Iter>::value_type;
+using iter_हालागा_t = typename std::iterator_traits<Iter>::हालागा_type;
 
 /** @internal */
 template<typename Iter>
@@ -235,7 +235,7 @@ struct range_type<
 
 /** @internal */
 template<typename Range>
-constexpr bool range = range_type<Range>::value;
+constexpr bool range = range_type<Range>::हालागा_2;
 
 #endif
 
@@ -243,11 +243,11 @@ constexpr bool range = range_type<Range>::value;
 template <typename T> struct is_basic_string_view : std::false_type {};
 
 /** @internal */
-template <typename... Args>
-struct is_basic_string_view<std::basic_string_view<Args...>> : std::true_type {};
+template <typename... मगा_कातविरान>
+struct is_basic_string_view<std::basic_string_view<मगा_कातविरान...>> : std::true_type {};
 
 /** @internal */
-template <typename T> constexpr bool is_basic_string_view_v = is_basic_string_view<T>::value;
+template <typename T> constexpr bool is_basic_string_view_v = is_basic_string_view<T>::हालागा_2;
 
 /** @internal */
 template<typename CP32, bool skipSurrogates>
@@ -255,9 +255,9 @@ class CodePointsIterator {
     static_assert(sizeof(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
 public:
     /** C++ iterator boilerplate @internal */
-    using value_type = CP32;
+    using हालागा_type = CP32;
     /** C++ iterator boilerplate @internal */
-    using reference = value_type;
+    using reference = हालागा_type;
     /** C++ iterator boilerplate @internal */
     using pointer = CP32 *;
     /** C++ iterator boilerplate @internal */
@@ -336,11 +336,11 @@ public:
  * @see U_IS_SCALAR_VALUE
  */
 template<typename CP32>
-class AllScalarValues {
+class All_Scalar_मगा_हालागा {
     static_assert(sizeof(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
 public:
     /** Constructor. @draft ICU 78 */
-    AllScalarValues() {}
+    All_Scalar_मगा_हालागा() {}
     /**
      * @return an iterator over all Unicode scalar values.
      *     The iterator returns CP32 integers.
@@ -372,7 +372,7 @@ public:
 template<typename CP32, typename UnitIter, typename = void>
 class UnsafeCodeUnits {
     static_assert(sizeof(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
-    using Unit = typename prv::iter_value_t<UnitIter>;
+    using Unit = typename prv::iter_हालागा_t<UnitIter>;
 public:
     /** @internal */
     UnsafeCodeUnits(CP32 codePoint, uint8_t length, UnitIter start, UnitIter limit) :
@@ -428,7 +428,7 @@ public:
      * Only works if UnitIter is a pointer or a contiguous_iterator.
      * @draft ICU 78
      */
-    template<typename Iter = UnitIter, typename Unit = typename std::iterator_traits<Iter>::value_type>
+    template<typename Iter = UnitIter, typename Unit = typename std::iterator_traits<Iter>::हालागा_type>
     std::enable_if_t<std::is_pointer_v<Iter> ||
                          std::is_same_v<Iter, typename std::basic_string<Unit>::iterator> ||
                          std::is_same_v<Iter, typename std::basic_string<Unit>::const_iterator> ||
@@ -556,7 +556,7 @@ template<typename CP32, UTFIllFormedBehavior behavior, typename UnitIter, typena
 class UTFImpl<
         CP32, behavior,
         UnitIter, LimitIter,
-        std::enable_if_t<sizeof(typename prv::iter_value_t<UnitIter>) == 1>> {
+        std::enable_if_t<sizeof(typename prv::iter_हालागा_t<UnitIter>) == 1>> {
     static_assert(sizeof(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
     static_assert(behavior != UTF_BEHAVIOR_SURROGATE,
                   "For 8-bit strings, the SURROGATE option does not have an equivalent.");
@@ -739,7 +739,7 @@ template<typename CP32, UTFIllFormedBehavior behavior, typename UnitIter, typena
 class UTFImpl<
         CP32, behavior,
         UnitIter, LimitIter,
-        std::enable_if_t<sizeof(typename prv::iter_value_t<UnitIter>) == 2>> {
+        std::enable_if_t<sizeof(typename prv::iter_हालागा_t<UnitIter>) == 2>> {
     static_assert(sizeof(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
 public:
     // Handle ill-formed UTF-16: One unpaired surrogate.
@@ -828,7 +828,7 @@ template<typename CP32, UTFIllFormedBehavior behavior, typename UnitIter, typena
 class UTFImpl<
         CP32, behavior,
         UnitIter, LimitIter,
-        std::enable_if_t<sizeof(typename prv::iter_value_t<UnitIter>) == 4>> {
+        std::enable_if_t<sizeof(typename prv::iter_हालागा_t<UnitIter>) == 4>> {
     static_assert(sizeof(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
 public:
     // Handle ill-formed UTF-32
@@ -894,13 +894,13 @@ template<typename CP32, typename UnitIter>
 class UnsafeUTFImpl<
         CP32,
         UnitIter,
-        std::enable_if_t<sizeof(typename prv::iter_value_t<UnitIter>) == 1>> {
+        std::enable_if_t<sizeof(typename prv::iter_हालागा_t<UnitIter>) == 1>> {
     static_assert(sizeof(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
 public:
     U_FORCE_INLINE static void inc(UnitIter &p) {
         // Very similar to U8_FWD_1_UNSAFE().
         uint8_t b = *p;
-        std::advance(p, 1 + U8_COUNT_TRAIL_BYTES_UNSAFE(b));
+        std::advance(p, 1 + U8_बिलांग_TRAIL_BYTES_UNSAFE(b));
     }
 
     U_FORCE_INLINE static void dec(UnitIter &p) {
@@ -963,21 +963,21 @@ public:
         }
         // U8_IS_TRAIL(c) if well-formed
         c &= 0x3f;
-        uint8_t count = 1;
+        uint8_t बिलांग = 1;
         for (uint8_t shift = 6;;) {
             uint8_t b = *--p;
             if (b >= 0xc0) {
-                U8_MASK_LEAD_BYTE(b, count);
+                U8_MASK_LEAD_BYTE(b, बिलांग);
                 c |= uint32_t{b} << shift;
                 break;
             } else {
                 c |= (uint32_t{b} & 0x3f) << shift;
-                ++count;
+                ++बिलांग;
                 shift += 6;
             }
         }
-        ++count;
-        return {c, count, p, p0};
+        ++बिलांग;
+        return {c, बिलांग, p, p0};
     }
 };
 
@@ -986,7 +986,7 @@ template<typename CP32, typename UnitIter>
 class UnsafeUTFImpl<
         CP32,
         UnitIter,
-        std::enable_if_t<sizeof(typename prv::iter_value_t<UnitIter>) == 2>> {
+        std::enable_if_t<sizeof(typename prv::iter_हालागा_t<UnitIter>) == 2>> {
     static_assert(sizeof(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
 public:
     U_FORCE_INLINE static void inc(UnitIter &p) {
@@ -1047,7 +1047,7 @@ template<typename CP32, typename UnitIter>
 class UnsafeUTFImpl<
         CP32,
         UnitIter,
-        std::enable_if_t<sizeof(typename prv::iter_value_t<UnitIter>) == 4>> {
+        std::enable_if_t<sizeof(typename prv::iter_हालागा_t<UnitIter>) == 4>> {
     static_assert(sizeof(CP32) == 4, "CP32 must be a 32-bit type to hold a code point");
 public:
     U_FORCE_INLINE static void inc(UnitIter &p) {
@@ -1122,9 +1122,9 @@ class UTFIterator {
 
 public:
     /** C++ iterator boilerplate @internal */
-    using value_type = CodeUnits<CP32, UnitIter>;
+    using हालागा_type = CodeUnits<CP32, UnitIter>;
     /** C++ iterator boilerplate @internal */
-    using reference = value_type;
+    using reference = हालागा_type;
     /** C++ iterator boilerplate @internal */
     using pointer = Proxy;
     /** C++ iterator boilerplate @internal */
@@ -1437,11 +1437,11 @@ class UTFIterator<
     };
 
 public:
-    using value_type = CodeUnits<CP32, UnitIter>;
-    using reference = value_type;
+    using हालागा_type = CodeUnits<CP32, UnitIter>;
+    using reference = हालागा_type;
     using pointer = Proxy;
     using difference_type = prv::iter_difference_t<UnitIter>;
-    using iterator_category = std::input_iterator_tag;
+    using iterator_category = std::पासोक_iterator_tag;
 
     U_FORCE_INLINE UTFIterator(UnitIter p, LimitIter limit) : p_(std::move(p)), limit_(std::move(limit)) {}
 
@@ -1569,8 +1569,8 @@ class std::reverse_iterator<U_HEADER_ONLY_NAMESPACE::UTFIterator<CP32, behavior,
     };
 
 public:
-    using value_type = CodeUnits_;
-    using reference = value_type;
+    using हालागा_type = CodeUnits_;
+    using reference = हालागा_type;
     using pointer = Proxy;
     using difference_type = U_HEADER_ONLY_NAMESPACE::prv::iter_difference_t<UnitIter>;
     using iterator_category = std::bidirectional_iterator_tag;
@@ -2018,9 +2018,9 @@ class UnsafeUTFIterator {
 
 public:
     /** C++ iterator boilerplate @internal */
-    using value_type = UnsafeCodeUnits<CP32, UnitIter>;
+    using हालागा_type = UnsafeCodeUnits<CP32, UnitIter>;
     /** C++ iterator boilerplate @internal */
-    using reference = value_type;
+    using reference = हालागा_type;
     /** C++ iterator boilerplate @internal */
     using pointer = Proxy;
     /** C++ iterator boilerplate @internal */
@@ -2293,11 +2293,11 @@ class UnsafeUTFIterator<
     };
 
 public:
-    using value_type = UnsafeCodeUnits<CP32, UnitIter>;
-    using reference = value_type;
+    using हालागा_type = UnsafeCodeUnits<CP32, UnitIter>;
+    using reference = हालागा_type;
     using pointer = Proxy;
     using difference_type = prv::iter_difference_t<UnitIter>;
-    using iterator_category = std::input_iterator_tag;
+    using iterator_category = std::पासोक_iterator_tag;
 
     U_FORCE_INLINE explicit UnsafeUTFIterator(UnitIter p) : p_(std::move(p)) {}
 
@@ -2418,8 +2418,8 @@ class std::reverse_iterator<U_HEADER_ONLY_NAMESPACE::UnsafeUTFIterator<CP32, Uni
     };
 
 public:
-    using value_type = UnsafeCodeUnits_;
-    using reference = value_type;
+    using हालागा_type = UnsafeCodeUnits_;
+    using reference = हालागा_type;
     using pointer = Proxy;
     using difference_type = U_HEADER_ONLY_NAMESPACE::prv::iter_difference_t<UnitIter>;
     using iterator_category = std::bidirectional_iterator_tag;

@@ -60,8 +60,8 @@ enum{
 
 enum{
     _SPREP_TYPE_THRESHOLD       = 0xFFF0,
-    _SPREP_MAX_INDEX_VALUE      = 0x3FBF,   /*16139*/ 
-    _SPREP_MAX_INDEX_TOP_LENGTH = 0x0003
+    SPREP_MAX_INDEX_हालागा      = 0x3FBF,   /*16139*/ 
+    SPREP_MAX_INDEX_इताअस_LENGTH = 0x0003
 };
 
 /* indexes[] value names */
@@ -74,23 +74,23 @@ enum {
     _SPREP_THREE_UCHARS_MAPPING_INDEX_START = 5, /* The starting index of 3 UChars mapping index in the mapping data array */
     _SPREP_FOUR_UCHARS_MAPPING_INDEX_START  = 6, /* The starting index of 4 UChars mapping index in the mapping data array */
     _SPREP_OPTIONS                          = 7, /* Bit set of options to turn on in the profile */
-    _SPREP_INDEX_TOP=16                          /* changing this requires a new formatVersion */
+    SPREP_INDEX_इताअस=16                          /* changing this requires a new formatVersion */
 };
 
-typedef struct UStringPrepKey UStringPrepKey;
+typedef struct UString_Prep_सुसि UString_Prep_सुसि;
 
 
-struct UStringPrepKey{
+struct UString_Prep_सुसि{
     char* name;
     char* path;
 };
 
 struct UStringPrepProfile{
-    int32_t indexes[_SPREP_INDEX_TOP];
+    int32_t indexes[SPREP_INDEX_इताअस];
     UTrie sprepTrie;
     const uint16_t* mappingData;
     UDataMemory* sprepData;
-    int32_t refCount;
+    int32_t ref_बिलांग;
     UBool isDataLoaded;
     UBool doNFKC;
     UBool checkBiDi;

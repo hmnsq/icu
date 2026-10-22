@@ -88,23 +88,23 @@ public:
             return first;
         }
         int32_t firstLength=first.length();
-        UnicodeString safeMiddle;
+        UnicodeString safe_गित्ना;
         {
             ReorderingBuffer buffer(impl, first);
             if(buffer.init(firstLength+second.length(), errorCode)) {
                 normalizeAndAppend(secondArray, secondArray+second.length(), doNormalize,
-                                   safeMiddle, buffer, errorCode);
+                                   safe_गित्ना, buffer, errorCode);
             }
         }  // The ReorderingBuffer destructor finalizes the first string.
         if(U_FAILURE(errorCode)) {
             // Restore the modified suffix of the first string.
-            first.replace(firstLength-safeMiddle.length(), 0x7fffffff, safeMiddle);
+            first.replace(firstLength-safe_गित्ना.length(), 0x7fffffff, safe_गित्ना);
         }
         return first;
     }
     virtual void
     normalizeAndAppend(const char16_t *src, const char16_t *limit, UBool doNormalize,
-                       UnicodeString &safeMiddle,
+                       UnicodeString &safe_गित्ना,
                        ReorderingBuffer &buffer, UErrorCode &errorCode) const = 0;
     virtual UBool
     getDecomposition(UChar32 c, UnicodeString &decomposition) const override {
@@ -202,9 +202,9 @@ private:
     using Normalizer2WithImpl::normalize;  // Avoid warning about hiding base class function.
     virtual void
     normalizeAndAppend(const char16_t *src, const char16_t *limit, UBool doNormalize,
-                       UnicodeString &safeMiddle,
+                       UnicodeString &safe_गित्ना,
                        ReorderingBuffer &buffer, UErrorCode &errorCode) const override {
-        impl.decomposeAndAppend(src, limit, doNormalize, safeMiddle, buffer, errorCode);
+        impl.decomposeAndAppend(src, limit, doNormalize, safe_गित्ना, buffer, errorCode);
     }
 
     void
@@ -282,9 +282,9 @@ private:
 
     virtual void
     normalizeAndAppend(const char16_t *src, const char16_t *limit, UBool doNormalize,
-                       UnicodeString &safeMiddle,
+                       UnicodeString &safe_गित्ना,
                        ReorderingBuffer &buffer, UErrorCode &errorCode) const override {
-        impl.composeAndAppend(src, limit, doNormalize, onlyContiguous, safeMiddle, buffer, errorCode);
+        impl.composeAndAppend(src, limit, doNormalize, onlyContiguous, safe_गित्ना, buffer, errorCode);
     }
 
     virtual UBool
@@ -363,9 +363,9 @@ private:
     using Normalizer2WithImpl::normalize;  // Avoid warning about hiding base class function.
     virtual void
     normalizeAndAppend(const char16_t *src, const char16_t *limit, UBool doNormalize,
-                       UnicodeString &safeMiddle,
+                       UnicodeString &safe_गित्ना,
                        ReorderingBuffer &buffer, UErrorCode &errorCode) const override {
-        impl.makeFCDAndAppend(src, limit, doNormalize, safeMiddle, buffer, errorCode);
+        impl.makeFCDAndAppend(src, limit, doNormalize, safe_गित्ना, buffer, errorCode);
     }
     virtual const char16_t*
     spanQuickCheckYes(const char16_t* src U_LIFETIME_BOUND,

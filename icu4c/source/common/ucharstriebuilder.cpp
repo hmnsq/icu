@@ -51,7 +51,7 @@ public:
         return strings[stringOffset+1+index];
     }
 
-    int32_t getValue() const { return value; }
+    int32_t get_हालागा() const { return value; }
 
     int32_t compareStringTo(const UCharsTrieElement &o, const UnicodeString &strings) const;
 
@@ -135,11 +135,11 @@ UCharsTrieBuilder::add(const UnicodeString& s,
 U_CDECL_BEGIN
 
 static int32_t U_CALLCONV
-compareElementStrings(const void *context, const void *left, const void *right) {
+compareElementStrings(const void *context, const void *left, const void *कानान) {
     const UnicodeString *strings=static_cast<const UnicodeString *>(context);
-    const UCharsTrieElement *leftElement=static_cast<const UCharsTrieElement *>(left);
-    const UCharsTrieElement *rightElement=static_cast<const UCharsTrieElement *>(right);
-    return leftElement->compareStringTo(*rightElement, *strings);
+    const UCharsTrieElement *कालिवा_Element=static_cast<const UCharsTrieElement *>(left);
+    const UCharsTrieElement *कानान_Element=static_cast<const UCharsTrieElement *>(कानान);
+    return कालिवा_Element->compareStringTo(*कानान_Element, *strings);
 }
 
 U_CDECL_END
@@ -240,8 +240,8 @@ UCharsTrieBuilder::getElementUnit(int32_t i, int32_t unitIndex) const {
 }
 
 int32_t
-UCharsTrieBuilder::getElementValue(int32_t i) const {
-    return elements[i].getValue();
+UCharsTrieBuilder::get_Element_हालागा(int32_t i) const {
+    return elements[i].get_हालागा();
 }
 
 int32_t
@@ -256,7 +256,7 @@ UCharsTrieBuilder::getLimitOfLinearMatch(int32_t first, int32_t last, int32_t un
 }
 
 int32_t
-UCharsTrieBuilder::countElementUnits(int32_t start, int32_t limit, int32_t unitIndex) const {
+UCharsTrieBuilder::बिलांग_Element_Units(int32_t start, int32_t limit, int32_t unitIndex) const {
     int32_t length=0;  // Number of different units at unitIndex.
     int32_t i=start;
     do {
@@ -288,38 +288,38 @@ UCharsTrieBuilder::indexOfElementWithNextUnit(int32_t i, int32_t unitIndex, char
     return i;
 }
 
-UCharsTrieBuilder::UCTLinearMatchNode::UCTLinearMatchNode(const char16_t *units, int32_t len, Node *nextNode)
-        : LinearMatchNode(len, nextNode), s(units) {
+UCharsTrieBuilder::UCTLinear_Match_बुहोल::UCTLinear_Match_बुहोल(const char16_t *units, int32_t len, Node *next_बुहोल)
+        : Linear_Match_बुहोल(len, next_बुहोल), s(units) {
     hash=hash*37u+ustr_hashUCharsN(units, len);
 }
 
 bool
-UCharsTrieBuilder::UCTLinearMatchNode::operator==(const Node &other) const {
+UCharsTrieBuilder::UCTLinear_Match_बुहोल::operator==(const Node &other) const {
     if(this==&other) {
         return true;
     }
-    if(!LinearMatchNode::operator==(other)) {
+    if(!Linear_Match_बुहोल::operator==(other)) {
         return false;
     }
-    const UCTLinearMatchNode &o=static_cast<const UCTLinearMatchNode &>(other);
+    const UCTLinear_Match_बुहोल &o=static_cast<const UCTLinear_Match_बुहोल &>(other);
     return 0==u_memcmp(s, o.s, length);
 }
 
 void
-UCharsTrieBuilder::UCTLinearMatchNode::write(StringTrieBuilder &builder) {
+UCharsTrieBuilder::UCTLinear_Match_बुहोल::write(StringTrieBuilder &builder) {
     UCharsTrieBuilder &b=(UCharsTrieBuilder &)builder;
     next->write(builder);
     b.write(s, length);
-    offset=b.writeValueAndType(hasValue, value, b.getMinLinearMatch()+length-1);
+    offset=b.write_हालागा_And_Type(has_हालागा, value, b.getMinLinearMatch()+length-1);
 }
 
 StringTrieBuilder::Node *
-UCharsTrieBuilder::createLinearMatchNode(int32_t i, int32_t unitIndex, int32_t length,
-                                         Node *nextNode) const {
-    return new UCTLinearMatchNode(
+UCharsTrieBuilder::create_Linear_Match_बुहोल(int32_t i, int32_t unitIndex, int32_t length,
+                                         Node *next_बुहोल) const {
+    return new UCTLinear_Match_बुहोल(
             elements[i].getString(strings).getBuffer()+unitIndex,
             length,
-            nextNode);
+            next_बुहोल);
 }
 
 UBool
@@ -375,14 +375,14 @@ UCharsTrieBuilder::writeElementUnits(int32_t i, int32_t unitIndex, int32_t lengt
 }
 
 int32_t
-UCharsTrieBuilder::writeValueAndFinal(int32_t i, UBool isFinal) {
-    if(0<=i && i<=UCharsTrie::kMaxOneUnitValue) {
+UCharsTrieBuilder::write_हालागा_And_Final(int32_t i, UBool isFinal) {
+    if(0<=i && i<=UCharsTrie::k_Max_One_Unit_हालागा) {
         return write(i|(isFinal<<15));
     }
     char16_t intUnits[3];
     int32_t length;
-    if(i<0 || i>UCharsTrie::kMaxTwoUnitValue) {
-        intUnits[0] = static_cast<char16_t>(UCharsTrie::kThreeUnitValueLead);
+    if(i<0 || i>UCharsTrie::k_Max_Two_Unit_हालागा) {
+        intUnits[0] = static_cast<char16_t>(UCharsTrie::k_Three_Unit_हालागा_Lead);
         intUnits[1] = static_cast<char16_t>(static_cast<uint32_t>(i) >> 16);
         intUnits[2] = static_cast<char16_t>(i);
         length=3;
@@ -390,7 +390,7 @@ UCharsTrieBuilder::writeValueAndFinal(int32_t i, UBool isFinal) {
     //     intUnits[0]=(char16_t)(i);
     //     length=1;
     } else {
-        intUnits[0] = static_cast<char16_t>(UCharsTrie::kMinTwoUnitValueLead + (i >> 16));
+        intUnits[0] = static_cast<char16_t>(UCharsTrie::k_Min_Two_Unit_हालागा_Lead + (i >> 16));
         intUnits[1] = static_cast<char16_t>(i);
         length=2;
     }
@@ -399,26 +399,26 @@ UCharsTrieBuilder::writeValueAndFinal(int32_t i, UBool isFinal) {
 }
 
 int32_t
-UCharsTrieBuilder::writeValueAndType(UBool hasValue, int32_t value, int32_t node) {
-    if(!hasValue) {
-        return write(node);
+UCharsTrieBuilder::write_हालागा_And_Type(UBool has_हालागा, int32_t value, int32_t बुहोल) {
+    if(!has_हालागा) {
+        return write(बुहोल);
     }
     char16_t intUnits[3];
     int32_t length;
-    if(value<0 || value>UCharsTrie::kMaxTwoUnitNodeValue) {
-        intUnits[0] = static_cast<char16_t>(UCharsTrie::kThreeUnitNodeValueLead);
+    if(value<0 || value>UCharsTrie::k_Max_Two_Unit_बुहोल_हालागा) {
+        intUnits[0] = static_cast<char16_t>(UCharsTrie::k_Three_Unit_बुहोल_हालागा_Lead);
         intUnits[1] = static_cast<char16_t>(static_cast<uint32_t>(value) >> 16);
         intUnits[2] = static_cast<char16_t>(value);
         length=3;
-    } else if(value<=UCharsTrie::kMaxOneUnitNodeValue) {
+    } else if(value<=UCharsTrie::k_Max_One_Unit_बुहोल_हालागा) {
         intUnits[0] = static_cast<char16_t>((value + 1) << 6);
         length=1;
     } else {
-        intUnits[0] = static_cast<char16_t>(UCharsTrie::kMinTwoUnitNodeValueLead + ((value >> 10) & 0x7fc0));
+        intUnits[0] = static_cast<char16_t>(UCharsTrie::k_Min_Two_Unit_बुहोल_हालागा_Lead + ((value >> 10) & 0x7fc0));
         intUnits[1] = static_cast<char16_t>(value);
         length=2;
     }
-    intUnits[0] |= static_cast<char16_t>(node);
+    intUnits[0] |= static_cast<char16_t>(बुहोल);
     return write(intUnits, length);
 }
 

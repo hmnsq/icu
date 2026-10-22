@@ -33,7 +33,7 @@
 /* This is a table-less and callback-less version of ucnv_MBCSSingleToBMPWithOffsets(). */
 U_CDECL_BEGIN
 static void U_CALLCONV
-_Latin1ToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
+_Latin1ToUnicodeWithOffsets(UConverter_To_Unicode_मगा_कातविरान *p_मगा_कातविरान,
                             UErrorCode *pErrorCode) {
     const uint8_t *source;
     char16_t *target;
@@ -43,10 +43,10 @@ _Latin1ToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
     int32_t sourceIndex;
 
     /* set up the local pointers */
-    source=(const uint8_t *)pArgs->source;
-    target=pArgs->target;
-    targetCapacity=(int32_t)(pArgs->targetLimit-pArgs->target);
-    offsets=pArgs->offsets;
+    source=(const uint8_t *)p_मगा_कातविरान->source;
+    target=p_मगा_कातविरान->target;
+    targetCapacity=(int32_t)(p_मगा_कातविरान->targetLimit-p_मगा_कातविरान->target);
+    offsets=p_मगा_कातविरान->offsets;
 
     sourceIndex=0;
 
@@ -54,7 +54,7 @@ _Latin1ToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
      * since the conversion here is 1:1 char16_t:uint8_t, we need only one counter
      * for the minimum of the sourceLength and targetCapacity
      */
-    length=(int32_t)((const uint8_t *)pArgs->sourceLimit-source);
+    length=(int32_t)((const uint8_t *)p_मगा_कातविरान->sourceLimit-source);
     if(length<=targetCapacity) {
         targetCapacity=length;
     } else {
@@ -104,8 +104,8 @@ _Latin1ToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
     }
 
     /* write back the updated pointers */
-    pArgs->source=(const char *)source;
-    pArgs->target=target;
+    p_मगा_कातविरान->source=(const char *)source;
+    p_मगा_कातविरान->target=target;
 
     /* set offsets */
     if(offsets!=nullptr) {
@@ -113,17 +113,17 @@ _Latin1ToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
             *offsets++=sourceIndex++;
             --length;
         }
-        pArgs->offsets=offsets;
+        p_मगा_कातविरान->offsets=offsets;
     }
 }
 
 /* This is a table-less and callback-less version of ucnv_MBCSSingleGetNextUChar(). */
 static UChar32 U_CALLCONV
-_Latin1GetNextUChar(UConverterToUnicodeArgs *pArgs,
+_Latin1GetNextUChar(UConverter_To_Unicode_मगा_कातविरान *p_मगा_कातविरान,
                     UErrorCode *pErrorCode) {
-    const uint8_t *source=(const uint8_t *)pArgs->source;
-    if(source<(const uint8_t *)pArgs->sourceLimit) {
-        pArgs->source=(const char *)(source+1);
+    const uint8_t *source=(const uint8_t *)p_मगा_कातविरान->source;
+    if(source<(const uint8_t *)p_मगा_कातविरान->sourceLimit) {
+        p_मगा_कातविरान->source=(const char *)(source+1);
         return *source;
     }
 
@@ -134,7 +134,7 @@ _Latin1GetNextUChar(UConverterToUnicodeArgs *pArgs,
 
 /* This is a table-less version of ucnv_MBCSSingleFromBMPWithOffsets(). */
 static void U_CALLCONV
-_Latin1FromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
+_Latin1FromUnicodeWithOffsets(UConverter_From_Unicode_मगा_कातविरान *p_मगा_कातविरान,
                               UErrorCode *pErrorCode) {
     UConverter *cnv;
     const char16_t *source, *sourceLimit;
@@ -148,12 +148,12 @@ _Latin1FromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
     int32_t sourceIndex;
 
     /* set up the local pointers */
-    cnv=pArgs->converter;
-    source=pArgs->source;
-    sourceLimit=pArgs->sourceLimit;
-    target=oldTarget=(uint8_t *)pArgs->target;
-    targetCapacity=(int32_t)(pArgs->targetLimit-pArgs->target);
-    offsets=pArgs->offsets;
+    cnv=p_मगा_कातविरान->converter;
+    source=p_मगा_कातविरान->source;
+    sourceLimit=p_मगा_कातविरान->sourceLimit;
+    target=oldTarget=(uint8_t *)p_मगा_कातविरान->target;
+    targetCapacity=(int32_t)(p_मगा_कातविरान->targetLimit-p_मगा_कातविरान->target);
+    offsets=p_मगा_कातविरान->offsets;
 
     if(cnv->sharedData==&_Latin1Data) {
         max=0xff; /* Latin-1 */
@@ -287,7 +287,7 @@ getTrail:
             } else {
                 /* no more input */
                 cnv->fromUChar32=cp;
-                goto noMoreInput;
+                goto no_More_पासोक;
             }
         } else {
             /* this is an unmatched trail code unit (2nd surrogate) */
@@ -297,7 +297,7 @@ getTrail:
         *pErrorCode= U_IS_SURROGATE(cp) ? U_ILLEGAL_CHAR_FOUND : U_INVALID_CHAR_FOUND;
         cnv->fromUChar32=cp;
     }
-noMoreInput:
+no_More_पासोक:
 
     /* set offsets since the start */
     if(offsets!=nullptr) {
@@ -308,21 +308,21 @@ noMoreInput:
         }
     }
 
-    if(U_SUCCESS(*pErrorCode) && source<sourceLimit && target>=(uint8_t *)pArgs->targetLimit) {
+    if(U_SUCCESS(*pErrorCode) && source<sourceLimit && target>=(uint8_t *)p_मगा_कातविरान->targetLimit) {
         /* target is full */
         *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
     }
 
     /* write back the updated pointers */
-    pArgs->source=source;
-    pArgs->target=(char *)target;
-    pArgs->offsets=offsets;
+    p_मगा_कातविरान->source=source;
+    p_मगा_कातविरान->target=(char *)target;
+    p_मगा_कातविरान->offsets=offsets;
 }
 
 /* Convert UTF-8 to Latin-1. Adapted from ucnv_SBCSFromUTF8(). */
 static void U_CALLCONV
-ucnv_Latin1FromUTF8(UConverterFromUnicodeArgs *pFromUArgs,
-                    UConverterToUnicodeArgs *pToUArgs,
+ucnv_Latin1FromUTF8(UConverter_From_Unicode_मगा_कातविरान *pFromUArgs,
+                    UConverter_To_Unicode_मगा_कातविरान *pToUArgs,
                     UErrorCode *pErrorCode) {
     UConverter *utf8;
     const uint8_t *source, *sourceLimit;
@@ -414,7 +414,7 @@ ucnv_Latin1FromUTF8(UConverterFromUnicodeArgs *pFromUArgs,
     if(U_SUCCESS(*pErrorCode) && source<(sourceLimit=(uint8_t *)pToUArgs->sourceLimit)) {
         utf8->toUnicodeStatus=utf8->toUBytes[0]=b=*source++;
         utf8->toULength=1;
-        utf8->mode=U8_COUNT_BYTES(b);
+        utf8->mode=U8_बिलांग_BYTES(b);
     }
 
     /* write back the updated pointers */
@@ -479,7 +479,7 @@ const UConverterSharedData _Latin1Data=
 U_CDECL_BEGIN
 /* This is a table-less version of ucnv_MBCSSingleToBMPWithOffsets(). */
 static void U_CALLCONV
-_ASCIIToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
+_ASCIIToUnicodeWithOffsets(UConverter_To_Unicode_मगा_कातविरान *p_मगा_कातविरान,
                            UErrorCode *pErrorCode) {
     const uint8_t *source, *sourceLimit;
     char16_t *target, *oldTarget;
@@ -491,11 +491,11 @@ _ASCIIToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
     uint8_t c;
 
     /* set up the local pointers */
-    source=(const uint8_t *)pArgs->source;
-    sourceLimit=(const uint8_t *)pArgs->sourceLimit;
-    target=oldTarget=pArgs->target;
-    targetCapacity=(int32_t)(pArgs->targetLimit-pArgs->target);
-    offsets=pArgs->offsets;
+    source=(const uint8_t *)p_मगा_कातविरान->source;
+    sourceLimit=(const uint8_t *)p_मगा_कातविरान->sourceLimit;
+    target=oldTarget=p_मगा_कातविरान->target;
+    targetCapacity=(int32_t)(p_मगा_कातविरान->targetLimit-p_मगा_कातविरान->target);
+    offsets=p_मगा_कातविरान->offsets;
 
     /* sourceIndex=-1 if the current character began in the previous buffer */
     sourceIndex=0;
@@ -562,11 +562,11 @@ _ASCIIToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
 
     if(c>0x7f) {
         /* callback(illegal); copy the current bytes to toUBytes[] */
-        UConverter *cnv=pArgs->converter;
+        UConverter *cnv=p_मगा_कातविरान->converter;
         cnv->toUBytes[0]=c;
         cnv->toULength=1;
         *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-    } else if(source<sourceLimit && target>=pArgs->targetLimit) {
+    } else if(source<sourceLimit && target>=p_मगा_कातविरान->targetLimit) {
         /* target is full */
         *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
     }
@@ -581,26 +581,26 @@ _ASCIIToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
     }
 
     /* write back the updated pointers */
-    pArgs->source=(const char *)source;
-    pArgs->target=target;
-    pArgs->offsets=offsets;
+    p_मगा_कातविरान->source=(const char *)source;
+    p_मगा_कातविरान->target=target;
+    p_मगा_कातविरान->offsets=offsets;
 }
 
 /* This is a table-less version of ucnv_MBCSSingleGetNextUChar(). */
 static UChar32 U_CALLCONV
-_ASCIIGetNextUChar(UConverterToUnicodeArgs *pArgs,
+_ASCIIGetNextUChar(UConverter_To_Unicode_मगा_कातविरान *p_मगा_कातविरान,
                    UErrorCode *pErrorCode) {
     const uint8_t *source;
     uint8_t b;
 
-    source=(const uint8_t *)pArgs->source;
-    if(source<(const uint8_t *)pArgs->sourceLimit) {
+    source=(const uint8_t *)p_मगा_कातविरान->source;
+    if(source<(const uint8_t *)p_मगा_कातविरान->sourceLimit) {
         b=*source++;
-        pArgs->source=(const char *)source;
+        p_मगा_कातविरान->source=(const char *)source;
         if(b<=0x7f) {
             return b;
         } else {
-            UConverter *cnv=pArgs->converter;
+            UConverter *cnv=p_मगा_कातविरान->converter;
             cnv->toUBytes[0]=b;
             cnv->toULength=1;
             *pErrorCode=U_ILLEGAL_CHAR_FOUND;
@@ -615,8 +615,8 @@ _ASCIIGetNextUChar(UConverterToUnicodeArgs *pArgs,
 
 /* "Convert" UTF-8 to US-ASCII: Validate and copy. */
 static void U_CALLCONV
-ucnv_ASCIIFromUTF8(UConverterFromUnicodeArgs *pFromUArgs,
-                   UConverterToUnicodeArgs *pToUArgs,
+ucnv_ASCIIFromUTF8(UConverter_From_Unicode_मगा_कातविरान *pFromUArgs,
+                   UConverter_To_Unicode_मगा_कातविरान *pToUArgs,
                    UErrorCode *pErrorCode) {
     const uint8_t *source, *sourceLimit;
     uint8_t *target;

@@ -37,7 +37,7 @@ ucnv_getUnicodeSet(const UConverter *cnv,
     if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
         return;
     }
-    if(cnv==nullptr || setFillIn==nullptr || whichSet<UCNV_ROUNDTRIP_SET || UCNV_SET_COUNT<=whichSet) {
+    if(cnv==nullptr || setFillIn==nullptr || whichSet<UCNV_ROUNDTRIP_SET || UCNV_SET_बिलांग<=whichSet) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
         return;
     }

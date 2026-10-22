@@ -243,7 +243,7 @@
 /* MBCS converter data and state -------------------------------------------- */
 
 enum {
-    MBCS_MAX_STATE_COUNT=128
+    MBCS_MAX_STATE_बिलांग=128
 };
 
 /**
@@ -271,11 +271,11 @@ enum {
 #define MBCS_ENTRY_TRANSITION_SET_OFFSET(entry, offset) (int32_t)(((entry)&0xff000000)|(offset))
 #define MBCS_ENTRY_TRANSITION_ADD_OFFSET(entry, offset) (int32_t)((entry)+(offset))
 
-#define MBCS_ENTRY_FINAL(state, action, value) (int32_t)(0x80000000|((int32_t)(state)<<24L)|((action)<<20L)|(value))
+#define MBCS_ENTRY_FINAL(state, action, हालागा_2) (int32_t)(0x80000000|((int32_t)(state)<<24L)|((action)<<20L)|(हालागा_2))
 #define MBCS_ENTRY_SET_FINAL(entry) (int32_t)((entry)|0x80000000)
 #define MBCS_ENTRY_FINAL_SET_ACTION(entry, action) (int32_t)(((entry)&0xff0fffff)|((int32_t)(action)<<20L))
-#define MBCS_ENTRY_FINAL_SET_VALUE(entry, value) (int32_t)(((entry)&0xfff00000)|(value))
-#define MBCS_ENTRY_FINAL_SET_ACTION_VALUE(entry, action, value) (int32_t)(((entry)&0xff000000)|((int32_t)(action)<<20L)|(value))
+#define MBCS_ENTRY_FINAL_SET_हालागा(entry, हालागा_2) (int32_t)(((entry)&0xfff00000)|(हालागा_2))
+#define MBCS_ENTRY_FINAL_SET_ACTION_हालागा(entry, action, हालागा_2) (int32_t)(((entry)&0xff000000)|((int32_t)(action)<<20L)|(हालागा_2))
 
 #define MBCS_ENTRY_SET_STATE(entry, state) (int32_t)(((entry)&0x80ffffff)|((int32_t)(state)<<24L))
 
@@ -290,8 +290,8 @@ enum {
 #define MBCS_ENTRY_FINAL_STATE(entry) ((((uint32_t)entry)>>24)&0x7f)
 #define MBCS_ENTRY_FINAL_IS_VALID_DIRECT_16(entry) ((entry)<(int32_t)0x80100000)
 #define MBCS_ENTRY_FINAL_ACTION(entry) ((((uint32_t)entry)>>20)&0xf)
-#define MBCS_ENTRY_FINAL_VALUE(entry) ((entry)&0xfffff)
-#define MBCS_ENTRY_FINAL_VALUE_16(entry) (uint16_t)(entry)
+#define MBCS_ENTRY_FINAL_हालागा(entry) ((entry)&0xfffff)
+#define MBCS_ENTRY_FINAL_हालागा_16(entry) (uint16_t)(entry)
 
 #define IS_ASCII_ROUNDTRIP(b, asciiRoundtrips) (((asciiRoundtrips) & (1<<((b)>>2)))!=0)
 
@@ -299,7 +299,7 @@ enum {
 #define MBCS_SINGLE_RESULT_FROM_U(table, results, c) (results)[ (table)[ (table)[(c)>>10] +(((c)>>4)&0x3f) ] +((c)&0xf) ]
 
 /* single-byte fromUnicode using the sbcsIndex */
-#define SBCS_RESULT_FROM_LOW_BMP(table, results, c) (results)[ (table)[(c)>>6] +((c)&0x3f) ]
+#define SBCS_RESULT_FROM_माबाबा_BMP(table, results, c) (results)[ (table)[(c)>>6] +((c)&0x3f) ]
 
 /* single-byte fromUTF8 using the sbcsIndex; l and t must be masked externally; can be l=0 and t<=0x7f */
 #define SBCS_RESULT_FROM_UTF8(table, results, l, t) (results)[ (table)[l] +(t) ]
@@ -308,8 +308,8 @@ enum {
 #define MBCS_STAGE_2_FROM_U(table, c) ((const uint32_t *)(table))[ (table)[(c)>>10] +(((c)>>4)&0x3f) ]
 #define MBCS_FROM_U_IS_ROUNDTRIP(stage2Entry, c) ( ((stage2Entry) & ((uint32_t)1<< (16+((c)&0xf)) )) !=0)
 
-#define MBCS_VALUE_2_FROM_STAGE_2(bytes, stage2Entry, c) ((uint16_t *)(bytes))[16*(uint32_t)(uint16_t)(stage2Entry)+((c)&0xf)]
-#define MBCS_VALUE_4_FROM_STAGE_2(bytes, stage2Entry, c) ((uint32_t *)(bytes))[16*(uint32_t)(uint16_t)(stage2Entry)+((c)&0xf)]
+#define MBCS_हालागा_2_FROM_STAGE_2(bytes, stage2Entry, c) ((uint16_t *)(bytes))[16*(uint32_t)(uint16_t)(stage2Entry)+((c)&0xf)]
+#define MBCS_हालागा_4_FROM_STAGE_2(bytes, stage2Entry, c) ((uint32_t *)(bytes))[16*(uint32_t)(uint16_t)(stage2Entry)+((c)&0xf)]
 
 #define MBCS_POINTER_3_FROM_STAGE_2(bytes, stage2Entry, c) ((bytes)+(16*(uint32_t)(uint16_t)(stage2Entry)+((c)&0xf))*3)
 
@@ -339,7 +339,7 @@ enum {
 
     MBCS_OUTPUT_EXT_ONLY,   /* e */
 
-    MBCS_OUTPUT_COUNT,
+    MBCS_OUTPUT_बिलांग,
 
     MBCS_OUTPUT_DBCS_ONLY=0xdb  /* runtime-only type for DBCS-only handling of SISO tables */
 };
@@ -369,8 +369,8 @@ enum {
  */
 typedef struct UConverterMBCSTable {
     /* toUnicode */
-    uint8_t countStates, dbcsOnlyState, stateTableOwned;
-    uint32_t countToUFallbacks;
+    uint8_t बिलांग_States, dbcsOnlyState, stateTableOwned;
+    uint32_t बिलांग_To_UFallbacks;
 
     const int32_t (*stateTable)/*[countStates]*/[256];
     int32_t (*swapLFNLStateTable)/*[countStates]*/[256]; /* for swaplfnl */
@@ -462,8 +462,8 @@ enum {
  */
 typedef struct {
     UVersionInfo version;
-    uint32_t countStates,
-             countToUFallbacks,
+    uint32_t बिलांग_States,
+             बिलांग_To_UFallbacks,
              offsetToUCodeUnits,
              offsetFromUTable,
              offsetFromUBytes,
@@ -513,7 +513,7 @@ ucnv_MBCSSingleSimpleGetNextUChar(UConverterSharedData *sharedData,
  * returns fallback values.
  */
 #define _MBCS_SINGLE_SIMPLE_GET_NEXT_BMP(sharedData, b) \
-    (UChar)MBCS_ENTRY_FINAL_VALUE_16((sharedData)->mbcs.stateTable[0][(uint8_t)(b)])
+    (UChar)MBCS_ENTRY_FINAL_हालागा_16((sharedData)->mbcs.stateTable[0][(uint8_t)(b)])
 
 /**
  * This is an internal function that allows other converter implementations
@@ -545,7 +545,7 @@ ucnv_MBCSIsLeadByte(UConverterSharedData *sharedData, char byte);
  */
 U_CFUNC int32_t
 ucnv_MBCSFromUChar32(UConverterSharedData *sharedData,
-                 UChar32 c, uint32_t *pValue,
+                 UChar32 c, uint32_t *p_हालागा,
                  UBool useFallback);
 
 /**
@@ -567,10 +567,10 @@ U_CFUNC UConverterType
 ucnv_MBCSGetType(const UConverter* converter);
 
 U_CFUNC void 
-ucnv_MBCSFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
+ucnv_MBCSFromUnicodeWithOffsets(UConverter_From_Unicode_मगा_कातविरान *p_मगा_कातविरान,
                             UErrorCode *pErrorCode);
 U_CFUNC void 
-ucnv_MBCSToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
+ucnv_MBCSToUnicodeWithOffsets(UConverter_To_Unicode_मगा_कातविरान *p_मगा_कातविरान,
                           UErrorCode *pErrorCode);
 
 /*

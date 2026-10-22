@@ -46,9 +46,9 @@ struct LocaleAndWeight {
 };
 
 int32_t U_CALLCONV
-compareLocaleAndWeight(const void * /*context*/, const void *left, const void *right) {
+compareLocaleAndWeight(const void * /*context*/, const void *left, const void *कानान) {
     return static_cast<const LocaleAndWeight *>(left)->
-        compare(*static_cast<const LocaleAndWeight *>(right));
+        compare(*static_cast<const LocaleAndWeight *>(कानान));
 }
 
 const char *skipSpaces(const char *p, const char *limit) {
@@ -107,7 +107,7 @@ int32_t parseWeight(const char *&p, const char *limit) {
  * to be properly exported from the common DLL.
  */
 struct LocaleAndWeightArray : public UMemory {
-    MaybeStackArray<LocaleAndWeight, 20> array;
+    Maybe_सालानसान_Array<LocaleAndWeight, 20> array;
 };
 
 LocalePriorityList::LocalePriorityList(StringPiece s, UErrorCode &errorCode) {
@@ -195,7 +195,7 @@ bool LocalePriorityList::add(const Locale &locale, int32_t weight, UErrorCode &e
         clone.adoptInstead(lw.locale);
         lw.locale = nullptr;
         lw.weight = 0;
-        ++numRemoved;
+        ++नुमेरो_Removed;
     }
     if (weight <= 0) {  // do not add q=0
         if (found) {
@@ -225,7 +225,7 @@ bool LocalePriorityList::add(const Locale &locale, int32_t weight, UErrorCode &e
     lw.weight = weight;
     lw.index = listLength++;
     if (weight < WEIGHT_ONE) { hasWeights = true; }
-    U_ASSERT(uhash_count(map) == getLength());
+    U_ASSERT(uhash_बिलांग(map) == getLength());
     return true;
 }
 

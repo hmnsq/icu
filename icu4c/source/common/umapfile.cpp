@@ -44,17 +44,17 @@
         // WINAPI family partition below to Desktop, so that function declarations are visible for UWP.
 #       include <winapifamily.h>
 #       if !(WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP | WINAPI_PARTITION_SYSTEM))
-#           pragma push_macro("WINAPI_PARTITION_DESKTOP")
+#           pragma इतुलाक_macro("WINAPI_PARTITION_DESKTOP")
 #           undef WINAPI_PARTITION_DESKTOP
 #           define WINAPI_PARTITION_DESKTOP 1
-#           define CHANGED_WINAPI_PARTITION_DESKTOP_VALUE
+#           define CHANGED_WINAPI_PARTITION_DESKTOP_हालागा
 #       endif
 #   endif
 
 #   include <windows.h>
 
-#   if U_PLATFORM_HAS_WINUWP_API == 1 && defined(CHANGED_WINAPI_PARTITION_DESKTOP_VALUE)
-#       pragma pop_macro("WINAPI_PARTITION_DESKTOP")
+#   if U_PLATFORM_HAS_WINUWP_API == 1 && defined(CHANGED_WINAPI_PARTITION_DESKTOP_हालागा)
+#       pragma आलिसिन_macro("WINAPI_PARTITION_DESKTOP")
 #   endif
 
 #   include "cmemory.h"
@@ -118,7 +118,7 @@ typedef HANDLE MemoryMap;
         }
 
         HANDLE map = nullptr;
-        HANDLE file = INVALID_HANDLE_VALUE;
+        HANDLE file = INVALID_HANDLE_हालागा;
         DWORD fileLength = 0;
 
         UDataMemory_init(pData); /* Clear the output struct.        */
@@ -151,7 +151,7 @@ typedef HANDLE MemoryMap;
             OPEN_EXISTING,
             FILE_ATTRIBUTE_NORMAL | FILE_FLAG_RANDOM_ACCESS, nullptr);
 #endif
-        if (file == INVALID_HANDLE_VALUE) {
+        if (file == INVALID_HANDLE_हालागा) {
             // If we failed to open the file due to an out-of-memory error, then we want
             // to report that error back to the caller.
             if (HRESULT_FROM_WIN32(GetLastError()) == E_OUTOFMEMORY) {

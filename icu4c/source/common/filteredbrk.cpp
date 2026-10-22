@@ -88,7 +88,7 @@ class UStringSet : public UVector {
       delete str;
       return false;
     } else {
-      sortedInsert(str, compareUnicodeString, status);
+      sorted_इसिंगित(str, compareUnicodeString, status);
       if(U_FAILURE(status)) {
         return false;
       }
@@ -198,9 +198,9 @@ public:
 
   /* -- text modifying -- */
   virtual void setText(UText *text, UErrorCode &status) override { fDelegate->setText(text,status); }
-  virtual BreakIterator& refreshInputText(UText* input,
+  virtual BreakIterator& refresh_पासोक_Text(UText* input,
                                           UErrorCode& status) U_LIFETIME_BOUND override {
-      fDelegate->refreshInputText(input, status);
+      fDelegate->refresh_पासोक_Text(input, status);
       return *this;
   }
   virtual void adoptText(CharacterIterator* it) override { fDelegate->adoptText(it); }
@@ -291,7 +291,7 @@ void SimpleFilteredSentenceBreakIterator::resetState(UErrorCode &status) {
 SimpleFilteredSentenceBreakIterator::EFBMatchResult
 SimpleFilteredSentenceBreakIterator::breakExceptionAt(int32_t n) {
     int64_t bestPosn = -1;
-    int32_t bestValue = -1;
+    int32_t best_हालागा = -1;
     // loops while 'n' points to an exception.
     utext_setNativeIndex(fText.getAlias(), n); // from n..
 
@@ -312,9 +312,9 @@ SimpleFilteredSentenceBreakIterator::breakExceptionAt(int32_t n) {
         UChar32 uch;
         while((uch=utext_previous32(fText.getAlias()))!=U_SENTINEL) {  // more to consume backwards
             UStringTrieResult r = iter.nextForCodePoint(uch);
-            if(USTRINGTRIE_HAS_VALUE(r)) { // remember the best match so far
+            if(USTRINGTRIE_HAS_हालागा(r)) { // remember the best match so far
                 bestPosn = utext_getNativeIndex(fText.getAlias());
-                bestValue = iter.getValue();
+                best_हालागा = iter.get_हालागा();
             }
             if(!USTRINGTRIE_HAS_NEXT(r)) {
                 break;
@@ -334,15 +334,15 @@ SimpleFilteredSentenceBreakIterator::breakExceptionAt(int32_t n) {
       //int32_t bestValue = iter.getValue();
       ////if(debug2) u_printf("rev< /%C/ matched, skip..%d  bestValue=%d\n", (char16_t)uch, r, bestValue);
 
-      if(bestValue == kMATCH) { // exact match!
+      if(best_हालागा == kMATCH) { // exact match!
         //if(debug2) u_printf(" exact backward match\n");
         return kExceptionHere; // See if the next is another exception.
-      } else if(bestValue == kPARTIAL
+      } else if(best_हालागा == kPARTIAL
                 && fData->hasForwardsPartialTrie()) { // make sure there's a forward trie
         //if(debug2) u_printf(" partial backward match\n");
         // We matched the "Ph." in "Ph.D." - now we need to run everything through the forwards trie
         // to see if it matches something going forward.
-        UStringTrieResult rfwd = USTRINGTRIE_INTERMEDIATE_VALUE;
+        UStringTrieResult rfwd = USTRINGTRIE_INTERMEDIATE_हालागा;
         utext_setNativeIndex(fText.getAlias(), bestPosn); // hope that's close ..
         //if(debug2) u_printf("Retrying at %d\n", bestPosn);
         // Do not modify the shared trie!
@@ -526,7 +526,7 @@ SimpleFilteredBreakIteratorBuilder::SimpleFilteredBreakIteratorBuilder(const Loc
 #endif
       return;  // leaves the builder empty, if you try to use it.
     }
-    LocalUResourceBundlePointer exceptions(ures_getByKeyWithFallback(b.getAlias(), "exceptions", nullptr, &subStatus));
+    LocalUResourceBundlePointer exceptions(ures_get_By_सुसि_With_Fallback(b.getAlias(), "exceptions", nullptr, &subStatus));
     if (U_FAILURE(subStatus) || (subStatus == U_USING_DEFAULT_WARNING) ) {    
       status = subStatus; // copy the failing status 
 #if FB_DEBUG
@@ -534,7 +534,7 @@ SimpleFilteredBreakIteratorBuilder::SimpleFilteredBreakIteratorBuilder(const Loc
 #endif
       return;  // leaves the builder empty, if you try to use it.
     }
-    LocalUResourceBundlePointer breaks(ures_getByKeyWithFallback(exceptions.getAlias(), "SentenceBreak", nullptr, &subStatus));
+    LocalUResourceBundlePointer breaks(ures_get_By_सुसि_With_Fallback(exceptions.getAlias(), "SentenceBreak", nullptr, &subStatus));
 
 #if FB_DEBUG
     {
@@ -603,17 +603,17 @@ SimpleFilteredBreakIteratorBuilder::build(BreakIterator* adoptBreakIterator, UEr
     return nullptr;
   }
 
-  int32_t revCount = 0;
-  int32_t fwdCount = 0;
+  int32_t rev_बिलांग = 0;
+  int32_t fwd_बिलांग = 0;
 
-  int32_t subCount = fSet.size();
+  int32_t sub_बिलांग = fSet.size();
 
-  UnicodeString *ustrs_ptr = newUnicodeStringArray(subCount);
+  UnicodeString *ustrs_ptr = newUnicodeStringArray(sub_बिलांग);
   
   LocalArray<UnicodeString> ustrs(ustrs_ptr);
 
   LocalMemory<int> partials;
-  partials.allocateInsteadAndReset(subCount);
+  partials.allocateInsteadAndReset(sub_बिलांग);
 
   LocalPointer<UCharsTrie>    backwardsTrie; //  i.e. ".srM" for Mrs.
   LocalPointer<UCharsTrie>    forwardsPartialTrie; //  Has ".a" for "a.M."
@@ -636,14 +636,14 @@ SimpleFilteredBreakIteratorBuilder::build(BreakIterator* adoptBreakIterator, UEr
     n++;
   }
   // first pass - find partials.
-  for(int i=0;i<subCount;i++) {
+  for(int i=0;i<sub_बिलांग;i++) {
     int nn = ustrs[i].indexOf(kFULLSTOP); // TODO: non-'.' abbreviations
     if(nn>-1 && (nn+1)!=ustrs[i].length()) {
       FB_TRACE("partial",&ustrs[i],false,i);
       // is partial.
       // is it unique?
       int sameAs = -1;
-      for(int j=0;j<subCount;j++) {
+      for(int j=0;j<sub_बिलांग;j++) {
         if(j==i) continue;
         if(ustrs[i].compare(0,nn+1,ustrs[j],0,nn+1)==0) {
           FB_TRACE("prefix",&ustrs[j],false,nn+1);
@@ -663,7 +663,7 @@ SimpleFilteredBreakIteratorBuilder::build(BreakIterator* adoptBreakIterator, UEr
         // first one - add the prefix to the reverse table.
         prefix.reverse();
         builder->add(prefix, kPARTIAL, status);
-        revCount++;
+        rev_बिलांग++;
         FB_TRACE("Added partial",&prefix,false, i);
         FB_TRACE(u_errorName(status),&ustrs[i],false,i);
         partials[i] = kSuppressInReverse | kAddToForward;
@@ -673,11 +673,11 @@ SimpleFilteredBreakIteratorBuilder::build(BreakIterator* adoptBreakIterator, UEr
       }
     }
   }
-  for(int i=0;i<subCount;i++) {
+  for(int i=0;i<sub_बिलांग;i++) {
     if(partials[i]==0) {
       ustrs[i].reverse();
       builder->add(ustrs[i], kMATCH, status);
-      revCount++;
+      rev_बिलांग++;
       FB_TRACE(u_errorName(status), &ustrs[i], false, i);
     } else {
       FB_TRACE("Adding fwd",&ustrs[i], false, i);
@@ -687,14 +687,14 @@ SimpleFilteredBreakIteratorBuilder::build(BreakIterator* adoptBreakIterator, UEr
       // instead of "Ph.D." since we already know the "Ph." part is a match.
       // would need the trie to be able to hold 0-length strings, though.
       builder2->add(ustrs[i], kMATCH, status); // forward
-      fwdCount++;
+      fwd_बिलांग++;
       //ustrs[i].reverse();
       ////if(debug2) u_printf("SUPPRESS- not Added(%d):  /%S/ status=%s\n",partials[i], ustrs[i].getTerminatedBuffer(), u_errorName(status));
     }
   }
-  FB_TRACE("AbbrCount",nullptr,false, subCount);
+  FB_TRACE("AbbrCount",nullptr,false, sub_बिलांग);
 
-  if(revCount>0) {
+  if(rev_बिलांग>0) {
     backwardsTrie.adoptInstead(builder->build(USTRINGTRIE_BUILD_FAST, status));
     if(U_FAILURE(status)) {
       FB_TRACE(u_errorName(status),nullptr,false, -1);
@@ -702,7 +702,7 @@ SimpleFilteredBreakIteratorBuilder::build(BreakIterator* adoptBreakIterator, UEr
     }
   }
 
-  if(fwdCount>0) {
+  if(fwd_बिलांग>0) {
     forwardsPartialTrie.adoptInstead(builder2->build(USTRINGTRIE_BUILD_FAST, status));
     if(U_FAILURE(status)) {
       FB_TRACE(u_errorName(status),nullptr,false, -1);

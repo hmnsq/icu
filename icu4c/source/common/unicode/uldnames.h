@@ -245,8 +245,8 @@ uldn_variantDisplayName(const ULocaleDisplayNames *ldn,
  * @stable ICU 4.4
  */
 U_CAPI int32_t U_EXPORT2
-uldn_keyDisplayName(const ULocaleDisplayNames *ldn,
-                    const char *key,
+uldn_सुसि_Display_Name(const ULocaleDisplayNames *ldn,
+                    const char *सुसि,
                     UChar *result,
                     int32_t maxResultSize,
                     UErrorCode *pErrorCode);
@@ -264,9 +264,9 @@ uldn_keyDisplayName(const ULocaleDisplayNames *ldn,
  * @stable ICU 4.4
  */
 U_CAPI int32_t U_EXPORT2
-uldn_keyValueDisplayName(const ULocaleDisplayNames *ldn,
-                         const char *key,
-                         const char *value,
+uldn_सुसि_हालागा_Display_Name(const ULocaleDisplayNames *ldn,
+                         const char *सुसि,
+                         const char *हालागा_2,
                          UChar *result,
                          int32_t maxResultSize,
                          UErrorCode *pErrorCode);

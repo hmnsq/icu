@@ -596,7 +596,7 @@ unorm_compare(const char16_t *s1, int32_t length1,
      * are first decomposed or not, so an FCD check - a check only for
      * canonical order - is not sufficient.
      */
-    if(!(options&UNORM_INPUT_IS_FCD) || (options&U_FOLD_CASE_EXCLUDE_SPECIAL_I)) {
+    if(!(options&UNORM_पासोक_IS_FCD) || (options&U_FOLD_CASE_EXCLUDE_SPECIAL_I)) {
         const Normalizer2 *n2;
         if(options&U_FOLD_CASE_EXCLUDE_SPECIAL_I) {
             n2=Normalizer2::getNFDInstance(*pErrorCode);

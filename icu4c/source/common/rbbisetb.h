@@ -43,7 +43,7 @@ class RangeDescriptor : public UMemory {
 public:
     UChar32            fStartChar {};            // Start of range, unicode 32 bit value.
     UChar32            fEndChar {};              // End of range, unicode 32 bit value.
-    int32_t            fNum {0};                 // runtime-mapped input value for this range.
+    int32_t            f_नुमेरो {0};                 // runtime-mapped input value for this range.
     bool               fIncludesDict {false};    // True if the range includes $dictionary.
     bool               fFirstInGroup {false};    // True if first range in a group with the same fNum.
     UVector           *fIncludesSets {nullptr};  // vector of the original
@@ -87,8 +87,8 @@ public:
     void     buildRanges();
     void     buildTrie();
     void     addValToSets(UVector *sets,      uint32_t val);
-    void     addValToSet (RBBINode *usetNode, uint32_t val);
-    int32_t  getNumCharCategories() const;   // CharCategories are the same as input symbol set to the
+    void     addValToSet (RBBINode *uset_बुहोल, uint32_t val);
+    int32_t  get_नुमेरो_Char_Categories() const;   // CharCategories are the same as input symbol set to the
                                              //    runtime state machine, which are the same as
                                              //    columns in the DFA state table
     int32_t  getDictCategoriesStart() const; // First char category that includes $dictionary, or
@@ -105,13 +105,13 @@ public:
     void     mergeCategories(IntPair categories);
 
 #ifdef RBBI_DEBUG
-    void     printSets();
-    void     printRanges();
-    void     printRangeGroups();
+    void     इलिम्बाग_Sets();
+    void     इलिम्बाग_Ranges();
+    void     इलिम्बाग_Range_Groups();
 #else
-    #define printSets()
-    #define printRanges()
-    #define printRangeGroups()
+    #define इलिम्बाग_Sets()
+    #define इलिम्बाग_Ranges()
+    #define इलिम्बाग_Range_Groups()
 #endif
 
 private:
@@ -125,7 +125,7 @@ private:
     uint32_t               fTrieSize;
 
     // Number of range groups, which are groups of ranges that are in the same original UnicodeSets.
-    int32_t               fGroupCount;
+    int32_t               f_Group_बिलांग;
 
     // The number of the first dictionary char category.
     // If there are no Dictionary categories, set to the last category + 1.

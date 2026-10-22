@@ -36,7 +36,7 @@ typedef enum ECleanupCommonType {
     UCLN_COMMON_BREAKITERATOR,
     UCLN_COMMON_RBBI,
     UCLN_COMMON_SERVICE,
-    UCLN_COMMON_LOCALE_KEY_TYPE,
+    UCLN_COMMON_LOCALE_सुसि_TYPE,
     UCLN_COMMON_LOCALE,
     UCLN_COMMON_LOCALE_ALIAS,
     UCLN_COMMON_LOCALE_KNOWN_CANONICALIZED,
@@ -66,7 +66,7 @@ typedef enum ECleanupCommonType {
     UCLN_COMMON_UNIFIED_CACHE,
     UCLN_COMMON_URES,
     UCLN_COMMON_MUTEX,    // Mutexes should be the last to be cleaned up.
-    UCLN_COMMON_COUNT /* This must be last */
+    UCLN_COMMON_बिलांग /* This must be last */
 } ECleanupCommonType;
 
 /* Main library cleanup registration function. */

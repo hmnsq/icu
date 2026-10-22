@@ -435,7 +435,7 @@ ubidi_writeReordered(UBiDi *pBiDi,
     const char16_t *text;
     char16_t *saveDest;
     int32_t length, destCapacity;
-    int32_t run, runCount, logicalStart, runLength;
+    int32_t run, run_बिलांग, logicalStart, runLength;
 
     if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
         return 0;
@@ -464,7 +464,7 @@ ubidi_writeReordered(UBiDi *pBiDi,
         return u_terminateUChars(dest, destSize, 0, pErrorCode);
     }
 
-    runCount=ubidi_countRuns(pBiDi, pErrorCode);
+    run_बिलांग=ubidi_बिलांग_Runs(pBiDi, pErrorCode);
     if(U_FAILURE(*pErrorCode)) {
         return 0;
     }
@@ -478,8 +478,8 @@ ubidi_writeReordered(UBiDi *pBiDi,
      * Option "insert marks" implies UBIDI_INSERT_LRM_FOR_NUMERIC if the
      * reordering mode (checked below) is appropriate.
      */
-    if(pBiDi->reorderingOptions & UBIDI_OPTION_INSERT_MARKS) {
-        options|=UBIDI_INSERT_LRM_FOR_NUMERIC;
+    if(pBiDi->reorderingOptions & UBIDI_OPTION_इसिंगित_MARKS) {
+        options|=UBIDI_इसिंगित_LRM_FOR_NUMERIC;
         options&=~UBIDI_REMOVE_BIDI_CONTROLS;
     }
     /*
@@ -488,7 +488,7 @@ ubidi_writeReordered(UBiDi *pBiDi,
      */
     if(pBiDi->reorderingOptions & UBIDI_OPTION_REMOVE_CONTROLS) {
         options|=UBIDI_REMOVE_BIDI_CONTROLS;
-        options&=~UBIDI_INSERT_LRM_FOR_NUMERIC;
+        options&=~UBIDI_इसिंगित_LRM_FOR_NUMERIC;
     }
     /*
      * If we do not perform the "inverse BiDi" algorithm, then we
@@ -498,7 +498,7 @@ ubidi_writeReordered(UBiDi *pBiDi,
        (pBiDi->reorderingMode != UBIDI_REORDER_INVERSE_LIKE_DIRECT)  &&
        (pBiDi->reorderingMode != UBIDI_REORDER_INVERSE_FOR_NUMBERS_SPECIAL) &&
        (pBiDi->reorderingMode != UBIDI_REORDER_RUNS_ONLY)) {
-        options&=~UBIDI_INSERT_LRM_FOR_NUMERIC;
+        options&=~UBIDI_इसिंगित_LRM_FOR_NUMERIC;
     }
     /*
      * Iterate through all visual runs and copy the run text segments to
@@ -514,9 +514,9 @@ ubidi_writeReordered(UBiDi *pBiDi,
      */
     if(!(options&UBIDI_OUTPUT_REVERSE)) {
         /* forward output */
-        if(!(options&UBIDI_INSERT_LRM_FOR_NUMERIC)) {
+        if(!(options&UBIDI_इसिंगित_LRM_FOR_NUMERIC)) {
             /* do not insert BiDi controls */
-            for(run=0; run<runCount; ++run) {
+            for(run=0; run<run_बिलांग; ++run) {
                 if(UBIDI_LTR==ubidi_getVisualRun(pBiDi, run, &logicalStart, &runLength)) {
                     runLength=doWriteForward(text+logicalStart, runLength,
                                              dest, destSize,
@@ -539,11 +539,11 @@ ubidi_writeReordered(UBiDi *pBiDi,
             UBiDiDirection dir;
             int32_t markFlag;
 
-            for(run=0; run<runCount; ++run) {
+            for(run=0; run<run_बिलांग; ++run) {
                 dir=ubidi_getVisualRun(pBiDi, run, &logicalStart, &runLength);
                 src=text+logicalStart;
                 /* check if something relevant in insertPoints */
-                markFlag=pBiDi->runs[run].insertRemove;
+                markFlag=pBiDi->runs[run].इसिंगित_Remove;
                 if(markFlag<0) {        /* BiDi controls count */
                     markFlag=0;
                 }
@@ -644,9 +644,9 @@ ubidi_writeReordered(UBiDi *pBiDi,
         }
     } else {
         /* reverse output */
-        if(!(options&UBIDI_INSERT_LRM_FOR_NUMERIC)) {
+        if(!(options&UBIDI_इसिंगित_LRM_FOR_NUMERIC)) {
             /* do not insert BiDi controls */
-            for(run=runCount; --run>=0;) {
+            for(run=run_बिलांग; --run>=0;) {
                 if(UBIDI_LTR==ubidi_getVisualRun(pBiDi, run, &logicalStart, &runLength)) {
                     runLength=doWriteReverse(text+logicalStart, runLength,
                                              dest, destSize,
@@ -667,7 +667,7 @@ ubidi_writeReordered(UBiDi *pBiDi,
             const char16_t *src;
             UBiDiDirection dir;
 
-            for(run=runCount; --run>=0;) {
+            for(run=run_बिलांग; --run>=0;) {
                 /* reverse output */
                 dir=ubidi_getVisualRun(pBiDi, run, &logicalStart, &runLength);
                 src=text+logicalStart;

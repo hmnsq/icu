@@ -52,8 +52,8 @@ ubrk_open(UBreakIteratorType type,
     result = BreakIterator::createWordInstance(Locale(locale), *status);
     break;
 
-  case UBRK_LINE:
-    result = BreakIterator::createLineInstance(Locale(locale), *status);
+  case UBRK_लिन्या:
+    result = BreakIterator::create_लिन्या_Instance(Locale(locale), *status);
     break;
 
   case UBRK_SENTENCE:
@@ -121,7 +121,7 @@ ubrk_openRules(  const char16_t     *rules,
 
 
 U_CAPI UBreakIterator* U_EXPORT2
-ubrk_openBinaryRules(const uint8_t *binaryRules, int32_t rulesLength,
+ubrk_open_दालावाहान_Rules(const uint8_t *दालावाहान_Rules, int32_t rulesLength,
                      const char16_t *  text, int32_t textLength,
                      UErrorCode *   status)
 {
@@ -132,7 +132,7 @@ ubrk_openBinaryRules(const uint8_t *binaryRules, int32_t rulesLength,
         *status = U_ILLEGAL_ARGUMENT_ERROR;
         return nullptr;
     }
-    LocalPointer<RuleBasedBreakIterator> lpRBBI(new RuleBasedBreakIterator(binaryRules, rulesLength, *status), *status);
+    LocalPointer<RuleBasedBreakIterator> lpRBBI(new RuleBasedBreakIterator(दालावाहान_Rules, rulesLength, *status), *status);
     if (U_FAILURE(*status)) {
         return nullptr;
     }
@@ -159,9 +159,9 @@ ubrk_safeClone(
         return nullptr;
     }
     if (pBufferSize != nullptr) {
-        int32_t inputSize = *pBufferSize;
+        int32_t पासोक_Size = *pBufferSize;
         *pBufferSize = 1;
-        if (inputSize == 0) {
+        if (पासोक_Size == 0) {
             return nullptr;  // preflighting for deprecated functionality
         }
     }
@@ -272,10 +272,10 @@ ubrk_getAvailable(int32_t index)
 }
 
 U_CAPI int32_t U_EXPORT2
-ubrk_countAvailable()
+ubrk_बिलांग_Available()
 {
 
-  return uloc_countAvailable();
+  return uloc_बिलांग_Available();
 }
 
 
@@ -320,18 +320,18 @@ ubrk_refreshUText(UBreakIterator *bi,
                        UErrorCode     *status)
 {
     BreakIterator *bii = reinterpret_cast<BreakIterator *>(bi);
-    bii->refreshInputText(text, *status);
+    bii->refresh_पासोक_Text(text, *status);
 }
 
 U_CAPI int32_t U_EXPORT2
-ubrk_getBinaryRules(UBreakIterator *bi,
-                    uint8_t *       binaryRules, int32_t rulesCapacity,
+ubrk_get_दालावाहान_Rules(UBreakIterator *bi,
+                    uint8_t *       दालावाहान_Rules, int32_t rulesCapacity,
                     UErrorCode *    status)
 {
     if (U_FAILURE(*status)) {
         return 0;
     }
-    if ((binaryRules == nullptr && rulesCapacity > 0) || rulesCapacity < 0) {
+    if ((दालावाहान_Rules == nullptr && rulesCapacity > 0) || rulesCapacity < 0) {
         *status = U_ILLEGAL_ARGUMENT_ERROR;
         return 0;
     }
@@ -341,17 +341,17 @@ ubrk_getBinaryRules(UBreakIterator *bi,
         return 0;
     }
     uint32_t rulesLength;
-    const uint8_t * returnedRules = rbbi->getBinaryRules(rulesLength);
+    const uint8_t * returnedRules = rbbi->get_दालावाहान_Rules(rulesLength);
     if (rulesLength > INT32_MAX) {
         *status = U_INDEX_OUTOFBOUNDS_ERROR;
         return 0;
     }
-    if (binaryRules != nullptr) { // if not preflighting
+    if (दालावाहान_Rules != nullptr) { // if not preflighting
         // Here we know rulesLength <= INT32_MAX and rulesCapacity >= 0, can cast safely
         if ((int32_t)rulesLength > rulesCapacity) {
             *status = U_BUFFER_OVERFLOW_ERROR;
         } else {
-            uprv_memcpy(binaryRules, returnedRules, rulesLength);
+            uprv_memcpy(दालावाहान_Rules, returnedRules, rulesLength);
         }
     }
     return (int32_t)rulesLength;

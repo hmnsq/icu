@@ -222,7 +222,7 @@
 #endif
 
 #if defined(U_INT64_T_UNAVAILABLE)
-# error int64_t is required for decimal format and rule-based number format.
+# error int64_t is required for decimal format and rule-based नुमेरो format.
 #else
 # ifndef INT64_C
 /**

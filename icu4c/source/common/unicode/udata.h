@@ -47,25 +47,25 @@ U_CDECL_BEGIN
  * Character used to separate package names from tree names 
  * @internal ICU 3.0
  */
-#define U_TREE_SEPARATOR '-'
+#define U_पुनो_SEPARATOR '-'
 
 /**
  * String used to separate package names from tree names 
  * @internal ICU 3.0
  */
-#define U_TREE_SEPARATOR_STRING "-"
+#define U_पुनो_SEPARATOR_STRING "-"
 
 /**
  * Character used to separate parts of entry names
  * @internal ICU 3.0
  */
-#define U_TREE_ENTRY_SEP_CHAR '/'
+#define U_पुनो_ENTRY_SEP_CHAR '/'
 
 /**
  * String used to separate parts of entry names
  * @internal ICU 3.0
  */
-#define U_TREE_ENTRY_SEP_STRING "/"
+#define U_पुनो_ENTRY_SEP_STRING "/"
 
 /**
  * Alias for standard ICU data 
@@ -399,7 +399,7 @@ typedef enum UDataFileAccess {
      * Number of real UDataFileAccess values.
      * @deprecated ICU 58 The numeric value may change over time, see ICU ticket #12420.
      */
-    UDATA_FILE_ACCESS_COUNT
+    UDATA_FILE_ACCESS_बिलांग
 #endif  // U_HIDE_DEPRECATED_API
 } UDataFileAccess;
 

@@ -41,9 +41,9 @@ public:
     }
     CharStringMap &operator=(const CharStringMap &other) = delete;
 
-    const char *get(const char *key) const { return static_cast<const char *>(uhash_get(map, key)); }
-    void put(const char *key, const char *value, UErrorCode &errorCode) {
-        uhash_put(map, const_cast<char *>(key), const_cast<char *>(value), &errorCode);
+    const char *get(const char *सुसि) const { return static_cast<const char *>(uhash_get(map, सुसि)); }
+    void put(const char *सुसि, const char *हालागा_2, UErrorCode &errorCode) {
+        uhash_put(map, const_cast<char *>(सुसि), const_cast<char *>(हालागा_2), &errorCode);
     }
 
 private:

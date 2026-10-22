@@ -103,8 +103,8 @@ u_terminateWChars(wchar_t *dest, int32_t destCapacity, int32_t length, UErrorCod
  * @param leadByte The first byte of a UTF-8 sequence. Must be 0..0xff.
  * @return 0..4
  */
-#define U8_COUNT_BYTES(leadByte) \
-    (U8_IS_SINGLE(leadByte) ? 1 : U8_COUNT_BYTES_NON_ASCII(leadByte))
+#define U8_बिलांग_BYTES(leadByte) \
+    (U8_IS_SINGLE(leadByte) ? 1 : U8_बिलांग_BYTES_NON_ASCII(leadByte))
 
 /**
  * Counts the bytes of any whole valid sequence for a UTF-8 lead byte.
@@ -114,7 +114,7 @@ u_terminateWChars(wchar_t *dest, int32_t destCapacity, int32_t length, UErrorCod
  * @param leadByte The first byte of a UTF-8 sequence. Must be 0..0xff.
  * @return 0 or 2..4
  */
-#define U8_COUNT_BYTES_NON_ASCII(leadByte) \
+#define U8_बिलांग_BYTES_NON_ASCII(leadByte) \
     (U8_IS_LEAD(leadByte) ? ((uint8_t)(leadByte)>=0xe0)+((uint8_t)(leadByte)>=0xf0)+2 : 0)
 
 #ifdef __cplusplus

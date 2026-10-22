@@ -101,7 +101,7 @@ enum UDisplayContext {
      * formatted with capitalization appropriate for the middle of a sentence.
      * @stable ICU 51
      */
-    UDISPCTX_CAPITALIZATION_FOR_MIDDLE_OF_SENTENCE = (UDISPCTX_TYPE_CAPITALIZATION<<8) + 1,
+    UDISPCTX_CAPITALIZATION_FOR_गित्ना_OF_SENTENCE = (UDISPCTX_TYPE_CAPITALIZATION<<8) + 1,
     /**
      * The capitalization context if a date, date symbol or display name is to be
      * formatted with capitalization appropriate for the beginning of a sentence.

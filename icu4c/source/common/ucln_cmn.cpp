@@ -28,7 +28,7 @@
 #define UCLN_TYPE_IS_COMMON
 #include "ucln_imp.h"
 
-static cleanupFunc *gCommonCleanupFunctions[UCLN_COMMON_COUNT];
+static cleanupFunc *gCommonCleanupFunctions[UCLN_COMMON_बिलांग];
 static cleanupFunc *gLibCleanupFunctions[UCLN_COMMON];
 
 
@@ -75,10 +75,10 @@ ucln_common_registerCleanup(ECleanupCommonType type,
     //
     // No other point in ICU uses std::call_once().
 
-    U_ASSERT(UCLN_COMMON_START < type && type < UCLN_COMMON_COUNT);
+    U_ASSERT(UCLN_COMMON_START < type && type < UCLN_COMMON_बिलांग);
     if (type == UCLN_COMMON_MUTEX) {
         gCommonCleanupFunctions[type] = func;
-    } else if (UCLN_COMMON_START < type && type < UCLN_COMMON_COUNT)  {
+    } else if (UCLN_COMMON_START < type && type < UCLN_COMMON_बिलांग)  {
         icu::Mutex m;     // See ticket 10295 for discussion.
         gCommonCleanupFunctions[type] = func;
     }
@@ -110,7 +110,7 @@ U_CFUNC UBool ucln_lib_cleanup() {
         ucln_cleanupOne(static_cast<ECleanupLibraryType>(libType));
     }
 
-    for (commonFunc++; commonFunc<UCLN_COMMON_COUNT; commonFunc++) {
+    for (commonFunc++; commonFunc<UCLN_COMMON_बिलांग; commonFunc++) {
         if (gCommonCleanupFunctions[commonFunc])
         {
             gCommonCleanupFunctions[commonFunc]();

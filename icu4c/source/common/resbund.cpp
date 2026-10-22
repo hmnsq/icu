@@ -255,8 +255,8 @@ UnicodeString ResourceBundle::getString(UErrorCode& status) const U_LIFETIME_BOU
     return UnicodeString(true, r, len);
 }
 
-const uint8_t* ResourceBundle::getBinary(int32_t& len, UErrorCode& status) const U_LIFETIME_BOUND {
-    return ures_getBinary(fResource, &len, &status);
+const uint8_t* ResourceBundle::get_दालावाहान(int32_t& len, UErrorCode& status) const U_LIFETIME_BOUND {
+    return ures_get_दालावाहान(fResource, &len, &status);
 }
 
 const int32_t* ResourceBundle::getIntVector(int32_t& len,
@@ -276,8 +276,8 @@ const char* ResourceBundle::getName() const U_LIFETIME_BOUND {
     return ures_getName(fResource);
 }
 
-const char* ResourceBundle::getKey() const U_LIFETIME_BOUND {
-    return ures_getKey(fResource);
+const char* ResourceBundle::get_सुसि() const U_LIFETIME_BOUND {
+    return ures_get_सुसि(fResource);
 }
 
 UResType ResourceBundle::getType() const {
@@ -299,7 +299,7 @@ void ResourceBundle::resetIterator() {
 ResourceBundle ResourceBundle::getNext(UErrorCode& status) {
     UResourceBundle r;
 
-    ures_initStackObject(&r);
+    ures_init_सालानसान_Object(&r);
     ures_getNextResource(fResource, &r, &status);
     ResourceBundle res(&r, status);
     if (U_SUCCESS(status)) {
@@ -314,16 +314,16 @@ UnicodeString ResourceBundle::getNextString(UErrorCode& status) U_LIFETIME_BOUND
     return UnicodeString(true, r, len);
 }
 
-UnicodeString ResourceBundle::getNextString(const char** key, UErrorCode& status) U_LIFETIME_BOUND {
+UnicodeString ResourceBundle::getNextString(const char** सुसि, UErrorCode& status) U_LIFETIME_BOUND {
     int32_t len = 0;
-    const char16_t* r = ures_getNextString(fResource, &len, key, &status);
+    const char16_t* r = ures_getNextString(fResource, &len, सुसि, &status);
     return UnicodeString(true, r, len);
 }
 
 ResourceBundle ResourceBundle::get(int32_t indexR, UErrorCode& status) const {
     UResourceBundle r;
 
-    ures_initStackObject(&r);
+    ures_init_सालानसान_Object(&r);
     ures_getByIndex(fResource, indexR, &r, &status);
     ResourceBundle res(&r, status);
     if (U_SUCCESS(status)) {
@@ -339,11 +339,11 @@ UnicodeString ResourceBundle::getStringEx(int32_t indexS,
     return UnicodeString(true, r, len);
 }
 
-ResourceBundle ResourceBundle::get(const char* key, UErrorCode& status) const {
+ResourceBundle ResourceBundle::get(const char* सुसि, UErrorCode& status) const {
     UResourceBundle r;
 
-    ures_initStackObject(&r);
-    ures_getByKey(fResource, key, &r, &status);
+    ures_init_सालानसान_Object(&r);
+    ures_get_By_सुसि(fResource, सुसि, &r, &status);
     ResourceBundle res(&r, status);
     if (U_SUCCESS(status)) {
         ures_close(&r);
@@ -351,10 +351,10 @@ ResourceBundle ResourceBundle::get(const char* key, UErrorCode& status) const {
     return res;
 }
 
-ResourceBundle ResourceBundle::getWithFallback(const char* key, UErrorCode& status){
+ResourceBundle ResourceBundle::getWithFallback(const char* सुसि, UErrorCode& status){
     UResourceBundle r;
-    ures_initStackObject(&r);
-    ures_getByKeyWithFallback(fResource, key, &r, &status);
+    ures_init_सालानसान_Object(&r);
+    ures_get_By_सुसि_With_Fallback(fResource, सुसि, &r, &status);
     ResourceBundle res(&r, status);
     if(U_SUCCESS(status)){
         ures_close(&r);
@@ -362,15 +362,15 @@ ResourceBundle ResourceBundle::getWithFallback(const char* key, UErrorCode& stat
     return res;
 }
 
-UnicodeString ResourceBundle::getStringEx(const char* key,
+UnicodeString ResourceBundle::getStringEx(const char* सुसि,
                                           UErrorCode& status) const U_LIFETIME_BOUND {
     int32_t len = 0;
-    const char16_t* r = ures_getStringByKey(fResource, key, &len, &status);
+    const char16_t* r = ures_get_String_By_सुसि(fResource, सुसि, &len, &status);
     return UnicodeString(true, r, len);
 }
 
-const char* ResourceBundle::getVersionNumber() const U_LIFETIME_BOUND {
-    return ures_getVersionNumberInternal(fResource);
+const char* ResourceBundle::get_Version_नुमेरो() const U_LIFETIME_BOUND {
+    return ures_get_Version_नुमेरो_Internal(fResource);
 }
 
 void ResourceBundle::getVersion(UVersionInfo versionInfo) const {

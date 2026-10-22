@@ -36,7 +36,7 @@
 U_NAMESPACE_BEGIN
 
 static icu::Locale*  availableLocaleList = nullptr;
-static int32_t  availableLocaleListCount;
+static int32_t  available_Locale_List_बिलांग;
 static icu::UInitOnce gInitOnceLocale {};
 
 namespace {
@@ -47,7 +47,7 @@ UBool U_CALLCONV locale_available_cleanup()
         delete []availableLocaleList;
         availableLocaleList = nullptr;
     }
-    availableLocaleListCount = 0;
+    available_Locale_List_बिलांग = 0;
     gInitOnceLocale.reset();
 
     return true;
@@ -61,15 +61,15 @@ void U_CALLCONV locale_available_init() {
     
     // for now, there is a hardcoded list, so just walk through that list and set it up.
     //  Note: this function is a friend of class Locale.
-    availableLocaleListCount = uloc_countAvailable();
-    if(availableLocaleListCount) {
-       availableLocaleList = new Locale[availableLocaleListCount];
+    available_Locale_List_बिलांग = uloc_बिलांग_Available();
+    if(available_Locale_List_बिलांग) {
+       availableLocaleList = new Locale[available_Locale_List_बिलांग];
     }
     if (availableLocaleList == nullptr) {
-        availableLocaleListCount= 0;
+        available_Locale_List_बिलांग= 0;
     }
-    for (int32_t locCount=availableLocaleListCount-1; locCount>=0; --locCount) {
-        availableLocaleList[locCount].setFromPOSIXID(uloc_getAvailable(locCount));
+    for (int32_t loc_बिलांग=available_Locale_List_बिलांग-1; loc_बिलांग>=0; --loc_बिलांग) {
+        availableLocaleList[loc_बिलांग].setFromPOSIXID(uloc_getAvailable(loc_बिलांग));
     }
     ucln_common_registerCleanup(UCLN_COMMON_LOCALE_AVAILABLE, locale_available_cleanup);
 }
@@ -78,7 +78,7 @@ const Locale* U_EXPORT2
 Locale::getAvailableLocales(int32_t& count)
 {
     umtx_initOnce(gInitOnceLocale, &locale_available_init);
-    count = availableLocaleListCount;
+    count = available_Locale_List_बिलांग;
     return availableLocaleList;
 }
 
@@ -100,15 +100,15 @@ icu::UInitOnce ginstalledLocalesInitOnce {};
 
 class AvailableLocalesSink : public ResourceSink {
   public:
-    void put(const char *key, ResourceValue &value, UBool /*noFallback*/, UErrorCode &status) override {
+    void put(const char *सुसि, Resource_हालागा &value, UBool /*noFallback*/, UErrorCode &status) override {
         if (U_FAILURE(status)) { return; }
         ResourceTable resIndexTable = value.getTable(status);
         if (U_FAILURE(status)) { return; }
-        for (int32_t i = 0; resIndexTable.getKeyAndValue(i, key, value); ++i) {
+        for (int32_t i = 0; resIndexTable.get_सुसि_And_हालागा(i, सुसि, value); ++i) {
             ULocAvailableType type;
-            if (uprv_strcmp(key, "InstalledLocales") == 0) {
+            if (uprv_strcmp(सुसि, "InstalledLocales") == 0) {
                 type = ULOC_AVAILABLE_DEFAULT;
-            } else if (uprv_strcmp(key, "AliasLocales") == 0) {
+            } else if (uprv_strcmp(सुसि, "AliasLocales") == 0) {
                 type = ULOC_AVAILABLE_ONLY_LEGACY_ALIASES;
             } else {
                 // CLDRVersion, etc.
@@ -125,8 +125,8 @@ class AvailableLocalesSink : public ResourceSink {
                 status = U_MEMORY_ALLOCATION_ERROR;
                 return;
             }
-            for (int32_t j = 0; availableLocalesTable.getKeyAndValue(j, key, value); ++j) {
-                gAvailableLocaleNames[type][j] = key;
+            for (int32_t j = 0; availableLocalesTable.get_सुसि_And_हालागा(j, सुसि, value); ++j) {
+                gAvailableLocaleNames[type][j] = सुसि;
             }
         }
     }
@@ -144,11 +144,11 @@ class AvailableLocalesStringEnumeration : public StringEnumeration {
 
         // If the "combined" list was requested, resolve that now
         if (fType == ULOC_AVAILABLE_WITH_LEGACY_ALIASES) {
-            int32_t defaultLocalesCount = gAvailableLocaleCounts[ULOC_AVAILABLE_DEFAULT];
-            if (actualIndex < defaultLocalesCount) {
+            int32_t default_Locales_बिलांग = gAvailableLocaleCounts[ULOC_AVAILABLE_DEFAULT];
+            if (actualIndex < default_Locales_बिलांग) {
                 actualType = ULOC_AVAILABLE_DEFAULT;
             } else {
-                actualIndex -= defaultLocalesCount;
+                actualIndex -= default_Locales_बिलांग;
                 actualType = ULOC_AVAILABLE_ONLY_LEGACY_ALIASES;
             }
         }
@@ -210,7 +210,7 @@ void U_CALLCONV loadInstalledLocales(UErrorCode& status) {
 
     icu::LocalUResourceBundlePointer rb(ures_openDirect(nullptr, "res_index", &status));
     AvailableLocalesSink sink;
-    ures_getAllItemsWithFallback(rb.getAlias(), "", sink, status);
+    ures_get_All_मगा_बागाय_With_Fallback(rb.getAlias(), "", sink, status);
 }
 
 void _load_installedLocales(UErrorCode& status) {
@@ -234,7 +234,7 @@ uloc_getAvailable(int32_t offset) {
 }
 
 U_CAPI int32_t  U_EXPORT2
-uloc_countAvailable() {
+uloc_बिलांग_Available() {
     icu::ErrorCode status;
     _load_installedLocales(status);
     if (status.isFailure()) {
@@ -248,7 +248,7 @@ uloc_openAvailableByType(ULocAvailableType type, UErrorCode* status) {
     if (U_FAILURE(*status)) {
         return nullptr;
     }
-    if (type < 0 || type >= ULOC_AVAILABLE_COUNT) {
+    if (type < 0 || type >= ULOC_AVAILABLE_बिलांग) {
         *status = U_ILLEGAL_ARGUMENT_ERROR;
         return nullptr;
     }

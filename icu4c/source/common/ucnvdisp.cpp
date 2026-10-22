@@ -59,7 +59,7 @@ ucnv_getDisplayName(const UConverter *cnv,
     }
 
     /* use the internal name as the key */
-    name=ures_getStringByKey(rb, cnv->sharedData->staticData->name, &length, &localStatus);
+    name=ures_get_String_By_सुसि(rb, cnv->sharedData->staticData->name, &length, &localStatus);
     ures_close(rb);
 
     if(U_SUCCESS(localStatus)) {

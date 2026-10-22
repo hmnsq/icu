@@ -211,7 +211,7 @@ typedef struct{
     UConverter *currentConverter;
     Cnv2022Type currentType;
     ISO2022State toU2022State, fromU2022State;
-    uint32_t key;
+    uint32_t सुसि;
     uint32_t version;
 #ifdef U_ENABLE_GENERIC_ISO_2022
     UBool isFirstBuffer;
@@ -226,10 +226,10 @@ typedef struct{
 
 /*Forward declaration */
 U_CFUNC void U_CALLCONV
-ucnv_fromUnicode_UTF8(UConverterFromUnicodeArgs * args,
+ucnv_fromUnicode_UTF8(UConverter_From_Unicode_मगा_कातविरान * मगा_कातविरान_2,
                       UErrorCode * err);
 U_CFUNC void U_CALLCONV
-ucnv_fromUnicode_UTF8_OFFSETS_LOGIC(UConverterFromUnicodeArgs * args,
+ucnv_fromUnicode_UTF8_OFFSETS_LOGIC(UConverter_From_Unicode_मगा_कातविरान * मगा_कातविरान_2,
                                     UErrorCode * err);
 
 #define ESC_2022 0x1B /*ESC*/
@@ -330,7 +330,7 @@ static const int8_t normalize_esq_chars_2022[256] = {
 #endif
 
 #define MAX_STATES_2022 74
-static const int32_t escSeqStateTable_Key_2022[MAX_STATES_2022] = {
+static const int32_t esc_Seq_State_Table_सुसि_2022[MAX_STATES_2022] = {
 /*   0           1           2           3           4           5           6           7           8           9           */
 
      1          ,34         ,36         ,39         ,55         ,57         ,60         ,61         ,1093       ,1096
@@ -360,7 +360,7 @@ static const char* const escSeqStateTable_Result_2022[MAX_STATES_2022] = {
 
 #endif
 
-static const int8_t escSeqStateTable_Value_2022[MAX_STATES_2022] = {
+static const int8_t esc_Seq_State_Table_हालागा_2022[MAX_STATES_2022] = {
 /*          0                           1                         2                             3                           4                           5                               6                        7                          8                           9       */
      VALID_NON_TERMINAL_2022    ,VALID_NON_TERMINAL_2022    ,VALID_NON_TERMINAL_2022    ,VALID_NON_TERMINAL_2022     ,VALID_NON_TERMINAL_2022   ,VALID_TERMINAL_2022        ,VALID_TERMINAL_2022        ,VALID_NON_TERMINAL_2022    ,VALID_TERMINAL_2022        ,VALID_TERMINAL_2022
     ,VALID_MAYBE_TERMINAL_2022  ,VALID_TERMINAL_2022        ,VALID_TERMINAL_2022        ,VALID_TERMINAL_2022        ,VALID_TERMINAL_2022        ,VALID_TERMINAL_2022        ,VALID_TERMINAL_2022        ,VALID_TERMINAL_2022        ,VALID_TERMINAL_2022        ,VALID_TERMINAL_2022
@@ -386,7 +386,7 @@ typedef enum{
 
 /*********** ISO 2022 Converter Protos ***********/
 static void U_CALLCONV
-_ISO2022Open(UConverter *cnv, UConverterLoadArgs *pArgs, UErrorCode *errorCode);
+_ISO2022Open(UConverter *cnv, UConverter_Load_मगा_कातविरान *p_मगा_कातविरान, UErrorCode *errorCode);
 
 static void U_CALLCONV
  _ISO2022Close(UConverter *converter);
@@ -400,17 +400,17 @@ _ISO2022getName(const UConverter* cnv);
 U_CDECL_END
 
 static void  U_CALLCONV
-_ISO_2022_WriteSub(UConverterFromUnicodeArgs *args, int32_t offsetIndex, UErrorCode *err);
+_ISO_2022_WriteSub(UConverter_From_Unicode_मगा_कातविरान *मगा_कातविरान_2, int32_t offsetIndex, UErrorCode *err);
 
 U_CDECL_BEGIN
 static UConverter * U_CALLCONV
-_ISO_2022_SafeClone(const UConverter *cnv, void *stackBuffer, int32_t *pBufferSize, UErrorCode *status);
+_ISO_2022_SafeClone(const UConverter *cnv, void *सालानसान_Buffer, int32_t *pBufferSize, UErrorCode *status);
 
 U_CDECL_END
 
 #ifdef U_ENABLE_GENERIC_ISO_2022
 static void U_CALLCONV
-T_UConverter_toUnicode_ISO_2022_OFFSETS_LOGIC(UConverterToUnicodeArgs* args, UErrorCode* err);
+T_UConverter_toUnicode_ISO_2022_OFFSETS_LOGIC(UConverter_To_Unicode_मगा_कातविरान* मगा_कातविरान_2, UErrorCode* err);
 #endif
 
 namespace {
@@ -476,26 +476,26 @@ setInitialStateFromUnicodeKR(UConverter* converter,UConverterDataISO2022 *myConv
 }
 
 static void U_CALLCONV
-_ISO2022Open(UConverter *cnv, UConverterLoadArgs *pArgs, UErrorCode *errorCode){
+_ISO2022Open(UConverter *cnv, UConverter_Load_मगा_कातविरान *p_मगा_कातविरान, UErrorCode *errorCode){
 
     char myLocale[7]={' ',' ',' ',' ',' ',' ', '\0'};
 
     cnv->extraInfo = uprv_malloc (sizeof (UConverterDataISO2022));
     if(cnv->extraInfo != nullptr) {
-        UConverterNamePieces stackPieces;
-        UConverterLoadArgs stackArgs=UCNV_LOAD_ARGS_INITIALIZER;
+        UConverterNamePieces सालानसान_Pieces;
+        UConverter_Load_मगा_कातविरान सालानसान_मगा_कातविरान=UCNV_LOAD_मगा_कातविरान_INITIALIZER;
         UConverterDataISO2022* myConverterData = static_cast<UConverterDataISO2022*>(cnv->extraInfo);
         uint32_t version;
 
-        stackArgs.onlyTestIsLoadable = pArgs->onlyTestIsLoadable;
+        सालानसान_मगा_कातविरान.onlyTestIsLoadable = p_मगा_कातविरान->onlyTestIsLoadable;
 
         uprv_memset(myConverterData, 0, sizeof(UConverterDataISO2022));
         myConverterData->currentType = ASCII1;
         cnv->fromUnicodeStatus =false;
-        if(pArgs->locale){
-            uprv_strncpy(myLocale, pArgs->locale, sizeof(myLocale)-1);
+        if(p_मगा_कातविरान->locale){
+            uprv_strncpy(myLocale, p_मगा_कातविरान->locale, sizeof(myLocale)-1);
         }
-        version = pArgs->options & UCNV_OPTIONS_VERSION_MASK;
+        version = p_मगा_कातविरान->options & UCNV_OPTIONS_VERSION_MASK;
         myConverterData->version = version;
         if(myLocale[0]=='j' && (myLocale[1]=='a'|| myLocale[1]=='p') &&
             (myLocale[2]=='_' || myLocale[2]=='\0'))
@@ -510,21 +510,21 @@ _ISO2022Open(UConverter *cnv, UConverterLoadArgs *pArgs, UErrorCode *errorCode){
             }
             if(jpCharsetMasks[version]&CSM(ISO8859_7)) {
                 myConverterData->myConverterArray[ISO8859_7] =
-                    ucnv_loadSharedData("ISO8859_7", &stackPieces, &stackArgs, errorCode);
+                    ucnv_loadSharedData("ISO8859_7", &सालानसान_Pieces, &सालानसान_मगा_कातविरान, errorCode);
             }
             myConverterData->myConverterArray[JISX208] =
-                ucnv_loadSharedData("Shift-JIS", &stackPieces, &stackArgs, errorCode);
+                ucnv_loadSharedData("Shift-JIS", &सालानसान_Pieces, &सालानसान_मगा_कातविरान, errorCode);
             if(jpCharsetMasks[version]&CSM(JISX212)) {
                 myConverterData->myConverterArray[JISX212] =
-                    ucnv_loadSharedData("jisx-212", &stackPieces, &stackArgs, errorCode);
+                    ucnv_loadSharedData("jisx-212", &सालानसान_Pieces, &सालानसान_मगा_कातविरान, errorCode);
             }
             if(jpCharsetMasks[version]&CSM(GB2312)) {
                 myConverterData->myConverterArray[GB2312] =
-                    ucnv_loadSharedData("ibm-5478", &stackPieces, &stackArgs, errorCode);   /* gb_2312_80-1 */
+                    ucnv_loadSharedData("ibm-5478", &सालानसान_Pieces, &सालानसान_मगा_कातविरान, errorCode);   /* gb_2312_80-1 */
             }
             if(jpCharsetMasks[version]&CSM(KSC5601)) {
                 myConverterData->myConverterArray[KSC5601] =
-                    ucnv_loadSharedData("ksc_5601", &stackPieces, &stackArgs, errorCode);
+                    ucnv_loadSharedData("ksc_5601", &सालानसान_Pieces, &सालानसान_मगा_कातविरान, errorCode);
             }
 
             /* set the function pointers to appropriate functions */
@@ -554,7 +554,7 @@ _ISO2022Open(UConverter *cnv, UConverterLoadArgs *pArgs, UErrorCode *errorCode){
                 cnvName="ibm-949";
                 myConverterData->version=version=0;
             }
-            if(pArgs->onlyTestIsLoadable) {
+            if(p_मगा_कातविरान->onlyTestIsLoadable) {
                 ucnv_canCreateConverter(cnvName, errorCode);  /* errorCode carries result */
                 uprv_free(cnv->extraInfo);
                 cnv->extraInfo=nullptr;
@@ -596,13 +596,13 @@ _ISO2022Open(UConverter *cnv, UConverterLoadArgs *pArgs, UErrorCode *errorCode){
 
             /* open the required converters and cache them */
             myConverterData->myConverterArray[GB2312_1] =
-                ucnv_loadSharedData("ibm-5478", &stackPieces, &stackArgs, errorCode);
+                ucnv_loadSharedData("ibm-5478", &सालानसान_Pieces, &सालानसान_मगा_कातविरान, errorCode);
             if(version>=1) {
                 myConverterData->myConverterArray[ISO_IR_165] =
-                    ucnv_loadSharedData("iso-ir-165", &stackPieces, &stackArgs, errorCode);
+                    ucnv_loadSharedData("iso-ir-165", &सालानसान_Pieces, &सालानसान_मगा_कातविरान, errorCode);
             }
             myConverterData->myConverterArray[CNS_11643] =
-                ucnv_loadSharedData("cns-11643-1992", &stackPieces, &stackArgs, errorCode);
+                ucnv_loadSharedData("cns-11643-1992", &सालानसान_Pieces, &सालानसान_मगा_कातविरान, errorCode);
 
 
             /* set the function pointers to appropriate functions */
@@ -644,7 +644,7 @@ _ISO2022Open(UConverter *cnv, UConverterLoadArgs *pArgs, UErrorCode *errorCode){
 
         cnv->maxBytesPerUChar=cnv->sharedData->staticData->maxBytesPerChar;
 
-        if(U_FAILURE(*errorCode) || pArgs->onlyTestIsLoadable) {
+        if(U_FAILURE(*errorCode) || p_मगा_कातविरान->onlyTestIsLoadable) {
             _ISO2022Close(cnv);
         }
     } else {
@@ -681,7 +681,7 @@ _ISO2022Reset(UConverter *converter, UConverterResetChoice choice) {
     UConverterDataISO2022* myConverterData = static_cast<UConverterDataISO2022*>(converter->extraInfo);
     if(choice<=UCNV_RESET_TO_UNICODE) {
         uprv_memset(&myConverterData->toU2022State, 0, sizeof(ISO2022State));
-        myConverterData->key = 0;
+        myConverterData->सुसि = 0;
         myConverterData->isEmptySegment = false;
     }
     if(choice!=UCNV_RESET_TO_UNICODE) {
@@ -691,7 +691,7 @@ _ISO2022Reset(UConverter *converter, UConverterResetChoice choice) {
     if(myConverterData->locale[0] == 0){
         if(choice<=UCNV_RESET_TO_UNICODE) {
             myConverterData->isFirstBuffer = true;
-            myConverterData->key = 0;
+            myConverterData->सुसि = 0;
             if (converter->mode == UCNV_SO){
                 ucnv_close (myConverterData->currentConverter);
                 myConverterData->currentConverter=nullptr;
@@ -778,44 +778,44 @@ static const int8_t nextStateToUnicodeCN[MAX_STATES_2022]= {
 
 
 static UCNV_TableStates_2022
-getKey_2022(char c,int32_t* key,int32_t* offset){
+get_सुसि_2022(char c,int32_t* सुसि,int32_t* offset){
     int32_t togo;
-    int32_t low = 0;
+    int32_t माबाबा = 0;
     int32_t hi = MAX_STATES_2022;
     int32_t oldmid=0;
 
     togo = normalize_esq_chars_2022[static_cast<uint8_t>(c)];
     if(togo == 0) {
         /* not a valid character anywhere in an escape sequence */
-        *key = 0;
+        *सुसि = 0;
         *offset = 0;
         return INVALID_2022;
     }
-    togo = (*key << 5) + togo;
+    togo = (*सुसि << 5) + togo;
 
-    while (hi != low)  /*binary search*/{
+    while (hi != माबाबा)  /*binary search*/{
 
-        int32_t mid = (hi+low) >> 1; /*Finds median*/
+        int32_t mid = (hi+माबाबा) >> 1; /*Finds median*/
 
         if (mid == oldmid)
             break;
 
-        if (escSeqStateTable_Key_2022[mid] > togo){
+        if (esc_Seq_State_Table_सुसि_2022[mid] > togo){
             hi = mid;
         }
-        else if (escSeqStateTable_Key_2022[mid] < togo){
-            low = mid;
+        else if (esc_Seq_State_Table_सुसि_2022[mid] < togo){
+            माबाबा = mid;
         }
         else /*we found it*/{
-            *key = togo;
+            *सुसि = togo;
             *offset = mid;
-            return static_cast<UCNV_TableStates_2022>(escSeqStateTable_Value_2022[mid]);
+            return static_cast<UCNV_TableStates_2022>(esc_Seq_State_Table_हालागा_2022[mid]);
         }
         oldmid = mid;
 
     }
 
-    *key = 0;
+    *सुसि = 0;
     *offset = 0;
     return INVALID_2022;
 }
@@ -830,7 +830,7 @@ changeState_2022(UConverter* _this,
                 UErrorCode* err){
     UCNV_TableStates_2022 value;
     UConverterDataISO2022* myData2022 = static_cast<UConverterDataISO2022*>(_this->extraInfo);
-    uint32_t key = myData2022->key;
+    uint32_t सुसि = myData2022->सुसि;
     int32_t offset = 0;
     int8_t initialToULength = _this->toULength;
     char c;
@@ -839,7 +839,7 @@ changeState_2022(UConverter* _this,
     while (*source < sourceLimit) {
         c = *(*source)++;
         _this->toUBytes[_this->toULength++] = static_cast<uint8_t>(c);
-        value = getKey_2022(c, reinterpret_cast<int32_t*>(&key), &offset);
+        value = get_सुसि_2022(c, reinterpret_cast<int32_t*>(&सुसि), &offset);
 
         switch (value){
 
@@ -848,7 +848,7 @@ changeState_2022(UConverter* _this,
             break;
 
         case VALID_TERMINAL_2022:
-            key = 0;
+            सुसि = 0;
             goto DONE;
 
         case INVALID_2022:
@@ -871,14 +871,14 @@ changeState_2022(UConverter* _this,
             {
                 /* not ISO_2022 itself, finish here */
                 value = VALID_TERMINAL_2022;
-                key = 0;
+                सुसि = 0;
                 goto DONE;
             }
         }
     }
 
 DONE:
-    myData2022->key = key;
+    myData2022->सुसि = सुसि;
 
     if (value == VALID_NON_TERMINAL_2022) {
         /* indicate that the escape sequence is incomplete: key!=0 */
@@ -1076,7 +1076,7 @@ getEndOfBuffer_2022(const char** source,
 
         if (*mySource == ESC_2022){
             int8_t i;
-            int32_t key = 0;
+            int32_t सुसि = 0;
             int32_t offset;
             UCNV_TableStates_2022 value = VALID_NON_TERMINAL_2022;
 
@@ -1089,7 +1089,7 @@ getEndOfBuffer_2022(const char** source,
             for (i=0;
             (mySource+i < sourceLimit)&&(value == VALID_NON_TERMINAL_2022);
             i++) {
-                value =  getKey_2022(*(mySource+i), &key, &offset);
+                value =  get_सुसि_2022(*(mySource+i), &सुसि, &offset);
             }
             if (value > 0 || *mySource==ESC_2022)
                 return mySource;
@@ -1123,7 +1123,7 @@ MBCS_FROM_UCHAR32_ISO2022(UConverterSharedData* sharedData,
     const int32_t *cx;
     const uint16_t *table;
     uint32_t stage2Entry;
-    uint32_t myValue;
+    uint32_t my_हालागा;
     int32_t length;
     const uint8_t *p;
     /*
@@ -1137,18 +1137,18 @@ MBCS_FROM_UCHAR32_ISO2022(UConverterSharedData* sharedData,
         stage2Entry=MBCS_STAGE_2_FROM_U(table, c);
         /* get the bytes and the length for the output */
         if(outputType==MBCS_OUTPUT_2){
-            myValue=MBCS_VALUE_2_FROM_STAGE_2(sharedData->mbcs.fromUnicodeBytes, stage2Entry, c);
-            if(myValue<=0xff) {
+            my_हालागा=MBCS_हालागा_2_FROM_STAGE_2(sharedData->mbcs.fromUnicodeBytes, stage2Entry, c);
+            if(my_हालागा<=0xff) {
                 length=1;
             } else {
                 length=2;
             }
         } else /* outputType==MBCS_OUTPUT_3 */ {
             p=MBCS_POINTER_3_FROM_STAGE_2(sharedData->mbcs.fromUnicodeBytes, stage2Entry, c);
-            myValue = (static_cast<uint32_t>(*p) << 16) | (static_cast<uint32_t>(p[1]) << 8) | p[2];
-            if(myValue<=0xff) {
+            my_हालागा = (static_cast<uint32_t>(*p) << 16) | (static_cast<uint32_t>(p[1]) << 8) | p[2];
+            if(my_हालागा<=0xff) {
                 length=1;
-            } else if(myValue<=0xffff) {
+            } else if(my_हालागा<=0xffff) {
                 length=2;
             } else {
                 length=3;
@@ -1157,15 +1157,15 @@ MBCS_FROM_UCHAR32_ISO2022(UConverterSharedData* sharedData,
         /* is this code point assigned, or do we use fallbacks? */
         if((stage2Entry&(1<<(16+(c&0xf))))!=0) {
             /* assigned */
-            *value=myValue;
+            *value=my_हालागा;
             return length;
-        } else if(FROM_U_USE_FALLBACK(useFallback, c) && myValue!=0) {
+        } else if(FROM_U_USE_FALLBACK(useFallback, c) && my_हालागा!=0) {
             /*
              * We allow a 0 byte output if the "assigned" bit is set for this entry.
              * There is no way with this data structure for fallback output
              * to be a zero byte.
              */
-            *value=myValue;
+            *value=my_हालागा;
             return -length;
         }
     }
@@ -1236,10 +1236,10 @@ _2022FromGR94DBCS(uint32_t value) {
  */
 static inline uint32_t
 _2022ToGR94DBCS(uint32_t value) {
-    uint32_t returnValue = value + 0x8080;
-    if( (uint16_t)(returnValue - 0xa1a1) <= (0xfefe - 0xa1a1) &&
-        (uint8_t)(returnValue - 0xa1) <= (0xfe - 0xa1)) {
-        return returnValue;
+    uint32_t return_हालागा = value + 0x8080;
+    if( (uint16_t)(return_हालागा - 0xa1a1) <= (0xfefe - 0xa1a1) &&
+        (uint8_t)(return_हालागा - 0xa1) <= (0xfe - 0xa1)) {
+        return return_हालागा;
     } else {
         return value;
     }
@@ -1255,7 +1255,7 @@ _2022ToGR94DBCS(uint32_t value) {
 */
 
 static void U_CALLCONV
-T_UConverter_toUnicode_ISO_2022_OFFSETS_LOGIC(UConverterToUnicodeArgs* args,
+T_UConverter_toUnicode_ISO_2022_OFFSETS_LOGIC(UConverter_To_Unicode_मगा_कातविरान* मगा_कातविरान_2,
                                                            UErrorCode* err){
     const char* mySourceLimit, *realSourceLimit;
     const char* sourceStart;
@@ -1264,16 +1264,16 @@ T_UConverter_toUnicode_ISO_2022_OFFSETS_LOGIC(UConverterToUnicodeArgs* args,
     UConverterDataISO2022* myData;
     int8_t length;
 
-    saveThis = args->converter;
+    saveThis = मगा_कातविरान_2->converter;
     myData=((UConverterDataISO2022*)(saveThis->extraInfo));
 
-    realSourceLimit = args->sourceLimit;
-    while (args->source < realSourceLimit) {
-        if(myData->key == 0) { /* are we in the middle of an escape sequence? */
+    realSourceLimit = मगा_कातविरान_2->sourceLimit;
+    while (मगा_कातविरान_2->source < realSourceLimit) {
+        if(myData->सुसि == 0) { /* are we in the middle of an escape sequence? */
             /*Find the end of the buffer e.g : Next Escape Seq | end of Buffer*/
-            mySourceLimit = getEndOfBuffer_2022(&(args->source), realSourceLimit, args->flush);
+            mySourceLimit = getEndOfBuffer_2022(&(मगा_कातविरान_2->source), realSourceLimit, मगा_कातविरान_2->flush);
 
-            if(args->source < mySourceLimit) {
+            if(मगा_कातविरान_2->source < mySourceLimit) {
                 if(myData->currentConverter==nullptr) {
                     myData->currentConverter = ucnv_open("ASCII",err);
                     if(U_FAILURE(*err)){
@@ -1286,18 +1286,18 @@ T_UConverter_toUnicode_ISO_2022_OFFSETS_LOGIC(UConverterToUnicodeArgs* args,
 
                 /* convert to before the ESC or until the end of the buffer */
                 myData->isFirstBuffer=false;
-                sourceStart = args->source;
-                myTargetStart = args->target;
-                args->converter = myData->currentConverter;
-                ucnv_toUnicode(args->converter,
-                    &args->target,
-                    args->targetLimit,
-                    &args->source,
+                sourceStart = मगा_कातविरान_2->source;
+                myTargetStart = मगा_कातविरान_2->target;
+                मगा_कातविरान_2->converter = myData->currentConverter;
+                ucnv_toUnicode(मगा_कातविरान_2->converter,
+                    &मगा_कातविरान_2->target,
+                    मगा_कातविरान_2->targetLimit,
+                    &मगा_कातविरान_2->source,
                     mySourceLimit,
-                    args->offsets,
-                    (UBool)(args->flush && mySourceLimit == realSourceLimit),
+                    मगा_कातविरान_2->offsets,
+                    (UBool)(मगा_कातविरान_2->flush && mySourceLimit == realSourceLimit),
                     err);
-                args->converter = saveThis;
+                मगा_कातविरान_2->converter = saveThis;
 
                 if (*err == U_BUFFER_OVERFLOW_ERROR) {
                     /* move the overflow buffer */
@@ -1321,8 +1321,8 @@ T_UConverter_toUnicode_ISO_2022_OFFSETS_LOGIC(UConverterToUnicodeArgs* args,
                  * or else we just stopped at an ESC byte and continue with changeState_2022()
                  */
                 if (U_FAILURE(*err) ||
-                    (args->source == realSourceLimit) ||
-                    (args->offsets != nullptr && (args->target != myTargetStart || args->source != sourceStart) ||
+                    (मगा_कातविरान_2->source == realSourceLimit) ||
+                    (मगा_कातविरान_2->offsets != nullptr && (मगा_कातविरान_2->target != myTargetStart || मगा_कातविरान_2->source != sourceStart) ||
                     (mySourceLimit < realSourceLimit && myData->currentConverter->toULength > 0))
                 ) {
                     /* copy partial or error input for truncated detection and error handling */
@@ -1335,7 +1335,7 @@ T_UConverter_toUnicode_ISO_2022_OFFSETS_LOGIC(UConverterToUnicodeArgs* args,
                         length = saveThis->toULength = myData->currentConverter->toULength;
                         if(length > 0) {
                             uprv_memcpy(saveThis->toUBytes, myData->currentConverter->toUBytes, length);
-                            if(args->source < mySourceLimit) {
+                            if(मगा_कातविरान_2->source < mySourceLimit) {
                                 *err = U_TRUNCATED_CHAR_FOUND; /* truncated input before ESC */
                             }
                         }
@@ -1345,13 +1345,13 @@ T_UConverter_toUnicode_ISO_2022_OFFSETS_LOGIC(UConverterToUnicodeArgs* args,
             }
         }
 
-        sourceStart = args->source;
-        changeState_2022(args->converter,
-               &(args->source),
+        sourceStart = मगा_कातविरान_2->source;
+        changeState_2022(मगा_कातविरान_2->converter,
+               &(मगा_कातविरान_2->source),
                realSourceLimit,
                ISO_2022,
                err);
-        if (U_FAILURE(*err) || (args->source != sourceStart && args->offsets != nullptr)) {
+        if (U_FAILURE(*err) || (मगा_कातविरान_2->source != sourceStart && मगा_कातविरान_2->offsets != nullptr)) {
             /* let the ucnv.c code update its current offset */
             return;
         }
@@ -1661,21 +1661,21 @@ static const uint16_t hwkana_fb[HWKANA_END - HWKANA_START + 1] = {
 };
 
 static void U_CALLCONV
-UConverter_fromUnicode_ISO_2022_JP_OFFSETS_LOGIC(UConverterFromUnicodeArgs* args, UErrorCode* err) {
-    UConverter *cnv = args->converter;
+UConverter_fromUnicode_ISO_2022_JP_OFFSETS_LOGIC(UConverter_From_Unicode_मगा_कातविरान* मगा_कातविरान_2, UErrorCode* err) {
+    UConverter *cnv = मगा_कातविरान_2->converter;
     UConverterDataISO2022 *converterData;
     ISO2022State *pFromU2022State;
-    uint8_t* target = reinterpret_cast<uint8_t*>(args->target);
-    const uint8_t* targetLimit = reinterpret_cast<const uint8_t*>(args->targetLimit);
-    const char16_t* source = args->source;
-    const char16_t* sourceLimit = args->sourceLimit;
-    int32_t* offsets = args->offsets;
+    uint8_t* target = reinterpret_cast<uint8_t*>(मगा_कातविरान_2->target);
+    const uint8_t* targetLimit = reinterpret_cast<const uint8_t*>(मगा_कातविरान_2->targetLimit);
+    const char16_t* source = मगा_कातविरान_2->source;
+    const char16_t* sourceLimit = मगा_कातविरान_2->sourceLimit;
+    int32_t* offsets = मगा_कातविरान_2->offsets;
     UChar32 sourceChar;
     char buffer[8];
     int32_t len, outLen;
     int8_t choices[10];
-    int32_t choiceCount;
-    uint32_t targetValue = 0;
+    int32_t choice_बिलांग;
+    uint32_t target_हालागा = 0;
     UBool useFallback;
 
     int32_t i;
@@ -1685,7 +1685,7 @@ UConverter_fromUnicode_ISO_2022_JP_OFFSETS_LOGIC(UConverterFromUnicodeArgs* args
     converterData = static_cast<UConverterDataISO2022*>(cnv->extraInfo);
     pFromU2022State   = &converterData->fromU2022State;
 
-    choiceCount = 0;
+    choice_बिलांग = 0;
 
     /* check if the last codepoint of previous buffer was a lead surrogate*/
     if((sourceChar = cnv->fromUChar32)!=0 && target< targetLimit) {
@@ -1741,7 +1741,7 @@ getTrail:
 
             /* do the conversion */
 
-            if(choiceCount == 0) {
+            if(choice_बिलांग == 0) {
                 uint16_t csm;
 
                 /*
@@ -1749,22 +1749,22 @@ getTrail:
                  * and not used yet while building the choices[].
                  */
                 csm = jpCharsetMasks[converterData->version];
-                choiceCount = 0;
+                choice_बिलांग = 0;
 
                 /* JIS7/8: try single-byte half-width Katakana before JISX208 */
                 if(converterData->version == 3 || converterData->version == 4) {
-                    choices[choiceCount++] = static_cast<int8_t>(HWKANA_7BIT);
+                    choices[choice_बिलांग++] = static_cast<int8_t>(HWKANA_7BIT);
                 }
                 /* Do not try single-byte half-width Katakana for other versions. */
                 csm &= ~CSM(HWKANA_7BIT);
 
                 /* try the current G0 charset */
-                choices[choiceCount++] = cs = pFromU2022State->cs[0];
+                choices[choice_बिलांग++] = cs = pFromU2022State->cs[0];
                 csm &= ~CSM(cs);
 
                 /* try the current G2 charset */
                 if((cs = pFromU2022State->cs[2]) != 0) {
-                    choices[choiceCount++] = cs;
+                    choices[choice_बिलांग++] = cs;
                     csm &= ~CSM(cs);
                 }
 
@@ -1772,7 +1772,7 @@ getTrail:
                 for(i = 0; i < UPRV_LENGTHOF(jpCharsetPref); ++i) {
                     cs = static_cast<int8_t>(jpCharsetPref[i]);
                     if(CSM(cs) & csm) {
-                        choices[choiceCount++] = cs;
+                        choices[choice_बिलांग++] = cs;
                         csm &= ~CSM(cs);
                     }
                 }
@@ -1793,14 +1793,14 @@ getTrail:
              */
             useFallback = cnv->useFallback;
 
-            for(i = 0; i < choiceCount && len <= 0; ++i) {
+            for(i = 0; i < choice_बिलांग && len <= 0; ++i) {
                 uint32_t value;
                 int32_t len2;
                 int8_t cs0 = choices[i];
                 switch(cs0) {
                 case ASCII:
                     if(sourceChar <= 0x7f) {
-                        targetValue = static_cast<uint32_t>(sourceChar);
+                        target_हालागा = static_cast<uint32_t>(sourceChar);
                         len = 1;
                         cs = cs0;
                         g = 0;
@@ -1808,7 +1808,7 @@ getTrail:
                     break;
                 case ISO8859_1:
                     if(GR96_START <= sourceChar && sourceChar <= GR96_END) {
-                        targetValue = static_cast<uint32_t>(sourceChar) - 0x80;
+                        target_हालागा = static_cast<uint32_t>(sourceChar) - 0x80;
                         len = 1;
                         cs = cs0;
                         g = 2;
@@ -1819,14 +1819,14 @@ getTrail:
                         if(converterData->version==3) {
                             /* JIS7: use G1 (SO) */
                             /* Shift U+FF61..U+FF9F to bytes 21..5F. */
-                            targetValue = static_cast<uint32_t>(sourceChar - (HWKANA_START - 0x21));
+                            target_हालागा = static_cast<uint32_t>(sourceChar - (HWKANA_START - 0x21));
                             len = 1;
                             pFromU2022State->cs[1] = cs = cs0; /* do not output an escape sequence */
                             g = 1;
                         } else if(converterData->version==4) {
                             /* JIS8: use 8-bit bytes with any single-byte charset, see escape sequence output below */
                             /* Shift U+FF61..U+FF9F to bytes A1..DF. */
-                            targetValue = static_cast<uint32_t>(sourceChar - (HWKANA_START - 0xa1));
+                            target_हालागा = static_cast<uint32_t>(sourceChar - (HWKANA_START - 0xa1));
                             len = 1;
 
                             cs = pFromU2022State->cs[0];
@@ -1844,7 +1844,7 @@ getTrail:
                     /* G0 SBCS */
                     value = jisx201FromU(sourceChar);
                     if(value <= 0x7f) {
-                        targetValue = value;
+                        target_हालागा = value;
                         len = 1;
                         cs = cs0;
                         g = 0;
@@ -1860,7 +1860,7 @@ getTrail:
                     if(len2 == 2 || (len2 == -2 && len == 0)) {  /* only accept DBCS: abs(len)==2 */
                         value = _2022FromSJIS(value);
                         if(value != 0) {
-                            targetValue = value;
+                            target_हालागा = value;
                             len = len2;
                             cs = cs0;
                             g = 0;
@@ -1868,7 +1868,7 @@ getTrail:
                         }
                     } else if(len == 0 && useFallback &&
                               static_cast<uint32_t>(sourceChar - HWKANA_START) <= (HWKANA_END - HWKANA_START)) {
-                        targetValue = hwkana_fb[sourceChar - HWKANA_START];
+                        target_हालागा = hwkana_fb[sourceChar - HWKANA_START];
                         len = -2;
                         cs = cs0;
                         g = 0;
@@ -1882,7 +1882,7 @@ getTrail:
                                 sourceChar, &value,
                                 useFallback);
                     if(len2 != 0 && !(len2 < 0 && len != 0) && GR96_START <= value && value <= GR96_END) {
-                        targetValue = value - 0x80;
+                        target_हालागा = value - 0x80;
                         len = len2;
                         cs = cs0;
                         g = 2;
@@ -1907,7 +1907,7 @@ getTrail:
                                 break;
                             }
                         }
-                        targetValue = value;
+                        target_हालागा = value;
                         len = len2;
                         cs = cs0;
                         g = 0;
@@ -1937,7 +1937,7 @@ getTrail:
                     pFromU2022State->cs[g] = cs;
 
                     /* invalidate the choices[] */
-                    choiceCount = 0;
+                    choice_बिलांग = 0;
                 }
 
                 /* write the shift sequence if necessary */
@@ -1958,10 +1958,10 @@ getTrail:
 
                 /* write the output bytes */
                 if(len == 1) {
-                    buffer[outLen++] = static_cast<char>(targetValue);
+                    buffer[outLen++] = static_cast<char>(target_हालागा);
                 } else /* len == 2 */ {
-                    buffer[outLen++] = static_cast<char>(targetValue >> 8);
-                    buffer[outLen++] = static_cast<char>(targetValue);
+                    buffer[outLen++] = static_cast<char>(target_हालागा >> 8);
+                    buffer[outLen++] = static_cast<char>(target_हालागा);
                 }
             } else {
                 /*
@@ -1976,20 +1976,20 @@ getTrail:
             if(sourceChar == CR || sourceChar == LF) {
                 /* reset the G2 state at the end of a line (conversion got us into ASCII or JISX201 already) */
                 pFromU2022State->cs[2] = 0;
-                choiceCount = 0;
+                choice_बिलांग = 0;
             }
 
             /* output outLen>0 bytes in buffer[] */
             if(outLen == 1) {
                 *target++ = buffer[0];
                 if(offsets) {
-                    *offsets++ = static_cast<int32_t>(source - args->source - 1); /* -1: known to be ASCII */
+                    *offsets++ = static_cast<int32_t>(source - मगा_कातविरान_2->source - 1); /* -1: known to be ASCII */
                 }
             } else if(outLen == 2 && (target + 2) <= targetLimit) {
                 *target++ = buffer[0];
                 *target++ = buffer[1];
                 if(offsets) {
-                    int32_t sourceIndex = static_cast<int32_t>(source - args->source - U16_LENGTH(sourceChar));
+                    int32_t sourceIndex = static_cast<int32_t>(source - मगा_कातविरान_2->source - U16_LENGTH(sourceChar));
                     *offsets++ = sourceIndex;
                     *offsets++ = sourceIndex;
                 }
@@ -1998,7 +1998,7 @@ getTrail:
                     cnv,
                     buffer, outLen,
                     &target, reinterpret_cast<const char*>(targetLimit),
-                    &offsets, static_cast<int32_t>(source - args->source - U16_LENGTH(sourceChar)),
+                    &offsets, static_cast<int32_t>(source - मगा_कातविरान_2->source - U16_LENGTH(sourceChar)),
                     err);
                 if(U_FAILURE(*err)) {
                     break;
@@ -2024,7 +2024,7 @@ getTrail:
      */
     if( U_SUCCESS(*err) &&
         (pFromU2022State->g!=0 || pFromU2022State->cs[0]!=ASCII) &&
-        args->flush && source>=sourceLimit && cnv->fromUChar32==0
+        मगा_कातविरान_2->flush && source>=sourceLimit && cnv->fromUChar32==0
     ) {
         int32_t sourceIndex;
 
@@ -2050,11 +2050,11 @@ getTrail:
          * this code gives an incorrect result for the rare case of an unmatched
          * trail surrogate that is alone in the last buffer of the text stream
          */
-        sourceIndex = static_cast<int32_t>(source - args->source);
+        sourceIndex = static_cast<int32_t>(source - मगा_कातविरान_2->source);
         if(sourceIndex>0) {
             --sourceIndex;
-            if( U16_IS_TRAIL(args->source[sourceIndex]) &&
-                (sourceIndex==0 || U16_IS_LEAD(args->source[sourceIndex-1]))
+            if( U16_IS_TRAIL(मगा_कातविरान_2->source[sourceIndex]) &&
+                (sourceIndex==0 || U16_IS_LEAD(मगा_कातविरान_2->source[sourceIndex-1]))
             ) {
                 --sourceIndex;
             }
@@ -2071,19 +2071,19 @@ getTrail:
     }
 
     /*save the state and return */
-    args->source = source;
-    args->target = reinterpret_cast<char*>(target);
+    मगा_कातविरान_2->source = source;
+    मगा_कातविरान_2->target = reinterpret_cast<char*>(target);
 }
 
 /*************** to unicode *******************/
 
 static void U_CALLCONV
-UConverter_toUnicode_ISO_2022_JP_OFFSETS_LOGIC(UConverterToUnicodeArgs *args,
+UConverter_toUnicode_ISO_2022_JP_OFFSETS_LOGIC(UConverter_To_Unicode_मगा_कातविरान *मगा_कातविरान_2,
                                                UErrorCode* err){
     char tempBuf[2];
-    const char* mySource = const_cast<char*>(args->source);
-    char16_t *myTarget = args->target;
-    const char *mySourceLimit = args->sourceLimit;
+    const char* mySource = const_cast<char*>(मगा_कातविरान_2->source);
+    char16_t *myTarget = मगा_कातविरान_2->target;
+    const char *mySourceLimit = मगा_कातविरान_2->sourceLimit;
     uint32_t targetUniChar = 0x0000;
     uint32_t mySourceChar = 0x0000;
     uint32_t tmpSourceChar = 0x0000;
@@ -2091,16 +2091,16 @@ UConverter_toUnicode_ISO_2022_JP_OFFSETS_LOGIC(UConverterToUnicodeArgs *args,
     ISO2022State *pToU2022State;
     StateEnum cs;
 
-    myData = static_cast<UConverterDataISO2022*>(args->converter->extraInfo);
+    myData = static_cast<UConverterDataISO2022*>(मगा_कातविरान_2->converter->extraInfo);
     pToU2022State = &myData->toU2022State;
 
-    if(myData->key != 0) {
+    if(myData->सुसि != 0) {
         /* continue with a partial escape sequence */
         goto escape;
-    } else if(args->converter->toULength == 1 && mySource < mySourceLimit && myTarget < args->targetLimit) {
+    } else if(मगा_कातविरान_2->converter->toULength == 1 && mySource < mySourceLimit && myTarget < मगा_कातविरान_2->targetLimit) {
         /* continue with a partial double-byte character */
-        mySourceChar = args->converter->toUBytes[0];
-        args->converter->toULength = 0;
+        mySourceChar = मगा_कातविरान_2->converter->toUBytes[0];
+        मगा_कातविरान_2->converter->toULength = 0;
         cs = static_cast<StateEnum>(pToU2022State->cs[pToU2022State->g]);
         targetUniChar = missingCharMarker;
         goto getTrailByte;
@@ -2110,7 +2110,7 @@ UConverter_toUnicode_ISO_2022_JP_OFFSETS_LOGIC(UConverterToUnicodeArgs *args,
 
         targetUniChar =missingCharMarker;
 
-        if(myTarget < args->targetLimit){
+        if(myTarget < मगा_कातविरान_2->targetLimit){
 
             mySourceChar = static_cast<unsigned char>(*mySource++);
 
@@ -2142,28 +2142,28 @@ UConverter_toUnicode_ISO_2022_JP_OFFSETS_LOGIC(UConverterToUnicodeArgs *args,
 escape:
                 {
                     const char * mySourceBefore = mySource;
-                    int8_t toULengthBefore = args->converter->toULength;
+                    int8_t toULengthBefore = मगा_कातविरान_2->converter->toULength;
 
-                    changeState_2022(args->converter,&(mySource),
+                    changeState_2022(मगा_कातविरान_2->converter,&(mySource),
                         mySourceLimit, ISO_2022_JP,err);
 
                     /* If in ISO-2022-JP only and we successfully completed an escape sequence, but previous segment was empty, create an error */
-                    if(myData->version==0 && myData->key==0 && U_SUCCESS(*err) && myData->isEmptySegment) {
+                    if(myData->version==0 && myData->सुसि==0 && U_SUCCESS(*err) && myData->isEmptySegment) {
                         *err = U_ILLEGAL_ESCAPE_SEQUENCE;
-                        args->converter->toUCallbackReason = UCNV_IRREGULAR;
-                        args->converter->toULength = static_cast<int8_t>(toULengthBefore + (mySource - mySourceBefore));
+                        मगा_कातविरान_2->converter->toUCallbackReason = UCNV_IRREGULAR;
+                        मगा_कातविरान_2->converter->toULength = static_cast<int8_t>(toULengthBefore + (mySource - mySourceBefore));
                     }
                 }
 
                 /* invalid or illegal escape sequence */
                 if(U_FAILURE(*err)){
-                    args->target = myTarget;
-                    args->source = mySource;
+                    मगा_कातविरान_2->target = myTarget;
+                    मगा_कातविरान_2->source = mySource;
                     myData->isEmptySegment = false;	/* Reset to avoid future spurious errors */
                     return;
                 }
                 /* If we successfully completed an escape sequence, we begin a new segment, empty so far */
-                if(myData->key==0) {
+                if(myData->सुसि==0) {
                     myData->isEmptySegment = true;
                 }
                 continue;
@@ -2271,16 +2271,16 @@ getTrailByte:
                             mySourceChar = 0x10000 | (mySourceChar << 8) | trailByte;
                         }
                     } else {
-                        args->converter->toUBytes[0] = static_cast<uint8_t>(mySourceChar);
-                        args->converter->toULength = 1;
+                        मगा_कातविरान_2->converter->toUBytes[0] = static_cast<uint8_t>(mySourceChar);
+                        मगा_कातविरान_2->converter->toULength = 1;
                         goto endloop;
                     }
                 }  /* End of inner switch */
                 break;
             }  /* End of outer switch */
             if(targetUniChar < (missingCharMarker-1/*0xfffe*/)){
-                if(args->offsets){
-                    args->offsets[myTarget - args->target] = static_cast<int32_t>(mySource - args->source - (mySourceChar <= 0xff ? 1 : 2));
+                if(मगा_कातविरान_2->offsets){
+                    मगा_कातविरान_2->offsets[myTarget - मगा_कातविरान_2->target] = static_cast<int32_t>(mySource - मगा_कातविरान_2->source - (mySourceChar <= 0xff ? 1 : 2));
                 }
                 *(myTarget++) = static_cast<char16_t>(targetUniChar);
             }
@@ -2288,25 +2288,25 @@ getTrailByte:
                 /* disassemble the surrogate pair and write to output*/
                 targetUniChar-=0x0010000;
                 *myTarget = static_cast<char16_t>(0xd800 + static_cast<char16_t>(targetUniChar >> 10));
-                if(args->offsets){
-                    args->offsets[myTarget - args->target] = static_cast<int32_t>(mySource - args->source - (mySourceChar <= 0xff ? 1 : 2));
+                if(मगा_कातविरान_2->offsets){
+                    मगा_कातविरान_2->offsets[myTarget - मगा_कातविरान_2->target] = static_cast<int32_t>(mySource - मगा_कातविरान_2->source - (mySourceChar <= 0xff ? 1 : 2));
                 }
                 ++myTarget;
-                if(myTarget< args->targetLimit){
+                if(myTarget< मगा_कातविरान_2->targetLimit){
                     *myTarget = static_cast<char16_t>(0xdc00 + static_cast<char16_t>(targetUniChar & 0x3ff));
-                    if(args->offsets){
-                        args->offsets[myTarget - args->target] = static_cast<int32_t>(mySource - args->source - (mySourceChar <= 0xff ? 1 : 2));
+                    if(मगा_कातविरान_2->offsets){
+                        मगा_कातविरान_2->offsets[myTarget - मगा_कातविरान_2->target] = static_cast<int32_t>(mySource - मगा_कातविरान_2->source - (mySourceChar <= 0xff ? 1 : 2));
                     }
                     ++myTarget;
                 }else{
-                    args->converter->UCharErrorBuffer[args->converter->UCharErrorBufferLength++]=
+                    मगा_कातविरान_2->converter->UCharErrorBuffer[मगा_कातविरान_2->converter->UCharErrorBufferLength++]=
                                     static_cast<char16_t>(0xdc00 + static_cast<char16_t>(targetUniChar & 0x3ff));
                 }
 
             }
             else{
                 /* Call the callback function*/
-                toUnicodeCallback(args->converter,mySourceChar,targetUniChar,err);
+                toUnicodeCallback(मगा_कातविरान_2->converter,mySourceChar,targetUniChar,err);
                 break;
             }
         }
@@ -2316,8 +2316,8 @@ getTrailByte:
         }
     }
 endloop:
-    args->target = myTarget;
-    args->source = mySource;
+    मगा_कातविरान_2->target = myTarget;
+    मगा_कातविरान_2->source = mySource;
 }
 
 
@@ -2331,14 +2331,14 @@ endloop:
 *      and SI to shift into single byte mode
 */
 static void U_CALLCONV
-UConverter_fromUnicode_ISO_2022_KR_OFFSETS_LOGIC_IBM(UConverterFromUnicodeArgs* args, UErrorCode* err){
+UConverter_fromUnicode_ISO_2022_KR_OFFSETS_LOGIC_IBM(UConverter_From_Unicode_मगा_कातविरान* मगा_कातविरान_2, UErrorCode* err){
 
-    UConverter* saveConv = args->converter;
+    UConverter* saveConv = मगा_कातविरान_2->converter;
     UConverterDataISO2022* myConverterData = static_cast<UConverterDataISO2022*>(saveConv->extraInfo);
-    args->converter=myConverterData->currentConverter;
+    मगा_कातविरान_2->converter=myConverterData->currentConverter;
 
     myConverterData->currentConverter->fromUChar32 = saveConv->fromUChar32;
-    ucnv_MBCSFromUnicodeWithOffsets(args,err);
+    ucnv_MBCSFromUnicodeWithOffsets(मगा_कातविरान_2,err);
     saveConv->fromUChar32 = myConverterData->currentConverter->fromUChar32;
 
     if(*err == U_BUFFER_OVERFLOW_ERROR) {
@@ -2351,17 +2351,17 @@ UConverter_fromUnicode_ISO_2022_KR_OFFSETS_LOGIC_IBM(UConverterFromUnicodeArgs* 
         saveConv->charErrorBufferLength = myConverterData->currentConverter->charErrorBufferLength;
         myConverterData->currentConverter->charErrorBufferLength = 0;
     }
-    args->converter=saveConv;
+    मगा_कातविरान_2->converter=saveConv;
 }
 
 static void U_CALLCONV
-UConverter_fromUnicode_ISO_2022_KR_OFFSETS_LOGIC(UConverterFromUnicodeArgs* args, UErrorCode* err){
+UConverter_fromUnicode_ISO_2022_KR_OFFSETS_LOGIC(UConverter_From_Unicode_मगा_कातविरान* मगा_कातविरान_2, UErrorCode* err){
 
-    const char16_t *source = args->source;
-    const char16_t *sourceLimit = args->sourceLimit;
-    unsigned char *target = reinterpret_cast<unsigned char*>(args->target);
-    unsigned char *targetLimit = reinterpret_cast<unsigned char*>(const_cast<char*>(args->targetLimit));
-    int32_t* offsets = args->offsets;
+    const char16_t *source = मगा_कातविरान_2->source;
+    const char16_t *sourceLimit = मगा_कातविरान_2->sourceLimit;
+    unsigned char *target = reinterpret_cast<unsigned char*>(मगा_कातविरान_2->target);
+    unsigned char *targetLimit = reinterpret_cast<unsigned char*>(const_cast<char*>(मगा_कातविरान_2->targetLimit));
+    int32_t* offsets = मगा_कातविरान_2->offsets;
     uint32_t targetByteUnit = 0x0000;
     UChar32 sourceChar = 0x0000;
     UBool isTargetByteDBCS;
@@ -2371,38 +2371,38 @@ UConverter_fromUnicode_ISO_2022_KR_OFFSETS_LOGIC(UConverterFromUnicodeArgs* args
     UBool useFallback;
     int32_t length =0;
 
-    converterData = static_cast<UConverterDataISO2022*>(args->converter->extraInfo);
+    converterData = static_cast<UConverterDataISO2022*>(मगा_कातविरान_2->converter->extraInfo);
     /* if the version is 1 then the user is requesting
      * conversion with ibm-25546 pass the arguments to
      * MBCS converter and return
      */
     if(converterData->version==1){
-        UConverter_fromUnicode_ISO_2022_KR_OFFSETS_LOGIC_IBM(args,err);
+        UConverter_fromUnicode_ISO_2022_KR_OFFSETS_LOGIC_IBM(मगा_कातविरान_2,err);
         return;
     }
 
     /* initialize data */
     sharedData = converterData->currentConverter->sharedData;
-    useFallback = args->converter->useFallback;
-    isTargetByteDBCS = static_cast<UBool>(args->converter->fromUnicodeStatus);
+    useFallback = मगा_कातविरान_2->converter->useFallback;
+    isTargetByteDBCS = static_cast<UBool>(मगा_कातविरान_2->converter->fromUnicodeStatus);
     oldIsTargetByteDBCS = isTargetByteDBCS;
 
-    isTargetByteDBCS = static_cast<UBool>(args->converter->fromUnicodeStatus);
-    if((sourceChar = args->converter->fromUChar32)!=0 && target <targetLimit) {
+    isTargetByteDBCS = static_cast<UBool>(मगा_कातविरान_2->converter->fromUnicodeStatus);
+    if((sourceChar = मगा_कातविरान_2->converter->fromUChar32)!=0 && target <targetLimit) {
         goto getTrail;
     }
     while(source < sourceLimit){
 
         targetByteUnit = missingCharMarker;
 
-        if(target < (unsigned char*) args->targetLimit){
+        if(target < (unsigned char*) मगा_कातविरान_2->targetLimit){
             sourceChar = *source++;
 
             /* do not convert SO/SI/ESC */
             if(IS_2022_CONTROL(sourceChar)) {
                 /* callback(illegal) */
                 *err=U_ILLEGAL_CHAR_FOUND;
-                args->converter->fromUChar32=sourceChar;
+                मगा_कातविरान_2->converter->fromUChar32=sourceChar;
                 break;
             }
 
@@ -2432,38 +2432,38 @@ UConverter_fromUnicode_ISO_2022_KR_OFFSETS_LOGIC(UConverterFromUnicodeArgs* args
                     else
                         *target++ = UCNV_SI;
                     if(offsets)
-                        *(offsets++) = static_cast<int32_t>(source - args->source - 1);
+                        *(offsets++) = static_cast<int32_t>(source - मगा_कातविरान_2->source - 1);
                 }
                 /* write the targetUniChar  to target */
                 if(targetByteUnit <= 0x00FF){
                     if( target < targetLimit){
                         *(target++) = static_cast<unsigned char>(targetByteUnit);
                         if(offsets){
-                            *(offsets++) = static_cast<int32_t>(source - args->source - 1);
+                            *(offsets++) = static_cast<int32_t>(source - मगा_कातविरान_2->source - 1);
                         }
 
                     }else{
-                        args->converter->charErrorBuffer[args->converter->charErrorBufferLength++] = static_cast<unsigned char>(targetByteUnit);
+                        मगा_कातविरान_2->converter->charErrorBuffer[मगा_कातविरान_2->converter->charErrorBufferLength++] = static_cast<unsigned char>(targetByteUnit);
                         *err = U_BUFFER_OVERFLOW_ERROR;
                     }
                 }else{
                     if(target < targetLimit){
                         *(target++) = static_cast<unsigned char>((targetByteUnit >> 8) - 0x80);
                         if(offsets){
-                            *(offsets++) = static_cast<int32_t>(source - args->source - 1);
+                            *(offsets++) = static_cast<int32_t>(source - मगा_कातविरान_2->source - 1);
                         }
                         if(target < targetLimit){
                             *(target++) = static_cast<unsigned char>(targetByteUnit - 0x80);
                             if(offsets){
-                                *(offsets++) = static_cast<int32_t>(source - args->source - 1);
+                                *(offsets++) = static_cast<int32_t>(source - मगा_कातविरान_2->source - 1);
                             }
                         }else{
-                            args->converter->charErrorBuffer[args->converter->charErrorBufferLength++] = static_cast<unsigned char>(targetByteUnit - 0x80);
+                            मगा_कातविरान_2->converter->charErrorBuffer[मगा_कातविरान_2->converter->charErrorBufferLength++] = static_cast<unsigned char>(targetByteUnit - 0x80);
                             *err = U_BUFFER_OVERFLOW_ERROR;
                         }
                     }else{
-                        args->converter->charErrorBuffer[args->converter->charErrorBufferLength++] = static_cast<unsigned char>((targetByteUnit >> 8) - 0x80);
-                        args->converter->charErrorBuffer[args->converter->charErrorBufferLength++] = static_cast<unsigned char>(targetByteUnit - 0x80);
+                        मगा_कातविरान_2->converter->charErrorBuffer[मगा_कातविरान_2->converter->charErrorBufferLength++] = static_cast<unsigned char>((targetByteUnit >> 8) - 0x80);
+                        मगा_कातविरान_2->converter->charErrorBuffer[मगा_कातविरान_2->converter->charErrorBufferLength++] = static_cast<unsigned char>(targetByteUnit - 0x80);
                         *err = U_BUFFER_OVERFLOW_ERROR;
                     }
                 }
@@ -2507,7 +2507,7 @@ getTrail:
                     *err = U_INVALID_CHAR_FOUND;
                 }
 
-                args->converter->fromUChar32=sourceChar;
+                मगा_कातविरान_2->converter->fromUChar32=sourceChar;
                 break;
             }
         } /* end if(myTargetIndex<myTargetLength) */
@@ -2530,7 +2530,7 @@ getTrail:
      */
     if( U_SUCCESS(*err) &&
         isTargetByteDBCS &&
-        args->flush && source>=sourceLimit && args->converter->fromUChar32==0
+        मगा_कातविरान_2->flush && source>=sourceLimit && मगा_कातविरान_2->converter->fromUChar32==0
     ) {
         int32_t sourceIndex;
 
@@ -2545,11 +2545,11 @@ getTrail:
          * this code gives an incorrect result for the rare case of an unmatched
          * trail surrogate that is alone in the last buffer of the text stream
          */
-        sourceIndex = static_cast<int32_t>(source - args->source);
+        sourceIndex = static_cast<int32_t>(source - मगा_कातविरान_2->source);
         if(sourceIndex>0) {
             --sourceIndex;
-            if( U16_IS_TRAIL(args->source[sourceIndex]) &&
-                (sourceIndex==0 || U16_IS_LEAD(args->source[sourceIndex-1]))
+            if( U16_IS_TRAIL(मगा_कातविरान_2->source[sourceIndex]) &&
+                (sourceIndex==0 || U16_IS_LEAD(मगा_कातविरान_2->source[sourceIndex-1]))
             ) {
                 --sourceIndex;
             }
@@ -2558,7 +2558,7 @@ getTrail:
         }
 
         fromUWriteUInt8(
-            args->converter,
+            मगा_कातविरान_2->converter,
             SHIFT_IN_STR, 1,
             &target, reinterpret_cast<const char*>(targetLimit),
             &offsets, sourceIndex,
@@ -2566,46 +2566,46 @@ getTrail:
     }
 
     /*save the state and return */
-    args->source = source;
-    args->target = reinterpret_cast<char*>(target);
-    args->converter->fromUnicodeStatus = static_cast<uint32_t>(isTargetByteDBCS);
+    मगा_कातविरान_2->source = source;
+    मगा_कातविरान_2->target = reinterpret_cast<char*>(target);
+    मगा_कातविरान_2->converter->fromUnicodeStatus = static_cast<uint32_t>(isTargetByteDBCS);
 }
 
 /************************ To Unicode ***************************************/
 
 static void U_CALLCONV
-UConverter_toUnicode_ISO_2022_KR_OFFSETS_LOGIC_IBM(UConverterToUnicodeArgs *args,
+UConverter_toUnicode_ISO_2022_KR_OFFSETS_LOGIC_IBM(UConverter_To_Unicode_मगा_कातविरान *मगा_कातविरान_2,
                                                             UErrorCode* err){
     char const* sourceStart;
-    UConverterDataISO2022* myData = static_cast<UConverterDataISO2022*>(args->converter->extraInfo);
+    UConverterDataISO2022* myData = static_cast<UConverterDataISO2022*>(मगा_कातविरान_2->converter->extraInfo);
 
-    UConverterToUnicodeArgs subArgs;
-    int32_t minArgsSize;
+    UConverter_To_Unicode_मगा_कातविरान sub_मगा_कातविरान;
+    int32_t min_मगा_कातविरान_Size;
 
     /* set up the subconverter arguments */
-    if(args->size<sizeof(UConverterToUnicodeArgs)) {
-        minArgsSize = args->size;
+    if(मगा_कातविरान_2->size<sizeof(UConverter_To_Unicode_मगा_कातविरान)) {
+        min_मगा_कातविरान_Size = मगा_कातविरान_2->size;
     } else {
-        minArgsSize = static_cast<int32_t>(sizeof(UConverterToUnicodeArgs));
+        min_मगा_कातविरान_Size = static_cast<int32_t>(sizeof(UConverter_To_Unicode_मगा_कातविरान));
     }
 
-    uprv_memcpy(&subArgs, args, minArgsSize);
-    subArgs.size = static_cast<uint16_t>(minArgsSize);
-    subArgs.converter = myData->currentConverter;
+    uprv_memcpy(&sub_मगा_कातविरान, मगा_कातविरान_2, min_मगा_कातविरान_Size);
+    sub_मगा_कातविरान.size = static_cast<uint16_t>(min_मगा_कातविरान_Size);
+    sub_मगा_कातविरान.converter = myData->currentConverter;
 
     /* remember the original start of the input for offsets */
-    sourceStart = args->source;
+    sourceStart = मगा_कातविरान_2->source;
 
-    if(myData->key != 0) {
+    if(myData->सुसि != 0) {
         /* continue with a partial escape sequence */
         goto escape;
     }
 
-    while(U_SUCCESS(*err) && args->source < args->sourceLimit) {
+    while(U_SUCCESS(*err) && मगा_कातविरान_2->source < मगा_कातविरान_2->sourceLimit) {
         /*Find the end of the buffer e.g : Next Escape Seq | end of Buffer*/
-        subArgs.source = args->source;
-        subArgs.sourceLimit = getEndOfBuffer_2022(&(args->source), args->sourceLimit, args->flush);
-        if(subArgs.source != subArgs.sourceLimit) {
+        sub_मगा_कातविरान.source = मगा_कातविरान_2->source;
+        sub_मगा_कातविरान.sourceLimit = getEndOfBuffer_2022(&(मगा_कातविरान_2->source), मगा_कातविरान_2->sourceLimit, मगा_कातविरान_2->flush);
+        if(sub_मगा_कातविरान.source != sub_मगा_कातविरान.sourceLimit) {
             /*
              * get the current partial byte sequence
              *
@@ -2613,24 +2613,24 @@ UConverter_toUnicode_ISO_2022_KR_OFFSETS_LOGIC_IBM(UConverterToUnicodeArgs *args
              * so that the conversion framework, which only sees the public
              * converter, can handle truncated and illegal input etc.
              */
-            if(args->converter->toULength > 0) {
-                uprv_memcpy(subArgs.converter->toUBytes, args->converter->toUBytes, args->converter->toULength);
+            if(मगा_कातविरान_2->converter->toULength > 0) {
+                uprv_memcpy(sub_मगा_कातविरान.converter->toUBytes, मगा_कातविरान_2->converter->toUBytes, मगा_कातविरान_2->converter->toULength);
             }
-            subArgs.converter->toULength = args->converter->toULength;
+            sub_मगा_कातविरान.converter->toULength = मगा_कातविरान_2->converter->toULength;
 
             /*
              * Convert up to the end of the input, or to before the next escape character.
              * Does not handle conversion extensions because the preToU[] state etc.
              * is not copied.
              */
-            ucnv_MBCSToUnicodeWithOffsets(&subArgs, err);
+            ucnv_MBCSToUnicodeWithOffsets(&sub_मगा_कातविरान, err);
 
-            if(args->offsets != nullptr && sourceStart != args->source) {
+            if(मगा_कातविरान_2->offsets != nullptr && sourceStart != मगा_कातविरान_2->source) {
                 /* update offsets to base them on the actual start of the input */
-                int32_t *offsets = args->offsets;
-                char16_t *target = args->target;
-                int32_t delta = static_cast<int32_t>(args->source - sourceStart);
-                while(target < subArgs.target) {
+                int32_t *offsets = मगा_कातविरान_2->offsets;
+                char16_t *target = मगा_कातविरान_2->target;
+                int32_t delta = static_cast<int32_t>(मगा_कातविरान_2->source - sourceStart);
+                while(target < sub_मगा_कातविरान.target) {
                     if(*offsets >= 0) {
                         *offsets += delta;
                     }
@@ -2638,75 +2638,75 @@ UConverter_toUnicode_ISO_2022_KR_OFFSETS_LOGIC_IBM(UConverterToUnicodeArgs *args
                     ++target;
                 }
             }
-            args->source = subArgs.source;
-            args->target = subArgs.target;
-            args->offsets = subArgs.offsets;
+            मगा_कातविरान_2->source = sub_मगा_कातविरान.source;
+            मगा_कातविरान_2->target = sub_मगा_कातविरान.target;
+            मगा_कातविरान_2->offsets = sub_मगा_कातविरान.offsets;
 
             /* copy input/error/overflow buffers */
-            if(subArgs.converter->toULength > 0) {
-                uprv_memcpy(args->converter->toUBytes, subArgs.converter->toUBytes, subArgs.converter->toULength);
+            if(sub_मगा_कातविरान.converter->toULength > 0) {
+                uprv_memcpy(मगा_कातविरान_2->converter->toUBytes, sub_मगा_कातविरान.converter->toUBytes, sub_मगा_कातविरान.converter->toULength);
             }
-            args->converter->toULength = subArgs.converter->toULength;
+            मगा_कातविरान_2->converter->toULength = sub_मगा_कातविरान.converter->toULength;
 
             if(*err == U_BUFFER_OVERFLOW_ERROR) {
-                if(subArgs.converter->UCharErrorBufferLength > 0) {
-                    uprv_memcpy(args->converter->UCharErrorBuffer, subArgs.converter->UCharErrorBuffer,
-                                subArgs.converter->UCharErrorBufferLength);
+                if(sub_मगा_कातविरान.converter->UCharErrorBufferLength > 0) {
+                    uprv_memcpy(मगा_कातविरान_2->converter->UCharErrorBuffer, sub_मगा_कातविरान.converter->UCharErrorBuffer,
+                                sub_मगा_कातविरान.converter->UCharErrorBufferLength);
                 }
-                args->converter->UCharErrorBufferLength=subArgs.converter->UCharErrorBufferLength;
-                subArgs.converter->UCharErrorBufferLength = 0;
+                मगा_कातविरान_2->converter->UCharErrorBufferLength=sub_मगा_कातविरान.converter->UCharErrorBufferLength;
+                sub_मगा_कातविरान.converter->UCharErrorBufferLength = 0;
             }
         }
 
-        if (U_FAILURE(*err) || (args->source == args->sourceLimit)) {
+        if (U_FAILURE(*err) || (मगा_कातविरान_2->source == मगा_कातविरान_2->sourceLimit)) {
             return;
         }
 
 escape:
-        changeState_2022(args->converter,
-               &(args->source),
-               args->sourceLimit,
+        changeState_2022(मगा_कातविरान_2->converter,
+               &(मगा_कातविरान_2->source),
+               मगा_कातविरान_2->sourceLimit,
                ISO_2022_KR,
                err);
     }
 }
 
 static void U_CALLCONV
-UConverter_toUnicode_ISO_2022_KR_OFFSETS_LOGIC(UConverterToUnicodeArgs *args,
+UConverter_toUnicode_ISO_2022_KR_OFFSETS_LOGIC(UConverter_To_Unicode_मगा_कातविरान *मगा_कातविरान_2,
                                                             UErrorCode* err){
     char tempBuf[2];
-    const char* mySource = const_cast<char*>(args->source);
-    char16_t *myTarget = args->target;
-    const char *mySourceLimit = args->sourceLimit;
+    const char* mySource = const_cast<char*>(मगा_कातविरान_2->source);
+    char16_t *myTarget = मगा_कातविरान_2->target;
+    const char *mySourceLimit = मगा_कातविरान_2->sourceLimit;
     UChar32 targetUniChar = 0x0000;
     char16_t mySourceChar = 0x0000;
     UConverterDataISO2022* myData;
     UConverterSharedData* sharedData ;
     UBool useFallback;
 
-    myData = static_cast<UConverterDataISO2022*>(args->converter->extraInfo);
+    myData = static_cast<UConverterDataISO2022*>(मगा_कातविरान_2->converter->extraInfo);
     if(myData->version==1){
-        UConverter_toUnicode_ISO_2022_KR_OFFSETS_LOGIC_IBM(args,err);
+        UConverter_toUnicode_ISO_2022_KR_OFFSETS_LOGIC_IBM(मगा_कातविरान_2,err);
         return;
     }
 
     /* initialize state */
     sharedData = myData->currentConverter->sharedData;
-    useFallback = args->converter->useFallback;
+    useFallback = मगा_कातविरान_2->converter->useFallback;
 
-    if(myData->key != 0) {
+    if(myData->सुसि != 0) {
         /* continue with a partial escape sequence */
         goto escape;
-    } else if(args->converter->toULength == 1 && mySource < mySourceLimit && myTarget < args->targetLimit) {
+    } else if(मगा_कातविरान_2->converter->toULength == 1 && mySource < mySourceLimit && myTarget < मगा_कातविरान_2->targetLimit) {
         /* continue with a partial double-byte character */
-        mySourceChar = args->converter->toUBytes[0];
-        args->converter->toULength = 0;
+        mySourceChar = मगा_कातविरान_2->converter->toUBytes[0];
+        मगा_कातविरान_2->converter->toULength = 0;
         goto getTrailByte;
     }
 
     while(mySource< mySourceLimit){
 
-        if(myTarget < args->targetLimit){
+        if(myTarget < मगा_कातविरान_2->targetLimit){
 
             mySourceChar = static_cast<unsigned char>(*mySource++);
 
@@ -2715,11 +2715,11 @@ UConverter_toUnicode_ISO_2022_KR_OFFSETS_LOGIC(UConverterToUnicodeArgs *args,
                 if (myData->isEmptySegment) {
                     myData->isEmptySegment = false;	/* we are handling it, reset to avoid future spurious errors */
                     *err = U_ILLEGAL_ESCAPE_SEQUENCE;
-                    args->converter->toUCallbackReason = UCNV_IRREGULAR;
-                    args->converter->toUBytes[0] = static_cast<uint8_t>(mySourceChar);
-                    args->converter->toULength = 1;
-                    args->target = myTarget;
-                    args->source = mySource;
+                    मगा_कातविरान_2->converter->toUCallbackReason = UCNV_IRREGULAR;
+                    मगा_कातविरान_2->converter->toUBytes[0] = static_cast<uint8_t>(mySourceChar);
+                    मगा_कातविरान_2->converter->toULength = 1;
+                    मगा_कातविरान_2->target = myTarget;
+                    मगा_कातविरान_2->source = mySource;
                     return;
                 }
                 /*consume the source */
@@ -2733,11 +2733,11 @@ UConverter_toUnicode_ISO_2022_KR_OFFSETS_LOGIC(UConverterToUnicodeArgs *args,
                 mySource--;
 escape:
                 myData->isEmptySegment = false;	/* Any invalid ESC sequences will be detected separately, so just reset this */
-                changeState_2022(args->converter,&(mySource),
+                changeState_2022(मगा_कातविरान_2->converter,&(mySource),
                                 mySourceLimit, ISO_2022_KR, err);
                 if(U_FAILURE(*err)){
-                    args->target = myTarget;
-                    args->source = mySource;
+                    मगा_कातविरान_2->target = myTarget;
+                    मगा_कातविरान_2->source = mySource;
                     return;
                 }
                 continue;
@@ -2776,8 +2776,8 @@ getTrailByte:
                         mySourceChar = static_cast<char16_t>(0x10000 | (mySourceChar << 8) | trailByte);
                     }
                 } else {
-                    args->converter->toUBytes[0] = static_cast<uint8_t>(mySourceChar);
-                    args->converter->toULength = 1;
+                    मगा_कातविरान_2->converter->toUBytes[0] = static_cast<uint8_t>(mySourceChar);
+                    मगा_कातविरान_2->converter->toULength = 1;
                     break;
                 }
             }
@@ -2787,14 +2787,14 @@ getTrailByte:
                 targetUniChar = 0xffff;
             }
             if(targetUniChar < 0xfffe){
-                if(args->offsets) {
-                    args->offsets[myTarget - args->target] = static_cast<int32_t>(mySource - args->source - (mySourceChar <= 0xff ? 1 : 2));
+                if(मगा_कातविरान_2->offsets) {
+                    मगा_कातविरान_2->offsets[myTarget - मगा_कातविरान_2->target] = static_cast<int32_t>(mySource - मगा_कातविरान_2->source - (mySourceChar <= 0xff ? 1 : 2));
                 }
                 *(myTarget++) = static_cast<char16_t>(targetUniChar);
             }
             else {
                 /* Call the callback function*/
-                toUnicodeCallback(args->converter,mySourceChar,targetUniChar,err);
+                toUnicodeCallback(मगा_कातविरान_2->converter,mySourceChar,targetUniChar,err);
                 break;
             }
         }
@@ -2803,8 +2803,8 @@ getTrailByte:
             break;
         }
     }
-    args->target = myTarget;
-    args->source = mySource;
+    मगा_कातविरान_2->target = myTarget;
+    मगा_कातविरान_2->source = mySource;
 }
 
 /*************************** END ISO2022-KR *********************************/
@@ -2914,28 +2914,28 @@ static const char* const escSeqCharsCN[10] ={
 };
 
 static void U_CALLCONV
-UConverter_fromUnicode_ISO_2022_CN_OFFSETS_LOGIC(UConverterFromUnicodeArgs* args, UErrorCode* err){
-    UConverter *cnv = args->converter;
+UConverter_fromUnicode_ISO_2022_CN_OFFSETS_LOGIC(UConverter_From_Unicode_मगा_कातविरान* मगा_कातविरान_2, UErrorCode* err){
+    UConverter *cnv = मगा_कातविरान_2->converter;
     UConverterDataISO2022 *converterData;
     ISO2022State *pFromU2022State;
-    uint8_t* target = reinterpret_cast<uint8_t*>(args->target);
-    const uint8_t* targetLimit = reinterpret_cast<const uint8_t*>(args->targetLimit);
-    const char16_t* source = args->source;
-    const char16_t* sourceLimit = args->sourceLimit;
-    int32_t* offsets = args->offsets;
+    uint8_t* target = reinterpret_cast<uint8_t*>(मगा_कातविरान_2->target);
+    const uint8_t* targetLimit = reinterpret_cast<const uint8_t*>(मगा_कातविरान_2->targetLimit);
+    const char16_t* source = मगा_कातविरान_2->source;
+    const char16_t* sourceLimit = मगा_कातविरान_2->sourceLimit;
+    int32_t* offsets = मगा_कातविरान_2->offsets;
     UChar32 sourceChar;
     char buffer[8];
     int32_t len;
     int8_t choices[3];
-    int32_t choiceCount;
-    uint32_t targetValue = 0;
+    int32_t choice_बिलांग;
+    uint32_t target_हालागा = 0;
     UBool useFallback;
 
     /* set up the state */
     converterData = static_cast<UConverterDataISO2022*>(cnv->extraInfo);
     pFromU2022State   = &converterData->fromU2022State;
 
-    choiceCount = 0;
+    choice_बिलांग = 0;
 
     /* check if the last codepoint of previous buffer was a lead surrogate*/
     if((sourceChar = cnv->fromUChar32)!=0 && target< targetLimit) {
@@ -3000,12 +3000,12 @@ getTrail:
                     buffer[1] = static_cast<char>(sourceChar);
                     len = 2;
                     pFromU2022State->g = 0;
-                    choiceCount = 0;
+                    choice_बिलांग = 0;
                 }
                 if(sourceChar == CR || sourceChar == LF) {
                     /* reset the state at the end of a line */
                     uprv_memset(pFromU2022State, 0, sizeof(ISO2022State));
-                    choiceCount = 0;
+                    choice_बिलांग = 0;
                 }
             }
             else{
@@ -3013,7 +3013,7 @@ getTrail:
                 int32_t i;
                 int8_t cs, g;
 
-                if(choiceCount == 0) {
+                if(choice_बिलांग == 0) {
                     /* try the current SO/G1 converter first */
                     choices[0] = pFromU2022State->cs[1];
 
@@ -3032,7 +3032,7 @@ getTrail:
                             choices[1] = static_cast<int8_t>(GB2312_1);
                         }
 
-                        choiceCount = 2;
+                        choice_बिलांग = 2;
                     } else if (converterData->version == 1) {
                         /* ISO-2022-CN-EXT */
 
@@ -3052,7 +3052,7 @@ getTrail:
                             break;
                         }
 
-                        choiceCount = 3;
+                        choice_बिलांग = 3;
                     } else {
                         choices[0] = static_cast<int8_t>(CNS_11643_1);
                         choices[1] = static_cast<int8_t>(GB2312_1);
@@ -3074,7 +3074,7 @@ getTrail:
                  */
                 useFallback = cnv->useFallback;
 
-                for(i = 0; i < choiceCount && len <= 0; ++i) {
+                for(i = 0; i < choice_बिलांग && len <= 0; ++i) {
                     int8_t cs0 = choices[i];
                     if(cs0 > 0) {
                         uint32_t value;
@@ -3087,7 +3087,7 @@ getTrail:
                                         useFallback,
                                         MBCS_OUTPUT_3);
                             if(len2 == 3 || (len2 == -3 && len == 0)) {
-                                targetValue = value;
+                                target_हालागा = value;
                                 cs = static_cast<int8_t>(CNS_11643_0 + (value >> 16) - 0x80);
                                 if(len2 >= 0) {
                                     len = 2;
@@ -3116,7 +3116,7 @@ getTrail:
                                         useFallback,
                                         MBCS_OUTPUT_2);
                             if(len2 == 2 || (len2 == -2 && len == 0)) {
-                                targetValue = value;
+                                target_हालागा = value;
                                 len = len2;
                                 cs = cs0;
                                 g = 1;
@@ -3141,7 +3141,7 @@ getTrail:
                         pFromU2022State->cs[g] = cs;
                         if(g == 1) {
                             /* changing the SO/G1 charset invalidates the choices[] */
-                            choiceCount = 0;
+                            choice_बिलांग = 0;
                         }
                     }
 
@@ -3166,8 +3166,8 @@ getTrail:
                     }
 
                     /* write the two output bytes */
-                    buffer[len++] = static_cast<char>(targetValue >> 8);
-                    buffer[len++] = static_cast<char>(targetValue);
+                    buffer[len++] = static_cast<char>(target_हालागा >> 8);
+                    buffer[len++] = static_cast<char>(target_हालागा);
                 } else {
                     /* if we cannot find the character after checking all codepages
                      * then this is an error
@@ -3182,13 +3182,13 @@ getTrail:
             if(len == 1) {
                 *target++ = buffer[0];
                 if(offsets) {
-                    *offsets++ = static_cast<int32_t>(source - args->source - 1); /* -1: known to be ASCII */
+                    *offsets++ = static_cast<int32_t>(source - मगा_कातविरान_2->source - 1); /* -1: known to be ASCII */
                 }
             } else if(len == 2 && (target + 2) <= targetLimit) {
                 *target++ = buffer[0];
                 *target++ = buffer[1];
                 if(offsets) {
-                    int32_t sourceIndex = static_cast<int32_t>(source - args->source - U16_LENGTH(sourceChar));
+                    int32_t sourceIndex = static_cast<int32_t>(source - मगा_कातविरान_2->source - U16_LENGTH(sourceChar));
                     *offsets++ = sourceIndex;
                     *offsets++ = sourceIndex;
                 }
@@ -3197,7 +3197,7 @@ getTrail:
                     cnv,
                     buffer, len,
                     &target, reinterpret_cast<const char*>(targetLimit),
-                    &offsets, static_cast<int32_t>(source - args->source - U16_LENGTH(sourceChar)),
+                    &offsets, static_cast<int32_t>(source - मगा_कातविरान_2->source - U16_LENGTH(sourceChar)),
                     err);
                 if(U_FAILURE(*err)) {
                     break;
@@ -3223,7 +3223,7 @@ getTrail:
      */
     if( U_SUCCESS(*err) &&
         pFromU2022State->g!=0 &&
-        args->flush && source>=sourceLimit && cnv->fromUChar32==0
+        मगा_कातविरान_2->flush && source>=sourceLimit && cnv->fromUChar32==0
     ) {
         int32_t sourceIndex;
 
@@ -3238,11 +3238,11 @@ getTrail:
          * this code gives an incorrect result for the rare case of an unmatched
          * trail surrogate that is alone in the last buffer of the text stream
          */
-        sourceIndex = static_cast<int32_t>(source - args->source);
+        sourceIndex = static_cast<int32_t>(source - मगा_कातविरान_2->source);
         if(sourceIndex>0) {
             --sourceIndex;
-            if( U16_IS_TRAIL(args->source[sourceIndex]) &&
-                (sourceIndex==0 || U16_IS_LEAD(args->source[sourceIndex-1]))
+            if( U16_IS_TRAIL(मगा_कातविरान_2->source[sourceIndex]) &&
+                (sourceIndex==0 || U16_IS_LEAD(मगा_कातविरान_2->source[sourceIndex-1]))
             ) {
                 --sourceIndex;
             }
@@ -3259,33 +3259,33 @@ getTrail:
     }
 
     /*save the state and return */
-    args->source = source;
-    args->target = reinterpret_cast<char*>(target);
+    मगा_कातविरान_2->source = source;
+    मगा_कातविरान_2->target = reinterpret_cast<char*>(target);
 }
 
 
 static void U_CALLCONV
-UConverter_toUnicode_ISO_2022_CN_OFFSETS_LOGIC(UConverterToUnicodeArgs *args,
+UConverter_toUnicode_ISO_2022_CN_OFFSETS_LOGIC(UConverter_To_Unicode_मगा_कातविरान *मगा_कातविरान_2,
                                                UErrorCode* err){
     char tempBuf[3];
-    const char* mySource = const_cast<char*>(args->source);
-    char16_t *myTarget = args->target;
-    const char *mySourceLimit = args->sourceLimit;
+    const char* mySource = const_cast<char*>(मगा_कातविरान_2->source);
+    char16_t *myTarget = मगा_कातविरान_2->target;
+    const char *mySourceLimit = मगा_कातविरान_2->sourceLimit;
     uint32_t targetUniChar = 0x0000;
     uint32_t mySourceChar = 0x0000;
     UConverterDataISO2022* myData;
     ISO2022State *pToU2022State;
 
-    myData = static_cast<UConverterDataISO2022*>(args->converter->extraInfo);
+    myData = static_cast<UConverterDataISO2022*>(मगा_कातविरान_2->converter->extraInfo);
     pToU2022State = &myData->toU2022State;
 
-    if(myData->key != 0) {
+    if(myData->सुसि != 0) {
         /* continue with a partial escape sequence */
         goto escape;
-    } else if(args->converter->toULength == 1 && mySource < mySourceLimit && myTarget < args->targetLimit) {
+    } else if(मगा_कातविरान_2->converter->toULength == 1 && mySource < mySourceLimit && myTarget < मगा_कातविरान_2->targetLimit) {
         /* continue with a partial double-byte character */
-        mySourceChar = args->converter->toUBytes[0];
-        args->converter->toULength = 0;
+        mySourceChar = मगा_कातविरान_2->converter->toUBytes[0];
+        मगा_कातविरान_2->converter->toULength = 0;
         targetUniChar = missingCharMarker;
         goto getTrailByte;
     }
@@ -3294,7 +3294,7 @@ UConverter_toUnicode_ISO_2022_CN_OFFSETS_LOGIC(UConverterToUnicodeArgs *args,
 
         targetUniChar =missingCharMarker;
 
-        if(myTarget < args->targetLimit){
+        if(myTarget < मगा_कातविरान_2->targetLimit){
 
             mySourceChar = static_cast<unsigned char>(*mySource++);
 
@@ -3304,11 +3304,11 @@ UConverter_toUnicode_ISO_2022_CN_OFFSETS_LOGIC(UConverterToUnicodeArgs *args,
                 if (myData->isEmptySegment) {
                     myData->isEmptySegment = false;	/* we are handling it, reset to avoid future spurious errors */
                     *err = U_ILLEGAL_ESCAPE_SEQUENCE;
-                    args->converter->toUCallbackReason = UCNV_IRREGULAR;
-                    args->converter->toUBytes[0] = static_cast<uint8_t>(mySourceChar);
-                    args->converter->toULength = 1;
-                    args->target = myTarget;
-                    args->source = mySource;
+                    मगा_कातविरान_2->converter->toUCallbackReason = UCNV_IRREGULAR;
+                    मगा_कातविरान_2->converter->toUBytes[0] = static_cast<uint8_t>(mySourceChar);
+                    मगा_कातविरान_2->converter->toULength = 1;
+                    मगा_कातविरान_2->target = myTarget;
+                    मगा_कातविरान_2->source = mySource;
                     return;
                 }
                 continue;
@@ -3329,23 +3329,23 @@ UConverter_toUnicode_ISO_2022_CN_OFFSETS_LOGIC(UConverterToUnicodeArgs *args,
 escape:
                 {
                     const char * mySourceBefore = mySource;
-                    int8_t toULengthBefore = args->converter->toULength;
+                    int8_t toULengthBefore = मगा_कातविरान_2->converter->toULength;
 
-                    changeState_2022(args->converter,&(mySource),
+                    changeState_2022(मगा_कातविरान_2->converter,&(mySource),
                         mySourceLimit, ISO_2022_CN,err);
 
                     /* After SO there must be at least one character before a designator (designator error handled separately) */
-                    if(myData->key==0 && U_SUCCESS(*err) && myData->isEmptySegment) {
+                    if(myData->सुसि==0 && U_SUCCESS(*err) && myData->isEmptySegment) {
                         *err = U_ILLEGAL_ESCAPE_SEQUENCE;
-                        args->converter->toUCallbackReason = UCNV_IRREGULAR;
-                        args->converter->toULength = static_cast<int8_t>(toULengthBefore + (mySource - mySourceBefore));
+                        मगा_कातविरान_2->converter->toUCallbackReason = UCNV_IRREGULAR;
+                        मगा_कातविरान_2->converter->toULength = static_cast<int8_t>(toULengthBefore + (mySource - mySourceBefore));
                     }
                 }
 
                 /* invalid or illegal escape sequence */
                 if(U_FAILURE(*err)){
-                    args->target = myTarget;
-                    args->source = mySource;
+                    मगा_कातविरान_2->target = myTarget;
+                    मगा_कातविरान_2->source = mySource;
                     myData->isEmptySegment = false;	/* Reset to avoid future spurious errors */
                     return;
                 }
@@ -3411,8 +3411,8 @@ getTrailByte:
                             pToU2022State->g=pToU2022State->prevG;
                         }
                     } else {
-                        args->converter->toUBytes[0] = static_cast<uint8_t>(mySourceChar);
-                        args->converter->toULength = 1;
+                        मगा_कातविरान_2->converter->toUBytes[0] = static_cast<uint8_t>(mySourceChar);
+                        मगा_कातविरान_2->converter->toULength = 1;
                         goto endloop;
                     }
                 }
@@ -3424,8 +3424,8 @@ getTrailByte:
                 break;
             }
             if(targetUniChar < (missingCharMarker-1/*0xfffe*/)){
-                if(args->offsets){
-                    args->offsets[myTarget - args->target] = static_cast<int32_t>(mySource - args->source - (mySourceChar <= 0xff ? 1 : 2));
+                if(मगा_कातविरान_2->offsets){
+                    मगा_कातविरान_2->offsets[myTarget - मगा_कातविरान_2->target] = static_cast<int32_t>(mySource - मगा_कातविरान_2->source - (mySourceChar <= 0xff ? 1 : 2));
                 }
                 *(myTarget++) = static_cast<char16_t>(targetUniChar);
             }
@@ -3433,25 +3433,25 @@ getTrailByte:
                 /* disassemble the surrogate pair and write to output*/
                 targetUniChar-=0x0010000;
                 *myTarget = static_cast<char16_t>(0xd800 + static_cast<char16_t>(targetUniChar >> 10));
-                if(args->offsets){
-                    args->offsets[myTarget - args->target] = static_cast<int32_t>(mySource - args->source - (mySourceChar <= 0xff ? 1 : 2));
+                if(मगा_कातविरान_2->offsets){
+                    मगा_कातविरान_2->offsets[myTarget - मगा_कातविरान_2->target] = static_cast<int32_t>(mySource - मगा_कातविरान_2->source - (mySourceChar <= 0xff ? 1 : 2));
                 }
                 ++myTarget;
-                if(myTarget< args->targetLimit){
+                if(myTarget< मगा_कातविरान_2->targetLimit){
                     *myTarget = static_cast<char16_t>(0xdc00 + static_cast<char16_t>(targetUniChar & 0x3ff));
-                    if(args->offsets){
-                        args->offsets[myTarget - args->target] = static_cast<int32_t>(mySource - args->source - (mySourceChar <= 0xff ? 1 : 2));
+                    if(मगा_कातविरान_2->offsets){
+                        मगा_कातविरान_2->offsets[myTarget - मगा_कातविरान_2->target] = static_cast<int32_t>(mySource - मगा_कातविरान_2->source - (mySourceChar <= 0xff ? 1 : 2));
                     }
                     ++myTarget;
                 }else{
-                    args->converter->UCharErrorBuffer[args->converter->UCharErrorBufferLength++]=
+                    मगा_कातविरान_2->converter->UCharErrorBuffer[मगा_कातविरान_2->converter->UCharErrorBufferLength++]=
                                     static_cast<char16_t>(0xdc00 + static_cast<char16_t>(targetUniChar & 0x3ff));
                 }
 
             }
             else{
                 /* Call the callback function*/
-                toUnicodeCallback(args->converter,mySourceChar,targetUniChar,err);
+                toUnicodeCallback(मगा_कातविरान_2->converter,mySourceChar,targetUniChar,err);
                 break;
             }
         }
@@ -3461,14 +3461,14 @@ getTrailByte:
         }
     }
 endloop:
-    args->target = myTarget;
-    args->source = mySource;
+    मगा_कातविरान_2->target = myTarget;
+    मगा_कातविरान_2->source = mySource;
 }
 #endif /* #if !UCONFIG_ONLY_HTML_CONVERSION */
 
 static void U_CALLCONV
-_ISO_2022_WriteSub(UConverterFromUnicodeArgs *args, int32_t offsetIndex, UErrorCode *err) {
-    UConverter *cnv = args->converter;
+_ISO_2022_WriteSub(UConverter_From_Unicode_मगा_कातविरान *मगा_कातविरान_2, int32_t offsetIndex, UErrorCode *err) {
+    UConverter *cnv = मगा_कातविरान_2->converter;
     UConverterDataISO2022* myConverterData = static_cast<UConverterDataISO2022*>(cnv->extraInfo);
     ISO2022State *pFromU2022State=&myConverterData->fromU2022State;
     char *p, *subchar;
@@ -3513,16 +3513,16 @@ _ISO_2022_WriteSub(UConverterFromUnicodeArgs *args, int32_t offsetIndex, UErrorC
     case 'k':
         if(myConverterData->version == 0) {
             if(length == 1) {
-                if(args->converter->fromUnicodeStatus) {
+                if(मगा_कातविरान_2->converter->fromUnicodeStatus) {
                     /* in DBCS mode: switch to SBCS */
-                    args->converter->fromUnicodeStatus = 0;
+                    मगा_कातविरान_2->converter->fromUnicodeStatus = 0;
                     *p++ = UCNV_SI;
                 }
                 *p++ = subchar[0];
             } else /* length == 2*/ {
-                if(!args->converter->fromUnicodeStatus) {
+                if(!मगा_कातविरान_2->converter->fromUnicodeStatus) {
                     /* in SBCS mode: switch to DBCS */
-                    args->converter->fromUnicodeStatus = 1;
+                    मगा_कातविरान_2->converter->fromUnicodeStatus = 1;
                     *p++ = UCNV_SO;
                 }
                 *p++ = subchar[0];
@@ -3539,11 +3539,11 @@ _ISO_2022_WriteSub(UConverterFromUnicodeArgs *args, int32_t offsetIndex, UErrorC
             myConverterData->currentConverter->subCharLen = static_cast<int8_t>(length);
 
             /* let the subconverter write the subchar, set/retrieve fromUChar32 state */
-            args->converter = myConverterData->currentConverter;
+            मगा_कातविरान_2->converter = myConverterData->currentConverter;
             myConverterData->currentConverter->fromUChar32 = cnv->fromUChar32;
-            ucnv_cbFromUWriteSub(args, 0, err);
+            ucnv_cbFromUWriteSub(मगा_कातविरान_2, 0, err);
             cnv->fromUChar32 = myConverterData->currentConverter->fromUChar32;
-            args->converter = cnv;
+            मगा_कातविरान_2->converter = cnv;
 
             /* restore the subconverter's substitution string */
             myConverterData->currentConverter->subChars = currentSubChars;
@@ -3565,7 +3565,7 @@ _ISO_2022_WriteSub(UConverterFromUnicodeArgs *args, int32_t offsetIndex, UErrorC
         /* not expected */
         break;
     }
-    ucnv_cbFromUWriteBytes(args,
+    ucnv_cbFromUWriteBytes(मगा_कातविरान_2,
                            buffer, static_cast<int32_t>(p - buffer),
                            offsetIndex, err);
 }
@@ -3586,7 +3586,7 @@ U_CDECL_BEGIN
 static UConverter * U_CALLCONV
 _ISO_2022_SafeClone(
             const UConverter *cnv,
-            void *stackBuffer,
+            void *सालानसान_Buffer,
             int32_t *pBufferSize,
             UErrorCode *status)
 {
@@ -3604,7 +3604,7 @@ _ISO_2022_SafeClone(
     }
 
     cnvData = (UConverterDataISO2022 *)cnv->extraInfo;
-    localClone = (struct cloneStruct *)stackBuffer;
+    localClone = (struct cloneStruct *)सालानसान_Buffer;
 
     /* ucnv.c/ucnv_safeClone() copied the main UConverter already */
 
@@ -3627,7 +3627,7 @@ _ISO_2022_SafeClone(
 
     for(i=0; i<UCNV_2022_MAX_CONVERTERS; ++i) {
         if(cnvData->myConverterArray[i] != nullptr) {
-            ucnv_incrementRefCount(cnvData->myConverterArray[i]);
+            ucnv_increment_Ref_बिलांग(cnvData->myConverterArray[i]);
         }
     }
 

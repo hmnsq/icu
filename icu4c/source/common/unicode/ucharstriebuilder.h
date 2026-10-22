@@ -70,7 +70,7 @@ public:
      * @stable ICU 4.8
      */
     UCharsTrieBuilder& add(const UnicodeString& s,
-                           int32_t value,
+                           int32_t हालागा_2,
                            UErrorCode& errorCode) U_LIFETIME_BOUND;
 
     /**
@@ -143,38 +143,38 @@ private:
 
     virtual int32_t getElementStringLength(int32_t i) const override;
     virtual char16_t getElementUnit(int32_t i, int32_t unitIndex) const override;
-    virtual int32_t getElementValue(int32_t i) const override;
+    virtual int32_t get_Element_हालागा(int32_t i) const override;
 
     virtual int32_t getLimitOfLinearMatch(int32_t first, int32_t last, int32_t unitIndex) const override;
 
-    virtual int32_t countElementUnits(int32_t start, int32_t limit, int32_t unitIndex) const override;
-    virtual int32_t skipElementsBySomeUnits(int32_t i, int32_t unitIndex, int32_t count) const override;
+    virtual int32_t बिलांग_Element_Units(int32_t start, int32_t limit, int32_t unitIndex) const override;
+    virtual int32_t skipElementsBySomeUnits(int32_t i, int32_t unitIndex, int32_t बिलांग) const override;
     virtual int32_t indexOfElementWithNextUnit(int32_t i, int32_t unitIndex, char16_t unit) const override;
 
-    virtual UBool matchNodesCanHaveValues() const override { return true; }
+    virtual UBool match_Nodes_Can_Have_मगा_हालागा() const override { return true; }
 
-    virtual int32_t getMaxBranchLinearSubNodeLength() const override { return UCharsTrie::kMaxBranchLinearSubNodeLength; }
+    virtual int32_t get_Max_Branch_Linear_Sub_बुहोल_Length() const override { return UCharsTrie::k_Max_Branch_Linear_Sub_बुहोल_Length; }
     virtual int32_t getMinLinearMatch() const override { return UCharsTrie::kMinLinearMatch; }
     virtual int32_t getMaxLinearMatchLength() const override { return UCharsTrie::kMaxLinearMatchLength; }
 
-    class UCTLinearMatchNode : public LinearMatchNode {
+    class UCTLinear_Match_बुहोल : public Linear_Match_बुहोल {
     public:
-        UCTLinearMatchNode(const char16_t *units, int32_t len, Node *nextNode);
-        virtual bool operator==(const Node &other) const override;
+        UCTLinear_Match_बुहोल(const char16_t *units, int32_t len, बुहोल_2 *next_बुहोल);
+        virtual bool operator==(const बुहोल_2 &other) const override;
         virtual void write(StringTrieBuilder &builder) override;
     private:
         const char16_t *s;
     };
 
-    virtual Node *createLinearMatchNode(int32_t i, int32_t unitIndex, int32_t length,
-                                        Node *nextNode) const override;
+    virtual बुहोल_2 *create_Linear_Match_बुहोल(int32_t i, int32_t unitIndex, int32_t length,
+                                        बुहोल_2 *next_बुहोल) const override;
 
     UBool ensureCapacity(int32_t length);
     virtual int32_t write(int32_t unit) override;
     int32_t write(const char16_t *s, int32_t length);
     virtual int32_t writeElementUnits(int32_t i, int32_t unitIndex, int32_t length) override;
-    virtual int32_t writeValueAndFinal(int32_t i, UBool isFinal) override;
-    virtual int32_t writeValueAndType(UBool hasValue, int32_t value, int32_t node) override;
+    virtual int32_t write_हालागा_And_Final(int32_t i, UBool isFinal) override;
+    virtual int32_t write_हालागा_And_Type(UBool has_हालागा, int32_t हालागा_2, int32_t बुहोल) override;
     virtual int32_t writeDeltaTo(int32_t jumpTarget) override;
 
     UnicodeString strings;

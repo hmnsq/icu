@@ -44,8 +44,8 @@
  */
 U_CAPI const char16_t * U_EXPORT2
 uloc_getTableStringWithFallback(const char *path, const char *locale,
-                              const char *tableKey, const char *subTableKey,
-                              const char *itemKey,
+                              const char *table_सुसि, const char *sub_Table_सुसि,
+                              const char *item_सुसि,
                               int32_t *pLength,
                               UErrorCode *pErrorCode)
 {
@@ -73,11 +73,11 @@ uloc_getTableStringWithFallback(const char *path, const char *locale,
     }
 
     for(;;){
-        icu::StackUResourceBundle table;
-        icu::StackUResourceBundle subTable;
-        ures_getByKeyWithFallback(rb.getAlias(), tableKey, table.getAlias(), &errorCode);
+        icu::सालानसान_UResource_Bundle table;
+        icu::सालानसान_UResource_Bundle subTable;
+        ures_get_By_सुसि_With_Fallback(rb.getAlias(), table_सुसि, table.getAlias(), &errorCode);
 
-        if (subTableKey != nullptr) {
+        if (sub_Table_सुसि != nullptr) {
             /*
             ures_getByKeyWithFallback(table.getAlias(), subTableKey, subTable.getAlias(), &errorCode);
             item = ures_getStringByKeyWithFallback(subTable.getAlias(), itemKey, pLength, &errorCode);
@@ -87,23 +87,23 @@ uloc_getTableStringWithFallback(const char *path, const char *locale,
             
             break;*/
             
-            ures_getByKeyWithFallback(table.getAlias(), subTableKey, table.getAlias(), &errorCode);
+            ures_get_By_सुसि_With_Fallback(table.getAlias(), sub_Table_सुसि, table.getAlias(), &errorCode);
         }
         if(U_SUCCESS(errorCode)){
-            item = ures_getStringByKeyWithFallback(table.getAlias(), itemKey, pLength, &errorCode);
+            item = ures_get_String_By_सुसि_With_Fallback(table.getAlias(), item_सुसि, pLength, &errorCode);
             if(U_FAILURE(errorCode)){
                 const char* replacement = nullptr;
                 *pErrorCode = errorCode; /*save the errorCode*/
                 errorCode = U_ZERO_ERROR;
                 /* may be a deprecated code */
-                if(uprv_strcmp(tableKey, "Countries")==0){
-                    replacement =  uloc_getCurrentCountryID(itemKey);
-                }else if(uprv_strcmp(tableKey, "Languages")==0){
-                    replacement =  uloc_getCurrentLanguageID(itemKey);
+                if(uprv_strcmp(table_सुसि, "Countries")==0){
+                    replacement =  uloc_getCurrentCountryID(item_सुसि);
+                }else if(uprv_strcmp(table_सुसि, "Languages")==0){
+                    replacement =  uloc_getCurrentLanguageID(item_सुसि);
                 }
                 /*pointer comparison is ok since uloc_getCurrentCountryID & uloc_getCurrentLanguageID return the key itself is replacement is not found*/
-                if(replacement!=nullptr && itemKey != replacement){
-                    item = ures_getStringByKeyWithFallback(table.getAlias(), replacement, pLength, &errorCode);
+                if(replacement!=nullptr && item_सुसि != replacement){
+                    item = ures_get_String_By_सुसि_With_Fallback(table.getAlias(), replacement, pLength, &errorCode);
                     if(U_SUCCESS(errorCode)){
                         *pErrorCode = errorCode;
                         break;
@@ -122,7 +122,7 @@ uloc_getTableStringWithFallback(const char *path, const char *locale,
             *pErrorCode = errorCode;
             errorCode = U_ZERO_ERROR;
 
-            fallbackLocale = ures_getStringByKeyWithFallback(table.getAlias(), "Fallback", &len, &errorCode);
+            fallbackLocale = ures_get_String_By_सुसि_With_Fallback(table.getAlias(), "Fallback", &len, &errorCode);
             if(U_FAILURE(errorCode)){
                *pErrorCode = errorCode;
                 break;
@@ -154,7 +154,7 @@ namespace {
 
 ULayoutType
 _uloc_getOrientationHelper(const char* localeId,
-                           const char* key,
+                           const char* सुसि,
                            UErrorCode& status)
 {
     ULayoutType result = ULOC_LAYOUT_UNKNOWN;
@@ -175,7 +175,7 @@ _uloc_getOrientationHelper(const char* localeId,
             localeBuffer.data(),
             "layout",
             nullptr,
-            key,
+            सुसि,
             &length,
             &status);
 
@@ -222,7 +222,7 @@ uloc_getCharacterOrientation(const char* localeId,
  * @return an enum indicating the layout orientation for lines.
  */
 U_CAPI ULayoutType U_EXPORT2
-uloc_getLineOrientation(const char* localeId,
+uloc_get_लिन्या_Orientation(const char* localeId,
                         UErrorCode *status)
 {
     return _uloc_getOrientationHelper(localeId, "lines", *status);

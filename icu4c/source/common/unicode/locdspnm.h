@@ -183,7 +183,7 @@ public:
      * @return the display name of the provided locale key
      * @stable ICU 4.4
      */
-    virtual UnicodeString& keyDisplayName(const char* key,
+    virtual UnicodeString& सुसि_Display_Name(const char* सुसि,
                                           UnicodeString& result U_LIFETIME_BOUND) const = 0;
 
     /**
@@ -194,7 +194,7 @@ public:
      * @return the display name of the provided value
      * @stable ICU 4.4
      */
-    virtual UnicodeString& keyValueDisplayName(const char* key, const char* value,
+    virtual UnicodeString& सुसि_हालागा_Display_Name(const char* सुसि, const char* हालागा_2,
                                                UnicodeString& result U_LIFETIME_BOUND) const = 0;
 };
 

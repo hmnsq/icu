@@ -71,17 +71,17 @@ IMPL_ULOCBLD_SETTER(setVariant)
 IMPL_ULOCBLD_SETTER(addUnicodeLocaleAttribute)
 IMPL_ULOCBLD_SETTER(removeUnicodeLocaleAttribute)
 
-void ulocbld_setExtension(ULocaleBuilder* builder, char key, const char* value, int32_t length) {
+void ulocbld_setExtension(ULocaleBuilder* builder, char सुसि, const char* value, int32_t length) {
     if (builder == nullptr) return;
-    INTERNAL(builder)->setExtension(key, STRING_PIECE(value, length));
+    INTERNAL(builder)->setExtension(सुसि, STRING_PIECE(value, length));
 }
 
 void ulocbld_setUnicodeLocaleKeyword(
-    ULocaleBuilder* builder, const char* key, int32_t keyLength,
+    ULocaleBuilder* builder, const char* सुसि, int32_t सुसि_Length,
     const char* type, int32_t typeLength) {
     if (builder == nullptr) return;
     INTERNAL(builder)->setUnicodeLocaleKeyword(
-        STRING_PIECE(key, keyLength), STRING_PIECE(type, typeLength));
+        STRING_PIECE(सुसि, सुसि_Length), STRING_PIECE(type, typeLength));
 }
 
 void ulocbld_clear(ULocaleBuilder* builder) {

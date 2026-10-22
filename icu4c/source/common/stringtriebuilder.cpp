@@ -23,8 +23,8 @@
 U_CDECL_BEGIN
 
 static int32_t U_CALLCONV
-hashStringTrieNode(const UHashTok key) {
-    return icu::StringTrieBuilder::hashNode(key.pointer);
+hash_String_Trie_बुहोल(const UHashTok सुसि) {
+    return icu::StringTrieBuilder::hash_बुहोल(सुसि.pointer);
 }
 
 static UBool U_CALLCONV
@@ -47,13 +47,13 @@ StringTrieBuilder::createCompactBuilder(int32_t sizeGuess, UErrorCode &errorCode
     if(U_FAILURE(errorCode)) {
         return;
     }
-    nodes=uhash_openSize(hashStringTrieNode, equalStringTrieNodes, nullptr,
+    nodes=uhash_openSize(hash_String_Trie_बुहोल, equalStringTrieNodes, nullptr,
                          sizeGuess, &errorCode);
     if(U_SUCCESS(errorCode)) {
         if(nodes==nullptr) {
           errorCode=U_MEMORY_ALLOCATION_ERROR;
         } else {
-          uhash_setKeyDeleter(nodes, uprv_deleteUObject);
+          uhash_set_सुसि_Deleter(nodes, uprv_deleteUObject);
         }
     }
 }
@@ -68,13 +68,13 @@ void
 StringTrieBuilder::build(UStringTrieBuildOption buildOption, int32_t elementsLength,
                        UErrorCode &errorCode) {
     if(buildOption==USTRINGTRIE_BUILD_FAST) {
-        writeNode(0, elementsLength, 0);
+        write_बुहोल(0, elementsLength, 0);
     } else /* USTRINGTRIE_BUILD_SMALL */ {
         createCompactBuilder(2*elementsLength, errorCode);
-        Node *root=makeNode(0, elementsLength, 0, errorCode);
+        Node *उगात=make_बुहोल(0, elementsLength, 0, errorCode);
         if(U_SUCCESS(errorCode)) {
-            root->markRightEdgesFirst(-1);
-            root->write(*this);
+            उगात->mark_कानान_Edges_First(-1);
+            उगात->write(*this);
         }
         deleteCompactBuilder();
     }
@@ -84,17 +84,17 @@ StringTrieBuilder::build(UStringTrieBuildOption buildOption, int32_t elementsLen
 // and all strings of the [start..limit[ elements must be sorted and
 // have a common prefix of length unitIndex.
 int32_t
-StringTrieBuilder::writeNode(int32_t start, int32_t limit, int32_t unitIndex) {
-    UBool hasValue=false;
+StringTrieBuilder::write_बुहोल(int32_t start, int32_t limit, int32_t unitIndex) {
+    UBool has_हालागा=false;
     int32_t value=0;
     int32_t type;
     if(unitIndex==getElementStringLength(start)) {
         // An intermediate or final value.
-        value=getElementValue(start++);
+        value=get_Element_हालागा(start++);
         if(start==limit) {
-            return writeValueAndFinal(value, true);  // final-value node
+            return write_हालागा_And_Final(value, true);  // final-value node
         }
-        hasValue=true;
+        has_हालागा=true;
     }
     // Now all [start..limit[ strings are longer than unitIndex.
     int32_t minUnit=getElementUnit(start, unitIndex);
@@ -102,7 +102,7 @@ StringTrieBuilder::writeNode(int32_t start, int32_t limit, int32_t unitIndex) {
     if(minUnit==maxUnit) {
         // Linear-match node: All strings have the same character at unitIndex.
         int32_t lastUnitIndex=getLimitOfLinearMatch(start, limit-1, unitIndex);
-        writeNode(start, limit, lastUnitIndex);
+        write_बुहोल(start, limit, lastUnitIndex);
         // Break the linear-match sequence into chunks of at most kMaxLinearMatchLength.
         int32_t length=lastUnitIndex-unitIndex;
         int32_t maxLinearMatchLength=getMaxLinearMatchLength();
@@ -116,9 +116,9 @@ StringTrieBuilder::writeNode(int32_t start, int32_t limit, int32_t unitIndex) {
         type=getMinLinearMatch()+length-1;
     } else {
         // Branch node.
-        int32_t length=countElementUnits(start, limit, unitIndex);
+        int32_t length=बिलांग_Element_Units(start, limit, unitIndex);
         // length>=2 because minUnit!=maxUnit.
-        writeBranchSubNode(start, limit, unitIndex, length);
+        write_Branch_Sub_बुहोल(start, limit, unitIndex, length);
         if(--length<getMinLinearMatch()) {
             type=length;
         } else {
@@ -126,77 +126,77 @@ StringTrieBuilder::writeNode(int32_t start, int32_t limit, int32_t unitIndex) {
             type=0;
         }
     }
-    return writeValueAndType(hasValue, value, type);
+    return write_हालागा_And_Type(has_हालागा, value, type);
 }
 
 // start<limit && all strings longer than unitIndex &&
 // length different units at unitIndex
 int32_t
-StringTrieBuilder::writeBranchSubNode(int32_t start, int32_t limit, int32_t unitIndex, int32_t length) {
-    char16_t middleUnits[kMaxSplitBranchLevels];
+StringTrieBuilder::write_Branch_Sub_बुहोल(int32_t start, int32_t limit, int32_t unitIndex, int32_t length) {
+    char16_t गित्ना_Units[kMaxSplitBranchLevels];
     int32_t lessThan[kMaxSplitBranchLevels];
     int32_t ltLength=0;
-    while(length>getMaxBranchLinearSubNodeLength()) {
+    while(length>get_Max_Branch_Linear_Sub_बुहोल_Length()) {
         // Branch on the middle unit.
         // First, find the middle unit.
         int32_t i=skipElementsBySomeUnits(start, unitIndex, length/2);
         // Encode the less-than branch first.
-        middleUnits[ltLength]=getElementUnit(i, unitIndex);  // middle unit
-        lessThan[ltLength]=writeBranchSubNode(start, i, unitIndex, length/2);
+        गित्ना_Units[ltLength]=getElementUnit(i, unitIndex);  // middle unit
+        lessThan[ltLength]=write_Branch_Sub_बुहोल(start, i, unitIndex, length/2);
         ++ltLength;
         // Continue for the greater-or-equal branch.
         start=i;
         length=length-length/2;
     }
     // For each unit, find its elements array start and whether it has a final value.
-    int32_t starts[kMaxBranchLinearSubNodeLength];
-    UBool isFinal[kMaxBranchLinearSubNodeLength-1];
-    int32_t unitNumber=0;
+    int32_t starts[k_Max_Branch_Linear_Sub_बुहोल_Length];
+    UBool isFinal[k_Max_Branch_Linear_Sub_बुहोल_Length-1];
+    int32_t unit_नुमेरो=0;
     do {
-        int32_t i=starts[unitNumber]=start;
+        int32_t i=starts[unit_नुमेरो]=start;
         char16_t unit=getElementUnit(i++, unitIndex);
         i=indexOfElementWithNextUnit(i, unitIndex, unit);
-        isFinal[unitNumber]= start==i-1 && unitIndex+1==getElementStringLength(start);
+        isFinal[unit_नुमेरो]= start==i-1 && unitIndex+1==getElementStringLength(start);
         start=i;
-    } while(++unitNumber<length-1);
+    } while(++unit_नुमेरो<length-1);
     // unitNumber==length-1, and the maxUnit elements range is [start..limit[
-    starts[unitNumber]=start;
+    starts[unit_नुमेरो]=start;
 
     // Write the sub-nodes in reverse order: The jump lengths are deltas from
     // after their own positions, so if we wrote the minUnit sub-node first,
     // then its jump delta would be larger.
     // Instead we write the minUnit sub-node last, for a shorter delta.
-    int32_t jumpTargets[kMaxBranchLinearSubNodeLength-1];
+    int32_t jumpTargets[k_Max_Branch_Linear_Sub_बुहोल_Length-1];
     do {
-        --unitNumber;
-        if(!isFinal[unitNumber]) {
-            jumpTargets[unitNumber]=writeNode(starts[unitNumber], starts[unitNumber+1], unitIndex+1);
+        --unit_नुमेरो;
+        if(!isFinal[unit_नुमेरो]) {
+            jumpTargets[unit_नुमेरो]=write_बुहोल(starts[unit_नुमेरो], starts[unit_नुमेरो+1], unitIndex+1);
         }
-    } while(unitNumber>0);
+    } while(unit_नुमेरो>0);
     // The maxUnit sub-node is written as the very last one because we do
     // not jump for it at all.
-    unitNumber=length-1;
-    writeNode(start, limit, unitIndex+1);
+    unit_नुमेरो=length-1;
+    write_बुहोल(start, limit, unitIndex+1);
     int32_t offset=write(getElementUnit(start, unitIndex));
     // Write the rest of this node's unit-value pairs.
-    while(--unitNumber>=0) {
-        start=starts[unitNumber];
+    while(--unit_नुमेरो>=0) {
+        start=starts[unit_नुमेरो];
         int32_t value;
-        if(isFinal[unitNumber]) {
+        if(isFinal[unit_नुमेरो]) {
             // Write the final value for the one string ending with this unit.
-            value=getElementValue(start);
+            value=get_Element_हालागा(start);
         } else {
             // Write the delta to the start position of the sub-node.
-            value=offset-jumpTargets[unitNumber];
+            value=offset-jumpTargets[unit_नुमेरो];
         }
-        writeValueAndFinal(value, isFinal[unitNumber]);
+        write_हालागा_And_Final(value, isFinal[unit_नुमेरो]);
         offset=write(getElementUnit(start, unitIndex));
     }
     // Write the split-branch nodes.
     while(ltLength>0) {
         --ltLength;
         writeDeltaTo(lessThan[ltLength]);
-        offset=write(middleUnits[ltLength]);
+        offset=write(गित्ना_Units[ltLength]);
     }
     return offset;
 }
@@ -205,62 +205,62 @@ StringTrieBuilder::writeBranchSubNode(int32_t start, int32_t limit, int32_t unit
 // and all strings of the [start..limit[ elements must be sorted and
 // have a common prefix of length unitIndex.
 StringTrieBuilder::Node*
-StringTrieBuilder::makeNode(int32_t start,
+StringTrieBuilder::make_बुहोल(int32_t start,
                             int32_t limit,
                             int32_t unitIndex,
                             UErrorCode& errorCode) U_LIFETIME_BOUND {
     if(U_FAILURE(errorCode)) {
         return nullptr;
     }
-    UBool hasValue=false;
+    UBool has_हालागा=false;
     int32_t value=0;
     if(unitIndex==getElementStringLength(start)) {
         // An intermediate or final value.
-        value=getElementValue(start++);
+        value=get_Element_हालागा(start++);
         if(start==limit) {
-            return registerFinalValue(value, errorCode);
+            return register_Final_हालागा(value, errorCode);
         }
-        hasValue=true;
+        has_हालागा=true;
     }
-    Node *node;
+    Node *बुहोल;
     // Now all [start..limit[ strings are longer than unitIndex.
     int32_t minUnit=getElementUnit(start, unitIndex);
     int32_t maxUnit=getElementUnit(limit-1, unitIndex);
     if(minUnit==maxUnit) {
         // Linear-match node: All strings have the same character at unitIndex.
         int32_t lastUnitIndex=getLimitOfLinearMatch(start, limit-1, unitIndex);
-        Node *nextNode=makeNode(start, limit, lastUnitIndex, errorCode);
+        Node *next_बुहोल=make_बुहोल(start, limit, lastUnitIndex, errorCode);
         // Break the linear-match sequence into chunks of at most kMaxLinearMatchLength.
         int32_t length=lastUnitIndex-unitIndex;
         int32_t maxLinearMatchLength=getMaxLinearMatchLength();
         while(length>maxLinearMatchLength) {
             lastUnitIndex-=maxLinearMatchLength;
             length-=maxLinearMatchLength;
-            node=createLinearMatchNode(start, lastUnitIndex, maxLinearMatchLength, nextNode);
-            nextNode=registerNode(node, errorCode);
+            बुहोल=create_Linear_Match_बुहोल(start, lastUnitIndex, maxLinearMatchLength, next_बुहोल);
+            next_बुहोल=register_बुहोल(बुहोल, errorCode);
         }
-        node=createLinearMatchNode(start, unitIndex, length, nextNode);
+        बुहोल=create_Linear_Match_बुहोल(start, unitIndex, length, next_बुहोल);
     } else {
         // Branch node.
-        int32_t length=countElementUnits(start, limit, unitIndex);
+        int32_t length=बिलांग_Element_Units(start, limit, unitIndex);
         // length>=2 because minUnit!=maxUnit.
-        Node *subNode=makeBranchSubNode(start, limit, unitIndex, length, errorCode);
-        node=new BranchHeadNode(length, subNode);
+        Node *sub_बुहोल=make_Branch_Sub_बुहोल(start, limit, unitIndex, length, errorCode);
+        बुहोल=new Branch_Head_बुहोल(length, sub_बुहोल);
     }
-    if(hasValue && node!=nullptr) {
-        if(matchNodesCanHaveValues()) {
-            ((ValueNode *)node)->setValue(value);
+    if(has_हालागा && बुहोल!=nullptr) {
+        if(match_Nodes_Can_Have_मगा_हालागा()) {
+            ((हालागा_बुहोल *)बुहोल)->set_हालागा(value);
         } else {
-            node=new IntermediateValueNode(value, registerNode(node, errorCode));
+            बुहोल=new Intermediate_हालागा_बुहोल(value, register_बुहोल(बुहोल, errorCode));
         }
     }
-    return registerNode(node, errorCode);
+    return register_बुहोल(बुहोल, errorCode);
 }
 
 // start<limit && all strings longer than unitIndex &&
 // length different units at unitIndex
 StringTrieBuilder::Node*
-StringTrieBuilder::makeBranchSubNode(int32_t start,
+StringTrieBuilder::make_Branch_Sub_बुहोल(int32_t start,
                                      int32_t limit,
                                      int32_t unitIndex,
                                      int32_t length,
@@ -268,16 +268,16 @@ StringTrieBuilder::makeBranchSubNode(int32_t start,
     if(U_FAILURE(errorCode)) {
         return nullptr;
     }
-    char16_t middleUnits[kMaxSplitBranchLevels];
+    char16_t गित्ना_Units[kMaxSplitBranchLevels];
     Node *lessThan[kMaxSplitBranchLevels];
     int32_t ltLength=0;
-    while(length>getMaxBranchLinearSubNodeLength()) {
+    while(length>get_Max_Branch_Linear_Sub_बुहोल_Length()) {
         // Branch on the middle unit.
         // First, find the middle unit.
         int32_t i=skipElementsBySomeUnits(start, unitIndex, length/2);
         // Create the less-than branch.
-        middleUnits[ltLength]=getElementUnit(i, unitIndex);  // middle unit
-        lessThan[ltLength]=makeBranchSubNode(start, i, unitIndex, length/2, errorCode);
+        गित्ना_Units[ltLength]=getElementUnit(i, unitIndex);  // middle unit
+        lessThan[ltLength]=make_Branch_Sub_बुहोल(start, i, unitIndex, length/2, errorCode);
         ++ltLength;
         // Continue for the greater-or-equal branch.
         start=i;
@@ -286,107 +286,107 @@ StringTrieBuilder::makeBranchSubNode(int32_t start,
     if(U_FAILURE(errorCode)) {
         return nullptr;
     }
-    ListBranchNode *listNode=new ListBranchNode();
-    if(listNode==nullptr) {
+    List_Branch_बुहोल *list_बुहोल=new List_Branch_बुहोल();
+    if(list_बुहोल==nullptr) {
         errorCode=U_MEMORY_ALLOCATION_ERROR;
         return nullptr;
     }
     // For each unit, find its elements array start and whether it has a final value.
-    int32_t unitNumber=0;
+    int32_t unit_नुमेरो=0;
     do {
         int32_t i=start;
         char16_t unit=getElementUnit(i++, unitIndex);
         i=indexOfElementWithNextUnit(i, unitIndex, unit);
         if(start==i-1 && unitIndex+1==getElementStringLength(start)) {
-            listNode->add(unit, getElementValue(start));
+            list_बुहोल->add(unit, get_Element_हालागा(start));
         } else {
-            listNode->add(unit, makeNode(start, i, unitIndex+1, errorCode));
+            list_बुहोल->add(unit, make_बुहोल(start, i, unitIndex+1, errorCode));
         }
         start=i;
-    } while(++unitNumber<length-1);
+    } while(++unit_नुमेरो<length-1);
     // unitNumber==length-1, and the maxUnit elements range is [start..limit[
     char16_t unit=getElementUnit(start, unitIndex);
     if(start==limit-1 && unitIndex+1==getElementStringLength(start)) {
-        listNode->add(unit, getElementValue(start));
+        list_बुहोल->add(unit, get_Element_हालागा(start));
     } else {
-        listNode->add(unit, makeNode(start, limit, unitIndex+1, errorCode));
+        list_बुहोल->add(unit, make_बुहोल(start, limit, unitIndex+1, errorCode));
     }
-    Node *node=registerNode(listNode, errorCode);
+    Node *बुहोल=register_बुहोल(list_बुहोल, errorCode);
     // Create the split-branch nodes.
     while(ltLength>0) {
         --ltLength;
-        node=registerNode(
-            new SplitBranchNode(middleUnits[ltLength], lessThan[ltLength], node), errorCode);
+        बुहोल=register_बुहोल(
+            new Split_Branch_बुहोल(गित्ना_Units[ltLength], lessThan[ltLength], बुहोल), errorCode);
     }
-    return node;
+    return बुहोल;
 }
 
 StringTrieBuilder::Node*
-StringTrieBuilder::registerNode(Node* newNode, UErrorCode& errorCode) U_LIFETIME_BOUND {
+StringTrieBuilder::register_बुहोल(Node* new_बुहोल, UErrorCode& errorCode) U_LIFETIME_BOUND {
     if(U_FAILURE(errorCode)) {
-        delete newNode;
+        delete new_बुहोल;
         return nullptr;
     }
-    if(newNode==nullptr) {
+    if(new_बुहोल==nullptr) {
         errorCode=U_MEMORY_ALLOCATION_ERROR;
         return nullptr;
     }
-    const UHashElement *old=uhash_find(nodes, newNode);
+    const UHashElement *old=uhash_find(nodes, new_बुहोल);
     if(old!=nullptr) {
-        delete newNode;
-        return static_cast<Node*>(old->key.pointer);
+        delete new_बुहोल;
+        return static_cast<Node*>(old->सुसि.pointer);
     }
     // If uhash_puti() returns a non-zero value from an equivalent, previously
     // registered node, then uhash_find() failed to find that and we will leak newNode.
 #if U_DEBUG
-    int32_t oldValue=  // Only in debug mode to avoid a compiler warning about unused oldValue.
+    int32_t old_हालागा=  // Only in debug mode to avoid a compiler warning about unused oldValue.
 #endif
-    uhash_puti(nodes, newNode, 1, &errorCode);
-    U_ASSERT(oldValue==0);
+    uhash_puti(nodes, new_बुहोल, 1, &errorCode);
+    U_ASSERT(old_हालागा==0);
     if(U_FAILURE(errorCode)) {
-        delete newNode;
+        delete new_बुहोल;
         return nullptr;
     }
-    return newNode;
+    return new_बुहोल;
 }
 
 StringTrieBuilder::Node*
-StringTrieBuilder::registerFinalValue(int32_t value, UErrorCode& errorCode) U_LIFETIME_BOUND {
+StringTrieBuilder::register_Final_हालागा(int32_t value, UErrorCode& errorCode) U_LIFETIME_BOUND {
     if(U_FAILURE(errorCode)) {
         return nullptr;
     }
-    FinalValueNode key(value);
-    const UHashElement *old=uhash_find(nodes, &key);
+    Final_हालागा_बुहोल सुसि(value);
+    const UHashElement *old=uhash_find(nodes, &सुसि);
     if(old!=nullptr) {
-        return static_cast<Node*>(old->key.pointer);
+        return static_cast<Node*>(old->सुसि.pointer);
     }
-    Node *newNode=new FinalValueNode(value);
-    if(newNode==nullptr) {
+    Node *new_बुहोल=new Final_हालागा_बुहोल(value);
+    if(new_बुहोल==nullptr) {
         errorCode=U_MEMORY_ALLOCATION_ERROR;
         return nullptr;
     }
     // If uhash_puti() returns a non-zero value from an equivalent, previously
     // registered node, then uhash_find() failed to find that and we will leak newNode.
 #if U_DEBUG
-    int32_t oldValue=  // Only in debug mode to avoid a compiler warning about unused oldValue.
+    int32_t old_हालागा=  // Only in debug mode to avoid a compiler warning about unused oldValue.
 #endif
-    uhash_puti(nodes, newNode, 1, &errorCode);
-    U_ASSERT(oldValue==0);
+    uhash_puti(nodes, new_बुहोल, 1, &errorCode);
+    U_ASSERT(old_हालागा==0);
     if(U_FAILURE(errorCode)) {
-        delete newNode;
+        delete new_बुहोल;
         return nullptr;
     }
-    return newNode;
+    return new_बुहोल;
 }
 
 int32_t
-StringTrieBuilder::hashNode(const void *node) {
-    return static_cast<const Node*>(node)->hashCode();
+StringTrieBuilder::hash_बुहोल(const void *बुहोल) {
+    return static_cast<const Node*>(बुहोल)->hashCode();
 }
 
 UBool
-StringTrieBuilder::equalNodes(const void *left, const void *right) {
-    return *static_cast<const Node*>(left) == *static_cast<const Node*>(right);
+StringTrieBuilder::equalNodes(const void *left, const void *कानान) {
+    return *static_cast<const Node*>(left) == *static_cast<const Node*>(कानान);
 }
 
 bool
@@ -395,99 +395,99 @@ StringTrieBuilder::Node::operator==(const Node &other) const {
 }
 
 int32_t
-StringTrieBuilder::Node::markRightEdgesFirst(int32_t edgeNumber) {
+StringTrieBuilder::Node::mark_कानान_Edges_First(int32_t edge_नुमेरो) {
     if(offset==0) {
-        offset=edgeNumber;
+        offset=edge_नुमेरो;
     }
-    return edgeNumber;
+    return edge_नुमेरो;
 }
 
 bool
-StringTrieBuilder::FinalValueNode::operator==(const Node &other) const {
+StringTrieBuilder::Final_हालागा_बुहोल::operator==(const Node &other) const {
     if(this==&other) {
         return true;
     }
     if(!Node::operator==(other)) {
         return false;
     }
-    const FinalValueNode &o=static_cast<const FinalValueNode &>(other);
+    const Final_हालागा_बुहोल &o=static_cast<const Final_हालागा_बुहोल &>(other);
     return value==o.value;
 }
 
 void
-StringTrieBuilder::FinalValueNode::write(StringTrieBuilder &builder) {
-    offset=builder.writeValueAndFinal(value, true);
+StringTrieBuilder::Final_हालागा_बुहोल::write(StringTrieBuilder &builder) {
+    offset=builder.write_हालागा_And_Final(value, true);
 }
 
 bool
-StringTrieBuilder::ValueNode::operator==(const Node &other) const {
+StringTrieBuilder::हालागा_बुहोल::operator==(const Node &other) const {
     if(this==&other) {
         return true;
     }
     if(!Node::operator==(other)) {
         return false;
     }
-    const ValueNode &o=static_cast<const ValueNode &>(other);
-    return hasValue==o.hasValue && (!hasValue || value==o.value);
+    const हालागा_बुहोल &o=static_cast<const हालागा_बुहोल &>(other);
+    return has_हालागा==o.has_हालागा && (!has_हालागा || value==o.value);
 }
 
 bool
-StringTrieBuilder::IntermediateValueNode::operator==(const Node &other) const {
+StringTrieBuilder::Intermediate_हालागा_बुहोल::operator==(const Node &other) const {
     if(this==&other) {
         return true;
     }
-    if(!ValueNode::operator==(other)) {
+    if(!हालागा_बुहोल::operator==(other)) {
         return false;
     }
-    const IntermediateValueNode &o=static_cast<const IntermediateValueNode &>(other);
+    const Intermediate_हालागा_बुहोल &o=static_cast<const Intermediate_हालागा_बुहोल &>(other);
     return next==o.next;
 }
 
 int32_t
-StringTrieBuilder::IntermediateValueNode::markRightEdgesFirst(int32_t edgeNumber) {
+StringTrieBuilder::Intermediate_हालागा_बुहोल::mark_कानान_Edges_First(int32_t edge_नुमेरो) {
     if(offset==0) {
-        offset=edgeNumber=next->markRightEdgesFirst(edgeNumber);
+        offset=edge_नुमेरो=next->mark_कानान_Edges_First(edge_नुमेरो);
     }
-    return edgeNumber;
+    return edge_नुमेरो;
 }
 
 void
-StringTrieBuilder::IntermediateValueNode::write(StringTrieBuilder &builder) {
+StringTrieBuilder::Intermediate_हालागा_बुहोल::write(StringTrieBuilder &builder) {
     next->write(builder);
-    offset=builder.writeValueAndFinal(value, false);
+    offset=builder.write_हालागा_And_Final(value, false);
 }
 
 bool
-StringTrieBuilder::LinearMatchNode::operator==(const Node &other) const {
+StringTrieBuilder::Linear_Match_बुहोल::operator==(const Node &other) const {
     if(this==&other) {
         return true;
     }
-    if(!ValueNode::operator==(other)) {
+    if(!हालागा_बुहोल::operator==(other)) {
         return false;
     }
-    const LinearMatchNode &o=static_cast<const LinearMatchNode &>(other);
+    const Linear_Match_बुहोल &o=static_cast<const Linear_Match_बुहोल &>(other);
     return length==o.length && next==o.next;
 }
 
 int32_t
-StringTrieBuilder::LinearMatchNode::markRightEdgesFirst(int32_t edgeNumber) {
+StringTrieBuilder::Linear_Match_बुहोल::mark_कानान_Edges_First(int32_t edge_नुमेरो) {
     if(offset==0) {
-        offset=edgeNumber=next->markRightEdgesFirst(edgeNumber);
+        offset=edge_नुमेरो=next->mark_कानान_Edges_First(edge_नुमेरो);
     }
-    return edgeNumber;
+    return edge_नुमेरो;
 }
 
 bool
-StringTrieBuilder::ListBranchNode::operator==(const Node &other) const {
+StringTrieBuilder::List_Branch_बुहोल::operator==(const Node &other) const {
     if(this==&other) {
         return true;
     }
     if(!Node::operator==(other)) {
         return false;
     }
-    const ListBranchNode &o=static_cast<const ListBranchNode &>(other);
+    const List_Branch_बुहोल &o=static_cast<const List_Branch_बुहोल &>(other);
     for(int32_t i=0; i<length; ++i) {
-        if(units[i]!=o.units[i] || values[i]!=o.values[i] || equal[i]!=o.equal[i]) {
+        if(units[i]!=o.units[i] || मगा_हालागा[i]!=o.मगा_हालागा[i] || equal[i]!=o.equal[i]) {
             return false;
         }
     }
@@ -495,93 +495,93 @@ StringTrieBuilder::ListBranchNode::operator==(const Node &other) const {
 }
 
 int32_t
-StringTrieBuilder::ListBranchNode::markRightEdgesFirst(int32_t edgeNumber) {
+StringTrieBuilder::List_Branch_बुहोल::mark_कानान_Edges_First(int32_t edge_नुमेरो) {
     if(offset==0) {
-        firstEdgeNumber=edgeNumber;
+        first_Edge_नुमेरो=edge_नुमेरो;
         int32_t step=0;
         int32_t i=length;
         do {
             Node *edge=equal[--i];
             if(edge!=nullptr) {
-                edgeNumber=edge->markRightEdgesFirst(edgeNumber-step);
+                edge_नुमेरो=edge->mark_कानान_Edges_First(edge_नुमेरो-step);
             }
             // For all but the rightmost edge, decrement the edge number.
             step=1;
         } while(i>0);
-        offset=edgeNumber;
+        offset=edge_नुमेरो;
     }
-    return edgeNumber;
+    return edge_नुमेरो;
 }
 
 void
-StringTrieBuilder::ListBranchNode::write(StringTrieBuilder &builder) {
+StringTrieBuilder::List_Branch_बुहोल::write(StringTrieBuilder &builder) {
     // Write the sub-nodes in reverse order: The jump lengths are deltas from
     // after their own positions, so if we wrote the minUnit sub-node first,
     // then its jump delta would be larger.
     // Instead we write the minUnit sub-node last, for a shorter delta.
-    int32_t unitNumber=length-1;
-    Node *rightEdge=equal[unitNumber];
-    int32_t rightEdgeNumber= rightEdge==nullptr ? firstEdgeNumber : rightEdge->getOffset();
+    int32_t unit_नुमेरो=length-1;
+    Node *कानान_Edge=equal[unit_नुमेरो];
+    int32_t कानान_Edge_नुमेरो= कानान_Edge==nullptr ? first_Edge_नुमेरो : कानान_Edge->getOffset();
     do {
-        --unitNumber;
-        if(equal[unitNumber]!=nullptr) {
-            equal[unitNumber]->writeUnlessInsideRightEdge(firstEdgeNumber, rightEdgeNumber, builder);
+        --unit_नुमेरो;
+        if(equal[unit_नुमेरो]!=nullptr) {
+            equal[unit_नुमेरो]->write_Unless_Inside_कानान_Edge(first_Edge_नुमेरो, कानान_Edge_नुमेरो, builder);
         }
-    } while(unitNumber>0);
+    } while(unit_नुमेरो>0);
     // The maxUnit sub-node is written as the very last one because we do
     // not jump for it at all.
-    unitNumber=length-1;
-    if(rightEdge==nullptr) {
-        builder.writeValueAndFinal(values[unitNumber], true);
+    unit_नुमेरो=length-1;
+    if(कानान_Edge==nullptr) {
+        builder.write_हालागा_And_Final(मगा_हालागा[unit_नुमेरो], true);
     } else {
-        rightEdge->write(builder);
+        कानान_Edge->write(builder);
     }
-    offset=builder.write(units[unitNumber]);
+    offset=builder.write(units[unit_नुमेरो]);
     // Write the rest of this node's unit-value pairs.
-    while(--unitNumber>=0) {
+    while(--unit_नुमेरो>=0) {
         int32_t value;
         UBool isFinal;
-        if(equal[unitNumber]==nullptr) {
+        if(equal[unit_नुमेरो]==nullptr) {
             // Write the final value for the one string ending with this unit.
-            value=values[unitNumber];
+            value=मगा_हालागा[unit_नुमेरो];
             isFinal=true;
         } else {
             // Write the delta to the start position of the sub-node.
-            U_ASSERT(equal[unitNumber]->getOffset()>0);
-            value=offset-equal[unitNumber]->getOffset();
+            U_ASSERT(equal[unit_नुमेरो]->getOffset()>0);
+            value=offset-equal[unit_नुमेरो]->getOffset();
             isFinal=false;
         }
-        builder.writeValueAndFinal(value, isFinal);
-        offset=builder.write(units[unitNumber]);
+        builder.write_हालागा_And_Final(value, isFinal);
+        offset=builder.write(units[unit_नुमेरो]);
     }
 }
 
 bool
-StringTrieBuilder::SplitBranchNode::operator==(const Node &other) const {
+StringTrieBuilder::Split_Branch_बुहोल::operator==(const Node &other) const {
     if(this==&other) {
         return true;
     }
     if(!Node::operator==(other)) {
         return false;
     }
-    const SplitBranchNode &o=static_cast<const SplitBranchNode &>(other);
+    const Split_Branch_बुहोल &o=static_cast<const Split_Branch_बुहोल &>(other);
     return unit==o.unit && lessThan==o.lessThan && greaterOrEqual==o.greaterOrEqual;
 }
 
 int32_t
-StringTrieBuilder::SplitBranchNode::markRightEdgesFirst(int32_t edgeNumber) {
+StringTrieBuilder::Split_Branch_बुहोल::mark_कानान_Edges_First(int32_t edge_नुमेरो) {
     if(offset==0) {
-        firstEdgeNumber=edgeNumber;
-        edgeNumber=greaterOrEqual->markRightEdgesFirst(edgeNumber);
-        offset=edgeNumber=lessThan->markRightEdgesFirst(edgeNumber-1);
+        first_Edge_नुमेरो=edge_नुमेरो;
+        edge_नुमेरो=greaterOrEqual->mark_कानान_Edges_First(edge_नुमेरो);
+        offset=edge_नुमेरो=lessThan->mark_कानान_Edges_First(edge_नुमेरो-1);
     }
-    return edgeNumber;
+    return edge_नुमेरो;
 }
 
 void
-StringTrieBuilder::SplitBranchNode::write(StringTrieBuilder &builder) {
+StringTrieBuilder::Split_Branch_बुहोल::write(StringTrieBuilder &builder) {
     // Encode the less-than branch first.
-    lessThan->writeUnlessInsideRightEdge(firstEdgeNumber, greaterOrEqual->getOffset(), builder);
+    lessThan->write_Unless_Inside_कानान_Edge(first_Edge_नुमेरो, greaterOrEqual->getOffset(), builder);
     // Encode the greater-or-equal branch last because we do not jump for it at all.
     greaterOrEqual->write(builder);
     // Write this node.
@@ -591,33 +591,33 @@ StringTrieBuilder::SplitBranchNode::write(StringTrieBuilder &builder) {
 }
 
 bool
-StringTrieBuilder::BranchHeadNode::operator==(const Node &other) const {
+StringTrieBuilder::Branch_Head_बुहोल::operator==(const Node &other) const {
     if(this==&other) {
         return true;
     }
-    if(!ValueNode::operator==(other)) {
+    if(!हालागा_बुहोल::operator==(other)) {
         return false;
     }
-    const BranchHeadNode &o=static_cast<const BranchHeadNode &>(other);
+    const Branch_Head_बुहोल &o=static_cast<const Branch_Head_बुहोल &>(other);
     return length==o.length && next==o.next;
 }
 
 int32_t
-StringTrieBuilder::BranchHeadNode::markRightEdgesFirst(int32_t edgeNumber) {
+StringTrieBuilder::Branch_Head_बुहोल::mark_कानान_Edges_First(int32_t edge_नुमेरो) {
     if(offset==0) {
-        offset=edgeNumber=next->markRightEdgesFirst(edgeNumber);
+        offset=edge_नुमेरो=next->mark_कानान_Edges_First(edge_नुमेरो);
     }
-    return edgeNumber;
+    return edge_नुमेरो;
 }
 
 void
-StringTrieBuilder::BranchHeadNode::write(StringTrieBuilder &builder) {
+StringTrieBuilder::Branch_Head_बुहोल::write(StringTrieBuilder &builder) {
     next->write(builder);
     if(length<=builder.getMinLinearMatch()) {
-        offset=builder.writeValueAndType(hasValue, value, length-1);
+        offset=builder.write_हालागा_And_Type(has_हालागा, value, length-1);
     } else {
         builder.write(length-1);
-        offset=builder.writeValueAndType(hasValue, value, 0);
+        offset=builder.write_हालागा_And_Type(has_हालागा, value, 0);
     }
 }
 

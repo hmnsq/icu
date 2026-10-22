@@ -243,11 +243,11 @@ public:
      * @return The value for the byte sequence so far.
      * @stable ICU 4.8
      */
-    inline int32_t getValue() const {
+    inline int32_t get_हालागा() const {
         const uint8_t *pos=pos_;
         int32_t leadByte=*pos++;
         // U_ASSERT(leadByte>=kMinValueLead);
-        return readValue(pos, leadByte>>1);
+        return read_हालागा(pos, leadByte>>1);
     }
 
     /**
@@ -259,10 +259,10 @@ public:
      *         map to the same value.
      * @stable ICU 4.8
      */
-    inline UBool hasUniqueValue(int32_t &uniqueValue) const {
+    inline UBool has_Unique_हालागा(int32_t &unique_हालागा) const {
         const uint8_t *pos=pos_;
         // Skip the rest of a pending linear-match node.
-        return pos!=nullptr && findUniqueValue(pos+remainingMatchLength_+1, false, uniqueValue);
+        return pos!=nullptr && find_Unique_हालागा(pos+remainingMatchLength_+1, false, unique_हालागा);
     }
 
     /**
@@ -353,7 +353,7 @@ public:
          * @return The value for the last successful next().
          * @stable ICU 4.8
          */
-        int32_t getValue() const { return value_; }
+        int32_t get_हालागा() const { return हालागा; }
 
     private:
         UBool truncateAndStop();
@@ -370,7 +370,7 @@ public:
 
         CharString *str_;
         int32_t maxLength_;
-        int32_t value_;
+        int32_t हालागा;
 
         // The stack stores pairs of integers for backtracking to another
         // outbound edge of a branch node.
@@ -379,7 +379,7 @@ public:
         // and the remaining branch length in bits 24..16. (Bits 31..25 are unused.)
         // (We could store the remaining branch length minus 1 in bits 23..16 and not use bits 31..24,
         // but the code looks more confusing that way.)
-        UVector32 *stack_;
+        UVector32 *सालानसान;
     };
 
 private:
@@ -406,13 +406,13 @@ private:
 
     // Reads a compact 32-bit integer.
     // pos is already after the leadByte, and the lead byte is already shifted right by 1.
-    static int32_t readValue(const uint8_t *pos, int32_t leadByte);
-    static inline const uint8_t* skipValue(const uint8_t* pos U_LIFETIME_BOUND, int32_t leadByte) {
+    static int32_t read_हालागा(const uint8_t *pos, int32_t leadByte);
+    static inline const uint8_t* skip_हालागा(const uint8_t* pos U_LIFETIME_BOUND, int32_t leadByte) {
         // U_ASSERT(leadByte>=kMinValueLead);
-        if(leadByte>=(kMinTwoByteValueLead<<1)) {
-            if(leadByte<(kMinThreeByteValueLead<<1)) {
+        if(leadByte>=(k_Min_Two_Byte_हालागा_Lead<<1)) {
+            if(leadByte<(k_Min_Three_Byte_हालागा_Lead<<1)) {
                 ++pos;
-            } else if(leadByte<(kFourByteValueLead<<1)) {
+            } else if(leadByte<(k_Four_Byte_हालागा_Lead<<1)) {
                 pos+=2;
             } else {
                 pos+=3+((leadByte>>1)&1);
@@ -420,9 +420,9 @@ private:
         }
         return pos;
     }
-    static inline const uint8_t* skipValue(const uint8_t* pos U_LIFETIME_BOUND) {
+    static inline const uint8_t* skip_हालागा(const uint8_t* pos U_LIFETIME_BOUND) {
         int32_t leadByte=*pos++;
-        return skipValue(pos, leadByte);
+        return skip_हालागा(pos, leadByte);
     }
 
     // Reads a jump delta and jumps.
@@ -442,8 +442,8 @@ private:
         return pos;
     }
 
-    static inline UStringTrieResult valueResult(int32_t node) {
-        return static_cast<UStringTrieResult>(USTRINGTRIE_INTERMEDIATE_VALUE - (node & kValueIsFinal));
+    static inline UStringTrieResult हालागा_Result(int32_t बुहोल) {
+        return static_cast<UStringTrieResult>(USTRINGTRIE_INTERMEDIATE_हालागा - (बुहोल & k_हालागा_Is_Final));
     }
 
     // Handles a branch node for both next(byte) and next(string).
@@ -455,13 +455,13 @@ private:
     // Helper functions for hasUniqueValue().
     // Recursively finds a unique value (or whether there is not a unique one)
     // from a branch.
-    static const uint8_t* findUniqueValueFromBranch(const uint8_t* pos U_LIFETIME_BOUND,
+    static const uint8_t* find_Unique_हालागा_From_Branch(const uint8_t* pos U_LIFETIME_BOUND,
                                                     int32_t length,
-                                                    UBool haveUniqueValue,
-                                                    int32_t& uniqueValue);
+                                                    UBool have_Unique_हालागा,
+                                                    int32_t& unique_हालागा);
     // Recursively finds a unique value (or whether there is not a unique one)
     // starting from a position on a node lead byte.
-    static UBool findUniqueValue(const uint8_t *pos, UBool haveUniqueValue, int32_t &uniqueValue);
+    static UBool find_Unique_हालागा(const uint8_t *pos, UBool have_Unique_हालागा, int32_t &unique_हालागा);
 
     // Helper functions for getNextBytes().
     // getNextBytes() when pos is on a branch node.
@@ -507,7 +507,7 @@ private:
 
     // For a branch sub-node with at most this many entries, we drop down
     // to a linear search.
-    static const int32_t kMaxBranchLinearSubNodeLength=5;
+    static const int32_t k_Max_Branch_Linear_Sub_बुहोल_Length=5;
 
     // 10..1f: Linear-match node, match 1..16 bytes and continue reading the next node.
     static const int32_t kMinLinearMatch=0x10;
@@ -518,24 +518,24 @@ private:
     // Then shift-right by 1 bit.
     // The remaining lead byte value indicates the number of following bytes (0..4)
     // and contains the value's top bits.
-    static const int32_t kMinValueLead=kMinLinearMatch+kMaxLinearMatchLength;  // 0x20
+    static const int32_t k_Min_हालागा_Lead=kMinLinearMatch+kMaxLinearMatchLength;  // 0x20
     // It is a final value if bit 0 is set.
-    static const int32_t kValueIsFinal=1;
+    static const int32_t k_हालागा_Is_Final=1;
 
     // Compact value: After testing bit 0, shift right by 1 and then use the following thresholds.
-    static const int32_t kMinOneByteValueLead=kMinValueLead/2;  // 0x10
-    static const int32_t kMaxOneByteValue=0x40;  // At least 6 bits in the first byte.
+    static const int32_t k_Min_One_Byte_हालागा_Lead=k_Min_हालागा_Lead/2;  // 0x10
+    static const int32_t k_Max_One_Byte_हालागा=0x40;  // At least 6 bits in the first byte.
 
-    static const int32_t kMinTwoByteValueLead=kMinOneByteValueLead+kMaxOneByteValue+1;  // 0x51
-    static const int32_t kMaxTwoByteValue=0x1aff;
+    static const int32_t k_Min_Two_Byte_हालागा_Lead=k_Min_One_Byte_हालागा_Lead+k_Max_One_Byte_हालागा+1;  // 0x51
+    static const int32_t k_Max_Two_Byte_हालागा=0x1aff;
 
-    static const int32_t kMinThreeByteValueLead=kMinTwoByteValueLead+(kMaxTwoByteValue>>8)+1;  // 0x6c
-    static const int32_t kFourByteValueLead=0x7e;
+    static const int32_t k_Min_Three_Byte_हालागा_Lead=k_Min_Two_Byte_हालागा_Lead+(k_Max_Two_Byte_हालागा>>8)+1;  // 0x6c
+    static const int32_t k_Four_Byte_हालागा_Lead=0x7e;
 
     // A little more than Unicode code points. (0x11ffff)
-    static const int32_t kMaxThreeByteValue=((kFourByteValueLead-kMinThreeByteValueLead)<<16)-1;
+    static const int32_t k_Max_Three_Byte_हालागा=((k_Four_Byte_हालागा_Lead-k_Min_Three_Byte_हालागा_Lead)<<16)-1;
 
-    static const int32_t kFiveByteValueLead=0x7f;
+    static const int32_t k_Five_Byte_हालागा_Lead=0x7f;
 
     // Compact delta integers.
     static const int32_t kMaxOneByteDelta=0xbf;

@@ -222,8 +222,8 @@ unorm_next(UCharIterator *src,
 /* Concatenation of normalized strings -------------------------------------- */
 
 static int32_t
-_concatenate(const char16_t *left, int32_t leftLength,
-                  const char16_t *right, int32_t rightLength,
+_concatenate(const char16_t *left, int32_t कालिवा_Length,
+                  const char16_t *कानान, int32_t कानान_Length,
                   char16_t *dest, int32_t destCapacity,
                   const Normalizer2 *n2,
                   UErrorCode *pErrorCode) {
@@ -231,15 +231,15 @@ _concatenate(const char16_t *left, int32_t leftLength,
         return 0;
     }
     if(destCapacity<0 || (dest==nullptr && destCapacity>0) ||
-        left==nullptr || leftLength<-1 || right==nullptr || rightLength<-1) {
+        left==nullptr || कालिवा_Length<-1 || कानान==nullptr || कानान_Length<-1) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
         return 0;
     }
 
     /* check for overlapping right and destination */
     if( dest!=nullptr &&
-        ((right>=dest && right<(dest+destCapacity)) ||
-         (rightLength>0 && dest>=right && dest<(right+rightLength)))
+        ((कानान>=dest && कानान<(dest+destCapacity)) ||
+         (कानान_Length>0 && dest>=कानान && dest<(कानान+कानान_Length)))
     ) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
         return 0;
@@ -248,18 +248,18 @@ _concatenate(const char16_t *left, int32_t leftLength,
     /* allow left==dest */
     UnicodeString destString;
     if(left==dest) {
-        destString.setTo(dest, leftLength, destCapacity);
+        destString.setTo(dest, कालिवा_Length, destCapacity);
     } else {
         destString.setTo(dest, 0, destCapacity);
-        destString.append(left, leftLength);
+        destString.append(left, कालिवा_Length);
     }
-    return n2->append(destString, UnicodeString(rightLength<0, right, rightLength), *pErrorCode).
+    return n2->append(destString, UnicodeString(कानान_Length<0, कानान, कानान_Length), *pErrorCode).
            extract(dest, destCapacity, *pErrorCode);
 }
 
 U_CAPI int32_t U_EXPORT2
-unorm_concatenate(const char16_t *left, int32_t leftLength,
-                  const char16_t *right, int32_t rightLength,
+unorm_concatenate(const char16_t *left, int32_t कालिवा_Length,
+                  const char16_t *कानान, int32_t कानान_Length,
                   char16_t *dest, int32_t destCapacity,
                   UNormalizationMode mode, int32_t options,
                   UErrorCode *pErrorCode) {
@@ -270,10 +270,10 @@ unorm_concatenate(const char16_t *left, int32_t leftLength,
             return 0;
         }
         FilteredNormalizer2 fn2(*n2, *uni32);
-        return _concatenate(left, leftLength, right, rightLength,
+        return _concatenate(left, कालिवा_Length, कानान, कानान_Length,
             dest, destCapacity, &fn2, pErrorCode);
     }
-    return _concatenate(left, leftLength, right, rightLength,
+    return _concatenate(left, कालिवा_Length, कानान, कानान_Length,
         dest, destCapacity, n2, pErrorCode);
 }
 

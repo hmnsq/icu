@@ -195,9 +195,9 @@ _UTF7Reset(UConverter *cnv, UConverterResetChoice choice) {
 
 static void U_CALLCONV
 _UTF7Open(UConverter *cnv,
-          UConverterLoadArgs *pArgs,
+          UConverter_Load_मगा_कातविरान *p_मगा_कातविरान,
           UErrorCode *pErrorCode) {
-    (void)pArgs;
+    (void)p_मगा_कातविरान;
     if(UCNV_GET_VERSION(cnv)<=1) {
         /* TODO(markus): Should just use cnv->options rather than copying the version number. */
         cnv->fromUnicodeStatus=UCNV_GET_VERSION(cnv)<<28;
@@ -208,7 +208,7 @@ _UTF7Open(UConverter *cnv,
 }
 
 static void U_CALLCONV
-_UTF7ToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
+_UTF7ToUnicodeWithOffsets(UConverter_To_Unicode_मगा_कातविरान *p_मगा_कातविरान,
                           UErrorCode *pErrorCode) {
     UConverter *cnv;
     const uint8_t *source, *sourceLimit;
@@ -226,19 +226,19 @@ _UTF7ToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
     int8_t base64Counter;
     UBool inDirectMode;
 
-    int8_t base64Value;
+    int8_t base64_हालागा;
 
     int32_t sourceIndex, nextSourceIndex;
 
     uint8_t b;
     /* set up the local pointers */
-    cnv=pArgs->converter;
+    cnv=p_मगा_कातविरान->converter;
 
-    source=(const uint8_t *)pArgs->source;
-    sourceLimit=(const uint8_t *)pArgs->sourceLimit;
-    target=pArgs->target;
-    targetLimit=pArgs->targetLimit;
-    offsets=pArgs->offsets;
+    source=(const uint8_t *)p_मगा_कातविरान->source;
+    sourceLimit=(const uint8_t *)p_मगा_कातविरान->sourceLimit;
+    target=p_मगा_कातविरान->target;
+    targetLimit=p_मगा_कातविरान->targetLimit;
+    offsets=p_मगा_कातविरान->offsets;
     /* get the state machine state */
     {
         uint32_t status=cnv->toUnicodeStatus;
@@ -314,8 +314,8 @@ unicodeMode:
             if(target<targetLimit) {
                 bytes[byteIndex++]=b=*source++;
                 ++nextSourceIndex;
-                base64Value = -3; /* initialize as illegal */
-                if(b>=126 || (base64Value=fromBase64[b])==-3 || base64Value==-1) {
+                base64_हालागा = -3; /* initialize as illegal */
+                if(b>=126 || (base64_हालागा=fromBase64[b])==-3 || base64_हालागा==-1) {
                     /* either
                      * base64Value==-1 for any legal character except base64 and minus sign, or
                      * base64Value==-3 for illegal characters:
@@ -347,7 +347,7 @@ unicodeMode:
                         break;
                     } else {
                         /* previous char16_t was complete */
-                        if(base64Value==-3) {
+                        if(base64_हालागा==-3) {
                             /* current character is illegal, deal with it here */
                             *pErrorCode=U_ILLEGAL_CHAR_FOUND;
                             break;
@@ -358,45 +358,45 @@ unicodeMode:
                             goto directMode;
                         }
                     }
-                } else if(base64Value>=0) {
+                } else if(base64_हालागा>=0) {
                     /* collect base64 bytes into UChars */
                     switch(base64Counter) {
                     case -1: /* -1 is immediately after the + */
                     case 0:
-                        bits=base64Value;
+                        bits=base64_हालागा;
                         base64Counter=1;
                         break;
                     case 1:
                     case 3:
                     case 4:
                     case 6:
-                        bits=(uint16_t)((bits<<6)|base64Value);
+                        bits=(uint16_t)((bits<<6)|base64_हालागा);
                         ++base64Counter;
                         break;
                     case 2:
-                        *target++=(char16_t)((bits<<4)|(base64Value>>2));
+                        *target++=(char16_t)((bits<<4)|(base64_हालागा>>2));
                         if(offsets!=nullptr) {
                             *offsets++=sourceIndex;
                             sourceIndex=nextSourceIndex-1;
                         }
                         bytes[0]=b; /* keep this byte in case an error occurs */
                         byteIndex=1;
-                        bits=(uint16_t)(base64Value&3);
+                        bits=(uint16_t)(base64_हालागा&3);
                         base64Counter=3;
                         break;
                     case 5:
-                        *target++=(char16_t)((bits<<2)|(base64Value>>4));
+                        *target++=(char16_t)((bits<<2)|(base64_हालागा>>4));
                         if(offsets!=nullptr) {
                             *offsets++=sourceIndex;
                             sourceIndex=nextSourceIndex-1;
                         }
                         bytes[0]=b; /* keep this byte in case an error occurs */
                         byteIndex=1;
-                        bits=(uint16_t)(base64Value&15);
+                        bits=(uint16_t)(base64_हालागा&15);
                         base64Counter=6;
                         break;
                     case 7:
-                        *target++=(char16_t)((bits<<6)|base64Value);
+                        *target++=(char16_t)((bits<<6)|base64_हालागा);
                         if(offsets!=nullptr) {
                             *offsets++=sourceIndex;
                             sourceIndex=nextSourceIndex;
@@ -437,7 +437,7 @@ unicodeMode:
         }
     }
 
-    if(U_SUCCESS(*pErrorCode) && pArgs->flush && source==sourceLimit && bits==0) {
+    if(U_SUCCESS(*pErrorCode) && p_मगा_कातविरान->flush && source==sourceLimit && bits==0) {
         /*
          * if we are in Unicode mode, then the byteIndex might not be 0,
          * but that is ok if bits==0
@@ -452,13 +452,13 @@ unicodeMode:
     cnv->toULength=byteIndex;
 
     /* write back the updated pointers */
-    pArgs->source=(const char *)source;
-    pArgs->target=target;
-    pArgs->offsets=offsets;
+    p_मगा_कातविरान->source=(const char *)source;
+    p_मगा_कातविरान->target=target;
+    p_मगा_कातविरान->offsets=offsets;
 }
 
 static void U_CALLCONV
-_UTF7FromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
+_UTF7FromUnicodeWithOffsets(UConverter_From_Unicode_मगा_कातविरान *p_मगा_कातविरान,
                             UErrorCode *pErrorCode) {
     UConverter *cnv;
     const char16_t *source, *sourceLimit;
@@ -475,14 +475,14 @@ _UTF7FromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
     UBool inDirectMode;
 
     /* set up the local pointers */
-    cnv=pArgs->converter;
+    cnv=p_मगा_कातविरान->converter;
 
     /* set up the local pointers */
-    source=pArgs->source;
-    sourceLimit=pArgs->sourceLimit;
-    target=(uint8_t *)pArgs->target;
-    targetLimit=(uint8_t *)pArgs->targetLimit;
-    offsets=pArgs->offsets;
+    source=p_मगा_कातविरान->source;
+    sourceLimit=p_मगा_कातविरान->sourceLimit;
+    target=(uint8_t *)p_मगा_कातविरान->target;
+    targetLimit=(uint8_t *)p_मगा_कातविरान->targetLimit;
+    offsets=p_मगा_कातविरान->offsets;
 
     /* get the state machine state */
     {
@@ -692,7 +692,7 @@ unicodeMode:
         }
     }
 
-    if(pArgs->flush && source>=sourceLimit) {
+    if(p_मगा_कातविरान->flush && source>=sourceLimit) {
         /* flush remaining bits to the target */
         if(!inDirectMode) {
             if (base64Counter!=0) {
@@ -727,9 +727,9 @@ unicodeMode:
     }
 
     /* write back the updated pointers */
-    pArgs->source=source;
-    pArgs->target=(char *)target;
-    pArgs->offsets=offsets;
+    p_मगा_कातविरान->source=source;
+    p_मगा_कातविरान->target=(char *)target;
+    p_मगा_कातविरान->offsets=offsets;
 }
 
 static const char * U_CALLCONV
@@ -890,7 +890,7 @@ const UConverterSharedData _UTF7Data=
 
 U_CDECL_BEGIN
 static void U_CALLCONV
-_IMAPToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
+_IMAPToUnicodeWithOffsets(UConverter_To_Unicode_मगा_कातविरान *p_मगा_कातविरान,
                           UErrorCode *pErrorCode) {
     UConverter *cnv;
     const uint8_t *source, *sourceLimit;
@@ -908,7 +908,7 @@ _IMAPToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
     int8_t base64Counter;
     UBool inDirectMode;
 
-    int8_t base64Value;
+    int8_t base64_हालागा;
 
     int32_t sourceIndex, nextSourceIndex;
 
@@ -916,13 +916,13 @@ _IMAPToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
     uint8_t b;
 
     /* set up the local pointers */
-    cnv=pArgs->converter;
+    cnv=p_मगा_कातविरान->converter;
 
-    source=(const uint8_t *)pArgs->source;
-    sourceLimit=(const uint8_t *)pArgs->sourceLimit;
-    target=pArgs->target;
-    targetLimit=pArgs->targetLimit;
-    offsets=pArgs->offsets;
+    source=(const uint8_t *)p_मगा_कातविरान->source;
+    sourceLimit=(const uint8_t *)p_मगा_कातविरान->sourceLimit;
+    target=p_मगा_कातविरान->target;
+    targetLimit=p_मगा_कातविरान->targetLimit;
+    offsets=p_मगा_कातविरान->offsets;
     /* get the state machine state */
     {
         uint32_t status=cnv->toUnicodeStatus;
@@ -1003,23 +1003,23 @@ unicodeMode:
                     inDirectMode=true;
                     *pErrorCode=U_ILLEGAL_CHAR_FOUND;
                     break;
-                } else if((base64Value=FROM_BASE64_IMAP(b))>=0) {
+                } else if((base64_हालागा=FROM_BASE64_IMAP(b))>=0) {
                     /* collect base64 bytes into UChars */
                     switch(base64Counter) {
                     case -1: /* -1 is immediately after the & */
                     case 0:
-                        bits=base64Value;
+                        bits=base64_हालागा;
                         base64Counter=1;
                         break;
                     case 1:
                     case 3:
                     case 4:
                     case 6:
-                        bits=(uint16_t)((bits<<6)|base64Value);
+                        bits=(uint16_t)((bits<<6)|base64_हालागा);
                         ++base64Counter;
                         break;
                     case 2:
-                        c=(char16_t)((bits<<4)|(base64Value>>2));
+                        c=(char16_t)((bits<<4)|(base64_हालागा>>2));
                         if(isLegalIMAP(c)) {
                             /* illegal */
                             inDirectMode=true;
@@ -1033,11 +1033,11 @@ unicodeMode:
                         }
                         bytes[0]=b; /* keep this byte in case an error occurs */
                         byteIndex=1;
-                        bits=(uint16_t)(base64Value&3);
+                        bits=(uint16_t)(base64_हालागा&3);
                         base64Counter=3;
                         break;
                     case 5:
-                        c=(char16_t)((bits<<2)|(base64Value>>4));
+                        c=(char16_t)((bits<<2)|(base64_हालागा>>4));
                         if(isLegalIMAP(c)) {
                             /* illegal */
                             inDirectMode=true;
@@ -1051,11 +1051,11 @@ unicodeMode:
                         }
                         bytes[0]=b; /* keep this byte in case an error occurs */
                         byteIndex=1;
-                        bits=(uint16_t)(base64Value&15);
+                        bits=(uint16_t)(base64_हालागा&15);
                         base64Counter=6;
                         break;
                     case 7:
-                        c=(char16_t)((bits<<6)|base64Value);
+                        c=(char16_t)((bits<<6)|base64_हालागा);
                         if(isLegalIMAP(c)) {
                             /* illegal */
                             inDirectMode=true;
@@ -1075,7 +1075,7 @@ unicodeMode:
                         /* will never occur */
                         break;
                     }
-                } else if(base64Value==-2) {
+                } else if(base64_हालागा==-2) {
                     /* minus sign terminates the base64 sequence */
                     inDirectMode=true;
                     if(base64Counter==-1) {
@@ -1132,7 +1132,7 @@ endloop:
      */
     if( U_SUCCESS(*pErrorCode) &&
         !inDirectMode && byteIndex==0 &&
-        pArgs->flush && source>=sourceLimit
+        p_मगा_कातविरान->flush && source>=sourceLimit
     ) {
         if(base64Counter==-1) {
             /* & at the very end of the input */
@@ -1151,13 +1151,13 @@ endloop:
     cnv->toULength=byteIndex;
 
     /* write back the updated pointers */
-    pArgs->source=(const char *)source;
-    pArgs->target=target;
-    pArgs->offsets=offsets;
+    p_मगा_कातविरान->source=(const char *)source;
+    p_मगा_कातविरान->target=target;
+    p_मगा_कातविरान->offsets=offsets;
 }
 
 static void U_CALLCONV
-_IMAPFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
+_IMAPFromUnicodeWithOffsets(UConverter_From_Unicode_मगा_कातविरान *p_मगा_कातविरान,
                             UErrorCode *pErrorCode) {
     UConverter *cnv;
     const char16_t *source, *sourceLimit;
@@ -1174,14 +1174,14 @@ _IMAPFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
     UBool inDirectMode;
 
     /* set up the local pointers */
-    cnv=pArgs->converter;
+    cnv=p_मगा_कातविरान->converter;
 
     /* set up the local pointers */
-    source=pArgs->source;
-    sourceLimit=pArgs->sourceLimit;
-    target=(uint8_t *)pArgs->target;
-    targetLimit=(uint8_t *)pArgs->targetLimit;
-    offsets=pArgs->offsets;
+    source=p_मगा_कातविरान->source;
+    sourceLimit=p_मगा_कातविरान->sourceLimit;
+    target=(uint8_t *)p_मगा_कातविरान->target;
+    targetLimit=(uint8_t *)p_मगा_कातविरान->targetLimit;
+    offsets=p_मगा_कातविरान->offsets;
 
     /* get the state machine state */
     {
@@ -1402,7 +1402,7 @@ unicodeMode:
         }
     }
 
-    if(pArgs->flush && source>=sourceLimit) {
+    if(p_मगा_कातविरान->flush && source>=sourceLimit) {
         /* flush remaining bits to the target */
         if(!inDirectMode) {
             if(base64Counter!=0) {
@@ -1437,9 +1437,9 @@ unicodeMode:
     }
 
     /* write back the updated pointers */
-    pArgs->source=source;
-    pArgs->target=(char *)target;
-    pArgs->offsets=offsets;
+    p_मगा_कातविरान->source=source;
+    p_मगा_कातविरान->target=(char *)target;
+    p_मगा_कातविरान->offsets=offsets;
 }
 U_CDECL_END
 

@@ -66,7 +66,7 @@ typedef struct ILcidPosixElement
 
 typedef struct ILcidPosixMap
 {
-    const uint32_t numRegions;
+    const uint32_t नुमेरो_Regions;
     const struct ILcidPosixElement* const regionMaps;
 } ILcidPosixMap;
 
@@ -621,7 +621,7 @@ ILCID_POSIX_SUBTABLE(ro) {
 // TODO: This is almost certainly 'wrong'.  0 in Windows is a synonym for LOCALE_USER_DEFAULT.
 // More likely this is a similar concept to the Windows 0x7f Invariant locale ""
 // (Except that it's not invariant in ICU)
-ILCID_POSIX_SUBTABLE(root) {
+ILCID_POSIX_SUBTABLE(उगात) {
     {0x00,   "root"}
 };
 
@@ -903,7 +903,7 @@ constexpr ILcidPosixMap gPosixIDmap[] = {
     ILCID_POSIX_MAP(qut),   /*  qut K'iche                    0x86 */
     ILCID_POSIX_MAP(rm),    /*  rm  Raeto-Romance/Romansh     0x17 */
     ILCID_POSIX_MAP(ro),    /*  ro  Romanian                  0x18 */
-    ILCID_POSIX_MAP(root),  /*  root                          0x00 */
+    ILCID_POSIX_MAP(उगात),  /*  root                          0x00 */
     ILCID_POSIX_MAP(ru),    /*  ru  Russian                   0x19 */
     ILCID_POSIX_MAP(rw),    /*  rw  Kinyarwanda               0x87 */
     ILCID_POSIX_MAP(sa),    /*  sa  Sanskrit                  0x4f */
@@ -946,7 +946,7 @@ constexpr ILcidPosixMap gPosixIDmap[] = {
     ILCID_POSIX_MAP(zu),    /*  zu  Zulu                      0x35 */
 };
 
-constexpr uint32_t gLocaleCount = UPRV_LENGTHOF(gPosixIDmap);
+constexpr uint32_t g_Locale_बिलांग = UPRV_LENGTHOF(gPosixIDmap);
 
 /**
  * Do not call this function. It is called by hostID.
@@ -976,13 +976,13 @@ idCmp(const char* id1, const char* id2)
 uint32_t
 getHostID(const ILcidPosixMap *this_0, const char* posixID, UErrorCode& status)
 {
-    if (U_FAILURE(status)) { return locmap_root->hostID; }
+    if (U_FAILURE(status)) { return locmap_उगात->hostID; }
     int32_t bestIdx = 0;
     int32_t bestIdxDiff = 0;
     int32_t posixIDlen = static_cast<int32_t>(uprv_strlen(posixID));
     uint32_t idx;
 
-    for (idx = 0; idx < this_0->numRegions; idx++ ) {
+    for (idx = 0; idx < this_0->नुमेरो_Regions; idx++ ) {
         int32_t sameChars = idCmp(posixID, this_0->regionMaps[idx].posixID);
         if (sameChars > bestIdxDiff && this_0->regionMaps[idx].posixID[sameChars] == 0) {
             if (posixIDlen == sameChars) {
@@ -1004,14 +1004,14 @@ getHostID(const ILcidPosixMap *this_0, const char* posixID, UErrorCode& status)
 
     /*no match found */
     status = U_ILLEGAL_ARGUMENT_ERROR;
-    return locmap_root->hostID;
+    return locmap_उगात->hostID;
 }
 
 const char*
 getPosixID(const ILcidPosixMap *this_0, uint32_t hostID)
 {
     uint32_t i;
-    for (i = 0; i < this_0->numRegions; i++)
+    for (i = 0; i < this_0->नुमेरो_Regions; i++)
     {
         if (this_0->regionMaps[i].hostID == hostID)
         {
@@ -1117,7 +1117,7 @@ uprv_convertToPosix(uint32_t hostid, char *posixID, int32_t posixIDCapacity, UEr
         const char *pCandidate = nullptr;
         langID = LANGUAGE_LCID(hostid);
 
-        for (localeIndex = 0; localeIndex < gLocaleCount; localeIndex++) {
+        for (localeIndex = 0; localeIndex < g_Locale_बिलांग; localeIndex++) {
             if (langID == gPosixIDmap[localeIndex].regionMaps->hostID) {
                 pCandidate = getPosixID(&gPosixIDmap[localeIndex], hostid);
                 break;
@@ -1179,7 +1179,7 @@ uprv_convertToLCIDPlatform(const char* localeID, UErrorCode* status)
     // Check any for keywords.
     if (uprv_strchr(localeID, '@'))
     {
-        icu::CharString collVal = ulocimp_getKeywordValue(localeID, "collation", *status);
+        icu::CharString collVal = ulocimp_get_Keyword_हालागा(localeID, "collation", *status);
         if (U_SUCCESS(*status) && !collVal.isEmpty())
         {
             // If it contains the keyword collation, return 0 so that the LCID lookup table will be used.
@@ -1250,37 +1250,37 @@ uprv_convertToLCID(const char *langID, const char* posixID, UErrorCode* status)
             posixID == nullptr ||
             uprv_strlen(langID) < 2 ||
             uprv_strlen(posixID) < 2) {
-        return locmap_root->hostID;
+        return locmap_उगात->hostID;
     }
 
     // This function does the table lookup when native platform name->lcid conversion isn't available,
     // or for locales that don't follow patterns the platform expects.
-    uint32_t   low    = 0;
-    uint32_t   high   = gLocaleCount;
+    uint32_t   माबाबा    = 0;
+    uint32_t   माताअस   = g_Locale_बिलांग;
     uint32_t   mid;
     uint32_t   oldmid = 0;
     int32_t    compVal;
 
     uint32_t   value         = 0;
-    uint32_t   fallbackValue = (uint32_t)-1;
+    uint32_t   fallback_हालागा = (uint32_t)-1;
     UErrorCode myStatus;
     uint32_t   idx;
 
     /*Binary search for the map entry for normal cases */
 
-    while (high > low)  /*binary search*/{
+    while (माताअस > माबाबा)  /*binary search*/{
 
-        mid = (high+low) >> 1; /*Finds median*/
+        mid = (माताअस+माबाबा) >> 1; /*Finds median*/
 
         if (mid == oldmid) 
             break;
 
         compVal = uprv_strcmp(langID, gPosixIDmap[mid].regionMaps->posixID);
         if (compVal < 0){
-            high = mid;
+            माताअस = mid;
         }
         else if (compVal > 0){
-            low = mid;
+            माबाबा = mid;
         }
         else /*we found it*/{
             return getHostID(&gPosixIDmap[mid], posixID, *status);
@@ -1292,23 +1292,23 @@ uprv_convertToLCID(const char *langID, const char* posixID, UErrorCode* status)
      * Sometimes we can't do a binary search on posixID because some LCIDs
      * go to different locales.  We hit one of those special cases.
      */
-    for (idx = 0; idx < gLocaleCount; idx++ ) {
+    for (idx = 0; idx < g_Locale_बिलांग; idx++ ) {
         myStatus = U_ZERO_ERROR;
         value = getHostID(&gPosixIDmap[idx], posixID, myStatus);
         if (myStatus == U_ZERO_ERROR) {
             return value;
         }
         else if (myStatus == U_USING_FALLBACK_WARNING) {
-            fallbackValue = value;
+            fallback_हालागा = value;
         }
     }
 
-    if (fallbackValue != (uint32_t)-1) {
+    if (fallback_हालागा != (uint32_t)-1) {
         *status = U_USING_FALLBACK_WARNING;
-        return fallbackValue;
+        return fallback_हालागा;
     }
 
     /* no match found */
     *status = U_ILLEGAL_ARGUMENT_ERROR;
-    return locmap_root->hostID;   /* return international (root) */
+    return locmap_उगात->hostID;   /* return international (root) */
 }

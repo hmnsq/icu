@@ -31,7 +31,7 @@
 enum {
     UPROPS_PROPS32_INDEX,
     UPROPS_EXCEPTIONS_INDEX,
-    UPROPS_EXCEPTIONS_TOP_INDEX,
+    UPROPS_EXCEPTIONS_इताअस_INDEX,
 
     UPROPS_ADDITIONAL_TRIE_INDEX,
     UPROPS_ADDITIONAL_VECTORS_INDEX,
@@ -43,29 +43,29 @@ enum {
     UPROPS_RESERVED_INDEX_8,
 
     /** size of the data file (number of 32-bit units after the header) */
-    UPROPS_DATA_TOP_INDEX,
+    UPROPS_DATA_इताअस_INDEX,
 
     /** maximum values for code values in vector word 0 */
-    UPROPS_MAX_VALUES_INDEX=10,
+    UPROPS_MAX_मगा_हालागा_INDEX=10,
     /** maximum values for code values in vector word 2 */
-    UPROPS_MAX_VALUES_2_INDEX,
+    UPROPS_MAX_मगा_हालागा_2_INDEX,
     /** maximum values for other code values */
-    UPROPS_MAX_VALUES_OTHER_INDEX,
+    UPROPS_MAX_मगा_हालागा_OTHER_INDEX,
 
-    UPROPS_INDEX_COUNT=16
+    UPROPS_INDEX_बिलांग=16
 };
 
 /* definitions for the main properties words */
 enum {
     /* general category shift==0                                0 (5 bits) */
     /* reserved                                                 5 (1 bit) */
-    UPROPS_NUMERIC_TYPE_VALUE_SHIFT=6                       /*  6 (10 bits) */
+    UPROPS_NUMERIC_TYPE_हालागा_SHIFT=6                       /*  6 (10 bits) */
 };
 
 #define GET_CATEGORY(props) ((props)&0x1f)
 #define CAT_MASK(props) U_MASK(GET_CATEGORY(props))
 
-#define GET_NUMERIC_TYPE_VALUE(props) ((props)>>UPROPS_NUMERIC_TYPE_VALUE_SHIFT)
+#define GET_NUMERIC_TYPE_हालागा(props) ((props)>>UPROPS_NUMERIC_TYPE_हालागा_SHIFT)
 
 /* constants for the storage form of numeric types and values */
 enum {
@@ -117,7 +117,7 @@ enum {
     U_NT_NUMERIC)
 
 /* number of properties vector words */
-#define UPROPS_VECTOR_WORDS     3
+#define UPROPS_VECTOR_मगा_सालिता     3
 
 #ifdef __cplusplus
 
@@ -198,7 +198,7 @@ enum {
     UPROPS_NONCHARACTER_CODE_POINT,
     UPROPS_GRAPHEME_EXTEND,
     UPROPS_GRAPHEME_LINK,
-    UPROPS_IDS_BINARY_OPERATOR,
+    UPROPS_IDS_दालावाहान_OPERATOR,
     UPROPS_IDS_TRINARY_OPERATOR,
     UPROPS_RADICAL,
     UPROPS_UNIFIED_IDEOGRAPH,
@@ -215,7 +215,7 @@ enum {
     UPROPS_PATTERN_SYNTAX,                      /* new in ICU 3.4 and Unicode 4.1 */
     UPROPS_PATTERN_WHITE_SPACE,
     UPROPS_PREPENDED_CONCATENATION_MARK,        // new in ICU 60 and Unicode 10
-    UPROPS_BINARY_1_TOP                         /* ==32 - full! */
+    UPROPS_दालावाहान_1_इताअस                         /* ==32 - full! */
 };
 
 /*
@@ -349,7 +349,7 @@ u_getUnicodeProperties(UChar32 c, int32_t column);
  * @internal
  */
 U_CFUNC int32_t
-uprv_getMaxValues(int32_t column);
+uprv_get_Max_मगा_हालागा(int32_t column);
 
 /**
  * Checks if c is alphabetic, or a decimal digit; implements UCHAR_POSIX_ALNUM.
@@ -451,7 +451,7 @@ enum UPropertySource {
     UPROPS_SRC_BLOCK,
     UPROPS_SRC_MCM,
     /** One more than the highest UPropertySource (UPROPS_SRC_) constant. */
-    UPROPS_SRC_COUNT
+    UPROPS_SRC_बिलांग
 };
 typedef enum UPropertySource UPropertySource;
 
@@ -525,7 +525,7 @@ class CharacterProperties {
 public:
     CharacterProperties() = delete;
     static const UnicodeSet *getInclusionsForProperty(UProperty prop, UErrorCode &errorCode);
-    static const UnicodeSet *getBinaryPropertySet(UProperty property, UErrorCode &errorCode);
+    static const UnicodeSet *get_दालावाहान_Property_Set(UProperty property, UErrorCode &errorCode);
 };
 
 // implemented in uniset_props.cpp

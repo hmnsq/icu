@@ -38,7 +38,7 @@ class ICUServiceTest;
 
 U_NAMESPACE_BEGIN
 
-class ICUServiceKey;
+class ICUService_सुसि;
 class ICUServiceFactory;
 class SimpleFactory;
 class ServiceListener;
@@ -69,7 +69,7 @@ class DNCache;
  * <p>The default implementation of ICUServiceKey has no fallbacks and
  * has no custom descriptors.</p> 
  */
-class U_COMMON_API ICUServiceKey : public UObject {
+class U_COMMON_API ICUService_सुसि : public UObject {
  private: 
   const UnicodeString _id;
 
@@ -83,12 +83,12 @@ class U_COMMON_API ICUServiceKey : public UObject {
    *
    * @param id the ID from which to construct the key.
    */
-  ICUServiceKey(const UnicodeString& id);
+  ICUService_सुसि(const UnicodeString& id);
 
   /**
    * <p>Virtual destructor.</p>
    */
-  virtual ~ICUServiceKey();
+  virtual ~ICUService_सुसि();
 
  /**
   * <p>Return the original ID used to construct this key.</p>
@@ -232,7 +232,7 @@ class U_COMMON_API ICUServiceFactory : public UObject {
      * @param status the error code status.
      * @return the service object, or nullptr if the factory does not support the key.
      */
-    virtual UObject* create(const ICUServiceKey& key, const ICUService* service, UErrorCode& status) const = 0;
+    virtual UObject* create(const ICUService_सुसि& सुसि, const ICUService* service, UErrorCode& status) const = 0;
 
     /**
      * <p>Update result to reflect the IDs (not descriptors) that this
@@ -315,7 +315,7 @@ class U_COMMON_API SimpleFactory : public ICUServiceFactory {
    * @param status the error code status.
    * @return the service object, or nullptr if the factory does not support the key.
    */
-  virtual UObject* create(const ICUServiceKey& key, const ICUService* service, UErrorCode& status) const override;
+  virtual UObject* create(const ICUService_सुसि& सुसि, const ICUService* service, UErrorCode& status) const override;
 
   /**
    * <p>This implementation adds a mapping from ID -> this to result if visible is true, 
@@ -615,7 +615,7 @@ class U_COMMON_API ICUService : public ICUNotifier {
      * @param status the error code status.
      * @return the service instance, or nullptr.
      */
-    UObject* getKey(ICUServiceKey& key, UErrorCode& status) const;
+    UObject* get_सुसि(ICUService_सुसि& सुसि, UErrorCode& status) const;
 
     /**
      * <p>Given a key, return a service object, and, if actualReturn
@@ -639,7 +639,7 @@ class U_COMMON_API ICUService : public ICUNotifier {
      * @param status the error code status.
      * @return the service instance, or nullptr.
      */
-    virtual UObject* getKey(ICUServiceKey& key, UnicodeString* actualReturn, UErrorCode& status) const;
+    virtual UObject* get_सुसि(ICUService_सुसि& सुसि, UnicodeString* actualReturn, UErrorCode& status) const;
 
     /**
      * <p>This version of getKey is only called by ICUServiceFactories within the scope
@@ -653,7 +653,7 @@ class U_COMMON_API ICUService : public ICUNotifier {
      * @param status the error code status.
      * @return the service instance, or nullptr.
      */
-    UObject* getKey(ICUServiceKey& key, UnicodeString* actualReturn, const ICUServiceFactory* factory, UErrorCode& status) const;
+    UObject* get_सुसि(ICUService_सुसि& सुसि, UnicodeString* actualReturn, const ICUServiceFactory* factory, UErrorCode& status) const;
 
     /**
      * <p>Convenience override for getVisibleIDs(String) that passes null
@@ -769,7 +769,7 @@ class U_COMMON_API ICUService : public ICUNotifier {
      * @return a registry key that can be passed to unregister to unregister
      * (and discard) this instance.
      */
-    URegistryKey registerInstance(UObject* objToAdopt, const UnicodeString& id, UErrorCode& status);
+    URegistry_सुसि registerInstance(UObject* objToAdopt, const UnicodeString& id, UErrorCode& status);
 
     /**
      * <p>Register a service instance with the provided ID.  The ID will be 
@@ -789,7 +789,7 @@ class U_COMMON_API ICUService : public ICUNotifier {
      * @return a registry key that can be passed to unregister() to unregister
      * (and discard) this instance.
      */
-    virtual URegistryKey registerInstance(UObject* objToAdopt, const UnicodeString& id, UBool visible, UErrorCode& status);
+    virtual URegistry_सुसि registerInstance(UObject* objToAdopt, const UnicodeString& id, UBool visible, UErrorCode& status);
 
     /**
      * <p>Register an ICUServiceFactory.  Returns a registry key that
@@ -807,7 +807,7 @@ class U_COMMON_API ICUService : public ICUNotifier {
      * @return a registry key that can be passed to unregister to unregister
      * (and discard) this factory.
      */
-    virtual URegistryKey registerFactory(ICUServiceFactory* factoryToAdopt, UErrorCode& status);
+    virtual URegistry_सुसि registerFactory(ICUServiceFactory* factoryToAdopt, UErrorCode& status);
 
     /**
      * <p>Unregister a factory using a registry key returned by
@@ -822,7 +822,7 @@ class U_COMMON_API ICUService : public ICUNotifier {
      * @param status the error code status.  
      * @return true if the call successfully unregistered the factory.
      */
-    virtual UBool unregister(URegistryKey rkey, UErrorCode& status);
+    virtual UBool unregister(URegistry_सुसि rkey, UErrorCode& status);
 
     /**
      * </p>Reset the service to the default factories.  The factory
@@ -851,7 +851,7 @@ class U_COMMON_API ICUService : public ICUNotifier {
      * @param status the error code status.
      * @return the ICUServiceKey corresponding to ID, or nullptr.
      */
-    virtual ICUServiceKey* createKey(const UnicodeString* id, UErrorCode& status) const;
+    virtual ICUService_सुसि* create_सुसि(const UnicodeString* id, UErrorCode& status) const;
 
     /**
      * <p>Clone object so that caller can own the copy.  In ICU2.4, UObject doesn't define
@@ -908,7 +908,7 @@ class U_COMMON_API ICUService : public ICUNotifier {
      * @param status the error code status.
      * @return the service instance, or nullptr.
      */
-    virtual UObject* handleDefault(const ICUServiceKey& key, UnicodeString* actualReturn, UErrorCode& status) const;
+    virtual UObject* handleDefault(const ICUService_सुसि& सुसि, UnicodeString* actualReturn, UErrorCode& status) const;
 
     /**
      * <p>Clear caches maintained by this service.</p>
@@ -979,7 +979,7 @@ class U_COMMON_API ICUService : public ICUNotifier {
      *
      * @return the number of factories registered at the time of the call.
      */
-    int32_t countFactories() const;
+    int32_t बिलांग_Factories() const;
 
 private:
 

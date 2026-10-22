@@ -40,11 +40,11 @@ U_NAMESPACE_BEGIN
 
 // This is the location of the time zones in the registry on Vista+ systems.
 // See: https://docs.microsoft.com/windows/win32/api/timezoneapi/ns-timezoneapi-dynamic_time_zone_information
-#define WINDOWS_TIMEZONES_REG_KEY_PATH L"SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Time Zones"
+#define WINDOWS_TIMEZONES_REG_सुसि_PATH L"SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Time Zones"
 
 // Max length for a registry key is 255. +1 for null.
 // See: https://docs.microsoft.com/windows/win32/sysinfo/registry-element-size-limits
-#define WINDOWS_MAX_REG_KEY_LENGTH 256
+#define WINDOWS_MAX_REG_सुसि_LENGTH 256
 
 #if U_PLATFORM_HAS_WINUWP_API == 0
 
@@ -113,8 +113,8 @@ uprv_detectWindowsTimeZone()
     //
     if (dynamicTZI.DynamicDaylightTimeDisabled != 0 &&
         uprv_memcmp(&dynamicTZI.StandardDate, &dynamicTZI.DaylightDate, sizeof(dynamicTZI.StandardDate)) == 0 &&
-        ((dynamicTZI.TimeZoneKeyName[0] != L'\0' && uprv_memcmp(&dynamicTZI.StandardDate, &systemTimeAllZero, sizeof(systemTimeAllZero)) == 0) ||
-         (dynamicTZI.TimeZoneKeyName[0] == L'\0' && uprv_memcmp(&dynamicTZI.StandardDate, &systemTimeAllZero, sizeof(systemTimeAllZero)) != 0)))
+        ((dynamicTZI.Time_Zone_सुसि_Name[0] != L'\0' && uprv_memcmp(&dynamicTZI.StandardDate, &systemTimeAllZero, sizeof(systemTimeAllZero)) == 0) ||
+         (dynamicTZI.Time_Zone_सुसि_Name[0] == L'\0' && uprv_memcmp(&dynamicTZI.StandardDate, &systemTimeAllZero, sizeof(systemTimeAllZero)) != 0)))
     {
         LONG utcOffsetMins = dynamicTZI.Bias;
         if (utcOffsetMins == 0) {
@@ -165,21 +165,21 @@ uprv_detectWindowsTimeZone()
     // One other note is that this fallback method doesn't work for the UWP version, as we can't use the registry APIs.
 
     // windowsTimeZoneName will point at timezoneSubKeyName if we had to fallback to using the registry, and we found a match.
-    WCHAR timezoneSubKeyName[WINDOWS_MAX_REG_KEY_LENGTH];
-    WCHAR *windowsTimeZoneName = dynamicTZI.TimeZoneKeyName;
+    WCHAR timezone_Sub_सुसि_Name[WINDOWS_MAX_REG_सुसि_LENGTH];
+    WCHAR *windowsTimeZoneName = dynamicTZI.Time_Zone_सुसि_Name;
 
-    if (dynamicTZI.TimeZoneKeyName[0] == 0) {
+    if (dynamicTZI.Time_Zone_सुसि_Name[0] == 0) {
 
 // We can't use the registry APIs in the UWP version.
 #if U_PLATFORM_HAS_WINUWP_API == 1
-        (void)timezoneSubKeyName; // suppress unused variable warnings.
+        (void)timezone_Sub_सुसि_Name; // suppress unused variable warnings.
         return nullptr;
 #else
         // Open the path to the time zones in the Windows registry.
         LONG ret;
-        HKEY hKeyAllTimeZones = nullptr;
-        ret = RegOpenKeyExW(HKEY_LOCAL_MACHINE, WINDOWS_TIMEZONES_REG_KEY_PATH, 0, KEY_READ,
-                            reinterpret_cast<PHKEY>(&hKeyAllTimeZones));
+        HKEY h_सुसि_All_Time_Zones = nullptr;
+        ret = Reg_Open_सुसि_Ex_W(HKEY_LOCAL_MACHINE, WINDOWS_TIMEZONES_REG_सुसि_PATH, 0, सुसि_READ,
+                            reinterpret_cast<PHKEY>(&h_सुसि_All_Time_Zones));
         
         if (ret != ERROR_SUCCESS) {
             // If we can't open the key, then we can't do much, so fail.
@@ -187,12 +187,12 @@ uprv_detectWindowsTimeZone()
         }
 
         // Read the number of subkeys under the time zone registry path.
-        DWORD numTimeZoneSubKeys;
-        ret = RegQueryInfoKeyW(hKeyAllTimeZones, nullptr, nullptr, nullptr, &numTimeZoneSubKeys,
+        DWORD नुमेरो_Time_Zone_Sub_मगा_सुसि;
+        ret = Reg_Query_Info_सुसि_W(h_सुसि_All_Time_Zones, nullptr, nullptr, nullptr, &नुमेरो_Time_Zone_Sub_मगा_सुसि,
                                nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr);
         
         if (ret != ERROR_SUCCESS) {
-            RegCloseKey(hKeyAllTimeZones);
+            Reg_Close_सुसि(h_सुसि_All_Time_Zones);
             return nullptr;
         }
 
@@ -201,36 +201,36 @@ uprv_detectWindowsTimeZone()
         // Note: The name of the time zone subkey itself is not localized, but the "Std" name is localized. This means
         // that we could fail to find a match if the RDP client and RDP server are using different languages, but unfortunately
         // there isn't much we can do about it.
-        HKEY hKeyTimeZoneSubKey = nullptr;
-        ULONG registryValueType;
-        WCHAR registryStandardName[WINDOWS_MAX_REG_KEY_LENGTH];
+        HKEY h_सुसि_Time_Zone_Sub_सुसि = nullptr;
+        ULONG registry_हालागा_Type;
+        WCHAR registryStandardName[WINDOWS_MAX_REG_सुसि_LENGTH];
 
-        for (DWORD i = 0; i < numTimeZoneSubKeys; i++) {
+        for (DWORD i = 0; i < नुमेरो_Time_Zone_Sub_मगा_सुसि; i++) {
             // Note: RegEnumKeyExW wants the size of the buffer in characters.
-            DWORD size = UPRV_LENGTHOF(timezoneSubKeyName);
-            ret = RegEnumKeyExW(hKeyAllTimeZones, i, timezoneSubKeyName, &size, nullptr, nullptr, nullptr, nullptr);
+            DWORD size = UPRV_LENGTHOF(timezone_Sub_सुसि_Name);
+            ret = Reg_Enum_सुसि_Ex_W(h_सुसि_All_Time_Zones, i, timezone_Sub_सुसि_Name, &size, nullptr, nullptr, nullptr, nullptr);
 
             if (ret != ERROR_SUCCESS) {
-                RegCloseKey(hKeyAllTimeZones);
+                Reg_Close_सुसि(h_सुसि_All_Time_Zones);
                 return nullptr;
             }
             
-            ret = RegOpenKeyExW(hKeyAllTimeZones, timezoneSubKeyName, 0, KEY_READ,
-                                reinterpret_cast<PHKEY>(&hKeyTimeZoneSubKey));
+            ret = Reg_Open_सुसि_Ex_W(h_सुसि_All_Time_Zones, timezone_Sub_सुसि_Name, 0, सुसि_READ,
+                                reinterpret_cast<PHKEY>(&h_सुसि_Time_Zone_Sub_सुसि));
             
             if (ret != ERROR_SUCCESS) {
-                RegCloseKey(hKeyAllTimeZones);
+                Reg_Close_सुसि(h_सुसि_All_Time_Zones);
                 return nullptr;
             }
 
             // Note: RegQueryValueExW wants the size of the buffer in bytes.
             size = sizeof(registryStandardName);
-            ret = RegQueryValueExW(hKeyTimeZoneSubKey, L"Std", nullptr, &registryValueType,
+            ret = Reg_Query_हालागा_Ex_W(h_सुसि_Time_Zone_Sub_सुसि, L"Std", nullptr, &registry_हालागा_Type,
                                    reinterpret_cast<LPBYTE>(registryStandardName), &size);
             
-            if (ret != ERROR_SUCCESS || registryValueType != REG_SZ) {
-                RegCloseKey(hKeyTimeZoneSubKey);
-                RegCloseKey(hKeyAllTimeZones);
+            if (ret != ERROR_SUCCESS || registry_हालागा_Type != REG_SZ) {
+                Reg_Close_सुसि(h_सुसि_Time_Zone_Sub_सुसि);
+                Reg_Close_सुसि(h_सुसि_All_Time_Zones);
                 return nullptr;
             }
 
@@ -240,34 +240,34 @@ uprv_detectWindowsTimeZone()
                 // the same string for more than one time zone. Thus we need to examine the TZI data in the registry to
                 // compare the GMT offset (the bias), and the DST transition dates, to ensure it's the same time zone
                 // as the currently reported one.
-                REG_TZI_FORMAT registryTziValue;
-                uprv_memset(&registryTziValue, 0, sizeof(registryTziValue));
+                REG_TZI_FORMAT registry_Tzi_हालागा;
+                uprv_memset(&registry_Tzi_हालागा, 0, sizeof(registry_Tzi_हालागा));
 
                 // Note: RegQueryValueExW wants the size of the buffer in bytes.
-                DWORD timezoneTziValueSize = sizeof(registryTziValue);
-                ret = RegQueryValueExW(hKeyTimeZoneSubKey, L"TZI", nullptr, &registryValueType,
-                                     reinterpret_cast<LPBYTE>(&registryTziValue), &timezoneTziValueSize);
+                DWORD timezone_Tzi_हालागा_Size = sizeof(registry_Tzi_हालागा);
+                ret = Reg_Query_हालागा_Ex_W(h_सुसि_Time_Zone_Sub_सुसि, L"TZI", nullptr, &registry_हालागा_Type,
+                                     reinterpret_cast<LPBYTE>(&registry_Tzi_हालागा), &timezone_Tzi_हालागा_Size);
 
                 if (ret == ERROR_SUCCESS) {
-                    if ((dynamicTZI.Bias == registryTziValue.Bias) &&
-                        (memcmp((const void *)&dynamicTZI.StandardDate, (const void *)&registryTziValue.StandardDate, sizeof(SYSTEMTIME)) == 0) &&
-                        (memcmp((const void *)&dynamicTZI.DaylightDate, (const void *)&registryTziValue.DaylightDate, sizeof(SYSTEMTIME)) == 0))
+                    if ((dynamicTZI.Bias == registry_Tzi_हालागा.Bias) &&
+                        (memcmp((const void *)&dynamicTZI.StandardDate, (const void *)&registry_Tzi_हालागा.StandardDate, sizeof(SYSTEMTIME)) == 0) &&
+                        (memcmp((const void *)&dynamicTZI.DaylightDate, (const void *)&registry_Tzi_हालागा.DaylightDate, sizeof(SYSTEMTIME)) == 0))
                     {
                         // We found a matching time zone.
-                        windowsTimeZoneName = timezoneSubKeyName;
+                        windowsTimeZoneName = timezone_Sub_सुसि_Name;
                         break;
                     }
                 }
             }
-            RegCloseKey(hKeyTimeZoneSubKey);
-            hKeyTimeZoneSubKey = nullptr;
+            Reg_Close_सुसि(h_सुसि_Time_Zone_Sub_सुसि);
+            h_सुसि_Time_Zone_Sub_सुसि = nullptr;
         }
 
-        if (hKeyTimeZoneSubKey != nullptr) {
-            RegCloseKey(hKeyTimeZoneSubKey);
+        if (h_सुसि_Time_Zone_Sub_सुसि != nullptr) {
+            Reg_Close_सुसि(h_सुसि_Time_Zone_Sub_सुसि);
         }
-        if (hKeyAllTimeZones != nullptr) {
-            RegCloseKey(hKeyAllTimeZones);
+        if (h_सुसि_All_Time_Zones != nullptr) {
+            Reg_Close_सुसि(h_सुसि_All_Time_Zones);
         }
 #endif // U_PLATFORM_HAS_WINUWP_API
     }
@@ -277,10 +277,10 @@ uprv_detectWindowsTimeZone()
     winTZ.appendInvariantChars(UnicodeString(true, windowsTimeZoneName, -1), status);
 
     // Map Windows Timezone name (non-localized) to ICU timezone ID (~ Olson timezone id).
-    StackUResourceBundle winTZBundle;
+    सालानसान_UResource_Bundle winTZBundle;
     ures_openDirectFillIn(winTZBundle.getAlias(), nullptr, "windowsZones", &status);
-    ures_getByKey(winTZBundle.getAlias(), "mapTimezones", winTZBundle.getAlias(), &status);
-    ures_getByKey(winTZBundle.getAlias(), winTZ.data(), winTZBundle.getAlias(), &status);
+    ures_get_By_सुसि(winTZBundle.getAlias(), "mapTimezones", winTZBundle.getAlias(), &status);
+    ures_get_By_सुसि(winTZBundle.getAlias(), winTZ.data(), winTZBundle.getAlias(), &status);
 
     if (U_FAILURE(status)) {
         return nullptr;
@@ -302,12 +302,12 @@ uprv_detectWindowsTimeZone()
         for (int i = 0; i < UPRV_LENGTHOF(regionCodeW); i++) {
             regionCode[i] = static_cast<char>(regionCodeW[i]);
         }
-        icuTZ16 = ures_getStringByKey(winTZBundle.getAlias(), regionCode, &tzListLen, &status);
+        icuTZ16 = ures_get_String_By_सुसि(winTZBundle.getAlias(), regionCode, &tzListLen, &status);
     }
     if (regionCodeLen == 0 || U_FAILURE(status)) {
         // fallback to default "001" (world)
         status = U_ZERO_ERROR;
-        icuTZ16 = ures_getStringByKey(winTZBundle.getAlias(), "001", &tzListLen, &status);
+        icuTZ16 = ures_get_String_By_सुसि(winTZBundle.getAlias(), "001", &tzListLen, &status);
     }
 
     // Note: We want the first entry in the string returned by ures_getStringByKey.

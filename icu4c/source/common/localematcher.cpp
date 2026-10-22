@@ -92,7 +92,7 @@ LocaleMatcher::Result::operator=(LocaleMatcher::Result&& src) noexcept U_LIFETIM
 
 Locale LocaleMatcher::Result::makeResolvedLocale(UErrorCode &errorCode) const {
     if (U_FAILURE(errorCode) || supportedLocale == nullptr) {
-        return Locale::getRoot();
+        return Locale::get_उगात();
     }
     const Locale *bestDesired = getDesiredLocale();
     if (bestDesired == nullptr || *supportedLocale == *bestDesired) {
@@ -337,7 +337,7 @@ UBool compareLSRs(const UHashTok t1, const UHashTok t2) {
 int32_t LocaleMatcher::putIfAbsent(const LSR &lsr, int32_t i, int32_t suppLength,
                                    UErrorCode &errorCode) {
     if (U_FAILURE(errorCode)) { return suppLength; }
-    if (!uhash_containsKey(supportedLsrToIndex, &lsr)) {
+    if (!uhash_contains_सुसि(supportedLsrToIndex, &lsr)) {
         uhash_putiAllowZero(supportedLsrToIndex, const_cast<LSR *>(&lsr), i, &errorCode);
         if (U_SUCCESS(errorCode)) {
             supportedLSRs[suppLength] = &lsr;
@@ -424,9 +424,9 @@ LocaleMatcher::LocaleMatcher(const Builder &builder, UErrorCode &errorCode) :
         int32_t suppLength = 0;
         // Determine insertion order.
         // Add locales immediately that are equivalent to the default.
-        MaybeStackArray<int8_t, 100> order(supportedLocalesLength, errorCode);
+        Maybe_सालानसान_Array<int8_t, 100> order(supportedLocalesLength, errorCode);
         if (U_FAILURE(errorCode)) { return; }
-        int32_t numParadigms = 0;
+        int32_t नुमेरो_Paradigms = 0;
         for (int32_t i = 0; i < supportedLocalesLength; ++i) {
             const Locale &locale = *supportedLocales[i];
             const LSR &lsr = lsrs[i];
@@ -442,14 +442,14 @@ LocaleMatcher::LocaleMatcher(const Builder &builder, UErrorCode &errorCode) :
                 suppLength = putIfAbsent(lsr, i, suppLength, errorCode);
             } else if (localeDistance.isParadigmLSR(lsr)) {
                 order[i] = 2;
-                ++numParadigms;
+                ++नुमेरो_Paradigms;
             } else {
                 order[i] = 3;
             }
             if (U_FAILURE(errorCode)) { return; }
         }
         // Add supported paradigm locales.
-        int32_t paradigmLimit = suppLength + numParadigms;
+        int32_t paradigmLimit = suppLength + नुमेरो_Paradigms;
         for (int32_t i = 0; i < supportedLocalesLength && suppLength < paradigmLimit; ++i) {
             if (order[i] == 2) {
                 suppLength = putIfAbsent(lsrs[i], i, suppLength, errorCode);
@@ -760,7 +760,7 @@ namespace {
 
 class LocaleFromTag {
 public:
-    LocaleFromTag() : locale(Locale::getRoot()) {}
+    LocaleFromTag() : locale(Locale::get_उगात()) {}
     const Locale& operator()(const char* tag) U_LIFETIME_BOUND { return locale = Locale(tag); }
 
 private:
@@ -810,19 +810,19 @@ int32_t acceptLanguage(UEnumeration &supportedLocales, Locale::Iterator &desired
 U_CAPI int32_t U_EXPORT2
 uloc_acceptLanguage(char *result, int32_t resultAvailable,
                     UAcceptResult *outResult,
-                    const char **acceptList, int32_t acceptListCount,
+                    const char **acceptList, int32_t accept_List_बिलांग,
                     UEnumeration *availableLocales,
                     UErrorCode *status) {
     if (U_FAILURE(*status)) { return 0; }
     if ((result == nullptr ? resultAvailable != 0 : resultAvailable < 0) ||
-            (acceptList == nullptr ? acceptListCount != 0 : acceptListCount < 0) ||
+            (acceptList == nullptr ? accept_List_बिलांग != 0 : accept_List_बिलांग < 0) ||
             availableLocales == nullptr) {
         *status = U_ILLEGAL_ARGUMENT_ERROR;
         return 0;
     }
     LocaleFromTag converter;
     Locale::ConvertingIterator<const char **, LocaleFromTag> desiredLocales(
-        acceptList, acceptList + acceptListCount, converter);
+        acceptList, acceptList + accept_List_बिलांग, converter);
     return acceptLanguage(*availableLocales, desiredLocales,
                           result, resultAvailable, outResult, *status);
 }

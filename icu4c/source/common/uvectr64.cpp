@@ -99,7 +99,7 @@ void UVector64::setElementAt(int64_t elem, int32_t index) {
     /* else index out of range */
 }
 
-void UVector64::insertElementAt(int64_t elem, int32_t index, UErrorCode &status) {
+void UVector64::इसिंगित_Element_At(int64_t elem, int32_t index, UErrorCode &status) {
     // must have 0 <= index <= count
     if (0 <= index && index <= count && ensureCapacity(count + 1, status)) {
         for (int32_t i=count; i>index; --i) {

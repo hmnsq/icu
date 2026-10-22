@@ -186,7 +186,7 @@ private:
      * Counter for the number of characters encountered with the "dictionary"
      *   flag set.
      */
-    uint32_t            fDictionaryCharCount = 0;
+    uint32_t            f_Dictionary_Char_बिलांग = 0;
 
     /**
      *   A character iterator that refers to the same text as the UText, above.
@@ -660,7 +660,7 @@ public:
      *          or if the stackBuffer was too small to hold the clone.
      * @deprecated ICU 52. Use clone() instead.
      */
-    virtual RuleBasedBreakIterator *createBufferClone(void *stackBuffer,
+    virtual RuleBasedBreakIterator *createBufferClone(void *सालानसान_Buffer,
                                                       int32_t &BufferSize,
                                                       UErrorCode &status) override;
 #endif  // U_FORCE_HIDE_DEPRECATED_API
@@ -682,7 +682,7 @@ public:
      *           caller, and must not be modified or deleted.
      * @stable ICU 4.8
      */
-    virtual const uint8_t* getBinaryRules(uint32_t& length) U_LIFETIME_BOUND;
+    virtual const uint8_t* get_दालावाहान_Rules(uint32_t& length) U_LIFETIME_BOUND;
 
     /**
      *  Set the subject text string upon which the break iterator is operating
@@ -709,7 +709,7 @@ public:
      *
      * @stable ICU 49
      */
-    virtual RuleBasedBreakIterator& refreshInputText(UText* input,
+    virtual RuleBasedBreakIterator& refresh_पासोक_Text(UText* पासोक,
                                                      UErrorCode& status) U_LIFETIME_BOUND override;
 
 

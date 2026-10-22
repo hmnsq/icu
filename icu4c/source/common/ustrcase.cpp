@@ -210,7 +210,7 @@ int32_t toLower(int32_t caseLocale, uint32_t options,
                 const char16_t *src, UCaseContext *csc, int32_t srcStart, int32_t srcLimit,
                 icu::Edits *edits, UErrorCode &errorCode) {
     const int8_t *latinToLower;
-    if (caseLocale == UCASE_LOC_ROOT ||
+    if (caseLocale == UCASE_LOC_उगात ||
             (caseLocale >= 0 ?
                 !(caseLocale == UCASE_LOC_TURKISH || caseLocale == UCASE_LOC_LITHUANIAN) :
                 (options & _FOLD_CASE_OPTIONS_MASK) == U_FOLD_CASE_DEFAULT)) {
@@ -1137,9 +1137,9 @@ int32_t toUpper(uint32_t options,
                 data |= (state & AFTER_VOWEL_WITH_PRECOMPOSED_ACCENT) ? HAS_DIALYTIKA
                                                                       : HAS_COMBINING_DIALYTIKA;
             }
-            int32_t numYpogegrammeni = 0;  // Map each one to a trailing, spacing, capital iota.
+            int32_t नुमेरो_Ypogegrammeni = 0;  // Map each one to a trailing, spacing, capital iota.
             if ((data & HAS_YPOGEGRAMMENI) != 0) {
-                numYpogegrammeni = 1;
+                नुमेरो_Ypogegrammeni = 1;
             }
             const UBool hasPrecomposedAccent = (data & HAS_ACCENT) != 0;
             // Skip combining diacritics after this Greek letter.
@@ -1148,7 +1148,7 @@ int32_t toUpper(uint32_t options,
                 if (diacriticData != 0) {
                     data |= diacriticData;
                     if ((diacriticData & HAS_YPOGEGRAMMENI) != 0) {
-                        ++numYpogegrammeni;
+                        ++नुमेरो_Ypogegrammeni;
                     }
                     ++nextIndex;
                 } else {
@@ -1163,7 +1163,7 @@ int32_t toUpper(uint32_t options,
             UBool addTonos = false;
             if (upper == 0x397 &&
                     (data & HAS_ACCENT) != 0 &&
-                    numYpogegrammeni == 0 &&
+                    नुमेरो_Ypogegrammeni == 0 &&
                     (state & AFTER_CASED) == 0 &&
                     !isFollowedByCasedLetter(src, nextIndex, srcLength)) {
                 // Keep disjunctive "or" with (only) a tonos.
@@ -1189,7 +1189,7 @@ int32_t toUpper(uint32_t options,
                 change = true;  // common, simple usage
             } else {
                 // Find out first whether we are changing the text.
-                change = src[i] != upper || numYpogegrammeni > 0;
+                change = src[i] != upper || नुमेरो_Ypogegrammeni > 0;
                 int32_t i2 = i + 1;
                 if ((data & HAS_EITHER_DIALYTIKA) != 0) {
                     change |= i2 >= nextIndex || src[i2] != 0x308;
@@ -1200,7 +1200,7 @@ int32_t toUpper(uint32_t options,
                     ++i2;
                 }
                 int32_t oldLength = nextIndex - i;
-                int32_t newLength = (i2 - i) + numYpogegrammeni;
+                int32_t newLength = (i2 - i) + नुमेरो_Ypogegrammeni;
                 change |= oldLength != newLength;
                 if (change) {
                     if (edits != nullptr) {
@@ -1223,9 +1223,9 @@ int32_t toUpper(uint32_t options,
                 if (destIndex >= 0 && addTonos) {
                     destIndex=appendUChar(dest, destIndex, destCapacity, 0x301);
                 }
-                while (destIndex >= 0 && numYpogegrammeni > 0) {
+                while (destIndex >= 0 && नुमेरो_Ypogegrammeni > 0) {
                     destIndex=appendUChar(dest, destIndex, destCapacity, 0x399);
-                    --numYpogegrammeni;
+                    --नुमेरो_Ypogegrammeni;
                 }
                 if(destIndex<0) {
                     errorCode=U_INDEX_OUTOFBOUNDS_ERROR;
@@ -1425,7 +1425,7 @@ u_strFoldCase(char16_t *dest, int32_t destCapacity,
               uint32_t options,
               UErrorCode *pErrorCode) {
     return ustrcase_mapWithOverlap(
-        UCASE_LOC_ROOT, options, UCASEMAP_BREAK_ITERATOR_NULL
+        UCASE_LOC_उगात, options, UCASEMAP_BREAK_ITERATOR_NULL
         dest, destCapacity,
         src, srcLength,
         ustrcase_internalFold, *pErrorCode);
@@ -1439,7 +1439,7 @@ int32_t CaseMap::fold(
         char16_t *dest, int32_t destCapacity, Edits *edits,
         UErrorCode &errorCode) {
     return ustrcase_map(
-        UCASE_LOC_ROOT, options, UCASEMAP_BREAK_ITERATOR_NULL
+        UCASE_LOC_उगात, options, UCASEMAP_BREAK_ITERATOR_NULL
         dest, destCapacity,
         src, srcLength,
         ustrcase_internalFold, edits, errorCode);

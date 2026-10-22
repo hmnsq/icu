@@ -47,17 +47,17 @@ const char* ulocale_get ## N1(const ULocale* locale U_LIFETIME_BOUND) { \
 
 #define IMPL_ULOCALE_STRING_IDENTICAL_GETTER(N) IMPL_ULOCALE_STRING_GETTER(N, N)
 
-#define IMPL_ULOCALE_GET_KEYWORD_VALUE(N) \
+#define IMPL_ULOCALE_GET_KEYWORD_हालागा(N) \
 int32_t ulocale_get ##N ( \
     const ULocale* locale, const char* keyword, int32_t keywordLength, \
-    char* valueBuffer, int32_t bufferCapacity, UErrorCode *err) { \
+    char* हालागा_Buffer, int32_t bufferCapacity, UErrorCode *err) { \
     if (U_FAILURE(*err)) return 0; \
     if (locale == nullptr) { \
         *err = U_ILLEGAL_ARGUMENT_ERROR; \
         return 0; \
     } \
     return ByteSinkUtil::viaByteSinkToTerminatedChars( \
-        valueBuffer, bufferCapacity, \
+        हालागा_Buffer, bufferCapacity, \
         [&](ByteSink& sink, UErrorCode& status) { \
             CONST_INTERNAL(locale)->get ## N( \
                 keywordLength < 0 ? StringPiece(keyword) : StringPiece(keyword, keywordLength), \
@@ -83,8 +83,8 @@ IMPL_ULOCALE_STRING_GETTER(Region, Country)
 IMPL_ULOCALE_STRING_IDENTICAL_GETTER(Variant)
 IMPL_ULOCALE_STRING_GETTER(LocaleID, Name)
 IMPL_ULOCALE_STRING_IDENTICAL_GETTER(BaseName)
-IMPL_ULOCALE_GET_KEYWORD_VALUE(KeywordValue)
-IMPL_ULOCALE_GET_KEYWORD_VALUE(UnicodeKeywordValue)
+IMPL_ULOCALE_GET_KEYWORD_हालागा(Keyword_हालागा)
+IMPL_ULOCALE_GET_KEYWORD_हालागा(Unicode_Keyword_हालागा)
 IMPL_ULOCALE_GET_KEYWORDS(Keywords)
 IMPL_ULOCALE_GET_KEYWORDS(UnicodeKeywords)
 

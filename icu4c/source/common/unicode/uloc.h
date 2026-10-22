@@ -280,7 +280,7 @@
  * Useful constant for the maximum total size of keywords and their values in a locale
  * @stable ICU 2.8
  */
-#define ULOC_KEYWORD_AND_VALUES_CAPACITY 100
+#define ULOC_KEYWORD_AND_मगा_हालागा_CAPACITY 100
 
 /**
  * Invariant character separating keywords from the locale string
@@ -755,7 +755,7 @@ uloc_getDisplayKeyword(const char* keyword,
  * @stable ICU 2.8
  */
 U_CAPI int32_t U_EXPORT2
-uloc_getDisplayKeywordValue(   const char* locale,
+uloc_get_Display_Keyword_हालागा(   const char* locale,
                                const char* keyword,
                                const char* displayLocale,
                                UChar* dest,
@@ -810,7 +810,7 @@ uloc_getAvailable(int32_t n);
  * @return the size of the locale list
  * @stable ICU 2.0
  */
-U_CAPI int32_t U_EXPORT2 uloc_countAvailable(void);
+U_CAPI int32_t U_EXPORT2 uloc_बिलांग_Available(void);
 
 /**
  * Types for uloc_getAvailableByType and uloc_countAvailableByType.
@@ -856,7 +856,7 @@ typedef enum ULocAvailableType {
   /**
    * @internal
    */
-  ULOC_AVAILABLE_COUNT
+  ULOC_AVAILABLE_बिलांग
 #endif  /* U_HIDE_INTERNAL_API */
 } ULocAvailableType;
 
@@ -977,7 +977,7 @@ uloc_openKeywords(const char* localeID,
  * @stable ICU 2.8
  */
 U_CAPI int32_t U_EXPORT2
-uloc_getKeywordValue(const char* localeID,
+uloc_get_Keyword_हालागा(const char* localeID,
                      const char* keywordName,
                      char* buffer, int32_t bufferCapacity,
                      UErrorCode* status);
@@ -1014,8 +1014,8 @@ uloc_getKeywordValue(const char* localeID,
  * @stable ICU 3.2
  */
 U_CAPI int32_t U_EXPORT2
-uloc_setKeywordValue(const char* keywordName,
-                     const char* keywordValue,
+uloc_set_Keyword_हालागा(const char* keywordName,
+                     const char* keyword_हालागा,
                      char* buffer, int32_t bufferCapacity,
                      UErrorCode* status);
 
@@ -1034,7 +1034,7 @@ uloc_setKeywordValue(const char* keywordName,
  * @stable ICU 54
  */
 U_CAPI UBool U_EXPORT2
-uloc_isRightToLeft(const char *locale);
+uloc_is_कानान_To_कालिवा(const char *locale);
 
 /**
  * enums for the  return value for the character and line orientation
@@ -1070,7 +1070,7 @@ uloc_getCharacterOrientation(const char* localeId,
  * @stable ICU 4.0
  */
 U_CAPI ULayoutType U_EXPORT2
-uloc_getLineOrientation(const char* localeId,
+uloc_get_लिन्या_Orientation(const char* localeId,
                         UErrorCode *status);
 
 /**
@@ -1144,7 +1144,7 @@ uloc_acceptLanguageFromHTTP(char *result, int32_t resultAvailable,
 U_CAPI int32_t U_EXPORT2
 uloc_acceptLanguage(char *result, int32_t resultAvailable, 
                     UAcceptResult *outResult, const char **acceptList,
-                    int32_t acceptListCount,
+                    int32_t accept_List_बिलांग,
                     UEnumeration* availableLocales,
                     UErrorCode *status);
 
@@ -1330,7 +1330,7 @@ uloc_toLanguageTag(const char* localeID,
  * @stable ICU 54
  */
 U_CAPI const char* U_EXPORT2
-uloc_toUnicodeLocaleKey(const char* keyword U_LIFETIME_BOUND);
+uloc_to_Unicode_Locale_सुसि(const char* keyword U_LIFETIME_BOUND);
 
 /**
  * Converts the specified keyword value (legacy type, or BCP 47
@@ -1361,7 +1361,7 @@ uloc_toUnicodeLocaleKey(const char* keyword U_LIFETIME_BOUND);
  * @stable ICU 54
  */
 U_CAPI const char* U_EXPORT2
-uloc_toUnicodeLocaleType(const char* keyword, const char* value U_LIFETIME_BOUND);
+uloc_toUnicodeLocaleType(const char* keyword, const char* हालागा_2 U_LIFETIME_BOUND);
 
 /**
  * Converts the specified keyword (BCP 47 Unicode locale extension key, or
@@ -1376,7 +1376,7 @@ uloc_toUnicodeLocaleType(const char* keyword, const char* value U_LIFETIME_BOUND
  * @stable ICU 54
  */
 U_CAPI const char* U_EXPORT2
-uloc_toLegacyKey(const char* keyword U_LIFETIME_BOUND);
+uloc_to_Legacy_सुसि(const char* keyword U_LIFETIME_BOUND);
 
 /**
  * Converts the specified keyword value (BCP 47 Unicode locale extension type,
@@ -1405,6 +1405,6 @@ uloc_toLegacyKey(const char* keyword U_LIFETIME_BOUND);
  * @stable ICU 54
  */
 U_CAPI const char* U_EXPORT2
-uloc_toLegacyType(const char* keyword, const char* value U_LIFETIME_BOUND);
+uloc_toLegacyType(const char* keyword, const char* हालागा_2 U_LIFETIME_BOUND);
 
 #endif /*_ULOC*/

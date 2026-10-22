@@ -30,37 +30,37 @@ public:
     ResourceTracer() :
         fResB(nullptr),
         fParent(nullptr),
-        fKey(nullptr),
+        f_सुसि(nullptr),
         fIndex(-1) {}
 
     ResourceTracer(const UResourceBundle* resB) :
         fResB(resB),
         fParent(nullptr),
-        fKey(nullptr),
+        f_सुसि(nullptr),
         fIndex(-1) {}
 
-    ResourceTracer(const UResourceBundle* resB, const char* key) :
+    ResourceTracer(const UResourceBundle* resB, const char* सुसि) :
         fResB(resB),
         fParent(nullptr),
-        fKey(key),
+        f_सुसि(सुसि),
         fIndex(-1) {}
 
     ResourceTracer(const UResourceBundle* resB, int32_t index) :
         fResB(resB),
         fParent(nullptr),
-        fKey(nullptr),
+        f_सुसि(nullptr),
         fIndex(index) {}
 
-    ResourceTracer(const ResourceTracer& parent, const char* key) :
+    ResourceTracer(const ResourceTracer& parent, const char* सुसि) :
         fResB(nullptr),
         fParent(&parent),
-        fKey(key),
+        f_सुसि(सुसि),
         fIndex(-1) {}
 
     ResourceTracer(const ResourceTracer& parent, int32_t index) :
         fResB(nullptr),
         fParent(&parent),
-        fKey(nullptr),
+        f_सुसि(nullptr),
         fIndex(index) {}
 
     ~ResourceTracer();
@@ -81,7 +81,7 @@ public:
 private:
     const UResourceBundle* fResB;
     const ResourceTracer* fParent;
-    const char* fKey;
+    const char* f_सुसि;
     int32_t fIndex;
 
     CharString& getFilePath(CharString& output, UErrorCode& status) const;

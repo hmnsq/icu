@@ -539,7 +539,7 @@ ubidi_open(void);
  * @stable ICU 2.0
  */
 U_CAPI UBiDi * U_EXPORT2
-ubidi_openSized(int32_t maxLength, int32_t maxRunCount, UErrorCode *pErrorCode);
+ubidi_openSized(int32_t maxLength, int32_t max_Run_बिलांग, UErrorCode *pErrorCode);
 
 /**
  * <code>ubidi_close()</code> must be called to free the memory
@@ -736,7 +736,7 @@ typedef enum UBiDiReorderingMode {
      * Number of values for reordering mode.
      * @deprecated ICU 58 The numeric value may change over time, see ICU ticket #12420.
      */
-    UBIDI_REORDER_COUNT
+    UBIDI_REORDER_बिलांग
 #endif  // U_HIDE_DEPRECATED_API
 } UBiDiReorderingMode;
 
@@ -965,7 +965,7 @@ typedef enum UBiDiReorderingOption {
      * @see ubidi_setReorderingOptions
      * @stable ICU 3.6
      */
-    UBIDI_OPTION_INSERT_MARKS = 1,
+    UBIDI_OPTION_इसिंगित_MARKS = 1,
 
     /**
      * option bit for <code>ubidi_setReorderingOptions</code>:
@@ -1285,9 +1285,9 @@ ubidi_setPara(UBiDi *pBiDi, const UChar *text, int32_t length,
  * @stable ICU 2.0
  */
 U_CAPI void U_EXPORT2
-ubidi_setLine(const UBiDi *pParaBiDi,
+ubidi_set_लिन्या(const UBiDi *pParaBiDi,
               int32_t start, int32_t limit,
-              UBiDi *pLineBiDi,
+              UBiDi *p_लिन्या_Bi_Di,
               UErrorCode *pErrorCode);
 
 /**
@@ -1390,7 +1390,7 @@ ubidi_getParaLevel(const UBiDi *pBiDi);
  * @stable ICU 3.4
  */
 U_CAPI int32_t U_EXPORT2
-ubidi_countParagraphs(UBiDi *pBiDi);
+ubidi_बिलांग_Paragraphs(UBiDi *pBiDi);
 
 /**
  * Get a paragraph, given a position within the text.
@@ -1546,7 +1546,7 @@ ubidi_getLogicalRun(const UBiDi *pBiDi, int32_t logicalPosition,
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-ubidi_countRuns(UBiDi *pBiDi, UErrorCode *pErrorCode);
+ubidi_बिलांग_Runs(UBiDi *pBiDi, UErrorCode *pErrorCode);
 
 /**
  * Get one run's logical start, length, and directionality,
@@ -1876,7 +1876,7 @@ ubidi_invertMap(const int32_t *srcMap, int32_t *destMap, int32_t length);
  * @see ubidi_writeReordered
  * @stable ICU 2.0
  */
-#define UBIDI_INSERT_LRM_FOR_NUMERIC    4
+#define UBIDI_इसिंगित_LRM_FOR_NUMERIC    4
 
 /**
  * option bit for ubidi_writeReordered():
@@ -1990,7 +1990,7 @@ U_CDECL_BEGIN
  * @see UBiDiClassCallback
  * @deprecated ICU 58 The numeric value may change over time, see ICU ticket #12420.
  */
-#define U_BIDI_CLASS_DEFAULT  U_CHAR_DIRECTION_COUNT
+#define U_BIDI_CLASS_DEFAULT  U_CHAR_DIRECTION_बिलांग
 #endif  // U_HIDE_DEPRECATED_API
 
 /**

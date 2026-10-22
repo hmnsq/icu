@@ -146,7 +146,7 @@ UDataCompareInvChars(const UDataSwapper *ds,
  * @internal ICU 2.8
  */
 typedef void U_CALLCONV
-UDataPrintError(void *context, const char *fmt, va_list args);
+UData_इलिम्बाग_Error(void *context, const char *fmt, va_list मगा_कातविरान_2);
 
 struct UDataSwapper {
     /** Input endianness. @internal ICU 2.8 */
@@ -190,9 +190,9 @@ struct UDataSwapper {
      * Can be NULL.
      * @internal ICU 2.8
      */
-    UDataPrintError *printError;
+    UData_इलिम्बाग_Error *इलिम्बाग_Error;
     /** Context pointer for printError. @internal ICU 2.8 */
-    void *printErrorContext;
+    void *इलिम्बाग_Error_Context;
 };
 
 U_CDECL_END
@@ -212,7 +212,7 @@ udata_openSwapper(UBool inIsBigEndian, uint8_t inCharset,
  * @internal ICU 2.8
  */
 U_CAPI UDataSwapper * U_EXPORT2
-udata_openSwapperForInputData(const void *data, int32_t length,
+udata_open_Swapper_For_पासोक_Data(const void *data, int32_t length,
                               UBool outIsBigEndian, uint8_t outCharset,
                               UErrorCode *pErrorCode);
 
@@ -258,7 +258,7 @@ udata_swapInvStringBlock(const UDataSwapper *ds,
                          UErrorCode *pErrorCode);
 
 U_CAPI void U_EXPORT2
-udata_printError(const UDataSwapper *ds,
+udata_इलिम्बाग_Error(const UDataSwapper *ds,
                  const char *fmt,
                  ...);
 
@@ -396,7 +396,7 @@ U_CAPI UDataMemory * U_EXPORT2
 udata_openSwap(const char *path, const char *type, const char *name,
                UDataMemoryIsAcceptable *isAcceptable, void *isAcceptableContext,
                UDataSwapFn *swap,
-               UDataPrintError *printError, void *printErrorContext,
+               UData_इलिम्बाग_Error *इलिम्बाग_Error, void *इलिम्बाग_Error_Context,
                UErrorCode *pErrorCode);
 
 #endif

@@ -193,10 +193,10 @@ _SCSUReset(UConverter *cnv, UConverterResetChoice choice) {
 
 static void U_CALLCONV
 _SCSUOpen(UConverter *cnv,
-          UConverterLoadArgs *pArgs,
+          UConverter_Load_मगा_कातविरान *p_मगा_कातविरान,
           UErrorCode *pErrorCode) {
-    const char *locale=pArgs->locale;
-    if(pArgs->onlyTestIsLoadable) {
+    const char *locale=p_मगा_कातविरान->locale;
+    if(p_मगा_कातविरान->onlyTestIsLoadable) {
         return;
     }
     cnv->extraInfo=uprv_malloc(sizeof(SCSUData));
@@ -229,7 +229,7 @@ _SCSUClose(UConverter *cnv) {
 /* SCSU-to-Unicode conversion functions ------------------------------------- */
 
 static void U_CALLCONV
-_SCSUToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
+_SCSUToUnicodeWithOffsets(UConverter_To_Unicode_मगा_कातविरान *p_मगा_कातविरान,
                           UErrorCode *pErrorCode) {
     UConverter *cnv;
     SCSUData *scsu;
@@ -246,14 +246,14 @@ _SCSUToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
     uint8_t b;
 
     /* set up the local pointers */
-    cnv=pArgs->converter;
+    cnv=p_मगा_कातविरान->converter;
     scsu=(SCSUData *)cnv->extraInfo;
 
-    source=(const uint8_t *)pArgs->source;
-    sourceLimit=(const uint8_t *)pArgs->sourceLimit;
-    target=pArgs->target;
-    targetLimit=pArgs->targetLimit;
-    offsets=pArgs->offsets;
+    source=(const uint8_t *)p_मगा_कातविरान->source;
+    sourceLimit=(const uint8_t *)p_मगा_कातविरान->sourceLimit;
+    target=p_मगा_कातविरान->target;
+    targetLimit=p_मगा_कातविरान->targetLimit;
+    offsets=p_मगा_कातविरान->offsets;
 
     /* get the state machine state */
     isSingleByteMode=scsu->toUIsSingleByteMode;
@@ -569,9 +569,9 @@ endloop:
     scsu->toUByteOne=byteOne;
 
     /* write back the updated pointers */
-    pArgs->source=(const char *)source;
-    pArgs->target=target;
-    pArgs->offsets=offsets;
+    p_मगा_कातविरान->source=(const char *)source;
+    p_मगा_कातविरान->target=target;
+    p_मगा_कातविरान->offsets=offsets;
 }
 
 /*
@@ -582,7 +582,7 @@ endloop:
  * offsets, sourceIndex, and nextSourceIndex.
  */
 static void U_CALLCONV
-_SCSUToUnicode(UConverterToUnicodeArgs *pArgs,
+_SCSUToUnicode(UConverter_To_Unicode_मगा_कातविरान *p_मगा_कातविरान,
                UErrorCode *pErrorCode) {
     UConverter *cnv;
     SCSUData *scsu;
@@ -596,13 +596,13 @@ _SCSUToUnicode(UConverterToUnicodeArgs *pArgs,
     uint8_t b;
 
     /* set up the local pointers */
-    cnv=pArgs->converter;
+    cnv=p_मगा_कातविरान->converter;
     scsu=(SCSUData *)cnv->extraInfo;
 
-    source=(const uint8_t *)pArgs->source;
-    sourceLimit=(const uint8_t *)pArgs->sourceLimit;
-    target=pArgs->target;
-    targetLimit=pArgs->targetLimit;
+    source=(const uint8_t *)p_मगा_कातविरान->source;
+    sourceLimit=(const uint8_t *)p_मगा_कातविरान->sourceLimit;
+    target=p_मगा_कातविरान->target;
+    targetLimit=p_मगा_कातविरान->targetLimit;
 
     /* get the state machine state */
     isSingleByteMode=scsu->toUIsSingleByteMode;
@@ -861,8 +861,8 @@ endloop:
     scsu->toUByteOne=byteOne;
 
     /* write back the updated pointers */
-    pArgs->source=(const char *)source;
-    pArgs->target=target;
+    p_मगा_कातविरान->source=(const char *)source;
+    p_मगा_कातविरान->target=target;
 }
 U_CDECL_END
 /* SCSU-from-Unicode conversion functions ----------------------------------- */
@@ -1006,7 +1006,7 @@ U_CDECL_BEGIN
  */
 
 static void U_CALLCONV
-_SCSUFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
+_SCSUFromUnicodeWithOffsets(UConverter_From_Unicode_मगा_कातविरान *p_मगा_कातविरान,
                             UErrorCode *pErrorCode) {
     UConverter *cnv;
     SCSUData *scsu;
@@ -1032,15 +1032,15 @@ _SCSUFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
     int8_t window;
 
     /* set up the local pointers */
-    cnv=pArgs->converter;
+    cnv=p_मगा_कातविरान->converter;
     scsu=(SCSUData *)cnv->extraInfo;
 
     /* set up the local pointers */
-    source=pArgs->source;
-    sourceLimit=pArgs->sourceLimit;
-    target=(uint8_t *)pArgs->target;
-    targetCapacity=(int32_t)(pArgs->targetLimit-pArgs->target);
-    offsets=pArgs->offsets;
+    source=p_मगा_कातविरान->source;
+    sourceLimit=p_मगा_कातविरान->sourceLimit;
+    target=(uint8_t *)p_मगा_कातविरान->target;
+    targetCapacity=(int32_t)(p_मगा_कातविरान->targetLimit-p_मगा_कातविरान->target);
+    offsets=p_मगा_कातविरान->offsets;
 
     /* get the state machine state */
     isSingleByteMode=scsu->fromUIsSingleByteMode;
@@ -1381,9 +1381,9 @@ endloop:
     cnv->fromUChar32=c;
 
     /* write back the updated pointers */
-    pArgs->source=source;
-    pArgs->target=(char *)target;
-    pArgs->offsets=offsets;
+    p_मगा_कातविरान->source=source;
+    p_मगा_कातविरान->target=(char *)target;
+    p_मगा_कातविरान->offsets=offsets;
     return;
 
 outputBytes:
@@ -1514,7 +1514,7 @@ outputBytes:
  * offsets, sourceIndex, and nextSourceIndex.
  */
 static void U_CALLCONV
-_SCSUFromUnicode(UConverterFromUnicodeArgs *pArgs,
+_SCSUFromUnicode(UConverter_From_Unicode_मगा_कातविरान *p_मगा_कातविरान,
                  UErrorCode *pErrorCode) {
     UConverter *cnv;
     SCSUData *scsu;
@@ -1537,14 +1537,14 @@ _SCSUFromUnicode(UConverterFromUnicodeArgs *pArgs,
     int8_t window;
 
     /* set up the local pointers */
-    cnv=pArgs->converter;
+    cnv=p_मगा_कातविरान->converter;
     scsu=(SCSUData *)cnv->extraInfo;
 
     /* set up the local pointers */
-    source=pArgs->source;
-    sourceLimit=pArgs->sourceLimit;
-    target=(uint8_t *)pArgs->target;
-    targetCapacity=(int32_t)(pArgs->targetLimit-pArgs->target);
+    source=p_मगा_कातविरान->source;
+    sourceLimit=p_मगा_कातविरान->sourceLimit;
+    target=(uint8_t *)p_मगा_कातविरान->target;
+    targetCapacity=(int32_t)(p_मगा_कातविरान->targetLimit-p_मगा_कातविरान->target);
 
     /* get the state machine state */
     isSingleByteMode=scsu->fromUIsSingleByteMode;
@@ -1856,8 +1856,8 @@ endloop:
     cnv->fromUChar32=c;
 
     /* write back the updated pointers */
-    pArgs->source=source;
-    pArgs->target=(char *)target;
+    p_मगा_कातविरान->source=source;
+    p_मगा_कातविरान->target=(char *)target;
     return;
 
 outputBytes:
@@ -1968,7 +1968,7 @@ struct cloneSCSUStruct
 
 static UConverter *  U_CALLCONV
 _SCSUSafeClone(const UConverter *cnv, 
-               void *stackBuffer, 
+               void *सालानसान_Buffer, 
                int32_t *pBufferSize, 
                UErrorCode *status)
 {
@@ -1984,7 +1984,7 @@ _SCSUSafeClone(const UConverter *cnv,
         return nullptr;
     }
 
-    localClone = (struct cloneSCSUStruct *)stackBuffer;
+    localClone = (struct cloneSCSUStruct *)सालानसान_Buffer;
     /* ucnv.c/ucnv_safeClone() copied the main UConverter already */
 
     uprv_memcpy(&localClone->mydata, cnv->extraInfo, sizeof(SCSUData));

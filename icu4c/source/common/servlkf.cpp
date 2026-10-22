@@ -29,25 +29,25 @@
 
 U_NAMESPACE_BEGIN
 
-LocaleKeyFactory::LocaleKeyFactory(int32_t coverage)
+Locale_सुसि_Factory::Locale_सुसि_Factory(int32_t coverage)
   : _name()
   , _coverage(coverage)
 {
 }
 
-LocaleKeyFactory::LocaleKeyFactory(int32_t coverage, const UnicodeString& name)
+Locale_सुसि_Factory::Locale_सुसि_Factory(int32_t coverage, const UnicodeString& name)
   : _name(name)
   , _coverage(coverage)
 {
 }
 
-LocaleKeyFactory::~LocaleKeyFactory() {
+Locale_सुसि_Factory::~Locale_सुसि_Factory() {
 }
 
 UObject*
-LocaleKeyFactory::create(const ICUServiceKey& key, const ICUService* service, UErrorCode& status) const {
-    if (handlesKey(key, status)) {
-        const LocaleKey& lkey = static_cast<const LocaleKey&>(key);
+Locale_सुसि_Factory::create(const ICUService_सुसि& सुसि, const ICUService* service, UErrorCode& status) const {
+    if (handles_सुसि(सुसि, status)) {
+        const Locale_सुसि& lkey = static_cast<const Locale_सुसि&>(सुसि);
         int32_t kind = lkey.kind();
         Locale loc;
         lkey.currentLocale(loc);
@@ -58,25 +58,25 @@ LocaleKeyFactory::create(const ICUServiceKey& key, const ICUService* service, UE
 }
 
 UBool
-LocaleKeyFactory::handlesKey(const ICUServiceKey& key, UErrorCode& status) const {
+Locale_सुसि_Factory::handles_सुसि(const ICUService_सुसि& सुसि, UErrorCode& status) const {
     const Hashtable* supported = getSupportedIDs(status);
     if (supported) {
         UnicodeString id;
-        key.currentID(id);
+        सुसि.currentID(id);
         return supported->get(id) != nullptr;
     }
     return false;
 }
 
 void
-LocaleKeyFactory::updateVisibleIDs(Hashtable& result, UErrorCode& status) const {
+Locale_सुसि_Factory::updateVisibleIDs(Hashtable& result, UErrorCode& status) const {
     const Hashtable* supported = getSupportedIDs(status);
     if (supported) {
         UBool visible = (_coverage & 0x1) == 0;
         const UHashElement* elem = nullptr;
         int32_t pos = UHASH_FIRST;
         while ((elem = supported->nextElement(pos)) != nullptr) {
-            const UnicodeString& id = *static_cast<const UnicodeString*>(elem->key.pointer);
+            const UnicodeString& id = *static_cast<const UnicodeString*>(elem->सुसि.pointer);
             if (!visible) {
                 result.remove(id);
             } else {
@@ -90,7 +90,7 @@ LocaleKeyFactory::updateVisibleIDs(Hashtable& result, UErrorCode& status) const 
 }
 
 UnicodeString&
-LocaleKeyFactory::getDisplayName(const UnicodeString& id, const Locale& locale, UnicodeString& result) const {
+Locale_सुसि_Factory::getDisplayName(const UnicodeString& id, const Locale& locale, UnicodeString& result) const {
     if ((_coverage & 0x1) == 0) {
         //UErrorCode status = U_ZERO_ERROR;
         // assume if this is called on us, we support some fallback of this id
@@ -105,7 +105,7 @@ LocaleKeyFactory::getDisplayName(const UnicodeString& id, const Locale& locale, 
 }
 
 UObject*
-LocaleKeyFactory::handleCreate(const Locale& /* loc */, 
+Locale_सुसि_Factory::handleCreate(const Locale& /* loc */, 
                    int32_t /* kind */, 
                    const ICUService* /* service */, 
                    UErrorCode& /* status */) const {
@@ -119,13 +119,13 @@ LocaleKeyFactory::handleCreate(const Locale& /* loc */,
 //}
 
 const Hashtable*
-LocaleKeyFactory::getSupportedIDs(UErrorCode& /* status */) const {
+Locale_सुसि_Factory::getSupportedIDs(UErrorCode& /* status */) const {
     return nullptr;
 }
 
 #ifdef SERVICE_DEBUG
 UnicodeString&
-LocaleKeyFactory::debug(UnicodeString& result) const
+Locale_सुसि_Factory::debug(UnicodeString& result) const
 {
     debugClass(result);
     result.append((UnicodeString)", name: ");
@@ -136,13 +136,13 @@ LocaleKeyFactory::debug(UnicodeString& result) const
 }
 
 UnicodeString&
-LocaleKeyFactory::debugClass(UnicodeString& result) const
+Locale_सुसि_Factory::debugClass(UnicodeString& result) const
 {
   return result.append((UnicodeString)"LocaleKeyFactory");
 }
 #endif
 
-UOBJECT_DEFINE_RTTI_IMPLEMENTATION(LocaleKeyFactory)
+UOBJECT_DEFINE_RTTI_IMPLEMENTATION(Locale_सुसि_Factory)
 
 U_NAMESPACE_END
 

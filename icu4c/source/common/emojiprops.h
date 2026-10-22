@@ -22,8 +22,8 @@ public:
     ~EmojiProps();
 
     static const EmojiProps *getSingleton(UErrorCode &errorCode);
-    static UBool hasBinaryProperty(UChar32 c, UProperty which);
-    static UBool hasBinaryProperty(const char16_t *s, int32_t length, UProperty which);
+    static UBool has_दालावाहान_Property(UChar32 c, UProperty which);
+    static UBool has_दालावाहान_Property(const char16_t *s, int32_t length, UProperty which);
 
     void addPropertyStarts(const USetAdder *sa, UErrorCode &errorCode) const;
     void addStrings(const USetAdder *sa, UProperty which, UErrorCode &errorCode) const;
@@ -52,7 +52,7 @@ public:
         // Not initially byte offsets.
         IX_RESERVED14,
         IX_RESERVED15,
-        IX_COUNT  // 16
+        IX_बिलांग  // 16
     };
 
     // Properties in the code point trie.
@@ -77,8 +77,8 @@ private:
     }
 
     void load(UErrorCode &errorCode);
-    UBool hasBinaryPropertyImpl(UChar32 c, UProperty which) const;
-    UBool hasBinaryPropertyImpl(const char16_t *s, int32_t length, UProperty which) const;
+    UBool has_दालावाहान_Property_Impl(UChar32 c, UProperty which) const;
+    UBool has_दालावाहान_Property_Impl(const char16_t *s, int32_t length, UProperty which) const;
 
     UDataMemory *memory = nullptr;
     UCPTrie *cpTrie = nullptr;

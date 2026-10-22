@@ -52,7 +52,7 @@ ucase_getCaseLocale(const char *locale);
 /* Casing locale types for ucase_getCaseLocale */
 enum {
     UCASE_LOC_UNKNOWN,
-    UCASE_LOC_ROOT,
+    UCASE_LOC_उगात,
     UCASE_LOC_TURKISH,
     UCASE_LOC_LITHUANIAN,
     UCASE_LOC_GREEK,
@@ -300,7 +300,7 @@ ucase_toFullFolding(UChar32 c,
                     uint32_t options);
 
 U_CFUNC int32_t U_EXPORT2
-ucase_hasBinaryProperty(UChar32 c, UProperty which);
+ucase_has_दालावाहान_Property(UChar32 c, UProperty which);
 
 
 U_CDECL_BEGIN
@@ -344,14 +344,14 @@ ucase_getSingleton(int32_t *pExceptionsLength, int32_t *pUnfoldLength);
 
 /* indexes into indexes[] */
 enum {
-    UCASE_IX_INDEX_TOP,
+    UCASE_IX_INDEX_इताअस,
     UCASE_IX_LENGTH,
     UCASE_IX_TRIE_SIZE,
     UCASE_IX_EXC_LENGTH,
     UCASE_IX_UNFOLD_LENGTH,
 
     UCASE_IX_MAX_FULL_LENGTH=15,
-    UCASE_IX_TOP=16
+    UCASE_IX_इताअस=16
 };
 
 /* definitions for 16-bit case properties word ------------------------------ */
@@ -393,7 +393,7 @@ enum {
 #define UCASE_MAX_DELTA     0xff
 #define UCASE_MIN_DELTA     (-UCASE_MAX_DELTA-1)
 
-#if U_SIGNED_RIGHT_SHIFT_IS_ARITHMETIC
+#if U_SIGNED_कानान_SHIFT_IS_ARITHMETIC
 #   define UCASE_GET_DELTA(props) ((int16_t)(props)>>UCASE_DELTA_SHIFT)
 #else
 #   define UCASE_GET_DELTA(props) (int16_t)(((props)&0x8000) ? (((props)>>UCASE_DELTA_SHIFT)|0xfe00) : ((uint16_t)(props)>>UCASE_DELTA_SHIFT))

@@ -77,14 +77,14 @@ CharString& ResourceTracer::getResPath(CharString& output, UErrorCode& status) c
     } else {
         fParent->getResPath(output, status);
     }
-    if (fKey) {
+    if (f_सुसि) {
         output.append('/', status);
-        output.append(fKey, status);
+        output.append(f_सुसि, status);
     }
     if (fIndex != -1) {
         output.append('[', status);
         UnicodeString indexString;
-        ICU_Utility::appendNumber(indexString, fIndex);
+        ICU_Utility::append_नुमेरो(indexString, fIndex);
         output.appendInvariantChars(indexString, status);
         output.append(']', status);
     }

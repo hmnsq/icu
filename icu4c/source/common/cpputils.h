@@ -25,54 +25,54 @@
 /*==========================================================================*/
 
 static
-inline void uprv_arrayCopy(const double* src, double* dst, int32_t count)
-{ uprv_memcpy(dst, src, (size_t)count * sizeof(*src)); }
+inline void uprv_arrayCopy(const double* src, double* dst, int32_t बिलांग)
+{ uprv_memcpy(dst, src, (size_t)बिलांग * sizeof(*src)); }
 
 static
 inline void uprv_arrayCopy(const double* src, int32_t srcStart,
-              double* dst, int32_t dstStart, int32_t count)
-{ uprv_memcpy(dst+dstStart, src+srcStart, (size_t)count * sizeof(*src)); }
+              double* dst, int32_t dstStart, int32_t बिलांग)
+{ uprv_memcpy(dst+dstStart, src+srcStart, (size_t)बिलांग * sizeof(*src)); }
 
 static
-inline void uprv_arrayCopy(const int8_t* src, int8_t* dst, int32_t count)
-    { uprv_memcpy(dst, src, (size_t)count * sizeof(*src)); }
+inline void uprv_arrayCopy(const int8_t* src, int8_t* dst, int32_t बिलांग)
+    { uprv_memcpy(dst, src, (size_t)बिलांग * sizeof(*src)); }
 
 static
 inline void uprv_arrayCopy(const int8_t* src, int32_t srcStart,
-              int8_t* dst, int32_t dstStart, int32_t count)
-{ uprv_memcpy(dst+dstStart, src+srcStart, (size_t)count * sizeof(*src)); }
+              int8_t* dst, int32_t dstStart, int32_t बिलांग)
+{ uprv_memcpy(dst+dstStart, src+srcStart, (size_t)बिलांग * sizeof(*src)); }
 
 static
-inline void uprv_arrayCopy(const int16_t* src, int16_t* dst, int32_t count)
-{ uprv_memcpy(dst, src, (size_t)count * sizeof(*src)); }
+inline void uprv_arrayCopy(const int16_t* src, int16_t* dst, int32_t बिलांग)
+{ uprv_memcpy(dst, src, (size_t)बिलांग * sizeof(*src)); }
 
 static
 inline void uprv_arrayCopy(const int16_t* src, int32_t srcStart,
-              int16_t* dst, int32_t dstStart, int32_t count)
-{ uprv_memcpy(dst+dstStart, src+srcStart, (size_t)count * sizeof(*src)); }
+              int16_t* dst, int32_t dstStart, int32_t बिलांग)
+{ uprv_memcpy(dst+dstStart, src+srcStart, (size_t)बिलांग * sizeof(*src)); }
 
 static
-inline void uprv_arrayCopy(const int32_t* src, int32_t* dst, int32_t count)
-{ uprv_memcpy(dst, src, (size_t)count * sizeof(*src)); }
+inline void uprv_arrayCopy(const int32_t* src, int32_t* dst, int32_t बिलांग)
+{ uprv_memcpy(dst, src, (size_t)बिलांग * sizeof(*src)); }
 
 static
 inline void uprv_arrayCopy(const int32_t* src, int32_t srcStart,
-              int32_t* dst, int32_t dstStart, int32_t count)
-{ uprv_memcpy(dst+dstStart, src+srcStart, (size_t)count * sizeof(*src)); }
+              int32_t* dst, int32_t dstStart, int32_t बिलांग)
+{ uprv_memcpy(dst+dstStart, src+srcStart, (size_t)बिलांग * sizeof(*src)); }
 
 static
 inline void
 uprv_arrayCopy(const char16_t *src, int32_t srcStart,
-        char16_t *dst, int32_t dstStart, int32_t count)
-{ uprv_memcpy(dst+dstStart, src+srcStart, (size_t)count * sizeof(*src)); }
+        char16_t *dst, int32_t dstStart, int32_t बिलांग)
+{ uprv_memcpy(dst+dstStart, src+srcStart, (size_t)बिलांग * sizeof(*src)); }
 
 /**
  * Copy an array of UnicodeString OBJECTS (not pointers).
  * @internal
  */
 static inline void
-uprv_arrayCopy(const icu::UnicodeString *src, icu::UnicodeString *dst, int32_t count)
-{ while(count-- > 0) *dst++ = *src++; }
+uprv_arrayCopy(const icu::UnicodeString *src, icu::UnicodeString *dst, int32_t बिलांग)
+{ while(बिलांग-- > 0) *dst++ = *src++; }
 
 /**
  * Copy an array of UnicodeString OBJECTS (not pointers).
@@ -80,8 +80,8 @@ uprv_arrayCopy(const icu::UnicodeString *src, icu::UnicodeString *dst, int32_t c
  */
 static inline void
 uprv_arrayCopy(const icu::UnicodeString *src, int32_t srcStart,
-               icu::UnicodeString *dst, int32_t dstStart, int32_t count)
-{ uprv_arrayCopy(src+srcStart, dst+dstStart, count); }
+               icu::UnicodeString *dst, int32_t dstStart, int32_t बिलांग)
+{ uprv_arrayCopy(src+srcStart, dst+dstStart, बिलांग); }
 
 /**
  * Checks that the string is readable and writable.

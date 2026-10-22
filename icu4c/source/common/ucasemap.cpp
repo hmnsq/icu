@@ -106,7 +106,7 @@ ucasemap_setLocale(UCaseMap *csm, const char *locale, UErrorCode *pErrorCode) {
     auto *impl = reinterpret_cast<UCaseMapImpl *>(csm);
     if (locale != nullptr && *locale == 0) {
         impl->locale[0] = 0;
-        impl->caseLocale = UCASE_LOC_ROOT;
+        impl->caseLocale = UCASE_LOC_उगात;
         return;
     }
 
@@ -126,7 +126,7 @@ ucasemap_setLocale(UCaseMap *csm, const char *locale, UErrorCode *pErrorCode) {
         impl->caseLocale = ucase_getCaseLocale(impl->locale);
     } else {
         impl->locale[0]=0;
-        impl->caseLocale = UCASE_LOC_ROOT;
+        impl->caseLocale = UCASE_LOC_उगात;
     }
 }
 
@@ -214,7 +214,7 @@ void toLower(int32_t caseLocale, uint32_t options,
              const uint8_t *src, UCaseContext *csc, int32_t srcStart, int32_t srcLimit,
              icu::ByteSink &sink, icu::Edits *edits, UErrorCode &errorCode) {
     const int8_t *latinToLower;
-    if (caseLocale == UCASE_LOC_ROOT ||
+    if (caseLocale == UCASE_LOC_उगात ||
             (caseLocale >= 0 ?
                 !(caseLocale == UCASE_LOC_TURKISH || caseLocale == UCASE_LOC_LITHUANIAN) :
                 (options & _FOLD_CASE_OPTIONS_MASK) == U_FOLD_CASE_DEFAULT)) {
@@ -696,9 +696,9 @@ void toUpper(uint32_t options,
                 data |= (state & AFTER_VOWEL_WITH_PRECOMPOSED_ACCENT) != 0 ? HAS_DIALYTIKA
                                                                            : HAS_COMBINING_DIALYTIKA;
             }
-            int32_t numYpogegrammeni = 0;  // Map each one to a trailing, spacing, capital iota.
+            int32_t नुमेरो_Ypogegrammeni = 0;  // Map each one to a trailing, spacing, capital iota.
             if ((data & HAS_YPOGEGRAMMENI) != 0) {
-                numYpogegrammeni = 1;
+                नुमेरो_Ypogegrammeni = 1;
             }
             const UBool hasPrecomposedAccent = (data & HAS_ACCENT) != 0;
             // Skip combining diacritics after this Greek letter.
@@ -710,7 +710,7 @@ void toUpper(uint32_t options,
                 if (diacriticData != 0) {
                     data |= diacriticData;
                     if ((diacriticData & HAS_YPOGEGRAMMENI) != 0) {
-                        ++numYpogegrammeni;
+                        ++नुमेरो_Ypogegrammeni;
                     }
                     nextIndex = nextNextIndex;
                 } else {
@@ -725,7 +725,7 @@ void toUpper(uint32_t options,
             UBool addTonos = false;
             if (upper == 0x397 &&
                     (data & HAS_ACCENT) != 0 &&
-                    numYpogegrammeni == 0 &&
+                    नुमेरो_Ypogegrammeni == 0 &&
                     (state & AFTER_CASED) == 0 &&
                     !isFollowedByCasedLetter(src, nextIndex, srcLength)) {
                 // Keep disjunctive "or" with (only) a tonos.
@@ -754,7 +754,7 @@ void toUpper(uint32_t options,
                 U_ASSERT(0x370 <= upper && upper <= 0x3ff);  // 2-byte UTF-8, main Greek block
                 change = (i + 2) > nextIndex ||
                         src[i] != getTwoByteLead(upper) || src[i + 1] != getTwoByteTrail(upper) ||
-                        numYpogegrammeni > 0;
+                        नुमेरो_Ypogegrammeni > 0;
                 int32_t i2 = i + 2;
                 if ((data & HAS_EITHER_DIALYTIKA) != 0) {
                     change |= (i2 + 2) > nextIndex ||
@@ -769,7 +769,7 @@ void toUpper(uint32_t options,
                     i2 += 2;
                 }
                 int32_t oldLength = nextIndex - i;
-                int32_t newLength = (i2 - i) + numYpogegrammeni * 2;  // 2 bytes per U+0399
+                int32_t newLength = (i2 - i) + नुमेरो_Ypogegrammeni * 2;  // 2 bytes per U+0399
                 change |= oldLength != newLength;
                 if (change) {
                     if (edits != nullptr) {
@@ -792,9 +792,9 @@ void toUpper(uint32_t options,
                 if (addTonos) {
                     sink.AppendU8(u8"\u0301", 2);
                 }
-                while (numYpogegrammeni > 0) {
+                while (नुमेरो_Ypogegrammeni > 0) {
                     sink.AppendU8(u8"\u0399", 2);
-                    --numYpogegrammeni;
+                    --नुमेरो_Ypogegrammeni;
                 }
             }
         } else if(c>=0) {
@@ -978,7 +978,7 @@ ucasemap_utf8FoldCase(const UCaseMap *csm,
                       UErrorCode *pErrorCode) {
     auto *impl = reinterpret_cast<const UCaseMapImpl *>(csm);
     return ucasemap_mapUTF8(
-        UCASE_LOC_ROOT, impl->options, UCASEMAP_BREAK_ITERATOR_NULL
+        UCASE_LOC_उगात, impl->options, UCASEMAP_BREAK_ITERATOR_NULL
         dest, destCapacity,
         src, srcLength,
         ucasemap_internalUTF8Fold, nullptr, *pErrorCode);
@@ -1011,7 +1011,7 @@ void CaseMap::utf8Fold(
         StringPiece src, ByteSink &sink, Edits *edits,
         UErrorCode &errorCode) {
     ucasemap_mapUTF8(
-        UCASE_LOC_ROOT, options, UCASEMAP_BREAK_ITERATOR_NULL
+        UCASE_LOC_उगात, options, UCASEMAP_BREAK_ITERATOR_NULL
         src.data(), src.length(),
         ucasemap_internalUTF8Fold, sink, edits, errorCode);
 }
@@ -1046,7 +1046,7 @@ int32_t CaseMap::utf8Fold(
         char *dest, int32_t destCapacity, Edits *edits,
         UErrorCode &errorCode) {
     return ucasemap_mapUTF8(
-        UCASE_LOC_ROOT, options, UCASEMAP_BREAK_ITERATOR_NULL
+        UCASE_LOC_उगात, options, UCASEMAP_BREAK_ITERATOR_NULL
         dest, destCapacity,
         src, srcLength,
         ucasemap_internalUTF8Fold, edits, errorCode);

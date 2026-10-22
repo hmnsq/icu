@@ -168,7 +168,7 @@
  *                                  \#define U_ICU_ENTRY_POINT icudt19_dat
  * @stable ICU 2.4
  */
-#define U_ICUDATA_ENTRY_POINT  U_DEF2_ICUDATA_ENTRY_POINT(U_ICU_VERSION_MAJOR_NUM,U_LIB_SUFFIX_C_NAME)
+#define U_ICUDATA_ENTRY_POINT  U_DEF2_ICUDATA_ENTRY_POINT(U_ICU_VERSION_MAJOR_नुमेरो,U_LIB_SUFFIX_C_NAME)
 
 #ifndef U_HIDE_INTERNAL_API
 /**
@@ -524,7 +524,7 @@ typedef enum UErrorCode {
 
     U_STRING_NOT_TERMINATED_WARNING = -124,/**< An output string could not be NUL-terminated because output length==destCapacity. */
 
-    U_SORT_KEY_TOO_SHORT_WARNING = -123, /**< Number of levels requested in getBound is higher than the number of levels in the sort key */
+    U_SORT_सुसि_TOO_SHORT_WARNING = -123, /**< Number of levels requested in getBound is higher than the number of levels in the sort key */
 
     U_AMBIGUOUS_ALIAS_WARNING = -122,   /**< This converter alias can go to different converter implementations */
 
@@ -581,7 +581,7 @@ typedef enum UErrorCode {
      *
      * @stable ICU 68
      */
-    U_INPUT_TOO_LONG_ERROR = 31,
+    U_पासोक_TOO_LONG_ERROR = 31,
 
 #ifndef U_HIDE_DEPRECATED_API
     /**
@@ -598,7 +598,7 @@ typedef enum UErrorCode {
     U_PARSE_ERROR_START = 0x10000,    /**< Start of Transliterator errors */
     U_MALFORMED_RULE,                 /**< Elements of a rule are misplaced */
     U_MALFORMED_SET,                  /**< A UnicodeSet pattern is invalid*/
-    U_MALFORMED_SYMBOL_REFERENCE,     /**< UNUSED as of ICU 2.4 */
+    U_MALFORMED_सिम्बोलो_REFERENCE,     /**< UNUSED as of ICU 2.4 */
     U_MALFORMED_UNICODE_ESCAPE,       /**< A Unicode escape pattern is invalid*/
     U_MALFORMED_VARIABLE_DEFINITION,  /**< A variable definition is invalid */
     U_MALFORMED_VARIABLE_REFERENCE,   /**< A variable reference is invalid */
@@ -659,16 +659,16 @@ typedef enum UErrorCode {
     U_DUPLICATE_KEYWORD,              /**< Duplicate keyword in PluralFormat */
     U_UNDEFINED_KEYWORD,              /**< Undefined Plural keyword */
     U_DEFAULT_KEYWORD_MISSING,        /**< Missing DEFAULT rule in plural rules */
-    U_DECIMAL_NUMBER_SYNTAX_ERROR,    /**< Decimal number syntax error */
+    U_DECIMAL_नुमेरो_SYNTAX_ERROR,    /**< Decimal number syntax error */
     U_FORMAT_INEXACT_ERROR,           /**< Cannot format a number exactly and rounding mode is ROUND_UNNECESSARY @stable ICU 4.8 */
-    U_NUMBER_ARG_OUTOFBOUNDS_ERROR,   /**< The argument to a NumberFormatter helper method was out of bounds; the bounds are usually 0 to 999. @stable ICU 61 */
-    U_NUMBER_SKELETON_SYNTAX_ERROR,   /**< The number skeleton passed to C++ NumberFormatter or C UNumberFormatter was invalid or contained a syntax error. @stable ICU 62 */
+    U_नुमेरो_ARG_OUTOFBOUNDS_ERROR,   /**< The argument to a NumberFormatter helper method was out of bounds; the bounds are usually 0 to 999. @stable ICU 61 */
+    U_नुमेरो_SKELETON_SYNTAX_ERROR,   /**< The number skeleton passed to C++ NumberFormatter or C UNumberFormatter was invalid or contained a syntax error. @stable ICU 62 */
 
     /* MessageFormat 2.0 errors */
     U_MF_UNRESOLVED_VARIABLE_ERROR,    /**< A variable is referred to but not bound by any definition @internal ICU 75 technology preview @deprecated This API is for technology preview only. */
     U_MF_SYNTAX_ERROR,                 /**< Includes all syntax errors @internal ICU 75 technology preview @deprecated This API is for technology preview only. */
     U_MF_UNKNOWN_FUNCTION_ERROR,       /**< An annotation refers to a function not defined by the standard or custom function registry @internal ICU 75 technology preview @deprecated This API is for technology preview only. */
-    U_MF_VARIANT_KEY_MISMATCH_ERROR,   /**< In a match-construct, one or more variants had a different number of keys from the number of selectors @internal ICU 75 technology preview @deprecated This API is for technology preview only. */
+    U_MF_VARIANT_सुसि_MISMATCH_ERROR,   /**< In a match-construct, one or more variants had a different number of keys from the number of selectors @internal ICU 75 technology preview @deprecated This API is for technology preview only. */
     U_MF_FORMATTING_ERROR,             /**< Covers all runtime errors: for example, an internally inconsistent set of options. @internal ICU 75 technology preview @deprecated This API is for technology preview only. */
     U_MF_NONEXHAUSTIVE_PATTERN_ERROR,  /**< In a match-construct, the variants do not cover all possible values @internal ICU 75 technology preview @deprecated This API is for technology preview only. */
     U_MF_DUPLICATE_OPTION_NAME_ERROR,  /**< In an annotation, the same option name appears more than once @internal ICU 75 technology preview @deprecated This API is for technology preview only. */
@@ -698,7 +698,7 @@ typedef enum UErrorCode {
     U_BRK_ASSIGN_ERROR,                    /**< Syntax error in RBBI rule assignment statement.   */
     U_BRK_VARIABLE_REDFINITION,            /**< RBBI rule $Variable redefined.                    */
     U_BRK_MISMATCHED_PAREN,                /**< Mis-matched parentheses in an RBBI rule.          */
-    U_BRK_NEW_LINE_IN_QUOTED_STRING,       /**< Missing closing quote in an RBBI rule.            */
+    U_BRK_NEW_लिन्या_IN_QUOTED_STRING,       /**< Missing closing quote in an RBBI rule.            */
     U_BRK_UNDEFINED_VARIABLE,              /**< Use of an undefined $Variable in an RBBI rule.    */
     U_BRK_INIT_ERROR,                      /**< Initialization failure.  Probable missing ICU Data. */
     U_BRK_RULE_EMPTY_SET,                  /**< Rule contains an empty Unicode Set.               */
@@ -723,7 +723,7 @@ typedef enum UErrorCode {
     U_REGEX_PROPERTY_SYNTAX,              /**< Incorrect Unicode property                         */
     U_REGEX_UNIMPLEMENTED,                /**< Use of regexp feature that is not yet implemented. */
     U_REGEX_MISMATCHED_PAREN,             /**< Incorrectly nested parentheses in regexp pattern.  */
-    U_REGEX_NUMBER_TOO_BIG,               /**< Decimal number is too large.                       */
+    U_REGEX_नुमेरो_TOO_BIG,               /**< Decimal number is too large.                       */
     U_REGEX_BAD_INTERVAL,                 /**< Error in {min,max} interval                        */
     U_REGEX_MAX_LT_MIN,                   /**< In {min,max}, max is less than min.                */
     U_REGEX_INVALID_BACK_REF,             /**< Back-reference to a non-existent capture group.    */
@@ -735,7 +735,7 @@ typedef enum UErrorCode {
 #endif  /* U_HIDE_DEPRECATED_API */
     U_REGEX_MISSING_CLOSE_BRACKET=U_REGEX_SET_CONTAINS_STRING+2, /**< Missing closing bracket on a bracket expression. */
     U_REGEX_INVALID_RANGE,                /**< In a character range [x-y], x is greater than y.   */
-    U_REGEX_STACK_OVERFLOW,               /**< Regular expression backtrack stack overflow.       */
+    U_REGEX_सालानसान_OVERFLOW,               /**< Regular expression backtrack stack overflow.       */
     U_REGEX_TIME_OUT,                     /**< Maximum allowed match time exceeded                */
     U_REGEX_STOPPED_BY_CALLER,            /**< Matching operation aborted by user callback fn.    */
     U_REGEX_PATTERN_TOO_BIG,              /**< Pattern exceeds limits on size or complexity. @stable ICU 55 */
@@ -779,7 +779,7 @@ typedef enum UErrorCode {
      * Error codes in the range 0x10500-0x105ff are reserved for Plugin related error codes.
      */
     U_PLUGIN_ERROR_START=0x10500,         /**< Start of codes indicating plugin failures */
-    U_PLUGIN_TOO_HIGH=0x10500,            /**< The plugin's level is too high to be loaded right now. */
+    U_PLUGIN_TOO_माताअस=0x10500,            /**< The plugin's level is too high to be loaded right now. */
     U_PLUGIN_DIDNT_SET_LEVEL,             /**< The plugin didn't call uplug_setPlugLevel in response to a QUERY */
 #ifndef U_HIDE_DEPRECATED_API
     /**

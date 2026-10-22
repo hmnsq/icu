@@ -15,7 +15,7 @@
 
 U_NAMESPACE_BEGIN
 
-ResourceValue::~ResourceValue() {}
+Resource_हालागा::~Resource_हालागा() {}
 
 ResourceSink::~ResourceSink() {}
 

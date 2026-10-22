@@ -34,7 +34,7 @@ public:
     static const int32_t TRIE_TYPE_BYTES; // = 0;
     static const int32_t TRIE_TYPE_UCHARS; // = 1;
     static const int32_t TRIE_TYPE_MASK; // = 7;
-    static const int32_t TRIE_HAS_VALUES; // = 8;
+    static const int32_t TRIE_HAS_मगा_हालागा; // = 8;
 
     static const int32_t TRANSFORM_NONE; // = 0;
     static const int32_t TRANSFORM_TYPE_OFFSET; // = 0x1000000;
@@ -55,7 +55,7 @@ public:
 
         IX_RESERVED6,
         IX_RESERVED7,
-        IX_COUNT
+        IX_बिलांग
     };
 };
 
@@ -91,7 +91,7 @@ public:
      *  @return          Number of matching words found.
      */
     virtual int32_t matches(UText *text, int32_t maxLength, int32_t limit,
-                            int32_t *lengths, int32_t *cpLengths, int32_t *values,
+                            int32_t *lengths, int32_t *cpLengths, int32_t *मगा_हालागा,
                             int32_t *prefix) const = 0;
 
     /** @return DictionaryData::TRIE_TYPE_XYZ */
@@ -106,7 +106,7 @@ public:
     UCharsDictionaryMatcher(const char16_t *c, UDataMemory *f) : characters(c), file(f) { }
     virtual ~UCharsDictionaryMatcher();
     virtual int32_t matches(UText *text, int32_t maxLength, int32_t limit,
-                            int32_t *lengths, int32_t *cpLengths, int32_t *values,
+                            int32_t *lengths, int32_t *cpLengths, int32_t *मगा_हालागा,
                             int32_t *prefix) const override;
     virtual int32_t getType() const override;
 private:
@@ -124,7 +124,7 @@ public:
             : characters(c), transformConstant(t), file(f) { }
     virtual ~BytesDictionaryMatcher();
     virtual int32_t matches(UText *text, int32_t maxLength, int32_t limit,
-                            int32_t *lengths, int32_t *cpLengths, int32_t *values,
+                            int32_t *lengths, int32_t *cpLengths, int32_t *मगा_हालागा,
                             int32_t *prefix) const override;
     virtual int32_t getType() const override;
 private:

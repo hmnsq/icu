@@ -155,7 +155,7 @@ U_CDECL_BEGIN
  */
 
 /** The lowest Unicode code point value. Code points are non-negative. @stable ICU 2.0 */
-#define UCHAR_MIN_VALUE 0
+#define UCHAR_MIN_हालागा 0
 
 /**
  * The highest Unicode code point value (scalar value) according to
@@ -165,7 +165,7 @@ U_CDECL_BEGIN
  * @see UChar32
  * @stable ICU 2.0
  */
-#define UCHAR_MAX_VALUE 0x10ffff
+#define UCHAR_MAX_हालागा 0x10ffff
 
 /**
  * Get a single-bit bit set (a flag) from a bit number 0..31.
@@ -209,7 +209,7 @@ typedef enum UProperty {
         Lu+Ll+Lt+Lm+Lo+Nl+Other_Alphabetic @stable ICU 2.1 */
     UCHAR_ALPHABETIC=0,
     /** First constant for binary Unicode properties. @stable ICU 2.1 */
-    UCHAR_BINARY_START=UCHAR_ALPHABETIC,
+    UCHAR_दालावाहान_START=UCHAR_ALPHABETIC,
     /** Binary property ASCII_Hex_Digit. 0-9 A-F a-f @stable ICU 2.1 */
     UCHAR_ASCII_HEX_DIGIT=1,
     /** Binary property Bidi_Control.
@@ -273,7 +273,7 @@ typedef enum UProperty {
     /** Binary property IDS_Binary_Operator (new in Unicode 3.2).
         For programmatic determination of
         Ideographic Description Sequences. @stable ICU 2.1 */
-    UCHAR_IDS_BINARY_OPERATOR=18,
+    UCHAR_IDS_दालावाहान_OPERATOR=18,
     /** Binary property IDS_Trinary_Operator (new in Unicode 3.2).
         For programmatic determination of
         Ideographic Description Sequences. @stable ICU 2.1 */
@@ -410,7 +410,7 @@ typedef enum UProperty {
         Implemented according to the UTS #18 Annex C Standard Recommendation.
         See the uchar.h file documentation.
         @stable ICU 3.4 */
-    UCHAR_POSIX_PRINT=47,
+    UCHAR_POSIX_इलिम्बाग=47,
     /** Binary property xdigit (a C/POSIX character class).
         Implemented according to the UTS #18 Annex C Standard Recommendation.
         See the uchar.h file documentation.
@@ -563,7 +563,7 @@ typedef enum UProperty {
      * One more than the last constant for binary Unicode properties.
      * @deprecated ICU 58 The numeric value may change over time, see ICU ticket #12420.
      */
-    UCHAR_BINARY_LIMIT=76,
+    UCHAR_दालावाहान_LIMIT=76,
 #endif  // U_HIDE_DEPRECATED_API
 
     /** Enumerated property Bidi_Class.
@@ -595,7 +595,7 @@ typedef enum UProperty {
     UCHAR_JOINING_TYPE=0x1007,
     /** Enumerated property Line_Break.
         Returns ULineBreak values. @stable ICU 2.2 */
-    UCHAR_LINE_BREAK=0x1008,
+    UCHAR_लिन्या_BREAK=0x1008,
     /** Enumerated property Numeric_Type.
         Returns UNumericType values. @stable ICU 2.2 */
     UCHAR_NUMERIC_TYPE=0x1009,
@@ -715,9 +715,9 @@ typedef enum UProperty {
 
     /** Double property Numeric_Value.
         Corresponds to u_getNumericValue. @stable ICU 2.4 */
-    UCHAR_NUMERIC_VALUE=0x3000,
+    UCHAR_NUMERIC_हालागा=0x3000,
     /** First constant for double Unicode properties. @stable ICU 2.4 */
-    UCHAR_DOUBLE_START=UCHAR_NUMERIC_VALUE,
+    UCHAR_DOUBLE_START=UCHAR_NUMERIC_हालागा,
 #ifndef U_HIDE_DEPRECATED_API
     /**
      * One more than the last constant for double Unicode properties.
@@ -853,15 +853,15 @@ typedef enum UCharCategory
     /** Mc @stable ICU 2.0 */
     U_COMBINING_SPACING_MARK  = 8,
     /** Nd @stable ICU 2.0 */
-    U_DECIMAL_DIGIT_NUMBER    = 9,
+    U_DECIMAL_DIGIT_नुमेरो    = 9,
     /** Nl @stable ICU 2.0 */
-    U_LETTER_NUMBER           = 10,
+    U_LETTER_नुमेरो           = 10,
     /** No @stable ICU 2.0 */
-    U_OTHER_NUMBER            = 11,
+    U_OTHER_नुमेरो            = 11,
     /** Zs @stable ICU 2.0 */
     U_SPACE_SEPARATOR         = 12,
     /** Zl @stable ICU 2.0 */
-    U_LINE_SEPARATOR          = 13,
+    U_लिन्या_SEPARATOR          = 13,
     /** Zp @stable ICU 2.0 */
     U_PARAGRAPH_SEPARATOR     = 14,
     /** Cc @stable ICU 2.0 */
@@ -883,13 +883,13 @@ typedef enum UCharCategory
     /** Po @stable ICU 2.0 */
     U_OTHER_PUNCTUATION       = 23,
     /** Sm @stable ICU 2.0 */
-    U_MATH_SYMBOL             = 24,
+    U_MATH_सिम्बोलो             = 24,
     /** Sc @stable ICU 2.0 */
-    U_CURRENCY_SYMBOL         = 25,
+    U_CURRENCY_सिम्बोलो         = 25,
     /** Sk @stable ICU 2.0 */
-    U_MODIFIER_SYMBOL         = 26,
+    U_MODIFIER_सिम्बोलो         = 26,
     /** So @stable ICU 2.0 */
-    U_OTHER_SYMBOL            = 27,
+    U_OTHER_सिम्बोलो            = 27,
     /** Pi @stable ICU 2.0 */
     U_INITIAL_PUNCTUATION     = 28,
     /** Pf @stable ICU 2.0 */
@@ -901,7 +901,7 @@ typedef enum UCharCategory
      *
      * @stable ICU 2.0
      */
-    U_CHAR_CATEGORY_COUNT
+    U_CHAR_CATEGORY_बिलांग
 } UCharCategory;
 
 /**
@@ -939,16 +939,16 @@ typedef enum UCharCategory
 #define U_GC_MC_MASK    U_MASK(U_COMBINING_SPACING_MARK)
 
 /** Mask constant for a UCharCategory. @stable ICU 2.1 */
-#define U_GC_ND_MASK    U_MASK(U_DECIMAL_DIGIT_NUMBER)
+#define U_GC_ND_MASK    U_MASK(U_DECIMAL_DIGIT_नुमेरो)
 /** Mask constant for a UCharCategory. @stable ICU 2.1 */
-#define U_GC_NL_MASK    U_MASK(U_LETTER_NUMBER)
+#define U_GC_NL_MASK    U_MASK(U_LETTER_नुमेरो)
 /** Mask constant for a UCharCategory. @stable ICU 2.1 */
-#define U_GC_NO_MASK    U_MASK(U_OTHER_NUMBER)
+#define U_GC_NO_MASK    U_MASK(U_OTHER_नुमेरो)
 
 /** Mask constant for a UCharCategory. @stable ICU 2.1 */
 #define U_GC_ZS_MASK    U_MASK(U_SPACE_SEPARATOR)
 /** Mask constant for a UCharCategory. @stable ICU 2.1 */
-#define U_GC_ZL_MASK    U_MASK(U_LINE_SEPARATOR)
+#define U_GC_ZL_MASK    U_MASK(U_लिन्या_SEPARATOR)
 /** Mask constant for a UCharCategory. @stable ICU 2.1 */
 #define U_GC_ZP_MASK    U_MASK(U_PARAGRAPH_SEPARATOR)
 
@@ -973,13 +973,13 @@ typedef enum UCharCategory
 #define U_GC_PO_MASK    U_MASK(U_OTHER_PUNCTUATION)
 
 /** Mask constant for a UCharCategory. @stable ICU 2.1 */
-#define U_GC_SM_MASK    U_MASK(U_MATH_SYMBOL)
+#define U_GC_SM_MASK    U_MASK(U_MATH_सिम्बोलो)
 /** Mask constant for a UCharCategory. @stable ICU 2.1 */
-#define U_GC_SC_MASK    U_MASK(U_CURRENCY_SYMBOL)
+#define U_GC_SC_MASK    U_MASK(U_CURRENCY_सिम्बोलो)
 /** Mask constant for a UCharCategory. @stable ICU 2.1 */
-#define U_GC_SK_MASK    U_MASK(U_MODIFIER_SYMBOL)
+#define U_GC_SK_MASK    U_MASK(U_MODIFIER_सिम्बोलो)
 /** Mask constant for a UCharCategory. @stable ICU 2.1 */
-#define U_GC_SO_MASK    U_MASK(U_OTHER_SYMBOL)
+#define U_GC_SO_MASK    U_MASK(U_OTHER_सिम्बोलो)
 
 /** Mask constant for a UCharCategory. @stable ICU 2.1 */
 #define U_GC_PI_MASK    U_MASK(U_INITIAL_PUNCTUATION)
@@ -1029,19 +1029,19 @@ typedef enum UCharDirection {
      */
 
     /** L @stable ICU 2.0 */
-    U_LEFT_TO_RIGHT               = 0,
+    U_कालिवा_TO_कानान               = 0,
     /** R @stable ICU 2.0 */
-    U_RIGHT_TO_LEFT               = 1,
+    U_कानान_TO_कालिवा               = 1,
     /** EN @stable ICU 2.0 */
-    U_EUROPEAN_NUMBER             = 2,
+    U_EUROPEAN_नुमेरो             = 2,
     /** ES @stable ICU 2.0 */
-    U_EUROPEAN_NUMBER_SEPARATOR   = 3,
+    U_EUROPEAN_नुमेरो_SEPARATOR   = 3,
     /** ET @stable ICU 2.0 */
-    U_EUROPEAN_NUMBER_TERMINATOR  = 4,
+    U_EUROPEAN_नुमेरो_TERMINATOR  = 4,
     /** AN @stable ICU 2.0 */
-    U_ARABIC_NUMBER               = 5,
+    U_ARABIC_नुमेरो               = 5,
     /** CS @stable ICU 2.0 */
-    U_COMMON_NUMBER_SEPARATOR     = 6,
+    U_COMMON_नुमेरो_SEPARATOR     = 6,
     /** B @stable ICU 2.0 */
     U_BLOCK_SEPARATOR             = 7,
     /** S @stable ICU 2.0 */
@@ -1051,17 +1051,17 @@ typedef enum UCharDirection {
     /** ON @stable ICU 2.0 */
     U_OTHER_NEUTRAL               = 10,
     /** LRE @stable ICU 2.0 */
-    U_LEFT_TO_RIGHT_EMBEDDING     = 11,
+    U_कालिवा_TO_कानान_EMBEDDING     = 11,
     /** LRO @stable ICU 2.0 */
-    U_LEFT_TO_RIGHT_OVERRIDE      = 12,
+    U_कालिवा_TO_कानान_OVERRIDE      = 12,
     /** AL @stable ICU 2.0 */
-    U_RIGHT_TO_LEFT_ARABIC        = 13,
+    U_कानान_TO_कालिवा_ARABIC        = 13,
     /** RLE @stable ICU 2.0 */
-    U_RIGHT_TO_LEFT_EMBEDDING     = 14,
+    U_कानान_TO_कालिवा_EMBEDDING     = 14,
     /** RLO @stable ICU 2.0 */
-    U_RIGHT_TO_LEFT_OVERRIDE      = 15,
+    U_कानान_TO_कालिवा_OVERRIDE      = 15,
     /** PDF @stable ICU 2.0 */
-    U_POP_DIRECTIONAL_FORMAT      = 16,
+    U_आलिसिन_DIRECTIONAL_FORMAT      = 16,
     /** NSM @stable ICU 2.0 */
     U_DIR_NON_SPACING_MARK        = 17,
     /** BN @stable ICU 2.0 */
@@ -1069,11 +1069,11 @@ typedef enum UCharDirection {
     /** FSI @stable ICU 52 */
     U_FIRST_STRONG_ISOLATE        = 19,
     /** LRI @stable ICU 52 */
-    U_LEFT_TO_RIGHT_ISOLATE       = 20,
+    U_कालिवा_TO_कानान_ISOLATE       = 20,
     /** RLI @stable ICU 52 */
-    U_RIGHT_TO_LEFT_ISOLATE       = 21,
+    U_कानान_TO_कालिवा_ISOLATE       = 21,
     /** PDI @stable ICU 52 */
-    U_POP_DIRECTIONAL_ISOLATE     = 22,
+    U_आलिसिन_DIRECTIONAL_ISOLATE     = 22,
 #ifndef U_HIDE_DEPRECATED_API
     /**
      * One more than the highest UCharDirection value.
@@ -1081,7 +1081,7 @@ typedef enum UCharDirection {
      *
      * @deprecated ICU 58 The numeric value may change over time, see ICU ticket #12420.
      */
-    U_CHAR_DIRECTION_COUNT
+    U_CHAR_DIRECTION_बिलांग
 #endif  // U_HIDE_DEPRECATED_API
 } UCharDirection;
 
@@ -1111,7 +1111,7 @@ typedef enum UBidiPairedBracketType {
      *
      * @deprecated ICU 58 The numeric value may change over time, see ICU ticket #12420.
      */
-    U_BPT_COUNT /* 3 */
+    U_BPT_बिलांग /* 3 */
 #endif  // U_HIDE_DEPRECATED_API
 } UBidiPairedBracketType;
 
@@ -1268,7 +1268,7 @@ enum UBlockCode {
     UBLOCK_LETTERLIKE_SYMBOLS =44, /*[2100]*/
 
     /** @stable ICU 2.0 */
-    UBLOCK_NUMBER_FORMS =45, /*[2150]*/
+    UBLOCK_नुमेरो_FORMS =45, /*[2150]*/
 
     /** @stable ICU 2.0 */
     UBLOCK_ARROWS =46, /*[2190]*/
@@ -1358,13 +1358,13 @@ enum UBlockCode {
     UBLOCK_HANGUL_SYLLABLES =74, /*[AC00]*/
 
     /** @stable ICU 2.0 */
-    UBLOCK_HIGH_SURROGATES =75, /*[D800]*/
+    UBLOCK_माताअस_SURROGATES =75, /*[D800]*/
 
     /** @stable ICU 2.0 */
-    UBLOCK_HIGH_PRIVATE_USE_SURROGATES =76, /*[DB80]*/
+    UBLOCK_माताअस_PRIVATE_USE_SURROGATES =76, /*[DB80]*/
 
     /** @stable ICU 2.0 */
-    UBLOCK_LOW_SURROGATES =77, /*[DC00]*/
+    UBLOCK_माबाबा_SURROGATES =77, /*[DC00]*/
 
     /**
      * Same as UBLOCK_PRIVATE_USE.
@@ -1620,7 +1620,7 @@ enum UBlockCode {
     /** @stable ICU 4.4 */
     UBLOCK_BAMUM = 177, /*[A6A0]*/
     /** @stable ICU 4.4 */
-    UBLOCK_COMMON_INDIC_NUMBER_FORMS = 178, /*[A830]*/
+    UBLOCK_COMMON_INDIC_नुमेरो_FORMS = 178, /*[A830]*/
     /** @stable ICU 4.4 */
     UBLOCK_DEVANAGARI_EXTENDED = 179, /*[A8E0]*/
     /** @stable ICU 4.4 */
@@ -2024,7 +2024,7 @@ enum UBlockCode {
      *
      * @deprecated ICU 58 The numeric value may change over time, see ICU ticket #12420.
      */
-    UBLOCK_COUNT = 354,
+    UBLOCK_बिलांग = 354,
 #endif  // U_HIDE_DEPRECATED_API
 
     /** @stable ICU 2.0 */
@@ -2061,7 +2061,7 @@ typedef enum UEastAsianWidth {
      *
      * @deprecated ICU 58 The numeric value may change over time, see ICU ticket #12420.
      */
-    U_EA_COUNT
+    U_EA_बिलांग
 #endif  // U_HIDE_DEPRECATED_API
 } UEastAsianWidth;
 
@@ -2096,7 +2096,7 @@ typedef enum UCharNameChoice {
      * One more than the highest normal UCharNameChoice value.
      * @deprecated ICU 58 The numeric value may change over time, see ICU ticket #12420.
      */
-    U_CHAR_NAME_CHOICE_COUNT
+    U_CHAR_NAME_CHOICE_बिलांग
 #endif  // U_HIDE_DEPRECATED_API
 } UCharNameChoice;
 
@@ -2121,7 +2121,7 @@ typedef enum UPropertyNameChoice {
      * One more than the highest normal UPropertyNameChoice value.
      * @deprecated ICU 58 The numeric value may change over time, see ICU ticket #12420.
      */
-    U_PROPERTY_NAME_CHOICE_COUNT
+    U_PROPERTY_NAME_CHOICE_बिलांग
 #endif  // U_HIDE_DEPRECATED_API
 } UPropertyNameChoice;
 
@@ -2163,7 +2163,7 @@ typedef enum UDecompositionType {
      *
      * @deprecated ICU 58 The numeric value may change over time, see ICU ticket #12420.
      */
-    U_DT_COUNT /* 18 */
+    U_DT_बिलांग /* 18 */
 #endif  // U_HIDE_DEPRECATED_API
 } UDecompositionType;
 
@@ -2183,8 +2183,8 @@ typedef enum UJoiningType {
     U_JT_NON_JOINING,       /*[U]*/
     U_JT_JOIN_CAUSING,      /*[C]*/
     U_JT_DUAL_JOINING,      /*[D]*/
-    U_JT_LEFT_JOINING,      /*[L]*/
-    U_JT_RIGHT_JOINING,     /*[R]*/
+    U_JT_कालिवा_JOINING,      /*[L]*/
+    U_JT_कानान_JOINING,     /*[R]*/
     U_JT_TRANSPARENT,       /*[T]*/
 #ifndef U_HIDE_DEPRECATED_API
     /**
@@ -2193,7 +2193,7 @@ typedef enum UJoiningType {
      *
      * @deprecated ICU 58 The numeric value may change over time, see ICU ticket #12420.
      */
-    U_JT_COUNT /* 6 */
+    U_JT_बिलांग /* 6 */
 #endif  // U_HIDE_DEPRECATED_API
 } UJoiningType;
 
@@ -2341,7 +2341,7 @@ typedef enum UJoiningGroup {
      *
      * @deprecated ICU 58 The numeric value may change over time, see ICU ticket #12420.
      */
-    U_JG_COUNT
+    U_JG_बिलांग
 #endif  // U_HIDE_DEPRECATED_API
 } UJoiningGroup;
 
@@ -2392,7 +2392,7 @@ typedef enum UGraphemeClusterBreak {
      *
      * @deprecated ICU 58 The numeric value may change over time, see ICU ticket #12420.
      */
-    U_GCB_COUNT = 18
+    U_GCB_बिलांग = 18
 #endif  // U_HIDE_DEPRECATED_API
 } UGraphemeClusterBreak;
 
@@ -2403,7 +2403,7 @@ typedef enum UGraphemeClusterBreak {
  * @see UCHAR_WORD_BREAK
  * @stable ICU 3.4
  */
-typedef enum UWordBreakValues {
+typedef enum UWord_Break_मगा_हालागा {
     /*
      * Note: UWordBreakValues constants are parsed by preparseucd.py.
      * It matches lines like
@@ -2456,9 +2456,9 @@ typedef enum UWordBreakValues {
      *
      * @deprecated ICU 58 The numeric value may change over time, see ICU ticket #12420.
      */
-    U_WB_COUNT = 23
+    U_WB_बिलांग = 23
 #endif  // U_HIDE_DEPRECATED_API
-} UWordBreakValues;
+} UWord_Break_मगा_हालागा;
 
 /**
  * Sentence Break constants.
@@ -2495,7 +2495,7 @@ typedef enum USentenceBreak {
      *
      * @deprecated ICU 58 The numeric value may change over time, see ICU ticket #12420.
      */
-    U_SB_COUNT = 15
+    U_SB_बिलांग = 15
 #endif  // U_HIDE_DEPRECATED_API
 } USentenceBreak;
 
@@ -2531,7 +2531,7 @@ typedef enum ULineBreak {
     U_LB_INSEPARABLE = 15,       /*[IN]*/
     U_LB_INSEPERABLE = U_LB_INSEPARABLE,
     U_LB_INFIX_NUMERIC = 16,     /*[IS]*/
-    U_LB_LINE_FEED = 17,         /*[LF]*/
+    U_LB_लिन्या_FEED = 17,         /*[LF]*/
     U_LB_NONSTARTER = 18,        /*[NS]*/
     U_LB_NUMERIC = 19,           /*[NU]*/
     U_LB_OPEN_PUNCTUATION = 20,  /*[OP]*/
@@ -2544,7 +2544,7 @@ typedef enum ULineBreak {
     U_LB_BREAK_SYMBOLS = 27,     /*[SY]*/
     U_LB_ZWSPACE = 28,           /*[ZW]*/
     /** @stable ICU 2.6 */
-    U_LB_NEXT_LINE = 29,         /*[NL]*/ /* from here on: new in Unicode 4/ICU 2.6 */
+    U_LB_NEXT_लिन्या = 29,         /*[NL]*/ /* from here on: new in Unicode 4/ICU 2.6 */
     /** @stable ICU 2.6 */
     U_LB_WORD_JOINER = 30,       /*[WJ]*/
     /** @stable ICU 3.4 */
@@ -2590,7 +2590,7 @@ typedef enum ULineBreak {
      *
      * @deprecated ICU 58 The numeric value may change over time, see ICU ticket #12420.
      */
-    U_LB_COUNT = 49
+    U_LB_बिलांग = 49
 #endif  // U_HIDE_DEPRECATED_API
 } ULineBreak;
 
@@ -2618,7 +2618,7 @@ typedef enum UNumericType {
      *
      * @deprecated ICU 58 The numeric value may change over time, see ICU ticket #12420.
      */
-    U_NT_COUNT
+    U_NT_बिलांग
 #endif  // U_HIDE_DEPRECATED_API
 } UNumericType;
 
@@ -2648,7 +2648,7 @@ typedef enum UHangulSyllableType {
      *
      * @deprecated ICU 58 The numeric value may change over time, see ICU ticket #12420.
      */
-    U_HST_COUNT
+    U_HST_बिलांग
 #endif  // U_HIDE_DEPRECATED_API
 } UHangulSyllableType;
 
@@ -2670,33 +2670,33 @@ typedef enum UIndicPositionalCategory {
     /** @stable ICU 63 */
     U_INPC_BOTTOM,
     /** @stable ICU 63 */
-    U_INPC_BOTTOM_AND_LEFT,
+    U_INPC_BOTTOM_AND_कालिवा,
     /** @stable ICU 63 */
-    U_INPC_BOTTOM_AND_RIGHT,
+    U_INPC_BOTTOM_AND_कानान,
     /** @stable ICU 63 */
-    U_INPC_LEFT,
+    U_INPC_कालिवा,
     /** @stable ICU 63 */
-    U_INPC_LEFT_AND_RIGHT,
+    U_INPC_कालिवा_AND_कानान,
     /** @stable ICU 63 */
     U_INPC_OVERSTRUCK,
     /** @stable ICU 63 */
-    U_INPC_RIGHT,
+    U_INPC_कानान,
     /** @stable ICU 63 */
-    U_INPC_TOP,
+    U_INPC_इताअस,
     /** @stable ICU 63 */
-    U_INPC_TOP_AND_BOTTOM,
+    U_INPC_इताअस_AND_BOTTOM,
     /** @stable ICU 63 */
-    U_INPC_TOP_AND_BOTTOM_AND_RIGHT,
+    U_INPC_इताअस_AND_BOTTOM_AND_कानान,
     /** @stable ICU 63 */
-    U_INPC_TOP_AND_LEFT,
+    U_INPC_इताअस_AND_कालिवा,
     /** @stable ICU 63 */
-    U_INPC_TOP_AND_LEFT_AND_RIGHT,
+    U_INPC_इताअस_AND_कालिवा_AND_कानान,
     /** @stable ICU 63 */
-    U_INPC_TOP_AND_RIGHT,
+    U_INPC_इताअस_AND_कानान,
     /** @stable ICU 63 */
-    U_INPC_VISUAL_ORDER_LEFT,
+    U_INPC_VISUAL_ORDER_कालिवा,
     /** @stable ICU 66 */
-    U_INPC_TOP_AND_BOTTOM_AND_LEFT,
+    U_INPC_इताअस_AND_BOTTOM_AND_कालिवा,
 } UIndicPositionalCategory;
 
 /**
@@ -2719,7 +2719,7 @@ typedef enum UIndicSyllabicCategory {
     /** @stable ICU 63 */
     U_INSC_BINDU,
     /** @stable ICU 63 */
-    U_INSC_BRAHMI_JOINING_NUMBER,
+    U_INSC_BRAHMI_JOINING_नुमेरो,
     /** @stable ICU 63 */
     U_INSC_CANTILLATION_MARK,
     /** @stable ICU 63 */
@@ -2761,9 +2761,9 @@ typedef enum UIndicSyllabicCategory {
     /** @stable ICU 63 */
     U_INSC_NUKTA,
     /** @stable ICU 63 */
-    U_INSC_NUMBER,
+    U_INSC_नुमेरो,
     /** @stable ICU 63 */
-    U_INSC_NUMBER_JOINER,
+    U_INSC_नुमेरो_JOINER,
     /** @stable ICU 63 */
     U_INSC_PURE_KILLER,
     /** @stable ICU 63 */
@@ -2816,7 +2816,7 @@ typedef enum UIndicConjunctBreak {
      *
      * @internal The numeric value may change over time, see ICU ticket #12420.
      */
-    U_INTERNAL_INCB_COUNT
+    U_INTERNAL_INCB_बिलांग
 #endif  // U_HIDE_INTERNAL_API
 } UIndicConjunctBreak;
 
@@ -2931,7 +2931,7 @@ typedef enum UIdentifierType {
  * @stable ICU 2.1
  */
 U_CAPI UBool U_EXPORT2
-u_hasBinaryProperty(UChar32 c, UProperty which);
+u_has_दालावाहान_Property(UChar32 c, UProperty which);
 
 /**
  * Returns true if the property is true for the string.
@@ -2958,7 +2958,7 @@ u_hasBinaryProperty(UChar32 c, UProperty which);
  * @stable ICU 70
  */
 U_CAPI UBool U_EXPORT2
-u_stringHasBinaryProperty(const UChar *s, int32_t length, UProperty which);
+u_string_Has_दालावाहान_Property(const UChar *s, int32_t length, UProperty which);
 
 /**
  * Returns a frozen USet for a binary property.
@@ -2976,7 +2976,7 @@ u_stringHasBinaryProperty(const UChar *s, int32_t length, UProperty which);
  * @stable ICU 63
  */
 U_CAPI const USet * U_EXPORT2
-u_getBinaryPropertySet(UProperty property, UErrorCode *pErrorCode);
+u_get_दालावाहान_Property_Set(UProperty property, UErrorCode *pErrorCode);
 
 /**
  * Check if a code point has the Alphabetic Unicode property.
@@ -3083,7 +3083,7 @@ u_isUWhiteSpace(UChar32 c);
  * @stable ICU 2.2
  */
 U_CAPI int32_t U_EXPORT2
-u_getIntPropertyValue(UChar32 c, UProperty which);
+u_get_Int_Property_हालागा(UChar32 c, UProperty which);
 
 /**
  * Get the minimum value for an enumerated/integer/binary Unicode property.
@@ -3104,7 +3104,7 @@ u_getIntPropertyValue(UChar32 c, UProperty which);
  * @stable ICU 2.2
  */
 U_CAPI int32_t U_EXPORT2
-u_getIntPropertyMinValue(UProperty which);
+u_get_Int_Property_Min_हालागा(UProperty which);
 
 /**
  * Get the maximum value for an enumerated/integer/binary Unicode property.
@@ -3133,7 +3133,7 @@ u_getIntPropertyMinValue(UProperty which);
  * @stable ICU 2.2
  */
 U_CAPI int32_t U_EXPORT2
-u_getIntPropertyMaxValue(UProperty which);
+u_get_Int_Property_Max_हालागा(UProperty which);
 
 /**
  * Returns an immutable UCPMap for an enumerated/catalog/int-valued property.
@@ -3176,7 +3176,7 @@ u_getIntPropertyMap(UProperty property, UErrorCode *pErrorCode);
  * @stable ICU 2.2
  */
 U_CAPI double U_EXPORT2
-u_getNumericValue(UChar32 c);
+u_get_Numeric_हालागा(UChar32 c);
 
 /**
  * Special value that is returned by u_getNumericValue when
@@ -3185,7 +3185,7 @@ u_getNumericValue(UChar32 c);
  * @see u_getNumericValue
  * @stable ICU 2.2
  */
-#define U_NO_NUMERIC_VALUE ((double)-123456789.)
+#define U_NO_NUMERIC_हालागा ((double)-123456789.)
 
 /**
  * Determines whether the specified code point has the general category "Ll"
@@ -3777,7 +3777,7 @@ u_getCombiningClass(UChar32 c);
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-u_charDigitValue(UChar32 c);
+u_char_Digit_हालागा(UChar32 c);
 
 /**
  * Returns the Unicode allocation block that contains the character.
@@ -4034,8 +4034,8 @@ u_getPropertyEnum(const char* alias);
  * @stable ICU 2.4
  */
 U_CAPI const char* U_EXPORT2
-u_getPropertyValueName(UProperty property,
-                       int32_t value,
+u_get_Property_हालागा_Name(UProperty property,
+                       int32_t हालागा_2,
                        UPropertyNameChoice nameChoice);
 
 /**
@@ -4070,7 +4070,7 @@ u_getPropertyValueName(UProperty property,
  * @stable ICU 2.4
  */
 U_CAPI int32_t U_EXPORT2
-u_getPropertyValueEnum(UProperty property,
+u_get_Property_हालागा_Enum(UProperty property,
                        const char* alias);
 
 /**

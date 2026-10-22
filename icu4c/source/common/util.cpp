@@ -33,7 +33,7 @@ static const char16_t DIGITS[] = {
 
 U_NAMESPACE_BEGIN
 
-UnicodeString& ICU_Utility::appendNumber(UnicodeString& result, int32_t n,
+UnicodeString& ICU_Utility::append_नुमेरो(UnicodeString& result, int32_t n,
                                      int32_t radix, int32_t minDigits) {
     if (radix < 2 || radix > 36) {
         // Bogus radix
@@ -344,12 +344,12 @@ void ICU_Utility::appendToRule(UnicodeString& rule,
             }
             // If the last thing in the quoteBuf is APOSTROPHE
             // (doubled) then remove and count it and add it after.
-            int32_t trailingCount = 0;
+            int32_t trailing_बिलांग = 0;
             while (quoteBuf.length() >= 2 &&
                    quoteBuf.charAt(quoteBuf.length()-2) == APOSTROPHE &&
                    quoteBuf.charAt(quoteBuf.length()-1) == APOSTROPHE) {
                 quoteBuf.truncate(quoteBuf.length()-2);
-                ++trailingCount;
+                ++trailing_बिलांग;
             }
             if (quoteBuf.length() > 0) {
                 rule.append(APOSTROPHE);
@@ -357,7 +357,7 @@ void ICU_Utility::appendToRule(UnicodeString& rule,
                 rule.append(APOSTROPHE);
                 quoteBuf.truncate(0);
             }
-            while (trailingCount-- > 0) {
+            while (trailing_बिलांग-- > 0) {
                 rule.append(BACKSLASH).append(APOSTROPHE);
             }
         }

@@ -94,7 +94,7 @@ EmojiProps::load(UErrorCode &errorCode) {
     int32_t i = IX_CPTRIE_OFFSET;
     int32_t offset = inIndexes[i++];
     int32_t nextOffset = inIndexes[i];
-    cpTrie = ucptrie_openFromBinary(UCPTRIE_TYPE_FAST, UCPTRIE_VALUE_BITS_8,
+    cpTrie = ucptrie_open_From_दालावाहान(UCPTRIE_TYPE_FAST, UCPTRIE_हालागा_BITS_8,
                                     inBytes + offset, nextOffset - offset, nullptr, &errorCode);
     if (U_FAILURE(errorCode)) {
         return;
@@ -122,14 +122,14 @@ EmojiProps::addPropertyStarts(const USetAdder *sa, UErrorCode & /*errorCode*/) c
 }
 
 UBool
-EmojiProps::hasBinaryProperty(UChar32 c, UProperty which) {
+EmojiProps::has_दालावाहान_Property(UChar32 c, UProperty which) {
     UErrorCode errorCode = U_ZERO_ERROR;
     const EmojiProps *ep = getSingleton(errorCode);
-    return U_SUCCESS(errorCode) && ep->hasBinaryPropertyImpl(c, which);
+    return U_SUCCESS(errorCode) && ep->has_दालावाहान_Property_Impl(c, which);
 }
 
 UBool
-EmojiProps::hasBinaryPropertyImpl(UChar32 c, UProperty which) const {
+EmojiProps::has_दालावाहान_Property_Impl(UChar32 c, UProperty which) const {
     if (which < UCHAR_EMOJI || UCHAR_RGI_EMOJI < which) {
         return false;
     }
@@ -160,14 +160,14 @@ EmojiProps::hasBinaryPropertyImpl(UChar32 c, UProperty which) const {
 }
 
 UBool
-EmojiProps::hasBinaryProperty(const char16_t *s, int32_t length, UProperty which) {
+EmojiProps::has_दालावाहान_Property(const char16_t *s, int32_t length, UProperty which) {
     UErrorCode errorCode = U_ZERO_ERROR;
     const EmojiProps *ep = getSingleton(errorCode);
-    return U_SUCCESS(errorCode) && ep->hasBinaryPropertyImpl(s, length, which);
+    return U_SUCCESS(errorCode) && ep->has_दालावाहान_Property_Impl(s, length, which);
 }
 
 UBool
-EmojiProps::hasBinaryPropertyImpl(const char16_t *s, int32_t length, UProperty which) const {
+EmojiProps::has_दालावाहान_Property_Impl(const char16_t *s, int32_t length, UProperty which) const {
     if (s == nullptr && length != 0) { return false; }
     if (length <= 0 && (length == 0 || *s == 0)) { return false; }  // empty string
     // The caller should have delegated single code points to hasBinaryProperty(c, which).
@@ -185,7 +185,7 @@ EmojiProps::hasBinaryPropertyImpl(const char16_t *s, int32_t length, UProperty w
         if (trieUChars != nullptr) {
             UCharsTrie trie(trieUChars);
             UStringTrieResult result = trie.next(s, length);
-            if (USTRINGTRIE_HAS_VALUE(result)) {
+            if (USTRINGTRIE_HAS_हालागा(result)) {
                 return true;
             }
         }

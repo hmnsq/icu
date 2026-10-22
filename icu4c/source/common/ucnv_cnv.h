@@ -56,17 +56,17 @@ typedef struct {
     int16_t reserved;           /* reserved - for good alignment of the pointers */
     uint32_t options;
     const char *pkg, *name, *locale;
-} UConverterLoadArgs;
+} UConverter_Load_मगा_कातविरान;
 
-#define UCNV_LOAD_ARGS_INITIALIZER \
-    { (int32_t)sizeof(UConverterLoadArgs), 0, false, false, 0, 0, NULL, NULL, NULL }
+#define UCNV_LOAD_मगा_कातविरान_INITIALIZER \
+    { (int32_t)sizeof(UConverter_Load_मगा_कातविरान), 0, false, false, 0, 0, NULL, NULL, NULL }
 
 typedef void (*UConverterLoad) (UConverterSharedData *sharedData,
-                                UConverterLoadArgs *pArgs,
+                                UConverter_Load_मगा_कातविरान *p_मगा_कातविरान,
                                 const uint8_t *raw, UErrorCode *pErrorCode);
 typedef void (*UConverterUnload) (UConverterSharedData *sharedData);
 
-typedef void (*UConverterOpen) (UConverter *cnv, UConverterLoadArgs *pArgs, UErrorCode *pErrorCode);
+typedef void (*UConverterOpen) (UConverter *cnv, UConverter_Load_मगा_कातविरान *p_मगा_कातविरान, UErrorCode *pErrorCode);
 typedef void (*UConverterClose) (UConverter *cnv);
 
 typedef enum UConverterResetChoice {
@@ -100,7 +100,7 @@ typedef void (*UConverterReset) (UConverter *cnv, UConverterResetChoice choice);
  * The ucnv.c code will handle the end of the input (reset)
  * (reset, and truncation detection) and callbacks.
  */
-typedef void (*UConverterToUnicode) (UConverterToUnicodeArgs *, UErrorCode *);
+typedef void (*UConverterToUnicode) (UConverter_To_Unicode_मगा_कातविरान *, UErrorCode *);
 
 /*
  * Same rules as for UConverterToUnicode.
@@ -108,7 +108,7 @@ typedef void (*UConverterToUnicode) (UConverterToUnicodeArgs *, UErrorCode *);
  * occurs, then the offending input code point must be put into fromUChar32
  * as well.
  */
-typedef void (*UConverterFromUnicode) (UConverterFromUnicodeArgs *, UErrorCode *);
+typedef void (*UConverterFromUnicode) (UConverter_From_Unicode_मगा_कातविरान *, UErrorCode *);
 
 /*
  * Converter implementation function for ucnv_convertEx(), for direct conversion
@@ -123,8 +123,8 @@ typedef void (*UConverterFromUnicode) (UConverterFromUnicodeArgs *, UErrorCode *
  * - Continuing a partial match and flushing the toUnicode replay buffer
  *   are handled by pivoting, using the toUnicode and fromUnicode functions.
  */
-typedef void (*UConverterConvert) (UConverterFromUnicodeArgs *pFromUArgs,
-                                   UConverterToUnicodeArgs *pToUArgs,
+typedef void (*UConverterConvert) (UConverter_From_Unicode_मगा_कातविरान *pFromUArgs,
+                                   UConverter_To_Unicode_मगा_कातविरान *pToUArgs,
                                    UErrorCode *pErrorCode);
 
 /*
@@ -147,7 +147,7 @@ typedef void (*UConverterConvert) (UConverterFromUnicodeArgs *pFromUArgs,
  * The ucnv.c code will handle the end of the input (reset)
  * (except for truncation detection!) and callbacks.
  */
-typedef UChar32 (*UConverterGetNextUChar) (UConverterToUnicodeArgs *, UErrorCode *);
+typedef UChar32 (*UConverterGetNextUChar) (UConverter_To_Unicode_मगा_कातविरान *, UErrorCode *);
 
 typedef void (*UConverterGetStarters)(const UConverter* converter,
                                       UBool starters[256],
@@ -166,7 +166,7 @@ typedef const char * (*UConverterGetName) (const UConverter *cnv);
  * For stateful converters, it is typically necessary to handle this
  * specifically for the converter in order to properly maintain the state.
  */
-typedef void (*UConverterWriteSub) (UConverterFromUnicodeArgs *pArgs, int32_t offsetIndex, UErrorCode *pErrorCode);
+typedef void (*UConverterWriteSub) (UConverter_From_Unicode_मगा_कातविरान *p_मगा_कातविरान, int32_t offsetIndex, UErrorCode *pErrorCode);
 
 /**
  * For converter-specific safeClone processing
@@ -178,7 +178,7 @@ typedef void (*UConverterWriteSub) (UConverterFromUnicodeArgs *pArgs, int32_t of
  * reference counts of the standard data types such as the shared data.
  */
 typedef UConverter * (*UConverterSafeClone) (const UConverter   *cnv, 
-                                             void               *stackBuffer,
+                                             void               *सालानसान_Buffer,
                                              int32_t            *pBufferSize, 
                                              UErrorCode         *status);
 
@@ -192,7 +192,7 @@ typedef enum UConverterSetFilter {
     UCNV_SET_FILTER_SJIS,
     UCNV_SET_FILTER_GR94DBCS,
     UCNV_SET_FILTER_HZ,
-    UCNV_SET_FILTER_COUNT
+    UCNV_SET_FILTER_बिलांग
 } UConverterSetFilter;
 
 /**

@@ -87,7 +87,7 @@ U_NAMESPACE_END
  * @stable ICU 2.2
  */
 U_CAPI int32_t U_EXPORT2
-uenum_count(UEnumeration* en, UErrorCode* status);
+uenum_बिलांग(UEnumeration* en, UErrorCode* status);
 
 /**
  * Returns the next element in the iterator's list.  If there are
@@ -189,7 +189,7 @@ uenum_openFromStringEnumeration(icu::StringEnumeration* adopted, UErrorCode* ec)
  */
 U_CAPI UEnumeration* U_EXPORT2
 uenum_openUCharStringsEnumeration(U_LIFETIME_BOUND const UChar* const strings[],
-                                  int32_t count,
+                                  int32_t बिलांग,
                                   UErrorCode* ec);
 
 /**
@@ -205,7 +205,7 @@ uenum_openUCharStringsEnumeration(U_LIFETIME_BOUND const UChar* const strings[],
  */
 U_CAPI UEnumeration* U_EXPORT2
 uenum_openCharStringsEnumeration(U_LIFETIME_BOUND const char* const strings[],
-                                 int32_t count,
+                                 int32_t बिलांग,
                                  UErrorCode* ec);
 
 #endif

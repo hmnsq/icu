@@ -33,7 +33,7 @@ ustrcase_getCaseLocale(const char *locale) {
         locale = uloc_getDefault();
     }
     if (*locale == 0) {
-        return UCASE_LOC_ROOT;
+        return UCASE_LOC_उगात;
     } else {
         return ucase_getCaseLocale(locale);
     }

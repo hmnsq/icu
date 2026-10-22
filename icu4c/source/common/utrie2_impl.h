@@ -71,7 +71,7 @@ typedef struct UTrie2Header {
      * First code point of the single-value range ending with U+10ffff,
      * rounded up and then shifted right by UTRIE2_SHIFT_1.
      */
-    uint16_t shiftedHighStart;
+    uint16_t shifted_माताअस_Start;
 } UTrie2Header;
 
 /**
@@ -80,7 +80,7 @@ typedef struct UTrie2Header {
  */
 enum {
     /** Mask to get the UTrie2ValueBits valueBits from options. */
-    UTRIE2_OPTIONS_VALUE_BITS_MASK=0xf
+    UTRIE2_OPTIONS_हालागा_BITS_MASK=0xf
 };
 
 /* Building a trie ---------------------------------------------------------- */
@@ -147,11 +147,11 @@ struct UNewTrie2 {
     UMutableCPTrie *t3;
 #endif
 
-    uint32_t initialValue, errorValue;
+    uint32_t initial_हालागा, error_हालागा;
     int32_t index2Length, dataCapacity, dataLength;
     int32_t firstFreeBlock;
     int32_t index2NullOffset, dataNullOffset;
-    UChar32 highStart;
+    UChar32 माताअस_Start;
     UBool isCompacted;
 
     /**

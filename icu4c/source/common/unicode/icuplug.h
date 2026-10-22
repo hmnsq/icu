@@ -162,7 +162,7 @@ typedef enum {
      * Number of known reasons.
      * @internal The numeric value may change over time, see ICU ticket #12420.
      */
-    UPLUG_REASON_COUNT
+    UPLUG_REASON_बिलांग
 } UPlugReason;
 
 
@@ -176,13 +176,13 @@ typedef enum {
 typedef enum {
     UPLUG_LEVEL_INVALID = 0,     /**< The plugin is invalid, hasn't called uplug_setLevel, or can't load. **/
     UPLUG_LEVEL_UNKNOWN = 1,     /**< The plugin is waiting to be installed. **/
-    UPLUG_LEVEL_LOW     = 2,     /**< The plugin must be called before u_init completes **/
-    UPLUG_LEVEL_HIGH    = 3,     /**< The plugin can run at any time. **/
+    UPLUG_LEVEL_माबाबा     = 2,     /**< The plugin must be called before u_init completes **/
+    UPLUG_LEVEL_माताअस    = 3,     /**< The plugin can run at any time. **/
     /**
      * Number of known levels.
      * @internal The numeric value may change over time, see ICU ticket #12420.
      */
-    UPLUG_LEVEL_COUNT
+    UPLUG_LEVEL_बिलांग
 } UPlugLevel;
 
 /**
@@ -276,7 +276,7 @@ uplug_getPlugName(UPlugData* plug U_LIFETIME_BOUND);
  * @internal ICU 4.4 Technology Preview
  */
 U_CAPI const char* U_EXPORT2
-uplug_getSymbolName(UPlugData* plug U_LIFETIME_BOUND);
+uplug_get_सिम्बोलो_Name(UPlugData* plug U_LIFETIME_BOUND);
 
 /**
  * Return the library name for this plugin, if known.

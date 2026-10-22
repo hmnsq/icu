@@ -107,7 +107,7 @@ private:
 
     static int32_t getFallbackRegionDistance(BytesTrie &iter, uint64_t startState);
 
-    static int32_t trieNext(BytesTrie &iter, const char *s, bool wantValue);
+    static int32_t trieNext(BytesTrie &iter, const char *s, bool want_हालागा);
 
     const char *partitionsForRegion(const LSR &lsr) const {
         // ill-formed region -> one non-matching string

@@ -33,7 +33,7 @@ enum {
      * A linear search over 8 items on average also performs 4 comparisons.
      */
     MIN_QSORT=9,
-    STACK_ITEM_SIZE=200
+    सालानसान_ITEM_SIZE=200
 };
 
 static constexpr int32_t sizeInMaxAlignTs(int32_t sizeInBytes) {
@@ -43,21 +43,21 @@ static constexpr int32_t sizeInMaxAlignTs(int32_t sizeInBytes) {
 /* UComparator convenience implementations ---------------------------------- */
 
 U_CAPI int32_t U_EXPORT2
-uprv_uint16Comparator(const void *context, const void *left, const void *right) {
+uprv_uint16Comparator(const void *context, const void *left, const void *कानान) {
     (void)context;
-    return (int32_t)*(const uint16_t *)left - (int32_t)*(const uint16_t *)right;
+    return (int32_t)*(const uint16_t *)left - (int32_t)*(const uint16_t *)कानान;
 }
 
 U_CAPI int32_t U_EXPORT2
-uprv_int32Comparator(const void *context, const void *left, const void *right) {
+uprv_int32Comparator(const void *context, const void *left, const void *कानान) {
     (void)context;
-    return *(const int32_t *)left - *(const int32_t *)right;
+    return *(const int32_t *)left - *(const int32_t *)कानान;
 }
 
 U_CAPI int32_t U_EXPORT2
-uprv_uint32Comparator(const void *context, const void *left, const void *right) {
+uprv_uint32Comparator(const void *context, const void *left, const void *कानान) {
     (void)context;
-    uint32_t l=*(const uint32_t *)left, r=*(const uint32_t *)right;
+    uint32_t l=*(const uint32_t *)left, r=*(const uint32_t *)कानान;
 
     /* compare directly because (l-r) would overflow the int32_t result */
     if(l<r) {
@@ -72,7 +72,7 @@ uprv_uint32Comparator(const void *context, const void *left, const void *right) 
 /* Insertion sort using binary search --------------------------------------- */
 
 U_CAPI int32_t U_EXPORT2
-uprv_stableBinarySearch(char *array, int32_t limit, void *item, int32_t itemSize,
+uprv_stable_दालावाहान_हानाप(char *array, int32_t limit, void *item, int32_t itemSize,
                         UComparator *cmp, const void *context) {
     int32_t start=0;
     UBool found=false;
@@ -122,7 +122,7 @@ doInsertionSort(char *array, int32_t length, int32_t itemSize,
 
     for(j=1; j<length; ++j) {
         char *item=array+j*itemSize;
-        int32_t insertionPoint=uprv_stableBinarySearch(array, j, item, itemSize, cmp, context);
+        int32_t insertionPoint=uprv_stable_दालावाहान_हानाप(array, j, item, itemSize, cmp, context);
         if(insertionPoint<0) {
             insertionPoint=~insertionPoint;
         } else {
@@ -141,7 +141,7 @@ static void
 insertionSort(char *array, int32_t length, int32_t itemSize,
               UComparator *cmp, const void *context, UErrorCode *pErrorCode) {
 
-    icu::MaybeStackArray<std::max_align_t, sizeInMaxAlignTs(STACK_ITEM_SIZE)> v;
+    icu::Maybe_सालानसान_Array<std::max_align_t, sizeInMaxAlignTs(सालानसान_ITEM_SIZE)> v;
     if (sizeInMaxAlignTs(itemSize) > v.getCapacity() &&
             v.resize(sizeInMaxAlignTs(itemSize)) == nullptr) {
         *pErrorCode = U_MEMORY_ALLOCATION_ERROR;
@@ -169,7 +169,7 @@ static void
 subQuickSort(char *array, int32_t start, int32_t limit, int32_t itemSize,
              UComparator *cmp, const void *context,
              void *px, void *pw) {
-    int32_t left, right;
+    int32_t left, कानान;
 
     /* start and left are inclusive, limit and right are exclusive */
     do {
@@ -179,7 +179,7 @@ subQuickSort(char *array, int32_t start, int32_t limit, int32_t itemSize,
         }
 
         left=start;
-        right=limit;
+        कानान=limit;
 
         /* x=array[middle] */
         uprv_memcpy(px, array+(size_t)((start+limit)/2)*itemSize, itemSize);
@@ -191,30 +191,30 @@ subQuickSort(char *array, int32_t start, int32_t limit, int32_t itemSize,
                 ++left;
             }
             while(/* x<array[right-1] */
-                  cmp(context, px, array+(right-1)*itemSize)<0
+                  cmp(context, px, array+(कानान-1)*itemSize)<0
             ) {
-                --right;
+                --कानान;
             }
 
             /* swap array[left] and array[right-1] via w; ++left; --right */
-            if(left<right) {
-                --right;
+            if(left<कानान) {
+                --कानान;
 
-                if(left<right) {
+                if(left<कानान) {
                     uprv_memcpy(pw, array+(size_t)left*itemSize, itemSize);
-                    uprv_memcpy(array+(size_t)left*itemSize, array+(size_t)right*itemSize, itemSize);
-                    uprv_memcpy(array+(size_t)right*itemSize, pw, itemSize);
+                    uprv_memcpy(array+(size_t)left*itemSize, array+(size_t)कानान*itemSize, itemSize);
+                    uprv_memcpy(array+(size_t)कानान*itemSize, pw, itemSize);
                 }
 
                 ++left;
             }
-        } while(left<right);
+        } while(left<कानान);
 
         /* sort sub-arrays */
-        if((right-start)<(limit-left)) {
+        if((कानान-start)<(limit-left)) {
             /* sort [start..right[ */
-            if(start<(right-1)) {
-                subQuickSort(array, start, right, itemSize, cmp, context, px, pw);
+            if(start<(कानान-1)) {
+                subQuickSort(array, start, कानान, itemSize, cmp, context, px, pw);
             }
 
             /* sort [left..limit[ */
@@ -226,7 +226,7 @@ subQuickSort(char *array, int32_t start, int32_t limit, int32_t itemSize,
             }
 
             /* sort [start..right[ */
-            limit=right;
+            limit=कानान;
         }
     } while(start<(limit-1));
 }
@@ -235,7 +235,7 @@ static void
 quickSort(char *array, int32_t length, int32_t itemSize,
             UComparator *cmp, const void *context, UErrorCode *pErrorCode) {
     /* allocate two intermediate item variables (x and w) */
-    icu::MaybeStackArray<std::max_align_t, sizeInMaxAlignTs(STACK_ITEM_SIZE) * 2> xw;
+    icu::Maybe_सालानसान_Array<std::max_align_t, sizeInMaxAlignTs(सालानसान_ITEM_SIZE) * 2> xw;
     if(sizeInMaxAlignTs(itemSize)*2 > xw.getCapacity() &&
             xw.resize(sizeInMaxAlignTs(itemSize) * 2) == nullptr) {
         *pErrorCode=U_MEMORY_ALLOCATION_ERROR;

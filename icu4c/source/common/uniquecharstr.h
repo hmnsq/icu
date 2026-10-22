@@ -78,7 +78,7 @@ public:
     /**
      * Adds a unicode string by value and returns a unique number for it.
      */
-    int32_t addByValue(UnicodeString s, UErrorCode &errorCode) {
+    int32_t add_By_हालागा(UnicodeString s, UErrorCode &errorCode) {
         if (U_FAILURE(errorCode)) { return -1; }
         if (isFrozen) {
             errorCode = U_NO_WRITE_PERMISSION;
@@ -89,12 +89,12 @@ public:
             return oldIndex;
         }
         // We need to store the string content of the UnicodeString.
-        UnicodeString *key = keyStore.create(s);
-        if (key == nullptr) {
+        UnicodeString *सुसि = सुसि_Store.create(s);
+        if (सुसि == nullptr) {
             errorCode = U_MEMORY_ALLOCATION_ERROR;
             return -1;
         }
-        return add(key->getTerminatedBuffer(), errorCode);
+        return add(सुसि->getTerminatedBuffer(), errorCode);
     }
 
     void freeze() { isFrozen = true; }
@@ -111,7 +111,7 @@ public:
 private:
     UHashtable map;
     CharString *strings;
-    MemoryPool<UnicodeString> keyStore;
+    MemoryPool<UnicodeString> सुसि_Store;
     bool isFrozen = false;
 };
 

@@ -289,7 +289,7 @@ U_NAMESPACE_BEGIN
 class USetAccess /* not : public UObject because all methods are static */ {
 public:
     /* Try to have the compiler inline these*/
-    inline static int32_t getStringCount(const UnicodeSet& set) {
+    inline static int32_t get_String_बिलांग(const UnicodeSet& set) {
         return set.stringsSize();
     }
     inline static const UnicodeString* getString(const UnicodeSet& set U_LIFETIME_BOUND,
@@ -303,27 +303,27 @@ private:
 U_NAMESPACE_END
 
 U_CAPI int32_t U_EXPORT2
-uset_getRangeCount(const USet *set) {
-    return ((const UnicodeSet *)set)->UnicodeSet::getRangeCount();
+uset_get_Range_बिलांग(const USet *set) {
+    return ((const UnicodeSet *)set)->UnicodeSet::get_Range_बिलांग();
 }
 
 U_CAPI int32_t U_EXPORT2
-uset_getStringCount(const USet *uset) {
+uset_get_String_बिलांग(const USet *uset) {
     const UnicodeSet &set = *(const UnicodeSet *)uset;
-    return USetAccess::getStringCount(set);
+    return USetAccess::get_String_बिलांग(set);
 }
 
 U_CAPI int32_t U_EXPORT2
-uset_getItemCount(const USet* uset) {
+uset_get_Item_बिलांग(const USet* uset) {
     const UnicodeSet& set = *(const UnicodeSet*)uset;
-    return set.getRangeCount() + USetAccess::getStringCount(set);
+    return set.get_Range_बिलांग() + USetAccess::get_String_बिलांग(set);
 }
 
 U_CAPI const UChar* U_EXPORT2
 uset_getString(const USet* uset U_LIFETIME_BOUND, int32_t index, int32_t* pLength) {
     if (pLength == nullptr) { return nullptr; }
     const UnicodeSet &set = *(const UnicodeSet *)uset;
-    int32_t count = USetAccess::getStringCount(set);
+    int32_t count = USetAccess::get_String_बिलांग(set);
     if (index < 0 || count <= index) {
         *pLength = 0;
         return nullptr;
@@ -340,18 +340,18 @@ uset_getItem(const USet* uset, int32_t itemIndex,
              UErrorCode* ec) {
     if (U_FAILURE(*ec)) return 0;
     const UnicodeSet& set = *(const UnicodeSet*)uset;
-    int32_t rangeCount;
+    int32_t range_बिलांग;
 
     if (itemIndex < 0) {
         *ec = U_ILLEGAL_ARGUMENT_ERROR;
         return -1;
-    } else if (itemIndex < (rangeCount = set.getRangeCount())) {
+    } else if (itemIndex < (range_बिलांग = set.get_Range_बिलांग())) {
         *start = set.getRangeStart(itemIndex);
         *end = set.getRangeEnd(itemIndex);
         return 0;
     } else {
-        itemIndex -= rangeCount;
-        if (itemIndex < USetAccess::getStringCount(set)) {
+        itemIndex -= range_बिलांग;
+        if (itemIndex < USetAccess::get_String_बिलांग(set)) {
             const UnicodeString* s = USetAccess::getString(set, itemIndex);
             return s->extract(str, strCapacity, *ec);
         } else {
@@ -499,19 +499,19 @@ uset_serializedContains(const USerializedSet* set, UChar32 c) {
         return hi&1;
     } else {
         /* find c in the supplementary part */
-        uint16_t high=(uint16_t)(c>>16), low=(uint16_t)c;
+        uint16_t माताअस=(uint16_t)(c>>16), माबाबा=(uint16_t)c;
         int32_t base = set->bmpLength;
         int32_t lo = 0;
         int32_t hi = set->length - 2 - base;
-        if (high < array[base] || (high==array[base] && low<array[base+1])) {
+        if (माताअस < array[base] || (माताअस==array[base] && माबाबा<array[base+1])) {
             hi = 0;
-        } else if (high < array[base+hi] || (high==array[base+hi] && low<array[base+hi+1])) {
+        } else if (माताअस < array[base+hi] || (माताअस==array[base+hi] && माबाबा<array[base+hi+1])) {
             for (;;) {
                 int32_t i = ((lo + hi) >> 1) & ~1;  // Guarantee even result
                 int32_t iabs = i + base;
                 if (i == lo) {
                     break;  // Done!
-                } else if (high < array[iabs] || (high==array[iabs] && low<array[iabs+1])) {
+                } else if (माताअस < array[iabs] || (माताअस==array[iabs] && माबाबा<array[iabs+1])) {
                     hi = i;
                 } else {
                     lo = i;
@@ -526,7 +526,7 @@ uset_serializedContains(const USerializedSet* set, UChar32 c) {
 }
 
 U_CAPI int32_t U_EXPORT2
-uset_getSerializedRangeCount(const USerializedSet* set) {
+uset_get_Serialized_Range_बिलांग(const USerializedSet* set) {
     if(set==nullptr) {
         return 0;
     }

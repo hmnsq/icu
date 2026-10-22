@@ -49,7 +49,7 @@ ucnv_extFindToU(const uint32_t *toUSection, int32_t length, uint8_t byte) {
 
     if(length==((limit-start)+1)) {
         /* direct access on a linear array */
-        return UCNV_EXT_TO_U_GET_VALUE(toUSection[byte-start]); /* could be 0 */
+        return UCNV_EXT_TO_U_GET_हालागा(toUSection[byte-start]); /* could be 0 */
     }
 
     /* word0 is suitable for <=toUSection[] comparison, word for <toUSection[] */
@@ -63,7 +63,7 @@ ucnv_extFindToU(const uint32_t *toUSection, int32_t length, uint8_t byte) {
      * for all v=0..f
      * so we need not mask off the lower 24 bits of each section word.
      */
-    word=word0|UCNV_EXT_TO_U_VALUE_MASK;
+    word=word0|UCNV_EXT_TO_U_हालागा_MASK;
 
     /* binary search */
     start=0;
@@ -101,7 +101,7 @@ ucnv_extFindToU(const uint32_t *toUSection, int32_t length, uint8_t byte) {
 
     /* did we really find it? */
     if(start<limit && byte==UCNV_EXT_TO_U_GET_BYTE(word=toUSection[start])) {
-        return UCNV_EXT_TO_U_GET_VALUE(word); /* never 0 */
+        return UCNV_EXT_TO_U_GET_हालागा(word); /* never 0 */
     } else {
         return 0; /* not found */
     }
@@ -124,11 +124,11 @@ static int32_t
 ucnv_extMatchToU(const int32_t *cx, int8_t sisoState,
                  const char *pre, int32_t preLength,
                  const char *src, int32_t srcLength,
-                 uint32_t *pMatchValue,
+                 uint32_t *p_Match_हालागा,
                  UBool /*useFallback*/, UBool flush) {
     const uint32_t *toUTable, *toUSection;
 
-    uint32_t value, matchValue;
+    uint32_t value, match_हालागा;
     int32_t i, j, idx, length, matchLength;
     uint8_t b;
 
@@ -140,7 +140,7 @@ ucnv_extMatchToU(const int32_t *cx, int8_t sisoState,
     toUTable=UCNV_EXT_ARRAY(cx, UCNV_EXT_TO_U_INDEX, uint32_t);
     idx=0;
 
-    matchValue=0;
+    match_हालागा=0;
     i=j=matchLength=0;
 
     if(sisoState==0) {
@@ -167,14 +167,14 @@ ucnv_extMatchToU(const int32_t *cx, int8_t sisoState,
         /* read first pair of the section */
         value=*toUSection++;
         length=UCNV_EXT_TO_U_GET_BYTE(value);
-        value=UCNV_EXT_TO_U_GET_VALUE(value);
+        value=UCNV_EXT_TO_U_GET_हालागा(value);
         if( value!=0 &&
             (UCNV_EXT_TO_U_IS_ROUNDTRIP(value) ||
              TO_U_USE_FALLBACK(useFallback)) &&
             UCNV_EXT_TO_U_VERIFY_SISO_MATCH(sisoState, i+j)
         ) {
             /* remember longest match so far */
-            matchValue=value;
+            match_हालागा=value;
             matchLength=i+j;
         }
 
@@ -213,7 +213,7 @@ ucnv_extMatchToU(const int32_t *cx, int8_t sisoState,
                     UCNV_EXT_TO_U_VERIFY_SISO_MATCH(sisoState, i+j)
                 ) {
                     /* full match, stop with result */
-                    matchValue=value;
+                    match_हालागा=value;
                     matchLength=i+j;
                 } else {
                     /* full match on fallback not taken, stop with the longest match so far */
@@ -229,7 +229,7 @@ ucnv_extMatchToU(const int32_t *cx, int8_t sisoState,
     }
 
     /* return result */
-    *pMatchValue=UCNV_EXT_TO_U_MASK_ROUNDTRIP(matchValue);
+    *p_Match_हालागा=UCNV_EXT_TO_U_MASK_ROUNDTRIP(match_हालागा);
     return matchLength;
 }
 
@@ -369,20 +369,20 @@ ucnv_extSimpleMatchToU(const int32_t *cx,
  */
 U_CFUNC void
 ucnv_extContinueMatchToU(UConverter *cnv,
-                         UConverterToUnicodeArgs *pArgs, int32_t srcIndex,
+                         UConverter_To_Unicode_मगा_कातविरान *p_मगा_कातविरान, int32_t srcIndex,
                          UErrorCode *pErrorCode) {
     uint32_t value = 0;  /* initialize output-only param to 0 to silence gcc */
     int32_t match, length;
 
     match=ucnv_extMatchToU(cnv->sharedData->mbcs.extIndexes, (int8_t)UCNV_SISO_STATE(cnv),
                            cnv->preToU, cnv->preToULength,
-                           pArgs->source, (int32_t)(pArgs->sourceLimit-pArgs->source),
+                           p_मगा_कातविरान->source, (int32_t)(p_मगा_कातविरान->sourceLimit-p_मगा_कातविरान->source),
                            &value,
-                           cnv->useFallback, pArgs->flush);
+                           cnv->useFallback, p_मगा_कातविरान->flush);
     if(match>0) {
         if(match>=cnv->preToULength) {
             /* advance src pointer for the consumed input */
-            pArgs->source+=match-cnv->preToULength;
+            p_मगा_कातविरान->source+=match-cnv->preToULength;
             cnv->preToULength=0;
         } else {
             /* the match did not use all of preToU[] - keep the rest for replay */
@@ -394,8 +394,8 @@ ucnv_extContinueMatchToU(UConverter *cnv,
         /* write result */
         ucnv_extWriteToU(cnv, cnv->sharedData->mbcs.extIndexes,
                          value,
-                         &pArgs->target, pArgs->targetLimit,
-                         &pArgs->offsets, srcIndex,
+                         &p_मगा_कातविरान->target, p_मगा_कातविरान->targetLimit,
+                         &p_मगा_कातविरान->offsets, srcIndex,
                          pErrorCode);
     } else if(match<0) {
         /* save state for partial match */
@@ -403,12 +403,12 @@ ucnv_extContinueMatchToU(UConverter *cnv,
         int32_t j;
 
         /* just _append_ the newly consumed input to preToU[] */
-        s=pArgs->source;
+        s=p_मगा_कातविरान->source;
         match=-match;
         for(j=cnv->preToULength; j<match; ++j) {
             cnv->preToU[j]=*s++;
         }
-        pArgs->source=s; /* same as *src=srcLimit; because we reached the end of input */
+        p_मगा_कातविरान->source=s; /* same as *src=srcLimit; because we reached the end of input */
         cnv->preToULength=(int8_t)match;
     } else /* match==0 */ {
         /*
@@ -532,15 +532,15 @@ ucnv_extMatchFromU(const int32_t *cx,
                    UChar32 firstCP,
                    const char16_t *pre, int32_t preLength,
                    const char16_t *src, int32_t srcLength,
-                   uint32_t *pMatchValue,
+                   uint32_t *p_Match_हालागा,
                    UBool useFallback, UBool flush) {
     const uint16_t *stage12, *stage3;
     const uint32_t *stage3b;
 
     const char16_t *fromUTableUChars, *fromUSectionUChars;
-    const uint32_t *fromUTableValues, *fromUSectionValues;
+    const uint32_t *from_UTable_मगा_हालागा, *from_USection_मगा_हालागा;
 
-    uint32_t value, matchValue;
+    uint32_t value, match_हालागा;
     int32_t i, j, idx, length, matchLength;
     char16_t c;
 
@@ -576,9 +576,9 @@ ucnv_extMatchFromU(const int32_t *cx,
 
         /* initialize */
         fromUTableUChars=UCNV_EXT_ARRAY(cx, UCNV_EXT_FROM_U_UCHARS_INDEX, char16_t);
-        fromUTableValues=UCNV_EXT_ARRAY(cx, UCNV_EXT_FROM_U_VALUES_INDEX, uint32_t);
+        from_UTable_मगा_हालागा=UCNV_EXT_ARRAY(cx, UCNV_EXT_FROM_U_मगा_हालागा_INDEX, uint32_t);
 
-        matchValue=0;
+        match_हालागा=0;
         i=j=matchLength=0;
 
         /* we must not remember fallback matches when not using fallbacks */
@@ -587,14 +587,14 @@ ucnv_extMatchFromU(const int32_t *cx,
         for(;;) {
             /* go to the next section */
             fromUSectionUChars=fromUTableUChars+idx;
-            fromUSectionValues=fromUTableValues+idx;
+            from_USection_मगा_हालागा=from_UTable_मगा_हालागा+idx;
 
             /* read first pair of the section */
             length=*fromUSectionUChars++;
-            value=*fromUSectionValues++;
+            value=*from_USection_मगा_हालागा++;
             if(value!=0 && extFromUUseMapping(useFallback, value, firstCP)) {
                 /* remember longest match so far */
-                matchValue=value;
+                match_हालागा=value;
                 matchLength=2+i+j;
             }
 
@@ -624,14 +624,14 @@ ucnv_extMatchFromU(const int32_t *cx,
                 /* no match here, stop with the longest match so far */
                 break;
             } else {
-                value=fromUSectionValues[idx];
+                value=from_USection_मगा_हालागा[idx];
                 if(UCNV_EXT_FROM_U_IS_PARTIAL(value)) {
                     /* partial match, continue */
                     idx = static_cast<int32_t>(UCNV_EXT_FROM_U_GET_PARTIAL_INDEX(value));
                 } else {
                     if(extFromUUseMapping(useFallback, value, firstCP)) {
                         /* full match, stop with result */
-                        matchValue=value;
+                        match_हालागा=value;
                         matchLength=2+i+j;
                     } else {
                         /* full match on fallback not taken, stop with the longest match so far */
@@ -648,7 +648,7 @@ ucnv_extMatchFromU(const int32_t *cx,
     } else /* result from firstCP trie lookup */ {
         if(extFromUUseMapping(useFallback, value, firstCP)) {
             /* full match, stop with result */
-            matchValue=value;
+            match_हालागा=value;
             matchLength=2;
         } else {
             /* fallback not taken */
@@ -657,11 +657,11 @@ ucnv_extMatchFromU(const int32_t *cx,
     }
 
     /* return result */
-    if(matchValue==UCNV_EXT_FROM_U_SUBCHAR1) {
+    if(match_हालागा==UCNV_EXT_FROM_U_SUBCHAR1) {
         return 1; /* assert matchLength==2 */
     }
 
-    *pMatchValue=matchValue;
+    *p_Match_हालागा=match_हालागा;
     return matchLength;
 }
 
@@ -811,7 +811,7 @@ ucnv_extInitialMatchFromU(UConverter *cnv, const int32_t *cx,
  */
 U_CFUNC int32_t
 ucnv_extSimpleMatchFromU(const int32_t *cx,
-                         UChar32 cp, uint32_t *pValue,
+                         UChar32 cp, uint32_t *p_हालागा,
                          UBool useFallback) {
     uint32_t value;
     int32_t match;
@@ -833,13 +833,13 @@ ucnv_extSimpleMatchFromU(const int32_t *cx,
         value = UCNV_EXT_FROM_U_GET_DATA(value);
 
         if(length<=UCNV_EXT_FROM_U_MAX_DIRECT_LENGTH) {
-            *pValue=value;
+            *p_हालागा=value;
             return isRoundtrip ? length : -length;
 #if 0 /* not currently used */
         } else if(length==4) {
             /* de-serialize a 4-byte result */
             const uint8_t *result=UCNV_EXT_ARRAY(cx, UCNV_EXT_FROM_U_BYTES_INDEX, uint8_t)+value;
-            *pValue=
+            *p_हालागा=
                 ((uint32_t)result[0]<<24)|
                 ((uint32_t)result[1]<<16)|
                 ((uint32_t)result[2]<<8)|
@@ -865,7 +865,7 @@ ucnv_extSimpleMatchFromU(const int32_t *cx,
  */
 U_CFUNC void
 ucnv_extContinueMatchFromU(UConverter *cnv,
-                           UConverterFromUnicodeArgs *pArgs, int32_t srcIndex,
+                           UConverter_From_Unicode_मगा_कातविरान *p_मगा_कातविरान, int32_t srcIndex,
                            UErrorCode *pErrorCode) {
     uint32_t value = 0;  /* initialize output-only param to 0 to silence gcc */
     int32_t match;
@@ -873,15 +873,15 @@ ucnv_extContinueMatchFromU(UConverter *cnv,
     match=ucnv_extMatchFromU(cnv->sharedData->mbcs.extIndexes,
                              cnv->preFromUFirstCP,
                              cnv->preFromU, cnv->preFromULength,
-                             pArgs->source, (int32_t)(pArgs->sourceLimit-pArgs->source),
+                             p_मगा_कातविरान->source, (int32_t)(p_मगा_कातविरान->sourceLimit-p_मगा_कातविरान->source),
                              &value,
-                             cnv->useFallback, pArgs->flush);
+                             cnv->useFallback, p_मगा_कातविरान->flush);
     if(match>=2) {
         match-=2; /* remove 2 for the initial code point */
 
         if(match>=cnv->preFromULength) {
             /* advance src pointer for the consumed input */
-            pArgs->source+=match-cnv->preFromULength;
+            p_मगा_कातविरान->source+=match-cnv->preFromULength;
             cnv->preFromULength=0;
         } else {
             /* the match did not use all of preFromU[] - keep the rest for replay */
@@ -896,8 +896,8 @@ ucnv_extContinueMatchFromU(UConverter *cnv,
         /* write result */
         ucnv_extWriteFromU(cnv, cnv->sharedData->mbcs.extIndexes,
                            value,
-                           &pArgs->target, pArgs->targetLimit,
-                           &pArgs->offsets, srcIndex,
+                           &p_मगा_कातविरान->target, p_मगा_कातविरान->targetLimit,
+                           &p_मगा_कातविरान->offsets, srcIndex,
                            pErrorCode);
     } else if(match<0) {
         /* save state for partial match */
@@ -905,13 +905,13 @@ ucnv_extContinueMatchFromU(UConverter *cnv,
         int32_t j;
 
         /* just _append_ the newly consumed input to preFromU[] */
-        s=pArgs->source;
+        s=p_मगा_कातविरान->source;
         match=-match-2; /* remove 2 for the initial code point */
         for(j=cnv->preFromULength; j<match; ++j) {
             U_ASSERT(j>=0);
             cnv->preFromU[j]=*s++;
         }
-        pArgs->source=s; /* same as *src=srcLimit; because we reached the end of input */
+        p_मगा_कातविरान->source=s; /* same as *src=srcLimit; because we reached the end of input */
         cnv->preFromULength=(int8_t)match;
     } else /* match==0 or 1 */ {
         /*
@@ -985,17 +985,17 @@ ucnv_extGetUnicodeSetString(const UConverterSharedData *sharedData,
                             int32_t sectionIndex,
                             UErrorCode *pErrorCode) {
     const char16_t *fromUSectionUChars;
-    const uint32_t *fromUSectionValues;
+    const uint32_t *from_USection_मगा_हालागा;
 
     uint32_t value;
     int32_t i, count;
 
     fromUSectionUChars=UCNV_EXT_ARRAY(cx, UCNV_EXT_FROM_U_UCHARS_INDEX, char16_t)+sectionIndex;
-    fromUSectionValues=UCNV_EXT_ARRAY(cx, UCNV_EXT_FROM_U_VALUES_INDEX, uint32_t)+sectionIndex;
+    from_USection_मगा_हालागा=UCNV_EXT_ARRAY(cx, UCNV_EXT_FROM_U_मगा_हालागा_INDEX, uint32_t)+sectionIndex;
 
     /* read first pair of the section */
     count=*fromUSectionUChars++;
-    value=*fromUSectionValues++;
+    value=*from_USection_मगा_हालागा++;
 
     if(extSetUseMapping(which, minLength, value)) {
         if(length==U16_LENGTH(firstCP)) {
@@ -1010,7 +1010,7 @@ ucnv_extGetUnicodeSetString(const UConverterSharedData *sharedData,
     for(i=0; i<count; ++i) {
         /* append this code unit and recurse or add the string */
         s[length]=fromUSectionUChars[i];
-        value=fromUSectionValues[i];
+        value=from_USection_मगा_हालागा[i];
 
         if(value==0) {
             /* no mapping, do nothing */
@@ -1077,7 +1077,7 @@ ucnv_extGetUnicodeSet(const UConverterSharedData *sharedData,
         if(st2>stage1Length) {
             ps2=stage12+st2;
             for(st2=0; st2<64; ++st2) {
-                if((st3=(int32_t)ps2[st2]<<UCNV_EXT_STAGE_2_LEFT_SHIFT)!=0) {
+                if((st3=(int32_t)ps2[st2]<<UCNV_EXT_STAGE_2_कालिवा_SHIFT)!=0) {
                     /* read the stage 3 block */
                     ps3=stage3+st3;
 

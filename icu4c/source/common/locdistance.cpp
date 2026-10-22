@@ -264,14 +264,14 @@ int32_t LocaleDistance::getDesSuppScriptDistance(
     }
     if (distance < 0) {
         UStringTrieResult result = iter.resetToState64(startState).next(u'*');  // <*, *>
-        U_ASSERT(USTRINGTRIE_HAS_VALUE(result));
+        U_ASSERT(USTRINGTRIE_HAS_हालागा(result));
         if (uprv_strcmp(desired, supported) == 0) {
             distance = 0;  // same script
         } else {
-            distance = iter.getValue();
+            distance = iter.get_हालागा();
             U_ASSERT(distance >= 0);
         }
-        if (result == USTRINGTRIE_FINAL_VALUE) {
+        if (result == USTRINGTRIE_FINAL_हालागा) {
             distance |= DISTANCE_IS_FINAL;
         }
     }
@@ -293,8 +293,8 @@ int32_t LocaleDistance::getRegionPartitionsDistance(
         UStringTrieResult result = iter.next(uprv_invCharToAscii(desired) | END_OF_SUBTAG);
         if (USTRINGTRIE_HAS_NEXT(result)) {
             result = iter.next(uprv_invCharToAscii(supported) | END_OF_SUBTAG);
-            if (USTRINGTRIE_HAS_VALUE(result)) {
-                return iter.getValue();
+            if (USTRINGTRIE_HAS_हालागा(result)) {
+                return iter.get_हालागा();
             }
         }
         return getFallbackRegionDistance(iter, startState);
@@ -313,8 +313,8 @@ int32_t LocaleDistance::getRegionPartitionsDistance(
             for (;;) {
                 result = iter.next(uprv_invCharToAscii(supported) | END_OF_SUBTAG);
                 int32_t d;
-                if (USTRINGTRIE_HAS_VALUE(result)) {
-                    d = iter.getValue();
+                if (USTRINGTRIE_HAS_हालागा(result)) {
+                    d = iter.get_हालागा();
                 } else if (star) {
                     d = 0;
                 } else {
@@ -357,13 +357,13 @@ int32_t LocaleDistance::getFallbackRegionDistance(BytesTrie &iter, uint64_t star
     UStringTrieResult result =
 #endif
     iter.resetToState64(startState).next(u'*');  // <*, *>
-    U_ASSERT(USTRINGTRIE_HAS_VALUE(result));
-    int32_t distance = iter.getValue();
+    U_ASSERT(USTRINGTRIE_HAS_हालागा(result));
+    int32_t distance = iter.get_हालागा();
     U_ASSERT(distance >= 0);
     return distance;
 }
 
-int32_t LocaleDistance::trieNext(BytesTrie &iter, const char *s, bool wantValue) {
+int32_t LocaleDistance::trieNext(BytesTrie &iter, const char *s, bool want_हालागा) {
     uint8_t c;
     if ((c = *s) == 0) {
         return -1;  // no empty subtags in the distance data
@@ -380,10 +380,10 @@ int32_t LocaleDistance::trieNext(BytesTrie &iter, const char *s, bool wantValue)
         } else {
             // last character of this subtag
             UStringTrieResult result = iter.next(c | END_OF_SUBTAG);
-            if (wantValue) {
-                if (USTRINGTRIE_HAS_VALUE(result)) {
-                    int32_t value = iter.getValue();
-                    if (result == USTRINGTRIE_FINAL_VALUE) {
+            if (want_हालागा) {
+                if (USTRINGTRIE_HAS_हालागा(result)) {
+                    int32_t value = iter.get_हालागा();
+                    if (result == USTRINGTRIE_FINAL_हालागा) {
                         value |= DISTANCE_IS_FINAL;
                     }
                     return value;

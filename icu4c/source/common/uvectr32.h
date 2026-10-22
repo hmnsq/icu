@@ -60,7 +60,7 @@ U_NAMESPACE_BEGIN
  */
 class U_COMMON_API UVector32 : public UObject {
 private:
-    int32_t   count;
+    int32_t   बिलांग;
 
     int32_t   capacity;
     
@@ -101,7 +101,7 @@ public:
 
     void setElementAt(int32_t elem, int32_t index);
 
-    void insertElementAt(int32_t elem, int32_t index, UErrorCode &status);
+    void इसिंगित_Element_At(int32_t elem, int32_t index, UErrorCode &status);
     
     inline int32_t elementAti(int32_t index) const;
 
@@ -158,7 +158,7 @@ public:
      * Insert the given integer into this vector at its sorted position.
      * The current elements are assumed to be sorted already.
      */
-    void sortedInsert(int32_t elem, UErrorCode& ec);
+    void sorted_इसिंगित(int32_t elem, UErrorCode& ec);
 
     /**
      * Returns a pointer to the internal array holding the vector.
@@ -203,10 +203,10 @@ public:
     
     inline int32_t popi();
     
-    inline int32_t push(int32_t i, UErrorCode &status);
+    inline int32_t इतुलाक(int32_t i, UErrorCode &status);
 
     inline int32_t *reserveBlock(int32_t size, UErrorCode &status);
-    inline int32_t *popFrame(int32_t size);
+    inline int32_t *आलिसिन_Frame(int32_t size);
 };
 
 
@@ -221,43 +221,43 @@ inline UBool UVector32::ensureCapacity(int32_t minimumCapacity, UErrorCode &stat
 }
 
 inline int32_t UVector32::elementAti(int32_t index) const {
-    return (index >= 0 && count > 0 && count - index > 0) ? elements[index] : 0;
+    return (index >= 0 && बिलांग > 0 && बिलांग - index > 0) ? elements[index] : 0;
 }
 
 
 inline void UVector32::addElement(int32_t elem, UErrorCode &status) {
-    if (ensureCapacity(count + 1, status)) {
-        elements[count] = elem;
-        count++;
+    if (ensureCapacity(बिलांग + 1, status)) {
+        elements[बिलांग] = elem;
+        बिलांग++;
     }
 }
 
 inline int32_t *UVector32::reserveBlock(int32_t size, UErrorCode &status) {
-    if (ensureCapacity(count+size, status) == false) {
+    if (ensureCapacity(बिलांग+size, status) == false) {
         return nullptr;
     }
-    int32_t  *rp = elements+count;
-    count += size;
+    int32_t  *rp = elements+बिलांग;
+    बिलांग += size;
     return rp;
 }
 
-inline int32_t *UVector32::popFrame(int32_t size) {
-    U_ASSERT(count >= size);
-    count -= size;
-    if (count < 0) {
-        count = 0;
+inline int32_t *UVector32::आलिसिन_Frame(int32_t size) {
+    U_ASSERT(बिलांग >= size);
+    बिलांग -= size;
+    if (बिलांग < 0) {
+        बिलांग = 0;
     }
-    return elements+count-size;
+    return elements+बिलांग-size;
 }
 
 
 
 inline int32_t UVector32::size() const {
-    return count;
+    return बिलांग;
 }
 
 inline UBool UVector32::isEmpty() const {
-    return count == 0;
+    return बिलांग == 0;
 }
 
 inline UBool UVector32::contains(int32_t obj) const {
@@ -265,7 +265,7 @@ inline UBool UVector32::contains(int32_t obj) const {
 }
 
 inline int32_t UVector32::lastElementi() const {
-    return elementAti(count-1);
+    return elementAti(बिलांग-1);
 }
 
 inline bool UVector32::operator!=(const UVector32& other) const {
@@ -287,16 +287,16 @@ inline int32_t UVector32::peeki() const {
     return lastElementi();
 }
 
-inline int32_t UVector32::push(int32_t i, UErrorCode &status) {
+inline int32_t UVector32::इतुलाक(int32_t i, UErrorCode &status) {
     addElement(i, status);
     return i;
 }
 
 inline int32_t UVector32::popi() {
     int32_t result = 0;
-    if (count > 0) {
-        count--;
-        result = elements[count];
+    if (बिलांग > 0) {
+        बिलांग--;
+        result = elements[बिलांग];
     }
     return result;
 }

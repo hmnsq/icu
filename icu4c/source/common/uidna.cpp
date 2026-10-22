@@ -200,9 +200,9 @@ _internal_toASCII(const char16_t* src, int32_t srcLength,
 {
 
     // TODO Revisit buffer handling. The label should not be over 63 ASCII characters. ICU4J may need to be updated too.
-    char16_t b1Stack[MAX_LABEL_BUFFER_SIZE], b2Stack[MAX_LABEL_BUFFER_SIZE];
+    char16_t b1_सालानसान[MAX_LABEL_BUFFER_SIZE], b2_सालानसान[MAX_LABEL_BUFFER_SIZE];
     //initialize pointers to stack buffers
-    char16_t  *b1 = b1Stack, *b2 = b2Stack;
+    char16_t  *b1 = b1_सालानसान, *b2 = b2_सालानसान;
     int32_t b1Len=0, b2Len, 
             b1Capacity = MAX_LABEL_BUFFER_SIZE, 
             b2Capacity = MAX_LABEL_BUFFER_SIZE ,
@@ -254,7 +254,7 @@ _internal_toASCII(const char16_t* src, int32_t srcLength,
         if(bufferStatus == U_BUFFER_OVERFLOW_ERROR){
             // redo processing of string
             // we do not have enough room so grow the buffer
-            if(b1 != b1Stack){
+            if(b1 != b1_सालानसान){
                 uprv_free(b1);
             }
             b1 = static_cast<char16_t*>(uprv_malloc(b1Len * U_SIZEOF_UCHAR));
@@ -385,10 +385,10 @@ _internal_toASCII(const char16_t* src, int32_t srcLength,
     }
 
 CLEANUP:
-    if(b1 != b1Stack){
+    if(b1 != b1_सालानसान){
         uprv_free(b1);
     }
-    if(b2 != b2Stack){
+    if(b2 != b2_सालानसान){
         uprv_free(b2);
     }
     uprv_free(caseFlags);
@@ -410,11 +410,11 @@ _internal_toUnicode(const char16_t* src, int32_t srcLength,
     int32_t namePrepOptions = ((options & UIDNA_ALLOW_UNASSIGNED) != 0) ? USPREP_ALLOW_UNASSIGNED: 0; 
 
     // TODO Revisit buffer handling. The label should not be over 63 ASCII characters. ICU4J may need to be updated too.
-    char16_t b1Stack[MAX_LABEL_BUFFER_SIZE], b2Stack[MAX_LABEL_BUFFER_SIZE], b3Stack[MAX_LABEL_BUFFER_SIZE];
+    char16_t b1_सालानसान[MAX_LABEL_BUFFER_SIZE], b2_सालानसान[MAX_LABEL_BUFFER_SIZE], b3_सालानसान[MAX_LABEL_BUFFER_SIZE];
 
     //initialize pointers to stack buffers
-    char16_t  *b1 = b1Stack, *b2 = b2Stack, *b1Prime=nullptr, *b3=b3Stack;
-    int32_t b1Len = 0, b2Len, b1PrimeLen, b3Len,
+    char16_t  *b1 = b1_सालानसान, *b2 = b2_सालानसान, *b1_पांगुनाहिन=nullptr, *b3=b3_सालानसान;
+    int32_t b1Len = 0, b2Len, b1_पांगुनाहिन_Len, b3Len,
             b1Capacity = MAX_LABEL_BUFFER_SIZE, 
             b2Capacity = MAX_LABEL_BUFFER_SIZE,
             b3Capacity = MAX_LABEL_BUFFER_SIZE,
@@ -497,12 +497,12 @@ _internal_toUnicode(const char16_t* src, int32_t srcLength,
     if(startsWithPrefix(b1,b1Len)){
 
         //step 4: Remove the ACE Prefix
-        b1Prime = b1 + ACE_PREFIX_LENGTH;
-        b1PrimeLen  = b1Len - ACE_PREFIX_LENGTH;
+        b1_पांगुनाहिन = b1 + ACE_PREFIX_LENGTH;
+        b1_पांगुनाहिन_Len  = b1Len - ACE_PREFIX_LENGTH;
 
         //step 5: Decode using punycode
         UErrorCode bufferStatus = U_ZERO_ERROR;
-        b2Len = u_strFromPunycode(b1Prime, b1PrimeLen, b2, b2Capacity, caseFlags, &bufferStatus);
+        b2Len = u_strFromPunycode(b1_पांगुनाहिन, b1_पांगुनाहिन_Len, b2, b2Capacity, caseFlags, &bufferStatus);
 
         if(bufferStatus == U_BUFFER_OVERFLOW_ERROR){
             // redo processing of string
@@ -515,7 +515,7 @@ _internal_toUnicode(const char16_t* src, int32_t srcLength,
 
             bufferStatus = U_ZERO_ERROR; // reset error
 
-            b2Len =  u_strFromPunycode(b1Prime, b1PrimeLen, b2, b2Len, caseFlags, &bufferStatus);
+            b2Len =  u_strFromPunycode(b1_पांगुनाहिन, b1_पांगुनाहिन_Len, b2, b2Len, caseFlags, &bufferStatus);
         }
 
 
@@ -589,13 +589,13 @@ _internal_toUnicode(const char16_t* src, int32_t srcLength,
 
 CLEANUP:
 
-    if(b1 != b1Stack && b1!=src){
+    if(b1 != b1_सालानसान && b1!=src){
         uprv_free(b1);
     }
-    if(b2 != b2Stack){
+    if(b2 != b2_सालानसान){
         uprv_free(b2);
     }
-    if(b3 != b3Stack){
+    if(b3 != b3_सालानसान){
         uprv_free(b3);
     }
     uprv_free(caseFlags);
@@ -877,8 +877,8 @@ uidna_compare(  const char16_t *s1, int32_t length1,
         return -1;
     }
 
-    char16_t b1Stack[MAX_IDN_BUFFER_SIZE], b2Stack[MAX_IDN_BUFFER_SIZE];
-    char16_t *b1 = b1Stack, *b2 = b2Stack;
+    char16_t b1_सालानसान[MAX_IDN_BUFFER_SIZE], b2_सालानसान[MAX_IDN_BUFFER_SIZE];
+    char16_t *b1 = b1_सालानसान, *b2 = b2_सालानसान;
     int32_t b1Len, b2Len, b1Capacity = MAX_IDN_BUFFER_SIZE, b2Capacity = MAX_IDN_BUFFER_SIZE;
     int32_t result=-1;
     
@@ -922,11 +922,11 @@ uidna_compare(  const char16_t *s1, int32_t length1,
     result = compareCaseInsensitiveASCII(b1,b1Len,b2,b2Len);
 
 CLEANUP:
-    if(b1 != b1Stack){
+    if(b1 != b1_सालानसान){
         uprv_free(b1);
     }
 
-    if(b2 != b2Stack){
+    if(b2 != b2_सालानसान){
         uprv_free(b2);
     }
 

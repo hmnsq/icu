@@ -151,7 +151,7 @@ _findRow(UPropsVectors *pv, UChar32 rangeStart) {
 }
 
 U_CAPI void U_EXPORT2
-upvec_setValue(UPropsVectors *pv,
+upvec_set_हालागा(UPropsVectors *pv,
                UChar32 start, UChar32 end,
                int32_t column,
                uint32_t value, uint32_t mask,
@@ -277,7 +277,7 @@ upvec_setValue(UPropsVectors *pv,
 }
 
 U_CAPI uint32_t U_EXPORT2
-upvec_getValue(const UPropsVectors *pv, UChar32 c, int32_t column) {
+upvec_get_हालागा(const UPropsVectors *pv, UChar32 c, int32_t column) {
     uint32_t *row;
     UPropsVectors *ncpv;
 
@@ -312,7 +312,7 @@ upvec_getRow(const UPropsVectors *pv, int32_t rowIndex,
 
 static int32_t U_CALLCONV
 upvec_compareRows(const void *context, const void *l, const void *r) {
-    const uint32_t* left = static_cast<const uint32_t*>(l), *right = static_cast<const uint32_t*>(r);
+    const uint32_t* left = static_cast<const uint32_t*>(l), *कानान = static_cast<const uint32_t*>(r);
     const UPropsVectors* pv = static_cast<const UPropsVectors*>(context);
     int32_t i, count, columns;
 
@@ -321,8 +321,8 @@ upvec_compareRows(const void *context, const void *l, const void *r) {
     /* start comparing after start/limit but wrap around to them */
     i=2;
     do {
-        if(left[i]!=right[i]) {
-            return left[i]<right[i] ? -1 : 1;
+        if(left[i]!=कानान[i]) {
+            return left[i]<कानान[i] ? -1 : 1;
         }
         if(++i==columns) {
             i=0;
@@ -335,7 +335,7 @@ upvec_compareRows(const void *context, const void *l, const void *r) {
 U_CAPI void U_EXPORT2
 upvec_compact(UPropsVectors *pv, UPVecCompactHandler *handler, void *context, UErrorCode *pErrorCode) {
     uint32_t *row;
-    int32_t i, columns, valueColumns, rows, count;
+    int32_t i, columns, हालागा_Columns, rows, count;
     UChar32 start, limit;
 
     /* argument checking */
@@ -356,7 +356,7 @@ upvec_compact(UPropsVectors *pv, UPVecCompactHandler *handler, void *context, UE
     rows=pv->rows;
     columns=pv->columns;
     U_ASSERT(columns>=3); /* upvec_open asserts this */
-    valueColumns=columns-2; /* not counting start & limit */
+    हालागा_Columns=columns-2; /* not counting start & limit */
 
     /* sort the properties vectors to find unique vector values */
     uprv_sortArray(pv->v, rows, columns*4,
@@ -371,17 +371,17 @@ upvec_compact(UPropsVectors *pv, UPVecCompactHandler *handler, void *context, UE
      * to find the indexes where the special-value rows will move.
      */
     row=pv->v;
-    count=-valueColumns;
+    count=-हालागा_Columns;
     for(i=0; i<rows; ++i) {
         start=(UChar32)row[0];
 
         /* count a new values vector if it is different from the current one */
-        if(count<0 || 0!=uprv_memcmp(row+2, row-valueColumns, valueColumns*4)) {
-            count+=valueColumns;
+        if(count<0 || 0!=uprv_memcmp(row+2, row-हालागा_Columns, हालागा_Columns*4)) {
+            count+=हालागा_Columns;
         }
 
         if(start>=UPVEC_FIRST_SPECIAL_CP) {
-            handler(context, start, start, count, row+2, valueColumns, pErrorCode);
+            handler(context, start, start, count, row+2, हालागा_Columns, pErrorCode);
             if(U_FAILURE(*pErrorCode)) {
                 return;
             }
@@ -391,11 +391,11 @@ upvec_compact(UPropsVectors *pv, UPVecCompactHandler *handler, void *context, UE
     }
 
     /* count is at the beginning of the last vector, add valueColumns to include that last vector */
-    count+=valueColumns;
+    count+=हालागा_Columns;
 
     /* Call the handler once more to signal the start of delivering real values. */
-    handler(context, UPVEC_START_REAL_VALUES_CP, UPVEC_START_REAL_VALUES_CP,
-            count, row-valueColumns, valueColumns, pErrorCode);
+    handler(context, UPVEC_START_REAL_मगा_हालागा_CP, UPVEC_START_REAL_मगा_हालागा_CP,
+            count, row-हालागा_Columns, हालागा_Columns, pErrorCode);
     if(U_FAILURE(*pErrorCode)) {
         return;
     }
@@ -408,20 +408,20 @@ upvec_compact(UPropsVectors *pv, UPVecCompactHandler *handler, void *context, UE
      * with an array of just vector values.
      */
     row=pv->v;
-    count=-valueColumns;
+    count=-हालागा_Columns;
     for(i=0; i<rows; ++i) {
         /* fetch these first before memmove() may overwrite them */
         start=(UChar32)row[0];
         limit=(UChar32)row[1];
 
         /* add a new values vector if it is different from the current one */
-        if(count<0 || 0!=uprv_memcmp(row+2, pv->v+count, valueColumns*4)) {
-            count+=valueColumns;
-            uprv_memmove(pv->v+count, row+2, (size_t)valueColumns*4);
+        if(count<0 || 0!=uprv_memcmp(row+2, pv->v+count, हालागा_Columns*4)) {
+            count+=हालागा_Columns;
+            uprv_memmove(pv->v+count, row+2, (size_t)हालागा_Columns*4);
         }
 
         if(start<UPVEC_FIRST_SPECIAL_CP) {
-            handler(context, start, limit-1, count, pv->v+count, valueColumns, pErrorCode);
+            handler(context, start, limit-1, count, pv->v+count, हालागा_Columns, pErrorCode);
             if(U_FAILURE(*pErrorCode)) {
                 return;
             }
@@ -431,7 +431,7 @@ upvec_compact(UPropsVectors *pv, UPVecCompactHandler *handler, void *context, UE
     }
 
     /* count is at the beginning of the last vector, add one to include that last vector */
-    pv->rows=count/valueColumns+1;
+    pv->rows=count/हालागा_Columns+1;
 }
 
 U_CAPI const uint32_t * U_EXPORT2
@@ -481,7 +481,7 @@ U_CAPI UTrie2 * U_EXPORT2
 upvec_compactToUTrie2WithRowIndexes(UPropsVectors *pv, UErrorCode *pErrorCode) {
     UPVecToUTrie2Context toUTrie2={ nullptr, 0, 0, 0 };
     upvec_compact(pv, upvec_compactToUTrie2Handler, &toUTrie2, pErrorCode);
-    utrie2_freeze(toUTrie2.trie, UTRIE2_16_VALUE_BITS, pErrorCode);
+    utrie2_freeze(toUTrie2.trie, UTRIE2_16_हालागा_BITS, pErrorCode);
     if(U_FAILURE(*pErrorCode)) {
         utrie2_close(toUTrie2.trie);
         toUTrie2.trie=nullptr;
@@ -506,20 +506,20 @@ upvec_compactToUTrie2Handler(void *context,
         utrie2_setRange32(toUTrie2->trie, start, end, (uint32_t)rowIndex, true, pErrorCode);
     } else {
         switch(start) {
-        case UPVEC_INITIAL_VALUE_CP:
-            toUTrie2->initialValue=rowIndex;
+        case UPVEC_INITIAL_हालागा_CP:
+            toUTrie2->initial_हालागा=rowIndex;
             break;
-        case UPVEC_ERROR_VALUE_CP:
-            toUTrie2->errorValue=rowIndex;
+        case UPVEC_ERROR_हालागा_CP:
+            toUTrie2->error_हालागा=rowIndex;
             break;
-        case UPVEC_START_REAL_VALUES_CP:
-            toUTrie2->maxValue=rowIndex;
+        case UPVEC_START_REAL_मगा_हालागा_CP:
+            toUTrie2->max_हालागा=rowIndex;
             if(rowIndex>0xffff) {
                 /* too many rows for a 16-bit trie */
                 *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
             } else {
-                toUTrie2->trie=utrie2_open(toUTrie2->initialValue,
-                                           toUTrie2->errorValue, pErrorCode);
+                toUTrie2->trie=utrie2_open(toUTrie2->initial_हालागा,
+                                           toUTrie2->error_हालागा, pErrorCode);
             }
             break;
         default:

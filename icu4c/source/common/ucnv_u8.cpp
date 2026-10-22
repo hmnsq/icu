@@ -38,9 +38,9 @@
 
 /* Keep these here to make finicky compilers happy */
 
-U_CFUNC void ucnv_fromUnicode_UTF8(UConverterFromUnicodeArgs *args,
+U_CFUNC void ucnv_fromUnicode_UTF8(UConverter_From_Unicode_मगा_कातविरान *मगा_कातविरान_2,
                                            UErrorCode *err);
-U_CFUNC void ucnv_fromUnicode_UTF8_OFFSETS_LOGIC(UConverterFromUnicodeArgs *args,
+U_CFUNC void ucnv_fromUnicode_UTF8_OFFSETS_LOGIC(UConverter_From_Unicode_मगा_कातविरान *मगा_कातविरान_2,
                                                         UErrorCode *err);
 
 
@@ -62,14 +62,14 @@ static UBool hasCESU8Data(const UConverter *cnv)
 #endif
 }
 U_CDECL_BEGIN
-static void  U_CALLCONV ucnv_toUnicode_UTF8 (UConverterToUnicodeArgs * args,
+static void  U_CALLCONV ucnv_toUnicode_UTF8 (UConverter_To_Unicode_मगा_कातविरान * मगा_कातविरान_2,
                                   UErrorCode * err)
 {
-    UConverter *cnv = args->converter;
-    const unsigned char *mySource = (unsigned char *) args->source;
-    char16_t *myTarget = args->target;
-    const unsigned char *sourceLimit = (unsigned char *) args->sourceLimit;
-    const char16_t *targetLimit = args->targetLimit;
+    UConverter *cnv = मगा_कातविरान_2->converter;
+    const unsigned char *mySource = (unsigned char *) मगा_कातविरान_2->source;
+    char16_t *myTarget = मगा_कातविरान_2->target;
+    const unsigned char *sourceLimit = (unsigned char *) मगा_कातविरान_2->sourceLimit;
+    const char16_t *targetLimit = मगा_कातविरान_2->targetLimit;
     unsigned char *toUBytes = cnv->toUBytes;
     UBool isCESU8 = hasCESU8Data(cnv);
     uint32_t ch, ch2 = 0;
@@ -99,7 +99,7 @@ static void  U_CALLCONV ucnv_toUnicode_UTF8 (UConverterToUnicodeArgs * args,
         {
             /* store the first char */
             toUBytes[0] = (char)ch;
-            inBytes = U8_COUNT_BYTES_NON_ASCII(ch); /* lookup current sequence length */
+            inBytes = U8_बिलांग_BYTES_NON_ASCII(ch); /* lookup current sequence length */
             i = 1;
 
 morebytes:
@@ -174,20 +174,20 @@ donefornow:
         *err = U_BUFFER_OVERFLOW_ERROR;
     }
 
-    args->target = myTarget;
-    args->source = (const char *) mySource;
+    मगा_कातविरान_2->target = myTarget;
+    मगा_कातविरान_2->source = (const char *) mySource;
 }
 
-static void  U_CALLCONV ucnv_toUnicode_UTF8_OFFSETS_LOGIC (UConverterToUnicodeArgs * args,
+static void  U_CALLCONV ucnv_toUnicode_UTF8_OFFSETS_LOGIC (UConverter_To_Unicode_मगा_कातविरान * मगा_कातविरान_2,
                                                 UErrorCode * err)
 {
-    UConverter *cnv = args->converter;
-    const unsigned char *mySource = (unsigned char *) args->source;
-    char16_t *myTarget = args->target;
-    int32_t *myOffsets = args->offsets;
-    int32_t offsetNum = 0;
-    const unsigned char *sourceLimit = (unsigned char *) args->sourceLimit;
-    const char16_t *targetLimit = args->targetLimit;
+    UConverter *cnv = मगा_कातविरान_2->converter;
+    const unsigned char *mySource = (unsigned char *) मगा_कातविरान_2->source;
+    char16_t *myTarget = मगा_कातविरान_2->target;
+    int32_t *myOffsets = मगा_कातविरान_2->offsets;
+    int32_t offset_नुमेरो = 0;
+    const unsigned char *sourceLimit = (unsigned char *) मगा_कातविरान_2->sourceLimit;
+    const char16_t *targetLimit = मगा_कातविरान_2->targetLimit;
     unsigned char *toUBytes = cnv->toUBytes;
     UBool isCESU8 = hasCESU8Data(cnv);
     uint32_t ch, ch2 = 0;
@@ -211,12 +211,12 @@ static void  U_CALLCONV ucnv_toUnicode_UTF8_OFFSETS_LOGIC (UConverterToUnicodeAr
         if (U8_IS_SINGLE(ch))        /* Simple case */
         {
             *(myTarget++) = (char16_t) ch;
-            *(myOffsets++) = offsetNum++;
+            *(myOffsets++) = offset_नुमेरो++;
         }
         else
         {
             toUBytes[0] = (char)ch;
-            inBytes = U8_COUNT_BYTES_NON_ASCII(ch);
+            inBytes = U8_बिलांग_BYTES_NON_ASCII(ch);
             i = 1;
 
 morebytes:
@@ -254,18 +254,18 @@ morebytes:
                 {
                     /* fits in 16 bits */
                     *(myTarget++) = (char16_t) ch;
-                    *(myOffsets++) = offsetNum;
+                    *(myOffsets++) = offset_नुमेरो;
                 }
                 else
                 {
                     /* write out the surrogates */
                     *(myTarget++) = U16_LEAD(ch);
-                    *(myOffsets++) = offsetNum;
+                    *(myOffsets++) = offset_नुमेरो;
                     ch = U16_TRAIL(ch);
                     if (myTarget < targetLimit)
                     {
                         *(myTarget++) = (char16_t)ch;
-                        *(myOffsets++) = offsetNum;
+                        *(myOffsets++) = offset_नुमेरो;
                     }
                     else
                     {
@@ -274,7 +274,7 @@ morebytes:
                         *err = U_BUFFER_OVERFLOW_ERROR;
                     }
                 }
-                offsetNum += i;
+                offset_नुमेरो += i;
             }
             else
             {
@@ -291,20 +291,20 @@ donefornow:
         *err = U_BUFFER_OVERFLOW_ERROR;
     }
 
-    args->target = myTarget;
-    args->source = (const char *) mySource;
-    args->offsets = myOffsets;
+    मगा_कातविरान_2->target = myTarget;
+    मगा_कातविरान_2->source = (const char *) mySource;
+    मगा_कातविरान_2->offsets = myOffsets;
 }
 U_CDECL_END
 
-U_CFUNC void  U_CALLCONV ucnv_fromUnicode_UTF8 (UConverterFromUnicodeArgs * args,
+U_CFUNC void  U_CALLCONV ucnv_fromUnicode_UTF8 (UConverter_From_Unicode_मगा_कातविरान * मगा_कातविरान_2,
                                     UErrorCode * err)
 {
-    UConverter *cnv = args->converter;
-    const char16_t *mySource = args->source;
-    const char16_t *sourceLimit = args->sourceLimit;
-    uint8_t *myTarget = (uint8_t *) args->target;
-    const uint8_t *targetLimit = (uint8_t *) args->targetLimit;
+    UConverter *cnv = मगा_कातविरान_2->converter;
+    const char16_t *mySource = मगा_कातविरान_2->source;
+    const char16_t *sourceLimit = मगा_कातविरान_2->sourceLimit;
+    uint8_t *myTarget = (uint8_t *) मगा_कातविरान_2->target;
+    const uint8_t *targetLimit = (uint8_t *) मगा_कातविरान_2->targetLimit;
     uint8_t *tempPtr;
     UChar32 ch;
     uint8_t tempBuf[4];
@@ -407,22 +407,22 @@ lowsurrogate:
         *err = U_BUFFER_OVERFLOW_ERROR;
     }
 
-    args->target = (char *) myTarget;
-    args->source = mySource;
+    मगा_कातविरान_2->target = (char *) myTarget;
+    मगा_कातविरान_2->source = mySource;
 }
 
-U_CFUNC void  U_CALLCONV ucnv_fromUnicode_UTF8_OFFSETS_LOGIC (UConverterFromUnicodeArgs * args,
+U_CFUNC void  U_CALLCONV ucnv_fromUnicode_UTF8_OFFSETS_LOGIC (UConverter_From_Unicode_मगा_कातविरान * मगा_कातविरान_2,
                                                   UErrorCode * err)
 {
-    UConverter *cnv = args->converter;
-    const char16_t *mySource = args->source;
-    int32_t *myOffsets = args->offsets;
-    const char16_t *sourceLimit = args->sourceLimit;
-    uint8_t *myTarget = (uint8_t *) args->target;
-    const uint8_t *targetLimit = (uint8_t *) args->targetLimit;
+    UConverter *cnv = मगा_कातविरान_2->converter;
+    const char16_t *mySource = मगा_कातविरान_2->source;
+    int32_t *myOffsets = मगा_कातविरान_2->offsets;
+    const char16_t *sourceLimit = मगा_कातविरान_2->sourceLimit;
+    uint8_t *myTarget = (uint8_t *) मगा_कातविरान_2->target;
+    const uint8_t *targetLimit = (uint8_t *) मगा_कातविरान_2->targetLimit;
     uint8_t *tempPtr;
     UChar32 ch;
-    int32_t offsetNum, nextSourceIndex;
+    int32_t offset_नुमेरो, nextSourceIndex;
     int32_t indexToWrite;
     uint8_t tempBuf[4];
     UBool isNotCESU8 = !hasCESU8Data(cnv);
@@ -431,11 +431,11 @@ U_CFUNC void  U_CALLCONV ucnv_fromUnicode_UTF8_OFFSETS_LOGIC (UConverterFromUnic
     {
         ch = cnv->fromUChar32;
         cnv->fromUChar32 = 0;
-        offsetNum = -1;
+        offset_नुमेरो = -1;
         nextSourceIndex = 0;
         goto lowsurrogate;
     } else {
-        offsetNum = 0;
+        offset_नुमेरो = 0;
     }
 
     while (mySource < sourceLimit && myTarget < targetLimit)
@@ -444,16 +444,16 @@ U_CFUNC void  U_CALLCONV ucnv_fromUnicode_UTF8_OFFSETS_LOGIC (UConverterFromUnic
 
         if (ch < 0x80)        /* Single byte */
         {
-            *(myOffsets++) = offsetNum++;
+            *(myOffsets++) = offset_नुमेरो++;
             *(myTarget++) = (char) ch;
         }
         else if (ch < 0x800)  /* Double byte */
         {
-            *(myOffsets++) = offsetNum;
+            *(myOffsets++) = offset_नुमेरो;
             *(myTarget++) = (uint8_t) ((ch >> 6) | 0xc0);
             if (myTarget < targetLimit)
             {
-                *(myOffsets++) = offsetNum++;
+                *(myOffsets++) = offset_नुमेरो++;
                 *(myTarget++) = (uint8_t) ((ch & 0x3f) | 0x80);
             }
             else
@@ -466,7 +466,7 @@ U_CFUNC void  U_CALLCONV ucnv_fromUnicode_UTF8_OFFSETS_LOGIC (UConverterFromUnic
         else
         /* Check for surrogates */
         {
-            nextSourceIndex = offsetNum + 1;
+            nextSourceIndex = offset_नुमेरो + 1;
 
             if(U16_IS_SURROGATE(ch) && isNotCESU8) {
 lowsurrogate:
@@ -513,11 +513,11 @@ lowsurrogate:
             if (tempPtr == myTarget) {
                 /* There was enough space to write the codepoint directly. */
                 myTarget += (indexToWrite + 1);
-                myOffsets[0] = offsetNum;
-                myOffsets[1] = offsetNum;
-                myOffsets[2] = offsetNum;
+                myOffsets[0] = offset_नुमेरो;
+                myOffsets[1] = offset_नुमेरो;
+                myOffsets[2] = offset_नुमेरो;
                 if (indexToWrite >= 3) {
-                    myOffsets[3] = offsetNum;
+                    myOffsets[3] = offset_नुमेरो;
                 }
                 myOffsets += (indexToWrite + 1);
             }
@@ -526,7 +526,7 @@ lowsurrogate:
                 for (; tempPtr <= (tempBuf + indexToWrite); tempPtr++) {
                     if (myTarget < targetLimit)
                     {
-                        *(myOffsets++) = offsetNum;
+                        *(myOffsets++) = offset_नुमेरो;
                         *(myTarget++) = *tempPtr;
                     }
                     else
@@ -536,7 +536,7 @@ lowsurrogate:
                     }
                 }
             }
-            offsetNum = nextSourceIndex;
+            offset_नुमेरो = nextSourceIndex;
         }
     }
 
@@ -545,13 +545,13 @@ lowsurrogate:
         *err = U_BUFFER_OVERFLOW_ERROR;
     }
 
-    args->target = (char *) myTarget;
-    args->source = mySource;
-    args->offsets = myOffsets;
+    मगा_कातविरान_2->target = (char *) myTarget;
+    मगा_कातविरान_2->source = mySource;
+    मगा_कातविरान_2->offsets = myOffsets;
 }
 
 U_CDECL_BEGIN
-static UChar32 U_CALLCONV ucnv_getNextUChar_UTF8(UConverterToUnicodeArgs *args,
+static UChar32 U_CALLCONV ucnv_getNextUChar_UTF8(UConverter_To_Unicode_मगा_कातविरान *मगा_कातविरान_2,
                                                UErrorCode *err) {
     UConverter *cnv;
     const uint8_t *sourceInitial;
@@ -562,9 +562,9 @@ static UChar32 U_CALLCONV ucnv_getNextUChar_UTF8(UConverterToUnicodeArgs *args,
 
     /* UTF-8 only here, the framework handles CESU-8 to combine surrogate pairs */
 
-    cnv = args->converter;
-    sourceInitial = source = (const uint8_t *)args->source;
-    if (source >= (const uint8_t *)args->sourceLimit)
+    cnv = मगा_कातविरान_2->converter;
+    sourceInitial = source = (const uint8_t *)मगा_कातविरान_2->source;
+    if (source >= (const uint8_t *)मगा_कातविरान_2->sourceLimit)
     {
         /* no input */
         *err = U_INDEX_OUTOFBOUNDS_ERROR;
@@ -574,28 +574,28 @@ static UChar32 U_CALLCONV ucnv_getNextUChar_UTF8(UConverterToUnicodeArgs *args,
     myByte = *(source++);
     if (U8_IS_SINGLE(myByte))
     {
-        args->source = (const char *)source;
+        मगा_कातविरान_2->source = (const char *)source;
         return (UChar32)myByte;
     }
 
-    uint16_t countTrailBytes = U8_COUNT_TRAIL_BYTES(myByte);
-    if (countTrailBytes == 0) {
+    uint16_t बिलांग_Trail_Bytes = U8_बिलांग_TRAIL_BYTES(myByte);
+    if (बिलांग_Trail_Bytes == 0) {
         cnv->toUBytes[0] = myByte;
         cnv->toULength = 1;
         *err = U_ILLEGAL_CHAR_FOUND;
-        args->source = (const char *)source;
+        मगा_कातविरान_2->source = (const char *)source;
         return 0xffff;
     }
 
     /*The byte sequence is longer than the buffer area passed*/
-    if (((const char *)source + countTrailBytes) > args->sourceLimit)
+    if (((const char *)source + बिलांग_Trail_Bytes) > मगा_कातविरान_2->sourceLimit)
     {
         /* check if all of the remaining bytes are trail bytes */
-        uint16_t extraBytesToWrite = countTrailBytes + 1;
+        uint16_t extraBytesToWrite = बिलांग_Trail_Bytes + 1;
         cnv->toUBytes[0] = myByte;
         i = 1;
         *err = U_TRUNCATED_CHAR_FOUND;
-        while(source < (const uint8_t *)args->sourceLimit) {
+        while(source < (const uint8_t *)मगा_कातविरान_2->sourceLimit) {
             uint8_t b = *source;
             if(icu::UTF8::isValidTrail(myByte, b, i, extraBytesToWrite)) {
                 cnv->toUBytes[i++] = b;
@@ -607,32 +607,32 @@ static UChar32 U_CALLCONV ucnv_getNextUChar_UTF8(UConverterToUnicodeArgs *args,
             }
         }
         cnv->toULength = i;
-        args->source = (const char *)source;
+        मगा_कातविरान_2->source = (const char *)source;
         return 0xffff;
     }
 
     ch = myByte << 6;
-    if(countTrailBytes == 2) {
+    if(बिलांग_Trail_Bytes == 2) {
         uint8_t t1 = *source, t2;
         if(U8_IS_VALID_LEAD3_AND_T1(myByte, t1) && U8_IS_TRAIL(t2 = *++source)) {
-            args->source = (const char *)(source + 1);
+            मगा_कातविरान_2->source = (const char *)(source + 1);
             return (((ch + t1) << 6) + t2) - offsetsFromUTF8[3];
         }
-    } else if(countTrailBytes == 1) {
+    } else if(बिलांग_Trail_Bytes == 1) {
         uint8_t t1 = *source;
         if(U8_IS_TRAIL(t1)) {
-            args->source = (const char *)(source + 1);
+            मगा_कातविरान_2->source = (const char *)(source + 1);
             return (ch + t1) - offsetsFromUTF8[2];
         }
     } else {  // countTrailBytes == 3
         uint8_t t1 = *source, t2, t3;
         if(U8_IS_VALID_LEAD4_AND_T1(myByte, t1) && U8_IS_TRAIL(t2 = *++source) &&
                 U8_IS_TRAIL(t3 = *++source)) {
-            args->source = (const char *)(source + 1);
+            मगा_कातविरान_2->source = (const char *)(source + 1);
             return (((((ch + t1) << 6) + t2) << 6) + t3) - offsetsFromUTF8[4];
         }
     }
-    args->source = (const char *)source;
+    मगा_कातविरान_2->source = (const char *)source;
 
     for(i = 0; sourceInitial < source; ++i) {
         cnv->toUBytes[i] = *sourceInitial++;
@@ -648,8 +648,8 @@ U_CDECL_END
 U_CDECL_BEGIN
 /* "Convert" UTF-8 to UTF-8: Validate and copy. Modified from ucnv_DBCSFromUTF8(). */
 static void U_CALLCONV
-ucnv_UTF8FromUTF8(UConverterFromUnicodeArgs *pFromUArgs,
-                  UConverterToUnicodeArgs *pToUArgs,
+ucnv_UTF8FromUTF8(UConverter_From_Unicode_मगा_कातविरान *pFromUArgs,
+                  UConverter_To_Unicode_मगा_कातविरान *pToUArgs,
                   UErrorCode *pErrorCode) {
     UConverter *utf8;
     const uint8_t *source, *sourceLimit;
@@ -757,7 +757,7 @@ ucnv_UTF8FromUTF8(UConverterFromUnicodeArgs *pFromUArgs,
             /* handle "complicated" and error cases, and continuing partial characters */
             oldToULength=0;
             toULength=1;
-            toULimit=U8_COUNT_BYTES_NON_ASCII(b);
+            toULimit=U8_बिलांग_BYTES_NON_ASCII(b);
             c=b;
 moreBytes:
             while(toULength<toULimit) {
@@ -820,7 +820,7 @@ moreBytes:
             *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
         } else {
             b=*source;
-            toULimit=U8_COUNT_BYTES(b);
+            toULimit=U8_बिलांग_BYTES(b);
             if(toULimit>(sourceLimit-source)) {
                 /* collect a truncated byte sequence */
                 toULength=0;

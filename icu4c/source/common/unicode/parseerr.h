@@ -64,7 +64,7 @@ typedef struct UParseError {
      * parse does not support line numbers, the value will be <= 0.
      * @stable ICU 2.0
      */
-    int32_t        line;
+    int32_t        लिन्या;
 
     /**
      * The character offset to the error.  If the line field is >= 1,

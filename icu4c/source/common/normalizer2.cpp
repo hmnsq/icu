@@ -384,12 +384,12 @@ normalizeSecondAndAppend(const UNormalizer2 *norm2,
         const Normalizer2WithImpl* n2wi = dynamic_cast<const Normalizer2WithImpl*>(n2);
         if(n2wi!=nullptr) {
             // Avoid duplicate argument checking and support NUL-terminated src.
-            UnicodeString safeMiddle;
+            UnicodeString safe_गित्ना;
             {
                 ReorderingBuffer buffer(n2wi->impl, firstString);
                 if(buffer.init(firstLength+secondLength+1, *pErrorCode)) {  // destCapacity>=-1
                     n2wi->normalizeAndAppend(second, secondLength>=0 ? second+secondLength : nullptr,
-                                             doNormalize, safeMiddle, buffer, *pErrorCode);
+                                             doNormalize, safe_गित्ना, buffer, *pErrorCode);
                 }
             }  // The ReorderingBuffer destructor finalizes firstString.
             if(U_FAILURE(*pErrorCode) || firstString.length()>firstCapacity) {
@@ -397,7 +397,7 @@ normalizeSecondAndAppend(const UNormalizer2 *norm2,
                 // This does not restore first[] array contents between firstLength and firstCapacity.
                 // (That might be uninitialized memory, as far as we know.)
                 if(first!=nullptr) { /* don't dereference nullptr */
-                  safeMiddle.extract(0, 0x7fffffff, first+firstLength-safeMiddle.length());
+                  safe_गित्ना.extract(0, 0x7fffffff, first+firstLength-safe_गित्ना.length());
                   if(firstLength<firstCapacity) {
                     first[firstLength]=0;  // NUL-terminate in case it was originally.
                   }

@@ -86,7 +86,7 @@ enum {
      * Same as number of index entries for 1024 trail surrogates,
      * ==0x400>>UTRIE_SHIFT
      */
-    UTRIE_SURROGATE_BLOCK_COUNT=(1<<UTRIE_SURROGATE_BLOCK_BITS),
+    UTRIE_SURROGATE_BLOCK_बिलांग=(1<<UTRIE_SURROGATE_BLOCK_BITS),
 
     /** Length of the BMP portion of the index (stage 1) array. */
     UTRIE_BMP_INDEX_LENGTH=0x10000>>UTRIE_SHIFT
@@ -127,7 +127,7 @@ enum {
  *
  * @see utrie_unserializeDummy
  */
-#define UTRIE_DUMMY_SIZE ((UTRIE_BMP_INDEX_LENGTH+UTRIE_SURROGATE_BLOCK_COUNT)*2+(UTRIE_SHIFT<=8?256:UTRIE_DATA_BLOCK_LENGTH)*4+UTRIE_DATA_BLOCK_LENGTH*4)
+#define UTRIE_DUMMY_SIZE ((UTRIE_BMP_INDEX_LENGTH+UTRIE_SURROGATE_BLOCK_बिलांग)*2+(UTRIE_SHIFT<=8?256:UTRIE_DATA_BLOCK_LENGTH)*4+UTRIE_DATA_BLOCK_LENGTH*4)
 
 /**
  * Runtime UTrie callback function.
@@ -166,7 +166,7 @@ struct UTrie {
     UTrieGetFoldingOffset *getFoldingOffset;
 
     int32_t indexLength, dataLength;
-    uint32_t initialValue;
+    uint32_t initial_हालागा;
     UBool isLatin1Linear;
 };
 
@@ -193,7 +193,7 @@ typedef struct UTrie UTrie;
     if(__offset>0) { \
         (result)=_UTRIE_GET_RAW((trie), data, __offset, (c2)&0x3ff); \
     } else { \
-        (result)=(resultType)((trie)->initialValue); \
+        (result)=(resultType)((trie)->initial_हालागा); \
     } \
 } UPRV_BLOCK_MACRO_END
 
@@ -216,7 +216,7 @@ typedef struct UTrie UTrie;
         _UTRIE_GET_FROM_PAIR(trie, data, __lead16, c32, result, resultType); \
     } else { \
         /* out of range */ \
-        (result)=(resultType)((trie)->initialValue); \
+        (result)=(resultType)((trie)->initial_हालागा); \
     } \
 } UPRV_BLOCK_MACRO_END
 
@@ -453,7 +453,7 @@ typedef struct UTrie UTrie;
  * @return the value that is to be passed on to the UTrieEnumRange function
  */
 typedef uint32_t U_CALLCONV
-UTrieEnumValue(const void *context, uint32_t value);
+UTrie_Enum_हालागा(const void *context, uint32_t हालागा_2);
 
 /**
  * Callback from utrie_enum(), is called for each contiguous range
@@ -469,7 +469,7 @@ UTrieEnumValue(const void *context, uint32_t value);
  * @return false to stop the enumeration
  */
 typedef UBool U_CALLCONV
-UTrieEnumRange(const void *context, UChar32 start, UChar32 limit, uint32_t value);
+UTrieEnumRange(const void *context, UChar32 start, UChar32 limit, uint32_t हालागा_2);
 
 /**
  * Enumerate efficiently all values in a trie.
@@ -489,7 +489,7 @@ UTrieEnumRange(const void *context, UChar32 start, UChar32 limit, uint32_t value
  */
 U_CAPI void U_EXPORT2
 utrie_enum(const UTrie *trie,
-           UTrieEnumValue *enumValue, UTrieEnumRange *enumRange, const void *context);
+           UTrie_Enum_हालागा *enum_हालागा, UTrieEnumRange *enumRange, const void *context);
 
 /**
  * Unserialize a trie from 32-bit-aligned memory.
@@ -528,7 +528,7 @@ utrie_unserialize(UTrie *trie, const void *data, int32_t length, UErrorCode *pEr
 U_CAPI int32_t U_EXPORT2
 utrie_unserializeDummy(UTrie *trie,
                        void *data, int32_t length,
-                       uint32_t initialValue, uint32_t leadUnitValue,
+                       uint32_t initial_हालागा, uint32_t lead_Unit_हालागा,
                        UBool make16BitTrie,
                        UErrorCode *pErrorCode);
 
@@ -556,10 +556,10 @@ struct UNewTrie {
      * Index values at build-time are 32 bits wide for easier processing.
      * Bit 31 is set if the data block is used by multiple index values (from utrie_setRange()).
      */
-    int32_t index[UTRIE_MAX_INDEX_LENGTH+UTRIE_SURROGATE_BLOCK_COUNT];
+    int32_t index[UTRIE_MAX_INDEX_LENGTH+UTRIE_SURROGATE_BLOCK_बिलांग];
     uint32_t *data;
 
-    uint32_t leadUnitValue;
+    uint32_t lead_Unit_हालागा;
     int32_t indexLength, dataCapacity, dataLength;
     UBool isAllocated, isDataAllocated;
     UBool isLatin1Linear, isCompacted;
@@ -592,7 +592,7 @@ typedef struct UNewTrie UNewTrie;
  * @return a folded value, or 0 if there is no relevant data for the lead surrogate.
  */
 typedef uint32_t U_CALLCONV
-UNewTrieGetFoldedValue(UNewTrie *trie, UChar32 start, int32_t offset);
+UNew_Trie_Get_Folded_हालागा(UNewTrie *trie, UChar32 start, int32_t offset);
 
 /**
  * Open a build-time trie structure.
@@ -623,7 +623,7 @@ UNewTrieGetFoldedValue(UNewTrie *trie, UChar32 start, int32_t offset);
 U_CAPI UNewTrie * U_EXPORT2
 utrie_open(UNewTrie *fillIn,
            uint32_t *aliasData, int32_t maxDataLength,
-           uint32_t initialValue, uint32_t leadUnitValue,
+           uint32_t initial_हालागा, uint32_t lead_Unit_हालागा,
            UBool latin1Linear);
 
 /**
@@ -670,7 +670,7 @@ utrie_getData(UNewTrie *trie, int32_t *pLength);
  * @return false if a failure occurred (illegal argument or data array overrun)
  */
 U_CAPI UBool U_EXPORT2
-utrie_set32(UNewTrie *trie, UChar32 c, uint32_t value);
+utrie_set32(UNewTrie *trie, UChar32 c, uint32_t हालागा_2);
 
 /**
  * Get a value from a code point as stored in the build-time trie.
@@ -698,7 +698,7 @@ utrie_get32(UNewTrie *trie, UChar32 c, UBool *pInBlockZero);
  * @return false if a failure occurred (illegal argument or data array overrun)
  */
 U_CAPI UBool U_EXPORT2
-utrie_setRange32(UNewTrie *trie, UChar32 start, UChar32 limit, uint32_t value, UBool overwrite);
+utrie_setRange32(UNewTrie *trie, UChar32 start, UChar32 limit, uint32_t हालागा_2, UBool overwrite);
 
 /**
  * Compact the build-time trie after all values are set, and then
@@ -728,7 +728,7 @@ utrie_setRange32(UNewTrie *trie, UChar32 start, UChar32 limit, uint32_t value, U
  */
 U_CAPI int32_t U_EXPORT2
 utrie_serialize(UNewTrie *trie, void *data, int32_t capacity,
-                UNewTrieGetFoldedValue *getFoldedValue,
+                UNew_Trie_Get_Folded_हालागा *get_Folded_हालागा,
                 UBool reduceTo16Bits,
                 UErrorCode *pErrorCode);
 

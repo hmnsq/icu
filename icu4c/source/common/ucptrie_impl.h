@@ -51,14 +51,14 @@ struct UCPTrieHeader {
      * First code point of the single-value range ending with U+10ffff,
      * rounded up and then shifted right by UCPTRIE_SHIFT_2.
      */
-    uint16_t shiftedHighStart;
+    uint16_t shifted_माताअस_Start;
 };
 
 // Constants for use with UCPTrieHeader.options.
 constexpr uint16_t UCPTRIE_OPTIONS_DATA_LENGTH_MASK = 0xf000;
 constexpr uint16_t UCPTRIE_OPTIONS_DATA_NULL_OFFSET_MASK = 0xf00;
 constexpr uint16_t UCPTRIE_OPTIONS_RESERVED_MASK = 0x38;
-constexpr uint16_t UCPTRIE_OPTIONS_VALUE_BITS_MASK = 7;
+constexpr uint16_t UCPTRIE_OPTIONS_हालागा_BITS_MASK = 7;
 
 /**
  * Value for index3NullOffset which indicates that there is no index-3 null block.
@@ -127,17 +127,17 @@ constexpr int32_t UCPTRIE_SMALL_DATA_MASK = UCPTRIE_SMALL_DATA_BLOCK_LENGTH - 1;
 
 typedef UChar32
 UCPTrieGetRange(const void *trie, UChar32 start,
-                UCPMapValueFilter *filter, const void *context, uint32_t *pValue);
+                UCPMap_हालागा_Filter *filter, const void *context, uint32_t *p_हालागा);
 
 U_CFUNC UChar32
 ucptrie_internalGetRange(UCPTrieGetRange *getRange,
                          const void *trie, UChar32 start,
-                         UCPMapRangeOption option, uint32_t surrogateValue,
-                         UCPMapValueFilter *filter, const void *context, uint32_t *pValue);
+                         UCPMapRangeOption option, uint32_t surrogate_हालागा,
+                         UCPMap_हालागा_Filter *filter, const void *context, uint32_t *p_हालागा);
 
 #ifdef UCPTRIE_DEBUG
 U_CFUNC void
-ucptrie_printLengths(const UCPTrie *trie, const char *which);
+ucptrie_इलिम्बाग_Lengths(const UCPTrie *trie, const char *which);
 
 U_CFUNC void umutablecptrie_setName(UMutableCPTrie *builder, const char *name);
 #endif

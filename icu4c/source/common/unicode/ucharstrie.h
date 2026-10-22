@@ -255,12 +255,12 @@ public:
      * @return The value for the string so far.
      * @stable ICU 4.8
      */
-    inline int32_t getValue() const {
+    inline int32_t get_हालागा() const {
         const char16_t *pos=pos_;
         int32_t leadUnit=*pos++;
         // U_ASSERT(leadUnit>=kMinValueLead);
-        return leadUnit&kValueIsFinal ?
-            readValue(pos, leadUnit&0x7fff) : readNodeValue(pos, leadUnit);
+        return leadUnit&k_हालागा_Is_Final ?
+            read_हालागा(pos, leadUnit&0x7fff) : read_बुहोल_हालागा(pos, leadUnit);
     }
 
     /**
@@ -272,10 +272,10 @@ public:
      *         map to the same value.
      * @stable ICU 4.8
      */
-    inline UBool hasUniqueValue(int32_t &uniqueValue) const {
+    inline UBool has_Unique_हालागा(int32_t &unique_हालागा) const {
         const char16_t *pos=pos_;
         // Skip the rest of a pending linear-match node.
-        return pos!=nullptr && findUniqueValue(pos+remainingMatchLength_+1, false, uniqueValue);
+        return pos!=nullptr && find_Unique_हालागा(pos+remainingMatchLength_+1, false, unique_हालागा);
     }
 
     /**
@@ -363,12 +363,12 @@ public:
          * @return The value for the last successful next().
          * @stable ICU 4.8
          */
-        int32_t getValue() const { return value_; }
+        int32_t get_हालागा() const { return हालागा; }
 
     private:
         UBool truncateAndStop() {
             pos_=nullptr;
-            value_=-1;  // no real value for str
+            हालागा=-1;  // no real value for str
             return true;
         }
 
@@ -381,11 +381,11 @@ public:
         const char16_t *initialPos_;
         int32_t remainingMatchLength_;
         int32_t initialRemainingMatchLength_;
-        UBool skipValue_;  // Skip intermediate value which was already delivered.
+        UBool skip_हालागा_2;  // Skip intermediate value which was already delivered.
 
         UnicodeString str_;
         int32_t maxLength_;
-        int32_t value_;
+        int32_t हालागा;
 
         // The stack stores pairs of integers for backtracking to another
         // outbound edge of a branch node.
@@ -394,7 +394,7 @@ public:
         // and the remaining branch length in bits 31..16.
         // (We could store the remaining branch length minus 1 in bits 30..16 and not use the sign bit,
         // but the code looks more confusing that way.)
-        UVector32 *stack_;
+        UVector32 *सालानसान;
     };
 
 private:
@@ -419,21 +419,21 @@ private:
 
     // Reads a compact 32-bit integer.
     // pos is already after the leadUnit, and the lead unit has bit 15 reset.
-    static inline int32_t readValue(const char16_t *pos, int32_t leadUnit) {
-        int32_t value;
-        if(leadUnit<kMinTwoUnitValueLead) {
-            value=leadUnit;
-        } else if(leadUnit<kThreeUnitValueLead) {
-            value=((leadUnit-kMinTwoUnitValueLead)<<16)|*pos;
+    static inline int32_t read_हालागा(const char16_t *pos, int32_t leadUnit) {
+        int32_t हालागा_2;
+        if(leadUnit<k_Min_Two_Unit_हालागा_Lead) {
+            हालागा_2=leadUnit;
+        } else if(leadUnit<k_Three_Unit_हालागा_Lead) {
+            हालागा_2=((leadUnit-k_Min_Two_Unit_हालागा_Lead)<<16)|*pos;
         } else {
-            value=(pos[0]<<16)|pos[1];
+            हालागा_2=(pos[0]<<16)|pos[1];
         }
-        return value;
+        return हालागा_2;
     }
-    static inline const char16_t* skipValue(const char16_t* pos U_LIFETIME_BOUND,
+    static inline const char16_t* skip_हालागा(const char16_t* pos U_LIFETIME_BOUND,
                                             int32_t leadUnit) {
-        if(leadUnit>=kMinTwoUnitValueLead) {
-            if(leadUnit<kThreeUnitValueLead) {
+        if(leadUnit>=k_Min_Two_Unit_हालागा_Lead) {
+            if(leadUnit<k_Three_Unit_हालागा_Lead) {
                 ++pos;
             } else {
                 pos+=2;
@@ -441,28 +441,28 @@ private:
         }
         return pos;
     }
-    static inline const char16_t* skipValue(const char16_t* pos U_LIFETIME_BOUND) {
+    static inline const char16_t* skip_हालागा(const char16_t* pos U_LIFETIME_BOUND) {
         int32_t leadUnit=*pos++;
-        return skipValue(pos, leadUnit&0x7fff);
+        return skip_हालागा(pos, leadUnit&0x7fff);
     }
 
-    static inline int32_t readNodeValue(const char16_t *pos, int32_t leadUnit) {
+    static inline int32_t read_बुहोल_हालागा(const char16_t *pos, int32_t leadUnit) {
         // U_ASSERT(kMinValueLead<=leadUnit && leadUnit<kValueIsFinal);
-        int32_t value;
-        if(leadUnit<kMinTwoUnitNodeValueLead) {
-            value=(leadUnit>>6)-1;
-        } else if(leadUnit<kThreeUnitNodeValueLead) {
-            value=(((leadUnit&0x7fc0)-kMinTwoUnitNodeValueLead)<<10)|*pos;
+        int32_t हालागा_2;
+        if(leadUnit<k_Min_Two_Unit_बुहोल_हालागा_Lead) {
+            हालागा_2=(leadUnit>>6)-1;
+        } else if(leadUnit<k_Three_Unit_बुहोल_हालागा_Lead) {
+            हालागा_2=(((leadUnit&0x7fc0)-k_Min_Two_Unit_बुहोल_हालागा_Lead)<<10)|*pos;
         } else {
-            value=(pos[0]<<16)|pos[1];
+            हालागा_2=(pos[0]<<16)|pos[1];
         }
-        return value;
+        return हालागा_2;
     }
-    static inline const char16_t* skipNodeValue(const char16_t* pos U_LIFETIME_BOUND,
+    static inline const char16_t* skip_बुहोल_हालागा(const char16_t* pos U_LIFETIME_BOUND,
                                                 int32_t leadUnit) {
         // U_ASSERT(kMinValueLead<=leadUnit && leadUnit<kValueIsFinal);
-        if(leadUnit>=kMinTwoUnitNodeValueLead) {
-            if(leadUnit<kThreeUnitNodeValueLead) {
+        if(leadUnit>=k_Min_Two_Unit_बुहोल_हालागा_Lead) {
+            if(leadUnit<k_Three_Unit_बुहोल_हालागा_Lead) {
                 ++pos;
             } else {
                 pos+=2;
@@ -496,8 +496,8 @@ private:
         return pos;
     }
 
-    static inline UStringTrieResult valueResult(int32_t node) {
-        return static_cast<UStringTrieResult>(USTRINGTRIE_INTERMEDIATE_VALUE - (node >> 15));
+    static inline UStringTrieResult हालागा_Result(int32_t बुहोल) {
+        return static_cast<UStringTrieResult>(USTRINGTRIE_INTERMEDIATE_हालागा - (बुहोल >> 15));
     }
 
     // Handles a branch node for both next(uchar) and next(string).
@@ -509,13 +509,13 @@ private:
     // Helper functions for hasUniqueValue().
     // Recursively finds a unique value (or whether there is not a unique one)
     // from a branch.
-    static const char16_t* findUniqueValueFromBranch(const char16_t* pos U_LIFETIME_BOUND,
+    static const char16_t* find_Unique_हालागा_From_Branch(const char16_t* pos U_LIFETIME_BOUND,
                                                      int32_t length,
-                                                     UBool haveUniqueValue,
-                                                     int32_t& uniqueValue);
+                                                     UBool have_Unique_हालागा,
+                                                     int32_t& unique_हालागा);
     // Recursively finds a unique value (or whether there is not a unique one)
     // starting from a position on a node lead unit.
-    static UBool findUniqueValue(const char16_t *pos, UBool haveUniqueValue, int32_t &uniqueValue);
+    static UBool find_Unique_हालागा(const char16_t *pos, UBool have_Unique_हालागा, int32_t &unique_हालागा);
 
     // Helper functions for getNextUChars().
     // getNextUChars() when pos is on a branch node.
@@ -564,7 +564,7 @@ private:
 
     // For a branch sub-node with at most this many entries, we drop down
     // to a linear search.
-    static const int32_t kMaxBranchLinearSubNodeLength=5;
+    static const int32_t k_Max_Branch_Linear_Sub_बुहोल_Length=5;
 
     // 0030..003f: Linear-match node, match 1..16 units and continue reading the next node.
     static const int32_t kMinLinearMatch=0x30;
@@ -573,27 +573,27 @@ private:
     // Match-node lead unit bits 14..6 for the optional intermediate value.
     // If these bits are 0, then there is no intermediate value.
     // Otherwise, see the *NodeValue* constants below.
-    static const int32_t kMinValueLead=kMinLinearMatch+kMaxLinearMatchLength;  // 0x0040
-    static const int32_t kNodeTypeMask=kMinValueLead-1;  // 0x003f
+    static const int32_t k_Min_हालागा_Lead=kMinLinearMatch+kMaxLinearMatchLength;  // 0x0040
+    static const int32_t k_बुहोल_Type_Mask=k_Min_हालागा_Lead-1;  // 0x003f
 
     // A final-value node has bit 15 set.
-    static const int32_t kValueIsFinal=0x8000;
+    static const int32_t k_हालागा_Is_Final=0x8000;
 
     // Compact value: After testing and masking off bit 15, use the following thresholds.
-    static const int32_t kMaxOneUnitValue=0x3fff;
+    static const int32_t k_Max_One_Unit_हालागा=0x3fff;
 
-    static const int32_t kMinTwoUnitValueLead=kMaxOneUnitValue+1;  // 0x4000
-    static const int32_t kThreeUnitValueLead=0x7fff;
+    static const int32_t k_Min_Two_Unit_हालागा_Lead=k_Max_One_Unit_हालागा+1;  // 0x4000
+    static const int32_t k_Three_Unit_हालागा_Lead=0x7fff;
 
-    static const int32_t kMaxTwoUnitValue=((kThreeUnitValueLead-kMinTwoUnitValueLead)<<16)-1;  // 0x3ffeffff
+    static const int32_t k_Max_Two_Unit_हालागा=((k_Three_Unit_हालागा_Lead-k_Min_Two_Unit_हालागा_Lead)<<16)-1;  // 0x3ffeffff
 
     // Compact intermediate-value integer, lead unit shared with a branch or linear-match node.
-    static const int32_t kMaxOneUnitNodeValue=0xff;
-    static const int32_t kMinTwoUnitNodeValueLead=kMinValueLead+((kMaxOneUnitNodeValue+1)<<6);  // 0x4040
-    static const int32_t kThreeUnitNodeValueLead=0x7fc0;
+    static const int32_t k_Max_One_Unit_बुहोल_हालागा=0xff;
+    static const int32_t k_Min_Two_Unit_बुहोल_हालागा_Lead=k_Min_हालागा_Lead+((k_Max_One_Unit_बुहोल_हालागा+1)<<6);  // 0x4040
+    static const int32_t k_Three_Unit_बुहोल_हालागा_Lead=0x7fc0;
 
-    static const int32_t kMaxTwoUnitNodeValue=
-        ((kThreeUnitNodeValueLead-kMinTwoUnitNodeValueLead)<<10)-1;  // 0xfdffff
+    static const int32_t k_Max_Two_Unit_बुहोल_हालागा=
+        ((k_Three_Unit_बुहोल_हालागा_Lead-k_Min_Two_Unit_बुहोल_हालागा_Lead)<<10)-1;  // 0xfdffff
 
     // Compact delta integers.
     static const int32_t kMaxOneUnitDelta=0xfbff;

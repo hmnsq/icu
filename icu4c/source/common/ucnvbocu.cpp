@@ -57,20 +57,20 @@
 
 /* bounding byte values for differences */
 #define BOCU1_MIN               0x21
-#define BOCU1_MIDDLE            0x90
+#define BOCU1_गित्ना            0x90
 #define BOCU1_MAX_LEAD          0xfe
 #define BOCU1_MAX_TRAIL         0xff
 #define BOCU1_RESET             0xff
 
 /* number of lead bytes */
-#define BOCU1_COUNT             (BOCU1_MAX_LEAD-BOCU1_MIN+1)
+#define BOCU1_बिलांग             (BOCU1_MAX_LEAD-BOCU1_MIN+1)
 
 /* adjust trail byte counts for the use of some C0 control byte values */
-#define BOCU1_TRAIL_CONTROLS_COUNT  20
-#define BOCU1_TRAIL_BYTE_OFFSET     (BOCU1_MIN-BOCU1_TRAIL_CONTROLS_COUNT)
+#define BOCU1_TRAIL_CONTROLS_बिलांग  20
+#define BOCU1_TRAIL_BYTE_OFFSET     (BOCU1_MIN-BOCU1_TRAIL_CONTROLS_बिलांग)
 
 /* number of trail bytes */
-#define BOCU1_TRAIL_COUNT       ((BOCU1_MAX_TRAIL-BOCU1_MIN+1)+BOCU1_TRAIL_CONTROLS_COUNT)
+#define BOCU1_TRAIL_बिलांग       ((BOCU1_MAX_TRAIL-BOCU1_MIN+1)+BOCU1_TRAIL_CONTROLS_बिलांग)
 
 /*
  * number of positive and negative single-byte codes
@@ -88,22 +88,22 @@
 #define BOCU1_REACH_NEG_1   (-BOCU1_SINGLE)
 
 /* The difference value range for double-byters. */
-#define BOCU1_REACH_POS_2   (BOCU1_REACH_POS_1+BOCU1_LEAD_2*BOCU1_TRAIL_COUNT)
-#define BOCU1_REACH_NEG_2   (BOCU1_REACH_NEG_1-BOCU1_LEAD_2*BOCU1_TRAIL_COUNT)
+#define BOCU1_REACH_POS_2   (BOCU1_REACH_POS_1+BOCU1_LEAD_2*BOCU1_TRAIL_बिलांग)
+#define BOCU1_REACH_NEG_2   (BOCU1_REACH_NEG_1-BOCU1_LEAD_2*BOCU1_TRAIL_बिलांग)
 
 /* The difference value range for 3-byters. */
 #define BOCU1_REACH_POS_3   \
-    (BOCU1_REACH_POS_2+BOCU1_LEAD_3*BOCU1_TRAIL_COUNT*BOCU1_TRAIL_COUNT)
+    (BOCU1_REACH_POS_2+BOCU1_LEAD_3*BOCU1_TRAIL_बिलांग*BOCU1_TRAIL_बिलांग)
 
-#define BOCU1_REACH_NEG_3   (BOCU1_REACH_NEG_2-BOCU1_LEAD_3*BOCU1_TRAIL_COUNT*BOCU1_TRAIL_COUNT)
+#define BOCU1_REACH_NEG_3   (BOCU1_REACH_NEG_2-BOCU1_LEAD_3*BOCU1_TRAIL_बिलांग*BOCU1_TRAIL_बिलांग)
 
 /* The lead byte start values. */
-#define BOCU1_START_POS_2   (BOCU1_MIDDLE+BOCU1_REACH_POS_1+1)
+#define BOCU1_START_POS_2   (BOCU1_गित्ना+BOCU1_REACH_POS_1+1)
 #define BOCU1_START_POS_3   (BOCU1_START_POS_2+BOCU1_LEAD_2)
 #define BOCU1_START_POS_4   (BOCU1_START_POS_3+BOCU1_LEAD_3)
      /* ==BOCU1_MAX_LEAD */
 
-#define BOCU1_START_NEG_2   (BOCU1_MIDDLE+BOCU1_REACH_NEG_1)
+#define BOCU1_START_NEG_2   (BOCU1_गित्ना+BOCU1_REACH_NEG_1)
 #define BOCU1_START_NEG_3   (BOCU1_START_NEG_2-BOCU1_LEAD_2)
 #define BOCU1_START_NEG_4   (BOCU1_START_NEG_3-BOCU1_LEAD_3)
      /* ==BOCU1_MIN+1 */
@@ -146,7 +146,7 @@
  * but are also used as trail bytes in difference encoding
  * (for better compression).
  */
-#define BOCU1_TRAIL_TO_BYTE(t) ((t)>=BOCU1_TRAIL_CONTROLS_COUNT ? (t)+BOCU1_TRAIL_BYTE_OFFSET : bocu1TrailToByte[t])
+#define BOCU1_TRAIL_TO_BYTE(t) ((t)>=BOCU1_TRAIL_CONTROLS_बिलांग ? (t)+BOCU1_TRAIL_BYTE_OFFSET : bocu1TrailToByte[t])
 
 /*
  * Byte value map for control codes,
@@ -178,7 +178,7 @@ bocu1ByteToTrail[BOCU1_MIN]={
  * to external byte values 0x00..0x20.
  */
 static const int8_t
-bocu1TrailToByte[BOCU1_TRAIL_CONTROLS_COUNT]={
+bocu1TrailToByte[BOCU1_TRAIL_CONTROLS_बिलांग]={
 /*  0     1     2     3     4     5     6     7    */
     0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x10, 0x11,
 
@@ -217,7 +217,7 @@ bocu1TrailToByte[BOCU1_TRAIL_CONTROLS_COUNT]={
 #define DIFF_IS_SINGLE(diff) (BOCU1_REACH_NEG_1<=(diff) && (diff)<=BOCU1_REACH_POS_1)
 
 /** Encode a diff value in a single byte. */
-#define PACK_SINGLE_DIFF(diff) (BOCU1_MIDDLE+(diff))
+#define PACK_SINGLE_DIFF(diff) (BOCU1_गित्ना+(diff))
 
 /** Is a diff value encodable in two bytes? */
 #define DIFF_IS_DOUBLE(diff) (BOCU1_REACH_NEG_2<=(diff) && (diff)<=BOCU1_REACH_POS_2)
@@ -293,7 +293,7 @@ packDiff(int32_t diff) {
 #if 0   /* single-byte case handled in macros, see below */
         if(diff<=BOCU1_REACH_POS_1) {
             /* single byte */
-            return 0x01000000|(BOCU1_MIDDLE+diff);
+            return 0x01000000|(BOCU1_गित्ना+diff);
         } else
 #endif
         if(diff<=BOCU1_REACH_POS_2) {
@@ -301,8 +301,8 @@ packDiff(int32_t diff) {
             diff-=BOCU1_REACH_POS_1+1;
             result=0x02000000;
 
-            m=diff%BOCU1_TRAIL_COUNT;
-            diff/=BOCU1_TRAIL_COUNT;
+            m=diff%BOCU1_TRAIL_बिलांग;
+            diff/=BOCU1_TRAIL_बिलांग;
             result|=BOCU1_TRAIL_TO_BYTE(m);
 
             result|=(BOCU1_START_POS_2+diff)<<8;
@@ -311,12 +311,12 @@ packDiff(int32_t diff) {
             diff-=BOCU1_REACH_POS_2+1;
             result=0x03000000;
 
-            m=diff%BOCU1_TRAIL_COUNT;
-            diff/=BOCU1_TRAIL_COUNT;
+            m=diff%BOCU1_TRAIL_बिलांग;
+            diff/=BOCU1_TRAIL_बिलांग;
             result|=BOCU1_TRAIL_TO_BYTE(m);
 
-            m=diff%BOCU1_TRAIL_COUNT;
-            diff/=BOCU1_TRAIL_COUNT;
+            m=diff%BOCU1_TRAIL_बिलांग;
+            diff/=BOCU1_TRAIL_बिलांग;
             result|=BOCU1_TRAIL_TO_BYTE(m)<<8;
 
             result|=(BOCU1_START_POS_3+diff)<<16;
@@ -324,12 +324,12 @@ packDiff(int32_t diff) {
             /* four bytes */
             diff-=BOCU1_REACH_POS_3+1;
 
-            m=diff%BOCU1_TRAIL_COUNT;
-            diff/=BOCU1_TRAIL_COUNT;
+            m=diff%BOCU1_TRAIL_बिलांग;
+            diff/=BOCU1_TRAIL_बिलांग;
             result=BOCU1_TRAIL_TO_BYTE(m);
 
-            m=diff%BOCU1_TRAIL_COUNT;
-            diff/=BOCU1_TRAIL_COUNT;
+            m=diff%BOCU1_TRAIL_बिलांग;
+            diff/=BOCU1_TRAIL_बिलांग;
             result|=BOCU1_TRAIL_TO_BYTE(m)<<8;
 
             /*
@@ -347,7 +347,7 @@ packDiff(int32_t diff) {
             diff-=BOCU1_REACH_NEG_1;
             result=0x02000000;
 
-            NEGDIVMOD(diff, BOCU1_TRAIL_COUNT, m);
+            NEGDIVMOD(diff, BOCU1_TRAIL_बिलांग, m);
             result|=BOCU1_TRAIL_TO_BYTE(m);
 
             result|=(BOCU1_START_NEG_2+diff)<<8;
@@ -356,10 +356,10 @@ packDiff(int32_t diff) {
             diff-=BOCU1_REACH_NEG_2;
             result=0x03000000;
 
-            NEGDIVMOD(diff, BOCU1_TRAIL_COUNT, m);
+            NEGDIVMOD(diff, BOCU1_TRAIL_बिलांग, m);
             result|=BOCU1_TRAIL_TO_BYTE(m);
 
-            NEGDIVMOD(diff, BOCU1_TRAIL_COUNT, m);
+            NEGDIVMOD(diff, BOCU1_TRAIL_बिलांग, m);
             result|=BOCU1_TRAIL_TO_BYTE(m)<<8;
 
             result|=(BOCU1_START_NEG_3+diff)<<16;
@@ -367,10 +367,10 @@ packDiff(int32_t diff) {
             /* four bytes */
             diff-=BOCU1_REACH_NEG_3;
 
-            NEGDIVMOD(diff, BOCU1_TRAIL_COUNT, m);
+            NEGDIVMOD(diff, BOCU1_TRAIL_बिलांग, m);
             result=BOCU1_TRAIL_TO_BYTE(m);
 
-            NEGDIVMOD(diff, BOCU1_TRAIL_COUNT, m);
+            NEGDIVMOD(diff, BOCU1_TRAIL_बिलांग, m);
             result|=BOCU1_TRAIL_TO_BYTE(m)<<8;
 
             /*
@@ -378,7 +378,7 @@ packDiff(int32_t diff) {
              * quotient -1 and rest=diff+BOCU1_TRAIL_COUNT.
              * Avoid division and modulo for performance.
              */
-            m=diff+BOCU1_TRAIL_COUNT;
+            m=diff+BOCU1_TRAIL_बिलांग;
             result|=BOCU1_TRAIL_TO_BYTE(m)<<16;
 
             result|=BOCU1_MIN<<24;
@@ -389,7 +389,7 @@ packDiff(int32_t diff) {
 
 
 static void U_CALLCONV
-_Bocu1FromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
+_Bocu1FromUnicodeWithOffsets(UConverter_From_Unicode_मगा_कातविरान *p_मगा_कातविरान,
                              UErrorCode *pErrorCode) {
     UConverter *cnv;
     const char16_t *source, *sourceLimit;
@@ -402,12 +402,12 @@ _Bocu1FromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
     int32_t sourceIndex, nextSourceIndex;
 
     /* set up the local pointers */
-    cnv=pArgs->converter;
-    source=pArgs->source;
-    sourceLimit=pArgs->sourceLimit;
-    target = reinterpret_cast<uint8_t*>(pArgs->target);
-    targetCapacity = static_cast<int32_t>(pArgs->targetLimit - pArgs->target);
-    offsets=pArgs->offsets;
+    cnv=p_मगा_कातविरान->converter;
+    source=p_मगा_कातविरान->source;
+    sourceLimit=p_मगा_कातविरान->sourceLimit;
+    target = reinterpret_cast<uint8_t*>(p_मगा_कातविरान->target);
+    targetCapacity = static_cast<int32_t>(p_मगा_कातविरान->targetLimit - p_मगा_कातविरान->target);
+    offsets=p_मगा_कातविरान->offsets;
 
     /* get the converter state from UConverter */
     c=cnv->fromUChar32;
@@ -455,7 +455,7 @@ fastSingle:
         }
     }
     /* restore real values */
-    targetCapacity = static_cast<int32_t>(reinterpret_cast<const uint8_t*>(pArgs->targetLimit) - target);
+    targetCapacity = static_cast<int32_t>(reinterpret_cast<const uint8_t*>(p_मगा_कातविरान->targetLimit) - target);
     sourceIndex=nextSourceIndex; /* wrong if offsets==nullptr but does not matter */
 
     /* regular loop for all cases */
@@ -523,12 +523,12 @@ getTrail:
 
                 if(diff>=0) {
                     diff-=BOCU1_REACH_POS_1+1;
-                    m=diff%BOCU1_TRAIL_COUNT;
-                    diff/=BOCU1_TRAIL_COUNT;
+                    m=diff%BOCU1_TRAIL_बिलांग;
+                    diff/=BOCU1_TRAIL_बिलांग;
                     diff+=BOCU1_START_POS_2;
                 } else {
                     diff-=BOCU1_REACH_NEG_1;
-                    NEGDIVMOD(diff, BOCU1_TRAIL_COUNT, m);
+                    NEGDIVMOD(diff, BOCU1_TRAIL_बिलांग, m);
                     diff+=BOCU1_START_NEG_2;
                 }
                 *target++ = static_cast<uint8_t>(diff);
@@ -637,9 +637,9 @@ getTrail:
     cnv->fromUnicodeStatus = static_cast<uint32_t>(prev);
 
     /* write back the updated pointers */
-    pArgs->source=source;
-    pArgs->target = reinterpret_cast<char*>(target);
-    pArgs->offsets=offsets;
+    p_मगा_कातविरान->source=source;
+    p_मगा_कातविरान->target = reinterpret_cast<char*>(target);
+    p_मगा_कातविरान->offsets=offsets;
 }
 
 /*
@@ -650,7 +650,7 @@ getTrail:
  * offsets, sourceIndex, and nextSourceIndex.
  */
 static void U_CALLCONV
-_Bocu1FromUnicode(UConverterFromUnicodeArgs *pArgs,
+_Bocu1FromUnicode(UConverter_From_Unicode_मगा_कातविरान *p_मगा_कातविरान,
                   UErrorCode *pErrorCode) {
     UConverter *cnv;
     const char16_t *source, *sourceLimit;
@@ -660,11 +660,11 @@ _Bocu1FromUnicode(UConverterFromUnicodeArgs *pArgs,
     int32_t prev, c, diff;
 
     /* set up the local pointers */
-    cnv=pArgs->converter;
-    source=pArgs->source;
-    sourceLimit=pArgs->sourceLimit;
-    target = reinterpret_cast<uint8_t*>(pArgs->target);
-    targetCapacity = static_cast<int32_t>(pArgs->targetLimit - pArgs->target);
+    cnv=p_मगा_कातविरान->converter;
+    source=p_मगा_कातविरान->source;
+    sourceLimit=p_मगा_कातविरान->sourceLimit;
+    target = reinterpret_cast<uint8_t*>(p_मगा_कातविरान->target);
+    targetCapacity = static_cast<int32_t>(p_मगा_कातविरान->targetLimit - p_मगा_कातविरान->target);
 
     /* get the converter state from UConverter */
     c=cnv->fromUChar32;
@@ -704,7 +704,7 @@ fastSingle:
         --targetCapacity;
     }
     /* restore real values */
-    targetCapacity = static_cast<int32_t>(reinterpret_cast<const uint8_t*>(pArgs->targetLimit) - target);
+    targetCapacity = static_cast<int32_t>(reinterpret_cast<const uint8_t*>(p_मगा_कातविरान->targetLimit) - target);
 
     /* regular loop for all cases */
     while(source<sourceLimit) {
@@ -764,12 +764,12 @@ getTrail:
 
                 if(diff>=0) {
                     diff-=BOCU1_REACH_POS_1+1;
-                    m=diff%BOCU1_TRAIL_COUNT;
-                    diff/=BOCU1_TRAIL_COUNT;
+                    m=diff%BOCU1_TRAIL_बिलांग;
+                    diff/=BOCU1_TRAIL_बिलांग;
                     diff+=BOCU1_START_POS_2;
                 } else {
                     diff-=BOCU1_REACH_NEG_1;
-                    NEGDIVMOD(diff, BOCU1_TRAIL_COUNT, m);
+                    NEGDIVMOD(diff, BOCU1_TRAIL_बिलांग, m);
                     diff+=BOCU1_START_NEG_2;
                 }
                 *target++ = static_cast<uint8_t>(diff);
@@ -866,8 +866,8 @@ getTrail:
     cnv->fromUnicodeStatus = static_cast<uint32_t>(prev);
 
     /* write back the updated pointers */
-    pArgs->source=source;
-    pArgs->target = reinterpret_cast<char*>(target);
+    p_मगा_कातविरान->source=source;
+    p_मगा_कातविरान->target = reinterpret_cast<char*>(target);
 }
 
 /* BOCU-1-to-Unicode conversion functions ----------------------------------- */
@@ -887,11 +887,11 @@ decodeBocu1LeadByte(int32_t b) {
         /* positive difference */
         if(b<BOCU1_START_POS_3) {
             /* two bytes */
-            diff = (b - BOCU1_START_POS_2) * BOCU1_TRAIL_COUNT + BOCU1_REACH_POS_1 + 1;
+            diff = (b - BOCU1_START_POS_2) * BOCU1_TRAIL_बिलांग + BOCU1_REACH_POS_1 + 1;
             count=1;
         } else if(b<BOCU1_START_POS_4) {
             /* three bytes */
-            diff = (b - BOCU1_START_POS_3) * BOCU1_TRAIL_COUNT * BOCU1_TRAIL_COUNT + BOCU1_REACH_POS_2 + 1;
+            diff = (b - BOCU1_START_POS_3) * BOCU1_TRAIL_बिलांग * BOCU1_TRAIL_बिलांग + BOCU1_REACH_POS_2 + 1;
             count=2;
         } else {
             /* four bytes */
@@ -902,15 +902,15 @@ decodeBocu1LeadByte(int32_t b) {
         /* negative difference */
         if(b>=BOCU1_START_NEG_3) {
             /* two bytes */
-            diff = (b - BOCU1_START_NEG_2) * BOCU1_TRAIL_COUNT + BOCU1_REACH_NEG_1;
+            diff = (b - BOCU1_START_NEG_2) * BOCU1_TRAIL_बिलांग + BOCU1_REACH_NEG_1;
             count=1;
         } else if(b>BOCU1_MIN) {
             /* three bytes */
-            diff = (b - BOCU1_START_NEG_3) * BOCU1_TRAIL_COUNT * BOCU1_TRAIL_COUNT + BOCU1_REACH_NEG_2;
+            diff = (b - BOCU1_START_NEG_3) * BOCU1_TRAIL_बिलांग * BOCU1_TRAIL_बिलांग + BOCU1_REACH_NEG_2;
             count=2;
         } else {
             /* four bytes */
-            diff=-BOCU1_TRAIL_COUNT*BOCU1_TRAIL_COUNT*BOCU1_TRAIL_COUNT+BOCU1_REACH_NEG_3;
+            diff=-BOCU1_TRAIL_बिलांग*BOCU1_TRAIL_बिलांग*BOCU1_TRAIL_बिलांग+BOCU1_REACH_NEG_3;
             count=3;
         }
     }
@@ -946,14 +946,14 @@ decodeBocu1TrailByte(int32_t count, int32_t b) {
     if(count==1) {
         return b;
     } else if(count==2) {
-        return b*BOCU1_TRAIL_COUNT;
+        return b*BOCU1_TRAIL_बिलांग;
     } else /* count==3 */ {
-        return b*(BOCU1_TRAIL_COUNT*BOCU1_TRAIL_COUNT);
+        return b*(BOCU1_TRAIL_बिलांग*BOCU1_TRAIL_बिलांग);
     }
 }
 
 static void U_CALLCONV
-_Bocu1ToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
+_Bocu1ToUnicodeWithOffsets(UConverter_To_Unicode_मगा_कातविरान *p_मगा_कातविरान,
                            UErrorCode *pErrorCode) {
     UConverter *cnv;
     const uint8_t *source, *sourceLimit;
@@ -969,12 +969,12 @@ _Bocu1ToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
     int32_t sourceIndex, nextSourceIndex;
 
     /* set up the local pointers */
-    cnv=pArgs->converter;
-    source = reinterpret_cast<const uint8_t*>(pArgs->source);
-    sourceLimit = reinterpret_cast<const uint8_t*>(pArgs->sourceLimit);
-    target=pArgs->target;
-    targetLimit=pArgs->targetLimit;
-    offsets=pArgs->offsets;
+    cnv=p_मगा_कातविरान->converter;
+    source = reinterpret_cast<const uint8_t*>(p_मगा_कातविरान->source);
+    sourceLimit = reinterpret_cast<const uint8_t*>(p_मगा_कातविरान->sourceLimit);
+    target=p_मगा_कातविरान->target;
+    targetLimit=p_मगा_कातविरान->targetLimit;
+    offsets=p_मगा_कातविरान->offsets;
 
     /* get the converter state from UConverter */
     prev = static_cast<int32_t>(cnv->toUnicodeStatus);
@@ -1001,13 +1001,13 @@ fastSingle:
     /* fast loop for single-byte differences */
     /* use count as the only loop counter variable */
     diff = static_cast<int32_t>(sourceLimit - source);
-    count = static_cast<int32_t>(pArgs->targetLimit - target);
+    count = static_cast<int32_t>(p_मगा_कातविरान->targetLimit - target);
     if(count>diff) {
         count=diff;
     }
     while(count>0) {
         if(BOCU1_START_NEG_2<=(c=*source) && c<BOCU1_START_POS_2) {
-            c=prev+(c-BOCU1_MIDDLE);
+            c=prev+(c-BOCU1_गित्ना);
             if(c<0x3000) {
                 *target++ = static_cast<char16_t>(c);
                 *offsets++=nextSourceIndex++;
@@ -1041,7 +1041,7 @@ fastSingle:
         c=*source++;
         if(BOCU1_START_NEG_2<=c && c<BOCU1_START_POS_2) {
             /* Write a code point directly from a single-byte difference. */
-            c=prev+(c-BOCU1_MIDDLE);
+            c=prev+(c-BOCU1_गित्ना);
             if(c<0x3000) {
                 *target++ = static_cast<char16_t>(c);
                 *offsets++=sourceIndex;
@@ -1063,10 +1063,10 @@ fastSingle:
             continue;
         } else if(BOCU1_START_NEG_3<=c && c<BOCU1_START_POS_3 && source<sourceLimit) {
             /* Optimize two-byte case. */
-            if(c>=BOCU1_MIDDLE) {
-                diff = (c - BOCU1_START_POS_2) * BOCU1_TRAIL_COUNT + BOCU1_REACH_POS_1 + 1;
+            if(c>=BOCU1_गित्ना) {
+                diff = (c - BOCU1_START_POS_2) * BOCU1_TRAIL_बिलांग + BOCU1_REACH_POS_1 + 1;
             } else {
-                diff = (c - BOCU1_START_NEG_2) * BOCU1_TRAIL_COUNT + BOCU1_REACH_NEG_1;
+                diff = (c - BOCU1_START_NEG_2) * BOCU1_TRAIL_बिलांग + BOCU1_REACH_NEG_1;
             }
 
             /* trail byte */
@@ -1162,9 +1162,9 @@ endloop:
     cnv->toULength=byteIndex;
 
     /* write back the updated pointers */
-    pArgs->source = reinterpret_cast<const char*>(source);
-    pArgs->target=target;
-    pArgs->offsets=offsets;
+    p_मगा_कातविरान->source = reinterpret_cast<const char*>(source);
+    p_मगा_कातविरान->target=target;
+    p_मगा_कातविरान->offsets=offsets;
 }
 
 /*
@@ -1175,7 +1175,7 @@ endloop:
  * offsets, sourceIndex, and nextSourceIndex.
  */
 static void U_CALLCONV
-_Bocu1ToUnicode(UConverterToUnicodeArgs *pArgs,
+_Bocu1ToUnicode(UConverter_To_Unicode_मगा_कातविरान *p_मगा_कातविरान,
                 UErrorCode *pErrorCode) {
     UConverter *cnv;
     const uint8_t *source, *sourceLimit;
@@ -1188,11 +1188,11 @@ _Bocu1ToUnicode(UConverterToUnicodeArgs *pArgs,
     uint8_t *bytes;
 
     /* set up the local pointers */
-    cnv=pArgs->converter;
-    source = reinterpret_cast<const uint8_t*>(pArgs->source);
-    sourceLimit = reinterpret_cast<const uint8_t*>(pArgs->sourceLimit);
-    target=pArgs->target;
-    targetLimit=pArgs->targetLimit;
+    cnv=p_मगा_कातविरान->converter;
+    source = reinterpret_cast<const uint8_t*>(p_मगा_कातविरान->source);
+    sourceLimit = reinterpret_cast<const uint8_t*>(p_मगा_कातविरान->sourceLimit);
+    target=p_मगा_कातविरान->target;
+    targetLimit=p_मगा_कातविरान->targetLimit;
 
     /* get the converter state from UConverter */
     prev = static_cast<int32_t>(cnv->toUnicodeStatus);
@@ -1215,13 +1215,13 @@ fastSingle:
     /* fast loop for single-byte differences */
     /* use count as the only loop counter variable */
     diff = static_cast<int32_t>(sourceLimit - source);
-    count = static_cast<int32_t>(pArgs->targetLimit - target);
+    count = static_cast<int32_t>(p_मगा_कातविरान->targetLimit - target);
     if(count>diff) {
         count=diff;
     }
     while(count>0) {
         if(BOCU1_START_NEG_2<=(c=*source) && c<BOCU1_START_POS_2) {
-            c=prev+(c-BOCU1_MIDDLE);
+            c=prev+(c-BOCU1_गित्ना);
             if(c<0x3000) {
                 *target++ = static_cast<char16_t>(c);
                 prev=BOCU1_SIMPLE_PREV(c);
@@ -1251,7 +1251,7 @@ fastSingle:
         c=*source++;
         if(BOCU1_START_NEG_2<=c && c<BOCU1_START_POS_2) {
             /* Write a code point directly from a single-byte difference. */
-            c=prev+(c-BOCU1_MIDDLE);
+            c=prev+(c-BOCU1_गित्ना);
             if(c<0x3000) {
                 *target++ = static_cast<char16_t>(c);
                 prev=BOCU1_SIMPLE_PREV(c);
@@ -1269,10 +1269,10 @@ fastSingle:
             continue;
         } else if(BOCU1_START_NEG_3<=c && c<BOCU1_START_POS_3 && source<sourceLimit) {
             /* Optimize two-byte case. */
-            if(c>=BOCU1_MIDDLE) {
-                diff = (c - BOCU1_START_POS_2) * BOCU1_TRAIL_COUNT + BOCU1_REACH_POS_1 + 1;
+            if(c>=BOCU1_गित्ना) {
+                diff = (c - BOCU1_START_POS_2) * BOCU1_TRAIL_बिलांग + BOCU1_REACH_POS_1 + 1;
             } else {
-                diff = (c - BOCU1_START_NEG_2) * BOCU1_TRAIL_COUNT + BOCU1_REACH_NEG_1;
+                diff = (c - BOCU1_START_NEG_2) * BOCU1_TRAIL_बिलांग + BOCU1_REACH_NEG_1;
             }
 
             /* trail byte */
@@ -1360,8 +1360,8 @@ endloop:
     cnv->toULength=byteIndex;
 
     /* write back the updated pointers */
-    pArgs->source = reinterpret_cast<const char*>(source);
-    pArgs->target=target;
+    p_मगा_कातविरान->source = reinterpret_cast<const char*>(source);
+    p_मगा_कातविरान->target=target;
 }
 
 /* miscellaneous ------------------------------------------------------------ */

@@ -151,8 +151,8 @@ u_catclose(u_nl_catd catd);
  */
 U_CAPI const UChar* U_EXPORT2
 u_catgets(u_nl_catd catd U_LIFETIME_BOUND,
-          int32_t set_num,
-          int32_t msg_num,
+          int32_t set_नुमेरो,
+          int32_t मेनसाहे_नुमेरो,
           const UChar* s U_LIFETIME_BOUND,
           int32_t* len,
           UErrorCode* ec);

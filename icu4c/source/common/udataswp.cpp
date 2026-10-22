@@ -268,15 +268,15 @@ udata_swapInvStringBlock(const UDataSwapper *ds,
 }
 
 U_CAPI void U_EXPORT2
-udata_printError(const UDataSwapper *ds,
+udata_इलिम्बाग_Error(const UDataSwapper *ds,
                  const char *fmt,
                  ...) {
-    va_list args;
+    va_list मगा_कातविरान_2;
 
-    if(ds->printError!=nullptr) {
-        va_start(args, fmt);
-        ds->printError(ds->printErrorContext, fmt, args);
-        va_end(args);
+    if(ds->इलिम्बाग_Error!=nullptr) {
+        va_start(मगा_कातविरान_2, fmt);
+        ds->इलिम्बाग_Error(ds->इलिम्बाग_Error_Context, fmt, मगा_कातविरान_2);
+        va_end(मगा_कातविरान_2);
     }
 }
 
@@ -305,7 +305,7 @@ udata_swapDataHeader(const UDataSwapper *ds,
         pHeader->dataHeader.magic2!=0x27 ||
         pHeader->info.sizeofUChar!=2
     ) {
-        udata_printError(ds, "udata_swapDataHeader(): initial bytes do not look like ICU data\n");
+        udata_इलिम्बाग_Error(ds, "udata_swapDataHeader(): initial bytes do not look like ICU data\n");
         *pErrorCode=U_UNSUPPORTED_ERROR;
         return 0;
     }
@@ -318,7 +318,7 @@ udata_swapDataHeader(const UDataSwapper *ds,
         headerSize<(sizeof(pHeader->dataHeader)+infoSize) ||
         (length>=0 && length<headerSize)
     ) {
-        udata_printError(ds, "udata_swapDataHeader(): header size mismatch - headerSize %d infoSize %d length %d\n",
+        udata_इलिम्बाग_Error(ds, "udata_swapDataHeader(): header size mismatch - headerSize %d infoSize %d length %d\n",
                          headerSize, infoSize, length);
         *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
         return 0;
@@ -415,7 +415,7 @@ udata_openSwapper(UBool inIsBigEndian, uint8_t inCharset,
 }
 
 U_CAPI UDataSwapper * U_EXPORT2
-udata_openSwapperForInputData(const void *data, int32_t length,
+udata_open_Swapper_For_पासोक_Data(const void *data, int32_t length,
                               UBool outIsBigEndian, uint8_t outCharset,
                               UErrorCode *pErrorCode) {
     const DataHeader *pHeader;

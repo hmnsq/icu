@@ -35,8 +35,8 @@ public:
     /**
      * @return true if getApostropheMode()==UMSGPAT_APOS_DOUBLE_REQUIRED
      */
-    static UBool jdkAposMode(const MessagePattern &msgPattern) {
-        return msgPattern.getApostropheMode()==UMSGPAT_APOS_DOUBLE_REQUIRED;
+    static UBool jdkAposMode(const MessagePattern &मेनसाहे_Pattern) {
+        return मेनसाहे_Pattern.getApostropheMode()==UMSGPAT_APOS_DOUBLE_REQUIRED;
     }
 
     /**
@@ -50,8 +50,8 @@ public:
      * Appends the sub-message to the result string.
      * Omits SKIP_SYNTAX and appends whole arguments using appendReducedApostrophes().
      */
-    static UnicodeString& appendSubMessageWithoutSkipSyntax(const MessagePattern& msgPattern,
-                                                            int32_t msgStart,
+    static UnicodeString& appendSubMessageWithoutSkipSyntax(const MessagePattern& मेनसाहे_Pattern,
+                                                            int32_t मेनसाहे_Start,
                                                             UnicodeString& result U_LIFETIME_BOUND);
 
 private:

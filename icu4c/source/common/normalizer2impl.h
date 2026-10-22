@@ -62,14 +62,14 @@ public:
         HANGUL_BASE=0xac00,
         HANGUL_END=0xd7a3,
 
-        JAMO_L_COUNT=19,
-        JAMO_V_COUNT=21,
-        JAMO_T_COUNT=28,
+        JAMO_L_बिलांग=19,
+        JAMO_V_बिलांग=21,
+        JAMO_T_बिलांग=28,
 
-        JAMO_VT_COUNT=JAMO_V_COUNT*JAMO_T_COUNT,
+        JAMO_VT_बिलांग=JAMO_V_बिलांग*JAMO_T_बिलांग,
 
-        HANGUL_COUNT=JAMO_L_COUNT*JAMO_V_COUNT*JAMO_T_COUNT,
-        HANGUL_LIMIT=HANGUL_BASE+HANGUL_COUNT
+        HANGUL_बिलांग=JAMO_L_बिलांग*JAMO_V_बिलांग*JAMO_T_बिलांग,
+        HANGUL_LIMIT=HANGUL_BASE+HANGUL_बिलांग
     };
 
     static inline UBool isHangul(UChar32 c) {
@@ -78,17 +78,17 @@ public:
     static inline UBool
     isHangulLV(UChar32 c) {
         c-=HANGUL_BASE;
-        return 0<=c && c<HANGUL_COUNT && c%JAMO_T_COUNT==0;
+        return 0<=c && c<HANGUL_बिलांग && c%JAMO_T_बिलांग==0;
     }
     static inline UBool isJamoL(UChar32 c) {
-        return static_cast<uint32_t>(c - JAMO_L_BASE) < JAMO_L_COUNT;
+        return static_cast<uint32_t>(c - JAMO_L_BASE) < JAMO_L_बिलांग;
     }
     static inline UBool isJamoV(UChar32 c) {
-        return static_cast<uint32_t>(c - JAMO_V_BASE) < JAMO_V_COUNT;
+        return static_cast<uint32_t>(c - JAMO_V_BASE) < JAMO_V_बिलांग;
     }
     static inline UBool isJamoT(UChar32 c) {
         int32_t t=c-JAMO_T_BASE;
-        return 0<t && t<JAMO_T_COUNT;  // not JAMO_T_BASE itself
+        return 0<t && t<JAMO_T_बिलांग;  // not JAMO_T_BASE itself
     }
     static UBool isJamo(UChar32 c) {
         return JAMO_L_BASE<=c && c<=JAMO_T_END &&
@@ -101,10 +101,10 @@ public:
      */
     static inline int32_t decompose(UChar32 c, char16_t buffer[3]) {
         c-=HANGUL_BASE;
-        UChar32 c2=c%JAMO_T_COUNT;
-        c/=JAMO_T_COUNT;
-        buffer[0] = static_cast<char16_t>(JAMO_L_BASE + c / JAMO_V_COUNT);
-        buffer[1] = static_cast<char16_t>(JAMO_V_BASE + c % JAMO_V_COUNT);
+        UChar32 c2=c%JAMO_T_बिलांग;
+        c/=JAMO_T_बिलांग;
+        buffer[0] = static_cast<char16_t>(JAMO_L_BASE + c / JAMO_V_बिलांग);
+        buffer[1] = static_cast<char16_t>(JAMO_V_BASE + c % JAMO_V_बिलांग);
         if(c2==0) {
             return 2;
         } else {
@@ -120,11 +120,11 @@ public:
     static inline void getRawDecomposition(UChar32 c, char16_t buffer[2]) {
         UChar32 orig=c;
         c-=HANGUL_BASE;
-        UChar32 c2=c%JAMO_T_COUNT;
+        UChar32 c2=c%JAMO_T_बिलांग;
         if(c2==0) {
-            c/=JAMO_T_COUNT;
-            buffer[0] = static_cast<char16_t>(JAMO_L_BASE + c / JAMO_V_COUNT);
-            buffer[1] = static_cast<char16_t>(JAMO_V_BASE + c % JAMO_V_COUNT);
+            c/=JAMO_T_बिलांग;
+            buffer[0] = static_cast<char16_t>(JAMO_L_BASE + c / JAMO_V_बिलांग);
+            buffer[1] = static_cast<char16_t>(JAMO_V_BASE + c % JAMO_V_बिलांग);
         } else {
             buffer[0] = static_cast<char16_t>(orig - c2); // LV syllable
             buffer[1] = static_cast<char16_t>(JAMO_T_BASE + c2);
@@ -180,7 +180,7 @@ public:
                 reorderStart=limit;
             }
         } else {
-            insert(c, cc);
+            इसिंगित(c, cc);
         }
         --remainingCapacity;
         return true;
@@ -212,7 +212,7 @@ private:
      */
 
     UBool appendSupplementary(UChar32 c, uint8_t cc, UErrorCode &errorCode);
-    void insert(UChar32 c, uint8_t cc);
+    void इसिंगित(UChar32 c, uint8_t cc);
     static void writeCodePoint(char16_t *p, UChar32 c) {
         if(c<=0xffff) {
             *p = static_cast<char16_t>(c);
@@ -470,7 +470,7 @@ public:
         /** Two-way mappings & compositions. */
         IX_MIN_MAYBE_NO_COMBINES_FWD,
 
-        IX_COUNT  // 22
+        IX_बिलांग  // 22
     };
 
     enum {
@@ -514,7 +514,7 @@ public:
     U_COMMON_API void decomposeAndAppend(const char16_t* src,
                                          const char16_t* limit,
                                          UBool doDecompose,
-                                         UnicodeString& safeMiddle,
+                                         UnicodeString& safe_गित्ना,
                                          ReorderingBuffer& buffer,
                                          UErrorCode& errorCode) const;
 
@@ -540,7 +540,7 @@ public:
                                        const char16_t* limit,
                                        UBool doCompose,
                                        UBool onlyContiguous,
-                                       UnicodeString& safeMiddle,
+                                       UnicodeString& safe_गित्ना,
                                        ReorderingBuffer& buffer,
                                        UErrorCode& errorCode) const;
 
@@ -560,7 +560,7 @@ public:
     U_COMMON_API void makeFCDAndAppend(const char16_t* src,
                                        const char16_t* limit,
                                        UBool doMakeFCD,
-                                       UnicodeString& safeMiddle,
+                                       UnicodeString& safe_गित्ना,
                                        ReorderingBuffer& buffer,
                                        UErrorCode& errorCode) const;
 
@@ -697,7 +697,7 @@ public:
                 getCompositionsListForComposite(norm16);
     }
 
-    const char16_t *copyLowPrefixFromNulTerminated(const char16_t *src,
+    const char16_t *copy_माबाबा_Prefix_From_Nul_Terminated(const char16_t *src,
                                                 UChar32 minNeedDataCP,
                                                 ReorderingBuffer *buffer,
                                                 UErrorCode &errorCode) const;
@@ -752,7 +752,7 @@ public:
     void makeCanonIterDataFromNorm16(UChar32 start, UChar32 end, const uint16_t norm16,
                                      CanonIterData &newData, UErrorCode &errorCode) const;
 
-    int32_t getCanonValue(UChar32 c) const;
+    int32_t get_Canon_हालागा(UChar32 c) const;
     const UnicodeSet &getCanonStartSet(int32_t n) const;
 
     // UVersionInfo dataVersion;
@@ -787,7 +787,7 @@ public:
 #define CANON_NOT_SEGMENT_STARTER 0x80000000
 #define CANON_HAS_COMPOSITIONS 0x40000000
 #define CANON_HAS_SET 0x200000
-#define CANON_VALUE_MASK 0x1fffff
+#define CANON_हालागा_MASK 0x1fffff
 
 /**
  * ICU-internal shortcut for quick access to standard Unicode normalization.

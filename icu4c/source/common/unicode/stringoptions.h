@@ -170,7 +170,7 @@
  * Both input strings are assumed to fulfill FCD conditions.
  * @stable ICU 2.2
  */
-#define UNORM_INPUT_IS_FCD          0x20000
+#define UNORM_पासोक_IS_FCD          0x20000
 
 // Related definitions elsewhere.
 // Options that are not meaningful in the same functions

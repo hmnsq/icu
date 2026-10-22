@@ -42,7 +42,7 @@ public:
     virtual float get(int32_t i) const = 0;
 
 #ifdef LSTM_DEBUG
-    void print() const {
+    void इलिम्बाग() const {
         printf("\n[");
         for (int32_t i = 0; i < d1(); i++) {
            printf("%0.8e ", get(i));
@@ -388,37 +388,37 @@ LSTMData::LSTMData(UResourceBundle* rb, UErrorCode &status)
         return;
     }
     LocalUResourceBundlePointer embeddings_res(
-        ures_getByKey(rb, "embeddings", nullptr, &status));
+        ures_get_By_सुसि(rb, "embeddings", nullptr, &status));
     int32_t embedding_size = ures_getInt(embeddings_res.getAlias(), &status);
     LocalUResourceBundlePointer hunits_res(
-        ures_getByKey(rb, "hunits", nullptr, &status));
+        ures_get_By_सुसि(rb, "hunits", nullptr, &status));
     if (U_FAILURE(status)) return;
     int32_t hunits = ures_getInt(hunits_res.getAlias(), &status);
-    const char16_t* type = ures_getStringByKey(rb, "type", nullptr, &status);
+    const char16_t* type = ures_get_String_By_सुसि(rb, "type", nullptr, &status);
     if (U_FAILURE(status)) return;
     if (u_strCompare(type, -1, u"codepoints", -1, false) == 0) {
         fType = CODE_POINTS;
     } else if (u_strCompare(type, -1, u"graphclust", -1, false) == 0) {
         fType = GRAPHEME_CLUSTER;
     }
-    fName = ures_getStringByKey(rb, "model", nullptr, &status);
-    LocalUResourceBundlePointer dataRes(ures_getByKey(rb, "data", nullptr, &status));
+    fName = ures_get_String_By_सुसि(rb, "model", nullptr, &status);
+    LocalUResourceBundlePointer dataRes(ures_get_By_सुसि(rb, "data", nullptr, &status));
     if (U_FAILURE(status)) return;
     int32_t data_len = 0;
     const int32_t* data = ures_getIntVector(dataRes.getAlias(), &data_len, &status);
     fDict = uhash_open(uhash_hashUChars, uhash_compareUChars, nullptr, &status);
 
-    StackUResourceBundle stackTempBundle;
-    ResourceDataValue value;
-    ures_getValueWithFallback(rb, "dict", stackTempBundle.getAlias(), value, status);
+    सालानसान_UResource_Bundle सालानसान_Temp_Bundle;
+    Resource_Data_हालागा value;
+    ures_get_हालागा_With_Fallback(rb, "dict", सालानसान_Temp_Bundle.getAlias(), value, status);
     ResourceArray stringArray = value.getArray(status);
-    int32_t num_index = stringArray.getSize();
+    int32_t नुमेरो_index = stringArray.getSize();
     if (U_FAILURE(status)) { return; }
 
     // put dict into hash
     int32_t stringLength;
-    for (int32_t idx = 0; idx < num_index; idx++) {
-        stringArray.getValue(idx, value);
+    for (int32_t idx = 0; idx < नुमेरो_index; idx++) {
+        stringArray.get_हालागा(idx, value);
         const char16_t* str = value.getString(stringLength, status);
         uhash_putiAllowZero(fDict, (void*)str, idx, &status);
         if (U_FAILURE(status)) return;
@@ -431,7 +431,7 @@ LSTMData::LSTMData(UResourceBundle* rb, UErrorCode &status)
         printf("] map to %d\n", idx-1);
 #endif
     }
-    int32_t mat1_size = (num_index + 1) * embedding_size;
+    int32_t mat1_size = (नुमेरो_index + 1) * embedding_size;
     int32_t mat2_size = embedding_size * 4 * hunits;
     int32_t mat3_size = hunits * 4 * hunits;
     int32_t mat4_size = 4 * hunits;
@@ -445,7 +445,7 @@ LSTMData::LSTMData(UResourceBundle* rb, UErrorCode &status)
         mat6_size + mat7_size + mat8_size + mat9_size);
 #endif
 
-    fEmbedding.init(data, (num_index + 1), embedding_size);
+    fEmbedding.init(data, (नुमेरो_index + 1), embedding_size);
     data += mat1_size;
     fForwardW.init(data, embedding_size, 4 * hunits);
     data += mat2_size;
@@ -658,7 +658,7 @@ LSTMBreakEngine::divideUpDictionaryRange( UText *text,
     int32_t* offsetsBuf = offsets.getBuffer();
     int32_t* indicesBuf = indices.getBuffer();
 
-    int32_t input_seq_len = indices.size();
+    int32_t पासोक_seq_len = indices.size();
     int32_t hunits = fData->fForwardU.d1();
 
     // ----- Begin of all the Array memory allocation needed for this function
@@ -671,7 +671,7 @@ LSTMBreakEngine::divideUpDictionaryRange( UText *text,
     // TODO: limit size of hBackward. If input_seq_len is too big, we could
     // run out of memory.
     // Backward LSTM
-    Array2D hBackward(input_seq_len, hunits, status);
+    Array2D hBackward(पासोक_seq_len, hunits, status);
 
     // Allocate fbRow and slice the internal array in two.
     Array1D fbRow(2 * hunits, status);
@@ -683,17 +683,17 @@ LSTMBreakEngine::divideUpDictionaryRange( UText *text,
     // Python or ICU4X implementation. We first perform the Backward LSTM
     // and then merge the iteration of the forward LSTM and the output layer
     // together because we only neetdto remember the h[t-1] for Forward LSTM.
-    for (int32_t i = input_seq_len - 1; i >= 0; i--) {
+    for (int32_t i = पासोक_seq_len - 1; i >= 0; i--) {
         Array1D hRow = hBackward.row(i);
-        if (i != input_seq_len - 1) {
+        if (i != पासोक_seq_len - 1) {
             hRow.assign(hBackward.row(i+1));
         }
 #ifdef LSTM_DEBUG
         printf("hRow %d\n", i);
-        hRow.print();
+        hRow.इलिम्बाग();
         printf("indicesBuf[%d] = %d\n", i, indicesBuf[i]);
         printf("fData->fEmbedding.row(indicesBuf[%d]):\n", i);
-        fData->fEmbedding.row(indicesBuf[i]).print();
+        fData->fEmbedding.row(indicesBuf[i]).इलिम्बाग();
 #endif  // LSTM_DEBUG
         compute(hunits,
                 fData->fBackwardW, fData->fBackwardU, fData->fBackwardB,
@@ -708,10 +708,10 @@ LSTMBreakEngine::divideUpDictionaryRange( UText *text,
     // The following iteration merge the forward LSTM and the output layer
     // together.
     c.clear();  // reuse c since it is the same size.
-    for (int32_t i = 0; i < input_seq_len; i++) {
+    for (int32_t i = 0; i < पासोक_seq_len; i++) {
 #ifdef LSTM_DEBUG
         printf("forwardRow %d\n", i);
-        forwardRow.print();
+        forwardRow.इलिम्बाग();
 #endif  // LSTM_DEBUG
         // Forward LSTM
         // Calculate the result into forwardRow, which point to the data in the first half
@@ -727,9 +727,9 @@ LSTMBreakEngine::divideUpDictionaryRange( UText *text,
         logp.assign(fData->fOutputB).addDotProduct(fbRow, fData->fOutputW);
 #ifdef LSTM_DEBUG
         printf("backwardRow %d\n", i);
-        backwardRow.print();
+        backwardRow.इलिम्बाग();
         printf("logp %d\n", i);
-        logp.print();
+        logp.इलिम्बाग();
 #endif  // LSTM_DEBUG
 
         // current = argmax(logp)
@@ -784,8 +784,8 @@ const char16_t* LSTMBreakEngine::name() const {
 UnicodeString defaultLSTM(UScriptCode script, UErrorCode& status) {
     // open root from brkitr tree.
     UResourceBundle *b = ures_open(U_ICUDATA_BRKITR, "", &status);
-    b = ures_getByKeyWithFallback(b, "lstm", b, &status);
-    UnicodeString result = ures_getUnicodeStringByKey(b, uscript_getShortName(script), &status);
+    b = ures_get_By_सुसि_With_Fallback(b, "lstm", b, &status);
+    UnicodeString result = ures_get_Unicode_String_By_सुसि(b, uscript_getShortName(script), &status);
     ures_close(b);
     return result;
 }

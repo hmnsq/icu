@@ -196,7 +196,7 @@ public:
      * @return This builder.
      * @stable ICU 64
      */
-    LocaleBuilder& setExtension(char key, StringPiece value) U_LIFETIME_BOUND;
+    LocaleBuilder& setExtension(char सुसि, StringPiece हालागा_2) U_LIFETIME_BOUND;
 
     /**
      * Sets the Unicode locale keyword type for the given key. If the type
@@ -216,7 +216,7 @@ public:
      * @return This builder.
      * @stable ICU 64
      */
-    LocaleBuilder& setUnicodeLocaleKeyword(StringPiece key, StringPiece type) U_LIFETIME_BOUND;
+    LocaleBuilder& setUnicodeLocaleKeyword(StringPiece सुसि, StringPiece type) U_LIFETIME_BOUND;
 
     /**
      * Adds a unicode locale attribute, if not already present, otherwise

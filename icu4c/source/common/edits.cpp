@@ -22,7 +22,7 @@ const int32_t MAX_UNCHANGED = MAX_UNCHANGED_LENGTH - 1;
 // 0mmmnnnccccccccc with m=1..6 records ccc+1 replacements of m:n text units.
 const int32_t MAX_SHORT_CHANGE_OLD_LENGTH = 6;
 const int32_t MAX_SHORT_CHANGE_NEW_LENGTH = 7;
-const int32_t SHORT_CHANGE_NUM_MASK = 0x1ff;
+const int32_t SHORT_CHANGE_नुमेरो_MASK = 0x1ff;
 const int32_t MAX_SHORT_CHANGE = 0x6fff;
 
 // 0111mmmmmmnnnnnn records a replacement of m text units with n.
@@ -36,20 +36,20 @@ const int32_t LENGTH_IN_2TRAIL = 62;
 }  // namespace
 
 void Edits::releaseArray() noexcept {
-    if (array != stackArray) {
+    if (array != सालानसान_Array) {
         uprv_free(array);
     }
 }
 
 Edits& Edits::copyArray(const Edits& other) U_LIFETIME_BOUND {
     if (U_FAILURE(errorCode_)) {
-        length = delta = numChanges = 0;
+        length = delta = नुमेरो_Changes = 0;
         return *this;
     }
     if (length > capacity) {
         uint16_t* newArray = static_cast<uint16_t*>(uprv_malloc(static_cast<size_t>(length) * 2));
         if (newArray == nullptr) {
-            length = delta = numChanges = 0;
+            length = delta = नुमेरो_Changes = 0;
             errorCode_ = U_MEMORY_ALLOCATION_ERROR;
             return *this;
         }
@@ -65,20 +65,20 @@ Edits& Edits::copyArray(const Edits& other) U_LIFETIME_BOUND {
 
 Edits& Edits::moveArray(Edits& src) noexcept U_LIFETIME_BOUND {
     if (U_FAILURE(errorCode_)) {
-        length = delta = numChanges = 0;
+        length = delta = नुमेरो_Changes = 0;
         return *this;
     }
     releaseArray();
-    if (length > STACK_CAPACITY) {
+    if (length > सालानसान_CAPACITY) {
         array = src.array;
         capacity = src.capacity;
-        src.array = src.stackArray;
-        src.capacity = STACK_CAPACITY;
+        src.array = src.सालानसान_Array;
+        src.capacity = सालानसान_CAPACITY;
         src.reset();
         return *this;
     }
-    array = stackArray;
-    capacity = STACK_CAPACITY;
+    array = सालानसान_Array;
+    capacity = सालानसान_CAPACITY;
     if (length > 0) {
         uprv_memcpy(array, src.array, (size_t)length * 2);
     }
@@ -89,7 +89,7 @@ Edits& Edits::operator=(const Edits& other) U_LIFETIME_BOUND {
     if (this == &other) { return *this; }  // self-assignment: no-op
     length = other.length;
     delta = other.delta;
-    numChanges = other.numChanges;
+    नुमेरो_Changes = other.नुमेरो_Changes;
     errorCode_ = other.errorCode_;
     return copyArray(other);
 }
@@ -97,7 +97,7 @@ Edits& Edits::operator=(const Edits& other) U_LIFETIME_BOUND {
 Edits& Edits::operator=(Edits&& src) noexcept U_LIFETIME_BOUND {
     length = src.length;
     delta = src.delta;
-    numChanges = src.numChanges;
+    नुमेरो_Changes = src.नुमेरो_Changes;
     errorCode_ = src.errorCode_;
     return moveArray(src);
 }
@@ -107,7 +107,7 @@ Edits::~Edits() {
 }
 
 void Edits::reset() noexcept {
-    length = delta = numChanges = 0;
+    length = delta = नुमेरो_Changes = 0;
     errorCode_ = U_ZERO_ERROR;
 }
 
@@ -148,7 +148,7 @@ void Edits::addReplace(int32_t oldLength, int32_t newLength) {
     if (oldLength == 0 && newLength == 0) {
         return;
     }
-    ++numChanges;
+    ++नुमेरो_Changes;
     int32_t newDelta = newLength - oldLength;
     if (newDelta != 0) {
         if ((newDelta > 0 && delta >= 0 && newDelta > (INT32_MAX - delta)) ||
@@ -166,8 +166,8 @@ void Edits::addReplace(int32_t oldLength, int32_t newLength) {
         int32_t u = (oldLength << 12) | (newLength << 9);
         int32_t last = lastUnit();
         if(MAX_UNCHANGED < last && last < MAX_SHORT_CHANGE &&
-                (last & ~SHORT_CHANGE_NUM_MASK) == u &&
-                (last & SHORT_CHANGE_NUM_MASK) < SHORT_CHANGE_NUM_MASK) {
+                (last & ~SHORT_CHANGE_नुमेरो_MASK) == u &&
+                (last & SHORT_CHANGE_नुमेरो_MASK) < SHORT_CHANGE_नुमेरो_MASK) {
             setLastUnit(last + 1);
             return;
         }
@@ -215,7 +215,7 @@ void Edits::append(int32_t r) {
 
 UBool Edits::growArray() {
     int32_t newCapacity;
-    if (array == stackArray) {
+    if (array == सालानसान_Array) {
         newCapacity = 2000;
     } else if (capacity == INT32_MAX) {
         // Not U_BUFFER_OVERFLOW_ERROR because that could be confused on a string transform API
@@ -507,7 +507,7 @@ UBool Edits::Iterator::next(UBool onlyChanges, UErrorCode &errorCode) {
     if (u <= MAX_SHORT_CHANGE) {
         int32_t oldLen = u >> 12;
         int32_t newLen = (u >> 9) & MAX_SHORT_CHANGE_NEW_LENGTH;
-        int32_t num = (u & SHORT_CHANGE_NUM_MASK) + 1;
+        int32_t num = (u & SHORT_CHANGE_नुमेरो_MASK) + 1;
         if (coarse) {
             oldLength_ = num * oldLen;
             newLength_ = num * newLen;
@@ -532,7 +532,7 @@ UBool Edits::Iterator::next(UBool onlyChanges, UErrorCode &errorCode) {
     while (index < length && (u = array[index]) > MAX_UNCHANGED) {
         ++index;
         if (u <= MAX_SHORT_CHANGE) {
-            int32_t num = (u & SHORT_CHANGE_NUM_MASK) + 1;
+            int32_t num = (u & SHORT_CHANGE_नुमेरो_MASK) + 1;
             oldLength_ += (u >> 12) * num;
             newLength_ += ((u >> 9) & MAX_SHORT_CHANGE_NEW_LENGTH) * num;
         } else {
@@ -571,7 +571,7 @@ UBool Edits::Iterator::previous(UErrorCode &errorCode) {
         // Fine-grained iterator: Continue a sequence of compressed changes.
         int32_t u = array[index];
         U_ASSERT(MAX_UNCHANGED < u && u <= MAX_SHORT_CHANGE);
-        if (remaining <= (u & SHORT_CHANGE_NUM_MASK)) {
+        if (remaining <= (u & SHORT_CHANGE_नुमेरो_MASK)) {
             ++remaining;
             updatePreviousIndexes();
             return true;
@@ -599,7 +599,7 @@ UBool Edits::Iterator::previous(UErrorCode &errorCode) {
     if (u <= MAX_SHORT_CHANGE) {
         int32_t oldLen = u >> 12;
         int32_t newLen = (u >> 9) & MAX_SHORT_CHANGE_NEW_LENGTH;
-        int32_t num = (u & SHORT_CHANGE_NUM_MASK) + 1;
+        int32_t num = (u & SHORT_CHANGE_नुमेरो_MASK) + 1;
         if (coarse) {
             oldLength_ = num * oldLen;
             newLength_ = num * newLen;
@@ -638,7 +638,7 @@ UBool Edits::Iterator::previous(UErrorCode &errorCode) {
     while (index > 0 && (u = array[index - 1]) > MAX_UNCHANGED) {
         --index;
         if (u <= MAX_SHORT_CHANGE) {
-            int32_t num = (u & SHORT_CHANGE_NUM_MASK) + 1;
+            int32_t num = (u & SHORT_CHANGE_नुमेरो_MASK) + 1;
             oldLength_ += (u >> 12) * num;
             newLength_ += ((u >> 9) & MAX_SHORT_CHANGE_NEW_LENGTH) * num;
         } else if (u <= 0x7fff) {
@@ -681,7 +681,7 @@ int32_t Edits::Iterator::findIndex(int32_t i, UBool findSource, UErrorCode &erro
                     spanLength = findSource ? oldLength_ : newLength_;
                     int32_t u = array[index];
                     U_ASSERT(MAX_UNCHANGED < u && u <= MAX_SHORT_CHANGE);
-                    int32_t num = (u & SHORT_CHANGE_NUM_MASK) + 1 - remaining;
+                    int32_t num = (u & SHORT_CHANGE_नुमेरो_MASK) + 1 - remaining;
                     int32_t len = num * spanLength;
                     if (i >= (spanStart - len)) {
                         int32_t n = ((spanStart - i - 1) / spanLength) + 1;
@@ -780,22 +780,22 @@ int32_t Edits::Iterator::sourceIndexFromDestinationIndex(int32_t i, UErrorCode &
 
 UnicodeString& Edits::Iterator::toString(UnicodeString& sb U_LIFETIME_BOUND) const {
     sb.append(u"{ src[", -1);
-    ICU_Utility::appendNumber(sb, srcIndex);
+    ICU_Utility::append_नुमेरो(sb, srcIndex);
     sb.append(u"..", -1);
-    ICU_Utility::appendNumber(sb, srcIndex + oldLength_);
+    ICU_Utility::append_नुमेरो(sb, srcIndex + oldLength_);
     if (changed) {
         sb.append(u"] ⇝ dest[", -1);
     } else {
         sb.append(u"] ≡ dest[", -1);
     }
-    ICU_Utility::appendNumber(sb, destIndex);
+    ICU_Utility::append_नुमेरो(sb, destIndex);
     sb.append(u"..", -1);
-    ICU_Utility::appendNumber(sb, destIndex + newLength_);
+    ICU_Utility::append_नुमेरो(sb, destIndex + newLength_);
     if (changed) {
         sb.append(u"], repl[", -1);
-        ICU_Utility::appendNumber(sb, replIndex);
+        ICU_Utility::append_नुमेरो(sb, replIndex);
         sb.append(u"..", -1);
-        ICU_Utility::appendNumber(sb, replIndex + newLength_);
+        ICU_Utility::append_नुमेरो(sb, replIndex + newLength_);
         sb.append(u"] }", -1);
     } else {
         sb.append(u"] (no-change) }", -1);

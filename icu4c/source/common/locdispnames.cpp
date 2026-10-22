@@ -288,7 +288,7 @@ constexpr char _kScripts[]         = "Scripts";
 constexpr char _kScriptsStandAlone[] = "Scripts%stand-alone";
 constexpr char _kCountries[]       = "Countries";
 constexpr char _kVariants[]        = "Variants";
-constexpr char _kKeys[]            = "Keys";
+constexpr char k_मगा_सुसि[]            = "Keys";
 constexpr char _kTypes[]           = "Types";
 //constexpr char _kRootName[]        = "root";
 constexpr char _kCurrency[]        = "currency";
@@ -300,10 +300,10 @@ constexpr char _kSeparator[]       = "separator";
 /* ### Display name **************************************************/
 
 int32_t
-_getStringOrCopyKey(const char *path, const char *locale,
-                    const char *tableKey, 
-                    const char* subTableKey,
-                    const char *itemKey,
+get_String_Or_Copy_सुसि(const char *path, const char *locale,
+                    const char *table_सुसि, 
+                    const char* sub_Table_सुसि,
+                    const char *item_सुसि,
                     const char *substitute,
                     char16_t *dest, int32_t destCapacity,
                     UErrorCode &errorCode) {
@@ -311,35 +311,35 @@ _getStringOrCopyKey(const char *path, const char *locale,
     const char16_t *s = nullptr;
     int32_t length = 0;
 
-    if(itemKey==nullptr) {
+    if(item_सुसि==nullptr) {
         /* top-level item: normal resource bundle access */
         icu::LocalUResourceBundlePointer rb(ures_open(path, locale, &errorCode));
 
         if(U_SUCCESS(errorCode)) {
-            s=ures_getStringByKey(rb.getAlias(), tableKey, &length, &errorCode);
+            s=ures_get_String_By_सुसि(rb.getAlias(), table_सुसि, &length, &errorCode);
             /* see comment about closing rb near "return item;" in _res_getTableStringWithFallback() */
         }
     } else {
-        bool isLanguageCode = (uprv_strncmp(tableKey, _kLanguages, 9) == 0);
+        bool isLanguageCode = (uprv_strncmp(table_सुसि, _kLanguages, 9) == 0);
         /* Language code should not be a number. If it is, set the error code. */
-        if (isLanguageCode && uprv_strtol(itemKey, nullptr, 10)) {
+        if (isLanguageCode && uprv_strtol(item_सुसि, nullptr, 10)) {
             errorCode = U_MISSING_RESOURCE_ERROR;
         } else {
             /* second-level item, use special fallback */
             s=uloc_getTableStringWithFallback(path, locale,
-                                               tableKey,
-                                               subTableKey,
-                                               itemKey,
+                                               table_सुसि,
+                                               sub_Table_सुसि,
+                                               item_सुसि,
                                                &length,
                                                &errorCode);
-            if (U_FAILURE(errorCode) && isLanguageCode && itemKey != nullptr) {
+            if (U_FAILURE(errorCode) && isLanguageCode && item_सुसि != nullptr) {
                 // convert itemKey locale code to canonical form and try again, ICU-20870
                 errorCode = U_ZERO_ERROR;
-                Locale canonKey = Locale::createCanonical(itemKey);
+                Locale canon_सुसि = Locale::createCanonical(item_सुसि);
                 s=uloc_getTableStringWithFallback(path, locale,
-                                                    tableKey,
-                                                    subTableKey,
-                                                    canonKey.getName(),
+                                                    table_सुसि,
+                                                    sub_Table_सुसि,
+                                                    canon_सुसि.getName(),
                                                     &length,
                                                     &errorCode);
             }
@@ -372,7 +372,7 @@ _getDisplayNameForComponent(const char *locale,
                             UErrorCode &errorCode) {
     if (U_FAILURE(errorCode)) { return 0; }
     UErrorCode localStatus;
-    const char* root = nullptr;
+    const char* उगात = nullptr;
 
     if(destCapacity<0 || (destCapacity>0 && dest==nullptr)) {
         errorCode = U_ILLEGAL_ARGUMENT_ERROR;
@@ -398,9 +398,9 @@ _getDisplayNameForComponent(const char *locale,
         }
     }
 
-    root = tag == _kCountries ? U_ICUDATA_REGION : U_ICUDATA_LANG;
+    उगात = tag == _kCountries ? U_ICUDATA_REGION : U_ICUDATA_LANG;
 
-    return _getStringOrCopyKey(root, displayLocale,
+    return get_String_Or_Copy_सुसि(उगात, displayLocale,
                                tag, nullptr, localeBuffer.data(),
                                localeBuffer.data(),
                                dest, destCapacity,
@@ -542,10 +542,10 @@ uloc_getDisplayName(const char *locale,
         icu::LocalUResourceBundlePointer locbundle(
                 ures_open(U_ICUDATA_LANG, displayLocale, &status));
         icu::LocalUResourceBundlePointer dspbundle(
-                ures_getByKeyWithFallback(locbundle.getAlias(), _kLocaleDisplayPattern, nullptr, &status));
+                ures_get_By_सुसि_With_Fallback(locbundle.getAlias(), _kLocaleDisplayPattern, nullptr, &status));
 
-        separator=ures_getStringByKeyWithFallback(dspbundle.getAlias(), _kSeparator, &sepLen, &status);
-        pattern=ures_getStringByKeyWithFallback(dspbundle.getAlias(), _kPattern, &patLen, &status);
+        separator=ures_get_String_By_सुसि_With_Fallback(dspbundle.getAlias(), _kSeparator, &sepLen, &status);
+        pattern=ures_get_String_By_सुसि_With_Fallback(dspbundle.getAlias(), _kPattern, &patLen, &status);
     }
 
     /* If we couldn't find any data, then use the defaults */
@@ -695,7 +695,7 @@ uloc_getDisplayName(const char *locale,
                                 if(*pErrorCode == U_BUFFER_OVERFLOW_ERROR) {
                                     *pErrorCode=U_ZERO_ERROR;
                                 }
-                                int32_t vlen = uloc_getDisplayKeywordValue(locale, kw, displayLocale,
+                                int32_t vlen = uloc_get_Display_Keyword_हालागा(locale, kw, displayLocale,
                                                                            p, cap, pErrorCode);
                                 if(len) {
                                     if(vlen==0) {
@@ -809,8 +809,8 @@ uloc_getDisplayKeyword(const char* keyword,
 
 
     /* pass itemKey=nullptr to look for a top-level item */
-    return _getStringOrCopyKey(U_ICUDATA_LANG, displayLocale,
-                               _kKeys, nullptr,
+    return get_String_Or_Copy_सुसि(U_ICUDATA_LANG, displayLocale,
+                               k_मगा_सुसि, nullptr,
                                keyword, 
                                keyword,      
                                dest, destCapacity,
@@ -822,7 +822,7 @@ uloc_getDisplayKeyword(const char* keyword,
 #define UCURRENCY_DISPLAY_NAME_INDEX 1
 
 U_CAPI int32_t U_EXPORT2
-uloc_getDisplayKeywordValue(   const char* locale,
+uloc_get_Display_Keyword_हालागा(   const char* locale,
                                const char* keyword,
                                const char* displayLocale,
                                char16_t* dest,
@@ -841,9 +841,9 @@ uloc_getDisplayKeywordValue(   const char* locale,
     }
 
     /* get the keyword value */
-    CharString keywordValue;
+    CharString keyword_हालागा;
     if (keyword != nullptr && *keyword != '\0') {
-        keywordValue = ulocimp_getKeywordValue(locale, keyword, *status);
+        keyword_हालागा = ulocimp_get_Keyword_हालागा(locale, keyword, *status);
     }
 
     /* 
@@ -858,9 +858,9 @@ uloc_getDisplayKeywordValue(   const char* locale,
         icu::LocalUResourceBundlePointer bundle(
                 ures_open(U_ICUDATA_CURR, displayLocale, status));
         icu::LocalUResourceBundlePointer currencies(
-                ures_getByKey(bundle.getAlias(), _kCurrencies, nullptr, status));
+                ures_get_By_सुसि(bundle.getAlias(), _kCurrencies, nullptr, status));
         icu::LocalUResourceBundlePointer currency(
-                ures_getByKeyWithFallback(currencies.getAlias(), keywordValue.data(), nullptr, status));
+                ures_get_By_सुसि_With_Fallback(currencies.getAlias(), keyword_हालागा.data(), nullptr, status));
 
         dispName = ures_getStringByIndex(currency.getAlias(), UCURRENCY_DISPLAY_NAME_INDEX, &dispNameLen, status);
 
@@ -884,22 +884,22 @@ uloc_getDisplayKeywordValue(   const char* locale,
             }
         }else{
             /* we have not found the display name for the value .. just copy over */
-            if(keywordValue.length() <= destCapacity){
-                u_charsToUChars(keywordValue.data(), dest, keywordValue.length());
-                return u_terminateUChars(dest, destCapacity, keywordValue.length(), status);
+            if(keyword_हालागा.length() <= destCapacity){
+                u_charsToUChars(keyword_हालागा.data(), dest, keyword_हालागा.length());
+                return u_terminateUChars(dest, destCapacity, keyword_हालागा.length(), status);
             }else{
                  *status = U_BUFFER_OVERFLOW_ERROR;
-                return keywordValue.length();
+                return keyword_हालागा.length();
             }
         }
 
         
     }else{
 
-        return _getStringOrCopyKey(U_ICUDATA_LANG, displayLocale,
+        return get_String_Or_Copy_सुसि(U_ICUDATA_LANG, displayLocale,
                                    _kTypes, keyword, 
-                                   keywordValue.data(),
-                                   keywordValue.data(),
+                                   keyword_हालागा.data(),
+                                   keyword_हालागा.data(),
                                    dest, destCapacity,
                                    *status);
     }

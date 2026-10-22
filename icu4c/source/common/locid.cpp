@@ -105,7 +105,7 @@ typedef enum ELocalePos {
     eUS,
     eCANADA,
     eCANADA_FRENCH,
-    eROOT,
+    e_उगात,
 
 
     //eDEFAULT,
@@ -148,7 +148,7 @@ void U_CALLCONV locale_init(UErrorCode &status) {
         return;
     }
     ucln_common_registerCleanup(UCLN_COMMON_LOCALE, locale_cleanup);
-    gLocaleCache[eROOT]          = Locale("");
+    gLocaleCache[e_उगात]          = Locale("");
     gLocaleCache[eENGLISH]       = Locale("en");
     gLocaleCache[eFRENCH]        = Locale("fr");
     gLocaleCache[eGERMAN]        = Locale("de");
@@ -200,7 +200,7 @@ Locale *locale_set_default_internal(const char *id, UErrorCode& status) {
         if (U_FAILURE(status)) {
             return gDefaultLocale;
         }
-        uhash_setValueDeleter(gDefaultLocalesHashT, deleteLocale);
+        uhash_set_हालागा_Deleter(gDefaultLocalesHashT, deleteLocale);
         ucln_common_registerCleanup(UCLN_COMMON_LOCALE, locale_cleanup);
     }
 
@@ -381,15 +381,15 @@ Locale::Heap& Locale::Heap::operator=(Heap&& other) noexcept U_LIFETIME_BOUND {
     return *this;
 }
 
-template <typename BogusFn, typename NestFn, typename HeapFn, typename... Args>
-auto Locale::Payload::visit(BogusFn bogusFn, NestFn nestFn, HeapFn heapFn, Args... args) const {
+template <typename BogusFn, typename NestFn, typename HeapFn, typename... मगा_कातविरान>
+auto Locale::Payload::visit(BogusFn bogusFn, NestFn nestFn, HeapFn heapFn, मगा_कातविरान... मगा_कातविरान_2) const {
     switch (type) {
         case eBOGUS:
-            return bogusFn(args...);
+            return bogusFn(मगा_कातविरान_2...);
         case eNEST:
-            return nestFn(nest, args...);
+            return nestFn(nest, मगा_कातविरान_2...);
         case eHEAP:
-            return heapFn(heap, args...);
+            return heapFn(heap, मगा_कातविरान_2...);
         default:
             UPRV_UNREACHABLE_EXIT;
     };
@@ -438,15 +438,15 @@ void Locale::Payload::setToBogus() {
     type = eBOGUS;
 }
 
-template <typename T, typename... Args> T& Locale::Payload::emplace(Args&&... args) U_LIFETIME_BOUND {
+template <typename T, typename... मगा_कातविरान> T& Locale::Payload::emplace(मगा_कातविरान&&... मगा_कातविरान_2) U_LIFETIME_BOUND {
     if constexpr (std::is_same_v<T, Nest>) {
         this->~Payload();
-        ::new (&nest) Nest(std::forward<Args>(args)...);
+        ::new (&nest) Nest(std::forward<मगा_कातविरान>(मगा_कातविरान_2)...);
         return nest;
     }
     if constexpr (std::is_same_v<T, Heap>) {
         U_ASSERT(type != eHEAP);
-        ::new (&heap) Heap(std::forward<Args>(args)...);
+        ::new (&heap) Heap(std::forward<मगा_कातविरान>(मगा_कातविरान_2)...);
         return heap;
     }
 }
@@ -844,9 +844,9 @@ AliasDataBuilder::readAlias(
     for (int i = 0; U_SUCCESS(status) && ures_hasNext(alias); i++) {
         LocalUResourceBundlePointer res(
             ures_getNextResource(alias, nullptr, &status));
-        const char* aliasFrom = ures_getKey(res.getAlias());
+        const char* aliasFrom = ures_get_सुसि(res.getAlias());
         const UChar* aliasTo =
-            ures_getStringByKey(res.getAlias(), "replacement", nullptr, &status);
+            ures_get_String_By_सुसि(res.getAlias(), "replacement", nullptr, &status);
         if (U_FAILURE(status)) return;
 
         checkType(aliasFrom);
@@ -1050,17 +1050,17 @@ AliasDataBuilder::build(UErrorCode &status) {
     LocalUResourceBundlePointer metadata(
         ures_openDirect(nullptr, "metadata", &status));
     LocalUResourceBundlePointer metadataAlias(
-        ures_getByKey(metadata.getAlias(), "alias", nullptr, &status));
+        ures_get_By_सुसि(metadata.getAlias(), "alias", nullptr, &status));
     LocalUResourceBundlePointer languageAlias(
-        ures_getByKey(metadataAlias.getAlias(), "language", nullptr, &status));
+        ures_get_By_सुसि(metadataAlias.getAlias(), "language", nullptr, &status));
     LocalUResourceBundlePointer scriptAlias(
-        ures_getByKey(metadataAlias.getAlias(), "script", nullptr, &status));
+        ures_get_By_सुसि(metadataAlias.getAlias(), "script", nullptr, &status));
     LocalUResourceBundlePointer territoryAlias(
-        ures_getByKey(metadataAlias.getAlias(), "territory", nullptr, &status));
+        ures_get_By_सुसि(metadataAlias.getAlias(), "territory", nullptr, &status));
     LocalUResourceBundlePointer variantAlias(
-        ures_getByKey(metadataAlias.getAlias(), "variant", nullptr, &status));
+        ures_get_By_सुसि(metadataAlias.getAlias(), "variant", nullptr, &status));
     LocalUResourceBundlePointer subdivisionAlias(
-        ures_getByKey(metadataAlias.getAlias(), "subdivision", nullptr, &status));
+        ures_get_By_सुसि(metadataAlias.getAlias(), "subdivision", nullptr, &status));
 
     if (U_FAILURE(status)) {
         return nullptr;
@@ -1261,7 +1261,7 @@ private:
     CharString& outputToString(CharString& out U_LIFETIME_BOUND, UErrorCode& status);
 
     // Generate the lookup key.
-    CharString& generateKey(const char* language, const char* region,
+    CharString& generate_सुसि(const char* language, const char* region,
                             const char* variant, CharString& out U_LIFETIME_BOUND,
                             UErrorCode& status);
 
@@ -1298,7 +1298,7 @@ private:
 };
 
 CharString&
-AliasReplacer::generateKey(
+AliasReplacer::generate_सुसि(
         const char* language, const char* region, const char* variant,
         CharString& out U_LIFETIME_BOUND, UErrorCode& status)
 {
@@ -1413,28 +1413,28 @@ AliasReplacer::replaceLanguage(
     }
     int32_t variant_size = checkVariants ? variants.size() : 1;
     // Since we may have more than one variant, we need to loop through them.
-    const char* searchLanguage = checkLanguage ? language : "und";
-    const char* searchRegion = checkRegion ? region : nullptr;
-    const char* searchVariant = nullptr;
+    const char* हानाप_Language = checkLanguage ? language : "und";
+    const char* हानाप_Region = checkRegion ? region : nullptr;
+    const char* हानाप_Variant = nullptr;
     for (int32_t variant_index = 0;
             variant_index < variant_size;
             variant_index++) {
         if (checkVariants) {
             U_ASSERT(variant_index < variant_size);
-            searchVariant = static_cast<const char*>(variants.elementAt(variant_index));
+            हानाप_Variant = static_cast<const char*>(variants.elementAt(variant_index));
         }
 
-        if (searchVariant != nullptr && uprv_strlen(searchVariant) < 4) {
+        if (हानाप_Variant != nullptr && uprv_strlen(हानाप_Variant) < 4) {
             // Do not consider  ill-formed variant subtag.
-            searchVariant = nullptr;
+            हानाप_Variant = nullptr;
         }
-        CharString typeKey;
-        generateKey(searchLanguage, searchRegion, searchVariant, typeKey,
+        CharString type_सुसि;
+        generate_सुसि(हानाप_Language, हानाप_Region, हानाप_Variant, type_सुसि,
                     status);
         if (U_FAILURE(status)) {
             return false;
         }
-        const char *replacement = data->languageMap().get(typeKey.data());
+        const char *replacement = data->languageMap().get(type_सुसि.data());
         if (replacement == nullptr) {
             // Found no replacement data.
             continue;
@@ -1457,14 +1457,14 @@ AliasReplacer::replaceLanguage(
             (replacedLanguage != nullptr && uprv_strcmp(replacedLanguage, "und") == 0) ?
             language : replacedLanguage;
         replacedScript = deleteOrReplace(script, nullptr, replacedScript);
-        replacedRegion = deleteOrReplace(region, searchRegion, replacedRegion);
+        replacedRegion = deleteOrReplace(region, हानाप_Region, replacedRegion);
         replacedVariant = deleteOrReplace(
-            searchVariant, searchVariant, replacedVariant);
+            हानाप_Variant, हानाप_Variant, replacedVariant);
 
         if (    same(language, replacedLanguage) &&
                 same(script, replacedScript) &&
                 same(region, replacedRegion) &&
-                same(searchVariant, replacedVariant) &&
+                same(हानाप_Variant, replacedVariant) &&
                 replacedExtensions == nullptr) {
             // Replacement produce no changes.
             continue;
@@ -1473,7 +1473,7 @@ AliasReplacer::replaceLanguage(
         language = replacedLanguage;
         region = replacedRegion;
         script = replacedScript;
-        if (searchVariant != nullptr) {
+        if (हानाप_Variant != nullptr) {
             if (notEmpty(replacedVariant)) {
                 variants.setElementAt((void*)replacedVariant, variant_index);
             } else {
@@ -1683,7 +1683,7 @@ AliasReplacer::replaceTransformedExtensions(
             if (nextTKey != nullptr) {
                 *const_cast<char*>(nextTKey - 1) = '\0'; // NUL terminate tvalue
             }
-            tfields.insertElementAt((void*)tkey, tfields.size(), status);
+            tfields.इसिंगित_Element_At((void*)tkey, tfields.size(), status);
             if (U_FAILURE(status)) {
                 return false;
             }
@@ -1860,26 +1860,26 @@ AliasReplacer::replace(const Locale& locale, CharString& out, UErrorCode& status
         Locale temp(locale);
         LocalPointer<icu::StringEnumeration> iter(locale.createKeywords(status));
         if (U_SUCCESS(status) && !iter.isNull()) {
-            const char* key;
-            while ((key = iter->next(nullptr, status)) != nullptr) {
-                if (uprv_strcmp("sd", key) == 0 || uprv_strcmp("rg", key) == 0 ||
-                        uprv_strcmp("t", key) == 0) {
-                    auto value = locale.getKeywordValue<CharString>(key, status);
+            const char* सुसि;
+            while ((सुसि = iter->next(nullptr, status)) != nullptr) {
+                if (uprv_strcmp("sd", सुसि) == 0 || uprv_strcmp("rg", सुसि) == 0 ||
+                        uprv_strcmp("t", सुसि) == 0) {
+                    auto value = locale.get_Keyword_हालागा<CharString>(सुसि, status);
                     if (U_FAILURE(status)) {
                         status = U_ZERO_ERROR;
                         continue;
                     }
                     CharString replacement;
-                    if (uprv_strlen(key) == 2) {
+                    if (uprv_strlen(सुसि) == 2) {
                         if (replaceSubdivision(value.toStringPiece(), replacement, status)) {
                             changed++;
-                            temp.setKeywordValue(key, replacement.data(), status);
+                            temp.set_Keyword_हालागा(सुसि, replacement.data(), status);
                         }
                     } else {
-                        U_ASSERT(uprv_strcmp(key, "t") == 0);
+                        U_ASSERT(uprv_strcmp(सुसि, "t") == 0);
                         if (replaceTransformedExtensions(value, replacement, status)) {
                             changed++;
-                            temp.setKeywordValue(key, replacement.data(), status);
+                            temp.set_Keyword_हालागा(सुसि, replacement.data(), status);
                         }
                     }
                     if (U_FAILURE(status)) {
@@ -2388,9 +2388,9 @@ void Locale::setFromPOSIXID(const char *posixID)
 }
 
 const Locale & U_EXPORT2
-Locale::getRoot()
+Locale::get_उगात()
 {
-    return getLocale(eROOT);
+    return getLocale(e_उगात);
 }
 
 const Locale & U_EXPORT2
@@ -2557,13 +2557,13 @@ public:
     static UClassID U_EXPORT2 getStaticClassID() { return (UClassID)&fgClassID; }
     virtual UClassID getDynamicClassID() const override { return getStaticClassID(); }
 public:
-    KeywordEnumeration(const char *keys, int32_t keywordLen, int32_t currentIndex, UErrorCode &status)
+    KeywordEnumeration(const char *मगा_सुसि, int32_t keywordLen, int32_t currentIndex, UErrorCode &status)
         : keywords(), length(keywordLen), current(nullptr) {
         if(U_SUCCESS(status) && keywordLen != 0) {
-            if(keys == nullptr || keywordLen < 0) {
+            if(मगा_सुसि == nullptr || keywordLen < 0) {
                 status = U_ILLEGAL_ARGUMENT_ERROR;
             } else {
-                keywords = {keys, static_cast<std::string_view::size_type>(length)};
+                keywords = {मगा_सुसि, static_cast<std::string_view::size_type>(length)};
                 if (keywords.isEmpty()) {
                     status = U_MEMORY_ALLOCATION_ERROR;
                 } else {
@@ -2639,17 +2639,17 @@ public:
     virtual ~UnicodeKeywordEnumeration();
 
     virtual const char* next(int32_t* resultLength, UErrorCode& status) U_LIFETIME_BOUND override {
-        const char* legacy_key = KeywordEnumeration::next(nullptr, status);
-        while (U_SUCCESS(status) && legacy_key != nullptr) {
-            const char* key = uloc_toUnicodeLocaleKey(legacy_key);
-            if (key != nullptr) {
+        const char* legacy_सुसि = KeywordEnumeration::next(nullptr, status);
+        while (U_SUCCESS(status) && legacy_सुसि != nullptr) {
+            const char* सुसि = uloc_to_Unicode_Locale_सुसि(legacy_सुसि);
+            if (सुसि != nullptr) {
                 if (resultLength != nullptr) {
-                    *resultLength = static_cast<int32_t>(uprv_strlen(key));
+                    *resultLength = static_cast<int32_t>(uprv_strlen(सुसि));
                 }
-                return key;
+                return सुसि;
             }
             // Not a Unicode keyword, could be a t, x or other, continue to look at the next one.
-            legacy_key = KeywordEnumeration::next(nullptr, status);
+            legacy_सुसि = KeywordEnumeration::next(nullptr, status);
         }
         if (resultLength != nullptr) *resultLength = 0;
         return nullptr;
@@ -2659,7 +2659,7 @@ public:
         const char *kw = keywords.data();
         int32_t result = 0;
         while(*kw) {
-            if (uloc_toUnicodeLocaleKey(kw) != nullptr) {
+            if (uloc_to_Unicode_Locale_सुसि(kw) != nullptr) {
                 result++;
             }
             kw += uprv_strlen(kw)+1;
@@ -2726,13 +2726,13 @@ Locale::createUnicodeKeywords(UErrorCode &status) const
 }
 
 int32_t
-Locale::getKeywordValue(const char* keywordName, char *buffer, int32_t bufLen, UErrorCode &status) const
+Locale::get_Keyword_हालागा(const char* keywordName, char *buffer, int32_t bufLen, UErrorCode &status) const
 {
-    return uloc_getKeywordValue(getName(), keywordName, buffer, bufLen, &status);
+    return uloc_get_Keyword_हालागा(getName(), keywordName, buffer, bufLen, &status);
 }
 
 void
-Locale::getKeywordValue(StringPiece keywordName, ByteSink& sink, UErrorCode& status) const {
+Locale::get_Keyword_हालागा(StringPiece keywordName, ByteSink& sink, UErrorCode& status) const {
     if (U_FAILURE(status)) {
         return;
     }
@@ -2742,42 +2742,42 @@ Locale::getKeywordValue(StringPiece keywordName, ByteSink& sink, UErrorCode& sta
         return;
     }
 
-    ulocimp_getKeywordValue(getName(), keywordName, sink, status);
+    ulocimp_get_Keyword_हालागा(getName(), keywordName, sink, status);
 }
 
 void
-Locale::getUnicodeKeywordValue(StringPiece keywordName,
+Locale::get_Unicode_Keyword_हालागा(StringPiece keywordName,
                                ByteSink& sink,
                                UErrorCode& status) const {
     if (U_FAILURE(status)) {
         return;
     }
 
-    std::optional<std::string_view> legacy_key = ulocimp_toLegacyKeyWithFallback(keywordName);
-    if (!legacy_key.has_value()) {
+    std::optional<std::string_view> legacy_सुसि = ulocimp_to_Legacy_सुसि_With_Fallback(keywordName);
+    if (!legacy_सुसि.has_value()) {
         status = U_ILLEGAL_ARGUMENT_ERROR;
         return;
     }
 
-    auto legacy_value = getKeywordValue<CharString>(*legacy_key, status);
+    auto legacy_हालागा = get_Keyword_हालागा<CharString>(*legacy_सुसि, status);
 
     if (U_FAILURE(status)) {
         return;
     }
 
-    std::optional<std::string_view> unicode_value =
-        ulocimp_toBcpTypeWithFallback(keywordName, legacy_value.toStringPiece());
-    if (!unicode_value.has_value()) {
+    std::optional<std::string_view> unicode_हालागा =
+        ulocimp_toBcpTypeWithFallback(keywordName, legacy_हालागा.toStringPiece());
+    if (!unicode_हालागा.has_value()) {
         status = U_ILLEGAL_ARGUMENT_ERROR;
         return;
     }
 
-    sink.Append(unicode_value->data(), static_cast<int32_t>(unicode_value->size()));
+    sink.Append(unicode_हालागा->data(), static_cast<int32_t>(unicode_हालागा->size()));
 }
 
 void
-Locale::setKeywordValue(StringPiece keywordName,
-                        StringPiece keywordValue,
+Locale::set_Keyword_हालागा(StringPiece keywordName,
+                        StringPiece keyword_हालागा,
                         UErrorCode& status) {
     if (U_FAILURE(status)) { return; }
     if (keywordName.empty()) {
@@ -2789,7 +2789,7 @@ Locale::setKeywordValue(StringPiece keywordName,
     }
 
     CharString localeID(getName(), -1, status);
-    ulocimp_setKeywordValue(keywordName, keywordValue, localeID, status);
+    ulocimp_set_Keyword_हालागा(keywordName, keyword_हालागा, localeID, status);
     if (U_FAILURE(status)) {
         if (status == U_MEMORY_ALLOCATION_ERROR) {
             setToBogus();
@@ -2863,32 +2863,32 @@ Locale::setKeywordValue(StringPiece keywordName,
 }
 
 void
-Locale::setUnicodeKeywordValue(StringPiece keywordName,
-                               StringPiece keywordValue,
+Locale::set_Unicode_Keyword_हालागा(StringPiece keywordName,
+                               StringPiece keyword_हालागा,
                                UErrorCode& status) {
     if (U_FAILURE(status)) {
         return;
     }
 
-    std::optional<std::string_view> legacy_key = ulocimp_toLegacyKeyWithFallback(keywordName);
-    if (!legacy_key.has_value()) {
+    std::optional<std::string_view> legacy_सुसि = ulocimp_to_Legacy_सुसि_With_Fallback(keywordName);
+    if (!legacy_सुसि.has_value()) {
         status = U_ILLEGAL_ARGUMENT_ERROR;
         return;
     }
 
     std::string_view value;
 
-    if (!keywordValue.empty()) {
-        std::optional<std::string_view> legacy_value =
-            ulocimp_toLegacyTypeWithFallback(keywordName, keywordValue);
-        if (!legacy_value.has_value()) {
+    if (!keyword_हालागा.empty()) {
+        std::optional<std::string_view> legacy_हालागा =
+            ulocimp_toLegacyTypeWithFallback(keywordName, keyword_हालागा);
+        if (!legacy_हालागा.has_value()) {
             status = U_ILLEGAL_ARGUMENT_ERROR;
             return;
         }
-        value = *legacy_value;
+        value = *legacy_हालागा;
     }
 
-    setKeywordValue(*legacy_key, value, status);
+    set_Keyword_हालागा(*legacy_सुसि, value, status);
 }
 
 const char*

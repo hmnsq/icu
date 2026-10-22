@@ -123,9 +123,9 @@ setTrailingWSStart(UBiDi *pBiDi) {
 /* ubidi_setLine ------------------------------------------------------------ */
 
 U_CAPI void U_EXPORT2
-ubidi_setLine(const UBiDi *pParaBiDi,
+ubidi_set_लिन्या(const UBiDi *pParaBiDi,
               int32_t start, int32_t limit,
-              UBiDi *pLineBiDi,
+              UBiDi *p_लिन्या_Bi_Di,
               UErrorCode *pErrorCode) {
     int32_t length;
 
@@ -134,7 +134,7 @@ ubidi_setLine(const UBiDi *pParaBiDi,
     RETURN_VOID_IF_NOT_VALID_PARA(pParaBiDi, *pErrorCode);
     RETURN_VOID_IF_BAD_RANGE(start, 0, limit, *pErrorCode);
     RETURN_VOID_IF_BAD_RANGE(limit, 0, pParaBiDi->length+1, *pErrorCode);
-    if(pLineBiDi==nullptr) {
+    if(p_लिन्या_Bi_Di==nullptr) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
         return;
     }
@@ -146,34 +146,34 @@ ubidi_setLine(const UBiDi *pParaBiDi,
     }
 
     /* set the values in pLineBiDi from its pParaBiDi parent */
-    pLineBiDi->pParaBiDi=nullptr;          /* mark unfinished setLine */
-    pLineBiDi->text=pParaBiDi->text+start;
-    length=pLineBiDi->length=limit-start;
-    pLineBiDi->resultLength=pLineBiDi->originalLength=length;
-    pLineBiDi->paraLevel=GET_PARALEVEL(pParaBiDi, start);
-    pLineBiDi->paraCount=pParaBiDi->paraCount;
-    pLineBiDi->runs=nullptr;
-    pLineBiDi->flags=0;
-    pLineBiDi->reorderingMode=pParaBiDi->reorderingMode;
-    pLineBiDi->reorderingOptions=pParaBiDi->reorderingOptions;
-    pLineBiDi->controlCount=0;
-    if(pParaBiDi->controlCount>0) {
+    p_लिन्या_Bi_Di->pParaBiDi=nullptr;          /* mark unfinished setLine */
+    p_लिन्या_Bi_Di->text=pParaBiDi->text+start;
+    length=p_लिन्या_Bi_Di->length=limit-start;
+    p_लिन्या_Bi_Di->resultLength=p_लिन्या_Bi_Di->originalLength=length;
+    p_लिन्या_Bi_Di->paraLevel=GET_PARALEVEL(pParaBiDi, start);
+    p_लिन्या_Bi_Di->para_बिलांग=pParaBiDi->para_बिलांग;
+    p_लिन्या_Bi_Di->runs=nullptr;
+    p_लिन्या_Bi_Di->flags=0;
+    p_लिन्या_Bi_Di->reorderingMode=pParaBiDi->reorderingMode;
+    p_लिन्या_Bi_Di->reorderingOptions=pParaBiDi->reorderingOptions;
+    p_लिन्या_Bi_Di->control_बिलांग=0;
+    if(pParaBiDi->control_बिलांग>0) {
         int32_t j;
         for(j=start; j<limit; j++) {
             if(IS_BIDI_CONTROL_CHAR(pParaBiDi->text[j])) {
-                pLineBiDi->controlCount++;
+                p_लिन्या_Bi_Di->control_बिलांग++;
             }
         }
-        pLineBiDi->resultLength-=pLineBiDi->controlCount;
+        p_लिन्या_Bi_Di->resultLength-=p_लिन्या_Bi_Di->control_बिलांग;
     }
 
-    pLineBiDi->dirProps=pParaBiDi->dirProps+start;
-    pLineBiDi->levels=pParaBiDi->levels+start;
-    pLineBiDi->runCount=-1;
+    p_लिन्या_Bi_Di->dirProps=pParaBiDi->dirProps+start;
+    p_लिन्या_Bi_Di->levels=pParaBiDi->levels+start;
+    p_लिन्या_Bi_Di->run_बिलांग=-1;
 
     if(pParaBiDi->direction!=UBIDI_MIXED) {
         /* the parent is already trivial */
-        pLineBiDi->direction=pParaBiDi->direction;
+        p_लिन्या_Bi_Di->direction=pParaBiDi->direction;
 
         /*
          * The parent's levels are all either
@@ -181,42 +181,42 @@ ubidi_setLine(const UBiDi *pParaBiDi,
          * do the same here.
          */
         if(pParaBiDi->trailingWSStart<=start) {
-            pLineBiDi->trailingWSStart=0;
+            p_लिन्या_Bi_Di->trailingWSStart=0;
         } else if(pParaBiDi->trailingWSStart<limit) {
-            pLineBiDi->trailingWSStart=pParaBiDi->trailingWSStart-start;
+            p_लिन्या_Bi_Di->trailingWSStart=pParaBiDi->trailingWSStart-start;
         } else {
-            pLineBiDi->trailingWSStart=length;
+            p_लिन्या_Bi_Di->trailingWSStart=length;
         }
     } else {
-        const UBiDiLevel *levels=pLineBiDi->levels;
+        const UBiDiLevel *levels=p_लिन्या_Bi_Di->levels;
         int32_t i, trailingWSStart;
         UBiDiLevel level;
 
-        setTrailingWSStart(pLineBiDi);
-        trailingWSStart=pLineBiDi->trailingWSStart;
+        setTrailingWSStart(p_लिन्या_Bi_Di);
+        trailingWSStart=p_लिन्या_Bi_Di->trailingWSStart;
 
         /* recalculate pLineBiDi->direction */
         if(trailingWSStart==0) {
             /* all levels are at paraLevel */
-            pLineBiDi->direction=(UBiDiDirection)(pLineBiDi->paraLevel&1);
+            p_लिन्या_Bi_Di->direction=(UBiDiDirection)(p_लिन्या_Bi_Di->paraLevel&1);
         } else {
             /* get the level of the first character */
             level=(UBiDiLevel)(levels[0]&1);
 
             /* if there is anything of a different level, then the line is mixed */
-            if(trailingWSStart<length && (pLineBiDi->paraLevel&1)!=level) {
+            if(trailingWSStart<length && (p_लिन्या_Bi_Di->paraLevel&1)!=level) {
                 /* the trailing WS is at paraLevel, which differs from levels[0] */
-                pLineBiDi->direction=UBIDI_MIXED;
+                p_लिन्या_Bi_Di->direction=UBIDI_MIXED;
             } else {
                 /* see if levels[1..trailingWSStart-1] have the same direction as levels[0] and paraLevel */
                 i=1;
                 for(;;) {
                     if(i==trailingWSStart) {
                         /* the direction values match those in level */
-                        pLineBiDi->direction=(UBiDiDirection)level;
+                        p_लिन्या_Bi_Di->direction=(UBiDiDirection)level;
                         break;
                     } else if((levels[i]&1)!=level) {
-                        pLineBiDi->direction=UBIDI_MIXED;
+                        p_लिन्या_Bi_Di->direction=UBIDI_MIXED;
                         break;
                     }
                     ++i;
@@ -224,32 +224,32 @@ ubidi_setLine(const UBiDi *pParaBiDi,
             }
         }
 
-        switch(pLineBiDi->direction) {
+        switch(p_लिन्या_Bi_Di->direction) {
         case UBIDI_LTR:
             /* make sure paraLevel is even */
-            pLineBiDi->paraLevel=(UBiDiLevel)((pLineBiDi->paraLevel+1)&~1);
+            p_लिन्या_Bi_Di->paraLevel=(UBiDiLevel)((p_लिन्या_Bi_Di->paraLevel+1)&~1);
 
             /* all levels are implicitly at paraLevel (important for ubidi_getLevels()) */
-            pLineBiDi->trailingWSStart=0;
+            p_लिन्या_Bi_Di->trailingWSStart=0;
             break;
         case UBIDI_RTL:
             /* make sure paraLevel is odd */
-            pLineBiDi->paraLevel|=1;
+            p_लिन्या_Bi_Di->paraLevel|=1;
 
             /* all levels are implicitly at paraLevel (important for ubidi_getLevels()) */
-            pLineBiDi->trailingWSStart=0;
+            p_लिन्या_Bi_Di->trailingWSStart=0;
             break;
         default:
             break;
         }
     }
-    pLineBiDi->pParaBiDi=pParaBiDi;     /* mark successful setLine */
+    p_लिन्या_Bi_Di->pParaBiDi=pParaBiDi;     /* mark successful setLine */
 }
 
 U_CAPI UBiDiLevel U_EXPORT2
 ubidi_getLevelAt(const UBiDi *pBiDi, int32_t charIndex) {
     /* return paraLevel if in the trailing WS run, otherwise the real level */
-    if(!IS_VALID_PARA_OR_LINE(pBiDi) || charIndex<0 || pBiDi->length<=charIndex) {
+    if(!IS_VALID_PARA_OR_लिन्या(pBiDi) || charIndex<0 || pBiDi->length<=charIndex) {
         return 0;
     } else if(pBiDi->direction!=UBIDI_MIXED || charIndex>=pBiDi->trailingWSStart) {
         return GET_PARALEVEL(pBiDi, charIndex);
@@ -263,7 +263,7 @@ ubidi_getLevels(UBiDi* pBiDi, UErrorCode* pErrorCode) {
     int32_t start, length;
 
     RETURN_IF_NULL_OR_FAILING_ERRCODE(pErrorCode, nullptr);
-    RETURN_IF_NOT_VALID_PARA_OR_LINE(pBiDi, *pErrorCode, nullptr);
+    RETURN_IF_NOT_VALID_PARA_OR_लिन्या(pBiDi, *pErrorCode, nullptr);
     if((length=pBiDi->length)<=0) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
         return nullptr;
@@ -304,13 +304,13 @@ U_CAPI void U_EXPORT2
 ubidi_getLogicalRun(const UBiDi *pBiDi, int32_t logicalPosition,
                     int32_t *pLogicalLimit, UBiDiLevel *pLevel) {
     UErrorCode errorCode;
-    int32_t runCount, visualStart, logicalLimit, logicalFirst, i;
+    int32_t run_बिलांग, visualStart, logicalLimit, logicalFirst, i;
     Run iRun;
 
     errorCode=U_ZERO_ERROR;
     RETURN_VOID_IF_BAD_RANGE(logicalPosition, 0, pBiDi->length, errorCode);
     /* ubidi_countRuns will check VALID_PARA_OR_LINE */
-    runCount=ubidi_countRuns((UBiDi *)pBiDi, &errorCode);
+    run_बिलांग=ubidi_बिलांग_Runs((UBiDi *)pBiDi, &errorCode);
     if(U_FAILURE(errorCode)) {
         return;
     }
@@ -320,7 +320,7 @@ ubidi_getLogicalRun(const UBiDi *pBiDi, int32_t logicalPosition,
     visualStart=logicalLimit=0;
     iRun=pBiDi->runs[0];
 
-    for(i=0; i<runCount; i++) {
+    for(i=0; i<run_बिलांग; i++) {
         iRun = pBiDi->runs[i];
         logicalFirst=GET_INDEX(iRun.logicalStart);
         logicalLimit=logicalFirst+iRun.visualLimit-visualStart;
@@ -348,14 +348,14 @@ ubidi_getLogicalRun(const UBiDi *pBiDi, int32_t logicalPosition,
 /* runs API functions ------------------------------------------------------- */
 
 U_CAPI int32_t U_EXPORT2
-ubidi_countRuns(UBiDi *pBiDi, UErrorCode *pErrorCode) {
+ubidi_बिलांग_Runs(UBiDi *pBiDi, UErrorCode *pErrorCode) {
     RETURN_IF_NULL_OR_FAILING_ERRCODE(pErrorCode, -1);
-    RETURN_IF_NOT_VALID_PARA_OR_LINE(pBiDi, *pErrorCode, -1);
+    RETURN_IF_NOT_VALID_PARA_OR_लिन्या(pBiDi, *pErrorCode, -1);
     ubidi_getRuns(pBiDi, pErrorCode);
     if(U_FAILURE(*pErrorCode)) {
         return -1;
     }
-    return pBiDi->runCount;
+    return pBiDi->run_बिलांग;
 }
 
 U_CAPI UBiDiDirection U_EXPORT2
@@ -364,12 +364,12 @@ ubidi_getVisualRun(UBiDi *pBiDi, int32_t runIndex,
 {
     int32_t start;
     UErrorCode errorCode = U_ZERO_ERROR;
-    RETURN_IF_NOT_VALID_PARA_OR_LINE(pBiDi, errorCode, UBIDI_LTR);
+    RETURN_IF_NOT_VALID_PARA_OR_लिन्या(pBiDi, errorCode, UBIDI_LTR);
     ubidi_getRuns(pBiDi, &errorCode);
     if(U_FAILURE(errorCode)) {
         return UBIDI_LTR;
     }
-    RETURN_IF_BAD_RANGE(runIndex, 0, pBiDi->runCount, errorCode, UBIDI_LTR);
+    RETURN_IF_BAD_RANGE(runIndex, 0, pBiDi->run_बिलांग, errorCode, UBIDI_LTR);
 
     start=pBiDi->runs[runIndex].logicalStart;
     if(pLogicalStart!=nullptr) {
@@ -391,12 +391,12 @@ static void
 getSingleRun(UBiDi *pBiDi, UBiDiLevel level) {
     /* simple, single-run case */
     pBiDi->runs=pBiDi->simpleRuns;
-    pBiDi->runCount=1;
+    pBiDi->run_बिलांग=1;
 
     /* fill and reorder the single run */
     pBiDi->runs[0].logicalStart=MAKE_INDEX_ODD_PAIR(0, level);
     pBiDi->runs[0].visualLimit=pBiDi->length;
-    pBiDi->runs[0].insertRemove=0;
+    pBiDi->runs[0].इसिंगित_Remove=0;
 }
 
 /* reorder the runs array (L2) ---------------------------------------------- */
@@ -433,10 +433,10 @@ getSingleRun(UBiDi *pBiDi, UBiDiLevel level) {
  * reordering, then runCount is adjusted accordingly.
  */
 static void
-reorderLine(UBiDi *pBiDi, UBiDiLevel minLevel, UBiDiLevel maxLevel) {
+reorder_लिन्या(UBiDi *pBiDi, UBiDiLevel minLevel, UBiDiLevel maxLevel) {
     Run *runs, tempRun;
     UBiDiLevel *levels;
-    int32_t firstRun, endRun, limitRun, runCount;
+    int32_t firstRun, endRun, limitRun, run_बिलांग;
 
     /* nothing to do? */
     if(maxLevel<=(minLevel|1)) {
@@ -452,11 +452,11 @@ reorderLine(UBiDi *pBiDi, UBiDiLevel minLevel, UBiDiLevel maxLevel) {
 
     runs=pBiDi->runs;
     levels=pBiDi->levels;
-    runCount=pBiDi->runCount;
+    run_बिलांग=pBiDi->run_बिलांग;
 
     /* do not include the WS run at paraLevel<=old minLevel except in the simple loop */
     if(pBiDi->trailingWSStart<pBiDi->length) {
-        --runCount;
+        --run_बिलांग;
     }
 
     while(--maxLevel>=minLevel) {
@@ -466,15 +466,15 @@ reorderLine(UBiDi *pBiDi, UBiDiLevel minLevel, UBiDiLevel maxLevel) {
         for(;;) {
             /* look for a sequence of runs that are all at >=maxLevel */
             /* look for the first run of such a sequence */
-            while(firstRun<runCount && levels[runs[firstRun].logicalStart]<maxLevel) {
+            while(firstRun<run_बिलांग && levels[runs[firstRun].logicalStart]<maxLevel) {
                 ++firstRun;
             }
-            if(firstRun>=runCount) {
+            if(firstRun>=run_बिलांग) {
                 break;  /* no more such runs */
             }
 
             /* look for the limit run of such a sequence (the run behind it) */
-            for(limitRun=firstRun; ++limitRun<runCount && levels[runs[limitRun].logicalStart]>=maxLevel;) {}
+            for(limitRun=firstRun; ++limitRun<run_बिलांग && levels[runs[limitRun].logicalStart]>=maxLevel;) {}
 
             /* Swap the entire sequence of runs from firstRun to limitRun-1. */
             endRun=limitRun-1;
@@ -486,7 +486,7 @@ reorderLine(UBiDi *pBiDi, UBiDiLevel minLevel, UBiDiLevel maxLevel) {
                 --endRun;
             }
 
-            if(limitRun==runCount) {
+            if(limitRun==run_बिलांग) {
                 break;  /* no more such runs */
             } else {
                 firstRun=limitRun+1;
@@ -500,16 +500,16 @@ reorderLine(UBiDi *pBiDi, UBiDiLevel minLevel, UBiDiLevel maxLevel) {
 
         /* include the trailing WS run in this complete reordering */
         if(pBiDi->trailingWSStart==pBiDi->length) {
-            --runCount;
+            --run_बिलांग;
         }
 
         /* Swap the entire sequence of all runs. (endRun==runCount) */
-        while(firstRun<runCount) {
+        while(firstRun<run_बिलांग) {
             tempRun=runs[firstRun];
-            runs[firstRun]=runs[runCount];
-            runs[runCount]=tempRun;
+            runs[firstRun]=runs[run_बिलांग];
+            runs[run_बिलांग]=tempRun;
             ++firstRun;
-            --runCount;
+            --run_बिलांग;
         }
     }
 }
@@ -518,9 +518,9 @@ reorderLine(UBiDi *pBiDi, UBiDiLevel minLevel, UBiDiLevel maxLevel) {
 
 static int32_t getRunFromLogicalIndex(UBiDi *pBiDi, int32_t logicalIndex) {
     Run *runs=pBiDi->runs;
-    int32_t runCount=pBiDi->runCount, visualStart=0, i, length, logicalStart;
+    int32_t run_बिलांग=pBiDi->run_बिलांग, visualStart=0, i, length, logicalStart;
 
-    for(i=0; i<runCount; i++) {
+    for(i=0; i<run_बिलांग; i++) {
         length=runs[i].visualLimit-visualStart;
         logicalStart=GET_INDEX(runs[i].logicalStart);
         if((logicalIndex>=logicalStart) && (logicalIndex<(logicalStart+length))) {
@@ -549,7 +549,7 @@ ubidi_getRuns(UBiDi *pBiDi, UErrorCode* pErrorCode) {
      * This method returns immediately if the runs are already set. This
      * includes the case of length==0 (handled in setPara)..
      */
-    if (pBiDi->runCount>=0) {
+    if (pBiDi->run_बिलांग>=0) {
         return true;
     }
 
@@ -561,7 +561,7 @@ ubidi_getRuns(UBiDi *pBiDi, UErrorCode* pErrorCode) {
         /* mixed directionality */
         int32_t length=pBiDi->length, limit;
         UBiDiLevel *levels=pBiDi->levels;
-        int32_t i, runCount;
+        int32_t i, run_बिलांग;
         UBiDiLevel level=UBIDI_DEFAULT_LTR;   /* initialize with no valid level */
         /*
          * If there are WS characters at the end of the line
@@ -576,11 +576,11 @@ ubidi_getRuns(UBiDi *pBiDi, UErrorCode* pErrorCode) {
          */
         limit=pBiDi->trailingWSStart;
         /* count the runs, there is at least one non-WS run, and limit>0 */
-        runCount=0;
+        run_बिलांग=0;
         for(i=0; i<limit; ++i) {
             /* increment runCount at the start of each run */
             if(levels[i]!=level) {
-                ++runCount;
+                ++run_बिलांग;
                 level=levels[i];
             }
         }
@@ -589,7 +589,7 @@ ubidi_getRuns(UBiDi *pBiDi, UErrorCode* pErrorCode) {
          * We don't need to see if the last run can be merged with a trailing
          * WS run because setTrailingWSStart() would have done that.
          */
-        if(runCount==1 && limit==length) {
+        if(run_बिलांग==1 && limit==length) {
             /* There is only one non-WS run and no trailing WS-run. */
             getSingleRun(pBiDi, levels[0]);
         } else /* runCount>1 || limit<length */ {
@@ -600,11 +600,11 @@ ubidi_getRuns(UBiDi *pBiDi, UErrorCode* pErrorCode) {
 
             /* now, count a (non-mergeable) WS run */
             if(limit<length) {
-                ++runCount;
+                ++run_बिलांग;
             }
 
             /* runCount>1 */
-            if(getRunsMemory(pBiDi, runCount)) {
+            if(getRunsMemory(pBiDi, run_बिलांग)) {
                 runs=pBiDi->runsMemory;
             } else {
                 *pErrorCode = U_MEMORY_ALLOCATION_ERROR;
@@ -638,7 +638,7 @@ ubidi_getRuns(UBiDi *pBiDi, UErrorCode* pErrorCode) {
                 /* i is another run limit */
                 runs[runIndex].logicalStart=start;
                 runs[runIndex].visualLimit=i-start;
-                runs[runIndex].insertRemove=0;
+                runs[runIndex].इसिंगित_Remove=0;
                 ++runIndex;
             } while(i<limit);
 
@@ -655,14 +655,14 @@ ubidi_getRuns(UBiDi *pBiDi, UErrorCode* pErrorCode) {
 
             /* set the object fields */
             pBiDi->runs=runs;
-            pBiDi->runCount=runCount;
+            pBiDi->run_बिलांग=run_बिलांग;
 
-            reorderLine(pBiDi, minLevel, maxLevel);
+            reorder_लिन्या(pBiDi, minLevel, maxLevel);
 
             /* now add the direction flags and adjust the visualLimit's to be just that */
             /* this loop will also handle the trailing WS run */
             limit=0;
-            for(i=0; i<runCount; ++i) {
+            for(i=0; i<run_बिलांग; ++i) {
                 ADD_ODD_BIT_FROM_LEVEL(runs[i].logicalStart, levels[runs[i].logicalStart]);
                 limit+=runs[i].visualLimit;
                 runs[i].visualLimit=limit;
@@ -672,7 +672,7 @@ ubidi_getRuns(UBiDi *pBiDi, UErrorCode* pErrorCode) {
             /* For a RTL paragraph, it will be the *first* run in visual order. */
             /* For the trailing WS run, pBiDi->paraLevel is ok even if
                contextual multiple paragraphs.                          */
-            if(runIndex<runCount) {
+            if(runIndex<run_बिलांग) {
                 int32_t trailingRun = ((pBiDi->paraLevel & 1) != 0)? 0 : runIndex;
 
                 ADD_ODD_BIT_FROM_LEVEL(runs[trailingRun].logicalStart, pBiDi->paraLevel);
@@ -681,24 +681,24 @@ ubidi_getRuns(UBiDi *pBiDi, UErrorCode* pErrorCode) {
     }
 
     /* handle insert LRM/RLM BEFORE/AFTER run */
-    if(pBiDi->insertPoints.size>0) {
-        Point *point, *start=pBiDi->insertPoints.points,
-                      *limit=start+pBiDi->insertPoints.size;
+    if(pBiDi->इसिंगित_Points.size>0) {
+        Point *point, *start=pBiDi->इसिंगित_Points.points,
+                      *limit=start+pBiDi->इसिंगित_Points.size;
         int32_t runIndex;
         for(point=start; point<limit; point++) {
             runIndex=getRunFromLogicalIndex(pBiDi, point->pos);
-            pBiDi->runs[runIndex].insertRemove|=point->flag;
+            pBiDi->runs[runIndex].इसिंगित_Remove|=point->flag;
         }
     }
 
     /* handle remove BiDi control characters */
-    if(pBiDi->controlCount>0) {
+    if(pBiDi->control_बिलांग>0) {
         int32_t runIndex;
         const char16_t *start=pBiDi->text, *limit=start+pBiDi->length, *pu;
         for(pu=start; pu<limit; pu++) {
             if(IS_BIDI_CONTROL_CHAR(*pu)) {
                 runIndex=getRunFromLogicalIndex(pBiDi, (int32_t)(pu-start));
-                pBiDi->runs[runIndex].insertRemove--;
+                pBiDi->runs[runIndex].इसिंगित_Remove--;
             }
         }
     }
@@ -875,7 +875,7 @@ U_CAPI int32_t U_EXPORT2
 ubidi_getVisualIndex(UBiDi *pBiDi, int32_t logicalIndex, UErrorCode *pErrorCode) {
     int32_t visualIndex=UBIDI_MAP_NOWHERE;
     RETURN_IF_NULL_OR_FAILING_ERRCODE(pErrorCode, -1);
-    RETURN_IF_NOT_VALID_PARA_OR_LINE(pBiDi, *pErrorCode, -1);
+    RETURN_IF_NOT_VALID_PARA_OR_लिन्या(pBiDi, *pErrorCode, -1);
     RETURN_IF_BAD_RANGE(logicalIndex, 0, pBiDi->length, *pErrorCode, -1);
 
     /* we can do the trivial cases without the runs array */
@@ -895,7 +895,7 @@ ubidi_getVisualIndex(UBiDi *pBiDi, int32_t logicalIndex, UErrorCode *pErrorCode)
             int32_t i, visualStart=0, offset, length;
 
             /* linear search for the run, search on the visual runs */
-            for(i=0; i<pBiDi->runCount; ++i) {
+            for(i=0; i<pBiDi->run_बिलांग; ++i) {
                 length=runs[i].visualLimit-visualStart;
                 offset=logicalIndex-GET_INDEX(runs[i].logicalStart);
                 if(offset>=0 && offset<length) {
@@ -910,36 +910,36 @@ ubidi_getVisualIndex(UBiDi *pBiDi, int32_t logicalIndex, UErrorCode *pErrorCode)
                 }
                 visualStart+=length;
             }
-            if(i>=pBiDi->runCount) {
+            if(i>=pBiDi->run_बिलांग) {
                 return UBIDI_MAP_NOWHERE;
             }
         }
     }
 
-    if(pBiDi->insertPoints.size>0) {
+    if(pBiDi->इसिंगित_Points.size>0) {
         /* add the number of added marks until the calculated visual index */
         Run *runs=pBiDi->runs;
-        int32_t i, length, insertRemove;
+        int32_t i, length, इसिंगित_Remove;
         int32_t visualStart=0, markFound=0;
         for(i=0; ; i++, visualStart+=length) {
             length=runs[i].visualLimit-visualStart;
-            insertRemove=runs[i].insertRemove;
-            if(insertRemove & (LRM_BEFORE|RLM_BEFORE)) {
+            इसिंगित_Remove=runs[i].इसिंगित_Remove;
+            if(इसिंगित_Remove & (LRM_BEFORE|RLM_BEFORE)) {
                 markFound++;
             }
             /* is it the run containing the visual index? */
             if(visualIndex<runs[i].visualLimit) {
                 return visualIndex+markFound;
             }
-            if(insertRemove & (LRM_AFTER|RLM_AFTER)) {
+            if(इसिंगित_Remove & (LRM_AFTER|RLM_AFTER)) {
                 markFound++;
             }
         }
     }
-    else if(pBiDi->controlCount>0) {
+    else if(pBiDi->control_बिलांग>0) {
         /* subtract the number of controls until the calculated visual index */
         Run *runs=pBiDi->runs;
-        int32_t i, j, start, limit, length, insertRemove;
+        int32_t i, j, start, limit, length, इसिंगित_Remove;
         int32_t visualStart=0, controlFound=0;
         char16_t uchar=pBiDi->text[logicalIndex];
         /* is the logical index pointing to a control ? */
@@ -949,14 +949,14 @@ ubidi_getVisualIndex(UBiDi *pBiDi, int32_t logicalIndex, UErrorCode *pErrorCode)
         /* loop on runs */
         for(i=0; ; i++, visualStart+=length) {
             length=runs[i].visualLimit-visualStart;
-            insertRemove=runs[i].insertRemove;
+            इसिंगित_Remove=runs[i].इसिंगित_Remove;
             /* calculated visual index is beyond this run? */
             if(visualIndex>=runs[i].visualLimit) {
-                controlFound-=insertRemove;
+                controlFound-=इसिंगित_Remove;
                 continue;
             }
             /* calculated visual index must be within current run */
-            if(insertRemove==0) {
+            if(इसिंगित_Remove==0) {
                 return visualIndex-controlFound;
             }
             if(IS_EVEN_RUN(runs[i].logicalStart)) {
@@ -984,12 +984,12 @@ ubidi_getVisualIndex(UBiDi *pBiDi, int32_t logicalIndex, UErrorCode *pErrorCode)
 U_CAPI int32_t U_EXPORT2
 ubidi_getLogicalIndex(UBiDi *pBiDi, int32_t visualIndex, UErrorCode *pErrorCode) {
     Run *runs;
-    int32_t i, runCount, start;
+    int32_t i, run_बिलांग, start;
     RETURN_IF_NULL_OR_FAILING_ERRCODE(pErrorCode, -1);
-    RETURN_IF_NOT_VALID_PARA_OR_LINE(pBiDi, *pErrorCode, -1);
+    RETURN_IF_NOT_VALID_PARA_OR_लिन्या(pBiDi, *pErrorCode, -1);
     RETURN_IF_BAD_RANGE(visualIndex, 0, pBiDi->resultLength, *pErrorCode, -1);
     /* we can do the trivial cases without the runs array */
-    if(pBiDi->insertPoints.size==0 && pBiDi->controlCount==0) {
+    if(pBiDi->इसिंगित_Points.size==0 && pBiDi->control_बिलांग==0) {
         if(pBiDi->direction==UBIDI_LTR) {
             return visualIndex;
         }
@@ -1003,17 +1003,17 @@ ubidi_getLogicalIndex(UBiDi *pBiDi, int32_t visualIndex, UErrorCode *pErrorCode)
     }
 
     runs=pBiDi->runs;
-    runCount=pBiDi->runCount;
-    if(pBiDi->insertPoints.size>0) {
+    run_बिलांग=pBiDi->run_बिलांग;
+    if(pBiDi->इसिंगित_Points.size>0) {
         /* handle inserted LRM/RLM */
-        int32_t markFound=0, insertRemove;
+        int32_t markFound=0, इसिंगित_Remove;
         int32_t visualStart=0, length;
         runs=pBiDi->runs;
         /* subtract number of marks until visual index */
         for(i=0; ; i++, visualStart+=length) {
             length=runs[i].visualLimit-visualStart;
-            insertRemove=runs[i].insertRemove;
-            if(insertRemove&(LRM_BEFORE|RLM_BEFORE)) {
+            इसिंगित_Remove=runs[i].इसिंगित_Remove;
+            if(इसिंगित_Remove&(LRM_BEFORE|RLM_BEFORE)) {
                 if(visualIndex<=(visualStart+markFound)) {
                     return UBIDI_MAP_NOWHERE;
                 }
@@ -1024,7 +1024,7 @@ ubidi_getLogicalIndex(UBiDi *pBiDi, int32_t visualIndex, UErrorCode *pErrorCode)
                 visualIndex-=markFound;
                 break;
             }
-            if(insertRemove&(LRM_AFTER|RLM_AFTER)) {
+            if(इसिंगित_Remove&(LRM_AFTER|RLM_AFTER)) {
                 if(visualIndex==(visualStart+length+markFound)) {
                     return UBIDI_MAP_NOWHERE;
                 }
@@ -1032,23 +1032,23 @@ ubidi_getLogicalIndex(UBiDi *pBiDi, int32_t visualIndex, UErrorCode *pErrorCode)
             }
         }
     }
-    else if(pBiDi->controlCount>0) {
+    else if(pBiDi->control_बिलांग>0) {
         /* handle removed BiDi control characters */
-        int32_t controlFound=0, insertRemove, length;
+        int32_t controlFound=0, इसिंगित_Remove, length;
         int32_t logicalStart, logicalEnd, visualStart=0, j, k;
         char16_t uchar;
         UBool evenRun;
         /* add number of controls until visual index */
         for(i=0; ; i++, visualStart+=length) {
             length=runs[i].visualLimit-visualStart;
-            insertRemove=runs[i].insertRemove;
+            इसिंगित_Remove=runs[i].इसिंगित_Remove;
             /* is adjusted visual index beyond current run? */
-            if(visualIndex>=(runs[i].visualLimit-controlFound+insertRemove)) {
-                controlFound-=insertRemove;
+            if(visualIndex>=(runs[i].visualLimit-controlFound+इसिंगित_Remove)) {
+                controlFound-=इसिंगित_Remove;
                 continue;
             }
             /* adjusted visual index is within current run */
-            if(insertRemove==0) {
+            if(इसिंगित_Remove==0) {
                 visualIndex+=controlFound;
                 break;
             }
@@ -1072,12 +1072,12 @@ ubidi_getLogicalIndex(UBiDi *pBiDi, int32_t visualIndex, UErrorCode *pErrorCode)
         }
     }
     /* handle all cases */
-    if(runCount<=10) {
+    if(run_बिलांग<=10) {
         /* linear search for the run */
         for(i=0; visualIndex>=runs[i].visualLimit; ++i) {}
     } else {
         /* binary search for the run */
-        int32_t begin=0, limit=runCount;
+        int32_t begin=0, limit=run_बिलांग;
 
         /* the middle if() is guaranteed to find the run, we don't need a loop limit */
         for(;;) {
@@ -1110,7 +1110,7 @@ U_CAPI void U_EXPORT2
 ubidi_getLogicalMap(UBiDi *pBiDi, int32_t *indexMap, UErrorCode *pErrorCode) {
     RETURN_VOID_IF_NULL_OR_FAILING_ERRCODE(pErrorCode);
     /* ubidi_countRuns() checks for VALID_PARA_OR_LINE */
-    ubidi_countRuns(pBiDi, pErrorCode);
+    ubidi_बिलांग_Runs(pBiDi, pErrorCode);
     if(U_FAILURE(*pErrorCode)) {
         /* no op */
     } else if(indexMap==nullptr) {
@@ -1128,7 +1128,7 @@ ubidi_getLogicalMap(UBiDi *pBiDi, int32_t *indexMap, UErrorCode *pErrorCode) {
         }
 
         visualStart=0;
-        for(j=0; j<pBiDi->runCount; ++j) {
+        for(j=0; j<pBiDi->run_बिलांग; ++j) {
             logicalStart=GET_INDEX(runs[j].logicalStart);
             visualLimit=runs[j].visualLimit;
             if(IS_EVEN_RUN(runs[j].logicalStart)) {
@@ -1144,15 +1144,15 @@ ubidi_getLogicalMap(UBiDi *pBiDi, int32_t *indexMap, UErrorCode *pErrorCode) {
             /* visualStart==visualLimit; */
         }
 
-        if(pBiDi->insertPoints.size>0) {
-            int32_t markFound=0, runCount=pBiDi->runCount;
-            int32_t length, insertRemove;
+        if(pBiDi->इसिंगित_Points.size>0) {
+            int32_t markFound=0, run_बिलांग=pBiDi->run_बिलांग;
+            int32_t length, इसिंगित_Remove;
             visualStart=0;
             /* add number of marks found until each index */
-            for(i=0; i<runCount; i++, visualStart+=length) {
+            for(i=0; i<run_बिलांग; i++, visualStart+=length) {
                 length=runs[i].visualLimit-visualStart;
-                insertRemove=runs[i].insertRemove;
-                if(insertRemove&(LRM_BEFORE|RLM_BEFORE)) {
+                इसिंगित_Remove=runs[i].इसिंगित_Remove;
+                if(इसिंगित_Remove&(LRM_BEFORE|RLM_BEFORE)) {
                     markFound++;
                 }
                 if(markFound>0) {
@@ -1162,23 +1162,23 @@ ubidi_getLogicalMap(UBiDi *pBiDi, int32_t *indexMap, UErrorCode *pErrorCode) {
                         indexMap[j]+=markFound;
                     }
                 }
-                if(insertRemove&(LRM_AFTER|RLM_AFTER)) {
+                if(इसिंगित_Remove&(LRM_AFTER|RLM_AFTER)) {
                     markFound++;
                 }
             }
         }
-        else if(pBiDi->controlCount>0) {
-            int32_t controlFound=0, runCount=pBiDi->runCount;
-            int32_t length, insertRemove;
+        else if(pBiDi->control_बिलांग>0) {
+            int32_t controlFound=0, run_बिलांग=pBiDi->run_बिलांग;
+            int32_t length, इसिंगित_Remove;
             UBool evenRun;
             char16_t uchar;
             visualStart=0;
             /* subtract number of controls found until each index */
-            for(i=0; i<runCount; i++, visualStart+=length) {
+            for(i=0; i<run_बिलांग; i++, visualStart+=length) {
                 length=runs[i].visualLimit-visualStart;
-                insertRemove=runs[i].insertRemove;
+                इसिंगित_Remove=runs[i].इसिंगित_Remove;
                 /* no control found within previous runs nor within this run */
-                if((controlFound-insertRemove)==0) {
+                if((controlFound-इसिंगित_Remove)==0) {
                     continue;
                 }
                 logicalStart=runs[i].logicalStart;
@@ -1186,7 +1186,7 @@ ubidi_getLogicalMap(UBiDi *pBiDi, int32_t *indexMap, UErrorCode *pErrorCode) {
                 REMOVE_ODD_BIT(logicalStart);
                 logicalLimit=logicalStart+length;
                 /* if no control within this run */
-                if(insertRemove==0) {
+                if(इसिंगित_Remove==0) {
                     for(j=logicalStart; j<logicalLimit; j++) {
                         indexMap[j]-=controlFound;
                     }
@@ -1215,10 +1215,10 @@ ubidi_getVisualMap(UBiDi *pBiDi, int32_t *indexMap, UErrorCode *pErrorCode) {
         return;
     }
     /* ubidi_countRuns() checks for VALID_PARA_OR_LINE */
-    ubidi_countRuns(pBiDi, pErrorCode);
+    ubidi_बिलांग_Runs(pBiDi, pErrorCode);
     if(U_SUCCESS(*pErrorCode)) {
         /* fill a visual-to-logical index map using the runs[] */
-        Run *runs=pBiDi->runs, *runsLimit=runs+pBiDi->runCount;
+        Run *runs=pBiDi->runs, *runsLimit=runs+pBiDi->run_बिलांग;
         int32_t logicalStart, visualStart, visualLimit, *pi=indexMap;
 
         if (pBiDi->resultLength<=0) {
@@ -1242,25 +1242,25 @@ ubidi_getVisualMap(UBiDi *pBiDi, int32_t *indexMap, UErrorCode *pErrorCode) {
             /* visualStart==visualLimit; */
         }
 
-        if(pBiDi->insertPoints.size>0) {
-            int32_t markFound=0, runCount=pBiDi->runCount;
-            int32_t insertRemove, i, j, k;
+        if(pBiDi->इसिंगित_Points.size>0) {
+            int32_t markFound=0, run_बिलांग=pBiDi->run_बिलांग;
+            int32_t इसिंगित_Remove, i, j, k;
             runs=pBiDi->runs;
             /* count all inserted marks */
-            for(i=0; i<runCount; i++) {
-                insertRemove=runs[i].insertRemove;
-                if(insertRemove&(LRM_BEFORE|RLM_BEFORE)) {
+            for(i=0; i<run_बिलांग; i++) {
+                इसिंगित_Remove=runs[i].इसिंगित_Remove;
+                if(इसिंगित_Remove&(LRM_BEFORE|RLM_BEFORE)) {
                     markFound++;
                 }
-                if(insertRemove&(LRM_AFTER|RLM_AFTER)) {
+                if(इसिंगित_Remove&(LRM_AFTER|RLM_AFTER)) {
                     markFound++;
                 }
             }
             /* move back indexes by number of preceding marks */
             k=pBiDi->resultLength;
-            for(i=runCount-1; i>=0 && markFound>0; i--) {
-                insertRemove=runs[i].insertRemove;
-                if(insertRemove&(LRM_AFTER|RLM_AFTER)) {
+            for(i=run_बिलांग-1; i>=0 && markFound>0; i--) {
+                इसिंगित_Remove=runs[i].इसिंगित_Remove;
+                if(इसिंगित_Remove&(LRM_AFTER|RLM_AFTER)) {
                     indexMap[--k]= UBIDI_MAP_NOWHERE;
                     markFound--;
                 }
@@ -1268,31 +1268,31 @@ ubidi_getVisualMap(UBiDi *pBiDi, int32_t *indexMap, UErrorCode *pErrorCode) {
                 for(j=runs[i].visualLimit-1; j>=visualStart && markFound>0; j--) {
                     indexMap[--k]=indexMap[j];
                 }
-                if(insertRemove&(LRM_BEFORE|RLM_BEFORE)) {
+                if(इसिंगित_Remove&(LRM_BEFORE|RLM_BEFORE)) {
                     indexMap[--k]= UBIDI_MAP_NOWHERE;
                     markFound--;
                 }
             }
         }
-        else if(pBiDi->controlCount>0) {
-            int32_t runCount=pBiDi->runCount, logicalEnd;
-            int32_t insertRemove, length, i, j, k, m;
+        else if(pBiDi->control_बिलांग>0) {
+            int32_t run_बिलांग=pBiDi->run_बिलांग, logicalEnd;
+            int32_t इसिंगित_Remove, length, i, j, k, m;
             char16_t uchar;
             UBool evenRun;
             runs=pBiDi->runs;
             visualStart=0;
             /* move forward indexes by number of preceding controls */
             k=0;
-            for(i=0; i<runCount; i++, visualStart+=length) {
+            for(i=0; i<run_बिलांग; i++, visualStart+=length) {
                 length=runs[i].visualLimit-visualStart;
-                insertRemove=runs[i].insertRemove;
+                इसिंगित_Remove=runs[i].इसिंगित_Remove;
                 /* if no control found yet, nothing to do in this run */
-                if((insertRemove==0)&&(k==visualStart)) {
+                if((इसिंगित_Remove==0)&&(k==visualStart)) {
                     k+=length;
                     continue;
                 }
                 /* if no control in this run */
-                if(insertRemove==0) {
+                if(इसिंगित_Remove==0) {
                     visualLimit=runs[i].visualLimit;
                     for(j=visualStart; j<visualLimit; j++) {
                         indexMap[k++]=indexMap[j];

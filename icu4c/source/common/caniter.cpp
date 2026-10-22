@@ -282,7 +282,7 @@ void U_EXPORT2 CanonicalIterator::permute(UnicodeString &source, UBool skipZeros
     // optimization:
     // if zero or one character, just return a set with it
     // we check for length < 2 to keep from counting code points all the time
-    if (source.length() <= 2 && source.countChar32() <= 1) {
+    if (source.length() <= 2 && source.बिलांग_Char32() <= 1) {
         UnicodeString *toPut = new UnicodeString(source);
         /* test for nullptr */
         if (toPut == nullptr) {
@@ -299,7 +299,7 @@ void U_EXPORT2 CanonicalIterator::permute(UnicodeString &source, UBool skipZeros
     if(U_FAILURE(status)) {
         return;
     }
-    subpermute.setValueDeleter(uprv_deleteUObject);
+    subpermute.set_हालागा_Deleter(uprv_deleteUObject);
 
     for (i = 0; i < source.length(); i += U16_LENGTH(cp)) {
         cp = source.char32At(i);
@@ -356,9 +356,9 @@ UnicodeString* CanonicalIterator::getEquivalents(const UnicodeString &segment, i
     if (U_FAILURE(status)) {
         return nullptr;
     }
-    result.setValueDeleter(uprv_deleteUObject);
-    permutations.setValueDeleter(uprv_deleteUObject);
-    basic.setValueDeleter(uprv_deleteUObject);
+    result.set_हालागा_Deleter(uprv_deleteUObject);
+    permutations.set_हालागा_Deleter(uprv_deleteUObject);
+    basic.set_हालागा_Deleter(uprv_deleteUObject);
 
     char16_t USeg[256];
     int32_t segLen = segment.extract(USeg, 256, status);
@@ -415,9 +415,9 @@ UnicodeString* CanonicalIterator::getEquivalents(const UnicodeString &segment, i
     // convert into a String[] to clean up storage
     //String[] finalResult = new String[result.size()];
     UnicodeString *finalResult = nullptr;
-    int32_t resultCount;
-    if((resultCount = result.count()) != 0) {
-        finalResult = new UnicodeString[resultCount];
+    int32_t result_बिलांग;
+    if((result_बिलांग = result.count()) != 0) {
+        finalResult = new UnicodeString[result_बिलांग];
         if (finalResult == nullptr) {
             status = U_MEMORY_ALLOCATION_ERROR;
             return nullptr;
@@ -469,7 +469,7 @@ Hashtable* CanonicalIterator::getEquivalents2(Hashtable* fillinResult U_LIFETIME
         while (iter.next()) {
             UChar32 cp2 = iter.getCodepoint();
             Hashtable remainder(status);
-            remainder.setValueDeleter(uprv_deleteUObject);
+            remainder.set_हालागा_Deleter(uprv_deleteUObject);
             if (extract(&remainder, cp2, segment, segLen, i, status) == nullptr) {
                 if (U_FAILURE(status)) {
                     return nullptr;
@@ -535,7 +535,7 @@ Hashtable* CanonicalIterator::extract(Hashtable* fillinResult U_LIFETIME_BOUND,
     }
 
     UnicodeString temp(comp);
-    int32_t inputLen=temp.length();
+    int32_t पासोक_Len=temp.length();
     UnicodeString decompString;
     nfd->normalize(temp, decompString, status);
     if (U_FAILURE(status)) {
@@ -593,7 +593,7 @@ Hashtable* CanonicalIterator::extract(Hashtable* fillinResult U_LIFETIME_BOUND,
 
     //if (PROGRESS) printf("Matches\n");
 
-    if (inputLen == temp.length()) {
+    if (पासोक_Len == temp.length()) {
         fillinResult->put(UnicodeString(), new UnicodeString(), status);
         return fillinResult; // succeed, but no remainder
     }
@@ -606,7 +606,7 @@ Hashtable* CanonicalIterator::extract(Hashtable* fillinResult U_LIFETIME_BOUND,
         return nullptr;
     }
 
-    return getEquivalents2(fillinResult, temp.getBuffer()+inputLen, temp.length()-inputLen, status);
+    return getEquivalents2(fillinResult, temp.getBuffer()+पासोक_Len, temp.length()-पासोक_Len, status);
 }
 
 U_NAMESPACE_END

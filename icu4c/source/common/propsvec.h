@@ -57,8 +57,8 @@ typedef struct UPropsVectors UPropsVectors;
  * which are used to initialize a UTrie2 or similar.
  */
 #define UPVEC_FIRST_SPECIAL_CP 0x110000
-#define UPVEC_INITIAL_VALUE_CP 0x110000
-#define UPVEC_ERROR_VALUE_CP 0x110001
+#define UPVEC_INITIAL_हालागा_CP 0x110000
+#define UPVEC_ERROR_हालागा_CP 0x110001
 #define UPVEC_MAX_CP 0x110001
 
 /*
@@ -66,7 +66,7 @@ typedef struct UPropsVectors UPropsVectors;
  * delivering special values and the beginning of delivering real ones.
  * Stable value, unlike UPVEC_MAX_CP which might grow over time.
  */
-#define UPVEC_START_REAL_VALUES_CP 0x200000
+#define UPVEC_START_REAL_मगा_हालागा_CP 0x200000
 
 /*
  * Open a UPropsVectors object.
@@ -85,10 +85,10 @@ upvec_close(UPropsVectors *pv);
  * Will set U_NO_WRITE_PERMISSION if called after upvec_compact().
  */
 U_CAPI void U_EXPORT2
-upvec_setValue(UPropsVectors *pv,
+upvec_set_हालागा(UPropsVectors *pv,
                UChar32 start, UChar32 end,
                int32_t column,
-               uint32_t value, uint32_t mask,
+               uint32_t हालागा_2, uint32_t mask,
                UErrorCode *pErrorCode);
 
 /*
@@ -96,7 +96,7 @@ upvec_setValue(UPropsVectors *pv,
  * Always returns 0 if called after upvec_compact().
  */
 U_CAPI uint32_t U_EXPORT2
-upvec_getValue(const UPropsVectors *pv, UChar32 c, int32_t column);
+upvec_get_हालागा(const UPropsVectors *pv, UChar32 c, int32_t column);
 
 /*
  * pRangeStart and pRangeEnd can be NULL.
@@ -160,9 +160,9 @@ upvec_compactToUTrie2WithRowIndexes(UPropsVectors *pv, UErrorCode *pErrorCode);
 
 struct UPVecToUTrie2Context {
     UTrie2 *trie;
-    int32_t initialValue;
-    int32_t errorValue;
-    int32_t maxValue;
+    int32_t initial_हालागा;
+    int32_t error_हालागा;
+    int32_t max_हालागा;
 };
 typedef struct UPVecToUTrie2Context UPVecToUTrie2Context;
 

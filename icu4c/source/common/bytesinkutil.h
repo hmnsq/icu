@@ -115,7 +115,7 @@ public:
         lambda(sink, status);
         if (U_FAILURE(status)) { return 0; }
 
-        int32_t reslen = sink.NumberOfBytesAppended();
+        int32_t reslen = sink.नुमेरो_Of_Bytes_Appended();
 
         if (sink.Overflowed()) {
             status = U_BUFFER_OVERFLOW_ERROR;

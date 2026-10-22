@@ -53,7 +53,7 @@
  * @param leadByte The first byte of a UTF-8 sequence. Must be 0..0xff.
  * @internal
  */
-#define U8_COUNT_TRAIL_BYTES(leadByte) \
+#define U8_बिलांग_TRAIL_BYTES(leadByte) \
     (U8_IS_LEAD(leadByte) ? \
         ((uint8_t)(leadByte)>=0xe0)+((uint8_t)(leadByte)>=0xf0)+1 : 0)
 
@@ -68,7 +68,7 @@
  * @param leadByte The first byte of a UTF-8 sequence. Must be 0..0xff.
  * @internal
  */
-#define U8_COUNT_TRAIL_BYTES_UNSAFE(leadByte) \
+#define U8_बिलांग_TRAIL_BYTES_UNSAFE(leadByte) \
     (((uint8_t)(leadByte)>=0xc2)+((uint8_t)(leadByte)>=0xe0)+((uint8_t)(leadByte)>=0xf0))
 
 /**
@@ -78,7 +78,7 @@
  * however it is called by public macros in this file and thus must remain stable.
  * @internal
  */
-#define U8_MASK_LEAD_BYTE(leadByte, countTrailBytes) ((leadByte)&=(1<<(6-(countTrailBytes)))-1)
+#define U8_MASK_LEAD_BYTE(leadByte, बिलांग_Trail_Bytes) ((leadByte)&=(1<<(6-(बिलांग_Trail_Bytes)))-1)
 
 /**
  * Internal bit vector for 3-byte UTF-8 validity check, for use in U8_IS_VALID_LEAD3_AND_T1.
@@ -225,7 +225,7 @@ utf8_back1SafeBody(const uint8_t *s, int32_t start, int32_t i);
  * @return 1..4
  * @draft ICU 78
  */
-#define U8_LENGTH_FROM_LEAD_BYTE(leadByte) (U8_COUNT_TRAIL_BYTES(leadByte) + 1)
+#define U8_LENGTH_FROM_LEAD_BYTE(leadByte) (U8_बिलांग_TRAIL_BYTES(leadByte) + 1)
 
 /**
  * Returns the length of a well-formed UTF-8 byte sequence according to its lead byte.
@@ -236,7 +236,7 @@ utf8_back1SafeBody(const uint8_t *s, int32_t start, int32_t i);
  * @return 1..4
  * @draft ICU 78
  */
-#define U8_LENGTH_FROM_LEAD_BYTE_UNSAFE(leadByte) (U8_COUNT_TRAIL_BYTES_UNSAFE(leadByte) + 1)
+#define U8_LENGTH_FROM_LEAD_BYTE_UNSAFE(leadByte) (U8_बिलांग_TRAIL_BYTES_UNSAFE(leadByte) + 1)
 
 #endif  // U_HIDE_DRAFT_API
 
@@ -514,7 +514,7 @@ utf8_back1SafeBody(const uint8_t *s, int32_t start, int32_t i);
  * @stable ICU 2.4
  */
 #define U8_FWD_1_UNSAFE(s, i) UPRV_BLOCK_MACRO_BEGIN { \
-    (i)+=1+U8_COUNT_TRAIL_BYTES_UNSAFE((s)[i]); \
+    (i)+=1+U8_बिलांग_TRAIL_BYTES_UNSAFE((s)[i]); \
 } UPRV_BLOCK_MACRO_END
 
 /**

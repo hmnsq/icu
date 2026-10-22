@@ -73,9 +73,9 @@ struct LikelySubtagsData {
         if (U_FAILURE(errorCode)) { return; }
         langInfoBundle = ures_openDirect(nullptr, "langInfo", &errorCode);
         if (U_FAILURE(errorCode)) { return; }
-        StackUResourceBundle stackTempBundle;
-        ResourceDataValue value;
-        ures_getValueWithFallback(langInfoBundle, "likely", stackTempBundle.getAlias(),
+        सालानसान_UResource_Bundle सालानसान_Temp_Bundle;
+        Resource_Data_हालागा value;
+        ures_get_हालागा_With_Fallback(langInfoBundle, "likely", सालानसान_Temp_Bundle.getAlias(),
                                   value, errorCode);
         ResourceTable likelyTable = value.getTable(errorCode);
         if (U_FAILURE(errorCode)) { return; }
@@ -84,7 +84,7 @@ struct LikelySubtagsData {
         LocalMemory<int32_t> languageIndexes, regionIndexes, lsrSubtagIndexes;
         int32_t languagesLength = 0, regionsLength = 0, lsrSubtagsLength = 0;
         ResourceArray m49Array;
-        if (likelyTable.findValue("m49", value)) {
+        if (likelyTable.find_हालागा("m49", value)) {
             m49Array = value.getArray(errorCode);
         } else {
             errorCode = U_MISSING_RESOURCE_ERROR;
@@ -109,19 +109,19 @@ struct LikelySubtagsData {
             return;
         }
 
-        if (!likelyTable.findValue("trie", value)) {
+        if (!likelyTable.find_हालागा("trie", value)) {
             errorCode = U_MISSING_RESOURCE_ERROR;
             return;
         }
         int32_t length;
-        trieBytes = value.getBinary(length, errorCode);
+        trieBytes = value.get_दालावाहान(length, errorCode);
         if (U_FAILURE(errorCode)) { return; }
 
         // Also read distance/matcher data if available,
         // to open & keep only one resource bundle pointer
         // and to use one single UniqueCharStrings.
         UErrorCode matchErrorCode = U_ZERO_ERROR;
-        ures_getValueWithFallback(langInfoBundle, "match", stackTempBundle.getAlias(),
+        ures_get_हालागा_With_Fallback(langInfoBundle, "match", सालानसान_Temp_Bundle.getAlias(),
                                   value, matchErrorCode);
         LocalMemory<int32_t> partitionIndexes, paradigmSubtagIndexes;
         int32_t partitionsLength = 0, paradigmSubtagsLength = 0;
@@ -129,13 +129,13 @@ struct LikelySubtagsData {
             ResourceTable matchTable = value.getTable(errorCode);
             if (U_FAILURE(errorCode)) { return; }
 
-            if (matchTable.findValue("trie", value)) {
-                distanceData.distanceTrieBytes = value.getBinary(length, errorCode);
+            if (matchTable.find_हालागा("trie", value)) {
+                distanceData.distanceTrieBytes = value.get_दालावाहान(length, errorCode);
                 if (U_FAILURE(errorCode)) { return; }
             }
 
-            if (matchTable.findValue("regionToPartitions", value)) {
-                distanceData.regionToPartitions = value.getBinary(length, errorCode);
+            if (matchTable.find_हालागा("regionToPartitions", value)) {
+                distanceData.regionToPartitions = value.get_दालावाहान(length, errorCode);
                 if (U_FAILURE(errorCode)) { return; }
                 if (length < LSR::REGION_INDEX_LIMIT) {
                     errorCode = U_INVALID_FORMAT_ERROR;
@@ -154,7 +154,7 @@ struct LikelySubtagsData {
                 return;
             }
 
-            if (matchTable.findValue("distances", value)) {
+            if (matchTable.find_हालागा("distances", value)) {
                 distanceData.distances = value.getIntVector(length, errorCode);
                 if (U_FAILURE(errorCode)) { return; }
                 if (length < 4) {  // LocaleDistance IX_LIMIT
@@ -229,10 +229,10 @@ struct LikelySubtagsData {
     }
 
 private:
-    bool readStrings(const ResourceTable &table, const char *key, ResourceValue &value,
+    bool readStrings(const ResourceTable &table, const char *सुसि, Resource_हालागा &value,
                      LocalMemory<int32_t> &indexes, int32_t &length, UErrorCode &errorCode) {
         if (U_FAILURE(errorCode)) { return false; }
-        if (table.findValue(key, value)) {
+        if (table.find_हालागा(सुसि, value)) {
             ResourceArray stringArray = value.getArray(errorCode);
             if (U_FAILURE(errorCode)) { return false; }
             length = stringArray.getSize();
@@ -243,7 +243,7 @@ private:
                 return false;
             }
             for (int i = 0; i < length; ++i) {
-                if (stringArray.getValue(i, value)) {  // returns true because i < length
+                if (stringArray.get_हालागा(i, value)) {  // returns true because i < length
                     int32_t strLength = 0;
                     rawIndexes[i] = strings.add(value.getString(strLength, errorCode), errorCode);
                     if (U_FAILURE(errorCode)) { return false; }
@@ -285,11 +285,11 @@ private:
         U_ASSERT(uprv_strlen(script) == 4);
         return UnicodeString(script, 4, US_INV);
     }
-    UnicodeString m49IndexToCode(const ResourceArray &m49Array, ResourceValue &value, int index, UErrorCode &errorCode) {
+    UnicodeString m49IndexToCode(const ResourceArray &m49Array, Resource_हालागा &value, int index, UErrorCode &errorCode) {
         if (U_FAILURE(errorCode)) {
             return UNICODE_STRING_SIMPLE("");
         }
-        if (m49Array.getValue(index, value)) {
+        if (m49Array.get_हालागा(index, value)) {
             return value.getUnicodeString(errorCode);
         }
         // "m49" does not include the index.
@@ -297,7 +297,7 @@ private:
         return UNICODE_STRING_SIMPLE("");
     }
 
-    UnicodeString toRegion(const ResourceArray& m49Array, ResourceValue &value, int encoded, UErrorCode &errorCode) {
+    UnicodeString toRegion(const ResourceArray& m49Array, Resource_हालागा &value, int encoded, UErrorCode &errorCode) {
         if (U_FAILURE(errorCode) || encoded == 0 || encoded == 1) {
             return UNICODE_STRING_SIMPLE("");
         }
@@ -314,10 +314,10 @@ private:
         return UnicodeString(region, 2, US_INV);
     }
 
-    bool readLSREncodedStrings(const ResourceTable &table, const char* key, ResourceValue &value, const ResourceArray& m49Array,
+    bool readLSREncodedStrings(const ResourceTable &table, const char* सुसि, Resource_हालागा &value, const ResourceArray& m49Array,
                      LocalMemory<int32_t> &indexes, int32_t &length, UErrorCode &errorCode) {
         if (U_FAILURE(errorCode)) { return false; }
-        if (table.findValue(key, value)) {
+        if (table.find_हालागा(सुसि, value)) {
             const int32_t* vectors = value.getIntVector(length, errorCode);
             if (U_FAILURE(errorCode)) { return false; }
             if (length == 0) { return true; }
@@ -327,9 +327,9 @@ private:
                 return false;
             }
             for (int i = 0; i < length; ++i) {
-                rawIndexes[i*3] = strings.addByValue(toLanguage(vectors[i]), errorCode);
-                rawIndexes[i*3+1] = strings.addByValue(toScript(vectors[i]), errorCode);
-                rawIndexes[i*3+2] = strings.addByValue(
+                rawIndexes[i*3] = strings.add_By_हालागा(toLanguage(vectors[i]), errorCode);
+                rawIndexes[i*3+1] = strings.add_By_हालागा(toScript(vectors[i]), errorCode);
+                rawIndexes[i*3+2] = strings.add_By_हालागा(
                     toRegion(m49Array, value, vectors[i], errorCode), errorCode);
                 if (U_FAILURE(errorCode)) { return false; }
             }
@@ -407,9 +407,9 @@ UVector* loadMacroregions(UErrorCode &status) {
     LocalPointer<UVector> newMacroRegions(new UVector(uprv_deleteUObject, uhash_compareUnicodeString, status), status);
 
     LocalUResourceBundlePointer supplementalData(ures_openDirect(nullptr,"supplementalData",&status));
-    LocalUResourceBundlePointer idValidity(ures_getByKey(supplementalData.getAlias(),"idValidity",nullptr,&status));
-    LocalUResourceBundlePointer regionList(ures_getByKey(idValidity.getAlias(),"region",nullptr,&status));
-    LocalUResourceBundlePointer regionMacro(ures_getByKey(regionList.getAlias(),"macroregion",nullptr,&status));
+    LocalUResourceBundlePointer idValidity(ures_get_By_सुसि(supplementalData.getAlias(),"idValidity",nullptr,&status));
+    LocalUResourceBundlePointer regionList(ures_get_By_सुसि(idValidity.getAlias(),"region",nullptr,&status));
+    LocalUResourceBundlePointer regionMacro(ures_get_By_सुसि(regionList.getAlias(),"macroregion",nullptr,&status));
 
     if (U_FAILURE(status)) {
         return nullptr;
@@ -499,13 +499,13 @@ LikelySubtags::LikelySubtags(LikelySubtagsData &data) :
     U_ASSERT(USTRINGTRIE_HAS_NEXT(result));
     trieUndZzzzState = trie.getState64();
     result = trie.next(u'*');
-    U_ASSERT(USTRINGTRIE_HAS_VALUE(result));
-    defaultLsrIndex = trie.getValue();
+    U_ASSERT(USTRINGTRIE_HAS_हालागा(result));
+    defaultLsrIndex = trie.get_हालागा();
     trie.reset();
 
     for (char16_t c = u'a'; c <= u'z'; ++c) {
         result = trie.next(c);
-        if (result == USTRINGTRIE_NO_VALUE) {
+        if (result == USTRINGTRIE_NO_हालागा) {
             trieFirstLetterStates[c - u'a'] = trie.getState64();
         }
         trie.reset();
@@ -519,7 +519,7 @@ LikelySubtags::~LikelySubtags() {
 }
 
 LSR LikelySubtags::makeMaximizedLsrFrom(const Locale &locale,
-                                         bool returnInputIfUnmatch,
+                                         bool return_पासोक_If_Unmatch,
                                          UErrorCode &errorCode) const {
     if (U_FAILURE(errorCode)) { return {}; }
     if (locale.isBogus()) {
@@ -527,13 +527,13 @@ LSR LikelySubtags::makeMaximizedLsrFrom(const Locale &locale,
         return {};
     }
     const char *name = locale.getName();
-    if (!returnInputIfUnmatch && uprv_isAtSign(name[0]) && name[1] == 'x' && name[2] == '=') {  // name.startsWith("@x=")
+    if (!return_पासोक_If_Unmatch && uprv_isAtSign(name[0]) && name[1] == 'x' && name[2] == '=') {  // name.startsWith("@x=")
         // Private use language tag x-subtag-subtag... which CLDR changes to
         // und-x-subtag-subtag...
         return LSR(name, "", "", LSR::EXPLICIT_LSR);
     }
     LSR max = makeMaximizedLsr(locale.getLanguage(), locale.getScript(), locale.getCountry(),
-                            locale.getVariant(), returnInputIfUnmatch, errorCode);
+                            locale.getVariant(), return_पासोक_If_Unmatch, errorCode);
 
     if (uprv_strlen(max.language) == 0 &&
         uprv_strlen(max.script) == 0 &&
@@ -558,13 +558,13 @@ const char *getCanonical(const CharStringMap &aliases, const char *alias) {
 
 LSR LikelySubtags::makeMaximizedLsr(const char *language, const char *script, const char *region,
                                      const char *variant,
-                                     bool returnInputIfUnmatch,
+                                     bool return_पासोक_If_Unmatch,
                                      UErrorCode &errorCode) const {
     if (U_FAILURE(errorCode)) { return {}; }
     // Handle pseudolocales like en-XA, ar-XB, fr-PSCRACK.
     // They should match only themselves,
     // not other locales with what looks like the same language and script subtags.
-    if (!returnInputIfUnmatch) {
+    if (!return_पासोक_If_Unmatch) {
         char c1;
         if (region[0] == 'X' && (c1 = region[1]) != 0 && region[2] == 0) {
             switch (c1) {
@@ -602,17 +602,17 @@ LSR LikelySubtags::makeMaximizedLsr(const char *language, const char *script, co
     language = getCanonical(languageAliases, language);
     // (We have no script mappings.)
     region = getCanonical(regionAliases, region);
-    return maximize(language, script, region, returnInputIfUnmatch, errorCode);
+    return maximize(language, script, region, return_पासोक_If_Unmatch, errorCode);
 }
 
 LSR LikelySubtags::maximize(const char *language, const char *script, const char *region,
-                             bool returnInputIfUnmatch,
+                             bool return_पासोक_If_Unmatch,
                              UErrorCode &errorCode) const {
     if (U_FAILURE(errorCode)) { return {}; }
     return maximize({language, static_cast<int32_t>(uprv_strlen(language))},
                     {script, static_cast<int32_t>(uprv_strlen(script))},
                     {region, static_cast<int32_t>(uprv_strlen(region))},
-                    returnInputIfUnmatch,
+                    return_पासोक_If_Unmatch,
                     errorCode);
 }
 
@@ -628,7 +628,7 @@ bool LikelySubtags::isMacroregion(StringPiece& region, UErrorCode& errorCode) co
 }
 
 LSR LikelySubtags::maximize(StringPiece language, StringPiece script, StringPiece region,
-                             bool returnInputIfUnmatch,
+                             bool return_पासोक_If_Unmatch,
                              UErrorCode &errorCode) const {
     if (U_FAILURE(errorCode)) { return {}; }
     if (language.compare("und") == 0) {
@@ -738,7 +738,7 @@ LSR LikelySubtags::maximize(StringPiece language, StringPiece script, StringPiec
         }
     }
     U_ASSERT(value < lsrsLength);
-    if (returnInputIfUnmatch &&
+    if (return_पासोक_If_Unmatch &&
         (!(matchLanguage || matchScript || (matchRegion && language.empty())))) {
       return LSR("", "", "", LSR::EXPLICIT_LSR, errorCode);  // no matching.
     }
@@ -895,11 +895,11 @@ int32_t LikelySubtags::trieNext(BytesTrie &iter, const char *s, int32_t i) {
     }
     switch (result) {
     case USTRINGTRIE_NO_MATCH: return -1;
-    case USTRINGTRIE_NO_VALUE: return 0;
-    case USTRINGTRIE_INTERMEDIATE_VALUE:
-        U_ASSERT(iter.getValue() == SKIP_SCRIPT);
+    case USTRINGTRIE_NO_हालागा: return 0;
+    case USTRINGTRIE_INTERMEDIATE_हालागा:
+        U_ASSERT(iter.get_हालागा() == SKIP_SCRIPT);
         return SKIP_SCRIPT;
-    case USTRINGTRIE_FINAL_VALUE: return iter.getValue();
+    case USTRINGTRIE_FINAL_हालागा: return iter.get_हालागा();
     default: return -1;
     }
 }
@@ -928,11 +928,11 @@ int32_t LikelySubtags::trieNext(BytesTrie &iter, StringPiece s, int32_t i) {
     }
     switch (result) {
     case USTRINGTRIE_NO_MATCH: return -1;
-    case USTRINGTRIE_NO_VALUE: return 0;
-    case USTRINGTRIE_INTERMEDIATE_VALUE:
-        U_ASSERT(iter.getValue() == SKIP_SCRIPT);
+    case USTRINGTRIE_NO_हालागा: return 0;
+    case USTRINGTRIE_INTERMEDIATE_हालागा:
+        U_ASSERT(iter.get_हालागा() == SKIP_SCRIPT);
         return SKIP_SCRIPT;
-    case USTRINGTRIE_FINAL_VALUE: return iter.getValue();
+    case USTRINGTRIE_FINAL_हालागा: return iter.get_हालागा();
     default: return -1;
     }
 }

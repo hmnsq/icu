@@ -55,7 +55,7 @@ UEnumClose(UEnumeration *en);
  * @return number of elements in enumeration
  */
 typedef int32_t U_CALLCONV
-UEnumCount(UEnumeration *en, UErrorCode *status);
+UEnum_बिलांग(UEnumeration *en, UErrorCode *status);
 
 /**
  * Function type declaration for uenum_unext().
@@ -119,7 +119,7 @@ struct UEnumeration {
     /* called from uenum_close */
     UEnumClose *close;
     /* called from uenum_count */
-    UEnumCount *count;
+    UEnum_बिलांग *बिलांग;
     /* called from uenum_unext */
     UEnumUNext *uNext;
     /* called from uenum_next */

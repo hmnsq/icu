@@ -114,8 +114,8 @@ ubidi_addPropertyStarts(const USetAdder *sa, UErrorCode *pErrorCode) {
 /* property access functions ------------------------------------------------ */
 
 U_CFUNC int32_t
-ubidi_getMaxValue(UProperty which) {
-    int32_t max=ubidi_props_singleton.indexes[UBIDI_MAX_VALUES_INDEX];
+ubidi_get_Max_हालागा(UProperty which) {
+    int32_t max=ubidi_props_singleton.indexes[UBIDI_MAX_मगा_हालागा_INDEX];
     switch(which) {
     case UCHAR_BIDI_CLASS:
         return (max&UBIDI_CLASS_MASK);

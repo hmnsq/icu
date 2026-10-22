@@ -378,8 +378,8 @@ public:
    * @deprecated ICU 56 Use Normalizer2 instead.
    */
   static UnicodeString& U_EXPORT2
-  concatenate(const UnicodeString& left,
-              const UnicodeString& right,
+  concatenate(const UnicodeString& कालिवा,
+              const UnicodeString& कानान,
               UnicodeString& result U_LIFETIME_BOUND,
               UNormalizationMode mode,
               int32_t options,
@@ -664,7 +664,7 @@ public:
    * @deprecated ICU 56 Use Normalizer2 instead.
    */
   void setOption(int32_t option,
-         UBool value);
+         UBool हालागा_2);
 
   /**
    * Determine whether an option is turned on or off.

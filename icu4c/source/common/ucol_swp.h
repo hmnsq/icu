@@ -32,7 +32,7 @@
  * @internal
  */
 U_CAPI UBool U_EXPORT2
-ucol_looksLikeCollationBinary(const UDataSwapper *ds,
+ucol_looks_Like_Collation_दालावाहान(const UDataSwapper *ds,
                               const void *inData, int32_t length);
 
 /**

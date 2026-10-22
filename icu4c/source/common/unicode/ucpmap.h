@@ -110,7 +110,7 @@ ucpmap_get(const UCPMap *map, UChar32 c);
  * @stable ICU 63
  */
 typedef uint32_t U_CALLCONV
-UCPMapValueFilter(const void *context, uint32_t value);
+UCPMap_हालागा_Filter(const void *context, uint32_t हालागा_2);
 
 /**
  * Returns the last code point such that all those from start to there have the same value.
@@ -150,8 +150,8 @@ UCPMapValueFilter(const void *context, uint32_t value);
  */
 U_CAPI UChar32 U_EXPORT2
 ucpmap_getRange(const UCPMap *map, UChar32 start,
-                UCPMapRangeOption option, uint32_t surrogateValue,
-                UCPMapValueFilter *filter, const void *context, uint32_t *pValue);
+                UCPMapRangeOption option, uint32_t surrogate_हालागा,
+                UCPMap_हालागा_Filter *filter, const void *context, uint32_t *p_हालागा);
 
 U_CDECL_END
 

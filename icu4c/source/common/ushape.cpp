@@ -353,14 +353,14 @@ _shapeToArabicDigitsWithContext(char16_t *s, int32_t length,
         for(i=0; i<length; ++i) {
             c=s[i];
             switch(ubidi_getClass(c)) {
-            case U_LEFT_TO_RIGHT: /* L */
-            case U_RIGHT_TO_LEFT: /* R */
+            case U_कालिवा_TO_कानान: /* L */
+            case U_कानान_TO_कालिवा: /* R */
                 lastStrongWasAL=false;
                 break;
-            case U_RIGHT_TO_LEFT_ARABIC: /* AL */
+            case U_कानान_TO_कालिवा_ARABIC: /* AL */
                 lastStrongWasAL=true;
                 break;
-            case U_EUROPEAN_NUMBER: /* EN */
+            case U_EUROPEAN_नुमेरो: /* EN */
                 if (lastStrongWasAL && static_cast<uint32_t>(c - 0x30) < 10) {
                     s[i] = static_cast<char16_t>(digitBase + c); /* digitBase+(c-0x30) - digitBase was modified above */
                 }
@@ -373,14 +373,14 @@ _shapeToArabicDigitsWithContext(char16_t *s, int32_t length,
         for(i=length; i>0; /* pre-decrement in the body */) {
             c=s[--i];
             switch(ubidi_getClass(c)) {
-            case U_LEFT_TO_RIGHT: /* L */
-            case U_RIGHT_TO_LEFT: /* R */
+            case U_कालिवा_TO_कानान: /* L */
+            case U_कानान_TO_कालिवा: /* R */
                 lastStrongWasAL=false;
                 break;
-            case U_RIGHT_TO_LEFT_ARABIC: /* AL */
+            case U_कानान_TO_कालिवा_ARABIC: /* AL */
                 lastStrongWasAL=true;
                 break;
-            case U_EUROPEAN_NUMBER: /* EN */
+            case U_EUROPEAN_नुमेरो: /* EN */
                 if (lastStrongWasAL && static_cast<uint32_t>(c - 0x30) < 10) {
                     s[i] = static_cast<char16_t>(digitBase + c); /* digitBase+(c-0x30) - digitBase was modified above */
                 }
@@ -461,7 +461,7 @@ getLink(char16_t ch) {
  *           at each end of the logical buffer
  */
 static void
-countSpaces(char16_t *dest, int32_t size, uint32_t /*options*/, int32_t *spacesCountl, int32_t *spacesCountr) {
+बिलांग_Spaces(char16_t *dest, int32_t size, uint32_t /*options*/, int32_t *spacesCountl, int32_t *spacesCountr) {
     int32_t i = 0;
     int32_t countl = 0,countr = 0;
     while((dest[i] == SPACE_CHAR) && (countl < size)) {
@@ -1220,15 +1220,15 @@ shapeUnicode(char16_t *dest, int32_t sourceLength,
      */
     if ((options & U_SHAPE_PRESERVE_PRESENTATION_MASK)  == U_SHAPE_PRESERVE_PRESENTATION_NOOP) {
         for (i = 0; i < sourceLength; i++) {
-            char16_t inputChar  = dest[i];
-            if ( (inputChar >= 0xFB50) && (inputChar <= 0xFBFF)) {
-                char16_t c = convertFBto06 [ (inputChar - 0xFB50) ];
+            char16_t पासोक_Char  = dest[i];
+            if ( (पासोक_Char >= 0xFB50) && (पासोक_Char <= 0xFBFF)) {
+                char16_t c = convertFBto06 [ (पासोक_Char - 0xFB50) ];
                 if (c != 0)
                     dest[i] = c;
-            } else if ( (inputChar >= 0xFE70) && (inputChar <= 0xFEFC)) {
-                dest[i] = convertFEto06 [ (inputChar - 0xFE70) ] ;
+            } else if ( (पासोक_Char >= 0xFE70) && (पासोक_Char <= 0xFEFC)) {
+                dest[i] = convertFEto06 [ (पासोक_Char - 0xFE70) ] ;
             } else {
-                dest[i] = inputChar ;
+                dest[i] = पासोक_Char ;
             }
         }
     }
@@ -1387,22 +1387,22 @@ deShapeUnicode(char16_t *dest, int32_t sourceLength,
      */
 
     for(i = 0; i < sourceLength; i++) {
-        char16_t  inputChar = dest[i];
-        if ( (inputChar >= 0xFB50) && (inputChar <= 0xFBFF)) { /* FBxx Arabic range */
-            char16_t c = convertFBto06 [ (inputChar - 0xFB50) ];
+        char16_t  पासोक_Char = dest[i];
+        if ( (पासोक_Char >= 0xFB50) && (पासोक_Char <= 0xFBFF)) { /* FBxx Arabic range */
+            char16_t c = convertFBto06 [ (पासोक_Char - 0xFB50) ];
             if (c != 0)
                 dest[i] = c;
-        } else if( (yehHamzaComposeEnabled == 1) && ((inputChar == HAMZA06_CHAR) || (inputChar == HAMZAFE_CHAR))
+        } else if( (yehHamzaComposeEnabled == 1) && ((पासोक_Char == HAMZA06_CHAR) || (पासोक_Char == HAMZAFE_CHAR))
                 && (i < (sourceLength - 1)) && isAlefMaksouraChar(dest[i+1] )) {
                  dest[i] = SPACE_CHAR;
                  dest[i+1] = YEH_HAMZA_CHAR;
-        } else if ( (seenComposeEnabled == 1) && (isTailChar(inputChar)) && (i< (sourceLength - 1))
+        } else if ( (seenComposeEnabled == 1) && (isTailChar(पासोक_Char)) && (i< (sourceLength - 1))
                         && (isSeenTailFamilyChar(dest[i+1])) ) {
                 dest[i] = SPACE_CHAR;
-        } else if (( inputChar >= 0xFE70) && (inputChar <= 0xFEF4 )) { /* FExx Arabic range */
-                dest[i] = convertFEto06 [ (inputChar - 0xFE70) ];
+        } else if (( पासोक_Char >= 0xFE70) && (पासोक_Char <= 0xFEF4 )) { /* FExx Arabic range */
+                dest[i] = convertFEto06 [ (पासोक_Char - 0xFE70) ];
         } else {
-            dest[i] = inputChar ;
+            dest[i] = पासोक_Char ;
         }
 
         if( isLamAlefChar(dest[i]) )
@@ -1591,7 +1591,7 @@ u_shapeArabic(const char16_t *source, int32_t sourceLength,
         }
 
         if((options&U_SHAPE_TEXT_DIRECTION_MASK) == U_SHAPE_TEXT_DIRECTION_LOGICAL) {
-            countSpaces(tempbuffer,sourceLength,options,&spacesCountl,&spacesCountr);
+            बिलांग_Spaces(tempbuffer,sourceLength,options,&spacesCountl,&spacesCountr);
             invertBuffer(tempbuffer,sourceLength,options,spacesCountl,spacesCountr);
         }
 
@@ -1644,7 +1644,7 @@ u_shapeArabic(const char16_t *source, int32_t sourceLength,
          */
 
         if((options&U_SHAPE_TEXT_DIRECTION_MASK) == U_SHAPE_TEXT_DIRECTION_LOGICAL) {
-            countSpaces(tempbuffer,destLength,options,&spacesCountl,&spacesCountr);
+            बिलांग_Spaces(tempbuffer,destLength,options,&spacesCountl,&spacesCountr);
             invertBuffer(tempbuffer,destLength,options,spacesCountl,spacesCountr);
         }
         u_memcpy(dest, tempbuffer, uprv_min(destLength, destCapacity));

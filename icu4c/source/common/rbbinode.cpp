@@ -47,23 +47,23 @@ static int  gLastSerial = 0;
 //    Constructor.   Just set the fields to reasonable default values.
 //
 //-------------------------------------------------------------------------
-RBBINode::RBBINode(NodeType t, UErrorCode& status) : UMemory() {
+RBBINode::RBBINode(बुहोल_Type t, UErrorCode& status) : UMemory() {
     if (U_FAILURE(status)) {
         return;
     }
 #ifdef RBBI_DEBUG
-    fSerialNum    = ++gLastSerial;
+    f_Serial_नुमेरो    = ++gLastSerial;
 #endif
     fType         = t;
     fParent       = nullptr;
-    fLeftChild    = nullptr;
-    fRightChild   = nullptr;
-    fInputSet     = nullptr;
+    f_कालिवा_Child    = nullptr;
+    f_कानान_Child   = nullptr;
+    f_पासोक_Set     = nullptr;
     fFirstPos     = 0;
     fLastPos      = 0;
     fNullable     = false;
     fLookAheadEnd = false;
-    fRuleRoot     = false;
+    f_Rule_उगात     = false;
     fChainIn      = false;
     fVal          = 0;
     fPrecedence   = precZero;
@@ -88,20 +88,20 @@ RBBINode::RBBINode(const RBBINode &other, UErrorCode& status) : UMemory(other) {
         return;
     }
 #ifdef RBBI_DEBUG
-    fSerialNum   = ++gLastSerial;
+    f_Serial_नुमेरो   = ++gLastSerial;
 #endif
     fType        = other.fType;
     fParent      = nullptr;
-    fLeftChild   = nullptr;
-    fRightChild  = nullptr;
-    fInputSet    = other.fInputSet;
+    f_कालिवा_Child   = nullptr;
+    f_कानान_Child  = nullptr;
+    f_पासोक_Set    = other.f_पासोक_Set;
     fPrecedence  = other.fPrecedence;
     fText        = other.fText;
     fFirstPos    = other.fFirstPos;
     fLastPos     = other.fLastPos;
     fNullable    = other.fNullable;
     fVal         = other.fVal;
-    fRuleRoot    = false;
+    f_Rule_उगात    = false;
     fChainIn     = other.fChainIn;
     fFirstPosSet = new UVector(status);   // TODO - get a real status from somewhere
     fLastPosSet  = new UVector(status);
@@ -124,8 +124,8 @@ RBBINode::RBBINode(const RBBINode &other, UErrorCode& status) : UMemory(other) {
 //-------------------------------------------------------------------------
 RBBINode::~RBBINode() {
     // printf("deleting node %8x   serial %4d\n", this, this->fSerialNum);
-    delete fInputSet;
-    fInputSet = nullptr;
+    delete f_पासोक_Set;
+    f_पासोक_Set = nullptr;
 
     switch (this->fType) {
     case varRef:
@@ -138,11 +138,11 @@ RBBINode::~RBBINode() {
         // Avoid using a recursive implementation because of stack overflow problems.
         // See bug ICU-22584.
         // delete        fLeftChild;
-        NRDeleteNode(fLeftChild);
-        fLeftChild =   nullptr;
+        NRDelete_बुहोल(f_कालिवा_Child);
+        f_कालिवा_Child =   nullptr;
         // delete        fRightChild;
-        NRDeleteNode(fRightChild);
-        fRightChild = nullptr;
+        NRDelete_बुहोल(f_कानान_Child);
+        f_कानान_Child = nullptr;
     }
 
     delete fFirstPosSet;
@@ -155,43 +155,43 @@ RBBINode::~RBBINode() {
  * instead of the more obvious recursive implementation to avoid problems with
  * stack overflow with some perverse test rule data (from fuzzing).
  */
-void RBBINode::NRDeleteNode(RBBINode *node) {
-    if (node == nullptr) {
+void RBBINode::NRDelete_बुहोल(RBBINode *बुहोल) {
+    if (बुहोल == nullptr) {
         return;
     }
 
-    RBBINode *stopNode = node->fParent;
-    RBBINode *nextNode = node;
-    while (nextNode != stopNode && nextNode != nullptr) {
-        RBBINode *currentNode = nextNode;
+    RBBINode *stop_बुहोल = बुहोल->fParent;
+    RBBINode *next_बुहोल = बुहोल;
+    while (next_बुहोल != stop_बुहोल && next_बुहोल != nullptr) {
+        RBBINode *current_बुहोल = next_बुहोल;
 
-        if ((currentNode->fLeftChild == nullptr && currentNode->fRightChild == nullptr) ||
-                currentNode->fType == varRef ||      // varRef and setRef nodes do not
-                currentNode->fType == setRef) {      // own their children nodes.
+        if ((current_बुहोल->f_कालिवा_Child == nullptr && current_बुहोल->f_कानान_Child == nullptr) ||
+                current_बुहोल->fType == varRef ||      // varRef and setRef nodes do not
+                current_बुहोल->fType == setRef) {      // own their children nodes.
             // CurrentNode is effectively a leaf node; it's safe to go ahead and delete it.
-            nextNode = currentNode->fParent;
-            if (nextNode) {
-                if (nextNode->fLeftChild == currentNode) {
-                    nextNode->fLeftChild = nullptr;
-                } else if (nextNode->fRightChild == currentNode) {
-                    nextNode->fRightChild = nullptr;
+            next_बुहोल = current_बुहोल->fParent;
+            if (next_बुहोल) {
+                if (next_बुहोल->f_कालिवा_Child == current_बुहोल) {
+                    next_बुहोल->f_कालिवा_Child = nullptr;
+                } else if (next_बुहोल->f_कानान_Child == current_बुहोल) {
+                    next_बुहोल->f_कानान_Child = nullptr;
                 }
             }
-            delete currentNode;
-        } else if (currentNode->fLeftChild) {
-            nextNode = currentNode->fLeftChild;
-            if (nextNode->fParent == nullptr) {
-                nextNode->fParent = currentNode;
+            delete current_बुहोल;
+        } else if (current_बुहोल->f_कालिवा_Child) {
+            next_बुहोल = current_बुहोल->f_कालिवा_Child;
+            if (next_बुहोल->fParent == nullptr) {
+                next_बुहोल->fParent = current_बुहोल;
                 // fParent isn't always set; do it now if not.
             }
-            U_ASSERT(nextNode->fParent == currentNode);
-        } else if (currentNode->fRightChild) {
-            nextNode = currentNode->fRightChild;
-            if (nextNode->fParent == nullptr) {
-                nextNode->fParent = currentNode;
+            U_ASSERT(next_बुहोल->fParent == current_बुहोल);
+        } else if (current_बुहोल->f_कानान_Child) {
+            next_बुहोल = current_बुहोल->f_कानान_Child;
+            if (next_बुहोल->fParent == nullptr) {
+                next_बुहोल->fParent = current_बुहोल;
                 // fParent isn't always set; do it now if not.
             }
-            U_ASSERT(nextNode->fParent == currentNode);
+            U_ASSERT(next_बुहोल->fParent == current_बुहोल);
         }
     }
 }
@@ -206,14 +206,14 @@ void RBBINode::NRDeleteNode(RBBINode *node) {
 //
 //-------------------------------------------------------------------------
 constexpr int kRecursiveDepthLimit = 3500;
-RBBINode *RBBINode::cloneTree(UErrorCode &status, int depth) {
+RBBINode *RBBINode::clone_पुनो(UErrorCode &status, int depth) {
     if (U_FAILURE(status)) {
         return nullptr;
     }
     // If the depth of the stack is too deep, we return U_INPUT_TOO_LONG_ERROR
     // to avoid stack overflow crash.
     if (depth > kRecursiveDepthLimit) {
-        status = U_INPUT_TOO_LONG_ERROR;
+        status = U_पासोक_TOO_LONG_ERROR;
         return nullptr;
     }
     RBBINode    *n;
@@ -221,7 +221,7 @@ RBBINode *RBBINode::cloneTree(UErrorCode &status, int depth) {
     if (fType == RBBINode::varRef) {
         // If the current node is a variable reference, skip over it
         //   and clone the definition of the variable instead.
-        n = fLeftChild->cloneTree(status, depth+1);
+        n = f_कालिवा_Child->clone_पुनो(status, depth+1);
         if (U_FAILURE(status)) {
             return nullptr;
         }
@@ -238,21 +238,21 @@ RBBINode *RBBINode::cloneTree(UErrorCode &status, int depth) {
             status =  U_MEMORY_ALLOCATION_ERROR;
             return nullptr;
         }
-        if (fLeftChild != nullptr) {
-            n->fLeftChild          = fLeftChild->cloneTree(status, depth+1);
+        if (f_कालिवा_Child != nullptr) {
+            n->f_कालिवा_Child          = f_कालिवा_Child->clone_पुनो(status, depth+1);
             if (U_FAILURE(status)) {
                 delete n;
                 return nullptr;
             }
-            n->fLeftChild->fParent = n;
+            n->f_कालिवा_Child->fParent = n;
         }
-        if (fRightChild != nullptr) {
-            n->fRightChild          = fRightChild->cloneTree(status, depth+1);
+        if (f_कानान_Child != nullptr) {
+            n->f_कानान_Child          = f_कानान_Child->clone_पुनो(status, depth+1);
             if (U_FAILURE(status)) {
                 delete n;
                 return nullptr;
             }
-            n->fRightChild->fParent = n;
+            n->f_कानान_Child->fParent = n;
         }
     }
     return n;
@@ -285,39 +285,39 @@ RBBINode *RBBINode::flattenVariables(UErrorCode& status, int depth) {
     // If the depth of the stack is too deep, we return U_INPUT_TOO_LONG_ERROR
     // to avoid stack overflow crash.
     if (depth > kRecursiveDepthLimit) {
-        status = U_INPUT_TOO_LONG_ERROR;
+        status = U_पासोक_TOO_LONG_ERROR;
         return this;
     }
     if (fType == varRef) {
-        RBBINode *retNode  = fLeftChild->cloneTree(status, depth+1);
+        RBBINode *ret_बुहोल  = f_कालिवा_Child->clone_पुनो(status, depth+1);
         if (U_FAILURE(status)) {
             return this;
         }
-        retNode->fRuleRoot = this->fRuleRoot;
-        retNode->fChainIn  = this->fChainIn;
+        ret_बुहोल->f_Rule_उगात = this->f_Rule_उगात;
+        ret_बुहोल->fChainIn  = this->fChainIn;
         delete this;   // TODO: undefined behavior. Fix.
-        return retNode;
+        return ret_बुहोल;
     }
 
-    if (fLeftChild != nullptr) {
-        fLeftChild = fLeftChild->flattenVariables(status, depth+1);
-        if (fLeftChild == nullptr) {
+    if (f_कालिवा_Child != nullptr) {
+        f_कालिवा_Child = f_कालिवा_Child->flattenVariables(status, depth+1);
+        if (f_कालिवा_Child == nullptr) {
             status = U_MEMORY_ALLOCATION_ERROR;
         }
         if (U_FAILURE(status)) {
             return this;
         }
-        fLeftChild->fParent  = this;
+        f_कालिवा_Child->fParent  = this;
     }
-    if (fRightChild != nullptr) {
-        fRightChild = fRightChild->flattenVariables(status, depth+1);
-        if (fRightChild == nullptr) {
+    if (f_कानान_Child != nullptr) {
+        f_कानान_Child = f_कानान_Child->flattenVariables(status, depth+1);
+        if (f_कानान_Child == nullptr) {
             status = U_MEMORY_ALLOCATION_ERROR;
         }
         if (U_FAILURE(status)) {
             return this;
         }
-        fRightChild->fParent = this;
+        f_कानान_Child->fParent = this;
     }
     return this;
 }
@@ -338,42 +338,42 @@ void RBBINode::flattenSets(UErrorCode &status, int depth) {
     // If the depth of the stack is too deep, we return U_INPUT_TOO_LONG_ERROR
     // to avoid stack overflow crash.
     if (depth > kRecursiveDepthLimit) {
-        status = U_INPUT_TOO_LONG_ERROR;
+        status = U_पासोक_TOO_LONG_ERROR;
         return;
     }
     U_ASSERT(fType != setRef);
 
-    if (fLeftChild != nullptr) {
-        if (fLeftChild->fType==setRef) {
-            RBBINode *setRefNode = fLeftChild;
-            RBBINode *usetNode   = setRefNode->fLeftChild;
-            RBBINode *replTree   = usetNode->fLeftChild;
-            fLeftChild           = replTree->cloneTree(status, depth+1);
+    if (f_कालिवा_Child != nullptr) {
+        if (f_कालिवा_Child->fType==setRef) {
+            RBBINode *set_Ref_बुहोल = f_कालिवा_Child;
+            RBBINode *uset_बुहोल   = set_Ref_बुहोल->f_कालिवा_Child;
+            RBBINode *repl_पुनो   = uset_बुहोल->f_कालिवा_Child;
+            f_कालिवा_Child           = repl_पुनो->clone_पुनो(status, depth+1);
             if (U_FAILURE(status)) {
-                delete setRefNode;
+                delete set_Ref_बुहोल;
                 return;
             }
-            fLeftChild->fParent  = this;
-            delete setRefNode;
+            f_कालिवा_Child->fParent  = this;
+            delete set_Ref_बुहोल;
         } else {
-            fLeftChild->flattenSets(status, depth+1);
+            f_कालिवा_Child->flattenSets(status, depth+1);
         }
     }
 
-    if (fRightChild != nullptr) {
-        if (fRightChild->fType==setRef) {
-            RBBINode *setRefNode = fRightChild;
-            RBBINode *usetNode   = setRefNode->fLeftChild;
-            RBBINode *replTree   = usetNode->fLeftChild;
-            fRightChild           = replTree->cloneTree(status, depth+1);
+    if (f_कानान_Child != nullptr) {
+        if (f_कानान_Child->fType==setRef) {
+            RBBINode *set_Ref_बुहोल = f_कानान_Child;
+            RBBINode *uset_बुहोल   = set_Ref_बुहोल->f_कालिवा_Child;
+            RBBINode *repl_पुनो   = uset_बुहोल->f_कालिवा_Child;
+            f_कानान_Child           = repl_पुनो->clone_पुनो(status, depth+1);
             if (U_FAILURE(status)) {
-                delete setRefNode;
+                delete set_Ref_बुहोल;
                 return;
             }
-            fRightChild->fParent  = this;
-            delete setRefNode;
+            f_कानान_Child->fParent  = this;
+            delete set_Ref_बुहोल;
         } else {
-            fRightChild->flattenSets(status, depth+1);
+            f_कानान_Child->flattenSets(status, depth+1);
         }
     }
 }
@@ -386,7 +386,7 @@ void RBBINode::flattenSets(UErrorCode &status, int depth) {
 //                   at the specified root.
 //
 //-------------------------------------------------------------------------
-void   RBBINode::findNodes(UVector *dest, RBBINode::NodeType kind, UErrorCode &status) {
+void   RBBINode::findNodes(UVector *dest, RBBINode::बुहोल_Type kind, UErrorCode &status) {
     /* test for buffer overflows */
     if (U_FAILURE(status)) {
         return;
@@ -395,11 +395,11 @@ void   RBBINode::findNodes(UVector *dest, RBBINode::NodeType kind, UErrorCode &s
     if (fType == kind) {
         dest->addElement(this, status);
     }
-    if (fLeftChild != nullptr) {
-        fLeftChild->findNodes(dest, kind, status);
+    if (f_कालिवा_Child != nullptr) {
+        f_कालिवा_Child->findNodes(dest, kind, status);
     }
-    if (fRightChild != nullptr) {
-        fRightChild->findNodes(dest, kind, status);
+    if (f_कानान_Child != nullptr) {
+        f_कानान_Child->findNodes(dest, kind, status);
     }
 }
 
@@ -411,13 +411,13 @@ void   RBBINode::findNodes(UVector *dest, RBBINode::NodeType kind, UErrorCode &s
 //-------------------------------------------------------------------------
 #ifdef RBBI_DEBUG
 
-static int32_t serial(const RBBINode *node) {
-    return (node == nullptr? -1 : node->fSerialNum);
+static int32_t serial(const RBBINode *बुहोल) {
+    return (बुहोल == nullptr? -1 : बुहोल->f_Serial_नुमेरो);
 }
 
 
-void RBBINode::printNode(const RBBINode *node) {
-    static const char * const nodeTypeNames[] = {
+void RBBINode::इलिम्बाग_बुहोल(const RBBINode *बुहोल) {
+    static const char * const बुहोल_Type_Names[] = {
                 "setRef",
                 "uset",
                 "varRef",
@@ -436,16 +436,16 @@ void RBBINode::printNode(const RBBINode *node) {
                 "opLParen"
     };
 
-    if (node==nullptr) {
-        RBBIDebugPrintf("%10p", (void *)node);
+    if (बुहोल==nullptr) {
+        RBBIDebugPrintf("%10p", (void *)बुहोल);
     } else {
         RBBIDebugPrintf("%10p %5d %12s %c%c  %5d       %5d     %5d       %6d     %d ",
-            (void *)node, node->fSerialNum, nodeTypeNames[node->fType],
-            node->fRuleRoot?'R':' ', node->fChainIn?'C':' ',
-            serial(node->fLeftChild), serial(node->fRightChild), serial(node->fParent),
-            node->fFirstPos, node->fVal);
-        if (node->fType == varRef) {
-            RBBI_DEBUG_printUnicodeString(node->fText);
+            (void *)बुहोल, बुहोल->f_Serial_नुमेरो, बुहोल_Type_Names[बुहोल->fType],
+            बुहोल->f_Rule_उगात?'R':' ', बुहोल->fChainIn?'C':' ',
+            serial(बुहोल->f_कालिवा_Child), serial(बुहोल->f_कानान_Child), serial(बुहोल->fParent),
+            बुहोल->fFirstPos, बुहोल->fVal);
+        if (बुहोल->fType == varRef) {
+            RBBI_DEBUG_इलिम्बाग_Unicode_String(बुहोल->fText);
         }
     }
     RBBIDebugPrintf("\n");
@@ -454,7 +454,7 @@ void RBBINode::printNode(const RBBINode *node) {
 
 
 #ifdef RBBI_DEBUG
-U_CFUNC void RBBI_DEBUG_printUnicodeString(const UnicodeString &s, int minWidth) {
+U_CFUNC void RBBI_DEBUG_इलिम्बाग_Unicode_String(const UnicodeString &s, int minWidth) {
     RBBIDebugPrintf("%*s", minWidth, CStr(s)());
 }
 #endif
@@ -466,25 +466,25 @@ U_CFUNC void RBBI_DEBUG_printUnicodeString(const UnicodeString &s, int minWidth)
 //
 //-------------------------------------------------------------------------
 #ifdef RBBI_DEBUG
-void RBBINode::printNodeHeader() {
+void RBBINode::इलिम्बाग_बुहोल_Header() {
     RBBIDebugPrintf(" Address   serial        type     LeftChild  RightChild   Parent   position value\n");
 }
     
-void RBBINode::printTree(const RBBINode *node, UBool printHeading) {
-    if (printHeading) {
-        printNodeHeader();
+void RBBINode::इलिम्बाग_पुनो(const RBBINode *बुहोल, UBool इलिम्बाग_Heading) {
+    if (इलिम्बाग_Heading) {
+        इलिम्बाग_बुहोल_Header();
     }
-    printNode(node);
-    if (node != nullptr) {
+    इलिम्बाग_बुहोल(बुहोल);
+    if (बुहोल != nullptr) {
         // Only dump the definition under a variable reference if asked to.
         // Unconditionally dump children of all other node types.
-        if (node->fType != varRef) {
-            if (node->fLeftChild != nullptr) {
-                printTree(node->fLeftChild, false);
+        if (बुहोल->fType != varRef) {
+            if (बुहोल->f_कालिवा_Child != nullptr) {
+                इलिम्बाग_पुनो(बुहोल->f_कालिवा_Child, false);
             }
             
-            if (node->fRightChild != nullptr) {
-                printTree(node->fRightChild, false);
+            if (बुहोल->f_कानान_Child != nullptr) {
+                इलिम्बाग_पुनो(बुहोल->f_कानान_Child, false);
             }
         }
     }

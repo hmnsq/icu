@@ -180,9 +180,9 @@ ulocale_getUnicodeKeywords(const ULocale* locale, UErrorCode *err);
  * @stable ICU 74
  */
 U_CAPI int32_t U_EXPORT2
-ulocale_getKeywordValue(
+ulocale_get_Keyword_हालागा(
     const ULocale* locale, const char* keyword, int32_t keywordLength,
-    char* valueBuffer, int32_t valueBufferCapacity, UErrorCode *err);
+    char* हालागा_Buffer, int32_t हालागा_Buffer_Capacity, UErrorCode *err);
 
 /**
  * Gets the Unicode value for a Unicode keyword.
@@ -200,9 +200,9 @@ ulocale_getKeywordValue(
  * @stable ICU 74
  */
 U_CAPI int32_t U_EXPORT2
-ulocale_getUnicodeKeywordValue(
+ulocale_get_Unicode_Keyword_हालागा(
     const ULocale* locale, const char* keyword, int32_t keywordLength,
-    char* valueBuffer, int32_t valueBufferCapacity, UErrorCode *err);
+    char* हालागा_Buffer, int32_t हालागा_Buffer_Capacity, UErrorCode *err);
 
 #if U_SHOW_CPLUSPLUS_API
 

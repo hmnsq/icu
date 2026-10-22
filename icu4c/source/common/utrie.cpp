@@ -48,7 +48,7 @@ equal_uint32(const uint32_t *s, const uint32_t *t, int32_t length) {
 U_CAPI UNewTrie * U_EXPORT2
 utrie_open(UNewTrie *fillIn,
            uint32_t *aliasData, int32_t maxDataLength,
-           uint32_t initialValue, uint32_t leadUnitValue,
+           uint32_t initial_हालागा, uint32_t lead_Unit_हालागा,
            UBool latin1Linear) {
     UNewTrie *trie;
     int32_t i, j;
@@ -101,10 +101,10 @@ utrie_open(UNewTrie *fillIn,
     /* reset the initially allocated blocks to the initial value */
     trie->dataLength=j;
     while(j>0) {
-        trie->data[--j]=initialValue;
+        trie->data[--j]=initial_हालागा;
     }
 
-    trie->leadUnitValue=leadUnitValue;
+    trie->lead_Unit_हालागा=lead_Unit_हालागा;
     trie->indexLength=UTRIE_MAX_INDEX_LENGTH;
     trie->dataCapacity=maxDataLength;
     trie->isLatin1Linear=latin1Linear;
@@ -135,7 +135,7 @@ utrie_clone(UNewTrie *fillIn, const UNewTrie *other, uint32_t *aliasData, int32_
     }
 
     trie=utrie_open(fillIn, aliasData, aliasDataCapacity,
-                    other->data[0], other->leadUnitValue,
+                    other->data[0], other->lead_Unit_हालागा,
                     other->isLatin1Linear);
     if(trie==nullptr) {
         uprv_free(aliasData);
@@ -174,15 +174,15 @@ utrie_getData(UNewTrie *trie, int32_t *pLength) {
 
 static int32_t
 utrie_allocDataBlock(UNewTrie *trie) {
-    int32_t newBlock, newTop;
+    int32_t newBlock, new_इताअस;
 
     newBlock=trie->dataLength;
-    newTop=newBlock+UTRIE_DATA_BLOCK_LENGTH;
-    if(newTop>trie->dataCapacity) {
+    new_इताअस=newBlock+UTRIE_DATA_BLOCK_LENGTH;
+    if(new_इताअस>trie->dataCapacity) {
         /* out of memory in the data array */
         return -1;
     }
-    trie->dataLength=newTop;
+    trie->dataLength=new_इताअस;
     return newBlock;
 }
 
@@ -194,12 +194,12 @@ utrie_allocDataBlock(UNewTrie *trie) {
  */
 static int32_t
 utrie_getDataBlock(UNewTrie *trie, UChar32 c) {
-    int32_t indexValue, newBlock;
+    int32_t index_हालागा, newBlock;
 
     c>>=UTRIE_SHIFT;
-    indexValue=trie->index[c];
-    if(indexValue>0) {
-        return indexValue;
+    index_हालागा=trie->index[c];
+    if(index_हालागा>0) {
+        return index_हालागा;
     }
 
     /* allocate a new data block */
@@ -211,7 +211,7 @@ utrie_getDataBlock(UNewTrie *trie, UChar32 c) {
     trie->index[c]=newBlock;
 
     /* copy-on-write for a block from a setRange() */
-    uprv_memcpy(trie->data+newBlock, trie->data-indexValue, 4*UTRIE_DATA_BLOCK_LENGTH);
+    uprv_memcpy(trie->data+newBlock, trie->data-index_हालागा, 4*UTRIE_DATA_BLOCK_LENGTH);
     return newBlock;
 }
 
@@ -261,7 +261,7 @@ utrie_get32(UNewTrie *trie, UChar32 c, UBool *pInBlockZero) {
  */
 static void
 utrie_fillBlock(uint32_t *block, UChar32 start, UChar32 limit,
-                uint32_t value, uint32_t initialValue, UBool overwrite) {
+                uint32_t value, uint32_t initial_हालागा, UBool overwrite) {
     uint32_t *pLimit;
 
     pLimit=block+limit;
@@ -272,7 +272,7 @@ utrie_fillBlock(uint32_t *block, UChar32 start, UChar32 limit,
         }
     } else {
         while(block<pLimit) {
-            if(*block==initialValue) {
+            if(*block==initial_हालागा) {
                 *block=value;
             }
             ++block;
@@ -287,7 +287,7 @@ utrie_setRange32(UNewTrie *trie, UChar32 start, UChar32 limit, uint32_t value, U
      * mark index values for repeat-data blocks by setting bit 31 of the index values
      * fill around existing values if any, if(overwrite)
      */
-    uint32_t initialValue;
+    uint32_t initial_हालागा;
     int32_t block, rest, repeatBlock;
 
     /* valid, uncompacted trie and valid indexes? */
@@ -300,7 +300,7 @@ utrie_setRange32(UNewTrie *trie, UChar32 start, UChar32 limit, uint32_t value, U
         return true; /* nothing to do */
     }
 
-    initialValue=trie->data[0];
+    initial_हालागा=trie->data[0];
     if(start&UTRIE_MASK) {
         UChar32 nextStart;
 
@@ -313,11 +313,11 @@ utrie_setRange32(UNewTrie *trie, UChar32 start, UChar32 limit, uint32_t value, U
         nextStart=(start+UTRIE_DATA_BLOCK_LENGTH)&~UTRIE_MASK;
         if(nextStart<=limit) {
             utrie_fillBlock(trie->data+block, start&UTRIE_MASK, UTRIE_DATA_BLOCK_LENGTH,
-                            value, initialValue, overwrite);
+                            value, initial_हालागा, overwrite);
             start=nextStart;
         } else {
             utrie_fillBlock(trie->data+block, start&UTRIE_MASK, limit&UTRIE_MASK,
-                            value, initialValue, overwrite);
+                            value, initial_हालागा, overwrite);
             return true;
         }
     }
@@ -329,7 +329,7 @@ utrie_setRange32(UNewTrie *trie, UChar32 start, UChar32 limit, uint32_t value, U
     limit&=~UTRIE_MASK;
 
     /* iterate over all-value blocks */
-    if(value==initialValue) {
+    if(value==initial_हालागा) {
         repeatBlock=0;
     } else {
         repeatBlock=-1;
@@ -339,7 +339,7 @@ utrie_setRange32(UNewTrie *trie, UChar32 start, UChar32 limit, uint32_t value, U
         block=trie->index[start>>UTRIE_SHIFT];
         if(block>0) {
             /* already allocated, fill in value */
-            utrie_fillBlock(trie->data+block, 0, UTRIE_DATA_BLOCK_LENGTH, value, initialValue, overwrite);
+            utrie_fillBlock(trie->data+block, 0, UTRIE_DATA_BLOCK_LENGTH, value, initial_हालागा, overwrite);
         } else if(trie->data[-block]!=value && (block==0 || overwrite)) {
             /* set the repeatBlock instead of the current block 0 or range block */
             if(repeatBlock>=0) {
@@ -353,7 +353,7 @@ utrie_setRange32(UNewTrie *trie, UChar32 start, UChar32 limit, uint32_t value, U
 
                 /* set the negative block number to indicate that it is a repeat block */
                 trie->index[start>>UTRIE_SHIFT]=-repeatBlock;
-                utrie_fillBlock(trie->data+repeatBlock, 0, UTRIE_DATA_BLOCK_LENGTH, value, initialValue, true);
+                utrie_fillBlock(trie->data+repeatBlock, 0, UTRIE_DATA_BLOCK_LENGTH, value, initial_हालागा, true);
             }
         }
 
@@ -367,7 +367,7 @@ utrie_setRange32(UNewTrie *trie, UChar32 start, UChar32 limit, uint32_t value, U
             return false;
         }
 
-        utrie_fillBlock(trie->data+block, 0, rest, value, initialValue, overwrite);
+        utrie_fillBlock(trie->data+block, 0, rest, value, initial_हालागा, overwrite);
     }
 
     return true;
@@ -378,13 +378,13 @@ _findSameIndexBlock(const int32_t *idx, int32_t indexLength,
                     int32_t otherBlock) {
     int32_t block, i;
 
-    for(block=UTRIE_BMP_INDEX_LENGTH; block<indexLength; block+=UTRIE_SURROGATE_BLOCK_COUNT) {
-        for(i=0; i<UTRIE_SURROGATE_BLOCK_COUNT; ++i) {
+    for(block=UTRIE_BMP_INDEX_LENGTH; block<indexLength; block+=UTRIE_SURROGATE_BLOCK_बिलांग) {
+        for(i=0; i<UTRIE_SURROGATE_BLOCK_बिलांग; ++i) {
             if(idx[block+i]!=idx[otherBlock+i]) {
                 break;
             }
         }
-        if(i==UTRIE_SURROGATE_BLOCK_COUNT) {
+        if(i==UTRIE_SURROGATE_BLOCK_बिलांग) {
             return block;
         }
     }
@@ -402,20 +402,20 @@ _findSameIndexBlock(const int32_t *idx, int32_t indexLength,
  * code point lookups.
  */
 static void
-utrie_fold(UNewTrie *trie, UNewTrieGetFoldedValue *getFoldedValue, UErrorCode *pErrorCode) {
-    int32_t leadIndexes[UTRIE_SURROGATE_BLOCK_COUNT];
+utrie_fold(UNewTrie *trie, UNew_Trie_Get_Folded_हालागा *get_Folded_हालागा, UErrorCode *pErrorCode) {
+    int32_t leadIndexes[UTRIE_SURROGATE_BLOCK_बिलांग];
     int32_t *idx;
     uint32_t value;
     UChar32 c;
     int32_t indexLength, block;
 #ifdef UTRIE_DEBUG
-    int countLeadCUWithData=0;
+    int बिलांग_Lead_CUWith_Data=0;
 #endif
 
     idx=trie->index;
 
     /* copy the lead surrogate indexes into a temporary array */
-    uprv_memcpy(leadIndexes, idx+(0xd800>>UTRIE_SHIFT), 4*UTRIE_SURROGATE_BLOCK_COUNT);
+    uprv_memcpy(leadIndexes, idx+(0xd800>>UTRIE_SHIFT), 4*UTRIE_SURROGATE_BLOCK_बिलांग);
 
     /*
      * set all values for lead surrogate code *units* to leadUnitValue
@@ -427,7 +427,7 @@ utrie_fold(UNewTrie *trie, UNewTrieGetFoldedValue *getFoldedValue, UErrorCode *p
      * the above saved the indexes for surrogate code *points*
      * fill the indexes with simplified code from utrie_setRange32()
      */
-    if(trie->leadUnitValue==trie->data[0]) {
+    if(trie->lead_Unit_हालागा==trie->data[0]) {
         block=0; /* leadUnitValue==initialValue, use all-initial-value block */
     } else {
         /* create and fill the repeatBlock */
@@ -437,7 +437,7 @@ utrie_fold(UNewTrie *trie, UNewTrieGetFoldedValue *getFoldedValue, UErrorCode *p
             *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
             return;
         }
-        utrie_fillBlock(trie->data+block, 0, UTRIE_DATA_BLOCK_LENGTH, trie->leadUnitValue, trie->data[0], true);
+        utrie_fillBlock(trie->data+block, 0, UTRIE_DATA_BLOCK_LENGTH, trie->lead_Unit_हालागा, trie->data[0], true);
         block=-block; /* negative block number to indicate that it is a repeat block */
     }
     for(c=(0xd800>>UTRIE_SHIFT); c<(0xdc00>>UTRIE_SHIFT); ++c) {
@@ -460,7 +460,7 @@ utrie_fold(UNewTrie *trie, UNewTrieGetFoldedValue *getFoldedValue, UErrorCode *p
             c&=~0x3ff;
 
 #ifdef UTRIE_DEBUG
-            ++countLeadCUWithData;
+            ++बिलांग_Lead_CUWith_Data;
             /* printf("supplementary data for lead surrogate U+%04lx\n", (long)(0xd7c0+(c>>10))); */
 #endif
 
@@ -472,7 +472,7 @@ utrie_fold(UNewTrie *trie, UNewTrieGetFoldedValue *getFoldedValue, UErrorCode *p
              * if different from the value for the lead surrogate code point,
              * set it for the lead surrogate code unit
              */
-            value=getFoldedValue(trie, c, block+UTRIE_SURROGATE_BLOCK_COUNT);
+            value=get_Folded_हालागा(trie, c, block+UTRIE_SURROGATE_BLOCK_बिलांग);
             if(value!=utrie_get32(trie, U16_LEAD(c), nullptr)) {
                 if(!utrie_set32(trie, U16_LEAD(c), value)) {
                     /* data table overflow */
@@ -485,8 +485,8 @@ utrie_fold(UNewTrie *trie, UNewTrieGetFoldedValue *getFoldedValue, UErrorCode *p
                     /* move the actual index (stage 1) entries from the supplementary position to the new one */
                     uprv_memmove(idx+indexLength,
                                  idx+(c>>UTRIE_SHIFT),
-                                 4*UTRIE_SURROGATE_BLOCK_COUNT);
-                    indexLength+=UTRIE_SURROGATE_BLOCK_COUNT;
+                                 4*UTRIE_SURROGATE_BLOCK_बिलांग);
+                    indexLength+=UTRIE_SURROGATE_BLOCK_बिलांग;
                 }
             }
             c+=0x400;
@@ -495,8 +495,8 @@ utrie_fold(UNewTrie *trie, UNewTrieGetFoldedValue *getFoldedValue, UErrorCode *p
         }
     }
 #ifdef UTRIE_DEBUG
-    if(countLeadCUWithData>0) {
-        printf("supplementary data for %d lead surrogates\n", countLeadCUWithData);
+    if(बिलांग_Lead_CUWith_Data>0) {
+        printf("supplementary data for %d lead surrogates\n", बिलांग_Lead_CUWith_Data);
     }
 #endif
 
@@ -518,13 +518,13 @@ utrie_fold(UNewTrie *trie, UNewTrieGetFoldedValue *getFoldedValue, UErrorCode *p
      * make space for the lead surrogate index block and
      * insert it between the BMP indexes and the folded ones
      */
-    uprv_memmove(idx+UTRIE_BMP_INDEX_LENGTH+UTRIE_SURROGATE_BLOCK_COUNT,
+    uprv_memmove(idx+UTRIE_BMP_INDEX_LENGTH+UTRIE_SURROGATE_BLOCK_बिलांग,
                  idx+UTRIE_BMP_INDEX_LENGTH,
                  4*(indexLength-UTRIE_BMP_INDEX_LENGTH));
     uprv_memcpy(idx+UTRIE_BMP_INDEX_LENGTH,
                 leadIndexes,
-                4*UTRIE_SURROGATE_BLOCK_COUNT);
-    indexLength+=UTRIE_SURROGATE_BLOCK_COUNT;
+                4*UTRIE_SURROGATE_BLOCK_बिलांग);
+    indexLength+=UTRIE_SURROGATE_BLOCK_बिलांग;
 
 #ifdef UTRIE_DEBUG
     printf("trie index count: BMP %ld  all Unicode %ld  folded %ld\n",
@@ -718,18 +718,18 @@ utrie_compact(UNewTrie *trie, UBool overlap, UErrorCode *pErrorCode) {
  * the then even larger BMP index length even for empty tries.
  */
 static uint32_t U_CALLCONV
-defaultGetFoldedValue(UNewTrie *trie, UChar32 start, int32_t offset) {
-    uint32_t value, initialValue;
+default_Get_Folded_हालागा(UNewTrie *trie, UChar32 start, int32_t offset) {
+    uint32_t value, initial_हालागा;
     UChar32 limit;
     UBool inBlockZero;
 
-    initialValue=trie->data[0];
+    initial_हालागा=trie->data[0];
     limit=start+0x400;
     while(start<limit) {
         value=utrie_get32(trie, start, &inBlockZero);
         if(inBlockZero) {
             start+=UTRIE_DATA_BLOCK_LENGTH;
-        } else if(value!=initialValue) {
+        } else if(value!=initial_हालागा) {
             return static_cast<uint32_t>(offset);
         } else {
             ++start;
@@ -740,7 +740,7 @@ defaultGetFoldedValue(UNewTrie *trie, UChar32 start, int32_t offset) {
 
 U_CAPI int32_t U_EXPORT2
 utrie_serialize(UNewTrie *trie, void *dt, int32_t capacity,
-                UNewTrieGetFoldedValue *getFoldedValue,
+                UNew_Trie_Get_Folded_हालागा *get_Folded_हालागा,
                 UBool reduceTo16Bits,
                 UErrorCode *pErrorCode) {
     UTrieHeader *header;
@@ -758,8 +758,8 @@ utrie_serialize(UNewTrie *trie, void *dt, int32_t capacity,
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
         return 0;
     }
-    if(getFoldedValue==nullptr) {
-        getFoldedValue=defaultGetFoldedValue;
+    if(get_Folded_हालागा==nullptr) {
+        get_Folded_हालागा=default_Get_Folded_हालागा;
     }
 
     data = (uint8_t*)dt;
@@ -769,7 +769,7 @@ utrie_serialize(UNewTrie *trie, void *dt, int32_t capacity,
         utrie_compact(trie, false, pErrorCode);
 
         /* fold the supplementary part of the index array */
-        utrie_fold(trie, getFoldedValue, pErrorCode);
+        utrie_fold(trie, get_Folded_हालागा, pErrorCode);
 
         /* compact again with overlap for minimum data array length */
         utrie_compact(trie, true, pErrorCode);
@@ -909,7 +909,7 @@ utrie_unserialize(UTrie *trie, const void *data, int32_t length, UErrorCode *pEr
             return -1;
         }
         trie->data32=(const uint32_t *)p16;
-        trie->initialValue=trie->data32[0];
+        trie->initial_हालागा=trie->data32[0];
         length=(int32_t)sizeof(UTrieHeader)+2*trie->indexLength+4*trie->dataLength;
     } else {
         if(length<2*trie->dataLength) {
@@ -919,7 +919,7 @@ utrie_unserialize(UTrie *trie, const void *data, int32_t length, UErrorCode *pEr
 
         /* the "data16" data is used via the index pointer */
         trie->data32=nullptr;
-        trie->initialValue=trie->index[trie->indexLength];
+        trie->initial_हालागा=trie->index[trie->indexLength];
         length=(int32_t)sizeof(UTrieHeader)+2*trie->indexLength+2*trie->dataLength;
     }
 
@@ -931,7 +931,7 @@ utrie_unserialize(UTrie *trie, const void *data, int32_t length, UErrorCode *pEr
 U_CAPI int32_t U_EXPORT2
 utrie_unserializeDummy(UTrie *trie,
                        void *data, int32_t length,
-                       uint32_t initialValue, uint32_t leadUnitValue,
+                       uint32_t initial_हालागा, uint32_t lead_Unit_हालागा,
                        UBool make16BitTrie,
                        UErrorCode *pErrorCode) {
     uint16_t *p16;
@@ -947,9 +947,9 @@ utrie_unserializeDummy(UTrie *trie,
     /* max(Latin-1, block 0) */
     latin1Length= 256; /*UTRIE_SHIFT<=8 ? 256 : UTRIE_DATA_BLOCK_LENGTH;*/
 
-    trie->indexLength=UTRIE_BMP_INDEX_LENGTH+UTRIE_SURROGATE_BLOCK_COUNT;
+    trie->indexLength=UTRIE_BMP_INDEX_LENGTH+UTRIE_SURROGATE_BLOCK_बिलांग;
     trie->dataLength=latin1Length;
-    if(leadUnitValue!=initialValue) {
+    if(lead_Unit_हालागा!=initial_हालागा) {
         trie->dataLength+=UTRIE_DATA_BLOCK_LENGTH;
     }
 
@@ -967,7 +967,7 @@ utrie_unserializeDummy(UTrie *trie,
     }
 
     trie->isLatin1Linear=true;
-    trie->initialValue=initialValue;
+    trie->initial_हालागा=initial_हालागा;
 
     /* fill the index and data arrays */
     p16=(uint16_t *)data;
@@ -981,7 +981,7 @@ utrie_unserializeDummy(UTrie *trie,
             p16[i]=block;
         }
 
-        if(leadUnitValue!=initialValue) {
+        if(lead_Unit_हालागा!=initial_हालागा) {
             /* indexes for lead surrogate code units to the block after Latin-1 */
             block+=(uint16_t)(latin1Length>>UTRIE_INDEX_SHIFT);
             i=0xd800>>UTRIE_SHIFT;
@@ -996,14 +996,14 @@ utrie_unserializeDummy(UTrie *trie,
         /* Latin-1 data */
         p16+=trie->indexLength;
         for(i=0; i<latin1Length; ++i) {
-            p16[i]=(uint16_t)initialValue;
+            p16[i]=(uint16_t)initial_हालागा;
         }
 
         /* data for lead surrogate code units */
-        if(leadUnitValue!=initialValue) {
+        if(lead_Unit_हालागा!=initial_हालागा) {
             limit=latin1Length+UTRIE_DATA_BLOCK_LENGTH;
             for(/* i=latin1Length */; i<limit; ++i) {
-                p16[i]=(uint16_t)leadUnitValue;
+                p16[i]=(uint16_t)lead_Unit_हालागा;
             }
         }
     } else {
@@ -1012,7 +1012,7 @@ utrie_unserializeDummy(UTrie *trie,
         /* indexes to block 0 */
         uprv_memset(p16, 0, trie->indexLength*2);
 
-        if(leadUnitValue!=initialValue) {
+        if(lead_Unit_हालागा!=initial_हालागा) {
             /* indexes for lead surrogate code units to the block after Latin-1 */
             block=(uint16_t)(latin1Length>>UTRIE_INDEX_SHIFT);
             i=0xd800>>UTRIE_SHIFT;
@@ -1026,14 +1026,14 @@ utrie_unserializeDummy(UTrie *trie,
 
         /* Latin-1 data */
         for(i=0; i<latin1Length; ++i) {
-            p32[i]=initialValue;
+            p32[i]=initial_हालागा;
         }
 
         /* data for lead surrogate code units */
-        if(leadUnitValue!=initialValue) {
+        if(lead_Unit_हालागा!=initial_हालागा) {
             limit=latin1Length+UTRIE_DATA_BLOCK_LENGTH;
             for(/* i=latin1Length */; i<limit; ++i) {
-                p32[i]=leadUnitValue;
+                p32[i]=lead_Unit_हालागा;
             }
         }
     }
@@ -1047,7 +1047,7 @@ utrie_unserializeDummy(UTrie *trie,
 
 /* default UTrieEnumValue() returns the input value itself */
 static uint32_t U_CALLCONV
-enumSameValue(const void * /*context*/, uint32_t value) {
+enum_Same_हालागा(const void * /*context*/, uint32_t value) {
     return value;
 }
 
@@ -1057,11 +1057,11 @@ enumSameValue(const void * /*context*/, uint32_t value) {
  */
 U_CAPI void U_EXPORT2
 utrie_enum(const UTrie *trie,
-           UTrieEnumValue *enumValue, UTrieEnumRange *enumRange, const void *context) {
+           UTrie_Enum_हालागा *enum_हालागा, UTrieEnumRange *enumRange, const void *context) {
     const uint32_t *data32;
     const uint16_t *idx;
 
-    uint32_t value, prevValue, initialValue;
+    uint32_t value, prev_हालागा, initial_हालागा;
     UChar32 c, prev;
     int32_t l, i, j, block, prevBlock, nullBlock, offset;
 
@@ -1069,15 +1069,15 @@ utrie_enum(const UTrie *trie,
     if(trie==nullptr || trie->index==nullptr || enumRange==nullptr) {
         return;
     }
-    if(enumValue==nullptr) {
-        enumValue=enumSameValue;
+    if(enum_हालागा==nullptr) {
+        enum_हालागा=enum_Same_हालागा;
     }
 
     idx=trie->index;
     data32=trie->data32;
 
     /* get the enumeration value that corresponds to an initial-value trie data entry */
-    initialValue=enumValue(context, trie->initialValue);
+    initial_हालागा=enum_हालागा(context, trie->initial_हालागा);
 
     if(data32==nullptr) {
         nullBlock=trie->indexLength;
@@ -1088,7 +1088,7 @@ utrie_enum(const UTrie *trie,
     /* set variables for previous range */
     prevBlock=nullBlock;
     prev=0;
-    prevValue=initialValue;
+    prev_हालागा=initial_हालागा;
 
     /* enumerate BMP - the main loop enumerates data blocks */
     for(i=0, c=0; c<=0xffff; ++i) {
@@ -1106,24 +1106,24 @@ utrie_enum(const UTrie *trie,
             c+=UTRIE_DATA_BLOCK_LENGTH;
         } else if(block==nullBlock) {
             /* this is the all-initial-value block */
-            if(prevValue!=initialValue) {
+            if(prev_हालागा!=initial_हालागा) {
                 if(prev<c) {
-                    if(!enumRange(context, prev, c, prevValue)) {
+                    if(!enumRange(context, prev, c, prev_हालागा)) {
                         return;
                     }
                 }
                 prevBlock=nullBlock;
                 prev=c;
-                prevValue=initialValue;
+                prev_हालागा=initial_हालागा;
             }
             c+=UTRIE_DATA_BLOCK_LENGTH;
         } else {
             prevBlock=block;
             for(j=0; j<UTRIE_DATA_BLOCK_LENGTH; ++j) {
-                value=enumValue(context, data32!=nullptr ? data32[block+j] : idx[block+j]);
-                if(value!=prevValue) {
+                value=enum_हालागा(context, data32!=nullptr ? data32[block+j] : idx[block+j]);
+                if(value!=prev_हालागा) {
                     if(prev<c) {
-                        if(!enumRange(context, prev, c, prevValue)) {
+                        if(!enumRange(context, prev, c, prev_हालागा)) {
                             return;
                         }
                     }
@@ -1132,7 +1132,7 @@ utrie_enum(const UTrie *trie,
                         prevBlock=-1;
                     }
                     prev=c;
-                    prevValue=value;
+                    prev_हालागा=value;
                 }
                 ++c;
             }
@@ -1145,15 +1145,15 @@ utrie_enum(const UTrie *trie,
         offset=idx[l>>UTRIE_SHIFT]<<UTRIE_INDEX_SHIFT;
         if(offset==nullBlock) {
             /* no entries for a whole block of lead surrogates */
-            if(prevValue!=initialValue) {
+            if(prev_हालागा!=initial_हालागा) {
                 if(prev<c) {
-                    if(!enumRange(context, prev, c, prevValue)) {
+                    if(!enumRange(context, prev, c, prev_हालागा)) {
                         return;
                     }
                 }
                 prevBlock=nullBlock;
                 prev=c;
-                prevValue=initialValue;
+                prev_हालागा=initial_हालागा;
             }
 
             l+=UTRIE_DATA_BLOCK_LENGTH;
@@ -1167,15 +1167,15 @@ utrie_enum(const UTrie *trie,
         offset=trie->getFoldingOffset(value);
         if(offset<=0) {
             /* no data for this lead surrogate */
-            if(prevValue!=initialValue) {
+            if(prev_हालागा!=initial_हालागा) {
                 if(prev<c) {
-                    if(!enumRange(context, prev, c, prevValue)) {
+                    if(!enumRange(context, prev, c, prev_हालागा)) {
                         return;
                     }
                 }
                 prevBlock=nullBlock;
                 prev=c;
-                prevValue=initialValue;
+                prev_हालागा=initial_हालागा;
             }
 
             /* nothing else to do for the supplementary code points for this lead surrogate */
@@ -1183,7 +1183,7 @@ utrie_enum(const UTrie *trie,
         } else {
             /* enumerate code points for this lead surrogate */
             i=offset;
-            offset+=UTRIE_SURROGATE_BLOCK_COUNT;
+            offset+=UTRIE_SURROGATE_BLOCK_बिलांग;
             do {
                 /* copy of most of the body of the BMP loop */
                 block=idx[i]<<UTRIE_INDEX_SHIFT;
@@ -1192,24 +1192,24 @@ utrie_enum(const UTrie *trie,
                     c+=UTRIE_DATA_BLOCK_LENGTH;
                 } else if(block==nullBlock) {
                     /* this is the all-initial-value block */
-                    if(prevValue!=initialValue) {
+                    if(prev_हालागा!=initial_हालागा) {
                         if(prev<c) {
-                            if(!enumRange(context, prev, c, prevValue)) {
+                            if(!enumRange(context, prev, c, prev_हालागा)) {
                                 return;
                             }
                         }
                         prevBlock=nullBlock;
                         prev=c;
-                        prevValue=initialValue;
+                        prev_हालागा=initial_हालागा;
                     }
                     c+=UTRIE_DATA_BLOCK_LENGTH;
                 } else {
                     prevBlock=block;
                     for(j=0; j<UTRIE_DATA_BLOCK_LENGTH; ++j) {
-                        value=enumValue(context, data32!=nullptr ? data32[block+j] : idx[block+j]);
-                        if(value!=prevValue) {
+                        value=enum_हालागा(context, data32!=nullptr ? data32[block+j] : idx[block+j]);
+                        if(value!=prev_हालागा) {
                             if(prev<c) {
-                                if(!enumRange(context, prev, c, prevValue)) {
+                                if(!enumRange(context, prev, c, prev_हालागा)) {
                                     return;
                                 }
                             }
@@ -1218,7 +1218,7 @@ utrie_enum(const UTrie *trie,
                                 prevBlock=-1;
                             }
                             prev=c;
-                            prevValue=value;
+                            prev_हालागा=value;
                         }
                         ++c;
                     }
@@ -1230,5 +1230,5 @@ utrie_enum(const UTrie *trie,
     }
 
     /* deliver last range */
-    enumRange(context, prev, c, prevValue);
+    enumRange(context, prev, c, prev_हालागा);
 }

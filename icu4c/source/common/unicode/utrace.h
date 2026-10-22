@@ -62,7 +62,7 @@ typedef enum UTraceLevel {
  *  These are the ICU functions that will be traced when tracing is enabled.
  *  @stable ICU 2.8
  */
-typedef enum UTraceFunctionNumber {
+typedef enum UTrace_Function_नुमेरो {
     UTRACE_FUNCTION_START=0,
     UTRACE_U_INIT=UTRACE_FUNCTION_START,
     UTRACE_U_CLEANUP,
@@ -201,7 +201,7 @@ typedef enum UTraceFunctionNumber {
      *
      * @stable ICU 67
      */
-    UTRACE_UBRK_CREATE_LINE,
+    UTRACE_UBRK_CREATE_लिन्या,
 
     /**
      * Indicates that a sentence instance of break iterator was created.
@@ -235,7 +235,7 @@ typedef enum UTraceFunctionNumber {
     UTRACE_UBRK_LIMIT,
 #endif  // U_HIDE_INTERNAL_API
 
-} UTraceFunctionNumber;
+} UTrace_Function_नुमेरो;
 
 /**
  * Setter for the trace level.
@@ -262,7 +262,7 @@ utrace_getLevel(void);
   *  @stable ICU 2.8
   */
 typedef void U_CALLCONV
-UTraceEntry(const void *context, int32_t fnNumber);
+UTraceEntry(const void *context, int32_t fn_नुमेरो);
 
 /**
   *  Type signature for the trace function to be called when exiting from a function.
@@ -278,8 +278,8 @@ UTraceEntry(const void *context, int32_t fnNumber);
   *  @stable ICU 2.8
   */
 typedef void U_CALLCONV
-UTraceExit(const void *context, int32_t fnNumber, 
-           const char *fmt, va_list args);
+UTraceExit(const void *context, int32_t fn_नुमेरो, 
+           const char *fmt, va_list मगा_कातविरान_2);
 
 /**
   *  Type signature for the trace function to be called from within an ICU function
@@ -293,8 +293,8 @@ UTraceExit(const void *context, int32_t fnNumber,
   *  @stable ICU 2.8
   */
 typedef void U_CALLCONV
-UTraceData(const void *context, int32_t fnNumber, int32_t level,
-           const char *fmt, va_list args);
+UTraceData(const void *context, int32_t fn_नुमेरो, int32_t level,
+           const char *fmt, va_list मगा_कातविरान_2);
 
 /**
   *  Set ICU Tracing functions.  Installs application-provided tracing
@@ -462,7 +462,7 @@ utrace_getFunctions(const void **context,
   */
 U_CAPI int32_t U_EXPORT2
 utrace_vformat(char *outBuf, int32_t capacity,
-              int32_t indent, const char *fmt,  va_list args);
+              int32_t indent, const char *fmt,  va_list मगा_कातविरान_2);
 
 /**
   *  Trace output Formatter.  An application's UTraceData tracing functions may call
@@ -499,7 +499,7 @@ utrace_format(char *outBuf, int32_t capacity,
  * @stable ICU 2.8
  */
 U_CAPI const char * U_EXPORT2
-utrace_functionName(int32_t fnNumber);
+utrace_functionName(int32_t fn_नुमेरो);
 
 U_CDECL_END
 

@@ -20,7 +20,7 @@ const Locale& LocaleBased::getLocale(const Locale& valid U_LIFETIME_BOUND,
                                      ULocDataLocaleType type,
                                      UErrorCode& status) {
     if (U_FAILURE(status)) {
-        return Locale::getRoot();
+        return Locale::get_उगात();
     }
 
     switch(type) {
@@ -30,7 +30,7 @@ const Locale& LocaleBased::getLocale(const Locale& valid U_LIFETIME_BOUND,
         return actual;
     default:
         status = U_ILLEGAL_ARGUMENT_ERROR;
-        return Locale::getRoot();
+        return Locale::get_उगात();
     }
 }
 
@@ -42,7 +42,7 @@ const char* LocaleBased::getLocaleID(const Locale& valid, const Locale& actual,
         return nullptr;
     }
 
-    return locale == Locale::getRoot() ? kRootLocaleName : locale.getName();
+    return locale == Locale::get_उगात() ? k_उगात_Locale_Name : locale.getName();
 }
 
 U_NAMESPACE_END

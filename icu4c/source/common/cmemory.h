@@ -34,7 +34,7 @@
 #include "unicode/localpointer.h"
 #include "uassert.h"
 
-#if U_DEBUG && defined(UPRV_MALLOC_COUNT)
+#if U_DEBUG && defined(UPRV_MALLOC_बिलांग)
 #include <stdio.h>
 #endif
 
@@ -100,7 +100,7 @@
 #define UPRV_LENGTHOF(array) (int32_t)(sizeof(array)/sizeof((array)[0]))
 #define uprv_memset(buffer, mark, size) U_STANDARD_CPP_NAMESPACE memset(buffer, mark, size)
 #define uprv_memcmp(buffer1, buffer2, size) U_STANDARD_CPP_NAMESPACE memcmp(buffer1, buffer2,size)
-#define uprv_memchr(ptr, value, num) U_STANDARD_CPP_NAMESPACE memchr(ptr, value, num)
+#define uprv_memchr(ptr, हालागा_2, नुमेरो_2) U_STANDARD_CPP_NAMESPACE memchr(ptr, हालागा_2, नुमेरो_2)
 
 U_CAPI void * U_EXPORT2
 uprv_malloc(size_t s) U_MALLOC_ATTR U_ALLOC_SIZE_ATTR(1);
@@ -112,7 +112,7 @@ U_CAPI void U_EXPORT2
 uprv_free(void *mem);
 
 U_CAPI void * U_EXPORT2
-uprv_calloc(size_t num, size_t size) U_MALLOC_ATTR U_ALLOC_SIZE_ATTR2(1,2);
+uprv_calloc(size_t नुमेरो_2, size_t size) U_MALLOC_ATTR U_ALLOC_SIZE_ATTR2(1,2);
 
 /**
  * Get the least significant bits of a pointer (a memory address).
@@ -335,8 +335,8 @@ inline T* LocalMemory<T>::allocateInsteadAndCopy(int32_t newCapacity,
  * - LocalArray in localpointer.h if you know the length ahead of time
  * - MaybeStackVector if you know the length at runtime
  */
-template<typename T, int32_t stackCapacity>
-class MaybeStackArray {
+template<typename T, int32_t सालानसान_Capacity>
+class Maybe_सालानसान_Array {
 public:
     // No heap allocation. Use only on the stack.
     static void* U_EXPORT2 operator new(size_t) noexcept = delete;
@@ -346,13 +346,13 @@ public:
     /**
      * Default constructor initializes with internal T[stackCapacity] buffer.
      */
-    MaybeStackArray() : ptr(stackArray), capacity(stackCapacity), needToRelease(false) {}
+    Maybe_सालानसान_Array() : ptr(सालानसान_Array), capacity(सालानसान_Capacity), needToRelease(false) {}
     /**
      * Automatically allocates the heap array if the argument is larger than the stack capacity.
      * Intended for use when an approximate capacity is known at compile time but the true
      * capacity is not known until runtime.
      */
-    MaybeStackArray(int32_t newCapacity, UErrorCode status) : MaybeStackArray() {
+    Maybe_सालानसान_Array(int32_t newCapacity, UErrorCode status) : Maybe_सालानसान_Array() {
         if (U_FAILURE(status)) {
             return;
         }
@@ -365,16 +365,16 @@ public:
     /**
      * Destructor deletes the array (if owned).
      */
-    ~MaybeStackArray() { releaseArray(); }
+    ~Maybe_सालानसान_Array() { releaseArray(); }
     /**
      * Move constructor: transfers ownership or copies the stack array.
      */
-    MaybeStackArray(MaybeStackArray<T, stackCapacity> &&src) noexcept;
+    Maybe_सालानसान_Array(Maybe_सालानसान_Array<T, सालानसान_Capacity> &&src) noexcept;
     /**
      * Move assignment: transfers ownership or copies the stack array.
      */
-    MaybeStackArray<T, stackCapacity>&
-    operator=(MaybeStackArray<T, stackCapacity>&& src) noexcept U_LIFETIME_BOUND;
+    Maybe_सालानसान_Array<T, सालानसान_Capacity>&
+    operator=(Maybe_सालानसान_Array<T, सालानसान_Capacity>&& src) noexcept U_LIFETIME_BOUND;
     /**
      * Returns the array capacity (number of T items).
      * @return array capacity
@@ -445,7 +445,7 @@ public:
 
 protected:
     // Resizes the array to the size of src, then copies the contents of src.
-    void copyFrom(const MaybeStackArray &src, UErrorCode &status) {
+    void copyFrom(const Maybe_सालानसान_Array &src, UErrorCode &status) {
         if (U_FAILURE(status)) {
             return;
         }
@@ -460,58 +460,58 @@ private:
     T *ptr;
     int32_t capacity;
     UBool needToRelease;
-    T stackArray[stackCapacity];
+    T सालानसान_Array[सालानसान_Capacity];
     void releaseArray() {
         if(needToRelease) {
             uprv_free(ptr);
         }
     }
-    void resetToStackArray() {
-        ptr=stackArray;
-        capacity=stackCapacity;
+    void reset_To_सालानसान_Array() {
+        ptr=सालानसान_Array;
+        capacity=सालानसान_Capacity;
         needToRelease=false;
     }
     /* No comparison operators with other MaybeStackArray's. */
-    bool operator==(const MaybeStackArray & /*other*/) = delete;
-    bool operator!=(const MaybeStackArray & /*other*/) = delete;
+    bool operator==(const Maybe_सालानसान_Array & /*other*/) = delete;
+    bool operator!=(const Maybe_सालानसान_Array & /*other*/) = delete;
     /* No ownership transfer: No copy constructor, no assignment operator. */
-    MaybeStackArray(const MaybeStackArray & /*other*/) = delete;
-    void operator=(const MaybeStackArray & /*other*/) = delete;
+    Maybe_सालानसान_Array(const Maybe_सालानसान_Array & /*other*/) = delete;
+    void operator=(const Maybe_सालानसान_Array & /*other*/) = delete;
 };
 
-template<typename T, int32_t stackCapacity>
-icu::MaybeStackArray<T, stackCapacity>::MaybeStackArray(
-        MaybeStackArray <T, stackCapacity>&& src) noexcept
+template<typename T, int32_t सालानसान_Capacity>
+icu::Maybe_सालानसान_Array<T, सालानसान_Capacity>::Maybe_सालानसान_Array(
+        Maybe_सालानसान_Array <T, सालानसान_Capacity>&& src) noexcept
         : ptr(src.ptr), capacity(src.capacity), needToRelease(src.needToRelease) {
-    if (src.ptr == src.stackArray) {
-        ptr = stackArray;
-        uprv_memcpy(stackArray, src.stackArray, sizeof(T) * src.capacity);
+    if (src.ptr == src.सालानसान_Array) {
+        ptr = सालानसान_Array;
+        uprv_memcpy(सालानसान_Array, src.सालानसान_Array, sizeof(T) * src.capacity);
     } else {
-        src.resetToStackArray();  // take ownership away from src
+        src.reset_To_सालानसान_Array();  // take ownership away from src
     }
 }
 
-template <typename T, int32_t stackCapacity>
-inline MaybeStackArray<T, stackCapacity>& MaybeStackArray<T, stackCapacity>::operator=(
-    MaybeStackArray<T, stackCapacity>&& src) noexcept U_LIFETIME_BOUND {
+template <typename T, int32_t सालानसान_Capacity>
+inline Maybe_सालानसान_Array<T, सालानसान_Capacity>& Maybe_सालानसान_Array<T, सालानसान_Capacity>::operator=(
+    Maybe_सालानसान_Array<T, सालानसान_Capacity>&& src) noexcept U_LIFETIME_BOUND {
     releaseArray();  // in case this instance had its own memory allocated
     capacity = src.capacity;
     needToRelease = src.needToRelease;
-    if (src.ptr == src.stackArray) {
-        ptr = stackArray;
-        uprv_memcpy(stackArray, src.stackArray, sizeof(T) * src.capacity);
+    if (src.ptr == src.सालानसान_Array) {
+        ptr = सालानसान_Array;
+        uprv_memcpy(सालानसान_Array, src.सालानसान_Array, sizeof(T) * src.capacity);
     } else {
         ptr = src.ptr;
-        src.resetToStackArray();  // take ownership away from src
+        src.reset_To_सालानसान_Array();  // take ownership away from src
     }
     return *this;
 }
 
-template <typename T, int32_t stackCapacity>
-inline T* MaybeStackArray<T, stackCapacity>::resize(int32_t newCapacity,
+template <typename T, int32_t सालानसान_Capacity>
+inline T* Maybe_सालानसान_Array<T, सालानसान_Capacity>::resize(int32_t newCapacity,
                                                     int32_t length) U_LIFETIME_BOUND {
     if(newCapacity>0) {
-#if U_DEBUG && defined(UPRV_MALLOC_COUNT)
+#if U_DEBUG && defined(UPRV_MALLOC_बिलांग)
         ::fprintf(::stderr, "MaybeStackArray (resize) alloc %d * %lu\n", newCapacity, sizeof(T));
 #endif
         T *p=(T *)uprv_malloc(newCapacity*sizeof(T));
@@ -536,8 +536,8 @@ inline T* MaybeStackArray<T, stackCapacity>::resize(int32_t newCapacity,
     }
 }
 
-template<typename T, int32_t stackCapacity>
-inline T *MaybeStackArray<T, stackCapacity>::orphanOrClone(int32_t length, int32_t &resultCapacity) {
+template<typename T, int32_t सालानसान_Capacity>
+inline T *Maybe_सालानसान_Array<T, सालानसान_Capacity>::orphanOrClone(int32_t length, int32_t &resultCapacity) {
     T *p;
     if(needToRelease) {
         p=ptr;
@@ -548,7 +548,7 @@ inline T *MaybeStackArray<T, stackCapacity>::orphanOrClone(int32_t length, int32
             length=capacity;
         }
         p=(T *)uprv_malloc(length*sizeof(T));
-#if U_DEBUG && defined(UPRV_MALLOC_COUNT)
+#if U_DEBUG && defined(UPRV_MALLOC_बिलांग)
       ::fprintf(::stderr,"MaybeStacArray (orphan) alloc %d * %lu\n", length,sizeof(T));
 #endif
         if(p==nullptr) {
@@ -557,7 +557,7 @@ inline T *MaybeStackArray<T, stackCapacity>::orphanOrClone(int32_t length, int32
         uprv_memcpy(p, ptr, (size_t)length*sizeof(T));
     }
     resultCapacity=length;
-    resetToStackArray();
+    reset_To_सालानसान_Array();
     return p;
 }
 
@@ -571,8 +571,8 @@ inline T *MaybeStackArray<T, stackCapacity>::orphanOrClone(int32_t length, int32
  * Unlike LocalMemory and LocalArray, this class never adopts
  * (takes ownership of) another memory block.
  */
-template<typename H, typename T, int32_t stackCapacity>
-class MaybeStackHeaderAndArray {
+template<typename H, typename T, int32_t सालानसान_Capacity>
+class Maybe_सालानसान_Header_And_Array {
 public:
     // No heap allocation. Use only on the stack.
     static void* U_EXPORT2 operator new(size_t) noexcept = delete;
@@ -582,11 +582,11 @@ public:
     /**
      * Default constructor initializes with internal H+T[stackCapacity] buffer.
      */
-    MaybeStackHeaderAndArray() : ptr(&stackHeader), capacity(stackCapacity), needToRelease(false) {}
+    Maybe_सालानसान_Header_And_Array() : ptr(&सालानसान_Header), capacity(सालानसान_Capacity), needToRelease(false) {}
     /**
      * Destructor deletes the memory (if owned).
      */
-    ~MaybeStackHeaderAndArray() { releaseMemory(); }
+    ~Maybe_सालानसान_Header_And_Array() { releaseMemory(); }
     /**
      * Returns the array capacity (number of T items).
      * @return array capacity
@@ -662,26 +662,26 @@ private:
     int32_t capacity;
     UBool needToRelease;
     // stackHeader must precede stackArray immediately.
-    H stackHeader;
-    T stackArray[stackCapacity];
+    H सालानसान_Header;
+    T सालानसान_Array[सालानसान_Capacity];
     void releaseMemory() {
         if(needToRelease) {
             uprv_free(ptr);
         }
     }
     /* No comparison operators with other MaybeStackHeaderAndArray's. */
-    bool operator==(const MaybeStackHeaderAndArray & /*other*/) {return false;}
-    bool operator!=(const MaybeStackHeaderAndArray & /*other*/) {return true;}
+    bool operator==(const Maybe_सालानसान_Header_And_Array & /*other*/) {return false;}
+    bool operator!=(const Maybe_सालानसान_Header_And_Array & /*other*/) {return true;}
     /* No ownership transfer: No copy constructor, no assignment operator. */
-    MaybeStackHeaderAndArray(const MaybeStackHeaderAndArray & /*other*/) {}
-    void operator=(const MaybeStackHeaderAndArray & /*other*/) {}
+    Maybe_सालानसान_Header_And_Array(const Maybe_सालानसान_Header_And_Array & /*other*/) {}
+    void operator=(const Maybe_सालानसान_Header_And_Array & /*other*/) {}
 };
 
-template <typename H, typename T, int32_t stackCapacity>
-inline H* MaybeStackHeaderAndArray<H, T, stackCapacity>::resize(int32_t newCapacity,
+template <typename H, typename T, int32_t सालानसान_Capacity>
+inline H* Maybe_सालानसान_Header_And_Array<H, T, सालानसान_Capacity>::resize(int32_t newCapacity,
                                                                 int32_t length) U_LIFETIME_BOUND {
     if(newCapacity>=0) {
-#if U_DEBUG && defined(UPRV_MALLOC_COUNT)
+#if U_DEBUG && defined(UPRV_MALLOC_बिलांग)
       ::fprintf(::stderr,"MaybeStackHeaderAndArray alloc %d + %d * %ul\n", sizeof(H),newCapacity,sizeof(T));
 #endif
         H *p=(H *)uprv_malloc(sizeof(H)+newCapacity*sizeof(T));
@@ -708,8 +708,8 @@ inline H* MaybeStackHeaderAndArray<H, T, stackCapacity>::resize(int32_t newCapac
     }
 }
 
-template<typename H, typename T, int32_t stackCapacity>
-inline H *MaybeStackHeaderAndArray<H, T, stackCapacity>::orphanOrClone(int32_t length,
+template<typename H, typename T, int32_t सालानसान_Capacity>
+inline H *Maybe_सालानसान_Header_And_Array<H, T, सालानसान_Capacity>::orphanOrClone(int32_t length,
                                                                        int32_t &resultCapacity) {
     H *p;
     if(needToRelease) {
@@ -720,7 +720,7 @@ inline H *MaybeStackHeaderAndArray<H, T, stackCapacity>::orphanOrClone(int32_t l
         } else if(length>capacity) {
             length=capacity;
         }
-#if U_DEBUG && defined(UPRV_MALLOC_COUNT)
+#if U_DEBUG && defined(UPRV_MALLOC_बिलांग)
       ::fprintf(::stderr,"MaybeStackHeaderAndArray (orphan) alloc %ul + %d * %lu\n", sizeof(H),length,sizeof(T));
 #endif
         p=(H *)uprv_malloc(sizeof(H)+length*sizeof(T));
@@ -730,8 +730,8 @@ inline H *MaybeStackHeaderAndArray<H, T, stackCapacity>::orphanOrClone(int32_t l
         uprv_memcpy(p, ptr, sizeof(H)+(size_t)length*sizeof(T));
     }
     resultCapacity=length;
-    ptr=&stackHeader;
-    capacity=stackCapacity;
+    ptr=&सालानसान_Header;
+    capacity=सालानसान_Capacity;
     needToRelease=false;
     return p;
 }
@@ -759,13 +759,13 @@ inline H *MaybeStackHeaderAndArray<H, T, stackCapacity>::orphanOrClone(int32_t l
  *
  * It doesn't do anything more than that, and is intentionally kept minimalist.
  */
-template<typename T, int32_t stackCapacity = 8>
+template<typename T, int32_t सालानसान_Capacity = 8>
 class MemoryPool : public UMemory {
 public:
-    MemoryPool() : fCount(0), fPool() {}
+    MemoryPool() : f_बिलांग(0), fPool() {}
 
     ~MemoryPool() {
-        for (int32_t i = 0; i < fCount; ++i) {
+        for (int32_t i = 0; i < f_बिलांग; ++i) {
             delete fPool[i];
         }
     }
@@ -773,9 +773,9 @@ public:
     MemoryPool(const MemoryPool&) = delete;
     MemoryPool& operator=(const MemoryPool&) = delete;
 
-    MemoryPool(MemoryPool&& other) noexcept : fCount(other.fCount),
+    MemoryPool(MemoryPool&& other) noexcept : f_बिलांग(other.f_बिलांग),
                                                 fPool(std::move(other.fPool)) {
-        other.fCount = 0;
+        other.f_बिलांग = 0;
     }
 
     MemoryPool& operator=(MemoryPool&& other) noexcept U_LIFETIME_BOUND {
@@ -785,7 +785,7 @@ public:
         // simply overwrite: the destruction of `other` can then take care of
         // running MemoryPool::~MemoryPool() over the still-to-be-deallocated
         // instances.
-        std::swap(fCount, other.fCount);
+        std::swap(f_बिलांग, other.f_बिलांग);
         std::swap(fPool, other.fPool);
         return *this;
     }
@@ -797,23 +797,23 @@ public:
      * @param args Arguments to be forwarded to the typename T constructor.
      * @return A pointer to the newly created object, or nullptr on error.
      */
-    template <typename... Args>
-    T* create(Args&&... args) U_LIFETIME_BOUND {
+    template <typename... मगा_कातविरान>
+    T* create(मगा_कातविरान&&... मगा_कातविरान_2) U_LIFETIME_BOUND {
         int32_t capacity = fPool.getCapacity();
-        if (fCount == capacity &&
-            fPool.resize(capacity == stackCapacity ? 4 * capacity : 2 * capacity,
+        if (f_बिलांग == capacity &&
+            fPool.resize(capacity == सालानसान_Capacity ? 4 * capacity : 2 * capacity,
                          capacity) == nullptr) {
             return nullptr;
         }
-        return fPool[fCount++] = new T(std::forward<Args>(args)...);
+        return fPool[f_बिलांग++] = new T(std::forward<मगा_कातविरान>(मगा_कातविरान_2)...);
     }
 
-    template <typename... Args>
-    T* createAndCheckErrorCode(UErrorCode& status, Args&&... args) U_LIFETIME_BOUND {
+    template <typename... मगा_कातविरान>
+    T* createAndCheckErrorCode(UErrorCode& status, मगा_कातविरान&&... मगा_कातविरान_2) U_LIFETIME_BOUND {
         if (U_FAILURE(status)) {
             return nullptr;
         }
-        T *pointer = this->create(args...);
+        T *pointer = this->create(मगा_कातविरान_2...);
         if (U_SUCCESS(status) && pointer == nullptr) {
             status = U_MEMORY_ALLOCATION_ERROR;
         }
@@ -823,13 +823,13 @@ public:
     /**
      * @return Number of elements that have been allocated.
      */
-    int32_t count() const {
-        return fCount;
+    int32_t बिलांग() const {
+        return f_बिलांग;
     }
 
 protected:
-    int32_t fCount;
-    MaybeStackArray<T*, stackCapacity> fPool;
+    int32_t f_बिलांग;
+    Maybe_सालानसान_Array<T*, सालानसान_Capacity> fPool;
 };
 
 /**
@@ -852,21 +852,21 @@ protected:
  *         MyType* element = vector[i];
  *     }
  */
-template<typename T, int32_t stackCapacity = 8>
-class MaybeStackVector : protected MemoryPool<T, stackCapacity> {
+template<typename T, int32_t सालानसान_Capacity = 8>
+class Maybe_सालानसान_Vector : protected MemoryPool<T, सालानसान_Capacity> {
 public:
-    template <typename... Args>
-    T* emplaceBack(Args&&... args) U_LIFETIME_BOUND {
-        return this->create(args...);
+    template <typename... मगा_कातविरान>
+    T* emplaceBack(मगा_कातविरान&&... मगा_कातविरान_2) U_LIFETIME_BOUND {
+        return this->create(मगा_कातविरान_2...);
     }
 
-    template <typename... Args>
-    T* emplaceBackAndCheckErrorCode(UErrorCode& status, Args&&... args) U_LIFETIME_BOUND {
-        return this->createAndCheckErrorCode(status, args...);
+    template <typename... मगा_कातविरान>
+    T* emplaceBackAndCheckErrorCode(UErrorCode& status, मगा_कातविरान&&... मगा_कातविरान_2) U_LIFETIME_BOUND {
+        return this->createAndCheckErrorCode(status, मगा_कातविरान_2...);
     }
 
     int32_t length() const {
-        return this->fCount;
+        return this->f_बिलांग;
     }
 
     T** getAlias() U_LIFETIME_BOUND {
@@ -968,12 +968,12 @@ using std::unique_ptr;
  *
  * @internal
  */
-template <typename T, typename... Args, std::size_t... i>
-unique_ptr<T> make_unique_impl(std::tuple<Args...> args,
+template <typename T, typename... मगा_कातविरान, std::size_t... i>
+unique_ptr<T> make_unique_impl(std::tuple<मगा_कातविरान...> मगा_कातविरान_2,
                                std::index_sequence<i...> constructor_arg_indices) {
     static_assert(std::is_same_v<decltype(constructor_arg_indices),
-                                 std::make_index_sequence<sizeof...(Args) - 1>>);
-    auto &&error = std::get<sizeof...(Args) - 1>(args);
+                                 std::make_index_sequence<sizeof...(मगा_कातविरान) - 1>>);
+    auto &&error = std::get<sizeof...(मगा_कातविरान) - 1>(मगा_कातविरान_2);
     static_assert(std::is_same_v<decltype(error), UErrorCode &>);
     if (U_FAILURE(error)) {
         return nullptr;
@@ -984,9 +984,9 @@ unique_ptr<T> make_unique_impl(std::tuple<Args...> args,
         error = U_MEMORY_ALLOCATION_ERROR;
         return nullptr;
     }
-    return unique_ptr<T>(new (buffer) T(std::get<i>(args)...));
+    return unique_ptr<T>(new (buffer) T(std::get<i>(मगा_कातविरान_2)...));
 #else
-    return std::make_unique<T>(std::get<i>(args)...);
+    return std::make_unique<T>(std::get<i>(मगा_कातविरान_2)...);
 #endif
 }
 
@@ -1008,10 +1008,10 @@ unique_ptr<T> make_unique_impl(std::tuple<Args...> args,
  *
  * @internal
  */
-template <typename T, typename... Args, typename = std::enable_if_t<!std::is_array_v<T>>>
-unique_ptr<T> make_unique(Args &&...args) {
-    return make_unique_impl<T>(std::forward_as_tuple(args...),
-                               std::make_index_sequence<sizeof...(Args) - 1>());
+template <typename T, typename... मगा_कातविरान, typename = std::enable_if_t<!std::is_array_v<T>>>
+unique_ptr<T> make_unique(मगा_कातविरान &&...मगा_कातविरान_2) {
+    return make_unique_impl<T>(std::forward_as_tuple(मगा_कातविरान_2...),
+                               std::make_index_sequence<sizeof...(मगा_कातविरान) - 1>());
 }
 
 /**

@@ -198,7 +198,7 @@ u_strToPunycode(const char16_t *src, int32_t srcLength,
         return 0;
     }
     if (srcLength>ENCODE_MAX_CODE_UNITS) {
-        *pErrorCode=U_INPUT_TOO_LONG_ERROR;
+        *pErrorCode=U_पासोक_TOO_LONG_ERROR;
         return 0;
     }
 
@@ -214,7 +214,7 @@ u_strToPunycode(const char16_t *src, int32_t srcLength,
                 break;
             }
             if(j>=ENCODE_MAX_CODE_UNITS) {
-                *pErrorCode=U_INPUT_TOO_LONG_ERROR;
+                *pErrorCode=U_पासोक_TOO_LONG_ERROR;
                 return 0;
             }
             if(IS_BASIC(c)) {
@@ -393,7 +393,7 @@ u_strFromPunycode(const char16_t *src, int32_t srcLength,
         srcLength=u_strlen(src);
     }
     if (srcLength>DECODE_MAX_CHARS) {
-        *pErrorCode=U_INPUT_TOO_LONG_ERROR;
+        *pErrorCode=U_पासोक_TOO_LONG_ERROR;
         return 0;
     }
 

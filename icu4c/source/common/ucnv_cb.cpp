@@ -34,7 +34,7 @@
 if you don't use ucnv_cbXXX functions.  Make sure you don't use the same callback within
 the same call stack if the complexity arises. */
 U_CAPI void  U_EXPORT2
-ucnv_cbFromUWriteBytes (UConverterFromUnicodeArgs *args,
+ucnv_cbFromUWriteBytes (UConverter_From_Unicode_मगा_कातविरान *मगा_कातविरान_2,
                        const char* source,
                        int32_t length,
                        int32_t offsetIndex,
@@ -45,15 +45,15 @@ ucnv_cbFromUWriteBytes (UConverterFromUnicodeArgs *args,
     }
 
     ucnv_fromUWriteBytes(
-        args->converter,
+        मगा_कातविरान_2->converter,
         source, length,
-        &args->target, args->targetLimit,
-        &args->offsets, offsetIndex,
+        &मगा_कातविरान_2->target, मगा_कातविरान_2->targetLimit,
+        &मगा_कातविरान_2->offsets, offsetIndex,
         err);
 }
 
 U_CAPI void  U_EXPORT2
-ucnv_cbFromUWriteUChars(UConverterFromUnicodeArgs *args,
+ucnv_cbFromUWriteUChars(UConverter_From_Unicode_मगा_कातविरान *मगा_कातविरान_2,
                              const char16_t** source,
                              const char16_t*  sourceLimit,
                              int32_t offsetIndex,
@@ -78,22 +78,22 @@ ucnv_cbFromUWriteUChars(UConverterFromUnicodeArgs *args,
         return;
     }
 
-    oldTarget = args->target;
+    oldTarget = मगा_कातविरान_2->target;
 
-    ucnv_fromUnicode(args->converter,
-        &args->target,
-        args->targetLimit,
+    ucnv_fromUnicode(मगा_कातविरान_2->converter,
+        &मगा_कातविरान_2->target,
+        मगा_कातविरान_2->targetLimit,
         source,
         sourceLimit,
         nullptr, /* no offsets */
         false, /* no flush */
         err);
 
-    if(args->offsets)
+    if(मगा_कातविरान_2->offsets)
     {
-        while (args->target != oldTarget)  /* if it moved at all.. */
+        while (मगा_कातविरान_2->target != oldTarget)  /* if it moved at all.. */
         {
-            *(args->offsets)++ = offsetIndex;
+            *(मगा_कातविरान_2->offsets)++ = offsetIndex;
             oldTarget++;
         }
     }
@@ -114,13 +114,13 @@ ucnv_cbFromUWriteUChars(UConverterFromUnicodeArgs *args,
 
         int8_t errBuffLen;
 
-        errBuffLen  = args->converter->charErrorBufferLength;
+        errBuffLen  = मगा_कातविरान_2->converter->charErrorBufferLength;
 
         /* start the new target at the first free slot in the errbuff.. */
-        newTarget = (char *)(args->converter->charErrorBuffer + errBuffLen);
+        newTarget = (char *)(मगा_कातविरान_2->converter->charErrorBuffer + errBuffLen);
 
-        newTargetLimit = (char *)(args->converter->charErrorBuffer +
-            sizeof(args->converter->charErrorBuffer));
+        newTargetLimit = (char *)(मगा_कातविरान_2->converter->charErrorBuffer +
+            sizeof(मगा_कातविरान_2->converter->charErrorBuffer));
 
         if(newTarget >= newTargetLimit)
         {
@@ -133,9 +133,9 @@ ucnv_cbFromUWriteUChars(UConverterFromUnicodeArgs *args,
         itself.  If the errbuff is needed by the converter this time,
         we're hosed - we're out of space! */
 
-        args->converter->charErrorBufferLength = 0;
+        मगा_कातविरान_2->converter->charErrorBufferLength = 0;
 
-        ucnv_fromUnicode(args->converter,
+        ucnv_fromUnicode(मगा_कातविरान_2->converter,
                          &newTarget,
                          newTargetLimit,
                          source,
@@ -147,8 +147,8 @@ ucnv_cbFromUWriteUChars(UConverterFromUnicodeArgs *args,
         /* We can go ahead and overwrite the  length here. We know just how
         to recalculate it. */
 
-        args->converter->charErrorBufferLength = (int8_t)(
-            newTarget - (char*)args->converter->charErrorBuffer);
+        मगा_कातविरान_2->converter->charErrorBufferLength = (int8_t)(
+            newTarget - (char*)मगा_कातविरान_2->converter->charErrorBuffer);
 
         if((newTarget >= newTargetLimit) || (err2 == U_BUFFER_OVERFLOW_ERROR))
         {
@@ -174,7 +174,7 @@ ucnv_cbFromUWriteUChars(UConverterFromUnicodeArgs *args,
 }
 
 U_CAPI void  U_EXPORT2
-ucnv_cbFromUWriteSub (UConverterFromUnicodeArgs *args,
+ucnv_cbFromUWriteSub (UConverter_From_Unicode_मगा_कातविरान *मगा_कातविरान_2,
                            int32_t offsetIndex,
                            UErrorCode * err)
 {
@@ -184,7 +184,7 @@ ucnv_cbFromUWriteSub (UConverterFromUnicodeArgs *args,
     if(U_FAILURE(*err)) {
         return;
     }
-    converter = args->converter;
+    converter = मगा_कातविरान_2->converter;
     length = converter->subCharLen;
 
     if(length == 0) {
@@ -201,31 +201,31 @@ ucnv_cbFromUWriteSub (UConverterFromUnicodeArgs *args,
          * At worst we should get a U_BUFFER_OVERFLOW_ERROR.
          */
         const char16_t *source = (const char16_t *)converter->subChars;
-        ucnv_cbFromUWriteUChars(args, &source, source - length, offsetIndex, err);
+        ucnv_cbFromUWriteUChars(मगा_कातविरान_2, &source, source - length, offsetIndex, err);
         return;
     }
 
     if(converter->sharedData->impl->writeSub!=nullptr) {
-        converter->sharedData->impl->writeSub(args, offsetIndex, err);
+        converter->sharedData->impl->writeSub(मगा_कातविरान_2, offsetIndex, err);
     }
     else if(converter->subChar1!=0 && (uint16_t)converter->invalidUCharBuffer[0]<=(uint16_t)0xffu) {
         /*
         TODO: Is this untestable because the MBCS converter has a writeSub function to call
         and the other converters don't use subChar1?
         */
-        ucnv_cbFromUWriteBytes(args,
+        ucnv_cbFromUWriteBytes(मगा_कातविरान_2,
                                (const char *)&converter->subChar1, 1,
                                offsetIndex, err);
     }
     else {
-        ucnv_cbFromUWriteBytes(args,
+        ucnv_cbFromUWriteBytes(मगा_कातविरान_2,
                                (const char *)converter->subChars, length,
                                offsetIndex, err);
     }
 }
 
 U_CAPI void  U_EXPORT2
-ucnv_cbToUWriteUChars (UConverterToUnicodeArgs *args,
+ucnv_cbToUWriteUChars (UConverter_To_Unicode_मगा_कातविरान *मगा_कातविरान_2,
                             const char16_t* source,
                             int32_t length,
                             int32_t offsetIndex,
@@ -236,25 +236,25 @@ ucnv_cbToUWriteUChars (UConverterToUnicodeArgs *args,
     }
 
     ucnv_toUWriteUChars(
-        args->converter,
+        मगा_कातविरान_2->converter,
         source, length,
-        &args->target, args->targetLimit,
-        &args->offsets, offsetIndex,
+        &मगा_कातविरान_2->target, मगा_कातविरान_2->targetLimit,
+        &मगा_कातविरान_2->offsets, offsetIndex,
         err);
 }
 
 U_CAPI void  U_EXPORT2
-ucnv_cbToUWriteSub (UConverterToUnicodeArgs *args,
+ucnv_cbToUWriteSub (UConverter_To_Unicode_मगा_कातविरान *मगा_कातविरान_2,
                          int32_t offsetIndex,
                        UErrorCode * err)
 {
     static const char16_t kSubstituteChar1 = 0x1A, kSubstituteChar = 0xFFFD;
 
     /* could optimize this case, just one uchar */
-    if(args->converter->invalidCharLength == 1 && args->converter->subChar1 != 0) {
-        ucnv_cbToUWriteUChars(args, &kSubstituteChar1, 1, offsetIndex, err);
+    if(मगा_कातविरान_2->converter->invalidCharLength == 1 && मगा_कातविरान_2->converter->subChar1 != 0) {
+        ucnv_cbToUWriteUChars(मगा_कातविरान_2, &kSubstituteChar1, 1, offsetIndex, err);
     } else {
-        ucnv_cbToUWriteUChars(args, &kSubstituteChar, 1, offsetIndex, err);
+        ucnv_cbToUWriteUChars(मगा_कातविरान_2, &kSubstituteChar, 1, offsetIndex, err);
     }
 }
 

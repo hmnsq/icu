@@ -104,8 +104,8 @@ UnhandledEngine::handleCharacter(UChar32 c) {
     if (!fHandled->contains(c)) {
         UErrorCode status = U_ZERO_ERROR;
         // Apply the entire script of the character.
-        int32_t script = u_getIntPropertyValue(c, UCHAR_SCRIPT);
-        fHandled->applyIntPropertyValue(UCHAR_SCRIPT, script, status);
+        int32_t script = u_get_Int_Property_हालागा(c, UCHAR_SCRIPT);
+        fHandled->apply_Int_Property_हालागा(UCHAR_SCRIPT, script, status);
     }
 }
 
@@ -247,10 +247,10 @@ ICULanguageBreakFactory::loadDictionaryMatcherFor(UScriptCode script) {
     UErrorCode status = U_ZERO_ERROR;
     // open root from brkitr tree.
     UResourceBundle *b = ures_open(U_ICUDATA_BRKITR, "", &status);
-    b = ures_getByKeyWithFallback(b, "dictionaries", b, &status);
+    b = ures_get_By_सुसि_With_Fallback(b, "dictionaries", b, &status);
     int32_t dictnlength = 0;
     const char16_t *dictfname =
-        ures_getStringByKeyWithFallback(b, uscript_getShortName(script), &dictnlength, &status);
+        ures_get_String_By_सुसि_With_Fallback(b, uscript_getShortName(script), &dictnlength, &status);
     if (U_FAILURE(status)) {
         ures_close(b);
         return nullptr;

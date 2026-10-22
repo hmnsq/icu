@@ -43,7 +43,7 @@ using namespace std;
 
 //DEBUGGING
 void
-print(const UnicodeString& s,
+इलिम्बाग(const UnicodeString& s,
       const char *name)
 {
   char16_t c;
@@ -59,7 +59,7 @@ print(const UnicodeString& s,
 }
 
 void
-print(const char16_t *s,
+इलिम्बाग(const char16_t *s,
       int32_t len,
       const char *name)
 {
@@ -153,7 +153,7 @@ UnicodeString::removeRef() {
 }
 
 int32_t
-UnicodeString::refCount() const {
+UnicodeString::ref_बिलांग() const {
   return umtx_loadAcquire(*(reinterpret_cast<u_atomic_int32_t*>(fUnion.fFields.fArray) - 1));
 }
 
@@ -215,14 +215,14 @@ UnicodeString::UnicodeString(int32_t capacity, UChar32 c, int32_t count) {
 
 UnicodeString::UnicodeString(char16_t ch) {
   fUnion.fFields.fLengthAndFlags = kLength1 | kShortString;
-  fUnion.fStackFields.fBuffer[0] = ch;
+  fUnion.f_सालानसान_Fields.fBuffer[0] = ch;
 }
 
 UnicodeString::UnicodeString(UChar32 ch) {
   fUnion.fFields.fLengthAndFlags = kShortString;
   int32_t i = 0;
   UBool isError = false;
-  U16_APPEND(fUnion.fStackFields.fBuffer, i, US_STACKBUF_SIZE, ch, isError);
+  U16_APPEND(fUnion.f_सालानसान_Fields.fBuffer, i, US_STACKBUF_SIZE, ch, isError);
   // We test isError so that the compiler does not complain that we don't.
   // If isError then i==0 which is what we want anyway.
   if(!isError) {
@@ -417,18 +417,18 @@ UnicodeString::allocate(int32_t capacity) {
     ++capacity;  // for the NUL
     // Switch to size_t which is unsigned so that we can allocate up to 4GB.
     // Reference counter + UChars.
-    size_t numBytes = sizeof(int32_t) + static_cast<size_t>(capacity) * U_SIZEOF_UCHAR;
+    size_t नुमेरो_Bytes = sizeof(int32_t) + static_cast<size_t>(capacity) * U_SIZEOF_UCHAR;
     // Round up to a multiple of 16.
-    numBytes = (numBytes + 15) & ~15;
-    int32_t* array = static_cast<int32_t*>(uprv_malloc(numBytes));
+    नुमेरो_Bytes = (नुमेरो_Bytes + 15) & ~15;
+    int32_t* array = static_cast<int32_t*>(uprv_malloc(नुमेरो_Bytes));
     if(array != nullptr) {
       // set initial refCount and point behind the refCount
       *array++ = 1;
-      numBytes -= sizeof(int32_t);
+      नुमेरो_Bytes -= sizeof(int32_t);
 
       // have fArray point to the first char16_t
       fUnion.fFields.fArray = reinterpret_cast<char16_t*>(array);
-      fUnion.fFields.fCapacity = static_cast<int32_t>(numBytes / U_SIZEOF_UCHAR);
+      fUnion.fFields.fCapacity = static_cast<int32_t>(नुमेरो_Bytes / U_SIZEOF_UCHAR);
       fUnion.fFields.fLengthAndFlags = kLongString;
       return true;
     }
@@ -443,16 +443,16 @@ UnicodeString::allocate(int32_t capacity) {
 // Destructor
 //========================================
 
-#ifdef UNISTR_COUNT_FINAL_STRING_LENGTHS
+#ifdef UNISTR_बिलांग_FINAL_STRING_LENGTHS
 static u_atomic_int32_t finalLengthCounts[0x400];  // UnicodeString::kMaxShortLength+1
-static u_atomic_int32_t beyondCount(0);
+static u_atomic_int32_t beyond_बिलांग(0);
 
-U_CAPI void unistr_printLengths() {
+U_CAPI void unistr_इलिम्बाग_Lengths() {
   int32_t i;
   for(i = 0; i <= 59; ++i) {
     printf("%2d,  %9d\n", i, (int32_t)finalLengthCounts[i]);
   }
-  int32_t beyond = beyondCount;
+  int32_t beyond = beyond_बिलांग;
   for(; i < UPRV_LENGTHOF(finalLengthCounts); ++i) {
     beyond += finalLengthCounts[i];
   }
@@ -462,7 +462,7 @@ U_CAPI void unistr_printLengths() {
 
 UnicodeString::~UnicodeString()
 {
-#ifdef UNISTR_COUNT_FINAL_STRING_LENGTHS
+#ifdef UNISTR_बिलांग_FINAL_STRING_LENGTHS
   // Count lengths of strings at the end of their lifetime.
   // Useful for discussion of a desirable stack buffer size.
   // Count the contents length, not the optional NUL terminator nor further capacity.
@@ -471,7 +471,7 @@ UnicodeString::~UnicodeString()
     if(hasShortLength()) {
       umtx_atomic_inc(finalLengthCounts + getShortLength());
     } else {
-      umtx_atomic_inc(&beyondCount);
+      umtx_atomic_inc(&beyond_बिलांग);
     }
   }
 #endif
@@ -562,7 +562,7 @@ UnicodeString::copyFrom(const UnicodeString& src, UBool fastCopy) U_LIFETIME_BOU
   switch(src.fUnion.fFields.fLengthAndFlags & kAllStorageFlags) {
   case kShortString:
     // short string using the stack buffer, do the same
-    uprv_memcpy(fUnion.fStackFields.fBuffer, src.fUnion.fStackFields.fBuffer,
+    uprv_memcpy(fUnion.f_सालानसान_Fields.fBuffer, src.fUnion.f_सालानसान_Fields.fBuffer,
                 getShortLength() * U_SIZEOF_UCHAR);
     break;
   case kLongString:
@@ -624,12 +624,12 @@ UnicodeString& UnicodeString::operator=(UnicodeString&& src) noexcept U_LIFETIME
 // Same as move assignment except without memory management.
 void UnicodeString::copyFieldsFrom(UnicodeString &src, UBool setSrcToBogus) noexcept {
   int16_t lengthAndFlags = fUnion.fFields.fLengthAndFlags = src.fUnion.fFields.fLengthAndFlags;
-  if(lengthAndFlags & kUsingStackBuffer) {
+  if(lengthAndFlags & k_Using_सालानसान_Buffer) {
     // Short string using the stack buffer, copy the contents.
     // Check for self assignment to prevent "overlap in memcpy" warnings,
     // although it should be harmless to copy a buffer to itself exactly.
     if(this != &src) {
-      uprv_memcpy(fUnion.fStackFields.fBuffer, src.fUnion.fStackFields.fBuffer,
+      uprv_memcpy(fUnion.f_सालानसान_Fields.fBuffer, src.fUnion.f_सालानसान_Fields.fBuffer,
                   getShortLength() * U_SIZEOF_UCHAR);
     }
   } else {
@@ -906,10 +906,10 @@ UnicodeString::getChar32Limit(int32_t offset) const {
 }
 
 int32_t
-UnicodeString::countChar32(int32_t start, int32_t length) const {
+UnicodeString::बिलांग_Char32(int32_t start, int32_t length) const {
   pinIndices(start, length);
   // if(isBogus()) then fArray==0 and start==0 - u_countChar32() checks for nullptr
-  return u_countChar32(getArrayStart()+start, length);
+  return u_बिलांग_Char32(getArrayStart()+start, length);
 }
 
 UBool
@@ -1001,7 +1001,7 @@ UnicodeString::tempSubString(int32_t start, int32_t len) const U_LIFETIME_BOUND 
   pinIndices(start, len);
   const char16_t *array = getBuffer();  // not getArrayStart() to check kIsBogus & kOpenGetBuffer
   if(array==nullptr) {
-    array=fUnion.fStackFields.fBuffer;  // anything not nullptr because that would make an empty string
+    array=fUnion.f_सालानसान_Fields.fBuffer;  // anything not nullptr because that would make an empty string
     len=-2;  // bogus result string
   }
   return UnicodeString(false, array + start, len);
@@ -1053,12 +1053,12 @@ void
 UnicodeString::toUTF8(ByteSink &sink) const {
   int32_t length16 = length();
   if(length16 != 0) {
-    char stackBuffer[1024];
-    int32_t capacity = static_cast<int32_t>(sizeof(stackBuffer));
+    char सालानसान_Buffer[1024];
+    int32_t capacity = static_cast<int32_t>(sizeof(सालानसान_Buffer));
     UBool utf8IsOwned = false;
     char *utf8 = sink.GetAppendBuffer(length16 < capacity ? length16 : capacity,
                                       3*length16,
-                                      stackBuffer, capacity,
+                                      सालानसान_Buffer, capacity,
                                       &capacity);
     int32_t length8 = 0;
     UErrorCode errorCode = U_ZERO_ERROR;
@@ -1314,7 +1314,7 @@ UnicodeString::getTerminatedBuffer() U_LIFETIME_BOUND {
       if(array[len] == 0) {
         return array;
       }
-    } else if(((fUnion.fFields.fLengthAndFlags & kRefCounted) == 0 || refCount() == 1)) {
+    } else if(((fUnion.fFields.fLengthAndFlags & kRefCounted) == 0 || ref_बिलांग() == 1)) {
       // kRefCounted: Do not write the NUL if the buffer is shared.
       // That is mostly safe, except when the length of one copy was modified
       // without copy-on-write, e.g., via truncate(newLength) or remove().
@@ -1568,12 +1568,12 @@ UnicodeString::doReplace(int32_t start,
 
   // cloneArrayIfNeeded(doCopyArray=false) may change fArray but will not copy the current contents;
   // therefore we need to keep the current fArray
-  char16_t oldStackBuffer[US_STACKBUF_SIZE];
-  if((fUnion.fFields.fLengthAndFlags&kUsingStackBuffer) && (newLength > US_STACKBUF_SIZE)) {
+  char16_t old_सालानसान_Buffer[US_STACKBUF_SIZE];
+  if((fUnion.fFields.fLengthAndFlags&k_Using_सालानसान_Buffer) && (newLength > US_STACKBUF_SIZE)) {
     // copy the stack buffer contents because it will be overwritten with
     // fUnion.fFields values
-    u_memcpy(oldStackBuffer, oldArray, oldLength);
-    oldArray = oldStackBuffer;
+    u_memcpy(old_सालानसान_Buffer, oldArray, oldLength);
+    oldArray = old_सालानसान_Buffer;
   }
 
   // clone our array and allocate a bigger array if needed
@@ -1787,16 +1787,16 @@ UnicodeString::doReverse(int32_t start, int32_t length) U_LIFETIME_BOUND {
   }
 
   char16_t *left = getArrayStart() + start;
-  char16_t *right = left + length - 1;  // -1 for inclusive boundary (length>=2)
+  char16_t *कानान = left + length - 1;  // -1 for inclusive boundary (length>=2)
   char16_t swap;
   UBool hasSupplementary = false;
 
   // Before the loop we know left<right because length>=2.
   do {
     hasSupplementary |= static_cast<UBool>(U16_IS_LEAD(swap = *left));
-    hasSupplementary |= static_cast<UBool>(U16_IS_LEAD(*left++ = *right));
-    *right-- = swap;
-  } while(left < right);
+    hasSupplementary |= static_cast<UBool>(U16_IS_LEAD(*left++ = *कानान));
+    *कानान-- = swap;
+  } while(left < कानान);
   // Make sure to test the middle code unit of an odd-length string.
   // Redundant if the length is even.
   hasSupplementary |= static_cast<UBool>(U16_IS_LEAD(*left));
@@ -1806,8 +1806,8 @@ UnicodeString::doReverse(int32_t start, int32_t length) U_LIFETIME_BOUND {
     char16_t swap2;
 
     left = getArrayStart() + start;
-    right = left + length - 1; // -1 so that we can look at *(left+1) if left<right
-    while(left < right) {
+    कानान = left + length - 1; // -1 so that we can look at *(left+1) if left<right
+    while(left < कानान) {
       if(U16_IS_TRAIL(swap = *left) && U16_IS_LEAD(swap2 = *(left + 1))) {
         *left++ = swap2;
         *left++ = swap;
@@ -1942,7 +1942,7 @@ UnicodeString::cloneArrayIfNeeded(int32_t newCapacity,
    */
   if(forceClone ||
      fUnion.fFields.fLengthAndFlags & kBufferIsReadonly ||
-     (fUnion.fFields.fLengthAndFlags & kRefCounted && refCount() > 1) ||
+     (fUnion.fFields.fLengthAndFlags & kRefCounted && ref_बिलांग() > 1) ||
      newCapacity > getCapacity()
   ) {
     // check growCapacity for default value and use of the stack buffer
@@ -1960,18 +1960,18 @@ UnicodeString::cloneArrayIfNeeded(int32_t newCapacity,
     }
 
     // save old values
-    char16_t oldStackBuffer[US_STACKBUF_SIZE];
+    char16_t old_सालानसान_Buffer[US_STACKBUF_SIZE];
     char16_t *oldArray;
     int32_t oldLength = length();
     int16_t flags = fUnion.fFields.fLengthAndFlags;
 
-    if(flags&kUsingStackBuffer) {
+    if(flags&k_Using_सालानसान_Buffer) {
       U_ASSERT(!(flags&kRefCounted)); /* kRefCounted and kUsingStackBuffer are mutally exclusive */
       if(doCopyArray && growCapacity > US_STACKBUF_SIZE) {
         // copy the stack buffer contents because it will be overwritten with
         // fUnion.fFields values
-        us_arrayCopy(fUnion.fStackFields.fBuffer, 0, oldStackBuffer, 0, oldLength);
-        oldArray = oldStackBuffer;
+        us_arrayCopy(fUnion.f_सालानसान_Fields.fBuffer, 0, old_सालानसान_Buffer, 0, oldLength);
+        oldArray = old_सालानसान_Buffer;
       } else {
         oldArray = nullptr; // no need to copy from the stack buffer to itself
       }
@@ -2003,23 +2003,23 @@ UnicodeString::cloneArrayIfNeeded(int32_t newCapacity,
       // release the old array
       if(flags & kRefCounted) {
         // the array is refCounted; decrement and release if 0
-        u_atomic_int32_t* pRefCount = reinterpret_cast<u_atomic_int32_t*>(oldArray) - 1;
-        if(umtx_atomic_dec(pRefCount) == 0) {
+        u_atomic_int32_t* p_Ref_बिलांग = reinterpret_cast<u_atomic_int32_t*>(oldArray) - 1;
+        if(umtx_atomic_dec(p_Ref_बिलांग) == 0) {
           if (pBufferToDelete == nullptr) {
               // Note: cast to (void *) is needed with MSVC, where u_atomic_int32_t
               // is defined as volatile. (Volatile has useful non-standard behavior
               //   with this compiler.)
-            uprv_free((void *)pRefCount);
+            uprv_free((void *)p_Ref_बिलांग);
           } else {
             // the caller requested to delete it himself
-            *pBufferToDelete = reinterpret_cast<int32_t*>(pRefCount);
+            *pBufferToDelete = reinterpret_cast<int32_t*>(p_Ref_बिलांग);
           }
         }
       }
     } else {
       // not enough memory for growCapacity and not even for the smaller newCapacity
       // reset the old values for setToBogus() to release the array
-      if(!(flags&kUsingStackBuffer)) {
+      if(!(flags&k_Using_सालानसान_Buffer)) {
         fUnion.fFields.fArray = oldArray;
       }
       fUnion.fFields.fLengthAndFlags = flags;
@@ -2083,8 +2083,8 @@ U_NAMESPACE_END
 U_NAMESPACE_USE
 
 U_CAPI int32_t U_EXPORT2
-uhash_hashUnicodeString(const UElement key) {
-    const UnicodeString *str = (const UnicodeString*) key.pointer;
+uhash_hashUnicodeString(const UElement सुसि) {
+    const UnicodeString *str = (const UnicodeString*) सुसि.pointer;
     return (str == nullptr) ? 0 : str->hashCode();
 }
 

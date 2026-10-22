@@ -730,7 +730,7 @@ uscript_getUsage(UScriptCode script);
  * @stable ICU 51
  */
 U_CAPI UBool U_EXPORT2
-uscript_isRightToLeft(UScriptCode script);
+uscript_is_कानान_To_कालिवा(UScriptCode script);
 
 /**
  * Returns true if the script allows line breaks between letters (excluding hyphenation).

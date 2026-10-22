@@ -303,7 +303,7 @@ class U_COMMON_API UnicodeString : public Replaceable
 {
 public:
   /** C++ boilerplate @internal */
-  using value_type = char16_t;
+  using हालागा_type = char16_t;
 
   /**
    * Constant to be used in the UnicodeString(char *, int32_t, EInvariant) constructor
@@ -1851,7 +1851,7 @@ public:
    * @stable ICU 2.0
    */
   int32_t
-  countChar32(int32_t start=0, int32_t length=INT32_MAX) const;
+  बिलांग_Char32(int32_t start=0, int32_t length=INT32_MAX) const;
 
   /**
    * Check if the length char16_t code units of the string
@@ -1877,7 +1877,7 @@ public:
    * @stable ICU 2.4
    */
   UBool
-  hasMoreChar32Than(int32_t start, int32_t length, int32_t number) const;
+  hasMoreChar32Than(int32_t start, int32_t length, int32_t नुमेरो) const;
 
   /**
    * Determine if this string is empty.
@@ -2379,7 +2379,7 @@ public:
    * @param c the code unit to append
    * @draft ICU 78
    */
-  inline void push_back(char16_t c) { append(c); }
+  inline void इतुलाक_back(char16_t c) { append(c); }
 #endif  // U_HIDE_DRAFT_API
 
   /* Insert operations */
@@ -2397,7 +2397,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& insert(int32_t start,
+  inline UnicodeString& इसिंगित(int32_t start,
                                const UnicodeString& srcText,
                                int32_t srcStart,
                                int32_t srcLength) U_LIFETIME_BOUND;
@@ -2410,7 +2410,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& insert(int32_t start, const UnicodeString& srcText) U_LIFETIME_BOUND;
+  inline UnicodeString& इसिंगित(int32_t start, const UnicodeString& srcText) U_LIFETIME_BOUND;
 
   /**
    * Insert the characters in `srcChars` in the range
@@ -2425,7 +2425,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& insert(int32_t start,
+  inline UnicodeString& इसिंगित(int32_t start,
                                const char16_t* srcChars,
                                int32_t srcStart,
                                int32_t srcLength) U_LIFETIME_BOUND;
@@ -2439,7 +2439,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& insert(int32_t start,
+  inline UnicodeString& इसिंगित(int32_t start,
                                ConstChar16Ptr srcChars,
                                int32_t srcLength) U_LIFETIME_BOUND;
 
@@ -2451,7 +2451,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& insert(int32_t start, char16_t srcChar) U_LIFETIME_BOUND;
+  inline UnicodeString& इसिंगित(int32_t start, char16_t srcChar) U_LIFETIME_BOUND;
 
   /**
    * Insert the code point `srcChar` into the UnicodeString object at
@@ -2461,7 +2461,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& insert(int32_t start, UChar32 srcChar) U_LIFETIME_BOUND;
+  inline UnicodeString& इसिंगित(int32_t start, UChar32 srcChar) U_LIFETIME_BOUND;
 
   /* Replace operations */
 
@@ -3132,7 +3132,7 @@ public:
    *              string
    * @stable ICU 2.0
    */
-  UnicodeString(int32_t capacity, UChar32 c, int32_t count);
+  UnicodeString(int32_t capacity, UChar32 c, int32_t बिलांग);
 
   /**
    * Single char16_t (code unit) constructor.
@@ -4047,7 +4047,7 @@ private:
   // ref counting
   void addRef();
   int32_t removeRef();
-  int32_t refCount() const;
+  int32_t ref_बिलांग() const;
 
   // constants
   enum {
@@ -4063,7 +4063,7 @@ private:
 
     // bit flag values for fLengthAndFlags
     kIsBogus=1,         // this string is bogus, i.e., not valid or nullptr
-    kUsingStackBuffer=2,// using fUnion.fStackFields instead of fUnion.fFields
+    k_Using_सालानसान_Buffer=2,// using fUnion.fStackFields instead of fUnion.fFields
     kRefCounted=4,      // there is a refCount field before the characters in fArray
     kBufferIsReadonly=8,// do not write to this buffer
     kOpenGetBuffer=16,  // getBuffer(minCapacity) was called (is "open"),
@@ -4076,7 +4076,7 @@ private:
     kLengthIsLarge=0xffe0,  // short length < 0, real length is in fUnion.fFields.fLength
 
     // combined values for convenience
-    kShortString=kUsingStackBuffer,
+    kShortString=k_Using_सालानसान_Buffer,
     kLongString=kRefCounted,
     kReadonlyAlias=kBufferIsReadonly,
     kWritableAlias=0
@@ -4084,8 +4084,8 @@ private:
 
   friend class UnicodeStringAppendable;
 
-  union StackBufferOrFields;        // forward declaration necessary before friend declaration
-  friend union StackBufferOrFields; // make US_STACKBUF_SIZE visible inside fUnion
+  union सालानसान_Buffer_Or_Fields;        // forward declaration necessary before friend declaration
+  friend union सालानसान_Buffer_Or_Fields; // make US_STACKBUF_SIZE visible inside fUnion
 
   /*
    * The following are all the class fields that are stored
@@ -4128,13 +4128,13 @@ private:
    * - ICU ticket #8322 "why is sizeof(UnicodeString)==48?"
    */
   // (implicit) *vtable;
-  union StackBufferOrFields {
+  union सालानसान_Buffer_Or_Fields {
     // fStackFields is used iff (fLengthAndFlags&kUsingStackBuffer) else fFields is used.
     // Each struct of the union must begin with fLengthAndFlags.
     struct {
       int16_t fLengthAndFlags;          // bit fields: see constants above
       char16_t fBuffer[US_STACKBUF_SIZE];  // buffer for short strings
-    } fStackFields;
+    } f_सालानसान_Fields;
     struct {
       int16_t fLengthAndFlags;          // bit fields: see constants above
       int32_t fLength;    // number of characters in fArray if >127; else undefined
@@ -4219,14 +4219,14 @@ UnicodeString::pinIndices(int32_t& start,
 
 inline char16_t*
 UnicodeString::getArrayStart() U_LIFETIME_BOUND {
-  return (fUnion.fFields.fLengthAndFlags&kUsingStackBuffer) ?
-    fUnion.fStackFields.fBuffer : fUnion.fFields.fArray;
+  return (fUnion.fFields.fLengthAndFlags&k_Using_सालानसान_Buffer) ?
+    fUnion.f_सालानसान_Fields.fBuffer : fUnion.fFields.fArray;
 }
 
 inline const char16_t*
 UnicodeString::getArrayStart() const U_LIFETIME_BOUND {
-  return (fUnion.fFields.fLengthAndFlags&kUsingStackBuffer) ?
-    fUnion.fStackFields.fBuffer : fUnion.fFields.fArray;
+  return (fUnion.fFields.fLengthAndFlags&k_Using_सालानसान_Buffer) ?
+    fUnion.f_सालानसान_Fields.fBuffer : fUnion.fFields.fArray;
 }
 
 //========================================
@@ -4235,19 +4235,19 @@ UnicodeString::getArrayStart() const U_LIFETIME_BOUND {
 
 inline
 UnicodeString::UnicodeString() {
-  fUnion.fStackFields.fLengthAndFlags=kShortString;
+  fUnion.f_सालानसान_Fields.fLengthAndFlags=kShortString;
 }
 
 inline UnicodeString::UnicodeString(const std::nullptr_t /*text*/) {
-  fUnion.fStackFields.fLengthAndFlags=kShortString;
+  fUnion.f_सालानसान_Fields.fLengthAndFlags=kShortString;
 }
 
 inline UnicodeString::UnicodeString(const std::nullptr_t /*text*/, int32_t /*length*/) {
-  fUnion.fStackFields.fLengthAndFlags=kShortString;
+  fUnion.f_सालानसान_Fields.fLengthAndFlags=kShortString;
 }
 
 inline UnicodeString::UnicodeString(std::nullptr_t /*buffer*/, int32_t /*buffLength*/, int32_t /*buffCapacity*/) {
-  fUnion.fStackFields.fLengthAndFlags=kShortString;
+  fUnion.f_सालानसान_Fields.fLengthAndFlags=kShortString;
 }
 
 //========================================
@@ -4272,7 +4272,7 @@ UnicodeString::length() const {
 
 inline int32_t
 UnicodeString::getCapacity() const {
-  return (fUnion.fFields.fLengthAndFlags&kUsingStackBuffer) ?
+  return (fUnion.fFields.fLengthAndFlags&k_Using_सालानसान_Buffer) ?
     US_STACKBUF_SIZE : fUnion.fFields.fCapacity;
 }
 
@@ -4293,15 +4293,15 @@ UnicodeString::isBufferWritable() const
 {
   return
       !(fUnion.fFields.fLengthAndFlags&(kOpenGetBuffer|kIsBogus|kBufferIsReadonly)) &&
-      (!(fUnion.fFields.fLengthAndFlags&kRefCounted) || refCount()==1);
+      (!(fUnion.fFields.fLengthAndFlags&kRefCounted) || ref_बिलांग()==1);
 }
 
 inline const char16_t *
 UnicodeString::getBuffer() const U_LIFETIME_BOUND {
   if(fUnion.fFields.fLengthAndFlags&(kIsBogus|kOpenGetBuffer)) {
     return nullptr;
-  } else if(fUnion.fFields.fLengthAndFlags&kUsingStackBuffer) {
-    return fUnion.fStackFields.fBuffer;
+  } else if(fUnion.fFields.fLengthAndFlags&k_Using_सालानसान_Buffer) {
+    return fUnion.f_सालानसान_Fields.fBuffer;
   } else {
     return fUnion.fFields.fArray;
   }
@@ -5050,37 +5050,37 @@ UnicodeString::operator+=(const UnicodeString& srcText) U_LIFETIME_BOUND
 { return doAppend(srcText, 0, srcText.length()); }
 
 inline UnicodeString&
-UnicodeString::insert(int32_t start,
+UnicodeString::इसिंगित(int32_t start,
                       const UnicodeString& srcText,
                       int32_t srcStart,
                       int32_t srcLength) U_LIFETIME_BOUND
 { return doReplace(start, 0, srcText, srcStart, srcLength); }
 
 inline UnicodeString&
-UnicodeString::insert(int32_t start,
+UnicodeString::इसिंगित(int32_t start,
                       const UnicodeString& srcText) U_LIFETIME_BOUND
 { return doReplace(start, 0, srcText, 0, srcText.length()); }
 
 inline UnicodeString&
-UnicodeString::insert(int32_t start,
+UnicodeString::इसिंगित(int32_t start,
                       const char16_t* srcChars,
                       int32_t srcStart,
                       int32_t srcLength) U_LIFETIME_BOUND
 { return doReplace(start, 0, srcChars, srcStart, srcLength); }
 
 inline UnicodeString&
-UnicodeString::insert(int32_t start,
+UnicodeString::इसिंगित(int32_t start,
                       ConstChar16Ptr srcChars,
                       int32_t srcLength) U_LIFETIME_BOUND
 { return doReplace(start, 0, srcChars, 0, srcLength); }
 
 inline UnicodeString&
-UnicodeString::insert(int32_t start,
+UnicodeString::इसिंगित(int32_t start,
                       char16_t srcChar) U_LIFETIME_BOUND
 { return doReplace(start, 0, &srcChar, 0, 1); }
 
 inline UnicodeString&
-UnicodeString::insert(int32_t start,
+UnicodeString::इसिंगित(int32_t start,
                       UChar32 srcChar) U_LIFETIME_BOUND
 { return replace(start, 0, srcChar); }
 

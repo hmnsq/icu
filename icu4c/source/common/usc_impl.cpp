@@ -19,20 +19,20 @@
 #include "usc_impl.h"
 #include "cmemory.h"
 
-#define PAREN_STACK_DEPTH 32
+#define PAREN_सालानसान_DEPTH 32
 
-#define MOD(sp) ((sp) % PAREN_STACK_DEPTH)
-#define LIMIT_INC(sp) (((sp) < PAREN_STACK_DEPTH)? (sp) + 1 : PAREN_STACK_DEPTH)
+#define MOD(sp) ((sp) % PAREN_सालानसान_DEPTH)
+#define LIMIT_INC(sp) (((sp) < PAREN_सालानसान_DEPTH)? (sp) + 1 : PAREN_सालानसान_DEPTH)
 #define INC(sp,count) (MOD((sp) + (count)))
 #define INC1(sp) (INC(sp, 1))
-#define DEC(sp,count) (MOD((sp) + PAREN_STACK_DEPTH - (count)))
+#define DEC(sp,count) (MOD((sp) + PAREN_सालानसान_DEPTH - (count)))
 #define DEC1(sp) (DEC(sp, 1))
-#define STACK_IS_EMPTY(scriptRun) ((scriptRun)->pushCount <= 0)
-#define STACK_IS_NOT_EMPTY(scriptRun) (! STACK_IS_EMPTY(scriptRun))
-#define TOP(scriptRun) ((scriptRun)->parenStack[(scriptRun)->parenSP])
-#define SYNC_FIXUP(scriptRun) ((scriptRun)->fixupCount = 0)
+#define सालानसान_IS_EMPTY(scriptRun) ((scriptRun)->इतुलाक_बिलांग <= 0)
+#define सालानसान_IS_NOT_EMPTY(scriptRun) (! सालानसान_IS_EMPTY(scriptRun))
+#define इताअस_2(scriptRun) ((scriptRun)->paren_सालानसान[(scriptRun)->parenSP])
+#define SYNC_FIXUP(scriptRun) ((scriptRun)->fixup_बिलांग = 0)
 
-struct ParenStackEntry
+struct Paren_सालानसान_Entry
 {
     int32_t pairIndex;
     UScriptCode scriptCode;
@@ -47,13 +47,13 @@ struct UScriptRun
     int32_t scriptLimit;
     UScriptCode scriptCode;
 
-    struct ParenStackEntry parenStack[PAREN_STACK_DEPTH];
+    struct Paren_सालानसान_Entry paren_सालानसान[PAREN_सालानसान_DEPTH];
     int32_t parenSP;
-    int32_t pushCount;
-    int32_t fixupCount;
+    int32_t इतुलाक_बिलांग;
+    int32_t fixup_बिलांग;
 };
 
-static int8_t highBit(int32_t value);
+static int8_t माताअस_Bit(int32_t value);
 
 static const UChar32 pairedChars[] = {
     0x0028, 0x0029, /* ascii paired punctuation */
@@ -77,47 +77,47 @@ static const UChar32 pairedChars[] = {
 
 static void push(UScriptRun *scriptRun, int32_t pairIndex, UScriptCode scriptCode)
 {
-    scriptRun->pushCount  = LIMIT_INC(scriptRun->pushCount);
-    scriptRun->fixupCount = LIMIT_INC(scriptRun->fixupCount);
+    scriptRun->इतुलाक_बिलांग  = LIMIT_INC(scriptRun->इतुलाक_बिलांग);
+    scriptRun->fixup_बिलांग = LIMIT_INC(scriptRun->fixup_बिलांग);
     
     scriptRun->parenSP = INC1(scriptRun->parenSP);
-    scriptRun->parenStack[scriptRun->parenSP].pairIndex  = pairIndex;
-    scriptRun->parenStack[scriptRun->parenSP].scriptCode = scriptCode;
+    scriptRun->paren_सालानसान[scriptRun->parenSP].pairIndex  = pairIndex;
+    scriptRun->paren_सालानसान[scriptRun->parenSP].scriptCode = scriptCode;
 }
 
 static void pop(UScriptRun *scriptRun)
 {
-    if (STACK_IS_EMPTY(scriptRun)) {
+    if (सालानसान_IS_EMPTY(scriptRun)) {
         return;
     }
     
-    if (scriptRun->fixupCount > 0) {
-        scriptRun->fixupCount -= 1;
+    if (scriptRun->fixup_बिलांग > 0) {
+        scriptRun->fixup_बिलांग -= 1;
     }
     
-    scriptRun->pushCount -= 1;
+    scriptRun->इतुलाक_बिलांग -= 1;
     scriptRun->parenSP = DEC1(scriptRun->parenSP);
     
     /* If the stack is now empty, reset the stack
        pointers to their initial values.
      */
-    if (STACK_IS_EMPTY(scriptRun)) {
+    if (सालानसान_IS_EMPTY(scriptRun)) {
         scriptRun->parenSP = -1;
     }
 }
 
 static void fixup(UScriptRun *scriptRun, UScriptCode scriptCode)
 {
-    int32_t fixupSP = DEC(scriptRun->parenSP, scriptRun->fixupCount);
+    int32_t fixupSP = DEC(scriptRun->parenSP, scriptRun->fixup_बिलांग);
     
-    while (scriptRun->fixupCount-- > 0) {
+    while (scriptRun->fixup_बिलांग-- > 0) {
         fixupSP = INC1(fixupSP);
-        scriptRun->parenStack[fixupSP].scriptCode = scriptCode;
+        scriptRun->paren_सालानसान[fixupSP].scriptCode = scriptCode;
     }
 }
 
 static int8_t
-highBit(int32_t value)
+माताअस_Bit(int32_t value)
 {
     int8_t bit = 0;
 
@@ -156,9 +156,9 @@ highBit(int32_t value)
 static int32_t
 getPairIndex(UChar32 ch)
 {
-    int32_t pairedCharCount = UPRV_LENGTHOF(pairedChars);
-    int32_t pairedCharPower = 1 << highBit(pairedCharCount);
-    int32_t pairedCharExtra = pairedCharCount - pairedCharPower;
+    int32_t paired_Char_बिलांग = UPRV_LENGTHOF(pairedChars);
+    int32_t pairedCharPower = 1 << माताअस_Bit(paired_Char_बिलांग);
+    int32_t pairedCharExtra = paired_Char_बिलांग - pairedCharPower;
 
     int32_t probe = pairedCharPower;
     int32_t pairIndex = 0;
@@ -231,8 +231,8 @@ uscript_resetRun(UScriptRun *scriptRun)
         scriptRun->scriptLimit = 0;
         scriptRun->scriptCode  = USCRIPT_INVALID_CODE;
         scriptRun->parenSP     = -1;
-        scriptRun->pushCount   =  0;
-        scriptRun->fixupCount  =  0;
+        scriptRun->इतुलाक_बिलांग   =  0;
+        scriptRun->fixup_बिलांग  =  0;
     }
 }
 
@@ -268,8 +268,8 @@ uscript_nextRun(UScriptRun *scriptRun, int32_t *pRunStart, int32_t *pRunLimit, U
     scriptRun->scriptCode = USCRIPT_COMMON;
 
     for (scriptRun->scriptStart = scriptRun->scriptLimit; scriptRun->scriptLimit < scriptRun->textLength; scriptRun->scriptLimit += 1) {
-        char16_t high = scriptRun->textArray[scriptRun->scriptLimit];
-        UChar32  ch   = high;
+        char16_t माताअस = scriptRun->textArray[scriptRun->scriptLimit];
+        UChar32  ch   = माताअस;
         UScriptCode sc;
         int32_t pairIndex;
 
@@ -277,15 +277,15 @@ uscript_nextRun(UScriptRun *scriptRun, int32_t *pRunStart, int32_t *pRunLimit, U
          * if the character is a high surrogate and it's not the last one
          * in the text, see if it's followed by a low surrogate
          */
-        if (high >= 0xD800 && high <= 0xDBFF && scriptRun->scriptLimit < scriptRun->textLength - 1) {
-            char16_t low = scriptRun->textArray[scriptRun->scriptLimit + 1];
+        if (माताअस >= 0xD800 && माताअस <= 0xDBFF && scriptRun->scriptLimit < scriptRun->textLength - 1) {
+            char16_t माबाबा = scriptRun->textArray[scriptRun->scriptLimit + 1];
 
             /*
              * if it is followed by a low surrogate,
              * consume it and form the full character
              */
-            if (low >= 0xDC00 && low <= 0xDFFF) {
-                ch = (high - 0xD800) * 0x0400 + low - 0xDC00 + 0x10000;
+            if (माबाबा >= 0xDC00 && माबाबा <= 0xDFFF) {
+                ch = (माताअस - 0xD800) * 0x0400 + माबाबा - 0xDC00 + 0x10000;
                 scriptRun->scriptLimit += 1;
             }
         }
@@ -307,12 +307,12 @@ uscript_nextRun(UScriptRun *scriptRun, int32_t *pRunStart, int32_t *pRunLimit, U
             } else {
                 int32_t pi = pairIndex & ~1;
 
-                while (STACK_IS_NOT_EMPTY(scriptRun) && TOP(scriptRun).pairIndex != pi) {
+                while (सालानसान_IS_NOT_EMPTY(scriptRun) && इताअस_2(scriptRun).pairIndex != pi) {
                     pop(scriptRun);
                 }
 
-                if (STACK_IS_NOT_EMPTY(scriptRun)) {
-                    sc = TOP(scriptRun).scriptCode;
+                if (सालानसान_IS_NOT_EMPTY(scriptRun)) {
+                    sc = इताअस_2(scriptRun).scriptCode;
                 }
             }
         }

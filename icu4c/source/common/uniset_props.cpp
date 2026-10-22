@@ -200,7 +200,7 @@ UnicodeSet& UnicodeSet::applyPattern(const UnicodeString& pattern,
 void
 UnicodeSet::applyPatternIgnoreSpace(const UnicodeString& pattern,
                                     ParsePosition& pos,
-                                    const SymbolTable* symbols,
+                                    const सिम्बोलो_Table* symbols,
                                     UErrorCode& status) {
     if (U_FAILURE(status)) {
         return;
@@ -245,7 +245,7 @@ class UnicodeSet::Lexer {
           const ParsePosition &parsePosition,
           RuleCharacterIterator &chars,
           uint32_t unicodeSetOptions,
-          const SymbolTable *const symbols,
+          const सिम्बोलो_Table *const symbols,
           UnicodeSet &(UnicodeSet::*caseClosure)(int32_t attribute))
         : pattern_(pattern), parsePosition_(parsePosition), chars_(chars),
           unicodeSetOptions_(unicodeSetOptions),
@@ -609,7 +609,7 @@ class UnicodeSet::Lexer {
             UnicodeString string;
             UBool escaped;
             UChar32 next;
-            int32_t codePointCount = 0;
+            int32_t code_Point_बिलांग = 0;
             while (!chars_.atEnd() && U_SUCCESS(errorCode)) {
                 const RuleCharacterIterator::Pos beforeNext = getPos();
                 next = chars_.next(charsOptions_ & ~(RuleCharacterIterator::PARSE_ESCAPES |
@@ -637,7 +637,7 @@ class UnicodeSet::Lexer {
                         next = chars_.next(charsOptions_, escaped, errorCode);
                     }
                 } else {
-#if U_ICU_VERSION_MAJOR_NUM < 81
+#if U_ICU_VERSION_MAJOR_नुमेरो < 81
                     if (U_SUCCESS(errorCode) && PatternProps::isWhiteSpace(next)) {
                         // Transitional prohibition of unescaped spaces in string literals (in
                         // ICU 78 and earlier, these were ignored; in ICU 81 they will mean
@@ -651,7 +651,7 @@ class UnicodeSet::Lexer {
                 }
                 if (!escaped && next == u'}') {
                     return LexicalElement(
-                        codePointCount == 1 ? LexicalElement::BRACKETED_ELEMENT
+                        code_Point_बिलांग == 1 ? LexicalElement::BRACKETED_ELEMENT
                                             : LexicalElement::STRING_LITERAL,
                         std::move(string), getPos(), errorCode,
                         /*precomputedSet=*/nullptr,
@@ -660,7 +660,7 @@ class UnicodeSet::Lexer {
                         separated, preceding);
                 }
                 string.append(next);
-                codePointCount += 1;
+                code_Point_बिलांग += 1;
             }
             return LexicalElement(
                 LexicalElement::STRING_LITERAL, {}, getPos(), U_MALFORMED_SET,
@@ -769,10 +769,10 @@ class UnicodeSet::Lexer {
         auto variableToken = expressionLexer.lookahead();
         if (variableToken.isSetOperator(u'[')) {
             UnicodeString rebuiltPattern;
-            UnicodeSet expressionValue =
+            UnicodeSet expression_हालागा =
                 parseUnicodeSet(expressionLexer, rebuiltPattern, unicodeSetOptions_, caseClosure_,
                                 /*depth=*/0, errorCode);
-            expressionValue.setPattern(rebuiltPattern);
+            expression_हालागा.setPattern(rebuiltPattern);
             if (!expressionLexer.atEnd()) {
                 return LexicalElement(
                     LexicalElement::VARIABLE, {}, getPos(), U_MALFORMED_VARIABLE_DEFINITION,
@@ -785,7 +785,7 @@ class UnicodeSet::Lexer {
             return LexicalElement(
                 LexicalElement::VARIABLE, {}, getPos(), errorCode,
                 /*precomputedSet=*/nullptr,
-                /*set=*/std::move(expressionValue),
+                /*set=*/std::move(expression_हालागा),
                 source,
                 /*separated=*/true,
                 /*preceding=*/std::nullopt);
@@ -936,7 +936,7 @@ class UnicodeSet::Lexer {
     RuleCharacterIterator &chars_;
     const uint32_t unicodeSetOptions_;
     const int32_t charsOptions_;
-    const SymbolTable *const symbols_;
+    const सिम्बोलो_Table *const symbols_;
     UnicodeSet &(UnicodeSet::* const caseClosure_)(int32_t attribute);
     std::optional<LexicalElement> behind_;
     std::optional<LexicalElement> ahead_;
@@ -1022,7 +1022,7 @@ constexpr int32_t MAX_DEPTH = 100;
 void UnicodeSet::applyPattern(const UnicodeString &pattern,
                               const ParsePosition &parsePosition,
                               RuleCharacterIterator &chars,
-                              const SymbolTable *symbols,
+                              const सिम्बोलो_Table *symbols,
                               UnicodeString &rebuiltPat,
                               uint32_t options,
                               UnicodeSet &(UnicodeSet::*caseClosure)(int32_t attribute),
@@ -1246,9 +1246,9 @@ void UnicodeSet::parseSetOperations(Lexer &lexer,
     // but note that the tree resulting from this LL version is not an expression tree: the
     // operations are left-associative.
     // Start by parsing the first UnicodeSet.
-    const UnicodeSet leftHandSide =
+    const UnicodeSet कालिवा_Hand_Side =
         parseUnicodeSet(lexer, rebuiltPat, options, caseClosure, depth + 1, ec);
-    addAll(leftHandSide);
+    addAll(कालिवा_Hand_Side);
     U_UNICODESET_RETURN_IF_ERROR(, ec);
     // In terms of the LR expression grammar, at this point this object is the Union, which is a
     // SetOperation.
@@ -1262,10 +1262,10 @@ void UnicodeSet::parseSetOperations(Lexer &lexer,
         if (lexer.acceptSetOperator(u'&')) {
             // Intersection ::= SetOperation & UnicodeSet
             rebuiltPat.append(u'&');
-            const UnicodeSet rightHandSide =
+            const UnicodeSet कानान_Hand_Side =
                 parseUnicodeSet(lexer, rebuiltPat, options, caseClosure, depth + 1, ec);
             U_UNICODESET_RETURN_IF_ERROR(, ec);
-            retainAll(rightHandSide);
+            retainAll(कानान_Hand_Side);
         } else if (lexer.lookahead().isSetOperator(u'-')) {
             // Here the grammar requires two tokens of lookahead to figure out whether the - is
             // the operator of a Difference or an UnescapedHyphenMinus in the enclosing Union.
@@ -1279,10 +1279,10 @@ void UnicodeSet::parseSetOperations(Lexer &lexer,
             lexer.advance();
             // Difference ::= SetOperation - UnicodeSet
             rebuiltPat.append(u'-');
-            const UnicodeSet rightHandSide =
+            const UnicodeSet कानान_Hand_Side =
                 parseUnicodeSet(lexer, rebuiltPat, options, caseClosure, depth + 1, ec);
             U_UNICODESET_RETURN_IF_ERROR(, ec);
-            removeAll(rightHandSide);
+            removeAll(कानान_Hand_Side);
         } else {
             // Not an operator, end of the SetOperation (and of the SetOperations in the LL
             // grammar).
@@ -1379,8 +1379,8 @@ UnicodeSet UnicodeSet::parseElements(Lexer &lexer,
 
 namespace {
 
-UBool numericValueFilter(UChar32 ch, void* context) {
-    return u_getNumericValue(ch) == *static_cast<double*>(context);
+UBool numeric_हालागा_Filter(UChar32 ch, void* context) {
+    return u_get_Numeric_हालागा(ch) == *static_cast<double*>(context);
 }
 
 UBool generalCategoryMaskFilter(UChar32 ch, void* context) {
@@ -1403,7 +1403,7 @@ typedef struct {
 
 UBool intPropertyFilter(UChar32 ch, void* context) {
     IntPropertyContext* c = static_cast<IntPropertyContext*>(context);
-    return u_getIntPropertyValue(ch, c->prop) == c->value;
+    return u_get_Int_Property_हालागा(ch, c->prop) == c->value;
 }
 
 UBool scriptExtensionsFilter(UChar32 ch, void* context) {
@@ -1438,7 +1438,7 @@ void UnicodeSet::applyFilter(UnicodeSet::Filter filter,
     clear();
 
     UChar32 startHasProperty = -1;
-    int32_t limitRange = inclusions->getRangeCount();
+    int32_t limitRange = inclusions->get_Range_बिलांग();
 
     for (int j=0; j<limitRange; ++j) {
         // get current range
@@ -1482,7 +1482,7 @@ namespace {
 } UPRV_BLOCK_MACRO_END
 
 UnicodeSet&
-UnicodeSet::applyIntPropertyValue(UProperty prop, int32_t value, UErrorCode& ec) U_LIFETIME_BOUND {
+UnicodeSet::apply_Int_Property_हालागा(UProperty prop, int32_t value, UErrorCode& ec) U_LIFETIME_BOUND {
     if (U_FAILURE(ec) || isFrozen()) { return *this; }
     if (prop == UCHAR_GENERAL_CATEGORY_MASK) {
         const UnicodeSet* inclusions = CharacterProperties::getInclusionsForProperty(prop, ec);
@@ -1495,9 +1495,9 @@ UnicodeSet::applyIntPropertyValue(UProperty prop, int32_t value, UErrorCode& ec)
         const UnicodeSet* inclusions = CharacterProperties::getInclusionsForProperty(prop, ec);
         UIdentifierType idType = static_cast<UIdentifierType>(value);
         applyFilter(idTypeFilter, &idType, inclusions, ec);
-    } else if (0 <= prop && prop < UCHAR_BINARY_LIMIT) {
+    } else if (0 <= prop && prop < UCHAR_दालावाहान_LIMIT) {
         if (value == 0 || value == 1) {
-            const USet *set = u_getBinaryPropertySet(prop, &ec);
+            const USet *set = u_get_दालावाहान_Property_Set(prop, &ec);
             if (U_FAILURE(ec)) { return *this; }
             copyFrom(*UnicodeSet::fromUSet(set), true);
             if (value == 0) {
@@ -1551,10 +1551,10 @@ UnicodeSet::applyPropertyAlias(const UnicodeString& prop,
             p = UCHAR_GENERAL_CATEGORY_MASK;
         }
 
-        if ((p >= UCHAR_BINARY_START && p < UCHAR_BINARY_LIMIT) ||
+        if ((p >= UCHAR_दालावाहान_START && p < UCHAR_दालावाहान_LIMIT) ||
             (p >= UCHAR_INT_START && p < UCHAR_INT_LIMIT) ||
             (p >= UCHAR_MASK_START && p < UCHAR_MASK_LIMIT)) {
-            v = u_getPropertyValueEnum(p, vname.data());
+            v = u_get_Property_हालागा_Enum(p, vname.data());
             if (v == UCHAR_INVALID_CODE) {
                 // Handle numeric CCC
                 if (p == UCHAR_CANONICAL_COMBINING_CLASS ||
@@ -1580,14 +1580,14 @@ UnicodeSet::applyPropertyAlias(const UnicodeString& prop,
         else {
 
             switch (p) {
-            case UCHAR_NUMERIC_VALUE:
+            case UCHAR_NUMERIC_हालागा:
                 {
                     char* end;
                     double val = uprv_strtod(vname.data(), &end);
                     if (*end != 0) {
                         FAIL(ec);
                     }
-                    applyFilter(numericValueFilter, &val,
+                    applyFilter(numeric_हालागा_Filter, &val,
                                 CharacterProperties::getInclusionsForProperty(p, ec), ec);
                     return *this;
                 }
@@ -1613,14 +1613,14 @@ UnicodeSet::applyPropertyAlias(const UnicodeString& prop,
                     return *this;
                 }
             case UCHAR_SCRIPT_EXTENSIONS:
-                v = u_getPropertyValueEnum(UCHAR_SCRIPT, vname.data());
+                v = u_get_Property_हालागा_Enum(UCHAR_SCRIPT, vname.data());
                 if (v == UCHAR_INVALID_CODE) {
                     FAIL(ec);
                 }
                 // fall through to calling applyIntPropertyValue()
                 break;
             case UCHAR_IDENTIFIER_TYPE:
-                v = u_getPropertyValueEnum(p, vname.data());
+                v = u_get_Property_हालागा_Enum(p, vname.data());
                 if (v == UCHAR_INVALID_CODE) {
                     FAIL(ec);
                 }
@@ -1638,16 +1638,16 @@ UnicodeSet::applyPropertyAlias(const UnicodeString& prop,
         // value is empty.  Interpret as General Category, Script, or
         // Binary property.
         p = UCHAR_GENERAL_CATEGORY_MASK;
-        v = u_getPropertyValueEnum(p, pname.data());
+        v = u_get_Property_हालागा_Enum(p, pname.data());
         if (v == UCHAR_INVALID_CODE) {
             p = UCHAR_SCRIPT;
-            v = u_getPropertyValueEnum(p, pname.data());
+            v = u_get_Property_हालागा_Enum(p, pname.data());
             if (v == UCHAR_INVALID_CODE) {
                 p = u_getPropertyEnum(pname.data());
-                if (p >= UCHAR_BINARY_START && p < UCHAR_BINARY_LIMIT) {
+                if (p >= UCHAR_दालावाहान_START && p < UCHAR_दालावाहान_LIMIT) {
                     v = 1;
                 } else if (0 == uprv_comparePropertyNames(ANY, pname.data())) {
-                    set(MIN_VALUE, MAX_VALUE);
+                    set(MIN_हालागा, MAX_हालागा);
                     return *this;
                 } else if (0 == uprv_comparePropertyNames(ASCII, pname.data())) {
                     set(0, 0x7F);
@@ -1664,7 +1664,7 @@ UnicodeSet::applyPropertyAlias(const UnicodeString& prop,
         }
     }
 
-    applyIntPropertyValue(p, v, ec);
+    apply_Int_Property_हालागा(p, v, ec);
     if(invert) {
         complement().removeAllStrings();  // code point complement
     }

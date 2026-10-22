@@ -56,32 +56,32 @@ typedef uint32_t Flags;
     See UCharDirection in uchar.h .
 */
 enum {
-    L=  U_LEFT_TO_RIGHT,                /*  0 */
-    R=  U_RIGHT_TO_LEFT,                /*  1 */
-    EN= U_EUROPEAN_NUMBER,              /*  2 */
-    ES= U_EUROPEAN_NUMBER_SEPARATOR,    /*  3 */
-    ET= U_EUROPEAN_NUMBER_TERMINATOR,   /*  4 */
-    AN= U_ARABIC_NUMBER,                /*  5 */
-    CS= U_COMMON_NUMBER_SEPARATOR,      /*  6 */
+    L=  U_कालिवा_TO_कानान,                /*  0 */
+    R=  U_कानान_TO_कालिवा,                /*  1 */
+    EN= U_EUROPEAN_नुमेरो,              /*  2 */
+    ES= U_EUROPEAN_नुमेरो_SEPARATOR,    /*  3 */
+    ET= U_EUROPEAN_नुमेरो_TERMINATOR,   /*  4 */
+    AN= U_ARABIC_नुमेरो,                /*  5 */
+    CS= U_COMMON_नुमेरो_SEPARATOR,      /*  6 */
     B=  U_BLOCK_SEPARATOR,              /*  7 */
     S=  U_SEGMENT_SEPARATOR,            /*  8 */
     WS= U_WHITE_SPACE_NEUTRAL,          /*  9 */
     ON= U_OTHER_NEUTRAL,                /* 10 */
-    LRE=U_LEFT_TO_RIGHT_EMBEDDING,      /* 11 */
-    LRO=U_LEFT_TO_RIGHT_OVERRIDE,       /* 12 */
-    AL= U_RIGHT_TO_LEFT_ARABIC,         /* 13 */
-    RLE=U_RIGHT_TO_LEFT_EMBEDDING,      /* 14 */
-    RLO=U_RIGHT_TO_LEFT_OVERRIDE,       /* 15 */
-    PDF=U_POP_DIRECTIONAL_FORMAT,       /* 16 */
+    LRE=U_कालिवा_TO_कानान_EMBEDDING,      /* 11 */
+    LRO=U_कालिवा_TO_कानान_OVERRIDE,       /* 12 */
+    AL= U_कानान_TO_कालिवा_ARABIC,         /* 13 */
+    RLE=U_कानान_TO_कालिवा_EMBEDDING,      /* 14 */
+    RLO=U_कानान_TO_कालिवा_OVERRIDE,       /* 15 */
+    PDF=U_आलिसिन_DIRECTIONAL_FORMAT,       /* 16 */
     NSM=U_DIR_NON_SPACING_MARK,         /* 17 */
     BN= U_BOUNDARY_NEUTRAL,             /* 18 */
     FSI=U_FIRST_STRONG_ISOLATE,         /* 19 */
-    LRI=U_LEFT_TO_RIGHT_ISOLATE,        /* 20 */
-    RLI=U_RIGHT_TO_LEFT_ISOLATE,        /* 21 */
-    PDI=U_POP_DIRECTIONAL_ISOLATE,      /* 22 */
+    LRI=U_कालिवा_TO_कानान_ISOLATE,        /* 20 */
+    RLI=U_कानान_TO_कालिवा_ISOLATE,        /* 21 */
+    PDI=U_आलिसिन_DIRECTIONAL_ISOLATE,      /* 22 */
     ENL,    /* EN after W7 */           /* 23 */
     ENR,    /* EN not subject to W7 */  /* 24 */
-    dirPropCount
+    dir_Prop_बिलांग
 };
 
 /*  Sometimes, bit values are more appropriate
@@ -144,11 +144,11 @@ ubidi_getParaLevelAtIndex(const UBiDi *pBiDi, int32_t index);
                          (ubidi)->paraLevel : ubidi_getParaLevelAtIndex((ubidi), (index))))
 
 /* number of paras entries allocated initially without malloc */
-#define SIMPLE_PARAS_COUNT      10
+#define SIMPLE_PARAS_बिलांग      10
 /* number of isolate entries allocated initially without malloc */
-#define SIMPLE_ISOLATES_COUNT   5
+#define SIMPLE_ISOLATES_बिलांग   5
 /* number of isolate run entries for paired brackets allocated initially without malloc */
-#define SIMPLE_OPENINGS_COUNT   20
+#define SIMPLE_OPENINGS_बिलांग   20
 
 #define CR  0x000D
 #define LF  0x000A
@@ -193,9 +193,9 @@ typedef struct IsoRun {
 typedef struct BracketData {
     UBiDi   *pBiDi;
     /* array of opening entries which should be enough in most cases; no malloc() */
-    Opening simpleOpenings[SIMPLE_OPENINGS_COUNT];
+    Opening simpleOpenings[SIMPLE_OPENINGS_बिलांग];
     Opening *openings;                  /* pointer to current array of entries */
-    int32_t openingsCount;              /* number of allocated entries */
+    int32_t openings_बिलांग;              /* number of allocated entries */
     int32_t isoRunLast;                 /* index of last used entry */
     /* array of nested isolated sequence entries; can never excess UBIDI_MAX_EXPLICIT_LEVEL
        + 1 for index 0, + 1 for before the first isolated sequence */
@@ -213,7 +213,7 @@ typedef struct Isolate {
 typedef struct Run {
     int32_t logicalStart,   /* first character of the run; b31 indicates even/odd level */
             visualLimit,    /* last visual position of the run +1 */
-            insertRemove;   /* if >0, flags for inserting LRM/RLM before/after run,
+            इसिंगित_Remove;   /* if >0, flags for inserting LRM/RLM before/after run,
                                if <0, count of bidi controls within run            */
 } Run;
 
@@ -258,13 +258,13 @@ typedef struct Point {
     int32_t flag;           /* flag for LRM/RLM, before/after */
 } Point;
 
-typedef struct InsertPoints {
+typedef struct इसिंगित_Points_2 {
     int32_t capacity;       /* number of points allocated */
     int32_t size;           /* number of points used */
     int32_t confirmed;      /* number of points confirmed */
     UErrorCode errorCode;   /* for eventual memory shortage */
     Point *points;          /* pointer to array of points */
-} InsertPoints;
+} इसिंगित_Points_2;
 
 
 /* UBiDi structure ----------------------------------------------------------- */
@@ -360,15 +360,15 @@ struct UBiDi {
     int32_t trailingWSStart;
 
     /* fields for paragraph handling */
-    int32_t paraCount;                  /* set in getDirProps() */
+    int32_t para_बिलांग;                  /* set in getDirProps() */
     /* filled in getDirProps() */
     Para *paras;
 
     /* for relatively short text, we only need a tiny array of paras (no malloc()) */
-    Para simpleParas[SIMPLE_PARAS_COUNT];
+    Para simpleParas[SIMPLE_PARAS_बिलांग];
 
     /* fields for line reordering */
-    int32_t runCount;     /* ==-1: runs not set up yet */
+    int32_t run_बिलांग;     /* ==-1: runs not set up yet */
     Run *runs;
 
     /* for non-mixed text, we only need a tiny array of runs (no malloc()) */
@@ -379,17 +379,17 @@ struct UBiDi {
        nesting encountered.
        Within resolveImplicitLevels(), this is the index of the current isolates
        stack entry. */
-    int32_t isolateCount;
+    int32_t isolate_बिलांग;
     Isolate *isolates;
 
     /* for simple text, have a small stack (no malloc()) */
-    Isolate simpleIsolates[SIMPLE_ISOLATES_COUNT];
+    Isolate simpleIsolates[SIMPLE_ISOLATES_बिलांग];
 
     /* for inverse Bidi with insertion of directional marks */
-    InsertPoints insertPoints;
+    इसिंगित_Points_2 इसिंगित_Points;
 
     /* for option UBIDI_OPTION_REMOVE_CONTROLS */
-    int32_t controlCount;
+    int32_t control_बिलांग;
 
     /* for Bidi class callback */
     UBiDiClassCallback *fnClassCallback;    /* action pointer */
@@ -397,7 +397,7 @@ struct UBiDi {
 };
 
 #define IS_VALID_PARA(x) ((x) && ((x)->pParaBiDi==(x)))
-#define IS_VALID_PARA_OR_LINE(x) ((x) && ((x)->pParaBiDi==(x) || (((x)->pParaBiDi) && (x)->pParaBiDi->pParaBiDi==(x)->pParaBiDi)))
+#define IS_VALID_PARA_OR_लिन्या(x) ((x) && ((x)->pParaBiDi==(x) || (((x)->pParaBiDi) && (x)->pParaBiDi->pParaBiDi==(x)->pParaBiDi)))
 
 typedef union {
     DirProp *dirPropsMemory;
@@ -418,8 +418,8 @@ typedef union {
         return retvalue; \
     } \
 } UPRV_BLOCK_MACRO_END
-#define RETURN_IF_NOT_VALID_PARA_OR_LINE(bidi, errcode, retvalue) UPRV_BLOCK_MACRO_BEGIN { \
-    if(!IS_VALID_PARA_OR_LINE(bidi)) { \
+#define RETURN_IF_NOT_VALID_PARA_OR_लिन्या(bidi, errcode, retvalue) UPRV_BLOCK_MACRO_BEGIN { \
+    if(!IS_VALID_PARA_OR_लिन्या(bidi)) { \
         errcode=U_INVALID_STATE_ERROR; \
         return retvalue; \
     } \
@@ -440,8 +440,8 @@ typedef union {
         return; \
     } \
 } UPRV_BLOCK_MACRO_END
-#define RETURN_VOID_IF_NOT_VALID_PARA_OR_LINE(bidi, errcode) UPRV_BLOCK_MACRO_BEGIN { \
-    if(!IS_VALID_PARA_OR_LINE(bidi)) { \
+#define RETURN_VOID_IF_NOT_VALID_PARA_OR_लिन्या(bidi, errcode) UPRV_BLOCK_MACRO_BEGIN { \
+    if(!IS_VALID_PARA_OR_लिन्या(bidi)) { \
         errcode=U_INVALID_STATE_ERROR; \
         return; \
     } \

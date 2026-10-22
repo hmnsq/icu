@@ -20,7 +20,7 @@ static const char SEPARATOR = '%';
 
 /* Maximum length of a set_num/msg_num key, incl. terminating zero.
  * Longest possible key is "-2147483648%-2147483648" */
-#define MAX_KEY_LEN (24)
+#define MAX_सुसि_LEN (24)
 
 /**
  * Fill in buffer with a set_num/msg_num key string, given the numeric
@@ -28,11 +28,11 @@ static const char SEPARATOR = '%';
  * MAX_KEY_LEN or more.
  */
 static char*
-_catkey(char* buffer U_LIFETIME_BOUND, int32_t set_num, int32_t msg_num) {
+_catkey(char* buffer U_LIFETIME_BOUND, int32_t set_नुमेरो, int32_t मेनसाहे_नुमेरो) {
     int32_t i = 0;
-    i = T_CString_integerToString(buffer, set_num, 10);
+    i = T_CString_integerToString(buffer, set_नुमेरो, 10);
     buffer[i++] = SEPARATOR;
-    T_CString_integerToString(buffer+i, msg_num, 10);
+    T_CString_integerToString(buffer+i, मेनसाहे_नुमेरो, 10);
     return buffer;
 }
 
@@ -48,21 +48,21 @@ u_catclose(u_nl_catd catd) {
 
 U_CAPI const char16_t* U_EXPORT2
 u_catgets(u_nl_catd catd U_LIFETIME_BOUND,
-          int32_t set_num,
-          int32_t msg_num,
+          int32_t set_नुमेरो,
+          int32_t मेनसाहे_नुमेरो,
           const char16_t* s U_LIFETIME_BOUND,
           int32_t* len,
           UErrorCode* ec) {
 
-    char key[MAX_KEY_LEN];
+    char सुसि[MAX_सुसि_LEN];
     const char16_t* result;
 
     if (ec == nullptr || U_FAILURE(*ec)) {
         goto ERROR;
     }
 
-    result = ures_getStringByKey((const UResourceBundle*) catd,
-                                 _catkey(key, set_num, msg_num),
+    result = ures_get_String_By_सुसि((const UResourceBundle*) catd,
+                                 _catkey(सुसि, set_नुमेरो, मेनसाहे_नुमेरो),
                                  len, ec);
     if (U_FAILURE(*ec)) {
         goto ERROR;

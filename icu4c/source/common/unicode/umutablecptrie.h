@@ -62,7 +62,7 @@ typedef struct UMutableCPTrie UMutableCPTrie;
  * @stable ICU 63
  */
 U_CAPI UMutableCPTrie * U_EXPORT2
-umutablecptrie_open(uint32_t initialValue, uint32_t errorValue, UErrorCode *pErrorCode);
+umutablecptrie_open(uint32_t initial_हालागा, uint32_t error_हालागा, UErrorCode *pErrorCode);
 
 /**
  * Clones a mutable trie.
@@ -151,8 +151,8 @@ umutablecptrie_get(const UMutableCPTrie *trie, UChar32 c);
  */
 U_CAPI UChar32 U_EXPORT2
 umutablecptrie_getRange(const UMutableCPTrie *trie, UChar32 start,
-                        UCPMapRangeOption option, uint32_t surrogateValue,
-                        UCPMapValueFilter *filter, const void *context, uint32_t *pValue);
+                        UCPMapRangeOption option, uint32_t surrogate_हालागा,
+                        UCPMap_हालागा_Filter *filter, const void *context, uint32_t *p_हालागा);
 
 /**
  * Sets a value for a code point.
@@ -164,7 +164,7 @@ umutablecptrie_getRange(const UMutableCPTrie *trie, UChar32 start,
  * @stable ICU 63
  */
 U_CAPI void U_EXPORT2
-umutablecptrie_set(UMutableCPTrie *trie, UChar32 c, uint32_t value, UErrorCode *pErrorCode);
+umutablecptrie_set(UMutableCPTrie *trie, UChar32 c, uint32_t हालागा_2, UErrorCode *pErrorCode);
 
 /**
  * Sets a value for each code point [start..end].
@@ -180,7 +180,7 @@ umutablecptrie_set(UMutableCPTrie *trie, UChar32 c, uint32_t value, UErrorCode *
 U_CAPI void U_EXPORT2
 umutablecptrie_setRange(UMutableCPTrie *trie,
                         UChar32 start, UChar32 end,
-                        uint32_t value, UErrorCode *pErrorCode);
+                        uint32_t हालागा_2, UErrorCode *pErrorCode);
 
 /**
  * Compacts the data and builds an immutable UCPTrie according to the parameters.
@@ -213,7 +213,7 @@ umutablecptrie_setRange(UMutableCPTrie *trie,
  * @stable ICU 63
  */
 U_CAPI UCPTrie * U_EXPORT2
-umutablecptrie_buildImmutable(UMutableCPTrie *trie, UCPTrieType type, UCPTrieValueWidth valueWidth,
+umutablecptrie_buildImmutable(UMutableCPTrie *trie, UCPTrieType type, UCPTrie_हालागा_Width हालागा_Width,
                               UErrorCode *pErrorCode);
 
 U_CDECL_END

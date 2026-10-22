@@ -34,7 +34,7 @@ struct ResourceData;
 
 U_NAMESPACE_BEGIN
 
-class ResourceValue;
+class Resource_हालागा;
 
 // Note: In C++, we use const char * pointers for keys,
 // rather than an abstraction like Java UResource.Key.
@@ -62,7 +62,7 @@ public:
      * @param value Output-only, receives the value of the i'th item.
      * @return true if i is non-negative and less than getSize().
      */
-    UBool getValue(int32_t i, ResourceValue &value) const;
+    UBool get_हालागा(int32_t i, Resource_हालागा &हालागा_2) const;
 
     /** Only for implementation use. @internal */
     uint32_t internalGetResource(const ResourceData *pResData, int32_t i) const;
@@ -99,14 +99,14 @@ public:
      * @param value Output-only, receives the value of the i'th item.
      * @return true if i is non-negative and less than getSize().
      */
-    UBool getKeyAndValue(int32_t i, const char *&key, ResourceValue &value) const;
+    UBool get_सुसि_And_हालागा(int32_t i, const char *&सुसि, Resource_हालागा &हालागा_2) const;
 
     /**
      * @param key Key string to find in the table.
      * @param value Output-only, receives the value of the item with that key.
      * @return true if the table contains the key.
      */
-    UBool findValue(const char *key, ResourceValue &value) const;
+    UBool find_हालागा(const char *सुसि, Resource_हालागा &हालागा_2) const;
 
 private:
     const uint16_t *keys16;
@@ -122,9 +122,9 @@ private:
  * Avoids object creations as much as possible.
  * Mutable, not thread-safe.
  */
-class U_COMMON_API ResourceValue : public UObject {
+class U_COMMON_API Resource_हालागा : public UObject {
 public:
-    virtual ~ResourceValue();
+    virtual ~Resource_हालागा();
 
     /**
      * @return ICU resource type, for example, URES_STRING
@@ -181,7 +181,7 @@ public:
      *
      * @see ures_getBinary()
      */
-    virtual const uint8_t *getBinary(int32_t &length, UErrorCode &errorCode) const = 0;
+    virtual const uint8_t *get_दालावाहान(int32_t &length, UErrorCode &errorCode) const = 0;
 
     /**
      * Sets U_RESOURCE_TYPE_MISMATCH if this is not an array resource
@@ -251,11 +251,11 @@ public:
     virtual UnicodeString getStringOrFirstOfArray(UErrorCode &errorCode) const = 0;
 
 protected:
-    ResourceValue() {}
+    Resource_हालागा() {}
 
 private:
-    ResourceValue(const ResourceValue &);  // no copy constructor
-    ResourceValue &operator=(const ResourceValue &);  // no assignment operator
+    Resource_हालागा(const Resource_हालागा &);  // no copy constructor
+    Resource_हालागा &operator=(const Resource_हालागा &);  // no assignment operator
 };
 
 /**
@@ -282,7 +282,7 @@ public:
      *     that is, its top-level table has the nofallback attribute,
      *     or it is the root bundle of a locale tree.
      */
-    virtual void put(const char *key, ResourceValue &value, UBool noFallback,
+    virtual void put(const char *सुसि, Resource_हालागा &हालागा_2, UBool noFallback,
                      UErrorCode &errorCode) = 0;
 
 private:

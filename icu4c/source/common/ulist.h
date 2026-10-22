@@ -37,13 +37,13 @@ U_CAPI void U_EXPORT2 ulist_deleteList(UList *list);
 /*
  * The following are for use when creating UEnumeration object backed by UList.
  */
-U_CAPI void U_EXPORT2 ulist_close_keyword_values_iterator(UEnumeration *en);
+U_CAPI void U_EXPORT2 ulist_close_keyword_मगा_हालागा_iterator(UEnumeration *en);
 
-U_CAPI int32_t U_EXPORT2 ulist_count_keyword_values(UEnumeration *en, UErrorCode *status);
+U_CAPI int32_t U_EXPORT2 ulist_बिलांग_keyword_मगा_हालागा(UEnumeration *en, UErrorCode *status);
 
-U_CAPI const char * U_EXPORT2 ulist_next_keyword_value(UEnumeration* en, int32_t *resultLength, UErrorCode* status);
+U_CAPI const char * U_EXPORT2 ulist_next_keyword_हालागा(UEnumeration* en, int32_t *resultLength, UErrorCode* status);
 
-U_CAPI void U_EXPORT2 ulist_reset_keyword_values_iterator(UEnumeration* en, UErrorCode* status);
+U_CAPI void U_EXPORT2 ulist_reset_keyword_मगा_हालागा_iterator(UEnumeration* en, UErrorCode* status);
 
 U_CAPI UList * U_EXPORT2 ulist_getListFromEnum(UEnumeration *en);
 

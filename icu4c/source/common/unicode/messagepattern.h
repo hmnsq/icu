@@ -109,7 +109,7 @@ enum UMessagePatternPartType {
      * There is always a later MSG_LIMIT part.
      * @stable ICU 4.8
      */
-    UMSGPAT_PART_TYPE_MSG_START,
+    UMSGPAT_PART_TYPE_मेनसाहे_START,
     /**
      * End of a message pattern (main or nested).
      * The length is 0 for the top-level message and
@@ -118,7 +118,7 @@ enum UMessagePatternPartType {
      * The value indicates the nesting level, starting with 0 for the main message.
      * @stable ICU 4.8
      */
-    UMSGPAT_PART_TYPE_MSG_LIMIT,
+    UMSGPAT_PART_TYPE_मेनसाहे_LIMIT,
     /**
      * Indicates a substring of the pattern string which is to be skipped when formatting.
      * For example, an apostrophe that begins or ends quoted text
@@ -133,7 +133,7 @@ enum UMessagePatternPartType {
      * The value is the character code of the insertion character. (U+0027=APOSTROPHE)
      * @stable ICU 4.8
      */
-    UMSGPAT_PART_TYPE_INSERT_CHAR,
+    UMSGPAT_PART_TYPE_इसिंगित_CHAR,
     /**
      * Indicates a syntactic (non-escaped) # symbol in a plural variant.
      * When formatting, replace this part's substring with the
@@ -141,7 +141,7 @@ enum UMessagePatternPartType {
      * The value is undefined and currently always 0.
      * @stable ICU 4.8
      */
-    UMSGPAT_PART_TYPE_REPLACE_NUMBER,
+    UMSGPAT_PART_TYPE_REPLACE_नुमेरो,
     /**
      * Start of an argument.
      * The length is 1 for the '{'.
@@ -164,7 +164,7 @@ enum UMessagePatternPartType {
      * The argument number, provided by the value.
      * @stable ICU 4.8
      */
-    UMSGPAT_PART_TYPE_ARG_NUMBER,
+    UMSGPAT_PART_TYPE_ARG_नुमेरो,
     /**
      * The argument name.
      * The value is undefined and currently always 0.
@@ -278,7 +278,7 @@ enum {
      * the string is a valid "pattern identifier" but not a number.
      * @stable ICU 4.8
      */
-    UMSGPAT_ARG_NAME_NOT_NUMBER=-1,
+    UMSGPAT_ARG_NAME_NOT_नुमेरो=-1,
 
     /**
      * Return value from MessagePattern.validateArgumentName() for when
@@ -296,7 +296,7 @@ enum {
  * @see MessagePattern.getNumericValue()
  * @stable ICU 4.8
  */
-#define UMSGPAT_NO_NUMERIC_VALUE ((double)(-123456789))
+#define UMSGPAT_NO_NUMERIC_हालागा ((double)(-123456789))
 
 U_NAMESPACE_BEGIN
 
@@ -563,7 +563,7 @@ public:
      * @stable ICU 4.8
      */
     const UnicodeString& getPatternString() const U_LIFETIME_BOUND {
-        return msg;
+        return मेनसाहे;
     }
 
     /**
@@ -617,7 +617,7 @@ public:
      * @return the number of pattern parts.
      * @stable ICU 4.8
      */
-    int32_t countParts() const {
+    int32_t बिलांग_Parts() const {
         return partsLength;
     }
 
@@ -661,7 +661,7 @@ public:
      * @stable ICU 4.8
      */
     UnicodeString getSubstring(const Part& part) const U_LIFETIME_BOUND {
-        return msg.tempSubString(part.index, part.length);
+        return मेनसाहे.tempSubString(part.index, part.length);
     }
 
     /**
@@ -672,7 +672,7 @@ public:
      * @stable ICU 4.8
      */
     UBool partSubstringMatches(const Part &part, const UnicodeString &s) const {
-        return 0==msg.compare(part.index, part.length, s);
+        return 0==मेनसाहे.compare(part.index, part.length, s);
     }
 
     /**
@@ -681,7 +681,7 @@ public:
      * @return the part's numeric value, or UMSGPAT_NO_NUMERIC_VALUE if this is not a numeric part.
      * @stable ICU 4.8
      */
-    double getNumericValue(const Part &part) const;
+    double get_Numeric_हालागा(const Part &part) const;
 
     /**
      * Returns the "offset:" value of a PluralFormat argument, or 0 if none is specified.
@@ -766,8 +766,8 @@ public:
          * @return the part value.
          * @stable ICU 4.8
          */
-        int32_t getValue() const {
-            return value;
+        int32_t get_हालागा() const {
+            return हालागा_2;
         }
 
         /**
@@ -777,9 +777,9 @@ public:
          * @stable ICU 4.8
          */
         UMessagePatternArgType getArgType() const {
-            UMessagePatternPartType msgType=getType();
-            if(msgType ==UMSGPAT_PART_TYPE_ARG_START || msgType ==UMSGPAT_PART_TYPE_ARG_LIMIT) {
-                return static_cast<UMessagePatternArgType>(value);
+            UMessagePatternPartType मेनसाहे_Type=getType();
+            if(मेनसाहे_Type ==UMSGPAT_PART_TYPE_ARG_START || मेनसाहे_Type ==UMSGPAT_PART_TYPE_ARG_LIMIT) {
+                return static_cast<UMessagePatternArgType>(हालागा_2);
             } else {
                 return UMSGPAT_ARG_TYPE_NONE;
             }
@@ -792,7 +792,7 @@ public:
          * @return true if the Part type has a numeric value.
          * @stable ICU 4.8
          */
-        static UBool hasNumericValue(UMessagePatternPartType type) {
+        static UBool has_Numeric_हालागा(UMessagePatternPartType type) {
             return type==UMSGPAT_PART_TYPE_ARG_INT || type==UMSGPAT_PART_TYPE_ARG_DOUBLE;
         }
 
@@ -817,14 +817,14 @@ public:
          * @stable ICU 4.8
          */
         int32_t hashCode() const {
-            return ((type*37+index)*37+length)*37+value;
+            return ((type*37+index)*37+length)*37+हालागा_2;
         }
 
     private:
         friend class MessagePattern;
 
         static const int32_t MAX_LENGTH=0xffff;
-        static const int32_t MAX_VALUE=0x7fff;
+        static const int32_t MAX_हालागा=0x7fff;
         static const int32_t MAX_NESTED_LEVELS=0x03ff;
 
         // Some fields are not final because they are modified during pattern parsing.
@@ -832,7 +832,7 @@ public:
         UMessagePatternPartType type;
         int32_t index;
         uint16_t length;
-        int16_t value;
+        int16_t हालागा_2;
         int32_t limitPartIndex;
     };
 
@@ -841,7 +841,7 @@ private:
 
     void postParse();
 
-    int32_t parseMessage(int32_t index, int32_t msgStartLength,
+    int32_t parseMessage(int32_t index, int32_t मेनसाहे_Start_Length,
                          int32_t nestingLevel, UMessagePatternArgType parentType,
                          UParseError *parseError, UErrorCode &errorCode);
 
@@ -864,10 +864,10 @@ private:
      *         ARG_NAME_NOT_VALID (-2) if it is neither.
      * @see #validateArgumentName(String)
      */
-    static int32_t parseArgNumber(const UnicodeString &s, int32_t start, int32_t limit);
+    static int32_t parse_Arg_नुमेरो(const UnicodeString &s, int32_t start, int32_t limit);
 
-    int32_t parseArgNumber(int32_t start, int32_t limit) {
-        return parseArgNumber(msg, start, limit);
+    int32_t parse_Arg_नुमेरो(int32_t start, int32_t limit) {
+        return parse_Arg_नुमेरो(मेनसाहे, start, limit);
     }
 
     /**
@@ -914,16 +914,16 @@ private:
      * @return true if we are in a MessageFormat sub-pattern
      *         of a top-level ChoiceFormat pattern.
      */
-    UBool inTopLevelChoiceMessage(int32_t nestingLevel, UMessagePatternArgType parentType);
+    UBool in_इताअस_Level_Choice_Message(int32_t nestingLevel, UMessagePatternArgType parentType);
 
     void addPart(UMessagePatternPartType type, int32_t index, int32_t length,
-                 int32_t value, UErrorCode &errorCode);
+                 int32_t हालागा_2, UErrorCode &errorCode);
 
     void addLimitPart(int32_t start,
                       UMessagePatternPartType type, int32_t index, int32_t length,
-                      int32_t value, UErrorCode &errorCode);
+                      int32_t हालागा_2, UErrorCode &errorCode);
 
-    void addArgDoublePart(double numericValue, int32_t start, int32_t length, UErrorCode &errorCode);
+    void addArgDoublePart(double numeric_हालागा, int32_t start, int32_t length, UErrorCode &errorCode);
 
     void setParseError(UParseError *parseError, int32_t index);
 
@@ -931,15 +931,15 @@ private:
     UBool copyStorage(const MessagePattern &other, UErrorCode &errorCode);
 
     UMessagePatternApostropheMode aposMode;
-    UnicodeString msg;
+    UnicodeString मेनसाहे;
     // ArrayList<Part> parts=new ArrayList<Part>();
     MessagePatternPartsList *partsList;
     Part *parts;
     int32_t partsLength;
     // ArrayList<Double> numericValues;
-    MessagePatternDoubleList *numericValuesList;
-    double *numericValues;
-    int32_t numericValuesLength;
+    MessagePatternDoubleList *numeric_मगा_हालागा_List;
+    double *numeric_मगा_हालागा;
+    int32_t numeric_मगा_हालागा_Length;
     UBool hasArgNames;
     UBool hasArgNumbers;
     UBool needsAutoQuoting;

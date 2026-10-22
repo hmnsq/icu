@@ -85,7 +85,7 @@ class PropNameData {
 public:
     enum {
         // Byte offsets from the start of the data, after the generic header.
-        IX_VALUE_MAPS_OFFSET,
+        IX_हालागा_MAPS_OFFSET,
         IX_BYTE_TRIES_OFFSET,
         IX_NAME_GROUPS_OFFSET,
         IX_RESERVED3_OFFSET,
@@ -95,25 +95,25 @@ public:
         // Other values.
         IX_MAX_NAME_LENGTH,
         IX_RESERVED7,
-        IX_COUNT
+        IX_बिलांग
     };
 
     static const char *getPropertyName(int32_t property, int32_t nameChoice);
-    static const char *getPropertyValueName(int32_t property, int32_t value, int32_t nameChoice);
+    static const char *get_Property_हालागा_Name(int32_t property, int32_t हालागा_2, int32_t nameChoice);
 
     static int32_t getPropertyEnum(const char *alias);
-    static int32_t getPropertyValueEnum(int32_t property, const char *alias);
+    static int32_t get_Property_हालागा_Enum(int32_t property, const char *alias);
 
 private:
     static int32_t findProperty(int32_t property);
-    static int32_t findPropertyValueNameGroup(int32_t valueMapIndex, int32_t value);
+    static int32_t find_Property_हालागा_Name_Group(int32_t हालागा_Map_Index, int32_t हालागा_2);
     static const char *getName(const char *nameGroup, int32_t nameIndex);
     static UBool containsName(BytesTrie &trie, const char *name);
 
-    static int32_t getPropertyOrValueEnum(int32_t bytesTrieOffset, const char *alias);
+    static int32_t get_Property_Or_हालागा_Enum(int32_t bytesTrieOffset, const char *alias);
 
     static const int32_t indexes[];
-    static const int32_t valueMaps[];
+    static const int32_t हालागा_Maps[];
     static const uint8_t bytesTries[];
     static const char nameGroups[];
 };

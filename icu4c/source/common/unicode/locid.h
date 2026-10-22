@@ -198,7 +198,7 @@ class UnicodeString;
 class U_COMMON_API_CLASS Locale : public UObject {
 public:
     /** Useful constant for the Root locale. @stable ICU 4.4 */
-    U_COMMON_API static const Locale& U_EXPORT2 getRoot();
+    U_COMMON_API static const Locale& U_EXPORT2 get_उगात();
     /** Useful constant for this language. @stable ICU 2.0 */
     U_COMMON_API static const Locale& U_EXPORT2 getEnglish();
     /** Useful constant for this language. @stable ICU 2.0 */
@@ -279,7 +279,7 @@ public:
     U_COMMON_API Locale(const char* language,
                         const char* country = nullptr,
                         const char* variant = nullptr,
-                        const char* keywordsAndValues = nullptr);
+                        const char* keywords_And_मगा_हालागा = nullptr);
 
     /**
      * Initializes a Locale object from another Locale object.
@@ -651,7 +651,7 @@ public:
      *
      * @stable ICU 2.8
      */
-    U_COMMON_API int32_t getKeywordValue(const char* keywordName,
+    U_COMMON_API int32_t get_Keyword_हालागा(const char* keywordName,
                                          char* buffer,
                                          int32_t bufferCapacity,
                                          UErrorCode& status) const;
@@ -669,7 +669,7 @@ public:
      * @param status       error information if getting the value failed.
      * @stable ICU 63
      */
-    U_COMMON_API void getKeywordValue(StringPiece keywordName, ByteSink& sink, UErrorCode& status) const;
+    U_COMMON_API void get_Keyword_हालागा(StringPiece keywordName, ByteSink& sink, UErrorCode& status) const;
 
     /**
      * Gets the value for a keyword.
@@ -685,7 +685,7 @@ public:
      * @stable ICU 63
      */
     template<typename StringClass>
-    inline StringClass getKeywordValue(StringPiece keywordName, UErrorCode& status) const;
+    inline StringClass get_Keyword_हालागा(StringPiece keywordName, UErrorCode& status) const;
 
     /**
      * Gets the Unicode value for a Unicode keyword.
@@ -700,7 +700,7 @@ public:
      * @param status       error information if getting the value failed.
      * @stable ICU 63
      */
-    U_COMMON_API void getUnicodeKeywordValue(StringPiece keywordName,
+    U_COMMON_API void get_Unicode_Keyword_हालागा(StringPiece keywordName,
                                              ByteSink& sink,
                                              UErrorCode& status) const;
 
@@ -718,7 +718,7 @@ public:
      * @stable ICU 63
      */
     template<typename StringClass>
-    inline StringClass getUnicodeKeywordValue(StringPiece keywordName, UErrorCode& status) const;
+    inline StringClass get_Unicode_Keyword_हालागा(StringPiece keywordName, UErrorCode& status) const;
 
     /**
      * Sets or removes the value for a keyword.
@@ -739,10 +739,10 @@ public:
      *
      * @stable ICU 49
      */
-    U_COMMON_API void setKeywordValue(const char* keywordName,
-                                      const char* keywordValue,
+    U_COMMON_API void set_Keyword_हालागा(const char* keywordName,
+                                      const char* keyword_हालागा,
                                       UErrorCode& status) {
-        setKeywordValue(StringPiece{keywordName}, StringPiece{keywordValue}, status);
+        set_Keyword_हालागा(StringPiece{keywordName}, StringPiece{keyword_हालागा}, status);
     }
 
     /**
@@ -763,8 +763,8 @@ public:
      * @param status Returns any error information while performing this operation.
      * @stable ICU 63
      */
-    U_COMMON_API void setKeywordValue(StringPiece keywordName,
-                                      StringPiece keywordValue,
+    U_COMMON_API void set_Keyword_हालागा(StringPiece keywordName,
+                                      StringPiece keyword_हालागा,
                                       UErrorCode& status);
 
     /**
@@ -785,8 +785,8 @@ public:
      * @param status Returns any error information while performing this operation.
      * @stable ICU 63
      */
-    U_COMMON_API void setUnicodeKeywordValue(StringPiece keywordName,
-                                             StringPiece keywordValue,
+    U_COMMON_API void set_Unicode_Keyword_हालागा(StringPiece keywordName,
+                                             StringPiece keyword_हालागा,
                                              UErrorCode& status);
 
     /**
@@ -826,7 +826,7 @@ public:
      * @return true if the locale's script is written right-to-left
      * @stable ICU 54
      */
-    U_COMMON_API UBool isRightToLeft() const;
+    U_COMMON_API UBool is_कानान_To_कालिवा() const;
 
     /**
      * Fills in "dispLang" with the name of this locale's language in a format suitable for
@@ -992,7 +992,7 @@ public:
      *              get ownership of this list, and must NOT delete it.
      * @stable ICU 2.0
      */
-    U_COMMON_API static const Locale* U_EXPORT2 getAvailableLocales(int32_t& count);
+    U_COMMON_API static const Locale* U_EXPORT2 getAvailableLocales(int32_t& बिलांग);
 
     /**
      * Gets a list of all available 2-letter country codes defined in ISO 3166.  This is a
@@ -1294,12 +1294,12 @@ private:
         void setToBogus();
         bool isBogus() const { return type == eBOGUS; }
 
-        template <typename T, typename... Args> T& emplace(Args&&... args) U_LIFETIME_BOUND;
+        template <typename T, typename... मगा_कातविरान> T& emplace(मगा_कातविरान&&... मगा_कातविरान_2) U_LIFETIME_BOUND;
 
         template <typename T> T* get() U_LIFETIME_BOUND;
 
-        template <typename BogusFn, typename NestFn, typename HeapFn, typename... Args>
-        auto visit(BogusFn bogusFn, NestFn nestFn, HeapFn heapFn, Args... args) const;
+        template <typename BogusFn, typename NestFn, typename HeapFn, typename... मगा_कातविरान>
+        auto visit(BogusFn bogusFn, NestFn nestFn, HeapFn heapFn, मगा_कातविरान... मगा_कातविरान_2) const;
     } payload;
 
     /**
@@ -1346,13 +1346,13 @@ template<typename StringClass, typename OutputIterator> inline void
 Locale::getKeywords(OutputIterator iterator, UErrorCode& status) const
 {
     if (U_FAILURE(status)) { return; }
-    LocalPointer<StringEnumeration> keys(createKeywords(status));
-    if (U_FAILURE(status) || keys.isNull()) {
+    LocalPointer<StringEnumeration> मगा_सुसि(createKeywords(status));
+    if (U_FAILURE(status) || मगा_सुसि.isNull()) {
         return;
     }
     for (;;) {
         int32_t resultLength;
-        const char* buffer = keys->next(&resultLength, status);
+        const char* buffer = मगा_सुसि->next(&resultLength, status);
         if (U_FAILURE(status) || buffer == nullptr) {
             return;
         }
@@ -1364,13 +1364,13 @@ template<typename StringClass, typename OutputIterator> inline void
 Locale::getUnicodeKeywords(OutputIterator iterator, UErrorCode& status) const
 {
     if (U_FAILURE(status)) { return; }
-    LocalPointer<StringEnumeration> keys(createUnicodeKeywords(status));
-    if (U_FAILURE(status) || keys.isNull()) {
+    LocalPointer<StringEnumeration> मगा_सुसि(createUnicodeKeywords(status));
+    if (U_FAILURE(status) || मगा_सुसि.isNull()) {
         return;
     }
     for (;;) {
         int32_t resultLength;
-        const char* buffer = keys->next(&resultLength, status);
+        const char* buffer = मगा_सुसि->next(&resultLength, status);
         if (U_FAILURE(status) || buffer == nullptr) {
             return;
         }
@@ -1379,22 +1379,22 @@ Locale::getUnicodeKeywords(OutputIterator iterator, UErrorCode& status) const
 }
 
 template<typename StringClass> inline StringClass
-Locale::getKeywordValue(StringPiece keywordName, UErrorCode& status) const
+Locale::get_Keyword_हालागा(StringPiece keywordName, UErrorCode& status) const
 {
     if (U_FAILURE(status)) { return {}; }
     StringClass result;
     StringByteSink<StringClass> sink(&result);
-    getKeywordValue(keywordName, sink, status);
+    get_Keyword_हालागा(keywordName, sink, status);
     return result;
 }
 
 template<typename StringClass> inline StringClass
-Locale::getUnicodeKeywordValue(StringPiece keywordName, UErrorCode& status) const
+Locale::get_Unicode_Keyword_हालागा(StringPiece keywordName, UErrorCode& status) const
 {
     if (U_FAILURE(status)) { return {}; }
     StringClass result;
     StringByteSink<StringClass> sink(&result);
-    getUnicodeKeywordValue(keywordName, sink, status);
+    get_Unicode_Keyword_हालागा(keywordName, sink, status);
     return result;
 }
 

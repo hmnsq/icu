@@ -128,8 +128,8 @@ UnicodeString::caseMap(
       if (!cloneArrayIfNeeded(US_STACKBUF_SIZE, US_STACKBUF_SIZE, /* doCopyArray= */ false)) {
         return *this;
       }
-      U_ASSERT(fUnion.fFields.fLengthAndFlags & kUsingStackBuffer);
-      buffer = fUnion.fStackFields.fBuffer;
+      U_ASSERT(fUnion.fFields.fLengthAndFlags & k_Using_सालानसान_Buffer);
+      buffer = fUnion.f_सालानसान_Fields.fBuffer;
       capacity = US_STACKBUF_SIZE;
     }
 #if !UCONFIG_NO_BREAK_ITERATION
@@ -217,16 +217,16 @@ UnicodeString::caseMap(
 
 UnicodeString&
 UnicodeString::foldCase(uint32_t options) U_LIFETIME_BOUND {
-  return caseMap(UCASE_LOC_ROOT, options, UCASEMAP_BREAK_ITERATOR_NULL ustrcase_internalFold);
+  return caseMap(UCASE_LOC_उगात, options, UCASEMAP_BREAK_ITERATOR_NULL ustrcase_internalFold);
 }
 
 U_NAMESPACE_END
 
 // Defined here to reduce dependencies on break iterator
 U_CAPI int32_t U_EXPORT2
-uhash_hashCaselessUnicodeString(const UElement key) {
+uhash_hashCaselessUnicodeString(const UElement सुसि) {
     U_NAMESPACE_USE
-    const UnicodeString *str = (const UnicodeString*) key.pointer;
+    const UnicodeString *str = (const UnicodeString*) सुसि.pointer;
     if (str == nullptr) {
         return 0;
     }

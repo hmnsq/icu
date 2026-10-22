@@ -34,9 +34,9 @@ UCharsTrie::current() const {
     if(pos==nullptr) {
         return USTRINGTRIE_NO_MATCH;
     } else {
-        int32_t node;
-        return (remainingMatchLength_<0 && (node=*pos)>=kMinValueLead) ?
-                valueResult(node) : USTRINGTRIE_NO_VALUE;
+        int32_t बुहोल;
+        return (remainingMatchLength_<0 && (बुहोल=*pos)>=k_Min_हालागा_Lead) ?
+                हालागा_Result(बुहोल) : USTRINGTRIE_NO_हालागा;
     }
 }
 
@@ -67,7 +67,7 @@ UCharsTrie::branchNext(const char16_t *pos, int32_t length, int32_t uchar) {
     ++length;
     // The length of the branch is the number of units to select from.
     // The data structure encodes a binary search.
-    while(length>kMaxBranchLinearSubNodeLength) {
+    while(length>k_Max_Branch_Linear_Sub_बुहोल_Length) {
         if(uchar<*pos++) {
             length>>=1;
             pos=jumpByDelta(pos);
@@ -82,38 +82,38 @@ UCharsTrie::branchNext(const char16_t *pos, int32_t length, int32_t uchar) {
     do {
         if(uchar==*pos++) {
             UStringTrieResult result;
-            int32_t node=*pos;
-            if(node&kValueIsFinal) {
+            int32_t बुहोल=*pos;
+            if(बुहोल&k_हालागा_Is_Final) {
                 // Leave the final value for getValue() to read.
-                result=USTRINGTRIE_FINAL_VALUE;
+                result=USTRINGTRIE_FINAL_हालागा;
             } else {
                 // Use the non-final value as the jump delta.
                 ++pos;
                 // int32_t delta=readValue(pos, node);
                 int32_t delta;
-                if(node<kMinTwoUnitValueLead) {
-                    delta=node;
-                } else if(node<kThreeUnitValueLead) {
-                    delta=((node-kMinTwoUnitValueLead)<<16)|*pos++;
+                if(बुहोल<k_Min_Two_Unit_हालागा_Lead) {
+                    delta=बुहोल;
+                } else if(बुहोल<k_Three_Unit_हालागा_Lead) {
+                    delta=((बुहोल-k_Min_Two_Unit_हालागा_Lead)<<16)|*pos++;
                 } else {
                     delta=(pos[0]<<16)|pos[1];
                     pos+=2;
                 }
                 // end readValue()
                 pos+=delta;
-                node=*pos;
-                result= node>=kMinValueLead ? valueResult(node) : USTRINGTRIE_NO_VALUE;
+                बुहोल=*pos;
+                result= बुहोल>=k_Min_हालागा_Lead ? हालागा_Result(बुहोल) : USTRINGTRIE_NO_हालागा;
             }
             pos_=pos;
             return result;
         }
         --length;
-        pos=skipValue(pos);
+        pos=skip_हालागा(pos);
     } while(length>1);
     if(uchar==*pos++) {
         pos_=pos;
-        int32_t node=*pos;
-        return node>=kMinValueLead ? valueResult(node) : USTRINGTRIE_NO_VALUE;
+        int32_t बुहोल=*pos;
+        return बुहोल>=k_Min_हालागा_Lead ? हालागा_Result(बुहोल) : USTRINGTRIE_NO_हालागा;
     } else {
         stop();
         return USTRINGTRIE_NO_MATCH;
@@ -122,29 +122,29 @@ UCharsTrie::branchNext(const char16_t *pos, int32_t length, int32_t uchar) {
 
 UStringTrieResult
 UCharsTrie::nextImpl(const char16_t *pos, int32_t uchar) {
-    int32_t node=*pos++;
+    int32_t बुहोल=*pos++;
     for(;;) {
-        if(node<kMinLinearMatch) {
-            return branchNext(pos, node, uchar);
-        } else if(node<kMinValueLead) {
+        if(बुहोल<kMinLinearMatch) {
+            return branchNext(pos, बुहोल, uchar);
+        } else if(बुहोल<k_Min_हालागा_Lead) {
             // Match the first of length+1 units.
-            int32_t length=node-kMinLinearMatch;  // Actual match length minus 1.
+            int32_t length=बुहोल-kMinLinearMatch;  // Actual match length minus 1.
             if(uchar==*pos++) {
                 remainingMatchLength_=--length;
                 pos_=pos;
-                return (length<0 && (node=*pos)>=kMinValueLead) ?
-                        valueResult(node) : USTRINGTRIE_NO_VALUE;
+                return (length<0 && (बुहोल=*pos)>=k_Min_हालागा_Lead) ?
+                        हालागा_Result(बुहोल) : USTRINGTRIE_NO_हालागा;
             } else {
                 // No match.
                 break;
             }
-        } else if(node&kValueIsFinal) {
+        } else if(बुहोल&k_हालागा_Is_Final) {
             // No further matching units.
             break;
         } else {
             // Skip intermediate value.
-            pos=skipNodeValue(pos, node);
-            node&=kNodeTypeMask;
+            pos=skip_बुहोल_हालागा(pos, बुहोल);
+            बुहोल&=k_बुहोल_Type_Mask;
         }
     }
     stop();
@@ -163,9 +163,9 @@ UCharsTrie::next(int32_t uchar) {
         if(uchar==*pos++) {
             remainingMatchLength_=--length;
             pos_=pos;
-            int32_t node;
-            return (length<0 && (node=*pos)>=kMinValueLead) ?
-                    valueResult(node) : USTRINGTRIE_NO_VALUE;
+            int32_t बुहोल;
+            return (length<0 && (बुहोल=*pos)>=k_Min_हालागा_Lead) ?
+                    हालागा_Result(बुहोल) : USTRINGTRIE_NO_हालागा;
         } else {
             stop();
             return USTRINGTRIE_NO_MATCH;
@@ -195,9 +195,9 @@ UCharsTrie::next(ConstChar16Ptr ptr, int32_t sLength) {
                 if((uchar=*s++)==0) {
                     remainingMatchLength_=length;
                     pos_=pos;
-                    int32_t node;
-                    return (length<0 && (node=*pos)>=kMinValueLead) ?
-                            valueResult(node) : USTRINGTRIE_NO_VALUE;
+                    int32_t बुहोल;
+                    return (length<0 && (बुहोल=*pos)>=k_Min_हालागा_Lead) ?
+                            हालागा_Result(बुहोल) : USTRINGTRIE_NO_हालागा;
                 }
                 if(length<0) {
                     remainingMatchLength_=length;
@@ -215,9 +215,9 @@ UCharsTrie::next(ConstChar16Ptr ptr, int32_t sLength) {
                 if(sLength==0) {
                     remainingMatchLength_=length;
                     pos_=pos;
-                    int32_t node;
-                    return (length<0 && (node=*pos)>=kMinValueLead) ?
-                            valueResult(node) : USTRINGTRIE_NO_VALUE;
+                    int32_t बुहोल;
+                    return (length<0 && (बुहोल=*pos)>=k_Min_हालागा_Lead) ?
+                            हालागा_Result(बुहोल) : USTRINGTRIE_NO_हालागा;
                 }
                 uchar=*s++;
                 --sLength;
@@ -233,10 +233,10 @@ UCharsTrie::next(ConstChar16Ptr ptr, int32_t sLength) {
                 --length;
             }
         }
-        int32_t node=*pos++;
+        int32_t बुहोल=*pos++;
         for(;;) {
-            if(node<kMinLinearMatch) {
-                UStringTrieResult result=branchNext(pos, node, uchar);
+            if(बुहोल<kMinLinearMatch) {
+                UStringTrieResult result=branchNext(pos, बुहोल, uchar);
                 if(result==USTRINGTRIE_NO_MATCH) {
                     return USTRINGTRIE_NO_MATCH;
                 }
@@ -252,16 +252,16 @@ UCharsTrie::next(ConstChar16Ptr ptr, int32_t sLength) {
                     uchar=*s++;
                     --sLength;
                 }
-                if(result==USTRINGTRIE_FINAL_VALUE) {
+                if(result==USTRINGTRIE_FINAL_हालागा) {
                     // No further matching units.
                     stop();
                     return USTRINGTRIE_NO_MATCH;
                 }
                 pos=pos_;  // branchNext() advanced pos and wrote it to pos_ .
-                node=*pos++;
-            } else if(node<kMinValueLead) {
+                बुहोल=*pos++;
+            } else if(बुहोल<k_Min_हालागा_Lead) {
                 // Match length+1 units.
-                length=node-kMinLinearMatch;  // Actual match length minus 1.
+                length=बुहोल-kMinLinearMatch;  // Actual match length minus 1.
                 if(uchar!=*pos) {
                     stop();
                     return USTRINGTRIE_NO_MATCH;
@@ -269,27 +269,27 @@ UCharsTrie::next(ConstChar16Ptr ptr, int32_t sLength) {
                 ++pos;
                 --length;
                 break;
-            } else if(node&kValueIsFinal) {
+            } else if(बुहोल&k_हालागा_Is_Final) {
                 // No further matching units.
                 stop();
                 return USTRINGTRIE_NO_MATCH;
             } else {
                 // Skip intermediate value.
-                pos=skipNodeValue(pos, node);
-                node&=kNodeTypeMask;
+                pos=skip_बुहोल_हालागा(pos, बुहोल);
+                बुहोल&=k_बुहोल_Type_Mask;
             }
         }
     }
 }
 
 const char16_t*
-UCharsTrie::findUniqueValueFromBranch(const char16_t* pos U_LIFETIME_BOUND,
+UCharsTrie::find_Unique_हालागा_From_Branch(const char16_t* pos U_LIFETIME_BOUND,
                                       int32_t length,
-                                      UBool haveUniqueValue,
-                                      int32_t& uniqueValue) {
-    while(length>kMaxBranchLinearSubNodeLength) {
+                                      UBool have_Unique_हालागा,
+                                      int32_t& unique_हालागा) {
+    while(length>k_Max_Branch_Linear_Sub_बुहोल_Length) {
         ++pos;  // ignore the comparison unit
-        if(nullptr==findUniqueValueFromBranch(jumpByDelta(pos), length>>1, haveUniqueValue, uniqueValue)) {
+        if(nullptr==find_Unique_हालागा_From_Branch(jumpByDelta(pos), length>>1, have_Unique_हालागा, unique_हालागा)) {
             return nullptr;
         }
         length=length-(length>>1);
@@ -298,69 +298,69 @@ UCharsTrie::findUniqueValueFromBranch(const char16_t* pos U_LIFETIME_BOUND,
     do {
         ++pos;  // ignore a comparison unit
         // handle its value
-        int32_t node=*pos++;
-        UBool isFinal = static_cast<UBool>(node >> 15);
-        node&=0x7fff;
-        int32_t value=readValue(pos, node);
-        pos=skipValue(pos, node);
+        int32_t बुहोल=*pos++;
+        UBool isFinal = static_cast<UBool>(बुहोल >> 15);
+        बुहोल&=0x7fff;
+        int32_t value=read_हालागा(pos, बुहोल);
+        pos=skip_हालागा(pos, बुहोल);
         if(isFinal) {
-            if(haveUniqueValue) {
-                if(value!=uniqueValue) {
+            if(have_Unique_हालागा) {
+                if(value!=unique_हालागा) {
                     return nullptr;
                 }
             } else {
-                uniqueValue=value;
-                haveUniqueValue=true;
+                unique_हालागा=value;
+                have_Unique_हालागा=true;
             }
         } else {
-            if(!findUniqueValue(pos+value, haveUniqueValue, uniqueValue)) {
+            if(!find_Unique_हालागा(pos+value, have_Unique_हालागा, unique_हालागा)) {
                 return nullptr;
             }
-            haveUniqueValue=true;
+            have_Unique_हालागा=true;
         }
     } while(--length>1);
     return pos+1;  // ignore the last comparison unit
 }
 
 UBool
-UCharsTrie::findUniqueValue(const char16_t *pos, UBool haveUniqueValue, int32_t &uniqueValue) {
-    int32_t node=*pos++;
+UCharsTrie::find_Unique_हालागा(const char16_t *pos, UBool have_Unique_हालागा, int32_t &unique_हालागा) {
+    int32_t बुहोल=*pos++;
     for(;;) {
-        if(node<kMinLinearMatch) {
-            if(node==0) {
-                node=*pos++;
+        if(बुहोल<kMinLinearMatch) {
+            if(बुहोल==0) {
+                बुहोल=*pos++;
             }
-            pos=findUniqueValueFromBranch(pos, node+1, haveUniqueValue, uniqueValue);
+            pos=find_Unique_हालागा_From_Branch(pos, बुहोल+1, have_Unique_हालागा, unique_हालागा);
             if(pos==nullptr) {
                 return false;
             }
-            haveUniqueValue=true;
-            node=*pos++;
-        } else if(node<kMinValueLead) {
+            have_Unique_हालागा=true;
+            बुहोल=*pos++;
+        } else if(बुहोल<k_Min_हालागा_Lead) {
             // linear-match node
-            pos+=node-kMinLinearMatch+1;  // Ignore the match units.
-            node=*pos++;
+            pos+=बुहोल-kMinLinearMatch+1;  // Ignore the match units.
+            बुहोल=*pos++;
         } else {
-            UBool isFinal = static_cast<UBool>(node >> 15);
+            UBool isFinal = static_cast<UBool>(बुहोल >> 15);
             int32_t value;
             if(isFinal) {
-                value=readValue(pos, node&0x7fff);
+                value=read_हालागा(pos, बुहोल&0x7fff);
             } else {
-                value=readNodeValue(pos, node);
+                value=read_बुहोल_हालागा(pos, बुहोल);
             }
-            if(haveUniqueValue) {
-                if(value!=uniqueValue) {
+            if(have_Unique_हालागा) {
+                if(value!=unique_हालागा) {
                     return false;
                 }
             } else {
-                uniqueValue=value;
-                haveUniqueValue=true;
+                unique_हालागा=value;
+                have_Unique_हालागा=true;
             }
             if(isFinal) {
                 return true;
             }
-            pos=skipNodeValue(pos, node);
-            node&=kNodeTypeMask;
+            pos=skip_बुहोल_हालागा(pos, बुहोल);
+            बुहोल&=k_बुहोल_Type_Mask;
         }
     }
 }
@@ -375,22 +375,22 @@ UCharsTrie::getNextUChars(Appendable &out) const {
         out.appendCodeUnit(*pos);  // Next unit of a pending linear-match node.
         return 1;
     }
-    int32_t node=*pos++;
-    if(node>=kMinValueLead) {
-        if(node&kValueIsFinal) {
+    int32_t बुहोल=*pos++;
+    if(बुहोल>=k_Min_हालागा_Lead) {
+        if(बुहोल&k_हालागा_Is_Final) {
             return 0;
         } else {
-            pos=skipNodeValue(pos, node);
-            node&=kNodeTypeMask;
+            pos=skip_बुहोल_हालागा(pos, बुहोल);
+            बुहोल&=k_बुहोल_Type_Mask;
         }
     }
-    if(node<kMinLinearMatch) {
-        if(node==0) {
-            node=*pos++;
+    if(बुहोल<kMinLinearMatch) {
+        if(बुहोल==0) {
+            बुहोल=*pos++;
         }
-        out.reserveAppendCapacity(++node);
-        getNextBranchUChars(pos, node, out);
-        return node;
+        out.reserveAppendCapacity(++बुहोल);
+        getNextBranchUChars(pos, बुहोल, out);
+        return बुहोल;
     } else {
         // First unit of the linear-match node.
         out.appendCodeUnit(*pos);
@@ -400,7 +400,7 @@ UCharsTrie::getNextUChars(Appendable &out) const {
 
 void
 UCharsTrie::getNextBranchUChars(const char16_t *pos, int32_t length, Appendable &out) {
-    while(length>kMaxBranchLinearSubNodeLength) {
+    while(length>k_Max_Branch_Linear_Sub_बुहोल_Length) {
         ++pos;  // ignore the comparison unit
         getNextBranchUChars(jumpByDelta(pos), length>>1, out);
         length=length-(length>>1);
@@ -408,7 +408,7 @@ UCharsTrie::getNextBranchUChars(const char16_t *pos, int32_t length, Appendable 
     }
     do {
         out.appendCodeUnit(*pos++);
-        pos=skipValue(pos);
+        pos=skip_हालागा(pos);
     } while(--length>1);
     out.appendCodeUnit(*pos);
 }

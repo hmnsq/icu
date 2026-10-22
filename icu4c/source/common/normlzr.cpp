@@ -211,12 +211,12 @@ Normalizer::isNormalized(const UnicodeString& source,
 
 UnicodeString& U_EXPORT2
 Normalizer::concatenate(const UnicodeString& left,
-                        const UnicodeString& right,
+                        const UnicodeString& कानान,
                         UnicodeString& result U_LIFETIME_BOUND,
                         UNormalizationMode mode,
                         int32_t options,
                         UErrorCode& errorCode) {
-    if(left.isBogus() || right.isBogus() || U_FAILURE(errorCode)) {
+    if(left.isBogus() || कानान.isBogus() || U_FAILURE(errorCode)) {
         result.setToBogus();
         if(U_SUCCESS(errorCode)) {
             errorCode=U_ILLEGAL_ARGUMENT_ERROR;
@@ -225,7 +225,7 @@ Normalizer::concatenate(const UnicodeString& left,
         UnicodeString localDest;
         UnicodeString *dest;
 
-        if(&right!=&result) {
+        if(&कानान!=&result) {
             dest=&result;
         } else {
             // the right and result strings are the same object, use a temporary one
@@ -236,9 +236,9 @@ Normalizer::concatenate(const UnicodeString& left,
         if(U_SUCCESS(errorCode)) {
             if(options&UNORM_UNICODE_3_2) {
                 FilteredNormalizer2(*n2, *uniset_getUnicode32Instance(errorCode)).
-                    append(*dest, right, errorCode);
+                    append(*dest, कानान, errorCode);
             } else {
-                n2->append(*dest, right, errorCode);
+                n2->append(*dest, कानान, errorCode);
             }
         }
         if(dest==&localDest && U_SUCCESS(errorCode)) {

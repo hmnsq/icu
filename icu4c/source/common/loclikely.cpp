@@ -351,7 +351,7 @@ static const char LANG_DIR_STRING[] =
 
 // Implemented here because this calls ulocimp_addLikelySubtags().
 U_CAPI UBool U_EXPORT2
-uloc_isRightToLeft(const char *locale) {
+uloc_is_कानान_To_कालिवा(const char *locale) {
     UErrorCode errorCode = U_ZERO_ERROR;
     icu::CharString lang;
     icu::CharString script;
@@ -382,25 +382,25 @@ uloc_isRightToLeft(const char *locale) {
             return false;
         }
     }
-    UScriptCode scriptCode = (UScriptCode)u_getPropertyValueEnum(UCHAR_SCRIPT, script.data());
-    return uscript_isRightToLeft(scriptCode);
+    UScriptCode scriptCode = (UScriptCode)u_get_Property_हालागा_Enum(UCHAR_SCRIPT, script.data());
+    return uscript_is_कानान_To_कालिवा(scriptCode);
 }
 
 U_NAMESPACE_BEGIN
 
 UBool
-Locale::isRightToLeft() const {
-    return uloc_isRightToLeft(getBaseName());
+Locale::is_कानान_To_कालिवा() const {
+    return uloc_is_कानान_To_कालिवा(getBaseName());
 }
 
 U_NAMESPACE_END
 
 namespace {
 icu::CharString
-GetRegionFromKey(const char* localeID, std::string_view key, UErrorCode& status) {
+Get_Region_From_सुसि(const char* localeID, std::string_view सुसि, UErrorCode& status) {
     icu::CharString result;
     // First check for keyword value
-    icu::CharString kw = ulocimp_getKeywordValue(localeID, key, status);
+    icu::CharString kw = ulocimp_get_Keyword_हालागा(localeID, सुसि, status);
     int32_t len = kw.length();
     // In UTS35
     //   type = alphanum{3,8} (sep alphanum{3,8})* ;
@@ -435,13 +435,13 @@ ulocimp_getRegionForSupplementalData(const char *localeID, bool inferRegion,
     if (U_FAILURE(status)) {
         return {};
     }
-    icu::CharString rgBuf = GetRegionFromKey(localeID, "rg", status);
+    icu::CharString rgBuf = Get_Region_From_सुसि(localeID, "rg", status);
     if (U_SUCCESS(status) && rgBuf.isEmpty()) {
         // No valid rg keyword value, try for unicode_region_subtag
         rgBuf = ulocimp_getRegion(localeID == nullptr ? uloc_getDefault() : localeID, status);
         if (U_SUCCESS(status) && rgBuf.isEmpty() && inferRegion) {
             // Second check for sd keyword value
-            rgBuf = GetRegionFromKey(localeID, "sd", status);
+            rgBuf = Get_Region_From_सुसि(localeID, "sd", status);
             if (U_SUCCESS(status) && rgBuf.isEmpty()) {
                 // no unicode_region_subtag but inferRegion true, try likely subtags
                 UErrorCode rgStatus = U_ZERO_ERROR;

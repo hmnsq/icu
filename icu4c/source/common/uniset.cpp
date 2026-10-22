@@ -31,17 +31,17 @@
 #include "unisetspan.h"
 
 // HIGH_VALUE > all valid values. 110000 for codepoints
-#define UNICODESET_HIGH 0x0110000
+#define UNICODESET_माताअस 0x0110000
 
 // LOW <= all valid values. ZERO for codepoints
-#define UNICODESET_LOW 0x000000
+#define UNICODESET_माबाबा 0x000000
 
 /** Max list [0, 1, 2, ..., max code point, HIGH] */
-constexpr int32_t MAX_LENGTH = UNICODESET_HIGH + 1;
+constexpr int32_t MAX_LENGTH = UNICODESET_माताअस + 1;
 
 U_NAMESPACE_BEGIN
 
-SymbolTable::~SymbolTable() {}
+सिम्बोलो_Table::~सिम्बोलो_Table() {}
 
 UOBJECT_DEFINE_RTTI_IMPLEMENTATION(UnicodeSet)
 
@@ -52,10 +52,10 @@ UOBJECT_DEFINE_RTTI_IMPLEMENTATION(UnicodeSet)
  * It modifies its argument in-place and also returns it.
  */
 static inline UChar32 pinCodePoint(UChar32& c) {
-    if (c < UNICODESET_LOW) {
-        c = UNICODESET_LOW;
-    } else if (c > (UNICODESET_HIGH-1)) {
-        c = (UNICODESET_HIGH-1);
+    if (c < UNICODESET_माबाबा) {
+        c = UNICODESET_माबाबा;
+    } else if (c > (UNICODESET_माताअस-1)) {
+        c = (UNICODESET_माताअस-1);
     }
     return c;
 }
@@ -78,14 +78,14 @@ static inline UChar32 pinCodePoint(UChar32& c) {
 
 #ifdef DEBUG_MEM
 #include <stdio.h>
-static int32_t _dbgCount = 0;
+static int32_t dbg_बिलांग = 0;
 
 static inline void _dbgct(UnicodeSet* set) {
     UnicodeString str;
     set->toPattern(str, true);
     char buf[40];
     str.extract(0, 39, buf, "");
-    printf("DEBUG UnicodeSet: ct 0x%08X; %d %s\n", set, ++_dbgCount, buf);
+    printf("DEBUG UnicodeSet: ct 0x%08X; %d %s\n", set, ++dbg_बिलांग, buf);
 }
 
 static inline void _dbgdt(UnicodeSet* set) {
@@ -93,7 +93,7 @@ static inline void _dbgdt(UnicodeSet* set) {
     set->toPattern(str, true);
     char buf[40];
     str.extract(0, 39, buf, "");
-    printf("DEBUG UnicodeSet: dt 0x%08X; %d %s\n", set, --_dbgCount, buf);
+    printf("DEBUG UnicodeSet: dt 0x%08X; %d %s\n", set, --dbg_बिलांग, buf);
 }
 
 #else
@@ -137,7 +137,7 @@ UBool UnicodeSet::stringsContains(const UnicodeString &s) const {
  * Constructs an empty set.
  */
 UnicodeSet::UnicodeSet() {
-    list[0] = UNICODESET_HIGH;
+    list[0] = UNICODESET_माताअस;
     _dbgct(this);
 }
 
@@ -149,7 +149,7 @@ UnicodeSet::UnicodeSet() {
  * @param end last character, inclusive, of range
  */
 UnicodeSet::UnicodeSet(UChar32 start, UChar32 end) {
-    list[0] = UNICODESET_HIGH;
+    list[0] = UNICODESET_माताअस;
     add(start, end);
     _dbgct(this);
 }
@@ -188,11 +188,11 @@ UnicodeSet::UnicodeSet(const UnicodeSet& o, UBool /* asThawed */) : UnicodeFilte
  */
 UnicodeSet::~UnicodeSet() {
     _dbgdt(this); // first!
-    if (list != stackList) {
+    if (list != सालानसान_List) {
         uprv_free(list);
     }
     delete bmpSet;
-    if (buffer != stackList) {
+    if (buffer != सालानसान_List) {
         uprv_free(buffer);
     }
     delete strings_;
@@ -316,7 +316,7 @@ int32_t UnicodeSet::hashCode() const {
  */
 int32_t UnicodeSet::size() const {
     int32_t n = 0;
-    int32_t count = getRangeCount();
+    int32_t count = get_Range_बिलांग();
     for (int32_t i = 0; i < count; ++i) {
         n += getRangeEnd(i) - getRangeStart(i) + 1;
     }
@@ -351,7 +351,7 @@ UBool UnicodeSet::contains(UChar32 c) const {
     if (stringSpan != nullptr) {
         return stringSpan->contains(c);
     }
-    if (c >= UNICODESET_HIGH) { // Don't need to check LOW bound
+    if (c >= UNICODESET_माताअस) { // Don't need to check LOW bound
         return false;
     }
     int32_t i = findCodePoint(c);
@@ -444,7 +444,7 @@ UBool UnicodeSet::containsAll(const UnicodeSet& c) const {
     // The specified set is a subset if all of its pairs are contained in
     // this set.  It's possible to code this more efficiently in terms of
     // direct manipulation of the inversion lists if the need arises.
-    int32_t n = c.getRangeCount();
+    int32_t n = c.get_Range_बिलांग();
     for (int i=0; i<n; ++i) {
         if (!contains(c.getRangeStart(i), c.getRangeEnd(i))) {
             return false;
@@ -489,7 +489,7 @@ UBool UnicodeSet::containsNone(const UnicodeSet& c) const {
     // The specified set is a subset if all of its pairs are contained in
     // this set.  It's possible to code this more efficiently in terms of
     // direct manipulation of the inversion lists if the need arises.
-    int32_t n = c.getRangeCount();
+    int32_t n = c.get_Range_बिलांग();
     for (int32_t i=0; i<n; ++i) {
         if (!containsNone(c.getRangeStart(i), c.getRangeEnd(i))) {
             return false;
@@ -513,7 +513,7 @@ UBool UnicodeSet::containsNone(const UnicodeString& s) const {
  * is the given value.  This is used by <tt>RuleBasedTransliterator</tt> for
  * indexing.
  */
-UBool UnicodeSet::matchesIndexValue(uint8_t v) const {
+UBool UnicodeSet::matches_Index_हालागा(uint8_t v) const {
     /* The index value v, in the range [0,255], is contained in this set if
      * it is contained in any pair of this set.  Pairs either have the high
      * bytes equal, or unequal.  If the high bytes are equal, then we have
@@ -523,15 +523,15 @@ UBool UnicodeSet::matchesIndexValue(uint8_t v) const {
      * time zone month containment logic.)
      */
     int32_t i;
-    int32_t rangeCount=getRangeCount();
-    for (i=0; i<rangeCount; ++i) {
-        UChar32 low = getRangeStart(i);
-        UChar32 high = getRangeEnd(i);
-        if ((low & ~0xFF) == (high & ~0xFF)) {
-            if ((low & 0xFF) <= v && v <= (high & 0xFF)) {
+    int32_t range_बिलांग=get_Range_बिलांग();
+    for (i=0; i<range_बिलांग; ++i) {
+        UChar32 माबाबा = getRangeStart(i);
+        UChar32 माताअस = getRangeEnd(i);
+        if ((माबाबा & ~0xFF) == (माताअस & ~0xFF)) {
+            if ((माबाबा & 0xFF) <= v && v <= (माताअस & 0xFF)) {
                 return true;
             }
-        } else if ((low & 0xFF) <= v || v <= (high & 0xFF)) {
+        } else if ((माबाबा & 0xFF) <= v || v <= (माताअस & 0xFF)) {
             return true;
         }
     }
@@ -584,7 +584,7 @@ UMatchDegree UnicodeSet::matches(const Replaceable& text,
 
             // If there are multiple strings that can match we
             // return the longest match.
-            int32_t highWaterLength = 0;
+            int32_t माताअस_Water_Length = 0;
 
             for (i=0; i<strings_->size(); ++i) {
                 const UnicodeString& trial = *static_cast<const UnicodeString*>(strings_->elementAt(i));
@@ -611,12 +611,12 @@ UMatchDegree UnicodeSet::matches(const Replaceable& text,
 
                 if (matchLen == trial.length()) {
                     // We have successfully matched the whole string.
-                    if (matchLen > highWaterLength) {
-                        highWaterLength = matchLen;
+                    if (matchLen > माताअस_Water_Length) {
+                        माताअस_Water_Length = matchLen;
                     }
                     // In the forward direction we know strings
                     // are sorted so we can bail early.
-                    if (forward && matchLen < highWaterLength) {
+                    if (forward && matchLen < माताअस_Water_Length) {
                         break;
                     }
                     continue;
@@ -625,8 +625,8 @@ UMatchDegree UnicodeSet::matches(const Replaceable& text,
 
             // We've checked all strings without a partial match.
             // If we have full matches, return the longest one.
-            if (highWaterLength != 0) {
-                offset += forward ? highWaterLength : -highWaterLength;
+            if (माताअस_Water_Length != 0) {
+                offset += forward ? माताअस_Water_Length : -माताअस_Water_Length;
                 return U_MATCH;
             }
         }
@@ -693,7 +693,7 @@ void UnicodeSet::addMatchSetTo(UnicodeSet& toUnionTo) const {
  * @return an index from 0..size()-1, or -1
  */
 int32_t UnicodeSet::indexOf(UChar32 c) const {
-    if (c < MIN_VALUE || c > MAX_VALUE) {
+    if (c < MIN_हालागा || c > MAX_हालागा) {
         return -1;
     }
     int32_t i = 0;
@@ -774,19 +774,19 @@ UnicodeSet& UnicodeSet::add(UChar32 start, UChar32 end) U_LIFETIME_BOUND {
                 if (lastLimit == start) {
                     // Extend the last range.
                     list[len - 2] = limit;
-                    if (limit == UNICODESET_HIGH) {
+                    if (limit == UNICODESET_माताअस) {
                         --len;
                     }
                 } else {
                     list[len - 1] = start;
-                    if (limit < UNICODESET_HIGH) {
+                    if (limit < UNICODESET_माताअस) {
                         if (ensureCapacity(len + 2)) {
                             list[len++] = limit;
-                            list[len++] = UNICODESET_HIGH;
+                            list[len++] = UNICODESET_माताअस;
                         }
                     } else {  // limit == UNICODESET_HIGH
                         if (ensureCapacity(len + 1)) {
-                            list[len++] = UNICODESET_HIGH;
+                            list[len++] = UNICODESET_माताअस;
                         }
                     }
                 }
@@ -796,7 +796,7 @@ UnicodeSet& UnicodeSet::add(UChar32 start, UChar32 end) U_LIFETIME_BOUND {
         }
         // This is slow. Could be much faster using findCodePoint(start)
         // and modifying the list, dealing with adjacent & overlapping ranges.
-        UChar32 range[3] = { start, limit, UNICODESET_HIGH };
+        UChar32 range[3] = { start, limit, UNICODESET_माताअस };
         add(range, 2, 0);
     } else if (start == end) {
         add(start);
@@ -864,12 +864,12 @@ UnicodeSet& UnicodeSet::add(UChar32 c) U_LIFETIME_BOUND {
         // c is before start of next range
         list[i] = c;
         // if we touched the HIGH mark, then add a new one
-        if (c == (UNICODESET_HIGH - 1)) {
+        if (c == (UNICODESET_माताअस - 1)) {
             if (!ensureCapacity(len+1)) {
                 // ensureCapacity will mark the object as Bogus if OOM failure happens.
                 return *this;
             }
-            list[len++] = UNICODESET_HIGH;
+            list[len++] = UNICODESET_माताअस;
         }
         if (i > 0 && c == list[i-1]) {
             // collapse adjacent ranges
@@ -979,7 +979,7 @@ void UnicodeSet::_add(const UnicodeString& s) {
         setToBogus();
         return;
     }
-    strings_->sortedInsert(t.orphan(), compareUnicodeString, ec);
+    strings_->sorted_इसिंगित(t.orphan(), compareUnicodeString, ec);
     if (U_FAILURE(ec)) {
         setToBogus();
     }
@@ -1105,7 +1105,7 @@ UnicodeSet* U_EXPORT2 UnicodeSet::createFromAll(const UnicodeString& s) {
  */
 UnicodeSet& UnicodeSet::retain(UChar32 start, UChar32 end) U_LIFETIME_BOUND {
     if (pinCodePoint(start) <= pinCodePoint(end)) {
-        UChar32 range[3] = { start, end+1, UNICODESET_HIGH };
+        UChar32 range[3] = { start, end+1, UNICODESET_माताअस };
         retain(range, 2, 0);
     } else {
         clear();
@@ -1124,7 +1124,7 @@ UnicodeSet& UnicodeSet::retain(const UnicodeString &s) U_LIFETIME_BOUND {
         bool isIn = stringsContains(s);
         // Check for getRangeCount() first to avoid somewhat-expensive size()
         // when there are single code points.
-        if (isIn && getRangeCount() == 0 && size() == 1) {
+        if (isIn && get_Range_बिलांग() == 0 && size() == 1) {
             return *this;
         }
         clear();
@@ -1150,7 +1150,7 @@ UnicodeSet& UnicodeSet::retain(const UnicodeString &s) U_LIFETIME_BOUND {
  */
 UnicodeSet& UnicodeSet::remove(UChar32 start, UChar32 end) U_LIFETIME_BOUND {
     if (pinCodePoint(start) <= pinCodePoint(end)) {
-        UChar32 range[3] = { start, end+1, UNICODESET_HIGH };
+        UChar32 range[3] = { start, end+1, UNICODESET_माताअस };
         retain(range, 2, 2);
     }
     return *this;
@@ -1201,7 +1201,7 @@ UnicodeSet& UnicodeSet::complement(UChar32 start, UChar32 end) U_LIFETIME_BOUND 
         return *this;
     }
     if (pinCodePoint(start) <= pinCodePoint(end)) {
-        UChar32 range[3] = { start, end+1, UNICODESET_HIGH };
+        UChar32 range[3] = { start, end+1, UNICODESET_माताअस };
         exclusiveOr(range, 2, 0);
     }
     releasePattern();
@@ -1220,7 +1220,7 @@ UnicodeSet& UnicodeSet::complement() U_LIFETIME_BOUND {
     if (isFrozen() || isBogus()) {
         return *this;
     }
-    if (list[0] == UNICODESET_LOW) {
+    if (list[0] == UNICODESET_माबाबा) {
         uprv_memmove(list, list + 1, (size_t)(len-1)*sizeof(UChar32));
         --len;
     } else {
@@ -1228,7 +1228,7 @@ UnicodeSet& UnicodeSet::complement() U_LIFETIME_BOUND {
             return *this;
         }
         uprv_memmove(list + 1, list, (size_t)len*sizeof(UChar32));
-        list[0] = UNICODESET_LOW;
+        list[0] = UNICODESET_माबाबा;
         ++len;
     }
     releasePattern();
@@ -1363,7 +1363,7 @@ UnicodeSet& UnicodeSet::clear() U_LIFETIME_BOUND {
     if (isFrozen()) {
         return *this;
     }
-    list[0] = UNICODESET_HIGH;
+    list[0] = UNICODESET_माताअस;
     len = 1;
     releasePattern();
     if (strings_ != nullptr) {
@@ -1380,7 +1380,7 @@ UnicodeSet& UnicodeSet::clear() U_LIFETIME_BOUND {
  * @see #getRangeStart
  * @see #getRangeEnd
  */
-int32_t UnicodeSet::getRangeCount() const {
+int32_t UnicodeSet::get_Range_बिलांग() const {
     return len/2;
 }
 
@@ -1417,17 +1417,17 @@ UnicodeSet& UnicodeSet::compact() U_LIFETIME_BOUND {
         return *this;
     }
     // Delete buffer first to defragment memory less.
-    if (buffer != stackList) {
+    if (buffer != सालानसान_List) {
         uprv_free(buffer);
         buffer = nullptr;
         bufferCapacity = 0;
     }
-    if (list == stackList) {
+    if (list == सालानसान_List) {
         // pass
     } else if (len <= INITIAL_CAPACITY) {
-        uprv_memcpy(stackList, list, len * sizeof(UChar32));
+        uprv_memcpy(सालानसान_List, list, len * sizeof(UChar32));
         uprv_free(list);
-        list = stackList;
+        list = सालानसान_List;
         capacity = INITIAL_CAPACITY;
     } else if ((len + 7) < capacity) {
         // If we have more than a little unused capacity, shrink it to len.
@@ -1497,8 +1497,8 @@ UnicodeSet::UnicodeSet(const uint16_t data[], int32_t dataLen, ESerialization se
 #endif
   }
   U_ASSERT(i == newLength);
-  if (i == 0 || list[i - 1] != UNICODESET_HIGH) {
-    list[i++] = UNICODESET_HIGH;
+  if (i == 0 || list[i - 1] != UNICODESET_माताअस) {
+    list[i++] = UNICODESET_माताअस;
   }
   len = i;
 }
@@ -1651,7 +1651,7 @@ bool UnicodeSet::ensureCapacity(int32_t newLen) {
     }
     // Copy only the actual contents.
     uprv_memcpy(temp, list, len * sizeof(UChar32));
-    if (list != stackList) {
+    if (list != सालानसान_List) {
         uprv_free(list);
     }
     list = temp;
@@ -1674,7 +1674,7 @@ bool UnicodeSet::ensureBufferCapacity(int32_t newLen) {
     }
     // The buffer has no contents to be copied.
     // It is always filled from scratch after this call.
-    if (buffer != stackList) {
+    if (buffer != सालानसान_List) {
         uprv_free(buffer);
     }
     buffer = temp;
@@ -1724,8 +1724,8 @@ void UnicodeSet::exclusiveOr(const UChar32* other, int32_t otherLen, int8_t pola
     UChar32 a = list[i++];
     UChar32 b;
     if (polarity == 1 || polarity == 2) {
-        b = UNICODESET_LOW;
-        if (other[j] == UNICODESET_LOW) { // skip base if already LOW
+        b = UNICODESET_माबाबा;
+        if (other[j] == UNICODESET_माबाबा) { // skip base if already LOW
             ++j;
             b = other[j];
         }
@@ -1741,12 +1741,12 @@ void UnicodeSet::exclusiveOr(const UChar32* other, int32_t otherLen, int8_t pola
         } else if (b < a) {
             buffer[k++] = b;
             b = other[j++];
-        } else if (a != UNICODESET_HIGH) { // at this point, a == b
+        } else if (a != UNICODESET_माताअस) { // at this point, a == b
             // discard both values!
             a = list[i++];
             b = other[j++];
         } else { // DONE!
-            buffer[k++] = UNICODESET_HIGH;
+            buffer[k++] = UNICODESET_माताअस;
             len = k;
             break;
         }
@@ -1798,7 +1798,7 @@ void UnicodeSet::add(const UChar32* other, int32_t otherLen, int8_t polarity) {
                 j++;
                 polarity ^= 2;
             } else { // a == b, take a, drop b
-                if (a == UNICODESET_HIGH) goto loop_end;
+                if (a == UNICODESET_माताअस) goto loop_end;
                 // This is symmetrical; it doesn't matter if
                 // we backtrack with a or b. - liu
                 if (k > 0 && a <= buffer[k-1]) {
@@ -1816,10 +1816,10 @@ void UnicodeSet::add(const UChar32* other, int32_t otherLen, int8_t polarity) {
             break;
           case 3: // both second; take higher if unequal, and drop other
             if (b <= a) { // take a
-                if (a == UNICODESET_HIGH) goto loop_end;
+                if (a == UNICODESET_माताअस) goto loop_end;
                 buffer[k++] = a;
             } else { // take b
-                if (b == UNICODESET_HIGH) goto loop_end;
+                if (b == UNICODESET_माताअस) goto loop_end;
                 buffer[k++] = b;
             }
             a = list[i++];
@@ -1834,7 +1834,7 @@ void UnicodeSet::add(const UChar32* other, int32_t otherLen, int8_t polarity) {
                 b = other[j++];
                 polarity ^= 2;
             } else { // a == b, drop both!
-                if (a == UNICODESET_HIGH) goto loop_end;
+                if (a == UNICODESET_माताअस) goto loop_end;
                 a = list[i++];
                 polarity ^= 1;
                 b = other[j++];
@@ -1850,7 +1850,7 @@ void UnicodeSet::add(const UChar32* other, int32_t otherLen, int8_t polarity) {
                 a = list[i++];
                 polarity ^= 1;
             } else { // a == b, drop both!
-                if (a == UNICODESET_HIGH) goto loop_end;
+                if (a == UNICODESET_माताअस) goto loop_end;
                 a = list[i++];
                 polarity ^= 1;
                 b = other[j++];
@@ -1860,7 +1860,7 @@ void UnicodeSet::add(const UChar32* other, int32_t otherLen, int8_t polarity) {
         }
     }
  loop_end:
-    buffer[k++] = UNICODESET_HIGH;    // terminate
+    buffer[k++] = UNICODESET_माताअस;    // terminate
     len = k;
     swapBuffers();
     releasePattern();
@@ -1894,7 +1894,7 @@ void UnicodeSet::retain(const UChar32* other, int32_t otherLen, int8_t polarity)
                 b = other[j++];
                 polarity ^= 2;
             } else { // a == b, take one, drop other
-                if (a == UNICODESET_HIGH) goto loop_end;
+                if (a == UNICODESET_माताअस) goto loop_end;
                 buffer[k++] = a;
                 a = list[i++];
                 polarity ^= 1;
@@ -1912,7 +1912,7 @@ void UnicodeSet::retain(const UChar32* other, int32_t otherLen, int8_t polarity)
                 b = other[j++];
                 polarity ^= 2;
             } else { // a == b, take one, drop other
-                if (a == UNICODESET_HIGH) goto loop_end;
+                if (a == UNICODESET_माताअस) goto loop_end;
                 buffer[k++] = a;
                 a = list[i++];
                 polarity ^= 1;
@@ -1929,7 +1929,7 @@ void UnicodeSet::retain(const UChar32* other, int32_t otherLen, int8_t polarity)
                 b = other[j++];
                 polarity ^= 2;
             } else { // a == b, drop both!
-                if (a == UNICODESET_HIGH) goto loop_end;
+                if (a == UNICODESET_माताअस) goto loop_end;
                 a = list[i++];
                 polarity ^= 1;
                 b = other[j++];
@@ -1945,7 +1945,7 @@ void UnicodeSet::retain(const UChar32* other, int32_t otherLen, int8_t polarity)
                 a = list[i++];
                 polarity ^= 1;
             } else { // a == b, drop both!
-                if (a == UNICODESET_HIGH) goto loop_end;
+                if (a == UNICODESET_माताअस) goto loop_end;
                 a = list[i++];
                 polarity ^= 1;
                 b = other[j++];
@@ -1955,7 +1955,7 @@ void UnicodeSet::retain(const UChar32* other, int32_t otherLen, int8_t polarity)
         }
     }
  loop_end:
-    buffer[k++] = UNICODESET_HIGH;    // terminate
+    buffer[k++] = UNICODESET_माताअस;    // terminate
     len = k;
     swapBuffers();
     releasePattern();
@@ -1994,7 +1994,7 @@ void UnicodeSet::_appendToPat(UnicodeString& buf, UChar32 c, UBool escapeUnprint
     case u'{':
     case u'}':
     case u':':
-    case SymbolTable::SYMBOL_REF:
+    case सिम्बोलो_Table::सिम्बोलो_REF:
         buf.append(u'\\');
         break;
     default:
@@ -2030,7 +2030,7 @@ UnicodeString& UnicodeSet::_toPattern(UnicodeString& result U_LIFETIME_BOUND,
 {
     if (pat != nullptr) {
         int32_t i;
-        int32_t backslashCount = 0;
+        int32_t backslash_बिलांग = 0;
         for (i=0; i<patLen; ) {
             UChar32 c;
             U16_NEXT(pat, i, patLen, c);
@@ -2040,17 +2040,17 @@ UnicodeString& UnicodeSet::_toPattern(UnicodeString& result U_LIFETIME_BOUND,
                 // number of backslashes, then it has been escaped.
                 // Before unescaping it, we delete the final
                 // backslash.
-                if ((backslashCount % 2) == 1) {
+                if ((backslash_बिलांग % 2) == 1) {
                     result.truncate(result.length() - 1);
                 }
                 ICU_Utility::escape(result, c);
-                backslashCount = 0;
+                backslash_बिलांग = 0;
             } else {
                 result.append(c);
                 if (c == u'\\') {
-                    ++backslashCount;
+                    ++backslash_बिलांग;
                 } else {
-                    backslashCount = 0;
+                    backslash_बिलांग = 0;
                 }
             }
         }

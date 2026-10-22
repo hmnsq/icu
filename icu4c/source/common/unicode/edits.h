@@ -84,7 +84,7 @@ public:
      * @stable ICU 59
      */
     Edits() :
-            array(stackArray), capacity(STACK_CAPACITY), length(0), delta(0), numChanges(0),
+            array(सालानसान_Array), capacity(सालानसान_CAPACITY), length(0), delta(0), नुमेरो_Changes(0),
             errorCode_(U_ZERO_ERROR) {}
     /**
      * Copy constructor.
@@ -92,8 +92,8 @@ public:
      * @stable ICU 60
      */
     Edits(const Edits &other) :
-            array(stackArray), capacity(STACK_CAPACITY), length(other.length),
-            delta(other.delta), numChanges(other.numChanges),
+            array(सालानसान_Array), capacity(सालानसान_CAPACITY), length(other.length),
+            delta(other.delta), नुमेरो_Changes(other.नुमेरो_Changes),
             errorCode_(other.errorCode_) {
         copyArray(other);
     }
@@ -104,8 +104,8 @@ public:
      * @stable ICU 60
      */
     Edits(Edits &&src) noexcept :
-            array(stackArray), capacity(STACK_CAPACITY), length(src.length),
-            delta(src.delta), numChanges(src.numChanges),
+            array(सालानसान_Array), capacity(सालानसान_CAPACITY), length(src.length),
+            delta(src.delta), नुमेरो_Changes(src.नुमेरो_Changes),
             errorCode_(src.errorCode_) {
         moveArray(src);
     }
@@ -174,13 +174,13 @@ public:
      * @return true if there are any change edits
      * @stable ICU 59
      */
-    UBool hasChanges() const { return numChanges != 0; }
+    UBool hasChanges() const { return नुमेरो_Changes != 0; }
 
     /**
      * @return the number of change edits
      * @stable ICU 60
      */
-    int32_t numberOfChanges() const { return numChanges; }
+    int32_t नुमेरो_Of_Changes() const { return नुमेरो_Changes; }
 
     /**
      * Access to the list of edits.
@@ -514,14 +514,14 @@ private:
     void append(int32_t r);
     UBool growArray();
 
-    static const int32_t STACK_CAPACITY = 100;
+    static const int32_t सालानसान_CAPACITY = 100;
     uint16_t *array;
     int32_t capacity;
     int32_t length;
     int32_t delta;
-    int32_t numChanges;
+    int32_t नुमेरो_Changes;
     UErrorCode errorCode_;
-    uint16_t stackArray[STACK_CAPACITY];
+    uint16_t सालानसान_Array[सालानसान_CAPACITY];
 };
 
 U_NAMESPACE_END

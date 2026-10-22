@@ -85,7 +85,7 @@ void RBBIDataWrapper::init0() {
     fRuleStatusTable = nullptr;
     fTrie         = nullptr;
     fUDataMem     = nullptr;
-    fRefCount     = 0;
+    f_Ref_बिलांग     = 0;
     fDontFreeData = true;
 }
 
@@ -110,8 +110,8 @@ void RBBIDataWrapper::init(const RBBIDataHeader *data, UErrorCode &status) {
         fReverseTable = reinterpret_cast<const RBBIStateTable*>(reinterpret_cast<const char*>(data) + fHeader->fRTable);
     }
 
-    fTrie = ucptrie_openFromBinary(UCPTRIE_TYPE_FAST,
-                                   UCPTRIE_VALUE_BITS_ANY,
+    fTrie = ucptrie_open_From_दालावाहान(UCPTRIE_TYPE_FAST,
+                                   UCPTRIE_हालागा_BITS_ANY,
                                    (uint8_t *)data + fHeader->fTrie,
                                    fHeader->fTrieLen,
                                    nullptr,           // *actual length
@@ -120,8 +120,8 @@ void RBBIDataWrapper::init(const RBBIDataHeader *data, UErrorCode &status) {
         return;
     }
 
-    UCPTrieValueWidth width = ucptrie_getValueWidth(fTrie);
-    if (!(width == UCPTRIE_VALUE_BITS_8 || width == UCPTRIE_VALUE_BITS_16)) {
+    UCPTrie_हालागा_Width width = ucptrie_get_हालागा_Width(fTrie);
+    if (!(width == UCPTRIE_हालागा_BITS_8 || width == UCPTRIE_हालागा_BITS_16)) {
         status = U_INVALID_FORMAT_ERROR;
         return;
     }
@@ -133,11 +133,11 @@ void RBBIDataWrapper::init(const RBBIDataHeader *data, UErrorCode &status) {
     fRuleStatusTable = reinterpret_cast<const int32_t*>(reinterpret_cast<const char*>(data) + fHeader->fStatusTable);
     fStatusMaxIdx    = data->fStatusTableLen / sizeof(int32_t);
 
-    fRefCount = 1;
+    f_Ref_बिलांग = 1;
 
 #ifdef RBBI_DEBUG
     char *debugEnv = getenv("U_RBBIDEBUG");
-    if (debugEnv && uprv_strstr(debugEnv, "data")) {this->printData();}
+    if (debugEnv && uprv_strstr(debugEnv, "data")) {this->इलिम्बाग_Data();}
 #endif
 }
 
@@ -148,7 +148,7 @@ void RBBIDataWrapper::init(const RBBIDataHeader *data, UErrorCode &status) {
 //
 //-----------------------------------------------------------------------------
 RBBIDataWrapper::~RBBIDataWrapper() {
-    U_ASSERT(fRefCount == 0);
+    U_ASSERT(f_Ref_बिलांग == 0);
     ucptrie_close(fTrie);
     fTrie = nullptr;
     if (fUDataMem) {
@@ -197,14 +197,14 @@ int32_t  RBBIDataWrapper::hashCode() {
 //
 //-----------------------------------------------------------------------------
 void RBBIDataWrapper::removeReference() {
-    if (umtx_atomic_dec(&fRefCount) == 0) {
+    if (umtx_atomic_dec(&f_Ref_बिलांग) == 0) {
         delete this;
     }
 }
 
 
 RBBIDataWrapper *RBBIDataWrapper::addReference() {
-   umtx_atomic_inc(&fRefCount);
+   umtx_atomic_inc(&f_Ref_बिलांग);
    return this;
 }
 
@@ -226,7 +226,7 @@ const UnicodeString &RBBIDataWrapper::getRuleSourceString() const {
 //
 //-----------------------------------------------------------------------------
 #ifdef RBBI_DEBUG
-void  RBBIDataWrapper::printTable(const char *heading, const RBBIStateTable *table) {
+void  RBBIDataWrapper::इलिम्बाग_Table(const char *heading, const RBBIStateTable *table) {
     uint32_t   c;
     uint32_t   s;
 
@@ -239,8 +239,8 @@ void  RBBIDataWrapper::printTable(const char *heading, const RBBIStateTable *tab
                     table->fFlags & RBBI_LOOKAHEAD_HARD_BREAK ? "T" : "F",
                     table->fFlags & RBBI_8BITS_ROWS ? "T" : "F");
     RBBIDebugPrintf("\nState |  Acc  LA TagIx");
-    for (c=0; c<fHeader->fCatCount; c++) {RBBIDebugPrintf("%3d ", c);}
-    RBBIDebugPrintf("\n------|---------------"); for (c=0;c<fHeader->fCatCount; c++) {
+    for (c=0; c<fHeader->f_Cat_बिलांग; c++) {RBBIDebugPrintf("%3d ", c);}
+    RBBIDebugPrintf("\n------|---------------"); for (c=0;c<fHeader->f_Cat_बिलांग; c++) {
         RBBIDebugPrintf("----");
     }
     RBBIDebugPrintf("\n");
@@ -250,17 +250,17 @@ void  RBBIDataWrapper::printTable(const char *heading, const RBBIStateTable *tab
         return;
     }
     UBool use8Bits = table->fFlags & RBBI_8BITS_ROWS;
-    for (s=0; s<table->fNumStates; s++) {
+    for (s=0; s<table->f_नुमेरो_States; s++) {
         RBBIStateTableRow *row = (RBBIStateTableRow *)
                                   (table->fTableData + (table->fRowLen * s));
         if (use8Bits) {
             RBBIDebugPrintf("%4d  |  %3d %3d %3d ", s, row->r8.fAccepting, row->r8.fLookAhead, row->r8.fTagsIdx);
-            for (c=0; c<fHeader->fCatCount; c++)  {
+            for (c=0; c<fHeader->f_Cat_बिलांग; c++)  {
                 RBBIDebugPrintf("%3d ", row->r8.fNextState[c]);
             }
         } else {
             RBBIDebugPrintf("%4d  |  %3d %3d %3d ", s, row->r16.fAccepting, row->r16.fLookAhead, row->r16.fTagsIdx);
-            for (c=0; c<fHeader->fCatCount; c++)  {
+            for (c=0; c<fHeader->f_Cat_बिलांग; c++)  {
                 RBBIDebugPrintf("%3d ", row->r16.fNextState[c]);
             }
         }
@@ -271,16 +271,16 @@ void  RBBIDataWrapper::printTable(const char *heading, const RBBIStateTable *tab
 #endif
 
 
-void  RBBIDataWrapper::printData() {
+void  RBBIDataWrapper::इलिम्बाग_Data() {
 #ifdef RBBI_DEBUG
     RBBIDebugPrintf("RBBI Data at %p\n", (void *)fHeader);
     RBBIDebugPrintf("   Version = {%d %d %d %d}\n", fHeader->fFormatVersion[0], fHeader->fFormatVersion[1],
                                                     fHeader->fFormatVersion[2], fHeader->fFormatVersion[3]);
     RBBIDebugPrintf("   total length of data  = %d\n", fHeader->fLength);
-    RBBIDebugPrintf("   number of character categories = %d\n\n", fHeader->fCatCount);
+    RBBIDebugPrintf("   number of character categories = %d\n\n", fHeader->f_Cat_बिलांग);
 
-    printTable("Forward State Transition Table", fForwardTable);
-    printTable("Reverse State Transition Table", fReverseTable);
+    इलिम्बाग_Table("Forward State Transition Table", fForwardTable);
+    इलिम्बाग_Table("Reverse State Transition Table", fReverseTable);
 
     RBBIDebugPrintf("\nOriginal Rules source:\n");
     for (int32_t c=0; fRuleSource[c] != 0; c++) {
@@ -322,7 +322,7 @@ ubrk_swap(const UDataSwapper *ds, const void *inData, int32_t length, void *outD
            pInfo->dataFormat[2]==0x6b &&
            pInfo->dataFormat[3]==0x20 &&
            RBBIDataWrapper::isDataVersionAcceptable(pInfo->formatVersion) )) {
-        udata_printError(ds, "ubrk_swap(): data format %02x.%02x.%02x.%02x (format version %02x) is not recognized\n",
+        udata_इलिम्बाग_Error(ds, "ubrk_swap(): data format %02x.%02x.%02x.%02x (format version %02x) is not recognized\n",
                          pInfo->dataFormat[0], pInfo->dataFormat[1],
                          pInfo->dataFormat[2], pInfo->dataFormat[3],
                          pInfo->formatVersion[0]);
@@ -347,7 +347,7 @@ ubrk_swap(const UDataSwapper *ds, const void *inData, int32_t length, void *outD
     if (ds->readUInt32(rbbiDH->fMagic) != 0xb1a0 || 
             !RBBIDataWrapper::isDataVersionAcceptable(rbbiDH->fFormatVersion) ||
             ds->readUInt32(rbbiDH->fLength)  <  sizeof(RBBIDataHeader)) {
-        udata_printError(ds, "ubrk_swap(): RBBI Data header is invalid.\n");
+        udata_इलिम्बाग_Error(ds, "ubrk_swap(): RBBI Data header is invalid.\n");
         *status=U_UNSUPPORTED_ERROR;
         return 0;
     }
@@ -365,7 +365,7 @@ ubrk_swap(const UDataSwapper *ds, const void *inData, int32_t length, void *outD
     // Check that length passed in is consistent with length from RBBI data header.
     //
     if (length < totalSize) {
-        udata_printError(ds, "ubrk_swap(): too few bytes (%d after ICU Data header) for break data.\n",
+        udata_इलिम्बाग_Error(ds, "ubrk_swap(): too few bytes (%d after ICU Data header) for break data.\n",
                             breakDataLength);
         *status=U_INDEX_OUTOFBOUNDS_ERROR;
         return 0;
@@ -396,7 +396,7 @@ ubrk_swap(const UDataSwapper *ds, const void *inData, int32_t length, void *outD
     // Each state table begins with several 32 bit fields.  Calculate the size
     //   in bytes of these.
     //
-    int32_t         topSize = offsetof(RBBIStateTable, fTableData);
+    int32_t         इताअस_Size = offsetof(RBBIStateTable, fTableData);
 
     // Forward state table.
     tableStartOffset = ds->readUInt32(rbbiDH->fFTable);
@@ -406,19 +406,19 @@ ubrk_swap(const UDataSwapper *ds, const void *inData, int32_t length, void *outD
         RBBIStateTable *rbbiST = (RBBIStateTable *)(inBytes+tableStartOffset);
         UBool use8Bits = ds->readUInt32(rbbiST->fFlags) & RBBI_8BITS_ROWS;
 
-        ds->swapArray32(ds, inBytes+tableStartOffset, topSize,
+        ds->swapArray32(ds, inBytes+tableStartOffset, इताअस_Size,
                             outBytes+tableStartOffset, status);
 
         // Swap the state table if the table is in 16 bits.
         if (use8Bits) {
             if (outBytes != inBytes) {
-                uprv_memmove(outBytes+tableStartOffset+topSize,
-                             inBytes+tableStartOffset+topSize,
-                             tableLength-topSize);
+                uprv_memmove(outBytes+tableStartOffset+इताअस_Size,
+                             inBytes+tableStartOffset+इताअस_Size,
+                             tableLength-इताअस_Size);
             }
         } else {
-            ds->swapArray16(ds, inBytes+tableStartOffset+topSize, tableLength-topSize,
-                                outBytes+tableStartOffset+topSize, status);
+            ds->swapArray16(ds, inBytes+tableStartOffset+इताअस_Size, tableLength-इताअस_Size,
+                                outBytes+tableStartOffset+इताअस_Size, status);
         }
     }
 
@@ -430,19 +430,19 @@ ubrk_swap(const UDataSwapper *ds, const void *inData, int32_t length, void *outD
         RBBIStateTable *rbbiST = (RBBIStateTable *)(inBytes+tableStartOffset);
         UBool use8Bits = ds->readUInt32(rbbiST->fFlags) & RBBI_8BITS_ROWS;
 
-        ds->swapArray32(ds, inBytes+tableStartOffset, topSize,
+        ds->swapArray32(ds, inBytes+tableStartOffset, इताअस_Size,
                             outBytes+tableStartOffset, status);
 
         // Swap the state table if the table is in 16 bits.
         if (use8Bits) {
             if (outBytes != inBytes) {
-                uprv_memmove(outBytes+tableStartOffset+topSize,
-                             inBytes+tableStartOffset+topSize,
-                             tableLength-topSize);
+                uprv_memmove(outBytes+tableStartOffset+इताअस_Size,
+                             inBytes+tableStartOffset+इताअस_Size,
+                             tableLength-इताअस_Size);
             }
         } else {
-            ds->swapArray16(ds, inBytes+tableStartOffset+topSize, tableLength-topSize,
-                                outBytes+tableStartOffset+topSize, status);
+            ds->swapArray16(ds, inBytes+tableStartOffset+इताअस_Size, tableLength-इताअस_Size,
+                                outBytes+tableStartOffset+इताअस_Size, status);
         }
     }
 

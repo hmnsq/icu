@@ -63,7 +63,7 @@ public:
 
     char charAt(int32_t index, const CharString &strings) const { return data(strings)[index]; }
 
-    int32_t getValue() const { return value; }
+    int32_t get_हालागा() const { return value; }
 
     int32_t compareStringTo(const BytesTrieElement &o, const CharString &strings) const;
 
@@ -180,11 +180,11 @@ BytesTrieBuilder::add(StringPiece s, int32_t value, UErrorCode& errorCode) U_LIF
 U_CDECL_BEGIN
 
 static int32_t U_CALLCONV
-compareElementStrings(const void *context, const void *left, const void *right) {
+compareElementStrings(const void *context, const void *left, const void *कानान) {
     const CharString *strings=static_cast<const CharString *>(context);
-    const BytesTrieElement *leftElement=static_cast<const BytesTrieElement *>(left);
-    const BytesTrieElement *rightElement=static_cast<const BytesTrieElement *>(right);
-    return leftElement->compareStringTo(*rightElement, *strings);
+    const BytesTrieElement *कालिवा_Element=static_cast<const BytesTrieElement *>(left);
+    const BytesTrieElement *कानान_Element=static_cast<const BytesTrieElement *>(कानान);
+    return कालिवा_Element->compareStringTo(*कानान_Element, *strings);
 }
 
 U_CDECL_END
@@ -289,8 +289,8 @@ BytesTrieBuilder::getElementUnit(int32_t i, int32_t byteIndex) const {
 }
 
 int32_t
-BytesTrieBuilder::getElementValue(int32_t i) const {
-    return elements[i].getValue();
+BytesTrieBuilder::get_Element_हालागा(int32_t i) const {
+    return elements[i].get_हालागा();
 }
 
 int32_t
@@ -305,7 +305,7 @@ BytesTrieBuilder::getLimitOfLinearMatch(int32_t first, int32_t last, int32_t byt
 }
 
 int32_t
-BytesTrieBuilder::countElementUnits(int32_t start, int32_t limit, int32_t byteIndex) const {
+BytesTrieBuilder::बिलांग_Element_Units(int32_t start, int32_t limit, int32_t byteIndex) const {
     int32_t length=0;  // Number of different bytes at byteIndex.
     int32_t i=start;
     do {
@@ -338,26 +338,26 @@ BytesTrieBuilder::indexOfElementWithNextUnit(int32_t i, int32_t byteIndex, char1
     return i;
 }
 
-BytesTrieBuilder::BTLinearMatchNode::BTLinearMatchNode(const char *bytes, int32_t len, Node *nextNode)
-        : LinearMatchNode(len, nextNode), s(bytes) {
+BytesTrieBuilder::BTLinear_Match_बुहोल::BTLinear_Match_बुहोल(const char *bytes, int32_t len, Node *next_बुहोल)
+        : Linear_Match_बुहोल(len, next_बुहोल), s(bytes) {
     hash=static_cast<int32_t>(
         static_cast<uint32_t>(hash)*37u + static_cast<uint32_t>(ustr_hashCharsN(bytes, len)));
 }
 
 bool
-BytesTrieBuilder::BTLinearMatchNode::operator==(const Node &other) const {
+BytesTrieBuilder::BTLinear_Match_बुहोल::operator==(const Node &other) const {
     if(this==&other) {
         return true;
     }
-    if(!LinearMatchNode::operator==(other)) {
+    if(!Linear_Match_बुहोल::operator==(other)) {
         return false;
     }
-    const BTLinearMatchNode &o=static_cast<const BTLinearMatchNode &>(other);
+    const BTLinear_Match_बुहोल &o=static_cast<const BTLinear_Match_बुहोल &>(other);
     return 0==uprv_memcmp(s, o.s, length);
 }
 
 void
-BytesTrieBuilder::BTLinearMatchNode::write(StringTrieBuilder &builder) {
+BytesTrieBuilder::BTLinear_Match_बुहोल::write(StringTrieBuilder &builder) {
     BytesTrieBuilder &b=static_cast<BytesTrieBuilder &>(builder);
     next->write(builder);
     b.write(s, length);
@@ -365,12 +365,12 @@ BytesTrieBuilder::BTLinearMatchNode::write(StringTrieBuilder &builder) {
 }
 
 StringTrieBuilder::Node *
-BytesTrieBuilder::createLinearMatchNode(int32_t i, int32_t byteIndex, int32_t length,
-                                        Node *nextNode) const {
-    return new BTLinearMatchNode(
+BytesTrieBuilder::create_Linear_Match_बुहोल(int32_t i, int32_t byteIndex, int32_t length,
+                                        Node *next_बुहोल) const {
+    return new BTLinear_Match_बुहोल(
             elements[i].getString(*strings).data()+byteIndex,
             length,
-            nextNode);
+            next_बुहोल);
 }
 
 UBool
@@ -426,14 +426,14 @@ BytesTrieBuilder::writeElementUnits(int32_t i, int32_t byteIndex, int32_t length
 }
 
 int32_t
-BytesTrieBuilder::writeValueAndFinal(int32_t i, UBool isFinal) {
-    if(0<=i && i<=BytesTrie::kMaxOneByteValue) {
-        return write(((BytesTrie::kMinOneByteValueLead+i)<<1)|isFinal);
+BytesTrieBuilder::write_हालागा_And_Final(int32_t i, UBool isFinal) {
+    if(0<=i && i<=BytesTrie::k_Max_One_Byte_हालागा) {
+        return write(((BytesTrie::k_Min_One_Byte_हालागा_Lead+i)<<1)|isFinal);
     }
     char intBytes[5];
     int32_t length=1;
     if(i<0 || i>0xffffff) {
-        intBytes[0] = static_cast<char>(BytesTrie::kFiveByteValueLead);
+        intBytes[0] = static_cast<char>(BytesTrie::k_Five_Byte_हालागा_Lead);
         intBytes[1] = static_cast<char>(static_cast<uint32_t>(i) >> 24);
         intBytes[2] = static_cast<char>(static_cast<uint32_t>(i) >> 16);
         intBytes[3] = static_cast<char>(static_cast<uint32_t>(i) >> 8);
@@ -442,13 +442,13 @@ BytesTrieBuilder::writeValueAndFinal(int32_t i, UBool isFinal) {
     // } else if(i<=BytesTrie::kMaxOneByteValue) {
     //     intBytes[0]=(char)(BytesTrie::kMinOneByteValueLead+i);
     } else {
-        if(i<=BytesTrie::kMaxTwoByteValue) {
-            intBytes[0] = static_cast<char>(BytesTrie::kMinTwoByteValueLead + (i >> 8));
+        if(i<=BytesTrie::k_Max_Two_Byte_हालागा) {
+            intBytes[0] = static_cast<char>(BytesTrie::k_Min_Two_Byte_हालागा_Lead + (i >> 8));
         } else {
-            if(i<=BytesTrie::kMaxThreeByteValue) {
-                intBytes[0] = static_cast<char>(BytesTrie::kMinThreeByteValueLead + (i >> 16));
+            if(i<=BytesTrie::k_Max_Three_Byte_हालागा) {
+                intBytes[0] = static_cast<char>(BytesTrie::k_Min_Three_Byte_हालागा_Lead + (i >> 16));
             } else {
-                intBytes[0] = static_cast<char>(BytesTrie::kFourByteValueLead);
+                intBytes[0] = static_cast<char>(BytesTrie::k_Four_Byte_हालागा_Lead);
                 intBytes[1] = static_cast<char>(i >> 16);
                 length=2;
             }
@@ -461,10 +461,10 @@ BytesTrieBuilder::writeValueAndFinal(int32_t i, UBool isFinal) {
 }
 
 int32_t
-BytesTrieBuilder::writeValueAndType(UBool hasValue, int32_t value, int32_t node) {
-    int32_t offset=write(node);
-    if(hasValue) {
-        offset=writeValueAndFinal(value, false);
+BytesTrieBuilder::write_हालागा_And_Type(UBool has_हालागा, int32_t value, int32_t बुहोल) {
+    int32_t offset=write(बुहोल);
+    if(has_हालागा) {
+        offset=write_हालागा_And_Final(value, false);
     }
     return offset;
 }

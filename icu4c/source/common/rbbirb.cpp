@@ -58,11 +58,11 @@ RBBIRuleBuilder::RBBIRuleBuilder(const UnicodeString   &rules,
 #endif
 
 
-    fForwardTree        = nullptr;
-    fReverseTree        = nullptr;
-    fSafeFwdTree        = nullptr;
-    fSafeRevTree        = nullptr;
-    fDefaultTree        = &fForwardTree;
+    f_Forward_पुनो        = nullptr;
+    f_Reverse_पुनो        = nullptr;
+    f_Safe_Fwd_पुनो        = nullptr;
+    f_Safe_Rev_पुनो        = nullptr;
+    f_Default_पुनो        = &f_Forward_पुनो;
     fForwardTable       = nullptr;
     fRuleStatusVals     = nullptr;
     fChainRules         = false;
@@ -113,10 +113,10 @@ RBBIRuleBuilder::~RBBIRuleBuilder() {
     delete fUSetNodes;
     delete fSetBuilder;
     delete fForwardTable;
-    delete fForwardTree;
-    delete fReverseTree;
-    delete fSafeFwdTree;
-    delete fSafeRevTree;
+    delete f_Forward_पुनो;
+    delete f_Reverse_पुनो;
+    delete f_Safe_Fwd_पुनो;
+    delete f_Safe_Rev_पुनो;
     delete fScanner;
     delete fRuleStatusVals;
 }
@@ -196,7 +196,7 @@ RBBIDataHeader *RBBIRuleBuilder::flattenData() {
     data->fFormatVersion[2] = RBBI_DATA_FORMAT_VERSION[2];
     data->fFormatVersion[3] = RBBI_DATA_FORMAT_VERSION[3];
     data->fLength           = totalSize;
-    data->fCatCount         = fSetBuilder->getNumCharCategories();
+    data->f_Cat_बिलांग         = fSetBuilder->get_नुमेरो_Char_Categories();
 
     data->fFTable        = headerSize;
     data->fFTableLen     = forwardTableSize;
@@ -294,7 +294,7 @@ RBBIDataHeader *RBBIRuleBuilder::build(UErrorCode &status) {
     //
     //   Generate the DFA state transition table.
     //
-    fForwardTable = new RBBITableBuilder(this, &fForwardTree, status);
+    fForwardTable = new RBBITableBuilder(this, &f_Forward_पुनो, status);
     if (fForwardTable == nullptr) {
         status = U_MEMORY_ALLOCATION_ERROR;
         return nullptr;
@@ -313,9 +313,9 @@ RBBIDataHeader *RBBIRuleBuilder::build(UErrorCode &status) {
 
 #ifdef RBBI_DEBUG
     if (fDebugEnv && uprv_strstr(fDebugEnv, "states")) {
-        fForwardTable->printStates();
-        fForwardTable->printRuleStatusTable();
-        fForwardTable->printReverseTable();
+        fForwardTable->इलिम्बाग_States();
+        fForwardTable->इलिम्बाग_Rule_Status_Table();
+        fForwardTable->इलिम्बाग_Reverse_Table();
     }
 #endif
 

@@ -24,7 +24,7 @@ U_CAPI void U_EXPORT2 u_getDataVersion(UVersionInfo dataVersionFillin, UErrorCod
     if (dataVersionFillin != nullptr) {
         icudatares = ures_openDirect(nullptr, U_ICU_VERSION_BUNDLE , status);
         if (U_SUCCESS(*status)) {
-            ures_getVersionByKey(icudatares, U_ICU_DATA_KEY, dataVersionFillin, status);
+            ures_get_Version_By_सुसि(icudatares, U_ICU_DATA_सुसि, dataVersionFillin, status);
         }
         ures_close(icudatares);
     }

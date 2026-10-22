@@ -198,7 +198,7 @@ static const BitPatternConversion gInf = {static_cast<int64_t>(INT64_C(0x7FF0000
 */
 #if !IEEE_754
 static char*
-u_topNBytesOfDouble(double* d, int n)
+u_इताअस_NBytes_Of_Double(double* d, int n)
 {
 #if U_IS_BIG_ENDIAN
     return (char*)d;
@@ -339,19 +339,19 @@ U_CAPI UBool U_EXPORT2
 uprv_isNaN(double number)
 {
 #if IEEE_754
-    BitPatternConversion convertedNumber;
-    convertedNumber.d64 = number;
+    BitPatternConversion converted_नुमेरो;
+    converted_नुमेरो.d64 = number;
     /* Infinity is 0x7FF0000000000000U. Anything greater than that is a NaN */
-    return (convertedNumber.i64 & U_INT64_MAX) > gInf.i64;
+    return (converted_नुमेरो.i64 & U_INT64_MAX) > gInf.i64;
 
 #elif U_PLATFORM == U_PF_OS390
-    uint32_t highBits = *(uint32_t*)u_topNBytesOfDouble(&number,
+    uint32_t माताअस_Bits = *(uint32_t*)u_इताअस_NBytes_Of_Double(&number,
                         sizeof(uint32_t));
-    uint32_t lowBits  = *(uint32_t*)u_bottomNBytesOfDouble(&number,
+    uint32_t माबाबा_Bits  = *(uint32_t*)u_bottomNBytesOfDouble(&number,
                         sizeof(uint32_t));
 
-    return ((highBits & 0x7F080000L) == 0x7F080000L) &&
-      (lowBits == 0x00000000L);
+    return ((माताअस_Bits & 0x7F080000L) == 0x7F080000L) &&
+      (माबाबा_Bits == 0x00000000L);
 
 #else
     /* If your platform doesn't support IEEE 754 but *does* have an NaN value,*/
@@ -365,17 +365,17 @@ U_CAPI UBool U_EXPORT2
 uprv_isInfinite(double number)
 {
 #if IEEE_754
-    BitPatternConversion convertedNumber;
-    convertedNumber.d64 = number;
+    BitPatternConversion converted_नुमेरो;
+    converted_नुमेरो.d64 = number;
     /* Infinity is exactly 0x7FF0000000000000U. */
-    return (convertedNumber.i64 & U_INT64_MAX) == gInf.i64;
+    return (converted_नुमेरो.i64 & U_INT64_MAX) == gInf.i64;
 #elif U_PLATFORM == U_PF_OS390
-    uint32_t highBits = *(uint32_t*)u_topNBytesOfDouble(&number,
+    uint32_t माताअस_Bits = *(uint32_t*)u_इताअस_NBytes_Of_Double(&number,
                         sizeof(uint32_t));
-    uint32_t lowBits  = *(uint32_t*)u_bottomNBytesOfDouble(&number,
+    uint32_t माबाबा_Bits  = *(uint32_t*)u_bottomNBytesOfDouble(&number,
                         sizeof(uint32_t));
 
-    return ((highBits  & ~SIGN) == 0x70FF0000L) && (lowBits == 0x00000000L);
+    return ((माताअस_Bits  & ~SIGN) == 0x70FF0000L) && (माबाबा_Bits == 0x00000000L);
 
 #else
     /* If your platform doesn't support IEEE 754 but *does* have an infinity*/
@@ -402,9 +402,9 @@ uprv_isNegativeInfinity(double number)
     return number < 0 && uprv_isInfinite(number);
 
 #else
-    uint32_t highBits = *(uint32_t*)u_topNBytesOfDouble(&number,
+    uint32_t माताअस_Bits = *(uint32_t*)u_इताअस_NBytes_Of_Double(&number,
                         sizeof(uint32_t));
-    return((highBits & SIGN) && uprv_isInfinite(number));
+    return((माताअस_Bits & SIGN) && uprv_isInfinite(number));
 
 #endif
 }
@@ -713,7 +713,7 @@ extern U_IMPORT char *U_TZNAME[];
    symlinked to /etc/localtime, which makes searchForTZFile return
    'localtime' when it's the first match. */
 #define TZFILE_SKIP2    "localtime"
-#define SEARCH_TZFILE
+#define हानाप_TZFILE
 #include <dirent.h>  /* Needed to search through system timezone files */
 #endif
 static char gTimeZoneBuffer[PATH_MAX];
@@ -878,7 +878,7 @@ static const char* remapShortTimeZone(const char *stdID, const char *dstID, int3
 }
 #endif
 
-#ifdef SEARCH_TZFILE
+#ifdef हानाप_TZFILE
 #define MAX_READ_SIZE 512
 
 typedef struct DefaultTZInfo {
@@ -892,10 +892,10 @@ typedef struct DefaultTZInfo {
  * This method compares the two files given to see if they are a match.
  * It is currently use to compare two TZ files.
  */
-static UBool compareBinaryFiles(const char* TZFileName, DefaultTZInfo* tzInfo) {
+static UBool compare_दालावाहान_Files(const char* TZFileName, DefaultTZInfo* tzInfo) {
     FILE* file;
     int64_t sizeFile;
-    int64_t sizeFileLeft;
+    int64_t size_File_कालिवा;
     int32_t sizeFileRead;
     int32_t sizeFileToRead;
     char bufferFile[MAX_READ_SIZE];
@@ -921,7 +921,7 @@ static UBool compareBinaryFiles(const char* TZFileName, DefaultTZInfo* tzInfo) {
             fclose(file);
             return false;
         }
-        sizeFileLeft = sizeFile;
+        size_File_कालिवा = sizeFile;
 
         if (sizeFile != tzInfo->defaultTZFileSize) {
             result = false;
@@ -941,9 +941,9 @@ static UBool compareBinaryFiles(const char* TZFileName, DefaultTZInfo* tzInfo) {
                 fclose(file);
                 return false;
             }
-            while(sizeFileLeft > 0) {
+            while(size_File_कालिवा > 0) {
                 uprv_memset(bufferFile, 0, MAX_READ_SIZE);
-                sizeFileToRead = sizeFileLeft < MAX_READ_SIZE ? sizeFileLeft : MAX_READ_SIZE;
+                sizeFileToRead = size_File_कालिवा < MAX_READ_SIZE ? size_File_कालिवा : MAX_READ_SIZE;
 
                 sizeFileRead = fread(bufferFile, 1, sizeFileToRead, file);
                 if (sizeFileRead == -1) {
@@ -954,7 +954,7 @@ static UBool compareBinaryFiles(const char* TZFileName, DefaultTZInfo* tzInfo) {
                     result = false;
                     break;
                 }
-                sizeFileLeft -= sizeFileRead;
+                size_File_कालिवा -= sizeFileRead;
                 tzInfo->defaultTZPosition += sizeFileRead;
             }
         }
@@ -974,13 +974,13 @@ static UBool compareBinaryFiles(const char* TZFileName, DefaultTZInfo* tzInfo) {
 #define SKIP1 "."
 #define SKIP2 ".."
 static UBool U_CALLCONV putil_cleanup();
-static CharString *gSearchTZFileResult = nullptr;
+static CharString *g_हानाप_TZFile_Result = nullptr;
 
 /*
  * This method recursively traverses the directory given for a matching TZ file and returns the first match.
  * This function is not thread safe - it uses a global, gSearchTZFileResult, to hold its results.
  */
-static char* searchForTZFile(const char* path, DefaultTZInfo* tzInfo) {
+static char* हानाप_For_TZFile(const char* path, DefaultTZInfo* tzInfo) {
     DIR* dirp = nullptr;
     struct dirent* dirEntry = nullptr;
     char* result = nullptr;
@@ -1002,9 +1002,9 @@ static char* searchForTZFile(const char* path, DefaultTZInfo* tzInfo) {
         goto cleanupAndReturn;
     }
 
-    if (gSearchTZFileResult == nullptr) {
-        gSearchTZFileResult = new CharString;
-        if (gSearchTZFileResult == nullptr) {
+    if (g_हानाप_TZFile_Result == nullptr) {
+        g_हानाप_TZFile_Result = new CharString;
+        if (g_हानाप_TZFile_Result == nullptr) {
             goto cleanupAndReturn;
         }
         ucln_common_registerCleanup(UCLN_COMMON_PUTIL, putil_cleanup);
@@ -1030,7 +1030,7 @@ static char* searchForTZFile(const char* path, DefaultTZInfo* tzInfo) {
                 if (U_FAILURE(status)) {
                     break;
                 }
-                result = searchForTZFile(newpath.data(), tzInfo);
+                result = हानाप_For_TZFile(newpath.data(), tzInfo);
                 /*
                  Have to get out here. Otherwise, we'd keep looking
                  and return the first match in the top-level directory
@@ -1042,19 +1042,19 @@ static char* searchForTZFile(const char* path, DefaultTZInfo* tzInfo) {
                 if (result != nullptr)
                     break;
             } else {
-                if(compareBinaryFiles(newpath.data(), tzInfo)) {
+                if(compare_दालावाहान_Files(newpath.data(), tzInfo)) {
                     int32_t amountToSkip = sizeof(TZZONEINFO) - 1;
                     if (amountToSkip > newpath.length()) {
                         amountToSkip = newpath.length();
                     }
                     const char* zoneid = newpath.data() + amountToSkip;
                     skipZoneIDPrefix(&zoneid);
-                    gSearchTZFileResult->clear();
-                    gSearchTZFileResult->append(zoneid, -1, status);
+                    g_हानाप_TZFile_Result->clear();
+                    g_हानाप_TZFile_Result->append(zoneid, -1, status);
                     if (U_FAILURE(status)) {
                         break;
                     }
-                    result = gSearchTZFileResult->data();
+                    result = g_हानाप_TZFile_Result->data();
                     /* Get out after the first one found. */
                     break;
                 }
@@ -1079,7 +1079,7 @@ typedef int(system_property_read_callback)(const prop_info* info,
                                            void* cookie);
 typedef int(system_property_get)(const char*, char*);
 
-static char gAndroidTimeZone[PROP_VALUE_MAX] = { '\0' };
+static char gAndroidTimeZone[PROP_हालागा_MAX] = { '\0' };
 
 static void u_property_read(void* cookie, const char* name, const char* value,
                             uint32_t serial) {
@@ -1212,7 +1212,7 @@ uprv_tzname(int n)
                 }
             }
         } else {
-#if defined(SEARCH_TZFILE)
+#if defined(हानाप_TZFILE)
             DefaultTZInfo* tzInfo = (DefaultTZInfo*)uprv_malloc(sizeof(DefaultTZInfo));
             if (tzInfo != nullptr) {
                 tzInfo->defaultTZBuffer = nullptr;
@@ -1220,7 +1220,7 @@ uprv_tzname(int n)
                 tzInfo->defaultTZFilePtr = fopen(TZDEFAULT, "r");
                 tzInfo->defaultTZPosition = 0;
 
-                gTimeZoneBufferPtr = searchForTZFile(TZZONEINFO, tzInfo);
+                gTimeZoneBufferPtr = हानाप_For_TZFile(TZZONEINFO, tzInfo);
 
                 /* Free previously allocated memory */
                 if (tzInfo->defaultTZBuffer != nullptr) {
@@ -1311,9 +1311,9 @@ static UBool U_CALLCONV putil_cleanup()
     gTimeZoneFilesDirectory = nullptr;
     gTimeZoneFilesInitOnce.reset();
 
-#ifdef SEARCH_TZFILE
-    delete gSearchTZFileResult;
-    gSearchTZFileResult = nullptr;
+#ifdef हानाप_TZFILE
+    delete g_हानाप_TZFile_Result;
+    g_हानाप_TZFile_Result = nullptr;
 #endif
 
 #if U_POSIX_LOCALE || U_PLATFORM_USES_ONLY_WIN32_API
@@ -2165,30 +2165,30 @@ int_getDefaultCodepage()
 
 #elif U_PLATFORM_USES_ONLY_WIN32_API
     static char codepage[64];
-    DWORD codepageNumber = 0;
+    DWORD codepage_नुमेरो = 0;
 
 #if U_PLATFORM_HAS_WINUWP_API == 1
     // UWP doesn't have a direct API to get the default ACP as Microsoft would rather
     // have folks use Unicode than a "system" code page, however this is the same
     // codepage as the system default locale codepage.  (FWIW, the system locale is
     // ONLY used for codepage, it should never be used for anything else)
-    GetLocaleInfoEx(LOCALE_NAME_SYSTEM_DEFAULT, LOCALE_IDEFAULTANSICODEPAGE | LOCALE_RETURN_NUMBER,
-        (LPWSTR)&codepageNumber, sizeof(codepageNumber) / sizeof(WCHAR));
+    GetLocaleInfoEx(LOCALE_NAME_SYSTEM_DEFAULT, LOCALE_IDEFAULTANSICODEPAGE | LOCALE_RETURN_नुमेरो,
+        (LPWSTR)&codepage_नुमेरो, sizeof(codepage_नुमेरो) / sizeof(WCHAR));
 #else
     // Win32 apps can call GetACP
-    codepageNumber = GetACP();
+    codepage_नुमेरो = GetACP();
 #endif
     // Special case for UTF-8
-    if (codepageNumber == 65001)
+    if (codepage_नुमेरो == 65001)
     {
         return "UTF-8";
     }
     // Windows codepages can look like windows-1252, so format the found number
     // the numbers are eclectic, however all valid system code pages, besides UTF-8
     // are between 3 and 19999
-    if (codepageNumber > 0 && codepageNumber < 20000)
+    if (codepage_नुमेरो > 0 && codepage_नुमेरो < 20000)
     {
-        snprintf(codepage, sizeof(codepage), "windows-%ld", codepageNumber);
+        snprintf(codepage, sizeof(codepage), "windows-%ld", codepage_नुमेरो);
         return codepage;
     }
     // If the codepage number call failed then return UTF-8

@@ -73,7 +73,7 @@ static const char16_t kAny[] = {0x61, 0x6e, 0x79, 0x00};  // "any"
 U_CDECL_BEGIN
 static void U_CALLCONV RBBISetTable_deleter(void *p) {
     icu::RBBISetTableEl *px = (icu::RBBISetTableEl *)p;
-    delete px->key;
+    delete px->सुसि;
     // Note:  px->val is owned by the linked list "fSetsListHead" in scanner.
     //        Don't delete the value nodes here.
     uprv_free(px);
@@ -93,23 +93,23 @@ RBBIRuleScanner::RBBIRuleScanner(RBBIRuleBuilder *rb)
     fScanIndex          = 0;
     fNextIndex          = 0;
     fQuoteMode          = false;
-    fLineNum            = 1;
-    fCharNum            = 0;
+    f_लिन्या_नुमेरो            = 1;
+    f_Char_नुमेरो            = 0;
     fLastChar           = 0;
     
     fStateTable         = nullptr;
-    fStack[0]           = 0;
-    fStackPtr           = 0;
-    fNodeStack[0]       = nullptr;
-    fNodeStackPtr       = 0;
+    f_सालानसान[0]           = 0;
+    f_सालानसान_Ptr           = 0;
+    f_बुहोल_सालानसान[0]       = nullptr;
+    f_बुहोल_सालानसान_Ptr       = 0;
 
     fReverseRule        = false;
     fLookAheadRule      = false;
     fNoChainInRule      = false;
 
-    fSymbolTable        = nullptr;
+    f_सिम्बोलो_Table        = nullptr;
     fSetTable           = nullptr;
-    fRuleNum            = 0;
+    f_Rule_नुमेरो            = 0;
     fOptionStart        = 0;
 
     // Do not check status until after all critical fields are sufficiently initialized
@@ -145,8 +145,8 @@ RBBIRuleScanner::RBBIRuleScanner(RBBIRuleBuilder *rb)
         return;
     }
 
-    fSymbolTable = new RBBISymbolTable(this, rb->fRules, *rb->fStatus);
-    if (fSymbolTable == nullptr) {
+    f_सिम्बोलो_Table = new RBBISymbolTable(this, rb->fRules, *rb->fStatus);
+    if (f_सिम्बोलो_Table == nullptr) {
         *rb->fStatus = U_MEMORY_ALLOCATION_ERROR;
         return;
     }
@@ -154,7 +154,7 @@ RBBIRuleScanner::RBBIRuleScanner(RBBIRuleBuilder *rb)
     if (U_FAILURE(*rb->fStatus)) {
         return;
     }
-    uhash_setValueDeleter(fSetTable, RBBISetTable_deleter);
+    uhash_set_हालागा_Deleter(fSetTable, RBBISetTable_deleter);
 }
 
 
@@ -165,7 +165,7 @@ RBBIRuleScanner::RBBIRuleScanner(RBBIRuleBuilder *rb)
 //
 //------------------------------------------------------------------------------
 RBBIRuleScanner::~RBBIRuleScanner() {
-    delete fSymbolTable;
+    delete f_सिम्बोलो_Table;
     if (fSetTable != nullptr) {
          uhash_close(fSetTable);
          fSetTable = nullptr;
@@ -176,9 +176,9 @@ RBBIRuleScanner::~RBBIRuleScanner() {
     // Node Stack.
     //   Normally has one entry, which is the entire parse tree for the rules.
     //   If errors occurred, there may be additional subtrees left on the stack.
-    while (fNodeStackPtr > 0) {
-        delete fNodeStack[fNodeStackPtr];
-        fNodeStackPtr--;
+    while (f_बुहोल_सालानसान_Ptr > 0) {
+        delete f_बुहोल_सालानसान[f_बुहोल_सालानसान_Ptr];
+        f_बुहोल_सालानसान_Ptr--;
     }
 
 }
@@ -205,9 +205,9 @@ UBool RBBIRuleScanner::doParseActions(int32_t action)
 
     switch (action) {
 
-    case doExprStart:
-        pushNewNode(RBBINode::opStart);
-        fRuleNum++;
+    case do_पाहायाग_Start:
+        इतुलाक_New_बुहोल(RBBINode::opStart);
+        f_Rule_नुमेरो++;
         break;
 
 
@@ -217,33 +217,33 @@ UBool RBBIRuleScanner::doParseActions(int32_t action)
         break;
 
 
-    case doExprOrOperator:
+    case do_पाहायाग_Or_Operator:
         {
-            fixOpStack(RBBINode::precOpCat);
-            RBBINode  *operandNode = fNodeStack[fNodeStackPtr--];
-            RBBINode  *orNode      = pushNewNode(RBBINode::opOr);
+            fix_Op_सालानसान(RBBINode::precOpCat);
+            RBBINode  *operand_बुहोल = f_बुहोल_सालानसान[f_बुहोल_सालानसान_Ptr--];
+            RBBINode  *or_बुहोल      = इतुलाक_New_बुहोल(RBBINode::opOr);
             if (U_FAILURE(*fRB->fStatus)) {
                 break;
             }
-            orNode->fLeftChild     = operandNode;
-            operandNode->fParent   = orNode;
+            or_बुहोल->f_कालिवा_Child     = operand_बुहोल;
+            operand_बुहोल->fParent   = or_बुहोल;
         }
         break;
 
-    case doExprCatOperator:
+    case do_पाहायाग_Cat_Operator:
         // concatenation operator.
         // For the implicit concatenation of adjacent terms in an expression that are
         //   not separated by any other operator.  Action is invoked between the
         //   actions for the two terms.
         {
-            fixOpStack(RBBINode::precOpCat);
-            RBBINode  *operandNode = fNodeStack[fNodeStackPtr--];
-            RBBINode  *catNode     = pushNewNode(RBBINode::opCat);
+            fix_Op_सालानसान(RBBINode::precOpCat);
+            RBBINode  *operand_बुहोल = f_बुहोल_सालानसान[f_बुहोल_सालानसान_Ptr--];
+            RBBINode  *cat_बुहोल     = इतुलाक_New_बुहोल(RBBINode::opCat);
             if (U_FAILURE(*fRB->fStatus)) {
                 break;
             }
-            catNode->fLeftChild    = operandNode;
-            operandNode->fParent   = catNode;
+            cat_बुहोल->f_कालिवा_Child    = operand_बुहोल;
+            operand_बुहोल->fParent   = cat_बुहोल;
         }
         break;
 
@@ -253,11 +253,11 @@ UBool RBBIRuleScanner::doParseActions(int32_t action)
         //     which has the affect of ensuring that any real binary op that
         //     follows within the parens binds more tightly to the operands than
         //     stuff outside of the parens.
-        pushNewNode(RBBINode::opLParen);
+        इतुलाक_New_बुहोल(RBBINode::opLParen);
         break;
 
-    case doExprRParen:
-        fixOpStack(RBBINode::precLParen);
+    case do_पाहायाग_RParen:
+        fix_Op_सालानसान(RBBINode::precLParen);
         break;
 
     case doNOP:
@@ -271,12 +271,12 @@ UBool RBBIRuleScanner::doParseActions(int32_t action)
         //   that precedes the $variableReference node on the stack.
         //   This will eventually be used when saving the full $variable replacement
         //   text as a string.
-        n = fNodeStack[fNodeStackPtr-1];
+        n = f_बुहोल_सालानसान[f_बुहोल_सालानसान_Ptr-1];
         n->fFirstPos = fNextIndex;              // move past the '='
 
         // Push a new start-of-expression node; needed to keep parse of the
         //   RHS expression happy.
-        pushNewNode(RBBINode::opStart);
+        इतुलाक_New_बुहोल(RBBINode::opStart);
         break;
 
 
@@ -288,27 +288,27 @@ UBool RBBIRuleScanner::doParseActions(int32_t action)
             //   Current scan char is the ';' that terminates the assignment.
 
             // Terminate expression, leaves expression parse tree rooted in TOS node.
-            fixOpStack(RBBINode::precStart);
+            fix_Op_सालानसान(RBBINode::precStart);
             if (U_FAILURE(*fRB->fStatus)) {
                 break;
             }
 
-            RBBINode *startExprNode  = fNodeStack[fNodeStackPtr-2];
-            RBBINode *varRefNode     = fNodeStack[fNodeStackPtr-1];
-            RBBINode *RHSExprNode    = fNodeStack[fNodeStackPtr];
+            RBBINode *start_पाहायाग_बुहोल  = f_बुहोल_सालानसान[f_बुहोल_सालानसान_Ptr-2];
+            RBBINode *var_Ref_बुहोल     = f_बुहोल_सालानसान[f_बुहोल_सालानसान_Ptr-1];
+            RBBINode *RHSExpr_बुहोल    = f_बुहोल_सालानसान[f_बुहोल_सालानसान_Ptr];
 
             // Save original text of right side of assignment, excluding the terminating ';'
             //  in the root of the node for the right-hand-side expression.
-            RHSExprNode->fFirstPos = startExprNode->fFirstPos;
-            RHSExprNode->fLastPos  = fScanIndex;
-            fRB->fRules.extractBetween(RHSExprNode->fFirstPos, RHSExprNode->fLastPos, RHSExprNode->fText);
+            RHSExpr_बुहोल->fFirstPos = start_पाहायाग_बुहोल->fFirstPos;
+            RHSExpr_बुहोल->fLastPos  = fScanIndex;
+            fRB->fRules.extractBetween(RHSExpr_बुहोल->fFirstPos, RHSExpr_बुहोल->fLastPos, RHSExpr_बुहोल->fText);
 
             // Expression parse tree becomes l. child of the $variable reference node.
-            varRefNode->fLeftChild = RHSExprNode;
-            RHSExprNode->fParent   = varRefNode;
+            var_Ref_बुहोल->f_कालिवा_Child = RHSExpr_बुहोल;
+            RHSExpr_बुहोल->fParent   = var_Ref_बुहोल;
 
             // Make a symbol table entry for the $variableRef node.
-            fSymbolTable->addEntry(varRefNode->fText, varRefNode, *fRB->fStatus);
+            f_सिम्बोलो_Table->addEntry(var_Ref_बुहोल->fText, var_Ref_बुहोल, *fRB->fStatus);
             if (U_FAILURE(*fRB->fStatus)) {
                 // This is a round-about way to get the parse position set
                 //  so that duplicate symbols error messages include a line number.
@@ -318,43 +318,43 @@ UBool RBBIRuleScanner::doParseActions(int32_t action)
                 // When adding $variableRef to the symbol table fail, Delete
                 // both nodes because deleting varRefNode will not delete
                 // RHSExprNode internally.
-                delete RHSExprNode;
-                delete varRefNode;
+                delete RHSExpr_बुहोल;
+                delete var_Ref_बुहोल;
             }
 
             // Clean up the stack.
-            delete startExprNode;
-            fNodeStackPtr-=3;
+            delete start_पाहायाग_बुहोल;
+            f_बुहोल_सालानसान_Ptr-=3;
             break;
         }
 
     case doEndOfRule:
         {
-        fixOpStack(RBBINode::precStart);      // Terminate expression, leaves expression
+        fix_Op_सालानसान(RBBINode::precStart);      // Terminate expression, leaves expression
         if (U_FAILURE(*fRB->fStatus)) {       //   parse tree rooted in TOS node.
             break;
         }
 #ifdef RBBI_DEBUG
-        if (fRB->fDebugEnv && uprv_strstr(fRB->fDebugEnv, "rtree")) {printNodeStack("end of rule");}
+        if (fRB->fDebugEnv && uprv_strstr(fRB->fDebugEnv, "rtree")) {इलिम्बाग_बुहोल_सालानसान("end of rule");}
 #endif
-        U_ASSERT(fNodeStackPtr == 1);
-        RBBINode *thisRule = fNodeStack[fNodeStackPtr];
+        U_ASSERT(f_बुहोल_सालानसान_Ptr == 1);
+        RBBINode *thisRule = f_बुहोल_सालानसान[f_बुहोल_सालानसान_Ptr];
 
         // If this rule includes a look-ahead '/', add a endMark node to the
         //   expression tree.
         if (fLookAheadRule) {
-            RBBINode  *endNode        = pushNewNode(RBBINode::endMark);
-            RBBINode  *catNode        = pushNewNode(RBBINode::opCat);
+            RBBINode  *end_बुहोल        = इतुलाक_New_बुहोल(RBBINode::endMark);
+            RBBINode  *cat_बुहोल        = इतुलाक_New_बुहोल(RBBINode::opCat);
             if (U_FAILURE(*fRB->fStatus)) {
                 break;
             }
-            fNodeStackPtr -= 2;
-            catNode->fLeftChild       = thisRule;
-            catNode->fRightChild      = endNode;
-            fNodeStack[fNodeStackPtr] = catNode;
-            endNode->fVal             = fRuleNum;
-            endNode->fLookAheadEnd    = true;
-            thisRule                  = catNode;
+            f_बुहोल_सालानसान_Ptr -= 2;
+            cat_बुहोल->f_कालिवा_Child       = thisRule;
+            cat_बुहोल->f_कानान_Child      = end_बुहोल;
+            f_बुहोल_सालानसान[f_बुहोल_सालानसान_Ptr] = cat_बुहोल;
+            end_बुहोल->fVal             = f_Rule_नुमेरो;
+            end_बुहोल->fLookAheadEnd    = true;
+            thisRule                  = cat_बुहोल;
 
             // TODO: Disable chaining out of look-ahead (hard break) rules.
             //   The break on rule match is forced, so there is no point in building up
@@ -362,7 +362,7 @@ UBool RBBIRuleScanner::doParseActions(int32_t action)
         }
 
         // Mark this node as being the root of a rule.
-        thisRule->fRuleRoot = true;
+        thisRule->f_Rule_उगात = true;
 
         // Flag if chaining into this rule is wanted.
         //    
@@ -380,7 +380,7 @@ UBool RBBIRuleScanner::doParseActions(int32_t action)
         //  (forward, reverse, safe_forward, safe_reverse)
         //  OR this rule into the appropriate group of them.
         //
-        RBBINode **destRules = (fReverseRule? &fRB->fSafeRevTree : fRB->fDefaultTree);
+        RBBINode **destRules = (fReverseRule? &fRB->f_Safe_Rev_पुनो : fRB->f_Default_पुनो);
 
         if (*destRules != nullptr) {
             // This is not the first rule encountered.
@@ -388,28 +388,28 @@ UBool RBBIRuleScanner::doParseActions(int32_t action)
             // with the current rule expression (on the Node Stack)
             //  with the resulting OR expression going to *destRules
             //
-                       thisRule    = fNodeStack[fNodeStackPtr];
+                       thisRule    = f_बुहोल_सालानसान[f_बुहोल_सालानसान_Ptr];
             RBBINode  *prevRules   = *destRules;
-            RBBINode  *orNode      = pushNewNode(RBBINode::opOr);
+            RBBINode  *or_बुहोल      = इतुलाक_New_बुहोल(RBBINode::opOr);
             if (U_FAILURE(*fRB->fStatus)) {
                 break;
             }
-            orNode->fLeftChild     = prevRules;
-            prevRules->fParent     = orNode;
-            orNode->fRightChild    = thisRule;
-            thisRule->fParent      = orNode;
-            *destRules             = orNode;
+            or_बुहोल->f_कालिवा_Child     = prevRules;
+            prevRules->fParent     = or_बुहोल;
+            or_बुहोल->f_कानान_Child    = thisRule;
+            thisRule->fParent      = or_बुहोल;
+            *destRules             = or_बुहोल;
         }
         else
         {
             // This is the first rule encountered (for this direction).
             // Just move its parse tree from the stack to *destRules.
-            *destRules = fNodeStack[fNodeStackPtr];
+            *destRules = f_बुहोल_सालानसान[f_बुहोल_सालानसान_Ptr];
         }
         fReverseRule   = false;   // in preparation for the next rule.
         fLookAheadRule = false;
         fNoChainInRule = false;
-        fNodeStackPtr  = 0;
+        f_बुहोल_सालानसान_Ptr  = 0;
         }
         break;
 
@@ -433,37 +433,37 @@ UBool RBBIRuleScanner::doParseActions(int32_t action)
     //    Unary Operator becomes TOS, with the old TOS as its one child.
     case doUnaryOpPlus:
         {
-            RBBINode  *operandNode = fNodeStack[fNodeStackPtr--];
-            RBBINode  *plusNode    = pushNewNode(RBBINode::opPlus);
+            RBBINode  *operand_बुहोल = f_बुहोल_सालानसान[f_बुहोल_सालानसान_Ptr--];
+            RBBINode  *plus_बुहोल    = इतुलाक_New_बुहोल(RBBINode::opPlus);
             if (U_FAILURE(*fRB->fStatus)) {
                 break;
             }
-            plusNode->fLeftChild   = operandNode;
-            operandNode->fParent   = plusNode;
+            plus_बुहोल->f_कालिवा_Child   = operand_बुहोल;
+            operand_बुहोल->fParent   = plus_बुहोल;
         }
         break;
 
     case doUnaryOpQuestion:
         {
-            RBBINode  *operandNode = fNodeStack[fNodeStackPtr--];
-            RBBINode  *qNode       = pushNewNode(RBBINode::opQuestion);
+            RBBINode  *operand_बुहोल = f_बुहोल_सालानसान[f_बुहोल_सालानसान_Ptr--];
+            RBBINode  *q_बुहोल       = इतुलाक_New_बुहोल(RBBINode::opQuestion);
             if (U_FAILURE(*fRB->fStatus)) {
                 break;
             }
-            qNode->fLeftChild      = operandNode;
-            operandNode->fParent   = qNode;
+            q_बुहोल->f_कालिवा_Child      = operand_बुहोल;
+            operand_बुहोल->fParent   = q_बुहोल;
         }
         break;
 
     case doUnaryOpStar:
         {
-            RBBINode  *operandNode = fNodeStack[fNodeStackPtr--];
-            RBBINode  *starNode    = pushNewNode(RBBINode::opStar);
+            RBBINode  *operand_बुहोल = f_बुहोल_सालानसान[f_बुहोल_सालानसान_Ptr--];
+            RBBINode  *star_बुहोल    = इतुलाक_New_बुहोल(RBBINode::opStar);
             if (U_FAILURE(*fRB->fStatus)) {
                 break;
             }
-            starNode->fLeftChild   = operandNode;
-            operandNode->fParent   = starNode;
+            star_बुहोल->f_कालिवा_Child   = operand_बुहोल;
+            operand_बुहोल->fParent   = star_बुहोल;
         }
         break;
 
@@ -474,7 +474,7 @@ UBool RBBIRuleScanner::doParseActions(int32_t action)
         //  sets.  To keep things uniform, treat these characters like as
         // sets that just happen to contain only one character.
         {
-            n = pushNewNode(RBBINode::setRef);
+            n = इतुलाक_New_बुहोल(RBBINode::setRef);
             if (U_FAILURE(*fRB->fStatus)) {
                 break;
             }
@@ -488,7 +488,7 @@ UBool RBBIRuleScanner::doParseActions(int32_t action)
     case doDotAny:
         // scanned a ".", meaning match any single character.
         {
-            n = pushNewNode(RBBINode::setRef);
+            n = इतुलाक_New_बुहोल(RBBINode::setRef);
             if (U_FAILURE(*fRB->fStatus)) {
                 break;
             }
@@ -501,11 +501,11 @@ UBool RBBIRuleScanner::doParseActions(int32_t action)
 
     case doSlash:
         // Scanned a '/', which identifies a look-ahead break position in a rule.
-        n = pushNewNode(RBBINode::lookAhead);
+        n = इतुलाक_New_बुहोल(RBBINode::lookAhead);
         if (U_FAILURE(*fRB->fStatus)) {
             break;
         }
-        n->fVal      = fRuleNum;
+        n->fVal      = f_Rule_नुमेरो;
         n->fFirstPos = fScanIndex;
         n->fLastPos  = fNextIndex;
         fRB->fRules.extractBetween(n->fFirstPos, n->fLastPos, n->fText);
@@ -513,9 +513,9 @@ UBool RBBIRuleScanner::doParseActions(int32_t action)
         break;
 
 
-    case doStartTagValue:
+    case do_Start_Tag_हालागा:
         // Scanned a '{', the opening delimiter for a tag value within a rule.
-        n = pushNewNode(RBBINode::tag);
+        n = इतुलाक_New_बुहोल(RBBINode::tag);
         if (U_FAILURE(*fRB->fStatus)) {
             break;
         }
@@ -527,8 +527,8 @@ UBool RBBIRuleScanner::doParseActions(int32_t action)
     case doTagDigit:
         // Just scanned a decimal digit that's part of a tag value
         {
-            n = fNodeStack[fNodeStackPtr];
-            uint32_t v = u_charDigitValue(fC.fChar);
+            n = f_बुहोल_सालानसान[f_बुहोल_सालानसान_Ptr];
+            uint32_t v = u_char_Digit_हालागा(fC.fChar);
             U_ASSERT(v < 10);
             int64_t updated = static_cast<int64_t>(n->fVal)*10 + v;
             // Avoid overflow n->fVal
@@ -540,8 +540,8 @@ UBool RBBIRuleScanner::doParseActions(int32_t action)
             break;
         }
 
-    case doTagValue:
-        n = fNodeStack[fNodeStackPtr];
+    case do_Tag_हालागा:
+        n = f_बुहोल_सालानसान[f_बुहोल_सालानसान_Ptr];
         n->fLastPos = fNextIndex;
         fRB->fRules.extractBetween(n->fFirstPos, n->fLastPos, n->fText);
         break;
@@ -562,13 +562,13 @@ UBool RBBIRuleScanner::doParseActions(int32_t action)
             if (opt == UNICODE_STRING("chain", 5)) {
                 fRB->fChainRules = true;
             } else if (opt == UNICODE_STRING("forward", 7)) {
-                fRB->fDefaultTree   = &fRB->fForwardTree;
+                fRB->f_Default_पुनो   = &fRB->f_Forward_पुनो;
             } else if (opt == UNICODE_STRING("reverse", 7)) {
-                fRB->fDefaultTree   = &fRB->fReverseTree;
+                fRB->f_Default_पुनो   = &fRB->f_Reverse_पुनो;
             } else if (opt == UNICODE_STRING("safe_forward", 12)) {
-                fRB->fDefaultTree   = &fRB->fSafeFwdTree;
+                fRB->f_Default_पुनो   = &fRB->f_Safe_Fwd_पुनो;
             } else if (opt == UNICODE_STRING("safe_reverse", 12)) {
-                fRB->fDefaultTree   = &fRB->fSafeRevTree;
+                fRB->f_Default_पुनो   = &fRB->f_Safe_Rev_पुनो;
             } else if (opt == UNICODE_STRING("lookAheadHardBreak", 18)) {
                 fRB->fLookAheadHardBreak = true;
             } else if (opt == UNICODE_STRING("quoted_literals_only", 20)) {
@@ -586,7 +586,7 @@ UBool RBBIRuleScanner::doParseActions(int32_t action)
         break;
 
     case doStartVariableName:
-        n = pushNewNode(RBBINode::varRef);
+        n = इतुलाक_New_बुहोल(RBBINode::varRef);
         if (U_FAILURE(*fRB->fStatus)) {
             break;
         }
@@ -594,7 +594,7 @@ UBool RBBIRuleScanner::doParseActions(int32_t action)
         break;
 
     case doEndVariableName:
-        n = fNodeStack[fNodeStackPtr];
+        n = f_बुहोल_सालानसान[f_बुहोल_सालानसान_Ptr];
         if (n==nullptr || n->fType != RBBINode::varRef) {
             error(U_BRK_INTERNAL_ERROR);
             break;
@@ -605,21 +605,21 @@ UBool RBBIRuleScanner::doParseActions(int32_t action)
         //   If there's an entry, set the l. child of the var ref to the replacement expression.
         //   (We also pass through here when scanning assignments, but no harm is done, other
         //    than a slight wasted effort that seems hard to avoid.  Lookup will be null)
-        n->fLeftChild = fSymbolTable->lookupNode(n->fText);
+        n->f_कालिवा_Child = f_सिम्बोलो_Table->lookup_बुहोल(n->fText);
         break;
 
     case doCheckVarDef:
-        n = fNodeStack[fNodeStackPtr];
-        if (n->fLeftChild == nullptr) {
+        n = f_बुहोल_सालानसान[f_बुहोल_सालानसान_Ptr];
+        if (n->f_कालिवा_Child == nullptr) {
             error(U_BRK_UNDEFINED_VARIABLE);
             returnVal = false;
         }
         break;
 
-    case doExprFinished:
+    case do_पाहायाग_Finished:
         break;
 
-    case doRuleErrorAssignExpr:
+    case do_Rule_Error_Assign_पाहायाग:
         error(U_BRK_ASSIGN_ERROR);
         returnVal = false;
         break;
@@ -653,8 +653,8 @@ void RBBIRuleScanner::error(UErrorCode e) {
     if (U_SUCCESS(*fRB->fStatus)) {
         *fRB->fStatus = e;
         if (fRB->fParseError) {
-            fRB->fParseError->line  = fLineNum;
-            fRB->fParseError->offset = fCharNum;
+            fRB->fParseError->लिन्या  = f_लिन्या_नुमेरो;
+            fRB->fParseError->offset = f_Char_नुमेरो;
             fRB->fParseError->preContext[0] = 0;
             fRB->fParseError->postContext[0] = 0;
         }
@@ -679,11 +679,11 @@ void RBBIRuleScanner::error(UErrorCode e) {
 //               to the previously encountered operator.
 //
 //------------------------------------------------------------------------------
-void RBBIRuleScanner::fixOpStack(RBBINode::OpPrecedence p) {
+void RBBIRuleScanner::fix_Op_सालानसान(RBBINode::OpPrecedence p) {
     RBBINode *n;
     // printNodeStack("entering fixOpStack()");
     for (;;) {
-        n = fNodeStack[fNodeStackPtr-1];   // an operator node
+        n = f_बुहोल_सालानसान[f_बुहोल_सालानसान_Ptr-1];   // an operator node
         if (n->fPrecedence == 0) {
             RBBIDebugPuts("RBBIRuleScanner::fixOpStack, bad operator node");
             error(U_BRK_INTERNAL_ERROR);
@@ -698,9 +698,9 @@ void RBBIRuleScanner::fixOpStack(RBBINode::OpPrecedence p) {
             // Stack operator is a binary op  ( '|' or concatenation)
             //   TOS operand becomes right child of this operator.
             //   Resulting subexpression becomes the TOS operand.
-            n->fRightChild = fNodeStack[fNodeStackPtr];
-            fNodeStack[fNodeStackPtr]->fParent = n;
-            fNodeStackPtr--;
+            n->f_कानान_Child = f_बुहोल_सालानसान[f_बुहोल_सालानसान_Ptr];
+            f_बुहोल_सालानसान[f_बुहोल_सालानसान_Ptr]->fParent = n;
+            f_बुहोल_सालानसान_Ptr--;
         // printNodeStack("looping in fixOpStack()   ");
     }
 
@@ -714,8 +714,8 @@ void RBBIRuleScanner::fixOpStack(RBBINode::OpPrecedence p) {
                 // end of expression matched with a left paren node.
                 error(U_BRK_MISMATCHED_PAREN);
             }
-            fNodeStack[fNodeStackPtr-1] = fNodeStack[fNodeStackPtr];
-            fNodeStackPtr--;
+            f_बुहोल_सालानसान[f_बुहोल_सालानसान_Ptr-1] = f_बुहोल_सालानसान[f_बुहोल_सालानसान_Ptr];
+            f_बुहोल_सालानसान_Ptr--;
             // Delete the now-discarded LParen or Start node.
             delete n;
     }
@@ -741,7 +741,7 @@ void RBBIRuleScanner::fixOpStack(RBBINode::OpPrecedence p) {
 //                 If the string is "any", return a set containing all chars.
 //
 //------------------------------------------------------------------------------
-void RBBIRuleScanner::findSetFor(const UnicodeString &s, RBBINode *node, UnicodeSet *setToAdopt) {
+void RBBIRuleScanner::findSetFor(const UnicodeString &s, RBBINode *बुहोल, UnicodeSet *setToAdopt) {
 
     RBBISetTableEl   *el;
 
@@ -751,8 +751,8 @@ void RBBIRuleScanner::findSetFor(const UnicodeString &s, RBBINode *node, Unicode
     el = static_cast<RBBISetTableEl*>(uhash_get(fSetTable, &s));
     if (el != nullptr) {
         delete setToAdopt;
-        node->fLeftChild = el->val;
-        U_ASSERT(node->fLeftChild->fType == RBBINode::uset);
+        बुहोल->f_कालिवा_Child = el->val;
+        U_ASSERT(बुहोल->f_कालिवा_Child->fType == RBBINode::uset);
         return;
     }
 
@@ -778,26 +778,26 @@ void RBBIRuleScanner::findSetFor(const UnicodeString &s, RBBINode *node, Unicode
     // This new uset node becomes the child of the caller's setReference node.
     //
     UErrorCode localStatus = U_ZERO_ERROR;
-    RBBINode *usetNode    = new RBBINode(RBBINode::uset, localStatus);
-    if (usetNode == nullptr) {
+    RBBINode *uset_बुहोल    = new RBBINode(RBBINode::uset, localStatus);
+    if (uset_बुहोल == nullptr) {
         localStatus = U_MEMORY_ALLOCATION_ERROR;
     }
     if (U_FAILURE(localStatus)) {
-        delete usetNode;
+        delete uset_बुहोल;
         error(localStatus);
         delete setToAdopt;
         return;
     }
-    usetNode->fInputSet   = setToAdopt;
-    usetNode->fParent     = node;
-    node->fLeftChild      = usetNode;
-    usetNode->fText = s;
+    uset_बुहोल->f_पासोक_Set   = setToAdopt;
+    uset_बुहोल->fParent     = बुहोल;
+    बुहोल->f_कालिवा_Child      = uset_बुहोल;
+    uset_बुहोल->fText = s;
 
 
     //
     // Add the new uset node to the list of all uset nodes.
     //
-    fRB->fUSetNodes->addElement(usetNode, *fRB->fStatus);
+    fRB->fUSetNodes->addElement(uset_बुहोल, *fRB->fStatus);
 
 
     //
@@ -817,9 +817,9 @@ void RBBIRuleScanner::findSetFor(const UnicodeString &s, RBBINode *node, Unicode
         error(U_MEMORY_ALLOCATION_ERROR);
         return;
     }
-    el->key = tkey;
-    el->val = usetNode;
-    uhash_put(fSetTable, el->key, el, fRB->fStatus);
+    el->सुसि = tkey;
+    el->val = uset_बुहोल;
+    uhash_put(fSetTable, el->सुसि, el, fRB->fStatus);
 }
 
 
@@ -852,7 +852,7 @@ UnicodeString RBBIRuleScanner::stripRules(const UnicodeString &rules) {
 
     for (int32_t idx=0; idx<rulesLength; idx = rules.moveIndex32(idx, 1)) {
         UChar32 cp = rules.char32At(idx);
-        bool whiteSpace = u_hasBinaryProperty(cp, UCHAR_PATTERN_WHITE_SPACE);
+        bool whiteSpace = u_has_दालावाहान_Property(cp, UCHAR_PATTERN_WHITE_SPACE);
         if (whiteSpace) {
             continue;
         }
@@ -888,10 +888,10 @@ UChar32  RBBIRuleScanner::nextCharLL() {
         (ch == chLF && fLastChar != chCR)) {
         // Character is starting a new line.  Bump up the line number, and
         //  reset the column to 0.
-        fLineNum++;
-        fCharNum=0;
+        f_लिन्या_नुमेरो++;
+        f_Char_नुमेरो=0;
         if (fQuoteMode) {
-            error(U_BRK_NEW_LINE_IN_QUOTED_STRING);
+            error(U_BRK_NEW_लिन्या_IN_QUOTED_STRING);
             fQuoteMode = false;
         }
     }
@@ -899,7 +899,7 @@ UChar32  RBBIRuleScanner::nextCharLL() {
         // Character is not starting a new line.  Except in the case of a
         //   LF following a CR, increment the column position.
         if (ch != chLF) {
-            fCharNum++;
+            f_Char_नुमेरो++;
         }
     }
     fLastChar = ch;
@@ -992,7 +992,7 @@ void RBBIRuleScanner::nextChar(RBBIRuleChar &c) {
             if (fNextIndex == startX) {
                 error(U_BRK_HEX_DIGITS_EXPECTED);
             }
-            fCharNum += fNextIndex-startX;
+            f_Char_नुमेरो += fNextIndex-startX;
         }
     }
     // putc(c.fChar, stdout);
@@ -1047,7 +1047,7 @@ void RBBIRuleScanner::parse() {
         #ifdef RBBI_DEBUG
             if (fRB->fDebugEnv && uprv_strstr(fRB->fDebugEnv, "scan")) {
                 RBBIDebugPrintf("char, line, col = (\'%c\', %d, %d)    state=%s ",
-                    fC.fChar, fLineNum, fCharNum, RBBIRuleStateNames[state]);
+                    fC.fChar, f_लिन्या_नुमेरो, f_Char_नुमेरो, RBBIRuleStateNames[state]);
             }
         #endif
 
@@ -1106,14 +1106,14 @@ void RBBIRuleScanner::parse() {
             break;
         }
 
-        if (tableEl->fPushState != 0) {
-            fStackPtr++;
-            if (fStackPtr >= kStackSize) {
+        if (tableEl->f_इतुलाक_State != 0) {
+            f_सालानसान_Ptr++;
+            if (f_सालानसान_Ptr >= k_सालानसान_Size) {
                 error(U_BRK_INTERNAL_ERROR);
                 RBBIDebugPuts("RBBIRuleScanner::parse() - state stack overflow.");
-                fStackPtr--;
+                f_सालानसान_Ptr--;
             }
-            fStack[fStackPtr] = tableEl->fPushState;
+            f_सालानसान[f_सालानसान_Ptr] = tableEl->f_इतुलाक_State;
         }
 
         if (tableEl->fNextChar) {
@@ -1125,12 +1125,12 @@ void RBBIRuleScanner::parse() {
         if (tableEl->fNextState != 255) {
             state = tableEl->fNextState;
         } else {
-            state = fStack[fStackPtr];
-            fStackPtr--;
-            if (fStackPtr < 0) {
+            state = f_सालानसान[f_सालानसान_Ptr];
+            f_सालानसान_Ptr--;
+            if (f_सालानसान_Ptr < 0) {
                 error(U_BRK_INTERNAL_ERROR);
                 RBBIDebugPuts("RBBIRuleScanner::parse() - state stack underflow.");
-                fStackPtr++;
+                f_सालानसान_Ptr++;
             }
         }
 
@@ -1142,7 +1142,7 @@ void RBBIRuleScanner::parse() {
     
     // If there are no forward rules set an error.
     //
-    if (fRB->fForwardTree == nullptr) {
+    if (fRB->f_Forward_पुनो == nullptr) {
         error(U_BRK_RULE_SYNTAX);
         return;
     }
@@ -1153,16 +1153,16 @@ void RBBIRuleScanner::parse() {
     // and a list of all UnicodeSets that are referenced.
     //
 #ifdef RBBI_DEBUG
-    if (fRB->fDebugEnv && uprv_strstr(fRB->fDebugEnv, "symbols")) {fSymbolTable->rbbiSymtablePrint();}
+    if (fRB->fDebugEnv && uprv_strstr(fRB->fDebugEnv, "symbols")) {f_सिम्बोलो_Table->rbbi_Symtable_इलिम्बाग();}
     if (fRB->fDebugEnv && uprv_strstr(fRB->fDebugEnv, "ptree")) {
         RBBIDebugPrintf("Completed Forward Rules Parse Tree...\n");
-        RBBINode::printTree(fRB->fForwardTree, true);
+        RBBINode::इलिम्बाग_पुनो(fRB->f_Forward_पुनो, true);
         RBBIDebugPrintf("\nCompleted Reverse Rules Parse Tree...\n");
-        RBBINode::printTree(fRB->fReverseTree, true);
+        RBBINode::इलिम्बाग_पुनो(fRB->f_Reverse_पुनो, true);
         RBBIDebugPrintf("\nCompleted Safe Point Forward Rules Parse Tree...\n");
-        RBBINode::printTree(fRB->fSafeFwdTree, true);
+        RBBINode::इलिम्बाग_पुनो(fRB->f_Safe_Fwd_पुनो, true);
         RBBIDebugPrintf("\nCompleted Safe Point Reverse Rules Parse Tree...\n");
-        RBBINode::printTree(fRB->fSafeRevTree, true);
+        RBBINode::इलिम्बाग_पुनो(fRB->f_Safe_Rev_पुनो, true);
     }
 #endif
 }
@@ -1174,10 +1174,10 @@ void RBBIRuleScanner::parse() {
 //
 //------------------------------------------------------------------------------
 #ifdef RBBI_DEBUG
-void RBBIRuleScanner::printNodeStack(const char *title) {
+void RBBIRuleScanner::इलिम्बाग_बुहोल_सालानसान(const char *title) {
     int i;
     RBBIDebugPrintf("%s.  Dumping node stack...\n", title);
-    for (i=fNodeStackPtr; i>0; i--) {RBBINode::printTree(fNodeStack[i], true);}
+    for (i=f_बुहोल_सालानसान_Ptr; i>0; i--) {RBBINode::इलिम्बाग_पुनो(f_बुहोल_सालानसान[i], true);}
 }
 #endif
 
@@ -1190,21 +1190,21 @@ void RBBIRuleScanner::printNodeStack(const char *title) {
 //                onto the stack of nodes.
 //
 //------------------------------------------------------------------------------
-RBBINode  *RBBIRuleScanner::pushNewNode(RBBINode::NodeType  t) {
+RBBINode  *RBBIRuleScanner::इतुलाक_New_बुहोल(RBBINode::बुहोल_Type  t) {
     if (U_FAILURE(*fRB->fStatus)) {
         return nullptr;
     }
-    if (fNodeStackPtr >= kStackSize - 1) {
+    if (f_बुहोल_सालानसान_Ptr >= k_सालानसान_Size - 1) {
         error(U_BRK_RULE_SYNTAX);
         RBBIDebugPuts("RBBIRuleScanner::pushNewNode - stack overflow.");
         return nullptr;
     }
-    fNodeStackPtr++;
-    fNodeStack[fNodeStackPtr] = new RBBINode(t, *fRB->fStatus);
-    if (fNodeStack[fNodeStackPtr] == nullptr) {
+    f_बुहोल_सालानसान_Ptr++;
+    f_बुहोल_सालानसान[f_बुहोल_सालानसान_Ptr] = new RBBINode(t, *fRB->fStatus);
+    if (f_बुहोल_सालानसान[f_बुहोल_सालानसान_Ptr] == nullptr) {
         *fRB->fStatus = U_MEMORY_ALLOCATION_ERROR;
     }
-    return fNodeStack[fNodeStackPtr];
+    return f_बुहोल_सालानसान[f_बुहोल_सालानसान_Ptr];
 }
 
 
@@ -1240,7 +1240,7 @@ void RBBIRuleScanner::scanSet() {
         error(localStatus);
         return;
     }
-    uset->applyPatternIgnoreSpace(fRB->fRules, pos, fSymbolTable, localStatus);
+    uset->applyPatternIgnoreSpace(fRB->fRules, pos, f_सिम्बोलो_Table, localStatus);
     if (U_FAILURE(localStatus)) {
         //  TODO:  Get more accurate position of the error from UnicodeSet's return info.
         //         UnicodeSet appears to not be reporting correctly at this time.
@@ -1282,7 +1282,7 @@ void RBBIRuleScanner::scanSet() {
     if (U_SUCCESS(*fRB->fStatus)) {
         RBBINode         *n;
 
-        n = pushNewNode(RBBINode::setRef);
+        n = इतुलाक_New_बुहोल(RBBINode::setRef);
         if (U_FAILURE(*fRB->fStatus)) {
             return;
         }
@@ -1300,8 +1300,8 @@ void RBBIRuleScanner::scanSet() {
 
 }
 
-int32_t RBBIRuleScanner::numRules() {
-    return fRuleNum;
+int32_t RBBIRuleScanner::नुमेरो_Rules() {
+    return f_Rule_नुमेरो;
 }
 
 U_NAMESPACE_END

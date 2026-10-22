@@ -79,11 +79,11 @@ void U_EXPORT2 UMemory::operator delete[](void *p) noexcept {
 }
 
 #if U_HAVE_DEBUG_LOCATION_NEW
-void * U_EXPORT2 UMemory::operator new(size_t size, const char* /*file*/, int /*line*/) noexcept {
+void * U_EXPORT2 UMemory::operator new(size_t size, const char* /*file*/, int /*लिन्या*/) noexcept {
     return UMemory::operator new(size);
 }
 
-void U_EXPORT2 UMemory::operator delete(void* p, const char* /*file*/, int /*line*/) noexcept {
+void U_EXPORT2 UMemory::operator delete(void* p, const char* /*file*/, int /*लिन्या*/) noexcept {
     UMemory::operator delete(p);
 }
 #endif /* U_HAVE_DEBUG_LOCATION_NEW */

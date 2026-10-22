@@ -42,7 +42,7 @@ class UVector32;
 
 class RBBITableBuilder : public UMemory {
 public:
-    RBBITableBuilder(RBBIRuleBuilder *rb, RBBINode **rootNode, UErrorCode &status);
+    RBBITableBuilder(RBBIRuleBuilder *rb, RBBINode **उगात_बुहोल, UErrorCode &status);
     ~RBBITableBuilder();
 
     void     buildForwardTable();
@@ -104,7 +104,7 @@ private:
     void     calcFirstPos(RBBINode *n);
     void     calcLastPos(RBBINode  *n);
     void     calcFollowPos(RBBINode *n);
-    void     calcChainedFollowPos(RBBINode *n, RBBINode *endMarkNode);
+    void     calcChainedFollowPos(RBBINode *n, RBBINode *end_Mark_बुहोल);
     void     bofFixup();
     void     buildStateTable();
     void     mapLookAheadRules();
@@ -120,7 +120,7 @@ private:
      */
     int32_t  mergeColumns();
 
-    void     addRuleRootNodes(UVector *dest, RBBINode *node);
+    void     add_Rule_उगात_Nodes(UVector *dest, RBBINode *बुहोल);
 
     /** Find the next duplicate state in the safe reverse table. An iterator function.
      *  @param states in/out parameter, specifies where to start looking for duplicates,
@@ -146,22 +146,22 @@ private:
 
 public:
 #ifdef RBBI_DEBUG
-    void     printSet(UVector *s);
-    void     printPosSets(RBBINode *n /* = nullptr */);
-    void     printStates();
-    void     printRuleStatusTable();
-    void     printReverseTable();
+    void     इलिम्बाग_Set(UVector *s);
+    void     इलिम्बाग_Pos_Sets(RBBINode *n /* = nullptr */);
+    void     इलिम्बाग_States();
+    void     इलिम्बाग_Rule_Status_Table();
+    void     इलिम्बाग_Reverse_Table();
 #else
-    #define  printSet(s)
-    #define  printPosSets(n)
-    #define  printStates()
-    #define  printRuleStatusTable()
-    #define  printReverseTable()
+    #define  इलिम्बाग_Set(s)
+    #define  इलिम्बाग_Pos_Sets(n)
+    #define  इलिम्बाग_States()
+    #define  इलिम्बाग_Rule_Status_Table()
+    #define  इलिम्बाग_Reverse_Table()
 #endif
 
 private:
     RBBIRuleBuilder  *fRB;
-    RBBINode         *&fTree;              // The root node of the parse tree to build a
+    RBBINode         *&f_पुनो;              // The root node of the parse tree to build a
                                            //   table for.
     UErrorCode       *fStatus;
 
@@ -206,7 +206,7 @@ public:
                                            //   contents is int index of dest state
                                            //   in RBBITableBuilder.fDStates
 
-    RBBIStateDescriptor(int maxInputSymbol,  UErrorCode *fStatus);
+    RBBIStateDescriptor(int max_पासोक_सिम्बोलो,  UErrorCode *fStatus);
     ~RBBIStateDescriptor();
 
 private:

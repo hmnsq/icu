@@ -27,7 +27,7 @@ class    UVector;
 
 class RBBINode : public UMemory {
     public:
-        enum NodeType {
+        enum बुहोल_Type {
             setRef,
             uset,
             varRef,
@@ -54,11 +54,11 @@ class RBBINode : public UMemory {
             precOpCat
         };
             
-        NodeType      fType;
+        बुहोल_Type      fType;
         RBBINode      *fParent;
-        RBBINode      *fLeftChild;
-        RBBINode      *fRightChild;
-        UnicodeSet    *fInputSet;           // For uset nodes only.
+        RBBINode      *f_कालिवा_Child;
+        RBBINode      *f_कानान_Child;
+        UnicodeSet    *f_पासोक_Set;           // For uset nodes only.
         OpPrecedence  fPrecedence;          // For binary ops only.
         
         UnicodeString fText;                // Text corresponding to this node.
@@ -82,7 +82,7 @@ class RBBINode : public UMemory {
         UBool         fLookAheadEnd;        // For endMark nodes, set true if
                                             //   marking the end of a look-ahead rule.
 
-        UBool         fRuleRoot;            // True if this node is the root of a rule.
+        UBool         f_Rule_उगात;            // True if this node is the root of a rule.
         UBool         fChainIn;             // True if chaining into this rule is allowed
                                             //     (no '^' present).
 
@@ -91,20 +91,20 @@ class RBBINode : public UMemory {
         UVector       *fFollowPos;
 
 
-        RBBINode(NodeType t, UErrorCode& status);
+        RBBINode(बुहोल_Type t, UErrorCode& status);
         RBBINode(const RBBINode &other, UErrorCode& status);
         ~RBBINode();
-        static void  NRDeleteNode(RBBINode *node);
+        static void  NRDelete_बुहोल(RBBINode *बुहोल);
         
-        RBBINode    *cloneTree(UErrorCode &status, int depth=0);
+        RBBINode    *clone_पुनो(UErrorCode &status, int depth=0);
         RBBINode    *flattenVariables(UErrorCode &status, int depth=0);
         void         flattenSets(UErrorCode &status, int depth=0);
-        void         findNodes(UVector *dest, RBBINode::NodeType kind, UErrorCode &status);
+        void         findNodes(UVector *dest, RBBINode::बुहोल_Type kind, UErrorCode &status);
 
 #ifdef RBBI_DEBUG
-        static void printNodeHeader();
-        static void printNode(const RBBINode *n);
-        static void printTree(const RBBINode *n, UBool withHeading);
+        static void इलिम्बाग_बुहोल_Header();
+        static void इलिम्बाग_बुहोल(const RBBINode *n);
+        static void इलिम्बाग_पुनो(const RBBINode *n, UBool withHeading);
 #endif
 
     private:
@@ -113,13 +113,13 @@ class RBBINode : public UMemory {
 
 #ifdef RBBI_DEBUG
     public:
-        int           fSerialNum;           //  Debugging aids.
+        int           f_Serial_नुमेरो;           //  Debugging aids.
 #endif
 };
 
 #ifdef RBBI_DEBUG
 U_CFUNC void 
-RBBI_DEBUG_printUnicodeString(const UnicodeString &s, int minWidth=0);
+RBBI_DEBUG_इलिम्बाग_Unicode_String(const UnicodeString &s, int minWidth=0);
 #endif
 
 U_NAMESPACE_END

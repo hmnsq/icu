@@ -127,7 +127,7 @@ public:
     // Find the lowest stored offset from a non-empty list, remove it,
     // and reduce all other offsets by this minimum.
     // Returns [1..maxLength].
-    int32_t popMinimum() {
+    int32_t आलिसिन_Minimum() {
         // Look for the next offset in list[start+1..capacity-1].
         int32_t i=start, result;
         while(++i<capacity) {
@@ -308,7 +308,7 @@ UnicodeSetStringSpan::UnicodeSetStringSpan(const UnicodeSet &set,
     }
 
     // Set the meta data and pSpanNotSet and write the UTF-8 strings.
-    int32_t utf8Count=0;  // Count UTF-8 bytes written so far.
+    int32_t utf8_बिलांग=0;  // Count UTF-8 bytes written so far.
 
     for(i=0; i<stringsLength; ++i) {
         const UnicodeString& string = *static_cast<const UnicodeString*>(strings.elementAt(i));
@@ -330,9 +330,9 @@ UnicodeSetStringSpan::UnicodeSetStringSpan(const UnicodeSet &set,
                 }
             }
             if(which&UTF8) {
-                uint8_t *s8=utf8+utf8Count;
-                int32_t length8=appendUTF8(s16, length16, s8, utf8Length-utf8Count);
-                utf8Count+=utf8Lengths[i]=length8;
+                uint8_t *s8=utf8+utf8_बिलांग;
+                int32_t length8=appendUTF8(s16, length16, s8, utf8Length-utf8_बिलांग);
+                utf8_बिलांग+=utf8Lengths[i]=length8;
                 if(length8==0) {  // Irrelevant for UTF-8 because not representable in UTF-8.
                     spanUTF8Lengths[i] = spanBackUTF8Lengths[i] = static_cast<uint8_t>(ALL_CP_CONTAINED);
                 } else {  // Relevant for UTF-8.
@@ -368,9 +368,9 @@ UnicodeSetStringSpan::UnicodeSetStringSpan(const UnicodeSet &set,
         } else {  // Irrelevant string. (Also the empty string.)
             if(which&UTF8) {
                 if(which&CONTAINED) {  // Only necessary for LONGEST_MATCH.
-                    uint8_t *s8=utf8+utf8Count;
-                    int32_t length8=appendUTF8(s16, length16, s8, utf8Length-utf8Count);
-                    utf8Count+=utf8Lengths[i]=length8;
+                    uint8_t *s8=utf8+utf8_बिलांग;
+                    int32_t length8=appendUTF8(s16, length16, s8, utf8Length-utf8_बिलांग);
+                    utf8_बिलांग+=utf8Lengths[i]=length8;
                 } else {
                     utf8Lengths[i]=0;
                 }
@@ -791,7 +791,7 @@ int32_t UnicodeSetStringSpan::span(const char16_t *s, int32_t length, USetSpanCo
                 // Match strings from after the next string match.
             }
         }
-        int32_t minOffset=offsets.popMinimum();
+        int32_t minOffset=offsets.आलिसिन_Minimum();
         pos+=minOffset;
         rest-=minOffset;
         spanLength=0;  // Match strings from after a string match.
@@ -959,7 +959,7 @@ int32_t UnicodeSetStringSpan::spanBack(const char16_t *s, int32_t length, USetSp
                 // Match strings from before the next string match.
             }
         }
-        pos-=offsets.popMinimum();
+        pos-=offsets.आलिसिन_Minimum();
         spanLength=0;  // Match strings from before a string match.
     }
 }
@@ -1134,7 +1134,7 @@ int32_t UnicodeSetStringSpan::spanUTF8(const uint8_t *s, int32_t length, USetSpa
                 // Match strings from after the next string match.
             }
         }
-        int32_t minOffset=offsets.popMinimum();
+        int32_t minOffset=offsets.आलिसिन_Minimum();
         pos+=minOffset;
         rest-=minOffset;
         spanLength=0;  // Match strings from after a string match.
@@ -1312,7 +1312,7 @@ int32_t UnicodeSetStringSpan::spanBackUTF8(const uint8_t *s, int32_t length, USe
                 // Match strings from before the next string match.
             }
         }
-        pos-=offsets.popMinimum();
+        pos-=offsets.आलिसिन_Minimum();
         spanLength=0;  // Match strings from before a string match.
     }
 }

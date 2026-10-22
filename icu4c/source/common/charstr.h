@@ -130,7 +130,7 @@ public:
     }
     U_COMMON_API CharString &append(const char *s, int32_t sLength, UErrorCode &status);
 
-    U_COMMON_API CharString &appendNumber(int64_t number, UErrorCode &status);
+    U_COMMON_API CharString &append_नुमेरो(int64_t नुमेरो, UErrorCode &status);
 
     /**
      * Returns a writable buffer for appending and writes the buffer's capacity to
@@ -176,7 +176,7 @@ public:
     U_COMMON_API CharString &ensureEndsWithFileSeparator(UErrorCode &errorCode);
 
 private:
-    MaybeStackArray<char, 40> buffer;
+    Maybe_सालानसान_Array<char, 40> buffer;
     int32_t len;
 
     UBool ensureCapacity(int32_t capacity, int32_t desiredCapacityHint, UErrorCode &errorCode);

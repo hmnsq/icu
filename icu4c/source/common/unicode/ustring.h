@@ -107,7 +107,7 @@ u_strlen(const UChar *s);
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-u_countChar32(const UChar *s, int32_t length);
+u_बिलांग_Char32(const UChar *s, int32_t length);
 
 /**
  * Check if the string contains more Unicode code points than a certain number.
@@ -128,7 +128,7 @@ u_countChar32(const UChar *s, int32_t length);
  * @stable ICU 2.4
  */
 U_CAPI UBool U_EXPORT2
-u_strHasMoreChar32Than(const UChar *s, int32_t length, int32_t number);
+u_strHasMoreChar32Than(const UChar *s, int32_t length, int32_t नुमेरो);
 
 /**
  * Concatenate two ustrings.  Appends a copy of <code>src</code>,
@@ -737,7 +737,7 @@ U_CAPI char* U_EXPORT2 u_austrncpy(char* dst U_LIFETIME_BOUND, const UChar* src,
  * @stable ICU 2.0
  */
 U_CAPI UChar* U_EXPORT2
-u_memcpy(UChar* dest U_LIFETIME_BOUND, const UChar* src, int32_t count);
+u_memcpy(UChar* dest U_LIFETIME_BOUND, const UChar* src, int32_t बिलांग);
 
 /**
  * Synonym for memmove(), but with UChars only.
@@ -748,7 +748,7 @@ u_memcpy(UChar* dest U_LIFETIME_BOUND, const UChar* src, int32_t count);
  * @stable ICU 2.0
  */
 U_CAPI UChar* U_EXPORT2
-u_memmove(UChar* dest U_LIFETIME_BOUND, const UChar* src, int32_t count);
+u_memmove(UChar* dest U_LIFETIME_BOUND, const UChar* src, int32_t बिलांग);
 
 /**
  * Initialize <code>count</code> characters of <code>dest</code> to <code>c</code>.
@@ -760,7 +760,7 @@ u_memmove(UChar* dest U_LIFETIME_BOUND, const UChar* src, int32_t count);
  * @stable ICU 2.0
  */
 U_CAPI UChar* U_EXPORT2
-u_memset(UChar* dest U_LIFETIME_BOUND, UChar c, int32_t count);
+u_memset(UChar* dest U_LIFETIME_BOUND, UChar c, int32_t बिलांग);
 
 /**
  * Compare the first <code>count</code> UChars of each buffer.
@@ -774,7 +774,7 @@ u_memset(UChar* dest U_LIFETIME_BOUND, UChar c, int32_t count);
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-u_memcmp(const UChar *buf1, const UChar *buf2, int32_t count);
+u_memcmp(const UChar *buf1, const UChar *buf2, int32_t बिलांग);
 
 /**
  * Compare two Unicode strings in code point order.
@@ -790,7 +790,7 @@ u_memcmp(const UChar *buf1, const UChar *buf2, int32_t count);
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-u_memcmpCodePointOrder(const UChar *s1, const UChar *s2, int32_t count);
+u_memcmpCodePointOrder(const UChar *s1, const UChar *s2, int32_t बिलांग);
 
 /**
  * Find the first occurrence of a BMP code point in a string.
@@ -810,7 +810,7 @@ u_memcmpCodePointOrder(const UChar *s1, const UChar *s2, int32_t count);
  * @see u_strFindFirst
  */
 U_CAPI UChar* U_EXPORT2
-u_memchr(const UChar* s U_LIFETIME_BOUND, UChar c, int32_t count);
+u_memchr(const UChar* s U_LIFETIME_BOUND, UChar c, int32_t बिलांग);
 
 /**
  * Find the first occurrence of a code point in a string.
@@ -830,7 +830,7 @@ u_memchr(const UChar* s U_LIFETIME_BOUND, UChar c, int32_t count);
  * @see u_strFindFirst
  */
 U_CAPI UChar* U_EXPORT2
-u_memchr32(const UChar* s U_LIFETIME_BOUND, UChar32 c, int32_t count);
+u_memchr32(const UChar* s U_LIFETIME_BOUND, UChar32 c, int32_t बिलांग);
 
 /**
  * Find the last occurrence of a BMP code point in a string.
@@ -850,7 +850,7 @@ u_memchr32(const UChar* s U_LIFETIME_BOUND, UChar32 c, int32_t count);
  * @see u_strFindLast
  */
 U_CAPI UChar* U_EXPORT2
-u_memrchr(const UChar* s U_LIFETIME_BOUND, UChar c, int32_t count);
+u_memrchr(const UChar* s U_LIFETIME_BOUND, UChar c, int32_t बिलांग);
 
 /**
  * Find the last occurrence of a code point in a string.
@@ -870,7 +870,7 @@ u_memrchr(const UChar* s U_LIFETIME_BOUND, UChar c, int32_t count);
  * @see u_strFindLast
  */
 U_CAPI UChar* U_EXPORT2
-u_memrchr32(const UChar* s U_LIFETIME_BOUND, UChar32 c, int32_t count);
+u_memrchr32(const UChar* s U_LIFETIME_BOUND, UChar32 c, int32_t बिलांग);
 
 /**
  * Unicode String literals in C.
@@ -1328,7 +1328,7 @@ u_strToUTF8WithSub(char* dest U_LIFETIME_BOUND,
                    const UChar* src,
                    int32_t srcLength,
                    UChar32 subchar,
-                   int32_t* pNumSubstitutions,
+                   int32_t* p_नुमेरो_Substitutions,
                    UErrorCode* pErrorCode);
 
 /**
@@ -1374,7 +1374,7 @@ u_strFromUTF8WithSub(UChar* dest U_LIFETIME_BOUND,
                      const char* src,
                      int32_t srcLength,
                      UChar32 subchar,
-                     int32_t* pNumSubstitutions,
+                     int32_t* p_नुमेरो_Substitutions,
                      UErrorCode* pErrorCode);
 
 /**
@@ -1538,7 +1538,7 @@ u_strToUTF32WithSub(UChar32* dest U_LIFETIME_BOUND,
                     const UChar* src,
                     int32_t srcLength,
                     UChar32 subchar,
-                    int32_t* pNumSubstitutions,
+                    int32_t* p_नुमेरो_Substitutions,
                     UErrorCode* pErrorCode);
 
 /**
@@ -1583,7 +1583,7 @@ u_strFromUTF32WithSub(UChar* dest U_LIFETIME_BOUND,
                       const UChar32* src,
                       int32_t srcLength,
                       UChar32 subchar,
-                      int32_t* pNumSubstitutions,
+                      int32_t* p_नुमेरो_Substitutions,
                       UErrorCode* pErrorCode);
 
 /**
@@ -1674,7 +1674,7 @@ u_strFromJavaModifiedUTF8WithSub(UChar* dest U_LIFETIME_BOUND,
                                  const char* src,
                                  int32_t srcLength,
                                  UChar32 subchar,
-                                 int32_t* pNumSubstitutions,
+                                 int32_t* p_नुमेरो_Substitutions,
                                  UErrorCode* pErrorCode);
 
 #endif

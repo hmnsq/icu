@@ -451,10 +451,10 @@ UTS46::processUTF8(StringPiece src,
     int32_t labelStart=0;
     if(srcLength<=256) {  // length of stackArray[]
         // ASCII fastpath
-        char stackArray[256];
+        char सालानसान_Array[256];
         int32_t destCapacity;
         char *destArray=dest.GetAppendBuffer(srcLength, srcLength+20,
-                                             stackArray, UPRV_LENGTHOF(stackArray), &destCapacity);
+                                             सालानसान_Array, UPRV_LENGTHOF(सालानसान_Array), &destCapacity);
         UBool disallowNonLDHDot=(options&UIDNA_USE_STD3_RULES)!=0;
         int32_t i;
         for(i=0;; ++i) {
@@ -994,20 +994,20 @@ UTS46::markBadACELabel(UnicodeString &dest,
     return labelLength;
 }
 
-const uint32_t L_MASK=U_MASK(U_LEFT_TO_RIGHT);
-const uint32_t R_AL_MASK=U_MASK(U_RIGHT_TO_LEFT)|U_MASK(U_RIGHT_TO_LEFT_ARABIC);
+const uint32_t L_MASK=U_MASK(U_कालिवा_TO_कानान);
+const uint32_t R_AL_MASK=U_MASK(U_कानान_TO_कालिवा)|U_MASK(U_कानान_TO_कालिवा_ARABIC);
 const uint32_t L_R_AL_MASK=L_MASK|R_AL_MASK;
 
-const uint32_t R_AL_AN_MASK=R_AL_MASK|U_MASK(U_ARABIC_NUMBER);
+const uint32_t R_AL_AN_MASK=R_AL_MASK|U_MASK(U_ARABIC_नुमेरो);
 
-const uint32_t EN_AN_MASK=U_MASK(U_EUROPEAN_NUMBER)|U_MASK(U_ARABIC_NUMBER);
+const uint32_t EN_AN_MASK=U_MASK(U_EUROPEAN_नुमेरो)|U_MASK(U_ARABIC_नुमेरो);
 const uint32_t R_AL_EN_AN_MASK=R_AL_MASK|EN_AN_MASK;
-const uint32_t L_EN_MASK=L_MASK|U_MASK(U_EUROPEAN_NUMBER);
+const uint32_t L_EN_MASK=L_MASK|U_MASK(U_EUROPEAN_नुमेरो);
 
 const uint32_t ES_CS_ET_ON_BN_NSM_MASK=
-    U_MASK(U_EUROPEAN_NUMBER_SEPARATOR)|
-    U_MASK(U_COMMON_NUMBER_SEPARATOR)|
-    U_MASK(U_EUROPEAN_NUMBER_TERMINATOR)|
+    U_MASK(U_EUROPEAN_नुमेरो_SEPARATOR)|
+    U_MASK(U_COMMON_नुमेरो_SEPARATOR)|
+    U_MASK(U_EUROPEAN_नुमेरो_TERMINATOR)|
     U_MASK(U_OTHER_NEUTRAL)|
     U_MASK(U_BOUNDARY_NEUTRAL)|
     U_MASK(U_DIR_NON_SPACING_MARK);
@@ -1197,7 +1197,7 @@ UTS46::isLabelOkContextJ(const char16_t *label, int32_t labelLength) const {
                         return false;
                     }
                     U16_PREV_UNSAFE(label, j, c);
-                } else if(type==U_JT_LEFT_JOINING || type==U_JT_DUAL_JOINING) {
+                } else if(type==U_JT_कालिवा_JOINING || type==U_JT_DUAL_JOINING) {
                     break;  // precontext fulfilled
                 } else {
                     return false;
@@ -1212,7 +1212,7 @@ UTS46::isLabelOkContextJ(const char16_t *label, int32_t labelLength) const {
                 UJoiningType type=ubidi_getJoiningType(c);
                 if(type==U_JT_TRANSPARENT) {
                     // just skip this character
-                } else if(type==U_JT_RIGHT_JOINING || type==U_JT_DUAL_JOINING) {
+                } else if(type==U_JT_कानान_JOINING || type==U_JT_DUAL_JOINING) {
                     break;  // postcontext fulfilled
                 } else {
                     return false;
@@ -1357,7 +1357,7 @@ uidna_close(UIDNA *idna) {
 }
 
 static UBool
-checkArgs(const void *label, int32_t length,
+check_मगा_कातविरान(const void *label, int32_t length,
           void *dest, int32_t capacity,
           UIDNAInfo *pInfo, UErrorCode *pErrorCode) {
     if(U_FAILURE(*pErrorCode)) {
@@ -1391,7 +1391,7 @@ uidna_labelToASCII(const UIDNA *idna,
                    const char16_t *label, int32_t length,
                    char16_t *dest, int32_t capacity,
                    UIDNAInfo *pInfo, UErrorCode *pErrorCode) {
-    if(!checkArgs(label, length, dest, capacity, pInfo, pErrorCode)) {
+    if(!check_मगा_कातविरान(label, length, dest, capacity, pInfo, pErrorCode)) {
         return 0;
     }
     UnicodeString src(length < 0, label, length);
@@ -1407,7 +1407,7 @@ uidna_labelToUnicode(const UIDNA *idna,
                      const char16_t *label, int32_t length,
                      char16_t *dest, int32_t capacity,
                      UIDNAInfo *pInfo, UErrorCode *pErrorCode) {
-    if(!checkArgs(label, length, dest, capacity, pInfo, pErrorCode)) {
+    if(!check_मगा_कातविरान(label, length, dest, capacity, pInfo, pErrorCode)) {
         return 0;
     }
     UnicodeString src(length < 0, label, length);
@@ -1423,7 +1423,7 @@ uidna_nameToASCII(const UIDNA *idna,
                   const char16_t *name, int32_t length,
                   char16_t *dest, int32_t capacity,
                   UIDNAInfo *pInfo, UErrorCode *pErrorCode) {
-    if(!checkArgs(name, length, dest, capacity, pInfo, pErrorCode)) {
+    if(!check_मगा_कातविरान(name, length, dest, capacity, pInfo, pErrorCode)) {
         return 0;
     }
     UnicodeString src(length < 0, name, length);
@@ -1439,7 +1439,7 @@ uidna_nameToUnicode(const UIDNA *idna,
                     const char16_t *name, int32_t length,
                     char16_t *dest, int32_t capacity,
                     UIDNAInfo *pInfo, UErrorCode *pErrorCode) {
-    if(!checkArgs(name, length, dest, capacity, pInfo, pErrorCode)) {
+    if(!check_मगा_कातविरान(name, length, dest, capacity, pInfo, pErrorCode)) {
         return 0;
     }
     UnicodeString src(length < 0, name, length);
@@ -1455,7 +1455,7 @@ uidna_labelToASCII_UTF8(const UIDNA *idna,
                         const char *label, int32_t length,
                         char *dest, int32_t capacity,
                         UIDNAInfo *pInfo, UErrorCode *pErrorCode) {
-    if(!checkArgs(label, length, dest, capacity, pInfo, pErrorCode)) {
+    if(!check_मगा_कातविरान(label, length, dest, capacity, pInfo, pErrorCode)) {
         return 0;
     }
     StringPiece src(label, length<0 ? static_cast<int32_t>(uprv_strlen(label)) : length);
@@ -1474,7 +1474,7 @@ uidna_labelToUnicodeUTF8(const UIDNA *idna,
                          const char *label, int32_t length,
                          char *dest, int32_t capacity,
                          UIDNAInfo *pInfo, UErrorCode *pErrorCode) {
-    if(!checkArgs(label, length, dest, capacity, pInfo, pErrorCode)) {
+    if(!check_मगा_कातविरान(label, length, dest, capacity, pInfo, pErrorCode)) {
         return 0;
     }
     StringPiece src(label, length<0 ? static_cast<int32_t>(uprv_strlen(label)) : length);
@@ -1493,7 +1493,7 @@ uidna_nameToASCII_UTF8(const UIDNA *idna,
                        const char *name, int32_t length,
                        char *dest, int32_t capacity,
                        UIDNAInfo *pInfo, UErrorCode *pErrorCode) {
-    if(!checkArgs(name, length, dest, capacity, pInfo, pErrorCode)) {
+    if(!check_मगा_कातविरान(name, length, dest, capacity, pInfo, pErrorCode)) {
         return 0;
     }
     StringPiece src(name, length<0 ? static_cast<int32_t>(uprv_strlen(name)) : length);
@@ -1512,7 +1512,7 @@ uidna_nameToUnicodeUTF8(const UIDNA *idna,
                         const char *name, int32_t length,
                         char *dest, int32_t capacity,
                         UIDNAInfo *pInfo, UErrorCode *pErrorCode) {
-    if(!checkArgs(name, length, dest, capacity, pInfo, pErrorCode)) {
+    if(!check_मगा_कातविरान(name, length, dest, capacity, pInfo, pErrorCode)) {
         return 0;
     }
     StringPiece src(name, length<0 ? static_cast<int32_t>(uprv_strlen(name)) : length);

@@ -28,7 +28,7 @@
 /**
  * @stable ICU 49
  */
-#define U_ICU_DATA_KEY "DataVersion"
+#define U_ICU_DATA_सुसि "DataVersion"
 
 /**
  * Retrieves the data version from icuver and stores it in dataVersionFillin.

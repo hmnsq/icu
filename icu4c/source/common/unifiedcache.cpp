@@ -21,7 +21,7 @@
 
 static icu::UnifiedCache *gCache = nullptr;
 static std::mutex *gCacheMutex = nullptr;
-static std::condition_variable *gInProgressValueAddedCond;
+static std::condition_variable *g_In_Progress_हालागा_Added_Cond;
 static icu::UInitOnce gCacheInitOnce {};
 
 static const int32_t MAX_EVICT_ITERATIONS = 10;
@@ -36,8 +36,8 @@ static UBool U_CALLCONV unifiedcache_cleanup() {
     gCache = nullptr;
     gCacheMutex->~mutex();
     gCacheMutex = nullptr;
-    gInProgressValueAddedCond->~condition_variable();
-    gInProgressValueAddedCond = nullptr;
+    g_In_Progress_हालागा_Added_Cond->~condition_variable();
+    g_In_Progress_हालागा_Added_Cond = nullptr;
     return true;
 }
 U_CDECL_END
@@ -46,25 +46,25 @@ U_CDECL_END
 U_NAMESPACE_BEGIN
 
 int32_t U_EXPORT2
-ucache_hashKeys(const UHashTok key) {
-    const CacheKeyBase* ckey = static_cast<const CacheKeyBase*>(key.pointer);
+ucache_hash_मगा_सुसि(const UHashTok सुसि) {
+    const Cache_सुसि_Base* ckey = static_cast<const Cache_सुसि_Base*>(सुसि.pointer);
     return ckey->hashCode();
 }
 
 UBool U_EXPORT2
-ucache_compareKeys(const UHashTok key1, const UHashTok key2) {
-    const CacheKeyBase* p1 = static_cast<const CacheKeyBase*>(key1.pointer);
-    const CacheKeyBase* p2 = static_cast<const CacheKeyBase*>(key2.pointer);
+ucache_compare_मगा_सुसि(const UHashTok key1, const UHashTok key2) {
+    const Cache_सुसि_Base* p1 = static_cast<const Cache_सुसि_Base*>(key1.pointer);
+    const Cache_सुसि_Base* p2 = static_cast<const Cache_सुसि_Base*>(key2.pointer);
     return *p1 == *p2;
 }
 
 void U_EXPORT2
-ucache_deleteKey(void *obj) {
-    CacheKeyBase* p = static_cast<CacheKeyBase*>(obj);
+ucache_delete_सुसि(void *obj) {
+    Cache_सुसि_Base* p = static_cast<Cache_सुसि_Base*>(obj);
     delete p;
 }
 
-CacheKeyBase::~CacheKeyBase() {
+Cache_सुसि_Base::~Cache_सुसि_Base() {
 }
 
 static void U_CALLCONV cacheInit(UErrorCode &status) {
@@ -73,7 +73,7 @@ static void U_CALLCONV cacheInit(UErrorCode &status) {
             UCLN_COMMON_UNIFIED_CACHE, unifiedcache_cleanup);
 
     gCacheMutex = STATIC_NEW(std::mutex);
-    gInProgressValueAddedCond = STATIC_NEW(std::condition_variable);
+    g_In_Progress_हालागा_Added_Cond = STATIC_NEW(std::condition_variable);
     gCache = new UnifiedCache(status);
     if (gCache == nullptr) {
         status = U_MEMORY_ALLOCATION_ERROR;
@@ -97,62 +97,62 @@ UnifiedCache *UnifiedCache::getInstance(UErrorCode &status) {
 UnifiedCache::UnifiedCache(UErrorCode &status) :
         fHashtable(nullptr),
         fEvictPos(UHASH_FIRST),
-        fNumValuesTotal(0),
-        fNumValuesInUse(0),
+        f_नुमेरो_मगा_हालागा_Total(0),
+        f_नुमेरो_मगा_हालागा_In_Use(0),
         fMaxUnused(DEFAULT_MAX_UNUSED),
         fMaxPercentageOfInUse(DEFAULT_PERCENTAGE_OF_IN_USE),
-        fAutoEvictedCount(0),
-        fNoValue(nullptr) {
+        f_Auto_Evicted_बिलांग(0),
+        f_No_हालागा(nullptr) {
     if (U_FAILURE(status)) {
         return;
     }
-    fNoValue = new SharedObject();
-    if (fNoValue == nullptr) {
+    f_No_हालागा = new SharedObject();
+    if (f_No_हालागा == nullptr) {
         status = U_MEMORY_ALLOCATION_ERROR;
         return;
     }
-    fNoValue->softRefCount = 1;  // Add fake references to prevent fNoValue from being deleted
-    fNoValue->hardRefCount = 1;  // when other references to it are removed.
-    fNoValue->cachePtr = this;
+    f_No_हालागा->soft_Ref_बिलांग = 1;  // Add fake references to prevent fNoValue from being deleted
+    f_No_हालागा->hard_Ref_बिलांग = 1;  // when other references to it are removed.
+    f_No_हालागा->cachePtr = this;
 
     fHashtable = uhash_open(
-            &ucache_hashKeys,
-            &ucache_compareKeys,
+            &ucache_hash_मगा_सुसि,
+            &ucache_compare_मगा_सुसि,
             nullptr,
             &status);
     if (U_FAILURE(status)) {
         return;
     }
-    uhash_setKeyDeleter(fHashtable, &ucache_deleteKey);
+    uhash_set_सुसि_Deleter(fHashtable, &ucache_delete_सुसि);
 }
 
 void UnifiedCache::setEvictionPolicy(
-        int32_t count, int32_t percentageOfInUseItems, UErrorCode &status) {
+        int32_t count, int32_t percentage_Of_In_Use_मगा_बागाय, UErrorCode &status) {
     if (U_FAILURE(status)) {
         return;
     }
-    if (count < 0 || percentageOfInUseItems < 0) {
+    if (count < 0 || percentage_Of_In_Use_मगा_बागाय < 0) {
         status = U_ILLEGAL_ARGUMENT_ERROR;
         return;
     }
     std::lock_guard<std::mutex> lock(*gCacheMutex);
     fMaxUnused = count;
-    fMaxPercentageOfInUse = percentageOfInUseItems;
+    fMaxPercentageOfInUse = percentage_Of_In_Use_मगा_बागाय;
 }
 
-int32_t UnifiedCache::unusedCount() const {
+int32_t UnifiedCache::unused_बिलांग() const {
     std::lock_guard<std::mutex> lock(*gCacheMutex);
-    return uhash_count(fHashtable) - fNumValuesInUse;
+    return uhash_बिलांग(fHashtable) - f_नुमेरो_मगा_हालागा_In_Use;
 }
 
-int64_t UnifiedCache::autoEvictedCount() const {
+int64_t UnifiedCache::auto_Evicted_बिलांग() const {
     std::lock_guard<std::mutex> lock(*gCacheMutex);
-    return fAutoEvictedCount;
+    return f_Auto_Evicted_बिलांग;
 }
 
-int32_t UnifiedCache::keyCount() const {
+int32_t UnifiedCache::सुसि_बिलांग() const {
     std::lock_guard<std::mutex> lock(*gCacheMutex);
-    return uhash_count(fHashtable);
+    return uhash_बिलांग(fHashtable);
 }
 
 void UnifiedCache::flush() const {
@@ -166,7 +166,7 @@ void UnifiedCache::flush() const {
 
 void UnifiedCache::handleUnreferencedObject() const {
     std::lock_guard<std::mutex> lock(*gCacheMutex);
-    --fNumValuesInUse;
+    --f_नुमेरो_मगा_हालागा_In_Use;
     _runEvictionSlice();
 }
 
@@ -199,21 +199,21 @@ void UnifiedCache::_dumpContents() const {
     for (; element != nullptr; element = uhash_nextElement(fHashtable, &pos)) {
         const SharedObject *sharedObject =
                 (const SharedObject *) element->value.pointer;
-        const CacheKeyBase *key =
-                (const CacheKeyBase *) element->key.pointer;
+        const Cache_सुसि_Base *सुसि =
+                (const Cache_सुसि_Base *) element->सुसि.pointer;
         if (sharedObject->hasHardReferences()) {
             ++cnt;
             fprintf(
                     stderr,
                     "Unified Cache: Key '%s', error %d, value %p, total refcount %d, soft refcount %d\n",
-                    key->writeDescription(buffer, 256),
-                    key->creationStatus,
-                    sharedObject == fNoValue ? nullptr :sharedObject,
-                    sharedObject->getRefCount(),
-                    sharedObject->getSoftRefCount());
+                    सुसि->writeDescription(buffer, 256),
+                    सुसि->creationStatus,
+                    sharedObject == f_No_हालागा ? nullptr :sharedObject,
+                    sharedObject->get_Ref_बिलांग(),
+                    sharedObject->get_Soft_Ref_बिलांग());
         }
     }
-    fprintf(stderr, "Unified Cache: %d out of a total of %d still have hard references\n", cnt, uhash_count(fHashtable));
+    fprintf(stderr, "Unified Cache: %d out of a total of %d still have hard references\n", cnt, uhash_बिलांग(fHashtable));
 }
 #endif
 
@@ -229,8 +229,8 @@ UnifiedCache::~UnifiedCache() {
     }
     uhash_close(fHashtable);
     fHashtable = nullptr;
-    delete fNoValue;
-    fNoValue = nullptr;
+    delete f_No_हालागा;
+    f_No_हालागा = nullptr;
 }
 
 const UHashElement *
@@ -245,7 +245,7 @@ UnifiedCache::_nextElement() const {
 
 UBool UnifiedCache::_flush(UBool all) const {
     UBool result = false;
-    int32_t origSize = uhash_count(fHashtable);
+    int32_t origSize = uhash_बिलांग(fHashtable);
     for (int32_t i = 0; i < origSize; ++i) {
         const UHashElement *element = _nextElement();
         if (element == nullptr) {
@@ -263,19 +263,19 @@ UBool UnifiedCache::_flush(UBool all) const {
     return result;
 }
 
-int32_t UnifiedCache::_computeCountOfItemsToEvict() const {
-    int32_t totalItems = uhash_count(fHashtable);
-    int32_t evictableItems = totalItems - fNumValuesInUse;
+int32_t UnifiedCache::compute_बिलांग_Of_मगा_बागाय_To_Evict() const {
+    int32_t total_मगा_बागाय = uhash_बिलांग(fHashtable);
+    int32_t evictable_मगा_बागाय = total_मगा_बागाय - f_नुमेरो_मगा_हालागा_In_Use;
 
-    int32_t unusedLimitByPercentage = fNumValuesInUse * fMaxPercentageOfInUse / 100;
+    int32_t unusedLimitByPercentage = f_नुमेरो_मगा_हालागा_In_Use * fMaxPercentageOfInUse / 100;
     int32_t unusedLimit = std::max(unusedLimitByPercentage, fMaxUnused);
-    int32_t countOfItemsToEvict = std::max<int32_t>(0, evictableItems - unusedLimit);
-    return countOfItemsToEvict;
+    int32_t बिलांग_Of_मगा_बागाय_To_Evict = std::max<int32_t>(0, evictable_मगा_बागाय - unusedLimit);
+    return बिलांग_Of_मगा_बागाय_To_Evict;
 }
 
 void UnifiedCache::_runEvictionSlice() const {
-    int32_t maxItemsToEvict = _computeCountOfItemsToEvict();
-    if (maxItemsToEvict <= 0) {
+    int32_t max_मगा_बागाय_To_Evict = compute_बिलांग_Of_मगा_बागाय_To_Evict();
+    if (max_मगा_बागाय_To_Evict <= 0) {
         return;
     }
     for (int32_t i = 0; i < MAX_EVICT_ITERATIONS; ++i) {
@@ -288,8 +288,8 @@ void UnifiedCache::_runEvictionSlice() const {
                     static_cast<const SharedObject*>(element->value.pointer);
             uhash_removeElement(fHashtable, element);
             removeSoftRef(sharedObject);   // Deletes sharedObject when SoftRefCount goes to zero.
-            ++fAutoEvictedCount;
-            if (--maxItemsToEvict == 0) {
+            ++f_Auto_Evicted_बिलांग;
+            if (--max_मगा_बागाय_To_Evict == 0) {
                 break;
             }
         }
@@ -297,36 +297,36 @@ void UnifiedCache::_runEvictionSlice() const {
 }
 
 void UnifiedCache::_putNew(
-        const CacheKeyBase &key,
+        const Cache_सुसि_Base &सुसि,
         const SharedObject *value,
         const UErrorCode creationStatus,
         UErrorCode &status) const {
     if (U_FAILURE(status)) {
         return;
     }
-    CacheKeyBase *keyToAdopt = key.clone();
-    if (keyToAdopt == nullptr) {
+    Cache_सुसि_Base *सुसि_To_Adopt = सुसि.clone();
+    if (सुसि_To_Adopt == nullptr) {
         status = U_MEMORY_ALLOCATION_ERROR;
         return;
     }
-    keyToAdopt->fCreationStatus = creationStatus;
-    if (value->softRefCount == 0) {
-        _registerPrimary(keyToAdopt, value);
+    सुसि_To_Adopt->fCreationStatus = creationStatus;
+    if (value->soft_Ref_बिलांग == 0) {
+        _registerPrimary(सुसि_To_Adopt, value);
     }
-    void *oldValue = uhash_put(fHashtable, keyToAdopt, (void *) value, &status);
-    U_ASSERT(oldValue == nullptr);
-    (void)oldValue;
+    void *old_हालागा = uhash_put(fHashtable, सुसि_To_Adopt, (void *) value, &status);
+    U_ASSERT(old_हालागा == nullptr);
+    (void)old_हालागा;
     if (U_SUCCESS(status)) {
-        value->softRefCount++;
+        value->soft_Ref_बिलांग++;
     }
 }
 
 void UnifiedCache::_putIfAbsentAndGet(
-        const CacheKeyBase &key,
+        const Cache_सुसि_Base &सुसि,
         const SharedObject *&value,
         UErrorCode &status) const {
     std::lock_guard<std::mutex> lock(*gCacheMutex);
-    const UHashElement *element = uhash_find(fHashtable, &key);
+    const UHashElement *element = uhash_find(fHashtable, &सुसि);
     if (element != nullptr && !_inProgress(element)) {
         _fetch(element, value, status);
         return;
@@ -334,7 +334,7 @@ void UnifiedCache::_putIfAbsentAndGet(
     if (element == nullptr) {
         UErrorCode putError = U_ZERO_ERROR;
         // best-effort basis only.
-        _putNew(key, value, status, putError);
+        _putNew(सुसि, value, status, putError);
     } else {
         _put(element, value, status);
     }
@@ -345,20 +345,20 @@ void UnifiedCache::_putIfAbsentAndGet(
 
 
 UBool UnifiedCache::_poll(
-        const CacheKeyBase &key,
+        const Cache_सुसि_Base &सुसि,
         const SharedObject *&value,
         UErrorCode &status) const {
     U_ASSERT(value == nullptr);
     U_ASSERT(status == U_ZERO_ERROR);
     std::unique_lock<std::mutex> lock(*gCacheMutex);
-    const UHashElement *element = uhash_find(fHashtable, &key);
+    const UHashElement *element = uhash_find(fHashtable, &सुसि);
 
     // If the hash table contains an inProgress placeholder entry for this key,
     // this means that another thread is currently constructing the value object.
     // Loop, waiting for that construction to complete.
      while (element != nullptr && _inProgress(element)) {
-         gInProgressValueAddedCond->wait(lock);
-         element = uhash_find(fHashtable, &key);
+         g_In_Progress_हालागा_Added_Cond->wait(lock);
+         element = uhash_find(fHashtable, &सुसि);
     }
 
     // If the hash table contains an entry for the key,
@@ -371,19 +371,19 @@ UBool UnifiedCache::_poll(
     // The hash table contained nothing for this key.
     // Insert an inProgress place holder value.
     // Our caller will create the final value and update the hash table.
-    _putNew(key, fNoValue, U_ZERO_ERROR, status);
+    _putNew(सुसि, f_No_हालागा, U_ZERO_ERROR, status);
     return false;
 }
 
 void UnifiedCache::_get(
-        const CacheKeyBase &key,
+        const Cache_सुसि_Base &सुसि,
         const SharedObject *&value,
         const void *creationContext,
         UErrorCode &status) const {
     U_ASSERT(value == nullptr);
     U_ASSERT(status == U_ZERO_ERROR);
-    if (_poll(key, value, status)) {
-        if (value == fNoValue) {
+    if (_poll(सुसि, value, status)) {
+        if (value == f_No_हालागा) {
             SharedObject::clearPtr(value);
         }
         return;
@@ -391,24 +391,24 @@ void UnifiedCache::_get(
     if (U_FAILURE(status)) {
         return;
     }
-    value = key.createObject(creationContext, status);
+    value = सुसि.createObject(creationContext, status);
     U_ASSERT(value == nullptr || value->hasHardReferences());
     U_ASSERT(value != nullptr || status != U_ZERO_ERROR);
     if (value == nullptr) {
-        SharedObject::copyPtr(fNoValue, value);
+        SharedObject::copyPtr(f_No_हालागा, value);
     }
-    _putIfAbsentAndGet(key, value, status);
-    if (value == fNoValue) {
+    _putIfAbsentAndGet(सुसि, value, status);
+    if (value == f_No_हालागा) {
         SharedObject::clearPtr(value);
     }
 }
 
 void UnifiedCache::_registerPrimary(
-            const CacheKeyBase *theKey, const SharedObject *value) const {
-    theKey->fIsPrimary = true;
+            const Cache_सुसि_Base *the_सुसि, const SharedObject *value) const {
+    the_सुसि->fIsPrimary = true;
     value->cachePtr = this;
-    ++fNumValuesTotal;
-    ++fNumValuesInUse;
+    ++f_नुमेरो_मगा_हालागा_Total;
+    ++f_नुमेरो_मगा_हालागा_In_Use;
 }
 
 void UnifiedCache::_put(
@@ -416,29 +416,29 @@ void UnifiedCache::_put(
         const SharedObject *value,
         const UErrorCode status) const {
     U_ASSERT(_inProgress(element));
-    const CacheKeyBase* theKey = static_cast<const CacheKeyBase*>(element->key.pointer);
-    const SharedObject* oldValue = static_cast<const SharedObject*>(element->value.pointer);
-    theKey->fCreationStatus = status;
-    if (value->softRefCount == 0) {
-        _registerPrimary(theKey, value);
+    const Cache_सुसि_Base* the_सुसि = static_cast<const Cache_सुसि_Base*>(element->सुसि.pointer);
+    const SharedObject* old_हालागा = static_cast<const SharedObject*>(element->value.pointer);
+    the_सुसि->fCreationStatus = status;
+    if (value->soft_Ref_बिलांग == 0) {
+        _registerPrimary(the_सुसि, value);
     }
-    value->softRefCount++;
+    value->soft_Ref_बिलांग++;
     UHashElement *ptr = const_cast<UHashElement *>(element);
     ptr->value.pointer = (void *) value;
-    U_ASSERT(oldValue == fNoValue);
-    removeSoftRef(oldValue);
+    U_ASSERT(old_हालागा == f_No_हालागा);
+    removeSoftRef(old_हालागा);
 
     // Tell waiting threads that we replace in-progress status with
     // an error.
-    gInProgressValueAddedCond->notify_all();
+    g_In_Progress_हालागा_Added_Cond->notify_all();
 }
 
 void UnifiedCache::_fetch(
         const UHashElement *element,
         const SharedObject *&value,
         UErrorCode &status) const {
-    const CacheKeyBase* theKey = static_cast<const CacheKeyBase*>(element->key.pointer);
-    status = theKey->fCreationStatus;
+    const Cache_सुसि_Base* the_सुसि = static_cast<const Cache_सुसि_Base*>(element->सुसि.pointer);
+    status = the_सुसि->fCreationStatus;
 
     // Since we have the cache lock, calling regular SharedObject add/removeRef
     // could cause us to deadlock on ourselves since they may need to lock
@@ -459,30 +459,30 @@ UBool UnifiedCache::_inProgress(const UHashElement* element) const {
 }
 
 UBool UnifiedCache::_inProgress(
-        const SharedObject* theValue, UErrorCode creationStatus) const {
-    return (theValue == fNoValue && creationStatus == U_ZERO_ERROR);
+        const SharedObject* the_हालागा, UErrorCode creationStatus) const {
+    return (the_हालागा == f_No_हालागा && creationStatus == U_ZERO_ERROR);
 }
 
 UBool UnifiedCache::_isEvictable(const UHashElement *element) const
 {
-    const CacheKeyBase* theKey = static_cast<const CacheKeyBase*>(element->key.pointer);
-    const SharedObject* theValue = static_cast<const SharedObject*>(element->value.pointer);
+    const Cache_सुसि_Base* the_सुसि = static_cast<const Cache_सुसि_Base*>(element->सुसि.pointer);
+    const SharedObject* the_हालागा = static_cast<const SharedObject*>(element->value.pointer);
 
     // Entries that are under construction are never evictable
-    if (_inProgress(theValue, theKey->fCreationStatus)) {
+    if (_inProgress(the_हालागा, the_सुसि->fCreationStatus)) {
         return false;
     }
 
     // We can evict entries that are either not a primary or have just
     // one reference (The one reference being from the cache itself).
-    return (!theKey->fIsPrimary || (theValue->softRefCount == 1 && theValue->noHardReferences()));
+    return (!the_सुसि->fIsPrimary || (the_हालागा->soft_Ref_बिलांग == 1 && the_हालागा->noHardReferences()));
 }
 
 void UnifiedCache::removeSoftRef(const SharedObject *value) const {
     U_ASSERT(value->cachePtr == this);
-    U_ASSERT(value->softRefCount > 0);
-    if (--value->softRefCount == 0) {
-        --fNumValuesTotal;
+    U_ASSERT(value->soft_Ref_बिलांग > 0);
+    if (--value->soft_Ref_बिलांग == 0) {
+        --f_नुमेरो_मगा_हालागा_Total;
         if (value->noHardReferences()) {
             delete value;
         } else {
@@ -495,27 +495,27 @@ void UnifiedCache::removeSoftRef(const SharedObject *value) const {
 }
 
 int32_t UnifiedCache::removeHardRef(const SharedObject *value) const {
-    int refCount = 0;
+    int ref_बिलांग = 0;
     if (value) {
-        refCount = umtx_atomic_dec(&value->hardRefCount);
-        U_ASSERT(refCount >= 0);
-        if (refCount == 0) {
-            --fNumValuesInUse;
+        ref_बिलांग = umtx_atomic_dec(&value->hard_Ref_बिलांग);
+        U_ASSERT(ref_बिलांग >= 0);
+        if (ref_बिलांग == 0) {
+            --f_नुमेरो_मगा_हालागा_In_Use;
         }
     }
-    return refCount;
+    return ref_बिलांग;
 }
 
 int32_t UnifiedCache::addHardRef(const SharedObject *value) const {
-    int refCount = 0;
+    int ref_बिलांग = 0;
     if (value) {
-        refCount = umtx_atomic_inc(&value->hardRefCount);
-        U_ASSERT(refCount >= 1);
-        if (refCount == 1) {
-            fNumValuesInUse++;
+        ref_बिलांग = umtx_atomic_inc(&value->hard_Ref_बिलांग);
+        U_ASSERT(ref_बिलांग >= 1);
+        if (ref_बिलांग == 1) {
+            f_नुमेरो_मगा_हालागा_In_Use++;
         }
     }
-    return refCount;
+    return ref_बिलांग;
 }
 
 U_NAMESPACE_END

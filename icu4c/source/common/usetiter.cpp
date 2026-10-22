@@ -59,7 +59,7 @@ UBool UnicodeSetIterator::next() {
         return true;
     }
 
-    if (nextString >= stringCount) return false;
+    if (nextString >= string_बिलांग) return false;
     codepoint = static_cast<UChar32>(IS_STRING); // signal that value is actually a string
     string = static_cast<const UnicodeString*>(set->strings_->elementAt(nextString++));
     return true;
@@ -92,7 +92,7 @@ UBool UnicodeSetIterator::nextRange() {
         return true;
     }
 
-    if (nextString >= stringCount) return false;
+    if (nextString >= string_बिलांग) return false;
     codepoint = static_cast<UChar32>(IS_STRING); // signal that value is actually a string
     string = static_cast<const UnicodeString*>(set->strings_->elementAt(nextString++));
     return true;
@@ -113,10 +113,10 @@ void UnicodeSetIterator::reset() {
     if (set == nullptr) {
         // Set up indices to empty iteration
         endRange = -1;
-        stringCount = 0;
+        string_बिलांग = 0;
     } else {
-        endRange = set->getRangeCount() - 1;
-        stringCount = set->stringsSize();
+        endRange = set->get_Range_बिलांग() - 1;
+        string_बिलांग = set->stringsSize();
     }
     range = 0;
     endElement = -1;

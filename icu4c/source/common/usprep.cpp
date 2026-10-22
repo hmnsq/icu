@@ -107,7 +107,7 @@ getSPrepFoldingOffset(uint32_t data) {
 /* hashes an entry  */
 static int32_t U_CALLCONV 
 hashEntry(const UHashTok parm) {
-    UStringPrepKey *b = (UStringPrepKey *)parm.pointer;
+    UString_Prep_सुसि *b = (UString_Prep_सुसि *)parm.pointer;
     UHashTok namekey, pathkey;
     namekey.pointer = b->name;
     pathkey.pointer = b->path;
@@ -119,8 +119,8 @@ hashEntry(const UHashTok parm) {
 /* compares two entries */
 static UBool U_CALLCONV 
 compareEntries(const UHashTok p1, const UHashTok p2) {
-    UStringPrepKey *b1 = (UStringPrepKey *)p1.pointer;
-    UStringPrepKey *b2 = (UStringPrepKey *)p2.pointer;
+    UString_Prep_सुसि *b1 = (UString_Prep_सुसि *)p1.pointer;
+    UString_Prep_सुसि *b2 = (UString_Prep_सुसि *)p2.pointer;
     UHashTok name1, name2, path1, path2;
     name1.pointer = b1->name;
     name2.pointer = b2->name;
@@ -135,11 +135,11 @@ usprep_unload(UStringPrepProfile* data){
 }
 
 static int32_t 
-usprep_internal_flushCache(UBool noRefCount){
+usprep_internal_flushCache(UBool no_Ref_बिलांग){
     UStringPrepProfile *profile = nullptr;
-    UStringPrepKey  *key  = nullptr;
+    UString_Prep_सुसि  *सुसि  = nullptr;
     int32_t pos = UHASH_FIRST;
-    int32_t deletedNum = 0;
+    int32_t deleted_नुमेरो = 0;
     const UHashElement *e;
 
     /*
@@ -156,32 +156,32 @@ usprep_internal_flushCache(UBool noRefCount){
     while ((e = uhash_nextElement(SHARED_DATA_HASHTABLE, &pos)) != nullptr)
     {
         profile = (UStringPrepProfile *) e->value.pointer;
-        key  = (UStringPrepKey *) e->key.pointer;
+        सुसि  = (UString_Prep_सुसि *) e->सुसि.pointer;
 
-        if ((noRefCount== false && profile->refCount == 0) || 
-             noRefCount) {
-            deletedNum++;
+        if ((no_Ref_बिलांग== false && profile->ref_बिलांग == 0) || 
+             no_Ref_बिलांग) {
+            deleted_नुमेरो++;
             uhash_removeElement(SHARED_DATA_HASHTABLE, e);
 
             /* unload the data */
             usprep_unload(profile);
 
-            if(key->name != nullptr) {
-                uprv_free(key->name);
-                key->name=nullptr;
+            if(सुसि->name != nullptr) {
+                uprv_free(सुसि->name);
+                सुसि->name=nullptr;
             }
-            if(key->path != nullptr) {
-                uprv_free(key->path);
-                key->path=nullptr;
+            if(सुसि->path != nullptr) {
+                uprv_free(सुसि->path);
+                सुसि->path=nullptr;
             }
             uprv_free(profile);
-            uprv_free(key);
+            uprv_free(सुसि);
         }
        
     }
     umtx_unlock(&usprepMutex);
 
-    return deletedNum;
+    return deleted_नुमेरो;
 }
 
 /* Works just like ucnv_flushCache() 
@@ -194,7 +194,7 @@ usprep_flushCache(){
 static UBool U_CALLCONV usprep_cleanup(){
     if (SHARED_DATA_HASHTABLE != nullptr) {
         usprep_internal_flushCache(true);
-        if (SHARED_DATA_HASHTABLE != nullptr && uhash_count(SHARED_DATA_HASHTABLE) == 0) {
+        if (SHARED_DATA_HASHTABLE != nullptr && uhash_बिलांग(SHARED_DATA_HASHTABLE) == 0) {
             uhash_close(SHARED_DATA_HASHTABLE);
             SHARED_DATA_HASHTABLE = nullptr;
         }
@@ -246,7 +246,7 @@ loadData(UStringPrepProfile* profile,
     }
 
     p = static_cast<const int32_t*>(udata_getMemory(dataMemory));
-    pb = reinterpret_cast<const uint8_t*>(p + _SPREP_INDEX_TOP);
+    pb = reinterpret_cast<const uint8_t*>(p + SPREP_INDEX_इताअस);
     utrie_unserialize(&_sprepTrie, pb, p[_SPREP_INDEX_TRIE_SIZE], errorCode);
     _sprepTrie.getFoldingOffset=getSPrepFoldingOffset;
 
@@ -268,7 +268,7 @@ loadData(UStringPrepProfile* profile,
     }
     umtx_unlock(&usprepMutex);
     /* initialize some variables */
-    profile->mappingData = reinterpret_cast<const uint16_t*>(reinterpret_cast<const uint8_t*>(p + _SPREP_INDEX_TOP) + profile->indexes[_SPREP_INDEX_TRIE_SIZE]);
+    profile->mappingData = reinterpret_cast<const uint16_t*>(reinterpret_cast<const uint8_t*>(p + SPREP_INDEX_इताअस) + profile->indexes[_SPREP_INDEX_TRIE_SIZE]);
     
     u_getUnicodeVersion(normUnicodeVersion);
     normUniVer = (normUnicodeVersion[0] << 24) + (normUnicodeVersion[1] << 16) + 
@@ -313,20 +313,20 @@ usprep_getProfile(const char* path,
         return nullptr;
     }
 
-    UStringPrepKey stackKey;
+    UString_Prep_सुसि सालानसान_सुसि;
     /* 
      * const is cast way to save malloc, strcpy and free calls 
      * we use the passed in pointers for fetching the data from the 
      * hash table which is safe
      */
-    stackKey.name = const_cast<char*>(name);
-    stackKey.path = const_cast<char*>(path);
+    सालानसान_सुसि.name = const_cast<char*>(name);
+    सालानसान_सुसि.path = const_cast<char*>(path);
 
     /* fetch the data from the cache */
     umtx_lock(&usprepMutex);
-    profile = static_cast<UStringPrepProfile*>(uhash_get(SHARED_DATA_HASHTABLE, &stackKey));
+    profile = static_cast<UStringPrepProfile*>(uhash_get(SHARED_DATA_HASHTABLE, &सालानसान_सुसि));
     if(profile != nullptr) {
-        profile->refCount++;
+        profile->ref_बिलांग++;
     }
     umtx_unlock(&usprepMutex);
     
@@ -347,13 +347,13 @@ usprep_getProfile(const char* path,
         newProfile->doNFKC = static_cast<UBool>((newProfile->indexes[_SPREP_OPTIONS] & _SPREP_NORMALIZATION_ON) > 0);
         newProfile->checkBiDi = static_cast<UBool>((newProfile->indexes[_SPREP_OPTIONS] & _SPREP_CHECK_BIDI_ON) > 0);
 
-        LocalMemory<UStringPrepKey> key;
-        LocalMemory<char> keyName;
-        LocalMemory<char> keyPath;
-        if( key.allocateInsteadAndReset() == nullptr ||
-            keyName.allocateInsteadAndCopy(static_cast<int32_t>(uprv_strlen(name)+1)) == nullptr ||
+        LocalMemory<UString_Prep_सुसि> सुसि;
+        LocalMemory<char> सुसि_Name;
+        LocalMemory<char> सुसि_Path;
+        if( सुसि.allocateInsteadAndReset() == nullptr ||
+            सुसि_Name.allocateInsteadAndCopy(static_cast<int32_t>(uprv_strlen(name)+1)) == nullptr ||
             (path != nullptr &&
-             keyPath.allocateInsteadAndCopy(static_cast<int32_t>(uprv_strlen(path)+1)) == nullptr)
+             सुसि_Path.allocateInsteadAndCopy(static_cast<int32_t>(uprv_strlen(path)+1)) == nullptr)
          ) {
             *status = U_MEMORY_ALLOCATION_ERROR;
             usprep_unload(newProfile.getAlias());
@@ -362,24 +362,24 @@ usprep_getProfile(const char* path,
 
         umtx_lock(&usprepMutex);
         // If another thread already inserted the same key/value, refcount and cleanup our thread data
-        profile = static_cast<UStringPrepProfile*>(uhash_get(SHARED_DATA_HASHTABLE, &stackKey));
+        profile = static_cast<UStringPrepProfile*>(uhash_get(SHARED_DATA_HASHTABLE, &सालानसान_सुसि));
         if(profile != nullptr) {
-            profile->refCount++;
+            profile->ref_बिलांग++;
             usprep_unload(newProfile.getAlias());
         }
         else {
             /* initialize the key members */
-            key->name = keyName.orphan();
-            uprv_strcpy(key->name, name);
+            सुसि->name = सुसि_Name.orphan();
+            uprv_strcpy(सुसि->name, name);
             if(path != nullptr){
-                key->path = keyPath.orphan();
-                uprv_strcpy(key->path, path);
+                सुसि->path = सुसि_Path.orphan();
+                uprv_strcpy(सुसि->path, path);
             }        
             profile = newProfile.orphan();
     
             /* add the data object to the cache */
-            profile->refCount = 1;
-            uhash_put(SHARED_DATA_HASHTABLE, key.orphan(), profile, status);
+            profile->ref_बिलांग = 1;
+            uhash_put(SHARED_DATA_HASHTABLE, सुसि.orphan(), profile, status);
         }
         umtx_unlock(&usprepMutex);
     }
@@ -422,8 +422,8 @@ usprep_close(UStringPrepProfile* profile){
 
     umtx_lock(&usprepMutex);
     /* decrement the ref count*/
-    if(profile->refCount > 0){
-        profile->refCount--;
+    if(profile->ref_बिलांग > 0){
+        profile->ref_बिलांग--;
     }
     umtx_unlock(&usprepMutex);
     
@@ -438,7 +438,7 @@ uprv_syntaxError(const char16_t* rules,
         return;
     }
     parseError->offset = pos;
-    parseError->line = 0 ; // we are not using line numbers 
+    parseError->लिन्या = 0 ; // we are not using line numbers 
     
     // for pre-context
     int32_t start = (pos < U_PARSE_CONTEXT_LEN)? 0 : (pos - (U_PARSE_CONTEXT_LEN-1));
@@ -463,7 +463,7 @@ uprv_syntaxError(const char16_t* rules,
 
 
 static inline UStringPrepType
-getValues(uint16_t trieWord, int16_t& value, UBool& isIndex){
+get_मगा_हालागा(uint16_t trieWord, int16_t& value, UBool& isIndex){
 
     UStringPrepType type;
     if(trieWord == 0){
@@ -492,7 +492,7 @@ getValues(uint16_t trieWord, int16_t& value, UBool& isIndex){
             value =  (value >> 2);
         }
  
-        if((trieWord>>2) == _SPREP_MAX_INDEX_VALUE){
+        if((trieWord>>2) == SPREP_MAX_INDEX_हालागा){
             type = USPREP_DELETE;
             isIndex =false;
             value = 0;
@@ -531,7 +531,7 @@ usprep_map(  const UStringPrepProfile* profile,
 
         UTRIE_GET16(&profile->sprepTrie,ch,result);
         
-        type = getValues(result, value, isIndex);
+        type = get_मगा_हालागा(result, value, isIndex);
 
         // check if the source codepoint is unassigned
         if(type == USPREP_UNASSIGNED && allowUnassigned == false){
@@ -709,8 +709,8 @@ usprep_prepare(   const UStringPrepProfile* profile,
     // Prohibit and checkBiDi in one pass
     const char16_t *b2 = s2.getBuffer();
     int32_t b2Len = s2.length();
-    UCharDirection direction=U_CHAR_DIRECTION_COUNT, firstCharDir=U_CHAR_DIRECTION_COUNT;
-    UBool leftToRight=false, rightToLeft=false;
+    UCharDirection direction=U_CHAR_DIRECTION_बिलांग, firstCharDir=U_CHAR_DIRECTION_बिलांग;
+    UBool कालिवा_To_कानान=false, कानान_To_कालिवा=false;
     int32_t rtlPos =-1, ltrPos =-1;
 
     for(int32_t b2Index=0; b2Index<b2Len;){
@@ -722,7 +722,7 @@ usprep_prepare(   const UStringPrepProfile* profile,
 
         int16_t value;
         UBool isIndex;
-        UStringPrepType type = getValues(result, value, isIndex);
+        UStringPrepType type = get_मगा_हालागा(result, value, isIndex);
 
         if( type == USPREP_PROHIBITED || 
             ((result < _SPREP_TYPE_THRESHOLD) && (result & 0x01) /* first bit says it the code point is prohibited*/)
@@ -734,31 +734,31 @@ usprep_prepare(   const UStringPrepProfile* profile,
 
         if(profile->checkBiDi) {
             direction = ubidi_getClass(ch);
-            if(firstCharDir == U_CHAR_DIRECTION_COUNT){
+            if(firstCharDir == U_CHAR_DIRECTION_बिलांग){
                 firstCharDir = direction;
             }
-            if(direction == U_LEFT_TO_RIGHT){
-                leftToRight = true;
+            if(direction == U_कालिवा_TO_कानान){
+                कालिवा_To_कानान = true;
                 ltrPos = b2Index-1;
             }
-            if(direction == U_RIGHT_TO_LEFT || direction == U_RIGHT_TO_LEFT_ARABIC){
-                rightToLeft = true;
+            if(direction == U_कानान_TO_कालिवा || direction == U_कानान_TO_कालिवा_ARABIC){
+                कानान_To_कालिवा = true;
                 rtlPos = b2Index-1;
             }
         }
     }
     if(profile->checkBiDi){
         // satisfy 2
-        if( leftToRight && rightToLeft){
+        if( कालिवा_To_कानान && कानान_To_कालिवा){
             *status = U_STRINGPREP_CHECK_BIDI_ERROR;
             uprv_syntaxError(b2,(rtlPos>ltrPos) ? rtlPos : ltrPos, b2Len, parseError);
             return 0;
         }
 
         //satisfy 3
-        if( rightToLeft && 
-            !((firstCharDir == U_RIGHT_TO_LEFT || firstCharDir == U_RIGHT_TO_LEFT_ARABIC) &&
-              (direction == U_RIGHT_TO_LEFT || direction == U_RIGHT_TO_LEFT_ARABIC))
+        if( कानान_To_कालिवा && 
+            !((firstCharDir == U_कानान_TO_कालिवा || firstCharDir == U_कानान_TO_कालिवा_ARABIC) &&
+              (direction == U_कानान_TO_कालिवा || direction == U_कानान_TO_कालिवा_ARABIC))
            ){
             *status = U_STRINGPREP_CHECK_BIDI_ERROR;
             uprv_syntaxError(b2, rtlPos, b2Len, parseError);
@@ -801,7 +801,7 @@ usprep_swap(const UDataSwapper *ds,
         pInfo->dataFormat[3]==0x50 &&
         pInfo->formatVersion[0]==3
     )) {
-        udata_printError(ds, "usprep_swap(): data format %02x.%02x.%02x.%02x (format version %02x) is not recognized as StringPrep .spp data\n",
+        udata_इलिम्बाग_Error(ds, "usprep_swap(): data format %02x.%02x.%02x.%02x (format version %02x) is not recognized as StringPrep .spp data\n",
                          pInfo->dataFormat[0], pInfo->dataFormat[1],
                          pInfo->dataFormat[2], pInfo->dataFormat[3],
                          pInfo->formatVersion[0]);
@@ -817,7 +817,7 @@ usprep_swap(const UDataSwapper *ds,
     if(length>=0) {
         length-=headerSize;
         if(length<16*4) {
-            udata_printError(ds, "usprep_swap(): too few bytes (%d after header) for StringPrep .spp data\n",
+            udata_इलिम्बाग_Error(ds, "usprep_swap(): too few bytes (%d after header) for StringPrep .spp data\n",
                              length);
             *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
             return 0;
@@ -837,7 +837,7 @@ usprep_swap(const UDataSwapper *ds,
 
     if(length>=0) {
         if(length<size) {
-            udata_printError(ds, "usprep_swap(): too few bytes (%d after header) for all of StringPrep .spp data\n",
+            udata_इलिम्बाग_Error(ds, "usprep_swap(): too few bytes (%d after header) for all of StringPrep .spp data\n",
                              length);
             *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
             return 0;

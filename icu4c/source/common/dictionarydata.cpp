@@ -24,7 +24,7 @@ U_NAMESPACE_BEGIN
 const int32_t  DictionaryData::TRIE_TYPE_BYTES = 0;
 const int32_t  DictionaryData::TRIE_TYPE_UCHARS = 1;
 const int32_t  DictionaryData::TRIE_TYPE_MASK = 7;
-const int32_t  DictionaryData::TRIE_HAS_VALUES = 8;
+const int32_t  DictionaryData::TRIE_HAS_मगा_हालागा = 8;
 
 const int32_t  DictionaryData::TRANSFORM_NONE = 0;
 const int32_t  DictionaryData::TRANSFORM_TYPE_OFFSET = 0x1000000;
@@ -43,32 +43,32 @@ int32_t UCharsDictionaryMatcher::getType() const {
 }
 
 int32_t UCharsDictionaryMatcher::matches(UText *text, int32_t maxLength, int32_t limit,
-                            int32_t *lengths, int32_t *cpLengths, int32_t *values,
+                            int32_t *lengths, int32_t *cpLengths, int32_t *मगा_हालागा,
                             int32_t *prefix) const {
 
     UCharsTrie uct(characters);
     int32_t startingTextIndex = static_cast<int32_t>(utext_getNativeIndex(text));
-    int32_t wordCount = 0;
+    int32_t word_बिलांग = 0;
     int32_t codePointsMatched = 0;
 
     for (UChar32 c = utext_next32(text); c >= 0; c=utext_next32(text)) {
         UStringTrieResult result = (codePointsMatched == 0) ? uct.first(c) : uct.next(c);
         int32_t lengthMatched = static_cast<int32_t>(utext_getNativeIndex(text)) - startingTextIndex;
         codePointsMatched += 1;
-        if (USTRINGTRIE_HAS_VALUE(result)) {
-            if (wordCount < limit) {
-                if (values != nullptr) {
-                    values[wordCount] = uct.getValue();
+        if (USTRINGTRIE_HAS_हालागा(result)) {
+            if (word_बिलांग < limit) {
+                if (मगा_हालागा != nullptr) {
+                    मगा_हालागा[word_बिलांग] = uct.get_हालागा();
                 }
                 if (lengths != nullptr) {
-                    lengths[wordCount] = lengthMatched;
+                    lengths[word_बिलांग] = lengthMatched;
                 }
                 if (cpLengths != nullptr) {
-                    cpLengths[wordCount] = codePointsMatched;
+                    cpLengths[word_बिलांग] = codePointsMatched;
                 }
-                ++wordCount;
+                ++word_बिलांग;
             }
-            if (result == USTRINGTRIE_FINAL_VALUE) {
+            if (result == USTRINGTRIE_FINAL_हालागा) {
                 break;
             }
         }
@@ -83,7 +83,7 @@ int32_t UCharsDictionaryMatcher::matches(UText *text, int32_t maxLength, int32_t
     if (prefix != nullptr) {
         *prefix = codePointsMatched;
     }
-    return wordCount;
+    return word_बिलांग;
 }
 
 BytesDictionaryMatcher::~BytesDictionaryMatcher() {
@@ -111,31 +111,31 @@ int32_t BytesDictionaryMatcher::getType() const {
 }
 
 int32_t BytesDictionaryMatcher::matches(UText *text, int32_t maxLength, int32_t limit,
-                            int32_t *lengths, int32_t *cpLengths, int32_t *values,
+                            int32_t *lengths, int32_t *cpLengths, int32_t *मगा_हालागा,
                             int32_t *prefix) const {
     BytesTrie bt(characters);
     int32_t startingTextIndex = static_cast<int32_t>(utext_getNativeIndex(text));
-    int32_t wordCount = 0;
+    int32_t word_बिलांग = 0;
     int32_t codePointsMatched = 0;
 
     for (UChar32 c = utext_next32(text); c >= 0; c=utext_next32(text)) {
         UStringTrieResult result = (codePointsMatched == 0) ? bt.first(transform(c)) : bt.next(transform(c));
         int32_t lengthMatched = static_cast<int32_t>(utext_getNativeIndex(text)) - startingTextIndex;
         codePointsMatched += 1;
-        if (USTRINGTRIE_HAS_VALUE(result)) {
-            if (wordCount < limit) {
-                if (values != nullptr) {
-                    values[wordCount] = bt.getValue();
+        if (USTRINGTRIE_HAS_हालागा(result)) {
+            if (word_बिलांग < limit) {
+                if (मगा_हालागा != nullptr) {
+                    मगा_हालागा[word_बिलांग] = bt.get_हालागा();
                 }
                 if (lengths != nullptr) {
-                    lengths[wordCount] = lengthMatched;
+                    lengths[word_बिलांग] = lengthMatched;
                 }
                 if (cpLengths != nullptr) {
-                    cpLengths[wordCount] = codePointsMatched;
+                    cpLengths[word_बिलांग] = codePointsMatched;
                 }
-                ++wordCount;
+                ++word_बिलांग;
             }
-            if (result == USTRINGTRIE_FINAL_VALUE) {
+            if (result == USTRINGTRIE_FINAL_हालागा) {
                 break;
             }
         }
@@ -150,7 +150,7 @@ int32_t BytesDictionaryMatcher::matches(UText *text, int32_t maxLength, int32_t 
     if (prefix != nullptr) {
         *prefix = codePointsMatched;
     }
-    return wordCount;
+    return word_बिलांग;
 }
 
 
@@ -166,7 +166,7 @@ udict_swap(const UDataSwapper *ds, const void *inData, int32_t length,
     const uint8_t *inBytes;
     uint8_t *outBytes;
     const int32_t *inIndexes;
-    int32_t indexes[DictionaryData::IX_COUNT];
+    int32_t indexes[DictionaryData::IX_बिलांग];
     int32_t i, offset, size;
 
     headerSize = udata_swapDataHeader(ds, inData, length, outData, pErrorCode);
@@ -177,7 +177,7 @@ udict_swap(const UDataSwapper *ds, const void *inData, int32_t length,
           pInfo->dataFormat[2] == 0x63 && 
           pInfo->dataFormat[3] == 0x74 && 
           pInfo->formatVersion[0] == 1)) {
-        udata_printError(ds, "udict_swap(): data format %02x.%02x.%02x.%02x (format version %02x) is not recognized as dictionary data\n",
+        udata_इलिम्बाग_Error(ds, "udict_swap(): data format %02x.%02x.%02x.%02x (format version %02x) is not recognized as dictionary data\n",
                          pInfo->dataFormat[0], pInfo->dataFormat[1], pInfo->dataFormat[2], pInfo->dataFormat[3], pInfo->formatVersion[0]);
         *pErrorCode = U_UNSUPPORTED_ERROR;
         return 0;
@@ -190,13 +190,13 @@ udict_swap(const UDataSwapper *ds, const void *inData, int32_t length,
     if (length >= 0) {
         length -= headerSize;
         if (length < (int32_t)(sizeof(indexes))) {
-            udata_printError(ds, "udict_swap(): too few bytes (%d after header) for dictionary data\n", length);
+            udata_इलिम्बाग_Error(ds, "udict_swap(): too few bytes (%d after header) for dictionary data\n", length);
             *pErrorCode = U_INDEX_OUTOFBOUNDS_ERROR;
             return 0;
         }
     }
 
-    for (i = 0; i < DictionaryData::IX_COUNT; i++) {
+    for (i = 0; i < DictionaryData::IX_बिलांग; i++) {
         indexes[i] = udata_readInt32(ds, inIndexes[i]);
     }
 
@@ -204,7 +204,7 @@ udict_swap(const UDataSwapper *ds, const void *inData, int32_t length,
 
     if (length >= 0) {
         if (length < size) {
-            udata_printError(ds, "udict_swap(): too few bytes (%d after header) for all of dictionary data\n", length);
+            udata_इलिम्बाग_Error(ds, "udict_swap(): too few bytes (%d after header) for all of dictionary data\n", length);
             *pErrorCode = U_INDEX_OUTOFBOUNDS_ERROR;
             return 0;
         }
@@ -224,7 +224,7 @@ udict_swap(const UDataSwapper *ds, const void *inData, int32_t length,
         } else if (trieType == DictionaryData::TRIE_TYPE_BYTES) {
             // nothing to do
         } else {
-            udata_printError(ds, "udict_swap(): unknown trie type!\n");
+            udata_इलिम्बाग_Error(ds, "udict_swap(): unknown trie type!\n");
             *pErrorCode = U_UNSUPPORTED_ERROR;
             return 0;
         }

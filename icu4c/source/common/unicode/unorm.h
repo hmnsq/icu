@@ -154,7 +154,7 @@ typedef enum {
   UNORM_FCD = 6,
 
   /** One more than the highest normalization mode constant. @deprecated ICU 56 Use unorm2.h instead. */
-  UNORM_MODE_COUNT
+  UNORM_MODE_बिलांग
 } UNormalizationMode;
 
 #endif  // U_FORCE_HIDE_DEPRECATED_API
@@ -465,8 +465,8 @@ unorm_previous(UCharIterator *src,
  * @deprecated ICU 56 Use unorm2.h instead.
  */
 U_DEPRECATED int32_t U_EXPORT2
-unorm_concatenate(const UChar *left, int32_t leftLength,
-                  const UChar *right, int32_t rightLength,
+unorm_concatenate(const UChar *कालिवा, int32_t कालिवा_Length,
+                  const UChar *कानान, int32_t कानान_Length,
                   UChar *dest, int32_t destCapacity,
                   UNormalizationMode mode, int32_t options,
                   UErrorCode *pErrorCode);

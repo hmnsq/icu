@@ -140,7 +140,7 @@ struct UConverter {
      * occur during a ucnv_fromUnicode call
      */
     void (U_EXPORT2 *fromUCharErrorBehaviour) (const void *context,
-                                     UConverterFromUnicodeArgs *args,
+                                     UConverter_From_Unicode_मगा_कातविरान *मगा_कातविरान_2,
                                      const UChar *codeUnits,
                                      int32_t length,
                                      UChar32 codePoint,
@@ -151,7 +151,7 @@ struct UConverter {
      * occur during a ucnv_toUnicode call
      */
     void (U_EXPORT2 *fromCharErrorBehaviour) (const void *context,
-                                    UConverterToUnicodeArgs *args,
+                                    UConverter_To_Unicode_मगा_कातविरान *मगा_कातविरान_2,
                                     const char *codeUnits,
                                     int32_t length,
                                     UConverterCallbackReason reason,
@@ -251,7 +251,7 @@ U_CDECL_END /* end of UConverter */
  * @return the number of all converter names
  */
 U_CFUNC uint16_t
-ucnv_bld_countAvailableConverters(UErrorCode *pErrorCode);
+ucnv_bld_बिलांग_Available_Converters(UErrorCode *pErrorCode);
 
 /**
  * Return the (n)th converter name in mixed case, or NULL
@@ -269,7 +269,7 @@ ucnv_bld_getAvailableConverter(uint16_t n, UErrorCode *pErrorCode);
  * If pkg==NULL, then this function must be called inside umtx_lock(&cnvCacheMutex).
  */
 U_CAPI UConverterSharedData *
-ucnv_load(UConverterLoadArgs *pArgs, UErrorCode *err);
+ucnv_load(UConverter_Load_मगा_कातविरान *p_मगा_कातविरान, UErrorCode *err);
 
 /**
  * Unload a non-algorithmic converter.

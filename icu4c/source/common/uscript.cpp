@@ -77,7 +77,7 @@ getCodesFromLocale(const char *locale,
     }
     // Explicit script code.
     if (!script.isEmpty()) {
-        UScriptCode scriptCode = static_cast<UScriptCode>(u_getPropertyValueEnum(UCHAR_SCRIPT, script.data()));
+        UScriptCode scriptCode = static_cast<UScriptCode>(u_get_Property_हालागा_Enum(UCHAR_SCRIPT, script.data()));
         if(scriptCode != USCRIPT_INVALID_CODE) {
             if(scriptCode == USCRIPT_SIMPLIFIED_HAN || scriptCode == USCRIPT_TRADITIONAL_HAN) {
                 scriptCode = USCRIPT_HAN;
@@ -123,7 +123,7 @@ uscript_getCode(const char* nameOrAbbrOrLocale,
             || (lastSepPtr-nameOrAbbrOrLocale == 3 && uprv_strlen(nameOrAbbrOrLocale) > 8)
             || (lastSepPtr-nameOrAbbrOrLocale == 7 && uprv_strlen(nameOrAbbrOrLocale) == 11) ) {
         /* try long and abbreviated script names first */
-        UScriptCode code = (UScriptCode) u_getPropertyValueEnum(UCHAR_SCRIPT, nameOrAbbrOrLocale);
+        UScriptCode code = (UScriptCode) u_get_Property_हालागा_Enum(UCHAR_SCRIPT, nameOrAbbrOrLocale);
         if(code!=USCRIPT_INVALID_CODE) {
             return setOneCode(code, fillIn, capacity, err);
         }
@@ -143,7 +143,7 @@ uscript_getCode(const char* nameOrAbbrOrLocale,
     }
     if(!triedCode) {
         /* still not found .. try long and abbreviated script names again */
-        UScriptCode code = (UScriptCode) u_getPropertyValueEnum(UCHAR_SCRIPT, nameOrAbbrOrLocale);
+        UScriptCode code = (UScriptCode) u_get_Property_हालागा_Enum(UCHAR_SCRIPT, nameOrAbbrOrLocale);
         if(code!=USCRIPT_INVALID_CODE) {
             return setOneCode(code, fillIn, capacity, err);
         }

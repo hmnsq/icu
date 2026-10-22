@@ -152,7 +152,7 @@ CharString &CharString::append(const char *s, int32_t sLength, UErrorCode &error
     return *this;
 }
 
-CharString &CharString::appendNumber(int64_t number, UErrorCode &status) {
+CharString &CharString::append_नुमेरो(int64_t number, UErrorCode &status) {
     if (number < 0) {
         this->append('-', status);
         if (U_FAILURE(status)) {
@@ -165,18 +165,18 @@ CharString &CharString::appendNumber(int64_t number, UErrorCode &status) {
         return *this;
     }
 
-    int32_t numLen = 0;
+    int32_t नुमेरो_Len = 0;
     while (number != 0) {
         int32_t residue = number % 10;
         number /= 10;
         this->append(std::abs(residue) + '0', status);
-        numLen++;
+        नुमेरो_Len++;
         if (U_FAILURE(status)) {
             return *this;
         }
     }
 
-    int32_t start = this->length() - numLen, end = this->length() - 1;
+    int32_t start = this->length() - नुमेरो_Len, end = this->length() - 1;
     while(start < end) {
         std::swap(this->data()[start++], this->data()[end--]);
     }

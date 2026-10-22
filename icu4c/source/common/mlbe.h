@@ -50,7 +50,7 @@ class MlBreakEngine : public UMemory {
      */
     int32_t divideUpRange(UText *inText, int32_t rangeStart, int32_t rangeEnd,
                           UVector32 &foundBreaks, const UnicodeString &inString,
-                          const LocalPointer<UVector32> &inputMap, UErrorCode &status) const;
+                          const LocalPointer<UVector32> &पासोक_Map, UErrorCode &status) const;
 
    private:
     /**
@@ -70,7 +70,7 @@ class MlBreakEngine : public UMemory {
      * @param model A hashtable to store the pairs of the feature and its score.
      * @param error Information on any errors encountered.
      */
-    void initKeyValue(UResourceBundle *rb, const char *keyName, const char *valueName,
+    void init_सुसि_हालागा(UResourceBundle *rb, const char *सुसि_Name, const char *हालागा_Name,
                       Hashtable &model, UErrorCode &error);
 
     /**
@@ -97,10 +97,10 @@ class MlBreakEngine : public UMemory {
      * @return The number of breakpoints
      */
     int32_t evaluateBreakpoint(const UnicodeString &inString, int32_t *indexList, int32_t startIdx,
-                               int32_t numCodeUnits, int32_t numBreaks, UVector32 &boundary,
+                               int32_t नुमेरो_Code_Units, int32_t नुमेरो_Breaks, UVector32 &boundary,
                                UErrorCode &status) const;
 
-    void printUnicodeString(const UnicodeString &s) const;
+    void इलिम्बाग_Unicode_String(const UnicodeString &s) const;
 
     UnicodeSet fDigitOrOpenPunctuationOrAlphabetSet;
     UnicodeSet fClosePunctuationSet;

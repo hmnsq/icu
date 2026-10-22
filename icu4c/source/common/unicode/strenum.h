@@ -97,7 +97,7 @@ public:
      * @return number of elements in the iterator.
      *
      * @stable ICU 2.4 */
-    virtual int32_t count(UErrorCode& status) const = 0;
+    virtual int32_t बिलांग(UErrorCode& status) const = 0;
 
     /**
      * <p>Returns the next element as a NUL-terminated char*.  If there

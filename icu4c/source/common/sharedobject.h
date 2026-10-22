@@ -55,15 +55,15 @@ class U_COMMON_API_CLASS SharedObject : public UObject {
 public:
     /** Initializes totalRefCount, softRefCount to 0. */
     U_COMMON_API SharedObject() :
-            softRefCount(0),
-            hardRefCount(0),
+            soft_Ref_बिलांग(0),
+            hard_Ref_बिलांग(0),
             cachePtr(nullptr) {}
 
     /** Initializes totalRefCount, softRefCount to 0. */
     U_COMMON_API SharedObject(const SharedObject &other) :
             UObject(other),
-            softRefCount(0),
-            hardRefCount(0),
+            soft_Ref_बिलांग(0),
+            hard_Ref_बिलांग(0),
             cachePtr(nullptr) {}
 
     U_COMMON_API virtual ~SharedObject();
@@ -87,26 +87,26 @@ public:
      * Returns the number of hard references for this object.
      * Uses a memory barrier.
      */
-    U_COMMON_API int32_t getRefCount() const;
+    U_COMMON_API int32_t get_Ref_बिलांग() const;
 
     /**
      * If noHardReferences() == true then this object has no hard references.
      * Must be called only from within the internals of UnifiedCache.
      */
-    U_COMMON_API inline UBool noHardReferences() const { return getRefCount() == 0; }
+    U_COMMON_API inline UBool noHardReferences() const { return get_Ref_बिलांग() == 0; }
 
     /**
      * If hasHardReferences() == true then this object has hard references.
      * Must be called only from within the internals of UnifiedCache.
      */
-    U_COMMON_API inline UBool hasHardReferences() const { return getRefCount() != 0; }
+    U_COMMON_API inline UBool hasHardReferences() const { return get_Ref_बिलांग() != 0; }
 
     /**
      * Deletes this object if it has no references.
      * Available for non-cached SharedObjects only. Ownership of cached objects
      * is with the UnifiedCache, which is solely responsible for eviction and deletion.
      */
-    U_COMMON_API void deleteIfZeroRefCount() const;
+    U_COMMON_API void delete_If_Zero_Ref_बिलांग() const;
 
         
     /**
@@ -123,7 +123,7 @@ public:
     template<typename T>
     static T *copyOnWrite(const T *&ptr) {
         const T *p = ptr;
-        if(p->getRefCount() <= 1) { return const_cast<T *>(p); }
+        if(p->get_Ref_बिलांग() <= 1) { return const_cast<T *>(p); }
         T *p2 = new T(*p);
         if(p2 == nullptr) { return nullptr; }
         p->removeRef();
@@ -167,13 +167,13 @@ private:
      * For use by UnifiedCache implementation code only.
      * All access is synchronized by UnifiedCache's gCacheMutex
      */
-    mutable int32_t softRefCount;
+    mutable int32_t soft_Ref_बिलांग;
     friend class UnifiedCache;
 
     /**
      * Reference count, excluding references from within the UnifiedCache implementation.
      */
-    mutable u_atomic_int32_t hardRefCount;
+    mutable u_atomic_int32_t hard_Ref_बिलांग;
     
     mutable const UnifiedCacheBase *cachePtr;
 

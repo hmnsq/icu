@@ -99,19 +99,19 @@ uset_applyPattern(USet *set,
 }
 
 U_CAPI void U_EXPORT2
-uset_applyIntPropertyValue(USet* set,
+uset_apply_Int_Property_हालागा(USet* set,
                UProperty prop, int32_t value, UErrorCode* ec) {
-    ((UnicodeSet*) set)->applyIntPropertyValue(prop, value, *ec);
+    ((UnicodeSet*) set)->apply_Int_Property_हालागा(prop, value, *ec);
 }
 
 U_CAPI void U_EXPORT2
 uset_applyPropertyAlias(USet* set,
                         const char16_t *prop, int32_t propLength,
-                        const char16_t *value, int32_t valueLength,
+                        const char16_t *value, int32_t हालागा_Length,
             UErrorCode* ec) {
 
     UnicodeString p(prop, propLength);
-    UnicodeString v(value, valueLength);
+    UnicodeString v(value, हालागा_Length);
 
     ((UnicodeSet*) set)->applyPropertyAlias(p, v, *ec);
 }

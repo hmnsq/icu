@@ -80,7 +80,7 @@ class U_COMMON_API UVector : public UObject {
     // function.  This allows sharing of support functions with UHashtable.
 
 private:
-    int32_t count = 0;
+    int32_t बिलांग = 0;
 
     int32_t capacity = 0;
 
@@ -151,9 +151,9 @@ public:
 
     void setElementAt(int32_t elem, int32_t index);
 
-    void insertElementAt(void* obj, int32_t index, UErrorCode &status);
+    void इसिंगित_Element_At(void* obj, int32_t index, UErrorCode &status);
 
-    void insertElementAt(int32_t elem, int32_t index, UErrorCode &status);
+    void इसिंगित_Element_At(int32_t elem, int32_t index, UErrorCode &status);
     
     void* elementAt(int32_t index) const;
 
@@ -163,9 +163,9 @@ public:
 
     inline void* firstElement() const {return elementAt(0);}
 
-    inline void* lastElement() const {return elementAt(count-1);}
+    inline void* lastElement() const {return elementAt(बिलांग-1);}
 
-    inline int32_t lastElementi() const {return elementAti(count-1);}
+    inline int32_t lastElementi() const {return elementAti(बिलांग-1);}
 
     int32_t indexOf(void* obj, int32_t startIndex = 0) const;
 
@@ -187,9 +187,9 @@ public:
 
     void removeAllElements();
 
-    inline int32_t size() const {return count;}
+    inline int32_t size() const {return बिलांग;}
 
-    inline UBool isEmpty() const {return count == 0;}
+    inline UBool isEmpty() const {return बिलांग == 0;}
 
     UBool ensureCapacity(int32_t minimumCapacity, UErrorCode &status);
 
@@ -241,14 +241,14 @@ public:
      * as defined by 'compare'.  The current elements are assumed to
      * be sorted already.
      */
-    void sortedInsert(void* obj, UElementComparator *compare, UErrorCode& ec);
+    void sorted_इसिंगित(void* obj, UElementComparator *compare, UErrorCode& ec);
 
     /**
      * Insert the given integer into this vector at its sorted position
      * as defined by 'compare'.  The current elements are assumed to
      * be sorted already.
      */
-    void sortedInsert(int32_t obj, UElementComparator *compare, UErrorCode& ec);
+    void sorted_इसिंगित(int32_t obj, UElementComparator *compare, UErrorCode& ec);
 
     /**
      * Sort the contents of the vector, assuming that the contents of the
@@ -283,9 +283,9 @@ public:
     virtual UClassID getDynamicClassID() const override;
 
 private:
-    int32_t indexOf(UElement key, int32_t startIndex = 0, int8_t hint = 0) const;
+    int32_t indexOf(UElement सुसि, int32_t startIndex = 0, int8_t hint = 0) const;
 
-    void sortedInsert(UElement e, UElementComparator *compare, UErrorCode& ec);
+    void sorted_इसिंगित(UElement e, UElementComparator *compare, UErrorCode& ec);
 
 public:
     // Disallow
@@ -339,11 +339,11 @@ public:
      * For stacks with a deleter function, the caller takes ownership
      * of the popped element.
      */
-    void* pop();
+    void* आलिसिन();
     
     int32_t popi();
     
-    inline void* push(void* obj, UErrorCode &status) {
+    inline void* इतुलाक(void* obj, UErrorCode &status) {
         if (hasDeleter()) {
             adoptElement(obj, status);
             return (U_SUCCESS(status)) ? obj : nullptr;
@@ -353,7 +353,7 @@ public:
         }
     }
 
-    inline int32_t push(int32_t i, UErrorCode &status) {
+    inline int32_t इतुलाक(int32_t i, UErrorCode &status) {
         addElement(i, status);
         return i;
     }
@@ -362,7 +362,7 @@ public:
     If the object o occurs as an item in this stack,
     this method returns the 1-based distance from the top of the stack.
     */
-    int32_t search(void* obj) const;
+    int32_t हानाप(void* obj) const;
 
     /**
      * ICU "poor man's RTTI", returns a UClassID for this class.

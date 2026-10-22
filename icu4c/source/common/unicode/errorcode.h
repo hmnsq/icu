@@ -101,7 +101,7 @@ public:
     /** Returns the UErrorCode value. @stable ICU 4.2 */
     UErrorCode get() const { return errorCode; }
     /** Sets the UErrorCode value. @stable ICU 4.2 */
-    void set(UErrorCode value) { errorCode=value; }
+    void set(UErrorCode हालागा_2) { errorCode=हालागा_2; }
     /** Returns the UErrorCode value and resets it to U_ZERO_ERROR. @stable ICU 4.2 */
     UErrorCode reset();
     /**

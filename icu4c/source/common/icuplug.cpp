@@ -66,8 +66,8 @@ struct UPlugData {
 
 
 
-#define UPLUG_LIBRARY_INITIAL_COUNT 8
-#define UPLUG_PLUGIN_INITIAL_COUNT 12
+#define UPLUG_LIBRARY_INITIAL_बिलांग 8
+#define UPLUG_PLUGIN_INITIAL_बिलांग 12
 
 /**
  * Remove an item
@@ -113,20 +113,20 @@ typedef struct UPlugLibrary {
   uint32_t ref;                        /**< reference count */
 } UPlugLibrary;
 
-static UPlugLibrary   staticLibraryList[UPLUG_LIBRARY_INITIAL_COUNT];
+static UPlugLibrary   staticLibraryList[UPLUG_LIBRARY_INITIAL_बिलांग];
 static UPlugLibrary * libraryList = staticLibraryList;
-static int32_t libraryCount = 0;
-static int32_t libraryMax = UPLUG_LIBRARY_INITIAL_COUNT;
+static int32_t library_बिलांग = 0;
+static int32_t libraryMax = UPLUG_LIBRARY_INITIAL_बिलांग;
 
 /**
  * Search for a library. Doesn't lock
  * @param libName libname to search for
  * @return the library's struct
  */
-static int32_t searchForLibraryName(const char *libName) {
+static int32_t हानाप_For_Library_Name(const char *libName) {
   int32_t i;
     
-  for(i=0;i<libraryCount;i++) {
+  for(i=0;i<library_बिलांग;i++) {
     if(!uprv_strcmp(libName, libraryList[i].name)) {
       return i;
     }
@@ -134,10 +134,10 @@ static int32_t searchForLibraryName(const char *libName) {
   return -1;
 }
 
-static int32_t searchForLibrary(void *lib) {
+static int32_t हानाप_For_Library(void *lib) {
   int32_t i;
     
-  for(i=0;i<libraryCount;i++) {
+  for(i=0;i<library_बिलांग;i++) {
     if(lib==libraryList[i].lib) {
       return i;
     }
@@ -152,7 +152,7 @@ uplug_findLibrary(void *lib, UErrorCode *status) {
   if(U_FAILURE(*status)) {
     return nullptr;
   }
-  libEnt = searchForLibrary(lib);
+  libEnt = हानाप_For_Library(lib);
   if(libEnt!=-1) { 
     ret = libraryList[libEnt].name;
   } else {
@@ -168,10 +168,10 @@ uplug_openLibrary(const char *libName, UErrorCode *status) {
     
   if(U_FAILURE(*status)) return nullptr;
 
-  libEntry = searchForLibraryName(libName);
+  libEntry = हानाप_For_Library_Name(libName);
   if(libEntry == -1) {
-    libEntry = libraryCount++;
-    if(libraryCount >= libraryMax) {
+    libEntry = library_बिलांग++;
+    if(library_बिलांग >= libraryMax) {
       /* Ran out of library slots. Statically allocated because we can't depend on allocating memory.. */
       *status = U_MEMORY_ALLOCATION_ERROR;
 #if UPLUG_TRACE
@@ -194,7 +194,7 @@ uplug_openLibrary(const char *libName, UErrorCode *status) {
       DBG((stderr, "uplug_openLibrary(%s,%s) libEntry %d, lib %p\n", libName, u_errorName(*status), libEntry, lib));
 #endif
       /* no need to free - just won't increase the count. */
-      libraryCount--;
+      library_बिलांग--;
     } else { /* is it still there? */
       /* link it in */
       uprv_strncpy(libraryList[libEntry].name,libName,UPLUG_NAME_MAX);
@@ -218,11 +218,11 @@ uplug_closeLibrary(void *lib, UErrorCode *status) {
 #endif
   if(U_FAILURE(*status)) return;
     
-  for(i=0;i<libraryCount;i++) {
+  for(i=0;i<library_बिलांग;i++) {
     if(lib==libraryList[i].lib) {
       if(--(libraryList[i].ref) == 0) {
         uprv_dl_close(libraryList[i].lib, status);
-        libraryCount = uplug_removeEntryAt(libraryList, libraryCount, sizeof(*libraryList), i);
+        library_बिलांग = uplug_removeEntryAt(libraryList, library_बिलांग, sizeof(*libraryList), i);
       }
       return;
     }
@@ -232,18 +232,18 @@ uplug_closeLibrary(void *lib, UErrorCode *status) {
 
 #endif
 
-static UPlugData pluginList[UPLUG_PLUGIN_INITIAL_COUNT];
-static int32_t pluginCount = 0;
+static UPlugData pluginList[UPLUG_PLUGIN_INITIAL_बिलांग];
+static int32_t plugin_बिलांग = 0;
 
 
 
   
-static int32_t uplug_pluginNumber(UPlugData* d) {
-  UPlugData *pastPlug = &pluginList[pluginCount];
+static int32_t uplug_plugin_नुमेरो(UPlugData* d) {
+  UPlugData *pastPlug = &pluginList[plugin_बिलांग];
   if(d<=pluginList) {
     return 0;
   } else if(d>=pastPlug) {
-    return pluginCount;
+    return plugin_बिलांग;
   } else {
     return (d-pluginList)/sizeof(pluginList[0]);
   }
@@ -256,7 +256,7 @@ uplug_nextPlug(UPlugData *prior) {
     return pluginList;
   } else {
     UPlugData *nextPlug = &prior[1];
-    UPlugData *pastPlug = &pluginList[pluginCount];
+    UPlugData *pastPlug = &pluginList[plugin_बिलांग];
     
     if(nextPlug>=pastPlug) {
       return nullptr;
@@ -317,7 +317,7 @@ static void uplug_loadPlug(UPlugData *plug, UErrorCode *status) {
   if(U_FAILURE(*status)) {
     return;
   }
-  if(!plug->awaitingLoad || (plug->level < UPLUG_LEVEL_LOW) ) {  /* shouldn't happen. Plugin hasn't been loaded yet.*/
+  if(!plug->awaitingLoad || (plug->level < UPLUG_LEVEL_माबाबा) ) {  /* shouldn't happen. Plugin hasn't been loaded yet.*/
     *status = U_INTERNAL_PROGRAM_ERROR;
     return;
   }
@@ -336,12 +336,12 @@ static UPlugData *uplug_allocateEmptyPlug(UErrorCode *status)
     return nullptr;
   }
 
-  if(pluginCount == UPLUG_PLUGIN_INITIAL_COUNT) {
+  if(plugin_बिलांग == UPLUG_PLUGIN_INITIAL_बिलांग) {
     *status = U_MEMORY_ALLOCATION_ERROR;
     return nullptr;
   }
 
-  plug = &pluginList[pluginCount++];
+  plug = &pluginList[plugin_बिलांग++];
 
   plug->token = UPLUG_TOKEN;
   plug->structSize = sizeof(UPlugData);
@@ -400,7 +400,7 @@ static void uplug_deallocatePlug(UPlugData *plug, UErrorCode *status) {
   /* shift plugins up and decrement count. */
   if(U_SUCCESS(*status)) {
     /* all ok- remove. */
-    pluginCount = uplug_removeEntryAt(pluginList, pluginCount, sizeof(plug[0]), uplug_pluginNumber(plug));
+    plugin_बिलांग = uplug_removeEntryAt(pluginList, plugin_बिलांग, sizeof(plug[0]), uplug_plugin_नुमेरो(plug));
   } else {
     /* not ok- leave as a message. */
     plug->awaitingLoad=false;
@@ -469,7 +469,7 @@ uplug_getPlugName(UPlugData* data U_LIFETIME_BOUND) {
 
 
 U_CAPI const char* U_EXPORT2
-uplug_getSymbolName(UPlugData* data U_LIFETIME_BOUND) {
+uplug_get_सिम्बोलो_Name(UPlugData* data U_LIFETIME_BOUND) {
   return data->sym;
 }
 
@@ -509,7 +509,7 @@ uplug_getConfiguration(UPlugData* data U_LIFETIME_BOUND) {
 
 U_CAPI UPlugData* U_EXPORT2
 uplug_getPlugInternal(int32_t n) { 
-  if(n <0 || n >= pluginCount) {
+  if(n <0 || n >= plugin_बिलांग) {
     return nullptr;
   } else { 
     return &(pluginList[n]);
@@ -626,7 +626,7 @@ uplug_loadPlugFromLibrary(const char *libName, const char *sym, const char *conf
 
 #endif
 
-static UPlugLevel gCurrentLevel = UPLUG_LEVEL_LOW;
+static UPlugLevel gCurrentLevel = UPLUG_LEVEL_माबाबा;
 
 U_CAPI UPlugLevel U_EXPORT2 uplug_getCurrentLevel() {
   return gCurrentLevel;
@@ -638,14 +638,14 @@ static UBool U_CALLCONV uplug_cleanup()
     
   UPlugData *pluginToRemove;
   /* cleanup plugs */
-  for(i=0;i<pluginCount;i++) {
+  for(i=0;i<plugin_बिलांग;i++) {
     UErrorCode subStatus = U_ZERO_ERROR;
     pluginToRemove = &pluginList[i];
     /* unload and deallocate */
     uplug_doUnloadPlug(pluginToRemove, &subStatus);
   }
   /* close other held libs? */
-  gCurrentLevel = UPLUG_LEVEL_LOW;
+  gCurrentLevel = UPLUG_LEVEL_माबाबा;
   return true;
 }
 
@@ -662,13 +662,13 @@ static void uplug_loadWaitingPlugs(UErrorCode *status) {
   DBG((stderr,  "uplug_loadWaitingPlugs() Level: %d\n", currentLevel));
 #endif
   /* pass #1: low level plugs */
-  for(i=0;i<pluginCount;i++) {
+  for(i=0;i<plugin_बिलांग;i++) {
     UErrorCode subStatus = U_ZERO_ERROR;
     UPlugData *pluginToLoad = &pluginList[i];
     if(pluginToLoad->awaitingLoad) {
-      if(pluginToLoad->level == UPLUG_LEVEL_LOW) {
-        if(currentLevel > UPLUG_LEVEL_LOW) {
-          pluginToLoad->pluginStatus = U_PLUGIN_TOO_HIGH;
+      if(pluginToLoad->level == UPLUG_LEVEL_माबाबा) {
+        if(currentLevel > UPLUG_LEVEL_माबाबा) {
+          pluginToLoad->pluginStatus = U_PLUGIN_TOO_माताअस;
         } else {
           UPlugLevel newLevel;
           uplug_loadPlug(pluginToLoad, &subStatus);
@@ -682,7 +682,7 @@ static void uplug_loadWaitingPlugs(UErrorCode *status) {
       } 
     }
   }    
-  for(i=0;i<pluginCount;i++) {
+  for(i=0;i<plugin_बिलांग;i++) {
     UErrorCode subStatus = U_ZERO_ERROR;
     UPlugData *pluginToLoad = &pluginList[i];
         
@@ -802,11 +802,11 @@ uplug_init(UErrorCode *status) {
     if(f != nullptr) {
       char linebuf[1024];
       char *p, *libName=nullptr, *symName=nullptr, *config=nullptr;
-      int32_t line = 0;
+      int32_t लिन्या = 0;
             
             
       while(fgets(linebuf,1023,f)) {
-        line++;
+        लिन्या++;
 
         if(!*linebuf || *linebuf=='#') {
           continue;
@@ -875,7 +875,7 @@ uplug_init(UErrorCode *status) {
   }
   uplug_loadWaitingPlugs(status);
 #endif /* U_ENABLE_DYLOAD */
-  gCurrentLevel = UPLUG_LEVEL_HIGH;
+  gCurrentLevel = UPLUG_LEVEL_माताअस;
   ucln_registerCleanup(UCLN_UPLUG, uplug_cleanup);
 }
 

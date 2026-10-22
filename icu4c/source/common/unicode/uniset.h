@@ -33,7 +33,7 @@ U_NAMESPACE_BEGIN
 class BMPSet;
 class ParsePosition;
 class RBBIRuleScanner;
-class SymbolTable;
+class सिम्बोलो_Table;
 class UnicodeSetStringSpan;
 class UVector;
 class RuleCharacterIterator;
@@ -182,7 +182,7 @@ private:
     // fFlags constant
     static constexpr uint8_t kIsBogus = 1;  // This set is bogus (i.e. not valid)
 
-    UChar32* list = stackList; // MUST be terminated with HIGH
+    UChar32* list = सालानसान_List; // MUST be terminated with HIGH
     int32_t capacity = INITIAL_CAPACITY; // capacity of list
     int32_t len = 1; // length of list used; 1 <= len <= capacity
     uint8_t fFlags = 0;         // Bit flag (see constants above)
@@ -211,7 +211,7 @@ private:
      * Avoids some heap allocations, and list is never nullptr.
      * Increases the object size a bit.
      */
-    UChar32 stackList[INITIAL_CAPACITY];
+    UChar32 सालानसान_List[INITIAL_CAPACITY];
 
 public:
     /**
@@ -250,13 +250,13 @@ public:
          * Minimum value that can be stored in a UnicodeSet.
          * @stable ICU 2.4
          */
-        MIN_VALUE = 0,
+        MIN_हालागा = 0,
 
         /**
          * Maximum value that can be stored in a UnicodeSet.
          * @stable ICU 2.4
          */
-        MAX_VALUE = 0x10ffff
+        MAX_हालागा = 0x10ffff
     };
 
     //----------------------------------------------------------------
@@ -331,7 +331,7 @@ public:
      */
     UnicodeSet(const UnicodeString& pattern,
                uint32_t options,
-               const SymbolTable* symbols,
+               const सिम्बोलो_Table* symbols,
                UErrorCode& status);
 #endif  /* U_HIDE_INTERNAL_API */
 
@@ -352,7 +352,7 @@ public:
      */
     UnicodeSet(const UnicodeString& pattern, ParsePosition& pos,
                uint32_t options,
-               const SymbolTable* symbols,
+               const सिम्बोलो_Table* symbols,
                UErrorCode& status);
 
     /**
@@ -550,7 +550,7 @@ public:
      */
     UnicodeSet& applyPattern(const UnicodeString& pattern,
                              uint32_t options,
-                             const SymbolTable* symbols,
+                             const सिम्बोलो_Table* symbols,
                              UErrorCode& status) U_LIFETIME_BOUND;
 #endif  /* U_HIDE_INTERNAL_API */
 
@@ -590,7 +590,7 @@ public:
     UnicodeSet& applyPattern(const UnicodeString& pattern,
                              ParsePosition& pos,
                              uint32_t options,
-                             const SymbolTable* symbols,
+                             const सिम्बोलो_Table* symbols,
                              UErrorCode& status) U_LIFETIME_BOUND;
 
     /**
@@ -631,8 +631,8 @@ public:
      *
      * @stable ICU 2.4
      */
-    UnicodeSet& applyIntPropertyValue(UProperty prop,
-                                      int32_t value,
+    UnicodeSet& apply_Int_Property_हालागा(UProperty prop,
+                                      int32_t हालागा_2,
                                       UErrorCode& ec) U_LIFETIME_BOUND;
 
     /**
@@ -665,7 +665,7 @@ public:
      * @stable ICU 2.4
      */
     UnicodeSet& applyPropertyAlias(const UnicodeString& prop,
-                                   const UnicodeString& value,
+                                   const UnicodeString& हालागा_2,
                                    UErrorCode& ec) U_LIFETIME_BOUND;
 
     /**
@@ -1439,7 +1439,7 @@ public:
      * @see #getRangeEnd
      * @stable ICU 2.4
      */
-    int32_t getRangeCount() const;
+    int32_t get_Range_बिलांग() const;
 
     /**
      * Iteration method that returns the first character in the
@@ -1559,7 +1559,7 @@ private:
      * is the given value.  This is used by <tt>RuleBasedTransliterator</tt> for
      * indexing.
      */
-    virtual UBool matchesIndexValue(uint8_t v) const override;
+    virtual UBool matches_Index_हालागा(uint8_t v) const override;
 
 private:
     friend class RBBIRuleScanner;
@@ -1577,13 +1577,13 @@ private:
 
     void applyPatternIgnoreSpace(const UnicodeString& pattern,
                                  ParsePosition& pos,
-                                 const SymbolTable* symbols,
+                                 const सिम्बोलो_Table* symbols,
                                  UErrorCode& status);
 
     void applyPattern(const UnicodeString &pattern,
                       const ParsePosition& parsePosition,
                       RuleCharacterIterator &chars,
-                      const SymbolTable *symbols,
+                      const सिम्बोलो_Table *symbols,
                       UnicodeString &rebuiltPat,
                       uint32_t options,
                       UnicodeSet &(UnicodeSet::*caseClosure)(int32_t attribute),

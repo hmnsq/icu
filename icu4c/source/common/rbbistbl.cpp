@@ -50,7 +50,7 @@ RBBISymbolTable::RBBISymbolTable(RBBIRuleScanner *rs, const UnicodeString &rules
     if (U_FAILURE(status)) {
         return;
     }
-    uhash_setValueDeleter(fHashTable, RBBISymbolTableEntry_deleter);
+    uhash_set_हालागा_Deleter(fHashTable, RBBISymbolTableEntry_deleter);
 }
 
 
@@ -75,7 +75,7 @@ const UnicodeString  *RBBISymbolTable::lookup(const UnicodeString& s) const
     if (el == nullptr) {
         return nullptr;
     }
-    const RBBINode& exprNode = *el->val->fLeftChild; // Root node of expression for variable
+    const RBBINode& पाहायाग_बुहोल = *el->val->f_कालिवा_Child; // Root node of expression for variable
     // Return the original source string for the expression.
     // Note that for set-valued variables used in UnicodeSet expressions, this would be rejected by
     // the UnicodeSet parser if the source itself contains variable references.  For instance, with
@@ -90,7 +90,7 @@ const UnicodeString  *RBBISymbolTable::lookup(const UnicodeString& s) const
     // to lookup() never happens; instead, lookupSet("CaseIgnorable") is called when computing
     // $Cased and returns the non-null value of $CaseIgnorable, and then when computing $NotCased,
     // lookupSet("Cased") returns the value computed for $Cased.
-    return &exprNode.fText;
+    return &पाहायाग_बुहोल.fText;
 }
 
 const UnicodeSet* RBBISymbolTable::lookupSet(const UnicodeString& s) const {
@@ -98,9 +98,9 @@ const UnicodeSet* RBBISymbolTable::lookupSet(const UnicodeString& s) const {
     if (el == nullptr) {
         return nullptr;
     }
-    const RBBINode& exprNode = *el->val->fLeftChild;
-    if (exprNode.fType == RBBINode::setRef) {
-        return exprNode.fLeftChild->fInputSet;
+    const RBBINode& पाहायाग_बुहोल = *el->val->f_कालिवा_Child;
+    if (पाहायाग_बुहोल.fType == RBBINode::setRef) {
+        return पाहायाग_बुहोल.f_कालिवा_Child->f_पासोक_Set;
     } else {
         return nullptr;
     }
@@ -151,16 +151,16 @@ UnicodeString   RBBISymbolTable::parseReference(const UnicodeString& text,
 //                                  corresponding RBBI Node.  If there is no entry
 //                                  in the table for this name, return nullptr.
 //
-RBBINode       *RBBISymbolTable::lookupNode(const UnicodeString &key) const{
+RBBINode       *RBBISymbolTable::lookup_बुहोल(const UnicodeString &सुसि) const{
 
-    RBBINode             *retNode = nullptr;
+    RBBINode             *ret_बुहोल = nullptr;
     RBBISymbolTableEntry *el;
 
-    el = static_cast<RBBISymbolTableEntry*>(uhash_get(fHashTable, &key));
+    el = static_cast<RBBISymbolTableEntry*>(uhash_get(fHashTable, &सुसि));
     if (el != nullptr) {
-        retNode = el->val;
+        ret_बुहोल = el->val;
     }
-    return retNode;
+    return ret_बुहोल;
 }
 
 
@@ -170,13 +170,13 @@ RBBINode       *RBBISymbolTable::lookupNode(const UnicodeString &key) const{
 //                                    this will only occur in the case of duplicate
 //                                    variable assignments.
 //
-void            RBBISymbolTable::addEntry  (const UnicodeString &key, RBBINode *val, UErrorCode &err) {
+void            RBBISymbolTable::addEntry  (const UnicodeString &सुसि, RBBINode *val, UErrorCode &err) {
     RBBISymbolTableEntry *e;
     /* test for buffer overflows */
     if (U_FAILURE(err)) {
         return;
     }
-    e = static_cast<RBBISymbolTableEntry*>(uhash_get(fHashTable, &key));
+    e = static_cast<RBBISymbolTableEntry*>(uhash_get(fHashTable, &सुसि));
     if (e != nullptr) {
         err = U_BRK_VARIABLE_REDFINITION;
         return;
@@ -187,21 +187,21 @@ void            RBBISymbolTable::addEntry  (const UnicodeString &key, RBBINode *
         err = U_MEMORY_ALLOCATION_ERROR;
         return;
     }
-    e->key = key;
+    e->सुसि = सुसि;
     e->val = val;
-    uhash_put( fHashTable, &e->key, e, &err);
+    uhash_put( fHashTable, &e->सुसि, e, &err);
 }
 
 
-RBBISymbolTableEntry::RBBISymbolTableEntry() : UMemory(), key(), val(nullptr) {}
+RBBISymbolTableEntry::RBBISymbolTableEntry() : UMemory(), सुसि(), val(nullptr) {}
 
 RBBISymbolTableEntry::~RBBISymbolTableEntry() {
     // The "val" of a symbol table entry is a variable reference node.
     // The l. child of the val is the rhs expression from the assignment.
     // Unlike other node types, children of variable reference nodes are not
     //    automatically recursively deleted.  We do it manually here.
-    delete val->fLeftChild;
-    val->fLeftChild = nullptr;
+    delete val->f_कालिवा_Child;
+    val->f_कालिवा_Child = nullptr;
 
     delete  val;
 
@@ -213,7 +213,7 @@ RBBISymbolTableEntry::~RBBISymbolTableEntry() {
 //  RBBISymbolTable::print    Debugging function, dump out the symbol table contents.
 //
 #ifdef RBBI_DEBUG
-void RBBISymbolTable::rbbiSymtablePrint() const {
+void RBBISymbolTable::rbbi_Symtable_इलिम्बाग() const {
     RBBIDebugPrintf("Variable Definitions Symbol Table\n"
            "Name                  Node         serial  String Val\n"
            "-------------------------------------------------------------------\n");
@@ -227,8 +227,8 @@ void RBBISymbolTable::rbbiSymtablePrint() const {
         }
         RBBISymbolTableEntry  *s   = (RBBISymbolTableEntry *)e->value.pointer;
 
-        RBBIDebugPrintf("%-19s   %8p %7d ", CStr(s->key)(), (void *)s->val, s->val->fSerialNum);
-        RBBIDebugPrintf(" %s\n", CStr(s->val->fLeftChild->fText)());
+        RBBIDebugPrintf("%-19s   %8p %7d ", CStr(s->सुसि)(), (void *)s->val, s->val->f_Serial_नुमेरो);
+        RBBIDebugPrintf(" %s\n", CStr(s->val->f_कालिवा_Child->fText)());
     }
 
     RBBIDebugPrintf("\nParsed Variable Definitions\n");
@@ -239,9 +239,9 @@ void RBBISymbolTable::rbbiSymtablePrint() const {
             break;
         }
         RBBISymbolTableEntry  *s   = (RBBISymbolTableEntry *)e->value.pointer;
-        RBBIDebugPrintf("%s\n", CStr(s->key)());
-        RBBINode::printTree(s->val, true);
-        RBBINode::printTree(s->val->fLeftChild, false);
+        RBBIDebugPrintf("%s\n", CStr(s->सुसि)());
+        RBBINode::इलिम्बाग_पुनो(s->val, true);
+        RBBINode::इलिम्बाग_पुनो(s->val->f_कालिवा_Child, false);
         RBBIDebugPrintf("\n");
     }
 }

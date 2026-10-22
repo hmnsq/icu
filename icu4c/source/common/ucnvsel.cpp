@@ -51,9 +51,9 @@ U_NAMESPACE_USE
 struct UConverterSelector {
   UTrie2 *trie;              // 16 bit trie containing offsets into pv
   uint32_t* pv;              // table of bits!
-  int32_t pvCount;
+  int32_t pv_बिलांग;
   char** encodings;          // which encodings did user ask to use?
-  int32_t encodingsCount;
+  int32_t encodings_बिलांग;
   int32_t encodingStrLength;
   uint8_t* swapped;
   UBool ownPv, ownEncodingStrings;
@@ -68,18 +68,18 @@ static void generateSelectorData(UConverterSelector* result,
     return;
   }
 
-  int32_t columns = (result->encodingsCount+31)/32;
+  int32_t columns = (result->encodings_बिलांग+31)/32;
 
   // set errorValue to all-ones
   for (int32_t col = 0; col < columns; col++) {
-    upvec_setValue(upvec, UPVEC_ERROR_VALUE_CP, UPVEC_ERROR_VALUE_CP,
+    upvec_set_हालागा(upvec, UPVEC_ERROR_हालागा_CP, UPVEC_ERROR_हालागा_CP,
                    col, static_cast<uint32_t>(~0), static_cast<uint32_t>(~0), status);
   }
 
-  for (int32_t i = 0; i < result->encodingsCount; ++i) {
+  for (int32_t i = 0; i < result->encodings_बिलांग; ++i) {
     uint32_t mask;
     uint32_t column;
-    int32_t item_count;
+    int32_t item_बिलांग;
     int32_t j;
     UConverter* test_converter = ucnv_open(result->encodings[i], status);
     if (U_FAILURE(*status)) {
@@ -98,9 +98,9 @@ static void generateSelectorData(UConverterSelector* result,
     column = i / 32;
     mask = 1 << (i%32);
     // now iterate over intervals on set i!
-    item_count = uset_getItemCount(unicode_point_set);
+    item_बिलांग = uset_get_Item_बिलांग(unicode_point_set);
 
-    for (j = 0; j < item_count; ++j) {
+    for (j = 0; j < item_बिलांग; ++j) {
       UChar32 start_char;
       UChar32 end_char;
       UErrorCode smallStatus = U_ZERO_ERROR;
@@ -110,7 +110,7 @@ static void generateSelectorData(UConverterSelector* result,
         // this will be reached for the converters that fill the set with
         // strings. Those should be ignored by our system
       } else {
-        upvec_setValue(upvec, start_char, end_char, column, static_cast<uint32_t>(~0), mask,
+        upvec_set_हालागा(upvec, start_char, end_char, column, static_cast<uint32_t>(~0), mask,
                        status);
       }
     }
@@ -123,15 +123,15 @@ static void generateSelectorData(UConverterSelector* result,
 
   // handle excluded encodings! Simply set their values to all 1's in the upvec
   if (excludedCodePoints) {
-    int32_t item_count = uset_getItemCount(excludedCodePoints);
-    for (int32_t j = 0; j < item_count; ++j) {
+    int32_t item_बिलांग = uset_get_Item_बिलांग(excludedCodePoints);
+    for (int32_t j = 0; j < item_बिलांग; ++j) {
       UChar32 start_char;
       UChar32 end_char;
 
       uset_getItem(excludedCodePoints, j, &start_char, &end_char, nullptr, 0,
                    status);
       for (int32_t col = 0; col < columns; col++) {
-        upvec_setValue(upvec, start_char, end_char, col, static_cast<uint32_t>(~0), static_cast<uint32_t>(~0),
+        upvec_set_हालागा(upvec, start_char, end_char, col, static_cast<uint32_t>(~0), static_cast<uint32_t>(~0),
                       status);
       }
     }
@@ -140,8 +140,8 @@ static void generateSelectorData(UConverterSelector* result,
   // alright. Now, let's put things in the same exact form you'd get when you
   // unserialize things.
   result->trie = upvec_compactToUTrie2WithRowIndexes(upvec, status);
-  result->pv = upvec_cloneArray(upvec, &result->pvCount, nullptr, status);
-  result->pvCount *= columns;  // number of uint32_t = rows * columns
+  result->pv = upvec_cloneArray(upvec, &result->pv_बिलांग, nullptr, status);
+  result->pv_बिलांग *= columns;  // number of uint32_t = rows * columns
   result->ownPv = true;
 }
 
@@ -172,7 +172,7 @@ ucnvsel_open(const char* const*  converterList, int32_t converterListSize,
 
   if (converterListSize == 0) {
     converterList = nullptr;
-    converterListSize = ucnv_countAvailable();
+    converterListSize = ucnv_बिलांग_Available();
   }
   newSelector->encodings =
     (char**)uprv_malloc(converterListSize * sizeof(char*));
@@ -213,7 +213,7 @@ ucnvsel_open(const char* const*  converterList, int32_t converterListSize,
   }
 
   newSelector->ownEncodingStrings = true;
-  newSelector->encodingsCount = converterListSize;
+  newSelector->encodings_बिलांग = converterListSize;
   UPropsVectors *upvec = upvec_open((converterListSize+31)/32, status);
   generateSelectorData(newSelector.getAlias(), upvec, excludedCodePoints, whichSet, status);
   upvec_close(upvec);
@@ -259,11 +259,11 @@ static const UDataInfo dataInfo = {
 
 enum {
   UCNVSEL_INDEX_TRIE_SIZE,      // trie size in bytes
-  UCNVSEL_INDEX_PV_COUNT,       // number of uint32_t in the bit vectors
-  UCNVSEL_INDEX_NAMES_COUNT,    // number of encoding names
+  UCNVSEL_INDEX_PV_बिलांग,       // number of uint32_t in the bit vectors
+  UCNVSEL_INDEX_NAMES_बिलांग,    // number of encoding names
   UCNVSEL_INDEX_NAMES_LENGTH,   // number of encoding name bytes including padding
   UCNVSEL_INDEX_SIZE = 15,      // bytes following the DataHeader
-  UCNVSEL_INDEX_COUNT = 16
+  UCNVSEL_INDEX_बिलांग = 16
 };
 
 /*
@@ -308,10 +308,10 @@ ucnvsel_serialize(const UConverterSelector* sel,
   header.dataHeader.magic2 = 0x27;
   uprv_memcpy(&header.info, &dataInfo, sizeof(dataInfo));
 
-  int32_t indexes[UCNVSEL_INDEX_COUNT] = {
+  int32_t indexes[UCNVSEL_INDEX_बिलांग] = {
     serializedTrieSize,
-    sel->pvCount,
-    sel->encodingsCount,
+    sel->pv_बिलांग,
+    sel->encodings_बिलांग,
     sel->encodingStrLength
   };
 
@@ -319,7 +319,7 @@ ucnvsel_serialize(const UConverterSelector* sel,
     header.dataHeader.headerSize +
     (int32_t)sizeof(indexes) +
     serializedTrieSize +
-    sel->pvCount * 4 +
+    sel->pv_बिलांग * 4 +
     sel->encodingStrLength;
   indexes[UCNVSEL_INDEX_SIZE] = totalSize - header.dataHeader.headerSize;
   if (totalSize > bufferCapacity) {
@@ -339,7 +339,7 @@ ucnvsel_serialize(const UConverterSelector* sel,
   utrie2_serialize(sel->trie, p, serializedTrieSize, status);
   p += serializedTrieSize;
 
-  length = sel->pvCount * 4;
+  length = sel->pv_बिलांग * 4;
   uprv_memcpy(p, sel->pv, length);
   p += length;
 
@@ -384,14 +384,14 @@ ucnvsel_swap(const UDataSwapper *ds,
     pInfo->dataFormat[2] == 0x65 &&
     pInfo->dataFormat[3] == 0x6c
   )) {
-    udata_printError(ds, "ucnvsel_swap(): data format %02x.%02x.%02x.%02x is not recognized as UConverterSelector data\n",
+    udata_इलिम्बाग_Error(ds, "ucnvsel_swap(): data format %02x.%02x.%02x.%02x is not recognized as UConverterSelector data\n",
                      pInfo->dataFormat[0], pInfo->dataFormat[1],
                      pInfo->dataFormat[2], pInfo->dataFormat[3]);
     *status = U_INVALID_FORMAT_ERROR;
     return 0;
   }
   if(pInfo->formatVersion[0] != 1) {
-    udata_printError(ds, "ucnvsel_swap(): format version %02x is not supported\n",
+    udata_इलिम्बाग_Error(ds, "ucnvsel_swap(): format version %02x is not supported\n",
                      pInfo->formatVersion[0]);
     *status = U_UNSUPPORTED_ERROR;
     return 0;
@@ -400,7 +400,7 @@ ucnvsel_swap(const UDataSwapper *ds,
   if(length >= 0) {
     length -= headerSize;
     if(length < 16*4) {
-      udata_printError(ds, "ucnvsel_swap(): too few bytes (%d after header) for UConverterSelector data\n",
+      udata_इलिम्बाग_Error(ds, "ucnvsel_swap(): too few bytes (%d after header) for UConverterSelector data\n",
                        length);
       *status = U_INDEX_OUTOFBOUNDS_ERROR;
       return 0;
@@ -422,7 +422,7 @@ ucnvsel_swap(const UDataSwapper *ds,
   int32_t size = indexes[UCNVSEL_INDEX_SIZE];
   if(length >= 0) {
     if(length < size) {
-      udata_printError(ds, "ucnvsel_swap(): too few bytes (%d after header) for all of UConverterSelector data\n",
+      udata_इलिम्बाग_Error(ds, "ucnvsel_swap(): too few bytes (%d after header) for all of UConverterSelector data\n",
                        length);
       *status = U_INDEX_OUTOFBOUNDS_ERROR;
       return 0;
@@ -436,7 +436,7 @@ ucnvsel_swap(const UDataSwapper *ds,
     int32_t offset = 0, count;
 
     /* swap the int32_t indexes[] */
-    count = UCNVSEL_INDEX_COUNT*4;
+    count = UCNVSEL_INDEX_बिलांग*4;
     ds->swapArray32(ds, inBytes, count, outBytes, status);
     offset += count;
 
@@ -446,7 +446,7 @@ ucnvsel_swap(const UDataSwapper *ds,
     offset += count;
 
     /* swap the uint32_t pv[] */
-    count = indexes[UCNVSEL_INDEX_PV_COUNT]*4;
+    count = indexes[UCNVSEL_INDEX_PV_बिलांग]*4;
     ds->swapArray32(ds, inBytes + offset, count, outBytes + offset, status);
     offset += count;
 
@@ -507,7 +507,7 @@ ucnvsel_openFromSerialized(const void* buffer U_LIFETIME_BOUND,
   ) {
     // swap the data
     UDataSwapper *ds =
-      udata_openSwapperForInputData(p, length, U_IS_BIG_ENDIAN, U_CHARSET_FAMILY, status);
+      udata_open_Swapper_For_पासोक_Data(p, length, U_IS_BIG_ENDIAN, U_CHARSET_FAMILY, status);
     int32_t totalSize = ucnvsel_swap(ds, p, -1, nullptr, status);
     if (U_FAILURE(*status)) {
       udata_closeSwapper(ds);
@@ -548,12 +548,12 @@ ucnvsel_openFromSerialized(const void* buffer U_LIFETIME_BOUND,
     *status = U_INDEX_OUTOFBOUNDS_ERROR;
     return nullptr;
   }
-  p += UCNVSEL_INDEX_COUNT * 4;
+  p += UCNVSEL_INDEX_बिलांग * 4;
   // create and populate the selector object
   UConverterSelector* sel = (UConverterSelector*)uprv_malloc(sizeof(UConverterSelector));
   char **encodings =
     (char **)uprv_malloc(
-      indexes[UCNVSEL_INDEX_NAMES_COUNT] * sizeof(char *));
+      indexes[UCNVSEL_INDEX_NAMES_बिलांग] * sizeof(char *));
   if (sel == nullptr || encodings == nullptr) {
     uprv_free(swapped);
     uprv_free(sel);
@@ -562,13 +562,13 @@ ucnvsel_openFromSerialized(const void* buffer U_LIFETIME_BOUND,
     return nullptr;
   }
   uprv_memset(sel, 0, sizeof(UConverterSelector));
-  sel->pvCount = indexes[UCNVSEL_INDEX_PV_COUNT];
+  sel->pv_बिलांग = indexes[UCNVSEL_INDEX_PV_बिलांग];
   sel->encodings = encodings;
-  sel->encodingsCount = indexes[UCNVSEL_INDEX_NAMES_COUNT];
+  sel->encodings_बिलांग = indexes[UCNVSEL_INDEX_NAMES_बिलांग];
   sel->encodingStrLength = indexes[UCNVSEL_INDEX_NAMES_LENGTH];
   sel->swapped = swapped;
   // trie
-  sel->trie = utrie2_openFromSerialized(UTRIE2_16_VALUE_BITS,
+  sel->trie = utrie2_openFromSerialized(UTRIE2_16_हालागा_BITS,
                                         p, indexes[UCNVSEL_INDEX_TRIE_SIZE], nullptr,
                                         status);
   p += indexes[UCNVSEL_INDEX_TRIE_SIZE];
@@ -578,10 +578,10 @@ ucnvsel_openFromSerialized(const void* buffer U_LIFETIME_BOUND,
   }
   // bit vectors
   sel->pv = (uint32_t *)p;
-  p += sel->pvCount * 4;
+  p += sel->pv_बिलांग * 4;
   // encoding names
   char* s = (char*)p;
-  for (int32_t i = 0; i < sel->encodingsCount; ++i) {
+  for (int32_t i = 0; i < sel->encodings_बिलांग; ++i) {
     sel->encodings[i] = s;
     s += uprv_strlen(s) + 1;
   }
@@ -610,7 +610,7 @@ ucnvsel_close_selector_iterator(UEnumeration *enumerator) {
 
 
 static int32_t U_CALLCONV
-ucnvsel_count_encodings(UEnumeration *enumerator, UErrorCode *status) {
+ucnvsel_बिलांग_encodings(UEnumeration *enumerator, UErrorCode *status) {
   // check if already failed
   if (U_FAILURE(*status)) {
     return 0;
@@ -658,7 +658,7 @@ static const UEnumeration defaultEncodings = {
   nullptr,
     nullptr,
     ucnvsel_close_selector_iterator,
-    ucnvsel_count_encodings,
+    ucnvsel_बिलांग_encodings,
     uenum_unextDefault,
     ucnvsel_next_encoding, 
     ucnvsel_reset_iterator
@@ -678,7 +678,7 @@ static UBool intersectMasks(uint32_t* dest, const uint32_t* source1, int32_t len
 
 // internal fn to count how many 1's are there in a mask
 // algorithm taken from  http://graphics.stanford.edu/~seander/bithacks.html
-static int16_t countOnes(uint32_t* mask, int32_t len) {
+static int16_t बिलांग_Ones(uint32_t* mask, int32_t len) {
   int32_t i, totalOnes = 0;
   for (i = 0 ; i < len ; ++i) {
     uint32_t ent = mask[i];
@@ -716,11 +716,11 @@ selectForMask(const UConverterSelector* sel U_LIFETIME_BOUND,
   }
   memcpy(en.getAlias(), &defaultEncodings, sizeof(UEnumeration));
   
-  int32_t columns = (sel->encodingsCount+31)/32;
-  int16_t numOnes = countOnes(mask.getAlias(), columns);
+  int32_t columns = (sel->encodings_बिलांग+31)/32;
+  int16_t नुमेरो_Ones = बिलांग_Ones(mask.getAlias(), columns);
   // now, we know the exact space we need for index
-  if (numOnes > 0) {
-    result->index = static_cast<int16_t*>(uprv_malloc(numOnes * sizeof(int16_t)));
+  if (नुमेरो_Ones > 0) {
+    result->index = static_cast<int16_t*>(uprv_malloc(नुमेरो_Ones * sizeof(int16_t)));
     if (result->index == nullptr) {
       *status = U_MEMORY_ALLOCATION_ERROR;
       return nullptr;
@@ -729,7 +729,7 @@ selectForMask(const UConverterSelector* sel U_LIFETIME_BOUND,
     int16_t k = 0;
     for (j = 0 ; j < columns; j++) {
       uint32_t v = mask[j];
-      for (i = 0 ; i < 32 && k < sel->encodingsCount; i++, k++) {
+      for (i = 0 ; i < 32 && k < sel->encodings_बिलांग; i++, k++) {
         if ((v & 1) != 0) {
           result->index[result->length++] = k;
         }
@@ -758,7 +758,7 @@ ucnvsel_selectForString(const UConverterSelector* sel U_LIFETIME_BOUND,
     return nullptr;
   }
 
-  int32_t columns = (sel->encodingsCount+31)/32;
+  int32_t columns = (sel->encodings_बिलांग+31)/32;
   uint32_t* mask = (uint32_t*) uprv_malloc(columns * 4);
   if (mask == nullptr) {
     *status = U_MEMORY_ALLOCATION_ERROR;
@@ -802,7 +802,7 @@ ucnvsel_selectForUTF8(const UConverterSelector* sel U_LIFETIME_BOUND,
     return nullptr;
   }
 
-  int32_t columns = (sel->encodingsCount+31)/32;
+  int32_t columns = (sel->encodings_बिलांग+31)/32;
   uint32_t* mask = (uint32_t*) uprv_malloc(columns * 4);
   if (mask == nullptr) {
     *status = U_MEMORY_ALLOCATION_ERROR;

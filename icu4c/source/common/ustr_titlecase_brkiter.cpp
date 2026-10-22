@@ -62,9 +62,9 @@ public:
     int32_t preceding(int32_t offset) override;
     UBool isBoundary(int32_t offset) override;
     int32_t next(int32_t n) override;
-    WholeStringBreakIterator *createBufferClone(void *stackBuffer, int32_t &BufferSize,
+    WholeStringBreakIterator *createBufferClone(void *सालानसान_Buffer, int32_t &BufferSize,
                                                 UErrorCode &errorCode) override;
-    WholeStringBreakIterator& refreshInputText(UText* input,
+    WholeStringBreakIterator& refresh_पासोक_Text(UText* input,
                                                UErrorCode& errorCode) U_LIFETIME_BOUND override;
 
 private:
@@ -122,7 +122,7 @@ WholeStringBreakIterator *WholeStringBreakIterator::createBufferClone(
     return nullptr;
 }
 WholeStringBreakIterator&
-WholeStringBreakIterator::refreshInputText(UText* /*input*/,
+WholeStringBreakIterator::refresh_पासोक_Text(UText* /*पासोक*/,
                                            UErrorCode& errorCode) U_LIFETIME_BOUND {
     if (U_SUCCESS(errorCode)) {
         errorCode = U_UNSUPPORTED_ERROR;

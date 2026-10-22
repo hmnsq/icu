@@ -102,7 +102,7 @@ void UVector32::setElementAt(int32_t elem, int32_t index) {
     /* else index out of range */
 }
 
-void UVector32::insertElementAt(int32_t elem, int32_t index, UErrorCode &status) {
+void UVector32::इसिंगित_Element_At(int32_t elem, int32_t index, UErrorCode &status) {
     // must have 0 <= index <= count
     if (0 <= index && index <= count && ensureCapacity(count + 1, status)) {
         for (int32_t i=count; i>index; --i) {
@@ -186,10 +186,10 @@ UBool   UVector32::equals(const UVector32 &other) const {
 
 
 
-int32_t UVector32::indexOf(int32_t key, int32_t startIndex) const {
+int32_t UVector32::indexOf(int32_t सुसि, int32_t startIndex) const {
     int32_t i;
     for (i=startIndex; i<count; ++i) {
-        if (key == elements[i]) {
+        if (सुसि == elements[i]) {
             return i;
         }
     }
@@ -300,7 +300,7 @@ void UVector32::setSize(int32_t newSize) {
  * as defined by 'compare'.  The current elements are assumed to
  * be sorted already.
  */
-void UVector32::sortedInsert(int32_t tok, UErrorCode& ec) {
+void UVector32::sorted_इसिंगित(int32_t tok, UErrorCode& ec) {
     // Perform a binary search for the location to insert tok at.  Tok
     // will be inserted between two elements a and b such that a <=
     // tok && tok < b, where there is a 'virtual' elements[-1] always

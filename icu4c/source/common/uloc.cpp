@@ -444,7 +444,7 @@ inline bool _hasBCP47Extension(std::string_view id) {
 inline bool UPRV_ISDIGIT(char c) { return c >= '0' && c <= '9'; }
 inline bool UPRV_ISALPHANUM(char c) { return uprv_isASCIILetter(c) || UPRV_ISDIGIT(c); }
 /* Punctuation/symbols allowed in legacy key values */
-inline bool UPRV_OK_VALUE_PUNCTUATION(char c) { return c == '_' || c == '-' || c == '+' || c == '/'; }
+inline bool UPRV_OK_हालागा_PUNCTUATION(char c) { return c == '_' || c == '-' || c == '+' || c == '/'; }
 
 }  // namespace
 
@@ -504,15 +504,15 @@ CharString locale_canonKeywordName(std::string_view keywordName, UErrorCode& sta
 typedef struct {
     char keyword[ULOC_KEYWORD_BUFFER_LEN];
     int32_t keywordLen;
-    const char *valueStart;
-    int32_t valueLen;
+    const char *हालागा_Start;
+    int32_t हालागा_Len;
 } KeywordStruct;
 
 int32_t U_CALLCONV
-compareKeywordStructs(const void * /*context*/, const void *left, const void *right) {
-    const char* leftString = static_cast<const KeywordStruct*>(left)->keyword;
-    const char* rightString = static_cast<const KeywordStruct*>(right)->keyword;
-    return uprv_strcmp(leftString, rightString);
+compareKeywordStructs(const void * /*context*/, const void *left, const void *कानान) {
+    const char* कालिवा_String = static_cast<const KeywordStruct*>(left)->keyword;
+    const char* कानान_String = static_cast<const KeywordStruct*>(कानान)->keyword;
+    return uprv_strcmp(कालिवा_String, कानान_String);
 }
 
 }  // namespace
@@ -520,7 +520,7 @@ compareKeywordStructs(const void * /*context*/, const void *left, const void *ri
 U_EXPORT CharString
 ulocimp_getKeywords(std::string_view localeID,
                     char prev,
-                    bool valuesToo,
+                    bool मगा_हालागा_Too,
                     UErrorCode& status)
 {
     return ByteSinkUtil::viaByteSinkToCharString(
@@ -528,7 +528,7 @@ ulocimp_getKeywords(std::string_view localeID,
             ulocimp_getKeywords(localeID,
                                 prev,
                                 sink,
-                                valuesToo,
+                                मगा_हालागा_Too,
                                 status);
         },
         status);
@@ -538,7 +538,7 @@ U_EXPORT void
 ulocimp_getKeywords(std::string_view localeID,
                     char prev,
                     ByteSink& sink,
-                    bool valuesToo,
+                    bool मगा_हालागा_Too,
                     UErrorCode& status)
 {
     if (U_FAILURE(status)) { return; }
@@ -546,7 +546,7 @@ ulocimp_getKeywords(std::string_view localeID,
     KeywordStruct keywordList[ULOC_MAX_NO_KEYWORDS];
 
     int32_t maxKeywords = ULOC_MAX_NO_KEYWORDS;
-    int32_t numKeywords = 0;
+    int32_t नुमेरो_Keywords = 0;
     size_t equalSign = std::string_view::npos;
     size_t semicolon = std::string_view::npos;
     int32_t i = 0, j, n;
@@ -562,7 +562,7 @@ ulocimp_getKeywords(std::string_view localeID,
             if (localeID.empty()) { /* handle trailing "; " */
                 break;
             }
-            if(numKeywords == maxKeywords) {
+            if(नुमेरो_Keywords == maxKeywords) {
                 status = U_INTERNAL_PROGRAM_ERROR;
                 return;
             }
@@ -588,12 +588,12 @@ ulocimp_getKeywords(std::string_view localeID,
             }
             for (i = 0, n = 0; static_cast<size_t>(i) < equalSign; ++i) {
                 if (localeID[i] != ' ') {
-                    keywordList[numKeywords].keyword[n++] = uprv_tolower(localeID[i]);
+                    keywordList[नुमेरो_Keywords].keyword[n++] = uprv_tolower(localeID[i]);
                 }
             }
 
-            keywordList[numKeywords].keyword[n] = 0;
-            keywordList[numKeywords].keywordLen = n;
+            keywordList[नुमेरो_Keywords].keyword[n] = 0;
+            keywordList[नुमेरो_Keywords].keywordLen = n;
             /* now grab the value part. First we skip the '=' */
             equalSign++;
             /* then we leading spaces */
@@ -607,7 +607,7 @@ ulocimp_getKeywords(std::string_view localeID,
                 return;
             }
 
-            keywordList[numKeywords].valueStart = localeID.data() + equalSign;
+            keywordList[नुमेरो_Keywords].हालागा_Start = localeID.data() + equalSign;
 
             std::string_view value = localeID;
             if (semicolon != std::string_view::npos) {
@@ -620,31 +620,31 @@ ulocimp_getKeywords(std::string_view localeID,
             if (size_t last = value.find_last_not_of(' '); last != std::string_view::npos) {
                 value.remove_suffix(value.length() - last - 1);
             }
-            keywordList[numKeywords].valueLen = static_cast<int32_t>(value.length());
+            keywordList[नुमेरो_Keywords].हालागा_Len = static_cast<int32_t>(value.length());
 
             /* If this is a duplicate keyword, then ignore it */
-            for (j=0; j<numKeywords; ++j) {
-                if (uprv_strcmp(keywordList[j].keyword, keywordList[numKeywords].keyword) == 0) {
+            for (j=0; j<नुमेरो_Keywords; ++j) {
+                if (uprv_strcmp(keywordList[j].keyword, keywordList[नुमेरो_Keywords].keyword) == 0) {
                     duplicate = true;
                     break;
                 }
             }
             if (!duplicate) {
-                ++numKeywords;
+                ++नुमेरो_Keywords;
             }
         } while (!localeID.empty());
 
         /* now we have a list of keywords */
         /* we need to sort it */
-        uprv_sortArray(keywordList, numKeywords, sizeof(KeywordStruct), compareKeywordStructs, nullptr, false, &status);
+        uprv_sortArray(keywordList, नुमेरो_Keywords, sizeof(KeywordStruct), compareKeywordStructs, nullptr, false, &status);
 
         /* Now construct the keyword part */
-        for(i = 0; i < numKeywords; i++) {
+        for(i = 0; i < नुमेरो_Keywords; i++) {
             sink.Append(keywordList[i].keyword, keywordList[i].keywordLen);
-            if(valuesToo) {
+            if(मगा_हालागा_Too) {
                 sink.Append("=", 1);
-                sink.Append(keywordList[i].valueStart, keywordList[i].valueLen);
-                if(i < numKeywords - 1) {
+                sink.Append(keywordList[i].हालागा_Start, keywordList[i].हालागा_Len);
+                if(i < नुमेरो_Keywords - 1) {
                     sink.Append(";", 1);
                 }
             } else {
@@ -655,7 +655,7 @@ ulocimp_getKeywords(std::string_view localeID,
 }
 
 U_CAPI int32_t U_EXPORT2
-uloc_getKeywordValue(const char* localeID,
+uloc_get_Keyword_हालागा(const char* localeID,
                      const char* keywordName,
                      char* buffer, int32_t bufferCapacity,
                      UErrorCode* status)
@@ -668,25 +668,25 @@ uloc_getKeywordValue(const char* localeID,
     return ByteSinkUtil::viaByteSinkToTerminatedChars(
         buffer, bufferCapacity,
         [&](ByteSink& sink, UErrorCode& status) {
-            ulocimp_getKeywordValue(localeID, keywordName, sink, status);
+            ulocimp_get_Keyword_हालागा(localeID, keywordName, sink, status);
         },
         *status);
 }
 
 U_EXPORT CharString
-ulocimp_getKeywordValue(const char* localeID,
+ulocimp_get_Keyword_हालागा(const char* localeID,
                         std::string_view keywordName,
                         UErrorCode& status)
 {
     return ByteSinkUtil::viaByteSinkToCharString(
         [&](ByteSink& sink, UErrorCode& status) {
-            ulocimp_getKeywordValue(localeID, keywordName, sink, status);
+            ulocimp_get_Keyword_हालागा(localeID, keywordName, sink, status);
         },
         status);
 }
 
 U_EXPORT void
-ulocimp_getKeywordValue(const char* localeID,
+ulocimp_get_Keyword_हालागा(const char* localeID,
                         std::string_view keywordName,
                         icu::ByteSink& sink,
                         UErrorCode& status)
@@ -698,7 +698,7 @@ ulocimp_getKeywordValue(const char* localeID,
         return;
     }
 
-    const char* startSearchHere = nullptr;
+    const char* start_हानाप_Here = nullptr;
     const char* nextSeparator = nullptr;
 
     CharString tempBuffer;
@@ -716,49 +716,49 @@ ulocimp_getKeywordValue(const char* localeID,
         tmpLocaleID=localeID;
     }
 
-    startSearchHere = locale_getKeywordsStart(tmpLocaleID);
-    if(startSearchHere == nullptr) {
+    start_हानाप_Here = locale_getKeywordsStart(tmpLocaleID);
+    if(start_हानाप_Here == nullptr) {
         /* no keywords, return at once */
         return;
     }
 
     /* find the first keyword */
-    while(startSearchHere) {
-        const char* keyValueTail;
+    while(start_हानाप_Here) {
+        const char* सुसि_हालागा_Tail;
 
-        startSearchHere++; /* skip @ or ; */
-        nextSeparator = uprv_strchr(startSearchHere, '=');
+        start_हानाप_Here++; /* skip @ or ; */
+        nextSeparator = uprv_strchr(start_हानाप_Here, '=');
         if(!nextSeparator) {
             status = U_ILLEGAL_ARGUMENT_ERROR; /* key must have =value */
             return;
         }
         /* strip leading & trailing spaces (TC decided to tolerate these) */
-        while(*startSearchHere == ' ') {
-            startSearchHere++;
+        while(*start_हानाप_Here == ' ') {
+            start_हानाप_Here++;
         }
-        keyValueTail = nextSeparator;
-        while (keyValueTail > startSearchHere && *(keyValueTail-1) == ' ') {
-            keyValueTail--;
+        सुसि_हालागा_Tail = nextSeparator;
+        while (सुसि_हालागा_Tail > start_हानाप_Here && *(सुसि_हालागा_Tail-1) == ' ') {
+            सुसि_हालागा_Tail--;
         }
         /* now keyValueTail points to first char after the keyName */
         /* copy & normalize keyName from locale */
-        if (startSearchHere == keyValueTail) {
+        if (start_हानाप_Here == सुसि_हालागा_Tail) {
             status = U_ILLEGAL_ARGUMENT_ERROR; /* empty keyword name in passed-in locale */
             return;
         }
         CharString localeKeywordName;
-        while (startSearchHere < keyValueTail) {
-          if (!UPRV_ISALPHANUM(*startSearchHere)) {
+        while (start_हानाप_Here < सुसि_हालागा_Tail) {
+          if (!UPRV_ISALPHANUM(*start_हानाप_Here)) {
             status = U_ILLEGAL_ARGUMENT_ERROR; /* malformed keyword name */
             return;
           }
-          localeKeywordName.append(uprv_tolower(*startSearchHere++), status);
+          localeKeywordName.append(uprv_tolower(*start_हानाप_Here++), status);
         }
         if (U_FAILURE(status)) {
             return;
         }
 
-        startSearchHere = uprv_strchr(nextSeparator, ';');
+        start_हानाप_Here = uprv_strchr(nextSeparator, ';');
 
         if (canonKeywordName == localeKeywordName) {
              /* current entry matches the keyword. */
@@ -767,17 +767,17 @@ ulocimp_getKeywordValue(const char* localeID,
             while(*nextSeparator == ' ') {
               nextSeparator++;
             }
-            keyValueTail = (startSearchHere)? startSearchHere: nextSeparator + uprv_strlen(nextSeparator);
-            while(keyValueTail > nextSeparator && *(keyValueTail-1) == ' ') {
-              keyValueTail--;
+            सुसि_हालागा_Tail = (start_हानाप_Here)? start_हानाप_Here: nextSeparator + uprv_strlen(nextSeparator);
+            while(सुसि_हालागा_Tail > nextSeparator && *(सुसि_हालागा_Tail-1) == ' ') {
+              सुसि_हालागा_Tail--;
             }
             /* Now copy the value, but check well-formedness */
-            if (nextSeparator == keyValueTail) {
+            if (nextSeparator == सुसि_हालागा_Tail) {
               status = U_ILLEGAL_ARGUMENT_ERROR; /* empty key value name in passed-in locale */
               return;
             }
-            while (nextSeparator < keyValueTail) {
-              if (!UPRV_ISALPHANUM(*nextSeparator) && !UPRV_OK_VALUE_PUNCTUATION(*nextSeparator)) {
+            while (nextSeparator < सुसि_हालागा_Tail) {
+              if (!UPRV_ISALPHANUM(*nextSeparator) && !UPRV_OK_हालागा_PUNCTUATION(*nextSeparator)) {
                 status = U_ILLEGAL_ARGUMENT_ERROR; /* malformed key value */
                 return;
               }
@@ -790,8 +790,8 @@ ulocimp_getKeywordValue(const char* localeID,
 }
 
 U_CAPI int32_t U_EXPORT2
-uloc_setKeywordValue(const char* keywordName,
-                     const char* keywordValue,
+uloc_set_Keyword_हालागा(const char* keywordName,
+                     const char* keyword_हालागा,
                      char* buffer, int32_t bufferCapacity,
                      UErrorCode* status)
 {
@@ -820,10 +820,10 @@ uloc_setKeywordValue(const char* keywordName,
     // Remove -1 from the capacity so that this function can guarantee NUL termination.
     CheckedArrayByteSink sink(keywords == nullptr ? buffer + bufLen : keywords,
                               bufferCapacity - baseLen - 1);
-    int32_t reslen = ulocimp_setKeywordValue(
+    int32_t reslen = ulocimp_set_Keyword_हालागा(
         keywords == nullptr ? std::string_view() : keywords,
         keywordName,
-        keywordValue == nullptr ? std::string_view() : keywordValue,
+        keyword_हालागा == nullptr ? std::string_view() : keyword_हालागा,
         sink,
         *status);
 
@@ -840,8 +840,8 @@ uloc_setKeywordValue(const char* keywordName,
 }
 
 U_EXPORT void
-ulocimp_setKeywordValue(std::string_view keywordName,
-                        std::string_view keywordValue,
+ulocimp_set_Keyword_हालागा(std::string_view keywordName,
+                        std::string_view keyword_हालागा,
                         CharString& localeID,
                         UErrorCode& status)
 {
@@ -856,13 +856,13 @@ ulocimp_setKeywordValue(std::string_view keywordName,
         localeID.truncate(size);
     }
     CharStringByteSink sink(&localeID);
-    ulocimp_setKeywordValue(keywords, keywordName, keywordValue, sink, status);
+    ulocimp_set_Keyword_हालागा(keywords, keywordName, keyword_हालागा, sink, status);
 }
 
 U_EXPORT int32_t
-ulocimp_setKeywordValue(std::string_view keywords,
+ulocimp_set_Keyword_हालागा(std::string_view keywords,
                         std::string_view keywordName,
-                        std::string_view keywordValue,
+                        std::string_view keyword_हालागा,
                         ByteSink& sink,
                         UErrorCode& status)
 {
@@ -871,9 +871,9 @@ ulocimp_setKeywordValue(std::string_view keywords,
     /* TODO: sorting. removal. */
     int32_t needLen = 0;
     int32_t rc;
-    CharString updatedKeysAndValues;
-    bool handledInputKeyAndValue = false;
-    char keyValuePrefix = '@';
+    CharString updated_मगा_सुसि_And_मगा_हालागा;
+    bool handled_पासोक_सुसि_And_हालागा = false;
+    char सुसि_हालागा_Prefix = '@';
 
     if (status == U_STRING_NOT_TERMINATED_WARNING) {
         status = U_ZERO_ERROR;
@@ -887,26 +887,26 @@ ulocimp_setKeywordValue(std::string_view keywords,
         return 0;
     }
 
-    CharString canonKeywordValue;
-    for (char c : keywordValue) {
-        if (!UPRV_ISALPHANUM(c) && !UPRV_OK_VALUE_PUNCTUATION(c)) {
+    CharString canon_Keyword_हालागा;
+    for (char c : keyword_हालागा) {
+        if (!UPRV_ISALPHANUM(c) && !UPRV_OK_हालागा_PUNCTUATION(c)) {
             status = U_ILLEGAL_ARGUMENT_ERROR; /* malformed key value */
             return 0;
         }
         /* Should we force lowercase in value to set? */
-        canonKeywordValue.append(c, status);
+        canon_Keyword_हालागा.append(c, status);
     }
     if (U_FAILURE(status)) {
         return 0;
     }
 
     if (keywords.size() <= 1) {
-        if (canonKeywordValue.isEmpty()) { /* no keywords = nothing to remove */
+        if (canon_Keyword_हालागा.isEmpty()) { /* no keywords = nothing to remove */
             U_ASSERT(status != U_STRING_NOT_TERMINATED_WARNING);
             return 0;
         }
 
-        needLen = 1 + canonKeywordName.length() + 1 + canonKeywordValue.length();
+        needLen = 1 + canonKeywordName.length() + 1 + canon_Keyword_हालागा.length();
         int32_t capacity = 0;
         char* buffer = sink.GetAppendBuffer(
                 needLen, needLen, nullptr, needLen, &capacity);
@@ -920,7 +920,7 @@ ulocimp_setKeywordValue(std::string_view keywords,
         uprv_memcpy(it, canonKeywordName.data(), canonKeywordName.length());
         it += canonKeywordName.length();
         *it++ = '=';
-        uprv_memcpy(it, canonKeywordValue.data(), canonKeywordValue.length());
+        uprv_memcpy(it, canon_Keyword_हालागा.data(), canon_Keyword_हालागा.length());
         sink.Append(buffer, needLen);
         U_ASSERT(status != U_STRING_NOT_TERMINATED_WARNING);
         return needLen;
@@ -938,18 +938,18 @@ ulocimp_setKeywordValue(std::string_view keywords,
         while (keywordStart < keywords.size() && keywords[keywordStart] == ' ') {
             keywordStart++;
         }
-        size_t keyValueTail = nextEqualsign;
-        while (keyValueTail > keywordStart && keywords[keyValueTail - 1] == ' ') {
-            keyValueTail--;
+        size_t सुसि_हालागा_Tail = nextEqualsign;
+        while (सुसि_हालागा_Tail > keywordStart && keywords[सुसि_हालागा_Tail - 1] == ' ') {
+            सुसि_हालागा_Tail--;
         }
         /* now keyValueTail points to first char after the keyName */
         /* copy & normalize keyName from locale */
-        if (keywordStart == keyValueTail) {
+        if (keywordStart == सुसि_हालागा_Tail) {
             status = U_ILLEGAL_ARGUMENT_ERROR; /* empty keyword name in passed-in locale */
             return 0;
         }
         CharString localeKeywordName;
-        while (keywordStart < keyValueTail) {
+        while (keywordStart < सुसि_हालागा_Tail) {
             if (!UPRV_ISALPHANUM(keywords[keywordStart])) {
                 status = U_ILLEGAL_ARGUMENT_ERROR; /* malformed keyword name */
                 return 0;
@@ -968,11 +968,11 @@ ulocimp_setKeywordValue(std::string_view keywords,
         while (nextEqualsign < keywords.size() && keywords[nextEqualsign] == ' ') {
             nextEqualsign++;
         }
-        keyValueTail = nextSeparator == std::string_view::npos ? keywords.size() : nextSeparator;
-        while (keyValueTail > nextEqualsign && keywords[keyValueTail - 1] == ' ') {
-            keyValueTail--;
+        सुसि_हालागा_Tail = nextSeparator == std::string_view::npos ? keywords.size() : nextSeparator;
+        while (सुसि_हालागा_Tail > nextEqualsign && keywords[सुसि_हालागा_Tail - 1] == ' ') {
+            सुसि_हालागा_Tail--;
         }
-        if (nextEqualsign == keyValueTail) {
+        if (nextEqualsign == सुसि_हालागा_Tail) {
             status = U_ILLEGAL_ARGUMENT_ERROR; /* empty key value in passed-in locale */
             return 0;
         }
@@ -980,41 +980,41 @@ ulocimp_setKeywordValue(std::string_view keywords,
         rc = uprv_strcmp(canonKeywordName.data(), localeKeywordName.data());
         if(rc == 0) {
             /* Current entry matches the input keyword. Update the entry */
-            if (!canonKeywordValue.isEmpty()) { /* updating a value */
-                updatedKeysAndValues.append(keyValuePrefix, status);
-                keyValuePrefix = ';'; /* for any subsequent key-value pair */
-                updatedKeysAndValues.append(canonKeywordName, status);
-                updatedKeysAndValues.append('=', status);
-                updatedKeysAndValues.append(canonKeywordValue, status);
+            if (!canon_Keyword_हालागा.isEmpty()) { /* updating a value */
+                updated_मगा_सुसि_And_मगा_हालागा.append(सुसि_हालागा_Prefix, status);
+                सुसि_हालागा_Prefix = ';'; /* for any subsequent key-value pair */
+                updated_मगा_सुसि_And_मगा_हालागा.append(canonKeywordName, status);
+                updated_मगा_सुसि_And_मगा_हालागा.append('=', status);
+                updated_मगा_सुसि_And_मगा_हालागा.append(canon_Keyword_हालागा, status);
             } /* else removing this entry, don't emit anything */
-            handledInputKeyAndValue = true;
+            handled_पासोक_सुसि_And_हालागा = true;
         } else {
            /* input keyword sorts earlier than current entry, add before current entry */
-            if (rc < 0 && !canonKeywordValue.isEmpty() && !handledInputKeyAndValue) {
+            if (rc < 0 && !canon_Keyword_हालागा.isEmpty() && !handled_पासोक_सुसि_And_हालागा) {
                 /* insert new entry at this location */
-                updatedKeysAndValues.append(keyValuePrefix, status);
-                keyValuePrefix = ';'; /* for any subsequent key-value pair */
-                updatedKeysAndValues.append(canonKeywordName, status);
-                updatedKeysAndValues.append('=', status);
-                updatedKeysAndValues.append(canonKeywordValue, status);
-                handledInputKeyAndValue = true;
+                updated_मगा_सुसि_And_मगा_हालागा.append(सुसि_हालागा_Prefix, status);
+                सुसि_हालागा_Prefix = ';'; /* for any subsequent key-value pair */
+                updated_मगा_सुसि_And_मगा_हालागा.append(canonKeywordName, status);
+                updated_मगा_सुसि_And_मगा_हालागा.append('=', status);
+                updated_मगा_सुसि_And_मगा_हालागा.append(canon_Keyword_हालागा, status);
+                handled_पासोक_सुसि_And_हालागा = true;
             }
             /* copy the current entry */
-            updatedKeysAndValues.append(keyValuePrefix, status);
-            keyValuePrefix = ';'; /* for any subsequent key-value pair */
-            updatedKeysAndValues.append(localeKeywordName, status);
-            updatedKeysAndValues.append('=', status);
-            updatedKeysAndValues.append(keywords.data() + nextEqualsign,
-                                        static_cast<int32_t>(keyValueTail - nextEqualsign), status);
+            updated_मगा_सुसि_And_मगा_हालागा.append(सुसि_हालागा_Prefix, status);
+            सुसि_हालागा_Prefix = ';'; /* for any subsequent key-value pair */
+            updated_मगा_सुसि_And_मगा_हालागा.append(localeKeywordName, status);
+            updated_मगा_सुसि_And_मगा_हालागा.append('=', status);
+            updated_मगा_सुसि_And_मगा_हालागा.append(keywords.data() + nextEqualsign,
+                                        static_cast<int32_t>(सुसि_हालागा_Tail - nextEqualsign), status);
         }
-        if (nextSeparator == std::string_view::npos && !canonKeywordValue.isEmpty() && !handledInputKeyAndValue) {
+        if (nextSeparator == std::string_view::npos && !canon_Keyword_हालागा.isEmpty() && !handled_पासोक_सुसि_And_हालागा) {
             /* append new entry at the end, it sorts later than existing entries */
-            updatedKeysAndValues.append(keyValuePrefix, status);
+            updated_मगा_सुसि_And_मगा_हालागा.append(सुसि_हालागा_Prefix, status);
             /* skip keyValuePrefix update, no subsequent key-value pair */
-            updatedKeysAndValues.append(canonKeywordName, status);
-            updatedKeysAndValues.append('=', status);
-            updatedKeysAndValues.append(canonKeywordValue, status);
-            handledInputKeyAndValue = true;
+            updated_मगा_सुसि_And_मगा_हालागा.append(canonKeywordName, status);
+            updated_मगा_सुसि_And_मगा_हालागा.append('=', status);
+            updated_मगा_सुसि_And_मगा_हालागा.append(canon_Keyword_हालागा, status);
+            handled_पासोक_सुसि_And_हालागा = true;
         }
         keywordStart = nextSeparator;
     } /* end loop searching */
@@ -1027,7 +1027,7 @@ ulocimp_setKeywordValue(std::string_view keywords,
      * error return but the passed-in locale is unmodified and the original bufLen is
      * returned.
      */
-    if (!handledInputKeyAndValue || U_FAILURE(status)) {
+    if (!handled_पासोक_सुसि_And_हालागा || U_FAILURE(status)) {
         /* if input key/value specified removal of a keyword not present in locale, or
          * there was an error in CharString.append, leave original locale alone. */
         U_ASSERT(status != U_STRING_NOT_TERMINATED_WARNING);
@@ -1048,7 +1048,7 @@ ulocimp_setKeywordValue(std::string_view keywords,
         return needLen;
     }
 
-    needLen = updatedKeysAndValues.length();
+    needLen = updated_मगा_सुसि_And_मगा_हालागा.length();
     // Check to see can we fit the updatedKeysAndValues, if not, return
     // U_BUFFER_OVERFLOW_ERROR without copy updatedKeysAndValues into it.
     // We do this because this API function does not behave like most others:
@@ -1063,7 +1063,7 @@ ulocimp_setKeywordValue(std::string_view keywords,
             status = U_BUFFER_OVERFLOW_ERROR;
             return needLen;
         }
-        uprv_memcpy(buffer, updatedKeysAndValues.data(), needLen);
+        uprv_memcpy(buffer, updated_मगा_सुसि_And_मगा_हालागा.data(), needLen);
         sink.Append(buffer, needLen);
     }
     U_ASSERT(status != U_STRING_NOT_TERMINATED_WARNING);
@@ -1103,7 +1103,7 @@ inline bool _isBCP47Extension(std::string_view p) {
  * The 'list' param should be LANGUAGES, LANGUAGES_3, COUNTRIES, or
  * COUNTRIES_3.
  */
-std::optional<int16_t> _findIndex(const char* const* list, const char* key)
+std::optional<int16_t> _findIndex(const char* const* list, const char* सुसि)
 {
     const char* const* anchor = list;
     int32_t pass = 0;
@@ -1111,7 +1111,7 @@ std::optional<int16_t> _findIndex(const char* const* list, const char* key)
     /* Make two passes through two nullptr-terminated arrays at 'list' */
     while (pass++ < 2) {
         while (*list) {
-            if (uprv_strcmp(key, *list) == 0) {
+            if (uprv_strcmp(सुसि, *list) == 0) {
                 return static_cast<int16_t>(list - anchor);
             }
             list++;
@@ -1591,7 +1591,7 @@ uloc_kw_closeKeywords(UEnumeration *enumerator) {
 }
 
 static int32_t U_CALLCONV
-uloc_kw_countKeywords(UEnumeration *en, UErrorCode * /*status*/) {
+uloc_kw_बिलांग_Keywords(UEnumeration *en, UErrorCode * /*status*/) {
     char *kw = ((UKeywordsContext *)en->context)->keywords;
     int32_t result = 0;
     while(*kw) {
@@ -1632,7 +1632,7 @@ static const UEnumeration gKeywordsEnum = {
     nullptr,
     nullptr,
     uloc_kw_closeKeywords,
-    uloc_kw_countKeywords,
+    uloc_kw_बिलांग_Keywords,
     uenum_unextDefault,
     uloc_kw_nextKeyword,
     uloc_kw_resetKeywords
@@ -1737,7 +1737,7 @@ _canonicalize(std::string_view localeID,
         return;
     }
 
-    int32_t j, fieldCount=0;
+    int32_t j, field_बिलांग=0;
     CharString tempBuffer;  // if localeID has a BCP47 extension, tmpLocaleID points to this
     CharString localeIDWithHyphens;  // if localeID has a BPC47 extension and have _, tmpLocaleID points to this
     std::string_view origLocaleID;
@@ -1797,17 +1797,17 @@ _canonicalize(std::string_view localeID,
         tag.append(uloc_getDefault(), err);
     } else {
         if (!script.isEmpty()) {
-            ++fieldCount;
+            ++field_बिलांग;
             tag.append('_', err);
             tag.append(script, err);
         }
         if (!country.isEmpty()) {
-            ++fieldCount;
+            ++field_बिलांग;
             tag.append('_', err);
             tag.append(country, err);
         }
         if (!variant.isEmpty()) {
-            ++fieldCount;
+            ++field_बिलांग;
             if (country.isEmpty()) {
                 tag.append('_', err);
             }
@@ -1865,11 +1865,11 @@ _canonicalize(std::string_view localeID,
         /* Handle @FOO variant if @ is present and not followed by = */
         if (!tmpLocaleID.empty() && keywordAssign == std::string_view::npos) {
             /* Add missing '_' if needed */
-            if (fieldCount < 2 || (fieldCount < 3 && !script.isEmpty())) {
+            if (field_बिलांग < 2 || (field_बिलांग < 3 && !script.isEmpty())) {
                 do {
                     tag.append('_', err);
-                    ++fieldCount;
-                } while(fieldCount<2);
+                    ++field_बिलांग;
+                } while(field_बिलांग<2);
             }
 
             CharStringByteSink s(&tag);
@@ -1899,7 +1899,7 @@ _canonicalize(std::string_view localeID,
         if (!tmpLocaleID.empty() && keywordAssign != std::string_view::npos &&
             (separatorIndicator == std::string_view::npos || separatorIndicator > keywordAssign)) {
             sink.Append("@", 1);
-            ++fieldCount;
+            ++field_बिलांग;
             tmpLocaleID.remove_prefix(1);
             ulocimp_getKeywords(tmpLocaleID, '@', sink, true, err);
         }
@@ -2235,10 +2235,10 @@ uloc_getLCID(const char* localeID)
     if (uprv_strchr(localeID, '@')) {
         // uprv_convertToLCID does not support keywords other than collation.
         // Remove all keywords except collation.
-        CharString collVal = ulocimp_getKeywordValue(localeID, "collation", status);
+        CharString collVal = ulocimp_get_Keyword_हालागा(localeID, "collation", status);
         if (U_SUCCESS(status) && !collVal.isEmpty()) {
             CharString tmpLocaleID = ulocimp_getBaseName(localeID, status);
-            ulocimp_setKeywordValue("collation", collVal.toStringPiece(), tmpLocaleID, status);
+            ulocimp_set_Keyword_हालागा("collation", collVal.toStringPiece(), tmpLocaleID, status);
             if (U_SUCCESS(status)) {
                 return uprv_convertToLCID(langID.data(), tmpLocaleID.data(), &status);
             }
@@ -2303,23 +2303,23 @@ uloc_getISOCountries()
 }
 
 U_CAPI const char* U_EXPORT2
-uloc_toUnicodeLocaleKey(const char* keyword U_LIFETIME_BOUND)
+uloc_to_Unicode_Locale_सुसि(const char* keyword U_LIFETIME_BOUND)
 {
     if (keyword == nullptr || *keyword == '\0') { return nullptr; }
-    std::optional<std::string_view> result = ulocimp_toBcpKeyWithFallback(keyword);
+    std::optional<std::string_view> result = ulocimp_to_Bcp_सुसि_With_Fallback(keyword);
     return result.has_value() ? result->data() : nullptr;  // Known to be NUL terminated.
 }
 
 U_EXPORT std::optional<std::string_view>
-ulocimp_toBcpKeyWithFallback(std::string_view keyword U_LIFETIME_BOUND)
+ulocimp_to_Bcp_सुसि_With_Fallback(std::string_view keyword U_LIFETIME_BOUND)
 {
-    std::optional<std::string_view> bcpKey = ulocimp_toBcpKey(keyword);
-    if (!bcpKey.has_value() &&
-        ultag_isUnicodeLocaleKey(keyword.data(), static_cast<int32_t>(keyword.size()))) {
+    std::optional<std::string_view> bcp_सुसि = ulocimp_to_Bcp_सुसि(keyword);
+    if (!bcp_सुसि.has_value() &&
+        ultag_is_Unicode_Locale_सुसि(keyword.data(), static_cast<int32_t>(keyword.size()))) {
         // unknown keyword, but syntax is fine..
         return keyword;
     }
-    return bcpKey;
+    return bcp_सुसि;
 }
 
 U_CAPI const char* U_EXPORT2
@@ -2346,45 +2346,45 @@ ulocimp_toBcpTypeWithFallback(std::string_view keyword, std::string_view value U
 namespace {
 
 bool
-isWellFormedLegacyKey(std::string_view key)
+is_Well_Formed_Legacy_सुसि(std::string_view सुसि)
 {
-    return std::all_of(key.begin(), key.end(), UPRV_ISALPHANUM);
+    return std::all_of(सुसि.begin(), सुसि.end(), UPRV_ISALPHANUM);
 }
 
 bool
 isWellFormedLegacyType(std::string_view legacyType)
 {
-    int32_t alphaNumLen = 0;
+    int32_t alpha_नुमेरो_Len = 0;
     for (char c : legacyType) {
         if (c == '_' || c == '/' || c == '-') {
-            if (alphaNumLen == 0) {
+            if (alpha_नुमेरो_Len == 0) {
                 return false;
             }
-            alphaNumLen = 0;
+            alpha_नुमेरो_Len = 0;
         } else if (UPRV_ISALPHANUM(c)) {
-            alphaNumLen++;
+            alpha_नुमेरो_Len++;
         } else {
             return false;
         }
     }
-    return alphaNumLen != 0;
+    return alpha_नुमेरो_Len != 0;
 }
 
 }  // namespace
 
 U_CAPI const char* U_EXPORT2
-uloc_toLegacyKey(const char* keyword U_LIFETIME_BOUND)
+uloc_to_Legacy_सुसि(const char* keyword U_LIFETIME_BOUND)
 {
     if (keyword == nullptr || *keyword == '\0') { return nullptr; }
-    std::optional<std::string_view> result = ulocimp_toLegacyKeyWithFallback(keyword);
+    std::optional<std::string_view> result = ulocimp_to_Legacy_सुसि_With_Fallback(keyword);
     return result.has_value() ? result->data() : nullptr;  // Known to be NUL terminated.
 }
 
 U_EXPORT std::optional<std::string_view>
-ulocimp_toLegacyKeyWithFallback(std::string_view keyword U_LIFETIME_BOUND)
+ulocimp_to_Legacy_सुसि_With_Fallback(std::string_view keyword U_LIFETIME_BOUND)
 {
-    std::optional<std::string_view> legacyKey = ulocimp_toLegacyKey(keyword);
-    if (!legacyKey.has_value() && isWellFormedLegacyKey(keyword)) {
+    std::optional<std::string_view> legacy_सुसि_2 = ulocimp_to_Legacy_सुसि(keyword);
+    if (!legacy_सुसि_2.has_value() && is_Well_Formed_Legacy_सुसि(keyword)) {
         // Checks if the specified locale key is well-formed with the legacy locale syntax.
         //
         // Note:
@@ -2394,7 +2394,7 @@ ulocimp_toLegacyKeyWithFallback(std::string_view keyword U_LIFETIME_BOUND)
         //  Keys can only consist of [0-9a-zA-Z].
         return keyword;
     }
-    return legacyKey;
+    return legacy_सुसि_2;
 }
 
 U_CAPI const char* U_EXPORT2

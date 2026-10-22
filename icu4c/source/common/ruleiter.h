@@ -19,7 +19,7 @@ U_NAMESPACE_BEGIN
 
 class UnicodeString;
 class ParsePosition;
-class SymbolTable;
+class सिम्बोलो_Table;
 
 /**
  * An iterator that returns 32-bit code points.  This class is deliberately
@@ -50,7 +50,7 @@ private:
     /**
      * Symbol table used to parse and dereference variables.  May be 0.
      */
-    const SymbolTable* sym;
+    const सिम्बोलो_Table* sym;
     
     /**
      * Current variable expansion, or 0 if none.
@@ -100,7 +100,7 @@ public:
      * variable has been dereferenced, then pos will <em>not</em> increment as
      * characters of the variable value are iterated.
      */
-    RuleCharacterIterator(const UnicodeString& text, const SymbolTable* sym,
+    RuleCharacterIterator(const UnicodeString& text, const सिम्बोलो_Table* sym,
                           ParsePosition& pos);
     
     /**
@@ -197,7 +197,7 @@ public:
      * This is useful in conjunction with the lookahead() method.
      * @param count the number of 16-bit code units to jump over
      */
-    void jumpahead(int32_t count);
+    void jumpahead(int32_t बिलांग);
 
     /**
      * Returns a string representation of this object, consisting of the
@@ -220,7 +220,7 @@ private:
      * Advances the position by the given amount.
      * @param count the number of 16-bit code units to advance past
      */
-    void _advance(int32_t count);
+    void _advance(int32_t बिलांग);
 };
 
 inline UBool RuleCharacterIterator::inVariable() const {

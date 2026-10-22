@@ -166,7 +166,7 @@ typedef enum {
     UCNV_COMPOUND_TEXT,
 
     /* Number of converter types for which we have conversion routines. */
-    UCNV_NUMBER_OF_SUPPORTED_CONVERTER_TYPES
+    UCNV_नुमेरो_OF_SUPPORTED_CONVERTER_TYPES
 } UConverterType;
 
 /**
@@ -200,7 +200,7 @@ typedef enum {
  */
 typedef void (U_EXPORT2 *UConverterToUCallback) (
                   const void* context,
-                  UConverterToUnicodeArgs *args,
+                  UConverter_To_Unicode_मगा_कातविरान *मगा_कातविरान_2,
                   const char *codeUnits,
                   int32_t length,
                   UConverterCallbackReason reason,
@@ -223,7 +223,7 @@ typedef void (U_EXPORT2 *UConverterToUCallback) (
  */
 typedef void (U_EXPORT2 *UConverterFromUCallback) (
                     const void* context,
-                    UConverterFromUnicodeArgs *args,
+                    UConverter_From_Unicode_मगा_कातविरान *मगा_कातविरान_2,
                     const UChar* codeUnits,
                     int32_t length,
                     UChar32 codePoint,
@@ -251,14 +251,14 @@ U_CDECL_END
  * @see ucnv_open
  * @stable ICU 2.0
  */
-#define UCNV_VALUE_SEP_CHAR '='
+#define UCNV_हालागा_SEP_CHAR '='
 
 /**
  * String version of UCNV_VALUE_SEP_CHAR.
  * @see ucnv_open
  * @stable ICU 2.0
  */
-#define UCNV_VALUE_SEP_STRING "="
+#define UCNV_हालागा_SEP_STRING "="
 
 /**
  * Converter option for specifying a locale.
@@ -553,7 +553,7 @@ U_CAPI UConverter* U_EXPORT2 ucnv_clone(const UConverter *cnv, UErrorCode *statu
  */
 U_DEPRECATED UConverter* U_EXPORT2
 ucnv_safeClone(const UConverter* cnv,
-               void* stackBuffer U_LIFETIME_BOUND,
+               void* सालानसान_Buffer U_LIFETIME_BOUND,
                int32_t* pBufferSize,
                UErrorCode* status);
 
@@ -959,7 +959,7 @@ typedef enum UConverterUnicodeSet {
      * Number of UConverterUnicodeSet selectors.
      * @deprecated ICU 58 The numeric value may change over time, see ICU ticket #12420.
      */
-    UCNV_SET_COUNT
+    UCNV_SET_बिलांग
 #endif  // U_HIDE_DEPRECATED_API
 } UConverterUnicodeSet;
 
@@ -1704,7 +1704,7 @@ ucnv_flushCache(void);
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-ucnv_countAvailable(void);
+ucnv_बिलांग_Available(void);
 
 /**
  * Gets the canonical converter name of the specified converter from a list of
@@ -1745,7 +1745,7 @@ ucnv_openAllNames(UErrorCode *pErrorCode);
  * @stable ICU 2.0
  */
 U_CAPI uint16_t U_EXPORT2
-ucnv_countAliases(const char *alias, UErrorCode *pErrorCode);
+ucnv_बिलांग_Aliases(const char *alias, UErrorCode *pErrorCode);
 
 /**
  * Gives the name of the alias at given index of alias list.
@@ -1812,7 +1812,7 @@ ucnv_openStandardNames(const char *convName,
  * @stable ICU 2.0
  */
 U_CAPI uint16_t U_EXPORT2
-ucnv_countStandards(void);
+ucnv_बिलांग_Standards(void);
 
 /**
  * Gives the name of the standard at given index of standard list.

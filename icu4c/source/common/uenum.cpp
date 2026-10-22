@@ -71,7 +71,7 @@ uenum_close(UEnumeration* en)
 }
 
 U_CAPI int32_t U_EXPORT2
-uenum_count(UEnumeration* en, UErrorCode* status)
+uenum_बिलांग(UEnumeration* en, UErrorCode* status)
 {
     if (!en || U_FAILURE(*status)) {
         return -1;

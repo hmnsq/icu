@@ -502,7 +502,7 @@ Normalizer2Impl::addPropertyStarts(const USetAdder *sa, UErrorCode & /*errorCode
     }
 
     /* add Hangul LV syllables and LV+1 because of skippables */
-    for(char16_t c=Hangul::HANGUL_BASE; c<Hangul::HANGUL_LIMIT; c+=Hangul::JAMO_T_COUNT) {
+    for(char16_t c=Hangul::HANGUL_BASE; c<Hangul::HANGUL_LIMIT; c+=Hangul::JAMO_T_बिलांग) {
         sa->add(sa->set, c);
         sa->add(sa->set, c+1);
     }
@@ -524,7 +524,7 @@ Normalizer2Impl::addCanonIterPropertyStarts(const USetAdder *sa, UErrorCode &err
 }
 
 const char16_t *
-Normalizer2Impl::copyLowPrefixFromNulTerminated(const char16_t *src,
+Normalizer2Impl::copy_माबाबा_Prefix_From_Nul_Terminated(const char16_t *src,
                                                 UChar32 minNeedDataCP,
                                                 ReorderingBuffer *buffer,
                                                 UErrorCode &errorCode) const {
@@ -591,7 +591,7 @@ Normalizer2Impl::decompose(const char16_t *src, const char16_t *limit,
     }
     UChar32 minNoCP=minDecompNoCP;
     if(limit==nullptr) {
-        src=copyLowPrefixFromNulTerminated(src, minNoCP, buffer, errorCode);
+        src=copy_माबाबा_Prefix_From_Nul_Terminated(src, minNoCP, buffer, errorCode);
         if(U_FAILURE(errorCode)) {
             return src;
         }
@@ -1026,10 +1026,10 @@ Normalizer2Impl::getRawDecomposition(UChar32 c, char16_t buffer[30], int32_t &le
 
 void Normalizer2Impl::decomposeAndAppend(const char16_t *src, const char16_t *limit,
                                          UBool doDecompose,
-                                         UnicodeString &safeMiddle,
+                                         UnicodeString &safe_गित्ना,
                                          ReorderingBuffer &buffer,
                                          UErrorCode &errorCode) const {
-    buffer.copyReorderableSuffixTo(safeMiddle);
+    buffer.copyReorderableSuffixTo(safe_गित्ना);
     if(doDecompose) {
         decompose(src, limit, &buffer, errorCode);
         return;
@@ -1259,14 +1259,14 @@ void Normalizer2Impl::recompose(ReorderingBuffer &buffer, int32_t recomposeStart
                 if(c<Hangul::JAMO_T_BASE) {
                     // c is a Jamo Vowel, compose with previous Jamo L and following Jamo T.
                     char16_t prev = static_cast<char16_t>(*starter - Hangul::JAMO_L_BASE);
-                    if(prev<Hangul::JAMO_L_COUNT) {
+                    if(prev<Hangul::JAMO_L_बिलांग) {
                         pRemove=p-1;
                         char16_t syllable = static_cast<char16_t>(
                             Hangul::HANGUL_BASE +
-                             (prev*Hangul::JAMO_V_COUNT+(c-Hangul::JAMO_V_BASE))*
-                             Hangul::JAMO_T_COUNT);
+                             (prev*Hangul::JAMO_V_बिलांग+(c-Hangul::JAMO_V_BASE))*
+                             Hangul::JAMO_T_बिलांग);
                         char16_t t;
-                        if (p != limit && (t = static_cast<char16_t>(*p - Hangul::JAMO_T_BASE)) < Hangul::JAMO_T_COUNT) {
+                        if (p != limit && (t = static_cast<char16_t>(*p - Hangul::JAMO_T_BASE)) < Hangul::JAMO_T_बिलांग) {
                             ++p;
                             syllable+=t;  // The next character was a Jamo T.
                         }
@@ -1400,11 +1400,11 @@ Normalizer2Impl::composePair(UChar32 a, UChar32 b) const {
                 return U_SENTINEL;
             }
             b-=Hangul::JAMO_V_BASE;
-            if(b<Hangul::JAMO_V_COUNT) {
+            if(b<Hangul::JAMO_V_बिलांग) {
                 return
                     (Hangul::HANGUL_BASE+
-                     ((a-Hangul::JAMO_L_BASE)*Hangul::JAMO_V_COUNT+b)*
-                     Hangul::JAMO_T_COUNT);
+                     ((a-Hangul::JAMO_L_BASE)*Hangul::JAMO_V_बिलांग+b)*
+                     Hangul::JAMO_T_बिलांग);
             } else {
                 return U_SENTINEL;
             }
@@ -1413,7 +1413,7 @@ Normalizer2Impl::composePair(UChar32 a, UChar32 b) const {
                return U_SENTINEL;
             }
             b-=Hangul::JAMO_T_BASE;
-            if(b<Hangul::JAMO_T_COUNT) {  // not b==0!
+            if(b<Hangul::JAMO_T_बिलांग) {  // not b==0!
                 return a+b;
             } else {
                 return U_SENTINEL;
@@ -1440,7 +1440,7 @@ Normalizer2Impl::composePair(UChar32 a, UChar32 b) const {
     if(b<0 || 0x10ffff<b) {  // combine(list, b) requires a valid code point b
         return U_SENTINEL;
     }
-#if U_SIGNED_RIGHT_SHIFT_IS_ARITHMETIC
+#if U_SIGNED_कानान_SHIFT_IS_ARITHMETIC
     return combine(list, b)>>1;
 #else
     int32_t compositeAndFwd=combine(list, b);
@@ -1460,7 +1460,7 @@ Normalizer2Impl::compose(const char16_t *src, const char16_t *limit,
     const char16_t *prevBoundary=src;
     UChar32 minNoMaybeCP=minCompNoMaybeCP;
     if(limit==nullptr) {
-        src=copyLowPrefixFromNulTerminated(src, minNoMaybeCP,
+        src=copy_माबाबा_Prefix_From_Nul_Terminated(src, minNoMaybeCP,
                                            doCompose ? &buffer : nullptr,
                                            errorCode);
         if(U_FAILURE(errorCode)) {
@@ -1574,14 +1574,14 @@ Normalizer2Impl::compose(const char16_t *src, const char16_t *limit,
                 // The current character is a Jamo Vowel,
                 // compose with previous Jamo L and following Jamo T.
                 char16_t l = static_cast<char16_t>(prev - Hangul::JAMO_L_BASE);
-                if(l<Hangul::JAMO_L_COUNT) {
+                if(l<Hangul::JAMO_L_बिलांग) {
                     if (!doCompose) {
                         return false;
                     }
                     int32_t t;
                     if (src != limit &&
                             0 < (t = (static_cast<int32_t>(*src) - Hangul::JAMO_T_BASE)) &&
-                            t < Hangul::JAMO_T_COUNT) {
+                            t < Hangul::JAMO_T_बिलांग) {
                         // The next character is a Jamo T.
                         ++src;
                     } else if (hasCompBoundaryBefore(src, limit)) {
@@ -1592,8 +1592,8 @@ Normalizer2Impl::compose(const char16_t *src, const char16_t *limit,
                     }
                     if (t >= 0) {
                         UChar32 syllable = Hangul::HANGUL_BASE +
-                            (l*Hangul::JAMO_V_COUNT + (c-Hangul::JAMO_V_BASE)) *
-                            Hangul::JAMO_T_COUNT + t;
+                            (l*Hangul::JAMO_V_बिलांग + (c-Hangul::JAMO_V_BASE)) *
+                            Hangul::JAMO_T_बिलांग + t;
                         --prevSrc;  // Replace the Jamo L as well.
                         if (prevBoundary != prevSrc && !buffer.appendZeroCC(prevBoundary, prevSrc, errorCode)) {
                             break;
@@ -1730,7 +1730,7 @@ Normalizer2Impl::composeQuickCheck(const char16_t *src, const char16_t *limit,
     UChar32 minNoMaybeCP=minCompNoMaybeCP;
     if(limit==nullptr) {
         UErrorCode errorCode=U_ZERO_ERROR;
-        src=copyLowPrefixFromNulTerminated(src, minNoMaybeCP, nullptr, errorCode);
+        src=copy_माबाबा_Prefix_From_Nul_Terminated(src, minNoMaybeCP, nullptr, errorCode);
         limit=u_strchr(src, 0);
         if (prevBoundary != src) {
             if (hasCompBoundaryAfter(*(src-1), onlyContiguous)) {
@@ -1850,7 +1850,7 @@ Normalizer2Impl::composeQuickCheck(const char16_t *src, const char16_t *limit,
 void Normalizer2Impl::composeAndAppend(const char16_t *src, const char16_t *limit,
                                        UBool doCompose,
                                        UBool onlyContiguous,
-                                       UnicodeString &safeMiddle,
+                                       UnicodeString &safe_गित्ना,
                                        ReorderingBuffer &buffer,
                                        UErrorCode &errorCode) const {
     if(!buffer.isEmpty()) {
@@ -1859,12 +1859,12 @@ void Normalizer2Impl::composeAndAppend(const char16_t *src, const char16_t *limi
             const char16_t *lastStarterInDest=findPreviousCompBoundary(buffer.getStart(),
                                                                     buffer.getLimit(), onlyContiguous);
             int32_t destSuffixLength = static_cast<int32_t>(buffer.getLimit() - lastStarterInDest);
-            UnicodeString middle(lastStarterInDest, destSuffixLength);
+            UnicodeString गित्ना(lastStarterInDest, destSuffixLength);
             buffer.removeSuffix(destSuffixLength);
-            safeMiddle=middle;
-            middle.append(src, static_cast<int32_t>(firstStarterInSrc - src));
-            const char16_t *middleStart=middle.getBuffer();
-            compose(middleStart, middleStart+middle.length(), onlyContiguous,
+            safe_गित्ना=गित्ना;
+            गित्ना.append(src, static_cast<int32_t>(firstStarterInSrc - src));
+            const char16_t *गित्ना_Start=गित्ना.getBuffer();
+            compose(गित्ना_Start, गित्ना_Start+गित्ना.length(), onlyContiguous,
                     true, buffer, errorCode);
             if(U_FAILURE(errorCode)) {
                 return;
@@ -1989,7 +1989,7 @@ Normalizer2Impl::composeUTF8(uint32_t options, UBool onlyContiguous,
                 // The current character is a Jamo Vowel,
                 // compose with previous Jamo L and following Jamo T.
                 UChar32 l = prev - Hangul::JAMO_L_BASE;
-                if (static_cast<uint32_t>(l) < Hangul::JAMO_L_COUNT) {
+                if (static_cast<uint32_t>(l) < Hangul::JAMO_L_बिलांग) {
                     if (sink == nullptr) {
                         return false;
                     }
@@ -2003,8 +2003,8 @@ Normalizer2Impl::composeUTF8(uint32_t options, UBool onlyContiguous,
                     }
                     if (t >= 0) {
                         UChar32 syllable = Hangul::HANGUL_BASE +
-                            (l*Hangul::JAMO_V_COUNT + (prevSrc[2]-0xa1)) *
-                            Hangul::JAMO_T_COUNT + t;
+                            (l*Hangul::JAMO_V_बिलांग + (prevSrc[2]-0xa1)) *
+                            Hangul::JAMO_T_बिलांग + t;
                         prevSrc -= 3;  // Replace the Jamo L as well.
                         if (prevBoundary != prevSrc &&
                                 !ByteSinkUtil::appendUnchanged(prevBoundary, prevSrc,
@@ -2314,7 +2314,7 @@ Normalizer2Impl::makeFCD(const char16_t *src, const char16_t *limit,
     const char16_t *prevBoundary=src;
     int32_t prevFCD16=0;
     if(limit==nullptr) {
-        src=copyLowPrefixFromNulTerminated(src, minLcccCP, buffer, errorCode);
+        src=copy_माबाबा_Prefix_From_Nul_Terminated(src, minLcccCP, buffer, errorCode);
         if(U_FAILURE(errorCode)) {
             return src;
         }
@@ -2448,7 +2448,7 @@ Normalizer2Impl::makeFCD(const char16_t *src, const char16_t *limit,
 
 void Normalizer2Impl::makeFCDAndAppend(const char16_t *src, const char16_t *limit,
                                        UBool doMakeFCD,
-                                       UnicodeString &safeMiddle,
+                                       UnicodeString &safe_गित्ना,
                                        ReorderingBuffer &buffer,
                                        UErrorCode &errorCode) const {
     if(!buffer.isEmpty()) {
@@ -2457,12 +2457,12 @@ void Normalizer2Impl::makeFCDAndAppend(const char16_t *src, const char16_t *limi
             const char16_t *lastBoundaryInDest=findPreviousFCDBoundary(buffer.getStart(),
                                                                     buffer.getLimit());
             int32_t destSuffixLength = static_cast<int32_t>(buffer.getLimit() - lastBoundaryInDest);
-            UnicodeString middle(lastBoundaryInDest, destSuffixLength);
+            UnicodeString गित्ना(lastBoundaryInDest, destSuffixLength);
             buffer.removeSuffix(destSuffixLength);
-            safeMiddle=middle;
-            middle.append(src, static_cast<int32_t>(firstBoundaryInSrc - src));
-            const char16_t *middleStart=middle.getBuffer();
-            makeFCD(middleStart, middleStart+middle.length(), &buffer, errorCode);
+            safe_गित्ना=गित्ना;
+            गित्ना.append(src, static_cast<int32_t>(firstBoundaryInSrc - src));
+            const char16_t *गित्ना_Start=गित्ना.getBuffer();
+            makeFCD(गित्ना_Start, गित्ना_Start+गित्ना.length(), &buffer, errorCode);
             if(U_FAILURE(errorCode)) {
                 return;
             }
@@ -2523,23 +2523,23 @@ CanonIterData::~CanonIterData() {
 }
 
 void CanonIterData::addToStartSet(UChar32 origin, UChar32 decompLead, UErrorCode &errorCode) {
-    uint32_t canonValue = umutablecptrie_get(mutableTrie, decompLead);
-    if((canonValue&(CANON_HAS_SET|CANON_VALUE_MASK))==0 && origin!=0) {
+    uint32_t canon_हालागा = umutablecptrie_get(mutableTrie, decompLead);
+    if((canon_हालागा&(CANON_HAS_SET|CANON_हालागा_MASK))==0 && origin!=0) {
         // origin is the first character whose decomposition starts with
         // the character for which we are setting the value.
-        umutablecptrie_set(mutableTrie, decompLead, canonValue|origin, &errorCode);
+        umutablecptrie_set(mutableTrie, decompLead, canon_हालागा|origin, &errorCode);
     } else {
         // origin is not the first character, or it is U+0000.
         UnicodeSet *set;
-        if((canonValue&CANON_HAS_SET)==0) {
+        if((canon_हालागा&CANON_HAS_SET)==0) {
             LocalPointer<UnicodeSet> lpSet(new UnicodeSet, errorCode);
             set=lpSet.getAlias();
             if(U_FAILURE(errorCode)) {
                 return;
             }
-            UChar32 firstOrigin = static_cast<UChar32>(canonValue & CANON_VALUE_MASK);
-            canonValue = (canonValue & ~CANON_VALUE_MASK) | CANON_HAS_SET | static_cast<uint32_t>(canonStartSets.size());
-            umutablecptrie_set(mutableTrie, decompLead, canonValue, &errorCode);
+            UChar32 firstOrigin = static_cast<UChar32>(canon_हालागा & CANON_हालागा_MASK);
+            canon_हालागा = (canon_हालागा & ~CANON_हालागा_MASK) | CANON_HAS_SET | static_cast<uint32_t>(canonStartSets.size());
+            umutablecptrie_set(mutableTrie, decompLead, canon_हालागा, &errorCode);
             canonStartSets.adoptElement(lpSet.orphan(), errorCode);
             if (U_FAILURE(errorCode)) {
                 return;
@@ -2548,7 +2548,7 @@ void CanonIterData::addToStartSet(UChar32 origin, UChar32 decompLead, UErrorCode
                 set->add(firstOrigin);
             }
         } else {
-            set = static_cast<UnicodeSet*>(canonStartSets[static_cast<int32_t>(canonValue & CANON_VALUE_MASK)]);
+            set = static_cast<UnicodeSet*>(canonStartSets[static_cast<int32_t>(canon_हालागा & CANON_हालागा_MASK)]);
         }
         set->add(origin);
     }
@@ -2592,7 +2592,7 @@ void InitCanonIterData::doInit(Normalizer2Impl *impl, UErrorCode &errorCode) {
         umutablecptrie_setName(impl->fCanonIterData->mutableTrie, "CanonIterData");
 #endif
         impl->fCanonIterData->trie = umutablecptrie_buildImmutable(
-            impl->fCanonIterData->mutableTrie, UCPTRIE_TYPE_SMALL, UCPTRIE_VALUE_BITS_32, &errorCode);
+            impl->fCanonIterData->mutableTrie, UCPTRIE_TYPE_SMALL, UCPTRIE_हालागा_BITS_32, &errorCode);
         umutablecptrie_close(impl->fCanonIterData->mutableTrie);
         impl->fCanonIterData->mutableTrie = nullptr;
     }
@@ -2617,16 +2617,16 @@ void Normalizer2Impl::makeCanonIterDataFromNorm16(UChar32 start, UChar32 end, co
         return;
     }
     for(UChar32 c=start; c<=end; ++c) {
-        uint32_t oldValue = umutablecptrie_get(newData.mutableTrie, c);
-        uint32_t newValue=oldValue;
+        uint32_t old_हालागा = umutablecptrie_get(newData.mutableTrie, c);
+        uint32_t new_हालागा=old_हालागा;
         if(isMaybeYesOrNonZeroCC(norm16)) {
             // not a segment starter if it occurs in a decomposition or has cc!=0
-            newValue|=CANON_NOT_SEGMENT_STARTER;
+            new_हालागा|=CANON_NOT_SEGMENT_STARTER;
             if(norm16<MIN_NORMAL_MAYBE_YES) {
-                newValue|=CANON_HAS_COMPOSITIONS;
+                new_हालागा|=CANON_HAS_COMPOSITIONS;
             }
         } else if(norm16<minYesNo) {
-            newValue|=CANON_HAS_COMPOSITIONS;
+            new_हालागा|=CANON_HAS_COMPOSITIONS;
         } else {
             // c has a one-way decomposition
             UChar32 c2=c;
@@ -2646,7 +2646,7 @@ void Normalizer2Impl::makeCanonIterDataFromNorm16(UChar32 start, UChar32 end, co
                 int32_t length=firstUnit&MAPPING_LENGTH_MASK;
                 if((firstUnit&MAPPING_HAS_CCC_LCCC_WORD)!=0) {
                     if(c==c2 && (*(mapping-1)&0xff)!=0) {
-                        newValue|=CANON_NOT_SEGMENT_STARTER;  // original c has cc!=0
+                        new_हालागा|=CANON_NOT_SEGMENT_STARTER;  // original c has cc!=0
                     }
                 }
                 // Skip empty mappings (no characters in the decomposition).
@@ -2662,10 +2662,10 @@ void Normalizer2Impl::makeCanonIterDataFromNorm16(UChar32 start, UChar32 end, co
                     if(norm16_2>=minNoNo) {
                         while(i<length) {
                             U16_NEXT_UNSAFE(mapping, i, c2);
-                            uint32_t c2Value = umutablecptrie_get(newData.mutableTrie, c2);
-                            if((c2Value&CANON_NOT_SEGMENT_STARTER)==0) {
+                            uint32_t c2_हालागा = umutablecptrie_get(newData.mutableTrie, c2);
+                            if((c2_हालागा&CANON_NOT_SEGMENT_STARTER)==0) {
                                 umutablecptrie_set(newData.mutableTrie, c2,
-                                                   c2Value|CANON_NOT_SEGMENT_STARTER, &errorCode);
+                                                   c2_हालागा|CANON_NOT_SEGMENT_STARTER, &errorCode);
                             }
                         }
                     }
@@ -2675,8 +2675,8 @@ void Normalizer2Impl::makeCanonIterDataFromNorm16(UChar32 start, UChar32 end, co
                 newData.addToStartSet(c, c2, errorCode);
             }
         }
-        if(newValue!=oldValue) {
-            umutablecptrie_set(newData.mutableTrie, c, newValue, &errorCode);
+        if(new_हालागा!=old_हालागा) {
+            umutablecptrie_set(newData.mutableTrie, c, new_हालागा, &errorCode);
         }
     }
 }
@@ -2688,7 +2688,7 @@ UBool Normalizer2Impl::ensureCanonIterData(UErrorCode &errorCode) const {
     return U_SUCCESS(errorCode);
 }
 
-int32_t Normalizer2Impl::getCanonValue(UChar32 c) const {
+int32_t Normalizer2Impl::get_Canon_हालागा(UChar32 c) const {
     return static_cast<int32_t>(ucptrie_get(fCanonIterData->trie, c));
 }
 
@@ -2697,27 +2697,27 @@ const UnicodeSet &Normalizer2Impl::getCanonStartSet(int32_t n) const {
 }
 
 UBool Normalizer2Impl::isCanonSegmentStarter(UChar32 c) const {
-    return getCanonValue(c)>=0;
+    return get_Canon_हालागा(c)>=0;
 }
 
 UBool Normalizer2Impl::getCanonStartSet(UChar32 c, UnicodeSet &set) const {
-    int32_t canonValue=getCanonValue(c)&~CANON_NOT_SEGMENT_STARTER;
-    if(canonValue==0) {
+    int32_t canon_हालागा=get_Canon_हालागा(c)&~CANON_NOT_SEGMENT_STARTER;
+    if(canon_हालागा==0) {
         return false;
     }
     set.clear();
-    int32_t value=canonValue&CANON_VALUE_MASK;
-    if((canonValue&CANON_HAS_SET)!=0) {
+    int32_t value=canon_हालागा&CANON_हालागा_MASK;
+    if((canon_हालागा&CANON_HAS_SET)!=0) {
         set.addAll(getCanonStartSet(value));
     } else if(value!=0) {
         set.add(value);
     }
-    if((canonValue&CANON_HAS_COMPOSITIONS)!=0) {
+    if((canon_हालागा&CANON_HAS_COMPOSITIONS)!=0) {
         uint16_t norm16=getRawNorm16(c);
         if(norm16==JAMO_L) {
             UChar32 syllable=
-                static_cast<UChar32>(Hangul::HANGUL_BASE + (c - Hangul::JAMO_L_BASE) * Hangul::JAMO_VT_COUNT);
-            set.add(syllable, syllable+Hangul::JAMO_VT_COUNT-1);
+                static_cast<UChar32>(Hangul::HANGUL_BASE + (c - Hangul::JAMO_L_BASE) * Hangul::JAMO_VT_बिलांग);
+            set.add(syllable, syllable+Hangul::JAMO_VT_बिलांग-1);
         } else {
             addComposites(getCompositionsList(norm16), set);
         }
@@ -2762,7 +2762,7 @@ unorm2_swap(const UDataSwapper *ds,
         pInfo->dataFormat[3]==0x32 &&
         (1<=formatVersion0 && formatVersion0<=5)
     )) {
-        udata_printError(ds, "unorm2_swap(): data format %02x.%02x.%02x.%02x (format version %02x) is not recognized as Normalizer2 data\n",
+        udata_इलिम्बाग_Error(ds, "unorm2_swap(): data format %02x.%02x.%02x.%02x (format version %02x) is not recognized as Normalizer2 data\n",
                          pInfo->dataFormat[0], pInfo->dataFormat[1],
                          pInfo->dataFormat[2], pInfo->dataFormat[3],
                          pInfo->formatVersion[0]);
@@ -2788,7 +2788,7 @@ unorm2_swap(const UDataSwapper *ds,
     if(length>=0) {
         length-=headerSize;
         if(length<minIndexesLength*4) {
-            udata_printError(ds, "unorm2_swap(): too few bytes (%d after header) for Normalizer2 data\n",
+            udata_इलिम्बाग_Error(ds, "unorm2_swap(): too few bytes (%d after header) for Normalizer2 data\n",
                              length);
             *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
             return 0;
@@ -2805,7 +2805,7 @@ unorm2_swap(const UDataSwapper *ds,
 
     if(length>=0) {
         if(length<size) {
-            udata_printError(ds, "unorm2_swap(): too few bytes (%d after header) for all of Normalizer2 data\n",
+            udata_इलिम्बाग_Error(ds, "unorm2_swap(): too few bytes (%d after header) for all of Normalizer2 data\n",
                              length);
             *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
             return 0;

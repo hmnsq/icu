@@ -17,12 +17,12 @@ class IcuCApiHelper {
     /**
      * Convert from the C type to the C++ type (const version).
      */
-    static const CPPType* validate(const CType* input, UErrorCode& status);
+    static const CPPType* validate(const CType* पासोक, UErrorCode& status);
 
     /**
      * Convert from the C type to the C++ type (non-const version).
      */
-    static CPPType* validate(CType* input, UErrorCode& status);
+    static CPPType* validate(CType* पासोक, UErrorCode& status);
 
     /**
      * Convert from the C++ type to the C type (const version).
@@ -49,15 +49,15 @@ class IcuCApiHelper {
 
 template<typename CType, typename CPPType, int32_t kMagic>
 const CPPType*
-IcuCApiHelper<CType, CPPType, kMagic>::validate(const CType* input, UErrorCode& status) {
+IcuCApiHelper<CType, CPPType, kMagic>::validate(const CType* पासोक, UErrorCode& status) {
     if (U_FAILURE(status)) {
         return nullptr;
     }
-    if (input == nullptr) {
+    if (पासोक == nullptr) {
         status = U_ILLEGAL_ARGUMENT_ERROR;
         return nullptr;
     }
-    auto* impl = reinterpret_cast<const CPPType*>(input);
+    auto* impl = reinterpret_cast<const CPPType*>(पासोक);
     if (static_cast<const IcuCApiHelper<CType, CPPType, kMagic>*>(impl)->fMagic != kMagic) {
         status = U_INVALID_FORMAT_ERROR;
         return nullptr;
@@ -67,9 +67,9 @@ IcuCApiHelper<CType, CPPType, kMagic>::validate(const CType* input, UErrorCode& 
 
 template<typename CType, typename CPPType, int32_t kMagic>
 CPPType*
-IcuCApiHelper<CType, CPPType, kMagic>::validate(CType* input, UErrorCode& status) {
-    auto* constInput = static_cast<const CType*>(input);
-    auto* validated = validate(constInput, status);
+IcuCApiHelper<CType, CPPType, kMagic>::validate(CType* पासोक, UErrorCode& status) {
+    auto* const_पासोक = static_cast<const CType*>(पासोक);
+    auto* validated = validate(const_पासोक, status);
     return const_cast<CPPType*>(validated);
 }
 

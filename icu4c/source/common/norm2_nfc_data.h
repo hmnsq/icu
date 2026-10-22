@@ -12,7 +12,7 @@
 static const UVersionInfo norm2_nfc_data_formatVersion={5,0,0,0};
 static const UVersionInfo norm2_nfc_data_dataVersion={0x12,0,0,0};
 
-static const int32_t norm2_nfc_data_indexes[Normalizer2Impl::IX_COUNT]={
+static const int32_t norm2_nfc_data_indexes[Normalizer2Impl::IX_बिलांग]={
 0x58,0x4f50,0x8d2c,0x8e2c,0x8e2c,0x8e2c,0x8e2c,0x8e2c,0xc0,0x300,0xb0c,0x2a6a,0x3cf0,0xfbc4,0x12c2,0x3c26,
 0x3cbe,0x3cf0,0x300,0,0xfb10,0xfb9e
 };

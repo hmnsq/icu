@@ -158,7 +158,7 @@ UStringEnumeration::~UStringEnumeration() {
 }
 
 int32_t UStringEnumeration::count(UErrorCode& status) const {
-    return uenum_count(uenum, &status);
+    return uenum_बिलांग(uenum, &status);
 }
 
 const char* UStringEnumeration::next(int32_t* resultLength, UErrorCode& status) U_LIFETIME_BOUND {
@@ -200,7 +200,7 @@ ustrenum_close(UEnumeration* en) {
  * Wrapper API to make StringEnumeration look like UEnumeration.
  */
 static int32_t U_CALLCONV
-ustrenum_count(UEnumeration* en,
+ustrenum_बिलांग(UEnumeration* en,
                UErrorCode* ec)
 {
     return THIS(en)->count(*ec);
@@ -246,7 +246,7 @@ static const UEnumeration USTRENUM_VT = {
     nullptr,
     nullptr, // store StringEnumeration pointer here
     ustrenum_close,
-    ustrenum_count,
+    ustrenum_बिलांग,
     ustrenum_unext,
     ustrenum_next,
     ustrenum_reset
@@ -292,7 +292,7 @@ ucharstrenum_close(UEnumeration* en) {
 }
 
 static int32_t U_CALLCONV
-ucharstrenum_count(UEnumeration* en,
+ucharstrenum_बिलांग(UEnumeration* en,
                    UErrorCode* /*ec*/) {
     return ((UCharStringEnumeration*)en)->count;
 }
@@ -338,7 +338,7 @@ static const UEnumeration UCHARSTRENUM_VT = {
     nullptr,
     nullptr, // store StringEnumeration pointer here
     ucharstrenum_close,
-    ucharstrenum_count,
+    ucharstrenum_बिलांग,
     uenum_unextDefault,
     ucharstrenum_next,
     ucharstrenum_reset
@@ -348,7 +348,7 @@ static const UEnumeration UCHARSTRENUM_U_VT = {
     nullptr,
     nullptr, // store StringEnumeration pointer here
     ucharstrenum_close,
-    ucharstrenum_count,
+    ucharstrenum_बिलांग,
     ucharstrenum_unext,
     uenum_nextDefault,
     ucharstrenum_reset

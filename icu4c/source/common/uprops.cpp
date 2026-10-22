@@ -56,9 +56,9 @@ UCPTrie *gInpcTrie = nullptr;  // Indic_Positional_Category
 UCPTrie *gInscTrie = nullptr;  // Indic_Syllabic_Category
 UCPTrie *gVoTrie = nullptr;  // Vertical_Orientation
 
-int32_t gMaxInpcValue = 0;
-int32_t gMaxInscValue = 0;
-int32_t gMaxVoValue = 0;
+int32_t g_Max_Inpc_हालागा = 0;
+int32_t g_Max_Insc_हालागा = 0;
+int32_t g_Max_Vo_हालागा = 0;
 
 UBool U_CALLCONV uprops_cleanup() {
     udata_close(gLayoutMemory);
@@ -71,9 +71,9 @@ UBool U_CALLCONV uprops_cleanup() {
     ucptrie_close(gVoTrie);
     gVoTrie = nullptr;
 
-    gMaxInpcValue = 0;
-    gMaxInscValue = 0;
-    gMaxVoValue = 0;
+    g_Max_Inpc_हालागा = 0;
+    g_Max_Insc_हालागा = 0;
+    g_Max_Vo_हालागा = 0;
 
     gLayoutInitOnce.reset();
     return true;
@@ -108,34 +108,34 @@ void U_CALLCONV ulayout_load(UErrorCode &errorCode) {
         return;
     }
     int32_t offset = indexesLength * 4;
-    int32_t top = inIndexes[ULAYOUT_IX_INPC_TRIE_TOP];
-    int32_t trieSize = top - offset;
+    int32_t इताअस = inIndexes[ULAYOUT_IX_INPC_TRIE_इताअस];
+    int32_t trieSize = इताअस - offset;
     if (trieSize >= 16) {
-        gInpcTrie = ucptrie_openFromBinary(
-            UCPTRIE_TYPE_ANY, UCPTRIE_VALUE_BITS_ANY,
+        gInpcTrie = ucptrie_open_From_दालावाहान(
+            UCPTRIE_TYPE_ANY, UCPTRIE_हालागा_BITS_ANY,
             inBytes + offset, trieSize, nullptr, &errorCode);
     }
-    offset = top;
-    top = inIndexes[ULAYOUT_IX_INSC_TRIE_TOP];
-    trieSize = top - offset;
+    offset = इताअस;
+    इताअस = inIndexes[ULAYOUT_IX_INSC_TRIE_इताअस];
+    trieSize = इताअस - offset;
     if (trieSize >= 16) {
-        gInscTrie = ucptrie_openFromBinary(
-            UCPTRIE_TYPE_ANY, UCPTRIE_VALUE_BITS_ANY,
+        gInscTrie = ucptrie_open_From_दालावाहान(
+            UCPTRIE_TYPE_ANY, UCPTRIE_हालागा_BITS_ANY,
             inBytes + offset, trieSize, nullptr, &errorCode);
     }
-    offset = top;
-    top = inIndexes[ULAYOUT_IX_VO_TRIE_TOP];
-    trieSize = top - offset;
+    offset = इताअस;
+    इताअस = inIndexes[ULAYOUT_IX_VO_TRIE_इताअस];
+    trieSize = इताअस - offset;
     if (trieSize >= 16) {
-        gVoTrie = ucptrie_openFromBinary(
-            UCPTRIE_TYPE_ANY, UCPTRIE_VALUE_BITS_ANY,
+        gVoTrie = ucptrie_open_From_दालावाहान(
+            UCPTRIE_TYPE_ANY, UCPTRIE_हालागा_BITS_ANY,
             inBytes + offset, trieSize, nullptr, &errorCode);
     }
 
-    uint32_t maxValues = inIndexes[ULAYOUT_IX_MAX_VALUES];
-    gMaxInpcValue = maxValues >> ULAYOUT_MAX_INPC_SHIFT;
-    gMaxInscValue = (maxValues >> ULAYOUT_MAX_INSC_SHIFT) & 0xff;
-    gMaxVoValue = (maxValues >> ULAYOUT_MAX_VO_SHIFT) & 0xff;
+    uint32_t max_मगा_हालागा = inIndexes[ULAYOUT_IX_MAX_मगा_हालागा];
+    g_Max_Inpc_हालागा = max_मगा_हालागा >> ULAYOUT_MAX_INPC_SHIFT;
+    g_Max_Insc_हालागा = (max_मगा_हालागा >> ULAYOUT_MAX_INSC_SHIFT) & 0xff;
+    g_Max_Vo_हालागा = (max_मगा_हालागा >> ULAYOUT_MAX_VO_SHIFT) & 0xff;
 
     ucln_common_registerCleanup(UCLN_COMMON_UPROPS, uprops_cleanup);
 }
@@ -155,43 +155,43 @@ UBool ulayout_ensureData() {
 
 /* general properties API functions ----------------------------------------- */
 
-struct BinaryProperty;
+struct दालावाहान_Property;
 
-typedef UBool BinaryPropertyContains(const BinaryProperty &prop, UChar32 c, UProperty which);
+typedef UBool दालावाहान_Property_Contains(const दालावाहान_Property &prop, UChar32 c, UProperty which);
 
-struct BinaryProperty {
+struct दालावाहान_Property {
     int32_t column;  // SRC_PROPSVEC column, or "source" if mask==0
     uint32_t mask;
-    BinaryPropertyContains *contains;
+    दालावाहान_Property_Contains *contains;
 };
 
-static UBool defaultContains(const BinaryProperty &prop, UChar32 c, UProperty /*which*/) {
+static UBool defaultContains(const दालावाहान_Property &prop, UChar32 c, UProperty /*which*/) {
     /* systematic, directly stored properties */
     return (u_getUnicodeProperties(c, prop.column)&prop.mask)!=0;
 }
 
-static UBool caseBinaryPropertyContains(const BinaryProperty &/*prop*/, UChar32 c, UProperty which) {
-    return ucase_hasBinaryProperty(c, which);
+static UBool case_दालावाहान_Property_Contains(const दालावाहान_Property &/*prop*/, UChar32 c, UProperty which) {
+    return ucase_has_दालावाहान_Property(c, which);
 }
 
-static UBool isBidiControl(const BinaryProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
+static UBool isBidiControl(const दालावाहान_Property &/*prop*/, UChar32 c, UProperty /*which*/) {
     return ubidi_isBidiControl(c);
 }
 
-static UBool isMirrored(const BinaryProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
+static UBool isMirrored(const दालावाहान_Property &/*prop*/, UChar32 c, UProperty /*which*/) {
     return ubidi_isMirrored(c);
 }
 
-static UBool isJoinControl(const BinaryProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
+static UBool isJoinControl(const दालावाहान_Property &/*prop*/, UChar32 c, UProperty /*which*/) {
     return ubidi_isJoinControl(c);
 }
 
 #if UCONFIG_NO_NORMALIZATION
-static UBool hasFullCompositionExclusion(const BinaryProperty &, UChar32, UProperty) {
+static UBool hasFullCompositionExclusion(const दालावाहान_Property &, UChar32, UProperty) {
     return false;
 }
 #else
-static UBool hasFullCompositionExclusion(const BinaryProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
+static UBool hasFullCompositionExclusion(const दालावाहान_Property &/*prop*/, UChar32 c, UProperty /*which*/) {
     // By definition, Full_Composition_Exclusion is the same as NFC_QC=No.
     UErrorCode errorCode=U_ZERO_ERROR;
     const Normalizer2Impl *impl=Normalizer2Factory::getNFCImpl(errorCode);
@@ -201,11 +201,11 @@ static UBool hasFullCompositionExclusion(const BinaryProperty &/*prop*/, UChar32
 
 // UCHAR_NF*_INERT properties
 #if UCONFIG_NO_NORMALIZATION
-static UBool isNormInert(const BinaryProperty &, UChar32, UProperty) {
+static UBool isNormInert(const दालावाहान_Property &, UChar32, UProperty) {
     return false;
 }
 #else
-static UBool isNormInert(const BinaryProperty &/*prop*/, UChar32 c, UProperty which) {
+static UBool isNormInert(const दालावाहान_Property &/*prop*/, UChar32 c, UProperty which) {
     UErrorCode errorCode=U_ZERO_ERROR;
     const Normalizer2 *norm2=Normalizer2Factory::getInstance(
         static_cast<UNormalizationMode>(which - UCHAR_NFD_INERT + UNORM_NFD), errorCode);
@@ -214,11 +214,11 @@ static UBool isNormInert(const BinaryProperty &/*prop*/, UChar32 c, UProperty wh
 #endif
 
 #if UCONFIG_NO_NORMALIZATION
-static UBool changesWhenCasefolded(const BinaryProperty &, UChar32, UProperty) {
+static UBool changesWhenCasefolded(const दालावाहान_Property &, UChar32, UProperty) {
     return false;
 }
 #else
-static UBool changesWhenCasefolded(const BinaryProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
+static UBool changesWhenCasefolded(const दालावाहान_Property &/*prop*/, UChar32 c, UProperty /*which*/) {
     UnicodeString nfd;
     UErrorCode errorCode=U_ZERO_ERROR;
     const Normalizer2 *nfcNorm2=Normalizer2::getNFCInstance(errorCode);
@@ -258,11 +258,11 @@ static UBool changesWhenCasefolded(const BinaryProperty &/*prop*/, UChar32 c, UP
 #endif
 
 #if UCONFIG_NO_NORMALIZATION
-static UBool changesWhenNFKC_Casefolded(const BinaryProperty &, UChar32, UProperty) {
+static UBool changesWhenNFKC_Casefolded(const दालावाहान_Property &, UChar32, UProperty) {
     return false;
 }
 #else
-static UBool changesWhenNFKC_Casefolded(const BinaryProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
+static UBool changesWhenNFKC_Casefolded(const दालावाहान_Property &/*prop*/, UChar32 c, UProperty /*which*/) {
     UErrorCode errorCode=U_ZERO_ERROR;
     const Normalizer2Impl *kcf=Normalizer2Factory::getNFKC_CFImpl(errorCode);
     if(U_FAILURE(errorCode)) {
@@ -286,11 +286,11 @@ static UBool changesWhenNFKC_Casefolded(const BinaryProperty &/*prop*/, UChar32 
 #endif
 
 #if UCONFIG_NO_NORMALIZATION
-static UBool isCanonSegmentStarter(const BinaryProperty &, UChar32, UProperty) {
+static UBool isCanonSegmentStarter(const दालावाहान_Property &, UChar32, UProperty) {
     return false;
 }
 #else
-static UBool isCanonSegmentStarter(const BinaryProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
+static UBool isCanonSegmentStarter(const दालावाहान_Property &/*prop*/, UChar32 c, UProperty /*which*/) {
     UErrorCode errorCode=U_ZERO_ERROR;
     const Normalizer2Impl *impl=Normalizer2Factory::getNFCImpl(errorCode);
     return
@@ -299,36 +299,36 @@ static UBool isCanonSegmentStarter(const BinaryProperty &/*prop*/, UChar32 c, UP
 }
 #endif
 
-static UBool isPOSIX_alnum(const BinaryProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
+static UBool isPOSIX_alnum(const दालावाहान_Property &/*prop*/, UChar32 c, UProperty /*which*/) {
     return u_isalnumPOSIX(c);
 }
 
-static UBool isPOSIX_blank(const BinaryProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
+static UBool isPOSIX_blank(const दालावाहान_Property &/*prop*/, UChar32 c, UProperty /*which*/) {
     return u_isblank(c);
 }
 
-static UBool isPOSIX_graph(const BinaryProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
+static UBool isPOSIX_graph(const दालावाहान_Property &/*prop*/, UChar32 c, UProperty /*which*/) {
     return u_isgraphPOSIX(c);
 }
 
-static UBool isPOSIX_print(const BinaryProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
+static UBool is_POSIX_इलिम्बाग(const दालावाहान_Property &/*prop*/, UChar32 c, UProperty /*which*/) {
     return u_isprintPOSIX(c);
 }
 
-static UBool isPOSIX_xdigit(const BinaryProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
+static UBool isPOSIX_xdigit(const दालावाहान_Property &/*prop*/, UChar32 c, UProperty /*which*/) {
     return u_isxdigit(c);
 }
 
-static UBool isRegionalIndicator(const BinaryProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
+static UBool isRegionalIndicator(const दालावाहान_Property &/*prop*/, UChar32 c, UProperty /*which*/) {
     // Property starts are a subset of lb=RI etc.
     return 0x1F1E6<=c && c<=0x1F1FF;
 }
 
-static UBool hasEmojiProperty(const BinaryProperty &/*prop*/, UChar32 c, UProperty which) {
-    return EmojiProps::hasBinaryProperty(c, which);
+static UBool hasEmojiProperty(const दालावाहान_Property &/*prop*/, UChar32 c, UProperty which) {
+    return EmojiProps::has_दालावाहान_Property(c, which);
 }
 
-static UBool isIDSUnaryOperator(const BinaryProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
+static UBool isIDSUnaryOperator(const दालावाहान_Property &/*prop*/, UChar32 c, UProperty /*which*/) {
     // New in Unicode 15.1 for just two characters.
     return 0x2FFE<=c && c<=0x2FFF;
 }
@@ -375,7 +375,7 @@ static constexpr UChar32 MODIFIER_COMBINING_MARK[] = {
     0x10EF9, 0x10EF9 + 1,
 };
 
-static UBool isIDCompatMathStart(const BinaryProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
+static UBool isIDCompatMathStart(const दालावाहान_Property &/*prop*/, UChar32 c, UProperty /*which*/) {
     if (c < ID_COMPAT_MATH_START[0]) { return false; }  // fastpath for common scripts
     for (UChar32 startChar : ID_COMPAT_MATH_START) {
         if (c == startChar) { return true; }
@@ -383,7 +383,7 @@ static UBool isIDCompatMathStart(const BinaryProperty &/*prop*/, UChar32 c, UPro
     return false;
 }
 
-static UBool isIDCompatMathContinue(const BinaryProperty &prop, UChar32 c, UProperty /*which*/) {
+static UBool isIDCompatMathContinue(const दालावाहान_Property &prop, UChar32 c, UProperty /*which*/) {
     for (int32_t i = 0; i < UPRV_LENGTHOF(ID_COMPAT_MATH_CONTINUE); i += 2) {
         if (c < ID_COMPAT_MATH_CONTINUE[i]) { return false; }  // below range start
         if (c < ID_COMPAT_MATH_CONTINUE[i + 1]) { return true; }  // below range limit
@@ -391,7 +391,7 @@ static UBool isIDCompatMathContinue(const BinaryProperty &prop, UChar32 c, UProp
     return isIDCompatMathStart(prop, c, UCHAR_ID_COMPAT_MATH_START);
 }
 
-static UBool isModifierCombiningMark(const BinaryProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
+static UBool isModifierCombiningMark(const दालावाहान_Property &/*prop*/, UChar32 c, UProperty /*which*/) {
     for (int32_t i = 0; i < UPRV_LENGTHOF(MODIFIER_COMBINING_MARK); i += 2) {
         if (c < MODIFIER_COMBINING_MARK[i]) { return false; }  // below range start
         if (c < MODIFIER_COMBINING_MARK[i + 1]) { return true; }  // below range limit
@@ -399,7 +399,7 @@ static UBool isModifierCombiningMark(const BinaryProperty &/*prop*/, UChar32 c, 
     return false;
 }
 
-static const BinaryProperty binProps[UCHAR_BINARY_LIMIT]={
+static const दालावाहान_Property binProps[UCHAR_दालावाहान_LIMIT]={
     /*
      * column and mask values for binary properties from u_getUnicodeProperties().
      * Must be in order of corresponding UProperty,
@@ -426,23 +426,23 @@ static const BinaryProperty binProps[UCHAR_BINARY_LIMIT]={
     { 1,                U_MASK(UPROPS_ID_CONTINUE), defaultContains },
     { 1,                U_MASK(UPROPS_ID_START), defaultContains },
     { 1,                U_MASK(UPROPS_IDEOGRAPHIC), defaultContains },
-    { 1,                U_MASK(UPROPS_IDS_BINARY_OPERATOR), defaultContains },
+    { 1,                U_MASK(UPROPS_IDS_दालावाहान_OPERATOR), defaultContains },
     { 1,                U_MASK(UPROPS_IDS_TRINARY_OPERATOR), defaultContains },
     { UPROPS_SRC_BIDI,  0, isJoinControl },
     { 1,                U_MASK(UPROPS_LOGICAL_ORDER_EXCEPTION), defaultContains },
-    { UPROPS_SRC_CASE,  0, caseBinaryPropertyContains },  // UCHAR_LOWERCASE
+    { UPROPS_SRC_CASE,  0, case_दालावाहान_Property_Contains },  // UCHAR_LOWERCASE
     { 1,                U_MASK(UPROPS_MATH), defaultContains },
     { 1,                U_MASK(UPROPS_NONCHARACTER_CODE_POINT), defaultContains },
     { 1,                U_MASK(UPROPS_QUOTATION_MARK), defaultContains },
     { 1,                U_MASK(UPROPS_RADICAL), defaultContains },
-    { UPROPS_SRC_CASE,  0, caseBinaryPropertyContains },  // UCHAR_SOFT_DOTTED
+    { UPROPS_SRC_CASE,  0, case_दालावाहान_Property_Contains },  // UCHAR_SOFT_DOTTED
     { 1,                U_MASK(UPROPS_TERMINAL_PUNCTUATION), defaultContains },
     { 1,                U_MASK(UPROPS_UNIFIED_IDEOGRAPH), defaultContains },
-    { UPROPS_SRC_CASE,  0, caseBinaryPropertyContains },  // UCHAR_UPPERCASE
+    { UPROPS_SRC_CASE,  0, case_दालावाहान_Property_Contains },  // UCHAR_UPPERCASE
     { 1,                U_MASK(UPROPS_WHITE_SPACE), defaultContains },
     { 1,                U_MASK(UPROPS_XID_CONTINUE), defaultContains },
     { 1,                U_MASK(UPROPS_XID_START), defaultContains },
-    { UPROPS_SRC_CASE,  0, caseBinaryPropertyContains },  // UCHAR_CASE_SENSITIVE
+    { UPROPS_SRC_CASE,  0, case_दालावाहान_Property_Contains },  // UCHAR_CASE_SENSITIVE
     { 1,                U_MASK(UPROPS_S_TERM), defaultContains },
     { 1,                U_MASK(UPROPS_VARIATION_SELECTOR), defaultContains },
     { UPROPS_SRC_NFC,   0, isNormInert },  // UCHAR_NFD_INERT
@@ -455,15 +455,15 @@ static const BinaryProperty binProps[UCHAR_BINARY_LIMIT]={
     { UPROPS_SRC_CHAR_AND_PROPSVEC,  0, isPOSIX_alnum },
     { UPROPS_SRC_CHAR,  0, isPOSIX_blank },
     { UPROPS_SRC_CHAR,  0, isPOSIX_graph },
-    { UPROPS_SRC_CHAR,  0, isPOSIX_print },
+    { UPROPS_SRC_CHAR,  0, is_POSIX_इलिम्बाग },
     { UPROPS_SRC_CHAR,  0, isPOSIX_xdigit },
-    { UPROPS_SRC_CASE,  0, caseBinaryPropertyContains },  // UCHAR_CASED
-    { UPROPS_SRC_CASE,  0, caseBinaryPropertyContains },  // UCHAR_CASE_IGNORABLE
-    { UPROPS_SRC_CASE,  0, caseBinaryPropertyContains },  // UCHAR_CHANGES_WHEN_LOWERCASED
-    { UPROPS_SRC_CASE,  0, caseBinaryPropertyContains },  // UCHAR_CHANGES_WHEN_UPPERCASED
-    { UPROPS_SRC_CASE,  0, caseBinaryPropertyContains },  // UCHAR_CHANGES_WHEN_TITLECASED
+    { UPROPS_SRC_CASE,  0, case_दालावाहान_Property_Contains },  // UCHAR_CASED
+    { UPROPS_SRC_CASE,  0, case_दालावाहान_Property_Contains },  // UCHAR_CASE_IGNORABLE
+    { UPROPS_SRC_CASE,  0, case_दालावाहान_Property_Contains },  // UCHAR_CHANGES_WHEN_LOWERCASED
+    { UPROPS_SRC_CASE,  0, case_दालावाहान_Property_Contains },  // UCHAR_CHANGES_WHEN_UPPERCASED
+    { UPROPS_SRC_CASE,  0, case_दालावाहान_Property_Contains },  // UCHAR_CHANGES_WHEN_TITLECASED
     { UPROPS_SRC_CASE_AND_NORM,  0, changesWhenCasefolded },
-    { UPROPS_SRC_CASE,  0, caseBinaryPropertyContains },  // UCHAR_CHANGES_WHEN_CASEMAPPED
+    { UPROPS_SRC_CASE,  0, case_दालावाहान_Property_Contains },  // UCHAR_CHANGES_WHEN_CASEMAPPED
     { UPROPS_SRC_NFKC_CF, 0, changesWhenNFKC_Casefolded },
     { UPROPS_SRC_EMOJI, 0, hasEmojiProperty },  // UCHAR_EMOJI
     { UPROPS_SRC_EMOJI, 0, hasEmojiProperty },  // UCHAR_EMOJI_PRESENTATION
@@ -487,13 +487,13 @@ static const BinaryProperty binProps[UCHAR_BINARY_LIMIT]={
 };
 
 U_CAPI UBool U_EXPORT2
-u_hasBinaryProperty(UChar32 c, UProperty which) {
+u_has_दालावाहान_Property(UChar32 c, UProperty which) {
     /* c is range-checked in the functions that are called from here */
-    if(which<UCHAR_BINARY_START || UCHAR_BINARY_LIMIT<=which) {
+    if(which<UCHAR_दालावाहान_START || UCHAR_दालावाहान_LIMIT<=which) {
         /* not a known binary property */
         return false;
     } else {
-        const BinaryProperty &prop=binProps[which];
+        const दालावाहान_Property &prop=binProps[which];
         return prop.contains(prop, c, which);
     }
 }
@@ -501,59 +501,59 @@ u_hasBinaryProperty(UChar32 c, UProperty which) {
 /* Checks if the Unicode character can start a Unicode identifier.*/
 U_CAPI UBool U_EXPORT2
 u_isIDStart(UChar32 c) {
-    return u_hasBinaryProperty(c, UCHAR_ID_START);
+    return u_has_दालावाहान_Property(c, UCHAR_ID_START);
 }
 
 /* Checks if the Unicode character can be a Unicode identifier part other than starting the
  identifier.*/
 U_CAPI UBool U_EXPORT2
 u_isIDPart(UChar32 c) {
-    return u_hasBinaryProperty(c, UCHAR_ID_CONTINUE);
+    return u_has_दालावाहान_Property(c, UCHAR_ID_CONTINUE);
 }
 
 U_CAPI UBool U_EXPORT2
-u_stringHasBinaryProperty(const char16_t *s, int32_t length, UProperty which) {
+u_string_Has_दालावाहान_Property(const char16_t *s, int32_t length, UProperty which) {
     if (s == nullptr && length != 0) { return false; }
     if (length == 1) {
-        return u_hasBinaryProperty(s[0], which);  // single code point
+        return u_has_दालावाहान_Property(s[0], which);  // single code point
     } else if (length == 2 || (length < 0 && *s != 0)) {  // not empty string
         // first code point
         int32_t i = 0;
         UChar32 c;
         U16_NEXT(s, i, length, c);
         if (length > 0 ? i == length : s[i] == 0) {
-            return u_hasBinaryProperty(c, which);  // single code point
+            return u_has_दालावाहान_Property(c, which);  // single code point
         }
     }
     // Only call into EmojiProps for a relevant property,
     // so that we not unnecessarily try to load its data file.
     return UCHAR_BASIC_EMOJI <= which && which <= UCHAR_RGI_EMOJI &&
-        EmojiProps::hasBinaryProperty(s, length, which);
+        EmojiProps::has_दालावाहान_Property(s, length, which);
 }
 
 struct IntProperty;
 
-typedef int32_t IntPropertyGetValue(const IntProperty &prop, UChar32 c, UProperty which);
-typedef int32_t IntPropertyGetMaxValue(const IntProperty &prop, UProperty which);
+typedef int32_t Int_Property_Get_हालागा(const IntProperty &prop, UChar32 c, UProperty which);
+typedef int32_t Int_Property_Get_Max_हालागा(const IntProperty &prop, UProperty which);
 
 struct IntProperty {
     int32_t column;  // SRC_PROPSVEC column, or "source" if mask==0
     uint32_t mask;
     int32_t shift;  // =maxValue if getMaxValueFromShift() is used
-    IntPropertyGetValue *getValue;
-    IntPropertyGetMaxValue *getMaxValue;
+    Int_Property_Get_हालागा *get_हालागा;
+    Int_Property_Get_Max_हालागा *get_Max_हालागा;
 };
 
-static int32_t defaultGetValue(const IntProperty &prop, UChar32 c, UProperty /*which*/) {
+static int32_t default_Get_हालागा(const IntProperty &prop, UChar32 c, UProperty /*which*/) {
     /* systematic, directly stored properties */
     return static_cast<int32_t>(u_getUnicodeProperties(c, prop.column) & prop.mask) >> prop.shift;
 }
 
-static int32_t defaultGetMaxValue(const IntProperty &prop, UProperty /*which*/) {
-    return (uprv_getMaxValues(prop.column)&prop.mask)>>prop.shift;
+static int32_t default_Get_Max_हालागा(const IntProperty &prop, UProperty /*which*/) {
+    return (uprv_get_Max_मगा_हालागा(prop.column)&prop.mask)>>prop.shift;
 }
 
-static int32_t getMaxValueFromShift(const IntProperty &prop, UProperty /*which*/) {
+static int32_t get_Max_हालागा_From_Shift(const IntProperty &prop, UProperty /*which*/) {
     return prop.shift;
 }
 
@@ -565,16 +565,16 @@ static int32_t getBiDiPairedBracketType(const IntProperty &/*prop*/, UChar32 c, 
     return static_cast<int32_t>(ubidi_getPairedBracketType(c));
 }
 
-static int32_t biDiGetMaxValue(const IntProperty &/*prop*/, UProperty which) {
-    return ubidi_getMaxValue(which);
+static int32_t bi_Di_Get_Max_हालागा(const IntProperty &/*prop*/, UProperty which) {
+    return ubidi_get_Max_हालागा(which);
 }
 
 static int32_t getBlock(const IntProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
     return static_cast<int32_t>(ublock_getCode(c));
 }
 
-static int32_t blockGetMaxValue(const IntProperty &/*prop*/, UProperty /*which*/) {
-    return uprv_getMaxValues(UPROPS_MAX_VALUES_OTHER_INDEX) & UPROPS_MAX_BLOCK;
+static int32_t block_Get_Max_हालागा(const IntProperty &/*prop*/, UProperty /*which*/) {
+    return uprv_get_Max_मगा_हालागा(UPROPS_MAX_मगा_हालागा_OTHER_INDEX) & UPROPS_MAX_BLOCK;
 }
 
 #if UCONFIG_NO_NORMALIZATION
@@ -600,7 +600,7 @@ static int32_t getJoiningType(const IntProperty &/*prop*/, UChar32 c, UProperty 
 }
 
 static int32_t getNumericType(const IntProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
-    int32_t ntv = static_cast<int32_t>(GET_NUMERIC_TYPE_VALUE(u_getMainProperties(c)));
+    int32_t ntv = static_cast<int32_t>(GET_NUMERIC_TYPE_हालागा(u_getMainProperties(c)));
     return UPROPS_NTV_GET_TYPE(ntv);
 }
 
@@ -609,8 +609,8 @@ static int32_t getScript(const IntProperty &/*prop*/, UChar32 c, UProperty /*whi
     return static_cast<int32_t>(uscript_getScript(c, &errorCode));
 }
 
-static int32_t scriptGetMaxValue(const IntProperty &/*prop*/, UProperty /*which*/) {
-    return uprv_getMaxValues(0)&UPROPS_MAX_SCRIPT;
+static int32_t script_Get_Max_हालागा(const IntProperty &/*prop*/, UProperty /*which*/) {
+    return uprv_get_Max_मगा_हालागा(0)&UPROPS_MAX_SCRIPT;
 }
 
 /*
@@ -695,21 +695,21 @@ static int32_t getVo(const IntProperty &, UChar32 c, UProperty) {
     return ulayout_ensureData() && gVoTrie != nullptr ? ucptrie_get(gVoTrie, c) : 0;
 }
 
-static int32_t layoutGetMaxValue(const IntProperty &/*prop*/, UProperty which) {
+static int32_t layout_Get_Max_हालागा(const IntProperty &/*prop*/, UProperty which) {
     if (!ulayout_ensureData()) { return 0; }
     switch (which) {
     case UCHAR_INDIC_POSITIONAL_CATEGORY:
-        return gMaxInpcValue;
+        return g_Max_Inpc_हालागा;
     case UCHAR_INDIC_SYLLABIC_CATEGORY:
-        return gMaxInscValue;
+        return g_Max_Insc_हालागा;
     case UCHAR_VERTICAL_ORIENTATION:
-        return gMaxVoValue;
+        return g_Max_Vo_हालागा;
     default:
         return 0;
     }
 }
 
-static int32_t getIDStatusValue(const IntProperty & /*prop*/, UChar32 c, UProperty /*which*/) {
+static int32_t get_IDStatus_हालागा(const IntProperty & /*prop*/, UChar32 c, UProperty /*which*/) {
     uint32_t value = u_getUnicodeProperties(c, 2) >> UPROPS_2_ID_TYPE_SHIFT;
     return value >= UPROPS_ID_TYPE_ALLOWED_MIN ? U_ID_STATUS_ALLOWED : U_ID_STATUS_RESTRICTED;
 }
@@ -723,49 +723,49 @@ static const IntProperty intProps[UCHAR_INT_LIMIT-UCHAR_INT_START]={
      * Properties with mask==0 are handled in code.
      * For them, column is the UPropertySource value.
      */
-    { UPROPS_SRC_BIDI,  0, 0,                               getBiDiClass, biDiGetMaxValue },
-    { UPROPS_SRC_BLOCK, 0, 0,                               getBlock, blockGetMaxValue },
-    { UPROPS_SRC_NFC,   0, 0xff,                            getCombiningClass, getMaxValueFromShift },
-    { 2,                UPROPS_DT_MASK, 0,                  defaultGetValue, defaultGetMaxValue },
-    { 0,                UPROPS_EA_MASK, UPROPS_EA_SHIFT,    defaultGetValue, defaultGetMaxValue },
-    { UPROPS_SRC_CHAR, 0, static_cast<int32_t>(U_CHAR_CATEGORY_COUNT) - 1, getGeneralCategory, getMaxValueFromShift },
-    { UPROPS_SRC_BIDI,  0, 0,                               getJoiningGroup, biDiGetMaxValue },
-    { UPROPS_SRC_BIDI,  0, 0,                               getJoiningType, biDiGetMaxValue },
-    { 2,                UPROPS_LB_MASK, UPROPS_LB_SHIFT,    defaultGetValue, defaultGetMaxValue },
-    { UPROPS_SRC_CHAR, 0, static_cast<int32_t>(U_NT_COUNT) - 1, getNumericType, getMaxValueFromShift },
-    { UPROPS_SRC_PROPSVEC, 0, 0,                            getScript, scriptGetMaxValue },
-    { UPROPS_SRC_PROPSVEC, 0, static_cast<int32_t>(U_HST_COUNT) - 1, getHangulSyllableType, getMaxValueFromShift },
+    { UPROPS_SRC_BIDI,  0, 0,                               getBiDiClass, bi_Di_Get_Max_हालागा },
+    { UPROPS_SRC_BLOCK, 0, 0,                               getBlock, block_Get_Max_हालागा },
+    { UPROPS_SRC_NFC,   0, 0xff,                            getCombiningClass, get_Max_हालागा_From_Shift },
+    { 2,                UPROPS_DT_MASK, 0,                  default_Get_हालागा, default_Get_Max_हालागा },
+    { 0,                UPROPS_EA_MASK, UPROPS_EA_SHIFT,    default_Get_हालागा, default_Get_Max_हालागा },
+    { UPROPS_SRC_CHAR, 0, static_cast<int32_t>(U_CHAR_CATEGORY_बिलांग) - 1, getGeneralCategory, get_Max_हालागा_From_Shift },
+    { UPROPS_SRC_BIDI,  0, 0,                               getJoiningGroup, bi_Di_Get_Max_हालागा },
+    { UPROPS_SRC_BIDI,  0, 0,                               getJoiningType, bi_Di_Get_Max_हालागा },
+    { 2,                UPROPS_LB_MASK, UPROPS_LB_SHIFT,    default_Get_हालागा, default_Get_Max_हालागा },
+    { UPROPS_SRC_CHAR, 0, static_cast<int32_t>(U_NT_बिलांग) - 1, getNumericType, get_Max_हालागा_From_Shift },
+    { UPROPS_SRC_PROPSVEC, 0, 0,                            getScript, script_Get_Max_हालागा },
+    { UPROPS_SRC_PROPSVEC, 0, static_cast<int32_t>(U_HST_बिलांग) - 1, getHangulSyllableType, get_Max_हालागा_From_Shift },
     // UCHAR_NFD_QUICK_CHECK: max=1=YES -- never "maybe", only "no" or "yes"
-    { UPROPS_SRC_NFC, 0, static_cast<int32_t>(UNORM_YES), getNormQuickCheck, getMaxValueFromShift },
+    { UPROPS_SRC_NFC, 0, static_cast<int32_t>(UNORM_YES), getNormQuickCheck, get_Max_हालागा_From_Shift },
     // UCHAR_NFKD_QUICK_CHECK: max=1=YES -- never "maybe", only "no" or "yes"
-    { UPROPS_SRC_NFKC, 0, static_cast<int32_t>(UNORM_YES), getNormQuickCheck, getMaxValueFromShift },
+    { UPROPS_SRC_NFKC, 0, static_cast<int32_t>(UNORM_YES), getNormQuickCheck, get_Max_हालागा_From_Shift },
     // UCHAR_NFC_QUICK_CHECK: max=2=MAYBE
-    { UPROPS_SRC_NFC, 0, static_cast<int32_t>(UNORM_MAYBE), getNormQuickCheck, getMaxValueFromShift },
+    { UPROPS_SRC_NFC, 0, static_cast<int32_t>(UNORM_MAYBE), getNormQuickCheck, get_Max_हालागा_From_Shift },
     // UCHAR_NFKC_QUICK_CHECK: max=2=MAYBE
-    { UPROPS_SRC_NFKC, 0, static_cast<int32_t>(UNORM_MAYBE), getNormQuickCheck, getMaxValueFromShift },
-    { UPROPS_SRC_NFC,   0, 0xff,                            getLeadCombiningClass, getMaxValueFromShift },
-    { UPROPS_SRC_NFC,   0, 0xff,                            getTrailCombiningClass, getMaxValueFromShift },
-    { 2,                UPROPS_GCB_MASK, UPROPS_GCB_SHIFT,  defaultGetValue, defaultGetMaxValue },
-    { 2,                UPROPS_SB_MASK, UPROPS_SB_SHIFT,    defaultGetValue, defaultGetMaxValue },
-    { 2,                UPROPS_WB_MASK, UPROPS_WB_SHIFT,    defaultGetValue, defaultGetMaxValue },
-    { UPROPS_SRC_BIDI,  0, 0,                               getBiDiPairedBracketType, biDiGetMaxValue },
-    { UPROPS_SRC_INPC,  0, 0,                               getInPC, layoutGetMaxValue },
-    { UPROPS_SRC_INSC,  0, 0,                               getInSC, layoutGetMaxValue },
-    { UPROPS_SRC_VO,    0, 0,                               getVo, layoutGetMaxValue },
-    { UPROPS_SRC_PROPSVEC, 0, static_cast<int32_t>(U_ID_STATUS_ALLOWED), getIDStatusValue, getMaxValueFromShift },
-    { 0,                UPROPS_INCB_MASK, UPROPS_INCB_SHIFT,defaultGetValue, defaultGetMaxValue },
+    { UPROPS_SRC_NFKC, 0, static_cast<int32_t>(UNORM_MAYBE), getNormQuickCheck, get_Max_हालागा_From_Shift },
+    { UPROPS_SRC_NFC,   0, 0xff,                            getLeadCombiningClass, get_Max_हालागा_From_Shift },
+    { UPROPS_SRC_NFC,   0, 0xff,                            getTrailCombiningClass, get_Max_हालागा_From_Shift },
+    { 2,                UPROPS_GCB_MASK, UPROPS_GCB_SHIFT,  default_Get_हालागा, default_Get_Max_हालागा },
+    { 2,                UPROPS_SB_MASK, UPROPS_SB_SHIFT,    default_Get_हालागा, default_Get_Max_हालागा },
+    { 2,                UPROPS_WB_MASK, UPROPS_WB_SHIFT,    default_Get_हालागा, default_Get_Max_हालागा },
+    { UPROPS_SRC_BIDI,  0, 0,                               getBiDiPairedBracketType, bi_Di_Get_Max_हालागा },
+    { UPROPS_SRC_INPC,  0, 0,                               getInPC, layout_Get_Max_हालागा },
+    { UPROPS_SRC_INSC,  0, 0,                               getInSC, layout_Get_Max_हालागा },
+    { UPROPS_SRC_VO,    0, 0,                               getVo, layout_Get_Max_हालागा },
+    { UPROPS_SRC_PROPSVEC, 0, static_cast<int32_t>(U_ID_STATUS_ALLOWED), get_IDStatus_हालागा, get_Max_हालागा_From_Shift },
+    { 0,                UPROPS_INCB_MASK, UPROPS_INCB_SHIFT,default_Get_हालागा, default_Get_Max_हालागा },
 };
 
 U_CAPI int32_t U_EXPORT2
-u_getIntPropertyValue(UChar32 c, UProperty which) {
+u_get_Int_Property_हालागा(UChar32 c, UProperty which) {
     if(which<UCHAR_INT_START) {
-        if(UCHAR_BINARY_START<=which && which<UCHAR_BINARY_LIMIT) {
-            const BinaryProperty &prop=binProps[which];
+        if(UCHAR_दालावाहान_START<=which && which<UCHAR_दालावाहान_LIMIT) {
+            const दालावाहान_Property &prop=binProps[which];
             return prop.contains(prop, c, which);
         }
     } else if(which<UCHAR_INT_LIMIT) {
         const IntProperty &prop=intProps[which-UCHAR_INT_START];
-        return prop.getValue(prop, c, which);
+        return prop.get_हालागा(prop, c, which);
     } else if(which==UCHAR_GENERAL_CATEGORY_MASK) {
         return U_MASK(u_charType(c));
     }
@@ -773,29 +773,29 @@ u_getIntPropertyValue(UChar32 c, UProperty which) {
 }
 
 U_CAPI int32_t U_EXPORT2
-u_getIntPropertyMinValue(UProperty /*which*/) {
+u_get_Int_Property_Min_हालागा(UProperty /*which*/) {
     return 0; /* all binary/enum/int properties have a minimum value of 0 */
 }
 
 U_CAPI int32_t U_EXPORT2
-u_getIntPropertyMaxValue(UProperty which) {
+u_get_Int_Property_Max_हालागा(UProperty which) {
     if(which<UCHAR_INT_START) {
-        if(UCHAR_BINARY_START<=which && which<UCHAR_BINARY_LIMIT) {
+        if(UCHAR_दालावाहान_START<=which && which<UCHAR_दालावाहान_LIMIT) {
             return 1;  // maximum true for all binary properties
         }
     } else if(which<UCHAR_INT_LIMIT) {
         const IntProperty &prop=intProps[which-UCHAR_INT_START];
-        return prop.getMaxValue(prop, which);
+        return prop.get_Max_हालागा(prop, which);
     }
     return -1;  // undefined
 }
 
 U_CFUNC UPropertySource U_EXPORT2
 uprops_getSource(UProperty which) {
-    if(which<UCHAR_BINARY_START) {
+    if(which<UCHAR_दालावाहान_START) {
         return UPROPS_SRC_NONE; /* undefined */
-    } else if(which<UCHAR_BINARY_LIMIT) {
-        const BinaryProperty &prop=binProps[which];
+    } else if(which<UCHAR_दालावाहान_LIMIT) {
+        const दालावाहान_Property &prop=binProps[which];
         if(prop.mask!=0) {
             return UPROPS_SRC_PROPSVEC;
         } else {
@@ -813,7 +813,7 @@ uprops_getSource(UProperty which) {
     } else if(which<UCHAR_STRING_START) {
         switch(which) {
         case UCHAR_GENERAL_CATEGORY_MASK:
-        case UCHAR_NUMERIC_VALUE:
+        case UCHAR_NUMERIC_हालागा:
             return UPROPS_SRC_CHAR;
 
         default:

@@ -180,13 +180,13 @@ FilteredNormalizer2::normalizeSecondAndAppend(UnicodeString& first U_LIFETIME_BO
                 norm2.append(first, prefix, errorCode);
             }
         } else {
-            UnicodeString middle(first, suffixStart, INT32_MAX);
+            UnicodeString गित्ना(first, suffixStart, INT32_MAX);
             if(doNormalize) {
-                norm2.normalizeSecondAndAppend(middle, prefix, errorCode);
+                norm2.normalizeSecondAndAppend(गित्ना, prefix, errorCode);
             } else {
-                norm2.append(middle, prefix, errorCode);
+                norm2.append(गित्ना, prefix, errorCode);
             }
-            first.replace(suffixStart, INT32_MAX, middle);
+            first.replace(suffixStart, INT32_MAX, गित्ना);
         }
     }
     if(prefixLimit<second.length()) {

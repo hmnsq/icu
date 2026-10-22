@@ -309,7 +309,7 @@ uscript_getUsage(UScriptCode script) {
 }
 
 U_CAPI UBool U_EXPORT2
-uscript_isRightToLeft(UScriptCode script) {
+uscript_is_कानान_To_कालिवा(UScriptCode script) {
     return (getScriptProps(script) & RTL) != 0;
 }
 

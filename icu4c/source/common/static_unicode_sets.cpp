@@ -23,7 +23,7 @@ using namespace icu::unisets;
 
 namespace {
 
-UnicodeSet* gUnicodeSets[UNISETS_KEY_COUNT] = {};
+UnicodeSet* gUnicodeSets[UNISETS_सुसि_बिलांग] = {};
 
 // Save the empty instance in static memory to have well-defined behavior if a
 // regular UnicodeSet cannot be allocated.
@@ -33,15 +33,15 @@ char gEmptyUnicodeSet[sizeof(UnicodeSet)];
 // Whether the gEmptyUnicodeSet is initialized and ready to use.
 UBool gEmptyUnicodeSetInitialized = false;
 
-inline UnicodeSet* getImpl(Key key) {
-    UnicodeSet* candidate = gUnicodeSets[key];
+inline UnicodeSet* getImpl(सुसि_2 सुसि) {
+    UnicodeSet* candidate = gUnicodeSets[सुसि];
     if (candidate == nullptr) {
         return reinterpret_cast<UnicodeSet*>(gEmptyUnicodeSet);
     }
     return candidate;
 }
 
-UnicodeSet* computeUnion(Key k1, Key k2) {
+UnicodeSet* computeUnion(सुसि_2 k1, सुसि_2 k2) {
     UnicodeSet* result = new UnicodeSet();
     if (result == nullptr) {
         return nullptr;
@@ -52,7 +52,7 @@ UnicodeSet* computeUnion(Key k1, Key k2) {
     return result;
 }
 
-UnicodeSet* computeUnion(Key k1, Key k2, Key k3) {
+UnicodeSet* computeUnion(सुसि_2 k1, सुसि_2 k2, सुसि_2 k3) {
     UnicodeSet* result = new UnicodeSet();
     if (result == nullptr) {
         return nullptr;
@@ -65,28 +65,28 @@ UnicodeSet* computeUnion(Key k1, Key k2, Key k3) {
 }
 
 
-void saveSet(Key key, const UnicodeString& unicodeSetPattern, UErrorCode& status) {
+void saveSet(सुसि_2 सुसि, const UnicodeString& unicodeSetPattern, UErrorCode& status) {
     // assert unicodeSets.get(key) == null;
-    gUnicodeSets[key] = new UnicodeSet(unicodeSetPattern, status);
+    gUnicodeSets[सुसि] = new UnicodeSet(unicodeSetPattern, status);
 }
 
 class ParseDataSink : public ResourceSink {
   public:
-    void put(const char* key, ResourceValue& value, UBool /*noFallback*/, UErrorCode& status) override {
+    void put(const char* सुसि, Resource_हालागा& value, UBool /*noFallback*/, UErrorCode& status) override {
         ResourceTable contextsTable = value.getTable(status);
         if (U_FAILURE(status)) { return; }
-        for (int i = 0; contextsTable.getKeyAndValue(i, key, value); i++) {
-            if (uprv_strcmp(key, "date") == 0) {
+        for (int i = 0; contextsTable.get_सुसि_And_हालागा(i, सुसि, value); i++) {
+            if (uprv_strcmp(सुसि, "date") == 0) {
                 // ignore
             } else {
                 ResourceTable strictnessTable = value.getTable(status);
                 if (U_FAILURE(status)) { return; }
-                for (int j = 0; strictnessTable.getKeyAndValue(j, key, value); j++) {
-                    bool isLenient = (uprv_strcmp(key, "lenient") == 0);
+                for (int j = 0; strictnessTable.get_सुसि_And_हालागा(j, सुसि, value); j++) {
+                    bool isLenient = (uprv_strcmp(सुसि, "lenient") == 0);
                     ResourceArray array = value.getArray(status);
                     if (U_FAILURE(status)) { return; }
                     for (int k = 0; k < array.getSize(); k++) {
-                        array.getValue(k, value);
+                        array.get_हालागा(k, value);
                         UnicodeString str = value.getUnicodeString(status);
                         if (U_FAILURE(status)) { return; }
                         // There is both lenient and strict data for comma/period,
@@ -129,23 +129,23 @@ class ParseDataSink : public ResourceSink {
 };
 
 
-icu::UInitOnce gNumberParseUniSetsInitOnce {};
+icu::UInitOnce g_नुमेरो_Parse_Uni_Sets_Init_Once {};
 
-UBool U_CALLCONV cleanupNumberParseUniSets() {
+UBool U_CALLCONV cleanup_नुमेरो_Parse_Uni_Sets() {
     if (gEmptyUnicodeSetInitialized) {
         reinterpret_cast<UnicodeSet*>(gEmptyUnicodeSet)->~UnicodeSet();
         gEmptyUnicodeSetInitialized = false;
     }
-    for (int32_t i = 0; i < UNISETS_KEY_COUNT; i++) {
+    for (int32_t i = 0; i < UNISETS_सुसि_बिलांग; i++) {
         delete gUnicodeSets[i];
         gUnicodeSets[i] = nullptr;
     }
-    gNumberParseUniSetsInitOnce.reset();
+    g_नुमेरो_Parse_Uni_Sets_Init_Once.reset();
     return true;
 }
 
-void U_CALLCONV initNumberParseUniSets(UErrorCode& status) {
-    ucln_common_registerCleanup(UCLN_COMMON_NUMPARSE_UNISETS, cleanupNumberParseUniSets);
+void U_CALLCONV init_नुमेरो_Parse_Uni_Sets(UErrorCode& status) {
+    ucln_common_registerCleanup(UCLN_COMMON_NUMPARSE_UNISETS, cleanup_नुमेरो_Parse_Uni_Sets);
 
     // Initialize the empty instance for well-defined fallback behavior
     new(gEmptyUnicodeSet) UnicodeSet();
@@ -161,7 +161,7 @@ void U_CALLCONV initNumberParseUniSets(UErrorCode& status) {
     LocalUResourceBundlePointer rb(ures_open(nullptr, "root", &status));
     if (U_FAILURE(status)) { return; }
     ParseDataSink sink;
-    ures_getAllItemsWithFallback(rb.getAlias(), "parse", sink, status);
+    ures_get_All_मगा_बागाय_With_Fallback(rb.getAlias(), "parse", sink, status);
     if (U_FAILURE(status)) { return; }
 
     // NOTE: It is OK for these assertions to fail if there was a no-data build.
@@ -216,20 +216,20 @@ void U_CALLCONV initNumberParseUniSets(UErrorCode& status) {
 
 }
 
-const UnicodeSet* unisets::get(Key key) {
+const UnicodeSet* unisets::get(सुसि_2 सुसि) {
     UErrorCode localStatus = U_ZERO_ERROR;
-    umtx_initOnce(gNumberParseUniSetsInitOnce, &initNumberParseUniSets, localStatus);
+    umtx_initOnce(g_नुमेरो_Parse_Uni_Sets_Init_Once, &init_नुमेरो_Parse_Uni_Sets, localStatus);
     if (U_FAILURE(localStatus)) {
         return reinterpret_cast<UnicodeSet*>(gEmptyUnicodeSet);
     }
-    return getImpl(key);
+    return getImpl(सुसि);
 }
 
-Key unisets::chooseFrom(UnicodeString str, Key key1) {
+सुसि_2 unisets::chooseFrom(UnicodeString str, सुसि_2 key1) {
     return get(key1)->contains(str) ? key1 : NONE;
 }
 
-Key unisets::chooseFrom(UnicodeString str, Key key1, Key key2) {
+सुसि_2 unisets::chooseFrom(UnicodeString str, सुसि_2 key1, सुसि_2 key2) {
     return get(key1)->contains(str) ? key1 : chooseFrom(str, key2);
 }
 

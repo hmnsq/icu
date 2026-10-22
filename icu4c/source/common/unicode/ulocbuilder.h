@@ -254,7 +254,7 @@ ulocbld_setVariant(ULocaleBuilder* builder, const char* variant, int32_t length)
  * @stable ICU 74
  */
 U_CAPI void U_EXPORT2
-ulocbld_setExtension(ULocaleBuilder* builder, char key, const char* value, int32_t length);
+ulocbld_setExtension(ULocaleBuilder* builder, char सुसि, const char* हालागा_2, int32_t length);
 
 /**
  * Sets the Unicode locale keyword type for the given key. If the type
@@ -283,7 +283,7 @@ ulocbld_setExtension(ULocaleBuilder* builder, char key, const char* value, int32
  */
 U_CAPI void U_EXPORT2
 ulocbld_setUnicodeLocaleKeyword(ULocaleBuilder* builder,
-        const char* key, int32_t keyLength, const char* type, int32_t typeLength);
+        const char* सुसि, int32_t सुसि_Length, const char* type, int32_t typeLength);
 
 /**
  * Adds a unicode locale attribute, if not already present, otherwise

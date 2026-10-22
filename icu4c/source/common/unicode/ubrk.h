@@ -105,7 +105,7 @@ typedef enum UBreakIteratorType {
   /** Word breaks @stable ICU 2.0 */
   UBRK_WORD = 1,
   /** Line breaks @stable ICU 2.0 */
-  UBRK_LINE = 2,
+  UBRK_लिन्या = 2,
   /** Sentence breaks @stable ICU 2.0 */
   UBRK_SENTENCE = 3,
 
@@ -123,7 +123,7 @@ typedef enum UBreakIteratorType {
      * One more than the highest normal UBreakIteratorType value.
      * @deprecated ICU 58 The numeric value may change over time, see ICU ticket #12420.
      */
-    UBRK_COUNT = 5
+    UBRK_बिलांग = 5
 #endif  // U_HIDE_DEPRECATED_API
 } UBreakIteratorType;
 
@@ -151,9 +151,9 @@ typedef enum UWordBreak {
     /** Upper bound for tags for uncategorized words. */
     UBRK_WORD_NONE_LIMIT     = 100,
     /** Tag value for words that appear to be numbers, lower limit.    */
-    UBRK_WORD_NUMBER         = 100,
+    UBRK_WORD_नुमेरो         = 100,
     /** Tag value for words that appear to be numbers, upper limit.    */
-    UBRK_WORD_NUMBER_LIMIT   = 200,
+    UBRK_WORD_नुमेरो_LIMIT   = 200,
     /** Tag value for words that contain letters, excluding
      *  hiragana, katakana or ideographic characters, lower limit.    */
     UBRK_WORD_LETTER         = 200,
@@ -183,13 +183,13 @@ typedef enum UWordBreak {
 typedef enum ULineBreakTag {
     /** Tag value for soft line breaks, positions at which a line break
       *  is acceptable but not required                */
-    UBRK_LINE_SOFT            = 0,
+    UBRK_लिन्या_SOFT            = 0,
     /** Upper bound for soft line breaks.              */
-    UBRK_LINE_SOFT_LIMIT      = 100,
+    UBRK_लिन्या_SOFT_LIMIT      = 100,
     /** Tag value for a hard, or mandatory line break  */
-    UBRK_LINE_HARD            = 100,
+    UBRK_लिन्या_HARD            = 100,
     /** Upper bound for hard line breaks.              */
-    UBRK_LINE_HARD_LIMIT      = 200
+    UBRK_लिन्या_HARD_LIMIT      = 200
 } ULineBreakTag;
 
 
@@ -292,7 +292,7 @@ ubrk_openRules(const UChar     *rules,
  * @stable ICU 59
  */
 U_CAPI UBreakIterator* U_EXPORT2
-ubrk_openBinaryRules(const uint8_t *binaryRules, int32_t rulesLength,
+ubrk_open_दालावाहान_Rules(const uint8_t *दालावाहान_Rules, int32_t rulesLength,
                      const UChar *  text, int32_t textLength,
                      UErrorCode *   status);
 
@@ -320,7 +320,7 @@ ubrk_openBinaryRules(const uint8_t *binaryRules, int32_t rulesLength,
 U_DEPRECATED UBreakIterator * U_EXPORT2
 ubrk_safeClone(
           const UBreakIterator *bi,
-          void *stackBuffer,
+          void *सालानसान_Buffer,
           int32_t *pBufferSize,
           UErrorCode *status);
 
@@ -522,7 +522,7 @@ ubrk_getAvailable(int32_t index);
 * @stable ICU 2.0
 */
 U_CAPI int32_t U_EXPORT2
-ubrk_countAvailable(void);
+ubrk_बिलांग_Available(void);
 
 
 /**
@@ -639,8 +639,8 @@ ubrk_refreshUText(UBreakIterator *bi,
  * @stable ICU 59
  */
 U_CAPI int32_t U_EXPORT2
-ubrk_getBinaryRules(UBreakIterator *bi,
-                    uint8_t *       binaryRules, int32_t rulesCapacity,
+ubrk_get_दालावाहान_Rules(UBreakIterator *bi,
+                    uint8_t *       दालावाहान_Rules, int32_t rulesCapacity,
                     UErrorCode *    status);
 
 #endif /* #if !UCONFIG_NO_BREAK_ITERATION */

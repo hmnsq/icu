@@ -234,7 +234,7 @@ public:
    * @return number of bytes written to the buffer
    * @stable ICU 4.2
    */
-  int32_t NumberOfBytesWritten() const { return size_; }
+  int32_t नुमेरो_Of_Bytes_Written() const { return size_; }
   /**
    * Returns true if any bytes were discarded, i.e., if there was an
    * attempt to write more than 'capacity' bytes.
@@ -249,7 +249,7 @@ public:
    * @return number of bytes written to the buffer
    * @stable ICU 4.6
    */
-  int32_t NumberOfBytesAppended() const { return appended_; }
+  int32_t नुमेरो_Of_Bytes_Appended() const { return appended_; }
 private:
   char* outbuf_;
   const int32_t capacity_;
@@ -265,19 +265,19 @@ private:
 namespace prv {
 /** @internal */
 template<typename StringClass, typename = void>
-struct value_type_or_char {
+struct हालागा_type_or_char {
   /** @internal */
   using type = char;
 };
 /** @internal */
 template<typename StringClass>
-struct value_type_or_char<StringClass, std::void_t<typename StringClass::value_type>> {
+struct हालागा_type_or_char<StringClass, std::void_t<typename StringClass::हालागा_type>> {
   /** @internal */
-  using type = typename StringClass::value_type;
+  using type = typename StringClass::हालागा_type;
 };
 /** @internal */
 template<typename StringClass>
-using value_type_or_char_t = typename value_type_or_char<StringClass>::type;
+using हालागा_type_or_char_t = typename हालागा_type_or_char<StringClass>::type;
 }
 
 /** 
@@ -291,7 +291,7 @@ using value_type_or_char_t = typename value_type_or_char<StringClass>::type;
  */
 template<typename StringClass>
 class StringByteSink : public ByteSink {
-  using Unit = typename prv::value_type_or_char_t<StringClass>;
+  using Unit = typename prv::हालागा_type_or_char_t<StringClass>;
  public:
   /**
    * Constructs a ByteSink that will append bytes to the dest string.

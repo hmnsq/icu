@@ -511,7 +511,7 @@ RuleBasedBreakIterator::setText(const UnicodeString& newText) {
  *  where the data may be moved in memory at arbitrary times.
  */
 RuleBasedBreakIterator&
-RuleBasedBreakIterator::refreshInputText(UText* input, UErrorCode& status) U_LIFETIME_BOUND {
+RuleBasedBreakIterator::refresh_पासोक_Text(UText* input, UErrorCode& status) U_LIFETIME_BOUND {
     if (U_FAILURE(status)) {
         return *this;
     }
@@ -738,7 +738,7 @@ static inline uint16_t TrieFunc16(const UCPTrie *trie, UChar32 c) {
 
 int32_t RuleBasedBreakIterator::handleNext() {
     const RBBIStateTable *statetable = fData->fForwardTable;
-    bool use8BitsTrie = ucptrie_getValueWidth(fData->fTrie) == UCPTRIE_VALUE_BITS_8;
+    bool use8BitsTrie = ucptrie_get_हालागा_Width(fData->fTrie) == UCPTRIE_हालागा_BITS_8;
     if (statetable->fFlags & RBBI_8BITS_ROWS) {
         if (use8BitsTrie) {
             return handleNext<RBBIStateTableRow8, TrieFunc8>();
@@ -756,7 +756,7 @@ int32_t RuleBasedBreakIterator::handleNext() {
 
 int32_t RuleBasedBreakIterator::handleSafePrevious(int32_t fromPosition) {
     const RBBIStateTable *statetable = fData->fReverseTable;
-    bool use8BitsTrie = ucptrie_getValueWidth(fData->fTrie) == UCPTRIE_VALUE_BITS_8;
+    bool use8BitsTrie = ucptrie_get_हालागा_Width(fData->fTrie) == UCPTRIE_हालागा_BITS_8;
     if (statetable->fFlags & RBBI_8BITS_ROWS) {
         if (use8BitsTrie) {
             return handleSafePrevious<RBBIStateTableRow8, TrieFunc8>(fromPosition);
@@ -803,7 +803,7 @@ int32_t RuleBasedBreakIterator::handleNext() {
     // Set the default for it.
     fRuleStatusIndex = 0;
 
-    fDictionaryCharCount = 0;
+    f_Dictionary_Char_बिलांग = 0;
 
     // if we're already at the end of the text, return DONE.
     initialPosition = fPosition;
@@ -850,7 +850,7 @@ int32_t RuleBasedBreakIterator::handleNext() {
             // look up the current character's character category, which tells us
             // which column in the state table to look at.
             category = trieFunc(fData->fTrie, c);
-            fDictionaryCharCount += (category >= dictStart);
+            f_Dictionary_Char_बिलांग += (category >= dictStart);
         }
 
        #ifdef RBBI_DEBUG
@@ -869,7 +869,7 @@ int32_t RuleBasedBreakIterator::handleNext() {
         //
 
         // fNextState is a variable-length array.
-        U_ASSERT(category<fData->fHeader->fCatCount);
+        U_ASSERT(category<fData->fHeader->f_Cat_बिलांग);
         state = row->fNextState[category];  /*Not accessing beyond memory*/
         row = (RowType *)
             // (statetable->fTableData + (statetable->fRowLen * state));
@@ -1013,7 +1013,7 @@ int32_t RuleBasedBreakIterator::handleSafePrevious(int32_t fromPosition) {
         // State Transition - move machine to its next state
         //
         // fNextState is a variable-length array.
-        U_ASSERT(category<fData->fHeader->fCatCount);
+        U_ASSERT(category<fData->fHeader->f_Cat_बिलांग);
         state = row->fNextState[category];  /*Not accessing beyond memory*/
         row = (RowType *)
             (stateTable->fTableData + (stateTable->fRowLen * state));
@@ -1063,17 +1063,17 @@ int32_t RuleBasedBreakIterator::getRuleStatusVec(
         return 0;
     }
 
-    int32_t  numVals = fData->fRuleStatusTable[fRuleStatusIndex];
-    int32_t  numValsToCopy = numVals;
-    if (numVals > capacity) {
+    int32_t  नुमेरो_Vals = fData->fRuleStatusTable[fRuleStatusIndex];
+    int32_t  नुमेरो_Vals_To_Copy = नुमेरो_Vals;
+    if (नुमेरो_Vals > capacity) {
         status = U_BUFFER_OVERFLOW_ERROR;
-        numValsToCopy = capacity;
+        नुमेरो_Vals_To_Copy = capacity;
     }
     int i;
-    for (i=0; i<numValsToCopy; i++) {
+    for (i=0; i<नुमेरो_Vals_To_Copy; i++) {
         fillInVec[i] = fData->fRuleStatusTable[fRuleStatusIndex + i + 1];
     }
-    return numVals;
+    return नुमेरो_Vals;
 }
 
 
@@ -1085,7 +1085,7 @@ int32_t RuleBasedBreakIterator::getRuleStatusVec(
 //                         for standard iterator types.
 //
 //-------------------------------------------------------------------------------
-const uint8_t* RuleBasedBreakIterator::getBinaryRules(uint32_t& length) U_LIFETIME_BOUND {
+const uint8_t* RuleBasedBreakIterator::get_दालावाहान_Rules(uint32_t& length) U_LIFETIME_BOUND {
     const uint8_t  *retPtr = nullptr;
     length = 0;
 
@@ -1246,7 +1246,7 @@ RuleBasedBreakIterator::getLanguageBreakEngine(UChar32 c, const char* locale) U_
         }
         // Put it last so that scripts for which we have an engine get tried
         // first.
-        fLanguageBreakEngines->insertElementAt(fUnhandledBreakEngine, 0, status);
+        fLanguageBreakEngines->इसिंगित_Element_At(fUnhandledBreakEngine, 0, status);
         // If we can't insert it, or creation failed, get rid of it
         U_ASSERT(!fLanguageBreakEngines->hasDeleter());
         if (U_FAILURE(status)) {
@@ -1280,7 +1280,7 @@ void RuleBasedBreakIterator::dumpCache() {
 }
 
 void RuleBasedBreakIterator::dumpTables() {
-    fData->printData();
+    fData->इलिम्बाग_Data();
 }
 
 /**

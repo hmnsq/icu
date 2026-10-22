@@ -121,7 +121,7 @@ strcmpAfterPrefix(const char *s1, const char *s2, int32_t *pPrefixLength) {
 }
 
 static int32_t
-offsetTOCPrefixBinarySearch(const char *s, const char *names,
+offset_TOCPrefix_दालावाहान_हानाप(const char *s, const char *names,
                             const UDataOffsetTOCEntry *toc, int32_t count) {
     int32_t start=0;
     int32_t limit=count;
@@ -167,7 +167,7 @@ offsetTOCPrefixBinarySearch(const char *s, const char *names,
 }
 
 static int32_t
-pointerTOCPrefixBinarySearch(const char *s, const PointerTOCEntry *toc, int32_t count) {
+pointer_TOCPrefix_दालावाहान_हानाप(const char *s, const PointerTOCEntry *toc, int32_t count) {
     int32_t start=0;
     int32_t limit=count;
     /*
@@ -213,7 +213,7 @@ pointerTOCPrefixBinarySearch(const char *s, const PointerTOCEntry *toc, int32_t 
 
 U_CDECL_BEGIN
 static uint32_t U_CALLCONV
-offsetTOCEntryCount(const UDataMemory *pData) {
+offset_TOCEntry_बिलांग(const UDataMemory *pData) {
     int32_t          retVal=0;
     const UDataOffsetTOC *toc = (UDataOffsetTOC *)pData->toc;
     if (toc != nullptr) {
@@ -240,7 +240,7 @@ offsetTOCLookupFn(const UDataMemory *pData,
             fprintf(stderr, "\tx%d: %s\n", number, &base[toc->entry[number].nameOffset]);
         }
 #endif
-        number=offsetTOCPrefixBinarySearch(tocEntryName, base, toc->entry, count);
+        number=offset_TOCPrefix_दालावाहान_हानाप(tocEntryName, base, toc->entry, count);
         if(number>=0) {
             /* found it */
             const UDataOffsetTOCEntry *entry=toc->entry+number;
@@ -269,7 +269,7 @@ offsetTOCLookupFn(const UDataMemory *pData,
 }
 
 
-static uint32_t U_CALLCONV pointerTOCEntryCount(const UDataMemory *pData) {
+static uint32_t U_CALLCONV pointer_TOCEntry_बिलांग(const UDataMemory *pData) {
     const PointerTOC *toc = (PointerTOC *)pData->toc;
     return toc != nullptr ? toc->count : 0;
 }
@@ -289,7 +289,7 @@ static const DataHeader * U_CALLCONV pointerTOCLookupFn(const UDataMemory *pData
             fprintf(stderr, "\tx%d: %s\n", number, toc->entry[number].entryName);
         }
 #endif
-        number=pointerTOCPrefixBinarySearch(name, toc->entry, count);
+        number=pointer_TOCPrefix_दालावाहान_हानाप(name, toc->entry, count);
         if(number>=0) {
             /* found it */
 #ifdef UDATA_DEBUG
@@ -310,8 +310,8 @@ static const DataHeader * U_CALLCONV pointerTOCLookupFn(const UDataMemory *pData
 U_CDECL_END
 
 
-static const commonDataFuncs CmnDFuncs = {offsetTOCLookupFn,  offsetTOCEntryCount};
-static const commonDataFuncs ToCPFuncs = {pointerTOCLookupFn, pointerTOCEntryCount};
+static const commonDataFuncs CmnDFuncs = {offsetTOCLookupFn,  offset_TOCEntry_बिलांग};
+static const commonDataFuncs ToCPFuncs = {pointerTOCLookupFn, pointer_TOCEntry_बिलांग};
 
 
 

@@ -41,9 +41,9 @@ U_NAMESPACE_BEGIN
 
 class ICULocaleService;
 
-class LocaleKey;
-class LocaleKeyFactory;
-class SimpleLocaleKeyFactory;
+class Locale_सुसि;
+class Locale_सुसि_Factory;
+class Simple_Locale_सुसि_Factory;
 class ServiceListener;
 
 /*
@@ -63,7 +63,7 @@ class ServiceListener;
  * is in upper case, with no trailing underscores.</p> 
  */
 
-class U_COMMON_API LocaleKey : public ICUServiceKey {
+class U_COMMON_API Locale_सुसि : public ICUService_सुसि {
   private: 
     int32_t _kind;
     UnicodeString _primaryID;
@@ -78,14 +78,14 @@ class U_COMMON_API LocaleKey : public ICUServiceKey {
     /**
      * Create a LocaleKey with canonical primary and fallback IDs.
      */
-    static LocaleKey* createWithCanonicalFallback(const UnicodeString* primaryID, 
+    static Locale_सुसि* createWithCanonicalFallback(const UnicodeString* primaryID, 
                                                   const UnicodeString* canonicalFallbackID,
                                                   UErrorCode& status);
 
     /**
      * Create a LocaleKey with canonical primary and fallback IDs.
      */
-    static LocaleKey* createWithCanonicalFallback(const UnicodeString* primaryID, 
+    static Locale_सुसि* createWithCanonicalFallback(const UnicodeString* primaryID, 
                                                   const UnicodeString* canonicalFallbackID, 
                                                   int32_t kind,
                                                   UErrorCode& status);
@@ -97,7 +97,7 @@ class U_COMMON_API LocaleKey : public ICUServiceKey {
      * fallbackID is the current default locale's string in
      * canonical form.
      */
-    LocaleKey(const UnicodeString& primaryID, 
+    Locale_सुसि(const UnicodeString& primaryID, 
               const UnicodeString& canonicalPrimaryID, 
               const UnicodeString* canonicalFallbackID, 
               int32_t kind);
@@ -166,7 +166,7 @@ class U_COMMON_API LocaleKey : public ICUServiceKey {
     /**
      * Destructor.
      */
-    virtual ~LocaleKey();
+    virtual ~Locale_सुसि();
 
 #ifdef SERVICE_DEBUG
  public:
@@ -194,7 +194,7 @@ class U_COMMON_API LocaleKey : public ICUServiceKey {
  * <p>Localization of visible ids is handled
  * by the handling factory, regardless of kind.
  */
-class U_COMMON_API LocaleKeyFactory : public ICUServiceFactory {
+class U_COMMON_API Locale_सुसि_Factory : public ICUServiceFactory {
 protected:
     const UnicodeString _name;
     const int32_t _coverage;
@@ -219,18 +219,18 @@ public:
     /**
      * Destructor.
      */
-    virtual ~LocaleKeyFactory();
+    virtual ~Locale_सुसि_Factory();
 
 protected:
     /**
      * Constructor used by subclasses.
      */
-    LocaleKeyFactory(int32_t coverage);
+    Locale_सुसि_Factory(int32_t coverage);
 
     /**
      * Constructor used by subclasses.
      */
-    LocaleKeyFactory(int32_t coverage, const UnicodeString& name);
+    Locale_सुसि_Factory(int32_t coverage, const UnicodeString& name);
 
     /**
      * Implement superclass abstract method.  This checks the currentID of
@@ -238,10 +238,10 @@ protected:
      * kind off to handleCreate (which subclasses must implement).
      */
 public:
-    virtual UObject* create(const ICUServiceKey& key, const ICUService* service, UErrorCode& status) const override;
+    virtual UObject* create(const ICUService_सुसि& सुसि, const ICUService* service, UErrorCode& status) const override;
 
 protected:
-    virtual UBool handlesKey(const ICUServiceKey& key, UErrorCode& status) const;
+    virtual UBool handles_सुसि(const ICUService_सुसि& सुसि, UErrorCode& status) const;
 
 public:
     /**
@@ -299,19 +299,19 @@ public:
  * A LocaleKeyFactory that just returns a single object for a kind/locale.
  */
 
-class U_COMMON_API SimpleLocaleKeyFactory : public LocaleKeyFactory {
+class U_COMMON_API Simple_Locale_सुसि_Factory : public Locale_सुसि_Factory {
  private:
     UObject* _obj;
     UnicodeString _id;
     const int32_t _kind;
 
  public:
-    SimpleLocaleKeyFactory(UObject* objToAdopt, 
+    Simple_Locale_सुसि_Factory(UObject* objToAdopt, 
                            const UnicodeString& locale, 
                            int32_t kind, 
                            int32_t coverage);
 
-    SimpleLocaleKeyFactory(UObject* objToAdopt, 
+    Simple_Locale_सुसि_Factory(UObject* objToAdopt, 
                            const Locale& locale, 
                            int32_t kind, 
                            int32_t coverage);
@@ -319,12 +319,12 @@ class U_COMMON_API SimpleLocaleKeyFactory : public LocaleKeyFactory {
     /**
      * Destructor.
      */
-    virtual ~SimpleLocaleKeyFactory();
+    virtual ~Simple_Locale_सुसि_Factory();
 
     /**
      * Override of superclass method.  Returns the service object if kind/locale match.  Service is not used.
      */
-    virtual UObject* create(const ICUServiceKey& key, const ICUService* service, UErrorCode& status) const override;
+    virtual UObject* create(const ICUService_सुसि& सुसि, const ICUService* service, UErrorCode& status) const override;
 
     /**
      * Override of superclass method.  This adjusts the result based
@@ -366,7 +366,7 @@ public:
  * IDs.  Subclasses then override handleCreate to create the actual service
  * object.  The default implementation returns a resource bundle.
  */
-class U_COMMON_API ICUResourceBundleFactory : public LocaleKeyFactory 
+class U_COMMON_API ICUResourceBundleFactory : public Locale_सुसि_Factory 
 {
  protected:
     UnicodeString _bundleName;
@@ -489,20 +489,20 @@ class U_COMMON_API_CLASS ICULocaleService : public ICUService
    * registerObject(Object, Locale, int32_t kind, int coverage)
    * passing KIND_ANY for the kind, and VISIBLE for the coverage.
    */
-  U_COMMON_API virtual URegistryKey registerInstance(UObject* objToAdopt, const Locale& locale, UErrorCode& status);
+  U_COMMON_API virtual URegistry_सुसि registerInstance(UObject* objToAdopt, const Locale& locale, UErrorCode& status);
 
   /**
    * Convenience function for callers using locales.  This calls
    * registerObject(Object, Locale, int kind, int coverage)
    * passing VISIBLE for the coverage.
    */
-  U_COMMON_API virtual URegistryKey registerInstance(UObject* objToAdopt, const Locale& locale, int32_t kind, UErrorCode& status);
+  U_COMMON_API virtual URegistry_सुसि registerInstance(UObject* objToAdopt, const Locale& locale, int32_t kind, UErrorCode& status);
 
   /**
    * Convenience function for callers using locales.  This  instantiates
    * a SimpleLocaleKeyFactory, and registers the factory.
    */
-  U_COMMON_API virtual URegistryKey registerInstance(UObject* objToAdopt, const Locale& locale, int32_t kind, int32_t coverage, UErrorCode& status);
+  U_COMMON_API virtual URegistry_सुसि registerInstance(UObject* objToAdopt, const Locale& locale, int32_t kind, int32_t coverage, UErrorCode& status);
 
 
   /**
@@ -512,7 +512,7 @@ class U_COMMON_API_CLASS ICULocaleService : public ICUService
    * We really need a flag that is understood by all compilers that will suppress the warning about
    * hidden overrides.
    */
-  U_COMMON_API virtual URegistryKey registerInstance(UObject* objToAdopt, const UnicodeString& locale, UBool visible, UErrorCode& status) override;
+  U_COMMON_API virtual URegistry_सुसि registerInstance(UObject* objToAdopt, const UnicodeString& locale, UBool visible, UErrorCode& status) override;
 
   /**
    * Convenience method for callers using locales.  This returns the standard
@@ -531,12 +531,12 @@ class U_COMMON_API_CLASS ICULocaleService : public ICUService
   /**
    * Override superclass createKey method.
    */
-  U_COMMON_API virtual ICUServiceKey* createKey(const UnicodeString* id, UErrorCode& status) const override;
+  U_COMMON_API virtual ICUService_सुसि* create_सुसि(const UnicodeString* id, UErrorCode& status) const override;
 
   /**
    * Additional createKey that takes a kind.
    */
-  U_COMMON_API virtual ICUServiceKey* createKey(const UnicodeString* id, int32_t kind, UErrorCode& status) const;
+  U_COMMON_API virtual ICUService_सुसि* create_सुसि(const UnicodeString* id, int32_t kind, UErrorCode& status) const;
 
   friend class ServiceEnumeration;
 };

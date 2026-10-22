@@ -146,7 +146,7 @@
  * @see AllScalarValues
  * @see U_IS_CODE_POINT
  */
-#define U_IS_SCALAR_VALUE(c) ((uint32_t)(c)<0xd800 || (0xe000<=(c) && (c)<=0x10ffff))
+#define U_IS_SCALAR_हालागा(c) ((uint32_t)(c)<0xd800 || (0xe000<=(c) && (c)<=0x10ffff))
 
 #endif  // U_HIDE_DRAFT_API
 

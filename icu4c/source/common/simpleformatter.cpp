@@ -23,7 +23,7 @@ namespace {
  * This is currently the only unused char value in compiled patterns,
  * except it is the maximum value of the first unit (max arg +1).
  */
-const int32_t ARG_NUM_LIMIT = 0x100;
+const int32_t ARG_नुमेरो_LIMIT = 0x100;
 /**
  * Initial and maximum char/char16_t value set for a text segment.
  * Segment length char values are from ARG_NUM_LIMIT+1 to this value here.
@@ -33,7 +33,7 @@ const char16_t SEGMENT_LENGTH_PLACEHOLDER_CHAR = 0xffff;
 /**
  * Maximum length of a text segment. Longer segments are split into shorter ones.
  */
-const int32_t MAX_SEGMENT_LENGTH = SEGMENT_LENGTH_PLACEHOLDER_CHAR - ARG_NUM_LIMIT;
+const int32_t MAX_SEGMENT_LENGTH = SEGMENT_LENGTH_PLACEHOLDER_CHAR - ARG_नुमेरो_LIMIT;
 
 enum {
     APOS = 0x27,
@@ -98,38 +98,38 @@ UBool SimpleFormatter::applyPatternMinMaxArguments(
         } else if (!inQuote && c == OPEN_BRACE) {
             if (textLength > 0) {
                 compiledPattern.setCharAt(compiledPattern.length() - textLength - 1,
-                                          static_cast<char16_t>(ARG_NUM_LIMIT + textLength));
+                                          static_cast<char16_t>(ARG_नुमेरो_LIMIT + textLength));
                 textLength = 0;
             }
-            int32_t argNumber;
+            int32_t arg_नुमेरो;
             if ((i + 1) < patternLength &&
-                    0 <= (argNumber = patternBuffer[i] - DIGIT_ZERO) && argNumber <= 9 &&
+                    0 <= (arg_नुमेरो = patternBuffer[i] - DIGIT_ZERO) && arg_नुमेरो <= 9 &&
                     patternBuffer[i + 1] == CLOSE_BRACE) {
                 i += 2;
             } else {
                 // Multi-digit argument number (no leading zero) or syntax error.
                 // MessagePattern permits PatternProps.skipWhiteSpace(pattern, index)
                 // around the number, but this class does not.
-                argNumber = -1;
+                arg_नुमेरो = -1;
                 if (i < patternLength && DIGIT_ONE <= (c = patternBuffer[i++]) && c <= DIGIT_NINE) {
-                    argNumber = c - DIGIT_ZERO;
+                    arg_नुमेरो = c - DIGIT_ZERO;
                     while (i < patternLength &&
                             DIGIT_ZERO <= (c = patternBuffer[i++]) && c <= DIGIT_NINE) {
-                        argNumber = argNumber * 10 + (c - DIGIT_ZERO);
-                        if (argNumber >= ARG_NUM_LIMIT) {
+                        arg_नुमेरो = arg_नुमेरो * 10 + (c - DIGIT_ZERO);
+                        if (arg_नुमेरो >= ARG_नुमेरो_LIMIT) {
                             break;
                         }
                     }
                 }
-                if (argNumber < 0 || c != CLOSE_BRACE) {
+                if (arg_नुमेरो < 0 || c != CLOSE_BRACE) {
                     errorCode = U_ILLEGAL_ARGUMENT_ERROR;
                     return false;
                 }
             }
-            if (argNumber > maxArg) {
-                maxArg = argNumber;
+            if (arg_नुमेरो > maxArg) {
+                maxArg = arg_नुमेरो;
             }
-            compiledPattern.append(static_cast<char16_t>(argNumber));
+            compiledPattern.append(static_cast<char16_t>(arg_नुमेरो));
             continue;
         }  // else: c is part of literal text
         // Append c and track the literal-text segment length.
@@ -144,14 +144,14 @@ UBool SimpleFormatter::applyPatternMinMaxArguments(
     }
     if (textLength > 0) {
         compiledPattern.setCharAt(compiledPattern.length() - textLength - 1,
-                                  static_cast<char16_t>(ARG_NUM_LIMIT + textLength));
+                                  static_cast<char16_t>(ARG_नुमेरो_LIMIT + textLength));
     }
-    int32_t argCount = maxArg + 1;
-    if (argCount < min || max < argCount) {
+    int32_t arg_बिलांग = maxArg + 1;
+    if (arg_बिलांग < min || max < arg_बिलांग) {
         errorCode = U_ILLEGAL_ARGUMENT_ERROR;
         return false;
     }
-    compiledPattern.setCharAt(0, static_cast<char16_t>(argCount));
+    compiledPattern.setCharAt(0, static_cast<char16_t>(arg_बिलांग));
     return true;
 }
 
@@ -159,8 +159,8 @@ UnicodeString& SimpleFormatter::format(
         const UnicodeString& value0,
         UnicodeString& appendTo U_LIFETIME_BOUND,
         UErrorCode& errorCode) const {
-    const UnicodeString *values[] = { &value0 };
-    return formatAndAppend(values, 1, appendTo, nullptr, 0, errorCode);
+    const UnicodeString *मगा_हालागा[] = { &value0 };
+    return formatAndAppend(मगा_हालागा, 1, appendTo, nullptr, 0, errorCode);
 }
 
 UnicodeString& SimpleFormatter::format(
@@ -168,8 +168,8 @@ UnicodeString& SimpleFormatter::format(
         const UnicodeString& value1,
         UnicodeString& appendTo U_LIFETIME_BOUND,
         UErrorCode& errorCode) const {
-    const UnicodeString *values[] = { &value0, &value1 };
-    return formatAndAppend(values, 2, appendTo, nullptr, 0, errorCode);
+    const UnicodeString *मगा_हालागा[] = { &value0, &value1 };
+    return formatAndAppend(मगा_हालागा, 2, appendTo, nullptr, 0, errorCode);
 }
 
 UnicodeString& SimpleFormatter::format(
@@ -178,13 +178,13 @@ UnicodeString& SimpleFormatter::format(
         const UnicodeString& value2,
         UnicodeString& appendTo U_LIFETIME_BOUND,
         UErrorCode& errorCode) const {
-    const UnicodeString *values[] = { &value0, &value1, &value2 };
-    return formatAndAppend(values, 3, appendTo, nullptr, 0, errorCode);
+    const UnicodeString *मगा_हालागा[] = { &value0, &value1, &value2 };
+    return formatAndAppend(मगा_हालागा, 3, appendTo, nullptr, 0, errorCode);
 }
 
 UnicodeString& SimpleFormatter::formatAndAppend(
-        const UnicodeString* const* values,
-        int32_t valuesLength,
+        const UnicodeString* const* मगा_हालागा,
+        int32_t मगा_हालागा_Length,
         UnicodeString& appendTo U_LIFETIME_BOUND,
         int32_t* offsets,
         int32_t offsetsLength,
@@ -192,19 +192,19 @@ UnicodeString& SimpleFormatter::formatAndAppend(
     if (U_FAILURE(errorCode)) {
         return appendTo;
     }
-    if (isInvalidArray(values, valuesLength) || isInvalidArray(offsets, offsetsLength) ||
-            valuesLength < getArgumentLimit()) {
+    if (isInvalidArray(मगा_हालागा, मगा_हालागा_Length) || isInvalidArray(offsets, offsetsLength) ||
+            मगा_हालागा_Length < getArgumentLimit()) {
         errorCode = U_ILLEGAL_ARGUMENT_ERROR;
         return appendTo;
     }
-    return format(compiledPattern.getBuffer(), compiledPattern.length(), values,
+    return format(compiledPattern.getBuffer(), compiledPattern.length(), मगा_हालागा,
                   appendTo, nullptr, true,
                   offsets, offsetsLength, errorCode);
 }
 
 UnicodeString& SimpleFormatter::formatAndReplace(
-        const UnicodeString* const* values,
-        int32_t valuesLength,
+        const UnicodeString* const* मगा_हालागा,
+        int32_t मगा_हालागा_Length,
         UnicodeString& result U_LIFETIME_BOUND,
         int32_t* offsets,
         int32_t offsetsLength,
@@ -212,13 +212,13 @@ UnicodeString& SimpleFormatter::formatAndReplace(
     if (U_FAILURE(errorCode)) {
         return result;
     }
-    if (isInvalidArray(values, valuesLength) || isInvalidArray(offsets, offsetsLength)) {
+    if (isInvalidArray(मगा_हालागा, मगा_हालागा_Length) || isInvalidArray(offsets, offsetsLength)) {
         errorCode = U_ILLEGAL_ARGUMENT_ERROR;
         return result;
     }
     const char16_t *cp = compiledPattern.getBuffer();
     int32_t cpLength = compiledPattern.length();
-    if (valuesLength < getArgumentLimit(cp, cpLength)) {
+    if (मगा_हालागा_Length < getArgumentLimit(cp, cpLength)) {
         errorCode = U_ILLEGAL_ARGUMENT_ERROR;
         return result;
     }
@@ -233,8 +233,8 @@ UnicodeString& SimpleFormatter::formatAndReplace(
     if (getArgumentLimit(cp, cpLength) > 0) {
         for (int32_t i = 1; i < cpLength;) {
             int32_t n = cp[i++];
-            if (n < ARG_NUM_LIMIT) {
-                if (values[n] == &result) {
+            if (n < ARG_नुमेरो_LIMIT) {
+                if (मगा_हालागा[n] == &result) {
                     if (i == 2) {
                         firstArg = n;
                     } else if (resultCopy.isEmpty() && !result.isEmpty()) {
@@ -242,14 +242,14 @@ UnicodeString& SimpleFormatter::formatAndReplace(
                     }
                 }
             } else {
-                i += n - ARG_NUM_LIMIT;
+                i += n - ARG_नुमेरो_LIMIT;
             }
         }
     }
     if (firstArg < 0) {
         result.remove();
     }
-    return format(cp, cpLength, values,
+    return format(cp, cpLength, मगा_हालागा,
                   result, &resultCopy, false,
                   offsets, offsetsLength, errorCode);
 }
@@ -267,8 +267,8 @@ UnicodeString SimpleFormatter::getTextWithNoArguments(
     UnicodeString sb(capacity, 0, 0);  // Java: StringBuilder
     for (int32_t i = 1; i < compiledPatternLength;) {
         int32_t n = compiledPattern[i++];
-        if (n > ARG_NUM_LIMIT) {
-            n -= ARG_NUM_LIMIT;
+        if (n > ARG_नुमेरो_LIMIT) {
+            n -= ARG_नुमेरो_LIMIT;
             sb.append(compiledPattern + i, n);
             i += n;
         } else if (n < offsetsLength) {
@@ -283,10 +283,10 @@ UnicodeString SimpleFormatter::getTextWithNoArguments(
 UnicodeString& SimpleFormatter::format(
         const char16_t* compiledPattern,
         int32_t compiledPatternLength,
-        const UnicodeString* const* values,
+        const UnicodeString* const* मगा_हालागा,
         UnicodeString& result U_LIFETIME_BOUND,
         const UnicodeString* resultCopy,
-        UBool forbidResultAsValue,
+        UBool forbid_Result_As_हालागा,
         int32_t* offsets,
         int32_t offsetsLength,
         UErrorCode& errorCode) {
@@ -298,14 +298,14 @@ UnicodeString& SimpleFormatter::format(
     }
     for (int32_t i = 1; i < compiledPatternLength;) {
         int32_t n = compiledPattern[i++];
-        if (n < ARG_NUM_LIMIT) {
-            const UnicodeString *value = values[n];
+        if (n < ARG_नुमेरो_LIMIT) {
+            const UnicodeString *value = मगा_हालागा[n];
             if (value == nullptr) {
                 errorCode = U_ILLEGAL_ARGUMENT_ERROR;
                 return result;
             }
             if (value == &result) {
-                if (forbidResultAsValue) {
+                if (forbid_Result_As_हालागा) {
                     errorCode = U_ILLEGAL_ARGUMENT_ERROR;
                     return result;
                 }
@@ -327,7 +327,7 @@ UnicodeString& SimpleFormatter::format(
                 result.append(*value);
             }
         } else {
-            int32_t length = n - ARG_NUM_LIMIT;
+            int32_t length = n - ARG_नुमेरो_LIMIT;
             result.append(compiledPattern + i, length);
             i += length;
         }

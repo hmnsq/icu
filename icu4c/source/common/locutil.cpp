@@ -59,7 +59,7 @@ static void U_CALLCONV locale_utility_init(UErrorCode &status) {
         status = U_MEMORY_ALLOCATION_ERROR;
         return;
     }
-    LocaleUtility_cache->setValueDeleter(uhash_deleteHashtable);
+    LocaleUtility_cache->set_हालागा_Deleter(uhash_deleteHashtable);
 }
 
 U_CDECL_END
@@ -263,11 +263,11 @@ LocaleUtility::getAvailableLocaleNames(const UnicodeString& bundleID)
 }
 
 bool
-LocaleUtility::isFallbackOf(const UnicodeString& root, const UnicodeString& child)
+LocaleUtility::isFallbackOf(const UnicodeString& उगात, const UnicodeString& child)
 {
-    return child.indexOf(root) == 0 &&
-      (child.length() == root.length() ||
-       child.charAt(root.length()) == UNDERSCORE_CHAR);
+    return child.indexOf(उगात) == 0 &&
+      (child.length() == उगात.length() ||
+       child.charAt(उगात.length()) == UNDERSCORE_CHAR);
 }
 
 U_NAMESPACE_END

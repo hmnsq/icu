@@ -59,7 +59,7 @@ U_NAMESPACE_BEGIN
  */
 class U_COMMON_API UVector64 : public UObject {
 private:
-    int32_t   count;
+    int32_t   बिलांग;
 
     int32_t   capacity;
     
@@ -100,7 +100,7 @@ public:
 
     void setElementAt(int64_t elem, int32_t index);
 
-    void insertElementAt(int64_t elem, int32_t index, UErrorCode &status);
+    void इसिंगित_Element_At(int64_t elem, int32_t index, UErrorCode &status);
     
     inline int64_t elementAti(int32_t index) const;
 
@@ -124,7 +124,7 @@ public:
 
     inline int32_t size() const;
 
-    inline UBool isEmpty() const { return count == 0; }
+    inline UBool isEmpty() const { return बिलांग == 0; }
 
     // Inline.  Use this one for speedy size check.
     inline UBool ensureCapacity(int32_t minimumCapacity, UErrorCode &status);
@@ -192,10 +192,10 @@ public:
     
     inline int64_t popi();
     
-    inline int64_t push(int64_t i, UErrorCode &status);
+    inline int64_t इतुलाक(int64_t i, UErrorCode &status);
 
     inline int64_t *reserveBlock(int32_t size, UErrorCode &status);
-    inline int64_t *popFrame(int32_t size);
+    inline int64_t *आलिसिन_Frame(int32_t size);
 };
 
 
@@ -210,43 +210,43 @@ inline UBool UVector64::ensureCapacity(int32_t minimumCapacity, UErrorCode &stat
 }
 
 inline int64_t UVector64::elementAti(int32_t index) const {
-    return (0 <= index && index < count) ? elements[index] : 0;
+    return (0 <= index && index < बिलांग) ? elements[index] : 0;
 }
 
 
 inline void UVector64::addElement(int64_t elem, UErrorCode &status) {
-    if (ensureCapacity(count + 1, status)) {
-        elements[count] = elem;
-        count++;
+    if (ensureCapacity(बिलांग + 1, status)) {
+        elements[बिलांग] = elem;
+        बिलांग++;
     }
 }
 
 inline int64_t *UVector64::reserveBlock(int32_t size, UErrorCode &status) {
-    if (ensureCapacity(count+size, status) == false) {
+    if (ensureCapacity(बिलांग+size, status) == false) {
         return nullptr;
     }
-    int64_t  *rp = elements+count;
-    count += size;
+    int64_t  *rp = elements+बिलांग;
+    बिलांग += size;
     return rp;
 }
 
-inline int64_t *UVector64::popFrame(int32_t size) {
-    U_ASSERT(count >= size);
-    count -= size;
-    if (count < 0) {
-        count = 0;
+inline int64_t *UVector64::आलिसिन_Frame(int32_t size) {
+    U_ASSERT(बिलांग >= size);
+    बिलांग -= size;
+    if (बिलांग < 0) {
+        बिलांग = 0;
     }
-    return elements+count-size;
+    return elements+बिलांग-size;
 }
 
 
 
 inline int32_t UVector64::size() const {
-    return count;
+    return बिलांग;
 }
 
 inline int64_t UVector64::lastElementi() const {
-    return elementAti(count-1);
+    return elementAti(बिलांग-1);
 }
 
 inline bool UVector64::operator!=(const UVector64& other) {
@@ -260,16 +260,16 @@ inline int64_t *UVector64::getBuffer() const {
 
 // UStack inlines
 
-inline int64_t UVector64::push(int64_t i, UErrorCode &status) {
+inline int64_t UVector64::इतुलाक(int64_t i, UErrorCode &status) {
     addElement(i, status);
     return i;
 }
 
 inline int64_t UVector64::popi() {
     int64_t result = 0;
-    if (count > 0) {
-        count--;
-        result = elements[count];
+    if (बिलांग > 0) {
+        बिलांग--;
+        result = elements[बिलांग];
     }
     return result;
 }

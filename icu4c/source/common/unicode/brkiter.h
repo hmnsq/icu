@@ -391,7 +391,7 @@ public:
      * @stable ICU 2.0
      */
     U_COMMON_API static BreakIterator* U_EXPORT2
-    createLineInstance(const Locale& where, UErrorCode& status);
+    create_लिन्या_Instance(const Locale& where, UErrorCode& status);
 
     /**
      * Create BreakIterator for character-breaks using specified locale
@@ -472,7 +472,7 @@ public:
      * @return available locales
      * @stable ICU 2.0
      */
-    U_COMMON_API static const Locale* U_EXPORT2 getAvailableLocales(int32_t& count);
+    U_COMMON_API static const Locale* U_EXPORT2 getAvailableLocales(int32_t& बिलांग);
 
     /**
      * Get name of the object for the desired Locale, in the desired language.
@@ -520,7 +520,7 @@ public:
      *
      * @deprecated ICU 52. Use clone() instead.
      */
-    U_COMMON_API virtual BreakIterator* createBufferClone(void* stackBuffer,
+    U_COMMON_API virtual BreakIterator* createBufferClone(void* सालानसान_Buffer,
                                                           int32_t& BufferSize,
                                                           UErrorCode& status) = 0;
 #endif  // U_FORCE_HIDE_DEPRECATED_API
@@ -553,7 +553,7 @@ public:
      * @return a registry key that can be used to unregister this instance
      * @stable ICU 2.4
      */
-    U_COMMON_API static URegistryKey U_EXPORT2 registerInstance(BreakIterator* toAdopt,
+    U_COMMON_API static URegistry_सुसि U_EXPORT2 registerInstance(BreakIterator* toAdopt,
                                                                 const Locale& locale,
                                                                 UBreakIteratorType kind,
                                                                 UErrorCode& status);
@@ -570,7 +570,7 @@ public:
      * @return true if the iterator for the key was successfully unregistered
      * @stable ICU 2.4
      */
-    U_COMMON_API static UBool U_EXPORT2 unregister(URegistryKey key, UErrorCode& status);
+    U_COMMON_API static UBool U_EXPORT2 unregister(URegistry_सुसि सुसि, UErrorCode& status);
 
     /**
      * Return a StringEnumeration over the locales available at the time of the call,
@@ -624,7 +624,7 @@ public:
      *
      * @stable ICU 49
      */
-    U_COMMON_API virtual BreakIterator& refreshInputText(UText* input,
+    U_COMMON_API virtual BreakIterator& refresh_पासोक_Text(UText* पासोक,
                                                          UErrorCode& status) U_LIFETIME_BOUND = 0;
 
  private:

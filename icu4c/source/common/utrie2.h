@@ -70,15 +70,15 @@ typedef struct UTrie2 UTrie2;
 /**
  * Selectors for the width of a UTrie2 data value.
  */
-enum UTrie2ValueBits {
+enum UTrie2_हालागा_Bits {
     /** 16 bits per UTrie2 data value. */
-    UTRIE2_16_VALUE_BITS,
+    UTRIE2_16_हालागा_BITS,
     /** 32 bits per UTrie2 data value. */
-    UTRIE2_32_VALUE_BITS,
+    UTRIE2_32_हालागा_BITS,
     /** Number of selectors for the width of UTrie2 data values. */
-    UTRIE2_COUNT_VALUE_BITS
+    UTRIE2_बिलांग_हालागा_BITS
 };
-typedef enum UTrie2ValueBits UTrie2ValueBits;
+typedef enum UTrie2_हालागा_Bits UTrie2_हालागा_Bits;
 
 /**
  * Open a frozen trie from its serialized from, stored in 32-bit-aligned memory.
@@ -100,7 +100,7 @@ typedef enum UTrie2ValueBits UTrie2ValueBits;
  * @see utrie2_serialize
  */
 U_CAPI UTrie2 * U_EXPORT2
-utrie2_openFromSerialized(UTrie2ValueBits valueBits,
+utrie2_openFromSerialized(UTrie2_हालागा_Bits हालागा_Bits,
                           const void *data, int32_t length, int32_t *pActualLength,
                           UErrorCode *pErrorCode);
 
@@ -126,8 +126,8 @@ utrie2_openFromSerialized(UTrie2ValueBits valueBits,
  * @see utrie2_open
  */
 U_CAPI UTrie2 * U_EXPORT2
-utrie2_openDummy(UTrie2ValueBits valueBits,
-                 uint32_t initialValue, uint32_t errorValue,
+utrie2_openDummy(UTrie2_हालागा_Bits हालागा_Bits,
+                 uint32_t initial_हालागा, uint32_t error_हालागा,
                  UErrorCode *pErrorCode);
 
 /**
@@ -154,7 +154,7 @@ utrie2_get32(const UTrie2 *trie, UChar32 c);
  * @return the value that is to be passed on to the UTrie2EnumRange function
  */
 typedef uint32_t U_CALLCONV
-UTrie2EnumValue(const void *context, uint32_t value);
+UTrie2_Enum_हालागा(const void *context, uint32_t हालागा_2);
 
 /**
  * Callback from utrie2_enum(), is called for each contiguous range
@@ -170,7 +170,7 @@ UTrie2EnumValue(const void *context, uint32_t value);
  * @return false to stop the enumeration
  */
 typedef UBool U_CALLCONV
-UTrie2EnumRange(const void *context, UChar32 start, UChar32 end, uint32_t value);
+UTrie2EnumRange(const void *context, UChar32 start, UChar32 end, uint32_t हालागा_2);
 
 /**
  * Enumerate efficiently all values in a trie.
@@ -192,7 +192,7 @@ UTrie2EnumRange(const void *context, UChar32 start, UChar32 end, uint32_t value)
  */
 U_CAPI void U_EXPORT2
 utrie2_enum(const UTrie2 *trie,
-            UTrie2EnumValue *enumValue, UTrie2EnumRange *enumRange, const void *context);
+            UTrie2_Enum_हालागा *enum_हालागा, UTrie2EnumRange *enumRange, const void *context);
 
 /* Building a trie ---------------------------------------------------------- */
 
@@ -208,7 +208,7 @@ utrie2_enum(const UTrie2 *trie,
  * @return a pointer to the allocated and initialized new trie
  */
 U_CAPI UTrie2 * U_EXPORT2
-utrie2_open(uint32_t initialValue, uint32_t errorValue, UErrorCode *pErrorCode);
+utrie2_open(uint32_t initial_हालागा, uint32_t error_हालागा, UErrorCode *pErrorCode);
 
 /**
  * Clone a trie.
@@ -251,7 +251,7 @@ utrie2_close(UTrie2 *trie);
  * - U_NO_WRITE_PERMISSION if the trie is frozen
  */
 U_CAPI void U_EXPORT2
-utrie2_set32(UTrie2 *trie, UChar32 c, uint32_t value, UErrorCode *pErrorCode);
+utrie2_set32(UTrie2 *trie, UChar32 c, uint32_t हालागा_2, UErrorCode *pErrorCode);
 
 /**
  * Set a value in a range of code points [start..end].
@@ -269,7 +269,7 @@ utrie2_set32(UTrie2 *trie, UChar32 c, uint32_t value, UErrorCode *pErrorCode);
 U_CAPI void U_EXPORT2
 utrie2_setRange32(UTrie2 *trie,
                   UChar32 start, UChar32 end,
-                  uint32_t value, UBool overwrite,
+                  uint32_t हालागा_2, UBool overwrite,
                   UErrorCode *pErrorCode);
 
 /**
@@ -292,7 +292,7 @@ utrie2_setRange32(UTrie2 *trie,
  * @see utrie2_cloneAsThawed
  */
 U_CAPI void U_EXPORT2
-utrie2_freeze(UTrie2 *trie, UTrie2ValueBits valueBits, UErrorCode *pErrorCode);
+utrie2_freeze(UTrie2 *trie, UTrie2_हालागा_Bits हालागा_Bits, UErrorCode *pErrorCode);
 
 /**
  * Test if the trie is frozen. (See utrie2_freeze().)
@@ -340,7 +340,7 @@ utrie2_serialize(const UTrie2 *trie,
  * @return The frozen UTrie2 with the same values as the UTrie.
  */
 U_CAPI UTrie2 * U_EXPORT2
-utrie2_fromUTrie(const UTrie *trie1, uint32_t errorValue, UErrorCode *pErrorCode);
+utrie2_fromUTrie(const UTrie *trie1, uint32_t error_हालागा, UErrorCode *pErrorCode);
 
 /* Public UTrie2 API macros ------------------------------------------------- */
 
@@ -528,7 +528,7 @@ utrie2_get32FromLeadSurrogateCodeUnit(const UTrie2 *trie, UChar32 c);
  */
 U_CAPI void U_EXPORT2
 utrie2_enumForLeadSurrogate(const UTrie2 *trie, UChar32 lead,
-                            UTrie2EnumValue *enumValue, UTrie2EnumRange *enumRange,
+                            UTrie2_Enum_हालागा *enum_हालागा, UTrie2EnumRange *enumRange,
                             const void *context);
 
 /**
@@ -542,7 +542,7 @@ utrie2_enumForLeadSurrogate(const UTrie2 *trie, UChar32 lead,
  */
 U_CAPI void U_EXPORT2
 utrie2_set32ForLeadSurrogateCodeUnit(UTrie2 *trie,
-                                     UChar32 lead, uint32_t value,
+                                     UChar32 lead, uint32_t हालागा_2,
                                      UErrorCode *pErrorCode);
 
 /**
@@ -659,13 +659,13 @@ struct UTrie2 {
     int32_t indexLength, dataLength;
     uint16_t index2NullOffset;  /* 0xffff if there is no dedicated index-2 null block */
     uint16_t dataNullOffset;
-    uint32_t initialValue;
+    uint32_t initial_हालागा;
     /** Value returned for out-of-range code points and illegal UTF-8. */
-    uint32_t errorValue;
+    uint32_t error_हालागा;
 
     /* Start of the last range which ends at U+10ffff, and its value. */
-    UChar32 highStart;
-    int32_t highValueIndex;
+    UChar32 माताअस_Start;
+    int32_t माताअस_हालागा_Index;
 
     /* private: used by builder and unserialization functions */
     void *memory;           /* serialized bytes; NULL if not frozen yet */
@@ -850,8 +850,8 @@ utrie2_internalU8PrevIndex(const UTrie2 *trie, UChar32 c,
                 (trie)->index, c) : \
             (uint32_t)(c)>0x10ffff ? \
                 (asciiOffset)+UTRIE2_BAD_UTF8_DATA_OFFSET : \
-                (c)>=(trie)->highStart ? \
-                    (trie)->highValueIndex : \
+                (c)>=(trie)->माताअस_Start ? \
+                    (trie)->माताअस_हालागा_Index : \
                     _UTRIE2_INDEX_FROM_SUPP((trie)->index, c))
 
 /** Internal trie getter from a UTF-16 single/lead code unit. Returns the data. */
@@ -860,7 +860,7 @@ utrie2_internalU8PrevIndex(const UTrie2 *trie, UChar32 c,
 
 /** Internal trie getter from a supplementary code point. Returns the data. */
 #define _UTRIE2_GET_FROM_SUPP(trie, data, c) \
-    (trie)->data[(c)>=(trie)->highStart ? (trie)->highValueIndex : \
+    (trie)->data[(c)>=(trie)->माताअस_Start ? (trie)->माताअस_हालागा_Index : \
                  _UTRIE2_INDEX_FROM_SUPP((trie)->index, c)]
 
 /**

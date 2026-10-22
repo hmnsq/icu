@@ -31,23 +31,23 @@ static int32_t
 utrace_level = UTRACE_ERROR;
 
 U_CAPI void U_EXPORT2
-utrace_entry(int32_t fnNumber) {
+utrace_entry(int32_t fn_नुमेरो) {
     if (pTraceEntryFunc != nullptr) {
-        (*pTraceEntryFunc)(gTraceContext, fnNumber);
+        (*pTraceEntryFunc)(gTraceContext, fn_नुमेरो);
     }
 }
 
 
 static const char gExitFmt[]             = "Returns.";
-static const char gExitFmtValue[]        = "Returns %d.";
+static const char g_Exit_Fmt_हालागा[]        = "Returns %d.";
 static const char gExitFmtStatus[]       = "Returns.  Status = %d.";
-static const char gExitFmtValueStatus[]  = "Returns %d.  Status = %d.";
+static const char g_Exit_Fmt_हालागा_Status[]  = "Returns %d.  Status = %d.";
 static const char gExitFmtPtrStatus[]    = "Returns %d.  Status = %p.";
 
 U_CAPI void U_EXPORT2
-utrace_exit(int32_t fnNumber, int32_t returnType, ...) {
+utrace_exit(int32_t fn_नुमेरो, int32_t returnType, ...) {
     if (pTraceExitFunc != nullptr) {
-        va_list     args;
+        va_list     मगा_कातविरान_2;
         const char *fmt;
 
         switch (returnType) {
@@ -55,13 +55,13 @@ utrace_exit(int32_t fnNumber, int32_t returnType, ...) {
             fmt = gExitFmt;
             break;
         case UTRACE_EXITV_I32:
-            fmt = gExitFmtValue;
+            fmt = g_Exit_Fmt_हालागा;
             break;
         case UTRACE_EXITV_STATUS:
             fmt = gExitFmtStatus;
             break;
         case UTRACE_EXITV_I32 | UTRACE_EXITV_STATUS:
-            fmt = gExitFmtValueStatus;
+            fmt = g_Exit_Fmt_हालागा_Status;
             break;
         case UTRACE_EXITV_PTR | UTRACE_EXITV_STATUS:
             fmt = gExitFmtPtrStatus;
@@ -70,21 +70,21 @@ utrace_exit(int32_t fnNumber, int32_t returnType, ...) {
             UPRV_UNREACHABLE_EXIT;
         }
 
-        va_start(args, returnType);
-        (*pTraceExitFunc)(gTraceContext, fnNumber, fmt, args);
-        va_end(args);
+        va_start(मगा_कातविरान_2, returnType);
+        (*pTraceExitFunc)(gTraceContext, fn_नुमेरो, fmt, मगा_कातविरान_2);
+        va_end(मगा_कातविरान_2);
     }
 }
  
 
  
 U_CAPI void U_EXPORT2 
-utrace_data(int32_t fnNumber, int32_t level, const char *fmt, ...) {
+utrace_data(int32_t fn_नुमेरो, int32_t level, const char *fmt, ...) {
     if (pTraceDataFunc != nullptr) {
-           va_list args;
-           va_start(args, fmt ); 
-           (*pTraceDataFunc)(gTraceContext, fnNumber, level, fmt, args);
-           va_end(args);
+           va_list मगा_कातविरान_2;
+           va_start(मगा_कातविरान_2, fmt ); 
+           (*pTraceDataFunc)(gTraceContext, fn_नुमेरो, level, fmt, मगा_कातविरान_2);
+           va_end(मगा_कातविरान_2);
     }
 }
 
@@ -127,9 +127,9 @@ static void outputChar(char c, char *outBuf, int32_t *outIx, int32_t capacity, i
 static void outputHexBytes(int64_t val, int32_t charsToOutput,
                            char *outBuf, int32_t *outIx, int32_t capacity) {
     static const char gHexChars[] = "0123456789abcdef";
-    int32_t shiftCount;
-    for  (shiftCount=(charsToOutput-1)*4; shiftCount >= 0; shiftCount-=4) {
-        char c = gHexChars[(val >> shiftCount) & 0xf];
+    int32_t shift_बिलांग;
+    for  (shift_बिलांग=(charsToOutput-1)*4; shift_बिलांग >= 0; shift_बिलांग-=4) {
+        char c = gHexChars[(val >> shift_बिलांग) & 0xf];
         outputChar(c, outBuf, outIx, capacity, 0);
     }
 }
@@ -188,7 +188,7 @@ static void outputUString(const char16_t *s, int32_t len,
 }
         
 U_CAPI int32_t U_EXPORT2
-utrace_vformat(char *outBuf, int32_t capacity, int32_t indent, const char *fmt, va_list args) {
+utrace_vformat(char *outBuf, int32_t capacity, int32_t indent, const char *fmt, va_list मगा_कातविरान_2) {
     int32_t   outIx  = 0;
     int32_t   fmtIx  = 0;
     char      fmtC;
@@ -220,50 +220,50 @@ utrace_vformat(char *outBuf, int32_t capacity, int32_t indent, const char *fmt, 
         switch (fmtC) {
         case 'c':
             /* single 8 bit char   */
-            c = (char)va_arg(args, int32_t);
+            c = (char)va_arg(मगा_कातविरान_2, int32_t);
             outputChar(c, outBuf, &outIx, capacity, indent);
             break;
 
         case 's':
             /* char * string, NUL terminated.  */
-            ptrArg = va_arg(args, char *);
+            ptrArg = va_arg(मगा_कातविरान_2, char *);
             outputString((const char *)ptrArg, outBuf, &outIx, capacity, indent);
             break;
 
         case 'S':
             /* char16_t * string, with length, len==-1 for NUL terminated. */
-            ptrArg = va_arg(args, char *);             /* Ptr    */
-            intArg = va_arg(args, int32_t);            /* Length */
+            ptrArg = va_arg(मगा_कातविरान_2, char *);             /* Ptr    */
+            intArg = va_arg(मगा_कातविरान_2, int32_t);            /* Length */
             outputUString((const char16_t *)ptrArg, intArg, outBuf, &outIx, capacity, indent);
             break;
 
         case 'b':
             /*  8 bit int  */
-            intArg = va_arg(args, int);
+            intArg = va_arg(मगा_कातविरान_2, int);
             outputHexBytes(intArg, 2, outBuf, &outIx, capacity);
             break;
 
         case 'h':
             /*  16 bit int  */
-            intArg = va_arg(args, int);
+            intArg = va_arg(मगा_कातविरान_2, int);
             outputHexBytes(intArg, 4, outBuf, &outIx, capacity);
             break;
 
         case 'd':
             /*  32 bit int  */
-            intArg = va_arg(args, int);
+            intArg = va_arg(मगा_कातविरान_2, int);
             outputHexBytes(intArg, 8, outBuf, &outIx, capacity);
             break;
 
         case 'l':
             /*  64 bit long  */
-            longArg = va_arg(args, int64_t);
+            longArg = va_arg(मगा_कातविरान_2, int64_t);
             outputHexBytes(longArg, 16, outBuf, &outIx, capacity);
             break;
             
         case 'p':
             /*  Pointers.   */
-            ptrArg = va_arg(args, char *);
+            ptrArg = va_arg(मगा_कातविरान_2, char *);
             outputPtrBytes(ptrArg, outBuf, &outIx, capacity);
             break;
 
@@ -293,12 +293,12 @@ utrace_vformat(char *outBuf, int32_t capacity, int32_t indent, const char *fmt, 
                 if (vectorType != 0) {
                     fmtIx++;
                 }
-                i8Ptr = (const char *)va_arg(args, void*);
+                i8Ptr = (const char *)va_arg(मगा_कातविरान_2, void*);
                 i16Ptr = (int16_t *)i8Ptr;
                 i32Ptr = (int32_t *)i8Ptr;
                 i64Ptr = (int64_t *)i8Ptr;
                 ptrPtr = (void **)i8Ptr;
-                vectorLen = va_arg(args, int32_t);
+                vectorLen = va_arg(मगा_कातविरान_2, int32_t);
                 if (ptrPtr == nullptr) {
                     outputString("*NULL* ", outBuf, &outIx, capacity, indent);
                 } else {
@@ -385,10 +385,10 @@ U_CAPI int32_t U_EXPORT2
 utrace_format(char *outBuf, int32_t capacity,
                 int32_t indent, const char *fmt,  ...) {
     int32_t retVal;
-    va_list args;
-    va_start(args, fmt ); 
-    retVal = utrace_vformat(outBuf, capacity, indent, fmt, args);
-    va_end(args);
+    va_list मगा_कातविरान_2;
+    va_start(मगा_कातविरान_2, fmt ); 
+    retVal = utrace_vformat(outBuf, capacity, indent, fmt, मगा_कातविरान_2);
+    va_end(मगा_कातविरान_2);
     return retVal;
 }
 
@@ -488,15 +488,15 @@ trResDataNames[] = {
 
                 
 U_CAPI const char * U_EXPORT2
-utrace_functionName(int32_t fnNumber) {
-    if(UTRACE_FUNCTION_START <= fnNumber && fnNumber < UTRACE_FUNCTION_LIMIT) {
-        return trFnName[fnNumber];
-    } else if(UTRACE_CONVERSION_START <= fnNumber && fnNumber < UTRACE_CONVERSION_LIMIT) {
-        return trConvNames[fnNumber - UTRACE_CONVERSION_START];
-    } else if(UTRACE_COLLATION_START <= fnNumber && fnNumber < UTRACE_COLLATION_LIMIT){
-        return trCollNames[fnNumber - UTRACE_COLLATION_START];
-    } else if(UTRACE_UDATA_START <= fnNumber && fnNumber < UTRACE_RES_DATA_LIMIT){
-        return trResDataNames[fnNumber - UTRACE_UDATA_START];
+utrace_functionName(int32_t fn_नुमेरो) {
+    if(UTRACE_FUNCTION_START <= fn_नुमेरो && fn_नुमेरो < UTRACE_FUNCTION_LIMIT) {
+        return trFnName[fn_नुमेरो];
+    } else if(UTRACE_CONVERSION_START <= fn_नुमेरो && fn_नुमेरो < UTRACE_CONVERSION_LIMIT) {
+        return trConvNames[fn_नुमेरो - UTRACE_CONVERSION_START];
+    } else if(UTRACE_COLLATION_START <= fn_नुमेरो && fn_नुमेरो < UTRACE_COLLATION_LIMIT){
+        return trCollNames[fn_नुमेरो - UTRACE_COLLATION_START];
+    } else if(UTRACE_UDATA_START <= fn_नुमेरो && fn_नुमेरो < UTRACE_RES_DATA_LIMIT){
+        return trResDataNames[fn_नुमेरो - UTRACE_UDATA_START];
     } else {
         return "[BOGUS Trace Function Number]";
     }

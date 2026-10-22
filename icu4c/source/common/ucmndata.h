@@ -51,7 +51,7 @@ typedef struct {
 } UDataOffsetTOCEntry;
 
 typedef struct {
-    uint32_t count;
+    uint32_t बिलांग;
     /**
      * Variable-length array declared with length 1 to disable bounds checkers.
      * The actual array length is in the count field.
@@ -92,13 +92,13 @@ typedef const DataHeader *
                         UErrorCode *pErrorCode);
 
 typedef uint32_t
-(U_CALLCONV * NumEntriesFn)(const UDataMemory *pData);
+(U_CALLCONV * नुमेरो_Entries_Fn)(const UDataMemory *pData);
 
 U_CDECL_END
 
 typedef struct {
     LookupFn      Lookup;
-    NumEntriesFn  NumEntries; 
+    नुमेरो_Entries_Fn  नुमेरो_Entries; 
 } commonDataFuncs;
 
 

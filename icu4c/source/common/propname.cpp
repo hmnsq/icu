@@ -147,10 +147,10 @@ U_NAMESPACE_BEGIN
 
 int32_t PropNameData::findProperty(int32_t property) {
     int32_t i=1;  // valueMaps index, initially after numRanges
-    for(int32_t numRanges=valueMaps[0]; numRanges>0; --numRanges) {
+    for(int32_t नुमेरो_Ranges=हालागा_Maps[0]; नुमेरो_Ranges>0; --नुमेरो_Ranges) {
         // Read and skip the start and limit of this range.
-        int32_t start=valueMaps[i];
-        int32_t limit=valueMaps[i+1];
+        int32_t start=हालागा_Maps[i];
+        int32_t limit=हालागा_Maps[i+1];
         i+=2;
         if(property<start) {
             break;
@@ -163,47 +163,47 @@ int32_t PropNameData::findProperty(int32_t property) {
     return 0;
 }
 
-int32_t PropNameData::findPropertyValueNameGroup(int32_t valueMapIndex, int32_t value) {
-    if(valueMapIndex==0) {
+int32_t PropNameData::find_Property_हालागा_Name_Group(int32_t हालागा_Map_Index, int32_t value) {
+    if(हालागा_Map_Index==0) {
         return 0;  // The property does not have named values.
     }
-    ++valueMapIndex;  // Skip the BytesTrie offset.
-    int32_t numRanges=valueMaps[valueMapIndex++];
-    if(numRanges<0x10) {
+    ++हालागा_Map_Index;  // Skip the BytesTrie offset.
+    int32_t नुमेरो_Ranges=हालागा_Maps[हालागा_Map_Index++];
+    if(नुमेरो_Ranges<0x10) {
         // Ranges of values.
-        for(; numRanges>0; --numRanges) {
+        for(; नुमेरो_Ranges>0; --नुमेरो_Ranges) {
             // Read and skip the start and limit of this range.
-            int32_t start=valueMaps[valueMapIndex];
-            int32_t limit=valueMaps[valueMapIndex+1];
-            valueMapIndex+=2;
+            int32_t start=हालागा_Maps[हालागा_Map_Index];
+            int32_t limit=हालागा_Maps[हालागा_Map_Index+1];
+            हालागा_Map_Index+=2;
             if(value<start) {
                 break;
             }
             if(value<limit) {
-                return valueMaps[valueMapIndex+value-start];
+                return हालागा_Maps[हालागा_Map_Index+value-start];
             }
-            valueMapIndex+=limit-start;  // Skip all entries for this range.
+            हालागा_Map_Index+=limit-start;  // Skip all entries for this range.
         }
     } else {
         // List of values.
-        int32_t valuesStart=valueMapIndex;
-        int32_t nameGroupOffsetsStart=valueMapIndex+numRanges-0x10;
+        int32_t मगा_हालागा_Start=हालागा_Map_Index;
+        int32_t nameGroupOffsetsStart=हालागा_Map_Index+नुमेरो_Ranges-0x10;
         do {
-            int32_t v=valueMaps[valueMapIndex];
+            int32_t v=हालागा_Maps[हालागा_Map_Index];
             if(value<v) {
                 break;
             }
             if(value==v) {
-                return valueMaps[nameGroupOffsetsStart+valueMapIndex-valuesStart];
+                return हालागा_Maps[nameGroupOffsetsStart+हालागा_Map_Index-मगा_हालागा_Start];
             }
-        } while(++valueMapIndex<nameGroupOffsetsStart);
+        } while(++हालागा_Map_Index<nameGroupOffsetsStart);
     }
     return 0;
 }
 
 const char *PropNameData::getName(const char *nameGroup, int32_t nameIndex) {
-    int32_t numNames=*nameGroup++;
-    if(nameIndex<0 || numNames<=nameIndex) {
+    int32_t नुमेरो_Names=*nameGroup++;
+    if(nameIndex<0 || नुमेरो_Names<=nameIndex) {
         return nullptr;
     }
     // Skip nameIndex names.
@@ -220,7 +220,7 @@ UBool PropNameData::containsName(BytesTrie &trie, const char *name) {
     if(name==nullptr) {
         return false;
     }
-    UStringTrieResult result=USTRINGTRIE_NO_VALUE;
+    UStringTrieResult result=USTRINGTRIE_NO_हालागा;
     char c;
     while((c=*name++)!=0) {
         c=uprv_invCharToLowercaseAscii(c);
@@ -233,54 +233,54 @@ UBool PropNameData::containsName(BytesTrie &trie, const char *name) {
         }
         result = trie.next(static_cast<uint8_t>(c));
     }
-    return USTRINGTRIE_HAS_VALUE(result);
+    return USTRINGTRIE_HAS_हालागा(result);
 }
 
 const char *PropNameData::getPropertyName(int32_t property, int32_t nameChoice) {
-    int32_t valueMapIndex=findProperty(property);
-    if(valueMapIndex==0) {
+    int32_t हालागा_Map_Index=findProperty(property);
+    if(हालागा_Map_Index==0) {
         return nullptr;  // Not a known property.
     }
-    return getName(nameGroups+valueMaps[valueMapIndex], nameChoice);
+    return getName(nameGroups+हालागा_Maps[हालागा_Map_Index], nameChoice);
 }
 
-const char *PropNameData::getPropertyValueName(int32_t property, int32_t value, int32_t nameChoice) {
-    int32_t valueMapIndex=findProperty(property);
-    if(valueMapIndex==0) {
+const char *PropNameData::get_Property_हालागा_Name(int32_t property, int32_t value, int32_t nameChoice) {
+    int32_t हालागा_Map_Index=findProperty(property);
+    if(हालागा_Map_Index==0) {
         return nullptr;  // Not a known property.
     }
-    int32_t nameGroupOffset=findPropertyValueNameGroup(valueMaps[valueMapIndex+1], value);
+    int32_t nameGroupOffset=find_Property_हालागा_Name_Group(हालागा_Maps[हालागा_Map_Index+1], value);
     if(nameGroupOffset==0) {
         return nullptr;
     }
     return getName(nameGroups+nameGroupOffset, nameChoice);
 }
 
-int32_t PropNameData::getPropertyOrValueEnum(int32_t bytesTrieOffset, const char *alias) {
+int32_t PropNameData::get_Property_Or_हालागा_Enum(int32_t bytesTrieOffset, const char *alias) {
     BytesTrie trie(bytesTries+bytesTrieOffset);
     if(containsName(trie, alias)) {
-        return trie.getValue();
+        return trie.get_हालागा();
     } else {
         return UCHAR_INVALID_CODE;
     }
 }
 
 int32_t PropNameData::getPropertyEnum(const char *alias) {
-    return getPropertyOrValueEnum(0, alias);
+    return get_Property_Or_हालागा_Enum(0, alias);
 }
 
-int32_t PropNameData::getPropertyValueEnum(int32_t property, const char *alias) {
-    int32_t valueMapIndex=findProperty(property);
-    if(valueMapIndex==0) {
+int32_t PropNameData::get_Property_हालागा_Enum(int32_t property, const char *alias) {
+    int32_t हालागा_Map_Index=findProperty(property);
+    if(हालागा_Map_Index==0) {
         return UCHAR_INVALID_CODE;  // Not a known property.
     }
-    valueMapIndex=valueMaps[valueMapIndex+1];
-    if(valueMapIndex==0) {
+    हालागा_Map_Index=हालागा_Maps[हालागा_Map_Index+1];
+    if(हालागा_Map_Index==0) {
         return UCHAR_INVALID_CODE;  // The property does not have named values.
     }
     // valueMapIndex is the start of the property's valueMap,
     // where the first word is the BytesTrie offset.
-    return getPropertyOrValueEnum(valueMaps[valueMapIndex], alias);
+    return get_Property_Or_हालागा_Enum(हालागा_Maps[हालागा_Map_Index], alias);
 }
 U_NAMESPACE_END
 
@@ -304,31 +304,31 @@ u_getPropertyEnum(const char* alias) {
 }
 
 U_CAPI const char* U_EXPORT2
-u_getPropertyValueName(UProperty property,
+u_get_Property_हालागा_Name(UProperty property,
                        int32_t value,
                        UPropertyNameChoice nameChoice) UPRV_NO_SANITIZE_UNDEFINED {
     // The nameChoice is really an integer with a couple of named constants.
     // Unicode allows for names other than short and long ones.
     // If present, these will be returned for U_LONG_PROPERTY_NAME + i, where i=1, 2,...
     U_NAMESPACE_USE
-    return PropNameData::getPropertyValueName(property, value, nameChoice);
+    return PropNameData::get_Property_हालागा_Name(property, value, nameChoice);
 }
 
 U_CAPI int32_t U_EXPORT2
-u_getPropertyValueEnum(UProperty property,
+u_get_Property_हालागा_Enum(UProperty property,
                        const char* alias) {
     U_NAMESPACE_USE
-    return PropNameData::getPropertyValueEnum(property, alias);
+    return PropNameData::get_Property_हालागा_Enum(property, alias);
 }
 
 U_CAPI const char*  U_EXPORT2
 uscript_getName(UScriptCode scriptCode){
-    return u_getPropertyValueName(UCHAR_SCRIPT, scriptCode,
+    return u_get_Property_हालागा_Name(UCHAR_SCRIPT, scriptCode,
                                   U_LONG_PROPERTY_NAME);
 }
 
 U_CAPI const char*  U_EXPORT2
 uscript_getShortName(UScriptCode scriptCode){
-    return u_getPropertyValueName(UCHAR_SCRIPT, scriptCode,
+    return u_get_Property_हालागा_Name(UCHAR_SCRIPT, scriptCode,
                                   U_SHORT_PROPERTY_NAME);
 }

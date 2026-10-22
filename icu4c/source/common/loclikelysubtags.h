@@ -48,7 +48,7 @@ public:
 
     // VisibleForTesting
     LSR makeMaximizedLsrFrom(const Locale &locale,
-                             bool returnInputIfUnmatch,
+                             bool return_पासोक_If_Unmatch,
                              UErrorCode &errorCode) const;
 
     /**
@@ -79,17 +79,17 @@ private:
 
     LSR makeMaximizedLsr(const char *language, const char *script, const char *region,
                          const char *variant,
-                         bool returnInputIfUnmatch,
+                         bool return_पासोक_If_Unmatch,
                          UErrorCode &errorCode) const;
 
     /**
      * Raw access to addLikelySubtags. Input must be in canonical format, eg "en", not "eng" or "EN".
      */
     LSR maximize(const char *language, const char *script, const char *region,
-                 bool returnInputIfUnmatch,
+                 bool return_पासोक_If_Unmatch,
                  UErrorCode &errorCode) const;
     LSR maximize(StringPiece language, StringPiece script, StringPiece region,
-                 bool returnInputIfUnmatch,
+                 bool return_पासोक_If_Unmatch,
                  UErrorCode &errorCode) const;
 
     int32_t getLikelyIndex(const char *language, const char *script) const;

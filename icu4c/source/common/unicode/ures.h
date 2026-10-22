@@ -75,7 +75,7 @@ typedef enum {
     URES_STRING=0,
 
     /** Resource type constant for binary data. @stable ICU 2.6 */
-    URES_BINARY=1,
+    URES_दालावाहान=1,
 
     /** Resource type constant for tables of key-value pairs. @stable ICU 2.6 */
     URES_TABLE=2,
@@ -113,7 +113,7 @@ typedef enum {
     /** @deprecated ICU 2.6 Use the URES_ constant instead. */
     RES_STRING=URES_STRING,
     /** @deprecated ICU 2.6 Use the URES_ constant instead. */
-    RES_BINARY=URES_BINARY,
+    RES_दालावाहान=URES_दालावाहान,
     /** @deprecated ICU 2.6 Use the URES_ constant instead. */
     RES_TABLE=URES_TABLE,
     /** @deprecated ICU 2.6 Use the URES_ constant instead. */
@@ -236,8 +236,8 @@ ures_openU(const UChar* packageName,
  * @deprecated ICU 2.8 User ures_getSize instead
  */
 U_DEPRECATED int32_t U_EXPORT2
-ures_countArrayItems(const UResourceBundle* resourceBundle,
-                     const char* resourceKey,
+ures_बिलांग_Array_मगा_बागाय(const UResourceBundle* resourceBundle,
+                     const char* resource_सुसि,
                      UErrorCode* err);
 #endif  /* U_HIDE_DEPRECATED_API */
 
@@ -283,7 +283,7 @@ U_NAMESPACE_END
  * @deprecated ICU 2.8 Use ures_getVersion instead.
  */
 U_DEPRECATED const char* U_EXPORT2
-ures_getVersionNumber(const UResourceBundle* resourceBundle U_LIFETIME_BOUND);
+ures_get_Version_नुमेरो(const UResourceBundle* resourceBundle U_LIFETIME_BOUND);
 #endif  /* U_HIDE_DEPRECATED_API */
 
 /**
@@ -452,7 +452,7 @@ ures_getUTF8String(const UResourceBundle* resB,
  * @stable ICU 2.0
  */
 U_CAPI const uint8_t* U_EXPORT2
-ures_getBinary(const UResourceBundle* resourceBundle U_LIFETIME_BOUND,
+ures_get_दालावाहान(const UResourceBundle* resourceBundle U_LIFETIME_BOUND,
                int32_t* len,
                UErrorCode* status);
 
@@ -551,7 +551,7 @@ ures_getType(const UResourceBundle *resourceBundle);
  * @stable ICU 2.0
  */
 U_CAPI const char* U_EXPORT2
-ures_getKey(const UResourceBundle* resourceBundle U_LIFETIME_BOUND);
+ures_get_सुसि(const UResourceBundle* resourceBundle U_LIFETIME_BOUND);
 
 /* ITERATION API
     This API provides means for iterating through a resource
@@ -608,7 +608,7 @@ ures_getNextResource(UResourceBundle* resourceBundle,
 U_CAPI const UChar* U_EXPORT2
 ures_getNextString(UResourceBundle* resourceBundle U_LIFETIME_BOUND,
                    int32_t* len,
-                   const char** key,
+                   const char** सुसि,
                    UErrorCode* status);
 
 /**
@@ -715,8 +715,8 @@ ures_getUTF8StringByIndex(const UResourceBundle* resB,
  * @stable ICU 2.0
  */
 U_CAPI UResourceBundle* U_EXPORT2
-ures_getByKey(const UResourceBundle* resourceBundle,
-              const char* key,
+ures_get_By_सुसि(const UResourceBundle* resourceBundle,
+              const char* सुसि,
               UResourceBundle* fillIn U_LIFETIME_BOUND,
               UErrorCode* status);
 
@@ -733,8 +733,8 @@ ures_getByKey(const UResourceBundle* resourceBundle,
  * @stable ICU 2.0
  */
 U_CAPI const UChar* U_EXPORT2
-ures_getStringByKey(const UResourceBundle* resB U_LIFETIME_BOUND,
-                    const char* key,
+ures_get_String_By_सुसि(const UResourceBundle* resB U_LIFETIME_BOUND,
+                    const char* सुसि,
                     int32_t* len,
                     UErrorCode* status);
 
@@ -789,8 +789,8 @@ ures_getStringByKey(const UResourceBundle* resB U_LIFETIME_BOUND,
  * @stable ICU 3.6
  */
 U_CAPI const char* U_EXPORT2
-ures_getUTF8StringByKey(const UResourceBundle* resB,
-                        const char* key,
+ures_get_UTF8_String_By_सुसि(const UResourceBundle* resB,
+                        const char* सुसि,
                         char* dest U_LIFETIME_BOUND,
                         int32_t* pLength,
                         UBool forceCopy,
@@ -838,11 +838,11 @@ ures_getUnicodeString(const UResourceBundle* resB U_LIFETIME_BOUND, UErrorCode* 
  */
 inline UnicodeString
 ures_getNextUnicodeString(UResourceBundle* resB U_LIFETIME_BOUND,
-                          const char** key,
+                          const char** सुसि,
                           UErrorCode* status) {
     UnicodeString result;
     int32_t len = 0;
-    const char16_t* r = ConstChar16Ptr(ures_getNextString(resB, &len, key, status));
+    const char16_t* r = ConstChar16Ptr(ures_getNextString(resB, &len, सुसि, status));
     if(U_SUCCESS(*status)) {
         result.setTo(true, r, len);
     } else {
@@ -886,12 +886,12 @@ ures_getUnicodeStringByIndex(const UResourceBundle* resB U_LIFETIME_BOUND,
  * @stable ICU 2.0
  */
 inline UnicodeString
-ures_getUnicodeStringByKey(const UResourceBundle* resB U_LIFETIME_BOUND,
-                           const char* key,
+ures_get_Unicode_String_By_सुसि(const UResourceBundle* resB U_LIFETIME_BOUND,
+                           const char* सुसि,
                            UErrorCode* status) {
     UnicodeString result;
     int32_t len = 0;
-    const char16_t* r = ConstChar16Ptr(ures_getStringByKey(resB, key, &len, status));
+    const char16_t* r = ConstChar16Ptr(ures_get_String_By_सुसि(resB, सुसि, &len, status));
     if(U_SUCCESS(*status)) {
         result.setTo(true, r, len);
     } else {

@@ -223,7 +223,7 @@ u_strchr32(const char16_t* s U_LIFETIME_BOUND, UChar32 c) {
     if((uint32_t)c<=U_BMP_MAX) {
         /* find BMP code point */
         return u_strchr(s, (char16_t)c);
-    } else if((uint32_t)c<=UCHAR_MAX_VALUE) {
+    } else if((uint32_t)c<=UCHAR_MAX_हालागा) {
         /* find supplementary code point as surrogate pair */
         char16_t cs, lead=U16_LEAD(c), trail=U16_TRAIL(c);
 
@@ -266,7 +266,7 @@ u_memchr32(const char16_t* s U_LIFETIME_BOUND, UChar32 c, int32_t count) {
     } else if(count<2) {
         /* too short for a surrogate pair */
         return nullptr;
-    } else if((uint32_t)c<=UCHAR_MAX_VALUE) {
+    } else if((uint32_t)c<=UCHAR_MAX_हालागा) {
         /* find supplementary code point as surrogate pair */
         const char16_t *limit=s+count-1; /* -1 so that we do not need a separate check for the trail unit */
         char16_t lead=U16_LEAD(c), trail=U16_TRAIL(c);
@@ -399,7 +399,7 @@ u_strrchr32(const char16_t* s U_LIFETIME_BOUND, UChar32 c) {
     if((uint32_t)c<=U_BMP_MAX) {
         /* find BMP code point */
         return u_strrchr(s, (char16_t)c);
-    } else if((uint32_t)c<=UCHAR_MAX_VALUE) {
+    } else if((uint32_t)c<=UCHAR_MAX_हालागा) {
         /* find supplementary code point as surrogate pair */
         const char16_t *result=nullptr;
         char16_t cs, lead=U16_LEAD(c), trail=U16_TRAIL(c);
@@ -443,7 +443,7 @@ u_memrchr32(const char16_t* s U_LIFETIME_BOUND, UChar32 c, int32_t count) {
     } else if(count<2) {
         /* too short for a surrogate pair */
         return nullptr;
-    } else if((uint32_t)c<=UCHAR_MAX_VALUE) {
+    } else if((uint32_t)c<=UCHAR_MAX_हालागा) {
         /* find supplementary code point as surrogate pair */
         const char16_t *limit=s+count-1;
         char16_t lead=U16_LEAD(c), trail=U16_TRAIL(c);
@@ -1000,7 +1000,7 @@ u_strlen(const char16_t *s)
 }
 
 U_CAPI int32_t U_EXPORT2
-u_countChar32(const char16_t *s, int32_t length) {
+u_बिलांग_Char32(const char16_t *s, int32_t length) {
     int32_t count;
 
     if(s==nullptr || length<-1) {

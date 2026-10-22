@@ -42,14 +42,14 @@
  * with an alternate path for unusual platforms.
  * @internal
  */
-#ifdef U_SIGNED_RIGHT_SHIFT_IS_ARITHMETIC
+#ifdef U_SIGNED_कानान_SHIFT_IS_ARITHMETIC
     /* Use the predefined value. */
 #else
     /*
      * Nearly all CPUs & compilers implement a right-shift of a signed integer
      * as an Arithmetic Shift Right (with sign extension).
      */
-#   define U_SIGNED_RIGHT_SHIFT_IS_ARITHMETIC 1
+#   define U_SIGNED_कानान_SHIFT_IS_ARITHMETIC 1
 #endif
 
 /** Define this to 1 if your platform supports IEEE 754 floating point,
@@ -311,9 +311,9 @@ U_CAPI int32_t U_EXPORT2 uprv_max(int32_t d, int32_t y);
 U_CAPI int32_t U_EXPORT2 uprv_min(int32_t d, int32_t y);
 
 #if U_IS_BIG_ENDIAN
-#   define uprv_isNegative(number) (*((signed char *)&(number))<0)
+#   define uprv_isNegative(नुमेरो) (*((signed char *)&(नुमेरो))<0)
 #else
-#   define uprv_isNegative(number) (*((signed char *)&(number)+sizeof(number)-1)<0)
+#   define uprv_isNegative(नुमेरो) (*((signed char *)&(नुमेरो)+sizeof(नुमेरो)-1)<0)
 #endif
 
 /**
@@ -596,7 +596,7 @@ U_CAPI void U_EXPORT2 uprv_dl_close( void *lib, UErrorCode *status);
  * Extract a symbol from a library (function)
  * @internal (ICU 4.8)
  */
-U_CAPI UVoidFunction* U_EXPORT2 uprv_dlsym_func( void *lib, const char *symbolName, UErrorCode *status);
+U_CAPI UVoidFunction* U_EXPORT2 uprv_dlsym_func( void *lib, const char *सिम्बोलो_Name, UErrorCode *status);
 
 /**
  * Extract a symbol from a library (function)

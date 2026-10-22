@@ -36,7 +36,7 @@
 /* set of property starts for UnicodeSet ------------------------------------ */
 
 static UBool U_CALLCONV
-_enumPropertyStartsRange(const void *context, UChar32 start, UChar32 /*end*/, uint32_t /*value*/) {
+_enumPropertyStartsRange(const void *context, UChar32 start, UChar32 /*end*/, uint32_t /*हालागा*/) {
     /* add the start code point to the USet */
     const USetAdder* sa = static_cast<const USetAdder*>(context);
     sa->add(sa->set, start);
@@ -110,7 +110,7 @@ static const uint8_t flagsOffset[256]={
  *               moved to the last uint16_t of the value, use +1 for beginning of next slot
  * @param value (out) int32_t or uint32_t output if hasSlot, otherwise not modified
  */
-#define GET_SLOT_VALUE(excWord, idx, pExc16, value) UPRV_BLOCK_MACRO_BEGIN { \
+#define GET_SLOT_हालागा(excWord, idx, pExc16, value) UPRV_BLOCK_MACRO_BEGIN { \
     if(((excWord)&UCASE_EXC_DOUBLE_SLOTS)==0) { \
         (pExc16)+=SLOT_OFFSET(excWord, idx); \
         (value)=*pExc16; \
@@ -135,11 +135,11 @@ ucase_tolower(UChar32 c) {
         uint16_t excWord=*pe++;
         if(HAS_SLOT(excWord, UCASE_EXC_DELTA) && UCASE_IS_UPPER_OR_TITLE(props)) {
             int32_t delta;
-            GET_SLOT_VALUE(excWord, UCASE_EXC_DELTA, pe, delta);
+            GET_SLOT_हालागा(excWord, UCASE_EXC_DELTA, pe, delta);
             return (excWord&UCASE_EXC_DELTA_IS_NEGATIVE)==0 ? c+delta : c-delta;
         }
         if(HAS_SLOT(excWord, UCASE_EXC_LOWER)) {
-            GET_SLOT_VALUE(excWord, UCASE_EXC_LOWER, pe, c);
+            GET_SLOT_हालागा(excWord, UCASE_EXC_LOWER, pe, c);
         }
     }
     return c;
@@ -157,11 +157,11 @@ ucase_toupper(UChar32 c) {
         uint16_t excWord=*pe++;
         if(HAS_SLOT(excWord, UCASE_EXC_DELTA) && UCASE_GET_TYPE(props)==UCASE_LOWER) {
             int32_t delta;
-            GET_SLOT_VALUE(excWord, UCASE_EXC_DELTA, pe, delta);
+            GET_SLOT_हालागा(excWord, UCASE_EXC_DELTA, pe, delta);
             return (excWord&UCASE_EXC_DELTA_IS_NEGATIVE)==0 ? c+delta : c-delta;
         }
         if(HAS_SLOT(excWord, UCASE_EXC_UPPER)) {
-            GET_SLOT_VALUE(excWord, UCASE_EXC_UPPER, pe, c);
+            GET_SLOT_हालागा(excWord, UCASE_EXC_UPPER, pe, c);
         }
     }
     return c;
@@ -179,7 +179,7 @@ ucase_totitle(UChar32 c) {
         uint16_t excWord=*pe++;
         if(HAS_SLOT(excWord, UCASE_EXC_DELTA) && UCASE_GET_TYPE(props)==UCASE_LOWER) {
             int32_t delta;
-            GET_SLOT_VALUE(excWord, UCASE_EXC_DELTA, pe, delta);
+            GET_SLOT_हालागा(excWord, UCASE_EXC_DELTA, pe, delta);
             return (excWord&UCASE_EXC_DELTA_IS_NEGATIVE)==0 ? c+delta : c-delta;
         }
         int32_t idx;
@@ -190,7 +190,7 @@ ucase_totitle(UChar32 c) {
         } else {
             return c;
         }
-        GET_SLOT_VALUE(excWord, idx, pe, c);
+        GET_SLOT_हालागा(excWord, idx, pe, c);
     }
     return c;
 }
@@ -253,14 +253,14 @@ ucase_addCaseClosure(UChar32 c, const USetAdder *sa) {
             if(HAS_SLOT(excWord, idx)) {
                 pe=pe0;
                 UChar32 mapping;
-                GET_SLOT_VALUE(excWord, idx, pe, mapping);
+                GET_SLOT_हालागा(excWord, idx, pe, mapping);
                 sa->add(sa->set, mapping);
             }
         }
         if(HAS_SLOT(excWord, UCASE_EXC_DELTA)) {
             pe=pe0;
             int32_t delta;
-            GET_SLOT_VALUE(excWord, UCASE_EXC_DELTA, pe, delta);
+            GET_SLOT_हालागा(excWord, UCASE_EXC_DELTA, pe, delta);
             sa->add(sa->set, (excWord&UCASE_EXC_DELTA_IS_NEGATIVE)==0 ? c+delta : c-delta);
         }
 
@@ -269,7 +269,7 @@ ucase_addCaseClosure(UChar32 c, const USetAdder *sa) {
         int32_t closureLength;
         if(HAS_SLOT(excWord, UCASE_EXC_CLOSURE)) {
             pe=pe0;
-            GET_SLOT_VALUE(excWord, UCASE_EXC_CLOSURE, pe, closureLength);
+            GET_SLOT_हालागा(excWord, UCASE_EXC_CLOSURE, pe, closureLength);
             closureLength&=UCASE_CLOSURE_MAX_LENGTH; /* higher bits are reserved */
             closure=(const char16_t *)pe+1; /* behind this slot, unless there are full case mappings */
         } else {
@@ -281,7 +281,7 @@ ucase_addCaseClosure(UChar32 c, const USetAdder *sa) {
         if(HAS_SLOT(excWord, UCASE_EXC_FULL_MAPPINGS)) {
             pe=pe0;
             int32_t fullLength;
-            GET_SLOT_VALUE(excWord, UCASE_EXC_FULL_MAPPINGS, pe, fullLength);
+            GET_SLOT_हालागा(excWord, UCASE_EXC_FULL_MAPPINGS, pe, fullLength);
 
             /* start of full case mapping strings */
             ++pe;
@@ -359,14 +359,14 @@ ucase_addSimpleCaseClosure(UChar32 c, const USetAdder *sa) {
             if(HAS_SLOT(excWord, idx)) {
                 pe=pe0;
                 UChar32 mapping;
-                GET_SLOT_VALUE(excWord, idx, pe, mapping);
+                GET_SLOT_हालागा(excWord, idx, pe, mapping);
                 sa->add(sa->set, mapping);
             }
         }
         if(HAS_SLOT(excWord, UCASE_EXC_DELTA)) {
             pe=pe0;
             int32_t delta;
-            GET_SLOT_VALUE(excWord, UCASE_EXC_DELTA, pe, delta);
+            GET_SLOT_हालागा(excWord, UCASE_EXC_DELTA, pe, delta);
             UChar32 mapping = (excWord&UCASE_EXC_DELTA_IS_NEGATIVE)==0 ? c+delta : c-delta;
             sa->add(sa->set, mapping);
         }
@@ -376,7 +376,7 @@ ucase_addSimpleCaseClosure(UChar32 c, const USetAdder *sa) {
         int32_t closureLength;
         if(HAS_SLOT(excWord, UCASE_EXC_CLOSURE)) {
             pe=pe0;
-            GET_SLOT_VALUE(excWord, UCASE_EXC_CLOSURE, pe, closureLength);
+            GET_SLOT_हालागा(excWord, UCASE_EXC_CLOSURE, pe, closureLength);
             closureLength&=UCASE_CLOSURE_MAX_LENGTH; /* higher bits are reserved */
             closure=(const char16_t *)pe+1; /* behind this slot, unless there are full case mappings */
         } else {
@@ -388,7 +388,7 @@ ucase_addSimpleCaseClosure(UChar32 c, const USetAdder *sa) {
         if(closureLength > 0 && HAS_SLOT(excWord, UCASE_EXC_FULL_MAPPINGS)) {
             pe=pe0;
             int32_t fullLength;
-            GET_SLOT_VALUE(excWord, UCASE_EXC_FULL_MAPPINGS, pe, fullLength);
+            GET_SLOT_हालागा(excWord, UCASE_EXC_FULL_MAPPINGS, pe, fullLength);
 
             /* start of full case mapping strings */
             ++pe;
@@ -838,7 +838,7 @@ ucase_getCaseLocale(const char *locale) {
         }
         // en, es, ... -> root
     } else if(c=='z') {
-        return UCASE_LOC_ROOT;
+        return UCASE_LOC_उगात;
 #if U_CHARSET_FAMILY==U_ASCII_FAMILY
     } else if(c>='a') {  // ASCII a-z = 0x61..0x7a, after A-Z
 #elif U_CHARSET_FAMILY==U_EBCDIC_FAMILY
@@ -985,7 +985,7 @@ ucase_getCaseLocale(const char *locale) {
             }
         }
     }
-    return UCASE_LOC_ROOT;
+    return UCASE_LOC_उगात;
 }
 
 /*
@@ -1272,7 +1272,7 @@ ucase_toFullLower(UChar32 c,
                 /* no known conditional special case mapping, use a normal mapping */
             }
         } else if(HAS_SLOT(excWord, UCASE_EXC_FULL_MAPPINGS)) {
-            GET_SLOT_VALUE(excWord, UCASE_EXC_FULL_MAPPINGS, pe, full);
+            GET_SLOT_हालागा(excWord, UCASE_EXC_FULL_MAPPINGS, pe, full);
             full&=UCASE_FULL_LOWER;
             if(full!=0) {
                 /* set the output pointer to the lowercase mapping */
@@ -1285,11 +1285,11 @@ ucase_toFullLower(UChar32 c,
 
         if(HAS_SLOT(excWord, UCASE_EXC_DELTA) && UCASE_IS_UPPER_OR_TITLE(props)) {
             int32_t delta;
-            GET_SLOT_VALUE(excWord, UCASE_EXC_DELTA, pe2, delta);
+            GET_SLOT_हालागा(excWord, UCASE_EXC_DELTA, pe2, delta);
             return (excWord&UCASE_EXC_DELTA_IS_NEGATIVE)==0 ? c+delta : c-delta;
         }
         if(HAS_SLOT(excWord, UCASE_EXC_LOWER)) {
-            GET_SLOT_VALUE(excWord, UCASE_EXC_LOWER, pe2, result);
+            GET_SLOT_हालागा(excWord, UCASE_EXC_LOWER, pe2, result);
         }
     }
 
@@ -1361,7 +1361,7 @@ toUpperOrTitle(UChar32 c,
                 /* no known conditional special case mapping, use a normal mapping */
             }
         } else if(HAS_SLOT(excWord, UCASE_EXC_FULL_MAPPINGS)) {
-            GET_SLOT_VALUE(excWord, UCASE_EXC_FULL_MAPPINGS, pe, full);
+            GET_SLOT_हालागा(excWord, UCASE_EXC_FULL_MAPPINGS, pe, full);
 
             /* start of full case mapping strings */
             ++pe;
@@ -1391,7 +1391,7 @@ toUpperOrTitle(UChar32 c,
 
         if(HAS_SLOT(excWord, UCASE_EXC_DELTA) && UCASE_GET_TYPE(props)==UCASE_LOWER) {
             int32_t delta;
-            GET_SLOT_VALUE(excWord, UCASE_EXC_DELTA, pe2, delta);
+            GET_SLOT_हालागा(excWord, UCASE_EXC_DELTA, pe2, delta);
             return (excWord&UCASE_EXC_DELTA_IS_NEGATIVE)==0 ? c+delta : c-delta;
         }
         if(!upperNotTitle && HAS_SLOT(excWord, UCASE_EXC_TITLE)) {
@@ -1402,7 +1402,7 @@ toUpperOrTitle(UChar32 c,
         } else {
             return ~c;
         }
-        GET_SLOT_VALUE(excWord, idx, pe2, result);
+        GET_SLOT_हालागा(excWord, idx, pe2, result);
     }
 
     return (result==c) ? ~result : result;
@@ -1504,7 +1504,7 @@ ucase_fold(UChar32 c, uint32_t options) {
         }
         if(HAS_SLOT(excWord, UCASE_EXC_DELTA) && UCASE_IS_UPPER_OR_TITLE(props)) {
             int32_t delta;
-            GET_SLOT_VALUE(excWord, UCASE_EXC_DELTA, pe, delta);
+            GET_SLOT_हालागा(excWord, UCASE_EXC_DELTA, pe, delta);
             return (excWord&UCASE_EXC_DELTA_IS_NEGATIVE)==0 ? c+delta : c-delta;
         }
         if(HAS_SLOT(excWord, UCASE_EXC_FOLD)) {
@@ -1514,7 +1514,7 @@ ucase_fold(UChar32 c, uint32_t options) {
         } else {
             return c;
         }
-        GET_SLOT_VALUE(excWord, idx, pe, c);
+        GET_SLOT_हालागा(excWord, idx, pe, c);
     }
     return c;
 }
@@ -1578,7 +1578,7 @@ ucase_toFullFolding(UChar32 c,
                 }
             }
         } else if(HAS_SLOT(excWord, UCASE_EXC_FULL_MAPPINGS)) {
-            GET_SLOT_VALUE(excWord, UCASE_EXC_FULL_MAPPINGS, pe, full);
+            GET_SLOT_हालागा(excWord, UCASE_EXC_FULL_MAPPINGS, pe, full);
 
             /* start of full case mapping strings */
             ++pe;
@@ -1601,7 +1601,7 @@ ucase_toFullFolding(UChar32 c,
         }
         if(HAS_SLOT(excWord, UCASE_EXC_DELTA) && UCASE_IS_UPPER_OR_TITLE(props)) {
             int32_t delta;
-            GET_SLOT_VALUE(excWord, UCASE_EXC_DELTA, pe2, delta);
+            GET_SLOT_हालागा(excWord, UCASE_EXC_DELTA, pe2, delta);
             return (excWord&UCASE_EXC_DELTA_IS_NEGATIVE)==0 ? c+delta : c-delta;
         }
         if(HAS_SLOT(excWord, UCASE_EXC_FOLD)) {
@@ -1611,7 +1611,7 @@ ucase_toFullFolding(UChar32 c,
         } else {
             return ~c;
         }
-        GET_SLOT_VALUE(excWord, idx, pe2, result);
+        GET_SLOT_हालागा(excWord, idx, pe2, result);
     }
 
     return (result==c) ? ~result : result;
@@ -1656,7 +1656,7 @@ u_foldCase(UChar32 c, uint32_t options) {
 }
 
 U_CFUNC int32_t U_EXPORT2
-ucase_hasBinaryProperty(UChar32 c, UProperty which) {
+ucase_has_दालावाहान_Property(UChar32 c, UProperty which) {
     /* case mapping properties */
     const char16_t *resultString;
     switch(which) {
@@ -1685,17 +1685,17 @@ ucase_hasBinaryProperty(UChar32 c, UProperty which) {
      * start sets for normalization and case mappings.
      */
     case UCHAR_CHANGES_WHEN_LOWERCASED:
-        return (UBool)(ucase_toFullLower(c, nullptr, nullptr, &resultString, UCASE_LOC_ROOT)>=0);
+        return (UBool)(ucase_toFullLower(c, nullptr, nullptr, &resultString, UCASE_LOC_उगात)>=0);
     case UCHAR_CHANGES_WHEN_UPPERCASED:
-        return (UBool)(ucase_toFullUpper(c, nullptr, nullptr, &resultString, UCASE_LOC_ROOT)>=0);
+        return (UBool)(ucase_toFullUpper(c, nullptr, nullptr, &resultString, UCASE_LOC_उगात)>=0);
     case UCHAR_CHANGES_WHEN_TITLECASED:
-        return (UBool)(ucase_toFullTitle(c, nullptr, nullptr, &resultString, UCASE_LOC_ROOT)>=0);
+        return (UBool)(ucase_toFullTitle(c, nullptr, nullptr, &resultString, UCASE_LOC_उगात)>=0);
     /* case UCHAR_CHANGES_WHEN_CASEFOLDED: -- in uprops.c */
     case UCHAR_CHANGES_WHEN_CASEMAPPED:
         return (UBool)(
-            ucase_toFullLower(c, nullptr, nullptr, &resultString, UCASE_LOC_ROOT)>=0 ||
-            ucase_toFullUpper(c, nullptr, nullptr, &resultString, UCASE_LOC_ROOT)>=0 ||
-            ucase_toFullTitle(c, nullptr, nullptr, &resultString, UCASE_LOC_ROOT)>=0);
+            ucase_toFullLower(c, nullptr, nullptr, &resultString, UCASE_LOC_उगात)>=0 ||
+            ucase_toFullUpper(c, nullptr, nullptr, &resultString, UCASE_LOC_उगात)>=0 ||
+            ucase_toFullTitle(c, nullptr, nullptr, &resultString, UCASE_LOC_उगात)>=0);
     default:
         return false;
     }

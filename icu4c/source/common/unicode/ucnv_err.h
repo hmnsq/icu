@@ -200,7 +200,7 @@ typedef struct {
     char *target;               /**< Pointer to the target buffer. @stable ICU 2.0    */
     const char *targetLimit;    /**< Pointer to the limit (end + 1) of target buffer. @stable ICU 2.0     */
     int32_t *offsets;           /**< Pointer to the buffer that receives the offsets. *offset = blah ; offset++;. @stable ICU 2.0  */
-} UConverterFromUnicodeArgs;
+} UConverter_From_Unicode_मगा_कातविरान;
 
 
 /**
@@ -216,7 +216,7 @@ typedef struct {
     UChar *target;              /**< Pointer to the target buffer. @stable ICU 2.0    */
     const UChar *targetLimit;   /**< Pointer to the limit (end + 1) of target buffer. @stable ICU 2.0     */
     int32_t *offsets;           /**< Pointer to the buffer that receives the offsets. *offset = blah ; offset++;. @stable ICU 2.0  */
-} UConverterToUnicodeArgs;
+} UConverter_To_Unicode_मगा_कातविरान;
 
 
 /**
@@ -235,7 +235,7 @@ typedef struct {
  */
 U_CAPI void U_EXPORT2 UCNV_FROM_U_CALLBACK_STOP (
                   const void *context,
-                  UConverterFromUnicodeArgs *fromUArgs,
+                  UConverter_From_Unicode_मगा_कातविरान *fromUArgs,
                   const UChar* codeUnits,
                   int32_t length,
                   UChar32 codePoint,
@@ -259,7 +259,7 @@ U_CAPI void U_EXPORT2 UCNV_FROM_U_CALLBACK_STOP (
  */
 U_CAPI void U_EXPORT2 UCNV_TO_U_CALLBACK_STOP (
                   const void *context,
-                  UConverterToUnicodeArgs *toUArgs,
+                  UConverter_To_Unicode_मगा_कातविरान *toUArgs,
                   const char* codeUnits,
                   int32_t length,
                   UConverterCallbackReason reason,
@@ -286,7 +286,7 @@ U_CAPI void U_EXPORT2 UCNV_TO_U_CALLBACK_STOP (
  */
 U_CAPI void U_EXPORT2 UCNV_FROM_U_CALLBACK_SKIP (
                   const void *context,
-                  UConverterFromUnicodeArgs *fromUArgs,
+                  UConverter_From_Unicode_मगा_कातविरान *fromUArgs,
                   const UChar* codeUnits,
                   int32_t length,
                   UChar32 codePoint,
@@ -316,7 +316,7 @@ U_CAPI void U_EXPORT2 UCNV_FROM_U_CALLBACK_SKIP (
  */
 U_CAPI void U_EXPORT2 UCNV_FROM_U_CALLBACK_SUBSTITUTE (
                   const void *context,
-                  UConverterFromUnicodeArgs *fromUArgs,
+                  UConverter_From_Unicode_मगा_कातविरान *fromUArgs,
                   const UChar* codeUnits,
                   int32_t length,
                   UChar32 codePoint,
@@ -372,7 +372,7 @@ U_CAPI void U_EXPORT2 UCNV_FROM_U_CALLBACK_SUBSTITUTE (
  */
 U_CAPI void U_EXPORT2 UCNV_FROM_U_CALLBACK_ESCAPE (
                   const void *context,
-                  UConverterFromUnicodeArgs *fromUArgs,
+                  UConverter_From_Unicode_मगा_कातविरान *fromUArgs,
                   const UChar* codeUnits,
                   int32_t length,
                   UChar32 codePoint,
@@ -400,7 +400,7 @@ U_CAPI void U_EXPORT2 UCNV_FROM_U_CALLBACK_ESCAPE (
  */
 U_CAPI void U_EXPORT2 UCNV_TO_U_CALLBACK_SKIP (
                   const void *context,
-                  UConverterToUnicodeArgs *toUArgs,
+                  UConverter_To_Unicode_मगा_कातविरान *toUArgs,
                   const char* codeUnits,
                   int32_t length,
                   UConverterCallbackReason reason,
@@ -426,7 +426,7 @@ U_CAPI void U_EXPORT2 UCNV_TO_U_CALLBACK_SKIP (
  */
 U_CAPI void U_EXPORT2 UCNV_TO_U_CALLBACK_SUBSTITUTE (
                   const void *context,
-                  UConverterToUnicodeArgs *toUArgs,
+                  UConverter_To_Unicode_मगा_कातविरान *toUArgs,
                   const char* codeUnits,
                   int32_t length,
                   UConverterCallbackReason reason,
@@ -452,7 +452,7 @@ U_CAPI void U_EXPORT2 UCNV_TO_U_CALLBACK_SUBSTITUTE (
 
 U_CAPI void U_EXPORT2 UCNV_TO_U_CALLBACK_ESCAPE (
                   const void *context,
-                  UConverterToUnicodeArgs *toUArgs,
+                  UConverter_To_Unicode_मगा_कातविरान *toUArgs,
                   const char* codeUnits,
                   int32_t length,
                   UConverterCallbackReason reason,

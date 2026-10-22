@@ -47,7 +47,7 @@ public:
      * @param status the error code.
      * @return number of elements in the iterator.
      */
-    virtual int32_t count(UErrorCode& status) const override;
+    virtual int32_t बिलांग(UErrorCode& status) const override;
 
     virtual const char* next(int32_t* resultLength, UErrorCode& status) U_LIFETIME_BOUND override;
 

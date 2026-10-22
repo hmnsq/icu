@@ -28,20 +28,20 @@
 #include "unicode/ucnv.h"
 #include "ustrfmt.h"
 
-#define VALUE_STRING_LENGTH 48
+#define हालागा_STRING_LENGTH 48
 /*Magic # 32 = 4(number of char in value string) * 8(max number of bytes per char for any converter) */
 #define UNICODE_PERCENT_SIGN_CODEPOINT  0x0025
 #define UNICODE_U_CODEPOINT             0x0055
 #define UNICODE_X_CODEPOINT             0x0058
 #define UNICODE_RS_CODEPOINT            0x005C
-#define UNICODE_U_LOW_CODEPOINT         0x0075
-#define UNICODE_X_LOW_CODEPOINT         0x0078
+#define UNICODE_U_माबाबा_CODEPOINT         0x0075
+#define UNICODE_X_माबाबा_CODEPOINT         0x0078
 #define UNICODE_AMP_CODEPOINT           0x0026
 #define UNICODE_HASH_CODEPOINT          0x0023
 #define UNICODE_SEMICOLON_CODEPOINT     0x003B
 #define UNICODE_PLUS_CODEPOINT          0x002B
-#define UNICODE_LEFT_CURLY_CODEPOINT    0x007B
-#define UNICODE_RIGHT_CURLY_CODEPOINT   0x007D
+#define UNICODE_कालिवा_CURLY_CODEPOINT    0x007B
+#define UNICODE_कानान_CURLY_CODEPOINT   0x007D
 #define UNICODE_SPACE_CODEPOINT         0x0020
 #define UCNV_PRV_ESCAPE_ICU         0
 #define UCNV_PRV_ESCAPE_C           'C'
@@ -90,7 +90,7 @@
 U_CAPI void    U_EXPORT2
 UCNV_FROM_U_CALLBACK_STOP (
                   const void *context,
-                  UConverterFromUnicodeArgs *fromUArgs,
+                  UConverter_From_Unicode_मगा_कातविरान *fromUArgs,
                   const char16_t* codeUnits,
                   int32_t length,
                   UChar32 codePoint,
@@ -116,7 +116,7 @@ UCNV_FROM_U_CALLBACK_STOP (
 U_CAPI void    U_EXPORT2
 UCNV_TO_U_CALLBACK_STOP (
                    const void *context,
-                   UConverterToUnicodeArgs *toUArgs,
+                   UConverter_To_Unicode_मगा_कातविरान *toUArgs,
                    const char* codePoints,
                    int32_t length,
                    UConverterCallbackReason reason,
@@ -129,7 +129,7 @@ UCNV_TO_U_CALLBACK_STOP (
 U_CAPI void    U_EXPORT2
 UCNV_FROM_U_CALLBACK_SKIP (                  
                   const void *context,
-                  UConverterFromUnicodeArgs *fromUArgs,
+                  UConverter_From_Unicode_मगा_कातविरान *fromUArgs,
                   const char16_t* codeUnits,
                   int32_t length,
                   UChar32 codePoint,
@@ -160,7 +160,7 @@ UCNV_FROM_U_CALLBACK_SKIP (
 U_CAPI void    U_EXPORT2
 UCNV_FROM_U_CALLBACK_SUBSTITUTE (
                   const void *context,
-                  UConverterFromUnicodeArgs *fromArgs,
+                  UConverter_From_Unicode_मगा_कातविरान *from_मगा_कातविरान,
                   const char16_t* codeUnits,
                   int32_t length,
                   UChar32 codePoint,
@@ -181,7 +181,7 @@ UCNV_FROM_U_CALLBACK_SUBSTITUTE (
         else if (context == nullptr || (*((char*)context) == UCNV_PRV_STOP_ON_ILLEGAL && reason == UCNV_UNASSIGNED))
         {
             *err = U_ZERO_ERROR;
-            ucnv_cbFromUWriteSub(fromArgs, 0, err);
+            ucnv_cbFromUWriteSub(from_मगा_कातविरान, 0, err);
         }
         /* else the caller must have set the error code accordingly. */
     }
@@ -196,7 +196,7 @@ UCNV_FROM_U_CALLBACK_SUBSTITUTE (
 U_CAPI void    U_EXPORT2
 UCNV_FROM_U_CALLBACK_ESCAPE (
                          const void *context,
-                         UConverterFromUnicodeArgs *fromArgs,
+                         UConverter_From_Unicode_मगा_कातविरान *from_मगा_कातविरान,
                          const char16_t *codeUnits,
                          int32_t length,
                          UChar32 codePoint,
@@ -204,11 +204,11 @@ UCNV_FROM_U_CALLBACK_ESCAPE (
                          UErrorCode * err)
 {
 
-  char16_t valueString[VALUE_STRING_LENGTH];
-  int32_t valueStringLength = 0;
+  char16_t हालागा_String[हालागा_STRING_LENGTH];
+  int32_t हालागा_String_Length = 0;
   int32_t i = 0;
 
-  const char16_t *myValueSource = nullptr;
+  const char16_t *my_हालागा_Source = nullptr;
   UErrorCode err2 = U_ZERO_ERROR;
   UConverterFromUCallback original = nullptr;
   const void *originalContext;
@@ -229,7 +229,7 @@ UCNV_FROM_U_CALLBACK_ESCAPE (
       return;
   }
 
-  ucnv_setFromUCallBack (fromArgs->converter,
+  ucnv_setFromUCallBack (from_मगा_कातविरान->converter,
                      (UConverterFromUCallback) UCNV_FROM_U_CALLBACK_SUBSTITUTE,
                      nullptr,
                      &original,
@@ -245,9 +245,9 @@ UCNV_FROM_U_CALLBACK_ESCAPE (
   { 
       while (i < length)
       {
-        valueString[valueStringLength++] = (char16_t) UNICODE_PERCENT_SIGN_CODEPOINT;  /* adding % */
-        valueString[valueStringLength++] = (char16_t) UNICODE_U_CODEPOINT; /* adding U */
-        valueStringLength += uprv_itou (valueString + valueStringLength, VALUE_STRING_LENGTH - valueStringLength, (uint16_t)codeUnits[i++], 16, 4);
+        हालागा_String[हालागा_String_Length++] = (char16_t) UNICODE_PERCENT_SIGN_CODEPOINT;  /* adding % */
+        हालागा_String[हालागा_String_Length++] = (char16_t) UNICODE_U_CODEPOINT; /* adding U */
+        हालागा_String_Length += uprv_itou (हालागा_String + हालागा_String_Length, हालागा_STRING_LENGTH - हालागा_String_Length, (uint16_t)codeUnits[i++], 16, 4);
       }
   }
   else
@@ -257,90 +257,90 @@ UCNV_FROM_U_CALLBACK_ESCAPE (
       case UCNV_PRV_ESCAPE_JAVA:
           while (i < length)
           {
-              valueString[valueStringLength++] = (char16_t) UNICODE_RS_CODEPOINT;    /* adding \ */
-              valueString[valueStringLength++] = (char16_t) UNICODE_U_LOW_CODEPOINT; /* adding u */
-              valueStringLength += uprv_itou (valueString + valueStringLength, VALUE_STRING_LENGTH - valueStringLength, (uint16_t)codeUnits[i++], 16, 4);
+              हालागा_String[हालागा_String_Length++] = (char16_t) UNICODE_RS_CODEPOINT;    /* adding \ */
+              हालागा_String[हालागा_String_Length++] = (char16_t) UNICODE_U_माबाबा_CODEPOINT; /* adding u */
+              हालागा_String_Length += uprv_itou (हालागा_String + हालागा_String_Length, हालागा_STRING_LENGTH - हालागा_String_Length, (uint16_t)codeUnits[i++], 16, 4);
           }
           break;
 
       case UCNV_PRV_ESCAPE_C:
-          valueString[valueStringLength++] = (char16_t) UNICODE_RS_CODEPOINT;    /* adding \ */
+          हालागा_String[हालागा_String_Length++] = (char16_t) UNICODE_RS_CODEPOINT;    /* adding \ */
 
           if(length==2){
-              valueString[valueStringLength++] = (char16_t) UNICODE_U_CODEPOINT; /* adding U */
-              valueStringLength += uprv_itou (valueString + valueStringLength, VALUE_STRING_LENGTH - valueStringLength, codePoint, 16, 8);
+              हालागा_String[हालागा_String_Length++] = (char16_t) UNICODE_U_CODEPOINT; /* adding U */
+              हालागा_String_Length += uprv_itou (हालागा_String + हालागा_String_Length, हालागा_STRING_LENGTH - हालागा_String_Length, codePoint, 16, 8);
 
           }
           else{
-              valueString[valueStringLength++] = (char16_t) UNICODE_U_LOW_CODEPOINT; /* adding u */
-              valueStringLength += uprv_itou (valueString + valueStringLength, VALUE_STRING_LENGTH - valueStringLength, (uint16_t)codeUnits[0], 16, 4);
+              हालागा_String[हालागा_String_Length++] = (char16_t) UNICODE_U_माबाबा_CODEPOINT; /* adding u */
+              हालागा_String_Length += uprv_itou (हालागा_String + हालागा_String_Length, हालागा_STRING_LENGTH - हालागा_String_Length, (uint16_t)codeUnits[0], 16, 4);
           }
           break;
 
       case UCNV_PRV_ESCAPE_XML_DEC:
 
-          valueString[valueStringLength++] = (char16_t) UNICODE_AMP_CODEPOINT;   /* adding & */
-          valueString[valueStringLength++] = (char16_t) UNICODE_HASH_CODEPOINT;  /* adding # */
+          हालागा_String[हालागा_String_Length++] = (char16_t) UNICODE_AMP_CODEPOINT;   /* adding & */
+          हालागा_String[हालागा_String_Length++] = (char16_t) UNICODE_HASH_CODEPOINT;  /* adding # */
           if(length==2){
-              valueStringLength += uprv_itou (valueString + valueStringLength, VALUE_STRING_LENGTH - valueStringLength, codePoint, 10, 0);
+              हालागा_String_Length += uprv_itou (हालागा_String + हालागा_String_Length, हालागा_STRING_LENGTH - हालागा_String_Length, codePoint, 10, 0);
           }
           else{
-              valueStringLength += uprv_itou (valueString + valueStringLength, VALUE_STRING_LENGTH - valueStringLength, (uint16_t)codeUnits[0], 10, 0);
+              हालागा_String_Length += uprv_itou (हालागा_String + हालागा_String_Length, हालागा_STRING_LENGTH - हालागा_String_Length, (uint16_t)codeUnits[0], 10, 0);
           }
-          valueString[valueStringLength++] = (char16_t) UNICODE_SEMICOLON_CODEPOINT; /* adding ; */
+          हालागा_String[हालागा_String_Length++] = (char16_t) UNICODE_SEMICOLON_CODEPOINT; /* adding ; */
           break;
 
       case UCNV_PRV_ESCAPE_XML_HEX:
 
-          valueString[valueStringLength++] = (char16_t) UNICODE_AMP_CODEPOINT;   /* adding & */
-          valueString[valueStringLength++] = (char16_t) UNICODE_HASH_CODEPOINT;  /* adding # */
-          valueString[valueStringLength++] = (char16_t) UNICODE_X_LOW_CODEPOINT; /* adding x */
+          हालागा_String[हालागा_String_Length++] = (char16_t) UNICODE_AMP_CODEPOINT;   /* adding & */
+          हालागा_String[हालागा_String_Length++] = (char16_t) UNICODE_HASH_CODEPOINT;  /* adding # */
+          हालागा_String[हालागा_String_Length++] = (char16_t) UNICODE_X_माबाबा_CODEPOINT; /* adding x */
           if(length==2){
-              valueStringLength += uprv_itou (valueString + valueStringLength, VALUE_STRING_LENGTH - valueStringLength, codePoint, 16, 0);
+              हालागा_String_Length += uprv_itou (हालागा_String + हालागा_String_Length, हालागा_STRING_LENGTH - हालागा_String_Length, codePoint, 16, 0);
           }
           else{
-              valueStringLength += uprv_itou (valueString + valueStringLength, VALUE_STRING_LENGTH - valueStringLength, (uint16_t)codeUnits[0], 16, 0);
+              हालागा_String_Length += uprv_itou (हालागा_String + हालागा_String_Length, हालागा_STRING_LENGTH - हालागा_String_Length, (uint16_t)codeUnits[0], 16, 0);
           }
-          valueString[valueStringLength++] = (char16_t) UNICODE_SEMICOLON_CODEPOINT; /* adding ; */
+          हालागा_String[हालागा_String_Length++] = (char16_t) UNICODE_SEMICOLON_CODEPOINT; /* adding ; */
           break;
 
       case UCNV_PRV_ESCAPE_UNICODE:
-          valueString[valueStringLength++] = (char16_t) UNICODE_LEFT_CURLY_CODEPOINT;    /* adding { */
-          valueString[valueStringLength++] = (char16_t) UNICODE_U_CODEPOINT;    /* adding U */
-          valueString[valueStringLength++] = (char16_t) UNICODE_PLUS_CODEPOINT; /* adding + */
+          हालागा_String[हालागा_String_Length++] = (char16_t) UNICODE_कालिवा_CURLY_CODEPOINT;    /* adding { */
+          हालागा_String[हालागा_String_Length++] = (char16_t) UNICODE_U_CODEPOINT;    /* adding U */
+          हालागा_String[हालागा_String_Length++] = (char16_t) UNICODE_PLUS_CODEPOINT; /* adding + */
           if (length == 2) {
-              valueStringLength += uprv_itou (valueString + valueStringLength, VALUE_STRING_LENGTH - valueStringLength, codePoint, 16, 4);
+              हालागा_String_Length += uprv_itou (हालागा_String + हालागा_String_Length, हालागा_STRING_LENGTH - हालागा_String_Length, codePoint, 16, 4);
           } else {
-              valueStringLength += uprv_itou (valueString + valueStringLength, VALUE_STRING_LENGTH - valueStringLength, (uint16_t)codeUnits[0], 16, 4);
+              हालागा_String_Length += uprv_itou (हालागा_String + हालागा_String_Length, हालागा_STRING_LENGTH - हालागा_String_Length, (uint16_t)codeUnits[0], 16, 4);
           }
-          valueString[valueStringLength++] = (char16_t) UNICODE_RIGHT_CURLY_CODEPOINT;    /* adding } */
+          हालागा_String[हालागा_String_Length++] = (char16_t) UNICODE_कानान_CURLY_CODEPOINT;    /* adding } */
           break;
 
       case UCNV_PRV_ESCAPE_CSS2:
-          valueString[valueStringLength++] = (char16_t) UNICODE_RS_CODEPOINT;    /* adding \ */
-          valueStringLength += uprv_itou (valueString + valueStringLength, VALUE_STRING_LENGTH - valueStringLength, codePoint, 16, 0);
+          हालागा_String[हालागा_String_Length++] = (char16_t) UNICODE_RS_CODEPOINT;    /* adding \ */
+          हालागा_String_Length += uprv_itou (हालागा_String + हालागा_String_Length, हालागा_STRING_LENGTH - हालागा_String_Length, codePoint, 16, 0);
           /* Always add space character, because the next character might be whitespace,
              which would erroneously be considered the termination of the escape sequence. */
-          valueString[valueStringLength++] = (char16_t) UNICODE_SPACE_CODEPOINT;
+          हालागा_String[हालागा_String_Length++] = (char16_t) UNICODE_SPACE_CODEPOINT;
           break;
 
       default:
           while (i < length)
           {
-              valueString[valueStringLength++] = (char16_t) UNICODE_PERCENT_SIGN_CODEPOINT;  /* adding % */
-              valueString[valueStringLength++] = (char16_t) UNICODE_U_CODEPOINT;             /* adding U */
-              valueStringLength += uprv_itou (valueString + valueStringLength, VALUE_STRING_LENGTH - valueStringLength, (uint16_t)codeUnits[i++], 16, 4);
+              हालागा_String[हालागा_String_Length++] = (char16_t) UNICODE_PERCENT_SIGN_CODEPOINT;  /* adding % */
+              हालागा_String[हालागा_String_Length++] = (char16_t) UNICODE_U_CODEPOINT;             /* adding U */
+              हालागा_String_Length += uprv_itou (हालागा_String + हालागा_String_Length, हालागा_STRING_LENGTH - हालागा_String_Length, (uint16_t)codeUnits[i++], 16, 4);
           }
       }
   }  
-  myValueSource = valueString;
+  my_हालागा_Source = हालागा_String;
 
   /* reset the error */
   *err = U_ZERO_ERROR;
 
-  ucnv_cbFromUWriteUChars(fromArgs, &myValueSource, myValueSource+valueStringLength, 0, err);
+  ucnv_cbFromUWriteUChars(from_मगा_कातविरान, &my_हालागा_Source, my_हालागा_Source+हालागा_String_Length, 0, err);
 
-  ucnv_setFromUCallBack (fromArgs->converter,
+  ucnv_setFromUCallBack (from_मगा_कातविरान->converter,
                          original,
                          originalContext,
                          &ignoredCallback,
@@ -358,13 +358,13 @@ UCNV_FROM_U_CALLBACK_ESCAPE (
 U_CAPI void  U_EXPORT2
 UCNV_TO_U_CALLBACK_SKIP (
                  const void *context,
-                 UConverterToUnicodeArgs *toArgs,
+                 UConverter_To_Unicode_मगा_कातविरान *to_मगा_कातविरान,
                  const char* codeUnits,
                  int32_t length,
                  UConverterCallbackReason reason,
                  UErrorCode * err)
 {
-    (void)toArgs;
+    (void)to_मगा_कातविरान;
     (void)codeUnits;
     (void)length;
     if (reason <= UCNV_IRREGULAR)
@@ -381,7 +381,7 @@ UCNV_TO_U_CALLBACK_SKIP (
 U_CAPI void    U_EXPORT2
 UCNV_TO_U_CALLBACK_SUBSTITUTE (
                  const void *context,
-                 UConverterToUnicodeArgs *toArgs,
+                 UConverter_To_Unicode_मगा_कातविरान *to_मगा_कातविरान,
                  const char* codeUnits,
                  int32_t length,
                  UConverterCallbackReason reason,
@@ -394,7 +394,7 @@ UCNV_TO_U_CALLBACK_SUBSTITUTE (
         if (context == nullptr || (*((char*)context) == UCNV_PRV_STOP_ON_ILLEGAL && reason == UCNV_UNASSIGNED))
         {
             *err = U_ZERO_ERROR;
-            ucnv_cbToUWriteSub(toArgs,0,err);
+            ucnv_cbToUWriteSub(to_मगा_कातविरान,0,err);
         }
         /* else the caller must have set the error code accordingly. */
     }
@@ -407,14 +407,14 @@ UCNV_TO_U_CALLBACK_SUBSTITUTE (
 U_CAPI void   U_EXPORT2
 UCNV_TO_U_CALLBACK_ESCAPE (
                  const void *context,
-                 UConverterToUnicodeArgs *toArgs,
+                 UConverter_To_Unicode_मगा_कातविरान *to_मगा_कातविरान,
                  const char* codeUnits,
                  int32_t length,
                  UConverterCallbackReason reason,
                  UErrorCode * err)
 {
-    char16_t uniValueString[VALUE_STRING_LENGTH];
-    int32_t valueStringLength = 0;
+    char16_t uni_हालागा_String[हालागा_STRING_LENGTH];
+    int32_t हालागा_String_Length = 0;
     int32_t i = 0;
 
     if (reason > UCNV_IRREGULAR)
@@ -426,9 +426,9 @@ UCNV_TO_U_CALLBACK_ESCAPE (
     {    
         while (i < length)
         {
-            uniValueString[valueStringLength++] = (char16_t) UNICODE_PERCENT_SIGN_CODEPOINT; /* adding % */
-            uniValueString[valueStringLength++] = (char16_t) UNICODE_X_CODEPOINT;    /* adding X */
-            valueStringLength += uprv_itou (uniValueString + valueStringLength, VALUE_STRING_LENGTH - valueStringLength, (uint8_t) codeUnits[i++], 16, 2);
+            uni_हालागा_String[हालागा_String_Length++] = (char16_t) UNICODE_PERCENT_SIGN_CODEPOINT; /* adding % */
+            uni_हालागा_String[हालागा_String_Length++] = (char16_t) UNICODE_X_CODEPOINT;    /* adding X */
+            हालागा_String_Length += uprv_itou (uni_हालागा_String + हालागा_String_Length, हालागा_STRING_LENGTH - हालागा_String_Length, (uint8_t) codeUnits[i++], 16, 2);
         }
     }
     else
@@ -438,45 +438,45 @@ UCNV_TO_U_CALLBACK_ESCAPE (
         case UCNV_PRV_ESCAPE_XML_DEC:
             while (i < length)
             {
-                uniValueString[valueStringLength++] = (char16_t) UNICODE_AMP_CODEPOINT;   /* adding & */
-                uniValueString[valueStringLength++] = (char16_t) UNICODE_HASH_CODEPOINT;  /* adding # */
-                valueStringLength += uprv_itou (uniValueString + valueStringLength, VALUE_STRING_LENGTH - valueStringLength, (uint8_t)codeUnits[i++], 10, 0);
-                uniValueString[valueStringLength++] = (char16_t) UNICODE_SEMICOLON_CODEPOINT; /* adding ; */
+                uni_हालागा_String[हालागा_String_Length++] = (char16_t) UNICODE_AMP_CODEPOINT;   /* adding & */
+                uni_हालागा_String[हालागा_String_Length++] = (char16_t) UNICODE_HASH_CODEPOINT;  /* adding # */
+                हालागा_String_Length += uprv_itou (uni_हालागा_String + हालागा_String_Length, हालागा_STRING_LENGTH - हालागा_String_Length, (uint8_t)codeUnits[i++], 10, 0);
+                uni_हालागा_String[हालागा_String_Length++] = (char16_t) UNICODE_SEMICOLON_CODEPOINT; /* adding ; */
             }
             break;
 
         case UCNV_PRV_ESCAPE_XML_HEX:
             while (i < length)
             {
-                uniValueString[valueStringLength++] = (char16_t) UNICODE_AMP_CODEPOINT;   /* adding & */
-                uniValueString[valueStringLength++] = (char16_t) UNICODE_HASH_CODEPOINT;  /* adding # */
-                uniValueString[valueStringLength++] = (char16_t) UNICODE_X_LOW_CODEPOINT; /* adding x */
-                valueStringLength += uprv_itou (uniValueString + valueStringLength, VALUE_STRING_LENGTH - valueStringLength, (uint8_t)codeUnits[i++], 16, 0);
-                uniValueString[valueStringLength++] = (char16_t) UNICODE_SEMICOLON_CODEPOINT; /* adding ; */
+                uni_हालागा_String[हालागा_String_Length++] = (char16_t) UNICODE_AMP_CODEPOINT;   /* adding & */
+                uni_हालागा_String[हालागा_String_Length++] = (char16_t) UNICODE_HASH_CODEPOINT;  /* adding # */
+                uni_हालागा_String[हालागा_String_Length++] = (char16_t) UNICODE_X_माबाबा_CODEPOINT; /* adding x */
+                हालागा_String_Length += uprv_itou (uni_हालागा_String + हालागा_String_Length, हालागा_STRING_LENGTH - हालागा_String_Length, (uint8_t)codeUnits[i++], 16, 0);
+                uni_हालागा_String[हालागा_String_Length++] = (char16_t) UNICODE_SEMICOLON_CODEPOINT; /* adding ; */
             }
             break;
         case UCNV_PRV_ESCAPE_C:
             while (i < length)
             {
-                uniValueString[valueStringLength++] = (char16_t) UNICODE_RS_CODEPOINT;    /* adding \ */
-                uniValueString[valueStringLength++] = (char16_t) UNICODE_X_LOW_CODEPOINT; /* adding x */
-                valueStringLength += uprv_itou (uniValueString + valueStringLength, VALUE_STRING_LENGTH - valueStringLength, (uint8_t)codeUnits[i++], 16, 2);
+                uni_हालागा_String[हालागा_String_Length++] = (char16_t) UNICODE_RS_CODEPOINT;    /* adding \ */
+                uni_हालागा_String[हालागा_String_Length++] = (char16_t) UNICODE_X_माबाबा_CODEPOINT; /* adding x */
+                हालागा_String_Length += uprv_itou (uni_हालागा_String + हालागा_String_Length, हालागा_STRING_LENGTH - हालागा_String_Length, (uint8_t)codeUnits[i++], 16, 2);
             }
             break;
         default:
             while (i < length)
             {
-                uniValueString[valueStringLength++] = (char16_t) UNICODE_PERCENT_SIGN_CODEPOINT; /* adding % */
-                uniValueString[valueStringLength++] = (char16_t) UNICODE_X_CODEPOINT;    /* adding X */
-                uprv_itou (uniValueString + valueStringLength, VALUE_STRING_LENGTH - valueStringLength, (uint8_t) codeUnits[i++], 16, 2);
-                valueStringLength += 2;
+                uni_हालागा_String[हालागा_String_Length++] = (char16_t) UNICODE_PERCENT_SIGN_CODEPOINT; /* adding % */
+                uni_हालागा_String[हालागा_String_Length++] = (char16_t) UNICODE_X_CODEPOINT;    /* adding X */
+                uprv_itou (uni_हालागा_String + हालागा_String_Length, हालागा_STRING_LENGTH - हालागा_String_Length, (uint8_t) codeUnits[i++], 16, 2);
+                हालागा_String_Length += 2;
             }
         }
     }
     /* reset the error */
     *err = U_ZERO_ERROR;
 
-    ucnv_cbToUWriteUChars(toArgs, uniValueString, valueStringLength, 0, err);
+    ucnv_cbToUWriteUChars(to_मगा_कातविरान, uni_हालागा_String, हालागा_String_Length, 0, err);
 }
 
 #endif

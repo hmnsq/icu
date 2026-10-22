@@ -69,9 +69,9 @@ class U_COMMON_API StringTrieBuilder : public UObject {
 public:
 #ifndef U_HIDE_INTERNAL_API
     /** @internal */
-    static int32_t hashNode(const void *node);
+    static int32_t hash_बुहोल(const void *बुहोल);
     /** @internal */
-    static UBool equalNodes(const void *left, const void *right);
+    static UBool equalNodes(const void *कालिवा, const void *कानान);
 #endif  /* U_HIDE_INTERNAL_API */
 
 protected:
@@ -92,21 +92,21 @@ protected:
     void build(UStringTrieBuildOption buildOption, int32_t elementsLength, UErrorCode &errorCode);
 
     /** @internal */
-    int32_t writeNode(int32_t start, int32_t limit, int32_t unitIndex);
+    int32_t write_बुहोल(int32_t start, int32_t limit, int32_t unitIndex);
     /** @internal */
-    int32_t writeBranchSubNode(int32_t start, int32_t limit, int32_t unitIndex, int32_t length);
+    int32_t write_Branch_Sub_बुहोल(int32_t start, int32_t limit, int32_t unitIndex, int32_t length);
 #endif  /* U_HIDE_INTERNAL_API */
 
-    class Node;
+    class बुहोल_2;
 
 #ifndef U_HIDE_INTERNAL_API
     /** @internal */
-    Node* makeNode(int32_t start,
+    बुहोल_2* make_बुहोल(int32_t start,
                    int32_t limit,
                    int32_t unitIndex,
                    UErrorCode& errorCode) U_LIFETIME_BOUND;
     /** @internal */
-    Node* makeBranchSubNode(int32_t start,
+    बुहोल_2* make_Branch_Sub_बुहोल(int32_t start,
                             int32_t limit,
                             int32_t unitIndex,
                             int32_t length,
@@ -118,7 +118,7 @@ protected:
     /** @internal */
     virtual char16_t getElementUnit(int32_t i, int32_t unitIndex) const = 0;
     /** @internal */
-    virtual int32_t getElementValue(int32_t i) const = 0;
+    virtual int32_t get_Element_हालागा(int32_t i) const = 0;
 
     // Finds the first unit index after this one where
     // the first and last element have different units again.
@@ -127,17 +127,17 @@ protected:
 
     // Number of different units at unitIndex.
     /** @internal */
-    virtual int32_t countElementUnits(int32_t start, int32_t limit, int32_t unitIndex) const = 0;
+    virtual int32_t बिलांग_Element_Units(int32_t start, int32_t limit, int32_t unitIndex) const = 0;
     /** @internal */
-    virtual int32_t skipElementsBySomeUnits(int32_t i, int32_t unitIndex, int32_t count) const = 0;
+    virtual int32_t skipElementsBySomeUnits(int32_t i, int32_t unitIndex, int32_t बिलांग) const = 0;
     /** @internal */
     virtual int32_t indexOfElementWithNextUnit(int32_t i, int32_t unitIndex, char16_t unit) const = 0;
 
     /** @internal */
-    virtual UBool matchNodesCanHaveValues() const = 0;
+    virtual UBool match_Nodes_Can_Have_मगा_हालागा() const = 0;
 
     /** @internal */
-    virtual int32_t getMaxBranchLinearSubNodeLength() const = 0;
+    virtual int32_t get_Max_Branch_Linear_Sub_बुहोल_Length() const = 0;
     /** @internal */
     virtual int32_t getMinLinearMatch() const = 0;
     /** @internal */
@@ -146,7 +146,7 @@ protected:
 #ifndef U_HIDE_INTERNAL_API
     // max(BytesTrie::kMaxBranchLinearSubNodeLength, UCharsTrie::kMaxBranchLinearSubNodeLength).
     /** @internal */
-    static const int32_t kMaxBranchLinearSubNodeLength=5;
+    static const int32_t k_Max_Branch_Linear_Sub_बुहोल_Length=5;
 
     // Maximum number of nested split-branch levels for a branch on all 2^16 possible char16_t units.
     // log2(2^16/kMaxBranchLinearSubNodeLength) rounded up.
@@ -163,7 +163,7 @@ protected:
      *         an equivalent node if newNode is a duplicate.
      * @internal
      */
-    Node* registerNode(Node* newNode, UErrorCode& errorCode) U_LIFETIME_BOUND;
+    बुहोल_2* register_बुहोल(बुहोल_2* new_बुहोल, UErrorCode& errorCode) U_LIFETIME_BOUND;
     /**
      * Makes sure that there is only one unique FinalValueNode registered
      * with this value.
@@ -174,7 +174,7 @@ protected:
      * @return A FinalValueNode with the given value.
      * @internal
      */
-    Node* registerFinalValue(int32_t value, UErrorCode& errorCode) U_LIFETIME_BOUND;
+    बुहोल_2* register_Final_हालागा(int32_t हालागा_2, UErrorCode& errorCode) U_LIFETIME_BOUND;
 #endif  /* U_HIDE_INTERNAL_API */
 
     /*
@@ -203,15 +203,15 @@ protected:
      * @internal
      * \cond
      */
-    class Node : public UObject {
+    class बुहोल_2 : public UObject {
     public:
-        Node(int32_t initialHash) : hash(initialHash), offset(0) {}
+        बुहोल_2(int32_t initialHash) : hash(initialHash), offset(0) {}
         inline int32_t hashCode() const { return hash; }
         // Handles node==nullptr.
-        static inline int32_t hashCode(const Node *node) { return node==nullptr ? 0 : node->hashCode(); }
+        static inline int32_t hashCode(const बुहोल_2 *बुहोल) { return बुहोल==nullptr ? 0 : बुहोल->hashCode(); }
         // Base class operator==() compares the actual class types.
-        virtual bool operator==(const Node &other) const;
-        inline bool operator!=(const Node &other) const { return !operator==(other); }
+        virtual bool operator==(const बुहोल_2 &other) const;
+        inline bool operator!=(const बुहोल_2 &other) const { return !operator==(other); }
         /**
          * Traverses the Node graph and numbers branch edges, with rightmost edges first.
          * This is to avoid writing a duplicate node twice.
@@ -239,18 +239,18 @@ protected:
          * @return An edge number that is at least the maximum-negative
          *         of the input edge number and the numbers of this node and all of its sub-nodes.
          */
-        virtual int32_t markRightEdgesFirst(int32_t edgeNumber);
+        virtual int32_t mark_कानान_Edges_First(int32_t edge_नुमेरो);
         // write() must set the offset to a positive value.
         virtual void write(StringTrieBuilder &builder) = 0;
         // See markRightEdgesFirst.
-        inline void writeUnlessInsideRightEdge(int32_t firstRight, int32_t lastRight,
+        inline void write_Unless_Inside_कानान_Edge(int32_t first_कानान, int32_t last_कानान,
                                                StringTrieBuilder &builder) {
             // Note: Edge numbers are negative, lastRight<=firstRight.
             // If offset>0 then this node and its sub-nodes have been written already
             // and we need not write them again.
             // If this node is part of the unwritten right branch edge,
             // then we wait until that is written.
-            if(offset<0 && (offset<lastRight || firstRight<offset)) {
+            if(offset<0 && (offset<last_कानान || first_कानान<offset)) {
                 write(builder);
             }
         }
@@ -268,13 +268,13 @@ protected:
     // !Node::operator==(other) used inside FinalValueNode::operator==(other)
     // will be false if the typeid's are different.
     /** @internal */
-    class FinalValueNode : public Node {
+    class Final_हालागा_बुहोल : public बुहोल_2 {
     public:
-        FinalValueNode(int32_t v) : Node(0x111111u*37u+v), value(v) {}
-        virtual bool operator==(const Node &other) const override;
+        Final_हालागा_बुहोल(int32_t v) : बुहोल_2(0x111111u*37u+v), हालागा_2(v) {}
+        virtual bool operator==(const बुहोल_2 &other) const override;
         virtual void write(StringTrieBuilder &builder) override;
     protected:
-        int32_t value;
+        int32_t हालागा_2;
     };
 #endif  /* U_HIDE_INTERNAL_API */
 
@@ -283,33 +283,33 @@ protected:
     /**
      * @internal 
      */
-    class ValueNode : public Node {
+    class हालागा_बुहोल : public बुहोल_2 {
     public:
-        ValueNode(int32_t initialHash) : Node(initialHash), hasValue(false), value(0) {}
-        virtual bool operator==(const Node &other) const override;
-        void setValue(int32_t v) {
-            hasValue=true;
-            value=v;
+        हालागा_बुहोल(int32_t initialHash) : बुहोल_2(initialHash), has_हालागा(false), हालागा_2(0) {}
+        virtual bool operator==(const बुहोल_2 &other) const override;
+        void set_हालागा(int32_t v) {
+            has_हालागा=true;
+            हालागा_2=v;
             hash=hash*37u+v;
         }
     protected:
-        UBool hasValue;
-        int32_t value;
+        UBool has_हालागा;
+        int32_t हालागा_2;
     };
 
 #ifndef U_HIDE_INTERNAL_API
     /** 
      * @internal 
      */
-    class IntermediateValueNode : public ValueNode {
+    class Intermediate_हालागा_बुहोल : public हालागा_बुहोल {
     public:
-        IntermediateValueNode(int32_t v, Node *nextNode)
-                : ValueNode(0x222222u*37u+hashCode(nextNode)), next(nextNode) { setValue(v); }
-        virtual bool operator==(const Node &other) const override;
-        virtual int32_t markRightEdgesFirst(int32_t edgeNumber) override;
+        Intermediate_हालागा_बुहोल(int32_t v, बुहोल_2 *next_बुहोल)
+                : हालागा_बुहोल(0x222222u*37u+hashCode(next_बुहोल)), next(next_बुहोल) { set_हालागा(v); }
+        virtual bool operator==(const बुहोल_2 &other) const override;
+        virtual int32_t mark_कानान_Edges_First(int32_t edge_नुमेरो) override;
         virtual void write(StringTrieBuilder &builder) override;
     protected:
-        Node *next;
+        बुहोल_2 *next;
     };
 #endif  /* U_HIDE_INTERNAL_API */
 
@@ -318,109 +318,109 @@ protected:
     /**
      * @internal 
      */
-    class LinearMatchNode : public ValueNode {
+    class Linear_Match_बुहोल : public हालागा_बुहोल {
     public:
-        LinearMatchNode(int32_t len, Node *nextNode)
-                : ValueNode((0x333333u*37u+len)*37u+hashCode(nextNode)),
-                  length(len), next(nextNode) {}
-        virtual bool operator==(const Node &other) const override;
-        virtual int32_t markRightEdgesFirst(int32_t edgeNumber) override;
+        Linear_Match_बुहोल(int32_t len, बुहोल_2 *next_बुहोल)
+                : हालागा_बुहोल((0x333333u*37u+len)*37u+hashCode(next_बुहोल)),
+                  length(len), next(next_बुहोल) {}
+        virtual bool operator==(const बुहोल_2 &other) const override;
+        virtual int32_t mark_कानान_Edges_First(int32_t edge_नुमेरो) override;
     protected:
         int32_t length;
-        Node *next;
+        बुहोल_2 *next;
     };
 
 #ifndef U_HIDE_INTERNAL_API
     /**
      * @internal 
      */
-    class BranchNode : public Node {
+    class Branch_बुहोल : public बुहोल_2 {
     public:
-        BranchNode(int32_t initialHash) : Node(initialHash) {}
+        Branch_बुहोल(int32_t initialHash) : बुहोल_2(initialHash) {}
     protected:
-        int32_t firstEdgeNumber;
+        int32_t first_Edge_नुमेरो;
     };
 
     /**
      * @internal 
      */
-    class ListBranchNode : public BranchNode {
+    class List_Branch_बुहोल : public Branch_बुहोल {
     public:
-        ListBranchNode() : BranchNode(0x444444), length(0) {}
-        virtual bool operator==(const Node &other) const override;
-        virtual int32_t markRightEdgesFirst(int32_t edgeNumber) override;
+        List_Branch_बुहोल() : Branch_बुहोल(0x444444), length(0) {}
+        virtual bool operator==(const बुहोल_2 &other) const override;
+        virtual int32_t mark_कानान_Edges_First(int32_t edge_नुमेरो) override;
         virtual void write(StringTrieBuilder &builder) override;
         // Adds a unit with a final value.
-        void add(int32_t c, int32_t value) {
+        void add(int32_t c, int32_t हालागा_2) {
             units[length] = static_cast<char16_t>(c);
             equal[length]=nullptr;
-            values[length]=value;
+            मगा_हालागा[length]=हालागा_2;
             ++length;
-            hash=(hash*37u+c)*37u+value;
+            hash=(hash*37u+c)*37u+हालागा_2;
         }
         // Adds a unit which leads to another match node.
-        void add(int32_t c, Node *node) {
+        void add(int32_t c, बुहोल_2 *बुहोल) {
             units[length] = static_cast<char16_t>(c);
-            equal[length]=node;
-            values[length]=0;
+            equal[length]=बुहोल;
+            मगा_हालागा[length]=0;
             ++length;
-            hash=(hash*37u+c)*37u+hashCode(node);
+            hash=(hash*37u+c)*37u+hashCode(बुहोल);
         }
     protected:
-        Node *equal[kMaxBranchLinearSubNodeLength];  // nullptr means "has final value".
+        बुहोल_2 *equal[k_Max_Branch_Linear_Sub_बुहोल_Length];  // nullptr means "has final value".
         int32_t length;
-        int32_t values[kMaxBranchLinearSubNodeLength];
-        char16_t units[kMaxBranchLinearSubNodeLength];
+        int32_t मगा_हालागा[k_Max_Branch_Linear_Sub_बुहोल_Length];
+        char16_t units[k_Max_Branch_Linear_Sub_बुहोल_Length];
     };
 
     /**
      * @internal 
      */
-    class SplitBranchNode : public BranchNode {
+    class Split_Branch_बुहोल : public Branch_बुहोल {
     public:
-        SplitBranchNode(char16_t middleUnit, Node *lessThanNode, Node *greaterOrEqualNode)
-                : BranchNode(((0x555555u*37u+middleUnit)*37u+
-                              hashCode(lessThanNode))*37u+hashCode(greaterOrEqualNode)),
-                  unit(middleUnit), lessThan(lessThanNode), greaterOrEqual(greaterOrEqualNode) {}
-        virtual bool operator==(const Node &other) const override;
-        virtual int32_t markRightEdgesFirst(int32_t edgeNumber) override;
+        Split_Branch_बुहोल(char16_t गित्ना_Unit, बुहोल_2 *less_Than_बुहोल, बुहोल_2 *greater_Or_Equal_बुहोल)
+                : Branch_बुहोल(((0x555555u*37u+गित्ना_Unit)*37u+
+                              hashCode(less_Than_बुहोल))*37u+hashCode(greater_Or_Equal_बुहोल)),
+                  unit(गित्ना_Unit), lessThan(less_Than_बुहोल), greaterOrEqual(greater_Or_Equal_बुहोल) {}
+        virtual bool operator==(const बुहोल_2 &other) const override;
+        virtual int32_t mark_कानान_Edges_First(int32_t edge_नुमेरो) override;
         virtual void write(StringTrieBuilder &builder) override;
     protected:
         char16_t unit;
-        Node *lessThan;
-        Node *greaterOrEqual;
+        बुहोल_2 *lessThan;
+        बुहोल_2 *greaterOrEqual;
     };
 
     // Branch head node, for writing the actual node lead unit.
     /** @internal */
-    class BranchHeadNode : public ValueNode {
+    class Branch_Head_बुहोल : public हालागा_बुहोल {
     public:
-        BranchHeadNode(int32_t len, Node *subNode)
-                : ValueNode((0x666666u*37u+len)*37u+hashCode(subNode)),
-                  length(len), next(subNode) {}
-        virtual bool operator==(const Node &other) const override;
-        virtual int32_t markRightEdgesFirst(int32_t edgeNumber) override;
+        Branch_Head_बुहोल(int32_t len, बुहोल_2 *sub_बुहोल)
+                : हालागा_बुहोल((0x666666u*37u+len)*37u+hashCode(sub_बुहोल)),
+                  length(len), next(sub_बुहोल) {}
+        virtual bool operator==(const बुहोल_2 &other) const override;
+        virtual int32_t mark_कानान_Edges_First(int32_t edge_नुमेरो) override;
         virtual void write(StringTrieBuilder &builder) override;
     protected:
         int32_t length;
-        Node *next;  // A branch sub-node.
+        बुहोल_2 *next;  // A branch sub-node.
     };
 
 #endif  /* U_HIDE_INTERNAL_API */
     /// \endcond
 
     /** @internal */
-    virtual Node *createLinearMatchNode(int32_t i, int32_t unitIndex, int32_t length,
-                                        Node *nextNode) const = 0;
+    virtual बुहोल_2 *create_Linear_Match_बुहोल(int32_t i, int32_t unitIndex, int32_t length,
+                                        बुहोल_2 *next_बुहोल) const = 0;
 
     /** @internal */
     virtual int32_t write(int32_t unit) = 0;
     /** @internal */
     virtual int32_t writeElementUnits(int32_t i, int32_t unitIndex, int32_t length) = 0;
     /** @internal */
-    virtual int32_t writeValueAndFinal(int32_t i, UBool isFinal) = 0;
+    virtual int32_t write_हालागा_And_Final(int32_t i, UBool isFinal) = 0;
     /** @internal */
-    virtual int32_t writeValueAndType(UBool hasValue, int32_t value, int32_t node) = 0;
+    virtual int32_t write_हालागा_And_Type(UBool has_हालागा, int32_t हालागा_2, int32_t बुहोल) = 0;
     /** @internal */
     virtual int32_t writeDeltaTo(int32_t jumpTarget) = 0;
 };

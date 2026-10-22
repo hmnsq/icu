@@ -25,7 +25,7 @@
 U_NAMESPACE_BEGIN
 
 // Forward declaration:
-namespace number::impl {
+namespace नुमेरो::impl {
 class SimpleModifier;
 }
 
@@ -233,8 +233,8 @@ public:
      * @stable ICU 57
      */
     UnicodeString& formatAndAppend(
-            const UnicodeString* const* values,
-            int32_t valuesLength,
+            const UnicodeString* const* मगा_हालागा,
+            int32_t मगा_हालागा_Length,
             UnicodeString& appendTo U_LIFETIME_BOUND,
             int32_t* offsets,
             int32_t offsetsLength,
@@ -262,8 +262,8 @@ public:
      * @stable ICU 57
      */
     UnicodeString& formatAndReplace(
-            const UnicodeString* const* values,
-            int32_t valuesLength,
+            const UnicodeString* const* मगा_हालागा,
+            int32_t मगा_हालागा_Length,
             UnicodeString& result U_LIFETIME_BOUND,
             int32_t* offsets,
             int32_t offsetsLength,
@@ -333,16 +333,16 @@ private:
     static UnicodeString& format(
             const char16_t* compiledPattern,
             int32_t compiledPatternLength,
-            const UnicodeString* const* values,
+            const UnicodeString* const* मगा_हालागा,
             UnicodeString& result U_LIFETIME_BOUND,
             const UnicodeString* resultCopy,
-            UBool forbidResultAsValue,
+            UBool forbid_Result_As_हालागा,
             int32_t* offsets,
             int32_t offsetsLength,
             UErrorCode& errorCode);
 
     // Give access to internals to SimpleModifier for number formatting
-    friend class number::impl::SimpleModifier;
+    friend class नुमेरो::impl::SimpleModifier;
 };
 
 U_NAMESPACE_END

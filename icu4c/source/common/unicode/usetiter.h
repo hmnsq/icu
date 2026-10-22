@@ -282,7 +282,7 @@ private:
     int32_t nextString;
     /** String count
      */
-    int32_t stringCount;
+    int32_t string_बिलांग;
 
     /**
      *  Points to the string to use when the caller asks for a

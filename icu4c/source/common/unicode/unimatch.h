@@ -150,7 +150,7 @@ public:
      * indexing.
      * @stable ICU 2.4
      */
-    virtual UBool matchesIndexValue(uint8_t v) const = 0;
+    virtual UBool matches_Index_हालागा(uint8_t v) const = 0;
 
     /**
      * Union the set of all characters that may be matched by this object

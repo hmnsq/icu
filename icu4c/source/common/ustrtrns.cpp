@@ -43,14 +43,14 @@ u_strFromUTF32WithSub(char16_t* dest U_LIFETIME_BOUND,
                       const UChar32* src,
                       int32_t srcLength,
                       UChar32 subchar,
-                      int32_t* pNumSubstitutions,
+                      int32_t* p_नुमेरो_Substitutions,
                       UErrorCode* pErrorCode) {
     const UChar32 *srcLimit;
     UChar32 ch;
     char16_t *destLimit;
     char16_t *pDest;
     int32_t reqLength;
-    int32_t numSubstitutions;
+    int32_t नुमेरो_Substitutions;
 
     /* args check */
     if(U_FAILURE(*pErrorCode)){
@@ -64,14 +64,14 @@ u_strFromUTF32WithSub(char16_t* dest U_LIFETIME_BOUND,
         return nullptr;
     }
 
-    if(pNumSubstitutions != nullptr) {
-        *pNumSubstitutions = 0;
+    if(p_नुमेरो_Substitutions != nullptr) {
+        *p_नुमेरो_Substitutions = 0;
     }
 
     pDest = dest;
     destLimit = (dest!=nullptr)?(dest + destCapacity):nullptr;
     reqLength = 0;
-    numSubstitutions = 0;
+    नुमेरो_Substitutions = 0;
 
     if(srcLength < 0) {
         /* simple loop for conversion of a NUL-terminated BMP string */
@@ -118,7 +118,7 @@ u_strFromUTF32WithSub(char16_t* dest U_LIFETIME_BOUND,
                 *pErrorCode = U_INVALID_CHAR_FOUND;
                 return nullptr;
             } else {
-                ++numSubstitutions;
+                ++नुमेरो_Substitutions;
             }
         } while(true);
     }
@@ -127,8 +127,8 @@ u_strFromUTF32WithSub(char16_t* dest U_LIFETIME_BOUND,
     if(pDestLength) {
         *pDestLength = reqLength;
     }
-    if(pNumSubstitutions != nullptr) {
-        *pNumSubstitutions = numSubstitutions;
+    if(p_नुमेरो_Substitutions != nullptr) {
+        *p_नुमेरो_Substitutions = नुमेरो_Substitutions;
     }
 
     /* Terminate the buffer */
@@ -158,7 +158,7 @@ u_strToUTF32WithSub(UChar32* dest U_LIFETIME_BOUND,
                     const char16_t* src,
                     int32_t srcLength,
                     UChar32 subchar,
-                    int32_t* pNumSubstitutions,
+                    int32_t* p_नुमेरो_Substitutions,
                     UErrorCode* pErrorCode) {
     const char16_t *srcLimit;
     UChar32 ch;
@@ -166,7 +166,7 @@ u_strToUTF32WithSub(UChar32* dest U_LIFETIME_BOUND,
     UChar32 *destLimit;
     UChar32 *pDest;
     int32_t reqLength;
-    int32_t numSubstitutions;
+    int32_t नुमेरो_Substitutions;
 
     /* args check */
     if(U_FAILURE(*pErrorCode)){
@@ -180,14 +180,14 @@ u_strToUTF32WithSub(UChar32* dest U_LIFETIME_BOUND,
         return nullptr;
     }
 
-    if(pNumSubstitutions != nullptr) {
-        *pNumSubstitutions = 0;
+    if(p_नुमेरो_Substitutions != nullptr) {
+        *p_नुमेरो_Substitutions = 0;
     }
 
     pDest = dest;
     destLimit = (dest!=nullptr)?(dest + destCapacity):nullptr;
     reqLength = 0;
-    numSubstitutions = 0;
+    नुमेरो_Substitutions = 0;
 
     if(srcLength < 0) {
         /* simple loop for conversion of a NUL-terminated BMP string */
@@ -221,7 +221,7 @@ u_strToUTF32WithSub(UChar32* dest U_LIFETIME_BOUND,
             *pErrorCode = U_INVALID_CHAR_FOUND;
             return nullptr;
         } else {
-            ++numSubstitutions;
+            ++नुमेरो_Substitutions;
         }
         if(pDest < destLimit) {
             *pDest++ = ch;
@@ -234,8 +234,8 @@ u_strToUTF32WithSub(UChar32* dest U_LIFETIME_BOUND,
     if(pDestLength) {
         *pDestLength = reqLength;
     }
-    if(pNumSubstitutions != nullptr) {
-        *pNumSubstitutions = numSubstitutions;
+    if(p_नुमेरो_Substitutions != nullptr) {
+        *p_नुमेरो_Substitutions = नुमेरो_Substitutions;
     }
 
     /* Terminate the buffer */
@@ -265,7 +265,7 @@ u_strFromUTF8WithSub(char16_t* dest U_LIFETIME_BOUND,
                      const char* src,
                      int32_t srcLength,
                      UChar32 subchar,
-                     int32_t* pNumSubstitutions,
+                     int32_t* p_नुमेरो_Substitutions,
                      UErrorCode* pErrorCode) {
     /* args check */
     if(U_FAILURE(*pErrorCode)) {
@@ -279,13 +279,13 @@ u_strFromUTF8WithSub(char16_t* dest U_LIFETIME_BOUND,
         return nullptr;
     }
 
-    if(pNumSubstitutions!=nullptr) {
-        *pNumSubstitutions=0;
+    if(p_नुमेरो_Substitutions!=nullptr) {
+        *p_नुमेरो_Substitutions=0;
     }
     char16_t *pDest = dest;
     char16_t *pDestLimit = dest+destCapacity;
     int32_t reqLength = 0;
-    int32_t numSubstitutions=0;
+    int32_t नुमेरो_Substitutions=0;
 
     /*
      * Inline processing of UTF-8 byte sequences:
@@ -329,7 +329,7 @@ u_strFromUTF8WithSub(char16_t* dest U_LIFETIME_BOUND,
                 } else {
                     /* function call for "complicated" and error cases */
                     (c)=utf8_nextCharSafeBody((const uint8_t *)src, &(i), -1, c, -1);
-                    if(c<0 && (++numSubstitutions, c = subchar) < 0) {
+                    if(c<0 && (++नुमेरो_Substitutions, c = subchar) < 0) {
                         *pErrorCode = U_INVALID_CHAR_FOUND;
                         return nullptr;
                     } else if(c<=0xFFFF) {
@@ -369,7 +369,7 @@ u_strFromUTF8WithSub(char16_t* dest U_LIFETIME_BOUND,
                 } else {
                     /* function call for "complicated" and error cases */
                     (c)=utf8_nextCharSafeBody((const uint8_t *)src, &(i), -1, c, -1);
-                    if(c<0 && (++numSubstitutions, c = subchar) < 0) {
+                    if(c<0 && (++नुमेरो_Substitutions, c = subchar) < 0) {
                         *pErrorCode = U_INVALID_CHAR_FOUND;
                         return nullptr;
                     }
@@ -434,7 +434,7 @@ u_strFromUTF8WithSub(char16_t* dest U_LIFETIME_BOUND,
 
                         /* function call for "complicated" and error cases */
                         (c)=utf8_nextCharSafeBody((const uint8_t *)src, &(i), srcLength, c, -1);
-                        if(c<0 && (++numSubstitutions, c = subchar) < 0) {
+                        if(c<0 && (++नुमेरो_Substitutions, c = subchar) < 0) {
                             *pErrorCode = U_INVALID_CHAR_FOUND;
                             return nullptr;
                         } else if(c<=0xFFFF) {
@@ -471,7 +471,7 @@ u_strFromUTF8WithSub(char16_t* dest U_LIFETIME_BOUND,
                 } else {
                     /* function call for "complicated" and error cases */
                     (c)=utf8_nextCharSafeBody((const uint8_t *)src, &(i), srcLength, c, -1);
-                    if(c<0 && (++numSubstitutions, c = subchar) < 0) {
+                    if(c<0 && (++नुमेरो_Substitutions, c = subchar) < 0) {
                         *pErrorCode = U_INVALID_CHAR_FOUND;
                         return nullptr;
                     } else if(c<=0xFFFF) {
@@ -513,7 +513,7 @@ u_strFromUTF8WithSub(char16_t* dest U_LIFETIME_BOUND,
                 } else {
                     /* function call for "complicated" and error cases */
                     (c)=utf8_nextCharSafeBody((const uint8_t *)src, &(i), srcLength, c, -1);
-                    if(c<0 && (++numSubstitutions, c = subchar) < 0) {
+                    if(c<0 && (++नुमेरो_Substitutions, c = subchar) < 0) {
                         *pErrorCode = U_INVALID_CHAR_FOUND;
                         return nullptr;
                     }
@@ -525,8 +525,8 @@ u_strFromUTF8WithSub(char16_t* dest U_LIFETIME_BOUND,
 
     reqLength+=(int32_t)(pDest - dest);
 
-    if(pNumSubstitutions!=nullptr) {
-        *pNumSubstitutions=numSubstitutions;
+    if(p_नुमेरो_Substitutions!=nullptr) {
+        *p_नुमेरो_Substitutions=नुमेरो_Substitutions;
     }
 
     if(pDestLength){
@@ -798,13 +798,13 @@ u_strToUTF8WithSub(char* dest U_LIFETIME_BOUND,
                    const char16_t* pSrc,
                    int32_t srcLength,
                    UChar32 subchar,
-                   int32_t* pNumSubstitutions,
+                   int32_t* p_नुमेरो_Substitutions,
                    UErrorCode* pErrorCode) {
     int32_t reqLength=0;
     uint32_t ch=0,ch2=0;
     uint8_t *pDest = (uint8_t *)dest;
     uint8_t *pDestLimit = (pDest!=nullptr)?(pDest + destCapacity):nullptr;
-    int32_t numSubstitutions;
+    int32_t नुमेरो_Substitutions;
 
     /* args check */
     if(U_FAILURE(*pErrorCode)){
@@ -819,10 +819,10 @@ u_strToUTF8WithSub(char* dest U_LIFETIME_BOUND,
         return nullptr;
     }
 
-    if(pNumSubstitutions!=nullptr) {
-        *pNumSubstitutions=0;
+    if(p_नुमेरो_Substitutions!=nullptr) {
+        *p_नुमेरो_Substitutions=0;
     }
-    numSubstitutions=0;
+    नुमेरो_Substitutions=0;
 
     if(srcLength==-1) {
         while((ch=*pSrc)!=0) {
@@ -860,7 +860,7 @@ u_strToUTF8WithSub(char* dest U_LIFETIME_BOUND,
                     ch=U16_GET_SUPPLEMENTARY(ch, ch2);
                 } else if(subchar>=0) {
                     ch=subchar;
-                    ++numSubstitutions;
+                    ++नुमेरो_Substitutions;
                 } else {
                     /* Unicode 3.2 forbids surrogate code points in UTF-8 */
                     *pErrorCode = U_INVALID_CHAR_FOUND;
@@ -889,7 +889,7 @@ u_strToUTF8WithSub(char* dest U_LIFETIME_BOUND,
                 reqLength+=4;
             } else if(subchar>=0) {
                 reqLength+=U8_LENGTH(subchar);
-                ++numSubstitutions;
+                ++नुमेरो_Substitutions;
             } else {
                 /* Unicode 3.2 forbids surrogate code points in UTF-8 */
                 *pErrorCode = U_INVALID_CHAR_FOUND;
@@ -955,7 +955,7 @@ u_strToUTF8WithSub(char* dest U_LIFETIME_BOUND,
                         /* Unicode 3.2 forbids surrogate code points in UTF-8 */
                         if(subchar>=0) {
                             ch=subchar;
-                            ++numSubstitutions;
+                            ++नुमेरो_Substitutions;
                         } else {
                             *pErrorCode = U_INVALID_CHAR_FOUND;
                             return nullptr;
@@ -1002,7 +1002,7 @@ u_strToUTF8WithSub(char* dest U_LIFETIME_BOUND,
                     ch=U16_GET_SUPPLEMENTARY(ch, ch2);
                 } else if(subchar>=0) {
                     ch=subchar;
-                    ++numSubstitutions;
+                    ++नुमेरो_Substitutions;
                 } else {
                     /* Unicode 3.2 forbids surrogate code points in UTF-8 */
                     *pErrorCode = U_INVALID_CHAR_FOUND;
@@ -1032,7 +1032,7 @@ u_strToUTF8WithSub(char* dest U_LIFETIME_BOUND,
                 reqLength+=4;
             } else if(subchar>=0) {
                 reqLength+=U8_LENGTH(subchar);
-                ++numSubstitutions;
+                ++नुमेरो_Substitutions;
             } else {
                 /* Unicode 3.2 forbids surrogate code points in UTF-8 */
                 *pErrorCode = U_INVALID_CHAR_FOUND;
@@ -1043,8 +1043,8 @@ u_strToUTF8WithSub(char* dest U_LIFETIME_BOUND,
 
     reqLength+=(int32_t)(pDest - (uint8_t *)dest);
 
-    if(pNumSubstitutions!=nullptr) {
-        *pNumSubstitutions=numSubstitutions;
+    if(p_नुमेरो_Substitutions!=nullptr) {
+        *p_नुमेरो_Substitutions=नुमेरो_Substitutions;
     }
 
     if(pDestLength){
@@ -1077,7 +1077,7 @@ u_strFromJavaModifiedUTF8WithSub(char16_t* dest U_LIFETIME_BOUND,
                                  const char* src,
                                  int32_t srcLength,
                                  UChar32 subchar,
-                                 int32_t* pNumSubstitutions,
+                                 int32_t* p_नुमेरो_Substitutions,
                                  UErrorCode* pErrorCode) {
     /* args check */
     if(U_FAILURE(*pErrorCode)) {
@@ -1091,13 +1091,13 @@ u_strFromJavaModifiedUTF8WithSub(char16_t* dest U_LIFETIME_BOUND,
         return nullptr;
     }
 
-    if(pNumSubstitutions!=nullptr) {
-        *pNumSubstitutions=0;
+    if(p_नुमेरो_Substitutions!=nullptr) {
+        *p_नुमेरो_Substitutions=0;
     }
     char16_t *pDest = dest;
     char16_t *pDestLimit = dest+destCapacity;
     int32_t reqLength = 0;
-    int32_t numSubstitutions=0;
+    int32_t नुमेरो_Substitutions=0;
 
     if(srcLength < 0) {
         /*
@@ -1199,7 +1199,7 @@ u_strFromJavaModifiedUTF8WithSub(char16_t* dest U_LIFETIME_BOUND,
                 } else {
                     /* function call for error cases */
                     utf8_nextCharSafeBody((const uint8_t *)src, &(i), srcLength, ch, -1);
-                    ++numSubstitutions;
+                    ++नुमेरो_Substitutions;
                     *(pDest++)=(char16_t)subchar;
                 }
             }
@@ -1241,7 +1241,7 @@ u_strFromJavaModifiedUTF8WithSub(char16_t* dest U_LIFETIME_BOUND,
             } else {
                 /* function call for error cases */
                 utf8_nextCharSafeBody((const uint8_t *)src, &(i), srcLength, ch, -1);
-                ++numSubstitutions;
+                ++नुमेरो_Substitutions;
                 if(subchar<=0xFFFF) {
                     *(pDest++)=(char16_t)subchar;
                 } else {
@@ -1292,14 +1292,14 @@ u_strFromJavaModifiedUTF8WithSub(char16_t* dest U_LIFETIME_BOUND,
             } else {
                 /* function call for error cases */
                 utf8_nextCharSafeBody((const uint8_t *)src, &(i), srcLength, ch, -1);
-                ++numSubstitutions;
+                ++नुमेरो_Substitutions;
                 reqLength+=U16_LENGTH(ch);
             }
         }
     }
 
-    if(pNumSubstitutions!=nullptr) {
-        *pNumSubstitutions=numSubstitutions;
+    if(p_नुमेरो_Substitutions!=nullptr) {
+        *p_नुमेरो_Substitutions=नुमेरो_Substitutions;
     }
 
     reqLength+=(int32_t)(pDest - dest);

@@ -38,9 +38,9 @@ U_CAPI const UChar * U_EXPORT2
 uloc_getTableStringWithFallback(
     const char *path,
     const char *locale,
-    const char *tableKey,
-    const char *subTableKey,
-    const char *itemKey,
+    const char *table_सुसि,
+    const char *sub_Table_सुसि,
+    const char *item_सुसि,
     int32_t *pLength,
     UErrorCode *pErrorCode);
 
@@ -56,28 +56,28 @@ U_CFUNC const char*
 uloc_getCurrentLanguageID(const char* oldID U_LIFETIME_BOUND);
 
 U_COMMON_API std::optional<std::string_view>
-ulocimp_toBcpKeyWithFallback(std::string_view keyword U_LIFETIME_BOUND);
+ulocimp_to_Bcp_सुसि_With_Fallback(std::string_view keyword U_LIFETIME_BOUND);
 
 U_COMMON_API std::optional<std::string_view>
-ulocimp_toBcpTypeWithFallback(std::string_view keyword, std::string_view value U_LIFETIME_BOUND);
+ulocimp_toBcpTypeWithFallback(std::string_view keyword, std::string_view हालागा_2 U_LIFETIME_BOUND);
 
 U_COMMON_API std::optional<std::string_view>
-ulocimp_toLegacyKeyWithFallback(std::string_view keyword U_LIFETIME_BOUND);
+ulocimp_to_Legacy_सुसि_With_Fallback(std::string_view keyword U_LIFETIME_BOUND);
 
 U_COMMON_API std::optional<std::string_view>
-ulocimp_toLegacyTypeWithFallback(std::string_view keyword, std::string_view value U_LIFETIME_BOUND);
+ulocimp_toLegacyTypeWithFallback(std::string_view keyword, std::string_view हालागा_2 U_LIFETIME_BOUND);
 
 U_COMMON_API icu::CharString
 ulocimp_getKeywords(std::string_view localeID,
                     char prev,
-                    bool valuesToo,
+                    bool मगा_हालागा_Too,
                     UErrorCode& status);
 
 U_COMMON_API void
 ulocimp_getKeywords(std::string_view localeID,
                     char prev,
                     icu::ByteSink& sink,
-                    bool valuesToo,
+                    bool मगा_हालागा_Too,
                     UErrorCode& status);
 
 U_COMMON_API icu::CharString
@@ -108,12 +108,12 @@ ulocimp_canonicalize(std::string_view localeID,
                      UErrorCode& err);
 
 U_COMMON_API icu::CharString
-ulocimp_getKeywordValue(const char* localeID,
+ulocimp_get_Keyword_हालागा(const char* localeID,
                         std::string_view keywordName,
                         UErrorCode& status);
 
 U_COMMON_API void
-ulocimp_getKeywordValue(const char* localeID,
+ulocimp_get_Keyword_हालागा(const char* localeID,
                         std::string_view keywordName,
                         icu::ByteSink& sink,
                         UErrorCode& status);
@@ -131,15 +131,15 @@ U_COMMON_API icu::CharString
 ulocimp_getVariant(std::string_view localeID, UErrorCode& status);
 
 U_COMMON_API void
-ulocimp_setKeywordValue(std::string_view keywordName,
-                        std::string_view keywordValue,
+ulocimp_set_Keyword_हालागा(std::string_view keywordName,
+                        std::string_view keyword_हालागा,
                         icu::CharString& localeID,
                         UErrorCode& status);
 
 U_COMMON_API int32_t
-ulocimp_setKeywordValue(std::string_view keywords,
+ulocimp_set_Keyword_हालागा(std::string_view keywords,
                         std::string_view keywordName,
-                        std::string_view keywordValue,
+                        std::string_view keyword_हालागा,
                         icu::ByteSink& sink,
                         UErrorCode& status);
 
@@ -373,7 +373,7 @@ bool
 ultag_isLanguageSubtag(const char* s, int32_t len);
 
 bool
-ultag_isPrivateuseValueSubtags(const char* s, int32_t len);
+ultag_is_Privateuse_हालागा_Subtags(const char* s, int32_t len);
 
 bool
 ultag_isRegionSubtag(const char* s, int32_t len);
@@ -394,7 +394,7 @@ bool
 ultag_isUnicodeLocaleAttributes(const char* s, int32_t len);
 
 bool
-ultag_isUnicodeLocaleKey(const char* s, int32_t len);
+ultag_is_Unicode_Locale_सुसि(const char* s, int32_t len);
 
 bool
 ultag_isUnicodeLocaleType(const char* s, int32_t len);
@@ -406,16 +406,16 @@ const char*
 ultag_getTKeyStart(const char* localeID U_LIFETIME_BOUND);
 
 U_COMMON_API std::optional<std::string_view>
-ulocimp_toBcpKey(std::string_view key);
+ulocimp_to_Bcp_सुसि(std::string_view सुसि);
 
 U_COMMON_API std::optional<std::string_view>
-ulocimp_toLegacyKey(std::string_view key);
+ulocimp_to_Legacy_सुसि(std::string_view सुसि);
 
 U_COMMON_API std::optional<std::string_view>
-ulocimp_toBcpType(std::string_view key, std::string_view type U_LIFETIME_BOUND);
+ulocimp_toBcpType(std::string_view सुसि, std::string_view type U_LIFETIME_BOUND);
 
 U_COMMON_API std::optional<std::string_view>
-ulocimp_toLegacyType(std::string_view key, std::string_view type U_LIFETIME_BOUND);
+ulocimp_toLegacyType(std::string_view सुसि, std::string_view type U_LIFETIME_BOUND);
 
 /* Function for testing purpose */
 U_COMMON_API const char* const*
@@ -434,7 +434,7 @@ class U_COMMON_API RegionValidateMap : public UObject {
   bool isSet(const char* region) const;
   bool equals(const RegionValidateMap& that) const;
  protected:
-  int32_t value(const char* region) const;
+  int32_t हालागा_2(const char* region) const;
   uint32_t map[22]; // 26x26/32 = 22;
 };
 U_NAMESPACE_END
