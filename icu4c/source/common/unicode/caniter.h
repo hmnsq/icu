@@ -10,14 +10,14 @@
 #ifndef CANITER_H
 #define CANITER_H
 
-#include "unicode/utypes.h"
+#अन्तर्भाव "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#यदि U_SHOW_CPLUSPLUS_API
 
-#if !UCONFIG_NO_NORMALIZATION
+#यदि !UCONFIG_NO_NORMALIZATION
 
-#include "unicode/uobject.h"
-#include "unicode/unistr.h"
+#अन्तर्भाव "unicode/uobject.h"
+#अन्तर्भाव "unicode/unistr.h"
 
 /**
  * \file
@@ -73,21 +73,21 @@ Results for: {LATIN CAPITAL LETTER A WITH RING ABOVE}{LATIN SMALL LETTER D}{COMB
  * @author C++ port by V. Weinstein
  * @stable ICU 2.4
  */
-class U_COMMON_API CanonicalIterator final : public UObject {
-public:
+class U_COMMON_API CanonicalIterator final : सार्वजनिक UObject {
+सार्वजनिक:
     /**
      * Construct a CanonicalIterator object
      * @param source    string to get results for
      * @param status    Fill-in parameter which receives the status of this operation.
      * @stable ICU 2.4
      */
-    CanonicalIterator(const UnicodeString &source, UErrorCode &status);
+    CanonicalIterator(ध्रुव UnicodeString &source, UErrorCode &status);
 
     /** Destructor
      *  Cleans pieces
      * @stable ICU 2.4
      */
-    virtual ~CanonicalIterator();
+    आभास ~CanonicalIterator();
 
     /**
      * Gets the NFD form of the current source we are iterating over.
@@ -100,7 +100,7 @@ public:
      * Resets the iterator so that one can start again from the beginning.
      * @stable ICU 2.4
      */
-    void reset();
+    शून्य reset();
 
     /**
      * Get the next canonically equivalent string.
@@ -118,7 +118,7 @@ public:
      * @param status        Fill-in parameter which receives the status of this operation.
      * @stable ICU 2.4
      */
-    void setSource(const UnicodeString &newSource, UErrorCode &status);
+    शून्य setSource(ध्रुव UnicodeString &newSource, UErrorCode &status);
 
 #ifndef U_HIDE_INTERNAL_API
     /**
@@ -131,7 +131,7 @@ public:
      * @param depth     depth of the call.
      * @internal
      */
-    static void U_EXPORT2 permute(UnicodeString &source, UBool skipZeros, Hashtable *result, UErrorCode &status, int32_t depth=0);
+    स्थिर शून्य U_EXPORT2 permute(UnicodeString &source, UBool skipZeros, Hashtable *result, UErrorCode &status, int32_t depth=0);
 #endif  /* U_HIDE_INTERNAL_API */
 
     /**
@@ -139,16 +139,16 @@ public:
      *
      * @stable ICU 2.2
      */
-    static UClassID U_EXPORT2 getStaticClassID();
+    स्थिर UClassID U_EXPORT2 getStaticClassID();
 
     /**
      * ICU "poor man's RTTI", returns a UClassID for the actual class.
      *
      * @stable ICU 2.2
      */
-    virtual UClassID getDynamicClassID() const override;
+    आभास UClassID getDynamicClassID() ध्रुव override;
 
-private:
+गुप्त:
     // ===================== PRIVATES ==============================
     // private default constructor
     CanonicalIterator() = delete;
@@ -157,12 +157,12 @@ private:
     /**
      * Copy constructor. Private for now.
      */
-    CanonicalIterator(const CanonicalIterator& other) = delete;
+    CanonicalIterator(ध्रुव CanonicalIterator& other) = delete;
 
     /**
      * Assignment operator. Private for now.
      */
-    CanonicalIterator& operator=(const CanonicalIterator& other) = delete;
+    CanonicalIterator& operator=(ध्रुव CanonicalIterator& other) = delete;
 
     // fields
     UnicodeString source;
@@ -181,15 +181,15 @@ private:
     // transient fields
     UnicodeString buffer;
 
-    const Normalizer2 *nfd;
-    const Normalizer2Impl *nfcImpl;
+    ध्रुव Normalizer2 *nfd;
+    ध्रुव Normalizer2Impl *nfcImpl;
 
     // we have a segment, in NFD. Find all the strings that are canonically equivalent to it.
-    UnicodeString *getEquivalents(const UnicodeString &segment, int32_t &result_len, UErrorCode &status); //private String[] getEquivalents(String segment)
+    UnicodeString *getEquivalents(ध्रुव UnicodeString &segment, int32_t &result_len, UErrorCode &status); //private String[] getEquivalents(String segment)
 
     //Set getEquivalents2(String segment);
     Hashtable* getEquivalents2(Hashtable* fillinResult U_LIFETIME_BOUND,
-                               const char16_t* segment,
+                               ध्रुव char16_t* segment,
                                int32_t segLen,
                                UErrorCode& status);
     //Hashtable *getEquivalents2(const UnicodeString &segment, int32_t segLen, UErrorCode &status);
@@ -202,13 +202,13 @@ private:
     //Set extract(int comp, String segment, int segmentPos, StringBuffer buffer);
     Hashtable* extract(Hashtable* fillinResult U_LIFETIME_BOUND,
                        UChar32 comp,
-                       const char16_t* segment,
+                       ध्रुव char16_t* segment,
                        int32_t segLen,
                        int32_t segmentPos,
                        UErrorCode& status);
     //Hashtable *extract(UChar32 comp, const UnicodeString &segment, int32_t segLen, int32_t segmentPos, UErrorCode &status);
 
-    void cleanPieces();
+    शून्य cleanPieces();
 
 };
 
