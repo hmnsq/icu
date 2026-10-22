@@ -22,7 +22,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#အကယ်၍ !UCONFIG_NO_CONVERSION
 
 #include "unicode/ucnv_cb.h"
 #include "ucnv_bld.h"
@@ -35,13 +35,13 @@ if you don't use ucnv_cbXXX functions.  Make sure you don't use the same callbac
 the same call stack if the complexity arises. */
 U_CAPI void  U_EXPORT2
 ucnv_cbFromUWriteBytes (UConverterFromUnicodeArgs *args,
-                       const char* source,
+                       const var_na* source,
                        int32_t length,
                        int32_t offsetIndex,
                        UErrorCode * err)
 {
-    if(U_FAILURE(*err)) {
-        return;
+    အကယ်၍(U_FAILURE(*err)) {
+        ပြန်ပေး;
     }
 
     ucnv_fromUWriteBytes(
@@ -71,11 +71,11 @@ ucnv_cbFromUWriteUChars(UConverterFromUnicodeArgs *args,
     into this.
     */
 
-    char *oldTarget;
+    var_na *oldTarget;
 
-    if(U_FAILURE(*err))
+    အကယ်၍(U_FAILURE(*err))
     {
-        return;
+        ပြန်ပေး;
     }
 
     oldTarget = args->target;
@@ -89,9 +89,9 @@ ucnv_cbFromUWriteUChars(UConverterFromUnicodeArgs *args,
         false, /* no flush */
         err);
 
-    if(args->offsets)
+    အကယ်၍(args->offsets)
     {
-        while (args->target != oldTarget)  /* if it moved at all.. */
+        နေစဉ် (args->target != oldTarget)  /* if it moved at all.. */
         {
             *(args->offsets)++ = offsetIndex;
             oldTarget++;
@@ -102,14 +102,14 @@ ucnv_cbFromUWriteUChars(UConverterFromUnicodeArgs *args,
     Note, if you did something like used a Stop subcallback, things would get interesting.
     In fact, here's where we want to return the partially consumed in-source!
     */
-    if(*err == U_BUFFER_OVERFLOW_ERROR)
+    အကယ်၍(*err == U_BUFFER_OVERFLOW_ERROR)
     /* && (*source < sourceLimit && args->target >= args->targetLimit)
     -- S. Hrcek */
     {
         /* Overflowed the target.  Now, we'll write into the charErrorBuffer.
         It's a fixed size. If we overflow it... Hmm */
-        char *newTarget;
-        const char *newTargetLimit;
+        var_na *newTarget;
+        const var_na *newTargetLimit;
         UErrorCode err2 = U_ZERO_ERROR;
 
         int8_t errBuffLen;
@@ -117,15 +117,15 @@ ucnv_cbFromUWriteUChars(UConverterFromUnicodeArgs *args,
         errBuffLen  = args->converter->charErrorBufferLength;
 
         /* start the new target at the first free slot in the errbuff.. */
-        newTarget = (char *)(args->converter->charErrorBuffer + errBuffLen);
+        newTarget = (var_na *)(args->converter->charErrorBuffer + errBuffLen);
 
-        newTargetLimit = (char *)(args->converter->charErrorBuffer +
-            sizeof(args->converter->charErrorBuffer));
+        newTargetLimit = (var_na *)(args->converter->charErrorBuffer +
+            parimaa_na(args->converter->charErrorBuffer));
 
-        if(newTarget >= newTargetLimit)
+        အကယ်၍(newTarget >= newTargetLimit)
         {
             *err = U_INTERNAL_PROGRAM_ERROR;
-            return;
+            ပြန်ပေး;
         }
 
         /* We're going to tell the converter that the errbuff len is empty.
@@ -148,16 +148,16 @@ ucnv_cbFromUWriteUChars(UConverterFromUnicodeArgs *args,
         to recalculate it. */
 
         args->converter->charErrorBufferLength = (int8_t)(
-            newTarget - (char*)args->converter->charErrorBuffer);
+            newTarget - (var_na*)args->converter->charErrorBuffer);
 
-        if((newTarget >= newTargetLimit) || (err2 == U_BUFFER_OVERFLOW_ERROR))
+        အကယ်၍((newTarget >= newTargetLimit) || (err2 == U_BUFFER_OVERFLOW_ERROR))
         {
             /* now we're REALLY in trouble.
             Internal program error - callback shouldn't have written this much
             data!
             */
             *err = U_INTERNAL_PROGRAM_ERROR;
-            return;
+            ပြန်ပေး;
         }
         /*else {*/
             /* sub errs could be invalid/truncated/illegal chars or w/e.
@@ -181,17 +181,17 @@ ucnv_cbFromUWriteSub (UConverterFromUnicodeArgs *args,
     UConverter *converter;
     int32_t length;
 
-    if(U_FAILURE(*err)) {
-        return;
+    အကယ်၍(U_FAILURE(*err)) {
+        ပြန်ပေး;
     }
     converter = args->converter;
     length = converter->subCharLen;
 
-    if(length == 0) {
-        return;
+    အကယ်၍(length == 0) {
+        ပြန်ပေး;
     }
 
-    if(length < 0) {
+    အကယ်၍(length < 0) {
         /*
          * Write/convert the substitution string. Its real length is -length.
          * Unlike the escape callback, we need not change the converter's
@@ -202,24 +202,24 @@ ucnv_cbFromUWriteSub (UConverterFromUnicodeArgs *args,
          */
         const char16_t *source = (const char16_t *)converter->subChars;
         ucnv_cbFromUWriteUChars(args, &source, source - length, offsetIndex, err);
-        return;
+        ပြန်ပေး;
     }
 
-    if(converter->sharedData->impl->writeSub!=nullptr) {
+    အကယ်၍(converter->sharedData->impl->writeSub!=nullptr) {
         converter->sharedData->impl->writeSub(args, offsetIndex, err);
     }
-    else if(converter->subChar1!=0 && (uint16_t)converter->invalidUCharBuffer[0]<=(uint16_t)0xffu) {
+    မဟုတ်ပါက အကယ်၍(converter->subChar1!=0 && (uint16_t)converter->invalidUCharBuffer[0]<=(uint16_t)0xffu) {
         /*
         TODO: Is this untestable because the MBCS converter has a writeSub function to call
         and the other converters don't use subChar1?
         */
         ucnv_cbFromUWriteBytes(args,
-                               (const char *)&converter->subChar1, 1,
+                               (const var_na *)&converter->subChar1, 1,
                                offsetIndex, err);
     }
-    else {
+    မဟုတ်ပါက {
         ucnv_cbFromUWriteBytes(args,
-                               (const char *)converter->subChars, length,
+                               (const var_na *)converter->subChars, length,
                                offsetIndex, err);
     }
 }
@@ -231,8 +231,8 @@ ucnv_cbToUWriteUChars (UConverterToUnicodeArgs *args,
                             int32_t offsetIndex,
                             UErrorCode * err)
 {
-    if(U_FAILURE(*err)) {
-        return;
+    အကယ်၍(U_FAILURE(*err)) {
+        ပြန်ပေး;
     }
 
     ucnv_toUWriteUChars(
@@ -251,9 +251,9 @@ ucnv_cbToUWriteSub (UConverterToUnicodeArgs *args,
     static const char16_t kSubstituteChar1 = 0x1A, kSubstituteChar = 0xFFFD;
 
     /* could optimize this case, just one uchar */
-    if(args->converter->invalidCharLength == 1 && args->converter->subChar1 != 0) {
+    အကယ်၍(args->converter->invalidCharLength == 1 && args->converter->subChar1 != 0) {
         ucnv_cbToUWriteUChars(args, &kSubstituteChar1, 1, offsetIndex, err);
-    } else {
+    } မဟုတ်ပါက {
         ucnv_cbToUWriteUChars(args, &kSubstituteChar, 1, offsetIndex, err);
     }
 }

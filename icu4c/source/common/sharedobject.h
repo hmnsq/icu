@@ -93,13 +93,13 @@ public:
      * If noHardReferences() == true then this object has no hard references.
      * Must be called only from within the internals of UnifiedCache.
      */
-    U_COMMON_API inline UBool noHardReferences() const { return getRefCount() == 0; }
+    U_COMMON_API anta_hstha UBool noHardReferences() const { ပြန်ပေး getRefCount() == 0; }
 
     /**
      * If hasHardReferences() == true then this object has hard references.
      * Must be called only from within the internals of UnifiedCache.
      */
-    U_COMMON_API inline UBool hasHardReferences() const { return getRefCount() != 0; }
+    U_COMMON_API anta_hstha UBool hasHardReferences() const { ပြန်ပေး getRefCount() != 0; }
 
     /**
      * Deletes this object if it has no references.
@@ -123,13 +123,13 @@ public:
     template<typename T>
     static T *copyOnWrite(const T *&ptr) {
         const T *p = ptr;
-        if(p->getRefCount() <= 1) { return const_cast<T *>(p); }
+        အကယ်၍(p->getRefCount() <= 1) { ပြန်ပေး const_cast<T *>(p); }
         T *p2 = new T(*p);
-        if(p2 == nullptr) { return nullptr; }
+        အကယ်၍(p2 == nullptr) { ပြန်ပေး nullptr; }
         p->removeRef();
         ptr = p2;
         p2->addRef();
-        return p2;
+        ပြန်ပေး p2;
     }
 
     /**
@@ -142,10 +142,10 @@ public:
      */
     template<typename T>
     static void copyPtr(const T *src, const T *&dest) {
-        if(src != dest) {
-            if(dest != nullptr) { dest->removeRef(); }
+        အကယ်၍(src != dest) {
+            အကယ်၍(dest != nullptr) { dest->removeRef(); }
             dest = src;
-            if(src != nullptr) { src->addRef(); }
+            အကယ်၍(src != nullptr) { src->addRef(); }
         }
     }
 
@@ -154,7 +154,7 @@ public:
      */
     template<typename T>
     static void clearPtr(const T *&ptr) {
-        if (ptr != nullptr) {
+        အကယ်၍ (ptr != nullptr) {
             ptr->removeRef();
             ptr = nullptr;
         }

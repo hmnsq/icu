@@ -19,7 +19,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#အကယ်၍ !UCONFIG_NO_BREAK_ITERATION
 
 #include "unicode/unistr.h"
 #include "unicode/uniset.h"
@@ -38,7 +38,7 @@
 U_NAMESPACE_BEGIN
 
 #ifdef RBBI_DEBUG
-static int  gLastSerial = 0;
+static ကိန်းပြည့်  gLastSerial = 0;
 #endif
 
 
@@ -48,8 +48,8 @@ static int  gLastSerial = 0;
 //
 //-------------------------------------------------------------------------
 RBBINode::RBBINode(NodeType t, UErrorCode& status) : UMemory() {
-    if (U_FAILURE(status)) {
-        return;
+    အကယ်၍ (U_FAILURE(status)) {
+        ပြန်ပေး;
     }
 #ifdef RBBI_DEBUG
     fSerialNum    = ++gLastSerial;
@@ -71,21 +71,21 @@ RBBINode::RBBINode(NodeType t, UErrorCode& status) : UMemory() {
     fFirstPosSet  = new UVector(status);
     fLastPosSet   = new UVector(status);
     fFollowPos    = new UVector(status);
-    if (U_SUCCESS(status) &&
+    အကယ်၍ (U_SUCCESS(status) &&
         (fFirstPosSet == nullptr || fLastPosSet == nullptr || fFollowPos == nullptr)) {
         status =  U_MEMORY_ALLOCATION_ERROR;
     }
-    if      (t==opCat)    {fPrecedence = precOpCat;}
-    else if (t==opOr)     {fPrecedence = precOpOr;}
-    else if (t==opStart)  {fPrecedence = precStart;}
-    else if (t==opLParen) {fPrecedence = precLParen;}
+    အကယ်၍      (t==opCat)    {fPrecedence = precOpCat;}
+    မဟုတ်ပါက အကယ်၍ (t==opOr)     {fPrecedence = precOpOr;}
+    မဟုတ်ပါက အကယ်၍ (t==opStart)  {fPrecedence = precStart;}
+    မဟုတ်ပါက အကယ်၍ (t==opLParen) {fPrecedence = precLParen;}
 
 }
 
 
 RBBINode::RBBINode(const RBBINode &other, UErrorCode& status) : UMemory(other) {
-    if (U_FAILURE(status)) {
-        return;
+    အကယ်၍ (U_FAILURE(status)) {
+        ပြန်ပေး;
     }
 #ifdef RBBI_DEBUG
     fSerialNum   = ++gLastSerial;
@@ -106,7 +106,7 @@ RBBINode::RBBINode(const RBBINode &other, UErrorCode& status) : UMemory(other) {
     fFirstPosSet = new UVector(status);   // TODO - get a real status from somewhere
     fLastPosSet  = new UVector(status);
     fFollowPos   = new UVector(status);
-    if (U_SUCCESS(status) &&
+    အကယ်၍ (U_SUCCESS(status) &&
         (fFirstPosSet == nullptr || fLastPosSet == nullptr || fFollowPos == nullptr)) {
         status =  U_MEMORY_ALLOCATION_ERROR;
     }
@@ -128,11 +128,11 @@ RBBINode::~RBBINode() {
     fInputSet = nullptr;
 
     switch (this->fType) {
-    case varRef:
-    case setRef:
+    pak_sa varRef:
+    pak_sa setRef:
         // for these node types, multiple instances point to the same "children"
         // Storage ownership of children handled elsewhere.  Don't delete here.
-        break;
+        bha_nga;
 
     default:
         // Avoid using a recursive implementation because of stack overflow problems.
@@ -156,38 +156,38 @@ RBBINode::~RBBINode() {
  * stack overflow with some perverse test rule data (from fuzzing).
  */
 void RBBINode::NRDeleteNode(RBBINode *node) {
-    if (node == nullptr) {
-        return;
+    အကယ်၍ (node == nullptr) {
+        ပြန်ပေး;
     }
 
     RBBINode *stopNode = node->fParent;
     RBBINode *nextNode = node;
-    while (nextNode != stopNode && nextNode != nullptr) {
+    နေစဉ် (nextNode != stopNode && nextNode != nullptr) {
         RBBINode *currentNode = nextNode;
 
-        if ((currentNode->fLeftChild == nullptr && currentNode->fRightChild == nullptr) ||
+        အကယ်၍ ((currentNode->fLeftChild == nullptr && currentNode->fRightChild == nullptr) ||
                 currentNode->fType == varRef ||      // varRef and setRef nodes do not
                 currentNode->fType == setRef) {      // own their children nodes.
             // CurrentNode is effectively a leaf node; it's safe to go ahead and delete it.
             nextNode = currentNode->fParent;
-            if (nextNode) {
-                if (nextNode->fLeftChild == currentNode) {
+            အကယ်၍ (nextNode) {
+                အကယ်၍ (nextNode->fLeftChild == currentNode) {
                     nextNode->fLeftChild = nullptr;
-                } else if (nextNode->fRightChild == currentNode) {
+                } မဟုတ်ပါက အကယ်၍ (nextNode->fRightChild == currentNode) {
                     nextNode->fRightChild = nullptr;
                 }
             }
             delete currentNode;
-        } else if (currentNode->fLeftChild) {
+        } မဟုတ်ပါက အကယ်၍ (currentNode->fLeftChild) {
             nextNode = currentNode->fLeftChild;
-            if (nextNode->fParent == nullptr) {
+            အကယ်၍ (nextNode->fParent == nullptr) {
                 nextNode->fParent = currentNode;
                 // fParent isn't always set; do it now if not.
             }
             U_ASSERT(nextNode->fParent == currentNode);
-        } else if (currentNode->fRightChild) {
+        } မဟုတ်ပါက အကယ်၍ (currentNode->fRightChild) {
             nextNode = currentNode->fRightChild;
-            if (nextNode->fParent == nullptr) {
+            အကယ်၍ (nextNode->fParent == nullptr) {
                 nextNode->fParent = currentNode;
                 // fParent isn't always set; do it now if not.
             }
@@ -205,57 +205,57 @@ void RBBINode::NRDeleteNode(RBBINode *node) {
 //                  references in preparation for generating the DFA tables.
 //
 //-------------------------------------------------------------------------
-constexpr int kRecursiveDepthLimit = 3500;
-RBBINode *RBBINode::cloneTree(UErrorCode &status, int depth) {
-    if (U_FAILURE(status)) {
-        return nullptr;
+constexpr ကိန်းပြည့် kRecursiveDepthLimit = 3500;
+RBBINode *RBBINode::cloneTree(UErrorCode &status, ကိန်းပြည့် depth) {
+    အကယ်၍ (U_FAILURE(status)) {
+        ပြန်ပေး nullptr;
     }
     // If the depth of the stack is too deep, we return U_INPUT_TOO_LONG_ERROR
     // to avoid stack overflow crash.
-    if (depth > kRecursiveDepthLimit) {
+    အကယ်၍ (depth > kRecursiveDepthLimit) {
         status = U_INPUT_TOO_LONG_ERROR;
-        return nullptr;
+        ပြန်ပေး nullptr;
     }
     RBBINode    *n;
 
-    if (fType == RBBINode::varRef) {
+    အကယ်၍ (fType == RBBINode::varRef) {
         // If the current node is a variable reference, skip over it
         //   and clone the definition of the variable instead.
         n = fLeftChild->cloneTree(status, depth+1);
-        if (U_FAILURE(status)) {
-            return nullptr;
+        အကယ်၍ (U_FAILURE(status)) {
+            ပြန်ပေး nullptr;
         }
-    } else if (fType == RBBINode::uset) {
+    } မဟုတ်ပါက အကယ်၍ (fType == RBBINode::uset) {
         n = this;
-    } else {
+    } မဟုတ်ပါက {
         n = new RBBINode(*this, status);
-        if (U_FAILURE(status)) {
+        အကယ်၍ (U_FAILURE(status)) {
             delete n;
-            return nullptr;
+            ပြန်ပေး nullptr;
         }
         // Check for null pointer.
-        if (n == nullptr) {
+        အကယ်၍ (n == nullptr) {
             status =  U_MEMORY_ALLOCATION_ERROR;
-            return nullptr;
+            ပြန်ပေး nullptr;
         }
-        if (fLeftChild != nullptr) {
+        အကယ်၍ (fLeftChild != nullptr) {
             n->fLeftChild          = fLeftChild->cloneTree(status, depth+1);
-            if (U_FAILURE(status)) {
+            အကယ်၍ (U_FAILURE(status)) {
                 delete n;
-                return nullptr;
+                ပြန်ပေး nullptr;
             }
             n->fLeftChild->fParent = n;
         }
-        if (fRightChild != nullptr) {
+        အကယ်၍ (fRightChild != nullptr) {
             n->fRightChild          = fRightChild->cloneTree(status, depth+1);
-            if (U_FAILURE(status)) {
+            အကယ်၍ (U_FAILURE(status)) {
                 delete n;
-                return nullptr;
+                ပြန်ပေး nullptr;
             }
             n->fRightChild->fParent = n;
         }
     }
-    return n;
+    ပြန်ပေး n;
 }
 
 
@@ -278,48 +278,48 @@ RBBINode *RBBINode::cloneTree(UErrorCode &status, int depth) {
 //                      nested references are handled by cloneTree(), not here.
 //
 //-------------------------------------------------------------------------
-RBBINode *RBBINode::flattenVariables(UErrorCode& status, int depth) {
-    if (U_FAILURE(status)) {
-        return this;
+RBBINode *RBBINode::flattenVariables(UErrorCode& status, ကိန်းပြည့် depth) {
+    အကယ်၍ (U_FAILURE(status)) {
+        ပြန်ပေး this;
     }
     // If the depth of the stack is too deep, we return U_INPUT_TOO_LONG_ERROR
     // to avoid stack overflow crash.
-    if (depth > kRecursiveDepthLimit) {
+    အကယ်၍ (depth > kRecursiveDepthLimit) {
         status = U_INPUT_TOO_LONG_ERROR;
-        return this;
+        ပြန်ပေး this;
     }
-    if (fType == varRef) {
+    အကယ်၍ (fType == varRef) {
         RBBINode *retNode  = fLeftChild->cloneTree(status, depth+1);
-        if (U_FAILURE(status)) {
-            return this;
+        အကယ်၍ (U_FAILURE(status)) {
+            ပြန်ပေး this;
         }
         retNode->fRuleRoot = this->fRuleRoot;
         retNode->fChainIn  = this->fChainIn;
         delete this;   // TODO: undefined behavior. Fix.
-        return retNode;
+        ပြန်ပေး retNode;
     }
 
-    if (fLeftChild != nullptr) {
+    အကယ်၍ (fLeftChild != nullptr) {
         fLeftChild = fLeftChild->flattenVariables(status, depth+1);
-        if (fLeftChild == nullptr) {
+        အကယ်၍ (fLeftChild == nullptr) {
             status = U_MEMORY_ALLOCATION_ERROR;
         }
-        if (U_FAILURE(status)) {
-            return this;
+        အကယ်၍ (U_FAILURE(status)) {
+            ပြန်ပေး this;
         }
         fLeftChild->fParent  = this;
     }
-    if (fRightChild != nullptr) {
+    အကယ်၍ (fRightChild != nullptr) {
         fRightChild = fRightChild->flattenVariables(status, depth+1);
-        if (fRightChild == nullptr) {
+        အကယ်၍ (fRightChild == nullptr) {
             status = U_MEMORY_ALLOCATION_ERROR;
         }
-        if (U_FAILURE(status)) {
-            return this;
+        အကယ်၍ (U_FAILURE(status)) {
+            ပြန်ပေး this;
         }
         fRightChild->fParent = this;
     }
-    return this;
+    ပြန်ပေး this;
 }
 
 
@@ -331,48 +331,48 @@ RBBINode *RBBINode::flattenVariables(UErrorCode& status, int depth) {
 //                 the left child of the uset node.
 //
 //-------------------------------------------------------------------------
-void RBBINode::flattenSets(UErrorCode &status, int depth) {
-    if (U_FAILURE(status)) {
-        return;
+void RBBINode::flattenSets(UErrorCode &status, ကိန်းပြည့် depth) {
+    အကယ်၍ (U_FAILURE(status)) {
+        ပြန်ပေး;
     }
     // If the depth of the stack is too deep, we return U_INPUT_TOO_LONG_ERROR
     // to avoid stack overflow crash.
-    if (depth > kRecursiveDepthLimit) {
+    အကယ်၍ (depth > kRecursiveDepthLimit) {
         status = U_INPUT_TOO_LONG_ERROR;
-        return;
+        ပြန်ပေး;
     }
     U_ASSERT(fType != setRef);
 
-    if (fLeftChild != nullptr) {
-        if (fLeftChild->fType==setRef) {
+    အကယ်၍ (fLeftChild != nullptr) {
+        အကယ်၍ (fLeftChild->fType==setRef) {
             RBBINode *setRefNode = fLeftChild;
             RBBINode *usetNode   = setRefNode->fLeftChild;
             RBBINode *replTree   = usetNode->fLeftChild;
             fLeftChild           = replTree->cloneTree(status, depth+1);
-            if (U_FAILURE(status)) {
+            အကယ်၍ (U_FAILURE(status)) {
                 delete setRefNode;
-                return;
+                ပြန်ပေး;
             }
             fLeftChild->fParent  = this;
             delete setRefNode;
-        } else {
+        } မဟုတ်ပါက {
             fLeftChild->flattenSets(status, depth+1);
         }
     }
 
-    if (fRightChild != nullptr) {
-        if (fRightChild->fType==setRef) {
+    အကယ်၍ (fRightChild != nullptr) {
+        အကယ်၍ (fRightChild->fType==setRef) {
             RBBINode *setRefNode = fRightChild;
             RBBINode *usetNode   = setRefNode->fLeftChild;
             RBBINode *replTree   = usetNode->fLeftChild;
             fRightChild           = replTree->cloneTree(status, depth+1);
-            if (U_FAILURE(status)) {
+            အကယ်၍ (U_FAILURE(status)) {
                 delete setRefNode;
-                return;
+                ပြန်ပေး;
             }
             fRightChild->fParent  = this;
             delete setRefNode;
-        } else {
+        } မဟုတ်ပါက {
             fRightChild->flattenSets(status, depth+1);
         }
     }
@@ -388,17 +388,17 @@ void RBBINode::flattenSets(UErrorCode &status, int depth) {
 //-------------------------------------------------------------------------
 void   RBBINode::findNodes(UVector *dest, RBBINode::NodeType kind, UErrorCode &status) {
     /* test for buffer overflows */
-    if (U_FAILURE(status)) {
-        return;
+    အကယ်၍ (U_FAILURE(status)) {
+        ပြန်ပေး;
     }
     U_ASSERT(!dest->hasDeleter());
-    if (fType == kind) {
+    အကယ်၍ (fType == kind) {
         dest->addElement(this, status);
     }
-    if (fLeftChild != nullptr) {
+    အကယ်၍ (fLeftChild != nullptr) {
         fLeftChild->findNodes(dest, kind, status);
     }
-    if (fRightChild != nullptr) {
+    အကယ်၍ (fRightChild != nullptr) {
         fRightChild->findNodes(dest, kind, status);
     }
 }
@@ -412,12 +412,12 @@ void   RBBINode::findNodes(UVector *dest, RBBINode::NodeType kind, UErrorCode &s
 #ifdef RBBI_DEBUG
 
 static int32_t serial(const RBBINode *node) {
-    return (node == nullptr? -1 : node->fSerialNum);
+    ပြန်ပေး (node == nullptr? -1 : node->fSerialNum);
 }
 
 
 void RBBINode::printNode(const RBBINode *node) {
-    static const char * const nodeTypeNames[] = {
+    static const var_na * const nodeTypeNames[] = {
                 "setRef",
                 "uset",
                 "varRef",
@@ -436,15 +436,15 @@ void RBBINode::printNode(const RBBINode *node) {
                 "opLParen"
     };
 
-    if (node==nullptr) {
+    အကယ်၍ (node==nullptr) {
         RBBIDebugPrintf("%10p", (void *)node);
-    } else {
+    } မဟုတ်ပါက {
         RBBIDebugPrintf("%10p %5d %12s %c%c  %5d       %5d     %5d       %6d     %d ",
             (void *)node, node->fSerialNum, nodeTypeNames[node->fType],
             node->fRuleRoot?'R':' ', node->fChainIn?'C':' ',
             serial(node->fLeftChild), serial(node->fRightChild), serial(node->fParent),
             node->fFirstPos, node->fVal);
-        if (node->fType == varRef) {
+        အကယ်၍ (node->fType == varRef) {
             RBBI_DEBUG_printUnicodeString(node->fText);
         }
     }
@@ -454,7 +454,7 @@ void RBBINode::printNode(const RBBINode *node) {
 
 
 #ifdef RBBI_DEBUG
-U_CFUNC void RBBI_DEBUG_printUnicodeString(const UnicodeString &s, int minWidth) {
+U_CFUNC void RBBI_DEBUG_printUnicodeString(const UnicodeString &s, ကိန်းပြည့် minWidth) {
     RBBIDebugPrintf("%*s", minWidth, CStr(s)());
 }
 #endif
@@ -471,19 +471,19 @@ void RBBINode::printNodeHeader() {
 }
     
 void RBBINode::printTree(const RBBINode *node, UBool printHeading) {
-    if (printHeading) {
+    အကယ်၍ (printHeading) {
         printNodeHeader();
     }
     printNode(node);
-    if (node != nullptr) {
+    အကယ်၍ (node != nullptr) {
         // Only dump the definition under a variable reference if asked to.
         // Unconditionally dump children of all other node types.
-        if (node->fType != varRef) {
-            if (node->fLeftChild != nullptr) {
+        အကယ်၍ (node->fType != varRef) {
+            အကယ်၍ (node->fLeftChild != nullptr) {
                 printTree(node->fLeftChild, false);
             }
             
-            if (node->fRightChild != nullptr) {
+            အကယ်၍ (node->fRightChild != nullptr) {
                 printTree(node->fRightChild, false);
             }
         }

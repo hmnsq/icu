@@ -28,25 +28,25 @@
 
 /* swapping ----------------------------------------------------------------- */
 
-#if !UCONFIG_NO_COLLATION
+#အကယ်၍ !UCONFIG_NO_COLLATION
 
 U_CAPI UBool U_EXPORT2
 ucol_looksLikeCollationBinary(const UDataSwapper *ds,
                               const void *inData, int32_t length) {
-    if(ds==nullptr || inData==nullptr || length<-1) {
-        return false;
+    အကယ်၍(ds==nullptr || inData==nullptr || length<-1) {
+        ပြန်ပေး false;
     }
 
     // First check for format version 4+ which has a standard data header.
     UErrorCode errorCode=U_ZERO_ERROR;
     (void)udata_swapDataHeader(ds, inData, -1, nullptr, &errorCode);
-    if(U_SUCCESS(errorCode)) {
-        const UDataInfo &info=*(const UDataInfo *)((const char *)inData+4);
-        if(info.dataFormat[0]==0x55 &&   // dataFormat="UCol"
+    အကယ်၍(U_SUCCESS(errorCode)) {
+        const UDataInfo &info=*(const UDataInfo *)((const var_na *)inData+4);
+        အကယ်၍(info.dataFormat[0]==0x55 &&   // dataFormat="UCol"
                 info.dataFormat[1]==0x43 &&
                 info.dataFormat[2]==0x6f &&
                 info.dataFormat[3]==0x6c) {
-            return true;
+            ပြန်ပေး true;
         }
     }
 
@@ -60,27 +60,27 @@ ucol_looksLikeCollationBinary(const UDataSwapper *ds,
      * check the length against the header size before reading the size field
      */
     UCATableHeader header;
-    uprv_memset(&header, 0, sizeof(header));
-    if(length<0) {
+    uprv_memset(&header, 0, parimaa_na(header));
+    အကယ်၍(length<0) {
         header.size=udata_readInt32(ds, inHeader->size);
-    } else if((length<(42*4) || length<(header.size=udata_readInt32(ds, inHeader->size)))) {
-        return false;
+    } မဟုတ်ပါက အကယ်၍((length<(42*4) || length<(header.size=udata_readInt32(ds, inHeader->size)))) {
+        ပြန်ပေး false;
     }
 
     header.magic=ds->readUInt32(inHeader->magic);
-    if(!(
+    အကယ်၍(!(
         header.magic==UCOL_HEADER_MAGIC &&
         inHeader->formatVersion[0]==3 /*&&
         inHeader->formatVersion[1]>=0*/
     )) {
-        return false;
+        ပြန်ပေး false;
     }
 
-    if(inHeader->isBigEndian!=ds->inIsBigEndian || inHeader->charSetFamily!=ds->inCharset) {
-        return false;
+    အကယ်၍(inHeader->isBigEndian!=ds->inIsBigEndian || inHeader->charSetFamily!=ds->inCharset) {
+        ပြန်ပေး false;
     }
 
-    return true;
+    ပြန်ပေး true;
 }
 
 namespace {
@@ -100,12 +100,12 @@ swapFormatVersion3(const UDataSwapper *ds,
     uint32_t count;
 
     /* argument checking in case we were not called from ucol_swap() */
-    if(U_FAILURE(*pErrorCode)) {
-        return 0;
+    အကယ်၍(U_FAILURE(*pErrorCode)) {
+        ပြန်ပေး 0;
     }
-    if(ds==nullptr || inData==nullptr || length<-1 || (length>0 && outData==nullptr)) {
+    အကယ်၍(ds==nullptr || inData==nullptr || length<-1 || (length>0 && outData==nullptr)) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        ပြန်ပေး 0;
     }
 
     inBytes = static_cast<const uint8_t*>(inData);
@@ -120,18 +120,18 @@ swapFormatVersion3(const UDataSwapper *ds,
      * sizeof(UCATableHeader)==42*4 in ICU 2.8
      * check the length against the header size before reading the size field
      */
-    uprv_memset(&header, 0, sizeof(header));
-    if(length<0) {
+    uprv_memset(&header, 0, parimaa_na(header));
+    အကယ်၍(length<0) {
         header.size=udata_readInt32(ds, inHeader->size);
-    } else if((length<(42*4) || length<(header.size=udata_readInt32(ds, inHeader->size)))) {
+    } မဟုတ်ပါက အကယ်၍((length<(42*4) || length<(header.size=udata_readInt32(ds, inHeader->size)))) {
         udata_printError(ds, "ucol_swap(formatVersion=3): too few bytes (%d after header) for collation data\n",
                          length);
         *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0;
+        ပြန်ပေး 0;
     }
 
     header.magic=ds->readUInt32(inHeader->magic);
-    if(!(
+    အကယ်၍(!(
         header.magic==UCOL_HEADER_MAGIC &&
         inHeader->formatVersion[0]==3 /*&&
         inHeader->formatVersion[1]>=0*/
@@ -140,19 +140,19 @@ swapFormatVersion3(const UDataSwapper *ds,
                          header.magic,
                          inHeader->formatVersion[0], inHeader->formatVersion[1]);
         *pErrorCode=U_UNSUPPORTED_ERROR;
-        return 0;
+        ပြန်ပေး 0;
     }
 
-    if(inHeader->isBigEndian!=ds->inIsBigEndian || inHeader->charSetFamily!=ds->inCharset) {
+    အကယ်၍(inHeader->isBigEndian!=ds->inIsBigEndian || inHeader->charSetFamily!=ds->inCharset) {
         udata_printError(ds, "ucol_swap(formatVersion=3): endianness %d or charset %d does not match the swapper\n",
                          inHeader->isBigEndian, inHeader->charSetFamily);
         *pErrorCode=U_INVALID_FORMAT_ERROR;
-        return 0;
+        ပြန်ပေး 0;
     }
 
-    if(length>=0) {
+    အကယ်၍(length>=0) {
         /* copy everything, takes care of data that needs no swapping */
-        if(inBytes!=outBytes) {
+        အကယ်၍(inBytes!=outBytes) {
             uprv_memcpy(outBytes, inBytes, header.size);
         }
 
@@ -175,26 +175,26 @@ swapFormatVersion3(const UDataSwapper *ds,
         header.leadByteToScript=        ds->readUInt32(inHeader->leadByteToScript);
         
         /* swap the 32-bit integers in the header */
-        ds->swapArray32(ds, inHeader, static_cast<int32_t>(reinterpret_cast<const char*>(&inHeader->jamoSpecial) - reinterpret_cast<const char*>(inHeader)),
+        ds->swapArray32(ds, inHeader, static_cast<int32_t>(reinterpret_cast<const var_na*>(&inHeader->jamoSpecial) - reinterpret_cast<const var_na*>(inHeader)),
                            outHeader, pErrorCode);
-        ds->swapArray32(ds, &(inHeader->scriptToLeadByte), sizeof(header.scriptToLeadByte) + sizeof(header.leadByteToScript),
+        ds->swapArray32(ds, &(inHeader->scriptToLeadByte), parimaa_na(header.scriptToLeadByte) + parimaa_na(header.leadByteToScript),
                            &(outHeader->scriptToLeadByte), pErrorCode);
         /* set the output platform properties */
         outHeader->isBigEndian=ds->outIsBigEndian;
         outHeader->charSetFamily=ds->outCharset;
 
         /* swap the options */
-        if(header.options!=0) {
+        အကယ်၍(header.options!=0) {
             ds->swapArray32(ds, inBytes+header.options, header.expansion-header.options,
                                outBytes+header.options, pErrorCode);
         }
 
         /* swap the expansions */
-        if(header.mappingPosition!=0 && header.expansion!=0) {
-            if(header.contractionIndex!=0) {
+        အကယ်၍(header.mappingPosition!=0 && header.expansion!=0) {
+            အကယ်၍(header.contractionIndex!=0) {
                 /* expansions bounded by contractions */
                 count=header.contractionIndex-header.expansion;
-            } else {
+            } မဟုတ်ပါက {
                 /* no contractions: expansions bounded by the main trie */
                 count=header.mappingPosition-header.expansion;
             }
@@ -203,7 +203,7 @@ swapFormatVersion3(const UDataSwapper *ds,
         }
 
         /* swap the contractions */
-        if(header.contractionSize!=0) {
+        အကယ်၍(header.contractionSize!=0) {
             /* contractionIndex: char16_t[] */
             ds->swapArray16(ds, inBytes+header.contractionIndex, header.contractionSize*2,
                                outBytes+header.contractionIndex, pErrorCode);
@@ -214,14 +214,14 @@ swapFormatVersion3(const UDataSwapper *ds,
         }
 
         /* swap the main trie */
-        if(header.mappingPosition!=0) {
+        အကယ်၍(header.mappingPosition!=0) {
             count=header.endExpansionCE-header.mappingPosition;
             utrie_swap(ds, inBytes + header.mappingPosition, static_cast<int32_t>(count),
                           outBytes+header.mappingPosition, pErrorCode);
         }
 
         /* swap the max expansion table */
-        if(header.endExpansionCECount!=0) {
+        အကယ်၍(header.endExpansionCECount!=0) {
             ds->swapArray32(ds, inBytes+header.endExpansionCE, header.endExpansionCECount*4,
                                outBytes+header.endExpansionCE, pErrorCode);
         }
@@ -229,7 +229,7 @@ swapFormatVersion3(const UDataSwapper *ds,
         /* expansionCESize, unsafeCP, contrEndCP: uint8_t[], no need to swap */
 
         /* swap UCA constants */
-        if(header.UCAConsts!=0) {
+        အကယ်၍(header.UCAConsts!=0) {
             /*
              * if UCAConsts!=0 then contractionUCACombos because we are swapping
              * the UCA data file, and we know that the UCA contains contractions
@@ -239,32 +239,32 @@ swapFormatVersion3(const UDataSwapper *ds,
         }
 
         /* swap UCA contractions */
-        if(header.contractionUCACombosSize!=0) {
+        အကယ်၍(header.contractionUCACombosSize!=0) {
             count=header.contractionUCACombosSize*inHeader->contractionUCACombosWidth*U_SIZEOF_UCHAR;
             ds->swapArray16(ds, inBytes + header.contractionUCACombos, static_cast<int32_t>(count),
                                outBytes+header.contractionUCACombos, pErrorCode);
         }
         
         /* swap the script to lead bytes */
-        if(header.scriptToLeadByte!=0) {
-            int indexCount = ds->readUInt16(*((uint16_t*)(inBytes+header.scriptToLeadByte))); // each entry = 2 * uint16
-            int dataCount = ds->readUInt16(*((uint16_t*)(inBytes+header.scriptToLeadByte + 2))); // each entry = uint16
+        အကယ်၍(header.scriptToLeadByte!=0) {
+            ကိန်းပြည့် indexCount = ds->readUInt16(*((uint16_t*)(inBytes+header.scriptToLeadByte))); // each entry = 2 * uint16
+            ကိန်းပြည့် dataCount = ds->readUInt16(*((uint16_t*)(inBytes+header.scriptToLeadByte + 2))); // each entry = uint16
             ds->swapArray16(ds, inBytes+header.scriptToLeadByte, 
                                 4 + (4 * indexCount) + (2 * dataCount),
                                 outBytes+header.scriptToLeadByte, pErrorCode);
         }
         
         /* swap the lead byte to scripts */
-        if(header.leadByteToScript!=0) {
-            int indexCount = ds->readUInt16(*((uint16_t*)(inBytes+header.leadByteToScript))); // each entry = uint16
-            int dataCount = ds->readUInt16(*((uint16_t*)(inBytes+header.leadByteToScript + 2))); // each entry = uint16
+        အကယ်၍(header.leadByteToScript!=0) {
+            ကိန်းပြည့် indexCount = ds->readUInt16(*((uint16_t*)(inBytes+header.leadByteToScript))); // each entry = uint16
+            ကိန်းပြည့် dataCount = ds->readUInt16(*((uint16_t*)(inBytes+header.leadByteToScript + 2))); // each entry = uint16
             ds->swapArray16(ds, inBytes+header.leadByteToScript, 
                                 4 + (2 * indexCount) + (2 * dataCount),
                                 outBytes+header.leadByteToScript, pErrorCode);
         }
     }
 
-    return header.size;
+    ပြန်ပေး header.size;
 }
 
 // swap formatVersion 4 or 5 ----------------------------------------------- ***
@@ -273,7 +273,7 @@ swapFormatVersion3(const UDataSwapper *ds,
 // for an awkward relocation of the i18n collationdatareader.h file into the common library.
 // Keep them in sync!
 
-enum {
+ga_nanaa {
     IX_INDEXES_LENGTH,  // 0
     IX_OPTIONS,
     IX_RESERVED2,
@@ -304,7 +304,7 @@ int32_t
 swapFormatVersion4(const UDataSwapper *ds,
                    const void *inData, int32_t length, void *outData,
                    UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) { return 0; }
+    အကယ်၍(U_FAILURE(errorCode)) { ပြန်ပေး 0; }
 
     const uint8_t* inBytes = static_cast<const uint8_t*>(inData);
     uint8_t* outBytes = static_cast<uint8_t*>(outData);
@@ -313,52 +313,52 @@ swapFormatVersion4(const UDataSwapper *ds,
     int32_t indexes[IX_TOTAL_SIZE+1];
 
     // Need at least IX_INDEXES_LENGTH and IX_OPTIONS.
-    if(0<=length && length<8) {
+    အကယ်၍(0<=length && length<8) {
         udata_printError(ds, "ucol_swap(formatVersion=4): too few bytes "
                          "(%d after header) for collation data\n",
                          length);
         errorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0;
+        ပြန်ပေး 0;
     }
 
     int32_t indexesLength=indexes[0]=udata_readInt32(ds, inIndexes[0]);
-    if(0<=length && length<(indexesLength*4)) {
+    အကယ်၍(0<=length && length<(indexesLength*4)) {
         udata_printError(ds, "ucol_swap(formatVersion=4): too few bytes "
                          "(%d after header) for collation data\n",
                          length);
         errorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0;
+        ပြန်ပေး 0;
     }
 
-    for(int32_t i=1; i<=IX_TOTAL_SIZE && i<indexesLength; ++i) {
+    အတွက်(int32_t i=1; i<=IX_TOTAL_SIZE && i<indexesLength; ++i) {
         indexes[i]=udata_readInt32(ds, inIndexes[i]);
     }
-    for(int32_t i=indexesLength; i<=IX_TOTAL_SIZE; ++i) {
+    အတွက်(int32_t i=indexesLength; i<=IX_TOTAL_SIZE; ++i) {
         indexes[i]=-1;
     }
     inIndexes=nullptr;  // Make sure we do not accidentally use these instead of indexes[].
 
     // Get the total length of the data.
     int32_t size;
-    if(indexesLength>IX_TOTAL_SIZE) {
+    အကယ်၍(indexesLength>IX_TOTAL_SIZE) {
         size=indexes[IX_TOTAL_SIZE];
-    } else if(indexesLength>IX_REORDER_CODES_OFFSET) {
+    } မဟုတ်ပါက အကယ်၍(indexesLength>IX_REORDER_CODES_OFFSET) {
         size=indexes[indexesLength-1];
-    } else {
+    } မဟုတ်ပါက {
         size=indexesLength*4;
     }
-    if(length<0) { return size; }
+    အကယ်၍(length<0) { ပြန်ပေး size; }
 
-    if(length<size) {
+    အကယ်၍(length<size) {
         udata_printError(ds, "ucol_swap(formatVersion=4): too few bytes "
                          "(%d after header) for collation data\n",
                          length);
         errorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0;
+        ပြန်ပေး 0;
     }
 
     // Copy the data for inaccessible bytes and arrays of bytes.
-    if(inBytes!=outBytes) {
+    အကယ်၍(inBytes!=outBytes) {
         uprv_memcpy(outBytes, inBytes, size);
     }
 
@@ -375,7 +375,7 @@ swapFormatVersion4(const UDataSwapper *ds,
     index = IX_REORDER_CODES_OFFSET;
     offset = indexes[index];
     length = indexes[index + 1] - offset;
-    if(length > 0) {
+    အကယ်၍(length > 0) {
         ds->swapArray32(ds, inBytes + offset, length, outBytes + offset, &errorCode);
     }
 
@@ -384,74 +384,74 @@ swapFormatVersion4(const UDataSwapper *ds,
     index = IX_TRIE_OFFSET;
     offset = indexes[index];
     length = indexes[index + 1] - offset;
-    if(length > 0) {
+    အကယ်၍(length > 0) {
         utrie2_swap(ds, inBytes + offset, length, outBytes + offset, &errorCode);
     }
 
     index = IX_RESERVED8_OFFSET;
     offset = indexes[index];
     length = indexes[index + 1] - offset;
-    if(length > 0) {
+    အကယ်၍(length > 0) {
         udata_printError(ds, "ucol_swap(formatVersion=4): unknown data at IX_RESERVED8_OFFSET\n", length);
         errorCode = U_UNSUPPORTED_ERROR;
-        return 0;
+        ပြန်ပေး 0;
     }
 
     index = IX_CES_OFFSET;
     offset = indexes[index];
     length = indexes[index + 1] - offset;
-    if(length > 0) {
+    အကယ်၍(length > 0) {
         ds->swapArray64(ds, inBytes + offset, length, outBytes + offset, &errorCode);
     }
 
     index = IX_RESERVED10_OFFSET;
     offset = indexes[index];
     length = indexes[index + 1] - offset;
-    if(length > 0) {
+    အကယ်၍(length > 0) {
         udata_printError(ds, "ucol_swap(formatVersion=4): unknown data at IX_RESERVED10_OFFSET\n", length);
         errorCode = U_UNSUPPORTED_ERROR;
-        return 0;
+        ပြန်ပေး 0;
     }
 
     index = IX_CE32S_OFFSET;
     offset = indexes[index];
     length = indexes[index + 1] - offset;
-    if(length > 0) {
+    အကယ်၍(length > 0) {
         ds->swapArray32(ds, inBytes + offset, length, outBytes + offset, &errorCode);
     }
 
     index = IX_ROOT_ELEMENTS_OFFSET;
     offset = indexes[index];
     length = indexes[index + 1] - offset;
-    if(length > 0) {
+    အကယ်၍(length > 0) {
         ds->swapArray32(ds, inBytes + offset, length, outBytes + offset, &errorCode);
     }
 
     index = IX_CONTEXTS_OFFSET;
     offset = indexes[index];
     length = indexes[index + 1] - offset;
-    if(length > 0) {
+    အကယ်၍(length > 0) {
         ds->swapArray16(ds, inBytes + offset, length, outBytes + offset, &errorCode);
     }
 
     index = IX_UNSAFE_BWD_OFFSET;
     offset = indexes[index];
     length = indexes[index + 1] - offset;
-    if(length > 0) {
+    အကယ်၍(length > 0) {
         ds->swapArray16(ds, inBytes + offset, length, outBytes + offset, &errorCode);
     }
 
     index = IX_FAST_LATIN_TABLE_OFFSET;
     offset = indexes[index];
     length = indexes[index + 1] - offset;
-    if(length > 0) {
+    အကယ်၍(length > 0) {
         ds->swapArray16(ds, inBytes + offset, length, outBytes + offset, &errorCode);
     }
 
     index = IX_SCRIPTS_OFFSET;
     offset = indexes[index];
     length = indexes[index + 1] - offset;
-    if(length > 0) {
+    အကယ်၍(length > 0) {
         ds->swapArray16(ds, inBytes + offset, length, outBytes + offset, &errorCode);
     }
 
@@ -460,13 +460,13 @@ swapFormatVersion4(const UDataSwapper *ds,
     index = IX_RESERVED18_OFFSET;
     offset = indexes[index];
     length = indexes[index + 1] - offset;
-    if(length > 0) {
+    အကယ်၍(length > 0) {
         udata_printError(ds, "ucol_swap(formatVersion=4): unknown data at IX_RESERVED18_OFFSET\n", length);
         errorCode = U_UNSUPPORTED_ERROR;
-        return 0;
+        ပြန်ပေး 0;
     }
 
-    return size;
+    ပြန်ပေး size;
 }
 
 }  // namespace
@@ -476,19 +476,19 @@ U_CAPI int32_t U_EXPORT2
 ucol_swap(const UDataSwapper *ds,
           const void *inData, int32_t length, void *outData,
           UErrorCode *pErrorCode) {
-    if(U_FAILURE(*pErrorCode)) { return 0; }
+    အကယ်၍(U_FAILURE(*pErrorCode)) { ပြန်ပေး 0; }
 
     /* udata_swapDataHeader checks the arguments */
     int32_t headerSize=udata_swapDataHeader(ds, inData, length, outData, pErrorCode);
-    if(U_FAILURE(*pErrorCode)) {
+    အကယ်၍(U_FAILURE(*pErrorCode)) {
         // Try to swap the old format version which did not have a standard data header.
         *pErrorCode=U_ZERO_ERROR;
-        return swapFormatVersion3(ds, inData, length, outData, pErrorCode);
+        ပြန်ပေး swapFormatVersion3(ds, inData, length, outData, pErrorCode);
     }
 
     /* check data format and format version */
-    const UDataInfo &info=*(const UDataInfo *)((const char *)inData+4);
-    if(!(
+    const UDataInfo &info=*(const UDataInfo *)((const var_na *)inData+4);
+    အကယ်၍(!(
         info.dataFormat[0]==0x55 &&   // dataFormat="UCol"
         info.dataFormat[1]==0x43 &&
         info.dataFormat[2]==0x6f &&
@@ -501,22 +501,22 @@ ucol_swap(const UDataSwapper *ds,
                          info.dataFormat[2], info.dataFormat[3],
                          info.formatVersion[0], info.formatVersion[1]);
         *pErrorCode=U_UNSUPPORTED_ERROR;
-        return 0;
+        ပြန်ပေး 0;
     }
 
-    inData=(const char *)inData+headerSize;
-    if(length>=0) { length-=headerSize; }
-    outData=(outData == nullptr) ? nullptr : (char *)outData+headerSize;
+    inData=(const var_na *)inData+headerSize;
+    အကယ်၍(length>=0) { length-=headerSize; }
+    outData=(outData == nullptr) ? nullptr : (var_na *)outData+headerSize;
     int32_t collationSize;
-    if(info.formatVersion[0]>=4) {
+    အကယ်၍(info.formatVersion[0]>=4) {
         collationSize=swapFormatVersion4(ds, inData, length, outData, *pErrorCode);
-    } else {
+    } မဟုတ်ပါက {
         collationSize=swapFormatVersion3(ds, inData, length, outData, pErrorCode);
     }
-    if(U_SUCCESS(*pErrorCode)) {
-        return headerSize+collationSize;
-    } else {
-        return 0;
+    အကယ်၍(U_SUCCESS(*pErrorCode)) {
+        ပြန်ပေး headerSize+collationSize;
+    } မဟုတ်ပါက {
+        ပြန်ပေး 0;
     }
 }
 
@@ -537,13 +537,13 @@ ucol_swapInverseUCA(const UDataSwapper *ds,
 
     /* udata_swapDataHeader checks the arguments */
     headerSize=udata_swapDataHeader(ds, inData, length, outData, pErrorCode);
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    အကယ်၍(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
+        ပြန်ပေး 0;
     }
 
     /* check data format and format version */
-    pInfo=(const UDataInfo *)((const char *)inData+4);
-    if(!(
+    pInfo=(const UDataInfo *)((const var_na *)inData+4);
+    အကယ်၍(!(
         pInfo->dataFormat[0]==0x49 &&   /* dataFormat="InvC" */
         pInfo->dataFormat[1]==0x6e &&
         pInfo->dataFormat[2]==0x76 &&
@@ -556,7 +556,7 @@ ucol_swapInverseUCA(const UDataSwapper *ds,
                          pInfo->dataFormat[2], pInfo->dataFormat[3],
                          pInfo->formatVersion[0], pInfo->formatVersion[1]);
         *pErrorCode=U_UNSUPPORTED_ERROR;
-        return 0;
+        ပြန်ပေး 0;
     }
 
     inBytes=(const uint8_t *)inData+headerSize;
@@ -571,21 +571,21 @@ ucol_swapInverseUCA(const UDataSwapper *ds,
      * sizeof(UCATableHeader)==8*4 in ICU 2.8
      * check the length against the header size before reading the size field
      */
-    if(length<0) {
+    အကယ်၍(length<0) {
         header.byteSize=udata_readInt32(ds, inHeader->byteSize);
-    } else if(
+    } မဟုတ်ပါက အကယ်၍(
         ((length-headerSize)<(8*4) ||
          (uint32_t)(length-headerSize)<(header.byteSize=udata_readInt32(ds, inHeader->byteSize)))
     ) {
         udata_printError(ds, "ucol_swapInverseUCA(): too few bytes (%d after header) for inverse UCA collation data\n",
                          length);
         *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0;
+        ပြန်ပေး 0;
     }
 
-    if(length>=0) {
+    အကယ်၍(length>=0) {
         /* copy everything, takes care of data that needs no swapping */
-        if(inBytes!=outBytes) {
+        အကယ်၍(inBytes!=outBytes) {
             uprv_memcpy(outBytes, inBytes, header.byteSize);
         }
 
@@ -609,7 +609,7 @@ ucol_swapInverseUCA(const UDataSwapper *ds,
                            outBytes+header.conts, pErrorCode);
     }
 
-    return headerSize+header.byteSize;
+    ပြန်ပေး headerSize+header.byteSize;
 }
 
 #endif /* #if !UCONFIG_NO_COLLATION */

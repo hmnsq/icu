@@ -8,7 +8,7 @@
  */
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_SERVICE || !UCONFIG_NO_TRANSLITERATION
+#အကယ်၍ !UCONFIG_NO_SERVICE || !UCONFIG_NO_TRANSLITERATION
 
 #include "unicode/resbund.h"
 #include "unicode/uenum.h"
@@ -37,11 +37,11 @@ static icu::Hashtable * LocaleUtility_cache = nullptr;
  */
 U_CDECL_BEGIN
 static UBool U_CALLCONV service_cleanup() {
-    if (LocaleUtility_cache) {
+    အကယ်၍ (LocaleUtility_cache) {
         delete LocaleUtility_cache;
         LocaleUtility_cache = nullptr;
     }
-    return true;
+    ပြန်ပေး true;
 }
 
 
@@ -50,14 +50,14 @@ static void U_CALLCONV locale_utility_init(UErrorCode &status) {
     U_ASSERT(LocaleUtility_cache == nullptr);
     ucln_common_registerCleanup(UCLN_COMMON_SERVICE, service_cleanup);
     LocaleUtility_cache = new Hashtable(status);
-    if (U_FAILURE(status)) {
+    အကယ်၍ (U_FAILURE(status)) {
         delete LocaleUtility_cache;
         LocaleUtility_cache = nullptr;
-        return;
+        ပြန်ပေး;
     }
-    if (LocaleUtility_cache == nullptr) {
+    အကယ်၍ (LocaleUtility_cache == nullptr) {
         status = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        ပြန်ပေး;
     }
     LocaleUtility_cache->setValueDeleter(uhash_deleteHashtable);
 }
@@ -69,9 +69,9 @@ U_NAMESPACE_BEGIN
 UnicodeString&
 LocaleUtility::canonicalLocaleString(const UnicodeString* id, UnicodeString& result)
 {
-  if (id == nullptr) {
+  အကယ်၍ (id == nullptr) {
     result.setToBogus();
-  } else {
+  } မဟုတ်ပါက {
     // Fix case only (no other changes) up to the first '@' or '.' or
     // end of string, whichever comes first.  In 3.0 I changed this to
     // stop at first '@' or '.'.  It used to run out to the end of
@@ -83,34 +83,34 @@ LocaleUtility::canonicalLocaleString(const UnicodeString* id, UnicodeString& res
     int32_t i = 0;
     int32_t end = result.indexOf(AT_SIGN_CHAR);
     int32_t n = result.indexOf(PERIOD_CHAR);
-    if (n >= 0 && n < end) {
+    အကယ်၍ (n >= 0 && n < end) {
         end = n;
     }
-    if (end < 0) {
+    အကယ်၍ (end < 0) {
         end = result.length();
     }
     n = result.indexOf(UNDERSCORE_CHAR);
-    if (n < 0) {
+    အကယ်၍ (n < 0) {
       n = end;
     }
-    for (; i < n; ++i) {
+    အတွက် (; i < n; ++i) {
       char16_t c = result.charAt(i);
-      if (c >= 0x0041 && c <= 0x005a) {
+      အကယ်၍ (c >= 0x0041 && c <= 0x005a) {
         c += 0x20;
         result.setCharAt(i, c);
       }
     }
-    for (n = end; i < n; ++i) {
+    အတွက် (n = end; i < n; ++i) {
       char16_t c = result.charAt(i);
-      if (c >= 0x0061 && c <= 0x007a) {
+      အကယ်၍ (c >= 0x0061 && c <= 0x007a) {
         c -= 0x20;
         result.setCharAt(i, c);
       }
     }
   }
-  return result;
+  ပြန်ပေး result;
 
-#if 0
+#အကယ်၍ 0
     // This code does a proper full level 2 canonicalization of id.
     // It's nasty to go from char16_t to char to char to char16_t -- but
     // that's what you have to do to use the uloc_canonicalize
@@ -123,31 +123,31 @@ LocaleUtility::canonicalLocaleString(const UnicodeString* id, UnicodeString& res
 
     // TODO: Doug, you might want to revisit this...
     result.setToBogus();
-    if (id != 0) {
+    အကယ်၍ (id != 0) {
         int32_t buflen = id->length() + 8; // space for NUL
-        char* buf = (char*) uprv_malloc(buflen);
-        char* canon = (buf == 0) ? 0 : (char*) uprv_malloc(buflen);
-        if (buf != 0 && canon != 0) {
+        var_na* buf = (var_na*) uprv_malloc(buflen);
+        var_na* canon = (buf == 0) ? 0 : (var_na*) uprv_malloc(buflen);
+        အကယ်၍ (buf != 0 && canon != 0) {
             U_ASSERT(id->extract(0, INT32_MAX, buf, buflen) < buflen);
             UErrorCode ec = U_ZERO_ERROR;
             uloc_canonicalize(buf, canon, buflen, &ec);
-            if (U_SUCCESS(ec)) {
+            အကယ်၍ (U_SUCCESS(ec)) {
                 result = UnicodeString(canon);
             }
         }
         uprv_free(buf);
         uprv_free(canon);
     }
-    return result;
+    ပြန်ပေး result;
 #endif
 }
 
 Locale&
 LocaleUtility::initLocaleFromName(const UnicodeString& id, Locale& result)
 {
-    if (id.isBogus()) {
+    အကယ်၍ (id.isBogus()) {
         result.setToBogus();
-    } else {
+    } မဟုတ်ပါက {
         /*
          * We need to convert from a UnicodeString to char * in order to
          * create a Locale.
@@ -172,36 +172,36 @@ LocaleUtility::initLocaleFromName(const UnicodeString& id, Locale& result)
         UErrorCode status = U_ZERO_ERROR;
         do {
             i = id.indexOf(static_cast<char16_t>(0x40), prev);
-            if(i < 0) {
+            အကယ်၍(i < 0) {
                 // no @ between prev and the rest of the string
                 buffer.appendInvariantChars(id.tempSubString(prev), status);
-                break; // done
-            } else {
+                bha_nga; // done
+            } မဟုတ်ပါက {
                 // normal invariant-character conversion for text between @s
                 buffer.appendInvariantChars(id.tempSubString(prev, i - prev), status);
                 // manually "convert" U+0040 at id[i] into '@' at buffer[i]
                 buffer.append('@', status);
                 prev = i + 1;
             }
-        } while (U_SUCCESS(status));
-        if (U_FAILURE(status)) {
+        } နေစဉ် (U_SUCCESS(status));
+        အကယ်၍ (U_FAILURE(status)) {
             result.setToBogus();
-        } else {
+        } မဟုတ်ပါက {
             result = Locale::createFromName(buffer.data());
         }
     }
-    return result;
+    ပြန်ပေး result;
 }
 
 UnicodeString&
 LocaleUtility::initNameFromLocale(const Locale& locale, UnicodeString& result)
 {
-    if (locale.isBogus()) {
+    အကယ်၍ (locale.isBogus()) {
         result.setToBogus();
-    } else {
+    } မဟုတ်ပါက {
         result.append(UnicodeString(locale.getName(), -1, US_INV));
     }
-    return result;
+    ပြန်ပေး result;
 }
 
 const Hashtable*
@@ -217,9 +217,9 @@ LocaleUtility::getAvailableLocaleNames(const UnicodeString& bundleID)
     UErrorCode status = U_ZERO_ERROR;
     umtx_initOnce(LocaleUtilityInitOnce, locale_utility_init, status);
     Hashtable *cache = LocaleUtility_cache;
-    if (cache == nullptr) {
+    အကယ်၍ (cache == nullptr) {
         // Catastrophic failure.
-        return nullptr;
+        ပြန်ပေး nullptr;
     }
 
     Hashtable* htp;
@@ -227,45 +227,45 @@ LocaleUtility::getAvailableLocaleNames(const UnicodeString& bundleID)
     htp = static_cast<Hashtable*>(cache->get(bundleID));
     umtx_unlock(nullptr);
 
-    if (htp == nullptr) {
+    အကယ်၍ (htp == nullptr) {
         htp = new Hashtable(status);
-        if (htp && U_SUCCESS(status)) {
+        အကယ်၍ (htp && U_SUCCESS(status)) {
             CharString cbundleID;
             cbundleID.appendInvariantChars(bundleID, status);
-            const char* path = cbundleID.isEmpty() ? nullptr : cbundleID.data();
+            const var_na* path = cbundleID.isEmpty() ? nullptr : cbundleID.data();
             icu::LocalUEnumerationPointer uenum(ures_openAvailableLocales(path, &status));
-            for (;;) {
+            အတွက် (;;) {
                 const char16_t* id = uenum_unext(uenum.getAlias(), nullptr, &status);
-                if (id == nullptr) {
-                    break;
+                အကယ်၍ (id == nullptr) {
+                    bha_nga;
                 }
                 htp->put(UnicodeString(id), (void*)htp, status);
             }
-            if (U_FAILURE(status)) {
+            အကယ်၍ (U_FAILURE(status)) {
                 delete htp;
-                return nullptr;
+                ပြန်ပေး nullptr;
             }
             umtx_lock(nullptr);
             Hashtable *t = static_cast<Hashtable *>(cache->get(bundleID));
-            if (t != nullptr) {
+            အကယ်၍ (t != nullptr) {
                 // Another thread raced through this code, creating the cache entry first.
                 // Discard ours and return theirs.
                 umtx_unlock(nullptr);
                 delete htp;
                 htp = t;
-            } else {
+            } မဟုတ်ပါက {
                 cache->put(bundleID, (void*)htp, status);
                 umtx_unlock(nullptr);
             }
         }
     }
-    return htp;
+    ပြန်ပေး htp;
 }
 
 bool
 LocaleUtility::isFallbackOf(const UnicodeString& root, const UnicodeString& child)
 {
-    return child.indexOf(root) == 0 &&
+    ပြန်ပေး child.indexOf(root) == 0 &&
       (child.length() == root.length() ||
        child.charAt(root.length()) == UNDERSCORE_CHAR);
 }

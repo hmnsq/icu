@@ -31,39 +31,39 @@ int32_t ICU_Utility::parseInteger(const UnicodeString& rule, int32_t& pos, int32
     int32_t p = pos;
     int8_t radix = 10;
 
-    if (p < limit && rule.charAt(p) == 48 /*0*/) {
-        if (p+1 < limit && (rule.charAt(p+1) == 0x78 /*x*/ || rule.charAt(p+1) == 0x58 /*X*/)) {
+    အကယ်၍ (p < limit && rule.charAt(p) == 48 /*0*/) {
+        အကယ်၍ (p+1 < limit && (rule.charAt(p+1) == 0x78 /*x*/ || rule.charAt(p+1) == 0x58 /*X*/)) {
             p += 2;
             radix = 16;
         }
-        else {
+        မဟုတ်ပါက {
             p++;
             count = 1;
             radix = 8;
         }
     }
 
-    while (p < limit) {
+    နေစဉ် (p < limit) {
         int32_t d = u_digit(rule.charAt(p++), radix);
-        if (d < 0) {
+        အကယ်၍ (d < 0) {
             --p;
-            break;
+            bha_nga;
         }
         ++count;
         int32_t v = (value * radix) + d;
-        if (v <= value) {
+        အကယ်၍ (v <= value) {
             // If there are too many input digits, at some point
             // the value will go negative, e.g., if we have seen
             // "0x8000000" already and there is another '0', when
             // we parse the next 0 the value will go negative.
-            return 0;
+            ပြန်ပေး 0;
         }
         value = v;
     }
-    if (count > 0) {
+    အကယ်၍ (count > 0) {
         pos = p;
     }
-    return value;
+    ပြန်ပေး value;
 }
 
 /**
@@ -90,44 +90,44 @@ int32_t ICU_Utility::parsePattern(const UnicodeString& rule, int32_t pos, int32_
     // TODO Update this to handle surrogates
     int32_t p;
     int32_t intCount = 0; // number of integers parsed
-    for (int32_t i=0; i<pattern.length(); ++i) {
+    အတွက် (int32_t i=0; i<pattern.length(); ++i) {
         char16_t cpat = pattern.charAt(i);
         char16_t c;
         switch (cpat) {
-        case 32 /*' '*/:
-            if (pos >= limit) {
-                return -1;
+        pak_sa 32 /*' '*/:
+            အကယ်၍ (pos >= limit) {
+                ပြန်ပေး -1;
             }
             c = rule.charAt(pos++);
-            if (!PatternProps::isWhiteSpace(c)) {
-                return -1;
+            အကယ်၍ (!PatternProps::isWhiteSpace(c)) {
+                ပြန်ပေး -1;
             }
             // FALL THROUGH to skipWhitespace
             U_FALLTHROUGH;
-        case 126 /*'~'*/:
+        pak_sa 126 /*'~'*/:
             pos = skipWhitespace(rule, pos);
-            break;
-        case 35 /*'#'*/:
+            bha_nga;
+        pak_sa 35 /*'#'*/:
             p = pos;
             parsedInts[intCount++] = parseInteger(rule, p, limit);
-            if (p == pos) {
+            အကယ်၍ (p == pos) {
                 // Syntax error; failed to parse integer
-                return -1;
+                ပြန်ပေး -1;
             }
             pos = p;
-            break;
+            bha_nga;
         default:
-            if (pos >= limit) {
-                return -1;
+            အကယ်၍ (pos >= limit) {
+                ပြန်ပေး -1;
             }
             c = static_cast<char16_t>(u_tolower(rule.charAt(pos++)));
-            if (c != cpat) {
-                return -1;
+            အကယ်၍ (c != cpat) {
+                ပြန်ပေး -1;
             }
-            break;
+            bha_nga;
         }
     }
-    return pos;
+    ပြန်ပေး pos;
 }
 
 /**
@@ -146,27 +146,27 @@ int32_t ICU_Utility::parsePattern(const UnicodeString& rule, int32_t pos, int32_
 UnicodeString ICU_Utility::parseUnicodeIdentifier(const UnicodeString& str, int32_t& pos) {
     // assert(pos < str.length());
     UnicodeString buf;
-    int p = pos;
-    while (p < str.length()) {
+    ကိန်းပြည့် p = pos;
+    နေစဉ် (p < str.length()) {
         UChar32 ch = str.char32At(p);
-        if (buf.length() == 0) {
-            if (u_isIDStart(ch)) {
+        အကယ်၍ (buf.length() == 0) {
+            အကယ်၍ (u_isIDStart(ch)) {
                 buf.append(ch);
-            } else {
+            } မဟုတ်ပါက {
                 buf.truncate(0);
-                return buf;
+                ပြန်ပေး buf;
             }
-        } else {
-            if (u_isIDPart(ch)) {
+        } မဟုတ်ပါက {
+            အကယ်၍ (u_isIDPart(ch)) {
                 buf.append(ch);
-            } else {
-                break;
+            } မဟုတ်ပါက {
+                bha_nga;
             }
         }
         p += U16_LENGTH(ch);
     }
     pos = p;
-    return buf;
+    ပြန်ပေး buf;
 }
 
 /**
@@ -192,24 +192,24 @@ int32_t ICU_Utility::parseNumber(const UnicodeString& text,
     // assert(radix <= 36);
     int32_t n = 0;
     int32_t p = pos;
-    while (p < text.length()) {
+    နေစဉ် (p < text.length()) {
         UChar32 ch = text.char32At(p);
         int32_t d = u_digit(ch, radix);
-        if (d < 0) {
-            break;
+        အကယ်၍ (d < 0) {
+            bha_nga;
         }
         int64_t update = radix*static_cast<int64_t>(n) + d;
-        if (update > INT32_MAX) {
-            return -1;
+        အကယ်၍ (update > INT32_MAX) {
+            ပြန်ပေး -1;
         }
         n = static_cast<int32_t>(update);
         ++p;
     }
-    if (p == pos) {
-        return -1;
+    အကယ်၍ (p == pos) {
+        ပြန်ပေး -1;
     }
     pos = p;
-    return n;
+    ပြန်ပေး n;
 }
 
 U_NAMESPACE_END

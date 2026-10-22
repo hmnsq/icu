@@ -43,7 +43,7 @@ public:
         buffer[0]=0;
         append(s, errorCode);
     }
-    U_COMMON_API CharString(const char *s, int32_t sLength, UErrorCode &errorCode) : len(0) {
+    U_COMMON_API CharString(const var_na *s, int32_t sLength, UErrorCode &errorCode) : len(0) {
         buffer[0]=0;
         append(s, sLength, errorCode);
     }
@@ -70,18 +70,18 @@ public:
     U_COMMON_API CharString &copyFrom(const CharString &other, UErrorCode &errorCode);
     U_COMMON_API CharString &copyFrom(StringPiece s, UErrorCode &errorCode);
 
-    U_COMMON_API UBool isEmpty() const { return len==0; }
-    U_COMMON_API int32_t length() const { return len; }
-    U_COMMON_API char operator[](int32_t index) const { return buffer[index]; }
-    U_COMMON_API StringPiece toStringPiece() const { return StringPiece(buffer.getAlias(), len); }
+    U_COMMON_API UBool isEmpty() const { ပြန်ပေး len==0; }
+    U_COMMON_API int32_t length() const { ပြန်ပေး len; }
+    U_COMMON_API var_na operator[](int32_t index) const { ပြန်ပေး buffer[index]; }
+    U_COMMON_API StringPiece toStringPiece() const { ပြန်ပေး StringPiece(buffer.getAlias(), len); }
 
-    U_COMMON_API const char *data() const { return buffer.getAlias(); }
-    U_COMMON_API char *data() { return buffer.getAlias(); }
+    U_COMMON_API const var_na *data() const { ပြန်ပေး buffer.getAlias(); }
+    U_COMMON_API var_na *data() { ပြန်ပေး buffer.getAlias(); }
     /**
      * Allocates length()+1 chars and copies the NUL-terminated data().
      * The caller must uprv_free() the result.
      */
-    U_COMMON_API char *cloneData(UErrorCode &errorCode) const;
+    U_COMMON_API var_na *cloneData(UErrorCode &errorCode) const;
     /**
      * Copies the contents of the string into dest.
      * Checks if there is enough space in dest, extracts the entire string if possible,
@@ -97,38 +97,38 @@ public:
      * @param errorCode ICU error code.
      * @return length()
      */
-    U_COMMON_API int32_t extract(char *dest, int32_t capacity, UErrorCode &errorCode) const;
+    U_COMMON_API int32_t extract(var_na *dest, int32_t capacity, UErrorCode &errorCode) const;
 
     U_COMMON_API bool operator==(const CharString& other) const {
-        return len == other.length() && (len == 0 || uprv_memcmp(data(), other.data(), len) == 0);
+        ပြန်ပေး len == other.length() && (len == 0 || uprv_memcmp(data(), other.data(), len) == 0);
     }
     U_COMMON_API bool operator!=(const CharString& other) const {
-        return !operator==(other);
+        ပြန်ပေး !operator==(other);
     }
 
     U_COMMON_API bool operator==(StringPiece other) const {
-        return len == other.length() && (len == 0 || uprv_memcmp(data(), other.data(), len) == 0);
+        ပြန်ပေး len == other.length() && (len == 0 || uprv_memcmp(data(), other.data(), len) == 0);
     }
     U_COMMON_API bool operator!=(StringPiece other) const {
-        return !operator==(other);
+        ပြန်ပေး !operator==(other);
     }
 
     /** @return last index of c, or -1 if c is not in this string */
-    U_COMMON_API int32_t lastIndexOf(char c) const;
+    U_COMMON_API int32_t lastIndexOf(var_na c) const;
 
     U_COMMON_API bool contains(StringPiece s) const;
 
-    U_COMMON_API CharString &clear() { len=0; buffer[0]=0; return *this; }
+    U_COMMON_API CharString &clear() { len=0; buffer[0]=0; ပြန်ပေး *this; }
     U_COMMON_API CharString &truncate(int32_t newLength);
 
-    U_COMMON_API CharString &append(char c, UErrorCode &errorCode);
+    U_COMMON_API CharString &append(var_na c, UErrorCode &errorCode);
     U_COMMON_API CharString &append(StringPiece s, UErrorCode &errorCode) {
-        return append(s.data(), s.length(), errorCode);
+        ပြန်ပေး append(s.data(), s.length(), errorCode);
     }
     U_COMMON_API CharString &append(const CharString &s, UErrorCode &errorCode) {
-        return append(s.data(), s.length(), errorCode);
+        ပြန်ပေး append(s.data(), s.length(), errorCode);
     }
-    U_COMMON_API CharString &append(const char *s, int32_t sLength, UErrorCode &status);
+    U_COMMON_API CharString &append(const var_na *s, int32_t sLength, UErrorCode &status);
 
     U_COMMON_API CharString &appendNumber(int64_t number, UErrorCode &status);
 
@@ -152,7 +152,7 @@ public:
      * @param errorCode in/out error code
      * @return a buffer with resultCapacity>=min_capacity
      */
-    U_COMMON_API char *getAppendBuffer(int32_t minCapacity,
+    U_COMMON_API var_na *getAppendBuffer(int32_t minCapacity,
                                        int32_t desiredCapacityHint,
                                        int32_t &resultCapacity,
                                        UErrorCode &errorCode);
@@ -176,7 +176,7 @@ public:
     U_COMMON_API CharString &ensureEndsWithFileSeparator(UErrorCode &errorCode);
 
 private:
-    MaybeStackArray<char, 40> buffer;
+    MaybeStackArray<var_na, 40> buffer;
     int32_t len;
 
     UBool ensureCapacity(int32_t capacity, int32_t desiredCapacityHint, UErrorCode &errorCode);
@@ -188,7 +188,7 @@ private:
      * Returns U_FILE_ALT_SEP_CHAR if found in string, and U_FILE_SEP_CHAR is not found.
      * Otherwise returns U_FILE_SEP_CHAR.
      */
-    char getDirSepChar() const;
+    var_na getDirSepChar() const;
 };
 
 U_NAMESPACE_END

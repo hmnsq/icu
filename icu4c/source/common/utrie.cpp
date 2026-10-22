@@ -33,14 +33,14 @@
 #undef ABS
 #define ABS(x) ((x)>=0 ? (x) : -(x))
 
-static inline UBool
+static anta_hstha UBool
 equal_uint32(const uint32_t *s, const uint32_t *t, int32_t length) {
-    while(length>0 && *s==*t) {
+    နေစဉ်(length>0 && *s==*t) {
         ++s;
         ++t;
         --length;
     }
-    return length == 0;
+    ပြန်ပေး length == 0;
 }
 
 /* Building a trie ----------------------------------------------------------*/
@@ -53,31 +53,31 @@ utrie_open(UNewTrie *fillIn,
     UNewTrie *trie;
     int32_t i, j;
 
-    if( maxDataLength<UTRIE_DATA_BLOCK_LENGTH ||
+    အကယ်၍( maxDataLength<UTRIE_DATA_BLOCK_LENGTH ||
         (latin1Linear && maxDataLength<1024)
     ) {
-        return nullptr;
+        ပြန်ပေး nullptr;
     }
 
-    if(fillIn!=nullptr) {
+    အကယ်၍(fillIn!=nullptr) {
         trie=fillIn;
-    } else {
-        trie=(UNewTrie *)uprv_malloc(sizeof(UNewTrie));
-        if(trie==nullptr) {
-            return nullptr;
+    } မဟုတ်ပါက {
+        trie=(UNewTrie *)uprv_malloc(parimaa_na(UNewTrie));
+        အကယ်၍(trie==nullptr) {
+            ပြန်ပေး nullptr;
         }
     }
-    uprv_memset(trie, 0, sizeof(UNewTrie));
+    uprv_memset(trie, 0, parimaa_na(UNewTrie));
     trie->isAllocated = fillIn == nullptr;
 
-    if(aliasData!=nullptr) {
+    အကယ်၍(aliasData!=nullptr) {
         trie->data=aliasData;
         trie->isDataAllocated=false;
-    } else {
+    } မဟုတ်ပါက {
         trie->data=(uint32_t *)uprv_malloc(maxDataLength*4);
-        if(trie->data==nullptr) {
+        အကယ်၍(trie->data==nullptr) {
             uprv_free(trie);
-            return nullptr;
+            ပြန်ပေး nullptr;
         }
         trie->isDataAllocated=true;
     }
@@ -85,7 +85,7 @@ utrie_open(UNewTrie *fillIn,
     /* preallocate and reset the first data block (block index 0) */
     j=UTRIE_DATA_BLOCK_LENGTH;
 
-    if(latin1Linear) {
+    အကယ်၍(latin1Linear) {
         /* preallocate and reset the first block (number 0) and Latin-1 (U+0000..U+00ff) after that */
         /* made sure above that maxDataLength>=1024 */
 
@@ -95,12 +95,12 @@ utrie_open(UNewTrie *fillIn,
             /* do this at least for trie->index[0] even if that block is only partly used for Latin-1 */
             trie->index[i++]=j;
             j+=UTRIE_DATA_BLOCK_LENGTH;
-        } while(i<(256>>UTRIE_SHIFT));
+        } နေစဉ်(i<(256>>UTRIE_SHIFT));
     }
 
     /* reset the initially allocated blocks to the initial value */
     trie->dataLength=j;
-    while(j>0) {
+    နေစဉ်(j>0) {
         trie->data[--j]=initialValue;
     }
 
@@ -109,7 +109,7 @@ utrie_open(UNewTrie *fillIn,
     trie->dataCapacity=maxDataLength;
     trie->isLatin1Linear=latin1Linear;
     trie->isCompacted=false;
-    return trie;
+    ပြန်ပေး trie;
 }
 
 U_CAPI UNewTrie * U_EXPORT2
@@ -118,18 +118,18 @@ utrie_clone(UNewTrie *fillIn, const UNewTrie *other, uint32_t *aliasData, int32_
     UBool isDataAllocated;
 
     /* do not clone if other is not valid or already compacted */
-    if(other==nullptr || other->data==nullptr || other->isCompacted) {
-        return nullptr;
+    အကယ်၍(other==nullptr || other->data==nullptr || other->isCompacted) {
+        ပြန်ပေး nullptr;
     }
 
     /* clone data */
-    if(aliasData!=nullptr && aliasDataCapacity>=other->dataCapacity) {
+    အကယ်၍(aliasData!=nullptr && aliasDataCapacity>=other->dataCapacity) {
         isDataAllocated=false;
-    } else {
+    } မဟုတ်ပါက {
         aliasDataCapacity=other->dataCapacity;
         aliasData=(uint32_t *)uprv_malloc(other->dataCapacity*4);
-        if(aliasData==nullptr) {
-            return nullptr;
+        အကယ်၍(aliasData==nullptr) {
+            ပြန်ပေး nullptr;
         }
         isDataAllocated=true;
     }
@@ -137,26 +137,26 @@ utrie_clone(UNewTrie *fillIn, const UNewTrie *other, uint32_t *aliasData, int32_
     trie=utrie_open(fillIn, aliasData, aliasDataCapacity,
                     other->data[0], other->leadUnitValue,
                     other->isLatin1Linear);
-    if(trie==nullptr) {
+    အကယ်၍(trie==nullptr) {
         uprv_free(aliasData);
-    } else {
-        uprv_memcpy(trie->index, other->index, sizeof(trie->index));
+    } မဟုတ်ပါက {
+        uprv_memcpy(trie->index, other->index, parimaa_na(trie->index));
         uprv_memcpy(trie->data, other->data, (size_t)other->dataLength*4);
         trie->dataLength=other->dataLength;
         trie->isDataAllocated=isDataAllocated;
     }
 
-    return trie;
+    ပြန်ပေး trie;
 }
 
 U_CAPI void U_EXPORT2
 utrie_close(UNewTrie *trie) {
-    if(trie!=nullptr) {
-        if(trie->isDataAllocated) {
+    အကယ်၍(trie!=nullptr) {
+        အကယ်၍(trie->isDataAllocated) {
             uprv_free(trie->data);
             trie->data=nullptr;
         }
-        if(trie->isAllocated) {
+        အကယ်၍(trie->isAllocated) {
             uprv_free(trie);
         }
     }
@@ -164,12 +164,12 @@ utrie_close(UNewTrie *trie) {
 
 U_CAPI uint32_t * U_EXPORT2
 utrie_getData(UNewTrie *trie, int32_t *pLength) {
-    if(trie==nullptr || pLength==nullptr) {
-        return nullptr;
+    အကယ်၍(trie==nullptr || pLength==nullptr) {
+        ပြန်ပေး nullptr;
     }
 
     *pLength=trie->dataLength;
-    return trie->data;
+    ပြန်ပေး trie->data;
 }
 
 static int32_t
@@ -178,12 +178,12 @@ utrie_allocDataBlock(UNewTrie *trie) {
 
     newBlock=trie->dataLength;
     newTop=newBlock+UTRIE_DATA_BLOCK_LENGTH;
-    if(newTop>trie->dataCapacity) {
+    အကယ်၍(newTop>trie->dataCapacity) {
         /* out of memory in the data array */
-        return -1;
+        ပြန်ပေး -1;
     }
     trie->dataLength=newTop;
-    return newBlock;
+    ပြန်ပေး newBlock;
 }
 
 /**
@@ -198,21 +198,21 @@ utrie_getDataBlock(UNewTrie *trie, UChar32 c) {
 
     c>>=UTRIE_SHIFT;
     indexValue=trie->index[c];
-    if(indexValue>0) {
-        return indexValue;
+    အကယ်၍(indexValue>0) {
+        ပြန်ပေး indexValue;
     }
 
     /* allocate a new data block */
     newBlock=utrie_allocDataBlock(trie);
-    if(newBlock<0) {
+    အကယ်၍(newBlock<0) {
         /* out of memory in the data array */
-        return -1;
+        ပြန်ပေး -1;
     }
     trie->index[c]=newBlock;
 
     /* copy-on-write for a block from a setRange() */
     uprv_memcpy(trie->data+newBlock, trie->data-indexValue, 4*UTRIE_DATA_BLOCK_LENGTH);
-    return newBlock;
+    ပြန်ပေး newBlock;
 }
 
 /**
@@ -223,17 +223,17 @@ utrie_set32(UNewTrie *trie, UChar32 c, uint32_t value) {
     int32_t block;
 
     /* valid, uncompacted trie and valid c? */
-    if(trie==nullptr || trie->isCompacted || (uint32_t)c>0x10ffff) {
-        return false;
+    အကယ်၍(trie==nullptr || trie->isCompacted || (uint32_t)c>0x10ffff) {
+        ပြန်ပေး false;
     }
 
     block=utrie_getDataBlock(trie, c);
-    if(block<0) {
-        return false;
+    အကယ်၍(block<0) {
+        ပြန်ပေး false;
     }
 
     trie->data[block+(c&UTRIE_MASK)]=value;
-    return true;
+    ပြန်ပေး true;
 }
 
 U_CAPI uint32_t U_EXPORT2
@@ -241,19 +241,19 @@ utrie_get32(UNewTrie *trie, UChar32 c, UBool *pInBlockZero) {
     int32_t block;
 
     /* valid, uncompacted trie and valid c? */
-    if(trie==nullptr || trie->isCompacted || (uint32_t)c>0x10ffff) {
-        if(pInBlockZero!=nullptr) {
+    အကယ်၍(trie==nullptr || trie->isCompacted || (uint32_t)c>0x10ffff) {
+        အကယ်၍(pInBlockZero!=nullptr) {
             *pInBlockZero=true;
         }
-        return 0;
+        ပြန်ပေး 0;
     }
 
     block=trie->index[c>>UTRIE_SHIFT];
-    if(pInBlockZero!=nullptr) {
+    အကယ်၍(pInBlockZero!=nullptr) {
         *pInBlockZero = block == 0;
     }
 
-    return trie->data[ABS(block)+(c&UTRIE_MASK)];
+    ပြန်ပေး trie->data[ABS(block)+(c&UTRIE_MASK)];
 }
 
 /**
@@ -266,13 +266,13 @@ utrie_fillBlock(uint32_t *block, UChar32 start, UChar32 limit,
 
     pLimit=block+limit;
     block+=start;
-    if(overwrite) {
-        while(block<pLimit) {
+    အကယ်၍(overwrite) {
+        နေစဉ်(block<pLimit) {
             *block++=value;
         }
-    } else {
-        while(block<pLimit) {
-            if(*block==initialValue) {
+    } မဟုတ်ပါက {
+        နေစဉ်(block<pLimit) {
+            အကယ်၍(*block==initialValue) {
                 *block=value;
             }
             ++block;
@@ -291,34 +291,34 @@ utrie_setRange32(UNewTrie *trie, UChar32 start, UChar32 limit, uint32_t value, U
     int32_t block, rest, repeatBlock;
 
     /* valid, uncompacted trie and valid indexes? */
-    if( trie==nullptr || trie->isCompacted ||
+    အကယ်၍( trie==nullptr || trie->isCompacted ||
         (uint32_t)start>0x10ffff || (uint32_t)limit>0x110000 || start>limit
     ) {
-        return false;
+        ပြန်ပေး false;
     }
-    if(start==limit) {
-        return true; /* nothing to do */
+    အကယ်၍(start==limit) {
+        ပြန်ပေး true; /* nothing to do */
     }
 
     initialValue=trie->data[0];
-    if(start&UTRIE_MASK) {
+    အကယ်၍(start&UTRIE_MASK) {
         UChar32 nextStart;
 
         /* set partial block at [start..following block boundary[ */
         block=utrie_getDataBlock(trie, start);
-        if(block<0) {
-            return false;
+        အကယ်၍(block<0) {
+            ပြန်ပေး false;
         }
 
         nextStart=(start+UTRIE_DATA_BLOCK_LENGTH)&~UTRIE_MASK;
-        if(nextStart<=limit) {
+        အကယ်၍(nextStart<=limit) {
             utrie_fillBlock(trie->data+block, start&UTRIE_MASK, UTRIE_DATA_BLOCK_LENGTH,
                             value, initialValue, overwrite);
             start=nextStart;
-        } else {
+        } မဟုတ်ပါက {
             utrie_fillBlock(trie->data+block, start&UTRIE_MASK, limit&UTRIE_MASK,
                             value, initialValue, overwrite);
-            return true;
+            ပြန်ပေး true;
         }
     }
 
@@ -329,26 +329,26 @@ utrie_setRange32(UNewTrie *trie, UChar32 start, UChar32 limit, uint32_t value, U
     limit&=~UTRIE_MASK;
 
     /* iterate over all-value blocks */
-    if(value==initialValue) {
+    အကယ်၍(value==initialValue) {
         repeatBlock=0;
-    } else {
+    } မဟုတ်ပါက {
         repeatBlock=-1;
     }
-    while(start<limit) {
+    နေစဉ်(start<limit) {
         /* get index value */
         block=trie->index[start>>UTRIE_SHIFT];
-        if(block>0) {
+        အကယ်၍(block>0) {
             /* already allocated, fill in value */
             utrie_fillBlock(trie->data+block, 0, UTRIE_DATA_BLOCK_LENGTH, value, initialValue, overwrite);
-        } else if(trie->data[-block]!=value && (block==0 || overwrite)) {
+        } မဟုတ်ပါက အကယ်၍(trie->data[-block]!=value && (block==0 || overwrite)) {
             /* set the repeatBlock instead of the current block 0 or range block */
-            if(repeatBlock>=0) {
+            အကယ်၍(repeatBlock>=0) {
                 trie->index[start>>UTRIE_SHIFT]=-repeatBlock;
-            } else {
+            } မဟုတ်ပါက {
                 /* create and set and fill the repeatBlock */
                 repeatBlock=utrie_getDataBlock(trie, start);
-                if(repeatBlock<0) {
-                    return false;
+                အကယ်၍(repeatBlock<0) {
+                    ပြန်ပေး false;
                 }
 
                 /* set the negative block number to indicate that it is a repeat block */
@@ -360,17 +360,17 @@ utrie_setRange32(UNewTrie *trie, UChar32 start, UChar32 limit, uint32_t value, U
         start+=UTRIE_DATA_BLOCK_LENGTH;
     }
 
-    if(rest>0) {
+    အကယ်၍(rest>0) {
         /* set partial block at [last block boundary..limit[ */
         block=utrie_getDataBlock(trie, start);
-        if(block<0) {
-            return false;
+        အကယ်၍(block<0) {
+            ပြန်ပေး false;
         }
 
         utrie_fillBlock(trie->data+block, 0, rest, value, initialValue, overwrite);
     }
 
-    return true;
+    ပြန်ပေး true;
 }
 
 static int32_t
@@ -378,17 +378,17 @@ _findSameIndexBlock(const int32_t *idx, int32_t indexLength,
                     int32_t otherBlock) {
     int32_t block, i;
 
-    for(block=UTRIE_BMP_INDEX_LENGTH; block<indexLength; block+=UTRIE_SURROGATE_BLOCK_COUNT) {
-        for(i=0; i<UTRIE_SURROGATE_BLOCK_COUNT; ++i) {
-            if(idx[block+i]!=idx[otherBlock+i]) {
-                break;
+    အတွက်(block=UTRIE_BMP_INDEX_LENGTH; block<indexLength; block+=UTRIE_SURROGATE_BLOCK_COUNT) {
+        အတွက်(i=0; i<UTRIE_SURROGATE_BLOCK_COUNT; ++i) {
+            အကယ်၍(idx[block+i]!=idx[otherBlock+i]) {
+                bha_nga;
             }
         }
-        if(i==UTRIE_SURROGATE_BLOCK_COUNT) {
-            return block;
+        အကယ်၍(i==UTRIE_SURROGATE_BLOCK_COUNT) {
+            ပြန်ပေး block;
         }
     }
-    return indexLength;
+    ပြန်ပေး indexLength;
 }
 
 /*
@@ -409,7 +409,7 @@ utrie_fold(UNewTrie *trie, UNewTrieGetFoldedValue *getFoldedValue, UErrorCode *p
     UChar32 c;
     int32_t indexLength, block;
 #ifdef UTRIE_DEBUG
-    int countLeadCUWithData=0;
+    ကိန်းပြည့် countLeadCUWithData=0;
 #endif
 
     idx=trie->index;
@@ -427,20 +427,20 @@ utrie_fold(UNewTrie *trie, UNewTrieGetFoldedValue *getFoldedValue, UErrorCode *p
      * the above saved the indexes for surrogate code *points*
      * fill the indexes with simplified code from utrie_setRange32()
      */
-    if(trie->leadUnitValue==trie->data[0]) {
+    အကယ်၍(trie->leadUnitValue==trie->data[0]) {
         block=0; /* leadUnitValue==initialValue, use all-initial-value block */
-    } else {
+    } မဟုတ်ပါက {
         /* create and fill the repeatBlock */
         block=utrie_allocDataBlock(trie);
-        if(block<0) {
+        အကယ်၍(block<0) {
             /* data table overflow */
             *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-            return;
+            ပြန်ပေး;
         }
         utrie_fillBlock(trie->data+block, 0, UTRIE_DATA_BLOCK_LENGTH, trie->leadUnitValue, trie->data[0], true);
         block=-block; /* negative block number to indicate that it is a repeat block */
     }
-    for(c=(0xd800>>UTRIE_SHIFT); c<(0xdc00>>UTRIE_SHIFT); ++c) {
+    အတွက်(c=(0xd800>>UTRIE_SHIFT); c<(0xdc00>>UTRIE_SHIFT); ++c) {
         trie->index[c]=block;
     }
 
@@ -454,8 +454,8 @@ utrie_fold(UNewTrie *trie, UNewTrieGetFoldedValue *getFoldedValue, UErrorCode *p
     indexLength=UTRIE_BMP_INDEX_LENGTH;
 
     /* search for any index (stage 1) entries for supplementary code points */
-    for(c=0x10000; c<0x110000;) {
-        if(idx[c>>UTRIE_SHIFT]!=0) {
+    အတွက်(c=0x10000; c<0x110000;) {
+        အကယ်၍(idx[c>>UTRIE_SHIFT]!=0) {
             /* there is data, treat the full block for a lead surrogate */
             c&=~0x3ff;
 
@@ -473,15 +473,15 @@ utrie_fold(UNewTrie *trie, UNewTrieGetFoldedValue *getFoldedValue, UErrorCode *p
              * set it for the lead surrogate code unit
              */
             value=getFoldedValue(trie, c, block+UTRIE_SURROGATE_BLOCK_COUNT);
-            if(value!=utrie_get32(trie, U16_LEAD(c), nullptr)) {
-                if(!utrie_set32(trie, U16_LEAD(c), value)) {
+            အကယ်၍(value!=utrie_get32(trie, U16_LEAD(c), nullptr)) {
+                အကယ်၍(!utrie_set32(trie, U16_LEAD(c), value)) {
                     /* data table overflow */
                     *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-                    return;
+                    ပြန်ပေး;
                 }
 
                 /* if we did not find an identical index block... */
-                if(block==indexLength) {
+                အကယ်၍(block==indexLength) {
                     /* move the actual index (stage 1) entries from the supplementary position to the new one */
                     uprv_memmove(idx+indexLength,
                                  idx+(c>>UTRIE_SHIFT),
@@ -490,12 +490,12 @@ utrie_fold(UNewTrie *trie, UNewTrieGetFoldedValue *getFoldedValue, UErrorCode *p
                 }
             }
             c+=0x400;
-        } else {
+        } မဟုတ်ပါက {
             c+=UTRIE_DATA_BLOCK_LENGTH;
         }
     }
 #ifdef UTRIE_DEBUG
-    if(countLeadCUWithData>0) {
+    အကယ်၍(countLeadCUWithData>0) {
         printf("supplementary data for %d lead surrogates\n", countLeadCUWithData);
     }
 #endif
@@ -509,9 +509,9 @@ utrie_fold(UNewTrie *trie, UNewTrieGetFoldedValue *getFoldedValue, UErrorCode *p
      * In fact, it can only ever become n==1024 with completely unfoldable data and
      * the additional block of duplicated values for lead surrogates.
      */
-    if(indexLength>=UTRIE_MAX_INDEX_LENGTH) {
+    အကယ်၍(indexLength>=UTRIE_MAX_INDEX_LENGTH) {
         *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-        return;
+        ပြန်ပေး;
     }
 
     /*
@@ -550,7 +550,7 @@ _findUnusedBlocks(UNewTrie *trie) {
     uprv_memset(trie->map, 0xff, (UTRIE_MAX_BUILD_TIME_DATA_LENGTH>>UTRIE_SHIFT)*4);
 
     /* mark each block that _is_ used with 0 */
-    for(i=0; i<trie->indexLength; ++i) {
+    အတွက်(i=0; i<trie->indexLength; ++i) {
         trie->map[ABS(trie->index[i])>>UTRIE_SHIFT]=0;
     }
 
@@ -566,12 +566,12 @@ _findSameDataBlock(const uint32_t *data, int32_t dataLength,
     /* ensure that we do not even partially get past dataLength */
     dataLength-=UTRIE_DATA_BLOCK_LENGTH;
 
-    for(block=0; block<=dataLength; block+=step) {
-        if(equal_uint32(data+block, data+otherBlock, UTRIE_DATA_BLOCK_LENGTH)) {
-            return block;
+    အတွက်(block=0; block<=dataLength; block+=step) {
+        အကယ်၍(equal_uint32(data+block, data+otherBlock, UTRIE_DATA_BLOCK_LENGTH)) {
+            ပြန်ပေး block;
         }
     }
-    return -1;
+    ပြန်ပေး -1;
 }
 
 /*
@@ -590,17 +590,17 @@ static void
 utrie_compact(UNewTrie *trie, UBool overlap, UErrorCode *pErrorCode) {
     int32_t i, start, newStart, overlapStart;
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return;
+    အကယ်၍(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
+        ပြန်ပေး;
     }
 
     /* valid, uncompacted trie? */
-    if(trie==nullptr) {
+    အကယ်၍(trie==nullptr) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        ပြန်ပေး;
     }
-    if(trie->isCompacted) {
-        return; /* nothing left to do */
+    အကယ်၍(trie->isCompacted) {
+        ပြန်ပေး; /* nothing left to do */
     }
 
     /* compaction */
@@ -609,14 +609,14 @@ utrie_compact(UNewTrie *trie, UBool overlap, UErrorCode *pErrorCode) {
     _findUnusedBlocks(trie);
 
     /* if Latin-1 is preallocated and linear, then do not compact Latin-1 data */
-    if(trie->isLatin1Linear && UTRIE_SHIFT<=8) {
+    အကယ်၍(trie->isLatin1Linear && UTRIE_SHIFT<=8) {
         overlapStart=UTRIE_DATA_BLOCK_LENGTH+256;
-    } else {
+    } မဟုတ်ပါက {
         overlapStart=UTRIE_DATA_BLOCK_LENGTH;
     }
 
     newStart=UTRIE_DATA_BLOCK_LENGTH;
-    for(start=newStart; start<trie->dataLength;) {
+    အတွက်(start=newStart; start<trie->dataLength;) {
         /*
          * start: index of first entry of current block
          * newStart: index where the current block is to be moved
@@ -624,7 +624,7 @@ utrie_compact(UNewTrie *trie, UBool overlap, UErrorCode *pErrorCode) {
          */
 
         /* skip blocks that are not used */
-        if(trie->map[start>>UTRIE_SHIFT]<0) {
+        အကယ်၍(trie->map[start>>UTRIE_SHIFT]<0) {
             /* advance start to the next block */
             start+=UTRIE_DATA_BLOCK_LENGTH;
 
@@ -633,7 +633,7 @@ utrie_compact(UNewTrie *trie, UBool overlap, UErrorCode *pErrorCode) {
         }
 
         /* search for an identical block */
-        if( start>=overlapStart &&
+        အကယ်၍( start>=overlapStart &&
             (i=_findSameDataBlock(trie->data, newStart, start,
                             overlap ? UTRIE_DATA_GRANULARITY : UTRIE_DATA_BLOCK_LENGTH))
              >=0
@@ -649,31 +649,31 @@ utrie_compact(UNewTrie *trie, UBool overlap, UErrorCode *pErrorCode) {
         }
 
         /* see if the beginning of this block can be overlapped with the end of the previous block */
-        if(overlap && start>=overlapStart) {
+        အကယ်၍(overlap && start>=overlapStart) {
             /* look for maximum overlap (modulo granularity) with the previous, adjacent block */
-            for(i=UTRIE_DATA_BLOCK_LENGTH-UTRIE_DATA_GRANULARITY;
+            အတွက်(i=UTRIE_DATA_BLOCK_LENGTH-UTRIE_DATA_GRANULARITY;
                 i>0 && !equal_uint32(trie->data+(newStart-i), trie->data+start, i);
                 i-=UTRIE_DATA_GRANULARITY) {}
-        } else {
+        } မဟုတ်ပါက {
             i=0;
         }
 
-        if(i>0) {
+        အကယ်၍(i>0) {
             /* some overlap */
             trie->map[start>>UTRIE_SHIFT]=newStart-i;
 
             /* move the non-overlapping indexes to their new positions */
             start+=i;
-            for(i=UTRIE_DATA_BLOCK_LENGTH-i; i>0; --i) {
+            အတွက်(i=UTRIE_DATA_BLOCK_LENGTH-i; i>0; --i) {
                 trie->data[newStart++]=trie->data[start++];
             }
-        } else if(newStart<start) {
+        } မဟုတ်ပါက အကယ်၍(newStart<start) {
             /* no overlap, just move the indexes to their new positions */
             trie->map[start>>UTRIE_SHIFT]=newStart;
-            for(i=UTRIE_DATA_BLOCK_LENGTH; i>0; --i) {
+            အတွက်(i=UTRIE_DATA_BLOCK_LENGTH; i>0; --i) {
                 trie->data[newStart++]=trie->data[start++];
             }
-        } else /* no overlap && newStart==start */ {
+        } မဟုတ်ပါက /* no overlap && newStart==start */ {
             trie->map[start>>UTRIE_SHIFT]=start;
             newStart+=UTRIE_DATA_BLOCK_LENGTH;
             start=newStart;
@@ -681,7 +681,7 @@ utrie_compact(UNewTrie *trie, UBool overlap, UErrorCode *pErrorCode) {
     }
 
     /* now adjust the index (stage 1) table */
-    for(i=0; i<trie->indexLength; ++i) {
+    အတွက်(i=0; i<trie->indexLength; ++i) {
         trie->index[i]=trie->map[ABS(trie->index[i])>>UTRIE_SHIFT];
     }
 
@@ -725,17 +725,17 @@ defaultGetFoldedValue(UNewTrie *trie, UChar32 start, int32_t offset) {
 
     initialValue=trie->data[0];
     limit=start+0x400;
-    while(start<limit) {
+    နေစဉ်(start<limit) {
         value=utrie_get32(trie, start, &inBlockZero);
-        if(inBlockZero) {
+        အကယ်၍(inBlockZero) {
             start+=UTRIE_DATA_BLOCK_LENGTH;
-        } else if(value!=initialValue) {
-            return static_cast<uint32_t>(offset);
-        } else {
+        } မဟုတ်ပါက အကယ်၍(value!=initialValue) {
+            ပြန်ပေး static_cast<uint32_t>(offset);
+        } မဟုတ်ပါက {
             ++start;
         }
     }
-    return 0;
+    ပြန်ပေး 0;
 }
 
 U_CAPI int32_t U_EXPORT2
@@ -750,21 +750,21 @@ utrie_serialize(UNewTrie *trie, void *dt, int32_t capacity,
     uint8_t* data = nullptr;
 
     /* argument check */
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    အကယ်၍(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
+        ပြန်ပေး 0;
     }
 
-    if(trie==nullptr || capacity<0 || (capacity>0 && dt==nullptr)) {
+    အကယ်၍(trie==nullptr || capacity<0 || (capacity>0 && dt==nullptr)) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        ပြန်ပေး 0;
     }
-    if(getFoldedValue==nullptr) {
+    အကယ်၍(getFoldedValue==nullptr) {
         getFoldedValue=defaultGetFoldedValue;
     }
 
     data = (uint8_t*)dt;
     /* fold and compact if necessary, also checks that indexLength is within limits */
-    if(!trie->isCompacted) {
+    အကယ်၍(!trie->isCompacted) {
         /* compact once without overlap to improve folding */
         utrie_compact(trie, false, pErrorCode);
 
@@ -775,25 +775,25 @@ utrie_serialize(UNewTrie *trie, void *dt, int32_t capacity,
         utrie_compact(trie, true, pErrorCode);
 
         trie->isCompacted=true;
-        if(U_FAILURE(*pErrorCode)) {
-            return 0;
+        အကယ်၍(U_FAILURE(*pErrorCode)) {
+            ပြန်ပေး 0;
         }
     }
 
     /* is dataLength within limits? */
-    if( (reduceTo16Bits ? (trie->dataLength+trie->indexLength) : trie->dataLength) >= UTRIE_MAX_DATA_LENGTH) {
+    အကယ်၍( (reduceTo16Bits ? (trie->dataLength+trie->indexLength) : trie->dataLength) >= UTRIE_MAX_DATA_LENGTH) {
         *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
     }
 
-    length=sizeof(UTrieHeader)+2*trie->indexLength;
-    if(reduceTo16Bits) {
+    length=parimaa_na(UTrieHeader)+2*trie->indexLength;
+    အကယ်၍(reduceTo16Bits) {
         length+=2*trie->dataLength;
-    } else {
+    } မဟုတ်ပါက {
         length+=4*trie->dataLength;
     }
 
-    if(length>capacity) {
-        return length; /* preflighting */
+    အကယ်၍(length>capacity) {
+        ပြန်ပေး length; /* preflighting */
     }
 
 #ifdef UTRIE_DEBUG
@@ -803,15 +803,15 @@ utrie_serialize(UNewTrie *trie, void *dt, int32_t capacity,
 
     /* set the header fields */
     header=(UTrieHeader *)data;
-    data+=sizeof(UTrieHeader);
+    data+=parimaa_na(UTrieHeader);
 
     header->signature=0x54726965; /* "Trie" */
     header->options=UTRIE_SHIFT | (UTRIE_INDEX_SHIFT<<UTRIE_OPTIONS_INDEX_SHIFT);
 
-    if(!reduceTo16Bits) {
+    အကယ်၍(!reduceTo16Bits) {
         header->options|=UTRIE_OPTIONS_DATA_IS_32_BIT;
     }
-    if(trie->isLatin1Linear) {
+    အကယ်၍(trie->isLatin1Linear) {
         header->options|=UTRIE_OPTIONS_LATIN1_IS_LINEAR;
     }
 
@@ -819,24 +819,24 @@ utrie_serialize(UNewTrie *trie, void *dt, int32_t capacity,
     header->dataLength=trie->dataLength;
 
     /* write the index (stage 1) array and the 16/32-bit data (stage 2) array */
-    if(reduceTo16Bits) {
+    အကယ်၍(reduceTo16Bits) {
         /* write 16-bit index values shifted right by UTRIE_INDEX_SHIFT, after adding indexLength */
         p=(uint32_t *)trie->index;
         dest16=(uint16_t *)data;
-        for(i=trie->indexLength; i>0; --i) {
+        အတွက်(i=trie->indexLength; i>0; --i) {
             *dest16++=(uint16_t)((*p++ + trie->indexLength)>>UTRIE_INDEX_SHIFT);
         }
 
         /* write 16-bit data values */
         p=trie->data;
-        for(i=trie->dataLength; i>0; --i) {
+        အတွက်(i=trie->dataLength; i>0; --i) {
             *dest16++=(uint16_t)*p++;
         }
-    } else {
+    } မဟုတ်ပါက {
         /* write 16-bit index values shifted right by UTRIE_INDEX_SHIFT */
         p=(uint32_t *)trie->index;
         dest16=(uint16_t *)data;
-        for(i=trie->indexLength; i>0; --i) {
+        အတွက်(i=trie->indexLength; i>0; --i) {
             *dest16++=(uint16_t)(*p++ >> UTRIE_INDEX_SHIFT);
         }
 
@@ -844,13 +844,13 @@ utrie_serialize(UNewTrie *trie, void *dt, int32_t capacity,
         uprv_memcpy(dest16, trie->data, 4*(size_t)trie->dataLength);
     }
 
-    return length;
+    ပြန်ပေး length;
 }
 
 /* inverse to defaultGetFoldedValue() */
 U_CAPI int32_t U_EXPORT2
 utrie_defaultGetFoldingOffset(uint32_t data) {
-    return (int32_t)data;
+    ပြန်ပေး (int32_t)data;
 }
 
 U_CAPI int32_t U_EXPORT2
@@ -859,30 +859,30 @@ utrie_unserialize(UTrie *trie, const void *data, int32_t length, UErrorCode *pEr
     const uint16_t *p16;
     uint32_t options;
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return -1;
+    အကယ်၍(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
+        ပြန်ပေး -1;
     }
 
     /* enough data for a trie header? */
-    if(length<(int32_t)sizeof(UTrieHeader)) {
+    အကယ်၍(length<(int32_t)parimaa_na(UTrieHeader)) {
         *pErrorCode=U_INVALID_FORMAT_ERROR;
-        return -1;
+        ပြန်ပေး -1;
     }
 
     /* check the signature */
     header=(const UTrieHeader *)data;
-    if(header->signature!=0x54726965) {
+    အကယ်၍(header->signature!=0x54726965) {
         *pErrorCode=U_INVALID_FORMAT_ERROR;
-        return -1;
+        ပြန်ပေး -1;
     }
 
     /* get the options and check the shift values */
     options=header->options;
-    if( (options&UTRIE_OPTIONS_SHIFT_MASK)!=UTRIE_SHIFT ||
+    အကယ်၍( (options&UTRIE_OPTIONS_SHIFT_MASK)!=UTRIE_SHIFT ||
         ((options>>UTRIE_OPTIONS_INDEX_SHIFT)&UTRIE_OPTIONS_SHIFT_MASK)!=UTRIE_INDEX_SHIFT
     ) {
         *pErrorCode=U_INVALID_FORMAT_ERROR;
-        return -1;
+        ပြန်ပေး -1;
     }
     trie->isLatin1Linear = (options & UTRIE_OPTIONS_LATIN1_IS_LINEAR) != 0;
 
@@ -890,12 +890,12 @@ utrie_unserialize(UTrie *trie, const void *data, int32_t length, UErrorCode *pEr
     trie->indexLength=header->indexLength;
     trie->dataLength=header->dataLength;
 
-    length-=(int32_t)sizeof(UTrieHeader);
+    length-=(int32_t)parimaa_na(UTrieHeader);
 
     /* enough data for the index? */
-    if(length<2*trie->indexLength) {
+    အကယ်၍(length<2*trie->indexLength) {
         *pErrorCode=U_INVALID_FORMAT_ERROR;
-        return -1;
+        ပြန်ပေး -1;
     }
     p16=(const uint16_t *)(header+1);
     trie->index=p16;
@@ -903,29 +903,29 @@ utrie_unserialize(UTrie *trie, const void *data, int32_t length, UErrorCode *pEr
     length-=2*trie->indexLength;
 
     /* get the data */
-    if(options&UTRIE_OPTIONS_DATA_IS_32_BIT) {
-        if(length<4*trie->dataLength) {
+    အကယ်၍(options&UTRIE_OPTIONS_DATA_IS_32_BIT) {
+        အကယ်၍(length<4*trie->dataLength) {
             *pErrorCode=U_INVALID_FORMAT_ERROR;
-            return -1;
+            ပြန်ပေး -1;
         }
         trie->data32=(const uint32_t *)p16;
         trie->initialValue=trie->data32[0];
-        length=(int32_t)sizeof(UTrieHeader)+2*trie->indexLength+4*trie->dataLength;
-    } else {
-        if(length<2*trie->dataLength) {
+        length=(int32_t)parimaa_na(UTrieHeader)+2*trie->indexLength+4*trie->dataLength;
+    } မဟုတ်ပါက {
+        အကယ်၍(length<2*trie->dataLength) {
             *pErrorCode=U_INVALID_FORMAT_ERROR;
-            return -1;
+            ပြန်ပေး -1;
         }
 
         /* the "data16" data is used via the index pointer */
         trie->data32=nullptr;
         trie->initialValue=trie->index[trie->indexLength];
-        length=(int32_t)sizeof(UTrieHeader)+2*trie->indexLength+2*trie->dataLength;
+        length=(int32_t)parimaa_na(UTrieHeader)+2*trie->indexLength+2*trie->dataLength;
     }
 
     trie->getFoldingOffset=utrie_defaultGetFoldingOffset;
 
-    return length;
+    ပြန်ပေး length;
 }
 
 U_CAPI int32_t U_EXPORT2
@@ -938,8 +938,8 @@ utrie_unserializeDummy(UTrie *trie,
     int32_t actualLength, latin1Length, i, limit;
     uint16_t block;
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return -1;
+    အကယ်၍(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
+        ပြန်ပေး -1;
     }
 
     /* calculate the actual size of the dummy trie data */
@@ -949,21 +949,21 @@ utrie_unserializeDummy(UTrie *trie,
 
     trie->indexLength=UTRIE_BMP_INDEX_LENGTH+UTRIE_SURROGATE_BLOCK_COUNT;
     trie->dataLength=latin1Length;
-    if(leadUnitValue!=initialValue) {
+    အကယ်၍(leadUnitValue!=initialValue) {
         trie->dataLength+=UTRIE_DATA_BLOCK_LENGTH;
     }
 
     actualLength=trie->indexLength*2;
-    if(make16BitTrie) {
+    အကယ်၍(make16BitTrie) {
         actualLength+=trie->dataLength*2;
-    } else {
+    } မဟုတ်ပါက {
         actualLength+=trie->dataLength*4;
     }
 
     /* enough space for the dummy trie? */
-    if(length<actualLength) {
+    အကယ်၍(length<actualLength) {
         *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-        return actualLength;
+        ပြန်ပေး actualLength;
     }
 
     trie->isLatin1Linear=true;
@@ -973,20 +973,20 @@ utrie_unserializeDummy(UTrie *trie,
     p16=(uint16_t *)data;
     trie->index=p16;
 
-    if(make16BitTrie) {
+    အကယ်၍(make16BitTrie) {
         /* indexes to block 0 */
         block=(uint16_t)(trie->indexLength>>UTRIE_INDEX_SHIFT);
         limit=trie->indexLength;
-        for(i=0; i<limit; ++i) {
+        အတွက်(i=0; i<limit; ++i) {
             p16[i]=block;
         }
 
-        if(leadUnitValue!=initialValue) {
+        အကယ်၍(leadUnitValue!=initialValue) {
             /* indexes for lead surrogate code units to the block after Latin-1 */
             block+=(uint16_t)(latin1Length>>UTRIE_INDEX_SHIFT);
             i=0xd800>>UTRIE_SHIFT;
             limit=0xdc00>>UTRIE_SHIFT;
-            for(; i<limit; ++i) {
+            အတွက်(; i<limit; ++i) {
                 p16[i]=block;
             }
         }
@@ -995,29 +995,29 @@ utrie_unserializeDummy(UTrie *trie,
 
         /* Latin-1 data */
         p16+=trie->indexLength;
-        for(i=0; i<latin1Length; ++i) {
+        အတွက်(i=0; i<latin1Length; ++i) {
             p16[i]=(uint16_t)initialValue;
         }
 
         /* data for lead surrogate code units */
-        if(leadUnitValue!=initialValue) {
+        အကယ်၍(leadUnitValue!=initialValue) {
             limit=latin1Length+UTRIE_DATA_BLOCK_LENGTH;
-            for(/* i=latin1Length */; i<limit; ++i) {
+            အတွက်(/* i=latin1Length */; i<limit; ++i) {
                 p16[i]=(uint16_t)leadUnitValue;
             }
         }
-    } else {
+    } မဟုတ်ပါက {
         uint32_t *p32;
 
         /* indexes to block 0 */
         uprv_memset(p16, 0, trie->indexLength*2);
 
-        if(leadUnitValue!=initialValue) {
+        အကယ်၍(leadUnitValue!=initialValue) {
             /* indexes for lead surrogate code units to the block after Latin-1 */
             block=(uint16_t)(latin1Length>>UTRIE_INDEX_SHIFT);
             i=0xd800>>UTRIE_SHIFT;
             limit=0xdc00>>UTRIE_SHIFT;
-            for(; i<limit; ++i) {
+            အတွက်(; i<limit; ++i) {
                 p16[i]=block;
             }
         }
@@ -1025,14 +1025,14 @@ utrie_unserializeDummy(UTrie *trie,
         trie->data32=p32=(uint32_t *)(p16+trie->indexLength);
 
         /* Latin-1 data */
-        for(i=0; i<latin1Length; ++i) {
+        အတွက်(i=0; i<latin1Length; ++i) {
             p32[i]=initialValue;
         }
 
         /* data for lead surrogate code units */
-        if(leadUnitValue!=initialValue) {
+        အကယ်၍(leadUnitValue!=initialValue) {
             limit=latin1Length+UTRIE_DATA_BLOCK_LENGTH;
-            for(/* i=latin1Length */; i<limit; ++i) {
+            အတွက်(/* i=latin1Length */; i<limit; ++i) {
                 p32[i]=leadUnitValue;
             }
         }
@@ -1040,7 +1040,7 @@ utrie_unserializeDummy(UTrie *trie,
 
     trie->getFoldingOffset=utrie_defaultGetFoldingOffset;
 
-    return actualLength;
+    ပြန်ပေး actualLength;
 }
 
 /* enumeration -------------------------------------------------------------- */
@@ -1048,7 +1048,7 @@ utrie_unserializeDummy(UTrie *trie,
 /* default UTrieEnumValue() returns the input value itself */
 static uint32_t U_CALLCONV
 enumSameValue(const void * /*context*/, uint32_t value) {
-    return value;
+    ပြန်ပေး value;
 }
 
 /**
@@ -1066,10 +1066,10 @@ utrie_enum(const UTrie *trie,
     int32_t l, i, j, block, prevBlock, nullBlock, offset;
 
     /* check arguments */
-    if(trie==nullptr || trie->index==nullptr || enumRange==nullptr) {
-        return;
+    အကယ်၍(trie==nullptr || trie->index==nullptr || enumRange==nullptr) {
+        ပြန်ပေး;
     }
-    if(enumValue==nullptr) {
+    အကယ်၍(enumValue==nullptr) {
         enumValue=enumSameValue;
     }
 
@@ -1079,9 +1079,9 @@ utrie_enum(const UTrie *trie,
     /* get the enumeration value that corresponds to an initial-value trie data entry */
     initialValue=enumValue(context, trie->initialValue);
 
-    if(data32==nullptr) {
+    အကယ်၍(data32==nullptr) {
         nullBlock=trie->indexLength;
-    } else {
+    } မဟုတ်ပါက {
         nullBlock=0;
     }
 
@@ -1091,25 +1091,25 @@ utrie_enum(const UTrie *trie,
     prevValue=initialValue;
 
     /* enumerate BMP - the main loop enumerates data blocks */
-    for(i=0, c=0; c<=0xffff; ++i) {
-        if(c==0xd800) {
+    အတွက်(i=0, c=0; c<=0xffff; ++i) {
+        အကယ်၍(c==0xd800) {
             /* skip lead surrogate code _units_, go to lead surr. code _points_ */
             i=UTRIE_BMP_INDEX_LENGTH;
-        } else if(c==0xdc00) {
+        } မဟုတ်ပါက အကယ်၍(c==0xdc00) {
             /* go back to regular BMP code points */
             i=c>>UTRIE_SHIFT;
         }
 
         block=idx[i]<<UTRIE_INDEX_SHIFT;
-        if(block==prevBlock) {
+        အကယ်၍(block==prevBlock) {
             /* the block is the same as the previous one, and filled with value */
             c+=UTRIE_DATA_BLOCK_LENGTH;
-        } else if(block==nullBlock) {
+        } မဟုတ်ပါက အကယ်၍(block==nullBlock) {
             /* this is the all-initial-value block */
-            if(prevValue!=initialValue) {
-                if(prev<c) {
-                    if(!enumRange(context, prev, c, prevValue)) {
-                        return;
+            အကယ်၍(prevValue!=initialValue) {
+                အကယ်၍(prev<c) {
+                    အကယ်၍(!enumRange(context, prev, c, prevValue)) {
+                        ပြန်ပေး;
                     }
                 }
                 prevBlock=nullBlock;
@@ -1117,17 +1117,17 @@ utrie_enum(const UTrie *trie,
                 prevValue=initialValue;
             }
             c+=UTRIE_DATA_BLOCK_LENGTH;
-        } else {
+        } မဟုတ်ပါက {
             prevBlock=block;
-            for(j=0; j<UTRIE_DATA_BLOCK_LENGTH; ++j) {
+            အတွက်(j=0; j<UTRIE_DATA_BLOCK_LENGTH; ++j) {
                 value=enumValue(context, data32!=nullptr ? data32[block+j] : idx[block+j]);
-                if(value!=prevValue) {
-                    if(prev<c) {
-                        if(!enumRange(context, prev, c, prevValue)) {
-                            return;
+                အကယ်၍(value!=prevValue) {
+                    အကယ်၍(prev<c) {
+                        အကယ်၍(!enumRange(context, prev, c, prevValue)) {
+                            ပြန်ပေး;
                         }
                     }
-                    if(j>0) {
+                    အကယ်၍(j>0) {
                         /* the block is not filled with all the same value */
                         prevBlock=-1;
                     }
@@ -1140,15 +1140,15 @@ utrie_enum(const UTrie *trie,
     }
 
     /* enumerate supplementary code points */
-    for(l=0xd800; l<0xdc00;) {
+    အတွက်(l=0xd800; l<0xdc00;) {
         /* lead surrogate access */
         offset=idx[l>>UTRIE_SHIFT]<<UTRIE_INDEX_SHIFT;
-        if(offset==nullBlock) {
+        အကယ်၍(offset==nullBlock) {
             /* no entries for a whole block of lead surrogates */
-            if(prevValue!=initialValue) {
-                if(prev<c) {
-                    if(!enumRange(context, prev, c, prevValue)) {
-                        return;
+            အကယ်၍(prevValue!=initialValue) {
+                အကယ်၍(prev<c) {
+                    အကယ်၍(!enumRange(context, prev, c, prevValue)) {
+                        ပြန်ပေး;
                     }
                 }
                 prevBlock=nullBlock;
@@ -1165,12 +1165,12 @@ utrie_enum(const UTrie *trie,
 
         /* enumerate trail surrogates for this lead surrogate */
         offset=trie->getFoldingOffset(value);
-        if(offset<=0) {
+        အကယ်၍(offset<=0) {
             /* no data for this lead surrogate */
-            if(prevValue!=initialValue) {
-                if(prev<c) {
-                    if(!enumRange(context, prev, c, prevValue)) {
-                        return;
+            အကယ်၍(prevValue!=initialValue) {
+                အကယ်၍(prev<c) {
+                    အကယ်၍(!enumRange(context, prev, c, prevValue)) {
+                        ပြန်ပေး;
                     }
                 }
                 prevBlock=nullBlock;
@@ -1180,22 +1180,22 @@ utrie_enum(const UTrie *trie,
 
             /* nothing else to do for the supplementary code points for this lead surrogate */
             c+=0x400;
-        } else {
+        } မဟုတ်ပါက {
             /* enumerate code points for this lead surrogate */
             i=offset;
             offset+=UTRIE_SURROGATE_BLOCK_COUNT;
             do {
                 /* copy of most of the body of the BMP loop */
                 block=idx[i]<<UTRIE_INDEX_SHIFT;
-                if(block==prevBlock) {
+                အကယ်၍(block==prevBlock) {
                     /* the block is the same as the previous one, and filled with value */
                     c+=UTRIE_DATA_BLOCK_LENGTH;
-                } else if(block==nullBlock) {
+                } မဟုတ်ပါက အကယ်၍(block==nullBlock) {
                     /* this is the all-initial-value block */
-                    if(prevValue!=initialValue) {
-                        if(prev<c) {
-                            if(!enumRange(context, prev, c, prevValue)) {
-                                return;
+                    အကယ်၍(prevValue!=initialValue) {
+                        အကယ်၍(prev<c) {
+                            အကယ်၍(!enumRange(context, prev, c, prevValue)) {
+                                ပြန်ပေး;
                             }
                         }
                         prevBlock=nullBlock;
@@ -1203,17 +1203,17 @@ utrie_enum(const UTrie *trie,
                         prevValue=initialValue;
                     }
                     c+=UTRIE_DATA_BLOCK_LENGTH;
-                } else {
+                } မဟုတ်ပါက {
                     prevBlock=block;
-                    for(j=0; j<UTRIE_DATA_BLOCK_LENGTH; ++j) {
+                    အတွက်(j=0; j<UTRIE_DATA_BLOCK_LENGTH; ++j) {
                         value=enumValue(context, data32!=nullptr ? data32[block+j] : idx[block+j]);
-                        if(value!=prevValue) {
-                            if(prev<c) {
-                                if(!enumRange(context, prev, c, prevValue)) {
-                                    return;
+                        အကယ်၍(value!=prevValue) {
+                            အကယ်၍(prev<c) {
+                                အကယ်၍(!enumRange(context, prev, c, prevValue)) {
+                                    ပြန်ပေး;
                                 }
                             }
-                            if(j>0) {
+                            အကယ်၍(j>0) {
                                 /* the block is not filled with all the same value */
                                 prevBlock=-1;
                             }
@@ -1223,7 +1223,7 @@ utrie_enum(const UTrie *trie,
                         ++c;
                     }
                 }
-            } while(++i<offset);
+            } နေစဉ်(++i<offset);
         }
 
         ++l;

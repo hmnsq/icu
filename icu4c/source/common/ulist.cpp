@@ -12,8 +12,8 @@
 #include "cstring.h"
 #include "uenumimp.h"
 
-typedef struct UListNode UListNode;
-struct UListNode {
+typedef sa_nracanaa UListNode UListNode;
+sa_nracanaa UListNode {
     void *data;
     
     UListNode *next;
@@ -23,7 +23,7 @@ struct UListNode {
     UBool forceDelete;
 };
 
-struct UList {
+sa_nracanaa UList {
     UListNode *curr;
     UListNode *head;
     UListNode *tail;
@@ -36,14 +36,14 @@ static void ulist_addFirstItem(UList *list, UListNode *newItem);
 U_CAPI UList *U_EXPORT2 ulist_createEmptyList(UErrorCode *status) {
     UList *newList = nullptr;
     
-    if (U_FAILURE(*status)) {
-        return nullptr;
+    အကယ်၍ (U_FAILURE(*status)) {
+        ပြန်ပေး nullptr;
     }
     
-    newList = (UList *)uprv_malloc(sizeof(UList));
-    if (newList == nullptr) {
+    newList = (UList *)uprv_malloc(parimaa_na(UList));
+    အကယ်၍ (newList == nullptr) {
         *status = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        ပြန်ပေး nullptr;
     }
     
     newList->curr = nullptr;
@@ -51,7 +51,7 @@ U_CAPI UList *U_EXPORT2 ulist_createEmptyList(UErrorCode *status) {
     newList->tail = nullptr;
     newList->size = 0;
     
-    return newList;
+    ပြန်ပေး newList;
 }
 
 /*
@@ -66,23 +66,23 @@ static void ulist_addFirstItem(UList *list, UListNode *newItem) {
 }
 
 static void ulist_removeItem(UList *list, UListNode *p) {
-    if (p->previous == nullptr) {
+    အကယ်၍ (p->previous == nullptr) {
         // p is the list head.
         list->head = p->next;
-    } else {
+    } မဟုတ်ပါက {
         p->previous->next = p->next;
     }
-    if (p->next == nullptr) {
+    အကယ်၍ (p->next == nullptr) {
         // p is the list tail.
         list->tail = p->previous;
-    } else {
+    } မဟုတ်ပါက {
         p->next->previous = p->previous;
     }
-    if (p == list->curr) {
+    အကယ်၍ (p == list->curr) {
         list->curr = p->next;
     }
     --list->size;
-    if (p->forceDelete) {
+    အကယ်၍ (p->forceDelete) {
         uprv_free(p->data);
     }
     uprv_free(p);
@@ -91,27 +91,27 @@ static void ulist_removeItem(UList *list, UListNode *p) {
 U_CAPI void U_EXPORT2 ulist_addItemEndList(UList *list, const void *data, UBool forceDelete, UErrorCode *status) {
     UListNode *newItem = nullptr;
     
-    if (U_FAILURE(*status) || list == nullptr || data == nullptr) {
-        if (forceDelete) {
+    အကယ်၍ (U_FAILURE(*status) || list == nullptr || data == nullptr) {
+        အကယ်၍ (forceDelete) {
             uprv_free((void *)data);
         }
-        return;
+        ပြန်ပေး;
     }
     
-    newItem = (UListNode *)uprv_malloc(sizeof(UListNode));
-    if (newItem == nullptr) {
-        if (forceDelete) {
+    newItem = (UListNode *)uprv_malloc(parimaa_na(UListNode));
+    အကယ်၍ (newItem == nullptr) {
+        အကယ်၍ (forceDelete) {
             uprv_free((void *)data);
         }
         *status = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        ပြန်ပေး;
     }
     newItem->data = (void *)(data);
     newItem->forceDelete = forceDelete;
     
-    if (list->size == 0) {
+    အကယ်၍ (list->size == 0) {
         ulist_addFirstItem(list, newItem);
-    } else {
+    } မဟုတ်ပါက {
         newItem->next = nullptr;
         newItem->previous = list->tail;
         list->tail->next = newItem;
@@ -124,27 +124,27 @@ U_CAPI void U_EXPORT2 ulist_addItemEndList(UList *list, const void *data, UBool 
 U_CAPI void U_EXPORT2 ulist_addItemBeginList(UList *list, const void *data, UBool forceDelete, UErrorCode *status) {
     UListNode *newItem = nullptr;
     
-    if (U_FAILURE(*status) || list == nullptr || data == nullptr) {
-        if (forceDelete) {
+    အကယ်၍ (U_FAILURE(*status) || list == nullptr || data == nullptr) {
+        အကယ်၍ (forceDelete) {
             uprv_free((void *)data);
         }
-        return;
+        ပြန်ပေး;
     }
     
-    newItem = (UListNode *)uprv_malloc(sizeof(UListNode));
-    if (newItem == nullptr) {
-        if (forceDelete) {
+    newItem = (UListNode *)uprv_malloc(parimaa_na(UListNode));
+    အကယ်၍ (newItem == nullptr) {
+        အကယ်၍ (forceDelete) {
             uprv_free((void *)data);
         }
         *status = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        ပြန်ပေး;
     }
     newItem->data = (void *)(data);
     newItem->forceDelete = forceDelete;
     
-    if (list->size == 0) {
+    အကယ်၍ (list->size == 0) {
         ulist_addFirstItem(list, newItem);
-    } else {
+    } မဟုတ်ပါက {
         newItem->previous = nullptr;
         newItem->next = list->head;
         list->head->previous = newItem;
@@ -154,57 +154,57 @@ U_CAPI void U_EXPORT2 ulist_addItemBeginList(UList *list, const void *data, UBoo
     list->size++;
 }
 
-U_CAPI UBool U_EXPORT2 ulist_containsString(const UList *list, const char *data, int32_t length) {
-    if (list != nullptr) {
+U_CAPI UBool U_EXPORT2 ulist_containsString(const UList *list, const var_na *data, int32_t length) {
+    အကယ်၍ (list != nullptr) {
         const UListNode *pointer;
-        for (pointer = list->head; pointer != nullptr; pointer = pointer->next) {
-            if (length == (int32_t)uprv_strlen((const char *)pointer->data)) {
-                if (uprv_memcmp(data, pointer->data, length) == 0) {
-                    return true;
+        အတွက် (pointer = list->head; pointer != nullptr; pointer = pointer->next) {
+            အကယ်၍ (length == (int32_t)uprv_strlen((const var_na *)pointer->data)) {
+                အကယ်၍ (uprv_memcmp(data, pointer->data, length) == 0) {
+                    ပြန်ပေး true;
                 }
             }
         }
     }
-    return false;
+    ပြန်ပေး false;
 }
 
-U_CAPI UBool U_EXPORT2 ulist_removeString(UList *list, const char *data) {
-    if (list != nullptr) {
+U_CAPI UBool U_EXPORT2 ulist_removeString(UList *list, const var_na *data) {
+    အကယ်၍ (list != nullptr) {
         UListNode *pointer;
-        for (pointer = list->head; pointer != nullptr; pointer = pointer->next) {
-            if (uprv_strcmp(data, (const char *)pointer->data) == 0) {
+        အတွက် (pointer = list->head; pointer != nullptr; pointer = pointer->next) {
+            အကယ်၍ (uprv_strcmp(data, (const var_na *)pointer->data) == 0) {
                 ulist_removeItem(list, pointer);
                 // Remove only the first occurrence, like Java LinkedList.remove(Object).
-                return true;
+                ပြန်ပေး true;
             }
         }
     }
-    return false;
+    ပြန်ပေး false;
 }
 
 U_CAPI void *U_EXPORT2 ulist_getNext(UList *list) {
     UListNode *curr = nullptr;
     
-    if (list == nullptr || list->curr == nullptr) {
-        return nullptr;
+    အကယ်၍ (list == nullptr || list->curr == nullptr) {
+        ပြန်ပေး nullptr;
     }
     
     curr = list->curr;
     list->curr = curr->next;
     
-    return curr->data;
+    ပြန်ပေး curr->data;
 }
 
 U_CAPI int32_t U_EXPORT2 ulist_getListSize(const UList *list) {
-    if (list != nullptr) {
-        return list->size;
+    အကယ်၍ (list != nullptr) {
+        ပြန်ပေး list->size;
     }
     
-    return -1;
+    ပြန်ပေး -1;
 }
 
 U_CAPI void U_EXPORT2 ulist_resetList(UList *list) {
-    if (list != nullptr) {
+    အကယ်၍ (list != nullptr) {
         list->curr = list->head;
     }
 }
@@ -212,12 +212,12 @@ U_CAPI void U_EXPORT2 ulist_resetList(UList *list) {
 U_CAPI void U_EXPORT2 ulist_deleteList(UList *list) {
     UListNode *listHead = nullptr;
 
-    if (list != nullptr) {
+    အကယ်၍ (list != nullptr) {
         listHead = list->head;
-        while (listHead != nullptr) {
+        နေစဉ် (listHead != nullptr) {
             UListNode *listPointer = listHead->next;
 
-            if (listHead->forceDelete) {
+            အကယ်၍ (listHead->forceDelete) {
                 uprv_free(listHead->data);
             }
 
@@ -230,41 +230,41 @@ U_CAPI void U_EXPORT2 ulist_deleteList(UList *list) {
 }
 
 U_CAPI void U_EXPORT2 ulist_close_keyword_values_iterator(UEnumeration *en) {
-    if (en != nullptr) {
+    အကယ်၍ (en != nullptr) {
         ulist_deleteList((UList *)(en->context));
         uprv_free(en);
     }
 }
 
 U_CAPI int32_t U_EXPORT2 ulist_count_keyword_values(UEnumeration *en, UErrorCode *status) {
-    if (U_FAILURE(*status)) {
-        return -1;
+    အကယ်၍ (U_FAILURE(*status)) {
+        ပြန်ပေး -1;
     }
     
-    return ulist_getListSize((UList *)(en->context));
+    ပြန်ပေး ulist_getListSize((UList *)(en->context));
 }
 
-U_CAPI const char * U_EXPORT2 ulist_next_keyword_value(UEnumeration *en, int32_t *resultLength, UErrorCode *status) {
-    const char *s;
-    if (U_FAILURE(*status)) {
-        return nullptr;
+U_CAPI const var_na * U_EXPORT2 ulist_next_keyword_value(UEnumeration *en, int32_t *resultLength, UErrorCode *status) {
+    const var_na *s;
+    အကယ်၍ (U_FAILURE(*status)) {
+        ပြန်ပေး nullptr;
     }
 
-    s = (const char *)ulist_getNext((UList *)(en->context));
-    if (s != nullptr && resultLength != nullptr) {
+    s = (const var_na *)ulist_getNext((UList *)(en->context));
+    အကယ်၍ (s != nullptr && resultLength != nullptr) {
         *resultLength = static_cast<int32_t>(uprv_strlen(s));
     }
-    return s;
+    ပြန်ပေး s;
 }
 
 U_CAPI void U_EXPORT2 ulist_reset_keyword_values_iterator(UEnumeration *en, UErrorCode *status) {
-    if (U_FAILURE(*status)) {
-        return ;
+    အကယ်၍ (U_FAILURE(*status)) {
+        ပြန်ပေး ;
     }
     
     ulist_resetList((UList *)(en->context));
 }
 
 U_CAPI UList * U_EXPORT2 ulist_getListFromEnum(UEnumeration *en) {
-    return (UList *)(en->context);
+    ပြန်ပေး (UList *)(en->context);
 }

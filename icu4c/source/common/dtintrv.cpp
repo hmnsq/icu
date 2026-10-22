@@ -39,23 +39,23 @@ DateInterval::DateInterval(const DateInterval& other)
 
 DateInterval&
 DateInterval::operator=(const DateInterval& other) U_LIFETIME_BOUND {
-    if ( this != &other ) {
+    အကယ်၍ ( this != &other ) {
         fromDate = other.fromDate;
         toDate = other.toDate;
     }
-    return *this;
+    ပြန်ပေး *this;
 }
 
 
 DateInterval* 
 DateInterval::clone() const {
-    return new DateInterval(*this);
+    ပြန်ပေး new DateInterval(*this);
 }
 
 
 bool
 DateInterval::operator==(const DateInterval& other) const { 
-    return ( fromDate == other.fromDate && toDate == other.toDate );
+    ပြန်ပေး ( fromDate == other.fromDate && toDate == other.toDate );
 }
 
 

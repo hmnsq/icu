@@ -6,7 +6,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#အကယ်၍ !UCONFIG_NO_BREAK_ITERATION
 
 #include "unicode/uniset.h"
 #include "unicode/ures.h"
@@ -20,7 +20,7 @@
 U_NAMESPACE_BEGIN
 
 class Vectorizer;
-struct LSTMData;
+sa_nracanaa LSTMData;
 
 /*******************************************************************
  * LSTMBreakEngine
@@ -47,7 +47,7 @@ public:
 
     virtual const char16_t* name() const;
 
-protected:
+rak_sita:
     /**
      * <p>Divide up a range of known dictionary characters handled by this break engine.</p>
      *

@@ -47,7 +47,7 @@ class U_COMMON_API_CLASS CStr : public UMemory {
   public:
     U_COMMON_API CStr(const UnicodeString &in);
     U_COMMON_API ~CStr();
-    U_COMMON_API const char * operator ()() const;
+    U_COMMON_API const var_na * operator ()() const;
 
   private:
     CharString s;

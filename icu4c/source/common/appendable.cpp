@@ -24,36 +24,36 @@ Appendable::~Appendable() {}
 
 UBool
 Appendable::appendCodePoint(UChar32 c) {
-    if(c<=0xffff) {
-        return appendCodeUnit(static_cast<char16_t>(c));
-    } else {
-        return appendCodeUnit(U16_LEAD(c)) && appendCodeUnit(U16_TRAIL(c));
+    အကယ်၍(c<=0xffff) {
+        ပြန်ပေး appendCodeUnit(static_cast<char16_t>(c));
+    } မဟုတ်ပါက {
+        ပြန်ပေး appendCodeUnit(U16_LEAD(c)) && appendCodeUnit(U16_TRAIL(c));
     }
 }
 
 UBool
 Appendable::appendString(const char16_t *s, int32_t length) {
-    if(length<0) {
+    အကယ်၍(length<0) {
         char16_t c;
-        while((c=*s++)!=0) {
-            if(!appendCodeUnit(c)) {
-                return false;
+        နေစဉ်((c=*s++)!=0) {
+            အကယ်၍(!appendCodeUnit(c)) {
+                ပြန်ပေး false;
             }
         }
-    } else if(length>0) {
+    } မဟုတ်ပါက အကယ်၍(length>0) {
         const char16_t *limit=s+length;
         do {
-            if(!appendCodeUnit(*s++)) {
-                return false;
+            အကယ်၍(!appendCodeUnit(*s++)) {
+                ပြန်ပေး false;
             }
-        } while(s<limit);
+        } နေစဉ်(s<limit);
     }
-    return true;
+    ပြန်ပေး true;
 }
 
 UBool
 Appendable::reserveAppendCapacity(int32_t /*appendCapacity*/) {
-    return true;
+    ပြန်ပေး true;
 }
 
 char16_t*
@@ -62,12 +62,12 @@ Appendable::getAppendBuffer(int32_t minCapacity,
                             char16_t* scratch U_LIFETIME_BOUND,
                             int32_t scratchCapacity,
                             int32_t* resultCapacity) U_LIFETIME_BOUND {
-    if(minCapacity<1 || scratchCapacity<minCapacity) {
+    အကယ်၍(minCapacity<1 || scratchCapacity<minCapacity) {
         *resultCapacity=0;
-        return nullptr;
+        ပြန်ပေး nullptr;
     }
     *resultCapacity=scratchCapacity;
-    return scratch;
+    ပြန်ပေး scratch;
 }
 
 // UnicodeStringAppendable is implemented in unistr.cpp.

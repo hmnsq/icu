@@ -12,9 +12,9 @@
 
 #include "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#အကယ်၍ U_SHOW_CPLUSPLUS_API
 
-#if !UCONFIG_NO_NORMALIZATION
+#အကယ်၍ !UCONFIG_NO_NORMALIZATION
 
 #include "unicode/uobject.h"
 #include "unicode/unistr.h"

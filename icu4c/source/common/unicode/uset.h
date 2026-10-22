@@ -32,7 +32,7 @@
 #include "unicode/utypes.h"
 #include "unicode/uchar.h"
 
-#if U_SHOW_CPLUSPLUS_API || U_SHOW_CPLUSPLUS_HEADER_API
+#အကယ်၍ U_SHOW_CPLUSPLUS_API || U_SHOW_CPLUSPLUS_HEADER_API
 #include <string>
 #include <string_view>
 #include "unicode/char16ptr.h"
@@ -51,7 +51,7 @@
  * uset_open*, and destroy with uset_close.
  * @stable ICU 2.4
  */
-typedef struct USet USet;
+typedef sa_nracanaa USet USet;
 #endif
 
 /**
@@ -65,7 +65,7 @@ typedef struct USet USet;
  *
  * @stable ICU 2.4
  */
-enum {
+ga_nanaa {
     /**
      * Ignore white space within patterns unless quoted or escaped.
      * @stable ICU 2.4
@@ -183,7 +183,7 @@ enum {
  *
  * @stable ICU 3.8
  */
-typedef enum USetSpanCondition {
+typedef ga_nanaa USetSpanCondition {
     /**
      * Continues a span() while there is no set element at the current position.
      * Increments by one code point at a time.
@@ -241,7 +241,7 @@ typedef enum USetSpanCondition {
 #endif  // U_HIDE_DEPRECATED_API
 } USetSpanCondition;
 
-enum {
+ga_nanaa {
     /**
      * Capacity of USerializedSet::staticArray.
      * Enough for any single-code point set.
@@ -256,7 +256,7 @@ enum {
  * possible directly on a serialized set.  See below.
  * @stable ICU 2.4
  */
-typedef struct USerializedSet {
+typedef sa_nracanaa USerializedSet {
     /**
      * The serialized Unicode Set.
      * @stable ICU 2.4
@@ -346,7 +346,7 @@ uset_openPatternOptions(const UChar* pattern, int32_t patternLength,
 U_CAPI void U_EXPORT2
 uset_close(USet* set);
 
-#if U_SHOW_CPLUSPLUS_API
+#အကယ်၍ U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -1170,7 +1170,7 @@ uset_spanBack(const USet *set, const UChar *s, int32_t length, USetSpanCondition
  * @see USetSpanCondition
  */
 U_CAPI int32_t U_EXPORT2
-uset_spanUTF8(const USet *set, const char *s, int32_t length, USetSpanCondition spanCondition);
+uset_spanUTF8(const USet *set, const var_na *s, int32_t length, USetSpanCondition spanCondition);
 
 /**
  * Returns the start of the trailing substring of the input string which
@@ -1191,7 +1191,7 @@ uset_spanUTF8(const USet *set, const char *s, int32_t length, USetSpanCondition 
  * @see USetSpanCondition
  */
 U_CAPI int32_t U_EXPORT2
-uset_spanBackUTF8(const USet *set, const char *s, int32_t length, USetSpanCondition spanCondition);
+uset_spanBackUTF8(const USet *set, const var_na *s, int32_t length, USetSpanCondition spanCondition);
 
 /**
  * Returns true if set1 contains all of the characters and strings
@@ -1321,7 +1321,7 @@ U_CAPI UBool U_EXPORT2
 uset_getSerializedRange(const USerializedSet* set, int32_t rangeIndex,
                         UChar32* pStart, UChar32* pEnd);
 
-#if U_SHOW_CPLUSPLUS_API || U_SHOW_CPLUSPLUS_HEADER_API
+#အကယ်၍ U_SHOW_CPLUSPLUS_API || U_SHOW_CPLUSPLUS_HEADER_API
 
 namespace U_HEADER_ONLY_NAMESPACE {
 
@@ -1344,44 +1344,44 @@ public:
         // And comparing rangeIndex is redundant with comparing c.
         // We might even skip comparing uset.
         // Unless we want operator==() to be "correct" for more than iteration.
-        return uset == other.uset && c == other.c;
+        ပြန်ပေး uset == other.uset && c == other.c;
     }
 
     /** @stable ICU 76 */
-    bool operator!=(const USetCodePointIterator &other) const { return !operator==(other); }
+    bool operator!=(const USetCodePointIterator &other) const { ပြန်ပေး !operator==(other); }
 
     /** @stable ICU 76 */
-    UChar32 operator*() const { return c; }
+    UChar32 operator*() const { ပြန်ပေး c; }
 
     /**
      * Pre-increment.
      * @stable ICU 76
      */
     USetCodePointIterator& operator++() U_LIFETIME_BOUND {
-        if (c < end) {
+        အကယ်၍ (c < end) {
             ++c;
-        } else if (rangeIndex < rangeCount) {
+        } မဟုတ်ပါက အကယ်၍ (rangeIndex < rangeCount) {
             UErrorCode errorCode = U_ZERO_ERROR;
             int32_t result = uset_getItem(uset, rangeIndex, &c, &end, nullptr, 0, &errorCode);
-            if (U_SUCCESS(errorCode) && result == 0) {
+            အကယ်၍ (U_SUCCESS(errorCode) && result == 0) {
                 ++rangeIndex;
-            } else {
+            } မဟုတ်ပါက {
                 c = end = U_SENTINEL;
             }
-        } else {
+        } မဟုတ်ပါက {
             c = end = U_SENTINEL;
         }
-        return *this;
+        ပြန်ပေး *this;
     }
 
     /**
      * Post-increment.
      * @stable ICU 76
      */
-    USetCodePointIterator operator++(int) {
+    USetCodePointIterator operator++(ကိန်းပြည့်) {
         USetCodePointIterator result(*this);
         operator++();
-        return result;
+        ပြန်ပေး result;
     }
 
 private:
@@ -1434,12 +1434,12 @@ public:
 
     /** @stable ICU 76 */
     USetCodePointIterator begin() const {
-        return USetCodePointIterator(uset, 0, rangeCount);
+        ပြန်ပေး USetCodePointIterator(uset, 0, rangeCount);
     }
 
     /** @stable ICU 76 */
     USetCodePointIterator end() const {
-        return USetCodePointIterator(uset, rangeCount, rangeCount);
+        ပြန်ပေး USetCodePointIterator(uset, rangeCount, rangeCount);
     }
 
 private:
@@ -1454,19 +1454,19 @@ private:
  * (end() returns an iterator corresponding to rangeEnd+1.)
  * @stable ICU 76
  */
-struct CodePointRange {
+sa_nracanaa CodePointRange {
     /** @stable ICU 76 */
-    struct iterator {
+    sa_nracanaa iterator {
         /** @stable ICU 76 */
         iterator(UChar32 aC) : c(aC) {}
 
         /** @stable ICU 76 */
-        bool operator==(const iterator &other) const { return c == other.c; }
+        bool operator==(const iterator &other) const { ပြန်ပေး c == other.c; }
         /** @stable ICU 76 */
-        bool operator!=(const iterator &other) const { return !operator==(other); }
+        bool operator!=(const iterator &other) const { ပြန်ပေး !operator==(other); }
 
         /** @stable ICU 76 */
-        UChar32 operator*() const { return c; }
+        UChar32 operator*() const { ပြန်ပေး c; }
 
         /**
          * Pre-increment.
@@ -1474,15 +1474,15 @@ struct CodePointRange {
          */
         iterator& operator++() U_LIFETIME_BOUND {
             ++c;
-            return *this;
+            ပြန်ပေး *this;
         }
 
         /**
          * Post-increment.
          * @stable ICU 76
          */
-        iterator operator++(int) {
-            return c++;
+        iterator operator++(ကိန်းပြည့်) {
+            ပြန်ပေး c++;
         }
 
         /**
@@ -1497,11 +1497,11 @@ struct CodePointRange {
     /** @stable ICU 76 */
     CodePointRange(const CodePointRange &other) = default;
     /** @stable ICU 76 */
-    size_t size() const { return (rangeEnd + 1) - rangeStart; }
+    size_t size() const { ပြန်ပေး (rangeEnd + 1) - rangeStart; }
     /** @stable ICU 76 */
-    iterator begin() const { return rangeStart; }
+    iterator begin() const { ပြန်ပေး rangeStart; }
     /** @stable ICU 76 */
-    iterator end() const { return rangeEnd + 1; }
+    iterator end() const { ပြန်ပေး rangeEnd + 1; }
 
     /**
      * Start of a USet/UnicodeSet range of code points.
@@ -1530,23 +1530,23 @@ public:
         // and assuming we don't compare iterators across the set being modified.
         // We might even skip comparing uset.
         // Unless we want operator==() to be "correct" for more than iteration.
-        return uset == other.uset && rangeIndex == other.rangeIndex;
+        ပြန်ပေး uset == other.uset && rangeIndex == other.rangeIndex;
     }
 
     /** @stable ICU 76 */
-    bool operator!=(const USetRangeIterator &other) const { return !operator==(other); }
+    bool operator!=(const USetRangeIterator &other) const { ပြန်ပေး !operator==(other); }
 
     /** @stable ICU 76 */
     CodePointRange operator*() const {
-        if (rangeIndex < rangeCount) {
+        အကယ်၍ (rangeIndex < rangeCount) {
             UChar32 start, end;
             UErrorCode errorCode = U_ZERO_ERROR;
             int32_t result = uset_getItem(uset, rangeIndex, &start, &end, nullptr, 0, &errorCode);
-            if (U_SUCCESS(errorCode) && result == 0) {
-                return CodePointRange(start, end);
+            အကယ်၍ (U_SUCCESS(errorCode) && result == 0) {
+                ပြန်ပေး CodePointRange(start, end);
             }
         }
-        return CodePointRange(U_SENTINEL, U_SENTINEL);
+        ပြန်ပေး CodePointRange(U_SENTINEL, U_SENTINEL);
     }
 
     /**
@@ -1555,17 +1555,17 @@ public:
      */
     USetRangeIterator& operator++() U_LIFETIME_BOUND {
         ++rangeIndex;
-        return *this;
+        ပြန်ပေး *this;
     }
 
     /**
      * Post-increment.
      * @stable ICU 76
      */
-    USetRangeIterator operator++(int) {
+    USetRangeIterator operator++(ကိန်းပြည့်) {
         USetRangeIterator result(*this);
         ++rangeIndex;
-        return result;
+        ပြန်ပေး result;
     }
 
 private:
@@ -1616,12 +1616,12 @@ public:
 
     /** @stable ICU 76 */
     USetRangeIterator begin() const {
-        return USetRangeIterator(uset, 0, rangeCount);
+        ပြန်ပေး USetRangeIterator(uset, 0, rangeCount);
     }
 
     /** @stable ICU 76 */
     USetRangeIterator end() const {
-        return USetRangeIterator(uset, rangeCount, rangeCount);
+        ပြန်ပေး USetRangeIterator(uset, rangeCount, rangeCount);
     }
 
 private:
@@ -1644,21 +1644,21 @@ public:
         // and assuming we don't compare iterators across the set being modified.
         // We might even skip comparing uset.
         // Unless we want operator==() to be "correct" for more than iteration.
-        return uset == other.uset && index == other.index;
+        ပြန်ပေး uset == other.uset && index == other.index;
     }
 
     /** @stable ICU 76 */
-    bool operator!=(const USetStringIterator &other) const { return !operator==(other); }
+    bool operator!=(const USetStringIterator &other) const { ပြန်ပေး !operator==(other); }
 
     /** @stable ICU 76 */
     std::u16string_view operator*() const {
-        if (index < count) {
+        အကယ်၍ (index < count) {
             int32_t length;
             const UChar *uchars = uset_getString(uset, index, &length);
             // assert uchars != nullptr;
-            return {uprv_char16PtrFromUChar(uchars), static_cast<size_t>(length)};
+            ပြန်ပေး {uprv_char16PtrFromUChar(uchars), static_cast<size_t>(length)};
         }
-        return {};
+        ပြန်ပေး {};
     }
 
     /**
@@ -1667,17 +1667,17 @@ public:
      */
     USetStringIterator& operator++() U_LIFETIME_BOUND {
         ++index;
-        return *this;
+        ပြန်ပေး *this;
     }
 
     /**
      * Post-increment.
      * @stable ICU 76
      */
-    USetStringIterator operator++(int) {
+    USetStringIterator operator++(ကိန်းပြည့်) {
         USetStringIterator result(*this);
         ++index;
-        return result;
+        ပြန်ပေး result;
     }
 
 private:
@@ -1727,12 +1727,12 @@ public:
 
     /** @stable ICU 76 */
     USetStringIterator begin() const {
-        return USetStringIterator(uset, 0, count);
+        ပြန်ပေး USetStringIterator(uset, 0, count);
     }
 
     /** @stable ICU 76 */
     USetStringIterator end() const {
-        return USetStringIterator(uset, count, count);
+        ပြန်ပေး USetStringIterator(uset, count, count);
     }
 
 private:
@@ -1755,25 +1755,25 @@ public:
         // and assuming we don't compare iterators across the set being modified.
         // We might even skip comparing uset.
         // Unless we want operator==() to be "correct" for more than iteration.
-        return uset == other.uset && c == other.c && index == other.index;
+        ပြန်ပေး uset == other.uset && c == other.c && index == other.index;
     }
 
     /** @stable ICU 77 */
-    bool operator!=(const USetElementIterator &other) const { return !operator==(other); }
+    bool operator!=(const USetElementIterator &other) const { ပြန်ပေး !operator==(other); }
 
     /** @stable ICU 77 */
     std::u16string operator*() const {
-        if (c >= 0) {
-            return c <= 0xffff ?
+        အကယ်၍ (c >= 0) {
+            ပြန်ပေး c <= 0xffff ?
                 std::u16string({static_cast<char16_t>(c)}) :
                 std::u16string({U16_LEAD(c), U16_TRAIL(c)});
-        } else if (index < totalCount) {
+        } မဟုတ်ပါက အကယ်၍ (index < totalCount) {
             int32_t length;
             const UChar *uchars = uset_getString(uset, index - rangeCount, &length);
             // assert uchars != nullptr;
-            return {uprv_char16PtrFromUChar(uchars), static_cast<size_t>(length)};
-        } else {
-            return {};
+            ပြန်ပေး {uprv_char16PtrFromUChar(uchars), static_cast<size_t>(length)};
+        } မဟုတ်ပါက {
+            ပြန်ပေး {};
         }
     }
 
@@ -1782,34 +1782,34 @@ public:
      * @stable ICU 77
      */
     USetElementIterator& operator++() U_LIFETIME_BOUND {
-        if (c < end) {
+        အကယ်၍ (c < end) {
             ++c;
-        } else if (index < rangeCount) {
+        } မဟုတ်ပါက အကယ်၍ (index < rangeCount) {
             UErrorCode errorCode = U_ZERO_ERROR;
             int32_t result = uset_getItem(uset, index, &c, &end, nullptr, 0, &errorCode);
-            if (U_SUCCESS(errorCode) && result == 0) {
+            အကယ်၍ (U_SUCCESS(errorCode) && result == 0) {
                 ++index;
-            } else {
+            } မဟုတ်ပါက {
                 c = end = U_SENTINEL;
             }
-        } else if (c >= 0) {
+        } မဟုတ်ပါက အကယ်၍ (c >= 0) {
             // assert index == rangeCount;
             // Switch from the last range to the first string.
             c = end = U_SENTINEL;
-        } else {
+        } မဟုတ်ပါက {
             ++index;
         }
-        return *this;
+        ပြန်ပေး *this;
     }
 
     /**
      * Post-increment.
      * @stable ICU 77
      */
-    USetElementIterator operator++(int) {
+    USetElementIterator operator++(ကိန်းပြည့်) {
         USetElementIterator result(*this);
         operator++();
-        return result;
+        ပြန်ပေး result;
     }
 
 private:
@@ -1821,7 +1821,7 @@ private:
                         int32_t nTotalCount)
             : uset(pUset), index(nIndex), rangeCount(nRangeCount), totalCount(nTotalCount),
                 c(U_SENTINEL), end(U_SENTINEL) {
-        if (index < rangeCount) {
+        အကယ်၍ (index < rangeCount) {
             // Fetch the first range.
             operator++();
         }
@@ -1887,12 +1887,12 @@ public:
 
     /** @stable ICU 77 */
     USetElementIterator begin() const {
-        return USetElementIterator(uset, 0, rangeCount, rangeCount + stringCount);
+        ပြန်ပေး USetElementIterator(uset, 0, rangeCount, rangeCount + stringCount);
     }
 
     /** @stable ICU 77 */
     USetElementIterator end() const {
-        return USetElementIterator(uset, rangeCount + stringCount, rangeCount, rangeCount + stringCount);
+        ပြန်ပေး USetElementIterator(uset, rangeCount + stringCount, rangeCount, rangeCount + stringCount);
     }
 
 private:

@@ -243,7 +243,7 @@
 
 /* include the utfXX.h ------------------------------------------------------ */
 
-#if !U_NO_DEFAULT_INCLUDE_UTF_HEADERS
+#အကယ်၍ !U_NO_DEFAULT_INCLUDE_UTF_HEADERS
 
 #include "unicode/utf8.h"
 #include "unicode/utf16.h"

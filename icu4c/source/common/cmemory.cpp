@@ -35,67 +35,67 @@ static UMemAllocFn    *pAlloc;
 static UMemReallocFn  *pRealloc;
 static UMemFreeFn     *pFree;
 
-#if U_DEBUG && defined(UPRV_MALLOC_COUNT)
+#အကယ်၍ U_DEBUG && defined(UPRV_MALLOC_COUNT)
 #include <stdio.h>
-static int n=0;
+static ကိန်းပြည့် n=0;
 static long b=0; 
 #endif
 
 U_CAPI void * U_EXPORT2
 uprv_malloc(size_t s) {
-#if U_DEBUG && defined(UPRV_MALLOC_COUNT)
-#if 1
+#အကယ်၍ U_DEBUG && defined(UPRV_MALLOC_COUNT)
+#အကယ်၍ 1
   putchar('>');
   fflush(stdout);
-#else
+#မဟုတ်ပါက
   fprintf(stderr,"MALLOC\t#%d\t%ul bytes\t%ul total\n", ++n,s,(b+=s)); fflush(stderr);
 #endif
 #endif
-    if (s > 0) {
-        if (pAlloc) {
-            return (*pAlloc)(pContext, s);
-        } else {
-            return uprv_default_malloc(s);
+    အကယ်၍ (s > 0) {
+        အကယ်၍ (pAlloc) {
+            ပြန်ပေး (*pAlloc)(pContext, s);
+        } မဟုတ်ပါက {
+            ပြန်ပေး uprv_default_malloc(s);
         }
-    } else {
-        return (void *)zeroMem;
+    } မဟုတ်ပါက {
+        ပြန်ပေး (void *)zeroMem;
     }
 }
 
 U_CAPI void * U_EXPORT2
 uprv_realloc(void * buffer, size_t size) {
-#if U_DEBUG && defined(UPRV_MALLOC_COUNT)
+#အကယ်၍ U_DEBUG && defined(UPRV_MALLOC_COUNT)
   putchar('~');
   fflush(stdout);
 #endif
-    if (buffer == zeroMem) {
-        return uprv_malloc(size);
-    } else if (size == 0) {
-        if (pFree) {
+    အကယ်၍ (buffer == zeroMem) {
+        ပြန်ပေး uprv_malloc(size);
+    } မဟုတ်ပါက အကယ်၍ (size == 0) {
+        အကယ်၍ (pFree) {
             (*pFree)(pContext, buffer);
-        } else {
+        } မဟုတ်ပါက {
             uprv_default_free(buffer);
         }
-        return (void *)zeroMem;
-    } else {
-        if (pRealloc) {
-            return (*pRealloc)(pContext, buffer, size);
-        } else {
-            return uprv_default_realloc(buffer, size);
+        ပြန်ပေး (void *)zeroMem;
+    } မဟုတ်ပါက {
+        အကယ်၍ (pRealloc) {
+            ပြန်ပေး (*pRealloc)(pContext, buffer, size);
+        } မဟုတ်ပါက {
+            ပြန်ပေး uprv_default_realloc(buffer, size);
         }
     }
 }
 
 U_CAPI void U_EXPORT2
 uprv_free(void *buffer) {
-#if U_DEBUG && defined(UPRV_MALLOC_COUNT)
+#အကယ်၍ U_DEBUG && defined(UPRV_MALLOC_COUNT)
   putchar('<');
   fflush(stdout);
 #endif
-    if (buffer != zeroMem) {
-        if (pFree) {
+    အကယ်၍ (buffer != zeroMem) {
+        အကယ်၍ (pFree) {
             (*pFree)(pContext, buffer);
-        } else {
+        } မဟုတ်ပါက {
             uprv_default_free(buffer);
         }
     }
@@ -106,21 +106,21 @@ uprv_calloc(size_t num, size_t size) {
     void *mem = nullptr;
     size *= num;
     mem = uprv_malloc(size);
-    if (mem) {
+    အကယ်၍ (mem) {
         uprv_memset(mem, 0, size);
     }
-    return mem;
+    ပြန်ပေး mem;
 }
 
 U_CAPI void U_EXPORT2
 u_setMemoryFunctions(const void *context, UMemAllocFn *a, UMemReallocFn *r, UMemFreeFn *f,  UErrorCode *status)
 {
-    if (U_FAILURE(*status)) {
-        return;
+    အကယ်၍ (U_FAILURE(*status)) {
+        ပြန်ပေး;
     }
-    if (a==nullptr || r==nullptr || f==nullptr) {
+    အကယ်၍ (a==nullptr || r==nullptr || f==nullptr) {
         *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        ပြန်ပေး;
     }
     pContext  = context;
     pAlloc    = a;
@@ -134,5 +134,5 @@ U_CFUNC UBool cmemory_cleanup() {
     pAlloc     = nullptr;
     pRealloc   = nullptr;
     pFree      = nullptr;
-    return true;
+    ပြန်ပေး true;
 }

@@ -20,7 +20,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_NORMALIZATION
+#အကယ်၍ !UCONFIG_NO_NORMALIZATION
 
 #include "unicode/bytestream.h"
 #include "unicode/edits.h"
@@ -51,14 +51,14 @@ namespace {
  * Can be lower than the actual lead byte for c.
  * Typically U+0300 for NFC/NFD, U+00A0 for NFKC/NFKD, U+0041 for NFKC_Casefold.
  */
-inline uint8_t leadByteForCP(UChar32 c) {
-    if (c <= 0x7f) {
-        return static_cast<uint8_t>(c);
-    } else if (c <= 0x7ff) {
-        return static_cast<uint8_t>(0xc0 + (c >> 6));
-    } else {
+anta_hstha uint8_t leadByteForCP(UChar32 c) {
+    အကယ်၍ (c <= 0x7f) {
+        ပြန်ပေး static_cast<uint8_t>(c);
+    } မဟုတ်ပါက အကယ်၍ (c <= 0x7ff) {
+        ပြန်ပေး static_cast<uint8_t>(0xc0 + (c >> 6));
+    } မဟုတ်ပါက {
         // Should not occur because ccc(U+0300)!=0.
-        return 0xe0;
+        ပြန်ပေး 0xe0;
     }
 }
 
@@ -76,15 +76,15 @@ UChar32 codePointFromValidUTF8(const uint8_t *cpStart, const uint8_t *cpLimit) {
     U_ASSERT(cpStart < cpLimit);
     uint8_t c = *cpStart;
     switch(cpLimit-cpStart) {
-    case 1:
-        return c;
-    case 2:
-        return ((c&0x1f)<<6) | (cpStart[1]&0x3f);
-    case 3:
+    pak_sa 1:
+        ပြန်ပေး c;
+    pak_sa 2:
+        ပြန်ပေး ((c&0x1f)<<6) | (cpStart[1]&0x3f);
+    pak_sa 3:
         // no need for (c&0xf) because the upper bits are truncated after <<12 in the cast to (char16_t)
-        return static_cast<char16_t>((c << 12) | ((cpStart[1] & 0x3f) << 6) | (cpStart[2] & 0x3f));
-    case 4:
-        return ((c&7)<<18) | ((cpStart[1]&0x3f)<<12) | ((cpStart[2]&0x3f)<<6) | (cpStart[3]&0x3f);
+        ပြန်ပေး static_cast<char16_t>((c << 12) | ((cpStart[1] & 0x3f) << 6) | (cpStart[2] & 0x3f));
+    pak_sa 4:
+        ပြန်ပေး ((c&7)<<18) | ((cpStart[1]&0x3f)<<12) | ((cpStart[2]&0x3f)<<6) | (cpStart[3]&0x3f);
     default:
         UPRV_UNREACHABLE_EXIT;  // Should not occur.
     }
@@ -95,18 +95,18 @@ UChar32 codePointFromValidUTF8(const uint8_t *cpStart, const uint8_t *cpLimit) {
  * Otherwise returns a negative value.
  */
 UChar32 previousHangulOrJamo(const uint8_t *start, const uint8_t *p) {
-    if ((p - start) >= 3) {
+    အကယ်၍ ((p - start) >= 3) {
         p -= 3;
         uint8_t l = *p;
         uint8_t t1, t2;
-        if (0xe1 <= l && l <= 0xed &&
+        အကယ်၍ (0xe1 <= l && l <= 0xed &&
                 (t1 = static_cast<uint8_t>(p[1] - 0x80)) <= 0x3f &&
                 (t2 = static_cast<uint8_t>(p[2] - 0x80)) <= 0x3f &&
                 (l < 0xed || t1 <= 0x1f)) {
-            return ((l & 0xf) << 12) | (t1 << 6) | t2;
+            ပြန်ပေး ((l & 0xf) << 12) | (t1 << 6) | t2;
         }
     }
-    return U_SENTINEL;
+    ပြန်ပေး U_SENTINEL;
 }
 
 /**
@@ -115,50 +115,50 @@ UChar32 previousHangulOrJamo(const uint8_t *start, const uint8_t *p) {
  */
 int32_t getJamoTMinusBase(const uint8_t *src, const uint8_t *limit) {
     // Jamo T: E1 86 A8..E1 87 82
-    if ((limit - src) >= 3 && *src == 0xe1) {
-        if (src[1] == 0x86) {
+    အကယ်၍ ((limit - src) >= 3 && *src == 0xe1) {
+        အကယ်၍ (src[1] == 0x86) {
             uint8_t t = src[2];
             // The first Jamo T is U+11A8 but JAMO_T_BASE is 11A7.
             // Offset 0 does not correspond to any conjoining Jamo.
-            if (0xa8 <= t && t <= 0xbf) {
-                return t - 0xa7;
+            အကယ်၍ (0xa8 <= t && t <= 0xbf) {
+                ပြန်ပေး t - 0xa7;
             }
-        } else if (src[1] == 0x87) {
+        } မဟုတ်ပါက အကယ်၍ (src[1] == 0x87) {
             uint8_t t = src[2];
-            if (static_cast<int8_t>(t) <= static_cast<int8_t>(0x82u)) {
-                return t - (0xa7 - 0x40);
+            အကယ်၍ (static_cast<int8_t>(t) <= static_cast<int8_t>(0x82u)) {
+                ပြန်ပေး t - (0xa7 - 0x40);
             }
         }
     }
-    return -1;
+    ပြန်ပေး -1;
 }
 
 void
 appendCodePointDelta(const uint8_t *cpStart, const uint8_t *cpLimit, int32_t delta,
                      ByteSink &sink, Edits *edits) {
-    char buffer[U8_MAX_LENGTH];
+    var_na buffer[U8_MAX_LENGTH];
     int32_t length;
     int32_t cpLength = static_cast<int32_t>(cpLimit - cpStart);
-    if (cpLength == 1) {
+    အကယ်၍ (cpLength == 1) {
         // The builder makes ASCII map to ASCII.
         buffer[0] = static_cast<uint8_t>(*cpStart + delta);
         length = 1;
-    } else {
+    } မဟုတ်ပါက {
         int32_t trail = *(cpLimit-1) + delta;
-        if (0x80 <= trail && trail <= 0xbf) {
+        အကယ်၍ (0x80 <= trail && trail <= 0xbf) {
             // The delta only changes the last trail byte.
             --cpLimit;
             length = 0;
-            do { buffer[length++] = *cpStart++; } while (cpStart < cpLimit);
+            do { buffer[length++] = *cpStart++; } နေစဉ် (cpStart < cpLimit);
             buffer[length++] = static_cast<uint8_t>(trail);
-        } else {
+        } မဟုတ်ပါက {
             // Decode the code point, add the delta, re-encode.
             UChar32 c = codePointFromValidUTF8(cpStart, cpLimit) + delta;
             length = 0;
             U8_APPEND_UNSAFE(buffer, length, c);
         }
     }
-    if (edits != nullptr) {
+    အကယ်၍ (edits != nullptr) {
         edits->addReplace(cpLength, length);
     }
     sink.Append(buffer, length);
@@ -173,7 +173,7 @@ ReorderingBuffer::ReorderingBuffer(const Normalizer2Impl &ni, UnicodeString &des
         impl(ni), str(dest),
         start(str.getBuffer(8)), reorderStart(start), limit(start),
         remainingCapacity(str.getCapacity()), lastCC(0) {
-    if (start == nullptr && U_SUCCESS(errorCode)) {
+    အကယ်၍ (start == nullptr && U_SUCCESS(errorCode)) {
         // getBuffer() already did str.setToBogus()
         errorCode = U_MEMORY_ALLOCATION_ERROR;
     }
@@ -182,31 +182,31 @@ ReorderingBuffer::ReorderingBuffer(const Normalizer2Impl &ni, UnicodeString &des
 UBool ReorderingBuffer::init(int32_t destCapacity, UErrorCode &errorCode) {
     int32_t length=str.length();
     start=str.getBuffer(destCapacity);
-    if(start==nullptr) {
+    အကယ်၍(start==nullptr) {
         // getBuffer() already did str.setToBogus()
         errorCode=U_MEMORY_ALLOCATION_ERROR;
-        return false;
+        ပြန်ပေး false;
     }
     limit=start+length;
     remainingCapacity=str.getCapacity()-length;
     reorderStart=start;
-    if(start==limit) {
+    အကယ်၍(start==limit) {
         lastCC=0;
-    } else {
+    } မဟုတ်ပါက {
         setIterator();
         lastCC=previousCC();
         // Set reorderStart after the last code point with cc<=1 if there is one.
-        if(lastCC>1) {
-            while(previousCC()>1) {}
+        အကယ်၍(lastCC>1) {
+            နေစဉ်(previousCC()>1) {}
         }
         reorderStart=codePointLimit;
     }
-    return true;
+    ပြန်ပေး true;
 }
 
 UBool ReorderingBuffer::equals(const char16_t *otherStart, const char16_t *otherLimit) const {
     int32_t length = static_cast<int32_t>(limit - start);
-    return
+    ပြန်ပေး
         length == static_cast<int32_t>(otherLimit - otherStart) &&
         0==u_memcmp(start, otherStart, length);
 }
@@ -216,119 +216,119 @@ UBool ReorderingBuffer::equals(const uint8_t *otherStart, const uint8_t *otherLi
     int32_t length = static_cast<int32_t>(limit - start);
     int32_t otherLength = static_cast<int32_t>(otherLimit - otherStart);
     // For equal strings, UTF-8 is at least as long as UTF-16, and at most three times as long.
-    if (otherLength < length || (otherLength / 3) > length) {
-        return false;
+    အကယ်၍ (otherLength < length || (otherLength / 3) > length) {
+        ပြန်ပေး false;
     }
     // Compare valid strings from between normalization boundaries.
     // (Invalid sequences are normalization-inert.)
-    for (int32_t i = 0, j = 0;;) {
-        if (i >= length) {
-            return j >= otherLength;
-        } else if (j >= otherLength) {
-            return false;
+    အတွက် (int32_t i = 0, j = 0;;) {
+        အကယ်၍ (i >= length) {
+            ပြန်ပေး j >= otherLength;
+        } မဟုတ်ပါက အကယ်၍ (j >= otherLength) {
+            ပြန်ပေး false;
         }
         // Not at the end of either string yet.
         UChar32 c, other;
         U16_NEXT_UNSAFE(start, i, c);
         U8_NEXT_UNSAFE(otherStart, j, other);
-        if (c != other) {
-            return false;
+        အကယ်၍ (c != other) {
+            ပြန်ပေး false;
         }
     }
 }
 
 UBool ReorderingBuffer::appendSupplementary(UChar32 c, uint8_t cc, UErrorCode &errorCode) {
-    if(remainingCapacity<2 && !resize(2, errorCode)) {
-        return false;
+    အကယ်၍(remainingCapacity<2 && !resize(2, errorCode)) {
+        ပြန်ပေး false;
     }
-    if(lastCC<=cc || cc==0) {
+    အကယ်၍(lastCC<=cc || cc==0) {
         limit[0]=U16_LEAD(c);
         limit[1]=U16_TRAIL(c);
         limit+=2;
         lastCC=cc;
-        if(cc<=1) {
+        အကယ်၍(cc<=1) {
             reorderStart=limit;
         }
-    } else {
+    } မဟုတ်ပါက {
         insert(c, cc);
     }
     remainingCapacity-=2;
-    return true;
+    ပြန်ပေး true;
 }
 
 UBool ReorderingBuffer::append(const char16_t *s, int32_t length, UBool isNFD,
                                uint8_t leadCC, uint8_t trailCC,
                                UErrorCode &errorCode) {
-    if(length==0) {
-        return true;
+    အကယ်၍(length==0) {
+        ပြန်ပေး true;
     }
-    if(remainingCapacity<length && !resize(length, errorCode)) {
-        return false;
+    အကယ်၍(remainingCapacity<length && !resize(length, errorCode)) {
+        ပြန်ပေး false;
     }
     remainingCapacity-=length;
-    if(lastCC<=leadCC || leadCC==0) {
-        if(trailCC<=1) {
+    အကယ်၍(lastCC<=leadCC || leadCC==0) {
+        အကယ်၍(trailCC<=1) {
             reorderStart=limit+length;
-        } else if(leadCC<=1) {
+        } မဟုတ်ပါက အကယ်၍(leadCC<=1) {
             reorderStart=limit+1;  // Ok if not a code point boundary.
         }
         const char16_t *sLimit=s+length;
-        do { *limit++=*s++; } while(s!=sLimit);
+        do { *limit++=*s++; } နေစဉ်(s!=sLimit);
         lastCC=trailCC;
-    } else {
+    } မဟုတ်ပါက {
         int32_t i=0;
         UChar32 c;
         U16_NEXT(s, i, length, c);
         insert(c, leadCC);  // insert first code point
-        while(i<length) {
+        နေစဉ်(i<length) {
             U16_NEXT(s, i, length, c);
-            if(i<length) {
-                if (isNFD) {
+            အကယ်၍(i<length) {
+                အကယ်၍ (isNFD) {
                     leadCC = Normalizer2Impl::getCCFromYesOrMaybeYes(impl.getRawNorm16(c));
-                } else {
+                } မဟုတ်ပါက {
                     leadCC = impl.getCC(impl.getNorm16(c));
                 }
-            } else {
+            } မဟုတ်ပါက {
                 leadCC=trailCC;
             }
             append(c, leadCC, errorCode);
         }
     }
-    return true;
+    ပြန်ပေး true;
 }
 
 UBool ReorderingBuffer::appendZeroCC(UChar32 c, UErrorCode &errorCode) {
     int32_t cpLength=U16_LENGTH(c);
-    if(remainingCapacity<cpLength && !resize(cpLength, errorCode)) {
-        return false;
+    အကယ်၍(remainingCapacity<cpLength && !resize(cpLength, errorCode)) {
+        ပြန်ပေး false;
     }
     remainingCapacity-=cpLength;
-    if(cpLength==1) {
+    အကယ်၍(cpLength==1) {
         *limit++ = static_cast<char16_t>(c);
-    } else {
+    } မဟုတ်ပါက {
         limit[0]=U16_LEAD(c);
         limit[1]=U16_TRAIL(c);
         limit+=2;
     }
     lastCC=0;
     reorderStart=limit;
-    return true;
+    ပြန်ပေး true;
 }
 
 UBool ReorderingBuffer::appendZeroCC(const char16_t *s, const char16_t *sLimit, UErrorCode &errorCode) {
-    if(s==sLimit) {
-        return true;
+    အကယ်၍(s==sLimit) {
+        ပြန်ပေး true;
     }
     int32_t length = static_cast<int32_t>(sLimit - s);
-    if(remainingCapacity<length && !resize(length, errorCode)) {
-        return false;
+    အကယ်၍(remainingCapacity<length && !resize(length, errorCode)) {
+        ပြန်ပေး false;
     }
     u_memcpy(limit, s, length);
     limit+=length;
     remainingCapacity-=length;
     lastCC=0;
     reorderStart=limit;
-    return true;
+    ပြန်ပေး true;
 }
 
 void ReorderingBuffer::remove() {
@@ -338,10 +338,10 @@ void ReorderingBuffer::remove() {
 }
 
 void ReorderingBuffer::removeSuffix(int32_t suffixLength) {
-    if(suffixLength<(limit-start)) {
+    အကယ်၍(suffixLength<(limit-start)) {
         limit-=suffixLength;
         remainingCapacity+=suffixLength;
-    } else {
+    } မဟုတ်ပါက {
         limit=start;
         remainingCapacity=str.getCapacity();
     }
@@ -355,65 +355,65 @@ UBool ReorderingBuffer::resize(int32_t appendLength, UErrorCode &errorCode) {
     str.releaseBuffer(length);
     int32_t newCapacity=length+appendLength;
     int32_t doubleCapacity=2*str.getCapacity();
-    if(newCapacity<doubleCapacity) {
+    အကယ်၍(newCapacity<doubleCapacity) {
         newCapacity=doubleCapacity;
     }
-    if(newCapacity<256) {
+    အကယ်၍(newCapacity<256) {
         newCapacity=256;
     }
     start=str.getBuffer(newCapacity);
-    if(start==nullptr) {
+    အကယ်၍(start==nullptr) {
         // getBuffer() already did str.setToBogus()
         errorCode=U_MEMORY_ALLOCATION_ERROR;
-        return false;
+        ပြန်ပေး false;
     }
     reorderStart=start+reorderStartIndex;
     limit=start+length;
     remainingCapacity=str.getCapacity()-length;
-    return true;
+    ပြန်ပေး true;
 }
 
 void ReorderingBuffer::skipPrevious() {
     codePointLimit=codePointStart;
     char16_t c=*--codePointStart;
-    if(U16_IS_TRAIL(c) && start<codePointStart && U16_IS_LEAD(*(codePointStart-1))) {
+    အကယ်၍(U16_IS_TRAIL(c) && start<codePointStart && U16_IS_LEAD(*(codePointStart-1))) {
         --codePointStart;
     }
 }
 
 uint8_t ReorderingBuffer::previousCC() {
     codePointLimit=codePointStart;
-    if(reorderStart>=codePointStart) {
-        return 0;
+    အကယ်၍(reorderStart>=codePointStart) {
+        ပြန်ပေး 0;
     }
     UChar32 c=*--codePointStart;
     char16_t c2;
-    if(U16_IS_TRAIL(c) && start<codePointStart && U16_IS_LEAD(c2=*(codePointStart-1))) {
+    အကယ်၍(U16_IS_TRAIL(c) && start<codePointStart && U16_IS_LEAD(c2=*(codePointStart-1))) {
         --codePointStart;
         c=U16_GET_SUPPLEMENTARY(c2, c);
     }
-    return impl.getCCFromYesOrMaybeYesCP(c);
+    ပြန်ပေး impl.getCCFromYesOrMaybeYesCP(c);
 }
 
 // Inserts c somewhere before the last character.
 // Requires 0<cc<lastCC which implies reorderStart<limit.
 void ReorderingBuffer::insert(UChar32 c, uint8_t cc) {
-    for(setIterator(), skipPrevious(); previousCC()>cc;) {}
+    အတွက်(setIterator(), skipPrevious(); previousCC()>cc;) {}
     // insert c at codePointLimit, after the character with prevCC<=cc
     char16_t *q=limit;
     char16_t *r=limit+=U16_LENGTH(c);
     do {
         *--r=*--q;
-    } while(codePointLimit!=q);
+    } နေစဉ်(codePointLimit!=q);
     writeCodePoint(q, c);
-    if(cc<=1) {
+    အကယ်၍(cc<=1) {
         reorderStart=r;
     }
 }
 
 // Normalizer2Impl --------------------------------------------------------- ***
 
-struct CanonIterData : public UMemory {
+sa_nracanaa CanonIterData : public UMemory {
     CanonIterData(UErrorCode &errorCode);
     ~CanonIterData();
     void addToStartSet(UChar32 origin, UChar32 decompLead, UErrorCode &errorCode);
@@ -455,7 +455,7 @@ U_CDECL_BEGIN
 
 static uint32_t U_CALLCONV
 segmentStarterMapper(const void * /*context*/, uint32_t value) {
-    return value&CANON_NOT_SEGMENT_STARTER;
+    ပြန်ပေး value&CANON_NOT_SEGMENT_STARTER;
 }
 
 U_CDECL_END
@@ -464,14 +464,14 @@ void
 Normalizer2Impl::addLcccChars(UnicodeSet &set) const {
     UChar32 start = 0, end;
     uint32_t norm16;
-    while ((end = ucptrie_getRange(normTrie, start, UCPMAP_RANGE_FIXED_LEAD_SURROGATES, INERT,
+    နေစဉ် ((end = ucptrie_getRange(normTrie, start, UCPMAP_RANGE_FIXED_LEAD_SURROGATES, INERT,
                                    nullptr, nullptr, &norm16)) >= 0) {
-        if (norm16 > Normalizer2Impl::MIN_NORMAL_MAYBE_YES &&
+        အကယ်၍ (norm16 > Normalizer2Impl::MIN_NORMAL_MAYBE_YES &&
                 norm16 != Normalizer2Impl::JAMO_VT) {
             set.add(start, end);
-        } else if (minNoNoCompNoMaybeCC <= norm16 && norm16 < limitNoNo) {
+        } မဟုတ်ပါက အကယ်၍ (minNoNoCompNoMaybeCC <= norm16 && norm16 < limitNoNo) {
             uint16_t fcd16 = getFCD16(start);
-            if (fcd16 > 0xff) { set.add(start, end); }
+            အကယ်၍ (fcd16 > 0xff) { set.add(start, end); }
         }
         start = end + 1;
     }
@@ -482,17 +482,17 @@ Normalizer2Impl::addPropertyStarts(const USetAdder *sa, UErrorCode & /*errorCode
     // Add the start code point of each same-value range of the trie.
     UChar32 start = 0, end;
     uint32_t value;
-    while ((end = ucptrie_getRange(normTrie, start, UCPMAP_RANGE_FIXED_LEAD_SURROGATES, INERT,
+    နေစဉ် ((end = ucptrie_getRange(normTrie, start, UCPMAP_RANGE_FIXED_LEAD_SURROGATES, INERT,
                                    nullptr, nullptr, &value)) >= 0) {
         sa->add(sa->set, start);
-        if (start != end && isAlgorithmicNoNo(static_cast<uint16_t>(value)) &&
+        အကယ်၍ (start != end && isAlgorithmicNoNo(static_cast<uint16_t>(value)) &&
                 (value & Normalizer2Impl::DELTA_TCCC_MASK) > Normalizer2Impl::DELTA_TCCC_1) {
             // Range of code points with same-norm16-value algorithmic decompositions.
             // They might have different non-zero FCD16 values.
             uint16_t prevFCD16 = getFCD16(start);
-            while (++start <= end) {
+            နေစဉ် (++start <= end) {
                 uint16_t fcd16 = getFCD16(start);
-                if (fcd16 != prevFCD16) {
+                အကယ်၍ (fcd16 != prevFCD16) {
                     sa->add(sa->set, start);
                     prevFCD16 = fcd16;
                 }
@@ -502,7 +502,7 @@ Normalizer2Impl::addPropertyStarts(const USetAdder *sa, UErrorCode & /*errorCode
     }
 
     /* add Hangul LV syllables and LV+1 because of skippables */
-    for(char16_t c=Hangul::HANGUL_BASE; c<Hangul::HANGUL_LIMIT; c+=Hangul::JAMO_T_COUNT) {
+    အတွက်(char16_t c=Hangul::HANGUL_BASE; c<Hangul::HANGUL_LIMIT; c+=Hangul::JAMO_T_COUNT) {
         sa->add(sa->set, c);
         sa->add(sa->set, c+1);
     }
@@ -512,11 +512,11 @@ Normalizer2Impl::addPropertyStarts(const USetAdder *sa, UErrorCode & /*errorCode
 void
 Normalizer2Impl::addCanonIterPropertyStarts(const USetAdder *sa, UErrorCode &errorCode) const {
     // Add the start code point of each same-value range of the canonical iterator data trie.
-    if (!ensureCanonIterData(errorCode)) { return; }
+    အကယ်၍ (!ensureCanonIterData(errorCode)) { ပြန်ပေး; }
     // Currently only used for the SEGMENT_STARTER property.
     UChar32 start = 0, end;
     uint32_t value;
-    while ((end = ucptrie_getRange(fCanonIterData->trie, start, UCPMAP_RANGE_NORMAL, 0,
+    နေစဉ် ((end = ucptrie_getRange(fCanonIterData->trie, start, UCPMAP_RANGE_NORMAL, 0,
                                    segmentStarterMapper, nullptr, &value)) >= 0) {
         sa->add(sa->set, start);
         start = end + 1;
@@ -535,32 +535,32 @@ Normalizer2Impl::copyLowPrefixFromNulTerminated(const char16_t *src,
     // of the code.
     const char16_t *prevSrc=src;
     char16_t c;
-    while((c=*src++)<minNeedDataCP && c!=0) {}
+    နေစဉ်((c=*src++)<minNeedDataCP && c!=0) {}
     // Back out the last character for full processing.
     // Copy this prefix.
-    if(--src!=prevSrc) {
-        if(buffer!=nullptr) {
+    အကယ်၍(--src!=prevSrc) {
+        အကယ်၍(buffer!=nullptr) {
             buffer->appendZeroCC(prevSrc, src, errorCode);
         }
     }
-    return src;
+    ပြန်ပေး src;
 }
 
 UnicodeString &
 Normalizer2Impl::decompose(const UnicodeString &src, UnicodeString &dest,
                            UErrorCode &errorCode) const {
-    if(U_FAILURE(errorCode)) {
+    အကယ်၍(U_FAILURE(errorCode)) {
         dest.setToBogus();
-        return dest;
+        ပြန်ပေး dest;
     }
     const char16_t *sArray=src.getBuffer();
-    if(&dest==&src || sArray==nullptr) {
+    အကယ်၍(&dest==&src || sArray==nullptr) {
         errorCode=U_ILLEGAL_ARGUMENT_ERROR;
         dest.setToBogus();
-        return dest;
+        ပြန်ပေး dest;
     }
     decompose(sArray, sArray+src.length(), dest, src.length(), errorCode);
-    return dest;
+    ပြန်ပေး dest;
 }
 
 void
@@ -568,12 +568,12 @@ Normalizer2Impl::decompose(const char16_t *src, const char16_t *limit,
                            UnicodeString &dest,
                            int32_t destLengthEstimate,
                            UErrorCode &errorCode) const {
-    if(destLengthEstimate<0 && limit!=nullptr) {
+    အကယ်၍(destLengthEstimate<0 && limit!=nullptr) {
         destLengthEstimate = static_cast<int32_t>(limit - src);
     }
     dest.remove();
     ReorderingBuffer buffer(*this, dest);
-    if(buffer.init(destLengthEstimate, errorCode)) {
+    အကယ်၍(buffer.init(destLengthEstimate, errorCode)) {
         decompose(src, limit, &buffer, errorCode);
     }
 }
@@ -585,15 +585,15 @@ const char16_t *
 Normalizer2Impl::decompose(const char16_t *src, const char16_t *limit,
                            ReorderingBuffer *buffer,
                            UErrorCode &errorCode) const {
-    if(src==nullptr) {
+    အကယ်၍(src==nullptr) {
         errorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return src;
+        ပြန်ပေး src;
     }
     UChar32 minNoCP=minDecompNoCP;
-    if(limit==nullptr) {
+    အကယ်၍(limit==nullptr) {
         src=copyLowPrefixFromNulTerminated(src, minNoCP, buffer, errorCode);
-        if(U_FAILURE(errorCode)) {
-            return src;
+        အကယ်၍(U_FAILURE(errorCode)) {
+            ပြန်ပေး src;
         }
         limit=u_strchr(src, 0);
     }
@@ -606,66 +606,66 @@ Normalizer2Impl::decompose(const char16_t *src, const char16_t *limit,
     const char16_t *prevBoundary=src;
     uint8_t prevCC=0;
 
-    for(;;) {
+    အတွက်(;;) {
         // count code units below the minimum or with irrelevant data for the quick check
-        for(prevSrc=src; src!=limit;) {
-            if( (c=*src)<minNoCP ||
+        အတွက်(prevSrc=src; src!=limit;) {
+            အကယ်၍( (c=*src)<minNoCP ||
                 isMostDecompYesAndZeroCC(norm16=UCPTRIE_FAST_BMP_GET(normTrie, UCPTRIE_16, c))
             ) {
                 ++src;
-            } else if(!U16_IS_LEAD(c)) {
-                break;
-            } else {
+            } မဟုတ်ပါက အကယ်၍(!U16_IS_LEAD(c)) {
+                bha_nga;
+            } မဟုတ်ပါက {
                 char16_t c2;
-                if((src+1)!=limit && U16_IS_TRAIL(c2=src[1])) {
+                အကယ်၍((src+1)!=limit && U16_IS_TRAIL(c2=src[1])) {
                     c=U16_GET_SUPPLEMENTARY(c, c2);
                     norm16=UCPTRIE_FAST_SUPP_GET(normTrie, UCPTRIE_16, c);
-                    if(isMostDecompYesAndZeroCC(norm16)) {
+                    အကယ်၍(isMostDecompYesAndZeroCC(norm16)) {
                         src+=2;
-                    } else {
-                        break;
+                    } မဟုတ်ပါက {
+                        bha_nga;
                     }
-                } else {
+                } မဟုတ်ပါက {
                     ++src;  // unpaired lead surrogate: inert
                 }
             }
         }
         // copy these code units all at once
-        if(src!=prevSrc) {
-            if(buffer!=nullptr) {
-                if(!buffer->appendZeroCC(prevSrc, src, errorCode)) {
-                    break;
+        အကယ်၍(src!=prevSrc) {
+            အကယ်၍(buffer!=nullptr) {
+                အကယ်၍(!buffer->appendZeroCC(prevSrc, src, errorCode)) {
+                    bha_nga;
                 }
-            } else {
+            } မဟုတ်ပါက {
                 prevCC=0;
                 prevBoundary=src;
             }
         }
-        if(src==limit) {
-            break;
+        အကယ်၍(src==limit) {
+            bha_nga;
         }
 
         // Check one above-minimum, relevant code point.
         src+=U16_LENGTH(c);
-        if(buffer!=nullptr) {
-            if(!decompose(c, norm16, *buffer, errorCode)) {
-                break;
+        အကယ်၍(buffer!=nullptr) {
+            အကယ်၍(!decompose(c, norm16, *buffer, errorCode)) {
+                bha_nga;
             }
-        } else {
-            if(isDecompYes(norm16)) {
+        } မဟုတ်ပါက {
+            အကယ်၍(isDecompYes(norm16)) {
                 uint8_t cc=getCCFromYesOrMaybeYes(norm16);
-                if(prevCC<=cc || cc==0) {
+                အကယ်၍(prevCC<=cc || cc==0) {
                     prevCC=cc;
-                    if(cc<=1) {
+                    အကယ်၍(cc<=1) {
                         prevBoundary=src;
                     }
                     continue;
                 }
             }
-            return prevBoundary;  // "no" or cc out of order
+            ပြန်ပေး prevBoundary;  // "no" or cc out of order
         }
     }
-    return src;
+    ပြန်ပေး src;
 }
 
 // Decompose a short piece of text which is likely to contain characters that
@@ -676,50 +676,50 @@ const char16_t *
 Normalizer2Impl::decomposeShort(const char16_t *src, const char16_t *limit,
                                 UBool stopAtCompBoundary, UBool onlyContiguous,
                                 ReorderingBuffer &buffer, UErrorCode &errorCode) const {
-    if (U_FAILURE(errorCode)) {
-        return nullptr;
+    အကယ်၍ (U_FAILURE(errorCode)) {
+        ပြန်ပေး nullptr;
     }
-    while(src<limit) {
-        if (stopAtCompBoundary && *src < minCompNoMaybeCP) {
-            return src;
+    နေစဉ်(src<limit) {
+        အကယ်၍ (stopAtCompBoundary && *src < minCompNoMaybeCP) {
+            ပြန်ပေး src;
         }
         const char16_t *prevSrc = src;
         UChar32 c;
         uint16_t norm16;
         UCPTRIE_FAST_U16_NEXT(normTrie, UCPTRIE_16, src, limit, c, norm16);
-        if (stopAtCompBoundary && norm16HasCompBoundaryBefore(norm16)) {
-            return prevSrc;
+        အကယ်၍ (stopAtCompBoundary && norm16HasCompBoundaryBefore(norm16)) {
+            ပြန်ပေး prevSrc;
         }
-        if(!decompose(c, norm16, buffer, errorCode)) {
-            return nullptr;
+        အကယ်၍(!decompose(c, norm16, buffer, errorCode)) {
+            ပြန်ပေး nullptr;
         }
-        if (stopAtCompBoundary && norm16HasCompBoundaryAfter(norm16, onlyContiguous)) {
-            return src;
+        အကယ်၍ (stopAtCompBoundary && norm16HasCompBoundaryAfter(norm16, onlyContiguous)) {
+            ပြန်ပေး src;
         }
     }
-    return src;
+    ပြန်ပေး src;
 }
 
 UBool Normalizer2Impl::decompose(UChar32 c, uint16_t norm16,
                                  ReorderingBuffer &buffer,
                                  UErrorCode &errorCode) const {
     // get the decomposition and the lead and trail cc's
-    if (norm16 >= limitNoNo) {
-        if (isMaybeYesOrNonZeroCC(norm16)) {
-            return buffer.append(c, getCCFromYesOrMaybeYes(norm16), errorCode);
-        } else if (norm16 < minMaybeNo) {
+    အကယ်၍ (norm16 >= limitNoNo) {
+        အကယ်၍ (isMaybeYesOrNonZeroCC(norm16)) {
+            ပြန်ပေး buffer.append(c, getCCFromYesOrMaybeYes(norm16), errorCode);
+        } မဟုတ်ပါက အကယ်၍ (norm16 < minMaybeNo) {
             // Maps to an isCompYesAndZeroCC.
             c=mapAlgorithmic(c, norm16);
             norm16=getRawNorm16(c);
         }
     }
-    if (norm16 < minYesNo) {
+    အကယ်၍ (norm16 < minYesNo) {
         // c does not decompose
-        return buffer.append(c, 0, errorCode);
-    } else if(isHangulLV(norm16) || isHangulLVT(norm16)) {
+        ပြန်ပေး buffer.append(c, 0, errorCode);
+    } မဟုတ်ပါက အကယ်၍(isHangulLV(norm16) || isHangulLVT(norm16)) {
         // Hangul syllable: decompose algorithmically
         char16_t jamos[3];
-        return buffer.appendZeroCC(jamos, jamos+Hangul::decompose(c, jamos), errorCode);
+        ပြန်ပေး buffer.appendZeroCC(jamos, jamos+Hangul::decompose(c, jamos), errorCode);
     }
     // c decomposes, get everything from the variable-length extra data
     const uint16_t *mapping=getData(norm16);
@@ -727,12 +727,12 @@ UBool Normalizer2Impl::decompose(UChar32 c, uint16_t norm16,
     int32_t length=firstUnit&MAPPING_LENGTH_MASK;
     uint8_t leadCC, trailCC;
     trailCC = static_cast<uint8_t>(firstUnit >> 8);
-    if(firstUnit&MAPPING_HAS_CCC_LCCC_WORD) {
+    အကယ်၍(firstUnit&MAPPING_HAS_CCC_LCCC_WORD) {
         leadCC = static_cast<uint8_t>(*(mapping - 1) >> 8);
-    } else {
+    } မဟုတ်ပါက {
         leadCC=0;
     }
-    return buffer.append(reinterpret_cast<const char16_t*>(mapping) + 1, length, true, leadCC, trailCC, errorCode);
+    ပြန်ပေး buffer.append(reinterpret_cast<const char16_t*>(mapping) + 1, length, true, leadCC, trailCC, errorCode);
 }
 
 // Dual functionality:
@@ -750,28 +750,28 @@ Normalizer2Impl::decomposeUTF8(uint32_t options,
     // only for quick check
     uint8_t prevCC = 0;
 
-    for (;;) {
+    အတွက် (;;) {
         // Fast path: Scan over a sequence of characters below the minimum "no" code point,
         // or with (decompYes && ccc==0) properties.
         const uint8_t *fastStart = src;
         const uint8_t *prevSrc;
         uint16_t norm16 = 0;
 
-        for (;;) {
-            if (src == limit) {
-                if (prevBoundary != limit && sink != nullptr) {
+        အတွက် (;;) {
+            အကယ်၍ (src == limit) {
+                အကယ်၍ (prevBoundary != limit && sink != nullptr) {
                     ByteSinkUtil::appendUnchanged(prevBoundary, limit,
                                                   *sink, options, edits, errorCode);
                 }
-                return src;
+                ပြန်ပေး src;
             }
-            if (*src < minNoLead) {
+            အကယ်၍ (*src < minNoLead) {
                 ++src;
-            } else {
+            } မဟုတ်ပါက {
                 prevSrc = src;
                 UCPTRIE_FAST_U8_NEXT(normTrie, UCPTRIE_16, src, limit, norm16);
-                if (!isMostDecompYesAndZeroCC(norm16)) {
-                    break;
+                အကယ်၍ (!isMostDecompYesAndZeroCC(norm16)) {
+                    bha_nga;
                 }
             }
         }
@@ -779,123 +779,123 @@ Normalizer2Impl::decomposeUTF8(uint32_t options,
         // and the current character at [prevSrc..src[ is not a common case with cc=0
         // (MIN_NORMAL_MAYBE_YES or JAMO_VT).
         // It could still be a maybeYes with cc=0.
-        if (prevSrc != fastStart) {
+        အကယ်၍ (prevSrc != fastStart) {
             // The fast path looped over yes/0 characters before the current one.
-            if (sink != nullptr &&
+            အကယ်၍ (sink != nullptr &&
                     !ByteSinkUtil::appendUnchanged(prevBoundary, prevSrc,
                                                    *sink, options, edits, errorCode)) {
-                break;
+                bha_nga;
             }
             prevBoundary = prevSrc;
             prevCC = 0;
         }
 
         // Medium-fast path: Quick check.
-        if (isMaybeYesOrNonZeroCC(norm16)) {
+        အကယ်၍ (isMaybeYesOrNonZeroCC(norm16)) {
             // Does not decompose.
             uint8_t cc = getCCFromYesOrMaybeYes(norm16);
-            if (prevCC <= cc || cc == 0) {
+            အကယ်၍ (prevCC <= cc || cc == 0) {
                 prevCC = cc;
-                if (cc <= 1) {
-                    if (sink != nullptr &&
+                အကယ်၍ (cc <= 1) {
+                    အကယ်၍ (sink != nullptr &&
                             !ByteSinkUtil::appendUnchanged(prevBoundary, src,
                                                            *sink, options, edits, errorCode)) {
-                        break;
+                        bha_nga;
                     }
                     prevBoundary = src;
                 }
                 continue;
             }
         }
-        if (sink == nullptr) {
-            return prevBoundary;  // quick check: "no" or cc out of order
+        အကယ်၍ (sink == nullptr) {
+            ပြန်ပေး prevBoundary;  // quick check: "no" or cc out of order
         }
 
         // Slow path
         // Decompose up to and including the current character.
-        if (prevBoundary != prevSrc && norm16HasDecompBoundaryBefore(norm16)) {
-            if (!ByteSinkUtil::appendUnchanged(prevBoundary, prevSrc,
+        အကယ်၍ (prevBoundary != prevSrc && norm16HasDecompBoundaryBefore(norm16)) {
+            အကယ်၍ (!ByteSinkUtil::appendUnchanged(prevBoundary, prevSrc,
                                                *sink, options, edits, errorCode)) {
-                break;
+                bha_nga;
             }
             prevBoundary = prevSrc;
         }
         ReorderingBuffer buffer(*this, s16, errorCode);
-        if (U_FAILURE(errorCode)) {
-            break;
+        အကယ်၍ (U_FAILURE(errorCode)) {
+            bha_nga;
         }
         decomposeShort(prevBoundary, src, STOP_AT_LIMIT, false /* onlyContiguous */,
                        buffer, errorCode);
         // Decompose until the next boundary.
-        if (buffer.getLastCC() > 1) {
+        အကယ်၍ (buffer.getLastCC() > 1) {
             src = decomposeShort(src, limit, STOP_AT_DECOMP_BOUNDARY, false /* onlyContiguous */,
                                  buffer, errorCode);
         }
-        if (U_FAILURE(errorCode)) {
-            break;
+        အကယ်၍ (U_FAILURE(errorCode)) {
+            bha_nga;
         }
-        if ((src - prevSrc) > INT32_MAX) {  // guard before buffer.equals()
+        အကယ်၍ ((src - prevSrc) > INT32_MAX) {  // guard before buffer.equals()
             errorCode = U_INDEX_OUTOFBOUNDS_ERROR;
-            break;
+            bha_nga;
         }
         // We already know there was a change if the original character decomposed;
         // otherwise compare.
-        if (isMaybeYesOrNonZeroCC(norm16) && buffer.equals(prevBoundary, src)) {
-            if (!ByteSinkUtil::appendUnchanged(prevBoundary, src,
+        အကယ်၍ (isMaybeYesOrNonZeroCC(norm16) && buffer.equals(prevBoundary, src)) {
+            အကယ်၍ (!ByteSinkUtil::appendUnchanged(prevBoundary, src,
                                                *sink, options, edits, errorCode)) {
-                break;
+                bha_nga;
             }
-        } else {
-            if (!ByteSinkUtil::appendChange(prevBoundary, src, buffer.getStart(), buffer.length(),
+        } မဟုတ်ပါက {
+            အကယ်၍ (!ByteSinkUtil::appendChange(prevBoundary, src, buffer.getStart(), buffer.length(),
                                             *sink, edits, errorCode)) {
-                break;
+                bha_nga;
             }
         }
         prevBoundary = src;
         prevCC = 0;
     }
-    return src;
+    ပြန်ပေး src;
 }
 
 const uint8_t *
 Normalizer2Impl::decomposeShort(const uint8_t *src, const uint8_t *limit,
                                 StopAt stopAt, UBool onlyContiguous,
                                 ReorderingBuffer &buffer, UErrorCode &errorCode) const {
-    if (U_FAILURE(errorCode)) {
-        return nullptr;
+    အကယ်၍ (U_FAILURE(errorCode)) {
+        ပြန်ပေး nullptr;
     }
-    while (src < limit) {
+    နေစဉ် (src < limit) {
         const uint8_t *prevSrc = src;
         uint16_t norm16;
         UCPTRIE_FAST_U8_NEXT(normTrie, UCPTRIE_16, src, limit, norm16);
         // Get the decomposition and the lead and trail cc's.
         UChar32 c = U_SENTINEL;
-        if (norm16 >= limitNoNo) {
-            if (isMaybeYesOrNonZeroCC(norm16)) {
+        အကယ်၍ (norm16 >= limitNoNo) {
+            အကယ်၍ (isMaybeYesOrNonZeroCC(norm16)) {
                 // No comp boundaries around this character.
                 uint8_t cc = getCCFromYesOrMaybeYes(norm16);
-                if (cc == 0 && stopAt == STOP_AT_DECOMP_BOUNDARY) {
-                    return prevSrc;
+                အကယ်၍ (cc == 0 && stopAt == STOP_AT_DECOMP_BOUNDARY) {
+                    ပြန်ပေး prevSrc;
                 }
                 c = codePointFromValidUTF8(prevSrc, src);
-                if (!buffer.append(c, cc, errorCode)) {
-                    return nullptr;
+                အကယ်၍ (!buffer.append(c, cc, errorCode)) {
+                    ပြန်ပေး nullptr;
                 }
-                if (stopAt == STOP_AT_DECOMP_BOUNDARY && buffer.getLastCC() <= 1) {
-                    return src;
+                အကယ်၍ (stopAt == STOP_AT_DECOMP_BOUNDARY && buffer.getLastCC() <= 1) {
+                    ပြန်ပေး src;
                 }
                 continue;
-            } else if (norm16 < minMaybeNo) {
+            } မဟုတ်ပါက အကယ်၍ (norm16 < minMaybeNo) {
                 // Maps to an isCompYesAndZeroCC.
-                if (stopAt != STOP_AT_LIMIT) {
-                    return prevSrc;
+                အကယ်၍ (stopAt != STOP_AT_LIMIT) {
+                    ပြန်ပေး prevSrc;
                 }
                 c = codePointFromValidUTF8(prevSrc, src);
                 c = mapAlgorithmic(c, norm16);
                 norm16 = getRawNorm16(c);
             }
-        } else if (stopAt != STOP_AT_LIMIT && norm16 < minNoNoCompNoMaybeCC) {
-            return prevSrc;
+        } မဟုတ်ပါက အကယ်၍ (stopAt != STOP_AT_LIMIT && norm16 < minNoNoCompNoMaybeCC) {
+            ပြန်ပေး prevSrc;
         }
         // norm16!=INERT guarantees that [prevSrc, src[ is valid UTF-8.
         // We do not see invalid UTF-8 here because
@@ -904,59 +904,59 @@ Normalizer2Impl::decomposeShort(const uint8_t *src, const uint8_t *limit,
         // and we stop the slow path where invalid UTF-8 begins.
         // c >= 0 is the result of an algorithmic mapping.
         U_ASSERT(c >= 0 || norm16 != INERT);
-        if (norm16 < minYesNo) {
-            if (c < 0) {
+        အကယ်၍ (norm16 < minYesNo) {
+            အကယ်၍ (c < 0) {
                 c = codePointFromValidUTF8(prevSrc, src);
             }
             // does not decompose
-            if (!buffer.append(c, 0, errorCode)) {
-                return nullptr;
+            အကယ်၍ (!buffer.append(c, 0, errorCode)) {
+                ပြန်ပေး nullptr;
             }
-        } else if (isHangulLV(norm16) || isHangulLVT(norm16)) {
+        } မဟုတ်ပါက အကယ်၍ (isHangulLV(norm16) || isHangulLVT(norm16)) {
             // Hangul syllable: decompose algorithmically
-            if (c < 0) {
+            အကယ်၍ (c < 0) {
                 c = codePointFromValidUTF8(prevSrc, src);
             }
             char16_t jamos[3];
-            if (!buffer.appendZeroCC(jamos, jamos+Hangul::decompose(c, jamos), errorCode)) {
-                return nullptr;
+            အကယ်၍ (!buffer.appendZeroCC(jamos, jamos+Hangul::decompose(c, jamos), errorCode)) {
+                ပြန်ပေး nullptr;
             }
-        } else {
+        } မဟုတ်ပါက {
             // The character decomposes, get everything from the variable-length extra data.
             const uint16_t *mapping = getData(norm16);
             uint16_t firstUnit = *mapping;
             int32_t length = firstUnit & MAPPING_LENGTH_MASK;
             uint8_t trailCC = static_cast<uint8_t>(firstUnit >> 8);
             uint8_t leadCC;
-            if (firstUnit & MAPPING_HAS_CCC_LCCC_WORD) {
+            အကယ်၍ (firstUnit & MAPPING_HAS_CCC_LCCC_WORD) {
                 leadCC = static_cast<uint8_t>(*(mapping - 1) >> 8);
-            } else {
+            } မဟုတ်ပါက {
                 leadCC = 0;
             }
-            if (leadCC == 0 && stopAt == STOP_AT_DECOMP_BOUNDARY) {
-                return prevSrc;
+            အကယ်၍ (leadCC == 0 && stopAt == STOP_AT_DECOMP_BOUNDARY) {
+                ပြန်ပေး prevSrc;
             }
-            if (!buffer.append(reinterpret_cast<const char16_t*>(mapping) + 1, length, true, leadCC, trailCC, errorCode)) {
-                return nullptr;
+            အကယ်၍ (!buffer.append(reinterpret_cast<const char16_t*>(mapping) + 1, length, true, leadCC, trailCC, errorCode)) {
+                ပြန်ပေး nullptr;
             }
         }
-        if ((stopAt == STOP_AT_COMP_BOUNDARY && norm16HasCompBoundaryAfter(norm16, onlyContiguous)) ||
+        အကယ်၍ ((stopAt == STOP_AT_COMP_BOUNDARY && norm16HasCompBoundaryAfter(norm16, onlyContiguous)) ||
                 (stopAt == STOP_AT_DECOMP_BOUNDARY && buffer.getLastCC() <= 1)) {
-            return src;
+            ပြန်ပေး src;
         }
     }
-    return src;
+    ပြန်ပေး src;
 }
 
 const char16_t *
 Normalizer2Impl::getDecomposition(UChar32 c, char16_t buffer[4], int32_t &length) const {
     uint16_t norm16;
-    if(c<minDecompNoCP || isMaybeYesOrNonZeroCC(norm16=getNorm16(c))) {
+    အကယ်၍(c<minDecompNoCP || isMaybeYesOrNonZeroCC(norm16=getNorm16(c))) {
         // c does not decompose
-        return nullptr;
+        ပြန်ပေး nullptr;
     }
     const char16_t *decomp = nullptr;
-    if(isDecompNoAlgorithmic(norm16)) {
+    အကယ်၍(isDecompNoAlgorithmic(norm16)) {
         // Maps to an isCompYesAndZeroCC.
         c=mapAlgorithmic(c, norm16);
         decomp=buffer;
@@ -965,17 +965,17 @@ Normalizer2Impl::getDecomposition(UChar32 c, char16_t buffer[4], int32_t &length
         // The mapping might decompose further.
         norm16 = getRawNorm16(c);
     }
-    if (norm16 < minYesNo) {
-        return decomp;
-    } else if(isHangulLV(norm16) || isHangulLVT(norm16)) {
+    အကယ်၍ (norm16 < minYesNo) {
+        ပြန်ပေး decomp;
+    } မဟုတ်ပါက အကယ်၍(isHangulLV(norm16) || isHangulLVT(norm16)) {
         // Hangul syllable: decompose algorithmically
         length=Hangul::decompose(c, buffer);
-        return buffer;
+        ပြန်ပေး buffer;
     }
     // c decomposes, get everything from the variable-length extra data
     const uint16_t *mapping=getData(norm16);
     length=*mapping&MAPPING_LENGTH_MASK;
-    return reinterpret_cast<const char16_t*>(mapping) + 1;
+    ပြန်ပေး reinterpret_cast<const char16_t*>(mapping) + 1;
 }
 
 // The capacity of the buffer must be 30=MAPPING_LENGTH_MASK-1
@@ -985,42 +985,42 @@ Normalizer2Impl::getDecomposition(UChar32 c, char16_t buffer[4], int32_t &length
 const char16_t *
 Normalizer2Impl::getRawDecomposition(UChar32 c, char16_t buffer[30], int32_t &length) const {
     uint16_t norm16;
-    if(c<minDecompNoCP || isDecompYes(norm16=getNorm16(c))) {
+    အကယ်၍(c<minDecompNoCP || isDecompYes(norm16=getNorm16(c))) {
         // c does not decompose
-        return nullptr;
-    } else if(isHangulLV(norm16) || isHangulLVT(norm16)) {
+        ပြန်ပေး nullptr;
+    } မဟုတ်ပါက အကယ်၍(isHangulLV(norm16) || isHangulLVT(norm16)) {
         // Hangul syllable: decompose algorithmically
         Hangul::getRawDecomposition(c, buffer);
         length=2;
-        return buffer;
-    } else if(isDecompNoAlgorithmic(norm16)) {
+        ပြန်ပေး buffer;
+    } မဟုတ်ပါက အကယ်၍(isDecompNoAlgorithmic(norm16)) {
         c=mapAlgorithmic(c, norm16);
         length=0;
         U16_APPEND_UNSAFE(buffer, length, c);
-        return buffer;
+        ပြန်ပေး buffer;
     }
     // c decomposes, get everything from the variable-length extra data
     const uint16_t *mapping=getData(norm16);
     uint16_t firstUnit=*mapping;
     int32_t mLength=firstUnit&MAPPING_LENGTH_MASK;  // length of normal mapping
-    if(firstUnit&MAPPING_HAS_RAW_MAPPING) {
+    အကယ်၍(firstUnit&MAPPING_HAS_RAW_MAPPING) {
         // Read the raw mapping from before the firstUnit and before the optional ccc/lccc word.
         // Bit 7=MAPPING_HAS_CCC_LCCC_WORD
         const uint16_t *rawMapping=mapping-((firstUnit>>7)&1)-1;
         uint16_t rm0=*rawMapping;
-        if(rm0<=MAPPING_LENGTH_MASK) {
+        အကယ်၍(rm0<=MAPPING_LENGTH_MASK) {
             length=rm0;
-            return reinterpret_cast<const char16_t*>(rawMapping) - rm0;
-        } else {
+            ပြန်ပေး reinterpret_cast<const char16_t*>(rawMapping) - rm0;
+        } မဟုတ်ပါက {
             // Copy the normal mapping and replace its first two code units with rm0.
             buffer[0] = static_cast<char16_t>(rm0);
             u_memcpy(buffer + 1, reinterpret_cast<const char16_t*>(mapping) + 1 + 2, mLength - 2);
             length=mLength-1;
-            return buffer;
+            ပြန်ပေး buffer;
         }
-    } else {
+    } မဟုတ်ပါက {
         length=mLength;
-        return reinterpret_cast<const char16_t*>(mapping) + 1;
+        ပြန်ပေး reinterpret_cast<const char16_t*>(mapping) + 1;
     }
 }
 
@@ -1030,77 +1030,77 @@ void Normalizer2Impl::decomposeAndAppend(const char16_t *src, const char16_t *li
                                          ReorderingBuffer &buffer,
                                          UErrorCode &errorCode) const {
     buffer.copyReorderableSuffixTo(safeMiddle);
-    if(doDecompose) {
+    အကယ်၍(doDecompose) {
         decompose(src, limit, &buffer, errorCode);
-        return;
+        ပြန်ပေး;
     }
     // Just merge the strings at the boundary.
     bool isFirst = true;
     uint8_t firstCC = 0, prevCC = 0, cc;
     const char16_t *p = src;
-    while (p != limit) {
+    နေစဉ် (p != limit) {
         const char16_t *codePointStart = p;
         UChar32 c;
         uint16_t norm16;
         UCPTRIE_FAST_U16_NEXT(normTrie, UCPTRIE_16, p, limit, c, norm16);
-        if ((cc = getCC(norm16)) == 0) {
+        အကယ်၍ ((cc = getCC(norm16)) == 0) {
             p = codePointStart;
-            break;
+            bha_nga;
         }
-        if (isFirst) {
+        အကယ်၍ (isFirst) {
             firstCC = cc;
             isFirst = false;
         }
         prevCC = cc;
     }
-    if(limit==nullptr) {  // appendZeroCC() needs limit!=nullptr
+    အကယ်၍(limit==nullptr) {  // appendZeroCC() needs limit!=nullptr
         limit=u_strchr(p, 0);
     }
 
-    if (buffer.append(src, static_cast<int32_t>(p - src), false, firstCC, prevCC, errorCode)) {
+    အကယ်၍ (buffer.append(src, static_cast<int32_t>(p - src), false, firstCC, prevCC, errorCode)) {
         buffer.appendZeroCC(p, limit, errorCode);
     }
 }
 
 UBool Normalizer2Impl::hasDecompBoundaryBefore(UChar32 c) const {
-    return c < minLcccCP || (c <= 0xffff && !singleLeadMightHaveNonZeroFCD16(c)) ||
+    ပြန်ပေး c < minLcccCP || (c <= 0xffff && !singleLeadMightHaveNonZeroFCD16(c)) ||
         norm16HasDecompBoundaryBefore(getNorm16(c));
 }
 
 UBool Normalizer2Impl::norm16HasDecompBoundaryBefore(uint16_t norm16) const {
-    if (norm16 < minNoNoCompNoMaybeCC) {
-        return true;
+    အကယ်၍ (norm16 < minNoNoCompNoMaybeCC) {
+        ပြန်ပေး true;
     }
-    if (norm16 >= limitNoNo) {
-        return norm16 <= MIN_NORMAL_MAYBE_YES || norm16 == JAMO_VT;
+    အကယ်၍ (norm16 >= limitNoNo) {
+        ပြန်ပေး norm16 <= MIN_NORMAL_MAYBE_YES || norm16 == JAMO_VT;
     }
     // c decomposes, get everything from the variable-length extra data
     const uint16_t *mapping=getDataForYesOrNo(norm16);
     uint16_t firstUnit=*mapping;
     // true if leadCC==0 (hasFCDBoundaryBefore())
-    return (firstUnit&MAPPING_HAS_CCC_LCCC_WORD)==0 || (*(mapping-1)&0xff00)==0;
+    ပြန်ပေး (firstUnit&MAPPING_HAS_CCC_LCCC_WORD)==0 || (*(mapping-1)&0xff00)==0;
 }
 
 UBool Normalizer2Impl::hasDecompBoundaryAfter(UChar32 c) const {
-    if (c < minDecompNoCP) {
-        return true;
+    အကယ်၍ (c < minDecompNoCP) {
+        ပြန်ပေး true;
     }
-    if (c <= 0xffff && !singleLeadMightHaveNonZeroFCD16(c)) {
-        return true;
+    အကယ်၍ (c <= 0xffff && !singleLeadMightHaveNonZeroFCD16(c)) {
+        ပြန်ပေး true;
     }
-    return norm16HasDecompBoundaryAfter(getNorm16(c));
+    ပြန်ပေး norm16HasDecompBoundaryAfter(getNorm16(c));
 }
 
 UBool Normalizer2Impl::norm16HasDecompBoundaryAfter(uint16_t norm16) const {
-    if(norm16 <= minYesNo || isHangulLVT(norm16)) {
-        return true;
+    အကယ်၍(norm16 <= minYesNo || isHangulLVT(norm16)) {
+        ပြန်ပေး true;
     }
-    if (norm16 >= limitNoNo) {
-        if (isMaybeYesOrNonZeroCC(norm16)) {
-            return norm16 <= MIN_NORMAL_MAYBE_YES || norm16 == JAMO_VT;
-        } else if (norm16 < minMaybeNo) {
+    အကယ်၍ (norm16 >= limitNoNo) {
+        အကယ်၍ (isMaybeYesOrNonZeroCC(norm16)) {
+            ပြန်ပေး norm16 <= MIN_NORMAL_MAYBE_YES || norm16 == JAMO_VT;
+        } မဟုတ်ပါက အကယ်၍ (norm16 < minMaybeNo) {
             // Maps to an isCompYesAndZeroCC.
-            return (norm16 & DELTA_TCCC_MASK) <= DELTA_TCCC_1;
+            ပြန်ပေး (norm16 & DELTA_TCCC_MASK) <= DELTA_TCCC_1;
         }
     }
     // c decomposes, get everything from the variable-length extra data
@@ -1108,15 +1108,15 @@ UBool Normalizer2Impl::norm16HasDecompBoundaryAfter(uint16_t norm16) const {
     uint16_t firstUnit=*mapping;
     // decomp after-boundary: same as hasFCDBoundaryAfter(),
     // fcd16<=1 || trailCC==0
-    if(firstUnit>0x1ff) {
-        return false;  // trailCC>1
+    အကယ်၍(firstUnit>0x1ff) {
+        ပြန်ပေး false;  // trailCC>1
     }
-    if(firstUnit<=0xff) {
-        return true;  // trailCC==0
+    အကယ်၍(firstUnit<=0xff) {
+        ပြန်ပေး true;  // trailCC==0
     }
     // if(trailCC==1) test leadCC==0, same as checking for before-boundary
     // true if leadCC==0 (hasFCDBoundaryBefore())
-    return (firstUnit&MAPPING_HAS_CCC_LCCC_WORD)==0 || (*(mapping-1)&0xff00)==0;
+    ပြန်ပေး (firstUnit&MAPPING_HAS_CCC_LCCC_WORD)==0 || (*(mapping-1)&0xff00)==0;
 }
 
 /*
@@ -1143,21 +1143,21 @@ UBool Normalizer2Impl::norm16HasDecompBoundaryAfter(uint16_t norm16) const {
  */
 int32_t Normalizer2Impl::combine(const uint16_t *list, UChar32 trail) {
     uint16_t key1, firstUnit;
-    if(trail<COMP_1_TRAIL_LIMIT) {
+    အကယ်၍(trail<COMP_1_TRAIL_LIMIT) {
         // trail character is 0..33FF
         // result entry may have 2 or 3 units
         key1 = static_cast<uint16_t>(trail << 1);
-        while(key1>(firstUnit=*list)) {
+        နေစဉ်(key1>(firstUnit=*list)) {
             list+=2+(firstUnit&COMP_1_TRIPLE);
         }
-        if(key1==(firstUnit&COMP_1_TRAIL_MASK)) {
-            if(firstUnit&COMP_1_TRIPLE) {
-                return (static_cast<int32_t>(list[1]) << 16) | list[2];
-            } else {
-                return list[1];
+        အကယ်၍(key1==(firstUnit&COMP_1_TRAIL_MASK)) {
+            အကယ်၍(firstUnit&COMP_1_TRIPLE) {
+                ပြန်ပေး (static_cast<int32_t>(list[1]) << 16) | list[2];
+            } မဟုတ်ပါက {
+                ပြန်ပေး list[1];
             }
         }
-    } else {
+    } မဟုတ်ပါက {
         // trail character is 3400..10FFFF
         // result entry has 3 units
         key1 = static_cast<uint16_t>(COMP_1_TRAIL_LIMIT +
@@ -1165,27 +1165,27 @@ int32_t Normalizer2Impl::combine(const uint16_t *list, UChar32 trail) {
                           ~COMP_1_TRIPLE));
         uint16_t key2 = static_cast<uint16_t>(trail << COMP_2_TRAIL_SHIFT);
         uint16_t secondUnit;
-        for(;;) {
-            if(key1>(firstUnit=*list)) {
+        အတွက်(;;) {
+            အကယ်၍(key1>(firstUnit=*list)) {
                 list+=2+(firstUnit&COMP_1_TRIPLE);
-            } else if(key1==(firstUnit&COMP_1_TRAIL_MASK)) {
-                if(key2>(secondUnit=list[1])) {
-                    if(firstUnit&COMP_1_LAST_TUPLE) {
-                        break;
-                    } else {
+            } မဟုတ်ပါက အကယ်၍(key1==(firstUnit&COMP_1_TRAIL_MASK)) {
+                အကယ်၍(key2>(secondUnit=list[1])) {
+                    အကယ်၍(firstUnit&COMP_1_LAST_TUPLE) {
+                        bha_nga;
+                    } မဟုတ်ပါက {
                         list+=3;
                     }
-                } else if(key2==(secondUnit&COMP_2_TRAIL_MASK)) {
-                    return (static_cast<int32_t>(secondUnit & ~COMP_2_TRAIL_MASK) << 16) | list[2];
-                } else {
-                    break;
+                } မဟုတ်ပါက အကယ်၍(key2==(secondUnit&COMP_2_TRAIL_MASK)) {
+                    ပြန်ပေး (static_cast<int32_t>(secondUnit & ~COMP_2_TRAIL_MASK) << 16) | list[2];
+                } မဟုတ်ပါက {
+                    bha_nga;
                 }
-            } else {
-                break;
+            } မဟုတ်ပါက {
+                bha_nga;
             }
         }
     }
-    return -1;
+    ပြန်ပေး -1;
 }
 
 /**
@@ -1197,19 +1197,19 @@ void Normalizer2Impl::addComposites(const uint16_t *list, UnicodeSet &set) const
     int32_t compositeAndFwd;
     do {
         firstUnit=*list;
-        if((firstUnit&COMP_1_TRIPLE)==0) {
+        အကယ်၍((firstUnit&COMP_1_TRIPLE)==0) {
             compositeAndFwd=list[1];
             list+=2;
-        } else {
+        } မဟုတ်ပါက {
             compositeAndFwd = ((static_cast<int32_t>(list[1]) & ~COMP_2_TRAIL_MASK) << 16) | list[2];
             list+=3;
         }
         UChar32 composite=compositeAndFwd>>1;
-        if((compositeAndFwd&1)!=0) {
+        အကယ်၍((compositeAndFwd&1)!=0) {
             addComposites(getCompositionsListForComposite(getRawNorm16(composite)), set);
         }
         set.add(composite);
-    } while((firstUnit&COMP_1_LAST_TUPLE)==0);
+    } နေစဉ်((firstUnit&COMP_1_LAST_TUPLE)==0);
 }
 
 /*
@@ -1226,8 +1226,8 @@ void Normalizer2Impl::recompose(ReorderingBuffer &buffer, int32_t recomposeStart
                                 UBool onlyContiguous) const {
     char16_t *p=buffer.getStart()+recomposeStartIndex;
     char16_t *limit=buffer.getLimit();
-    if(p==limit) {
-        return;
+    အကယ်၍(p==limit) {
+        ပြန်ပေး;
     }
 
     char16_t *starter, *pRemove, *q, *r;
@@ -1244,29 +1244,29 @@ void Normalizer2Impl::recompose(ReorderingBuffer &buffer, int32_t recomposeStart
     starterIsSupplementary=false;
     prevCC=0;
 
-    for(;;) {
+    အတွက်(;;) {
         UCPTRIE_FAST_U16_NEXT(normTrie, UCPTRIE_16, p, limit, c, norm16);
         cc=getCCFromYesOrMaybeYes(norm16);
-        if( // this character combines backward and
+        အကယ်၍( // this character combines backward and
             isMaybe(norm16) &&
             // we have seen a starter that combines forward and
             compositionsList!=nullptr &&
             // the backward-combining character is not blocked
             (prevCC<cc || prevCC==0)
         ) {
-            if(isJamoVT(norm16)) {
+            အကယ်၍(isJamoVT(norm16)) {
                 // c is a Jamo V/T, see if we can compose it with the previous character.
-                if(c<Hangul::JAMO_T_BASE) {
+                အကယ်၍(c<Hangul::JAMO_T_BASE) {
                     // c is a Jamo Vowel, compose with previous Jamo L and following Jamo T.
                     char16_t prev = static_cast<char16_t>(*starter - Hangul::JAMO_L_BASE);
-                    if(prev<Hangul::JAMO_L_COUNT) {
+                    အကယ်၍(prev<Hangul::JAMO_L_COUNT) {
                         pRemove=p-1;
                         char16_t syllable = static_cast<char16_t>(
                             Hangul::HANGUL_BASE +
                              (prev*Hangul::JAMO_V_COUNT+(c-Hangul::JAMO_V_BASE))*
                              Hangul::JAMO_T_COUNT);
                         char16_t t;
-                        if (p != limit && (t = static_cast<char16_t>(*p - Hangul::JAMO_T_BASE)) < Hangul::JAMO_T_COUNT) {
+                        အကယ်၍ (p != limit && (t = static_cast<char16_t>(*p - Hangul::JAMO_T_BASE)) < Hangul::JAMO_T_COUNT) {
                             ++p;
                             syllable+=t;  // The next character was a Jamo T.
                         }
@@ -1274,7 +1274,7 @@ void Normalizer2Impl::recompose(ReorderingBuffer &buffer, int32_t recomposeStart
                         // remove the Jamo V/T
                         q=pRemove;
                         r=p;
-                        while(r<limit) {
+                        နေစဉ်(r<limit) {
                             *q++=*r++;
                         }
                         limit=q;
@@ -1287,56 +1287,56 @@ void Normalizer2Impl::recompose(ReorderingBuffer &buffer, int32_t recomposeStart
                  * a Jamo T could combine with.
                  * All Jamo Ts are combined above when handling Jamo Vs.
                  */
-                if(p==limit) {
-                    break;
+                အကယ်၍(p==limit) {
+                    bha_nga;
                 }
                 compositionsList=nullptr;
                 continue;
-            } else if((compositeAndFwd=combine(compositionsList, c))>=0) {
+            } မဟုတ်ပါက အကယ်၍((compositeAndFwd=combine(compositionsList, c))>=0) {
                 // The starter and the combining mark (c) do combine.
                 UChar32 composite=compositeAndFwd>>1;
 
                 // Replace the starter with the composite, remove the combining mark.
                 pRemove=p-U16_LENGTH(c);  // pRemove & p: start & limit of the combining mark
-                if(starterIsSupplementary) {
-                    if(U_IS_SUPPLEMENTARY(composite)) {
+                အကယ်၍(starterIsSupplementary) {
+                    အကယ်၍(U_IS_SUPPLEMENTARY(composite)) {
                         // both are supplementary
                         starter[0]=U16_LEAD(composite);
                         starter[1]=U16_TRAIL(composite);
-                    } else {
+                    } မဟုတ်ပါက {
                         *starter = static_cast<char16_t>(composite);
                         // The composite is shorter than the starter,
                         // move the intermediate characters forward one.
                         starterIsSupplementary=false;
                         q=starter+1;
                         r=q+1;
-                        while(r<pRemove) {
+                        နေစဉ်(r<pRemove) {
                             *q++=*r++;
                         }
                         --pRemove;
                     }
-                } else if(U_IS_SUPPLEMENTARY(composite)) {
+                } မဟုတ်ပါက အကယ်၍(U_IS_SUPPLEMENTARY(composite)) {
                     // The composite is longer than the starter,
                     // move the intermediate characters back one.
                     starterIsSupplementary=true;
                     ++starter;  // temporarily increment for the loop boundary
                     q=pRemove;
                     r=++pRemove;
-                    while(starter<q) {
+                    နေစဉ်(starter<q) {
                         *--r=*--q;
                     }
                     *starter=U16_TRAIL(composite);
                     *--starter=U16_LEAD(composite);  // undo the temporary increment
-                } else {
+                } မဟုတ်ပါက {
                     // both are on the BMP
                     *starter = static_cast<char16_t>(composite);
                 }
 
                 /* remove the combining mark by moving the following text over it */
-                if(pRemove<p) {
+                အကယ်၍(pRemove<p) {
                     q=pRemove;
                     r=p;
-                    while(r<limit) {
+                    နေစဉ်(r<limit) {
                         *q++=*r++;
                     }
                     limit=q;
@@ -1344,14 +1344,14 @@ void Normalizer2Impl::recompose(ReorderingBuffer &buffer, int32_t recomposeStart
                 }
                 // Keep prevCC because we removed the combining mark.
 
-                if(p==limit) {
-                    break;
+                အကယ်၍(p==limit) {
+                    bha_nga;
                 }
                 // Is the composite a starter that combines forward?
-                if(compositeAndFwd&1) {
+                အကယ်၍(compositeAndFwd&1) {
                     compositionsList=
                         getCompositionsListForComposite(getRawNorm16(composite));
-                } else {
+                } မဟုတ်ပါက {
                     compositionsList=nullptr;
                 }
 
@@ -1362,24 +1362,24 @@ void Normalizer2Impl::recompose(ReorderingBuffer &buffer, int32_t recomposeStart
 
         // no combination this time
         prevCC=cc;
-        if(p==limit) {
-            break;
+        အကယ်၍(p==limit) {
+            bha_nga;
         }
 
         // If c did not combine, then check if it is a starter.
-        if(cc==0) {
+        အကယ်၍(cc==0) {
             // Found a new starter.
-            if((compositionsList=getCompositionsListForDecompYes(norm16))!=nullptr) {
+            အကယ်၍((compositionsList=getCompositionsListForDecompYes(norm16))!=nullptr) {
                 // It may combine with something, prepare for it.
-                if(U_IS_BMP(c)) {
+                အကယ်၍(U_IS_BMP(c)) {
                     starterIsSupplementary=false;
                     starter=p-1;
-                } else {
+                } မဟုတ်ပါက {
                     starterIsSupplementary=true;
                     starter=p-2;
                 }
             }
-        } else if(onlyContiguous) {
+        } မဟုတ်ပါက အကယ်၍(onlyContiguous) {
             // FCC: no discontiguous compositions; any intervening character blocks.
             compositionsList=nullptr;
         }
@@ -1391,60 +1391,60 @@ UChar32
 Normalizer2Impl::composePair(UChar32 a, UChar32 b) const {
     uint16_t norm16=getNorm16(a);  // maps an out-of-range 'a' to inert norm16
     const uint16_t *list;
-    if(isInert(norm16)) {
-        return U_SENTINEL;
-    } else if(norm16<minYesNoMappingsOnly) {
+    အကယ်၍(isInert(norm16)) {
+        ပြန်ပေး U_SENTINEL;
+    } မဟုတ်ပါက အကယ်၍(norm16<minYesNoMappingsOnly) {
         // a combines forward.
-        if(isJamoL(norm16)) {
-            if (b < Hangul::JAMO_V_BASE) {
-                return U_SENTINEL;
+        အကယ်၍(isJamoL(norm16)) {
+            အကယ်၍ (b < Hangul::JAMO_V_BASE) {
+                ပြန်ပေး U_SENTINEL;
             }
             b-=Hangul::JAMO_V_BASE;
-            if(b<Hangul::JAMO_V_COUNT) {
-                return
+            အကယ်၍(b<Hangul::JAMO_V_COUNT) {
+                ပြန်ပေး
                     (Hangul::HANGUL_BASE+
                      ((a-Hangul::JAMO_L_BASE)*Hangul::JAMO_V_COUNT+b)*
                      Hangul::JAMO_T_COUNT);
-            } else {
-                return U_SENTINEL;
+            } မဟုတ်ပါက {
+                ပြန်ပေး U_SENTINEL;
             }
-        } else if(isHangulLV(norm16)) {
-            if (b <= Hangul::JAMO_T_BASE) {
-               return U_SENTINEL;
+        } မဟုတ်ပါက အကယ်၍(isHangulLV(norm16)) {
+            အကယ်၍ (b <= Hangul::JAMO_T_BASE) {
+               ပြန်ပေး U_SENTINEL;
             }
             b-=Hangul::JAMO_T_BASE;
-            if(b<Hangul::JAMO_T_COUNT) {  // not b==0!
-                return a+b;
-            } else {
-                return U_SENTINEL;
+            အကယ်၍(b<Hangul::JAMO_T_COUNT) {  // not b==0!
+                ပြန်ပေး a+b;
+            } မဟုတ်ပါက {
+                ပြန်ပေး U_SENTINEL;
             }
-        } else {
+        } မဟုတ်ပါက {
             // 'a' has a compositions list in extraData
             list=getDataForYesOrNo(norm16);
-            if(norm16>minYesNo) {  // composite 'a' has both mapping & compositions list
+            အကယ်၍(norm16>minYesNo) {  // composite 'a' has both mapping & compositions list
                 list+=  // mapping pointer
                     1+  // +1 to skip the first unit with the mapping length
                     (*list&MAPPING_LENGTH_MASK);  // + mapping length
             }
         }
-    } else if(norm16<minMaybeNoCombinesFwd || MIN_NORMAL_MAYBE_YES<=norm16) {
-        return U_SENTINEL;
-    } else {
+    } မဟုတ်ပါက အကယ်၍(norm16<minMaybeNoCombinesFwd || MIN_NORMAL_MAYBE_YES<=norm16) {
+        ပြန်ပေး U_SENTINEL;
+    } မဟုတ်ပါက {
         list=getDataForMaybe(norm16);
-        if(norm16<minMaybeYes) {  // composite 'a' has both mapping & compositions list
+        အကယ်၍(norm16<minMaybeYes) {  // composite 'a' has both mapping & compositions list
             list+=  // mapping pointer
                 1+  // +1 to skip the first unit with the mapping length
                 (*list&MAPPING_LENGTH_MASK);  // + mapping length
         }
     }
-    if(b<0 || 0x10ffff<b) {  // combine(list, b) requires a valid code point b
-        return U_SENTINEL;
+    အကယ်၍(b<0 || 0x10ffff<b) {  // combine(list, b) requires a valid code point b
+        ပြန်ပေး U_SENTINEL;
     }
-#if U_SIGNED_RIGHT_SHIFT_IS_ARITHMETIC
-    return combine(list, b)>>1;
-#else
+#အကယ်၍ U_SIGNED_RIGHT_SHIFT_IS_ARITHMETIC
+    ပြန်ပေး combine(list, b)>>1;
+#မဟုတ်ပါက
     int32_t compositeAndFwd=combine(list, b);
-    return compositeAndFwd>=0 ? compositeAndFwd>>1 : U_SENTINEL;
+    ပြန်ပေး compositeAndFwd>=0 ? compositeAndFwd>>1 : U_SENTINEL;
 #endif
 }
 
@@ -1459,53 +1459,53 @@ Normalizer2Impl::compose(const char16_t *src, const char16_t *limit,
                          UErrorCode &errorCode) const {
     const char16_t *prevBoundary=src;
     UChar32 minNoMaybeCP=minCompNoMaybeCP;
-    if(limit==nullptr) {
+    အကယ်၍(limit==nullptr) {
         src=copyLowPrefixFromNulTerminated(src, minNoMaybeCP,
                                            doCompose ? &buffer : nullptr,
                                            errorCode);
-        if(U_FAILURE(errorCode)) {
-            return false;
+        အကယ်၍(U_FAILURE(errorCode)) {
+            ပြန်ပေး false;
         }
         limit=u_strchr(src, 0);
-        if (prevBoundary != src) {
-            if (hasCompBoundaryAfter(*(src-1), onlyContiguous)) {
+        အကယ်၍ (prevBoundary != src) {
+            အကယ်၍ (hasCompBoundaryAfter(*(src-1), onlyContiguous)) {
                 prevBoundary = src;
-            } else {
+            } မဟုတ်ပါက {
                 buffer.removeSuffix(1);
                 prevBoundary = --src;
             }
         }
     }
 
-    for (;;) {
+    အတွက် (;;) {
         // Fast path: Scan over a sequence of characters below the minimum "no or maybe" code point,
         // or with (compYes && ccc==0) properties.
         const char16_t *prevSrc;
         UChar32 c = 0;
         uint16_t norm16 = 0;
-        for (;;) {
-            if (src == limit) {
-                if (prevBoundary != limit && doCompose) {
+        အတွက် (;;) {
+            အကယ်၍ (src == limit) {
+                အကယ်၍ (prevBoundary != limit && doCompose) {
                     buffer.appendZeroCC(prevBoundary, limit, errorCode);
                 }
-                return true;
+                ပြန်ပေး true;
             }
-            if( (c=*src)<minNoMaybeCP ||
+            အကယ်၍( (c=*src)<minNoMaybeCP ||
                 isCompYesAndZeroCC(norm16=UCPTRIE_FAST_BMP_GET(normTrie, UCPTRIE_16, c))
             ) {
                 ++src;
-            } else {
+            } မဟုတ်ပါက {
                 prevSrc = src++;
-                if(!U16_IS_LEAD(c)) {
-                    break;
-                } else {
+                အကယ်၍(!U16_IS_LEAD(c)) {
+                    bha_nga;
+                } မဟုတ်ပါက {
                     char16_t c2;
-                    if(src!=limit && U16_IS_TRAIL(c2=*src)) {
+                    အကယ်၍(src!=limit && U16_IS_TRAIL(c2=*src)) {
                         ++src;
                         c=U16_GET_SUPPLEMENTARY(c, c2);
                         norm16=UCPTRIE_FAST_SUPP_GET(normTrie, UCPTRIE_16, c);
-                        if(!isCompYesAndZeroCC(norm16)) {
-                            break;
+                        အကယ်၍(!isCompYesAndZeroCC(norm16)) {
+                            bha_nga;
                         }
                     }
                 }
@@ -1518,49 +1518,49 @@ Normalizer2Impl::compose(const char16_t *src, const char16_t *limit,
         // It is not a Hangul syllable or Jamo L because those have "yes" properties.
 
         // Medium-fast path: Handle cases that do not require full decomposition and recomposition.
-        if (norm16 < minMaybeNo) {  // minNoNo <= norm16 < minMaybeNo
-            if (!doCompose) {
-                return false;
+        အကယ်၍ (norm16 < minMaybeNo) {  // minNoNo <= norm16 < minMaybeNo
+            အကယ်၍ (!doCompose) {
+                ပြန်ပေး false;
             }
             // Fast path for mapping a character that is immediately surrounded by boundaries.
             // In this case, we need not decompose around the current character.
-            if (isDecompNoAlgorithmic(norm16)) {
+            အကယ်၍ (isDecompNoAlgorithmic(norm16)) {
                 // Maps to a single isCompYesAndZeroCC character
                 // which also implies hasCompBoundaryBefore.
-                if (norm16HasCompBoundaryAfter(norm16, onlyContiguous) ||
+                အကယ်၍ (norm16HasCompBoundaryAfter(norm16, onlyContiguous) ||
                         hasCompBoundaryBefore(src, limit)) {
-                    if (prevBoundary != prevSrc && !buffer.appendZeroCC(prevBoundary, prevSrc, errorCode)) {
-                        break;
+                    အကယ်၍ (prevBoundary != prevSrc && !buffer.appendZeroCC(prevBoundary, prevSrc, errorCode)) {
+                        bha_nga;
                     }
-                    if(!buffer.append(mapAlgorithmic(c, norm16), 0, errorCode)) {
-                        break;
+                    အကယ်၍(!buffer.append(mapAlgorithmic(c, norm16), 0, errorCode)) {
+                        bha_nga;
                     }
                     prevBoundary = src;
                     continue;
                 }
-            } else if (norm16 < minNoNoCompBoundaryBefore) {
+            } မဟုတ်ပါက အကယ်၍ (norm16 < minNoNoCompBoundaryBefore) {
                 // The mapping is comp-normalized which also implies hasCompBoundaryBefore.
-                if (norm16HasCompBoundaryAfter(norm16, onlyContiguous) ||
+                အကယ်၍ (norm16HasCompBoundaryAfter(norm16, onlyContiguous) ||
                         hasCompBoundaryBefore(src, limit)) {
-                    if (prevBoundary != prevSrc && !buffer.appendZeroCC(prevBoundary, prevSrc, errorCode)) {
-                        break;
+                    အကယ်၍ (prevBoundary != prevSrc && !buffer.appendZeroCC(prevBoundary, prevSrc, errorCode)) {
+                        bha_nga;
                     }
                     const char16_t *mapping = reinterpret_cast<const char16_t *>(getDataForYesOrNo(norm16));
                     int32_t length = *mapping++ & MAPPING_LENGTH_MASK;
-                    if(!buffer.appendZeroCC(mapping, mapping + length, errorCode)) {
-                        break;
+                    အကယ်၍(!buffer.appendZeroCC(mapping, mapping + length, errorCode)) {
+                        bha_nga;
                     }
                     prevBoundary = src;
                     continue;
                 }
-            } else if (norm16 >= minNoNoEmpty) {
+            } မဟုတ်ပါက အကယ်၍ (norm16 >= minNoNoEmpty) {
                 // The current character maps to nothing.
                 // Simply omit it from the output if there is a boundary before _or_ after it.
                 // The character itself implies no boundaries.
-                if (hasCompBoundaryBefore(src, limit) ||
+                အကယ်၍ (hasCompBoundaryBefore(src, limit) ||
                         hasCompBoundaryAfter(prevBoundary, prevSrc, onlyContiguous)) {
-                    if (prevBoundary != prevSrc && !buffer.appendZeroCC(prevBoundary, prevSrc, errorCode)) {
-                        break;
+                    အကယ်၍ (prevBoundary != prevSrc && !buffer.appendZeroCC(prevBoundary, prevSrc, errorCode)) {
+                        bha_nga;
                     }
                     prevBoundary = src;
                     continue;
@@ -1568,38 +1568,38 @@ Normalizer2Impl::compose(const char16_t *src, const char16_t *limit,
             }
             // Other "noNo" type, or need to examine more text around this character:
             // Fall through to the slow path.
-        } else if (isJamoVT(norm16) && prevBoundary != prevSrc) {
+        } မဟုတ်ပါက အကယ်၍ (isJamoVT(norm16) && prevBoundary != prevSrc) {
             char16_t prev=*(prevSrc-1);
-            if(c<Hangul::JAMO_T_BASE) {
+            အကယ်၍(c<Hangul::JAMO_T_BASE) {
                 // The current character is a Jamo Vowel,
                 // compose with previous Jamo L and following Jamo T.
                 char16_t l = static_cast<char16_t>(prev - Hangul::JAMO_L_BASE);
-                if(l<Hangul::JAMO_L_COUNT) {
-                    if (!doCompose) {
-                        return false;
+                အကယ်၍(l<Hangul::JAMO_L_COUNT) {
+                    အကယ်၍ (!doCompose) {
+                        ပြန်ပေး false;
                     }
                     int32_t t;
-                    if (src != limit &&
+                    အကယ်၍ (src != limit &&
                             0 < (t = (static_cast<int32_t>(*src) - Hangul::JAMO_T_BASE)) &&
                             t < Hangul::JAMO_T_COUNT) {
                         // The next character is a Jamo T.
                         ++src;
-                    } else if (hasCompBoundaryBefore(src, limit)) {
+                    } မဟုတ်ပါက အကယ်၍ (hasCompBoundaryBefore(src, limit)) {
                         // No Jamo T follows, not even via decomposition.
                         t = 0;
-                    } else {
+                    } မဟုတ်ပါက {
                         t = -1;
                     }
-                    if (t >= 0) {
+                    အကယ်၍ (t >= 0) {
                         UChar32 syllable = Hangul::HANGUL_BASE +
                             (l*Hangul::JAMO_V_COUNT + (c-Hangul::JAMO_V_BASE)) *
                             Hangul::JAMO_T_COUNT + t;
                         --prevSrc;  // Replace the Jamo L as well.
-                        if (prevBoundary != prevSrc && !buffer.appendZeroCC(prevBoundary, prevSrc, errorCode)) {
-                            break;
+                        အကယ်၍ (prevBoundary != prevSrc && !buffer.appendZeroCC(prevBoundary, prevSrc, errorCode)) {
+                            bha_nga;
                         }
-                        if (!buffer.appendBMP(static_cast<char16_t>(syllable), 0, errorCode)) {
-                            break;
+                        အကယ်၍ (!buffer.appendBMP(static_cast<char16_t>(syllable), 0, errorCode)) {
+                            bha_nga;
                         }
                         prevBoundary = src;
                         continue;
@@ -1612,67 +1612,67 @@ Normalizer2Impl::compose(const char16_t *src, const char16_t *limit,
                     // (which would complicate the code and may not work with strange custom data)
                     // or use the slow path.
                 }
-            } else if (Hangul::isHangulLV(prev)) {
+            } မဟုတ်ပါက အကယ်၍ (Hangul::isHangulLV(prev)) {
                 // The current character is a Jamo Trailing consonant,
                 // compose with previous Hangul LV that does not contain a Jamo T.
-                if (!doCompose) {
-                    return false;
+                အကယ်၍ (!doCompose) {
+                    ပြန်ပေး false;
                 }
                 UChar32 syllable = prev + c - Hangul::JAMO_T_BASE;
                 --prevSrc;  // Replace the Hangul LV as well.
-                if (prevBoundary != prevSrc && !buffer.appendZeroCC(prevBoundary, prevSrc, errorCode)) {
-                    break;
+                အကယ်၍ (prevBoundary != prevSrc && !buffer.appendZeroCC(prevBoundary, prevSrc, errorCode)) {
+                    bha_nga;
                 }
-                if (!buffer.appendBMP(static_cast<char16_t>(syllable), 0, errorCode)) {
-                    break;
+                အကယ်၍ (!buffer.appendBMP(static_cast<char16_t>(syllable), 0, errorCode)) {
+                    bha_nga;
                 }
                 prevBoundary = src;
                 continue;
             }
             // No matching context, or may need to decompose surrounding text first:
             // Fall through to the slow path.
-        } else if (norm16 > JAMO_VT) {  // norm16 >= MIN_YES_YES_WITH_CC
+        } မဟုတ်ပါက အကယ်၍ (norm16 > JAMO_VT) {  // norm16 >= MIN_YES_YES_WITH_CC
             // One or more combining marks that do not combine-back:
             // Check for canonical order, copy unchanged if ok and
             // if followed by a character with a boundary-before.
             uint8_t cc = getCCFromNormalYesOrMaybe(norm16);  // cc!=0
-            if (onlyContiguous /* FCC */ && getPreviousTrailCC(prevBoundary, prevSrc) > cc) {
+            အကယ်၍ (onlyContiguous /* FCC */ && getPreviousTrailCC(prevBoundary, prevSrc) > cc) {
                 // Fails FCD test, need to decompose and contiguously recompose.
-                if (!doCompose) {
-                    return false;
+                အကယ်၍ (!doCompose) {
+                    ပြန်ပေး false;
                 }
-            } else {
+            } မဟုတ်ပါက {
                 // If !onlyContiguous (not FCC), then we ignore the tccc of
                 // the previous character which passed the quick check "yes && ccc==0" test.
                 const char16_t *nextSrc;
                 uint16_t n16;
-                for (;;) {
-                    if (src == limit) {
-                        if (doCompose) {
+                အတွက် (;;) {
+                    အကယ်၍ (src == limit) {
+                        အကယ်၍ (doCompose) {
                             buffer.appendZeroCC(prevBoundary, limit, errorCode);
                         }
-                        return true;
+                        ပြန်ပေး true;
                     }
                     uint8_t prevCC = cc;
                     nextSrc = src;
                     UCPTRIE_FAST_U16_NEXT(normTrie, UCPTRIE_16, nextSrc, limit, c, n16);
-                    if (n16 >= MIN_YES_YES_WITH_CC) {
+                    အကယ်၍ (n16 >= MIN_YES_YES_WITH_CC) {
                         cc = getCCFromNormalYesOrMaybe(n16);
-                        if (prevCC > cc) {
-                            if (!doCompose) {
-                                return false;
+                        အကယ်၍ (prevCC > cc) {
+                            အကယ်၍ (!doCompose) {
+                                ပြန်ပေး false;
                             }
-                            break;
+                            bha_nga;
                         }
-                    } else {
-                        break;
+                    } မဟုတ်ပါက {
+                        bha_nga;
                     }
                     src = nextSrc;
                 }
                 // src is after the last in-order combining mark.
                 // If there is a boundary here, then we continue with no change.
-                if (norm16HasCompBoundaryBefore(n16)) {
-                    if (isCompYesAndZeroCC(n16)) {
+                အကယ်၍ (norm16HasCompBoundaryBefore(n16)) {
+                    အကယ်၍ (isCompYesAndZeroCC(n16)) {
                         src = nextSrc;
                     }
                     continue;
@@ -1683,15 +1683,15 @@ Normalizer2Impl::compose(const char16_t *src, const char16_t *limit,
 
         // Slow path: Find the nearest boundaries around the current character,
         // decompose and recompose.
-        if (prevBoundary != prevSrc && !norm16HasCompBoundaryBefore(norm16)) {
+        အကယ်၍ (prevBoundary != prevSrc && !norm16HasCompBoundaryBefore(norm16)) {
             const char16_t *p = prevSrc;
             UCPTRIE_FAST_U16_PREV(normTrie, UCPTRIE_16, prevBoundary, p, c, norm16);
-            if (!norm16HasCompBoundaryAfter(norm16, onlyContiguous)) {
+            အကယ်၍ (!norm16HasCompBoundaryAfter(norm16, onlyContiguous)) {
                 prevSrc = p;
             }
         }
-        if (doCompose && prevBoundary != prevSrc && !buffer.appendZeroCC(prevBoundary, prevSrc, errorCode)) {
-            break;
+        အကယ်၍ (doCompose && prevBoundary != prevSrc && !buffer.appendZeroCC(prevBoundary, prevSrc, errorCode)) {
+            bha_nga;
         }
         int32_t recomposeStartIndex=buffer.length();
         // We know there is not a boundary here.
@@ -1700,23 +1700,23 @@ Normalizer2Impl::compose(const char16_t *src, const char16_t *limit,
         // Decompose until the next boundary.
         src = decomposeShort(src, limit, true /* stopAtCompBoundary */, onlyContiguous,
                              buffer, errorCode);
-        if (U_FAILURE(errorCode)) {
-            break;
+        အကယ်၍ (U_FAILURE(errorCode)) {
+            bha_nga;
         }
-        if ((src - prevSrc) > INT32_MAX) {  // guard before buffer.equals()
+        အကယ်၍ ((src - prevSrc) > INT32_MAX) {  // guard before buffer.equals()
             errorCode = U_INDEX_OUTOFBOUNDS_ERROR;
-            return true;
+            ပြန်ပေး true;
         }
         recompose(buffer, recomposeStartIndex, onlyContiguous);
-        if(!doCompose) {
-            if(!buffer.equals(prevSrc, src)) {
-                return false;
+        အကယ်၍(!doCompose) {
+            အကယ်၍(!buffer.equals(prevSrc, src)) {
+                ပြန်ပေး false;
             }
             buffer.remove();
         }
         prevBoundary=src;
     }
-    return true;
+    ပြန်ပေး true;
 }
 
 // Very similar to compose(): Make the same changes in both places if relevant.
@@ -1728,45 +1728,45 @@ Normalizer2Impl::composeQuickCheck(const char16_t *src, const char16_t *limit,
                                    UNormalizationCheckResult *pQCResult) const {
     const char16_t *prevBoundary=src;
     UChar32 minNoMaybeCP=minCompNoMaybeCP;
-    if(limit==nullptr) {
+    အကယ်၍(limit==nullptr) {
         UErrorCode errorCode=U_ZERO_ERROR;
         src=copyLowPrefixFromNulTerminated(src, minNoMaybeCP, nullptr, errorCode);
         limit=u_strchr(src, 0);
-        if (prevBoundary != src) {
-            if (hasCompBoundaryAfter(*(src-1), onlyContiguous)) {
+        အကယ်၍ (prevBoundary != src) {
+            အကယ်၍ (hasCompBoundaryAfter(*(src-1), onlyContiguous)) {
                 prevBoundary = src;
-            } else {
+            } မဟုတ်ပါက {
                 prevBoundary = --src;
             }
         }
     }
 
-    for(;;) {
+    အတွက်(;;) {
         // Fast path: Scan over a sequence of characters below the minimum "no or maybe" code point,
         // or with (compYes && ccc==0) properties.
         const char16_t *prevSrc;
         UChar32 c = 0;
         uint16_t norm16 = 0;
-        for (;;) {
-            if(src==limit) {
-                return src;
+        အတွက် (;;) {
+            အကယ်၍(src==limit) {
+                ပြန်ပေး src;
             }
-            if( (c=*src)<minNoMaybeCP ||
+            အကယ်၍( (c=*src)<minNoMaybeCP ||
                 isCompYesAndZeroCC(norm16=UCPTRIE_FAST_BMP_GET(normTrie, UCPTRIE_16, c))
             ) {
                 ++src;
-            } else {
+            } မဟုတ်ပါက {
                 prevSrc = src++;
-                if(!U16_IS_LEAD(c)) {
-                    break;
-                } else {
+                အကယ်၍(!U16_IS_LEAD(c)) {
+                    bha_nga;
+                } မဟုတ်ပါက {
                     char16_t c2;
-                    if(src!=limit && U16_IS_TRAIL(c2=*src)) {
+                    အကယ်၍(src!=limit && U16_IS_TRAIL(c2=*src)) {
                         ++src;
                         c=U16_GET_SUPPLEMENTARY(c, c2);
                         norm16=UCPTRIE_FAST_SUPP_GET(normTrie, UCPTRIE_16, c);
-                        if(!isCompYesAndZeroCC(norm16)) {
-                            break;
+                        အကယ်၍(!isCompYesAndZeroCC(norm16)) {
+                            bha_nga;
                         }
                     }
                 }
@@ -1779,71 +1779,71 @@ Normalizer2Impl::composeQuickCheck(const char16_t *src, const char16_t *limit,
         // It is not a Hangul syllable or Jamo L because those have "yes" properties.
 
         uint16_t prevNorm16 = INERT;
-        if (prevBoundary != prevSrc) {
-            if (norm16HasCompBoundaryBefore(norm16)) {
+        အကယ်၍ (prevBoundary != prevSrc) {
+            အကယ်၍ (norm16HasCompBoundaryBefore(norm16)) {
                 prevBoundary = prevSrc;
-            } else {
+            } မဟုတ်ပါက {
                 const char16_t *p = prevSrc;
                 uint16_t n16;
                 UCPTRIE_FAST_U16_PREV(normTrie, UCPTRIE_16, prevBoundary, p, c, n16);
-                if (norm16HasCompBoundaryAfter(n16, onlyContiguous)) {
+                အကယ်၍ (norm16HasCompBoundaryAfter(n16, onlyContiguous)) {
                     prevBoundary = prevSrc;
-                } else {
+                } မဟုတ်ပါက {
                     prevBoundary = p;
                     prevNorm16 = n16;
                 }
             }
         }
 
-        if (norm16 >= minMaybeNo) {
+        အကယ်၍ (norm16 >= minMaybeNo) {
             uint16_t fcd16 = getFCD16FromMaybeOrNonZeroCC(norm16);
             uint8_t cc = fcd16 >> 8;
-            if (onlyContiguous /* FCC */ && cc != 0 &&
+            အကယ်၍ (onlyContiguous /* FCC */ && cc != 0 &&
                     getTrailCCFromCompYesAndZeroCC(prevNorm16) > cc) {
                 // The [prevBoundary..prevSrc[ character
                 // passed the quick check "yes && ccc==0" test
                 // but is out of canonical order with the current combining mark.
-            } else {
+            } မဟုတ်ပါက {
                 // If !onlyContiguous (not FCC), then we ignore the tccc of
                 // the previous character which passed the quick check "yes && ccc==0" test.
                 const char16_t *nextSrc;
-                for (;;) {
-                    if (norm16 < MIN_YES_YES_WITH_CC) {
-                        if (pQCResult != nullptr) {
+                အတွက် (;;) {
+                    အကယ်၍ (norm16 < MIN_YES_YES_WITH_CC) {
+                        အကယ်၍ (pQCResult != nullptr) {
                             *pQCResult = UNORM_MAYBE;
-                        } else {
-                            return prevBoundary;
+                        } မဟုတ်ပါက {
+                            ပြန်ပေး prevBoundary;
                         }
                     }
-                    if (src == limit) {
-                        return src;
+                    အကယ်၍ (src == limit) {
+                        ပြန်ပေး src;
                     }
                     uint8_t prevCC = fcd16;
                     nextSrc = src;
                     UCPTRIE_FAST_U16_NEXT(normTrie, UCPTRIE_16, nextSrc, limit, c, norm16);
-                    if (norm16 >= minMaybeNo) {
+                    အကယ်၍ (norm16 >= minMaybeNo) {
                         fcd16 = getFCD16FromMaybeOrNonZeroCC(norm16);
                         cc = fcd16 >> 8;
-                        if (!(prevCC <= cc || cc == 0)) {
-                            break;
+                        အကယ်၍ (!(prevCC <= cc || cc == 0)) {
+                            bha_nga;
                         }
-                    } else {
-                        break;
+                    } မဟုတ်ပါက {
+                        bha_nga;
                     }
                     src = nextSrc;
                 }
                 // src is after the last in-order combining mark.
-                if (isCompYesAndZeroCC(norm16)) {
+                အကယ်၍ (isCompYesAndZeroCC(norm16)) {
                     prevBoundary = src;
                     src = nextSrc;
                     continue;
                 }
             }
         }
-        if(pQCResult!=nullptr) {
+        အကယ်၍(pQCResult!=nullptr) {
             *pQCResult=UNORM_NO;
         }
-        return prevBoundary;
+        ပြန်ပေး prevBoundary;
     }
 }
 
@@ -1853,9 +1853,9 @@ void Normalizer2Impl::composeAndAppend(const char16_t *src, const char16_t *limi
                                        UnicodeString &safeMiddle,
                                        ReorderingBuffer &buffer,
                                        UErrorCode &errorCode) const {
-    if(!buffer.isEmpty()) {
+    အကယ်၍(!buffer.isEmpty()) {
         const char16_t *firstStarterInSrc=findNextCompBoundary(src, limit, onlyContiguous);
-        if(src!=firstStarterInSrc) {
+        အကယ်၍(src!=firstStarterInSrc) {
             const char16_t *lastStarterInDest=findPreviousCompBoundary(buffer.getStart(),
                                                                     buffer.getLimit(), onlyContiguous);
             int32_t destSuffixLength = static_cast<int32_t>(buffer.getLimit() - lastStarterInDest);
@@ -1866,16 +1866,16 @@ void Normalizer2Impl::composeAndAppend(const char16_t *src, const char16_t *limi
             const char16_t *middleStart=middle.getBuffer();
             compose(middleStart, middleStart+middle.length(), onlyContiguous,
                     true, buffer, errorCode);
-            if(U_FAILURE(errorCode)) {
-                return;
+            အကယ်၍(U_FAILURE(errorCode)) {
+                ပြန်ပေး;
             }
             src=firstStarterInSrc;
         }
     }
-    if(doCompose) {
+    အကယ်၍(doCompose) {
         compose(src, limit, onlyContiguous, true, buffer, errorCode);
-    } else {
-        if(limit==nullptr) {  // appendZeroCC() needs limit!=nullptr
+    } မဟုတ်ပါက {
+        အကယ်၍(limit==nullptr) {  // appendZeroCC() needs limit!=nullptr
             limit=u_strchr(src, 0);
         }
         buffer.appendZeroCC(src, limit, errorCode);
@@ -1891,26 +1891,26 @@ Normalizer2Impl::composeUTF8(uint32_t options, UBool onlyContiguous,
     uint8_t minNoMaybeLead = leadByteForCP(minCompNoMaybeCP);
     const uint8_t *prevBoundary = src;
 
-    for (;;) {
+    အတွက် (;;) {
         // Fast path: Scan over a sequence of characters below the minimum "no or maybe" code point,
         // or with (compYes && ccc==0) properties.
         const uint8_t *prevSrc;
         uint16_t norm16 = 0;
-        for (;;) {
-            if (src == limit) {
-                if (prevBoundary != limit && sink != nullptr) {
+        အတွက် (;;) {
+            အကယ်၍ (src == limit) {
+                အကယ်၍ (prevBoundary != limit && sink != nullptr) {
                     ByteSinkUtil::appendUnchanged(prevBoundary, limit,
                                                   *sink, options, edits, errorCode);
                 }
-                return true;
+                ပြန်ပေး true;
             }
-            if (*src < minNoMaybeLead) {
+            အကယ်၍ (*src < minNoMaybeLead) {
                 ++src;
-            } else {
+            } မဟုတ်ပါက {
                 prevSrc = src;
                 UCPTRIE_FAST_U8_NEXT(normTrie, UCPTRIE_16, src, limit, norm16);
-                if (!isCompYesAndZeroCC(norm16)) {
-                    break;
+                အကယ်၍ (!isCompYesAndZeroCC(norm16)) {
+                    bha_nga;
                 }
             }
         }
@@ -1921,56 +1921,56 @@ Normalizer2Impl::composeUTF8(uint32_t options, UBool onlyContiguous,
         // It is not a Hangul syllable or Jamo L because those have "yes" properties.
 
         // Medium-fast path: Handle cases that do not require full decomposition and recomposition.
-        if (norm16 < minMaybeNo) {  // minNoNo <= norm16 < minMaybeNo
-            if (sink == nullptr) {
-                return false;
+        အကယ်၍ (norm16 < minMaybeNo) {  // minNoNo <= norm16 < minMaybeNo
+            အကယ်၍ (sink == nullptr) {
+                ပြန်ပေး false;
             }
             // Fast path for mapping a character that is immediately surrounded by boundaries.
             // In this case, we need not decompose around the current character.
-            if (isDecompNoAlgorithmic(norm16)) {
+            အကယ်၍ (isDecompNoAlgorithmic(norm16)) {
                 // Maps to a single isCompYesAndZeroCC character
                 // which also implies hasCompBoundaryBefore.
-                if (norm16HasCompBoundaryAfter(norm16, onlyContiguous) ||
+                အကယ်၍ (norm16HasCompBoundaryAfter(norm16, onlyContiguous) ||
                         hasCompBoundaryBefore(src, limit)) {
-                    if (prevBoundary != prevSrc &&
+                    အကယ်၍ (prevBoundary != prevSrc &&
                             !ByteSinkUtil::appendUnchanged(prevBoundary, prevSrc,
                                                            *sink, options, edits, errorCode)) {
-                        break;
+                        bha_nga;
                     }
                     appendCodePointDelta(prevSrc, src, getAlgorithmicDelta(norm16), *sink, edits);
                     prevBoundary = src;
                     continue;
                 }
-            } else if (norm16 < minNoNoCompBoundaryBefore) {
+            } မဟုတ်ပါက အကယ်၍ (norm16 < minNoNoCompBoundaryBefore) {
                 // The mapping is comp-normalized which also implies hasCompBoundaryBefore.
-                if (norm16HasCompBoundaryAfter(norm16, onlyContiguous) ||
+                အကယ်၍ (norm16HasCompBoundaryAfter(norm16, onlyContiguous) ||
                         hasCompBoundaryBefore(src, limit)) {
-                    if (prevBoundary != prevSrc &&
+                    အကယ်၍ (prevBoundary != prevSrc &&
                             !ByteSinkUtil::appendUnchanged(prevBoundary, prevSrc,
                                                            *sink, options, edits, errorCode)) {
-                        break;
+                        bha_nga;
                     }
                     const uint16_t *mapping = getDataForYesOrNo(norm16);
                     int32_t length = *mapping++ & MAPPING_LENGTH_MASK;
-                    if (!ByteSinkUtil::appendChange(prevSrc, src, reinterpret_cast<const char16_t*>(mapping), length,
+                    အကယ်၍ (!ByteSinkUtil::appendChange(prevSrc, src, reinterpret_cast<const char16_t*>(mapping), length,
                                                     *sink, edits, errorCode)) {
-                        break;
+                        bha_nga;
                     }
                     prevBoundary = src;
                     continue;
                 }
-            } else if (norm16 >= minNoNoEmpty) {
+            } မဟုတ်ပါက အကယ်၍ (norm16 >= minNoNoEmpty) {
                 // The current character maps to nothing.
                 // Simply omit it from the output if there is a boundary before _or_ after it.
                 // The character itself implies no boundaries.
-                if (hasCompBoundaryBefore(src, limit) ||
+                အကယ်၍ (hasCompBoundaryBefore(src, limit) ||
                         hasCompBoundaryAfter(prevBoundary, prevSrc, onlyContiguous)) {
-                    if (prevBoundary != prevSrc &&
+                    အကယ်၍ (prevBoundary != prevSrc &&
                             !ByteSinkUtil::appendUnchanged(prevBoundary, prevSrc,
                                                            *sink, options, edits, errorCode)) {
-                        break;
+                        bha_nga;
                     }
-                    if (edits != nullptr) {
+                    အကယ်၍ (edits != nullptr) {
                         edits->addReplace(static_cast<int32_t>(src - prevSrc), 0);
                     }
                     prevBoundary = src;
@@ -1979,37 +1979,37 @@ Normalizer2Impl::composeUTF8(uint32_t options, UBool onlyContiguous,
             }
             // Other "noNo" type, or need to examine more text around this character:
             // Fall through to the slow path.
-        } else if (isJamoVT(norm16)) {
+        } မဟုတ်ပါက အကယ်၍ (isJamoVT(norm16)) {
             // Jamo L: E1 84 80..92
             // Jamo V: E1 85 A1..B5
             // Jamo T: E1 86 A8..E1 87 82
             U_ASSERT((src - prevSrc) == 3 && *prevSrc == 0xe1);
             UChar32 prev = previousHangulOrJamo(prevBoundary, prevSrc);
-            if (prevSrc[1] == 0x85) {
+            အကယ်၍ (prevSrc[1] == 0x85) {
                 // The current character is a Jamo Vowel,
                 // compose with previous Jamo L and following Jamo T.
                 UChar32 l = prev - Hangul::JAMO_L_BASE;
-                if (static_cast<uint32_t>(l) < Hangul::JAMO_L_COUNT) {
-                    if (sink == nullptr) {
-                        return false;
+                အကယ်၍ (static_cast<uint32_t>(l) < Hangul::JAMO_L_COUNT) {
+                    အကယ်၍ (sink == nullptr) {
+                        ပြန်ပေး false;
                     }
                     int32_t t = getJamoTMinusBase(src, limit);
-                    if (t >= 0) {
+                    အကယ်၍ (t >= 0) {
                         // The next character is a Jamo T.
                         src += 3;
-                    } else if (hasCompBoundaryBefore(src, limit)) {
+                    } မဟုတ်ပါက အကယ်၍ (hasCompBoundaryBefore(src, limit)) {
                         // No Jamo T follows, not even via decomposition.
                         t = 0;
                     }
-                    if (t >= 0) {
+                    အကယ်၍ (t >= 0) {
                         UChar32 syllable = Hangul::HANGUL_BASE +
                             (l*Hangul::JAMO_V_COUNT + (prevSrc[2]-0xa1)) *
                             Hangul::JAMO_T_COUNT + t;
                         prevSrc -= 3;  // Replace the Jamo L as well.
-                        if (prevBoundary != prevSrc &&
+                        အကယ်၍ (prevBoundary != prevSrc &&
                                 !ByteSinkUtil::appendUnchanged(prevBoundary, prevSrc,
                                                                *sink, options, edits, errorCode)) {
-                            break;
+                            bha_nga;
                         }
                         ByteSinkUtil::appendCodePoint(prevSrc, src, syllable, *sink, edits);
                         prevBoundary = src;
@@ -2023,18 +2023,18 @@ Normalizer2Impl::composeUTF8(uint32_t options, UBool onlyContiguous,
                     // (which would complicate the code and may not work with strange custom data)
                     // or use the slow path.
                 }
-            } else if (Hangul::isHangulLV(prev)) {
+            } မဟုတ်ပါက အကယ်၍ (Hangul::isHangulLV(prev)) {
                 // The current character is a Jamo Trailing consonant,
                 // compose with previous Hangul LV that does not contain a Jamo T.
-                if (sink == nullptr) {
-                    return false;
+                အကယ်၍ (sink == nullptr) {
+                    ပြန်ပေး false;
                 }
                 UChar32 syllable = prev + getJamoTMinusBase(prevSrc, src);
                 prevSrc -= 3;  // Replace the Hangul LV as well.
-                if (prevBoundary != prevSrc &&
+                အကယ်၍ (prevBoundary != prevSrc &&
                         !ByteSinkUtil::appendUnchanged(prevBoundary, prevSrc,
                                                        *sink, options, edits, errorCode)) {
-                    break;
+                    bha_nga;
                 }
                 ByteSinkUtil::appendCodePoint(prevSrc, src, syllable, *sink, edits);
                 prevBoundary = src;
@@ -2042,49 +2042,49 @@ Normalizer2Impl::composeUTF8(uint32_t options, UBool onlyContiguous,
             }
             // No matching context, or may need to decompose surrounding text first:
             // Fall through to the slow path.
-        } else if (norm16 > JAMO_VT) {  // norm16 >= MIN_YES_YES_WITH_CC
+        } မဟုတ်ပါက အကယ်၍ (norm16 > JAMO_VT) {  // norm16 >= MIN_YES_YES_WITH_CC
             // One or more combining marks that do not combine-back:
             // Check for canonical order, copy unchanged if ok and
             // if followed by a character with a boundary-before.
             uint8_t cc = getCCFromNormalYesOrMaybe(norm16);  // cc!=0
-            if (onlyContiguous /* FCC */ && getPreviousTrailCC(prevBoundary, prevSrc) > cc) {
+            အကယ်၍ (onlyContiguous /* FCC */ && getPreviousTrailCC(prevBoundary, prevSrc) > cc) {
                 // Fails FCD test, need to decompose and contiguously recompose.
-                if (sink == nullptr) {
-                    return false;
+                အကယ်၍ (sink == nullptr) {
+                    ပြန်ပေး false;
                 }
-            } else {
+            } မဟုတ်ပါက {
                 // If !onlyContiguous (not FCC), then we ignore the tccc of
                 // the previous character which passed the quick check "yes && ccc==0" test.
                 const uint8_t *nextSrc;
                 uint16_t n16;
-                for (;;) {
-                    if (src == limit) {
-                        if (sink != nullptr) {
+                အတွက် (;;) {
+                    အကယ်၍ (src == limit) {
+                        အကယ်၍ (sink != nullptr) {
                             ByteSinkUtil::appendUnchanged(prevBoundary, limit,
                                                           *sink, options, edits, errorCode);
                         }
-                        return true;
+                        ပြန်ပေး true;
                     }
                     uint8_t prevCC = cc;
                     nextSrc = src;
                     UCPTRIE_FAST_U8_NEXT(normTrie, UCPTRIE_16, nextSrc, limit, n16);
-                    if (n16 >= MIN_YES_YES_WITH_CC) {
+                    အကယ်၍ (n16 >= MIN_YES_YES_WITH_CC) {
                         cc = getCCFromNormalYesOrMaybe(n16);
-                        if (prevCC > cc) {
-                            if (sink == nullptr) {
-                                return false;
+                        အကယ်၍ (prevCC > cc) {
+                            အကယ်၍ (sink == nullptr) {
+                                ပြန်ပေး false;
                             }
-                            break;
+                            bha_nga;
                         }
-                    } else {
-                        break;
+                    } မဟုတ်ပါက {
+                        bha_nga;
                     }
                     src = nextSrc;
                 }
                 // src is after the last in-order combining mark.
                 // If there is a boundary here, then we continue with no change.
-                if (norm16HasCompBoundaryBefore(n16)) {
-                    if (isCompYesAndZeroCC(n16)) {
+                အကယ်၍ (norm16HasCompBoundaryBefore(n16)) {
+                    အကယ်၍ (isCompYesAndZeroCC(n16)) {
                         src = nextSrc;
                     }
                     continue;
@@ -2095,16 +2095,16 @@ Normalizer2Impl::composeUTF8(uint32_t options, UBool onlyContiguous,
 
         // Slow path: Find the nearest boundaries around the current character,
         // decompose and recompose.
-        if (prevBoundary != prevSrc && !norm16HasCompBoundaryBefore(norm16)) {
+        အကယ်၍ (prevBoundary != prevSrc && !norm16HasCompBoundaryBefore(norm16)) {
             const uint8_t *p = prevSrc;
             UCPTRIE_FAST_U8_PREV(normTrie, UCPTRIE_16, prevBoundary, p, norm16);
-            if (!norm16HasCompBoundaryAfter(norm16, onlyContiguous)) {
+            အကယ်၍ (!norm16HasCompBoundaryAfter(norm16, onlyContiguous)) {
                 prevSrc = p;
             }
         }
         ReorderingBuffer buffer(*this, s16, errorCode);
-        if (U_FAILURE(errorCode)) {
-            break;
+        အကယ်၍ (U_FAILURE(errorCode)) {
+            bha_nga;
         }
         // We know there is not a boundary here.
         decomposeShort(prevSrc, src, STOP_AT_LIMIT, onlyContiguous,
@@ -2112,125 +2112,125 @@ Normalizer2Impl::composeUTF8(uint32_t options, UBool onlyContiguous,
         // Decompose until the next boundary.
         src = decomposeShort(src, limit, STOP_AT_COMP_BOUNDARY, onlyContiguous,
                              buffer, errorCode);
-        if (U_FAILURE(errorCode)) {
-            break;
+        အကယ်၍ (U_FAILURE(errorCode)) {
+            bha_nga;
         }
-        if ((src - prevSrc) > INT32_MAX) {  // guard before buffer.equals()
+        အကယ်၍ ((src - prevSrc) > INT32_MAX) {  // guard before buffer.equals()
             errorCode = U_INDEX_OUTOFBOUNDS_ERROR;
-            return true;
+            ပြန်ပေး true;
         }
         recompose(buffer, 0, onlyContiguous);
-        if (!buffer.equals(prevSrc, src)) {
-            if (sink == nullptr) {
-                return false;
+        အကယ်၍ (!buffer.equals(prevSrc, src)) {
+            အကယ်၍ (sink == nullptr) {
+                ပြန်ပေး false;
             }
-            if (prevBoundary != prevSrc &&
+            အကယ်၍ (prevBoundary != prevSrc &&
                     !ByteSinkUtil::appendUnchanged(prevBoundary, prevSrc,
                                                    *sink, options, edits, errorCode)) {
-                break;
+                bha_nga;
             }
-            if (!ByteSinkUtil::appendChange(prevSrc, src, buffer.getStart(), buffer.length(),
+            အကယ်၍ (!ByteSinkUtil::appendChange(prevSrc, src, buffer.getStart(), buffer.length(),
                                             *sink, edits, errorCode)) {
-                break;
+                bha_nga;
             }
             prevBoundary = src;
         }
     }
-    return true;
+    ပြန်ပေး true;
 }
 
 UBool Normalizer2Impl::hasCompBoundaryBefore(const char16_t *src, const char16_t *limit) const {
-    if (src == limit || *src < minCompNoMaybeCP) {
-        return true;
+    အကယ်၍ (src == limit || *src < minCompNoMaybeCP) {
+        ပြန်ပေး true;
     }
     UChar32 c;
     uint16_t norm16;
     UCPTRIE_FAST_U16_NEXT(normTrie, UCPTRIE_16, src, limit, c, norm16);
-    return norm16HasCompBoundaryBefore(norm16);
+    ပြန်ပေး norm16HasCompBoundaryBefore(norm16);
 }
 
 UBool Normalizer2Impl::hasCompBoundaryBefore(const uint8_t *src, const uint8_t *limit) const {
-    if (src == limit) {
-        return true;
+    အကယ်၍ (src == limit) {
+        ပြန်ပေး true;
     }
     uint16_t norm16;
     UCPTRIE_FAST_U8_NEXT(normTrie, UCPTRIE_16, src, limit, norm16);
-    return norm16HasCompBoundaryBefore(norm16);
+    ပြန်ပေး norm16HasCompBoundaryBefore(norm16);
 }
 
 UBool Normalizer2Impl::hasCompBoundaryAfter(const char16_t *start, const char16_t *p,
                                             UBool onlyContiguous) const {
-    if (start == p) {
-        return true;
+    အကယ်၍ (start == p) {
+        ပြန်ပေး true;
     }
     UChar32 c;
     uint16_t norm16;
     UCPTRIE_FAST_U16_PREV(normTrie, UCPTRIE_16, start, p, c, norm16);
-    return norm16HasCompBoundaryAfter(norm16, onlyContiguous);
+    ပြန်ပေး norm16HasCompBoundaryAfter(norm16, onlyContiguous);
 }
 
 UBool Normalizer2Impl::hasCompBoundaryAfter(const uint8_t *start, const uint8_t *p,
                                             UBool onlyContiguous) const {
-    if (start == p) {
-        return true;
+    အကယ်၍ (start == p) {
+        ပြန်ပေး true;
     }
     uint16_t norm16;
     UCPTRIE_FAST_U8_PREV(normTrie, UCPTRIE_16, start, p, norm16);
-    return norm16HasCompBoundaryAfter(norm16, onlyContiguous);
+    ပြန်ပေး norm16HasCompBoundaryAfter(norm16, onlyContiguous);
 }
 
 const char16_t *Normalizer2Impl::findPreviousCompBoundary(const char16_t *start, const char16_t *p,
                                                        UBool onlyContiguous) const {
-    while (p != start) {
+    နေစဉ် (p != start) {
         const char16_t *codePointLimit = p;
         UChar32 c;
         uint16_t norm16;
         UCPTRIE_FAST_U16_PREV(normTrie, UCPTRIE_16, start, p, c, norm16);
-        if (norm16HasCompBoundaryAfter(norm16, onlyContiguous)) {
-            return codePointLimit;
+        အကယ်၍ (norm16HasCompBoundaryAfter(norm16, onlyContiguous)) {
+            ပြန်ပေး codePointLimit;
         }
-        if (hasCompBoundaryBefore(c, norm16)) {
-            return p;
+        အကယ်၍ (hasCompBoundaryBefore(c, norm16)) {
+            ပြန်ပေး p;
         }
     }
-    return p;
+    ပြန်ပေး p;
 }
 
 const char16_t *Normalizer2Impl::findNextCompBoundary(const char16_t *p, const char16_t *limit,
                                                    UBool onlyContiguous) const {
-    while (p != limit) {
+    နေစဉ် (p != limit) {
         const char16_t *codePointStart = p;
         UChar32 c;
         uint16_t norm16;
         UCPTRIE_FAST_U16_NEXT(normTrie, UCPTRIE_16, p, limit, c, norm16);
-        if (hasCompBoundaryBefore(c, norm16)) {
-            return codePointStart;
+        အကယ်၍ (hasCompBoundaryBefore(c, norm16)) {
+            ပြန်ပေး codePointStart;
         }
-        if (norm16HasCompBoundaryAfter(norm16, onlyContiguous)) {
-            return p;
+        အကယ်၍ (norm16HasCompBoundaryAfter(norm16, onlyContiguous)) {
+            ပြန်ပေး p;
         }
     }
-    return p;
+    ပြန်ပေး p;
 }
 
 uint8_t Normalizer2Impl::getPreviousTrailCC(const char16_t *start, const char16_t *p) const {
-    if (start == p) {
-        return 0;
+    အကယ်၍ (start == p) {
+        ပြန်ပေး 0;
     }
     int32_t i = static_cast<int32_t>(p - start);
     UChar32 c;
     U16_PREV(start, 0, i, c);
-    return static_cast<uint8_t>(getFCD16(c));
+    ပြန်ပေး static_cast<uint8_t>(getFCD16(c));
 }
 
 uint8_t Normalizer2Impl::getPreviousTrailCC(const uint8_t *start, const uint8_t *p) const {
-    if (start == p) {
-        return 0;
+    အကယ်၍ (start == p) {
+        ပြန်ပေး 0;
     }
     int32_t i = static_cast<int32_t>(p - start);
     UChar32 c;
     U8_PREV(start, 0, i, c);
-    return static_cast<uint8_t>(getFCD16(c));
+    ပြန်ပေး static_cast<uint8_t>(getFCD16(c));
 }
 
 // Note: normalizer2impl.cpp r30982 (2011-nov-27)
@@ -2245,61 +2245,61 @@ uint8_t Normalizer2Impl::getPreviousTrailCC(const uint8_t *start, const uint8_t 
 // function on Windows ARM64. As a work-around, we disable optimizations for this function.
 // This work-around could/should be removed once the following versions of Visual Studio are no
 // longer supported: All versions of VS2017, and versions of VS2019 below 16.4.
-#if (defined(_MSC_VER) && (defined(_M_ARM64)) && (_MSC_VER < 1924))
+#အကယ်၍ (defined(_MSC_VER) && (defined(_M_ARM64)) && (_MSC_VER < 1924))
 #pragma optimize( "", off )
 #endif
 // Gets the FCD value from the regular normalization data.
 uint16_t Normalizer2Impl::getFCD16FromNormData(UChar32 c) const {
     uint16_t norm16=getNorm16(c);
-    if (norm16 >= limitNoNo) {
-        if(norm16>=MIN_NORMAL_MAYBE_YES) {
+    အကယ်၍ (norm16 >= limitNoNo) {
+        အကယ်၍(norm16>=MIN_NORMAL_MAYBE_YES) {
             // combining mark
             norm16=getCCFromNormalYesOrMaybe(norm16);
-            return norm16|(norm16<<8);
-        } else if(norm16>=minMaybeYes) {
-            return 0;
-        } else if(norm16<minMaybeNo) {  // isDecompNoAlgorithmic(norm16)
+            ပြန်ပေး norm16|(norm16<<8);
+        } မဟုတ်ပါက အကယ်၍(norm16>=minMaybeYes) {
+            ပြန်ပေး 0;
+        } မဟုတ်ပါက အကယ်၍(norm16<minMaybeNo) {  // isDecompNoAlgorithmic(norm16)
             uint16_t deltaTrailCC = norm16 & DELTA_TCCC_MASK;
-            if (deltaTrailCC <= DELTA_TCCC_1) {
-                return deltaTrailCC >> OFFSET_SHIFT;
+            အကယ်၍ (deltaTrailCC <= DELTA_TCCC_1) {
+                ပြန်ပေး deltaTrailCC >> OFFSET_SHIFT;
             }
             // Maps to an isCompYesAndZeroCC.
             c=mapAlgorithmic(c, norm16);
             norm16=getRawNorm16(c);
         }
     }
-    if(norm16<=minYesNo || isHangulLVT(norm16)) {
+    အကယ်၍(norm16<=minYesNo || isHangulLVT(norm16)) {
         // no decomposition or Hangul syllable, all zeros
-        return 0;
+        ပြန်ပေး 0;
     }
     // c decomposes, get everything from the variable-length extra data
     const uint16_t *mapping=getData(norm16);
     uint16_t firstUnit=*mapping;
     norm16=firstUnit>>8;  // tccc
-    if(firstUnit&MAPPING_HAS_CCC_LCCC_WORD) {
+    အကယ်၍(firstUnit&MAPPING_HAS_CCC_LCCC_WORD) {
         norm16|=*(mapping-1)&0xff00;  // lccc
     }
-    return norm16;
+    ပြန်ပေး norm16;
 }
-#if (defined(_MSC_VER) && (defined(_M_ARM64)) && (_MSC_VER < 1924))
+#အကယ်၍ (defined(_MSC_VER) && (defined(_M_ARM64)) && (_MSC_VER < 1924))
 #pragma optimize( "", on )
 #endif
 
 uint16_t Normalizer2Impl::getFCD16FromMaybeOrNonZeroCC(uint16_t norm16) const {
     U_ASSERT(norm16 >= minMaybeNo);
-    if (norm16 >= MIN_NORMAL_MAYBE_YES) {
+    အကယ်၍ (norm16 >= MIN_NORMAL_MAYBE_YES) {
         // combining mark
         norm16 = getCCFromNormalYesOrMaybe(norm16);
-        return norm16 | (norm16<<8);
-    } else if (norm16 >= minMaybeYes) {
-        return 0;
+        ပြန်ပေး norm16 | (norm16<<8);
+    } မဟုတ်ပါက အကယ်၍ (norm16 >= minMaybeYes) {
+        ပြန်ပေး 0;
     }
     // c decomposes, get everything from the variable-length extra data
     const uint16_t *mapping = getDataForMaybe(norm16);
     uint16_t firstUnit = *mapping;
     // maybeNo has lccc = 0
     U_ASSERT((firstUnit & MAPPING_HAS_CCC_LCCC_WORD) == 0 || (*(mapping - 1) & 0xff00) == 0);
-    return firstUnit >> 8;  // tccc
+    ပြန်ပေး firstUnit >> 8;  // tccc
 }
 
 // Dual functionality:
@@ -2313,17 +2313,17 @@ Normalizer2Impl::makeFCD(const char16_t *src, const char16_t *limit,
     // Similar to the prevBoundary in the compose() implementation.
     const char16_t *prevBoundary=src;
     int32_t prevFCD16=0;
-    if(limit==nullptr) {
+    အကယ်၍(limit==nullptr) {
         src=copyLowPrefixFromNulTerminated(src, minLcccCP, buffer, errorCode);
-        if(U_FAILURE(errorCode)) {
-            return src;
+        အကယ်၍(U_FAILURE(errorCode)) {
+            ပြန်ပေး src;
         }
-        if(prevBoundary<src) {
+        အကယ်၍(prevBoundary<src) {
             prevBoundary=src;
             // We know that the previous character's lccc==0.
             // Fetching the fcd16 value was deferred for this below-U+0300 code point.
             prevFCD16=getFCD16(*(src-1));
-            if(prevFCD16>1) {
+            အကယ်၍(prevFCD16>1) {
                 --prevBoundary;
             }
         }
@@ -2340,86 +2340,86 @@ Normalizer2Impl::makeFCD(const char16_t *src, const char16_t *limit,
     UChar32 c=0;
     uint16_t fcd16=0;
 
-    for(;;) {
+    အတွက်(;;) {
         // count code units with lccc==0
-        for(prevSrc=src; src!=limit;) {
-            if((c=*src)<minLcccCP) {
+        အတွက်(prevSrc=src; src!=limit;) {
+            အကယ်၍((c=*src)<minLcccCP) {
                 prevFCD16=~c;
                 ++src;
-            } else if(!singleLeadMightHaveNonZeroFCD16(c)) {
+            } မဟုတ်ပါက အကယ်၍(!singleLeadMightHaveNonZeroFCD16(c)) {
                 prevFCD16=0;
                 ++src;
-            } else {
-                if(U16_IS_LEAD(c)) {
+            } မဟုတ်ပါက {
+                အကယ်၍(U16_IS_LEAD(c)) {
                     char16_t c2;
-                    if((src+1)!=limit && U16_IS_TRAIL(c2=src[1])) {
+                    အကယ်၍((src+1)!=limit && U16_IS_TRAIL(c2=src[1])) {
                         c=U16_GET_SUPPLEMENTARY(c, c2);
                     }
                 }
-                if((fcd16=getFCD16FromNormData(c))<=0xff) {
+                အကယ်၍((fcd16=getFCD16FromNormData(c))<=0xff) {
                     prevFCD16=fcd16;
                     src+=U16_LENGTH(c);
-                } else {
-                    break;
+                } မဟုတ်ပါက {
+                    bha_nga;
                 }
             }
         }
         // copy these code units all at once
-        if(src!=prevSrc) {
-            if(buffer!=nullptr && !buffer->appendZeroCC(prevSrc, src, errorCode)) {
-                break;
+        အကယ်၍(src!=prevSrc) {
+            အကယ်၍(buffer!=nullptr && !buffer->appendZeroCC(prevSrc, src, errorCode)) {
+                bha_nga;
             }
-            if(src==limit) {
-                break;
+            အကယ်၍(src==limit) {
+                bha_nga;
             }
             prevBoundary=src;
             // We know that the previous character's lccc==0.
-            if(prevFCD16<0) {
+            အကယ်၍(prevFCD16<0) {
                 // Fetching the fcd16 value was deferred for this below-minLcccCP code point.
                 UChar32 prev=~prevFCD16;
-                if(prev<minDecompNoCP) {
+                အကယ်၍(prev<minDecompNoCP) {
                     prevFCD16=0;
-                } else {
+                } မဟုတ်ပါက {
                     prevFCD16=getFCD16FromNormData(prev);
-                    if(prevFCD16>1) {
+                    အကယ်၍(prevFCD16>1) {
                         --prevBoundary;
                     }
                 }
-            } else {
+            } မဟုတ်ပါက {
                 const char16_t *p=src-1;
-                if(U16_IS_TRAIL(*p) && prevSrc<p && U16_IS_LEAD(*(p-1))) {
+                အကယ်၍(U16_IS_TRAIL(*p) && prevSrc<p && U16_IS_LEAD(*(p-1))) {
                     --p;
                     // Need to fetch the previous character's FCD value because
                     // prevFCD16 was just for the trail surrogate code point.
                     prevFCD16=getFCD16FromNormData(U16_GET_SUPPLEMENTARY(p[0], p[1]));
                     // Still known to have lccc==0 because its lead surrogate unit had lccc==0.
                 }
-                if(prevFCD16>1) {
+                အကယ်၍(prevFCD16>1) {
                     prevBoundary=p;
                 }
             }
             // The start of the current character (c).
             prevSrc=src;
-        } else if(src==limit) {
-            break;
+        } မဟုတ်ပါက အကယ်၍(src==limit) {
+            bha_nga;
         }
 
         src+=U16_LENGTH(c);
         // The current character (c) at [prevSrc..src[ has a non-zero lead combining class.
         // Check for proper order, and decompose locally if necessary.
-        if((prevFCD16&0xff)<=(fcd16>>8)) {
+        အကယ်၍((prevFCD16&0xff)<=(fcd16>>8)) {
             // proper order: prev tccc <= current lccc
-            if((fcd16&0xff)<=1) {
+            အကယ်၍((fcd16&0xff)<=1) {
                 prevBoundary=src;
             }
-            if(buffer!=nullptr && !buffer->appendZeroCC(c, errorCode)) {
-                break;
+            အကယ်၍(buffer!=nullptr && !buffer->appendZeroCC(c, errorCode)) {
+                bha_nga;
             }
             prevFCD16=fcd16;
             continue;
-        } else if(buffer==nullptr) {
-            return prevBoundary;  // quick check "no"
-        } else {
+        } မဟုတ်ပါက အကယ်၍(buffer==nullptr) {
+            ပြန်ပေး prevBoundary;  // quick check "no"
+        } မဟုတ်ပါက {
             /*
              * Back out the part of the source that we copied or appended
              * already but is now going to be decomposed.
@@ -2436,14 +2436,14 @@ Normalizer2Impl::makeFCD(const char16_t *src, const char16_t *limit,
              * Decompose and reorder a limited piece of the text.
              */
             decomposeShort(prevBoundary, src, false, false, *buffer, errorCode);
-            if (U_FAILURE(errorCode)) {
-                break;
+            အကယ်၍ (U_FAILURE(errorCode)) {
+                bha_nga;
             }
             prevBoundary=src;
             prevFCD16=0;
         }
     }
-    return src;
+    ပြန်ပေး src;
 }
 
 void Normalizer2Impl::makeFCDAndAppend(const char16_t *src, const char16_t *limit,
@@ -2451,9 +2451,9 @@ void Normalizer2Impl::makeFCDAndAppend(const char16_t *src, const char16_t *limi
                                        UnicodeString &safeMiddle,
                                        ReorderingBuffer &buffer,
                                        UErrorCode &errorCode) const {
-    if(!buffer.isEmpty()) {
+    အကယ်၍(!buffer.isEmpty()) {
         const char16_t *firstBoundaryInSrc=findNextFCDBoundary(src, limit);
-        if(src!=firstBoundaryInSrc) {
+        အကယ်၍(src!=firstBoundaryInSrc) {
             const char16_t *lastBoundaryInDest=findPreviousFCDBoundary(buffer.getStart(),
                                                                     buffer.getLimit());
             int32_t destSuffixLength = static_cast<int32_t>(buffer.getLimit() - lastBoundaryInDest);
@@ -2463,16 +2463,16 @@ void Normalizer2Impl::makeFCDAndAppend(const char16_t *src, const char16_t *limi
             middle.append(src, static_cast<int32_t>(firstBoundaryInSrc - src));
             const char16_t *middleStart=middle.getBuffer();
             makeFCD(middleStart, middleStart+middle.length(), &buffer, errorCode);
-            if(U_FAILURE(errorCode)) {
-                return;
+            အကယ်၍(U_FAILURE(errorCode)) {
+                ပြန်ပေး;
             }
             src=firstBoundaryInSrc;
         }
     }
-    if(doMakeFCD) {
+    အကယ်၍(doMakeFCD) {
         makeFCD(src, limit, &buffer, errorCode);
-    } else {
-        if(limit==nullptr) {  // appendZeroCC() needs limit!=nullptr
+    } မဟုတ်ပါက {
+        အကယ်၍(limit==nullptr) {  // appendZeroCC() needs limit!=nullptr
             limit=u_strchr(src, 0);
         }
         buffer.appendZeroCC(src, limit, errorCode);
@@ -2480,35 +2480,35 @@ void Normalizer2Impl::makeFCDAndAppend(const char16_t *src, const char16_t *limi
 }
 
 const char16_t *Normalizer2Impl::findPreviousFCDBoundary(const char16_t *start, const char16_t *p) const {
-    while(start<p) {
+    နေစဉ်(start<p) {
         const char16_t *codePointLimit = p;
         UChar32 c;
         uint16_t norm16;
         UCPTRIE_FAST_U16_PREV(normTrie, UCPTRIE_16, start, p, c, norm16);
-        if (c < minDecompNoCP || norm16HasDecompBoundaryAfter(norm16)) {
-            return codePointLimit;
+        အကယ်၍ (c < minDecompNoCP || norm16HasDecompBoundaryAfter(norm16)) {
+            ပြန်ပေး codePointLimit;
         }
-        if (norm16HasDecompBoundaryBefore(norm16)) {
-            return p;
+        အကယ်၍ (norm16HasDecompBoundaryBefore(norm16)) {
+            ပြန်ပေး p;
         }
     }
-    return p;
+    ပြန်ပေး p;
 }
 
 const char16_t *Normalizer2Impl::findNextFCDBoundary(const char16_t *p, const char16_t *limit) const {
-    while(p<limit) {
+    နေစဉ်(p<limit) {
         const char16_t *codePointStart=p;
         UChar32 c;
         uint16_t norm16;
         UCPTRIE_FAST_U16_NEXT(normTrie, UCPTRIE_16, p, limit, c, norm16);
-        if (c < minLcccCP || norm16HasDecompBoundaryBefore(norm16)) {
-            return codePointStart;
+        အကယ်၍ (c < minLcccCP || norm16HasDecompBoundaryBefore(norm16)) {
+            ပြန်ပေး codePointStart;
         }
-        if (norm16HasDecompBoundaryAfter(norm16)) {
-            return p;
+        အကယ်၍ (norm16HasDecompBoundaryAfter(norm16)) {
+            ပြန်ပေး p;
         }
     }
-    return p;
+    ပြန်ပေး p;
 }
 
 // CanonicalIterator data -------------------------------------------------- ***
@@ -2524,30 +2524,30 @@ CanonIterData::~CanonIterData() {
 
 void CanonIterData::addToStartSet(UChar32 origin, UChar32 decompLead, UErrorCode &errorCode) {
     uint32_t canonValue = umutablecptrie_get(mutableTrie, decompLead);
-    if((canonValue&(CANON_HAS_SET|CANON_VALUE_MASK))==0 && origin!=0) {
+    အကယ်၍((canonValue&(CANON_HAS_SET|CANON_VALUE_MASK))==0 && origin!=0) {
         // origin is the first character whose decomposition starts with
         // the character for which we are setting the value.
         umutablecptrie_set(mutableTrie, decompLead, canonValue|origin, &errorCode);
-    } else {
+    } မဟုတ်ပါက {
         // origin is not the first character, or it is U+0000.
         UnicodeSet *set;
-        if((canonValue&CANON_HAS_SET)==0) {
+        အကယ်၍((canonValue&CANON_HAS_SET)==0) {
             LocalPointer<UnicodeSet> lpSet(new UnicodeSet, errorCode);
             set=lpSet.getAlias();
-            if(U_FAILURE(errorCode)) {
-                return;
+            အကယ်၍(U_FAILURE(errorCode)) {
+                ပြန်ပေး;
             }
             UChar32 firstOrigin = static_cast<UChar32>(canonValue & CANON_VALUE_MASK);
             canonValue = (canonValue & ~CANON_VALUE_MASK) | CANON_HAS_SET | static_cast<uint32_t>(canonStartSets.size());
             umutablecptrie_set(mutableTrie, decompLead, canonValue, &errorCode);
             canonStartSets.adoptElement(lpSet.orphan(), errorCode);
-            if (U_FAILURE(errorCode)) {
-                return;
+            အကယ်၍ (U_FAILURE(errorCode)) {
+                ပြန်ပေး;
             }
-            if(firstOrigin!=0) {
+            အကယ်၍(firstOrigin!=0) {
                 set->add(firstOrigin);
             }
-        } else {
+        } မဟုတ်ပါက {
             set = static_cast<UnicodeSet*>(canonStartSets[static_cast<int32_t>(canonValue & CANON_VALUE_MASK)]);
         }
         set->add(origin);
@@ -2573,17 +2573,17 @@ U_CDECL_END
 void InitCanonIterData::doInit(Normalizer2Impl *impl, UErrorCode &errorCode) {
     U_ASSERT(impl->fCanonIterData == nullptr);
     impl->fCanonIterData = new CanonIterData(errorCode);
-    if (impl->fCanonIterData == nullptr) {
+    အကယ်၍ (impl->fCanonIterData == nullptr) {
         errorCode=U_MEMORY_ALLOCATION_ERROR;
     }
-    if (U_SUCCESS(errorCode)) {
+    အကယ်၍ (U_SUCCESS(errorCode)) {
         UChar32 start = 0, end;
         uint32_t value;
-        while ((end = ucptrie_getRange(impl->normTrie, start,
+        နေစဉ် ((end = ucptrie_getRange(impl->normTrie, start,
                                        UCPMAP_RANGE_FIXED_LEAD_SURROGATES, Normalizer2Impl::INERT,
                                        nullptr, nullptr, &value)) >= 0) {
             // Call Normalizer2Impl::makeCanonIterDataFromNorm16() for a range of same-norm16 characters.
-            if (value != Normalizer2Impl::INERT) {
+            အကယ်၍ (value != Normalizer2Impl::INERT) {
                 impl->makeCanonIterDataFromNorm16(start, end, value, *impl->fCanonIterData, errorCode);
             }
             start = end + 1;
@@ -2596,7 +2596,7 @@ void InitCanonIterData::doInit(Normalizer2Impl *impl, UErrorCode &errorCode) {
         umutablecptrie_close(impl->fCanonIterData->mutableTrie);
         impl->fCanonIterData->mutableTrie = nullptr;
     }
-    if (U_FAILURE(errorCode)) {
+    အကယ်၍ (U_FAILURE(errorCode)) {
         delete impl->fCanonIterData;
         impl->fCanonIterData = nullptr;
     }
@@ -2605,7 +2605,7 @@ void InitCanonIterData::doInit(Normalizer2Impl *impl, UErrorCode &errorCode) {
 void Normalizer2Impl::makeCanonIterDataFromNorm16(UChar32 start, UChar32 end, const uint16_t norm16,
                                                   CanonIterData &newData,
                                                   UErrorCode &errorCode) const {
-    if(isInert(norm16) ||
+    အကယ်၍(isInert(norm16) ||
             (minYesNo<=norm16 && norm16<minNoNo) ||
             (minMaybeNo<=norm16 && norm16<minMaybeYes)) {
         // Inert, or 2-way mapping (including Hangul syllable).
@@ -2614,43 +2614,43 @@ void Normalizer2Impl::makeCanonIterDataFromNorm16(UChar32 start, UChar32 end, co
         // starter's compositions list, and the other characters in
         // 2-way mappings get CANON_NOT_SEGMENT_STARTER set because they are
         // "maybe" characters.
-        return;
+        ပြန်ပေး;
     }
-    for(UChar32 c=start; c<=end; ++c) {
+    အတွက်(UChar32 c=start; c<=end; ++c) {
         uint32_t oldValue = umutablecptrie_get(newData.mutableTrie, c);
         uint32_t newValue=oldValue;
-        if(isMaybeYesOrNonZeroCC(norm16)) {
+        အကယ်၍(isMaybeYesOrNonZeroCC(norm16)) {
             // not a segment starter if it occurs in a decomposition or has cc!=0
             newValue|=CANON_NOT_SEGMENT_STARTER;
-            if(norm16<MIN_NORMAL_MAYBE_YES) {
+            အကယ်၍(norm16<MIN_NORMAL_MAYBE_YES) {
                 newValue|=CANON_HAS_COMPOSITIONS;
             }
-        } else if(norm16<minYesNo) {
+        } မဟုတ်ပါက အကယ်၍(norm16<minYesNo) {
             newValue|=CANON_HAS_COMPOSITIONS;
-        } else {
+        } မဟုတ်ပါက {
             // c has a one-way decomposition
             UChar32 c2=c;
             // Do not modify the whole-range norm16 value.
             uint16_t norm16_2=norm16;
-            if (isDecompNoAlgorithmic(norm16_2)) {
+            အကယ်၍ (isDecompNoAlgorithmic(norm16_2)) {
                 // Maps to an isCompYesAndZeroCC.
                 c2 = mapAlgorithmic(c2, norm16_2);
                 norm16_2 = getRawNorm16(c2);
                 // No compatibility mappings for the CanonicalIterator.
                 U_ASSERT(!(isHangulLV(norm16_2) || isHangulLVT(norm16_2)));
             }
-            if (norm16_2 > minYesNo) {
+            အကယ်၍ (norm16_2 > minYesNo) {
                 // c decomposes, get everything from the variable-length extra data
                 const uint16_t *mapping=getDataForYesOrNo(norm16_2);
                 uint16_t firstUnit=*mapping;
                 int32_t length=firstUnit&MAPPING_LENGTH_MASK;
-                if((firstUnit&MAPPING_HAS_CCC_LCCC_WORD)!=0) {
-                    if(c==c2 && (*(mapping-1)&0xff)!=0) {
+                အကယ်၍((firstUnit&MAPPING_HAS_CCC_LCCC_WORD)!=0) {
+                    အကယ်၍(c==c2 && (*(mapping-1)&0xff)!=0) {
                         newValue|=CANON_NOT_SEGMENT_STARTER;  // original c has cc!=0
                     }
                 }
                 // Skip empty mappings (no characters in the decomposition).
-                if(length!=0) {
+                အကယ်၍(length!=0) {
                     ++mapping;  // skip over the firstUnit
                     // add c to first code point's start set
                     int32_t i=0;
@@ -2659,23 +2659,23 @@ void Normalizer2Impl::makeCanonIterDataFromNorm16(UChar32 start, UChar32 end, co
                     // Set CANON_NOT_SEGMENT_STARTER for each remaining code point of a
                     // one-way mapping. A 2-way mapping is possible here after
                     // intermediate algorithmic mapping.
-                    if(norm16_2>=minNoNo) {
-                        while(i<length) {
+                    အကယ်၍(norm16_2>=minNoNo) {
+                        နေစဉ်(i<length) {
                             U16_NEXT_UNSAFE(mapping, i, c2);
                             uint32_t c2Value = umutablecptrie_get(newData.mutableTrie, c2);
-                            if((c2Value&CANON_NOT_SEGMENT_STARTER)==0) {
+                            အကယ်၍((c2Value&CANON_NOT_SEGMENT_STARTER)==0) {
                                 umutablecptrie_set(newData.mutableTrie, c2,
                                                    c2Value|CANON_NOT_SEGMENT_STARTER, &errorCode);
                             }
                         }
                     }
                 }
-            } else {
+            } မဟုတ်ပါက {
                 // c decomposed to c2 algorithmically; c has cc==0
                 newData.addToStartSet(c, c2, errorCode);
             }
         }
-        if(newValue!=oldValue) {
+        အကယ်၍(newValue!=oldValue) {
             umutablecptrie_set(newData.mutableTrie, c, newValue, &errorCode);
         }
     }
@@ -2685,44 +2685,44 @@ UBool Normalizer2Impl::ensureCanonIterData(UErrorCode &errorCode) const {
     // Logically const: Synchronized instantiation.
     Normalizer2Impl *me=const_cast<Normalizer2Impl *>(this);
     umtx_initOnce(me->fCanonIterDataInitOnce, &initCanonIterData, me, errorCode);
-    return U_SUCCESS(errorCode);
+    ပြန်ပေး U_SUCCESS(errorCode);
 }
 
 int32_t Normalizer2Impl::getCanonValue(UChar32 c) const {
-    return static_cast<int32_t>(ucptrie_get(fCanonIterData->trie, c));
+    ပြန်ပေး static_cast<int32_t>(ucptrie_get(fCanonIterData->trie, c));
 }
 
 const UnicodeSet &Normalizer2Impl::getCanonStartSet(int32_t n) const {
-    return *static_cast<const UnicodeSet*>(fCanonIterData->canonStartSets[n]);
+    ပြန်ပေး *static_cast<const UnicodeSet*>(fCanonIterData->canonStartSets[n]);
 }
 
 UBool Normalizer2Impl::isCanonSegmentStarter(UChar32 c) const {
-    return getCanonValue(c)>=0;
+    ပြန်ပေး getCanonValue(c)>=0;
 }
 
 UBool Normalizer2Impl::getCanonStartSet(UChar32 c, UnicodeSet &set) const {
     int32_t canonValue=getCanonValue(c)&~CANON_NOT_SEGMENT_STARTER;
-    if(canonValue==0) {
-        return false;
+    အကယ်၍(canonValue==0) {
+        ပြန်ပေး false;
     }
     set.clear();
     int32_t value=canonValue&CANON_VALUE_MASK;
-    if((canonValue&CANON_HAS_SET)!=0) {
+    အကယ်၍((canonValue&CANON_HAS_SET)!=0) {
         set.addAll(getCanonStartSet(value));
-    } else if(value!=0) {
+    } မဟုတ်ပါက အကယ်၍(value!=0) {
         set.add(value);
     }
-    if((canonValue&CANON_HAS_COMPOSITIONS)!=0) {
+    အကယ်၍((canonValue&CANON_HAS_COMPOSITIONS)!=0) {
         uint16_t norm16=getRawNorm16(c);
-        if(norm16==JAMO_L) {
+        အကယ်၍(norm16==JAMO_L) {
             UChar32 syllable=
                 static_cast<UChar32>(Hangul::HANGUL_BASE + (c - Hangul::JAMO_L_BASE) * Hangul::JAMO_VT_COUNT);
             set.add(syllable, syllable+Hangul::JAMO_VT_COUNT-1);
-        } else {
+        } မဟုတ်ပါက {
             addComposites(getCompositionsList(norm16), set);
         }
     }
-    return true;
+    ပြန်ပေး true;
 }
 
 U_NAMESPACE_END
@@ -2748,14 +2748,14 @@ unorm2_swap(const UDataSwapper *ds,
 
     /* udata_swapDataHeader checks the arguments */
     headerSize=udata_swapDataHeader(ds, inData, length, outData, pErrorCode);
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    အကယ်၍(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
+        ပြန်ပေး 0;
     }
 
     /* check data format and format version */
-    pInfo=(const UDataInfo *)((const char *)inData+4);
+    pInfo=(const UDataInfo *)((const var_na *)inData+4);
     uint8_t formatVersion0=pInfo->formatVersion[0];
-    if(!(
+    အကယ်၍(!(
         pInfo->dataFormat[0]==0x4e &&   /* dataFormat="Nrm2" */
         pInfo->dataFormat[1]==0x72 &&
         pInfo->dataFormat[2]==0x6d &&
@@ -2767,7 +2767,7 @@ unorm2_swap(const UDataSwapper *ds,
                          pInfo->dataFormat[2], pInfo->dataFormat[3],
                          pInfo->formatVersion[0]);
         *pErrorCode=U_UNSUPPORTED_ERROR;
-        return 0;
+        ပြန်ပေး 0;
     }
 
     inBytes=(const uint8_t *)inData+headerSize;
@@ -2775,44 +2775,44 @@ unorm2_swap(const UDataSwapper *ds,
 
     inIndexes=(const int32_t *)inBytes;
     int32_t minIndexesLength;
-    if(formatVersion0==1) {
+    အကယ်၍(formatVersion0==1) {
         minIndexesLength=Normalizer2Impl::IX_MIN_MAYBE_YES+1;
-    } else if(formatVersion0==2) {
+    } မဟုတ်ပါက အကယ်၍(formatVersion0==2) {
         minIndexesLength=Normalizer2Impl::IX_MIN_YES_NO_MAPPINGS_ONLY+1;
-    } else if(formatVersion0<=4) {
+    } မဟုတ်ပါက အကယ်၍(formatVersion0<=4) {
         minIndexesLength=Normalizer2Impl::IX_MIN_LCCC_CP+1;
-    } else {
+    } မဟုတ်ပါက {
         minIndexesLength=Normalizer2Impl::IX_MIN_MAYBE_NO_COMBINES_FWD+1;
     }
 
-    if(length>=0) {
+    အကယ်၍(length>=0) {
         length-=headerSize;
-        if(length<minIndexesLength*4) {
+        အကယ်၍(length<minIndexesLength*4) {
             udata_printError(ds, "unorm2_swap(): too few bytes (%d after header) for Normalizer2 data\n",
                              length);
             *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-            return 0;
+            ပြန်ပေး 0;
         }
     }
 
     /* read the first few indexes */
-    for(i=0; i<UPRV_LENGTHOF(indexes); ++i) {
+    အတွက်(i=0; i<UPRV_LENGTHOF(indexes); ++i) {
         indexes[i]=udata_readInt32(ds, inIndexes[i]);
     }
 
     /* get the total length of the data */
     size=indexes[Normalizer2Impl::IX_TOTAL_SIZE];
 
-    if(length>=0) {
-        if(length<size) {
+    အကယ်၍(length>=0) {
+        အကယ်၍(length<size) {
             udata_printError(ds, "unorm2_swap(): too few bytes (%d after header) for all of Normalizer2 data\n",
                              length);
             *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-            return 0;
+            ပြန်ပေး 0;
         }
 
         /* copy the data for inaccessible bytes */
-        if(inBytes!=outBytes) {
+        အကယ်၍(inBytes!=outBytes) {
             uprv_memcpy(outBytes, inBytes, size);
         }
 
@@ -2840,7 +2840,7 @@ unorm2_swap(const UDataSwapper *ds,
         U_ASSERT(offset==size);
     }
 
-    return headerSize+size;
+    ပြန်ပေး headerSize+size;
 }
 
 #endif  // !UCONFIG_NO_NORMALIZATION

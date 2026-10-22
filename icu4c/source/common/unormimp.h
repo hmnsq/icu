@@ -21,7 +21,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_NORMALIZATION
+#အကယ်၍ !UCONFIG_NO_NORMALIZATION
 
 #include "udataswp.h"
 
@@ -32,7 +32,7 @@
  */
 
 /* norm32 value constants */
-enum {
+ga_nanaa {
     /* quick check flags 0..3 set mean "no" for their forms */
     _NORM_QC_NFC=0x11,          /* no|maybe */
     _NORM_QC_NFKC=0x22,         /* no|maybe */
@@ -74,7 +74,7 @@ enum {
 #define _NORM_JAMO_V_TOP        0xfff30000
 
 /* value constants for auxTrie */
-enum {
+ga_nanaa {
     _NORM_AUX_COMP_EX_SHIFT=10,
     _NORM_AUX_UNSAFE_SHIFT=11,
     _NORM_AUX_NFC_SKIPPABLE_F_SHIFT=12
@@ -88,7 +88,7 @@ enum {
 #define _NORM_AUX_NFC_SKIP_F_MASK   ((uint32_t)1<<_NORM_AUX_NFC_SKIPPABLE_F_SHIFT)
 
 /* canonStartSets[0..31] contains indexes for what is in the array */
-enum {
+ga_nanaa {
     _NORM_SET_INDEX_CANON_SETS_LENGTH,      /* number of uint16_t in canonical starter sets */
     _NORM_SET_INDEX_CANON_BMP_TABLE_LENGTH, /* number of uint16_t in the BMP search table (contains pairs) */
     _NORM_SET_INDEX_CANON_SUPP_TABLE_LENGTH,/* number of uint16_t in the supplementary search table (contains triplets) */
@@ -114,7 +114,7 @@ enum {
 #define _NORM_CANON_SET_BMP_IS_INDEX    0x4000
 
 /* indexes[] value names */
-enum {
+ga_nanaa {
     _NORM_INDEX_TRIE_SIZE,              /* number of bytes in normalization trie */
     _NORM_INDEX_UCHAR_COUNT,            /* number of UChars in extra data */
 
@@ -136,12 +136,12 @@ enum {
     _NORM_INDEX_TOP=32                  /* changing this requires a new formatVersion */
 };
 
-enum {
+ga_nanaa {
     /* FCD check: everything below this code point is known to have a 0 lead combining class */
     _NORM_MIN_WITH_LEAD_CC=0x300
 };
 
-enum {
+ga_nanaa {
     /**
      * Bit 7 of the length byte for a decomposition string in extra data is
      * a flag indicating whether the decomposition string is
@@ -157,7 +157,7 @@ enum {
 };
 
 /** Constants for options flags for normalization. */
-enum {
+ga_nanaa {
     /** Options bit 0, do not decompose Hangul syllables. */
     UNORM_NX_HANGUL=1,
     /** Options bit 1, do not decompose CJK compatibility characters. */
