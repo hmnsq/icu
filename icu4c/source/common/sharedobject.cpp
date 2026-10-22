@@ -7,11 +7,11 @@
 ******************************************************************************
 * sharedobject.cpp
 */
-#include "sharedobject.h"
-#include "mutex.h"
-#include "uassert.h"
-#include "umutex.h"
-#include "unifiedcache.h"
+#ضمن "sharedobject.h"
+#ضمن "mutex.h"
+#ضمن "uassert.h"
+#ضمن "umutex.h"
+#ضمن "unifiedcache.h"
 
 U_NAMESPACE_BEGIN
 
@@ -19,8 +19,8 @@ SharedObject::~SharedObject() {}
 
 UnifiedCacheBase::~UnifiedCacheBase() {}
 
-void
-SharedObject::addRef() const {
+فراغ
+SharedObject::addRef() ثابت {
     umtx_atomic_inc(&hardRefCount);
 }
 
@@ -32,30 +32,30 @@ SharedObject::addRef() const {
 //           a cache eviction cycle concurrently.
 //           NO ACCESS TO *this PERMITTED AFTER REFERENCE COUNT == 0 for cached objects.
 //           THE OBJECT MAY ALREADY BE GONE.
-void
-SharedObject::removeRef() const {
-    const UnifiedCacheBase *cache = this->cachePtr;
+فراغ
+SharedObject::removeRef() ثابت {
+    ثابت UnifiedCacheBase *cache = هذا->cachePtr;
     int32_t updatedRefCount = umtx_atomic_dec(&hardRefCount);
     U_ASSERT(updatedRefCount >= 0);
-    if (updatedRefCount == 0) {
-        if (cache) {
+    𐤀𐤌 (updatedRefCount == 0) {
+        𐤀𐤌 (cache) {
             cache->handleUnreferencedObject();
-        } else {
-            delete this;
+        } وإلا {
+            delete هذا;
         }
     }
 }
 
 
 int32_t
-SharedObject::getRefCount() const {
-    return umtx_loadAcquire(hardRefCount);
+SharedObject::getRefCount() ثابت {
+    أرجع umtx_loadAcquire(hardRefCount);
 }
 
-void
-SharedObject::deleteIfZeroRefCount() const {
-    if (this->cachePtr == nullptr && getRefCount() == 0) {
-        delete this;
+فراغ
+SharedObject::deleteIfZeroRefCount() ثابت {
+    𐤀𐤌 (هذا->cachePtr == nullptr && getRefCount() == 0) {
+        delete هذا;
     }
 }
 

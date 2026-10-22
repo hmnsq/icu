@@ -7,9 +7,9 @@
 #ifndef __UCPTRIE_IMPL_H__
 #define __UCPTRIE_IMPL_H__
 
-#include "unicode/ucptrie.h"
+#ضمن "unicode/ucptrie.h"
 #ifdef UCPTRIE_DEBUG
-#include "unicode/umutablecptrie.h"
+#ضمن "unicode/umutablecptrie.h"
 #endif
 
 // UCPTrie signature values, in platform endianness and opposite endianness.
@@ -21,7 +21,7 @@
  * Header data for the binary, memory-mappable representation of a UCPTrie/CodePointTrie.
  * @internal
  */
-struct UCPTrieHeader {
+بنية UCPTrieHeader {
     /** "Tri3" in big-endian US-ASCII (0x54726933) */
     uint32_t signature;
 
@@ -125,21 +125,21 @@ constexpr int32_t UCPTRIE_SMALL_DATA_BLOCK_LENGTH = 1 << UCPTRIE_SHIFT_3;
 constexpr int32_t UCPTRIE_SMALL_DATA_MASK = UCPTRIE_SMALL_DATA_BLOCK_LENGTH - 1;
 
 
-typedef UChar32
-UCPTrieGetRange(const void *trie, UChar32 start,
-                UCPMapValueFilter *filter, const void *context, uint32_t *pValue);
+تعريفنوع UChar32
+UCPTrieGetRange(ثابت فراغ *trie, UChar32 start,
+                UCPMapValueFilter *filter, ثابت فراغ *context, uint32_t *pValue);
 
 U_CFUNC UChar32
 ucptrie_internalGetRange(UCPTrieGetRange *getRange,
-                         const void *trie, UChar32 start,
+                         ثابت فراغ *trie, UChar32 start,
                          UCPMapRangeOption option, uint32_t surrogateValue,
-                         UCPMapValueFilter *filter, const void *context, uint32_t *pValue);
+                         UCPMapValueFilter *filter, ثابت فراغ *context, uint32_t *pValue);
 
 #ifdef UCPTRIE_DEBUG
-U_CFUNC void
-ucptrie_printLengths(const UCPTrie *trie, const char *which);
+U_CFUNC فراغ
+ucptrie_printLengths(ثابت UCPTrie *trie, ثابت حرف *which);
 
-U_CFUNC void umutablecptrie_setName(UMutableCPTrie *builder, const char *name);
+U_CFUNC فراغ umutablecptrie_setName(UMutableCPTrie *builder, ثابت حرف *name);
 #endif
 
 /*

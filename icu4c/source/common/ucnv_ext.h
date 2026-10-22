@@ -21,12 +21,12 @@
 #ifndef __UCNV_EXT_H__
 #define __UCNV_EXT_H__
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#𐤀𐤌 !UCONFIG_NO_CONVERSION
 
-#include "unicode/ucnv.h"
-#include "ucnv_cnv.h"
+#ضمن "unicode/ucnv.h"
+#ضمن "ucnv_cnv.h"
 
 /*
  * See icuhtml/design/conversion/conversion_extensions.html
@@ -308,7 +308,7 @@
  *   Contains fromUnicode mapping results, stored as sequences of chars.
  *   Indexes and lengths stored in the fromUTableValues[].
  */
-enum {
+تعداد {
     UCNV_EXT_INDEXES_LENGTH,            /* 0 */
 
     UCNV_EXT_TO_U_INDEX,                /* 1 */
@@ -342,7 +342,7 @@ enum {
 
 /* get the pointer to an extension array from indexes[index] */
 #define UCNV_EXT_ARRAY(indexes, index, itemType) \
-    ((const itemType *)((const char *)(indexes)+(indexes)[index]))
+    ((ثابت itemType *)((ثابت حرف *)(indexes)+(indexes)[index]))
 
 #define UCNV_GET_MAX_BYTES_PER_UCHAR(indexes) \
     ((indexes)[UCNV_EXT_COUNT_BYTES]&0xff)
@@ -350,40 +350,40 @@ enum {
 /* internal API ------------------------------------------------------------- */
 
 U_CFUNC UBool
-ucnv_extInitialMatchToU(UConverter *cnv, const int32_t *cx,
+ucnv_extInitialMatchToU(UConverter *cnv, ثابت int32_t *cx,
                         int32_t firstLength,
-                        const char **src, const char *srcLimit,
-                        UChar **target, const UChar *targetLimit,
+                        ثابت حرف **src, ثابت حرف *srcLimit,
+                        UChar **target, ثابت UChar *targetLimit,
                         int32_t **offsets, int32_t srcIndex,
                         UBool flush,
                         UErrorCode *pErrorCode);
 
 U_CFUNC UChar32
-ucnv_extSimpleMatchToU(const int32_t *cx,
-                       const char *source, int32_t length,
+ucnv_extSimpleMatchToU(ثابت int32_t *cx,
+                       ثابت حرف *source, int32_t length,
                        UBool useFallback);
 
-U_CFUNC void
+U_CFUNC فراغ
 ucnv_extContinueMatchToU(UConverter *cnv,
                          UConverterToUnicodeArgs *pArgs, int32_t srcIndex,
                          UErrorCode *pErrorCode);
 
 
 U_CFUNC UBool
-ucnv_extInitialMatchFromU(UConverter *cnv, const int32_t *cx,
+ucnv_extInitialMatchFromU(UConverter *cnv, ثابت int32_t *cx,
                           UChar32 cp,
-                          const UChar **src, const UChar *srcLimit,
-                          char **target, const char *targetLimit,
+                          ثابت UChar **src, ثابت UChar *srcLimit,
+                          حرف **target, ثابت حرف *targetLimit,
                           int32_t **offsets, int32_t srcIndex,
                           UBool flush,
                           UErrorCode *pErrorCode);
 
 U_CFUNC int32_t
-ucnv_extSimpleMatchFromU(const int32_t *cx,
+ucnv_extSimpleMatchFromU(ثابت int32_t *cx,
                          UChar32 cp, uint32_t *pValue,
                          UBool useFallback);
 
-U_CFUNC void
+U_CFUNC فراغ
 ucnv_extContinueMatchFromU(UConverter *cnv,
                            UConverterFromUnicodeArgs *pArgs, int32_t srcIndex,
                            UErrorCode *pErrorCode);
@@ -397,9 +397,9 @@ ucnv_extContinueMatchFromU(UConverter *cnv,
  * For example, the Shift-JIS filter only works for 2-byte results and tests
  * that those 2 bytes are in the JIS X 0208 range of Shift-JIS.
  */
-U_CFUNC void
-ucnv_extGetUnicodeSet(const UConverterSharedData *sharedData,
-                      const USetAdder *sa,
+U_CFUNC فراغ
+ucnv_extGetUnicodeSet(ثابت UConverterSharedData *sharedData,
+                      ثابت USetAdder *sa,
                       UConverterUnicodeSet which,
                       UConverterSetFilter filter,
                       UErrorCode *pErrorCode);

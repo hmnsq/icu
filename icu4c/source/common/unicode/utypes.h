@@ -35,12 +35,12 @@
 #define UTYPES_H
 
 
-#include "unicode/umachine.h"
-#include "unicode/uversion.h"
-#include "unicode/uconfig.h"
-#include <float.h>
+#ضمن "unicode/umachine.h"
+#ضمن "unicode/uversion.h"
+#ضمن "unicode/uconfig.h"
+#ضمن <float.h>
 
-#if !U_NO_DEFAULT_INCLUDE_UTF_HEADERS
+#𐤀𐤌 !U_NO_DEFAULT_INCLUDE_UTF_HEADERS
 #   include "unicode/utf.h"
 #endif
 
@@ -78,7 +78,7 @@
 #   ifndef U_SHOW_CPLUSPLUS_HEADER_API
 #       define U_SHOW_CPLUSPLUS_HEADER_API 1
 #   endif
-#else
+#وإلا
 #   undef U_SHOW_CPLUSPLUS_API
 #   define U_SHOW_CPLUSPLUS_API 0
 #   undef U_SHOW_CPLUSPLUS_HEADER_API
@@ -95,10 +95,10 @@
  * Define this to 1 to request that internal API be "hidden"
  * @internal
  */
-#if !U_DEFAULT_SHOW_DRAFT && !defined(U_SHOW_DRAFT_API)
+#𐤀𐤌 !U_DEFAULT_SHOW_DRAFT && !defined(U_SHOW_DRAFT_API)
 #define U_HIDE_DRAFT_API 1
 #endif
-#if !U_DEFAULT_SHOW_DRAFT && !defined(U_SHOW_INTERNAL_API)
+#𐤀𐤌 !U_DEFAULT_SHOW_DRAFT && !defined(U_SHOW_INTERNAL_API)
 #define U_HIDE_INTERNAL_API 1
 #endif
 
@@ -124,22 +124,22 @@
  * The non-string form of U_ICUDATA_TYPE_LETTER
  * @stable ICU 2.0
  */
-#if U_CHARSET_FAMILY
-#   if U_IS_BIG_ENDIAN
+#𐤀𐤌 U_CHARSET_FAMILY
+#   𐤀𐤌 U_IS_BIG_ENDIAN
    /* EBCDIC - should always be BE */
 #     define U_ICUDATA_TYPE_LETTER "e"
 #     define U_ICUDATA_TYPE_LITLETTER e
-#   else
+#   وإلا
 #     error "Don't know what to do with little endian EBCDIC!"
 #     define U_ICUDATA_TYPE_LETTER "x"
 #     define U_ICUDATA_TYPE_LITLETTER x
 #   endif
-#else
-#   if U_IS_BIG_ENDIAN
+#وإلا
+#   𐤀𐤌 U_IS_BIG_ENDIAN
       /* Big-endian ASCII */
 #     define U_ICUDATA_TYPE_LETTER "b"
 #     define U_ICUDATA_TYPE_LITLETTER b
-#   else
+#   وإلا
       /* Little-endian ASCII */
 #     define U_ICUDATA_TYPE_LETTER "l"
 #     define U_ICUDATA_TYPE_LITLETTER l
@@ -185,7 +185,7 @@
 /* affected by symbol renaming. See platform.h */
 #ifndef U_LIB_SUFFIX_C_NAME
 #define U_DEF_ICUDATA_ENTRY_POINT(major, suff) icudt##major##_dat
-#else
+#وإلا
 #define U_DEF_ICUDATA_ENTRY_POINT(major, suff) icudt##suff ## major##_dat
 #endif
 #endif
@@ -196,11 +196,11 @@
  * Define NULL if necessary, to nullptr for C++ and to ((void *)0) for C.
  * @stable ICU 2.0
  */
-#ifndef NULL
+#ifndef عدم
 #ifdef __cplusplus
-#define NULL    nullptr
-#else
-#define NULL    ((void *)0)
+#define عدم    nullptr
+#وإلا
+#define عدم    ((فراغ *)0)
 #endif
 #endif
 
@@ -215,7 +215,7 @@
  * UTC leap seconds are ignored.
  * @stable ICU 2.0
  */
-typedef double UDate;
+تعريفنوع مزدوج UDate;
 
 /** The number of milliseconds per second @stable ICU 2.0 */
 #define U_MILLIS_PER_SECOND        (1000)
@@ -310,7 +310,7 @@ typedef double UDate;
 #define U_COMBINED_IMPLEMENTATION 1
 #endif
 
-#if defined(U_COMBINED_IMPLEMENTATION)
+#𐤀𐤌 defined(U_COMBINED_IMPLEMENTATION)
 #define U_DATA_API     U_EXPORT
 #define U_COMMON_API   U_EXPORT
 #define U_I18N_API     U_EXPORT
@@ -318,7 +318,7 @@ typedef double UDate;
 #define U_LAYOUTEX_API U_EXPORT
 #define U_IO_API       U_EXPORT
 #define U_TOOLUTIL_API U_EXPORT
-#elif defined(U_STATIC_IMPLEMENTATION)
+#وإلاإذا defined(U_STATIC_IMPLEMENTATION)
 #define U_DATA_API
 #define U_COMMON_API
 #define U_I18N_API
@@ -326,7 +326,7 @@ typedef double UDate;
 #define U_LAYOUTEX_API
 #define U_IO_API
 #define U_TOOLUTIL_API
-#elif defined(U_COMMON_IMPLEMENTATION)
+#وإلاإذا defined(U_COMMON_IMPLEMENTATION)
 #define U_DATA_API     U_IMPORT
 #define U_COMMON_API   U_EXPORT
 #define U_I18N_API     U_IMPORT
@@ -334,7 +334,7 @@ typedef double UDate;
 #define U_LAYOUTEX_API U_IMPORT
 #define U_IO_API       U_IMPORT
 #define U_TOOLUTIL_API U_IMPORT
-#elif defined(U_I18N_IMPLEMENTATION)
+#وإلاإذا defined(U_I18N_IMPLEMENTATION)
 #define U_DATA_API     U_IMPORT
 #define U_COMMON_API   U_IMPORT
 #define U_I18N_API     U_EXPORT
@@ -342,7 +342,7 @@ typedef double UDate;
 #define U_LAYOUTEX_API U_IMPORT
 #define U_IO_API       U_IMPORT
 #define U_TOOLUTIL_API U_IMPORT
-#elif defined(U_LAYOUT_IMPLEMENTATION)
+#وإلاإذا defined(U_LAYOUT_IMPLEMENTATION)
 #define U_DATA_API     U_IMPORT
 #define U_COMMON_API   U_IMPORT
 #define U_I18N_API     U_IMPORT
@@ -350,7 +350,7 @@ typedef double UDate;
 #define U_LAYOUTEX_API U_IMPORT
 #define U_IO_API       U_IMPORT
 #define U_TOOLUTIL_API U_IMPORT
-#elif defined(U_LAYOUTEX_IMPLEMENTATION)
+#وإلاإذا defined(U_LAYOUTEX_IMPLEMENTATION)
 #define U_DATA_API     U_IMPORT
 #define U_COMMON_API   U_IMPORT
 #define U_I18N_API     U_IMPORT
@@ -358,7 +358,7 @@ typedef double UDate;
 #define U_LAYOUTEX_API U_EXPORT
 #define U_IO_API       U_IMPORT
 #define U_TOOLUTIL_API U_IMPORT
-#elif defined(U_IO_IMPLEMENTATION)
+#وإلاإذا defined(U_IO_IMPLEMENTATION)
 #define U_DATA_API     U_IMPORT
 #define U_COMMON_API   U_IMPORT
 #define U_I18N_API     U_IMPORT
@@ -366,7 +366,7 @@ typedef double UDate;
 #define U_LAYOUTEX_API U_IMPORT
 #define U_IO_API       U_EXPORT
 #define U_TOOLUTIL_API U_IMPORT
-#elif defined(U_TOOLUTIL_IMPLEMENTATION)
+#وإلاإذا defined(U_TOOLUTIL_IMPLEMENTATION)
 #define U_DATA_API     U_IMPORT
 #define U_COMMON_API   U_IMPORT
 #define U_I18N_API     U_IMPORT
@@ -374,7 +374,7 @@ typedef double UDate;
 #define U_LAYOUTEX_API U_IMPORT
 #define U_IO_API       U_IMPORT
 #define U_TOOLUTIL_API U_EXPORT
-#else
+#وإلا
 #define U_DATA_API     U_IMPORT
 #define U_COMMON_API   U_IMPORT
 #define U_I18N_API     U_IMPORT
@@ -443,7 +443,7 @@ typedef double UDate;
 //
 // https://learn.microsoft.com/en-us/cpp/error-messages/compiler-warnings/compiler-warning-level-1-c4251
 //
-#if U_PLATFORM_HAS_WIN32_API
+#𐤀𐤌 U_PLATFORM_HAS_WIN32_API
 #define U_DATA_API_CLASS
 #define U_COMMON_API_CLASS
 #define U_I18N_API_CLASS
@@ -451,7 +451,7 @@ typedef double UDate;
 #define U_LAYOUTEX_API_CLASS
 #define U_IO_API_CLASS
 #define U_TOOLUTIL_API_CLASS
-#else
+#وإلا
 #define U_DATA_API_CLASS     U_DATA_API
 #define U_COMMON_API_CLASS   U_COMMON_API
 #define U_I18N_API_CLASS     U_I18N_API
@@ -470,7 +470,7 @@ typedef double UDate;
  */
 #ifdef __cplusplus
 #define U_STANDARD_CPP_NAMESPACE        ::
-#else
+#وإلا
 #define U_STANDARD_CPP_NAMESPACE
 #endif
 
@@ -506,7 +506,7 @@ typedef double UDate;
  *
  * @stable ICU 2.0
  */
-typedef enum UErrorCode {
+تعريفنوع تعداد UErrorCode {
     /* The ordering of U_ERROR_INFO_START Vs U_USING_FALLBACK_WARNING looks weird
      * and is that way because VC++ debugger displays first encountered constant,
      * which is not the what the code is used for
@@ -806,15 +806,15 @@ typedef enum UErrorCode {
      * Does the error code indicate success?
      * @stable ICU 2.0
      */
-    static
-    inline UBool U_SUCCESS(UErrorCode code) { return code <= U_ZERO_ERROR; }
+    ساكن
+    مضمن UBool U_SUCCESS(UErrorCode code) { أرجع code <= U_ZERO_ERROR; }
     /**
      * Does the error code indicate a failure?
      * @stable ICU 2.0
      */
-    static
-    inline UBool U_FAILURE(UErrorCode code) { return code > U_ZERO_ERROR; }
-#else
+    ساكن
+    مضمن UBool U_FAILURE(UErrorCode code) { أرجع code > U_ZERO_ERROR; }
+#وإلا
     /**
      * Does the error code indicate success?
      * @stable ICU 2.0
@@ -835,13 +835,13 @@ typedef enum UErrorCode {
      * @internal ICU 79 technology preview
      * @deprecated This API is for technology preview only.
      */
-    static
-    inline UBool U_MF_RECOVERABLE_ERROR(UErrorCode code) {
-        return (code == U_MF_OPERAND_MISMATCH_ERROR)
+    ساكن
+    مضمن UBool U_MF_RECOVERABLE_ERROR(UErrorCode code) {
+        أرجع (code == U_MF_OPERAND_MISMATCH_ERROR)
             || (code == U_MF_FORMATTING_ERROR)
             || (code == U_MF_BAD_OPTION);
     }
-#else
+#وإلا
     /**
      * Does the error code indicate success?
      *
@@ -861,7 +861,7 @@ typedef enum UErrorCode {
  * in the UErrorCode enum above.
  * @stable ICU 2.0
  */
-U_CAPI const char * U_EXPORT2
+U_CAPI ثابت حرف * U_EXPORT2
 u_errorName(UErrorCode code);
 
 

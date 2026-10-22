@@ -14,11 +14,11 @@
 #ifndef PROPNAME_H
 #define PROPNAME_H
 
-#include "unicode/utypes.h"
-#include "unicode/bytestrie.h"
-#include "unicode/uchar.h"
-#include "udataswp.h"
-#include "uprops.h"
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/bytestrie.h"
+#ضمن "unicode/uchar.h"
+#ضمن "udataswp.h"
+#ضمن "uprops.h"
 
 /*
  * This header defines the in-memory layout of the property names data
@@ -51,16 +51,16 @@ U_CDECL_BEGIN
  */
 
 U_CAPI int32_t U_EXPORT2
-uprv_compareASCIIPropertyNames(const char *name1, const char *name2);
+uprv_compareASCIIPropertyNames(ثابت حرف *name1, ثابت حرف *name2);
 
 U_CAPI int32_t U_EXPORT2
-uprv_compareEBCDICPropertyNames(const char *name1, const char *name2);
+uprv_compareEBCDICPropertyNames(ثابت حرف *name1, ثابت حرف *name2);
 
-#if U_CHARSET_FAMILY==U_ASCII_FAMILY
+#𐤀𐤌 U_CHARSET_FAMILY==U_ASCII_FAMILY
 #   define uprv_comparePropertyNames uprv_compareASCIIPropertyNames
-#elif U_CHARSET_FAMILY==U_EBCDIC_FAMILY
+#وإلاإذا U_CHARSET_FAMILY==U_EBCDIC_FAMILY
 #   define uprv_comparePropertyNames uprv_compareEBCDICPropertyNames
-#else
+#وإلا
 #   error U_CHARSET_FAMILY is not valid
 #endif
 
@@ -82,8 +82,8 @@ U_CDECL_END
 U_NAMESPACE_BEGIN
 
 class PropNameData {
-public:
-    enum {
+عام:
+    تعداد {
         // Byte offsets from the start of the data, after the generic header.
         IX_VALUE_MAPS_OFFSET,
         IX_BYTE_TRIES_OFFSET,
@@ -98,24 +98,24 @@ public:
         IX_COUNT
     };
 
-    static const char *getPropertyName(int32_t property, int32_t nameChoice);
-    static const char *getPropertyValueName(int32_t property, int32_t value, int32_t nameChoice);
+    ساكن ثابت حرف *getPropertyName(int32_t property, int32_t nameChoice);
+    ساكن ثابت حرف *getPropertyValueName(int32_t property, int32_t value, int32_t nameChoice);
 
-    static int32_t getPropertyEnum(const char *alias);
-    static int32_t getPropertyValueEnum(int32_t property, const char *alias);
+    ساكن int32_t getPropertyEnum(ثابت حرف *alias);
+    ساكن int32_t getPropertyValueEnum(int32_t property, ثابت حرف *alias);
 
-private:
-    static int32_t findProperty(int32_t property);
-    static int32_t findPropertyValueNameGroup(int32_t valueMapIndex, int32_t value);
-    static const char *getName(const char *nameGroup, int32_t nameIndex);
-    static UBool containsName(BytesTrie &trie, const char *name);
+خاص:
+    ساكن int32_t findProperty(int32_t property);
+    ساكن int32_t findPropertyValueNameGroup(int32_t valueMapIndex, int32_t value);
+    ساكن ثابت حرف *getName(ثابت حرف *nameGroup, int32_t nameIndex);
+    ساكن UBool containsName(BytesTrie &trie, ثابت حرف *name);
 
-    static int32_t getPropertyOrValueEnum(int32_t bytesTrieOffset, const char *alias);
+    ساكن int32_t getPropertyOrValueEnum(int32_t bytesTrieOffset, ثابت حرف *alias);
 
-    static const int32_t indexes[];
-    static const int32_t valueMaps[];
-    static const uint8_t bytesTries[];
-    static const char nameGroups[];
+    ساكن ثابت int32_t indexes[];
+    ساكن ثابت int32_t valueMaps[];
+    ساكن ثابت uint8_t bytesTries[];
+    ساكن ثابت حرف nameGroups[];
 };
 
 /*

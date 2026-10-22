@@ -19,10 +19,10 @@
 #ifndef UBIDIIMP_H
 #define UBIDIIMP_H
 
-#include "unicode/utypes.h"
-#include "unicode/ubidi.h"
-#include "unicode/uchar.h"
-#include "ubidi_props.h"
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/ubidi.h"
+#ضمن "unicode/uchar.h"
+#ضمن "ubidi_props.h"
 
 /* miscellaneous definitions ---------------------------------------------- */
 /*
@@ -48,14 +48,14 @@
 #   undef ES
 #endif
 
-typedef uint8_t DirProp;
-typedef uint32_t Flags;
+تعريفنوع uint8_t DirProp;
+تعريفنوع uint32_t Flags;
 
 /*  Comparing the description of the BiDi algorithm with this implementation
     is easier with the same names for the BiDi types in the code as there.
     See UCharDirection in uchar.h .
 */
-enum {
+تعداد {
     L=  U_LEFT_TO_RIGHT,                /*  0 */
     R=  U_RIGHT_TO_LEFT,                /*  1 */
     EN= U_EUROPEAN_NUMBER,              /*  2 */
@@ -137,7 +137,7 @@ enum {
 #define ISOLATE  0x0100
 
 U_CFUNC UBiDiLevel
-ubidi_getParaLevelAtIndex(const UBiDi *pBiDi, int32_t index);
+ubidi_getParaLevelAtIndex(ثابت UBiDi *pBiDi, int32_t index);
 
 #define GET_PARALEVEL(ubidi, index) \
             ((UBiDiLevel)(!(ubidi)->defaultParaLevel || (index)<(ubidi)->paras[0].limit ? \
@@ -154,24 +154,24 @@ ubidi_getParaLevelAtIndex(const UBiDi *pBiDi, int32_t index);
 #define LF  0x000A
 
 /* Run structure for reordering --------------------------------------------- */
-enum {
+تعداد {
     LRM_BEFORE=1,
     LRM_AFTER=2,
     RLM_BEFORE=4,
     RLM_AFTER=8
 };
 
-typedef struct Para {
+تعريفنوع بنية Para {
     int32_t limit;
     int32_t level;
 } Para;
 
-enum {                                  /* flags for Opening.flags */
+تعداد {                                  /* flags for Opening.flags */
     FOUND_L=DIRPROP_FLAG(L),
     FOUND_R=DIRPROP_FLAG(R)
 };
 
-typedef struct Opening {
+تعريفنوع بنية Opening {
     int32_t position;                   /* position of opening bracket */
     int32_t match;                      /* matching char or -position of closing bracket */
     int32_t contextPos;                 /* position of last strong char found before opening */
@@ -180,7 +180,7 @@ typedef struct Opening {
     uint8_t filler;                     /* to complete a nice multiple of 4 chars */
 } Opening;
 
-typedef struct IsoRun {
+تعريفنوع بنية IsoRun {
     int32_t  contextPos;                /* position of char determining context */
     uint16_t start;                     /* index of first opening entry for this run */
     uint16_t limit;                     /* index after last opening entry for this run */
@@ -190,7 +190,7 @@ typedef struct IsoRun {
     UBiDiDirection contextDir;          /* L or R to use as context for following openings */
 } IsoRun;
 
-typedef struct BracketData {
+تعريفنوع بنية BracketData {
     UBiDi   *pBiDi;
     /* array of opening entries which should be enough in most cases; no malloc() */
     Opening simpleOpenings[SIMPLE_OPENINGS_COUNT];
@@ -203,14 +203,14 @@ typedef struct BracketData {
     UBool isNumbersSpecial;             /* reordering mode for NUMBERS_SPECIAL */
 } BracketData;
 
-typedef struct Isolate {
+تعريفنوع بنية Isolate {
     int32_t startON;
     int32_t start1;
     int32_t state;
     int16_t stateImp;
 } Isolate;
 
-typedef struct Run {
+تعريفنوع بنية Run {
     int32_t logicalStart,   /* first character of the run; b31 indicates even/odd level */
             visualLimit,    /* last visual position of the run +1 */
             insertRemove;   /* if >0, flags for inserting LRM/RLM before/after run,
@@ -233,7 +233,7 @@ U_CFUNC UBool
 ubidi_getRuns(UBiDi *pBiDi, UErrorCode *pErrorCode);
 
 /** BiDi control code points */
-enum {
+تعداد {
     ZWNJ_CHAR=0x200c,
     ZWJ_CHAR,
     LRM_CHAR,
@@ -253,12 +253,12 @@ enum {
 
 /* InsertPoints structure for noting where to put BiDi marks ---------------- */
 
-typedef struct Point {
+تعريفنوع بنية Point {
     int32_t pos;            /* position in text */
     int32_t flag;           /* flag for LRM/RLM, before/after */
 } Point;
 
-typedef struct InsertPoints {
+تعريفنوع بنية InsertPoints {
     int32_t capacity;       /* number of points allocated */
     int32_t size;           /* number of points used */
     int32_t confirmed;      /* number of points confirmed */
@@ -269,15 +269,15 @@ typedef struct InsertPoints {
 
 /* UBiDi structure ----------------------------------------------------------- */
 
-struct UBiDi {
+بنية UBiDi {
     /* pointer to parent paragraph object (pointer to self if this object is
      * a paragraph object); set to NULL in a newly opened object; set to a
      * real value after a successful execution of ubidi_setPara or ubidi_setLine
      */
-    const UBiDi * pParaBiDi;
+    ثابت UBiDi * pParaBiDi;
 
     /* alias pointer to the current text */
-    const UChar *text;
+    ثابت UChar *text;
 
     /* length of the current text */
     int32_t originalLength;
@@ -338,13 +338,13 @@ struct UBiDi {
     UBiDiLevel defaultParaLevel;
 
     /* context data */
-    const UChar *prologue;
+    ثابت UChar *prologue;
     int32_t proLength;
-    const UChar *epilogue;
+    ثابت UChar *epilogue;
     int32_t epiLength;
 
     /* the following is set in ubidi_setPara, used in processPropertySeq */
-    const struct ImpTabPair * pImpTabPair;  /* pointer to levels state table pair */
+    ثابت بنية ImpTabPair * pImpTabPair;  /* pointer to levels state table pair */
 
     /* the overall paragraph or line directionality - see UBiDiDirection */
     UBiDiDirection direction;
@@ -393,13 +393,13 @@ struct UBiDi {
 
     /* for Bidi class callback */
     UBiDiClassCallback *fnClassCallback;    /* action pointer */
-    const void *coClassCallback;            /* context pointer */
+    ثابت فراغ *coClassCallback;            /* context pointer */
 };
 
 #define IS_VALID_PARA(x) ((x) && ((x)->pParaBiDi==(x)))
 #define IS_VALID_PARA_OR_LINE(x) ((x) && ((x)->pParaBiDi==(x) || (((x)->pParaBiDi) && (x)->pParaBiDi->pParaBiDi==(x)->pParaBiDi)))
 
-typedef union {
+تعريفنوع اتحاد {
     DirProp *dirPropsMemory;
     UBiDiLevel *levelsMemory;
     Opening *openingsMemory;
@@ -410,46 +410,46 @@ typedef union {
 
 /* Macros for initial checks at function entry */
 #define RETURN_IF_NULL_OR_FAILING_ERRCODE(pErrcode, retvalue) UPRV_BLOCK_MACRO_BEGIN { \
-    if((pErrcode)==NULL || U_FAILURE(*pErrcode)) return retvalue; \
+    𐤀𐤌((pErrcode)==عدم || U_FAILURE(*pErrcode)) أرجع retvalue; \
 } UPRV_BLOCK_MACRO_END
 #define RETURN_IF_NOT_VALID_PARA(bidi, errcode, retvalue) UPRV_BLOCK_MACRO_BEGIN { \
-    if(!IS_VALID_PARA(bidi)) { \
+    𐤀𐤌(!IS_VALID_PARA(bidi)) { \
         errcode=U_INVALID_STATE_ERROR; \
-        return retvalue; \
+        أرجع retvalue; \
     } \
 } UPRV_BLOCK_MACRO_END
 #define RETURN_IF_NOT_VALID_PARA_OR_LINE(bidi, errcode, retvalue) UPRV_BLOCK_MACRO_BEGIN { \
-    if(!IS_VALID_PARA_OR_LINE(bidi)) { \
+    𐤀𐤌(!IS_VALID_PARA_OR_LINE(bidi)) { \
         errcode=U_INVALID_STATE_ERROR; \
-        return retvalue; \
+        أرجع retvalue; \
     } \
 } UPRV_BLOCK_MACRO_END
 #define RETURN_IF_BAD_RANGE(arg, start, limit, errcode, retvalue) UPRV_BLOCK_MACRO_BEGIN { \
-    if((arg)<(start) || (arg)>=(limit)) { \
+    𐤀𐤌((arg)<(start) || (arg)>=(limit)) { \
         (errcode)=U_ILLEGAL_ARGUMENT_ERROR; \
-        return retvalue; \
+        أرجع retvalue; \
     } \
 } UPRV_BLOCK_MACRO_END
 
 #define RETURN_VOID_IF_NULL_OR_FAILING_ERRCODE(pErrcode) UPRV_BLOCK_MACRO_BEGIN { \
-    if((pErrcode)==NULL || U_FAILURE(*pErrcode)) return; \
+    𐤀𐤌((pErrcode)==عدم || U_FAILURE(*pErrcode)) أرجع; \
 } UPRV_BLOCK_MACRO_END
 #define RETURN_VOID_IF_NOT_VALID_PARA(bidi, errcode) UPRV_BLOCK_MACRO_BEGIN { \
-    if(!IS_VALID_PARA(bidi)) { \
+    𐤀𐤌(!IS_VALID_PARA(bidi)) { \
         errcode=U_INVALID_STATE_ERROR; \
-        return; \
+        أرجع; \
     } \
 } UPRV_BLOCK_MACRO_END
 #define RETURN_VOID_IF_NOT_VALID_PARA_OR_LINE(bidi, errcode) UPRV_BLOCK_MACRO_BEGIN { \
-    if(!IS_VALID_PARA_OR_LINE(bidi)) { \
+    𐤀𐤌(!IS_VALID_PARA_OR_LINE(bidi)) { \
         errcode=U_INVALID_STATE_ERROR; \
-        return; \
+        أرجع; \
     } \
 } UPRV_BLOCK_MACRO_END
 #define RETURN_VOID_IF_BAD_RANGE(arg, start, limit, errcode) UPRV_BLOCK_MACRO_BEGIN { \
-    if((arg)<(start) || (arg)>=(limit)) { \
+    𐤀𐤌((arg)<(start) || (arg)>=(limit)) { \
         (errcode)=U_ILLEGAL_ARGUMENT_ERROR; \
-        return; \
+        أرجع; \
     } \
 } UPRV_BLOCK_MACRO_END
 
@@ -468,7 +468,7 @@ ubidi_getMemory(BidiMemoryForAllocation *pMemory, int32_t *pSize, UBool mayAlloc
 
 #define getRunsMemory(pBiDi, length) \
         ubidi_getMemory((BidiMemoryForAllocation *)&(pBiDi)->runsMemory, &(pBiDi)->runsSize, \
-                        (pBiDi)->mayAllocateRuns, (length)*sizeof(Run))
+                        (pBiDi)->mayAllocateRuns, (length)*حجم(Run))
 
 /* additional macros used by ubidi_open() - always allow allocation */
 #define getInitialDirPropsMemory(pBiDi, length) \
@@ -481,18 +481,18 @@ ubidi_getMemory(BidiMemoryForAllocation *pMemory, int32_t *pSize, UBool mayAlloc
 
 #define getInitialOpeningsMemory(pBiDi, length) \
         ubidi_getMemory((BidiMemoryForAllocation *)&(pBiDi)->openingsMemory, &(pBiDi)->openingsSize, \
-                        true, (length)*sizeof(Opening))
+                        true, (length)*حجم(Opening))
 
 #define getInitialParasMemory(pBiDi, length) \
         ubidi_getMemory((BidiMemoryForAllocation *)&(pBiDi)->parasMemory, &(pBiDi)->parasSize, \
-                        true, (length)*sizeof(Para))
+                        true, (length)*حجم(Para))
 
 #define getInitialRunsMemory(pBiDi, length) \
         ubidi_getMemory((BidiMemoryForAllocation *)&(pBiDi)->runsMemory, &(pBiDi)->runsSize, \
-                        true, (length)*sizeof(Run))
+                        true, (length)*حجم(Run))
 
 #define getInitialIsolatesMemory(pBiDi, length) \
         ubidi_getMemory((BidiMemoryForAllocation *)&(pBiDi)->isolatesMemory, &(pBiDi)->isolatesSize, \
-                        true, (length)*sizeof(Isolate))
+                        true, (length)*حجم(Isolate))
 
 #endif

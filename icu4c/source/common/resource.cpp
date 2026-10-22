@@ -11,7 +11,7 @@
 * created by: Markus W. Scherer
 */
 
-#include "resource.h"
+#ضمن "resource.h"
 
 U_NAMESPACE_BEGIN
 

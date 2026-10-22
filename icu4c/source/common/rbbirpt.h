@@ -15,20 +15,20 @@
 #ifndef RBBIRPT_H
 #define RBBIRPT_H
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
 U_NAMESPACE_BEGIN
 //
 // Character classes for RBBI rule scanning.
 //
-    static const uint8_t kRuleSet_digit_char = 128;
-    static const uint8_t kRuleSet_name_char = 129;
-    static const uint8_t kRuleSet_name_start_char = 130;
-    static const uint8_t kRuleSet_rule_char = 131;
-    static const uint8_t kRuleSet_white_space = 132;
+    ساكن ثابت uint8_t kRuleSet_digit_char = 128;
+    ساكن ثابت uint8_t kRuleSet_name_char = 129;
+    ساكن ثابت uint8_t kRuleSet_name_start_char = 130;
+    ساكن ثابت uint8_t kRuleSet_rule_char = 131;
+    ساكن ثابت uint8_t kRuleSet_white_space = 132;
 
 
-enum RBBI_RuleParseAction {
+تعداد RBBI_RuleParseAction {
     doCheckVarDef,
     doDotAny,
     doEndAssign,
@@ -68,7 +68,7 @@ enum RBBI_RuleParseAction {
 //  RBBIRuleTableEl    represents the structure of a row in the transition table
 //                     for the rule parser state machine.
 //-------------------------------------------------------------------------------
-struct RBBIRuleTableEl {
+بنية RBBIRuleTableEl {
     RBBI_RuleParseAction          fAction;
     uint8_t                       fCharClass;       // 0-127:    an individual ASCII character
                                                     // 128-255:  character class index
@@ -78,7 +78,7 @@ struct RBBIRuleTableEl {
     UBool                         fNextChar;
 };
 
-static const struct RBBIRuleTableEl gRuleParseStateTable[] = {
+ساكن ثابت بنية RBBIRuleTableEl gRuleParseStateTable[] = {
     {doNOP, 0, 0, 0, true}
     , {doExprStart, 254, 29, 9, false}     //  1      start
     , {doNOP, 132, 1,0,  true}     //  2 
@@ -185,7 +185,7 @@ static const struct RBBIRuleTableEl gRuleParseStateTable[] = {
     , {doExit, 255, 103,0,  true}     //  103      errorDeath
  };
 #ifdef RBBI_DEBUG
-static const char * const RBBIRuleStateNames[] = {    0,
+ساكن ثابت حرف * ثابت RBBIRuleStateNames[] = {    0,
      "start",
     0,
     0,

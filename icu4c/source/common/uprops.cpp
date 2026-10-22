@@ -23,31 +23,31 @@
 *   including those for normalization and case mappings.
 */
 
-#include "unicode/utypes.h"
-#include "unicode/uchar.h"
-#include "unicode/ucptrie.h"
-#include "unicode/udata.h"
-#include "unicode/unorm2.h"
-#include "unicode/uscript.h"
-#include "unicode/ustring.h"
-#include "unicode/utf16.h"
-#include "cstring.h"
-#include "emojiprops.h"
-#include "mutex.h"
-#include "normalizer2impl.h"
-#include "umutex.h"
-#include "ubidi_props.h"
-#include "uprops.h"
-#include "ucase.h"
-#include "ucln_cmn.h"
-#include "ulayout_props.h"
-#include "ustr_imp.h"
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/uchar.h"
+#ضمن "unicode/ucptrie.h"
+#ضمن "unicode/udata.h"
+#ضمن "unicode/unorm2.h"
+#ضمن "unicode/uscript.h"
+#ضمن "unicode/ustring.h"
+#ضمن "unicode/utf16.h"
+#ضمن "cstring.h"
+#ضمن "emojiprops.h"
+#ضمن "mutex.h"
+#ضمن "normalizer2impl.h"
+#ضمن "umutex.h"
+#ضمن "ubidi_props.h"
+#ضمن "uprops.h"
+#ضمن "ucase.h"
+#ضمن "ucln_cmn.h"
+#ضمن "ulayout_props.h"
+#ضمن "ustr_imp.h"
 
 U_NAMESPACE_USE
 
 // Unicode text layout properties data -----------------------------------------
 
-namespace {
+نطاق {
 
 icu::UInitOnce gLayoutInitOnce {};
 UDataMemory *gLayoutMemory = nullptr;
@@ -76,14 +76,14 @@ UBool U_CALLCONV uprops_cleanup() {
     gMaxVoValue = 0;
 
     gLayoutInitOnce.reset();
-    return true;
+    أرجع true;
 }
 
 UBool U_CALLCONV
-ulayout_isAcceptable(void * /*context*/,
-                     const char * /* type */, const char * /*name*/,
-                     const UDataInfo *pInfo) {
-    return pInfo->size >= 20 &&
+ulayout_isAcceptable(فراغ * /*context*/,
+                     ثابت حرف * /* type */, ثابت حرف * /*name*/,
+                     ثابت UDataInfo *pInfo) {
+    أرجع pInfo->size >= 20 &&
         pInfo->isBigEndian == U_IS_BIG_ENDIAN &&
         pInfo->charsetFamily == U_CHARSET_FAMILY &&
         pInfo->dataFormat[0] == ULAYOUT_FMT_0 &&
@@ -94,23 +94,23 @@ ulayout_isAcceptable(void * /*context*/,
 }
 
 // UInitOnce singleton initialization function
-void U_CALLCONV ulayout_load(UErrorCode &errorCode) {
+فراغ U_CALLCONV ulayout_load(UErrorCode &errorCode) {
     gLayoutMemory = udata_openChoice(
         nullptr, ULAYOUT_DATA_TYPE, ULAYOUT_DATA_NAME,
         ulayout_isAcceptable, nullptr, &errorCode);
-    if (U_FAILURE(errorCode)) { return; }
+    𐤀𐤌 (U_FAILURE(errorCode)) { أرجع; }
 
-    const uint8_t* inBytes = static_cast<const uint8_t*>(udata_getMemory(gLayoutMemory));
-    const int32_t* inIndexes = reinterpret_cast<const int32_t*>(inBytes);
+    ثابت uint8_t* inBytes = static_cast<ثابت uint8_t*>(udata_getMemory(gLayoutMemory));
+    ثابت int32_t* inIndexes = reinterpret_cast<ثابت int32_t*>(inBytes);
     int32_t indexesLength = inIndexes[ULAYOUT_IX_INDEXES_LENGTH];
-    if (indexesLength < 12) {
+    𐤀𐤌 (indexesLength < 12) {
         errorCode = U_INVALID_FORMAT_ERROR;  // Not enough indexes.
-        return;
+        أرجع;
     }
     int32_t offset = indexesLength * 4;
     int32_t top = inIndexes[ULAYOUT_IX_INPC_TRIE_TOP];
     int32_t trieSize = top - offset;
-    if (trieSize >= 16) {
+    𐤀𐤌 (trieSize >= 16) {
         gInpcTrie = ucptrie_openFromBinary(
             UCPTRIE_TYPE_ANY, UCPTRIE_VALUE_BITS_ANY,
             inBytes + offset, trieSize, nullptr, &errorCode);
@@ -118,7 +118,7 @@ void U_CALLCONV ulayout_load(UErrorCode &errorCode) {
     offset = top;
     top = inIndexes[ULAYOUT_IX_INSC_TRIE_TOP];
     trieSize = top - offset;
-    if (trieSize >= 16) {
+    𐤀𐤌 (trieSize >= 16) {
         gInscTrie = ucptrie_openFromBinary(
             UCPTRIE_TYPE_ANY, UCPTRIE_VALUE_BITS_ANY,
             inBytes + offset, trieSize, nullptr, &errorCode);
@@ -126,7 +126,7 @@ void U_CALLCONV ulayout_load(UErrorCode &errorCode) {
     offset = top;
     top = inIndexes[ULAYOUT_IX_VO_TRIE_TOP];
     trieSize = top - offset;
-    if (trieSize >= 16) {
+    𐤀𐤌 (trieSize >= 16) {
         gVoTrie = ucptrie_openFromBinary(
             UCPTRIE_TYPE_ANY, UCPTRIE_VALUE_BITS_ANY,
             inBytes + offset, trieSize, nullptr, &errorCode);
@@ -141,132 +141,132 @@ void U_CALLCONV ulayout_load(UErrorCode &errorCode) {
 }
 
 UBool ulayout_ensureData(UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return false; }
+    𐤀𐤌 (U_FAILURE(errorCode)) { أرجع خطأ; }
     umtx_initOnce(gLayoutInitOnce, &ulayout_load, errorCode);
-    return U_SUCCESS(errorCode);
+    أرجع U_SUCCESS(errorCode);
 }
 
 UBool ulayout_ensureData() {
     UErrorCode errorCode = U_ZERO_ERROR;
-    return ulayout_ensureData(errorCode);
+    أرجع ulayout_ensureData(errorCode);
 }
 
 }  // namespace
 
 /* general properties API functions ----------------------------------------- */
 
-struct BinaryProperty;
+بنية BinaryProperty;
 
-typedef UBool BinaryPropertyContains(const BinaryProperty &prop, UChar32 c, UProperty which);
+تعريفنوع UBool BinaryPropertyContains(ثابت BinaryProperty &prop, UChar32 c, UProperty which);
 
-struct BinaryProperty {
+بنية BinaryProperty {
     int32_t column;  // SRC_PROPSVEC column, or "source" if mask==0
     uint32_t mask;
     BinaryPropertyContains *contains;
 };
 
-static UBool defaultContains(const BinaryProperty &prop, UChar32 c, UProperty /*which*/) {
+ساكن UBool defaultContains(ثابت BinaryProperty &prop, UChar32 c, UProperty /*which*/) {
     /* systematic, directly stored properties */
-    return (u_getUnicodeProperties(c, prop.column)&prop.mask)!=0;
+    أرجع (u_getUnicodeProperties(c, prop.column)&prop.mask)!=0;
 }
 
-static UBool caseBinaryPropertyContains(const BinaryProperty &/*prop*/, UChar32 c, UProperty which) {
-    return ucase_hasBinaryProperty(c, which);
+ساكن UBool caseBinaryPropertyContains(ثابت BinaryProperty &/*prop*/, UChar32 c, UProperty which) {
+    أرجع ucase_hasBinaryProperty(c, which);
 }
 
-static UBool isBidiControl(const BinaryProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
-    return ubidi_isBidiControl(c);
+ساكن UBool isBidiControl(ثابت BinaryProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
+    أرجع ubidi_isBidiControl(c);
 }
 
-static UBool isMirrored(const BinaryProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
-    return ubidi_isMirrored(c);
+ساكن UBool isMirrored(ثابت BinaryProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
+    أرجع ubidi_isMirrored(c);
 }
 
-static UBool isJoinControl(const BinaryProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
-    return ubidi_isJoinControl(c);
+ساكن UBool isJoinControl(ثابت BinaryProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
+    أرجع ubidi_isJoinControl(c);
 }
 
-#if UCONFIG_NO_NORMALIZATION
-static UBool hasFullCompositionExclusion(const BinaryProperty &, UChar32, UProperty) {
-    return false;
+#𐤀𐤌 UCONFIG_NO_NORMALIZATION
+ساكن UBool hasFullCompositionExclusion(ثابت BinaryProperty &, UChar32, UProperty) {
+    أرجع خطأ;
 }
-#else
-static UBool hasFullCompositionExclusion(const BinaryProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
+#وإلا
+ساكن UBool hasFullCompositionExclusion(ثابت BinaryProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
     // By definition, Full_Composition_Exclusion is the same as NFC_QC=No.
     UErrorCode errorCode=U_ZERO_ERROR;
-    const Normalizer2Impl *impl=Normalizer2Factory::getNFCImpl(errorCode);
-    return U_SUCCESS(errorCode) && impl->isCompNo(impl->getNorm16(c));
+    ثابت Normalizer2Impl *impl=Normalizer2Factory::getNFCImpl(errorCode);
+    أرجع U_SUCCESS(errorCode) && impl->isCompNo(impl->getNorm16(c));
 }
 #endif
 
 // UCHAR_NF*_INERT properties
-#if UCONFIG_NO_NORMALIZATION
-static UBool isNormInert(const BinaryProperty &, UChar32, UProperty) {
-    return false;
+#𐤀𐤌 UCONFIG_NO_NORMALIZATION
+ساكن UBool isNormInert(ثابت BinaryProperty &, UChar32, UProperty) {
+    أرجع خطأ;
 }
-#else
-static UBool isNormInert(const BinaryProperty &/*prop*/, UChar32 c, UProperty which) {
+#وإلا
+ساكن UBool isNormInert(ثابت BinaryProperty &/*prop*/, UChar32 c, UProperty which) {
     UErrorCode errorCode=U_ZERO_ERROR;
-    const Normalizer2 *norm2=Normalizer2Factory::getInstance(
+    ثابت Normalizer2 *norm2=Normalizer2Factory::getInstance(
         static_cast<UNormalizationMode>(which - UCHAR_NFD_INERT + UNORM_NFD), errorCode);
-    return U_SUCCESS(errorCode) && norm2->isInert(c);
+    أرجع U_SUCCESS(errorCode) && norm2->isInert(c);
 }
 #endif
 
-#if UCONFIG_NO_NORMALIZATION
-static UBool changesWhenCasefolded(const BinaryProperty &, UChar32, UProperty) {
-    return false;
+#𐤀𐤌 UCONFIG_NO_NORMALIZATION
+ساكن UBool changesWhenCasefolded(ثابت BinaryProperty &, UChar32, UProperty) {
+    أرجع خطأ;
 }
-#else
-static UBool changesWhenCasefolded(const BinaryProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
+#وإلا
+ساكن UBool changesWhenCasefolded(ثابت BinaryProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
     UnicodeString nfd;
     UErrorCode errorCode=U_ZERO_ERROR;
-    const Normalizer2 *nfcNorm2=Normalizer2::getNFCInstance(errorCode);
-    if(U_FAILURE(errorCode)) {
-        return false;
+    ثابت Normalizer2 *nfcNorm2=Normalizer2::getNFCInstance(errorCode);
+    𐤀𐤌(U_FAILURE(errorCode)) {
+        أرجع خطأ;
     }
-    if(nfcNorm2->getDecomposition(c, nfd)) {
+    𐤀𐤌(nfcNorm2->getDecomposition(c, nfd)) {
         /* c has a decomposition */
-        if(nfd.length()==1) {
+        𐤀𐤌(nfd.length()==1) {
             c=nfd[0];  /* single BMP code point */
-        } else if(nfd.length()<=U16_MAX_LENGTH &&
+        } وإلا 𐤀𐤌(nfd.length()<=U16_MAX_LENGTH &&
                   nfd.length()==U16_LENGTH(c=nfd.char32At(0))
         ) {
             /* single supplementary code point */
-        } else {
+        } وإلا {
             c=U_SENTINEL;
         }
-    } else if(c<0) {
-        return false;  /* protect against bad input */
+    } وإلا 𐤀𐤌(c<0) {
+        أرجع خطأ;  /* protect against bad input */
     }
-    if(c>=0) {
+    𐤀𐤌(c>=0) {
         /* single code point */
-        const char16_t *resultString;
-        return ucase_toFullFolding(c, &resultString, U_FOLD_CASE_DEFAULT) >= 0;
-    } else {
+        ثابت char16_t *resultString;
+        أرجع ucase_toFullFolding(c, &resultString, U_FOLD_CASE_DEFAULT) >= 0;
+    } وإلا {
         /* guess some large but stack-friendly capacity */
         char16_t dest[2*UCASE_MAX_STRING_LENGTH];
         int32_t destLength;
         destLength=u_strFoldCase(dest, UPRV_LENGTHOF(dest),
                                   nfd.getBuffer(), nfd.length(),
                                   U_FOLD_CASE_DEFAULT, &errorCode);
-        return U_SUCCESS(errorCode) &&
+        أرجع U_SUCCESS(errorCode) &&
                        0!=u_strCompare(nfd.getBuffer(), nfd.length(),
-                                       dest, destLength, false);
+                                       dest, destLength, خطأ);
     }
 }
 #endif
 
-#if UCONFIG_NO_NORMALIZATION
-static UBool changesWhenNFKC_Casefolded(const BinaryProperty &, UChar32, UProperty) {
-    return false;
+#𐤀𐤌 UCONFIG_NO_NORMALIZATION
+ساكن UBool changesWhenNFKC_Casefolded(ثابت BinaryProperty &, UChar32, UProperty) {
+    أرجع خطأ;
 }
-#else
-static UBool changesWhenNFKC_Casefolded(const BinaryProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
+#وإلا
+ساكن UBool changesWhenNFKC_Casefolded(ثابت BinaryProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
     UErrorCode errorCode=U_ZERO_ERROR;
-    const Normalizer2Impl *kcf=Normalizer2Factory::getNFKC_CFImpl(errorCode);
-    if(U_FAILURE(errorCode)) {
-        return false;
+    ثابت Normalizer2Impl *kcf=Normalizer2Factory::getNFKC_CFImpl(errorCode);
+    𐤀𐤌(U_FAILURE(errorCode)) {
+        أرجع خطأ;
     }
     UnicodeString src(c);
     UnicodeString dest;
@@ -275,66 +275,66 @@ static UBool changesWhenNFKC_Casefolded(const BinaryProperty &/*prop*/, UChar32 
         // needs to release dest's buffer before we look at its contents.
         ReorderingBuffer buffer(*kcf, dest);
         // Small destCapacity for NFKC_CF(c).
-        if(buffer.init(5, errorCode)) {
-            const char16_t *srcArray=src.getBuffer();
-            kcf->compose(srcArray, srcArray+src.length(), false,
+        𐤀𐤌(buffer.init(5, errorCode)) {
+            ثابت char16_t *srcArray=src.getBuffer();
+            kcf->compose(srcArray, srcArray+src.length(), خطأ,
                           true, buffer, errorCode);
         }
     }
-    return U_SUCCESS(errorCode) && dest!=src;
+    أرجع U_SUCCESS(errorCode) && dest!=src;
 }
 #endif
 
-#if UCONFIG_NO_NORMALIZATION
-static UBool isCanonSegmentStarter(const BinaryProperty &, UChar32, UProperty) {
-    return false;
+#𐤀𐤌 UCONFIG_NO_NORMALIZATION
+ساكن UBool isCanonSegmentStarter(ثابت BinaryProperty &, UChar32, UProperty) {
+    أرجع خطأ;
 }
-#else
-static UBool isCanonSegmentStarter(const BinaryProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
+#وإلا
+ساكن UBool isCanonSegmentStarter(ثابت BinaryProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
     UErrorCode errorCode=U_ZERO_ERROR;
-    const Normalizer2Impl *impl=Normalizer2Factory::getNFCImpl(errorCode);
-    return
+    ثابت Normalizer2Impl *impl=Normalizer2Factory::getNFCImpl(errorCode);
+    أرجع
         U_SUCCESS(errorCode) && impl->ensureCanonIterData(errorCode) &&
         impl->isCanonSegmentStarter(c);
 }
 #endif
 
-static UBool isPOSIX_alnum(const BinaryProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
-    return u_isalnumPOSIX(c);
+ساكن UBool isPOSIX_alnum(ثابت BinaryProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
+    أرجع u_isalnumPOSIX(c);
 }
 
-static UBool isPOSIX_blank(const BinaryProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
-    return u_isblank(c);
+ساكن UBool isPOSIX_blank(ثابت BinaryProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
+    أرجع u_isblank(c);
 }
 
-static UBool isPOSIX_graph(const BinaryProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
-    return u_isgraphPOSIX(c);
+ساكن UBool isPOSIX_graph(ثابت BinaryProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
+    أرجع u_isgraphPOSIX(c);
 }
 
-static UBool isPOSIX_print(const BinaryProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
-    return u_isprintPOSIX(c);
+ساكن UBool isPOSIX_print(ثابت BinaryProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
+    أرجع u_isprintPOSIX(c);
 }
 
-static UBool isPOSIX_xdigit(const BinaryProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
-    return u_isxdigit(c);
+ساكن UBool isPOSIX_xdigit(ثابت BinaryProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
+    أرجع u_isxdigit(c);
 }
 
-static UBool isRegionalIndicator(const BinaryProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
+ساكن UBool isRegionalIndicator(ثابت BinaryProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
     // Property starts are a subset of lb=RI etc.
-    return 0x1F1E6<=c && c<=0x1F1FF;
+    أرجع 0x1F1E6<=c && c<=0x1F1FF;
 }
 
-static UBool hasEmojiProperty(const BinaryProperty &/*prop*/, UChar32 c, UProperty which) {
-    return EmojiProps::hasBinaryProperty(c, which);
+ساكن UBool hasEmojiProperty(ثابت BinaryProperty &/*prop*/, UChar32 c, UProperty which) {
+    أرجع EmojiProps::hasBinaryProperty(c, which);
 }
 
-static UBool isIDSUnaryOperator(const BinaryProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
+ساكن UBool isIDSUnaryOperator(ثابت BinaryProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
     // New in Unicode 15.1 for just two characters.
-    return 0x2FFE<=c && c<=0x2FFF;
+    أرجع 0x2FFE<=c && c<=0x2FFF;
 }
 
 /** Ranges (start/limit pairs) of ID_Compat_Math_Continue (only), from UCD PropList.txt. */
-static constexpr UChar32 ID_COMPAT_MATH_CONTINUE[] = {
+ساكن constexpr UChar32 ID_COMPAT_MATH_CONTINUE[] = {
     0x00B2, 0x00B3 + 1,
     0x00B9, 0x00B9 + 1,
     0x2070, 0x2070 + 1,
@@ -343,7 +343,7 @@ static constexpr UChar32 ID_COMPAT_MATH_CONTINUE[] = {
 };
 
 /** ID_Compat_Math_Start characters, from UCD PropList.txt. */
-static constexpr UChar32 ID_COMPAT_MATH_START[] = {
+ساكن constexpr UChar32 ID_COMPAT_MATH_START[] = {
     0x2202,
     0x2207,
     0x221E,
@@ -360,7 +360,7 @@ static constexpr UChar32 ID_COMPAT_MATH_START[] = {
 };
 
 /** Ranges (start/limit pairs) of Modifier_Combining_Mark (only), from UCD PropList.txt. */
-static constexpr UChar32 MODIFIER_COMBINING_MARK[] = {
+ساكن constexpr UChar32 MODIFIER_COMBINING_MARK[] = {
     0x0654, 0x0655 + 1,
     0x0658, 0x0658 + 1, // U+0658
     0x06DC, 0x06DC + 1, // U+06DC
@@ -375,31 +375,31 @@ static constexpr UChar32 MODIFIER_COMBINING_MARK[] = {
     0x10EF9, 0x10EF9 + 1,
 };
 
-static UBool isIDCompatMathStart(const BinaryProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
-    if (c < ID_COMPAT_MATH_START[0]) { return false; }  // fastpath for common scripts
-    for (UChar32 startChar : ID_COMPAT_MATH_START) {
-        if (c == startChar) { return true; }
+ساكن UBool isIDCompatMathStart(ثابت BinaryProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
+    𐤀𐤌 (c < ID_COMPAT_MATH_START[0]) { أرجع خطأ; }  // fastpath for common scripts
+    لكل (UChar32 startChar : ID_COMPAT_MATH_START) {
+        𐤀𐤌 (c == startChar) { أرجع true; }
     }
-    return false;
+    أرجع خطأ;
 }
 
-static UBool isIDCompatMathContinue(const BinaryProperty &prop, UChar32 c, UProperty /*which*/) {
-    for (int32_t i = 0; i < UPRV_LENGTHOF(ID_COMPAT_MATH_CONTINUE); i += 2) {
-        if (c < ID_COMPAT_MATH_CONTINUE[i]) { return false; }  // below range start
-        if (c < ID_COMPAT_MATH_CONTINUE[i + 1]) { return true; }  // below range limit
+ساكن UBool isIDCompatMathContinue(ثابت BinaryProperty &prop, UChar32 c, UProperty /*which*/) {
+    لكل (int32_t i = 0; i < UPRV_LENGTHOF(ID_COMPAT_MATH_CONTINUE); i += 2) {
+        𐤀𐤌 (c < ID_COMPAT_MATH_CONTINUE[i]) { أرجع خطأ; }  // below range start
+        𐤀𐤌 (c < ID_COMPAT_MATH_CONTINUE[i + 1]) { أرجع true; }  // below range limit
     }
-    return isIDCompatMathStart(prop, c, UCHAR_ID_COMPAT_MATH_START);
+    أرجع isIDCompatMathStart(prop, c, UCHAR_ID_COMPAT_MATH_START);
 }
 
-static UBool isModifierCombiningMark(const BinaryProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
-    for (int32_t i = 0; i < UPRV_LENGTHOF(MODIFIER_COMBINING_MARK); i += 2) {
-        if (c < MODIFIER_COMBINING_MARK[i]) { return false; }  // below range start
-        if (c < MODIFIER_COMBINING_MARK[i + 1]) { return true; }  // below range limit
+ساكن UBool isModifierCombiningMark(ثابت BinaryProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
+    لكل (int32_t i = 0; i < UPRV_LENGTHOF(MODIFIER_COMBINING_MARK); i += 2) {
+        𐤀𐤌 (c < MODIFIER_COMBINING_MARK[i]) { أرجع خطأ; }  // below range start
+        𐤀𐤌 (c < MODIFIER_COMBINING_MARK[i + 1]) { أرجع true; }  // below range limit
     }
-    return false;
+    أرجع خطأ;
 }
 
-static const BinaryProperty binProps[UCHAR_BINARY_LIMIT]={
+ساكن ثابت BinaryProperty binProps[UCHAR_BINARY_LIMIT]={
     /*
      * column and mask values for binary properties from u_getUnicodeProperties().
      * Must be in order of corresponding UProperty,
@@ -489,54 +489,54 @@ static const BinaryProperty binProps[UCHAR_BINARY_LIMIT]={
 U_CAPI UBool U_EXPORT2
 u_hasBinaryProperty(UChar32 c, UProperty which) {
     /* c is range-checked in the functions that are called from here */
-    if(which<UCHAR_BINARY_START || UCHAR_BINARY_LIMIT<=which) {
+    𐤀𐤌(which<UCHAR_BINARY_START || UCHAR_BINARY_LIMIT<=which) {
         /* not a known binary property */
-        return false;
-    } else {
-        const BinaryProperty &prop=binProps[which];
-        return prop.contains(prop, c, which);
+        أرجع خطأ;
+    } وإلا {
+        ثابت BinaryProperty &prop=binProps[which];
+        أرجع prop.contains(prop, c, which);
     }
 }
 
 /* Checks if the Unicode character can start a Unicode identifier.*/
 U_CAPI UBool U_EXPORT2
 u_isIDStart(UChar32 c) {
-    return u_hasBinaryProperty(c, UCHAR_ID_START);
+    أرجع u_hasBinaryProperty(c, UCHAR_ID_START);
 }
 
 /* Checks if the Unicode character can be a Unicode identifier part other than starting the
  identifier.*/
 U_CAPI UBool U_EXPORT2
 u_isIDPart(UChar32 c) {
-    return u_hasBinaryProperty(c, UCHAR_ID_CONTINUE);
+    أرجع u_hasBinaryProperty(c, UCHAR_ID_CONTINUE);
 }
 
 U_CAPI UBool U_EXPORT2
-u_stringHasBinaryProperty(const char16_t *s, int32_t length, UProperty which) {
-    if (s == nullptr && length != 0) { return false; }
-    if (length == 1) {
-        return u_hasBinaryProperty(s[0], which);  // single code point
-    } else if (length == 2 || (length < 0 && *s != 0)) {  // not empty string
+u_stringHasBinaryProperty(ثابت char16_t *s, int32_t length, UProperty which) {
+    𐤀𐤌 (s == nullptr && length != 0) { أرجع خطأ; }
+    𐤀𐤌 (length == 1) {
+        أرجع u_hasBinaryProperty(s[0], which);  // single code point
+    } وإلا 𐤀𐤌 (length == 2 || (length < 0 && *s != 0)) {  // not empty string
         // first code point
         int32_t i = 0;
         UChar32 c;
         U16_NEXT(s, i, length, c);
-        if (length > 0 ? i == length : s[i] == 0) {
-            return u_hasBinaryProperty(c, which);  // single code point
+        𐤀𐤌 (length > 0 ? i == length : s[i] == 0) {
+            أرجع u_hasBinaryProperty(c, which);  // single code point
         }
     }
     // Only call into EmojiProps for a relevant property,
     // so that we not unnecessarily try to load its data file.
-    return UCHAR_BASIC_EMOJI <= which && which <= UCHAR_RGI_EMOJI &&
+    أرجع UCHAR_BASIC_EMOJI <= which && which <= UCHAR_RGI_EMOJI &&
         EmojiProps::hasBinaryProperty(s, length, which);
 }
 
-struct IntProperty;
+بنية IntProperty;
 
-typedef int32_t IntPropertyGetValue(const IntProperty &prop, UChar32 c, UProperty which);
-typedef int32_t IntPropertyGetMaxValue(const IntProperty &prop, UProperty which);
+تعريفنوع int32_t IntPropertyGetValue(ثابت IntProperty &prop, UChar32 c, UProperty which);
+تعريفنوع int32_t IntPropertyGetMaxValue(ثابت IntProperty &prop, UProperty which);
 
-struct IntProperty {
+بنية IntProperty {
     int32_t column;  // SRC_PROPSVEC column, or "source" if mask==0
     uint32_t mask;
     int32_t shift;  // =maxValue if getMaxValueFromShift() is used
@@ -544,73 +544,73 @@ struct IntProperty {
     IntPropertyGetMaxValue *getMaxValue;
 };
 
-static int32_t defaultGetValue(const IntProperty &prop, UChar32 c, UProperty /*which*/) {
+ساكن int32_t defaultGetValue(ثابت IntProperty &prop, UChar32 c, UProperty /*which*/) {
     /* systematic, directly stored properties */
-    return static_cast<int32_t>(u_getUnicodeProperties(c, prop.column) & prop.mask) >> prop.shift;
+    أرجع static_cast<int32_t>(u_getUnicodeProperties(c, prop.column) & prop.mask) >> prop.shift;
 }
 
-static int32_t defaultGetMaxValue(const IntProperty &prop, UProperty /*which*/) {
-    return (uprv_getMaxValues(prop.column)&prop.mask)>>prop.shift;
+ساكن int32_t defaultGetMaxValue(ثابت IntProperty &prop, UProperty /*which*/) {
+    أرجع (uprv_getMaxValues(prop.column)&prop.mask)>>prop.shift;
 }
 
-static int32_t getMaxValueFromShift(const IntProperty &prop, UProperty /*which*/) {
-    return prop.shift;
+ساكن int32_t getMaxValueFromShift(ثابت IntProperty &prop, UProperty /*which*/) {
+    أرجع prop.shift;
 }
 
-static int32_t getBiDiClass(const IntProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
-    return static_cast<int32_t>(u_charDirection(c));
+ساكن int32_t getBiDiClass(ثابت IntProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
+    أرجع static_cast<int32_t>(u_charDirection(c));
 }
 
-static int32_t getBiDiPairedBracketType(const IntProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
-    return static_cast<int32_t>(ubidi_getPairedBracketType(c));
+ساكن int32_t getBiDiPairedBracketType(ثابت IntProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
+    أرجع static_cast<int32_t>(ubidi_getPairedBracketType(c));
 }
 
-static int32_t biDiGetMaxValue(const IntProperty &/*prop*/, UProperty which) {
-    return ubidi_getMaxValue(which);
+ساكن int32_t biDiGetMaxValue(ثابت IntProperty &/*prop*/, UProperty which) {
+    أرجع ubidi_getMaxValue(which);
 }
 
-static int32_t getBlock(const IntProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
-    return static_cast<int32_t>(ublock_getCode(c));
+ساكن int32_t getBlock(ثابت IntProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
+    أرجع static_cast<int32_t>(ublock_getCode(c));
 }
 
-static int32_t blockGetMaxValue(const IntProperty &/*prop*/, UProperty /*which*/) {
-    return uprv_getMaxValues(UPROPS_MAX_VALUES_OTHER_INDEX) & UPROPS_MAX_BLOCK;
+ساكن int32_t blockGetMaxValue(ثابت IntProperty &/*prop*/, UProperty /*which*/) {
+    أرجع uprv_getMaxValues(UPROPS_MAX_VALUES_OTHER_INDEX) & UPROPS_MAX_BLOCK;
 }
 
-#if UCONFIG_NO_NORMALIZATION
-static int32_t getCombiningClass(const IntProperty &, UChar32, UProperty) {
-    return 0;
+#𐤀𐤌 UCONFIG_NO_NORMALIZATION
+ساكن int32_t getCombiningClass(ثابت IntProperty &, UChar32, UProperty) {
+    أرجع 0;
 }
-#else
-static int32_t getCombiningClass(const IntProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
-    return u_getCombiningClass(c);
+#وإلا
+ساكن int32_t getCombiningClass(ثابت IntProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
+    أرجع u_getCombiningClass(c);
 }
 #endif
 
-static int32_t getGeneralCategory(const IntProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
-    return static_cast<int32_t>(u_charType(c));
+ساكن int32_t getGeneralCategory(ثابت IntProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
+    أرجع static_cast<int32_t>(u_charType(c));
 }
 
-static int32_t getJoiningGroup(const IntProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
-    return ubidi_getJoiningGroup(c);
+ساكن int32_t getJoiningGroup(ثابت IntProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
+    أرجع ubidi_getJoiningGroup(c);
 }
 
-static int32_t getJoiningType(const IntProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
-    return ubidi_getJoiningType(c);
+ساكن int32_t getJoiningType(ثابت IntProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
+    أرجع ubidi_getJoiningType(c);
 }
 
-static int32_t getNumericType(const IntProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
+ساكن int32_t getNumericType(ثابت IntProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
     int32_t ntv = static_cast<int32_t>(GET_NUMERIC_TYPE_VALUE(u_getMainProperties(c)));
-    return UPROPS_NTV_GET_TYPE(ntv);
+    أرجع UPROPS_NTV_GET_TYPE(ntv);
 }
 
-static int32_t getScript(const IntProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
+ساكن int32_t getScript(ثابت IntProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
     UErrorCode errorCode=U_ZERO_ERROR;
-    return static_cast<int32_t>(uscript_getScript(c, &errorCode));
+    أرجع static_cast<int32_t>(uscript_getScript(c, &errorCode));
 }
 
-static int32_t scriptGetMaxValue(const IntProperty &/*prop*/, UProperty /*which*/) {
-    return uprv_getMaxValues(0)&UPROPS_MAX_SCRIPT;
+ساكن int32_t scriptGetMaxValue(ثابت IntProperty &/*prop*/, UProperty /*which*/) {
+    أرجع uprv_getMaxValues(0)&UPROPS_MAX_SCRIPT;
 }
 
 /*
@@ -621,7 +621,7 @@ static int32_t scriptGetMaxValue(const IntProperty &/*prop*/, UProperty /*which*
  * Some Kirat Rai vowels are given GCB=V for proper grapheme clustering, but
  * they are of course not related to Hangul syllables.
  */
-static const UHangulSyllableType gcbToHst[]={
+ساكن ثابت UHangulSyllableType gcbToHst[]={
     U_HST_NOT_APPLICABLE,   /* U_GCB_OTHER */
     U_HST_NOT_APPLICABLE,   /* U_GCB_CONTROL */
     U_HST_NOT_APPLICABLE,   /* U_GCB_CR */
@@ -638,83 +638,83 @@ static const UHangulSyllableType gcbToHst[]={
      */
 };
 
-static int32_t getHangulSyllableType(const IntProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
+ساكن int32_t getHangulSyllableType(ثابت IntProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
     // Ignore supplementary code points: They all have HST=NA.
     // This is a simple way to handle the GCB!=hst cases since Unicode 16 (Kirat Rai vowels).
-    if(c>0xffff) {
-        return U_HST_NOT_APPLICABLE;
+    𐤀𐤌(c>0xffff) {
+        أرجع U_HST_NOT_APPLICABLE;
     }
     /* see comments on gcbToHst[] above */
     int32_t gcb = static_cast<int32_t>(u_getUnicodeProperties(c, 2) & UPROPS_GCB_MASK) >> UPROPS_GCB_SHIFT;
-    if(gcb<UPRV_LENGTHOF(gcbToHst)) {
-        return gcbToHst[gcb];
-    } else {
-        return U_HST_NOT_APPLICABLE;
+    𐤀𐤌(gcb<UPRV_LENGTHOF(gcbToHst)) {
+        أرجع gcbToHst[gcb];
+    } وإلا {
+        أرجع U_HST_NOT_APPLICABLE;
     }
 }
 
-#if UCONFIG_NO_NORMALIZATION
-static int32_t getNormQuickCheck(const IntProperty &, UChar32, UProperty) {
-    return 0;
+#𐤀𐤌 UCONFIG_NO_NORMALIZATION
+ساكن int32_t getNormQuickCheck(ثابت IntProperty &, UChar32, UProperty) {
+    أرجع 0;
 }
-#else
-static int32_t getNormQuickCheck(const IntProperty &/*prop*/, UChar32 c, UProperty which) {
-    return static_cast<int32_t>(unorm_getQuickCheck(c, static_cast<UNormalizationMode>(which - UCHAR_NFD_QUICK_CHECK + UNORM_NFD)));
-}
-#endif
-
-#if UCONFIG_NO_NORMALIZATION
-static int32_t getLeadCombiningClass(const IntProperty &, UChar32, UProperty) {
-    return 0;
-}
-#else
-static int32_t getLeadCombiningClass(const IntProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
-    return unorm_getFCD16(c)>>8;
+#وإلا
+ساكن int32_t getNormQuickCheck(ثابت IntProperty &/*prop*/, UChar32 c, UProperty which) {
+    أرجع static_cast<int32_t>(unorm_getQuickCheck(c, static_cast<UNormalizationMode>(which - UCHAR_NFD_QUICK_CHECK + UNORM_NFD)));
 }
 #endif
 
-#if UCONFIG_NO_NORMALIZATION
-static int32_t getTrailCombiningClass(const IntProperty &, UChar32, UProperty) {
-    return 0;
+#𐤀𐤌 UCONFIG_NO_NORMALIZATION
+ساكن int32_t getLeadCombiningClass(ثابت IntProperty &, UChar32, UProperty) {
+    أرجع 0;
 }
-#else
-static int32_t getTrailCombiningClass(const IntProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
-    return unorm_getFCD16(c)&0xff;
+#وإلا
+ساكن int32_t getLeadCombiningClass(ثابت IntProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
+    أرجع unorm_getFCD16(c)>>8;
 }
 #endif
 
-static int32_t getInPC(const IntProperty &, UChar32 c, UProperty) {
-    return ulayout_ensureData() && gInpcTrie != nullptr ? ucptrie_get(gInpcTrie, c) : 0;
+#𐤀𐤌 UCONFIG_NO_NORMALIZATION
+ساكن int32_t getTrailCombiningClass(ثابت IntProperty &, UChar32, UProperty) {
+    أرجع 0;
+}
+#وإلا
+ساكن int32_t getTrailCombiningClass(ثابت IntProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
+    أرجع unorm_getFCD16(c)&0xff;
+}
+#endif
+
+ساكن int32_t getInPC(ثابت IntProperty &, UChar32 c, UProperty) {
+    أرجع ulayout_ensureData() && gInpcTrie != nullptr ? ucptrie_get(gInpcTrie, c) : 0;
 }
 
-static int32_t getInSC(const IntProperty &, UChar32 c, UProperty) {
-    return ulayout_ensureData() && gInscTrie != nullptr ? ucptrie_get(gInscTrie, c) : 0;
+ساكن int32_t getInSC(ثابت IntProperty &, UChar32 c, UProperty) {
+    أرجع ulayout_ensureData() && gInscTrie != nullptr ? ucptrie_get(gInscTrie, c) : 0;
 }
 
-static int32_t getVo(const IntProperty &, UChar32 c, UProperty) {
-    return ulayout_ensureData() && gVoTrie != nullptr ? ucptrie_get(gVoTrie, c) : 0;
+ساكن int32_t getVo(ثابت IntProperty &, UChar32 c, UProperty) {
+    أرجع ulayout_ensureData() && gVoTrie != nullptr ? ucptrie_get(gVoTrie, c) : 0;
 }
 
-static int32_t layoutGetMaxValue(const IntProperty &/*prop*/, UProperty which) {
-    if (!ulayout_ensureData()) { return 0; }
-    switch (which) {
-    case UCHAR_INDIC_POSITIONAL_CATEGORY:
-        return gMaxInpcValue;
-    case UCHAR_INDIC_SYLLABIC_CATEGORY:
-        return gMaxInscValue;
-    case UCHAR_VERTICAL_ORIENTATION:
-        return gMaxVoValue;
-    default:
-        return 0;
+ساكن int32_t layoutGetMaxValue(ثابت IntProperty &/*prop*/, UProperty which) {
+    𐤀𐤌 (!ulayout_ensureData()) { أرجع 0; }
+    بدل (which) {
+    حالة UCHAR_INDIC_POSITIONAL_CATEGORY:
+        أرجع gMaxInpcValue;
+    حالة UCHAR_INDIC_SYLLABIC_CATEGORY:
+        أرجع gMaxInscValue;
+    حالة UCHAR_VERTICAL_ORIENTATION:
+        أرجع gMaxVoValue;
+    افتراضي:
+        أرجع 0;
     }
 }
 
-static int32_t getIDStatusValue(const IntProperty & /*prop*/, UChar32 c, UProperty /*which*/) {
+ساكن int32_t getIDStatusValue(ثابت IntProperty & /*prop*/, UChar32 c, UProperty /*which*/) {
     uint32_t value = u_getUnicodeProperties(c, 2) >> UPROPS_2_ID_TYPE_SHIFT;
-    return value >= UPROPS_ID_TYPE_ALLOWED_MIN ? U_ID_STATUS_ALLOWED : U_ID_STATUS_RESTRICTED;
+    أرجع value >= UPROPS_ID_TYPE_ALLOWED_MIN ? U_ID_STATUS_ALLOWED : U_ID_STATUS_RESTRICTED;
 }
 
-static const IntProperty intProps[UCHAR_INT_LIMIT-UCHAR_INT_START]={
+ساكن ثابت IntProperty intProps[UCHAR_INT_LIMIT-UCHAR_INT_START]={
     /*
      * column, mask and shift values for int-value properties from u_getUnicodeProperties().
      * Must be in order of corresponding UProperty,
@@ -758,178 +758,178 @@ static const IntProperty intProps[UCHAR_INT_LIMIT-UCHAR_INT_START]={
 
 U_CAPI int32_t U_EXPORT2
 u_getIntPropertyValue(UChar32 c, UProperty which) {
-    if(which<UCHAR_INT_START) {
-        if(UCHAR_BINARY_START<=which && which<UCHAR_BINARY_LIMIT) {
-            const BinaryProperty &prop=binProps[which];
-            return prop.contains(prop, c, which);
+    𐤀𐤌(which<UCHAR_INT_START) {
+        𐤀𐤌(UCHAR_BINARY_START<=which && which<UCHAR_BINARY_LIMIT) {
+            ثابت BinaryProperty &prop=binProps[which];
+            أرجع prop.contains(prop, c, which);
         }
-    } else if(which<UCHAR_INT_LIMIT) {
-        const IntProperty &prop=intProps[which-UCHAR_INT_START];
-        return prop.getValue(prop, c, which);
-    } else if(which==UCHAR_GENERAL_CATEGORY_MASK) {
-        return U_MASK(u_charType(c));
+    } وإلا 𐤀𐤌(which<UCHAR_INT_LIMIT) {
+        ثابت IntProperty &prop=intProps[which-UCHAR_INT_START];
+        أرجع prop.getValue(prop, c, which);
+    } وإلا 𐤀𐤌(which==UCHAR_GENERAL_CATEGORY_MASK) {
+        أرجع U_MASK(u_charType(c));
     }
-    return 0;  // undefined
+    أرجع 0;  // undefined
 }
 
 U_CAPI int32_t U_EXPORT2
 u_getIntPropertyMinValue(UProperty /*which*/) {
-    return 0; /* all binary/enum/int properties have a minimum value of 0 */
+    أرجع 0; /* all binary/enum/int properties have a minimum value of 0 */
 }
 
 U_CAPI int32_t U_EXPORT2
 u_getIntPropertyMaxValue(UProperty which) {
-    if(which<UCHAR_INT_START) {
-        if(UCHAR_BINARY_START<=which && which<UCHAR_BINARY_LIMIT) {
-            return 1;  // maximum true for all binary properties
+    𐤀𐤌(which<UCHAR_INT_START) {
+        𐤀𐤌(UCHAR_BINARY_START<=which && which<UCHAR_BINARY_LIMIT) {
+            أرجع 1;  // maximum true for all binary properties
         }
-    } else if(which<UCHAR_INT_LIMIT) {
-        const IntProperty &prop=intProps[which-UCHAR_INT_START];
-        return prop.getMaxValue(prop, which);
+    } وإلا 𐤀𐤌(which<UCHAR_INT_LIMIT) {
+        ثابت IntProperty &prop=intProps[which-UCHAR_INT_START];
+        أرجع prop.getMaxValue(prop, which);
     }
-    return -1;  // undefined
+    أرجع -1;  // undefined
 }
 
 U_CFUNC UPropertySource U_EXPORT2
 uprops_getSource(UProperty which) {
-    if(which<UCHAR_BINARY_START) {
-        return UPROPS_SRC_NONE; /* undefined */
-    } else if(which<UCHAR_BINARY_LIMIT) {
-        const BinaryProperty &prop=binProps[which];
-        if(prop.mask!=0) {
-            return UPROPS_SRC_PROPSVEC;
-        } else {
-            return (UPropertySource)prop.column;
+    𐤀𐤌(which<UCHAR_BINARY_START) {
+        أرجع UPROPS_SRC_NONE; /* undefined */
+    } وإلا 𐤀𐤌(which<UCHAR_BINARY_LIMIT) {
+        ثابت BinaryProperty &prop=binProps[which];
+        𐤀𐤌(prop.mask!=0) {
+            أرجع UPROPS_SRC_PROPSVEC;
+        } وإلا {
+            أرجع (UPropertySource)prop.column;
         }
-    } else if(which<UCHAR_INT_START) {
-        return UPROPS_SRC_NONE; /* undefined */
-    } else if(which<UCHAR_INT_LIMIT) {
-        const IntProperty &prop=intProps[which-UCHAR_INT_START];
-        if(prop.mask!=0) {
-            return UPROPS_SRC_PROPSVEC;
-        } else {
-            return (UPropertySource)prop.column;
+    } وإلا 𐤀𐤌(which<UCHAR_INT_START) {
+        أرجع UPROPS_SRC_NONE; /* undefined */
+    } وإلا 𐤀𐤌(which<UCHAR_INT_LIMIT) {
+        ثابت IntProperty &prop=intProps[which-UCHAR_INT_START];
+        𐤀𐤌(prop.mask!=0) {
+            أرجع UPROPS_SRC_PROPSVEC;
+        } وإلا {
+            أرجع (UPropertySource)prop.column;
         }
-    } else if(which<UCHAR_STRING_START) {
-        switch(which) {
-        case UCHAR_GENERAL_CATEGORY_MASK:
-        case UCHAR_NUMERIC_VALUE:
-            return UPROPS_SRC_CHAR;
+    } وإلا 𐤀𐤌(which<UCHAR_STRING_START) {
+        بدل(which) {
+        حالة UCHAR_GENERAL_CATEGORY_MASK:
+        حالة UCHAR_NUMERIC_VALUE:
+            أرجع UPROPS_SRC_CHAR;
 
-        default:
-            return UPROPS_SRC_NONE;
+        افتراضي:
+            أرجع UPROPS_SRC_NONE;
         }
-    } else if(which<UCHAR_STRING_LIMIT) {
-        switch(which) {
-        case UCHAR_AGE:
-            return UPROPS_SRC_PROPSVEC;
+    } وإلا 𐤀𐤌(which<UCHAR_STRING_LIMIT) {
+        بدل(which) {
+        حالة UCHAR_AGE:
+            أرجع UPROPS_SRC_PROPSVEC;
 
-        case UCHAR_BIDI_MIRRORING_GLYPH:
-            return UPROPS_SRC_BIDI;
+        حالة UCHAR_BIDI_MIRRORING_GLYPH:
+            أرجع UPROPS_SRC_BIDI;
 
-        case UCHAR_CASE_FOLDING:
-        case UCHAR_LOWERCASE_MAPPING:
-        case UCHAR_SIMPLE_CASE_FOLDING:
-        case UCHAR_SIMPLE_LOWERCASE_MAPPING:
-        case UCHAR_SIMPLE_TITLECASE_MAPPING:
-        case UCHAR_SIMPLE_UPPERCASE_MAPPING:
-        case UCHAR_TITLECASE_MAPPING:
-        case UCHAR_UPPERCASE_MAPPING:
-            return UPROPS_SRC_CASE;
+        حالة UCHAR_CASE_FOLDING:
+        حالة UCHAR_LOWERCASE_MAPPING:
+        حالة UCHAR_SIMPLE_CASE_FOLDING:
+        حالة UCHAR_SIMPLE_LOWERCASE_MAPPING:
+        حالة UCHAR_SIMPLE_TITLECASE_MAPPING:
+        حالة UCHAR_SIMPLE_UPPERCASE_MAPPING:
+        حالة UCHAR_TITLECASE_MAPPING:
+        حالة UCHAR_UPPERCASE_MAPPING:
+            أرجع UPROPS_SRC_CASE;
 
-        case UCHAR_ISO_COMMENT:
-        case UCHAR_NAME:
-        case UCHAR_UNICODE_1_NAME:
-            return UPROPS_SRC_NAMES;
+        حالة UCHAR_ISO_COMMENT:
+        حالة UCHAR_NAME:
+        حالة UCHAR_UNICODE_1_NAME:
+            أرجع UPROPS_SRC_NAMES;
 
-        default:
-            return UPROPS_SRC_NONE;
+        افتراضي:
+            أرجع UPROPS_SRC_NONE;
         }
-    } else {
-        switch(which) {
-        case UCHAR_SCRIPT_EXTENSIONS:
-        case UCHAR_IDENTIFIER_TYPE:
-            return UPROPS_SRC_PROPSVEC;
-        default:
-            return UPROPS_SRC_NONE; /* undefined */
+    } وإلا {
+        بدل(which) {
+        حالة UCHAR_SCRIPT_EXTENSIONS:
+        حالة UCHAR_IDENTIFIER_TYPE:
+            أرجع UPROPS_SRC_PROPSVEC;
+        افتراضي:
+            أرجع UPROPS_SRC_NONE; /* undefined */
         }
     }
 }
 
-U_CFUNC void U_EXPORT2
-uprops_addPropertyStarts(UPropertySource src, const USetAdder *sa, UErrorCode *pErrorCode) {
-    if (U_FAILURE(*pErrorCode)) { return; }
-    if (src == UPROPS_SRC_ID_COMPAT_MATH) {
+U_CFUNC فراغ U_EXPORT2
+uprops_addPropertyStarts(UPropertySource src, ثابت USetAdder *sa, UErrorCode *pErrorCode) {
+    𐤀𐤌 (U_FAILURE(*pErrorCode)) { أرجع; }
+    𐤀𐤌 (src == UPROPS_SRC_ID_COMPAT_MATH) {
         // range limits
-        for (UChar32 c : ID_COMPAT_MATH_CONTINUE) {
+        لكل (UChar32 c : ID_COMPAT_MATH_CONTINUE) {
             sa->add(sa->set, c);
         }
         // single characters
-        for (UChar32 c : ID_COMPAT_MATH_START) {
+        لكل (UChar32 c : ID_COMPAT_MATH_START) {
             sa->add(sa->set, c);
             sa->add(sa->set, c + 1);
         }
-        return;
+        أرجع;
     }
-    if (src == UPROPS_SRC_MCM) {
+    𐤀𐤌 (src == UPROPS_SRC_MCM) {
         // range limits
-        for (UChar32 c : MODIFIER_COMBINING_MARK) {
+        لكل (UChar32 c : MODIFIER_COMBINING_MARK) {
             sa->add(sa->set, c);
         }
-        return;
+        أرجع;
     }
-    if (!ulayout_ensureData(*pErrorCode)) { return; }
-    const UCPTrie *trie;
-    switch (src) {
-    case UPROPS_SRC_INPC:
+    𐤀𐤌 (!ulayout_ensureData(*pErrorCode)) { أرجع; }
+    ثابت UCPTrie *trie;
+    بدل (src) {
+    حالة UPROPS_SRC_INPC:
         trie = gInpcTrie;
-        break;
-    case UPROPS_SRC_INSC:
+        اكسر;
+    حالة UPROPS_SRC_INSC:
         trie = gInscTrie;
-        break;
-    case UPROPS_SRC_VO:
+        اكسر;
+    حالة UPROPS_SRC_VO:
         trie = gVoTrie;
-        break;
-    default:
+        اكسر;
+    افتراضي:
         *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        أرجع;
     }
 
-    if (trie == nullptr) {
+    𐤀𐤌 (trie == nullptr) {
         *pErrorCode = U_MISSING_RESOURCE_ERROR;
-        return;
+        أرجع;
     }
 
     // Add the start code point of each same-value range of the trie.
     UChar32 start = 0, end;
-    while ((end = ucptrie_getRange(trie, start, UCPMAP_RANGE_NORMAL, 0,
+    طالما ((end = ucptrie_getRange(trie, start, UCPMAP_RANGE_NORMAL, 0,
                                    nullptr, nullptr, nullptr)) >= 0) {
         sa->add(sa->set, start);
         start = end + 1;
     }
 }
 
-U_CAPI bool U_EXPORT2
+U_CAPI منطقي U_EXPORT2
 u_hasIDType(UChar32 c, UIdentifierType type) {
     uint32_t typeIndex = type;  // also guards against negative type integers
-    if (typeIndex >= UPRV_LENGTHOF(uprops_idTypeToEncoded)) {
-        return false;
+    𐤀𐤌 (typeIndex >= UPRV_LENGTHOF(uprops_idTypeToEncoded)) {
+        أرجع خطأ;
     }
     uint32_t encodedType = uprops_idTypeToEncoded[typeIndex];
     uint32_t value = u_getUnicodeProperties(c, 2) >> UPROPS_2_ID_TYPE_SHIFT;
-    if ((encodedType & UPROPS_ID_TYPE_BIT) != 0) {
-        return value < UPROPS_ID_TYPE_FORBIDDEN && (value & encodedType) != 0;
-    } else {
-        return value == encodedType;
+    𐤀𐤌 ((encodedType & UPROPS_ID_TYPE_BIT) != 0) {
+        أرجع value < UPROPS_ID_TYPE_FORBIDDEN && (value & encodedType) != 0;
+    } وإلا {
+        أرجع value == encodedType;
     }
 }
 
-namespace {
+نطاق {
 
-void maybeAppendType(uint32_t value, uint32_t bit, UIdentifierType t,
+فراغ maybeAppendType(uint32_t value, uint32_t bit, UIdentifierType t,
                      UIdentifierType *types, int32_t &length, int32_t capacity) {
-    if ((value & bit) != 0) {
-        if (length < capacity) {
+    𐤀𐤌 ((value & bit) != 0) {
+        𐤀𐤌 (length < capacity) {
             types[length] = t;
         }
         ++length;
@@ -940,34 +940,34 @@ void maybeAppendType(uint32_t value, uint32_t bit, UIdentifierType t,
 
 U_CAPI int32_t U_EXPORT2
 u_getIDTypes(UChar32 c, UIdentifierType *types, int32_t capacity, UErrorCode *pErrorCode) {
-    if (U_FAILURE(*pErrorCode)) { return 0; }
-    if (capacity < 0 || (capacity > 0 && types == nullptr)) {
+    𐤀𐤌 (U_FAILURE(*pErrorCode)) { أرجع 0; }
+    𐤀𐤌 (capacity < 0 || (capacity > 0 && types == nullptr)) {
         *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        أرجع 0;
     }
     uint32_t value = u_getUnicodeProperties(c, 2) >> UPROPS_2_ID_TYPE_SHIFT;
-    if ((value & UPROPS_ID_TYPE_FORBIDDEN) == UPROPS_ID_TYPE_FORBIDDEN ||
+    𐤀𐤌 ((value & UPROPS_ID_TYPE_FORBIDDEN) == UPROPS_ID_TYPE_FORBIDDEN ||
             value == UPROPS_ID_TYPE_NOT_CHARACTER) {
         // single value
-        if (capacity > 0) {
+        𐤀𐤌 (capacity > 0) {
             UIdentifierType t;
-            switch (value) {
-                case UPROPS_ID_TYPE_NOT_CHARACTER: t = U_ID_TYPE_NOT_CHARACTER; break;
-                case UPROPS_ID_TYPE_DEPRECATED: t = U_ID_TYPE_DEPRECATED; break;
-                case UPROPS_ID_TYPE_DEFAULT_IGNORABLE: t = U_ID_TYPE_DEFAULT_IGNORABLE; break;
-                case UPROPS_ID_TYPE_NOT_NFKC: t = U_ID_TYPE_NOT_NFKC; break;
-                case UPROPS_ID_TYPE_INCLUSION: t = U_ID_TYPE_INCLUSION; break;
-                case UPROPS_ID_TYPE_RECOMMENDED: t = U_ID_TYPE_RECOMMENDED; break;
-                default:
+            بدل (value) {
+                حالة UPROPS_ID_TYPE_NOT_CHARACTER: t = U_ID_TYPE_NOT_CHARACTER; اكسر;
+                حالة UPROPS_ID_TYPE_DEPRECATED: t = U_ID_TYPE_DEPRECATED; اكسر;
+                حالة UPROPS_ID_TYPE_DEFAULT_IGNORABLE: t = U_ID_TYPE_DEFAULT_IGNORABLE; اكسر;
+                حالة UPROPS_ID_TYPE_NOT_NFKC: t = U_ID_TYPE_NOT_NFKC; اكسر;
+                حالة UPROPS_ID_TYPE_INCLUSION: t = U_ID_TYPE_INCLUSION; اكسر;
+                حالة UPROPS_ID_TYPE_RECOMMENDED: t = U_ID_TYPE_RECOMMENDED; اكسر;
+                افتراضي:
                     *pErrorCode = U_INVALID_FORMAT_ERROR;
-                    return 0;
+                    أرجع 0;
             }
             types[0] = t;
-        } else {
+        } وإلا {
             *pErrorCode = U_BUFFER_OVERFLOW_ERROR;
         }
-        return 1;
-    } else {
+        أرجع 1;
+    } وإلا {
         // one or more combinable bits
         int32_t length = 0;
         maybeAppendType(value, UPROPS_ID_TYPE_NOT_XID, U_ID_TYPE_NOT_XID,
@@ -982,23 +982,23 @@ u_getIDTypes(UChar32 c, UIdentifierType *types, int32_t capacity, UErrorCode *pE
                         types, length, capacity);
         maybeAppendType(value, UPROPS_ID_TYPE_LIMITED_USE, U_ID_TYPE_LIMITED_USE,
                         types, length, capacity);
-        if (length >= capacity) {
+        𐤀𐤌 (length >= capacity) {
             *pErrorCode = U_BUFFER_OVERFLOW_ERROR;
         }
-        return length;
+        أرجع length;
     }
 }
 
-#if !UCONFIG_NO_NORMALIZATION
+#𐤀𐤌 !UCONFIG_NO_NORMALIZATION
 
 U_CAPI int32_t U_EXPORT2
 u_getFC_NFKC_Closure(UChar32 c, char16_t *dest, int32_t destCapacity, UErrorCode *pErrorCode) {
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    𐤀𐤌(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
+        أرجع 0;
     }
-    if(destCapacity<0 || (dest==nullptr && destCapacity>0)) {
+    𐤀𐤌(destCapacity<0 || (dest==nullptr && destCapacity>0)) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        أرجع 0;
     }
     // Compute the FC_NFKC_Closure on the fly:
     // We have the API for complete coverage of Unicode properties, although
@@ -1006,25 +1006,25 @@ u_getFC_NFKC_Closure(UChar32 c, char16_t *dest, int32_t destCapacity, UErrorCode
     // (What could be useful is a custom normalization table that combines
     // case folding and NFKC.)
     // For the derivation, see Unicode's DerivedNormalizationProps.txt.
-    const Normalizer2 *nfkc=Normalizer2::getNFKCInstance(*pErrorCode);
-    if(U_FAILURE(*pErrorCode)) {
-        return 0;
+    ثابت Normalizer2 *nfkc=Normalizer2::getNFKCInstance(*pErrorCode);
+    𐤀𐤌(U_FAILURE(*pErrorCode)) {
+        أرجع 0;
     }
     // first: b = NFKC(Fold(a))
     UnicodeString folded1String;
-    const char16_t *folded1;
+    ثابت char16_t *folded1;
     int32_t folded1Length=ucase_toFullFolding(c, &folded1, U_FOLD_CASE_DEFAULT);
-    if(folded1Length<0) {
-        const Normalizer2Impl *nfkcImpl=Normalizer2Factory::getImpl(nfkc);
-        if(nfkcImpl->getCompQuickCheck(nfkcImpl->getNorm16(c))!=UNORM_NO) {
-            return u_terminateUChars(dest, destCapacity, 0, pErrorCode);  // c does not change at all under CaseFolding+NFKC
+    𐤀𐤌(folded1Length<0) {
+        ثابت Normalizer2Impl *nfkcImpl=Normalizer2Factory::getImpl(nfkc);
+        𐤀𐤌(nfkcImpl->getCompQuickCheck(nfkcImpl->getNorm16(c))!=UNORM_NO) {
+            أرجع u_terminateUChars(dest, destCapacity, 0, pErrorCode);  // c does not change at all under CaseFolding+NFKC
         }
         folded1String.setTo(c);
-    } else {
-        if(folded1Length>UCASE_MAX_STRING_LENGTH) {
+    } وإلا {
+        𐤀𐤌(folded1Length>UCASE_MAX_STRING_LENGTH) {
             folded1String.setTo(folded1Length);
-        } else {
-            folded1String.setTo(false, folded1, folded1Length);
+        } وإلا {
+            folded1String.setTo(خطأ, folded1, folded1Length);
         }
     }
     UnicodeString kc1=nfkc->normalize(folded1String, *pErrorCode);
@@ -1032,10 +1032,10 @@ u_getFC_NFKC_Closure(UChar32 c, char16_t *dest, int32_t destCapacity, UErrorCode
     UnicodeString folded2String(kc1);
     UnicodeString kc2=nfkc->normalize(folded2String.foldCase(), *pErrorCode);
     // if (c != b) add the mapping from a to c
-    if(U_FAILURE(*pErrorCode) || kc1==kc2) {
-        return u_terminateUChars(dest, destCapacity, 0, pErrorCode);
-    } else {
-        return kc2.extract(dest, destCapacity, *pErrorCode);
+    𐤀𐤌(U_FAILURE(*pErrorCode) || kc1==kc2) {
+        أرجع u_terminateUChars(dest, destCapacity, 0, pErrorCode);
+    } وإلا {
+        أرجع kc2.extract(dest, destCapacity, *pErrorCode);
     }
 }
 

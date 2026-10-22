@@ -22,7 +22,7 @@
  * \brief C API: Helper definitions for dictionary trie APIs.
  */
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
 
 /**
@@ -32,7 +32,7 @@
  * @see USTRINGTRIE_HAS_NEXT
  * @stable ICU 4.8
  */
-enum UStringTrieResult {
+تعداد UStringTrieResult {
     /**
      * The input unit(s) did not continue a matching string.
      * Once current()/next() return USTRINGTRIE_NO_MATCH,

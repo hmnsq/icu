@@ -13,19 +13,19 @@
 //
 // Author: sffc
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if !UCONFIG_NO_FORMATTING
+#𐤀𐤌 !UCONFIG_NO_FORMATTING
 #ifndef __STATIC_UNICODE_SETS_H__
 #define __STATIC_UNICODE_SETS_H__
 
-#include "unicode/uniset.h"
-#include "unicode/unistr.h"
+#ضمن "unicode/uniset.h"
+#ضمن "unicode/unistr.h"
 
 U_NAMESPACE_BEGIN
 namespace unisets {
 
-enum Key {
+تعداد Key {
     // NONE is used to indicate null in chooseFrom().
     // EMPTY is used to get an empty UnicodeSet.
     NONE = -1,
@@ -93,7 +93,7 @@ enum Key {
  * @return The requested UnicodeSet. Guaranteed to be frozen and non-null, but
  *         may be empty if an error occurred during data loading.
  */
-U_COMMON_API const UnicodeSet* get(Key key);
+U_COMMON_API ثابت UnicodeSet* get(Key key);
 
 /**
  * Checks if the UnicodeSet given by key1 contains the given string.
@@ -123,7 +123,7 @@ U_COMMON_API Key chooseFrom(UnicodeString str, Key key1, Key key2);
 // Unused in C++:
 // Key chooseCurrency(UnicodeString str);
 // Used instead:
-static const struct {
+ساكن ثابت بنية {
     Key key;
     UChar32 exemplar;
 } kCurrencyEntries[] = {

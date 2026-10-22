@@ -24,16 +24,16 @@
  * \brief C++ API: New API for Unicode Normalization.
  */
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#𐤀𐤌 U_SHOW_CPLUSPLUS_API
 
-#if !UCONFIG_NO_NORMALIZATION
+#𐤀𐤌 !UCONFIG_NO_NORMALIZATION
 
-#include "unicode/stringpiece.h"
-#include "unicode/uniset.h"
-#include "unicode/unistr.h"
-#include "unicode/unorm2.h"
+#ضمن "unicode/stringpiece.h"
+#ضمن "unicode/uniset.h"
+#ضمن "unicode/unistr.h"
+#ضمن "unicode/unorm2.h"
 
 U_NAMESPACE_BEGIN
 
@@ -82,8 +82,8 @@ class ByteSink;
  * Different functions may return different boundaries.
  * @stable ICU 4.4
  */
-class U_COMMON_API Normalizer2 : public UObject {
-public:
+class U_COMMON_API Normalizer2 : عام UObject {
+عام:
     /**
      * Destructor.
      * @stable ICU 4.4
@@ -101,7 +101,7 @@ public:
      * @return the requested Normalizer2, if successful
      * @stable ICU 49
      */
-    static const Normalizer2 *
+    ساكن ثابت Normalizer2 *
     getNFCInstance(UErrorCode &errorCode);
 
     /**
@@ -115,7 +115,7 @@ public:
      * @return the requested Normalizer2, if successful
      * @stable ICU 49
      */
-    static const Normalizer2 *
+    ساكن ثابت Normalizer2 *
     getNFDInstance(UErrorCode &errorCode);
 
     /**
@@ -129,7 +129,7 @@ public:
      * @return the requested Normalizer2, if successful
      * @stable ICU 49
      */
-    static const Normalizer2 *
+    ساكن ثابت Normalizer2 *
     getNFKCInstance(UErrorCode &errorCode);
 
     /**
@@ -143,7 +143,7 @@ public:
      * @return the requested Normalizer2, if successful
      * @stable ICU 49
      */
-    static const Normalizer2 *
+    ساكن ثابت Normalizer2 *
     getNFKDInstance(UErrorCode &errorCode);
 
     /**
@@ -160,7 +160,7 @@ public:
      * @return the requested Normalizer2, if successful
      * @stable ICU 49
      */
-    static const Normalizer2 *
+    ساكن ثابت Normalizer2 *
     getNFKCCasefoldInstance(UErrorCode &errorCode);
 
     /**
@@ -177,7 +177,7 @@ public:
      * @return the requested Normalizer2, if successful
      * @stable ICU 74
      */
-    static const Normalizer2 *
+    ساكن ثابت Normalizer2 *
     getNFKCSimpleCasefoldInstance(UErrorCode &errorCode);
 
     /**
@@ -201,9 +201,9 @@ public:
      * @return the requested Normalizer2, if successful
      * @stable ICU 4.4
      */
-    static const Normalizer2 *
-    getInstance(const char *packageName,
-                const char *name,
+    ساكن ثابت Normalizer2 *
+    getInstance(ثابت حرف *packageName,
+                ثابت حرف *name,
                 UNormalization2Mode mode,
                 UErrorCode &errorCode);
 
@@ -218,10 +218,10 @@ public:
      * @stable ICU 4.4
      */
     UnicodeString
-    normalize(const UnicodeString &src, UErrorCode &errorCode) const {
+    normalize(ثابت UnicodeString &src, UErrorCode &errorCode) ثابت {
         UnicodeString result;
         normalize(src, result, errorCode);
-        return result;
+        أرجع result;
     }
     /**
      * Writes the normalized form of the source string to the destination string
@@ -237,9 +237,9 @@ public:
      * @stable ICU 4.4
      */
     virtual UnicodeString&
-    normalize(const UnicodeString& src,
+    normalize(ثابت UnicodeString& src,
               UnicodeString& dest U_LIFETIME_BOUND,
-              UErrorCode& errorCode) const = 0;
+              UErrorCode& errorCode) ثابت = 0;
 
     /**
      * Normalizes a UTF-8 string and optionally records how source substrings
@@ -263,9 +263,9 @@ public:
      *                  function chaining. (See User Guide for details.)
      * @stable ICU 60
      */
-    virtual void
+    virtual فراغ
     normalizeUTF8(uint32_t options, StringPiece src, ByteSink &sink,
-                  Edits *edits, UErrorCode &errorCode) const;
+                  Edits *edits, UErrorCode &errorCode) ثابت;
 
     /**
      * Appends the normalized form of the second string to the first string
@@ -283,8 +283,8 @@ public:
      */
     virtual UnicodeString&
     normalizeSecondAndAppend(UnicodeString& first U_LIFETIME_BOUND,
-                             const UnicodeString& second,
-                             UErrorCode& errorCode) const = 0;
+                             ثابت UnicodeString& second,
+                             UErrorCode& errorCode) ثابت = 0;
     /**
      * Appends the second string to the first string
      * (merging them at the boundary) and returns the first string.
@@ -301,8 +301,8 @@ public:
      */
     virtual UnicodeString&
     append(UnicodeString& first U_LIFETIME_BOUND,
-           const UnicodeString& second,
-           UErrorCode& errorCode) const = 0;
+           ثابت UnicodeString& second,
+           UErrorCode& errorCode) ثابت = 0;
 
     /**
      * Gets the decomposition mapping of c.
@@ -318,7 +318,7 @@ public:
      * @stable ICU 4.6
      */
     virtual UBool
-    getDecomposition(UChar32 c, UnicodeString &decomposition) const = 0;
+    getDecomposition(UChar32 c, UnicodeString &decomposition) ثابت = 0;
 
     /**
      * Gets the raw decomposition mapping of c.
@@ -345,7 +345,7 @@ public:
      * @stable ICU 49
      */
     virtual UBool
-    getRawDecomposition(UChar32 c, UnicodeString &decomposition) const;
+    getRawDecomposition(UChar32 c, UnicodeString &decomposition) ثابت;
 
     /**
      * Performs pairwise composition of a & b and returns the composite if there is one.
@@ -363,7 +363,7 @@ public:
      * @stable ICU 49
      */
     virtual UChar32
-    composePair(UChar32 a, UChar32 b) const;
+    composePair(UChar32 a, UChar32 b) ثابت;
 
     /**
      * Gets the combining class of c.
@@ -374,7 +374,7 @@ public:
      * @stable ICU 49
      */
     virtual uint8_t
-    getCombiningClass(UChar32 c) const;
+    getCombiningClass(UChar32 c) ثابت;
 
     /**
      * Tests if the string is normalized.
@@ -391,7 +391,7 @@ public:
      * @stable ICU 4.4
      */
     virtual UBool
-    isNormalized(const UnicodeString &s, UErrorCode &errorCode) const = 0;
+    isNormalized(ثابت UnicodeString &s, UErrorCode &errorCode) ثابت = 0;
     /**
      * Tests if the UTF-8 string is normalized.
      * Internally, in cases where the quickCheck() method would return "maybe"
@@ -412,7 +412,7 @@ public:
      * @stable ICU 60
      */
     virtual UBool
-    isNormalizedUTF8(StringPiece s, UErrorCode &errorCode) const;
+    isNormalizedUTF8(StringPiece s, UErrorCode &errorCode) ثابت;
 
 
     /**
@@ -431,7 +431,7 @@ public:
      * @stable ICU 4.4
      */
     virtual UNormalizationCheckResult
-    quickCheck(const UnicodeString &s, UErrorCode &errorCode) const = 0;
+    quickCheck(ثابت UnicodeString &s, UErrorCode &errorCode) ثابت = 0;
 
     /**
      * Returns the end of the normalized substring of the input string.
@@ -456,7 +456,7 @@ public:
      * @stable ICU 4.4
      */
     virtual int32_t
-    spanQuickCheckYes(const UnicodeString &s, UErrorCode &errorCode) const = 0;
+    spanQuickCheckYes(ثابت UnicodeString &s, UErrorCode &errorCode) ثابت = 0;
 
     /**
      * Tests if the character always has a normalization boundary before it,
@@ -471,7 +471,7 @@ public:
      * @return true if c has a normalization boundary before it
      * @stable ICU 4.4
      */
-    virtual UBool hasBoundaryBefore(UChar32 c) const = 0;
+    virtual UBool hasBoundaryBefore(UChar32 c) ثابت = 0;
 
     /**
      * Tests if the character always has a normalization boundary after it,
@@ -487,7 +487,7 @@ public:
      * @return true if c has a normalization boundary after it
      * @stable ICU 4.4
      */
-    virtual UBool hasBoundaryAfter(UChar32 c) const = 0;
+    virtual UBool hasBoundaryAfter(UChar32 c) ثابت = 0;
 
     /**
      * Tests if the character is normalization-inert.
@@ -502,7 +502,7 @@ public:
      * @return true if c is normalization-inert
      * @stable ICU 4.4
      */
-    virtual UBool isInert(UChar32 c) const = 0;
+    virtual UBool isInert(UChar32 c) ثابت = 0;
 };
 
 /**
@@ -516,8 +516,8 @@ public:
  * must be destructed by the owner.
  * @stable ICU 4.4
  */
-class U_COMMON_API FilteredNormalizer2 : public Normalizer2 {
-public:
+class U_COMMON_API FilteredNormalizer2 : عام Normalizer2 {
+عام:
     /**
      * Constructs a filtered normalizer wrapping any Normalizer2 instance
      * and a filter set.
@@ -528,8 +528,8 @@ public:
      * @param filterSet UnicodeSet which determines the characters to be normalized
      * @stable ICU 4.4
      */
-    FilteredNormalizer2(const Normalizer2& n2 U_LIFETIME_BOUND,
-                        const UnicodeSet& filterSet U_LIFETIME_BOUND) :
+    FilteredNormalizer2(ثابت Normalizer2& n2 U_LIFETIME_BOUND,
+                        ثابت UnicodeSet& filterSet U_LIFETIME_BOUND) :
             norm2(n2), set(filterSet) {}
 
     /**
@@ -552,9 +552,9 @@ public:
      * @stable ICU 4.4
      */
     virtual UnicodeString&
-    normalize(const UnicodeString& src,
+    normalize(ثابت UnicodeString& src,
               UnicodeString& dest U_LIFETIME_BOUND,
-              UErrorCode& errorCode) const override;
+              UErrorCode& errorCode) ثابت override;
 
     /**
      * Normalizes a UTF-8 string and optionally records how source substrings
@@ -578,9 +578,9 @@ public:
      *                  function chaining. (See User Guide for details.)
      * @stable ICU 60
      */
-    virtual void
+    virtual فراغ
     normalizeUTF8(uint32_t options, StringPiece src, ByteSink &sink,
-                  Edits *edits, UErrorCode &errorCode) const override;
+                  Edits *edits, UErrorCode &errorCode) ثابت override;
 
     /**
      * Appends the normalized form of the second string to the first string
@@ -598,8 +598,8 @@ public:
      */
     virtual UnicodeString&
     normalizeSecondAndAppend(UnicodeString& first U_LIFETIME_BOUND,
-                             const UnicodeString& second,
-                             UErrorCode& errorCode) const override;
+                             ثابت UnicodeString& second,
+                             UErrorCode& errorCode) ثابت override;
     /**
      * Appends the second string to the first string
      * (merging them at the boundary) and returns the first string.
@@ -616,8 +616,8 @@ public:
      */
     virtual UnicodeString&
     append(UnicodeString& first U_LIFETIME_BOUND,
-           const UnicodeString& second,
-           UErrorCode& errorCode) const override;
+           ثابت UnicodeString& second,
+           UErrorCode& errorCode) ثابت override;
 
     /**
      * Gets the decomposition mapping of c.
@@ -631,7 +631,7 @@ public:
      * @stable ICU 4.6
      */
     virtual UBool
-    getDecomposition(UChar32 c, UnicodeString &decomposition) const override;
+    getDecomposition(UChar32 c, UnicodeString &decomposition) ثابت override;
 
     /**
      * Gets the raw decomposition mapping of c.
@@ -645,7 +645,7 @@ public:
      * @stable ICU 49
      */
     virtual UBool
-    getRawDecomposition(UChar32 c, UnicodeString &decomposition) const override;
+    getRawDecomposition(UChar32 c, UnicodeString &decomposition) ثابت override;
 
     /**
      * Performs pairwise composition of a & b and returns the composite if there is one.
@@ -658,7 +658,7 @@ public:
      * @stable ICU 49
      */
     virtual UChar32
-    composePair(UChar32 a, UChar32 b) const override;
+    composePair(UChar32 a, UChar32 b) ثابت override;
 
     /**
      * Gets the combining class of c.
@@ -669,7 +669,7 @@ public:
      * @stable ICU 49
      */
     virtual uint8_t
-    getCombiningClass(UChar32 c) const override;
+    getCombiningClass(UChar32 c) ثابت override;
 
     /**
      * Tests if the string is normalized.
@@ -683,7 +683,7 @@ public:
      * @stable ICU 4.4
      */
     virtual UBool
-    isNormalized(const UnicodeString &s, UErrorCode &errorCode) const override;
+    isNormalized(ثابت UnicodeString &s, UErrorCode &errorCode) ثابت override;
     /**
      * Tests if the UTF-8 string is normalized.
      * Internally, in cases where the quickCheck() method would return "maybe"
@@ -704,7 +704,7 @@ public:
      * @stable ICU 60
      */
     virtual UBool
-    isNormalizedUTF8(StringPiece s, UErrorCode &errorCode) const override;
+    isNormalizedUTF8(StringPiece s, UErrorCode &errorCode) ثابت override;
     /**
      * Tests if the string is normalized.
      * For details see the Normalizer2 base class documentation.
@@ -717,7 +717,7 @@ public:
      * @stable ICU 4.4
      */
     virtual UNormalizationCheckResult
-    quickCheck(const UnicodeString &s, UErrorCode &errorCode) const override;
+    quickCheck(ثابت UnicodeString &s, UErrorCode &errorCode) ثابت override;
     /**
      * Returns the end of the normalized substring of the input string.
      * For details see the Normalizer2 base class documentation.
@@ -730,7 +730,7 @@ public:
      * @stable ICU 4.4
      */
     virtual int32_t
-    spanQuickCheckYes(const UnicodeString &s, UErrorCode &errorCode) const override;
+    spanQuickCheckYes(ثابت UnicodeString &s, UErrorCode &errorCode) ثابت override;
 
     /**
      * Tests if the character always has a normalization boundary before it,
@@ -740,7 +740,7 @@ public:
      * @return true if c has a normalization boundary before it
      * @stable ICU 4.4
      */
-    virtual UBool hasBoundaryBefore(UChar32 c) const override;
+    virtual UBool hasBoundaryBefore(UChar32 c) ثابت override;
 
     /**
      * Tests if the character always has a normalization boundary after it,
@@ -750,7 +750,7 @@ public:
      * @return true if c has a normalization boundary after it
      * @stable ICU 4.4
      */
-    virtual UBool hasBoundaryAfter(UChar32 c) const override;
+    virtual UBool hasBoundaryAfter(UChar32 c) ثابت override;
 
     /**
      * Tests if the character is normalization-inert.
@@ -759,28 +759,28 @@ public:
      * @return true if c is normalization-inert
      * @stable ICU 4.4
      */
-    virtual UBool isInert(UChar32 c) const override;
-private:
+    virtual UBool isInert(UChar32 c) ثابت override;
+خاص:
     UnicodeString&
-    normalize(const UnicodeString& src,
+    normalize(ثابت UnicodeString& src,
               UnicodeString& dest U_LIFETIME_BOUND,
               USetSpanCondition spanCondition,
-              UErrorCode& errorCode) const;
+              UErrorCode& errorCode) ثابت;
 
-    void
-    normalizeUTF8(uint32_t options, const char *src, int32_t length,
+    فراغ
+    normalizeUTF8(uint32_t options, ثابت حرف *src, int32_t length,
                   ByteSink &sink, Edits *edits,
                   USetSpanCondition spanCondition,
-                  UErrorCode &errorCode) const;
+                  UErrorCode &errorCode) ثابت;
 
     UnicodeString&
     normalizeSecondAndAppend(UnicodeString& first U_LIFETIME_BOUND,
-                             const UnicodeString& second,
+                             ثابت UnicodeString& second,
                              UBool doNormalize,
-                             UErrorCode& errorCode) const;
+                             UErrorCode& errorCode) ثابت;
 
-    const Normalizer2 &norm2;
-    const UnicodeSet &set;
+    ثابت Normalizer2 &norm2;
+    ثابت UnicodeSet &set;
 };
 
 U_NAMESPACE_END
