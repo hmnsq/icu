@@ -11,7 +11,7 @@
 
 #include "unicode/utypes.h"
 
-#if UCONFIG_NO_SERVICE
+#ако UCONFIG_NO_SERVICE
 
 U_NAMESPACE_BEGIN
 
@@ -23,7 +23,7 @@ class ICUNotifier;
 
 U_NAMESPACE_END
 
-#else
+#инако
 
 #include "unicode/uobject.h"
 #include "unicode/unistr.h"
@@ -45,11 +45,11 @@ public:
 public:
 #ifdef SERVICE_DEBUG
     virtual UnicodeString& debug(UnicodeString& result) const {
-      return debugClass(result);
+      врати debugClass(result);
     }
 
     virtual UnicodeString& debugClass(UnicodeString& result) const {
-      return result.append((UnicodeString)"Key");
+      врати result.append((UnicodeString)"Key");
     }
 #endif
 };

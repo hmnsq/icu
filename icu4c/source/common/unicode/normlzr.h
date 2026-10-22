@@ -13,14 +13,14 @@
 
 #include "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ако U_SHOW_CPLUSPLUS_API
 
 /**
  * \file 
  * \brief C++ API: Unicode Normalization
  */
  
-#if !UCONFIG_NO_NORMALIZATION
+#ако !UCONFIG_NO_NORMALIZATION
 
 #include "unicode/chariter.h"
 #include "unicode/normalizer2.h"
@@ -781,20 +781,20 @@ private:
 #ifndef U_HIDE_DEPRECATED_API
 inline bool
 Normalizer::operator!= (const Normalizer& other) const
-{ return ! operator==(other); }
+{ врати ! operator==(other); }
 
 inline UNormalizationCheckResult
 Normalizer::quickCheck(const UnicodeString& source,
                        UNormalizationMode mode,
                        UErrorCode &status) {
-    return quickCheck(source, mode, 0, status);
+    врати quickCheck(source, mode, 0, status);
 }
 
 inline UBool
 Normalizer::isNormalized(const UnicodeString& source,
                          UNormalizationMode mode,
                          UErrorCode &status) {
-    return isNormalized(source, mode, 0, status);
+    врати isNormalized(source, mode, 0, status);
 }
 #endif  /* U_HIDE_DEPRECATED_API */
 
@@ -803,7 +803,7 @@ Normalizer::compare(const UnicodeString &s1, const UnicodeString &s2,
                     uint32_t options,
                     UErrorCode &errorCode) {
   // all argument checking is done in unorm_compare
-  return unorm_compare(toUCharPtr(s1.getBuffer()), s1.length(),
+  врати unorm_compare(toUCharPtr(s1.getBuffer()), s1.length(),
                        toUCharPtr(s2.getBuffer()), s2.length(),
                        options,
                        &errorCode);

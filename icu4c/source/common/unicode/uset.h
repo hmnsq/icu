@@ -32,7 +32,7 @@
 #include "unicode/utypes.h"
 #include "unicode/uchar.h"
 
-#if U_SHOW_CPLUSPLUS_API || U_SHOW_CPLUSPLUS_HEADER_API
+#ако U_SHOW_CPLUSPLUS_API || U_SHOW_CPLUSPLUS_HEADER_API
 #include <string>
 #include <string_view>
 #include "unicode/char16ptr.h"
@@ -346,7 +346,7 @@ uset_openPatternOptions(const UChar* pattern, int32_t patternLength,
 U_CAPI void U_EXPORT2
 uset_close(USet* set);
 
-#if U_SHOW_CPLUSPLUS_API
+#ако U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -1321,7 +1321,7 @@ U_CAPI UBool U_EXPORT2
 uset_getSerializedRange(const USerializedSet* set, int32_t rangeIndex,
                         UChar32* pStart, UChar32* pEnd);
 
-#if U_SHOW_CPLUSPLUS_API || U_SHOW_CPLUSPLUS_HEADER_API
+#ако U_SHOW_CPLUSPLUS_API || U_SHOW_CPLUSPLUS_HEADER_API
 
 namespace U_HEADER_ONLY_NAMESPACE {
 
@@ -1344,44 +1344,44 @@ public:
         // And comparing rangeIndex is redundant with comparing c.
         // We might even skip comparing uset.
         // Unless we want operator==() to be "correct" for more than iteration.
-        return uset == other.uset && c == other.c;
+        врати uset == other.uset && c == other.c;
     }
 
     /** @stable ICU 76 */
-    bool operator!=(const USetCodePointIterator &other) const { return !operator==(other); }
+    bool operator!=(const USetCodePointIterator &other) const { врати !operator==(other); }
 
     /** @stable ICU 76 */
-    UChar32 operator*() const { return c; }
+    UChar32 operator*() const { врати c; }
 
     /**
      * Pre-increment.
      * @stable ICU 76
      */
     USetCodePointIterator& operator++() U_LIFETIME_BOUND {
-        if (c < end) {
+        ако (c < end) {
             ++c;
-        } else if (rangeIndex < rangeCount) {
+        } инако ако (rangeIndex < rangeCount) {
             UErrorCode errorCode = U_ZERO_ERROR;
             int32_t result = uset_getItem(uset, rangeIndex, &c, &end, nullptr, 0, &errorCode);
-            if (U_SUCCESS(errorCode) && result == 0) {
+            ако (U_SUCCESS(errorCode) && result == 0) {
                 ++rangeIndex;
-            } else {
+            } инако {
                 c = end = U_SENTINEL;
             }
-        } else {
+        } инако {
             c = end = U_SENTINEL;
         }
-        return *this;
+        врати *this;
     }
 
     /**
      * Post-increment.
      * @stable ICU 76
      */
-    USetCodePointIterator operator++(int) {
+    USetCodePointIterator operator++(цео) {
         USetCodePointIterator result(*this);
         operator++();
-        return result;
+        врати result;
     }
 
 private:
@@ -1434,12 +1434,12 @@ public:
 
     /** @stable ICU 76 */
     USetCodePointIterator begin() const {
-        return USetCodePointIterator(uset, 0, rangeCount);
+        врати USetCodePointIterator(uset, 0, rangeCount);
     }
 
     /** @stable ICU 76 */
     USetCodePointIterator end() const {
-        return USetCodePointIterator(uset, rangeCount, rangeCount);
+        врати USetCodePointIterator(uset, rangeCount, rangeCount);
     }
 
 private:
@@ -1461,12 +1461,12 @@ struct CodePointRange {
         iterator(UChar32 aC) : c(aC) {}
 
         /** @stable ICU 76 */
-        bool operator==(const iterator &other) const { return c == other.c; }
+        bool operator==(const iterator &other) const { врати c == other.c; }
         /** @stable ICU 76 */
-        bool operator!=(const iterator &other) const { return !operator==(other); }
+        bool operator!=(const iterator &other) const { врати !operator==(other); }
 
         /** @stable ICU 76 */
-        UChar32 operator*() const { return c; }
+        UChar32 operator*() const { врати c; }
 
         /**
          * Pre-increment.
@@ -1474,15 +1474,15 @@ struct CodePointRange {
          */
         iterator& operator++() U_LIFETIME_BOUND {
             ++c;
-            return *this;
+            врати *this;
         }
 
         /**
          * Post-increment.
          * @stable ICU 76
          */
-        iterator operator++(int) {
-            return c++;
+        iterator operator++(цео) {
+            врати c++;
         }
 
         /**
@@ -1497,11 +1497,11 @@ struct CodePointRange {
     /** @stable ICU 76 */
     CodePointRange(const CodePointRange &other) = default;
     /** @stable ICU 76 */
-    size_t size() const { return (rangeEnd + 1) - rangeStart; }
+    size_t size() const { врати (rangeEnd + 1) - rangeStart; }
     /** @stable ICU 76 */
-    iterator begin() const { return rangeStart; }
+    iterator begin() const { врати rangeStart; }
     /** @stable ICU 76 */
-    iterator end() const { return rangeEnd + 1; }
+    iterator end() const { врати rangeEnd + 1; }
 
     /**
      * Start of a USet/UnicodeSet range of code points.
@@ -1530,23 +1530,23 @@ public:
         // and assuming we don't compare iterators across the set being modified.
         // We might even skip comparing uset.
         // Unless we want operator==() to be "correct" for more than iteration.
-        return uset == other.uset && rangeIndex == other.rangeIndex;
+        врати uset == other.uset && rangeIndex == other.rangeIndex;
     }
 
     /** @stable ICU 76 */
-    bool operator!=(const USetRangeIterator &other) const { return !operator==(other); }
+    bool operator!=(const USetRangeIterator &other) const { врати !operator==(other); }
 
     /** @stable ICU 76 */
     CodePointRange operator*() const {
-        if (rangeIndex < rangeCount) {
+        ако (rangeIndex < rangeCount) {
             UChar32 start, end;
             UErrorCode errorCode = U_ZERO_ERROR;
             int32_t result = uset_getItem(uset, rangeIndex, &start, &end, nullptr, 0, &errorCode);
-            if (U_SUCCESS(errorCode) && result == 0) {
-                return CodePointRange(start, end);
+            ако (U_SUCCESS(errorCode) && result == 0) {
+                врати CodePointRange(start, end);
             }
         }
-        return CodePointRange(U_SENTINEL, U_SENTINEL);
+        врати CodePointRange(U_SENTINEL, U_SENTINEL);
     }
 
     /**
@@ -1555,17 +1555,17 @@ public:
      */
     USetRangeIterator& operator++() U_LIFETIME_BOUND {
         ++rangeIndex;
-        return *this;
+        врати *this;
     }
 
     /**
      * Post-increment.
      * @stable ICU 76
      */
-    USetRangeIterator operator++(int) {
+    USetRangeIterator operator++(цео) {
         USetRangeIterator result(*this);
         ++rangeIndex;
-        return result;
+        врати result;
     }
 
 private:
@@ -1616,12 +1616,12 @@ public:
 
     /** @stable ICU 76 */
     USetRangeIterator begin() const {
-        return USetRangeIterator(uset, 0, rangeCount);
+        врати USetRangeIterator(uset, 0, rangeCount);
     }
 
     /** @stable ICU 76 */
     USetRangeIterator end() const {
-        return USetRangeIterator(uset, rangeCount, rangeCount);
+        врати USetRangeIterator(uset, rangeCount, rangeCount);
     }
 
 private:
@@ -1644,21 +1644,21 @@ public:
         // and assuming we don't compare iterators across the set being modified.
         // We might even skip comparing uset.
         // Unless we want operator==() to be "correct" for more than iteration.
-        return uset == other.uset && index == other.index;
+        врати uset == other.uset && index == other.index;
     }
 
     /** @stable ICU 76 */
-    bool operator!=(const USetStringIterator &other) const { return !operator==(other); }
+    bool operator!=(const USetStringIterator &other) const { врати !operator==(other); }
 
     /** @stable ICU 76 */
     std::u16string_view operator*() const {
-        if (index < count) {
+        ако (index < count) {
             int32_t length;
             const UChar *uchars = uset_getString(uset, index, &length);
             // assert uchars != nullptr;
-            return {uprv_char16PtrFromUChar(uchars), static_cast<size_t>(length)};
+            врати {uprv_char16PtrFromUChar(uchars), static_cast<size_t>(length)};
         }
-        return {};
+        врати {};
     }
 
     /**
@@ -1667,17 +1667,17 @@ public:
      */
     USetStringIterator& operator++() U_LIFETIME_BOUND {
         ++index;
-        return *this;
+        врати *this;
     }
 
     /**
      * Post-increment.
      * @stable ICU 76
      */
-    USetStringIterator operator++(int) {
+    USetStringIterator operator++(цео) {
         USetStringIterator result(*this);
         ++index;
-        return result;
+        врати result;
     }
 
 private:
@@ -1727,12 +1727,12 @@ public:
 
     /** @stable ICU 76 */
     USetStringIterator begin() const {
-        return USetStringIterator(uset, 0, count);
+        врати USetStringIterator(uset, 0, count);
     }
 
     /** @stable ICU 76 */
     USetStringIterator end() const {
-        return USetStringIterator(uset, count, count);
+        врати USetStringIterator(uset, count, count);
     }
 
 private:
@@ -1755,25 +1755,25 @@ public:
         // and assuming we don't compare iterators across the set being modified.
         // We might even skip comparing uset.
         // Unless we want operator==() to be "correct" for more than iteration.
-        return uset == other.uset && c == other.c && index == other.index;
+        врати uset == other.uset && c == other.c && index == other.index;
     }
 
     /** @stable ICU 77 */
-    bool operator!=(const USetElementIterator &other) const { return !operator==(other); }
+    bool operator!=(const USetElementIterator &other) const { врати !operator==(other); }
 
     /** @stable ICU 77 */
     std::u16string operator*() const {
-        if (c >= 0) {
-            return c <= 0xffff ?
+        ако (c >= 0) {
+            врати c <= 0xffff ?
                 std::u16string({static_cast<char16_t>(c)}) :
                 std::u16string({U16_LEAD(c), U16_TRAIL(c)});
-        } else if (index < totalCount) {
+        } инако ако (index < totalCount) {
             int32_t length;
             const UChar *uchars = uset_getString(uset, index - rangeCount, &length);
             // assert uchars != nullptr;
-            return {uprv_char16PtrFromUChar(uchars), static_cast<size_t>(length)};
-        } else {
-            return {};
+            врати {uprv_char16PtrFromUChar(uchars), static_cast<size_t>(length)};
+        } инако {
+            врати {};
         }
     }
 
@@ -1782,34 +1782,34 @@ public:
      * @stable ICU 77
      */
     USetElementIterator& operator++() U_LIFETIME_BOUND {
-        if (c < end) {
+        ако (c < end) {
             ++c;
-        } else if (index < rangeCount) {
+        } инако ако (index < rangeCount) {
             UErrorCode errorCode = U_ZERO_ERROR;
             int32_t result = uset_getItem(uset, index, &c, &end, nullptr, 0, &errorCode);
-            if (U_SUCCESS(errorCode) && result == 0) {
+            ако (U_SUCCESS(errorCode) && result == 0) {
                 ++index;
-            } else {
+            } инако {
                 c = end = U_SENTINEL;
             }
-        } else if (c >= 0) {
+        } инако ако (c >= 0) {
             // assert index == rangeCount;
             // Switch from the last range to the first string.
             c = end = U_SENTINEL;
-        } else {
+        } инако {
             ++index;
         }
-        return *this;
+        врати *this;
     }
 
     /**
      * Post-increment.
      * @stable ICU 77
      */
-    USetElementIterator operator++(int) {
+    USetElementIterator operator++(цео) {
         USetElementIterator result(*this);
         operator++();
-        return result;
+        врати result;
     }
 
 private:
@@ -1821,7 +1821,7 @@ private:
                         int32_t nTotalCount)
             : uset(pUset), index(nIndex), rangeCount(nRangeCount), totalCount(nTotalCount),
                 c(U_SENTINEL), end(U_SENTINEL) {
-        if (index < rangeCount) {
+        ако (index < rangeCount) {
             // Fetch the first range.
             operator++();
         }
@@ -1887,12 +1887,12 @@ public:
 
     /** @stable ICU 77 */
     USetElementIterator begin() const {
-        return USetElementIterator(uset, 0, rangeCount, rangeCount + stringCount);
+        врати USetElementIterator(uset, 0, rangeCount, rangeCount + stringCount);
     }
 
     /** @stable ICU 77 */
     USetElementIterator end() const {
-        return USetElementIterator(uset, rangeCount + stringCount, rangeCount, rangeCount + stringCount);
+        врати USetElementIterator(uset, rangeCount + stringCount, rangeCount, rangeCount + stringCount);
     }
 
 private:

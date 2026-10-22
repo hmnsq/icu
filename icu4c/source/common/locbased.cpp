@@ -19,18 +19,18 @@ const Locale& LocaleBased::getLocale(const Locale& valid U_LIFETIME_BOUND,
                                      const Locale& actual U_LIFETIME_BOUND,
                                      ULocDataLocaleType type,
                                      UErrorCode& status) {
-    if (U_FAILURE(status)) {
-        return Locale::getRoot();
+    ако (U_FAILURE(status)) {
+        врати Locale::getRoot();
     }
 
     switch(type) {
     case ULOC_VALID_LOCALE:
-        return valid;
+        врати valid;
     case ULOC_ACTUAL_LOCALE:
-        return actual;
+        врати actual;
     default:
         status = U_ILLEGAL_ARGUMENT_ERROR;
-        return Locale::getRoot();
+        врати Locale::getRoot();
     }
 }
 
@@ -38,11 +38,11 @@ const char* LocaleBased::getLocaleID(const Locale& valid, const Locale& actual,
                                      ULocDataLocaleType type, UErrorCode& status) {
     const Locale& locale = getLocale(valid, actual, type, status);
 
-    if (U_FAILURE(status)) {
-        return nullptr;
+    ако (U_FAILURE(status)) {
+        врати nullptr;
     }
 
-    return locale == Locale::getRoot() ? kRootLocaleName : locale.getName();
+    врати locale == Locale::getRoot() ? kRootLocaleName : locale.getName();
 }
 
 U_NAMESPACE_END

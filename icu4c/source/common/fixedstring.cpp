@@ -9,19 +9,19 @@
 U_NAMESPACE_BEGIN
 
 U_EXPORT void copyInvariantChars(const UnicodeString& src, FixedString& dst, UErrorCode& status) {
-    if (U_FAILURE(status)) {
-        return;
+    ако (U_FAILURE(status)) {
+        врати;
     }
 
-    if (src.isEmpty()) {
+    ако (src.isEmpty()) {
         dst.clear();
-        return;
+        врати;
     }
 
     int32_t length = src.length();
-    if (!dst.reserve(length + 1)) {
+    ако (!dst.reserve(length + 1)) {
         status = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        врати;
     }
     src.extract(0, length, dst.getAlias(), length + 1, US_INV);
 }

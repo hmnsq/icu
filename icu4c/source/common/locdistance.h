@@ -27,25 +27,25 @@ public:
     static const LocaleDistance *getSingleton(UErrorCode &errorCode);
 
     static int32_t shiftDistance(int32_t distance) {
-        return distance << DISTANCE_SHIFT;
+        врати distance << DISTANCE_SHIFT;
     }
 
     static int32_t getShiftedDistance(int32_t indexAndDistance) {
-        return indexAndDistance & DISTANCE_MASK;
+        врати indexAndDistance & DISTANCE_MASK;
     }
 
     static double getDistanceDouble(int32_t indexAndDistance) {
         double shiftedDistance = getShiftedDistance(indexAndDistance);
-        return shiftedDistance / (1 << DISTANCE_SHIFT);
+        врати shiftedDistance / (1 << DISTANCE_SHIFT);
     }
 
     static int32_t getDistanceFloor(int32_t indexAndDistance) {
-        return (indexAndDistance & DISTANCE_MASK) >> DISTANCE_SHIFT;
+        врати (indexAndDistance & DISTANCE_MASK) >> DISTANCE_SHIFT;
     }
 
     static int32_t getIndex(int32_t indexAndDistance) {
         // assert indexAndDistance >= 0;
-        return indexAndDistance >> INDEX_SHIFT;
+        врати indexAndDistance >> INDEX_SHIFT;
     }
 
     /**
@@ -65,11 +65,11 @@ public:
     bool isParadigmLSR(const LSR &lsr) const;
 
     int32_t getDefaultScriptDistance() const {
-        return defaultScriptDistance;
+        врати defaultScriptDistance;
     }
 
     int32_t getDefaultDemotionPerDesiredLocale() const {
-        return defaultDemotionPerDesiredLocale;
+        врати defaultDemotionPerDesiredLocale;
     }
 
 private:
@@ -92,7 +92,7 @@ private:
     bool isMatch(const LSR &desired, const LSR &supported,
                  int32_t shiftedThreshold, ULocMatchFavorSubtag favorSubtag) const {
         const LSR *pSupp = &supported;
-        return getBestIndexAndDistance(
+        врати getBestIndexAndDistance(
             desired, &pSupp, 1,
             shiftedThreshold, favorSubtag, ULOCMATCH_DIRECTION_WITH_ONE_WAY) >= 0;
     }
@@ -112,11 +112,11 @@ private:
     const char *partitionsForRegion(const LSR &lsr) const {
         // ill-formed region -> one non-matching string
         int32_t pIndex = regionToPartitionsIndex[lsr.regionIndex];
-        return partitionArrays[pIndex];
+        врати partitionArrays[pIndex];
     }
 
     int32_t getDefaultRegionDistance() const {
-        return defaultRegionDistance;
+        врати defaultRegionDistance;
     }
 
     const LikelySubtags &likelySubtags;

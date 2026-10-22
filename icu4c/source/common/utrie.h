@@ -190,9 +190,9 @@ typedef struct UTrie UTrie;
     __offset=(trie)->getFoldingOffset(result); \
 \
     /* get the real data from the folded lead/trail units */ \
-    if(__offset>0) { \
+    ако(__offset>0) { \
         (result)=_UTRIE_GET_RAW((trie), data, __offset, (c2)&0x3ff); \
-    } else { \
+    } инако { \
         (result)=(resultType)((trie)->initialValue); \
     } \
 } UPRV_BLOCK_MACRO_END
@@ -207,14 +207,14 @@ typedef struct UTrie UTrie;
  *   if((c32)<=0xd7ff) { (result)=_UTRIE_GET_RAW(trie, data, 0, c32); }
  */
 #define _UTRIE_GET(trie, data, c32, result, resultType) UPRV_BLOCK_MACRO_BEGIN { \
-    if((uint32_t)(c32)<=0xffff) { \
+    ако((uint32_t)(c32)<=0xffff) { \
         /* BMP code points */ \
         (result)=_UTRIE_GET_FROM_BMP(trie, data, c32); \
-    } else if((uint32_t)(c32)<=0x10ffff) { \
+    } инако ако((uint32_t)(c32)<=0x10ffff) { \
         /* supplementary code point */ \
         UChar __lead16=U16_LEAD(c32); \
         _UTRIE_GET_FROM_PAIR(trie, data, __lead16, c32, result, resultType); \
-    } else { \
+    } инако { \
         /* out of range */ \
         (result)=(resultType)((trie)->initialValue); \
     } \
@@ -223,13 +223,13 @@ typedef struct UTrie UTrie;
 /** Internal next-post-increment: get the next code point (c, c2) and its data */
 #define _UTRIE_NEXT(trie, data, src, limit, c, c2, result, resultType) UPRV_BLOCK_MACRO_BEGIN { \
     (c)=*(src)++; \
-    if(!U16_IS_LEAD(c)) { \
+    ако(!U16_IS_LEAD(c)) { \
         (c2)=0; \
         (result)=_UTRIE_GET_RAW((trie), data, 0, (c)); \
-    } else if((src)!=(limit) && U16_IS_TRAIL((c2)=*(src))) { \
+    } инако ако((src)!=(limit) && U16_IS_TRAIL((c2)=*(src))) { \
         ++(src); \
         _UTRIE_GET_FROM_PAIR((trie), data, (c), (c2), (result), resultType); \
-    } else { \
+    } инако { \
         /* unpaired lead surrogate code point */ \
         (c2)=0; \
         (result)=_UTRIE_GET_RAW((trie), data, UTRIE_LEAD_INDEX_DISP, (c)); \
@@ -239,21 +239,21 @@ typedef struct UTrie UTrie;
 /** Internal previous: get the previous code point (c, c2) and its data */
 #define _UTRIE_PREVIOUS(trie, data, start, src, c, c2, result, resultType) UPRV_BLOCK_MACRO_BEGIN { \
     (c)=*--(src); \
-    if(!U16_IS_SURROGATE(c)) { \
+    ако(!U16_IS_SURROGATE(c)) { \
         (c2)=0; \
         (result)=_UTRIE_GET_RAW((trie), data, 0, (c)); \
-    } else if(!U16_IS_SURROGATE_LEAD(c)) { \
+    } инако ако(!U16_IS_SURROGATE_LEAD(c)) { \
         /* trail surrogate */ \
-        if((start)!=(src) && U16_IS_LEAD((c2)=*((src)-1))) { \
+        ако((start)!=(src) && U16_IS_LEAD((c2)=*((src)-1))) { \
             --(src); \
             (result)=(c); (c)=(c2); (c2)=(UChar)(result); /* swap c, c2 */ \
             _UTRIE_GET_FROM_PAIR((trie), data, (c), (c2), (result), resultType); \
-        } else { \
+        } инако { \
             /* unpaired trail surrogate code point */ \
             (c2)=0; \
             (result)=_UTRIE_GET_RAW((trie), data, 0, (c)); \
         } \
-    } else { \
+    } инако { \
         /* unpaired lead surrogate code point */ \
         (c2)=0; \
         (result)=_UTRIE_GET_RAW((trie), data, UTRIE_LEAD_INDEX_DISP, (c)); \

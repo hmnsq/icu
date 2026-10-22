@@ -72,7 +72,7 @@ uprv_arrayCopy(const char16_t *src, int32_t srcStart,
  */
 static inline void
 uprv_arrayCopy(const icu::UnicodeString *src, icu::UnicodeString *dst, int32_t count)
-{ while(count-- > 0) *dst++ = *src++; }
+{ док(count-- > 0) *dst++ = *src++; }
 
 /**
  * Copy an array of UnicodeString OBJECTS (not pointers).
@@ -89,7 +89,7 @@ uprv_arrayCopy(const icu::UnicodeString *src, int32_t srcStart,
  */
 inline void
 uprv_checkCanGetBuffer(const icu::UnicodeString &s, UErrorCode &errorCode) {
-    if(U_SUCCESS(errorCode) && s.isBogus()) {
+    ако(U_SUCCESS(errorCode) && s.isBogus()) {
         errorCode=U_ILLEGAL_ARGUMENT_ERROR;
     }
 }

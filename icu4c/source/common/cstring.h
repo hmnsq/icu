@@ -64,11 +64,11 @@ uprv_asciitolower(char c);
 U_CAPI char U_EXPORT2
 uprv_ebcdictolower(char c);
 
-#if U_CHARSET_FAMILY==U_ASCII_FAMILY
+#ако U_CHARSET_FAMILY==U_ASCII_FAMILY
 #   define uprv_tolower uprv_asciitolower
 #elif U_CHARSET_FAMILY==U_EBCDIC_FAMILY
 #   define uprv_tolower uprv_ebcdictolower
-#else
+#инако
 #   error U_CHARSET_FAMILY is not valid
 #endif
 
@@ -113,14 +113,14 @@ T_CString_stringToInteger(const char *integerString, int32_t radix);
  * Case-insensitive, language-independent string comparison
  * limited to the ASCII character repertoire.
  */
-U_CAPI int U_EXPORT2
+U_CAPI цео U_EXPORT2
 uprv_stricmp(const char *str1, const char *str2);
 
 /**
  * Case-insensitive, language-independent string comparison
  * limited to the ASCII character repertoire.
  */
-U_CAPI int U_EXPORT2
+U_CAPI цео U_EXPORT2
 uprv_strnicmp(const char *str1, const char *str2, uint32_t n);
 
 #endif /* ! CSTRING_H */

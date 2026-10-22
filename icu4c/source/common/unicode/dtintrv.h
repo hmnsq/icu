@@ -16,7 +16,7 @@
 
 #include "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ако U_SHOW_CPLUSPLUS_API
 
 #include "unicode/uobject.h"
 
@@ -140,19 +140,19 @@ private:
 
 inline UDate 
 DateInterval::getFromDate() const { 
-    return fromDate; 
+    врати fromDate; 
 }
 
 
 inline UDate 
 DateInterval::getToDate() const { 
-    return toDate; 
+    врати toDate; 
 }
 
 
 inline bool
 DateInterval::operator!=(const DateInterval& other) const { 
-    return ( !operator==(other) );
+    врати ( !operator==(other) );
 }
 
 

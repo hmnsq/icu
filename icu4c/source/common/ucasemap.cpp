@@ -29,7 +29,7 @@
 #include "unicode/uloc.h"
 #include "unicode/ustring.h"
 #include "unicode/ucasemap.h"
-#if !UCONFIG_NO_BREAK_ITERATION
+#ако !UCONFIG_NO_BREAK_ITERATION
 #include "unicode/utext.h"
 #endif
 #include "unicode/utf.h"
@@ -52,7 +52,7 @@ U_NAMESPACE_USE
 U_NAMESPACE_BEGIN
 
 UCaseMapImpl::UCaseMapImpl(const char *localeID, uint32_t opts, UErrorCode *pErrorCode) :
-#if !UCONFIG_NO_BREAK_ITERATION
+#ако !UCONFIG_NO_BREAK_ITERATION
         iter(nullptr),
 #endif
         caseLocale(UCASE_LOC_UNKNOWN), options(opts) {
@@ -60,7 +60,7 @@ UCaseMapImpl::UCaseMapImpl(const char *localeID, uint32_t opts, UErrorCode *pErr
 }
 
 UCaseMapImpl::~UCaseMapImpl() {
-#if !UCONFIG_NO_BREAK_ITERATION
+#ако !UCONFIG_NO_BREAK_ITERATION
     delete iter;
 #endif
 }
@@ -69,18 +69,18 @@ U_NAMESPACE_END
 
 U_CAPI UCaseMap * U_EXPORT2
 ucasemap_open(const char *locale, uint32_t options, UErrorCode *pErrorCode) {
-    if(U_FAILURE(*pErrorCode)) {
-        return nullptr;
+    ако(U_FAILURE(*pErrorCode)) {
+        врати nullptr;
     }
     UCaseMapImpl *csm = new UCaseMapImpl(locale, options, pErrorCode);
-    if(csm==nullptr) {
+    ако(csm==nullptr) {
         *pErrorCode = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
-    } else if (U_FAILURE(*pErrorCode)) {
+        врати nullptr;
+    } инако ако (U_FAILURE(*pErrorCode)) {
         delete csm;
-        return nullptr;
+        врати nullptr;
     }
-    return reinterpret_cast<UCaseMap *>(csm);
+    врати reinterpret_cast<UCaseMap *>(csm);
 }
 
 U_CAPI void U_EXPORT2
@@ -90,41 +90,41 @@ ucasemap_close(UCaseMap *csm) {
 
 U_CAPI const char* U_EXPORT2
 ucasemap_getLocale(const UCaseMap* csm U_LIFETIME_BOUND) {
-    return reinterpret_cast<const UCaseMapImpl *>(csm)->locale;
+    врати reinterpret_cast<const UCaseMapImpl *>(csm)->locale;
 }
 
 U_CAPI uint32_t U_EXPORT2
 ucasemap_getOptions(const UCaseMap *csm) {
-    return reinterpret_cast<const UCaseMapImpl *>(csm)->options;
+    врати reinterpret_cast<const UCaseMapImpl *>(csm)->options;
 }
 
 U_CAPI void U_EXPORT2
 ucasemap_setLocale(UCaseMap *csm, const char *locale, UErrorCode *pErrorCode) {
-    if(U_FAILURE(*pErrorCode)) {
-        return;
+    ако(U_FAILURE(*pErrorCode)) {
+        врати;
     }
     auto *impl = reinterpret_cast<UCaseMapImpl *>(csm);
-    if (locale != nullptr && *locale == 0) {
+    ако (locale != nullptr && *locale == 0) {
         impl->locale[0] = 0;
         impl->caseLocale = UCASE_LOC_ROOT;
-        return;
+        врати;
     }
 
     UErrorCode bufferStatus = U_ZERO_ERROR;
     int32_t length=uloc_getName(locale, impl->locale, (int32_t)sizeof(impl->locale), &bufferStatus);
-    if(bufferStatus==U_BUFFER_OVERFLOW_ERROR || (U_SUCCESS(bufferStatus) && length==sizeof(impl->locale))) {
+    ако(bufferStatus==U_BUFFER_OVERFLOW_ERROR || (U_SUCCESS(bufferStatus) && length==sizeof(impl->locale))) {
         bufferStatus = U_ZERO_ERROR;
         /* we only really need the language code for case mappings */
         length=uloc_getLanguage(locale, impl->locale, (int32_t)sizeof(impl->locale), &bufferStatus);
     }
-    if(U_FAILURE(bufferStatus)) {
+    ако(U_FAILURE(bufferStatus)) {
         *pErrorCode=bufferStatus;
-    } else if(length==sizeof(impl->locale)) {
+    } инако ако(length==sizeof(impl->locale)) {
         *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
     }
-    if(U_SUCCESS(*pErrorCode)) {     
+    ако(U_SUCCESS(*pErrorCode)) {     
         impl->caseLocale = ucase_getCaseLocale(impl->locale);
-    } else {
+    } инако {
         impl->locale[0]=0;
         impl->caseLocale = UCASE_LOC_ROOT;
     }
@@ -132,8 +132,8 @@ ucasemap_setLocale(UCaseMap *csm, const char *locale, UErrorCode *pErrorCode) {
 
 U_CAPI void U_EXPORT2
 ucasemap_setOptions(UCaseMap *csm, uint32_t options, UErrorCode *pErrorCode) {
-    if(U_FAILURE(*pErrorCode)) {
-        return;
+    ако(U_FAILURE(*pErrorCode)) {
+        врати;
     }
     reinterpret_cast<UCaseMapImpl *>(csm)->options=options;
 }
@@ -151,59 +151,59 @@ appendResult(int32_t cpLength, int32_t result, const char16_t *s,
     U_ASSERT(U_SUCCESS(errorCode));
 
     /* decode the result */
-    if(result<0) {
+    ако(result<0) {
         /* (not) original code point */
-        if(edits!=nullptr) {
+        ако(edits!=nullptr) {
             edits->addUnchanged(cpLength);
         }
-        if((options & U_OMIT_UNCHANGED_TEXT) == 0) {
+        ако((options & U_OMIT_UNCHANGED_TEXT) == 0) {
             ByteSinkUtil::appendCodePoint(cpLength, ~result, sink);
         }
-    } else {
-        if(result<=UCASE_MAX_STRING_LENGTH) {
+    } инако {
+        ако(result<=UCASE_MAX_STRING_LENGTH) {
             // string: "result" is the UTF-16 length
-            return ByteSinkUtil::appendChange(cpLength, s, result, sink, edits, errorCode);
-        } else {
+            врати ByteSinkUtil::appendChange(cpLength, s, result, sink, edits, errorCode);
+        } инако {
             ByteSinkUtil::appendCodePoint(cpLength, result, sink, edits);
         }
     }
-    return true;
+    врати true;
 }
 
 // See unicode/utf8.h U8_APPEND_UNSAFE().
-inline uint8_t getTwoByteLead(UChar32 c) { return static_cast<uint8_t>((c >> 6) | 0xc0); }
-inline uint8_t getTwoByteTrail(UChar32 c) { return static_cast<uint8_t>((c & 0x3f) | 0x80); }
+inline uint8_t getTwoByteLead(UChar32 c) { врати static_cast<uint8_t>((c >> 6) | 0xc0); }
+inline uint8_t getTwoByteTrail(UChar32 c) { врати static_cast<uint8_t>((c & 0x3f) | 0x80); }
 
 UChar32 U_CALLCONV
 utf8_caseContextIterator(void *context, int8_t dir) {
     UCaseContext* csc = static_cast<UCaseContext*>(context);
     UChar32 c;
 
-    if(dir<0) {
+    ако(dir<0) {
         /* reset for backward iteration */
         csc->index=csc->cpStart;
         csc->dir=dir;
-    } else if(dir>0) {
+    } инако ако(dir>0) {
         /* reset for forward iteration */
         csc->index=csc->cpLimit;
         csc->dir=dir;
-    } else {
+    } инако {
         /* continue current iteration direction */
         dir=csc->dir;
     }
 
-    if(dir<0) {
-        if(csc->start<csc->index) {
+    ако(dir<0) {
+        ако(csc->start<csc->index) {
             U8_PREV((const uint8_t *)csc->p, csc->start, csc->index, c);
-            return c;
+            врати c;
         }
-    } else {
-        if(csc->index<csc->limit) {
+    } инако {
+        ако(csc->index<csc->limit) {
             U8_NEXT((const uint8_t *)csc->p, csc->index, csc->limit, c);
-            return c;
+            врати c;
         }
     }
-    return U_SENTINEL;
+    врати U_SENTINEL;
 }
 
 /**
@@ -214,67 +214,67 @@ void toLower(int32_t caseLocale, uint32_t options,
              const uint8_t *src, UCaseContext *csc, int32_t srcStart, int32_t srcLimit,
              icu::ByteSink &sink, icu::Edits *edits, UErrorCode &errorCode) {
     const int8_t *latinToLower;
-    if (caseLocale == UCASE_LOC_ROOT ||
+    ако (caseLocale == UCASE_LOC_ROOT ||
             (caseLocale >= 0 ?
                 !(caseLocale == UCASE_LOC_TURKISH || caseLocale == UCASE_LOC_LITHUANIAN) :
                 (options & _FOLD_CASE_OPTIONS_MASK) == U_FOLD_CASE_DEFAULT)) {
         latinToLower = LatinCase::TO_LOWER_NORMAL;
-    } else {
+    } инако {
         latinToLower = LatinCase::TO_LOWER_TR_LT;
     }
     const UTrie2 *trie = ucase_getTrie();
     int32_t prev = srcStart;
     int32_t srcIndex = srcStart;
-    for (;;) {
+    за (;;) {
         // fast path for simple cases
         int32_t cpStart;
         UChar32 c;
-        for (;;) {
-            if (U_FAILURE(errorCode) || srcIndex >= srcLimit) {
+        за (;;) {
+            ако (U_FAILURE(errorCode) || srcIndex >= srcLimit) {
                 c = U_SENTINEL;
                 break;
             }
             uint8_t lead = src[srcIndex++];
-            if (lead <= 0x7f) {
+            ако (lead <= 0x7f) {
                 int8_t d = latinToLower[lead];
-                if (d == LatinCase::EXC) {
+                ако (d == LatinCase::EXC) {
                     cpStart = srcIndex - 1;
                     c = lead;
                     break;
                 }
-                if (d == 0) { continue; }
+                ако (d == 0) { continue; }
                 ByteSinkUtil::appendUnchanged(src + prev, srcIndex - 1 - prev,
                                               sink, options, edits, errorCode);
                 char ascii = static_cast<char>(lead + d);
                 sink.Append(&ascii, 1);
-                if (edits != nullptr) {
+                ако (edits != nullptr) {
                     edits->addReplace(1, 1);
                 }
                 prev = srcIndex;
                 continue;
-            } else if (lead < 0xe3) {
+            } инако ако (lead < 0xe3) {
                 uint8_t t;
-                if (0xc2 <= lead && lead <= 0xc5 && srcIndex < srcLimit &&
+                ако (0xc2 <= lead && lead <= 0xc5 && srcIndex < srcLimit &&
                         (t = src[srcIndex] - 0x80) <= 0x3f) {
                     // U+0080..U+017F
                     ++srcIndex;
                     c = ((lead - 0xc0) << 6) | t;
                     int8_t d = latinToLower[c];
-                    if (d == LatinCase::EXC) {
+                    ако (d == LatinCase::EXC) {
                         cpStart = srcIndex - 2;
                         break;
                     }
-                    if (d == 0) { continue; }
+                    ако (d == 0) { continue; }
                     ByteSinkUtil::appendUnchanged(src + prev, srcIndex - 2 - prev,
                                                   sink, options, edits, errorCode);
                     ByteSinkUtil::appendTwoBytes(c + d, sink);
-                    if (edits != nullptr) {
+                    ако (edits != nullptr) {
                         edits->addReplace(2, 2);
                     }
                     prev = srcIndex;
                     continue;
                 }
-            } else if ((lead <= 0xe9 || lead == 0xeb || lead == 0xec) &&
+            } инако ако ((lead <= 0xe9 || lead == 0xeb || lead == 0xec) &&
                     (srcIndex + 2) <= srcLimit &&
                     U8_IS_TRAIL(src[srcIndex]) && U8_IS_TRAIL(src[srcIndex + 1])) {
                 // most of CJK: no case mappings
@@ -283,14 +283,14 @@ void toLower(int32_t caseLocale, uint32_t options,
             }
             cpStart = --srcIndex;
             U8_NEXT(src, srcIndex, srcLimit, c);
-            if (c < 0) {
+            ако (c < 0) {
                 // ill-formed UTF-8
                 continue;
             }
             uint16_t props = UTRIE2_GET16(trie, c);
-            if (UCASE_HAS_EXCEPTION(props)) { break; }
+            ако (UCASE_HAS_EXCEPTION(props)) { break; }
             int32_t delta;
-            if (!UCASE_IS_UPPER_OR_TITLE(props) || (delta = UCASE_GET_DELTA(props)) == 0) {
+            ако (!UCASE_IS_UPPER_OR_TITLE(props) || (delta = UCASE_GET_DELTA(props)) == 0) {
                 continue;
             }
             ByteSinkUtil::appendUnchanged(src + prev, cpStart - prev,
@@ -298,19 +298,19 @@ void toLower(int32_t caseLocale, uint32_t options,
             ByteSinkUtil::appendCodePoint(srcIndex - cpStart, c + delta, sink, edits);
             prev = srcIndex;
         }
-        if (c < 0) {
+        ако (c < 0) {
             break;
         }
         // slow path
         const char16_t *s;
-        if (caseLocale >= 0) {
+        ако (caseLocale >= 0) {
             csc->cpStart = cpStart;
             csc->cpLimit = srcIndex;
             c = ucase_toFullLower(c, utf8_caseContextIterator, csc, &s, caseLocale);
-        } else {
+        } инако {
             c = ucase_toFullFolding(c, &s, options);
         }
-        if (c >= 0) {
+        ако (c >= 0) {
             ByteSinkUtil::appendUnchanged(src + prev, cpStart - prev,
                                           sink, options, edits, errorCode);
             appendResult(srcIndex - cpStart, c, s, sink, options, edits, errorCode);
@@ -325,64 +325,64 @@ void toUpper(int32_t caseLocale, uint32_t options,
              const uint8_t *src, UCaseContext *csc, int32_t srcLength,
              icu::ByteSink &sink, icu::Edits *edits, UErrorCode &errorCode) {
     const int8_t *latinToUpper;
-    if (caseLocale == UCASE_LOC_TURKISH) {
+    ако (caseLocale == UCASE_LOC_TURKISH) {
         latinToUpper = LatinCase::TO_UPPER_TR;
-    } else {
+    } инако {
         latinToUpper = LatinCase::TO_UPPER_NORMAL;
     }
     const UTrie2 *trie = ucase_getTrie();
     int32_t prev = 0;
     int32_t srcIndex = 0;
-    for (;;) {
+    за (;;) {
         // fast path for simple cases
         int32_t cpStart;
         UChar32 c;
-        for (;;) {
-            if (U_FAILURE(errorCode) || srcIndex >= srcLength) {
+        за (;;) {
+            ако (U_FAILURE(errorCode) || srcIndex >= srcLength) {
                 c = U_SENTINEL;
                 break;
             }
             uint8_t lead = src[srcIndex++];
-            if (lead <= 0x7f) {
+            ако (lead <= 0x7f) {
                 int8_t d = latinToUpper[lead];
-                if (d == LatinCase::EXC) {
+                ако (d == LatinCase::EXC) {
                     cpStart = srcIndex - 1;
                     c = lead;
                     break;
                 }
-                if (d == 0) { continue; }
+                ако (d == 0) { continue; }
                 ByteSinkUtil::appendUnchanged(src + prev, srcIndex - 1 - prev,
                                               sink, options, edits, errorCode);
                 char ascii = static_cast<char>(lead + d);
                 sink.Append(&ascii, 1);
-                if (edits != nullptr) {
+                ако (edits != nullptr) {
                     edits->addReplace(1, 1);
                 }
                 prev = srcIndex;
                 continue;
-            } else if (lead < 0xe3) {
+            } инако ако (lead < 0xe3) {
                 uint8_t t;
-                if (0xc2 <= lead && lead <= 0xc5 && srcIndex < srcLength &&
+                ако (0xc2 <= lead && lead <= 0xc5 && srcIndex < srcLength &&
                         (t = src[srcIndex] - 0x80) <= 0x3f) {
                     // U+0080..U+017F
                     ++srcIndex;
                     c = ((lead - 0xc0) << 6) | t;
                     int8_t d = latinToUpper[c];
-                    if (d == LatinCase::EXC) {
+                    ако (d == LatinCase::EXC) {
                         cpStart = srcIndex - 2;
                         break;
                     }
-                    if (d == 0) { continue; }
+                    ако (d == 0) { continue; }
                     ByteSinkUtil::appendUnchanged(src + prev, srcIndex - 2 - prev,
                                                   sink, options, edits, errorCode);
                     ByteSinkUtil::appendTwoBytes(c + d, sink);
-                    if (edits != nullptr) {
+                    ако (edits != nullptr) {
                         edits->addReplace(2, 2);
                     }
                     prev = srcIndex;
                     continue;
                 }
-            } else if ((lead <= 0xe9 || lead == 0xeb || lead == 0xec) &&
+            } инако ако ((lead <= 0xe9 || lead == 0xeb || lead == 0xec) &&
                     (srcIndex + 2) <= srcLength &&
                     U8_IS_TRAIL(src[srcIndex]) && U8_IS_TRAIL(src[srcIndex + 1])) {
                 // most of CJK: no case mappings
@@ -391,14 +391,14 @@ void toUpper(int32_t caseLocale, uint32_t options,
             }
             cpStart = --srcIndex;
             U8_NEXT(src, srcIndex, srcLength, c);
-            if (c < 0) {
+            ако (c < 0) {
                 // ill-formed UTF-8
                 continue;
             }
             uint16_t props = UTRIE2_GET16(trie, c);
-            if (UCASE_HAS_EXCEPTION(props)) { break; }
+            ако (UCASE_HAS_EXCEPTION(props)) { break; }
             int32_t delta;
-            if (UCASE_GET_TYPE(props) != UCASE_LOWER || (delta = UCASE_GET_DELTA(props)) == 0) {
+            ако (UCASE_GET_TYPE(props) != UCASE_LOWER || (delta = UCASE_GET_DELTA(props)) == 0) {
                 continue;
             }
             ByteSinkUtil::appendUnchanged(src + prev, cpStart - prev,
@@ -406,7 +406,7 @@ void toUpper(int32_t caseLocale, uint32_t options,
             ByteSinkUtil::appendCodePoint(srcIndex - cpStart, c + delta, sink, edits);
             prev = srcIndex;
         }
-        if (c < 0) {
+        ако (c < 0) {
             break;
         }
         // slow path
@@ -414,7 +414,7 @@ void toUpper(int32_t caseLocale, uint32_t options,
         csc->cpLimit = srcIndex;
         const char16_t *s;
         c = ucase_toFullUpper(c, utf8_caseContextIterator, csc, &s, caseLocale);
-        if (c >= 0) {
+        ако (c >= 0) {
             ByteSinkUtil::appendUnchanged(src + prev, cpStart - prev,
                                           sink, options, edits, errorCode);
             appendResult(srcIndex - cpStart, c, s, sink, options, edits, errorCode);
@@ -427,7 +427,7 @@ void toUpper(int32_t caseLocale, uint32_t options,
 
 }  // namespace
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#ако !UCONFIG_NO_BREAK_ITERATION
 
 namespace {
 
@@ -461,61 +461,61 @@ int32_t maybeTitleDutchIJ(const uint8_t *src, UChar32 c, int32_t start, int32_t 
     c2 = src[index++];
 
     // Is the first letter an i/I with accent?
-    if (c == u'I') {
-        if (c2 == ACUTE_BYTE0 && index < segmentLimit && src[index++] == ACUTE_BYTE1) {
+    ако (c == u'I') {
+        ако (c2 == ACUTE_BYTE0 && index < segmentLimit && src[index++] == ACUTE_BYTE1) {
             withAcute = true;
             unchanged1 = 2;  // ACUTE is 2 code units in UTF-8
-            if (index == segmentLimit) { return start; }
+            ако (index == segmentLimit) { врати start; }
             c2 = src[index++];
         }
-    } else {  // Í
+    } инако {  // Í
         withAcute = true;
     }
 
     // Is the next character a j/J?
-    if (c2 == u'j') {
+    ако (c2 == u'j') {
         doTitleJ = true;
-    } else if (c2 == u'J') {
+    } инако ако (c2 == u'J') {
         ++unchanged1;
-    } else {
-        return start;
+    } инако {
+        врати start;
     }
 
     // A plain i/I must be followed by a plain j/J.
     // An i/I with acute must be followed by a j/J with acute.
-    if (withAcute) {
-        if ((index + 1) >= segmentLimit || src[index++] != ACUTE_BYTE0 || src[index++] != ACUTE_BYTE1) {
-            return start;
+    ако (withAcute) {
+        ако ((index + 1) >= segmentLimit || src[index++] != ACUTE_BYTE0 || src[index++] != ACUTE_BYTE1) {
+            врати start;
         }
-        if (doTitleJ) {
+        ако (doTitleJ) {
             unchanged2 = 2;  // ACUTE is 2 code units in UTF-8
-        } else {
+        } инако {
             unchanged1 = unchanged1 + 2;    // ACUTE is 2 code units in UTF-8
         }
     }
 
     // There must not be another combining mark.
-    if (index < segmentLimit) {
+    ако (index < segmentLimit) {
         int32_t cp;
         int32_t i = index;
         U8_NEXT(src, i, segmentLimit, cp);
         uint32_t typeMask = U_GET_GC_MASK(cp);
-        if ((typeMask & U_GC_M_MASK) != 0) {
-            return start;
+        ако ((typeMask & U_GC_M_MASK) != 0) {
+            врати start;
         }
     }
 
     // Output the rest of the Dutch IJ.
     ByteSinkUtil::appendUnchanged(src + start, unchanged1, sink, options, edits, errorCode);
     start += unchanged1;
-    if (doTitleJ) {
+    ако (doTitleJ) {
         ByteSinkUtil::appendCodePoint(1, u'J', sink, edits);
         ++start;
     }
     ByteSinkUtil::appendUnchanged(src + start, unchanged2, sink, options, edits, errorCode);
 
     U_ASSERT(start + unchanged2 == index);
-    return index;
+    врати index;
 }
 
 }  // namespace
@@ -526,8 +526,8 @@ ucasemap_internalUTF8ToTitle(
         const uint8_t *src, int32_t srcLength,
         ByteSink &sink, icu::Edits *edits,
         UErrorCode &errorCode) {
-    if (!ustrcase_checkTitleAdjustmentOptions(options, errorCode)) {
-        return;
+    ако (!ustrcase_checkTitleAdjustmentOptions(options, errorCode)) {
+        врати;
     }
 
     /* set up local variables */
@@ -538,16 +538,16 @@ ucasemap_internalUTF8ToTitle(
     UBool isFirstIndex=true;
 
     /* titlecasing loop */
-    while(prev<srcLength) {
+    док(prev<srcLength) {
         /* find next index where to titlecase */
         int32_t index;
-        if(isFirstIndex) {
+        ако(isFirstIndex) {
             isFirstIndex=false;
             index=iter->first();
-        } else {
+        } инако {
             index=iter->next();
         }
-        if(index==UBRK_DONE || index>srcLength) {
+        ако(index==UBRK_DONE || index>srcLength) {
             index=srcLength;
         }
 
@@ -557,79 +557,79 @@ ucasemap_internalUTF8ToTitle(
          * b) first letter (titlecase)              [titleStart..titleLimit[
          * c) subsequent characters (lowercase)                 [titleLimit..index[
          */
-        if(prev<index) {
+        ако(prev<index) {
             /* find and copy skipped characters [prev..titleStart[ */
             int32_t titleStart=prev;
             int32_t titleLimit=prev;
             UChar32 c;
             U8_NEXT(src, titleLimit, index, c);
-            if ((options&U_TITLECASE_NO_BREAK_ADJUSTMENT)==0) {
+            ако ((options&U_TITLECASE_NO_BREAK_ADJUSTMENT)==0) {
                 // Adjust the titlecasing index to the next cased character,
                 // or to the next letter/number/symbol/private use.
                 // Stop with titleStart<titleLimit<=index
                 // if there is a character to be titlecased,
                 // or else stop with titleStart==titleLimit==index.
                 UBool toCased = (options&U_TITLECASE_ADJUST_TO_CASED) != 0;
-                while (toCased ? UCASE_NONE==ucase_getType(c) : !ustrcase_isLNS(c)) {
+                док (toCased ? UCASE_NONE==ucase_getType(c) : !ustrcase_isLNS(c)) {
                     titleStart=titleLimit;
-                    if(titleLimit==index) {
+                    ако(titleLimit==index) {
                         break;
                     }
                     U8_NEXT(src, titleLimit, index, c);
                 }
-                if (prev < titleStart) {
-                    if (!ByteSinkUtil::appendUnchanged(src+prev, titleStart-prev,
+                ако (prev < titleStart) {
+                    ако (!ByteSinkUtil::appendUnchanged(src+prev, titleStart-prev,
                                                        sink, options, edits, errorCode)) {
-                        return;
+                        врати;
                     }
                 }
             }
 
-            if(titleStart<titleLimit) {
+            ако(titleStart<titleLimit) {
                 /* titlecase c which is from [titleStart..titleLimit[ */
-                if(c>=0) {
+                ако(c>=0) {
                     csc.cpStart=titleStart;
                     csc.cpLimit=titleLimit;
                     const char16_t *s;
                     c=ucase_toFullTitle(c, utf8_caseContextIterator, &csc, &s, caseLocale);
-                    if (!appendResult(titleLimit-titleStart, c, s, sink, options, edits, errorCode)) {
-                        return;
+                    ако (!appendResult(titleLimit-titleStart, c, s, sink, options, edits, errorCode)) {
+                        врати;
                     }
-                } else {
+                } инако {
                     // Malformed UTF-8.
-                    if (!ByteSinkUtil::appendUnchanged(src+titleStart, titleLimit-titleStart,
+                    ако (!ByteSinkUtil::appendUnchanged(src+titleStart, titleLimit-titleStart,
                                                        sink, options, edits, errorCode)) {
-                        return;
+                        врати;
                     }
                 }
 
                 /* Special case Dutch IJ titlecasing */
-                if (titleLimit < index &&
+                ако (titleLimit < index &&
                     caseLocale == UCASE_LOC_DUTCH) {
-                    if (c < 0) {
+                    ако (c < 0) {
                         c = ~c;
                     }
 
-                    if (c == u'I' || c == u'Í') {
+                    ако (c == u'I' || c == u'Í') {
                         titleLimit = maybeTitleDutchIJ(src, c, titleLimit, index, sink, options, edits, errorCode);
                     }
                 }
 
                 /* lowercase [titleLimit..index[ */
-                if(titleLimit<index) {
-                    if((options&U_TITLECASE_NO_LOWERCASE)==0) {
+                ако(titleLimit<index) {
+                    ако((options&U_TITLECASE_NO_LOWERCASE)==0) {
                         /* Normal operation: Lowercase the rest of the word. */
                         toLower(caseLocale, options,
                                 src, &csc, titleLimit, index,
                                 sink, edits, errorCode);
-                        if(U_FAILURE(errorCode)) {
-                            return;
+                        ако(U_FAILURE(errorCode)) {
+                            врати;
                         }
-                    } else {
+                    } инако {
                         /* Optionally just copy the rest of the word unchanged. */
-                        if (!ByteSinkUtil::appendUnchanged(src+titleLimit, index-titleLimit,
+                        ако (!ByteSinkUtil::appendUnchanged(src+titleLimit, index-titleLimit,
                                                            sink, options, edits, errorCode)) {
-                            return;
+                            врати;
                         }
                     }
                 }
@@ -646,19 +646,19 @@ U_NAMESPACE_BEGIN
 namespace GreekUpper {
 
 UBool isFollowedByCasedLetter(const uint8_t *s, int32_t i, int32_t length) {
-    while (i < length) {
+    док (i < length) {
         UChar32 c;
         U8_NEXT(s, i, length, c);
         int32_t type = ucase_getTypeOrIgnorable(c);
-        if ((type & UCASE_IGNORABLE) != 0) {
+        ако ((type & UCASE_IGNORABLE) != 0) {
             // Case-ignorable, continue with the loop.
-        } else if (type != UCASE_NONE) {
-            return true;  // Followed by cased letter.
-        } else {
-            return false;  // Uncased and not case-ignorable.
+        } инако ако (type != UCASE_NONE) {
+            врати true;  // Followed by cased letter.
+        } инако {
+            врати false;  // Uncased and not case-ignorable.
         }
     }
-    return false;  // Not followed by cased letter.
+    врати false;  // Not followed by cased letter.
 }
 
 // Keep this consistent with the UTF-16 version in ustrcase.cpp and the Java version in CaseMap.java.
@@ -667,21 +667,21 @@ void toUpper(uint32_t options,
              ByteSink &sink, Edits *edits,
              UErrorCode &errorCode) {
     uint32_t state = 0;
-    for (int32_t i = 0; i < srcLength;) {
+    за (int32_t i = 0; i < srcLength;) {
         int32_t nextIndex = i;
         UChar32 c;
         U8_NEXT(src, nextIndex, srcLength, c);
         uint32_t nextState = 0;
         int32_t type = ucase_getTypeOrIgnorable(c);
-        if ((type & UCASE_IGNORABLE) != 0) {
+        ако ((type & UCASE_IGNORABLE) != 0) {
             // c is case-ignorable
             nextState |= (state & AFTER_CASED);
-        } else if (type != UCASE_NONE) {
+        } инако ако (type != UCASE_NONE) {
             // c is cased
             nextState |= AFTER_CASED;
         }
         uint32_t data = getLetterData(c);
-        if (data > 0) {
+        ако (data > 0) {
             uint32_t upper = data & UPPER_MASK;
             // Add a dialytika to this iota or ypsilon vowel
             // if we removed a tonos from the previous vowel,
@@ -689,7 +689,7 @@ void toUpper(uint32_t options,
             // Adding one only to the final vowel in a longer sequence
             // (which does not occur in normal writing) would require lookahead.
             // Set the same flag as for preserving an existing dialytika.
-            if ((data & HAS_VOWEL) != 0 &&
+            ако ((data & HAS_VOWEL) != 0 &&
                 (state & (AFTER_VOWEL_WITH_PRECOMPOSED_ACCENT | AFTER_VOWEL_WITH_COMBINING_ACCENT)) !=
                     0 &&
                 (upper == 0x399 || upper == 0x3A5)) {
@@ -697,72 +697,72 @@ void toUpper(uint32_t options,
                                                                            : HAS_COMBINING_DIALYTIKA;
             }
             int32_t numYpogegrammeni = 0;  // Map each one to a trailing, spacing, capital iota.
-            if ((data & HAS_YPOGEGRAMMENI) != 0) {
+            ако ((data & HAS_YPOGEGRAMMENI) != 0) {
                 numYpogegrammeni = 1;
             }
             const UBool hasPrecomposedAccent = (data & HAS_ACCENT) != 0;
             // Skip combining diacritics after this Greek letter.
             int32_t nextNextIndex = nextIndex;
-            while (nextIndex < srcLength) {
+            док (nextIndex < srcLength) {
                 UChar32 c2;
                 U8_NEXT(src, nextNextIndex, srcLength, c2);
                 uint32_t diacriticData = getDiacriticData(c2);
-                if (diacriticData != 0) {
+                ако (diacriticData != 0) {
                     data |= diacriticData;
-                    if ((diacriticData & HAS_YPOGEGRAMMENI) != 0) {
+                    ако ((diacriticData & HAS_YPOGEGRAMMENI) != 0) {
                         ++numYpogegrammeni;
                     }
                     nextIndex = nextNextIndex;
-                } else {
+                } инако {
                     break;  // not a Greek diacritic
                 }
             }
-            if ((data & HAS_VOWEL_AND_ACCENT_AND_DIALYTIKA) == HAS_VOWEL_AND_ACCENT) {
+            ако ((data & HAS_VOWEL_AND_ACCENT_AND_DIALYTIKA) == HAS_VOWEL_AND_ACCENT) {
                 nextState |= hasPrecomposedAccent ? AFTER_VOWEL_WITH_PRECOMPOSED_ACCENT
                                                   : AFTER_VOWEL_WITH_COMBINING_ACCENT;
             }
             // Map according to Greek rules.
             UBool addTonos = false;
-            if (upper == 0x397 &&
+            ако (upper == 0x397 &&
                     (data & HAS_ACCENT) != 0 &&
                     numYpogegrammeni == 0 &&
                     (state & AFTER_CASED) == 0 &&
                     !isFollowedByCasedLetter(src, nextIndex, srcLength)) {
                 // Keep disjunctive "or" with (only) a tonos.
                 // We use the same "word boundary" conditions as for the Final_Sigma test.
-                if (hasPrecomposedAccent) {
+                ако (hasPrecomposedAccent) {
                     upper = 0x389;  // Preserve the precomposed form.
-                } else {
+                } инако {
                     addTonos = true;
                 }
-            } else if ((data & HAS_DIALYTIKA) != 0) {
+            } инако ако ((data & HAS_DIALYTIKA) != 0) {
                 // Preserve a vowel with dialytika in precomposed form if it exists.
-                if (upper == 0x399) {
+                ако (upper == 0x399) {
                     upper = 0x3AA;
                     data &= ~HAS_EITHER_DIALYTIKA;
-                } else if (upper == 0x3A5) {
+                } инако ако (upper == 0x3A5) {
                     upper = 0x3AB;
                     data &= ~HAS_EITHER_DIALYTIKA;
                 }
             }
 
             UBool change;
-            if (edits == nullptr && (options & U_OMIT_UNCHANGED_TEXT) == 0) {
+            ако (edits == nullptr && (options & U_OMIT_UNCHANGED_TEXT) == 0) {
                 change = true;  // common, simple usage
-            } else {
+            } инако {
                 // Find out first whether we are changing the text.
                 U_ASSERT(0x370 <= upper && upper <= 0x3ff);  // 2-byte UTF-8, main Greek block
                 change = (i + 2) > nextIndex ||
                         src[i] != getTwoByteLead(upper) || src[i + 1] != getTwoByteTrail(upper) ||
                         numYpogegrammeni > 0;
                 int32_t i2 = i + 2;
-                if ((data & HAS_EITHER_DIALYTIKA) != 0) {
+                ако ((data & HAS_EITHER_DIALYTIKA) != 0) {
                     change |= (i2 + 2) > nextIndex ||
                             src[i2] != static_cast<uint8_t>(u8"\u0308"[0]) ||
                             src[i2 + 1] != static_cast<uint8_t>(u8"\u0308"[1]);
                     i2 += 2;
                 }
-                if (addTonos) {
+                ако (addTonos) {
                     change |= (i2 + 2) > nextIndex ||
                             src[i2] != static_cast<uint8_t>(u8"\u0301"[0]) ||
                             src[i2 + 1] != static_cast<uint8_t>(u8"\u0301"[1]);
@@ -771,12 +771,12 @@ void toUpper(uint32_t options,
                 int32_t oldLength = nextIndex - i;
                 int32_t newLength = (i2 - i) + numYpogegrammeni * 2;  // 2 bytes per U+0399
                 change |= oldLength != newLength;
-                if (change) {
-                    if (edits != nullptr) {
+                ако (change) {
+                    ако (edits != nullptr) {
                         edits->addReplace(oldLength, newLength);
                     }
-                } else {
-                    if (edits != nullptr) {
+                } инако {
+                    ако (edits != nullptr) {
                         edits->addUnchanged(oldLength);
                     }
                     // Write unchanged text?
@@ -784,30 +784,30 @@ void toUpper(uint32_t options,
                 }
             }
 
-            if (change) {
+            ако (change) {
                 ByteSinkUtil::appendTwoBytes(upper, sink);
-                if ((data & HAS_EITHER_DIALYTIKA) != 0) {
+                ако ((data & HAS_EITHER_DIALYTIKA) != 0) {
                     sink.AppendU8(u8"\u0308", 2);  // restore or add a dialytika
                 }
-                if (addTonos) {
+                ако (addTonos) {
                     sink.AppendU8(u8"\u0301", 2);
                 }
-                while (numYpogegrammeni > 0) {
+                док (numYpogegrammeni > 0) {
                     sink.AppendU8(u8"\u0399", 2);
                     --numYpogegrammeni;
                 }
             }
-        } else if(c>=0) {
+        } инако ако(c>=0) {
             const char16_t *s;
             c=ucase_toFullUpper(c, nullptr, nullptr, &s, UCASE_LOC_GREEK);
-            if (!appendResult(nextIndex - i, c, s, sink, options, edits, errorCode)) {
-                return;
+            ако (!appendResult(nextIndex - i, c, s, sink, options, edits, errorCode)) {
+                врати;
             }
-        } else {
+        } инако {
             // Malformed UTF-8.
-            if (!ByteSinkUtil::appendUnchanged(src+i, nextIndex-i,
+            ако (!ByteSinkUtil::appendUnchanged(src+i, nextIndex-i,
                                                sink, options, edits, errorCode)) {
-                return;
+                врати;
             }
         }
         i = nextIndex;
@@ -837,9 +837,9 @@ ucasemap_internalUTF8ToUpper(int32_t caseLocale, uint32_t options, UCASEMAP_BREA
                              const uint8_t *src, int32_t srcLength,
                              icu::ByteSink &sink, icu::Edits *edits,
                              UErrorCode &errorCode) {
-    if (caseLocale == UCASE_LOC_GREEK) {
+    ако (caseLocale == UCASE_LOC_GREEK) {
         GreekUpper::toUpper(options, src, srcLength, sink, edits, errorCode);
-    } else {
+    } инако {
         UCaseContext csc=UCASECONTEXT_INITIALIZER;
         csc.p=(void *)src;
         csc.limit=srcLength;
@@ -868,27 +868,27 @@ ucasemap_mapUTF8(int32_t caseLocale, uint32_t options, UCASEMAP_BREAK_ITERATOR_P
                  icu::ByteSink &sink, icu::Edits *edits,
                  UErrorCode &errorCode) {
     /* check argument values */
-    if (U_FAILURE(errorCode)) {
-        return;
+    ако (U_FAILURE(errorCode)) {
+        врати;
     }
-    if ((src == nullptr && srcLength != 0) || srcLength < -1) {
+    ако ((src == nullptr && srcLength != 0) || srcLength < -1) {
         errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        врати;
     }
 
     // Get the string length.
-    if (srcLength == -1) {
+    ако (srcLength == -1) {
         srcLength = static_cast<int32_t>(uprv_strlen(src));
     }
 
-    if (edits != nullptr && (options & U_EDITS_NO_RESET) == 0) {
+    ако (edits != nullptr && (options & U_EDITS_NO_RESET) == 0) {
         edits->reset();
     }
     stringCaseMapper(caseLocale, options, UCASEMAP_BREAK_ITERATOR
                      reinterpret_cast<const uint8_t*>(src), srcLength, sink, edits, errorCode);
     sink.Flush();
-    if (U_SUCCESS(errorCode)) {
-        if (edits != nullptr) {
+    ако (U_SUCCESS(errorCode)) {
+        ако (edits != nullptr) {
             edits->copyErrorTo(errorCode);
         }
     }
@@ -902,32 +902,32 @@ ucasemap_mapUTF8(int32_t caseLocale, uint32_t options, UCASEMAP_BREAK_ITERATOR_P
                  icu::Edits *edits,
                  UErrorCode &errorCode) {
     /* check argument values */
-    if(U_FAILURE(errorCode)) {
-        return 0;
+    ако(U_FAILURE(errorCode)) {
+        врати 0;
     }
-    if( destCapacity<0 ||
+    ако( destCapacity<0 ||
         (dest==nullptr && destCapacity>0) ||
         (src==nullptr && srcLength!=0) || srcLength<-1
     ) {
         errorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        врати 0;
     }
 
     /* get the string length */
-    if(srcLength==-1) {
+    ако(srcLength==-1) {
         srcLength = static_cast<int32_t>(uprv_strlen(src));
     }
 
     /* check for overlapping source and destination */
-    if( dest!=nullptr &&
+    ако( dest!=nullptr &&
         ((src>=dest && src<(dest+destCapacity)) ||
          (dest>=src && dest<(src+srcLength)))
     ) {
         errorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        врати 0;
     }
 
-    if (edits != nullptr && (options & U_EDITS_NO_RESET) == 0) {
+    ако (edits != nullptr && (options & U_EDITS_NO_RESET) == 0) {
         edits->reset();
     }
     int32_t reslen = ByteSinkUtil::viaByteSinkToTerminatedChars(
@@ -937,10 +937,10 @@ ucasemap_mapUTF8(int32_t caseLocale, uint32_t options, UCASEMAP_BREAK_ITERATOR_P
                              reinterpret_cast<const uint8_t*>(src), srcLength, sink, edits, status);
         },
         errorCode);
-    if (U_SUCCESS(errorCode) && edits != nullptr) {
+    ако (U_SUCCESS(errorCode) && edits != nullptr) {
         edits->copyErrorTo(errorCode);
     }
-    return reslen;
+    врати reslen;
 }
 
 /* public API functions */
@@ -951,7 +951,7 @@ ucasemap_utf8ToLower(const UCaseMap *csm,
                      const char *src, int32_t srcLength,
                      UErrorCode *pErrorCode) {
     auto *impl = reinterpret_cast<const UCaseMapImpl *>(csm);
-    return ucasemap_mapUTF8(
+    врати ucasemap_mapUTF8(
         impl->caseLocale, impl->options, UCASEMAP_BREAK_ITERATOR_NULL
         dest, destCapacity,
         src, srcLength,
@@ -964,7 +964,7 @@ ucasemap_utf8ToUpper(const UCaseMap *csm,
                      const char *src, int32_t srcLength,
                      UErrorCode *pErrorCode) {
     auto *impl = reinterpret_cast<const UCaseMapImpl *>(csm);
-    return ucasemap_mapUTF8(
+    врати ucasemap_mapUTF8(
         impl->caseLocale, impl->options, UCASEMAP_BREAK_ITERATOR_NULL
         dest, destCapacity,
         src, srcLength,
@@ -977,7 +977,7 @@ ucasemap_utf8FoldCase(const UCaseMap *csm,
                       const char *src, int32_t srcLength,
                       UErrorCode *pErrorCode) {
     auto *impl = reinterpret_cast<const UCaseMapImpl *>(csm);
-    return ucasemap_mapUTF8(
+    врати ucasemap_mapUTF8(
         UCASE_LOC_ROOT, impl->options, UCASEMAP_BREAK_ITERATOR_NULL
         dest, destCapacity,
         src, srcLength,
@@ -1021,7 +1021,7 @@ int32_t CaseMap::utf8ToLower(
         const char *src, int32_t srcLength,
         char *dest, int32_t destCapacity, Edits *edits,
         UErrorCode &errorCode) {
-    return ucasemap_mapUTF8(
+    врати ucasemap_mapUTF8(
         ustrcase_getCaseLocale(locale), options, UCASEMAP_BREAK_ITERATOR_NULL
         dest, destCapacity,
         src, srcLength,
@@ -1033,7 +1033,7 @@ int32_t CaseMap::utf8ToUpper(
         const char *src, int32_t srcLength,
         char *dest, int32_t destCapacity, Edits *edits,
         UErrorCode &errorCode) {
-    return ucasemap_mapUTF8(
+    врати ucasemap_mapUTF8(
         ustrcase_getCaseLocale(locale), options, UCASEMAP_BREAK_ITERATOR_NULL
         dest, destCapacity,
         src, srcLength,
@@ -1045,7 +1045,7 @@ int32_t CaseMap::utf8Fold(
         const char *src, int32_t srcLength,
         char *dest, int32_t destCapacity, Edits *edits,
         UErrorCode &errorCode) {
-    return ucasemap_mapUTF8(
+    врати ucasemap_mapUTF8(
         UCASE_LOC_ROOT, options, UCASEMAP_BREAK_ITERATOR_NULL
         dest, destCapacity,
         src, srcLength,

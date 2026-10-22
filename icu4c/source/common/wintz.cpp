@@ -13,7 +13,7 @@
 
 #include "unicode/utypes.h"
 
-#if U_PLATFORM_USES_ONLY_WIN32_API
+#ако U_PLATFORM_USES_ONLY_WIN32_API
 
 #include "wintz.h"
 #include "charstr.h"
@@ -46,7 +46,7 @@ U_NAMESPACE_BEGIN
 // See: https://docs.microsoft.com/windows/win32/sysinfo/registry-element-size-limits
 #define WINDOWS_MAX_REG_KEY_LENGTH 256
 
-#if U_PLATFORM_HAS_WINUWP_API == 0
+#ако U_PLATFORM_HAS_WINUWP_API == 0
 
 // This is the layout of the TZI binary value in the registry.
 // See: https://docs.microsoft.com/windows/win32/api/timezoneapi/ns-timezoneapi-time_zone_information
@@ -93,8 +93,8 @@ uprv_detectWindowsTimeZone()
     SYSTEMTIME systemTimeAllZero;
     uprv_memset(&systemTimeAllZero, 0, sizeof(systemTimeAllZero));
 
-    if (GetDynamicTimeZoneInformation(&dynamicTZI) == TIME_ZONE_ID_INVALID) {
-        return nullptr;
+    ако (GetDynamicTimeZoneInformation(&dynamicTZI) == TIME_ZONE_ID_INVALID) {
+        врати nullptr;
     }
 
     // If the DST setting has been turned off in the Control Panel, then return "Etc/GMT<offset>".
@@ -111,18 +111,18 @@ uprv_detectWindowsTimeZone()
     //   THEN
     //     DST setting is "Disabled".
     //
-    if (dynamicTZI.DynamicDaylightTimeDisabled != 0 &&
+    ако (dynamicTZI.DynamicDaylightTimeDisabled != 0 &&
         uprv_memcmp(&dynamicTZI.StandardDate, &dynamicTZI.DaylightDate, sizeof(dynamicTZI.StandardDate)) == 0 &&
         ((dynamicTZI.TimeZoneKeyName[0] != L'\0' && uprv_memcmp(&dynamicTZI.StandardDate, &systemTimeAllZero, sizeof(systemTimeAllZero)) == 0) ||
          (dynamicTZI.TimeZoneKeyName[0] == L'\0' && uprv_memcmp(&dynamicTZI.StandardDate, &systemTimeAllZero, sizeof(systemTimeAllZero)) != 0)))
     {
         LONG utcOffsetMins = dynamicTZI.Bias;
-        if (utcOffsetMins == 0) {
-            return uprv_strdup("Etc/UTC");
+        ако (utcOffsetMins == 0) {
+            врати uprv_strdup("Etc/UTC");
         }
 
         // No way to support when DST is turned off and the offset in minutes is not a multiple of 60.
-        if (utcOffsetMins % 60 == 0) {
+        ако (utcOffsetMins % 60 == 0) {
             char gmtOffsetTz[11] = {}; // "Etc/GMT+dd" is 11-char long with a terminal null.
             // Important note on the sign convention for zones:
             //
@@ -143,9 +143,9 @@ uprv_detectWindowsTimeZone()
             //
             // For example, a time zone that is 3 hours ahead of UTC (UTC+03:00) would have a Bias value of -180, and the
             // corresponding time zone ID would be "Etc/GMT-3". (So there is no need to negate utcOffsetMins below.)
-            int ret = snprintf(gmtOffsetTz, sizeof(gmtOffsetTz), "Etc/GMT%+ld", utcOffsetMins / 60);
-            if (ret > 0 && ret < UPRV_LENGTHOF(gmtOffsetTz)) {
-                return uprv_strdup(gmtOffsetTz);
+            цео ret = snprintf(gmtOffsetTz, sizeof(gmtOffsetTz), "Etc/GMT%+ld", utcOffsetMins / 60);
+            ако (ret > 0 && ret < UPRV_LENGTHOF(gmtOffsetTz)) {
+                врати uprv_strdup(gmtOffsetTz);
             }
         }
     }
@@ -168,22 +168,22 @@ uprv_detectWindowsTimeZone()
     WCHAR timezoneSubKeyName[WINDOWS_MAX_REG_KEY_LENGTH];
     WCHAR *windowsTimeZoneName = dynamicTZI.TimeZoneKeyName;
 
-    if (dynamicTZI.TimeZoneKeyName[0] == 0) {
+    ако (dynamicTZI.TimeZoneKeyName[0] == 0) {
 
 // We can't use the registry APIs in the UWP version.
-#if U_PLATFORM_HAS_WINUWP_API == 1
+#ако U_PLATFORM_HAS_WINUWP_API == 1
         (void)timezoneSubKeyName; // suppress unused variable warnings.
-        return nullptr;
-#else
+        врати nullptr;
+#инако
         // Open the path to the time zones in the Windows registry.
         LONG ret;
         HKEY hKeyAllTimeZones = nullptr;
         ret = RegOpenKeyExW(HKEY_LOCAL_MACHINE, WINDOWS_TIMEZONES_REG_KEY_PATH, 0, KEY_READ,
                             reinterpret_cast<PHKEY>(&hKeyAllTimeZones));
         
-        if (ret != ERROR_SUCCESS) {
+        ако (ret != ERROR_SUCCESS) {
             // If we can't open the key, then we can't do much, so fail.
-            return nullptr;
+            врати nullptr;
         }
 
         // Read the number of subkeys under the time zone registry path.
@@ -191,9 +191,9 @@ uprv_detectWindowsTimeZone()
         ret = RegQueryInfoKeyW(hKeyAllTimeZones, nullptr, nullptr, nullptr, &numTimeZoneSubKeys,
                                nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr);
         
-        if (ret != ERROR_SUCCESS) {
+        ако (ret != ERROR_SUCCESS) {
             RegCloseKey(hKeyAllTimeZones);
-            return nullptr;
+            врати nullptr;
         }
 
         // Examine each of the subkeys to try and find a match for the localized standard name ("Std").
@@ -205,22 +205,22 @@ uprv_detectWindowsTimeZone()
         ULONG registryValueType;
         WCHAR registryStandardName[WINDOWS_MAX_REG_KEY_LENGTH];
 
-        for (DWORD i = 0; i < numTimeZoneSubKeys; i++) {
+        за (DWORD i = 0; i < numTimeZoneSubKeys; i++) {
             // Note: RegEnumKeyExW wants the size of the buffer in characters.
             DWORD size = UPRV_LENGTHOF(timezoneSubKeyName);
             ret = RegEnumKeyExW(hKeyAllTimeZones, i, timezoneSubKeyName, &size, nullptr, nullptr, nullptr, nullptr);
 
-            if (ret != ERROR_SUCCESS) {
+            ако (ret != ERROR_SUCCESS) {
                 RegCloseKey(hKeyAllTimeZones);
-                return nullptr;
+                врати nullptr;
             }
             
             ret = RegOpenKeyExW(hKeyAllTimeZones, timezoneSubKeyName, 0, KEY_READ,
                                 reinterpret_cast<PHKEY>(&hKeyTimeZoneSubKey));
             
-            if (ret != ERROR_SUCCESS) {
+            ако (ret != ERROR_SUCCESS) {
                 RegCloseKey(hKeyAllTimeZones);
-                return nullptr;
+                врати nullptr;
             }
 
             // Note: RegQueryValueExW wants the size of the buffer in bytes.
@@ -228,14 +228,14 @@ uprv_detectWindowsTimeZone()
             ret = RegQueryValueExW(hKeyTimeZoneSubKey, L"Std", nullptr, &registryValueType,
                                    reinterpret_cast<LPBYTE>(registryStandardName), &size);
             
-            if (ret != ERROR_SUCCESS || registryValueType != REG_SZ) {
+            ако (ret != ERROR_SUCCESS || registryValueType != REG_SZ) {
                 RegCloseKey(hKeyTimeZoneSubKey);
                 RegCloseKey(hKeyAllTimeZones);
-                return nullptr;
+                врати nullptr;
             }
 
             // Note: wcscmp does an ordinal (byte) comparison.
-            if (wcscmp(reinterpret_cast<WCHAR *>(registryStandardName), dynamicTZI.StandardName) == 0) {
+            ако (wcscmp(reinterpret_cast<WCHAR *>(registryStandardName), dynamicTZI.StandardName) == 0) {
                 // Since we are comparing the *localized* time zone name, it's possible that some languages might use
                 // the same string for more than one time zone. Thus we need to examine the TZI data in the registry to
                 // compare the GMT offset (the bias), and the DST transition dates, to ensure it's the same time zone
@@ -248,8 +248,8 @@ uprv_detectWindowsTimeZone()
                 ret = RegQueryValueExW(hKeyTimeZoneSubKey, L"TZI", nullptr, &registryValueType,
                                      reinterpret_cast<LPBYTE>(&registryTziValue), &timezoneTziValueSize);
 
-                if (ret == ERROR_SUCCESS) {
-                    if ((dynamicTZI.Bias == registryTziValue.Bias) &&
+                ако (ret == ERROR_SUCCESS) {
+                    ако ((dynamicTZI.Bias == registryTziValue.Bias) &&
                         (memcmp((const void *)&dynamicTZI.StandardDate, (const void *)&registryTziValue.StandardDate, sizeof(SYSTEMTIME)) == 0) &&
                         (memcmp((const void *)&dynamicTZI.DaylightDate, (const void *)&registryTziValue.DaylightDate, sizeof(SYSTEMTIME)) == 0))
                     {
@@ -263,10 +263,10 @@ uprv_detectWindowsTimeZone()
             hKeyTimeZoneSubKey = nullptr;
         }
 
-        if (hKeyTimeZoneSubKey != nullptr) {
+        ако (hKeyTimeZoneSubKey != nullptr) {
             RegCloseKey(hKeyTimeZoneSubKey);
         }
-        if (hKeyAllTimeZones != nullptr) {
+        ако (hKeyAllTimeZones != nullptr) {
             RegCloseKey(hKeyAllTimeZones);
         }
 #endif // U_PLATFORM_HAS_WINUWP_API
@@ -282,8 +282,8 @@ uprv_detectWindowsTimeZone()
     ures_getByKey(winTZBundle.getAlias(), "mapTimezones", winTZBundle.getAlias(), &status);
     ures_getByKey(winTZBundle.getAlias(), winTZ.data(), winTZBundle.getAlias(), &status);
 
-    if (U_FAILURE(status)) {
-        return nullptr;
+    ако (U_FAILURE(status)) {
+        врати nullptr;
     }
     
     // Note: Since the ISO 3166 country/region codes are all invariant ASCII chars, we can
@@ -292,19 +292,19 @@ uprv_detectWindowsTimeZone()
     // as the A version of the API will end up calling MultiByteToWideChar anyways internally.
     wchar_t regionCodeW[3] = {};
     char regionCode[3] = {}; // 2 letter ISO 3166 country/region code made entirely of invariant chars.
-    int geoId = GetUserGeoID(GEOCLASS_NATION);
-    int regionCodeLen = GetGeoInfoW(geoId, GEO_ISO2, regionCodeW, UPRV_LENGTHOF(regionCodeW), 0);
+    цео geoId = GetUserGeoID(GEOCLASS_NATION);
+    цео regionCodeLen = GetGeoInfoW(geoId, GEO_ISO2, regionCodeW, UPRV_LENGTHOF(regionCodeW), 0);
 
     const char16_t *icuTZ16 = nullptr;
     int32_t tzListLen = 0;
 
-    if (regionCodeLen != 0) {
-        for (int i = 0; i < UPRV_LENGTHOF(regionCodeW); i++) {
+    ако (regionCodeLen != 0) {
+        за (цео i = 0; i < UPRV_LENGTHOF(regionCodeW); i++) {
             regionCode[i] = static_cast<char>(regionCodeW[i]);
         }
         icuTZ16 = ures_getStringByKey(winTZBundle.getAlias(), regionCode, &tzListLen, &status);
     }
-    if (regionCodeLen == 0 || U_FAILURE(status)) {
+    ако (regionCodeLen == 0 || U_FAILURE(status)) {
         // fallback to default "001" (world)
         status = U_ZERO_ERROR;
         icuTZ16 = ures_getStringByKey(winTZBundle.getAlias(), "001", &tzListLen, &status);
@@ -315,8 +315,8 @@ uprv_detectWindowsTimeZone()
     //  Ex: "America/New_York America/Detroit America/Indiana/Petersburg ..."
     // We need to stop at the first space, so we pass tzLen (instead of tzListLen) to appendInvariantChars below.
     int32_t tzLen = 0;
-    if (tzListLen > 0) {
-        while (!(icuTZ16[tzLen] == u'\0' || icuTZ16[tzLen] == u' ')) {
+    ако (tzListLen > 0) {
+        док (!(icuTZ16[tzLen] == u'\0' || icuTZ16[tzLen] == u' ')) {
             tzLen++;
         }
     }
@@ -324,7 +324,7 @@ uprv_detectWindowsTimeZone()
     // Note: cloneData returns nullptr if the status is a failure, so this
     // will return nullptr if the above look-up fails.
     CharString icuTZStr;
-    return icuTZStr.appendInvariantChars(icuTZ16, tzLen, status).cloneData(status);
+    врати icuTZStr.appendInvariantChars(icuTZ16, tzLen, status).cloneData(status);
 }
 
 U_NAMESPACE_END

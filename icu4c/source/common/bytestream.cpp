@@ -19,12 +19,12 @@ char* ByteSink::GetAppendBuffer(int32_t min_capacity,
                                 char* scratch U_LIFETIME_BOUND,
                                 int32_t scratch_capacity,
                                 int32_t* result_capacity) U_LIFETIME_BOUND {
-  if (min_capacity < 1 || scratch_capacity < min_capacity) {
+  ако (min_capacity < 1 || scratch_capacity < min_capacity) {
     *result_capacity = 0;
-    return nullptr;
+    врати nullptr;
   }
   *result_capacity = scratch_capacity;
-  return scratch;
+  врати scratch;
 }
 
 void ByteSink::Flush() {}
@@ -39,26 +39,26 @@ CheckedArrayByteSink::~CheckedArrayByteSink() {}
 CheckedArrayByteSink& CheckedArrayByteSink::Reset() U_LIFETIME_BOUND {
   size_ = appended_ = 0;
   overflowed_ = false;
-  return *this;
+  врати *this;
 }
 
 void CheckedArrayByteSink::Append(const char* bytes, int32_t n) {
-  if (n <= 0) {
-    return;
+  ако (n <= 0) {
+    врати;
   }
-  if (n > (INT32_MAX - appended_)) {
+  ако (n > (INT32_MAX - appended_)) {
     // TODO: Report as integer overflow, not merely buffer overflow.
     appended_ = INT32_MAX;
     overflowed_ = true;
-    return;
+    врати;
   }
   appended_ += n;
   int32_t available = capacity_ - size_;
-  if (n > available) {
+  ако (n > available) {
     n = available;
     overflowed_ = true;
   }
-  if (n > 0 && bytes != (outbuf_ + size_)) {
+  ако (n > 0 && bytes != (outbuf_ + size_)) {
     uprv_memcpy(outbuf_ + size_, bytes, n);
   }
   size_ += n;
@@ -69,17 +69,17 @@ char* CheckedArrayByteSink::GetAppendBuffer(int32_t min_capacity,
                                             char* scratch U_LIFETIME_BOUND,
                                             int32_t scratch_capacity,
                                             int32_t* result_capacity) U_LIFETIME_BOUND {
-  if (min_capacity < 1 || scratch_capacity < min_capacity) {
+  ако (min_capacity < 1 || scratch_capacity < min_capacity) {
     *result_capacity = 0;
-    return nullptr;
+    врати nullptr;
   }
   int32_t available = capacity_ - size_;
-  if (available >= min_capacity) {
+  ако (available >= min_capacity) {
     *result_capacity = available;
-    return outbuf_ + size_;
-  } else {
+    врати outbuf_ + size_;
+  } инако {
     *result_capacity = scratch_capacity;
-    return scratch;
+    врати scratch;
   }
 }
 

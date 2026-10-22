@@ -19,7 +19,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#ако !UCONFIG_NO_BREAK_ITERATION
 
 #include "unicode/brkiter.h"
 #include "unicode/ubrk.h"
@@ -35,16 +35,16 @@ void CaseMap::utf8ToTitle(
         const char *locale, uint32_t options, BreakIterator *iter,
         StringPiece src, ByteSink &sink, Edits *edits,
         UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) {
-        return;
+    ако (U_FAILURE(errorCode)) {
+        врати;
     }
     UText utext = UTEXT_INITIALIZER;
     utext_openUTF8(&utext, src.data(), src.length(), &errorCode);
     LocalPointer<BreakIterator> ownedIter;
     iter = ustrcase_getTitleBreakIterator(nullptr, locale, options, iter, ownedIter, errorCode);
-    if (iter == nullptr) {
+    ако (iter == nullptr) {
         utext_close(&utext);
-        return;
+        врати;
     }
     iter->setText(&utext, errorCode);
     ucasemap_mapUTF8(
@@ -59,16 +59,16 @@ int32_t CaseMap::utf8ToTitle(
         const char *src, int32_t srcLength,
         char *dest, int32_t destCapacity, Edits *edits,
         UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) {
-        return 0;
+    ако (U_FAILURE(errorCode)) {
+        врати 0;
     }
     UText utext=UTEXT_INITIALIZER;
     utext_openUTF8(&utext, src, srcLength, &errorCode);
     LocalPointer<BreakIterator> ownedIter;
     iter = ustrcase_getTitleBreakIterator(nullptr, locale, options, iter, ownedIter, errorCode);
-    if(iter==nullptr) {
+    ако(iter==nullptr) {
         utext_close(&utext);
-        return 0;
+        врати 0;
     }
     iter->setText(&utext, errorCode);
     int32_t length=ucasemap_mapUTF8(
@@ -77,7 +77,7 @@ int32_t CaseMap::utf8ToTitle(
         src, srcLength,
         ucasemap_internalUTF8ToTitle, edits, errorCode);
     utext_close(&utext);
-    return length;
+    врати length;
 }
 
 U_NAMESPACE_END
@@ -87,13 +87,13 @@ U_NAMESPACE_USE
 U_CAPI const UBreakIterator* U_EXPORT2
 ucasemap_getBreakIterator(const UCaseMap* csm U_LIFETIME_BOUND) {
     auto *impl = reinterpret_cast<const UCaseMapImpl *>(csm);
-    return reinterpret_cast<UBreakIterator *>(impl->iter);
+    врати reinterpret_cast<UBreakIterator *>(impl->iter);
 }
 
 U_CAPI void U_EXPORT2
 ucasemap_setBreakIterator(UCaseMap *csm, UBreakIterator *iterToAdopt, UErrorCode *pErrorCode) {
-    if(U_FAILURE(*pErrorCode)) {
-        return;
+    ако(U_FAILURE(*pErrorCode)) {
+        врати;
     }
     auto *impl = reinterpret_cast<UCaseMapImpl *>(csm);
     delete impl->iter;
@@ -105,22 +105,22 @@ ucasemap_utf8ToTitle(UCaseMap *csm,
                      char *dest, int32_t destCapacity,
                      const char *src, int32_t srcLength,
                      UErrorCode *pErrorCode) {
-    if (U_FAILURE(*pErrorCode)) {
-        return 0;
+    ако (U_FAILURE(*pErrorCode)) {
+        врати 0;
     }
     UText utext=UTEXT_INITIALIZER;
     utext_openUTF8(&utext, src, srcLength, pErrorCode);
-    if (U_FAILURE(*pErrorCode)) {
-        return 0;
+    ако (U_FAILURE(*pErrorCode)) {
+        врати 0;
     }
     auto *impl = reinterpret_cast<UCaseMapImpl *>(csm);
-    if(impl->iter==nullptr) {
+    ако(impl->iter==nullptr) {
         LocalPointer<BreakIterator> ownedIter;
         BreakIterator *iter = ustrcase_getTitleBreakIterator(
             nullptr, impl->locale, impl->options, nullptr, ownedIter, *pErrorCode);
-        if (iter == nullptr) {
+        ако (iter == nullptr) {
             utext_close(&utext);
-            return 0;
+            врати 0;
         }
         impl->iter = ownedIter.orphan();
     }
@@ -131,7 +131,7 @@ ucasemap_utf8ToTitle(UCaseMap *csm,
             src, srcLength,
             ucasemap_internalUTF8ToTitle, nullptr, *pErrorCode);
     utext_close(&utext);
-    return length;
+    врати length;
 }
 
 #endif  // !UCONFIG_NO_BREAK_ITERATION

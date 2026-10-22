@@ -58,14 +58,14 @@ class U_COMMON_API LocalePriorityList : public UMemory {
 public:
     class Iterator : public Locale::Iterator {
     public:
-        UBool hasNext() const override { return count < length; }
+        UBool hasNext() const override { врати count < length; }
 
         const Locale &next() override {
-            for(;;) {
+            за(;;) {
                 const Locale *locale = list.localeAt(index++);
-                if (locale != nullptr) {
+                ако (locale != nullptr) {
                     ++count;
-                    return *locale;
+                    врати *locale;
                 }
             }
         }
@@ -85,11 +85,11 @@ public:
 
     ~LocalePriorityList();
 
-    int32_t getLength() const { return listLength - numRemoved; }
+    int32_t getLength() const { врати listLength - numRemoved; }
 
-    int32_t getLengthIncludingRemoved() const { return listLength; }
+    int32_t getLengthIncludingRemoved() const { врати listLength; }
 
-    Iterator iterator() const { return Iterator(*this); }
+    Iterator iterator() const { врати Iterator(*this); }
 
     const Locale *localeAt(int32_t i) const;
 

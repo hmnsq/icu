@@ -348,7 +348,7 @@ class KhmerBreakEngine : public DictionaryBreakEngine {
 
 };
 
-#if !UCONFIG_NO_NORMALIZATION
+#ако !UCONFIG_NO_NORMALIZATION
 
 /*******************************************************************
  * CjkBreakEngine

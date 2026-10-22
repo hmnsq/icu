@@ -35,44 +35,44 @@ ures_openU(const char16_t *myPath,
     int32_t length;
     char *path = pathBuffer;
 
-    if(status==nullptr || U_FAILURE(*status)) {
-        return nullptr;
+    ако(status==nullptr || U_FAILURE(*status)) {
+        врати nullptr;
     }
-    if(myPath==nullptr) {
+    ако(myPath==nullptr) {
         path = nullptr;
     }
-    else {
+    инако {
         length=u_strlen(myPath);
-        if(length>=(int32_t)sizeof(pathBuffer)) {
+        ако(length>=(int32_t)sizeof(pathBuffer)) {
             *status=U_ILLEGAL_ARGUMENT_ERROR;
-            return nullptr;
-        } else if(uprv_isInvariantUString(myPath, length)) {
+            врати nullptr;
+        } инако ако(uprv_isInvariantUString(myPath, length)) {
             /*
              * the invariant converter is sufficient for package and tree names
              * and is more efficient
              */
             u_UCharsToChars(myPath, path, length+1); /* length+1 to include the NUL */
-        } else {
-#if !UCONFIG_NO_CONVERSION
+        } инако {
+#ако !UCONFIG_NO_CONVERSION
             /* use the default converter to support variant-character paths */
             UConverter *cnv=u_getDefaultConverter(status);
             length=ucnv_fromUChars(cnv, path, (int32_t)sizeof(pathBuffer), myPath, length, status);
             u_releaseDefaultConverter(cnv);
-            if(U_FAILURE(*status)) {
-                return nullptr;
+            ако(U_FAILURE(*status)) {
+                врати nullptr;
             }
-            if(length>=(int32_t)sizeof(pathBuffer)) {
+            ако(length>=(int32_t)sizeof(pathBuffer)) {
                 /* not NUL-terminated - path too long */
                 *status=U_ILLEGAL_ARGUMENT_ERROR;
-                return nullptr;
+                врати nullptr;
             }
-#else
+#инако
             /* the default converter is not available */
             *status=U_UNSUPPORTED_ERROR;
-            return nullptr;
+            врати nullptr;
 #endif
         }
     }
 
-    return ures_open(path, localeID, status);
+    врати ures_open(path, localeID, status);
 }

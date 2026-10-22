@@ -41,27 +41,27 @@ U_CFUNC void UDatamemory_assign(UDataMemory *dest, UDataMemory *source) {
 U_CFUNC UDataMemory *UDataMemory_createNewInstance(UErrorCode *pErr) {
     UDataMemory *This;
 
-    if (U_FAILURE(*pErr)) {
-        return nullptr;
+    ако (U_FAILURE(*pErr)) {
+        врати nullptr;
     }
     This = (UDataMemory *)uprv_malloc(sizeof(UDataMemory));
-    if (This == nullptr) {
+    ако (This == nullptr) {
         *pErr = U_MEMORY_ALLOCATION_ERROR; }
-    else {
+    инако {
         UDataMemory_init(This);
         This->heapAllocated = true;
     }
-    return This;
+    врати This;
 }
 
 U_CFUNC const DataHeader*
 UDataMemory_normalizeDataPointer(const void* p U_LIFETIME_BOUND) {
     /* allow the data to be optionally prepended with an alignment-forcing double value */
     const DataHeader *pdh = (const DataHeader *)p;
-    if(pdh==nullptr || (pdh->dataHeader.magic1==0xda && pdh->dataHeader.magic2==0x27)) {
-        return pdh;
-    } else {
-#if U_PLATFORM == U_PF_OS400
+    ако(pdh==nullptr || (pdh->dataHeader.magic1==0xda && pdh->dataHeader.magic2==0x27)) {
+        врати pdh;
+    } инако {
+#ако U_PLATFORM == U_PF_OS400
         /*
         TODO: Fix this once the compiler implements this feature. Keep in sync with genccode.c
 
@@ -74,9 +74,9 @@ UDataMemory_normalizeDataPointer(const void* p U_LIFETIME_BOUND) {
         magic numbers we must skip the initial double.
         [grhoten 4/24/2003]
         */
-        return (const DataHeader *)*((const void **)p+1);
-#else
-        return (const DataHeader *)((const double *)p+1);
+        врати (const DataHeader *)*((const void **)p+1);
+#инако
+        врати (const DataHeader *)((const double *)p+1);
 #endif
     }
 }
@@ -89,11 +89,11 @@ U_CFUNC void UDataMemory_setData (UDataMemory *This, const void *dataAddr) {
 
 U_CAPI void U_EXPORT2
 udata_close(UDataMemory *pData) {
-    if(pData!=nullptr) {
+    ако(pData!=nullptr) {
         uprv_unmapFile(pData);
-        if(pData->heapAllocated ) {
+        ако(pData->heapAllocated ) {
             uprv_free(pData);
-        } else {
+        } инако {
             UDataMemory_init(pData);
         }
     }
@@ -101,10 +101,10 @@ udata_close(UDataMemory *pData) {
 
 U_CAPI const void* U_EXPORT2
 udata_getMemory(UDataMemory* pData U_LIFETIME_BOUND) {
-    if(pData!=nullptr && pData->pHeader!=nullptr) {
-        return (char *)(pData->pHeader)+udata_getHeaderSize(pData->pHeader);
-    } else {
-        return nullptr;
+    ако(pData!=nullptr && pData->pHeader!=nullptr) {
+        врати (char *)(pData->pHeader)+udata_getHeaderSize(pData->pHeader);
+    } инако {
+        врати nullptr;
     }
 }
 
@@ -130,14 +130,14 @@ udata_getMemory(UDataMemory* pData U_LIFETIME_BOUND) {
  */
 U_CAPI int32_t U_EXPORT2
 udata_getLength(const UDataMemory *pData) {
-    if(pData!=nullptr && pData->pHeader!=nullptr && pData->length>=0) {
+    ако(pData!=nullptr && pData->pHeader!=nullptr && pData->length>=0) {
         /*
          * subtract the header size,
          * return only the size of the actual data starting at udata_getMemory()
          */
-        return pData->length-udata_getHeaderSize(pData->pHeader);
-    } else {
-        return -1;
+        врати pData->length-udata_getHeaderSize(pData->pHeader);
+    } инако {
+        врати -1;
     }
 }
 
@@ -148,13 +148,13 @@ udata_getLength(const UDataMemory *pData) {
  */
 U_CAPI const void* U_EXPORT2
 udata_getRawMemory(const UDataMemory* pData U_LIFETIME_BOUND) {
-    if(pData!=nullptr && pData->pHeader!=nullptr) {
-        return pData->pHeader;
-    } else {
-        return nullptr;
+    ако(pData!=nullptr && pData->pHeader!=nullptr) {
+        врати pData->pHeader;
+    } инако {
+        врати nullptr;
     }
 }
 
 U_CFUNC UBool UDataMemory_isLoaded(const UDataMemory *This) {
-    return This->pHeader != nullptr;
+    врати This->pHeader != nullptr;
 }

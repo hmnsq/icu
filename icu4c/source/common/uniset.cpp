@@ -52,12 +52,12 @@ UOBJECT_DEFINE_RTTI_IMPLEMENTATION(UnicodeSet)
  * It modifies its argument in-place and also returns it.
  */
 static inline UChar32 pinCodePoint(UChar32& c) {
-    if (c < UNICODESET_LOW) {
+    ако (c < UNICODESET_LOW) {
         c = UNICODESET_LOW;
-    } else if (c > (UNICODESET_HIGH-1)) {
+    } инако ако (c > (UNICODESET_HIGH-1)) {
         c = (UNICODESET_HIGH-1);
     }
-    return c;
+    врати c;
 }
 
 //----------------------------------------------------------------
@@ -96,7 +96,7 @@ static inline void _dbgdt(UnicodeSet* set) {
     printf("DEBUG UnicodeSet: dt 0x%08X; %d %s\n", set, --_dbgCount, buf);
 }
 
-#else
+#инако
 
 #define _dbgct(set)
 #define _dbgdt(set)
@@ -114,19 +114,19 @@ static void U_CALLCONV cloneUnicodeString(UElement *dst, UElement *src) {
 static int32_t U_CALLCONV compareUnicodeString(UElement t1, UElement t2) {
     const UnicodeString& a = *static_cast<const UnicodeString*>(t1.pointer);
     const UnicodeString& b = *static_cast<const UnicodeString*>(t2.pointer);
-    return a.compare(b);
+    врати a.compare(b);
 }
 
 UBool UnicodeSet::hasStrings() const {
-    return strings_ != nullptr && !strings_->isEmpty();
+    врати strings_ != nullptr && !strings_->isEmpty();
 }
 
 int32_t UnicodeSet::stringsSize() const {
-    return strings_ == nullptr ? 0 : strings_->size();
+    врати strings_ == nullptr ? 0 : strings_->size();
 }
 
 UBool UnicodeSet::stringsContains(const UnicodeString &s) const {
-    return strings_ != nullptr && strings_->contains((void*) &s);
+    врати strings_ != nullptr && strings_->contains((void*) &s);
 }
 
 //----------------------------------------------------------------
@@ -164,19 +164,19 @@ UnicodeSet::UnicodeSet(const UnicodeSet& o) : UnicodeFilter(o) {
 
 // Copy-construct as thawed.
 UnicodeSet::UnicodeSet(const UnicodeSet& o, UBool /* asThawed */) : UnicodeFilter(o) {
-    if (ensureCapacity(o.len)) {
+    ако (ensureCapacity(o.len)) {
         // *this = o except for bmpSet and stringSpan
         len = o.len;
         uprv_memcpy(list, o.list, (size_t)len*sizeof(UChar32));
-        if (o.hasStrings()) {
+        ако (o.hasStrings()) {
             UErrorCode status = U_ZERO_ERROR;
-            if (!allocateStrings(status) ||
+            ако (!allocateStrings(status) ||
                     (strings_->assign(*o.strings_, cloneUnicodeString, status), U_FAILURE(status))) {
                 setToBogus();
-                return;
+                врати;
             }
         }
-        if (o.pat) {
+        ако (o.pat) {
             setPattern(o.pat, o.patLen);
         }
         _dbgct(this);
@@ -188,11 +188,11 @@ UnicodeSet::UnicodeSet(const UnicodeSet& o, UBool /* asThawed */) : UnicodeFilte
  */
 UnicodeSet::~UnicodeSet() {
     _dbgdt(this); // first!
-    if (list != stackList) {
+    ако (list != stackList) {
         uprv_free(list);
     }
     delete bmpSet;
-    if (buffer != stackList) {
+    ако (buffer != stackList) {
         uprv_free(buffer);
     }
     delete strings_;
@@ -204,55 +204,55 @@ UnicodeSet::~UnicodeSet() {
  * Assigns this object to be a copy of another.
  */
 UnicodeSet& UnicodeSet::operator=(const UnicodeSet& o) U_LIFETIME_BOUND {
-    return copyFrom(o, false);
+    врати copyFrom(o, false);
 }
 
 UnicodeSet& UnicodeSet::copyFrom(const UnicodeSet& o, UBool asThawed) U_LIFETIME_BOUND {
-    if (this == &o) {
-        return *this;
+    ако (this == &o) {
+        врати *this;
     }
-    if (isFrozen()) {
-        return *this;
+    ако (isFrozen()) {
+        врати *this;
     }
-    if (o.isBogus()) {
+    ако (o.isBogus()) {
         setToBogus();
-        return *this;
+        врати *this;
     }
-    if (!ensureCapacity(o.len)) {
+    ако (!ensureCapacity(o.len)) {
         // ensureCapacity will mark the UnicodeSet as Bogus if OOM failure happens.
-        return *this;
+        врати *this;
     }
     len = o.len;
     uprv_memcpy(list, o.list, (size_t)len*sizeof(UChar32));
-    if (o.bmpSet != nullptr && !asThawed) {
+    ако (o.bmpSet != nullptr && !asThawed) {
         bmpSet = new BMPSet(*o.bmpSet, list, len);
-        if (bmpSet == nullptr) { // Check for memory allocation error.
+        ако (bmpSet == nullptr) { // Check for memory allocation error.
             setToBogus();
-            return *this;
+            врати *this;
         }
     }
-    if (o.hasStrings()) {
+    ако (o.hasStrings()) {
         UErrorCode status = U_ZERO_ERROR;
-        if ((strings_ == nullptr && !allocateStrings(status)) ||
+        ако ((strings_ == nullptr && !allocateStrings(status)) ||
                 (strings_->assign(*o.strings_, cloneUnicodeString, status), U_FAILURE(status))) {
             setToBogus();
-            return *this;
+            врати *this;
         }
-    } else if (hasStrings()) {
+    } инако ако (hasStrings()) {
         strings_->removeAllElements();
     }
-    if (o.stringSpan != nullptr && strings_ != nullptr && !asThawed) {
+    ако (o.stringSpan != nullptr && strings_ != nullptr && !asThawed) {
         stringSpan = new UnicodeSetStringSpan(*o.stringSpan, *strings_);
-        if (stringSpan == nullptr) { // Check for memory allocation error.
+        ако (stringSpan == nullptr) { // Check for memory allocation error.
             setToBogus();
-            return *this;
+            врати *this;
         }
     }
     releasePattern();
-    if (o.pat) {
+    ако (o.pat) {
         setPattern(o.pat, o.patLen);
     }
-    return *this;
+    врати *this;
 }
 
 /**
@@ -261,11 +261,11 @@ UnicodeSet& UnicodeSet::copyFrom(const UnicodeSet& o, UBool asThawed) U_LIFETIME
  * UnicodeMatchers, such as Transliterator, to implement cloning.
  */
 UnicodeSet* UnicodeSet::clone() const {
-    return new UnicodeSet(*this);
+    врати new UnicodeSet(*this);
 }
 
 UnicodeSet *UnicodeSet::cloneAsThawed() const {
-    return new UnicodeSet(*this, true);
+    врати new UnicodeSet(*this, true);
 }
 
 /**
@@ -279,13 +279,13 @@ UnicodeSet *UnicodeSet::cloneAsThawed() const {
  * @return <tt>true</tt> if the specified set is equal to this set.
  */
 bool UnicodeSet::operator==(const UnicodeSet& o) const {
-    if (len != o.len) return false;
-    for (int32_t i = 0; i < len; ++i) {
-        if (list[i] != o.list[i]) return false;
+    ако (len != o.len) врати false;
+    за (int32_t i = 0; i < len; ++i) {
+        ако (list[i] != o.list[i]) врати false;
     }
-    if (hasStrings() != o.hasStrings()) { return false; }
-    if (hasStrings() && *strings_ != *o.strings_) return false;
-    return true;
+    ако (hasStrings() != o.hasStrings()) { врати false; }
+    ако (hasStrings() && *strings_ != *o.strings_) врати false;
+    врати true;
 }
 
 /**
@@ -296,11 +296,11 @@ bool UnicodeSet::operator==(const UnicodeSet& o) const {
  */
 int32_t UnicodeSet::hashCode() const {
     uint32_t result = static_cast<uint32_t>(len);
-    for (int32_t i = 0; i < len; ++i) {
+    за (int32_t i = 0; i < len; ++i) {
         result *= 1000003u;
         result += list[i];
     }
-    return static_cast<int32_t>(result);
+    врати static_cast<int32_t>(result);
 }
 
 //----------------------------------------------------------------
@@ -317,10 +317,10 @@ int32_t UnicodeSet::hashCode() const {
 int32_t UnicodeSet::size() const {
     int32_t n = 0;
     int32_t count = getRangeCount();
-    for (int32_t i = 0; i < count; ++i) {
+    за (int32_t i = 0; i < count; ++i) {
         n += getRangeEnd(i) - getRangeStart(i) + 1;
     }
-    return n + stringsSize();
+    врати n + stringsSize();
 }
 
 /**
@@ -329,7 +329,7 @@ int32_t UnicodeSet::size() const {
  * @return <tt>true</tt> if this set contains no elements.
  */
 UBool UnicodeSet::isEmpty() const {
-    return len == 1 && !hasStrings();
+    врати len == 1 && !hasStrings();
 }
 
 /**
@@ -345,17 +345,17 @@ UBool UnicodeSet::contains(UChar32 c) const {
     //for (;;) {
     //    if (c < list[++i]) break;
     //}
-    if (bmpSet != nullptr) {
-        return bmpSet->contains(c);
+    ако (bmpSet != nullptr) {
+        врати bmpSet->contains(c);
     }
-    if (stringSpan != nullptr) {
-        return stringSpan->contains(c);
+    ако (stringSpan != nullptr) {
+        врати stringSpan->contains(c);
     }
-    if (c >= UNICODESET_HIGH) { // Don't need to check LOW bound
-        return false;
+    ако (c >= UNICODESET_HIGH) { // Don't need to check LOW bound
+        врати false;
     }
     int32_t i = findCodePoint(c);
-    return i & 1; // return true if odd
+    врати i & 1; // return true if odd
 }
 
 /**
@@ -380,27 +380,27 @@ int32_t UnicodeSet::findCodePoint(UChar32 c) const {
 
     // Return the smallest i such that c < list[i].  Assume
     // list[len - 1] == HIGH and that c is legal (0..HIGH-1).
-    if (c < list[0])
-        return 0;
+    ако (c < list[0])
+        врати 0;
     // High runner test.  c is often after the last range, so an
     // initial check for this condition pays off.
     int32_t lo = 0;
     int32_t hi = len - 1;
-    if (lo >= hi || c >= list[hi-1])
-        return hi;
+    ако (lo >= hi || c >= list[hi-1])
+        врати hi;
     // invariant: c >= list[lo]
     // invariant: c < list[hi]
-    for (;;) {
+    за (;;) {
         int32_t i = (lo + hi) >> 1;
-        if (i == lo) {
+        ако (i == lo) {
             break; // Found!
-        } else if (c < list[i]) {
+        } инако ако (c < list[i]) {
             hi = i;
-        } else {
+        } инако {
             lo = i;
         }
     }
-    return hi;
+    врати hi;
 }
 
 /**
@@ -416,7 +416,7 @@ UBool UnicodeSet::contains(UChar32 start, UChar32 end) const {
     //    if (start < list[++i]) break;
     //}
     int32_t i = findCodePoint(start);
-    return ((i & 1) != 0 && end < list[i]);
+    врати ((i & 1) != 0 && end < list[i]);
 }
 
 /**
@@ -427,10 +427,10 @@ UBool UnicodeSet::contains(UChar32 start, UChar32 end) const {
  */
 UBool UnicodeSet::contains(const UnicodeString& s) const {
     int32_t cp = getSingleCP(s);
-    if (cp < 0) {
-        return stringsContains(s);
-    } else {
-        return contains(static_cast<UChar32>(cp));
+    ако (cp < 0) {
+        врати stringsContains(s);
+    } инако {
+        врати contains(static_cast<UChar32>(cp));
     }
 }
 
@@ -445,12 +445,12 @@ UBool UnicodeSet::containsAll(const UnicodeSet& c) const {
     // this set.  It's possible to code this more efficiently in terms of
     // direct manipulation of the inversion lists if the need arises.
     int32_t n = c.getRangeCount();
-    for (int i=0; i<n; ++i) {
-        if (!contains(c.getRangeStart(i), c.getRangeEnd(i))) {
-            return false;
+    за (цео i=0; i<n; ++i) {
+        ако (!contains(c.getRangeStart(i), c.getRangeEnd(i))) {
+            врати false;
         }
     }
-    return !c.hasStrings() || (strings_ != nullptr && strings_->containsAll(*c.strings_));
+    врати !c.hasStrings() || (strings_ != nullptr && strings_->containsAll(*c.strings_));
 }
 
 /**
@@ -460,7 +460,7 @@ UBool UnicodeSet::containsAll(const UnicodeSet& c) const {
  * @return true if the test condition is met
  */
 UBool UnicodeSet::containsAll(const UnicodeString& s) const {
-    return span(s.getBuffer(), s.length(), USET_SPAN_CONTAINED) == s.length();
+    врати span(s.getBuffer(), s.length(), USET_SPAN_CONTAINED) == s.length();
 }
 
 /**
@@ -476,7 +476,7 @@ UBool UnicodeSet::containsNone(UChar32 start, UChar32 end) const {
     //    if (start < list[++i]) break;
     //}
     int32_t i = findCodePoint(start);
-    return ((i & 1) == 0 && end < list[i]);
+    врати ((i & 1) == 0 && end < list[i]);
 }
 
 /**
@@ -490,12 +490,12 @@ UBool UnicodeSet::containsNone(const UnicodeSet& c) const {
     // this set.  It's possible to code this more efficiently in terms of
     // direct manipulation of the inversion lists if the need arises.
     int32_t n = c.getRangeCount();
-    for (int32_t i=0; i<n; ++i) {
-        if (!containsNone(c.getRangeStart(i), c.getRangeEnd(i))) {
-            return false;
+    за (int32_t i=0; i<n; ++i) {
+        ако (!containsNone(c.getRangeStart(i), c.getRangeEnd(i))) {
+            врати false;
         }
     }
-    return strings_ == nullptr || !c.hasStrings() || strings_->containsNone(*c.strings_);
+    врати strings_ == nullptr || !c.hasStrings() || strings_->containsNone(*c.strings_);
 }
 
 /**
@@ -505,7 +505,7 @@ UBool UnicodeSet::containsNone(const UnicodeSet& c) const {
  * @return true if the test condition is met
  */
 UBool UnicodeSet::containsNone(const UnicodeString& s) const {
-    return span(s.getBuffer(), s.length(), USET_SPAN_NOT_CONTAINED) == s.length();
+    врати span(s.getBuffer(), s.length(), USET_SPAN_NOT_CONTAINED) == s.length();
 }
 
 /**
@@ -524,30 +524,30 @@ UBool UnicodeSet::matchesIndexValue(uint8_t v) const {
      */
     int32_t i;
     int32_t rangeCount=getRangeCount();
-    for (i=0; i<rangeCount; ++i) {
+    за (i=0; i<rangeCount; ++i) {
         UChar32 low = getRangeStart(i);
         UChar32 high = getRangeEnd(i);
-        if ((low & ~0xFF) == (high & ~0xFF)) {
-            if ((low & 0xFF) <= v && v <= (high & 0xFF)) {
-                return true;
+        ако ((low & ~0xFF) == (high & ~0xFF)) {
+            ако ((low & 0xFF) <= v && v <= (high & 0xFF)) {
+                врати true;
             }
-        } else if ((low & 0xFF) <= v || v <= (high & 0xFF)) {
-            return true;
+        } инако ако ((low & 0xFF) <= v || v <= (high & 0xFF)) {
+            врати true;
         }
     }
-    if (hasStrings()) {
-        for (i=0; i<strings_->size(); ++i) {
+    ако (hasStrings()) {
+        за (i=0; i<strings_->size(); ++i) {
             const UnicodeString& s = *static_cast<const UnicodeString*>(strings_->elementAt(i));
-            if (s.isEmpty()) {
+            ако (s.isEmpty()) {
                 continue;  // skip the empty string
             }
             UChar32 c = s.char32At(0);
-            if ((c & 0xFF) == v) {
-                return true;
+            ако ((c & 0xFF) == v) {
+                врати true;
             }
         }
     }
-    return false;
+    врати false;
 }
 
 /**
@@ -558,14 +558,14 @@ UMatchDegree UnicodeSet::matches(const Replaceable& text,
                                  int32_t& offset,
                                  int32_t limit,
                                  UBool incremental) {
-    if (offset == limit) {
-        if (contains(U_ETHER)) {
-            return incremental ? U_PARTIAL_MATCH : U_MATCH;
-        } else {
-            return U_MISMATCH;
+    ако (offset == limit) {
+        ако (contains(U_ETHER)) {
+            врати incremental ? U_PARTIAL_MATCH : U_MATCH;
+        } инако {
+            врати U_MISMATCH;
         }
-    } else {
-        if (hasStrings()) { // try strings first
+    } инако {
+        ако (hasStrings()) { // try strings first
 
             // might separate forward and backward loops later
             // for now they are combined
@@ -586,9 +586,9 @@ UMatchDegree UnicodeSet::matches(const Replaceable& text,
             // return the longest match.
             int32_t highWaterLength = 0;
 
-            for (i=0; i<strings_->size(); ++i) {
+            за (i=0; i<strings_->size(); ++i) {
                 const UnicodeString& trial = *static_cast<const UnicodeString*>(strings_->elementAt(i));
-                if (trial.isEmpty()) {
+                ако (trial.isEmpty()) {
                     continue;  // skip the empty string
                 }
 
@@ -596,27 +596,27 @@ UMatchDegree UnicodeSet::matches(const Replaceable& text,
 
                 // Strings are sorted, so we can optimize in the
                 // forward direction.
-                if (forward && c > firstChar) break;
-                if (c != firstChar) continue;
+                ако (forward && c > firstChar) break;
+                ако (c != firstChar) continue;
 
                 int32_t matchLen = matchRest(text, offset, limit, trial);
 
-                if (incremental) {
+                ако (incremental) {
                     int32_t maxLen = forward ? limit-offset : offset-limit;
-                    if (matchLen == maxLen) {
+                    ако (matchLen == maxLen) {
                         // We have successfully matched but only up to limit.
-                        return U_PARTIAL_MATCH;
+                        врати U_PARTIAL_MATCH;
                     }
                 }
 
-                if (matchLen == trial.length()) {
+                ако (matchLen == trial.length()) {
                     // We have successfully matched the whole string.
-                    if (matchLen > highWaterLength) {
+                    ако (matchLen > highWaterLength) {
                         highWaterLength = matchLen;
                     }
                     // In the forward direction we know strings
                     // are sorted so we can bail early.
-                    if (forward && matchLen < highWaterLength) {
+                    ако (forward && matchLen < highWaterLength) {
                         break;
                     }
                     continue;
@@ -625,12 +625,12 @@ UMatchDegree UnicodeSet::matches(const Replaceable& text,
 
             // We've checked all strings without a partial match.
             // If we have full matches, return the longest one.
-            if (highWaterLength != 0) {
+            ако (highWaterLength != 0) {
                 offset += forward ? highWaterLength : -highWaterLength;
-                return U_MATCH;
+                врати U_MATCH;
             }
         }
-        return UnicodeFilter::matches(text, offset, limit, incremental);
+        врати UnicodeFilter::matches(text, offset, limit, incremental);
     }
 }
 
@@ -661,21 +661,21 @@ int32_t UnicodeSet::matchRest(const Replaceable& text,
     int32_t i;
     int32_t maxLen;
     int32_t slen = s.length();
-    if (start < limit) {
+    ако (start < limit) {
         maxLen = limit - start;
-        if (maxLen > slen) maxLen = slen;
-        for (i = 1; i < maxLen; ++i) {
-            if (text.charAt(start + i) != s.charAt(i)) return 0;
+        ако (maxLen > slen) maxLen = slen;
+        за (i = 1; i < maxLen; ++i) {
+            ако (text.charAt(start + i) != s.charAt(i)) врати 0;
         }
-    } else {
+    } инако {
         maxLen = start - limit;
-        if (maxLen > slen) maxLen = slen;
+        ако (maxLen > slen) maxLen = slen;
         --slen; // <=> slen = s.length() - 1;
-        for (i = 1; i < maxLen; ++i) {
-            if (text.charAt(start - i) != s.charAt(slen - i)) return 0;
+        за (i = 1; i < maxLen; ++i) {
+            ако (text.charAt(start - i) != s.charAt(slen - i)) врати 0;
         }
     }
-    return maxLen;
+    врати maxLen;
 }
 
 /**
@@ -693,19 +693,19 @@ void UnicodeSet::addMatchSetTo(UnicodeSet& toUnionTo) const {
  * @return an index from 0..size()-1, or -1
  */
 int32_t UnicodeSet::indexOf(UChar32 c) const {
-    if (c < MIN_VALUE || c > MAX_VALUE) {
-        return -1;
+    ако (c < MIN_VALUE || c > MAX_VALUE) {
+        врати -1;
     }
     int32_t i = 0;
     int32_t n = 0;
-    for (;;) {
+    за (;;) {
         UChar32 start = list[i++];
-        if (c < start) {
-            return -1;
+        ако (c < start) {
+            врати -1;
         }
         UChar32 limit = list[i++];
-        if (c < limit) {
-            return n + c - start;
+        ако (c < limit) {
+            врати n + c - start;
         }
         n += limit - start;
     }
@@ -720,21 +720,21 @@ int32_t UnicodeSet::indexOf(UChar32 c) const {
  * @return the character at the given index, or (UChar32)-1.
  */
 UChar32 UnicodeSet::charAt(int32_t index) const {
-    if (index >= 0) {
+    ако (index >= 0) {
         // len2 is the largest even integer <= len, that is, it is len
         // for even values and len-1 for odd values.  With odd values
         // the last entry is UNICODESET_HIGH.
         int32_t len2 = len & ~1;
-        for (int32_t i=0; i < len2;) {
+        за (int32_t i=0; i < len2;) {
             UChar32 start = list[i++];
             int32_t count = list[i++] - start;
-            if (index < count) {
-                return static_cast<UChar32>(start + index);
+            ако (index < count) {
+                врати static_cast<UChar32>(start + index);
             }
             index -= count;
         }
     }
-    return static_cast<UChar32>(-1);
+    врати static_cast<UChar32>(-1);
 }
 
 /**
@@ -748,7 +748,7 @@ UChar32 UnicodeSet::charAt(int32_t index) const {
 UnicodeSet& UnicodeSet::set(UChar32 start, UChar32 end) U_LIFETIME_BOUND {
     clear();
     complement(start, end);
-    return *this;
+    врати *this;
 }
 
 /**
@@ -763,45 +763,45 @@ UnicodeSet& UnicodeSet::set(UChar32 start, UChar32 end) U_LIFETIME_BOUND {
  * to this set.
  */
 UnicodeSet& UnicodeSet::add(UChar32 start, UChar32 end) U_LIFETIME_BOUND {
-    if (pinCodePoint(start) < pinCodePoint(end)) {
+    ако (pinCodePoint(start) < pinCodePoint(end)) {
         UChar32 limit = end + 1;
         // Fast path for adding a new range after the last one.
         // Odd list length: [..., lastStart, lastLimit, HIGH]
-        if ((len & 1) != 0) {
+        ако ((len & 1) != 0) {
             // If the list is empty, set lastLimit low enough to not be adjacent to 0.
             UChar32 lastLimit = len == 1 ? -2 : list[len - 2];
-            if (lastLimit <= start && !isFrozen() && !isBogus()) {
-                if (lastLimit == start) {
+            ако (lastLimit <= start && !isFrozen() && !isBogus()) {
+                ако (lastLimit == start) {
                     // Extend the last range.
                     list[len - 2] = limit;
-                    if (limit == UNICODESET_HIGH) {
+                    ако (limit == UNICODESET_HIGH) {
                         --len;
                     }
-                } else {
+                } инако {
                     list[len - 1] = start;
-                    if (limit < UNICODESET_HIGH) {
-                        if (ensureCapacity(len + 2)) {
+                    ако (limit < UNICODESET_HIGH) {
+                        ако (ensureCapacity(len + 2)) {
                             list[len++] = limit;
                             list[len++] = UNICODESET_HIGH;
                         }
-                    } else {  // limit == UNICODESET_HIGH
-                        if (ensureCapacity(len + 1)) {
+                    } инако {  // limit == UNICODESET_HIGH
+                        ако (ensureCapacity(len + 1)) {
                             list[len++] = UNICODESET_HIGH;
                         }
                     }
                 }
                 releasePattern();
-                return *this;
+                врати *this;
             }
         }
         // This is slow. Could be much faster using findCodePoint(start)
         // and modifying the list, dealing with adjacent & overlapping ranges.
         UChar32 range[3] = { start, limit, UNICODESET_HIGH };
         add(range, 2, 0);
-    } else if (start == end) {
+    } инако ако (start == end) {
         add(start);
     }
-    return *this;
+    врати *this;
 }
 
 // #define DEBUG_US_ADD
@@ -809,16 +809,16 @@ UnicodeSet& UnicodeSet::add(UChar32 start, UChar32 end) U_LIFETIME_BOUND {
 #ifdef DEBUG_US_ADD
 #include <stdio.h>
 void dump(UChar32 c) {
-    if (c <= 0xFF) {
+    ако (c <= 0xFF) {
         printf("%c", (char)c);
-    } else {
+    } инако {
         printf("U+%04X", c);
     }
 }
 void dump(const UChar32* list, int32_t len) {
     printf("[");
-    for (int32_t i=0; i<len; ++i) {
-        if (i != 0) printf(", ");
+    за (int32_t i=0; i<len; ++i) {
+        ако (i != 0) printf(", ");
         dump(list[i]);
     }
     printf("]");
@@ -837,7 +837,7 @@ UnicodeSet& UnicodeSet::add(UChar32 c) U_LIFETIME_BOUND {
     int32_t i = findCodePoint(pinCodePoint(c));
 
     // already in set?
-    if ((i & 1) != 0  || isFrozen() || isBogus()) return *this;
+    ако ((i & 1) != 0  || isFrozen() || isBogus()) врати *this;
 
     // HIGH is 0x110000
     // assert(list[len-1] == HIGH);
@@ -860,18 +860,18 @@ UnicodeSet& UnicodeSet::add(UChar32 c) U_LIFETIME_BOUND {
     printf(" => ");
 #endif
 
-    if (c == list[i]-1) {
+    ако (c == list[i]-1) {
         // c is before start of next range
         list[i] = c;
         // if we touched the HIGH mark, then add a new one
-        if (c == (UNICODESET_HIGH - 1)) {
-            if (!ensureCapacity(len+1)) {
+        ако (c == (UNICODESET_HIGH - 1)) {
+            ако (!ensureCapacity(len+1)) {
                 // ensureCapacity will mark the object as Bogus if OOM failure happens.
-                return *this;
+                врати *this;
             }
             list[len++] = UNICODESET_HIGH;
         }
-        if (i > 0 && c == list[i-1]) {
+        ако (i > 0 && c == list[i-1]) {
             // collapse adjacent ranges
 
             // [..., start_k-1, c, c, limit_k, ..., HIGH]
@@ -884,19 +884,19 @@ UnicodeSet& UnicodeSet::add(UChar32 c) U_LIFETIME_BOUND {
             UChar32* dst = list + i - 1;
             UChar32* src = dst + 2;
             UChar32* srclimit = list + len;
-            while (src < srclimit) *(dst++) = *(src++);
+            док (src < srclimit) *(dst++) = *(src++);
 
             len -= 2;
         }
     }
 
-    else if (i > 0 && c == list[i-1]) {
+    инако ако (i > 0 && c == list[i-1]) {
         // c is after end of prior range
         list[i-1]++;
         // no need to check for collapse here
     }
 
-    else {
+    инако {
         // At this point we know the new char is not adjacent to
         // any existing ranges, and it is not 10FFFF.
 
@@ -909,9 +909,9 @@ UnicodeSet& UnicodeSet::add(UChar32 c) U_LIFETIME_BOUND {
         //                             ^
         //                             list[i]
 
-        if (!ensureCapacity(len+2)) {
+        ако (!ensureCapacity(len+2)) {
             // ensureCapacity will mark the object as Bogus if OOM failure happens.
-            return *this;
+            врати *this;
         }
 
         UChar32 *p = list + i;
@@ -925,8 +925,8 @@ UnicodeSet& UnicodeSet::add(UChar32 c) U_LIFETIME_BOUND {
     dump(list, len);
     printf("\n");
 
-    for (i=1; i<len; ++i) {
-        if (list[i] <= list[i-1]) {
+    за (i=1; i<len; ++i) {
+        ако (list[i] <= list[i-1]) {
             // Corrupt array!
             printf("ERROR: list has been corrupted\n");
             exit(1);
@@ -935,7 +935,7 @@ UnicodeSet& UnicodeSet::add(UChar32 c) U_LIFETIME_BOUND {
 #endif
 
     releasePattern();
-    return *this;
+    врати *this;
 }
 
 /**
@@ -948,17 +948,17 @@ UnicodeSet& UnicodeSet::add(UChar32 c) U_LIFETIME_BOUND {
  * @return the modified set, for chaining
  */
 UnicodeSet& UnicodeSet::add(const UnicodeString& s) U_LIFETIME_BOUND {
-    if (isFrozen() || isBogus()) return *this;
+    ако (isFrozen() || isBogus()) врати *this;
     int32_t cp = getSingleCP(s);
-    if (cp < 0) {
-        if (!stringsContains(s)) {
+    ако (cp < 0) {
+        ако (!stringsContains(s)) {
             _add(s);
             releasePattern();
         }
-    } else {
+    } инако {
         add(static_cast<UChar32>(cp));
     }
-    return *this;
+    врати *this;
 }
 
 /**
@@ -966,21 +966,21 @@ UnicodeSet& UnicodeSet::add(const UnicodeString& s) U_LIFETIME_BOUND {
  * must have been checked by the caller to not already be in 'strings_'.
  */
 void UnicodeSet::_add(const UnicodeString& s) {
-    if (isFrozen() || isBogus()) {
-        return;
+    ако (isFrozen() || isBogus()) {
+        врати;
     }
     UErrorCode ec = U_ZERO_ERROR;
-    if (strings_ == nullptr && !allocateStrings(ec)) {
+    ако (strings_ == nullptr && !allocateStrings(ec)) {
         setToBogus();
-        return;
+        врати;
     }
     LocalPointer<UnicodeString> t(new UnicodeString(s));
-    if (t.isNull()) { // Check for memory allocation error.
+    ако (t.isNull()) { // Check for memory allocation error.
         setToBogus();
-        return;
+        врати;
     }
     strings_->sortedInsert(t.orphan(), compareUnicodeString, ec);
-    if (U_FAILURE(ec)) {
+    ако (U_FAILURE(ec)) {
         setToBogus();
     }
 }
@@ -992,14 +992,14 @@ void UnicodeSet::_add(const UnicodeString& s) {
  */
 int32_t UnicodeSet::getSingleCP(const UnicodeString& s) {
     int32_t sLength = s.length();
-    if (sLength == 1) return s.charAt(0);
-    if (sLength == 2) {
+    ако (sLength == 1) врати s.charAt(0);
+    ако (sLength == 2) {
         UChar32 cp = s.char32At(0);
-        if (cp > 0xFFFF) { // is surrogate pair
-            return cp;
+        ако (cp > 0xFFFF) { // is surrogate pair
+            врати cp;
         }
     }
-    return -1;
+    врати -1;
 }
 
 /**
@@ -1010,11 +1010,11 @@ int32_t UnicodeSet::getSingleCP(const UnicodeString& s) {
  */
 UnicodeSet& UnicodeSet::addAll(const UnicodeString& s) U_LIFETIME_BOUND {
     UChar32 cp;
-    for (int32_t i = 0; i < s.length(); i += U16_LENGTH(cp)) {
+    за (int32_t i = 0; i < s.length(); i += U16_LENGTH(cp)) {
         cp = s.char32At(i);
         add(cp);
     }
-    return *this;
+    врати *this;
 }
 
 /**
@@ -1027,7 +1027,7 @@ UnicodeSet& UnicodeSet::retainAll(const UnicodeString& s) U_LIFETIME_BOUND {
     UnicodeSet set;
     set.addAll(s);
     retainAll(set);
-    return *this;
+    врати *this;
 }
 
 /**
@@ -1040,7 +1040,7 @@ UnicodeSet& UnicodeSet::complementAll(const UnicodeString& s) U_LIFETIME_BOUND {
     UnicodeSet set;
     set.addAll(s);
     complementAll(set);
-    return *this;
+    врати *this;
 }
 
 /**
@@ -1053,15 +1053,15 @@ UnicodeSet& UnicodeSet::removeAll(const UnicodeString& s) U_LIFETIME_BOUND {
     UnicodeSet set;
     set.addAll(s);
     removeAll(set);
-    return *this;
+    врати *this;
 }
 
 UnicodeSet& UnicodeSet::removeAllStrings() U_LIFETIME_BOUND {
-    if (!isFrozen() && hasStrings()) {
+    ако (!isFrozen() && hasStrings()) {
         strings_->removeAllElements();
         releasePattern();
     }
-    return *this;
+    врати *this;
 }
 
 
@@ -1073,10 +1073,10 @@ UnicodeSet& UnicodeSet::removeAllStrings() U_LIFETIME_BOUND {
  */
 UnicodeSet* U_EXPORT2 UnicodeSet::createFrom(const UnicodeString& s) {
     UnicodeSet *set = new UnicodeSet();
-    if (set != nullptr) { // Check for memory allocation error.
+    ако (set != nullptr) { // Check for memory allocation error.
         set->add(s);
     }
-    return set;
+    врати set;
 }
 
 
@@ -1087,10 +1087,10 @@ UnicodeSet* U_EXPORT2 UnicodeSet::createFrom(const UnicodeString& s) {
  */
 UnicodeSet* U_EXPORT2 UnicodeSet::createFromAll(const UnicodeString& s) {
     UnicodeSet *set = new UnicodeSet();
-    if (set != nullptr) { // Check for memory allocation error.
+    ако (set != nullptr) { // Check for memory allocation error.
         set->addAll(s);
     }
-    return set;
+    врати set;
 }
 
 /**
@@ -1104,37 +1104,37 @@ UnicodeSet* U_EXPORT2 UnicodeSet::createFromAll(const UnicodeString& s) {
  * to this set.
  */
 UnicodeSet& UnicodeSet::retain(UChar32 start, UChar32 end) U_LIFETIME_BOUND {
-    if (pinCodePoint(start) <= pinCodePoint(end)) {
+    ако (pinCodePoint(start) <= pinCodePoint(end)) {
         UChar32 range[3] = { start, end+1, UNICODESET_HIGH };
         retain(range, 2, 0);
-    } else {
+    } инако {
         clear();
     }
-    return *this;
+    врати *this;
 }
 
 UnicodeSet& UnicodeSet::retain(UChar32 c) U_LIFETIME_BOUND {
-    return retain(c, c);
+    врати retain(c, c);
 }
 
 UnicodeSet& UnicodeSet::retain(const UnicodeString &s) U_LIFETIME_BOUND {
-    if (isFrozen() || isBogus()) { return *this; }
+    ако (isFrozen() || isBogus()) { врати *this; }
     UChar32 cp = getSingleCP(s);
-    if (cp < 0) {
+    ако (cp < 0) {
         bool isIn = stringsContains(s);
         // Check for getRangeCount() first to avoid somewhat-expensive size()
         // when there are single code points.
-        if (isIn && getRangeCount() == 0 && size() == 1) {
-            return *this;
+        ако (isIn && getRangeCount() == 0 && size() == 1) {
+            врати *this;
         }
         clear();
-        if (isIn) {
+        ако (isIn) {
             _add(s);
         }
-    } else {
+    } инако {
         retain(cp, cp);
     }
-    return *this;
+    врати *this;
 }
 
 /**
@@ -1149,11 +1149,11 @@ UnicodeSet& UnicodeSet::retain(const UnicodeString &s) U_LIFETIME_BOUND {
  * from this set.
  */
 UnicodeSet& UnicodeSet::remove(UChar32 start, UChar32 end) U_LIFETIME_BOUND {
-    if (pinCodePoint(start) <= pinCodePoint(end)) {
+    ако (pinCodePoint(start) <= pinCodePoint(end)) {
         UChar32 range[3] = { start, end+1, UNICODESET_HIGH };
         retain(range, 2, 2);
     }
-    return *this;
+    врати *this;
 }
 
 /**
@@ -1162,7 +1162,7 @@ UnicodeSet& UnicodeSet::remove(UChar32 start, UChar32 end) U_LIFETIME_BOUND {
  * returns.
  */
 UnicodeSet& UnicodeSet::remove(UChar32 c) U_LIFETIME_BOUND {
-    return remove(c, c);
+    врати remove(c, c);
 }
 
 /**
@@ -1173,16 +1173,16 @@ UnicodeSet& UnicodeSet::remove(UChar32 c) U_LIFETIME_BOUND {
  * @return the modified set, for chaining
  */
 UnicodeSet& UnicodeSet::remove(const UnicodeString& s) U_LIFETIME_BOUND {
-    if (isFrozen() || isBogus()) return *this;
+    ако (isFrozen() || isBogus()) врати *this;
     int32_t cp = getSingleCP(s);
-    if (cp < 0) {
-        if (strings_ != nullptr && strings_->removeElement((void*) &s)) {
+    ако (cp < 0) {
+        ако (strings_ != nullptr && strings_->removeElement((void*) &s)) {
             releasePattern();
         }
-    } else {
+    } инако {
         remove(static_cast<UChar32>(cp), static_cast<UChar32>(cp));
     }
-    return *this;
+    врати *this;
 }
 
 /**
@@ -1197,19 +1197,19 @@ UnicodeSet& UnicodeSet::remove(const UnicodeString& s) U_LIFETIME_BOUND {
  * from this set.
  */
 UnicodeSet& UnicodeSet::complement(UChar32 start, UChar32 end) U_LIFETIME_BOUND {
-    if (isFrozen() || isBogus()) {
-        return *this;
+    ако (isFrozen() || isBogus()) {
+        врати *this;
     }
-    if (pinCodePoint(start) <= pinCodePoint(end)) {
+    ако (pinCodePoint(start) <= pinCodePoint(end)) {
         UChar32 range[3] = { start, end+1, UNICODESET_HIGH };
         exclusiveOr(range, 2, 0);
     }
     releasePattern();
-    return *this;
+    врати *this;
 }
 
 UnicodeSet& UnicodeSet::complement(UChar32 c) U_LIFETIME_BOUND {
-    return complement(c, c);
+    врати complement(c, c);
 }
 
 /**
@@ -1217,22 +1217,22 @@ UnicodeSet& UnicodeSet::complement(UChar32 c) U_LIFETIME_BOUND {
  * <code>complement(MIN_VALUE, MAX_VALUE)</code>.
  */
 UnicodeSet& UnicodeSet::complement() U_LIFETIME_BOUND {
-    if (isFrozen() || isBogus()) {
-        return *this;
+    ако (isFrozen() || isBogus()) {
+        врати *this;
     }
-    if (list[0] == UNICODESET_LOW) {
+    ако (list[0] == UNICODESET_LOW) {
         uprv_memmove(list, list + 1, (size_t)(len-1)*sizeof(UChar32));
         --len;
-    } else {
-        if (!ensureCapacity(len+1)) {
-            return *this;
+    } инако {
+        ако (!ensureCapacity(len+1)) {
+            врати *this;
         }
         uprv_memmove(list + 1, list, (size_t)len*sizeof(UChar32));
         list[0] = UNICODESET_LOW;
         ++len;
     }
     releasePattern();
-    return *this;
+    врати *this;
 }
 
 /**
@@ -1244,19 +1244,19 @@ UnicodeSet& UnicodeSet::complement() U_LIFETIME_BOUND {
  * @return this object, for chaining
  */
 UnicodeSet& UnicodeSet::complement(const UnicodeString& s) U_LIFETIME_BOUND {
-    if (isFrozen() || isBogus()) return *this;
+    ако (isFrozen() || isBogus()) врати *this;
     int32_t cp = getSingleCP(s);
-    if (cp < 0) {
-        if (stringsContains(s)) {
+    ако (cp < 0) {
+        ако (stringsContains(s)) {
             strings_->removeElement((void*) &s);
-        } else {
+        } инако {
             _add(s);
         }
         releasePattern();
-    } else {
+    } инако {
         complement(static_cast<UChar32>(cp), static_cast<UChar32>(cp));
     }
-    return *this;
+    врати *this;
 }
 
 /**
@@ -1270,20 +1270,20 @@ UnicodeSet& UnicodeSet::complement(const UnicodeString& s) U_LIFETIME_BOUND {
  * @see #add(char, char)
  */
 UnicodeSet& UnicodeSet::addAll(const UnicodeSet& c) U_LIFETIME_BOUND {
-    if ( c.len>0 && c.list!=nullptr ) {
+    ако ( c.len>0 && c.list!=nullptr ) {
         add(c.list, c.len, 0);
     }
 
     // Add strings in order
-    if ( c.strings_!=nullptr ) {
-        for (int32_t i=0; i<c.strings_->size(); ++i) {
+    ако ( c.strings_!=nullptr ) {
+        за (int32_t i=0; i<c.strings_->size(); ++i) {
             const UnicodeString* s = static_cast<const UnicodeString*>(c.strings_->elementAt(i));
-            if (!stringsContains(*s)) {
+            ако (!stringsContains(*s)) {
                 _add(*s);
             }
         }
     }
-    return *this;
+    врати *this;
 }
 
 /**
@@ -1296,18 +1296,18 @@ UnicodeSet& UnicodeSet::addAll(const UnicodeSet& c) U_LIFETIME_BOUND {
  * @param c set that defines which elements this set will retain.
  */
 UnicodeSet& UnicodeSet::retainAll(const UnicodeSet& c) U_LIFETIME_BOUND {
-    if (isFrozen() || isBogus()) {
-        return *this;
+    ако (isFrozen() || isBogus()) {
+        врати *this;
     }
     retain(c.list, c.len, 0);
-    if (hasStrings()) {
-        if (!c.hasStrings()) {
+    ако (hasStrings()) {
+        ако (!c.hasStrings()) {
             strings_->removeAllElements();
-        } else {
+        } инако {
             strings_->retainAll(*c.strings_);
         }
     }
-    return *this;
+    врати *this;
 }
 
 /**
@@ -1320,14 +1320,14 @@ UnicodeSet& UnicodeSet::retainAll(const UnicodeSet& c) U_LIFETIME_BOUND {
  *          this set.
  */
 UnicodeSet& UnicodeSet::removeAll(const UnicodeSet& c) U_LIFETIME_BOUND {
-    if (isFrozen() || isBogus()) {
-        return *this;
+    ако (isFrozen() || isBogus()) {
+        врати *this;
     }
     retain(c.list, c.len, 2);
-    if (hasStrings() && c.hasStrings()) {
+    ако (hasStrings() && c.hasStrings()) {
         strings_->removeAll(*c.strings_);
     }
-    return *this;
+    врати *this;
 }
 
 /**
@@ -1339,20 +1339,20 @@ UnicodeSet& UnicodeSet::removeAll(const UnicodeSet& c) U_LIFETIME_BOUND {
  *          this set.
  */
 UnicodeSet& UnicodeSet::complementAll(const UnicodeSet& c) U_LIFETIME_BOUND {
-    if (isFrozen() || isBogus()) {
-        return *this;
+    ако (isFrozen() || isBogus()) {
+        врати *this;
     }
     exclusiveOr(c.list, c.len, 0);
 
-    if (c.strings_ != nullptr) {
-        for (int32_t i=0; i<c.strings_->size(); ++i) {
+    ако (c.strings_ != nullptr) {
+        за (int32_t i=0; i<c.strings_->size(); ++i) {
             void* e = c.strings_->elementAt(i);
-            if (strings_ == nullptr || !strings_->removeElement(e)) {
+            ако (strings_ == nullptr || !strings_->removeElement(e)) {
                 _add(*static_cast<const UnicodeString*>(e));
             }
         }
     }
-    return *this;
+    врати *this;
 }
 
 /**
@@ -1360,18 +1360,18 @@ UnicodeSet& UnicodeSet::complementAll(const UnicodeSet& c) U_LIFETIME_BOUND {
  * empty after this call returns.
  */
 UnicodeSet& UnicodeSet::clear() U_LIFETIME_BOUND {
-    if (isFrozen()) {
-        return *this;
+    ако (isFrozen()) {
+        врати *this;
     }
     list[0] = UNICODESET_HIGH;
     len = 1;
     releasePattern();
-    if (strings_ != nullptr) {
+    ако (strings_ != nullptr) {
         strings_->removeAllElements();
     }
     // Remove bogus
     fFlags = 0;
-    return *this;
+    врати *this;
 }
 
 /**
@@ -1381,7 +1381,7 @@ UnicodeSet& UnicodeSet::clear() U_LIFETIME_BOUND {
  * @see #getRangeEnd
  */
 int32_t UnicodeSet::getRangeCount() const {
-    return len/2;
+    врати len/2;
 }
 
 /**
@@ -1391,7 +1391,7 @@ int32_t UnicodeSet::getRangeCount() const {
  * @see #getRangeEnd
  */
 UChar32 UnicodeSet::getRangeStart(int32_t index) const {
-    return list[index*2];
+    врати list[index*2];
 }
 
 /**
@@ -1401,11 +1401,11 @@ UChar32 UnicodeSet::getRangeStart(int32_t index) const {
  * @see #getRangeEnd
  */
 UChar32 UnicodeSet::getRangeEnd(int32_t index) const {
-    return list[index*2 + 1] - 1;
+    врати list[index*2 + 1] - 1;
 }
 
 const UnicodeString* UnicodeSet::getString(int32_t index) const U_LIFETIME_BOUND {
-    return static_cast<const UnicodeString*>(strings_->elementAt(index));
+    врати static_cast<const UnicodeString*>(strings_->elementAt(index));
 }
 
 /**
@@ -1413,37 +1413,37 @@ const UnicodeString* UnicodeSet::getString(int32_t index) const U_LIFETIME_BOUND
  * possible space, without changing this object's value.
  */
 UnicodeSet& UnicodeSet::compact() U_LIFETIME_BOUND {
-    if (isFrozen() || isBogus()) {
-        return *this;
+    ако (isFrozen() || isBogus()) {
+        врати *this;
     }
     // Delete buffer first to defragment memory less.
-    if (buffer != stackList) {
+    ако (buffer != stackList) {
         uprv_free(buffer);
         buffer = nullptr;
         bufferCapacity = 0;
     }
-    if (list == stackList) {
+    ако (list == stackList) {
         // pass
-    } else if (len <= INITIAL_CAPACITY) {
+    } инако ако (len <= INITIAL_CAPACITY) {
         uprv_memcpy(stackList, list, len * sizeof(UChar32));
         uprv_free(list);
         list = stackList;
         capacity = INITIAL_CAPACITY;
-    } else if ((len + 7) < capacity) {
+    } инако ако ((len + 7) < capacity) {
         // If we have more than a little unused capacity, shrink it to len.
         UChar32* temp = static_cast<UChar32*>(uprv_realloc(list, sizeof(UChar32) * len));
-        if (temp) {
+        ако (temp) {
             list = temp;
             capacity = len;
         }
         // else what the heck happened?! We allocated less memory!
         // Oh well. We'll keep our original array.
     }
-    if (strings_ != nullptr && strings_->isEmpty()) {
+    ако (strings_ != nullptr && strings_->isEmpty()) {
         delete strings_;
         strings_ = nullptr;
     }
-    return *this;
+    врати *this;
 }
 
 #ifdef DEBUG_SERIALIZE
@@ -1456,17 +1456,17 @@ UnicodeSet& UnicodeSet::compact() U_LIFETIME_BOUND {
 UnicodeSet::UnicodeSet(const uint16_t data[], int32_t dataLen, ESerialization serialization,
                        UErrorCode &ec) {
 
-  if(U_FAILURE(ec)) {
+  ако(U_FAILURE(ec)) {
     setToBogus();
-    return;
+    врати;
   }
 
-  if( (serialization != kSerialized)
+  ако( (serialization != kSerialized)
       || (data==nullptr)
       || (dataLen < 1)) {
     ec = U_ILLEGAL_ARGUMENT_ERROR;
     setToBogus();
-    return;
+    врати;
   }
 
   // bmp?
@@ -1477,19 +1477,19 @@ UnicodeSet::UnicodeSet(const uint16_t data[], int32_t dataLen, ESerialization se
 #ifdef DEBUG_SERIALIZE
   printf("dataLen %d headerSize %d bmpLen %d len %d. data[0]=%X/%X/%X/%X\n", dataLen,headerSize,bmpLength,newLength, data[0],data[1],data[2],data[3]);
 #endif
-  if(!ensureCapacity(newLength + 1)) {  // +1 for HIGH
-    return;
+  ако(!ensureCapacity(newLength + 1)) {  // +1 for HIGH
+    врати;
   }
   // copy bmp
   int32_t i;
-  for(i = 0; i< bmpLength;i++) {
+  за(i = 0; i< bmpLength;i++) {
     list[i] = data[i+headerSize];
 #ifdef DEBUG_SERIALIZE
     printf("<<16@%d[%d] %X\n", i+headerSize, i, list[i]);
 #endif
   }
   // copy smp
-  for(i=bmpLength;i<newLength;i++) {
+  за(i=bmpLength;i<newLength;i++) {
     list[i] = (static_cast<UChar32>(data[headerSize + bmpLength + (i - bmpLength) * 2 + 0]) << 16) +
                static_cast<UChar32>(data[headerSize + bmpLength + (i - bmpLength) * 2 + 1]);
 #ifdef DEBUG_SERIALIZE
@@ -1497,7 +1497,7 @@ UnicodeSet::UnicodeSet(const uint16_t data[], int32_t dataLen, ESerialization se
 #endif
   }
   U_ASSERT(i == newLength);
-  if (i == 0 || list[i - 1] != UNICODESET_HIGH) {
+  ако (i == 0 || list[i - 1] != UNICODESET_HIGH) {
     list[i++] = UNICODESET_HIGH;
   }
   len = i;
@@ -1507,49 +1507,49 @@ UnicodeSet::UnicodeSet(const uint16_t data[], int32_t dataLen, ESerialization se
 int32_t UnicodeSet::serialize(uint16_t *dest, int32_t destCapacity, UErrorCode& ec) const {
     int32_t bmpLength, length, destLength;
 
-    if (U_FAILURE(ec)) {
-        return 0;
+    ако (U_FAILURE(ec)) {
+        врати 0;
     }
 
-    if (destCapacity<0 || (destCapacity>0 && dest==nullptr)) {
+    ако (destCapacity<0 || (destCapacity>0 && dest==nullptr)) {
         ec=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        врати 0;
     }
 
     /* count necessary 16-bit units */
     length=this->len-1; // Subtract 1 to ignore final UNICODESET_HIGH
     // assert(length>=0);
-    if (length==0) {
+    ако (length==0) {
         /* empty set */
-        if (destCapacity>0) {
+        ако (destCapacity>0) {
             *dest=0;
-        } else {
+        } инако {
             ec=U_BUFFER_OVERFLOW_ERROR;
         }
-        return 1;
+        врати 1;
     }
     /* now length>0 */
 
-    if (this->list[length-1]<=0xffff) {
+    ако (this->list[length-1]<=0xffff) {
         /* all BMP */
         bmpLength=length;
-    } else if (this->list[0]>=0x10000) {
+    } инако ако (this->list[0]>=0x10000) {
         /* all supplementary */
         bmpLength=0;
         length*=2;
-    } else {
+    } инако {
         /* some BMP, some supplementary */
-        for (bmpLength=0; bmpLength<length && this->list[bmpLength]<=0xffff; ++bmpLength) {}
+        за (bmpLength=0; bmpLength<length && this->list[bmpLength]<=0xffff; ++bmpLength) {}
         length=bmpLength+2*(length-bmpLength);
     }
 #ifdef DEBUG_SERIALIZE
     printf(">> bmpLength%d length%d len%d\n", bmpLength, length, len);
 #endif
     /* length: number of 16-bit array units */
-    if (length>0x7fff) {
+    ако (length>0x7fff) {
         /* there are only 15 bits for the length in the first serialized word */
         ec=U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0;
+        врати 0;
     }
 
     /*
@@ -1559,7 +1559,7 @@ int32_t UnicodeSet::serialize(uint16_t *dest, int32_t destCapacity, UErrorCode& 
      * 1 bmpLength unit (if there are supplementary values)
      */
     destLength=length+((length>bmpLength)?2:1);
-    if (destLength<=destCapacity) {
+    ако (destLength<=destCapacity) {
         const UChar32 *p;
         int32_t i;
 
@@ -1567,7 +1567,7 @@ int32_t UnicodeSet::serialize(uint16_t *dest, int32_t destCapacity, UErrorCode& 
         printf("writeHdr\n");
 #endif
         *dest = static_cast<uint16_t>(length);
-        if (length>bmpLength) {
+        ако (length>bmpLength) {
             *dest|=0x8000;
             *++dest = static_cast<uint16_t>(bmpLength);
         }
@@ -1575,25 +1575,25 @@ int32_t UnicodeSet::serialize(uint16_t *dest, int32_t destCapacity, UErrorCode& 
 
         /* write the BMP part of the array */
         p=this->list;
-        for (i=0; i<bmpLength; ++i) {
+        за (i=0; i<bmpLength; ++i) {
 #ifdef DEBUG_SERIALIZE
-          printf("writebmp: %x\n", (int)*p);
+          printf("writebmp: %x\n", (цео)*p);
 #endif
             *dest++ = static_cast<uint16_t>(*p++);
         }
 
         /* write the supplementary part of the array */
-        for (; i<length; i+=2) {
+        за (; i<length; i+=2) {
 #ifdef DEBUG_SERIALIZE
-          printf("write32: %x\n", (int)*p);
+          printf("write32: %x\n", (цео)*p);
 #endif
             *dest++ = static_cast<uint16_t>(*p >> 16);
             *dest++ = static_cast<uint16_t>(*p++);
         }
-    } else {
+    } инако {
         ec=U_BUFFER_OVERFLOW_ERROR;
     }
-    return destLength;
+    врати destLength;
 }
 
 //----------------------------------------------------------------
@@ -1604,82 +1604,82 @@ int32_t UnicodeSet::serialize(uint16_t *dest, int32_t destCapacity, UErrorCode& 
  * Allocate our strings vector and return true if successful.
  */
 UBool UnicodeSet::allocateStrings(UErrorCode &status) {
-    if (U_FAILURE(status)) {
-        return false;
+    ако (U_FAILURE(status)) {
+        врати false;
     }
     strings_ = new UVector(uprv_deleteUObject,
                           uhash_compareUnicodeString, 1, status);
-    if (strings_ == nullptr) { // Check for memory allocation error.
+    ако (strings_ == nullptr) { // Check for memory allocation error.
         status = U_MEMORY_ALLOCATION_ERROR;
-        return false;
+        врати false;
     }
-    if (U_FAILURE(status)) {
+    ако (U_FAILURE(status)) {
         delete strings_;
         strings_ = nullptr;
-        return false;
+        врати false;
     } 
-    return true;
+    врати true;
 }
 
 int32_t UnicodeSet::nextCapacity(int32_t minCapacity) {
     // Grow exponentially to reduce the frequency of allocations.
-    if (minCapacity < INITIAL_CAPACITY) {
-        return minCapacity + INITIAL_CAPACITY;
-    } else if (minCapacity <= 2500) {
-        return 5 * minCapacity;
-    } else {
+    ако (minCapacity < INITIAL_CAPACITY) {
+        врати minCapacity + INITIAL_CAPACITY;
+    } инако ако (minCapacity <= 2500) {
+        врати 5 * minCapacity;
+    } инако {
         int32_t newCapacity = 2 * minCapacity;
-        if (newCapacity > MAX_LENGTH) {
+        ако (newCapacity > MAX_LENGTH) {
             newCapacity = MAX_LENGTH;
         }
-        return newCapacity;
+        врати newCapacity;
     }
 }
 
 bool UnicodeSet::ensureCapacity(int32_t newLen) {
-    if (newLen > MAX_LENGTH) {
+    ако (newLen > MAX_LENGTH) {
         newLen = MAX_LENGTH;
     }
-    if (newLen <= capacity) {
-        return true;
+    ако (newLen <= capacity) {
+        врати true;
     }
     int32_t newCapacity = nextCapacity(newLen);
     UChar32* temp = static_cast<UChar32*>(uprv_malloc(newCapacity * sizeof(UChar32)));
-    if (temp == nullptr) {
+    ако (temp == nullptr) {
         setToBogus(); // set the object to bogus state if an OOM failure occurred.
-        return false;
+        врати false;
     }
     // Copy only the actual contents.
     uprv_memcpy(temp, list, len * sizeof(UChar32));
-    if (list != stackList) {
+    ако (list != stackList) {
         uprv_free(list);
     }
     list = temp;
     capacity = newCapacity;
-    return true;
+    врати true;
 }
 
 bool UnicodeSet::ensureBufferCapacity(int32_t newLen) {
-    if (newLen > MAX_LENGTH) {
+    ако (newLen > MAX_LENGTH) {
         newLen = MAX_LENGTH;
     }
-    if (newLen <= bufferCapacity) {
-        return true;
+    ако (newLen <= bufferCapacity) {
+        врати true;
     }
     int32_t newCapacity = nextCapacity(newLen);
     UChar32* temp = static_cast<UChar32*>(uprv_malloc(newCapacity * sizeof(UChar32)));
-    if (temp == nullptr) {
+    ако (temp == nullptr) {
         setToBogus();
-        return false;
+        врати false;
     }
     // The buffer has no contents to be copied.
     // It is always filled from scratch after this call.
-    if (buffer != stackList) {
+    ако (buffer != stackList) {
         uprv_free(buffer);
     }
     buffer = temp;
     bufferCapacity = newCapacity;
-    return true;
+    врати true;
 }
 
 /**
@@ -1706,46 +1706,46 @@ void UnicodeSet::setToBogus() {
 //----------------------------------------------------------------
 
 static inline UChar32 max(UChar32 a, UChar32 b) {
-    return (a > b) ? a : b;
+    врати (a > b) ? a : b;
 }
 
 // polarity = 0, 3 is normal: x xor y
 // polarity = 1, 2: x xor ~y == x === y
 
 void UnicodeSet::exclusiveOr(const UChar32* other, int32_t otherLen, int8_t polarity) {
-    if (isFrozen() || isBogus()) {
-        return;
+    ако (isFrozen() || isBogus()) {
+        врати;
     }
-    if (!ensureBufferCapacity(len + otherLen)) {
-        return;
+    ако (!ensureBufferCapacity(len + otherLen)) {
+        врати;
     }
 
     int32_t i = 0, j = 0, k = 0;
     UChar32 a = list[i++];
     UChar32 b;
-    if (polarity == 1 || polarity == 2) {
+    ако (polarity == 1 || polarity == 2) {
         b = UNICODESET_LOW;
-        if (other[j] == UNICODESET_LOW) { // skip base if already LOW
+        ако (other[j] == UNICODESET_LOW) { // skip base if already LOW
             ++j;
             b = other[j];
         }
-    } else {
+    } инако {
         b = other[j++];
     }
     // simplest of all the routines
     // sort the values, discarding identicals!
-    for (;;) {
-        if (a < b) {
+    за (;;) {
+        ако (a < b) {
             buffer[k++] = a;
             a = list[i++];
-        } else if (b < a) {
+        } инако ако (b < a) {
             buffer[k++] = b;
             b = other[j++];
-        } else if (a != UNICODESET_HIGH) { // at this point, a == b
+        } инако ако (a != UNICODESET_HIGH) { // at this point, a == b
             // discard both values!
             a = list[i++];
             b = other[j++];
-        } else { // DONE!
+        } инако { // DONE!
             buffer[k++] = UNICODESET_HIGH;
             len = k;
             break;
@@ -1761,11 +1761,11 @@ void UnicodeSet::exclusiveOr(const UChar32* other, int32_t otherLen, int8_t pola
 // polarity = 3: ~x union ~y
 
 void UnicodeSet::add(const UChar32* other, int32_t otherLen, int8_t polarity) {
-    if (isFrozen() || isBogus() || other==nullptr) {
-        return;
+    ако (isFrozen() || isBogus() || other==nullptr) {
+        врати;
     }
-    if (!ensureBufferCapacity(len + otherLen)) {
-        return;
+    ако (!ensureBufferCapacity(len + otherLen)) {
+        врати;
     }
 
     int32_t i = 0, j = 0, k = 0;
@@ -1773,37 +1773,37 @@ void UnicodeSet::add(const UChar32* other, int32_t otherLen, int8_t polarity) {
     UChar32 b = other[j++];
     // change from xor is that we have to check overlapping pairs
     // polarity bit 1 means a is second, bit 2 means b is.
-    for (;;) {
+    за (;;) {
         switch (polarity) {
           case 0: // both first; take lower if unequal
-            if (a < b) { // take a
+            ако (a < b) { // take a
                 // Back up over overlapping ranges in buffer[]
-                if (k > 0 && a <= buffer[k-1]) {
+                ако (k > 0 && a <= buffer[k-1]) {
                     // Pick latter end value in buffer[] vs. list[]
                     a = max(list[i], buffer[--k]);
-                } else {
+                } инако {
                     // No overlap
                     buffer[k++] = a;
                     a = list[i];
                 }
                 i++; // Common if/else code factored out
                 polarity ^= 1;
-            } else if (b < a) { // take b
-                if (k > 0 && b <= buffer[k-1]) {
+            } инако ако (b < a) { // take b
+                ако (k > 0 && b <= buffer[k-1]) {
                     b = max(other[j], buffer[--k]);
-                } else {
+                } инако {
                     buffer[k++] = b;
                     b = other[j];
                 }
                 j++;
                 polarity ^= 2;
-            } else { // a == b, take a, drop b
-                if (a == UNICODESET_HIGH) goto loop_end;
+            } инако { // a == b, take a, drop b
+                ако (a == UNICODESET_HIGH) goto loop_end;
                 // This is symmetrical; it doesn't matter if
                 // we backtrack with a or b. - liu
-                if (k > 0 && a <= buffer[k-1]) {
+                ако (k > 0 && a <= buffer[k-1]) {
                     a = max(list[i], buffer[--k]);
-                } else {
+                } инако {
                     // No overlap
                     buffer[k++] = a;
                     a = list[i];
@@ -1815,11 +1815,11 @@ void UnicodeSet::add(const UChar32* other, int32_t otherLen, int8_t polarity) {
             }
             break;
           case 3: // both second; take higher if unequal, and drop other
-            if (b <= a) { // take a
-                if (a == UNICODESET_HIGH) goto loop_end;
+            ако (b <= a) { // take a
+                ако (a == UNICODESET_HIGH) goto loop_end;
                 buffer[k++] = a;
-            } else { // take b
-                if (b == UNICODESET_HIGH) goto loop_end;
+            } инако { // take b
+                ако (b == UNICODESET_HIGH) goto loop_end;
                 buffer[k++] = b;
             }
             a = list[i++];
@@ -1828,13 +1828,13 @@ void UnicodeSet::add(const UChar32* other, int32_t otherLen, int8_t polarity) {
             polarity ^= 2;
             break;
           case 1: // a second, b first; if b < a, overlap
-            if (a < b) { // no overlap, take a
+            ако (a < b) { // no overlap, take a
                 buffer[k++] = a; a = list[i++]; polarity ^= 1;
-            } else if (b < a) { // OVERLAP, drop b
+            } инако ако (b < a) { // OVERLAP, drop b
                 b = other[j++];
                 polarity ^= 2;
-            } else { // a == b, drop both!
-                if (a == UNICODESET_HIGH) goto loop_end;
+            } инако { // a == b, drop both!
+                ако (a == UNICODESET_HIGH) goto loop_end;
                 a = list[i++];
                 polarity ^= 1;
                 b = other[j++];
@@ -1842,15 +1842,15 @@ void UnicodeSet::add(const UChar32* other, int32_t otherLen, int8_t polarity) {
             }
             break;
           case 2: // a first, b second; if a < b, overlap
-            if (b < a) { // no overlap, take b
+            ако (b < a) { // no overlap, take b
                 buffer[k++] = b;
                 b = other[j++];
                 polarity ^= 2;
-            } else  if (a < b) { // OVERLAP, drop a
+            } инако  ако (a < b) { // OVERLAP, drop a
                 a = list[i++];
                 polarity ^= 1;
-            } else { // a == b, drop both!
-                if (a == UNICODESET_HIGH) goto loop_end;
+            } инако { // a == b, drop both!
+                ако (a == UNICODESET_HIGH) goto loop_end;
                 a = list[i++];
                 polarity ^= 1;
                 b = other[j++];
@@ -1872,11 +1872,11 @@ void UnicodeSet::add(const UChar32* other, int32_t otherLen, int8_t polarity) {
 // polarity = 3: ~x intersect ~y
 
 void UnicodeSet::retain(const UChar32* other, int32_t otherLen, int8_t polarity) {
-    if (isFrozen() || isBogus()) {
-        return;
+    ако (isFrozen() || isBogus()) {
+        врати;
     }
-    if (!ensureBufferCapacity(len + otherLen)) {
-        return;
+    ако (!ensureBufferCapacity(len + otherLen)) {
+        врати;
     }
 
     int32_t i = 0, j = 0, k = 0;
@@ -1884,17 +1884,17 @@ void UnicodeSet::retain(const UChar32* other, int32_t otherLen, int8_t polarity)
     UChar32 b = other[j++];
     // change from xor is that we have to check overlapping pairs
     // polarity bit 1 means a is second, bit 2 means b is.
-    for (;;) {
+    за (;;) {
         switch (polarity) {
           case 0: // both first; drop the smaller
-            if (a < b) { // drop a
+            ако (a < b) { // drop a
                 a = list[i++];
                 polarity ^= 1;
-            } else if (b < a) { // drop b
+            } инако ако (b < a) { // drop b
                 b = other[j++];
                 polarity ^= 2;
-            } else { // a == b, take one, drop other
-                if (a == UNICODESET_HIGH) goto loop_end;
+            } инако { // a == b, take one, drop other
+                ако (a == UNICODESET_HIGH) goto loop_end;
                 buffer[k++] = a;
                 a = list[i++];
                 polarity ^= 1;
@@ -1903,16 +1903,16 @@ void UnicodeSet::retain(const UChar32* other, int32_t otherLen, int8_t polarity)
             }
             break;
           case 3: // both second; take lower if unequal
-            if (a < b) { // take a
+            ако (a < b) { // take a
                 buffer[k++] = a;
                 a = list[i++];
                 polarity ^= 1;
-            } else if (b < a) { // take b
+            } инако ако (b < a) { // take b
                 buffer[k++] = b;
                 b = other[j++];
                 polarity ^= 2;
-            } else { // a == b, take one, drop other
-                if (a == UNICODESET_HIGH) goto loop_end;
+            } инако { // a == b, take one, drop other
+                ако (a == UNICODESET_HIGH) goto loop_end;
                 buffer[k++] = a;
                 a = list[i++];
                 polarity ^= 1;
@@ -1921,15 +1921,15 @@ void UnicodeSet::retain(const UChar32* other, int32_t otherLen, int8_t polarity)
             }
             break;
           case 1: // a second, b first;
-            if (a < b) { // NO OVERLAP, drop a
+            ако (a < b) { // NO OVERLAP, drop a
                 a = list[i++];
                 polarity ^= 1;
-            } else if (b < a) { // OVERLAP, take b
+            } инако ако (b < a) { // OVERLAP, take b
                 buffer[k++] = b;
                 b = other[j++];
                 polarity ^= 2;
-            } else { // a == b, drop both!
-                if (a == UNICODESET_HIGH) goto loop_end;
+            } инако { // a == b, drop both!
+                ако (a == UNICODESET_HIGH) goto loop_end;
                 a = list[i++];
                 polarity ^= 1;
                 b = other[j++];
@@ -1937,15 +1937,15 @@ void UnicodeSet::retain(const UChar32* other, int32_t otherLen, int8_t polarity)
             }
             break;
           case 2: // a first, b second; if a < b, overlap
-            if (b < a) { // no overlap, drop b
+            ако (b < a) { // no overlap, drop b
                 b = other[j++];
                 polarity ^= 2;
-            } else  if (a < b) { // OVERLAP, take a
+            } инако  ако (a < b) { // OVERLAP, take a
                 buffer[k++] = a;
                 a = list[i++];
                 polarity ^= 1;
-            } else { // a == b, drop both!
-                if (a == UNICODESET_HIGH) goto loop_end;
+            } инако { // a == b, drop both!
+                ако (a == UNICODESET_HIGH) goto loop_end;
                 a = list[i++];
                 polarity ^= 1;
                 b = other[j++];
@@ -1967,7 +1967,7 @@ void UnicodeSet::retain(const UChar32* other, int32_t otherLen, int8_t polarity)
  */
 void UnicodeSet::_appendToPat(UnicodeString& buf, const UnicodeString& s, UBool escapeUnprintable) {
     UChar32 cp;
-    for (int32_t i = 0; i < s.length(); i += U16_LENGTH(cp)) {
+    за (int32_t i = 0; i < s.length(); i += U16_LENGTH(cp)) {
         _appendToPat(buf, cp = s.char32At(i), escapeUnprintable);
     }
 }
@@ -1977,11 +1977,11 @@ void UnicodeSet::_appendToPat(UnicodeString& buf, const UnicodeString& s, UBool 
  * character to the given <code>StringBuffer</code>.
  */
 void UnicodeSet::_appendToPat(UnicodeString& buf, UChar32 c, UBool escapeUnprintable) {
-    if (escapeUnprintable ? ICU_Utility::isUnprintable(c) : ICU_Utility::shouldAlwaysBeEscaped(c)) {
+    ако (escapeUnprintable ? ICU_Utility::isUnprintable(c) : ICU_Utility::shouldAlwaysBeEscaped(c)) {
         // Use hex escape notation (\uxxxx or \Uxxxxxxxx) for anything
         // unprintable
         ICU_Utility::escape(buf, c);
-        return;
+        врати;
     }
     // Okay to let ':' pass through
     switch (c) {
@@ -1999,7 +1999,7 @@ void UnicodeSet::_appendToPat(UnicodeString& buf, UChar32 c, UBool escapeUnprint
         break;
     default:
         // Escape whitespace
-        if (PatternProps::isWhiteSpace(c)) {
+        ако (PatternProps::isWhiteSpace(c)) {
             buf.append(u'\\');
         }
         break;
@@ -2010,8 +2010,8 @@ void UnicodeSet::_appendToPat(UnicodeString& buf, UChar32 c, UBool escapeUnprint
 void UnicodeSet::_appendToPat(UnicodeString &result, UChar32 start, UChar32 end,
                               UBool escapeUnprintable) {
     _appendToPat(result, start, escapeUnprintable);
-    if (start != end) {
-        if ((start+1) != end ||
+    ако (start != end) {
+        ако ((start+1) != end ||
                 // Avoid writing what looks like a lead+trail surrogate pair.
                 start == 0xdbff) {
             result.append(u'-');
@@ -2028,36 +2028,36 @@ void UnicodeSet::_appendToPat(UnicodeString &result, UChar32 start, UChar32 end,
 UnicodeString& UnicodeSet::_toPattern(UnicodeString& result U_LIFETIME_BOUND,
                                       UBool escapeUnprintable) const
 {
-    if (pat != nullptr) {
+    ако (pat != nullptr) {
         int32_t i;
         int32_t backslashCount = 0;
-        for (i=0; i<patLen; ) {
+        за (i=0; i<patLen; ) {
             UChar32 c;
             U16_NEXT(pat, i, patLen, c);
-            if (escapeUnprintable ?
+            ако (escapeUnprintable ?
                     ICU_Utility::isUnprintable(c) : ICU_Utility::shouldAlwaysBeEscaped(c)) {
                 // If the unprintable character is preceded by an odd
                 // number of backslashes, then it has been escaped.
                 // Before unescaping it, we delete the final
                 // backslash.
-                if ((backslashCount % 2) == 1) {
+                ако ((backslashCount % 2) == 1) {
                     result.truncate(result.length() - 1);
                 }
                 ICU_Utility::escape(result, c);
                 backslashCount = 0;
-            } else {
+            } инако {
                 result.append(c);
-                if (c == u'\\') {
+                ако (c == u'\\') {
                     ++backslashCount;
-                } else {
+                } инако {
                     backslashCount = 0;
                 }
             }
         }
-        return result;
+        врати result;
     }
 
-    return _generatePattern(result, escapeUnprintable);
+    врати _generatePattern(result, escapeUnprintable);
 }
 
 /**
@@ -2069,7 +2069,7 @@ UnicodeString& UnicodeSet::toPattern(UnicodeString& result U_LIFETIME_BOUND,
                                      UBool escapeUnprintable) const
 {
     result.truncate(0);
-    return _toPattern(result, escapeUnprintable);
+    врати _toPattern(result, escapeUnprintable);
 }
 
 /**
@@ -2096,7 +2096,7 @@ UnicodeString& UnicodeSet::_generatePattern(UnicodeString& result U_LIFETIME_BOU
     //
     // *But* do not write the inverse (complement) if there are strings.
     // Since ICU 70, the '^' performs a code point complement which removes all strings.
-    if (len >= 4 && list[0] == 0 && limit == len && !hasStrings()) {
+    ако (len >= 4 && list[0] == 0 && limit == len && !hasStrings()) {
         // Emit the inverse
         result.append(u'^');
         // Offsetting the inversion list index by one lets us
@@ -2106,33 +2106,33 @@ UnicodeString& UnicodeSet::_generatePattern(UnicodeString& result U_LIFETIME_BOU
     }
 
     // Emit the ranges as pairs.
-    while (i < limit) {
+    док (i < limit) {
         UChar32 start = list[i];  // getRangeStart()
         UChar32 end = list[i + 1] - 1;  // getRangeEnd() = range limit minus one
-        if (!(0xd800 <= end && end <= 0xdbff)) {
+        ако (!(0xd800 <= end && end <= 0xdbff)) {
             _appendToPat(result, start, end, escapeUnprintable);
             i += 2;
-        } else {
+        } инако {
             // The range ends with a lead surrogate.
             // Avoid writing what looks like a lead+trail surrogate pair.
             // 1. Postpone ranges that start with a lead surrogate code point.
             int32_t firstLead = i;
-            while ((i += 2) < limit && list[i] <= 0xdbff) {}
+            док ((i += 2) < limit && list[i] <= 0xdbff) {}
             int32_t firstAfterLead = i;
             // 2. Write following ranges that start with a trail surrogate code point.
-            while (i < limit && (start = list[i]) <= 0xdfff) {
+            док (i < limit && (start = list[i]) <= 0xdfff) {
                 _appendToPat(result, start, list[i + 1] - 1, escapeUnprintable);
                 i += 2;
             }
             // 3. Now write the postponed ranges.
-            for (int j = firstLead; j < firstAfterLead; j += 2) {
+            за (цео j = firstLead; j < firstAfterLead; j += 2) {
                 _appendToPat(result, list[j], list[j + 1] - 1, escapeUnprintable);
             }
         }
     }
 
-    if (strings_ != nullptr) {
-        for (int32_t i = 0; i<strings_->size(); ++i) {
+    ако (strings_ != nullptr) {
+        за (int32_t i = 0; i<strings_->size(); ++i) {
             result.append(u'{');
             _appendToPat(result,
                          *static_cast<const UnicodeString*>(strings_->elementAt(i)),
@@ -2140,14 +2140,14 @@ UnicodeString& UnicodeSet::_generatePattern(UnicodeString& result U_LIFETIME_BOU
             result.append(u'}');
         }
     }
-    return result.append(u']');
+    врати result.append(u']');
 }
 
 /**
 * Release existing cached pattern
 */
 void UnicodeSet::releasePattern() {
-    if (pat) {
+    ако (pat) {
         uprv_free(pat);
         pat = nullptr;
         patLen = 0;
@@ -2160,7 +2160,7 @@ void UnicodeSet::releasePattern() {
 void UnicodeSet::setPattern(const char16_t *newPat, int32_t newPatLen) {
     releasePattern();
     pat = static_cast<char16_t*>(uprv_malloc((newPatLen + 1) * sizeof(char16_t)));
-    if (pat) {
+    ако (pat) {
         patLen = newPatLen;
         u_memcpy(pat, newPat, patLen);
         pat[patLen] = 0;
@@ -2170,16 +2170,16 @@ void UnicodeSet::setPattern(const char16_t *newPat, int32_t newPatLen) {
 }
 
 UnicodeSet* UnicodeSet::freeze() U_LIFETIME_BOUND {
-    if(!isFrozen() && !isBogus()) {
+    ако(!isFrozen() && !isBogus()) {
         compact();
 
         // Optimize contains() and span() and similar functions.
-        if (hasStrings()) {
+        ако (hasStrings()) {
             stringSpan = new UnicodeSetStringSpan(*this, *strings_, UnicodeSetStringSpan::ALL);
-            if (stringSpan == nullptr) {
+            ако (stringSpan == nullptr) {
                 setToBogus();
-                return this;
-            } else if (!stringSpan->needsStringSpanUTF16()) {
+                врати this;
+            } инако ако (!stringSpan->needsStringSpanUTF16()) {
                 // All strings are irrelevant for span() etc. because
                 // all of each string's code points are contained in this set.
                 // Do not check needsStringSpanUTF8() because UTF-8 has at most as
@@ -2189,40 +2189,40 @@ UnicodeSet* UnicodeSet::freeze() U_LIFETIME_BOUND {
                 stringSpan = nullptr;
             }
         }
-        if (stringSpan == nullptr) {
+        ако (stringSpan == nullptr) {
             // No span-relevant strings: Optimize for code point spans.
             bmpSet=new BMPSet(list, len);
-            if (bmpSet == nullptr) { // Check for memory allocation error.
+            ако (bmpSet == nullptr) { // Check for memory allocation error.
                 setToBogus();
             }
         }
     }
-    return this;
+    врати this;
 }
 
 int32_t UnicodeSet::span(const char16_t *s, int32_t length, USetSpanCondition spanCondition) const {
-    if(length>0 && bmpSet!=nullptr) {
-        return static_cast<int32_t>(bmpSet->span(s, s + length, spanCondition) - s);
+    ако(length>0 && bmpSet!=nullptr) {
+        врати static_cast<int32_t>(bmpSet->span(s, s + length, spanCondition) - s);
     }
-    if(length<0) {
+    ако(length<0) {
         length=u_strlen(s);
     }
-    if(length==0) {
-        return 0;
+    ако(length==0) {
+        врати 0;
     }
-    if(stringSpan!=nullptr) {
-        return stringSpan->span(s, length, spanCondition);
-    } else if(hasStrings()) {
+    ако(stringSpan!=nullptr) {
+        врати stringSpan->span(s, length, spanCondition);
+    } инако ако(hasStrings()) {
         uint32_t which= spanCondition==USET_SPAN_NOT_CONTAINED ?
                             UnicodeSetStringSpan::FWD_UTF16_NOT_CONTAINED :
                             UnicodeSetStringSpan::FWD_UTF16_CONTAINED;
         UnicodeSetStringSpan strSpan(*this, *strings_, which);
-        if(strSpan.needsStringSpanUTF16()) {
-            return strSpan.span(s, length, spanCondition);
+        ако(strSpan.needsStringSpanUTF16()) {
+            врати strSpan.span(s, length, spanCondition);
         }
     }
 
-    if(spanCondition!=USET_SPAN_NOT_CONTAINED) {
+    ако(spanCondition!=USET_SPAN_NOT_CONTAINED) {
         spanCondition=USET_SPAN_CONTAINED;  // Pin to 0/1 values.
     }
 
@@ -2230,36 +2230,36 @@ int32_t UnicodeSet::span(const char16_t *s, int32_t length, USetSpanCondition sp
     int32_t start=0, prev=0;
     do {
         U16_NEXT(s, start, length, c);
-        if(spanCondition!=contains(c)) {
+        ако(spanCondition!=contains(c)) {
             break;
         }
-    } while((prev=start)<length);
-    return prev;
+    } док((prev=start)<length);
+    врати prev;
 }
 
 int32_t UnicodeSet::spanBack(const char16_t *s, int32_t length, USetSpanCondition spanCondition) const {
-    if(length>0 && bmpSet!=nullptr) {
-        return static_cast<int32_t>(bmpSet->spanBack(s, s + length, spanCondition) - s);
+    ако(length>0 && bmpSet!=nullptr) {
+        врати static_cast<int32_t>(bmpSet->spanBack(s, s + length, spanCondition) - s);
     }
-    if(length<0) {
+    ако(length<0) {
         length=u_strlen(s);
     }
-    if(length==0) {
-        return 0;
+    ако(length==0) {
+        врати 0;
     }
-    if(stringSpan!=nullptr) {
-        return stringSpan->spanBack(s, length, spanCondition);
-    } else if(hasStrings()) {
+    ако(stringSpan!=nullptr) {
+        врати stringSpan->spanBack(s, length, spanCondition);
+    } инако ако(hasStrings()) {
         uint32_t which= spanCondition==USET_SPAN_NOT_CONTAINED ?
                             UnicodeSetStringSpan::BACK_UTF16_NOT_CONTAINED :
                             UnicodeSetStringSpan::BACK_UTF16_CONTAINED;
         UnicodeSetStringSpan strSpan(*this, *strings_, which);
-        if(strSpan.needsStringSpanUTF16()) {
-            return strSpan.spanBack(s, length, spanCondition);
+        ако(strSpan.needsStringSpanUTF16()) {
+            врати strSpan.spanBack(s, length, spanCondition);
         }
     }
 
-    if(spanCondition!=USET_SPAN_NOT_CONTAINED) {
+    ако(spanCondition!=USET_SPAN_NOT_CONTAINED) {
         spanCondition=USET_SPAN_CONTAINED;  // Pin to 0/1 values.
     }
 
@@ -2267,37 +2267,37 @@ int32_t UnicodeSet::spanBack(const char16_t *s, int32_t length, USetSpanConditio
     int32_t prev=length;
     do {
         U16_PREV(s, 0, length, c);
-        if(spanCondition!=contains(c)) {
+        ако(spanCondition!=contains(c)) {
             break;
         }
-    } while((prev=length)>0);
-    return prev;
+    } док((prev=length)>0);
+    врати prev;
 }
 
 int32_t UnicodeSet::spanUTF8(const char *s, int32_t length, USetSpanCondition spanCondition) const {
-    if(length>0 && bmpSet!=nullptr) {
+    ако(length>0 && bmpSet!=nullptr) {
         const uint8_t* s0 = reinterpret_cast<const uint8_t*>(s);
-        return static_cast<int32_t>(bmpSet->spanUTF8(s0, length, spanCondition) - s0);
+        врати static_cast<int32_t>(bmpSet->spanUTF8(s0, length, spanCondition) - s0);
     }
-    if(length<0) {
+    ако(length<0) {
         length = static_cast<int32_t>(uprv_strlen(s));
     }
-    if(length==0) {
-        return 0;
+    ако(length==0) {
+        врати 0;
     }
-    if(stringSpan!=nullptr) {
-        return stringSpan->spanUTF8(reinterpret_cast<const uint8_t*>(s), length, spanCondition);
-    } else if(hasStrings()) {
+    ако(stringSpan!=nullptr) {
+        врати stringSpan->spanUTF8(reinterpret_cast<const uint8_t*>(s), length, spanCondition);
+    } инако ако(hasStrings()) {
         uint32_t which= spanCondition==USET_SPAN_NOT_CONTAINED ?
                             UnicodeSetStringSpan::FWD_UTF8_NOT_CONTAINED :
                             UnicodeSetStringSpan::FWD_UTF8_CONTAINED;
         UnicodeSetStringSpan strSpan(*this, *strings_, which);
-        if(strSpan.needsStringSpanUTF8()) {
-            return strSpan.spanUTF8(reinterpret_cast<const uint8_t*>(s), length, spanCondition);
+        ако(strSpan.needsStringSpanUTF8()) {
+            врати strSpan.spanUTF8(reinterpret_cast<const uint8_t*>(s), length, spanCondition);
         }
     }
 
-    if(spanCondition!=USET_SPAN_NOT_CONTAINED) {
+    ако(spanCondition!=USET_SPAN_NOT_CONTAINED) {
         spanCondition=USET_SPAN_CONTAINED;  // Pin to 0/1 values.
     }
 
@@ -2305,37 +2305,37 @@ int32_t UnicodeSet::spanUTF8(const char *s, int32_t length, USetSpanCondition sp
     int32_t start=0, prev=0;
     do {
         U8_NEXT_OR_FFFD(s, start, length, c);
-        if(spanCondition!=contains(c)) {
+        ако(spanCondition!=contains(c)) {
             break;
         }
-    } while((prev=start)<length);
-    return prev;
+    } док((prev=start)<length);
+    врати prev;
 }
 
 int32_t UnicodeSet::spanBackUTF8(const char *s, int32_t length, USetSpanCondition spanCondition) const {
-    if(length>0 && bmpSet!=nullptr) {
+    ако(length>0 && bmpSet!=nullptr) {
         const uint8_t* s0 = reinterpret_cast<const uint8_t*>(s);
-        return bmpSet->spanBackUTF8(s0, length, spanCondition);
+        врати bmpSet->spanBackUTF8(s0, length, spanCondition);
     }
-    if(length<0) {
+    ако(length<0) {
         length = static_cast<int32_t>(uprv_strlen(s));
     }
-    if(length==0) {
-        return 0;
+    ако(length==0) {
+        врати 0;
     }
-    if(stringSpan!=nullptr) {
-        return stringSpan->spanBackUTF8(reinterpret_cast<const uint8_t*>(s), length, spanCondition);
-    } else if(hasStrings()) {
+    ако(stringSpan!=nullptr) {
+        врати stringSpan->spanBackUTF8(reinterpret_cast<const uint8_t*>(s), length, spanCondition);
+    } инако ако(hasStrings()) {
         uint32_t which= spanCondition==USET_SPAN_NOT_CONTAINED ?
                             UnicodeSetStringSpan::BACK_UTF8_NOT_CONTAINED :
                             UnicodeSetStringSpan::BACK_UTF8_CONTAINED;
         UnicodeSetStringSpan strSpan(*this, *strings_, which);
-        if(strSpan.needsStringSpanUTF8()) {
-            return strSpan.spanBackUTF8(reinterpret_cast<const uint8_t*>(s), length, spanCondition);
+        ако(strSpan.needsStringSpanUTF8()) {
+            врати strSpan.spanBackUTF8(reinterpret_cast<const uint8_t*>(s), length, spanCondition);
         }
     }
 
-    if(spanCondition!=USET_SPAN_NOT_CONTAINED) {
+    ако(spanCondition!=USET_SPAN_NOT_CONTAINED) {
         spanCondition=USET_SPAN_CONTAINED;  // Pin to 0/1 values.
     }
 
@@ -2343,11 +2343,11 @@ int32_t UnicodeSet::spanBackUTF8(const char *s, int32_t length, USetSpanConditio
     int32_t prev=length;
     do {
         U8_PREV_OR_FFFD(s, 0, length, c);
-        if(spanCondition!=contains(c)) {
+        ако(spanCondition!=contains(c)) {
             break;
         }
-    } while((prev=length)>0);
-    return prev;
+    } док((prev=length)>0);
+    врати prev;
 }
 
 U_NAMESPACE_END

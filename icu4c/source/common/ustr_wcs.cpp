@@ -27,12 +27,12 @@
 #include "ustr_imp.h"
 #include "ustr_cnv.h"
 
-#if defined(U_WCHAR_IS_UTF16) || defined(U_WCHAR_IS_UTF32) || !UCONFIG_NO_CONVERSION
+#ако defined(U_WCHAR_IS_UTF16) || defined(U_WCHAR_IS_UTF32) || !UCONFIG_NO_CONVERSION
 
 #define _STACK_BUFFER_CAPACITY 1000
 #define _BUFFER_CAPACITY_MULTIPLIER 2
 
-#if !defined(U_WCHAR_IS_UTF16) && !defined(U_WCHAR_IS_UTF32)
+#ако !defined(U_WCHAR_IS_UTF16) && !defined(U_WCHAR_IS_UTF32)
 // TODO: We should use CharString for char buffers and UnicodeString for char16_t buffers.
 // Then we could change this to work only with wchar_t buffers.
 static inline UBool 
@@ -42,22 +42,22 @@ u_growAnyBufferFromStatic(void *context,
     // Use char* not void* to avoid the compiler's strict-aliasing assumptions
     // and related warnings.
     char *newBuffer=(char *)uprv_malloc(reqCapacity*size);
-    if(newBuffer!=nullptr) {
-        if(length>0) {
+    ако(newBuffer!=nullptr) {
+        ако(length>0) {
             uprv_memcpy(newBuffer, *pBuffer, (size_t)length*size);
         }
         *pCapacity=reqCapacity;
-    } else {
+    } инако {
         *pCapacity=0;
     }
 
     /* release the old pBuffer if it was not statically allocated */
-    if(*pBuffer!=(char *)context) {
+    ако(*pBuffer!=(char *)context) {
         uprv_free(*pBuffer);
     }
 
     *pBuffer=newBuffer;
-    return newBuffer!=nullptr;
+    врати newBuffer!=nullptr;
 }
 
 /* helper function */
@@ -77,24 +77,24 @@ _strToWCS(wchar_t *dest,
     char* saveBuf = tempBuf;
     wchar_t* intTarget=nullptr;
     int32_t intTargetCapacity=0;
-    int count=0,retVal=0;
+    цео count=0,retVal=0;
     
     const char16_t *pSrcLimit =nullptr;
     const char16_t *pSrc = src;
 
     conv = u_getDefaultConverter(pErrorCode);
     
-    if(U_FAILURE(*pErrorCode)){
-        return nullptr;
+    ако(U_FAILURE(*pErrorCode)){
+        врати nullptr;
     }
     
-    if(srcLength == -1){
+    ако(srcLength == -1){
         srcLength = u_strlen(pSrc);
     }
     
     pSrcLimit = pSrc + srcLength;
 
-    for(;;) {
+    за(;;) {
         UErrorCode bufferStatus = U_ZERO_ERROR;
 
         /* convert to chars using default converter */
@@ -102,15 +102,15 @@ _strToWCS(wchar_t *dest,
         count =(tempBuf - saveBuf);
         
         /* This should rarely occur */
-        if(bufferStatus==U_BUFFER_OVERFLOW_ERROR){
+        ако(bufferStatus==U_BUFFER_OVERFLOW_ERROR){
             tempBuf = saveBuf;
             
             /* we don't have enough room on the stack grow the buffer */
             int32_t newCapacity = 2 * srcLength;
-            if(newCapacity <= tempBufCapacity) {
+            ако(newCapacity <= tempBufCapacity) {
                 newCapacity = _BUFFER_CAPACITY_MULTIPLIER * tempBufCapacity;
             }
-            if(!u_growAnyBufferFromStatic(stackBuffer,(void**) &tempBuf, &tempBufCapacity,
+            ако(!u_growAnyBufferFromStatic(stackBuffer,(void**) &tempBuf, &tempBufCapacity,
                     newCapacity, count, 1)) {
                 goto cleanup;
             }
@@ -118,8 +118,8 @@ _strToWCS(wchar_t *dest,
            saveBuf = tempBuf;
            tempBufLimit = tempBuf + tempBufCapacity;
            tempBuf = tempBuf + count;
-        } else {
-            if (U_FAILURE(bufferStatus)) {
+        } инако {
+            ако (U_FAILURE(bufferStatus)) {
                 *pErrorCode = bufferStatus;
                 goto cleanup;
             }
@@ -128,10 +128,10 @@ _strToWCS(wchar_t *dest,
     }
 
     /* done with conversion null terminate the char buffer */
-    if(count>=tempBufCapacity){
+    ако(count>=tempBufCapacity){
         tempBuf = saveBuf;
         /* we don't have enough room on the stack grow the buffer */
-        if(!u_growAnyBufferFromStatic(stackBuffer,(void**) &tempBuf, &tempBufCapacity, 
+        ако(!u_growAnyBufferFromStatic(stackBuffer,(void**) &tempBuf, &tempBufCapacity, 
                 count+1, count, 1)) {
             goto cleanup;
         }              
@@ -148,7 +148,7 @@ _strToWCS(wchar_t *dest,
     intTargetCapacity =  (count * _BUFFER_CAPACITY_MULTIPLIER + 1) /*for null termination */;
     intTarget = (wchar_t*)uprv_malloc( intTargetCapacity * sizeof(wchar_t) );
 
-    if(intTarget){
+    ако(intTarget){
 
         int32_t nulLen = 0;
         int32_t remaining = intTargetCapacity;
@@ -156,18 +156,18 @@ _strToWCS(wchar_t *dest,
         tempBuf = saveBuf;
         
         /* now convert the mbs to wcs */
-        for(;;){
+        за(;;){
             
             /* we can call the system API since we are sure that
              * there is atleast 1 null in the input
              */
             retVal = uprv_mbstowcs(pIntTarget,(tempBuf+nulLen),remaining);
             
-            if(retVal==-1){
+            ако(retVal==-1){
                 *pErrorCode = U_INVALID_CHAR_FOUND;
                 break;
-            }else if(retVal== remaining){/* should never occur */
-                int numWritten = (pIntTarget-intTarget);
+            }инако ако(retVal== remaining){/* should never occur */
+                цео numWritten = (pIntTarget-intTarget);
                 u_growAnyBufferFromStatic(nullptr,(void**) &intTarget,
                                           &intTargetCapacity,
                                           intTargetCapacity * _BUFFER_CAPACITY_MULTIPLIER,
@@ -176,53 +176,53 @@ _strToWCS(wchar_t *dest,
                 pIntTarget = intTarget;
                 remaining=intTargetCapacity;
 
-                if(nulLen!=count){ /*there are embedded nulls*/
+                ако(nulLen!=count){ /*there are embedded nulls*/
                     pIntTarget+=numWritten;
                     remaining-=numWritten;
                 }
 
-            }else{
+            }инако{
                 int32_t nulVal;
                 /*scan for nulls */
                 /* we donot check for limit since tempBuf is null terminated */
-                while(tempBuf[nulLen++] != 0){
+                док(tempBuf[nulLen++] != 0){
                 }
                 nulVal = (nulLen < srcLength) ? 1 : 0; 
                 pIntTarget = pIntTarget + retVal+nulVal;
                 remaining -=(retVal+nulVal);
             
                 /* check if we have reached the source limit*/
-                if(nulLen>=(count)){
+                ако(nulLen>=(count)){
                     break;
                 }
             }
         }
         count = (int32_t)(pIntTarget-intTarget);
        
-        if(0 < count && count <= destCapacity){
+        ако(0 < count && count <= destCapacity){
             uprv_memcpy(dest, intTarget, (size_t)count*sizeof(wchar_t));
         }  
 
-        if(pDestLength){
+        ако(pDestLength){
             *pDestLength = count;
         }
 
         /* free the allocated memory */
         uprv_free(intTarget);
 
-    }else{
+    }инако{
         *pErrorCode = U_MEMORY_ALLOCATION_ERROR;
     }
 cleanup:
     /* are we still using stack buffer */
-    if(stackBuffer != saveBuf){
+    ако(stackBuffer != saveBuf){
         uprv_free(saveBuf);
     }
     u_terminateWChars(dest,destCapacity,count,pErrorCode);
 
     u_releaseDefaultConverter(conv);
 
-    return dest;
+    врати dest;
 }
 #endif
 
@@ -235,47 +235,47 @@ u_strToWCS(wchar_t* dest U_LIFETIME_BOUND,
            UErrorCode* pErrorCode) {
 
     /* args check */
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)){
-        return nullptr;
+    ако(pErrorCode==nullptr || U_FAILURE(*pErrorCode)){
+        врати nullptr;
     }
         
-    if( (src==nullptr && srcLength!=0) || srcLength < -1 ||
+    ако( (src==nullptr && srcLength!=0) || srcLength < -1 ||
         (destCapacity<0) || (dest == nullptr && destCapacity > 0)
     ) {
         *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        врати nullptr;
     }
     
 #ifdef U_WCHAR_IS_UTF16
     /* wchar_t is UTF-16 just do a memcpy */
-    if(srcLength == -1){
+    ако(srcLength == -1){
         srcLength = u_strlen(src);
     }
-    if(0 < srcLength && srcLength <= destCapacity){
+    ако(0 < srcLength && srcLength <= destCapacity){
         u_memcpy((char16_t *)dest, src, srcLength);
     }
-    if(pDestLength){
+    ако(pDestLength){
        *pDestLength = srcLength;
     }
 
     u_terminateUChars((char16_t *)dest,destCapacity,srcLength,pErrorCode);
 
-    return dest;
+    врати dest;
 
 #elif defined U_WCHAR_IS_UTF32
     
-    return (wchar_t*)u_strToUTF32((UChar32*)dest, destCapacity, pDestLength,
+    врати (wchar_t*)u_strToUTF32((UChar32*)dest, destCapacity, pDestLength,
                                   src, srcLength, pErrorCode);
 
-#else
+#инако
     
-    return _strToWCS(dest,destCapacity,pDestLength,src,srcLength, pErrorCode);
+    врати _strToWCS(dest,destCapacity,pDestLength,src,srcLength, pErrorCode);
     
 #endif
 
 }
 
-#if !defined(U_WCHAR_IS_UTF16) && !defined(U_WCHAR_IS_UTF32)
+#ако !defined(U_WCHAR_IS_UTF16) && !defined(U_WCHAR_IS_UTF32)
 /* helper function */
 static char16_t*
 _strFromWCS( char16_t   *dest,
@@ -306,31 +306,31 @@ _strFromWCS( char16_t   *dest,
     const wchar_t* pSrc = src;
     const wchar_t* pSrcLimit = nullptr;
 
-    if(srcLength ==-1){
+    ако(srcLength ==-1){
         /* if the wchar_t source is null terminated we can safely
          * assume that there are no embedded nulls, this is a fast
          * path for null terminated strings.
          */
-        for(;;){
+        за(;;){
             /* convert wchars  to chars */
             retVal = uprv_wcstombs(pCSrc,src, cStackCap);
     
-            if(retVal == -1){
+            ако(retVal == -1){
                 *pErrorCode = U_ILLEGAL_CHAR_FOUND;
                 goto cleanup;
-            }else if(retVal >= (cStackCap-1)){
+            }инако ако(retVal >= (cStackCap-1)){
                 /* Should rarely occur */
                 u_growAnyBufferFromStatic(cStack,(void**)&pCSrc,&cStackCap,
                     cStackCap * _BUFFER_CAPACITY_MULTIPLIER, 0, sizeof(char));
                 pCSave = pCSrc;
-            }else{
+            }инако{
                 /* converted every thing */
                 pCSrc = pCSrc+retVal;
                 break;
             }
         }
         
-    }else{
+    }инако{
         /* here the source is not null terminated 
          * so it may have nulls embedded and we need to
          * do some extra processing 
@@ -339,16 +339,16 @@ _strFromWCS( char16_t   *dest,
         
         pSrcLimit = src + srcLength;
 
-        for(;;){
+        за(;;){
             int32_t nulLen = 0;
 
             /* find nulls in the string */
-            while(nulLen<srcLength && pSrc[nulLen++]!=0){
+            док(nulLen<srcLength && pSrc[nulLen++]!=0){
             }
 
-            if((pSrc+nulLen) < pSrcLimit){
+            ако((pSrc+nulLen) < pSrcLimit){
                 /* check if we have enough room in pCSrc */
-                if(remaining < (nulLen * MB_CUR_MAX)){
+                ако(remaining < (nulLen * MB_CUR_MAX)){
                     /* should rarely occur */
                     int32_t len = (pCSrc-pCSave);
                     pCSrc = pCSave;
@@ -366,7 +366,7 @@ _strFromWCS( char16_t   *dest,
                  */
                 retVal = uprv_wcstombs(pCSrc,pSrc,remaining);
 
-                if(retVal==-1){
+                ако(retVal==-1){
                     /* an error occurred bail out */
                     *pErrorCode = U_ILLEGAL_CHAR_FOUND;
                     goto cleanup;
@@ -379,21 +379,21 @@ _strFromWCS( char16_t   *dest,
                 remaining -= (pCSrc-pCSave);
 
 
-            }else{
+            }инако{
                 /* the source is not null terminated and we are 
                  * end of source so we copy the source to a temp buffer
                  * null terminate it and convert wchar_ts to chars
                  */
-                if(nulLen >= _STACK_BUFFER_CAPACITY){
+                ако(nulLen >= _STACK_BUFFER_CAPACITY){
                     /* Should rarely occur */
                     /* allocate new buffer buffer */
                     pWStack =(wchar_t*) uprv_malloc(sizeof(wchar_t) * (nulLen + 1));
-                    if(pWStack==nullptr){
+                    ако(pWStack==nullptr){
                         *pErrorCode = U_MEMORY_ALLOCATION_ERROR;
                         goto cleanup;
                     }
                 }
-                if(nulLen>0){
+                ако(nulLen>0){
                     /* copy the contents to tempStack */
                     uprv_memcpy(pWStack, pSrc, (size_t)nulLen*sizeof(wchar_t));
                 }
@@ -401,7 +401,7 @@ _strFromWCS( char16_t   *dest,
                 /* null terminate the tempBuffer */
                 pWStack[nulLen] =0 ;
             
-                if(remaining < (nulLen * MB_CUR_MAX)){
+                ако(remaining < (nulLen * MB_CUR_MAX)){
                     /* Should rarely occur */
                     int32_t len = (pCSrc-pCSave);
                     pCSrc = pCSave;
@@ -434,11 +434,11 @@ _strFromWCS( char16_t   *dest,
     
     conv= u_getDefaultConverter(pErrorCode);
     
-    if(U_FAILURE(*pErrorCode)|| conv==nullptr){
+    ако(U_FAILURE(*pErrorCode)|| conv==nullptr){
         goto cleanup;
     }
     
-    for(;;) {
+    за(;;) {
         UErrorCode bufferStatus = U_ZERO_ERROR;
 
         /* convert to stack buffer*/
@@ -447,12 +447,12 @@ _strFromWCS( char16_t   *dest,
         /* increment count to number written to stack */
         count+= pTarget - target;
 
-        if(bufferStatus==U_BUFFER_OVERFLOW_ERROR){
+        ако(bufferStatus==U_BUFFER_OVERFLOW_ERROR){
             target = uStack;
             pTarget = uStack;
             pTargetLimit = uStack + _STACK_BUFFER_CAPACITY;
-        } else {
-            if (U_FAILURE(bufferStatus)) {
+        } инако {
+            ако (U_FAILURE(bufferStatus)) {
                 *pErrorCode = bufferStatus;
             }
             break;
@@ -460,7 +460,7 @@ _strFromWCS( char16_t   *dest,
         
     }
     
-    if(pDestLength){
+    ако(pDestLength){
         *pDestLength =count;
     }
 
@@ -468,17 +468,17 @@ _strFromWCS( char16_t   *dest,
     
 cleanup:
  
-    if(cStack != pCSave){
+    ако(cStack != pCSave){
         uprv_free(pCSave);
     }
 
-    if(wStack != pWStack){
+    ако(wStack != pWStack){
         uprv_free(pWStack);
     }
     
     u_releaseDefaultConverter(conv);
 
-    return dest;
+    врати dest;
 }
 #endif
 
@@ -492,41 +492,41 @@ u_strFromWCS(char16_t* dest U_LIFETIME_BOUND,
 {
 
     /* args check */
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)){
-        return nullptr;
+    ако(pErrorCode==nullptr || U_FAILURE(*pErrorCode)){
+        врати nullptr;
     }
 
-    if( (src==nullptr && srcLength!=0) || srcLength < -1 ||
+    ако( (src==nullptr && srcLength!=0) || srcLength < -1 ||
         (destCapacity<0) || (dest == nullptr && destCapacity > 0)
     ) {
         *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        врати nullptr;
     }
 
 #ifdef U_WCHAR_IS_UTF16
     /* wchar_t is UTF-16 just do a memcpy */
-    if(srcLength == -1){
+    ако(srcLength == -1){
         srcLength = u_strlen((const char16_t *)src);
     }
-    if(0 < srcLength && srcLength <= destCapacity){
+    ако(0 < srcLength && srcLength <= destCapacity){
         u_memcpy(dest, (const char16_t *)src, srcLength);
     }
-    if(pDestLength){
+    ако(pDestLength){
        *pDestLength = srcLength;
     }
 
     u_terminateUChars(dest,destCapacity,srcLength,pErrorCode);
 
-    return dest;
+    врати dest;
 
 #elif defined U_WCHAR_IS_UTF32
     
-    return u_strFromUTF32(dest, destCapacity, pDestLength,
+    врати u_strFromUTF32(dest, destCapacity, pDestLength,
                           (UChar32*)src, srcLength, pErrorCode);
 
-#else
+#инако
 
-    return _strFromWCS(dest,destCapacity,pDestLength,src,srcLength,pErrorCode);  
+    врати _strFromWCS(dest,destCapacity,pDestLength,src,srcLength,pErrorCode);  
 
 #endif
 
