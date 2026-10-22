@@ -14,10 +14,10 @@
 #ifndef CHARSTRING_H
 #define CHARSTRING_H
 
-#include "unicode/utypes.h"
-#include "unicode/unistr.h"
-#include "unicode/uobject.h"
-#include "cmemory.h"
+#अन्तर्भाव "unicode/utypes.h"
+#अन्तर्भाव "unicode/unistr.h"
+#अन्तर्भाव "unicode/uobject.h"
+#अन्तर्भाव "cmemory.h"
 
 U_NAMESPACE_BEGIN
 
@@ -32,18 +32,18 @@ U_NAMESPACE_BEGIN
  * For example:
  *   cs.data()[5]='a';  // no need for setCharAt(5, 'a')
  */
-class U_COMMON_API_CLASS CharString : public UMemory {
-public:
+class U_COMMON_API_CLASS CharString : सार्वजनिक UMemory {
+सार्वजनिक:
     U_COMMON_API CharString() : len(0) { buffer[0]=0; }
     U_COMMON_API CharString(StringPiece s, UErrorCode &errorCode) : len(0) {
         buffer[0]=0;
         append(s, errorCode);
     }
-    U_COMMON_API CharString(const CharString &s, UErrorCode &errorCode) : len(0) {
+    U_COMMON_API CharString(ध्रुव CharString &s, UErrorCode &errorCode) : len(0) {
         buffer[0]=0;
         append(s, errorCode);
     }
-    U_COMMON_API CharString(const char *s, int32_t sLength, UErrorCode &errorCode) : len(0) {
+    U_COMMON_API CharString(ध्रुव वर्ण *s, int32_t sLength, UErrorCode &errorCode) : len(0) {
         buffer[0]=0;
         append(s, sLength, errorCode);
     }
@@ -67,21 +67,21 @@ public:
      * the assignment operator, to make copies explicit and to
      * use a UErrorCode where memory allocations might be needed.
      */
-    U_COMMON_API CharString &copyFrom(const CharString &other, UErrorCode &errorCode);
+    U_COMMON_API CharString &copyFrom(ध्रुव CharString &other, UErrorCode &errorCode);
     U_COMMON_API CharString &copyFrom(StringPiece s, UErrorCode &errorCode);
 
-    U_COMMON_API UBool isEmpty() const { return len==0; }
-    U_COMMON_API int32_t length() const { return len; }
-    U_COMMON_API char operator[](int32_t index) const { return buffer[index]; }
-    U_COMMON_API StringPiece toStringPiece() const { return StringPiece(buffer.getAlias(), len); }
+    U_COMMON_API UBool isEmpty() ध्रुव { प्रत्यागम len==0; }
+    U_COMMON_API int32_t length() ध्रुव { प्रत्यागम len; }
+    U_COMMON_API वर्ण operator[](int32_t index) ध्रुव { प्रत्यागम buffer[index]; }
+    U_COMMON_API StringPiece toStringPiece() ध्रुव { प्रत्यागम StringPiece(buffer.getAlias(), len); }
 
-    U_COMMON_API const char *data() const { return buffer.getAlias(); }
-    U_COMMON_API char *data() { return buffer.getAlias(); }
+    U_COMMON_API ध्रुव वर्ण *data() ध्रुव { प्रत्यागम buffer.getAlias(); }
+    U_COMMON_API वर्ण *data() { प्रत्यागम buffer.getAlias(); }
     /**
      * Allocates length()+1 chars and copies the NUL-terminated data().
      * The caller must uprv_free() the result.
      */
-    U_COMMON_API char *cloneData(UErrorCode &errorCode) const;
+    U_COMMON_API वर्ण *cloneData(UErrorCode &errorCode) ध्रुव;
     /**
      * Copies the contents of the string into dest.
      * Checks if there is enough space in dest, extracts the entire string if possible,
@@ -97,40 +97,40 @@ public:
      * @param errorCode ICU error code.
      * @return length()
      */
-    U_COMMON_API int32_t extract(char *dest, int32_t capacity, UErrorCode &errorCode) const;
+    U_COMMON_API int32_t extract(वर्ण *dest, int32_t capacity, UErrorCode &errorCode) ध्रुव;
 
-    U_COMMON_API bool operator==(const CharString& other) const {
-        return len == other.length() && (len == 0 || uprv_memcmp(data(), other.data(), len) == 0);
+    U_COMMON_API bool operator==(ध्रुव CharString& other) ध्रुव {
+        प्रत्यागम len == other.length() && (len == 0 || uprv_memcmp(data(), other.data(), len) == 0);
     }
-    U_COMMON_API bool operator!=(const CharString& other) const {
-        return !operator==(other);
+    U_COMMON_API bool operator!=(ध्रुव CharString& other) ध्रुव {
+        प्रत्यागम !operator==(other);
     }
 
-    U_COMMON_API bool operator==(StringPiece other) const {
-        return len == other.length() && (len == 0 || uprv_memcmp(data(), other.data(), len) == 0);
+    U_COMMON_API bool operator==(StringPiece other) ध्रुव {
+        प्रत्यागम len == other.length() && (len == 0 || uprv_memcmp(data(), other.data(), len) == 0);
     }
-    U_COMMON_API bool operator!=(StringPiece other) const {
-        return !operator==(other);
+    U_COMMON_API bool operator!=(StringPiece other) ध्रुव {
+        प्रत्यागम !operator==(other);
     }
 
     /** @return last index of c, or -1 if c is not in this string */
-    U_COMMON_API int32_t lastIndexOf(char c) const;
+    U_COMMON_API int32_t lastIndexOf(वर्ण c) ध्रुव;
 
-    U_COMMON_API bool contains(StringPiece s) const;
+    U_COMMON_API bool contains(StringPiece s) ध्रुव;
 
-    U_COMMON_API CharString &clear() { len=0; buffer[0]=0; return *this; }
+    U_COMMON_API CharString &clear() { len=0; buffer[0]=0; प्रत्यागम *this; }
     U_COMMON_API CharString &truncate(int32_t newLength);
 
-    U_COMMON_API CharString &append(char c, UErrorCode &errorCode);
+    U_COMMON_API CharString &append(वर्ण c, UErrorCode &errorCode);
     U_COMMON_API CharString &append(StringPiece s, UErrorCode &errorCode) {
-        return append(s.data(), s.length(), errorCode);
+        प्रत्यागम append(s.data(), s.length(), errorCode);
     }
-    U_COMMON_API CharString &append(const CharString &s, UErrorCode &errorCode) {
-        return append(s.data(), s.length(), errorCode);
+    U_COMMON_API CharString &append(ध्रुव CharString &s, UErrorCode &errorCode) {
+        प्रत्यागम append(s.data(), s.length(), errorCode);
     }
-    U_COMMON_API CharString &append(const char *s, int32_t sLength, UErrorCode &status);
+    U_COMMON_API CharString &append(ध्रुव वर्ण *s, int32_t sLength, UErrorCode &status);
 
-    U_COMMON_API CharString &appendNumber(int64_t number, UErrorCode &status);
+    U_COMMON_API CharString &append_संख्या(int64_t संख्या, UErrorCode &status);
 
     /**
      * Returns a writable buffer for appending and writes the buffer's capacity to
@@ -152,13 +152,13 @@ public:
      * @param errorCode in/out error code
      * @return a buffer with resultCapacity>=min_capacity
      */
-    U_COMMON_API char *getAppendBuffer(int32_t minCapacity,
+    U_COMMON_API वर्ण *getAppendBuffer(int32_t minCapacity,
                                        int32_t desiredCapacityHint,
                                        int32_t &resultCapacity,
                                        UErrorCode &errorCode);
 
-    U_COMMON_API CharString &appendInvariantChars(const UnicodeString &s, UErrorCode &errorCode);
-    U_COMMON_API CharString &appendInvariantChars(const char16_t* uchars,
+    U_COMMON_API CharString &appendInvariantChars(ध्रुव UnicodeString &s, UErrorCode &errorCode);
+    U_COMMON_API CharString &appendInvariantChars(ध्रुव char16_t* uchars,
                                                   int32_t ucharsLen,
                                                   UErrorCode& errorCode);
 
@@ -175,20 +175,20 @@ public:
      */
     U_COMMON_API CharString &ensureEndsWithFileSeparator(UErrorCode &errorCode);
 
-private:
-    MaybeStackArray<char, 40> buffer;
+गुप्त:
+    Maybe_ढेर_Array<वर्ण, 40> buffer;
     int32_t len;
 
     UBool ensureCapacity(int32_t capacity, int32_t desiredCapacityHint, UErrorCode &errorCode);
 
-    CharString(const CharString &other) = delete; // forbid copying of this class
-    CharString &operator=(const CharString &other) = delete; // forbid copying of this class
+    CharString(ध्रुव CharString &other) = delete; // forbid copying of this class
+    CharString &operator=(ध्रुव CharString &other) = delete; // forbid copying of this class
 
     /**
      * Returns U_FILE_ALT_SEP_CHAR if found in string, and U_FILE_SEP_CHAR is not found.
      * Otherwise returns U_FILE_SEP_CHAR.
      */
-    char getDirSepChar() const;
+    वर्ण getDirSepChar() ध्रुव;
 };
 
 U_NAMESPACE_END
