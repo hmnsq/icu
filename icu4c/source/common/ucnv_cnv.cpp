@@ -17,166 +17,166 @@
 *   06/29/2000  helena      Major rewrite of the callback APIs.
 */
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#إذا !UCONFIG_NO_CONVERSION
 
-#include "unicode/ucnv_err.h"
-#include "unicode/ucnv.h"
-#include "unicode/uset.h"
-#include "ucnv_cnv.h"
-#include "ucnv_bld.h"
-#include "cmemory.h"
+#ضمن "unicode/ucnv_err.h"
+#ضمن "unicode/ucnv.h"
+#ضمن "unicode/uset.h"
+#ضمن "ucnv_cnv.h"
+#ضمن "ucnv_bld.h"
+#ضمن "cmemory.h"
 
-U_CFUNC void
-ucnv_getCompleteUnicodeSet(const UConverter *cnv,
-                   const USetAdder *sa,
-                   UConverterUnicodeSet which,
-                   UErrorCode *pErrorCode) {
-    (void)cnv;
-    (void)which;
-    (void)pErrorCode;
-    sa->addRange(sa->set, 0, 0x10ffff);
+U_CFUNC فراغ
+ucnv_get_Complete_Unicode_مجموعه(ثابت UConverter *cnv,
+                   ثابت USetAdder *sa,
+                   UConverter_Unicode_مجموعه which,
+                   UError_کد *p_Error_کد) {
+    (فراغ)cnv;
+    (فراغ)which;
+    (فراغ)p_Error_کد;
+    sa->جمع_کن_Range(sa->مجموعه, 0, 0x10ffff);
 }
 
-U_CFUNC void
-ucnv_getNonSurrogateUnicodeSet(const UConverter *cnv,
-                               const USetAdder *sa,
-                               UConverterUnicodeSet which,
-                               UErrorCode *pErrorCode) {
-    (void)cnv;
-    (void)which;
-    (void)pErrorCode;
-    sa->addRange(sa->set, 0, 0xd7ff);
-    sa->addRange(sa->set, 0xe000, 0x10ffff);
+U_CFUNC فراغ
+ucnv_get_Non_Surrogate_Unicode_مجموعه(ثابت UConverter *cnv,
+                               ثابت USetAdder *sa,
+                               UConverter_Unicode_مجموعه which,
+                               UError_کد *p_Error_کد) {
+    (فراغ)cnv;
+    (فراغ)which;
+    (فراغ)p_Error_کد;
+    sa->جمع_کن_Range(sa->مجموعه, 0, 0xd7ff);
+    sa->جمع_کن_Range(sa->مجموعه, 0xe000, 0x10ffff);
 }
 
-U_CFUNC void
-ucnv_fromUWriteBytes(UConverter *cnv,
-                     const char *bytes, int32_t length,
-                     char **target, const char *targetLimit,
+U_CFUNC فراغ
+ucnv_from_UWrite_بایتها(UConverter *cnv,
+                     ثابت حرف *بایتها, int32_t length,
+                     حرف **هدف, ثابت حرف *هدف_حد,
                      int32_t **offsets,
-                     int32_t sourceIndex,
-                     UErrorCode *pErrorCode) {
-    char *t=*target;
+                     int32_t منبع_شاخص,
+                     UError_کد *p_Error_کد) {
+    حرف *t=*هدف;
     int32_t *o;
 
     /* write bytes */
-    if(offsets==nullptr || (o=*offsets)==nullptr) {
-        while(length>0 && t<targetLimit) {
-            *t++=*bytes++;
+    إذا(offsets==اشاره_تهی || (o=*offsets)==اشاره_تهی) {
+        طالما(length>0 && t<هدف_حد) {
+            *t++=*بایتها++;
             --length;
         }
-    } else {
+    } وإلا {
         /* output with offsets */
-        while(length>0 && t<targetLimit) {
-            *t++=*bytes++;
-            *o++=sourceIndex;
+        طالما(length>0 && t<هدف_حد) {
+            *t++=*بایتها++;
+            *o++=منبع_شاخص;
             --length;
         }
         *offsets=o;
     }
-    *target=t;
+    *هدف=t;
 
     /* write overflow */
-    if(length>0) {
-        if(cnv!=nullptr) {
-            t=(char *)cnv->charErrorBuffer;
-            cnv->charErrorBufferLength=(int8_t)length;
-            do {
-                *t++=(uint8_t)*bytes++;
-            } while(--length>0);
+    إذا(length>0) {
+        إذا(cnv!=اشاره_تهی) {
+            t=(حرف *)cnv->char_Error_میانگیر;
+            cnv->char_Error_میانگیر_درازی=(int8_t)length;
+            افعل {
+                *t++=(uint8_t)*بایتها++;
+            } طالما(--length>0);
         }
-        *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+        *p_Error_کد=U_میانگیر_سرریز_ERROR;
     }
 }
 
-U_CFUNC void
-ucnv_toUWriteUChars(UConverter *cnv,
-                    const char16_t *uchars, int32_t length,
-                    char16_t **target, const char16_t *targetLimit,
+U_CFUNC فراغ
+ucnv_مقصد_UWrite_UChars(UConverter *cnv,
+                    ثابت char16_t *uchars, int32_t length,
+                    char16_t **هدف, ثابت char16_t *هدف_حد,
                     int32_t **offsets,
-                    int32_t sourceIndex,
-                    UErrorCode *pErrorCode) {
-    char16_t *t=*target;
+                    int32_t منبع_شاخص,
+                    UError_کد *p_Error_کد) {
+    char16_t *t=*هدف;
     int32_t *o;
 
     /* write UChars */
-    if(offsets==nullptr || (o=*offsets)==nullptr) {
-        while(length>0 && t<targetLimit) {
+    إذا(offsets==اشاره_تهی || (o=*offsets)==اشاره_تهی) {
+        طالما(length>0 && t<هدف_حد) {
             *t++=*uchars++;
             --length;
         }
-    } else {
+    } وإلا {
         /* output with offsets */
-        while(length>0 && t<targetLimit) {
+        طالما(length>0 && t<هدف_حد) {
             *t++=*uchars++;
-            *o++=sourceIndex;
+            *o++=منبع_شاخص;
             --length;
         }
         *offsets=o;
     }
-    *target=t;
+    *هدف=t;
 
     /* write overflow */
-    if(length>0) {
-        if(cnv!=nullptr) {
-            t=cnv->UCharErrorBuffer;
-            cnv->UCharErrorBufferLength=(int8_t)length;
-            do {
+    إذا(length>0) {
+        إذا(cnv!=اشاره_تهی) {
+            t=cnv->UChar_Error_میانگیر;
+            cnv->UChar_Error_میانگیر_درازی=(int8_t)length;
+            افعل {
                 *t++=*uchars++;
-            } while(--length>0);
+            } طالما(--length>0);
         }
-        *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+        *p_Error_کد=U_میانگیر_سرریز_ERROR;
     }
 }
 
-U_CFUNC void
-ucnv_toUWriteCodePoint(UConverter *cnv,
+U_CFUNC فراغ
+ucnv_مقصد_UWrite_کد_نقطه(UConverter *cnv,
                        UChar32 c,
-                       char16_t **target, const char16_t *targetLimit,
+                       char16_t **هدف, ثابت char16_t *هدف_حد,
                        int32_t **offsets,
-                       int32_t sourceIndex,
-                       UErrorCode *pErrorCode) {
+                       int32_t منبع_شاخص,
+                       UError_کد *p_Error_کد) {
     char16_t *t;
     int32_t *o;
 
-    t=*target;
+    t=*هدف;
 
-    if(t<targetLimit) {
-        if(c<=0xffff) {
+    إذا(t<هدف_حد) {
+        إذا(c<=0xffff) {
             *t++=(char16_t)c;
             c=U_SENTINEL;
-        } else /* c is a supplementary code point */ {
+        } وإلا /* c is a supplementary code point */ {
             *t++=U16_LEAD(c);
             c=U16_TRAIL(c);
-            if(t<targetLimit) {
+            إذا(t<هدف_حد) {
                 *t++=(char16_t)c;
                 c=U_SENTINEL;
             }
         }
 
         /* write offsets */
-        if(offsets!=nullptr && (o=*offsets)!=nullptr) {
-            *o++=sourceIndex;
-            if((*target+1)<t) {
-                *o++=sourceIndex;
+        إذا(offsets!=اشاره_تهی && (o=*offsets)!=اشاره_تهی) {
+            *o++=منبع_شاخص;
+            إذا((*هدف+1)<t) {
+                *o++=منبع_شاخص;
             }
             *offsets=o;
         }
     }
 
-    *target=t;
+    *هدف=t;
 
     /* write overflow from c */
-    if(c>=0) {
-        if(cnv!=nullptr) {
+    إذا(c>=0) {
+        إذا(cnv!=اشاره_تهی) {
             int8_t i=0;
-            U16_APPEND_UNSAFE(cnv->UCharErrorBuffer, i, c);
-            cnv->UCharErrorBufferLength=i;
+            U16_APPEND_UNSAFE(cnv->UChar_Error_میانگیر, i, c);
+            cnv->UChar_Error_میانگیر_درازی=i;
         }
-        *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+        *p_Error_کد=U_میانگیر_سرریز_ERROR;
     }
 }
 
-#endif
+#پایان_اگر

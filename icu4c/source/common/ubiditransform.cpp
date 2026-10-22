@@ -15,29 +15,29 @@
 *
 */
 
-#include "cmemory.h"
-#include "unicode/ubidi.h"
-#include "unicode/ustring.h"
-#include "unicode/ushape.h"
-#include "unicode/utf16.h"
-#include "ustr_imp.h"
-#include "unicode/ubiditransform.h"
+#ضمن "cmemory.h"
+#ضمن "unicode/ubidi.h"
+#ضمن "unicode/ustring.h"
+#ضمن "unicode/ushape.h"
+#ضمن "unicode/utf16.h"
+#ضمن "ustr_imp.h"
+#ضمن "unicode/ubiditransform.h"
 
 /* Some convenience defines */
-#define LTR                     UBIDI_LTR
-#define RTL                     UBIDI_RTL
-#define LOGICAL                 UBIDI_LOGICAL
-#define VISUAL                  UBIDI_VISUAL
-#define SHAPE_LOGICAL           U_SHAPE_TEXT_DIRECTION_LOGICAL
-#define SHAPE_VISUAL            U_SHAPE_TEXT_DIRECTION_VISUAL_LTR
+#تعریف_کن LTR                     UBIDI_LTR
+#تعریف_کن RTL                     UBIDI_RTL
+#تعریف_کن LOGICAL                 UBIDI_LOGICAL
+#تعریف_کن VISUAL                  UBIDI_VISUAL
+#تعریف_کن SHAPE_LOGICAL           U_SHAPE_متن_DIRECTION_LOGICAL
+#تعریف_کن SHAPE_VISUAL            U_SHAPE_متن_DIRECTION_VISUAL_LTR
 
-#define CHECK_LEN(STR, LEN, ERROR) UPRV_BLOCK_MACRO_BEGIN { \
-    if (LEN == 0) return 0; \
-    if (LEN < -1) { *(ERROR) = U_ILLEGAL_ARGUMENT_ERROR; return 0; } \
-    if (LEN == -1) LEN = u_strlen(STR); \
-} UPRV_BLOCK_MACRO_END
+#تعریف_کن CHECK_LEN(STR, LEN, ERROR) UPRV_بلوک_MACRO_BEGIN { \
+    إذا (LEN == 0) أرجع 0; \
+    إذا (LEN < -1) { *(ERROR) = U_ILLEGAL_آرگومان_ERROR; أرجع 0; } \
+    إذا (LEN == -1) LEN = u_strlen(STR); \
+} UPRV_بلوک_MACRO_انتها
 
-#define MAX_ACTIONS     7
+#تعریف_کن MAX_ACTIONS     7
 
 /**
  * Typedef for a pointer to a function, which performs some operation (such as
@@ -45,7 +45,7 @@
  * indicates whether the text was changed in the course of this operation or
  * not.
  */
-typedef UBool (*UBiDiAction)(UBiDiTransform *, UErrorCode *);
+تعريفنوع UBool (*UBiDiAction)(UBiDiTransform *, UError_کد *);
 
 /**
  * Structure that holds a predefined reordering scheme, including the following
@@ -64,52 +64,52 @@ typedef UBool (*UBiDiAction)(UBiDiTransform *, UErrorCode *);
  *     transformation.</li>
  * </ul>
  */
-typedef struct {
-    UBiDiLevel        inLevel;               /* input level */
-    UBiDiOrder        inOrder;               /* input order */
-    UBiDiLevel        outLevel;              /* output level */
-    UBiDiOrder        outOrder;              /* output order */
+تعريفنوع بنية {
+    UBiDiLevel        درون_Level;               /* input level */
+    UBi_Di_ترتیب        درون_ترتیب;               /* input order */
+    UBiDiLevel        بیرون_Level;              /* output level */
+    UBi_Di_ترتیب        بیرون_ترتیب;              /* output order */
     uint32_t          digitsDir;             /* digit shaping direction */
     uint32_t          lettersDir;            /* letter shaping direction */
-    UBiDiLevel        baseLevel;             /* paragraph level to be used with setPara */
-    const UBiDiAction actions[MAX_ACTIONS];  /* array of pointers to functions carrying out the transformation */
+    UBiDiLevel        پایه_Level;             /* paragraph level to be used with setPara */
+    ثابت UBiDiAction actions[MAX_ACTIONS];  /* array of pointers to functions carrying out the transformation */
 } ReorderingScheme;
 
-struct UBiDiTransform {
+بنية UBiDiTransform {
     UBiDi                   *pBidi;             /* pointer to a UBiDi object */
-    const ReorderingScheme  *pActiveScheme;     /* effective reordering scheme */
+    ثابت ReorderingScheme  *p_فعال_Scheme;     /* effective reordering scheme */
     char16_t                *src;               /* input text */
     char16_t                *dest;              /* output text */
-    uint32_t                srcLength;          /* input text length - not really needed as we are zero-terminated and can u_strlen */
-    uint32_t                srcSize;            /* input text capacity excluding the trailing zero */
-    uint32_t                destSize;           /* output text capacity */
-    uint32_t                *pDestLength;       /* number of UChars written to dest */
+    uint32_t                src_درازی;          /* input text length - not really needed as we are zero-terminated and can u_strlen */
+    uint32_t                src_اندازه;            /* input text capacity excluding the trailing zero */
+    uint32_t                dest_اندازه;           /* output text capacity */
+    uint32_t                *p_Dest_درازی;       /* number of UChars written to dest */
     uint32_t                reorderingOptions;  /* reordering options - currently only suppot DO_MIRRORING */
     uint32_t                digits;             /* digit option for ArabicShaping */
     uint32_t                letters;            /* letter option for ArabicShaping */
 };
 
 U_CAPI UBiDiTransform* U_EXPORT2
-ubiditransform_open(UErrorCode *pErrorCode)
+ubiditransform_open(UError_کد *p_Error_کد)
 {
-    UBiDiTransform *pBiDiTransform = nullptr;
-    if (U_SUCCESS(*pErrorCode)) {
-        pBiDiTransform = (UBiDiTransform*) uprv_calloc(1, sizeof(UBiDiTransform));
-        if (pBiDiTransform == nullptr) {
-            *pErrorCode = U_MEMORY_ALLOCATION_ERROR;
+    UBiDiTransform *pBiDiTransform = اشاره_تهی;
+    إذا (U_SUCCESS(*p_Error_کد)) {
+        pBiDiTransform = (UBiDiTransform*) uprv_calloc(1, حجم(UBiDiTransform));
+        إذا (pBiDiTransform == اشاره_تهی) {
+            *p_Error_کد = U_حافظه_تخصیص_ERROR;
         }
     }
-    return pBiDiTransform;
+    أرجع pBiDiTransform;
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI فراغ U_EXPORT2
 ubiditransform_close(UBiDiTransform *pBiDiTransform)
 {
-    if (pBiDiTransform != nullptr) {
-        if (pBiDiTransform->pBidi != nullptr) {
+    إذا (pBiDiTransform != اشاره_تهی) {
+        إذا (pBiDiTransform->pBidi != اشاره_تهی) {
             ubidi_close(pBiDiTransform->pBidi);
         }
-        if (pBiDiTransform->src != nullptr) {
+        إذا (pBiDiTransform->src != اشاره_تهی) {
             uprv_free(pBiDiTransform->src);
         }
         uprv_free(pBiDiTransform);
@@ -125,12 +125,12 @@ ubiditransform_close(UBiDiTransform *pBiDiTransform)
  * @return Whether or not this function modifies the text. Besides the return
  * value, the caller should also check <code>U_SUCCESS(*pErrorCode)</code>.
  */
-static UBool
-action_resolve(UBiDiTransform *pTransform, UErrorCode *pErrorCode)
+ساكن UBool
+action_resolve(UBiDiTransform *pTransform, UError_کد *p_Error_کد)
 {
-    ubidi_setPara(pTransform->pBidi, pTransform->src, pTransform->srcLength,
-            pTransform->pActiveScheme->baseLevel, nullptr, pErrorCode);
-    return false;
+    ubidi_مجموعه_Para(pTransform->pBidi, pTransform->src, pTransform->src_درازی,
+            pTransform->p_فعال_Scheme->پایه_Level, اشاره_تهی, p_Error_کد);
+    أرجع خطأ;
 }
 
 /**
@@ -142,15 +142,15 @@ action_resolve(UBiDiTransform *pTransform, UErrorCode *pErrorCode)
  * @return Whether or not this function modifies the text. Besides the return
  * value, the caller should also check <code>U_SUCCESS(*pErrorCode)</code>.
  */
-static UBool
-action_reorder(UBiDiTransform *pTransform, UErrorCode *pErrorCode)
+ساكن UBool
+action_reorder(UBiDiTransform *pTransform, UError_کد *p_Error_کد)
 {
-    ubidi_writeReordered(pTransform->pBidi, pTransform->dest, pTransform->destSize,
-            static_cast<uint16_t>(pTransform->reorderingOptions), pErrorCode);
+    ubidi_writeReordered(pTransform->pBidi, pTransform->dest, pTransform->dest_اندازه,
+            static_cast<uint16_t>(pTransform->reorderingOptions), p_Error_کد);
 
-    *pTransform->pDestLength = pTransform->srcLength;
+    *pTransform->p_Dest_درازی = pTransform->src_درازی;
     pTransform->reorderingOptions = UBIDI_REORDER_DEFAULT;
-    return true;
+    أرجع درست;
 }
 
 /**
@@ -162,13 +162,13 @@ action_reorder(UBiDiTransform *pTransform, UErrorCode *pErrorCode)
  * @return Whether or not this function modifies the text. Besides the return
  * value, the caller should also check <code>U_SUCCESS(*pErrorCode)</code>.
  */
-static UBool
-action_setInverse(UBiDiTransform *pTransform, UErrorCode *pErrorCode)
+ساكن UBool
+action_مجموعه_Inverse(UBiDiTransform *pTransform, UError_کد *p_Error_کد)
 {
-    (void)pErrorCode;
-    ubidi_setInverse(pTransform->pBidi, true);
-    ubidi_setReorderingMode(pTransform->pBidi, UBIDI_REORDER_INVERSE_LIKE_DIRECT);
-    return false;
+    (فراغ)p_Error_کد;
+    ubidi_مجموعه_Inverse(pTransform->pBidi, درست);
+    ubidi_مجموعه_Reordering_نما(pTransform->pBidi, UBIDI_REORDER_INVERSE_LIKE_مستقیم);
+    أرجع خطأ;
 }
 
 /**
@@ -181,12 +181,12 @@ action_setInverse(UBiDiTransform *pTransform, UErrorCode *pErrorCode)
  * @return Whether or not this function modifies the text. Besides the return
  * value, the caller should also check <code>U_SUCCESS(*pErrorCode)</code>.
  */
-static UBool
-action_setRunsOnly(UBiDiTransform *pTransform, UErrorCode *pErrorCode)
+ساكن UBool
+action_مجموعه_Runs_Only(UBiDiTransform *pTransform, UError_کد *p_Error_کد)
 {
-    (void)pErrorCode;
-    ubidi_setReorderingMode(pTransform->pBidi, UBIDI_REORDER_RUNS_ONLY);
-    return false;
+    (فراغ)p_Error_کد;
+    ubidi_مجموعه_Reordering_نما(pTransform->pBidi, UBIDI_REORDER_RUNS_ONLY);
+    أرجع خطأ;
 }
 
 /**
@@ -198,14 +198,14 @@ action_setRunsOnly(UBiDiTransform *pTransform, UErrorCode *pErrorCode)
  * @return Whether or not this function modifies the text. Besides the return
  * value, the caller should also check <code>U_SUCCESS(*pErrorCode)</code>.
  */
-static UBool
-action_reverse(UBiDiTransform *pTransform, UErrorCode *pErrorCode)
+ساكن UBool
+action_معکوس(UBiDiTransform *pTransform, UError_کد *p_Error_کد)
 {
-    ubidi_writeReverse(pTransform->src, pTransform->srcLength,
-            pTransform->dest, pTransform->destSize,
-            UBIDI_REORDER_DEFAULT, pErrorCode);
-    *pTransform->pDestLength = pTransform->srcLength;
-    return true;
+    ubidi_write_معکوس(pTransform->src, pTransform->src_درازی,
+            pTransform->dest, pTransform->dest_اندازه,
+            UBIDI_REORDER_DEFAULT, p_Error_کد);
+    *pTransform->p_Dest_درازی = pTransform->src_درازی;
+    أرجع درست;
 }
 
 /**
@@ -219,31 +219,31 @@ action_reverse(UBiDiTransform *pTransform, UErrorCode *pErrorCode)
  * @param newSize A new source capacity in <code>char16_t</code>s.
  * @param pErrorCode Pointer to the error code value.
  */
-static void
-updateSrc(UBiDiTransform *pTransform, const char16_t *newSrc, uint32_t newLength,
-        uint32_t newSize, UErrorCode *pErrorCode)
+ساكن فراغ
+updateSrc(UBiDiTransform *pTransform, ثابت char16_t *newSrc, uint32_t new_درازی,
+        uint32_t new_اندازه, UError_کد *p_Error_کد)
 {
-    if (newSize < newLength) {
-        *pErrorCode = U_BUFFER_OVERFLOW_ERROR;
-        return;
+    إذا (new_اندازه < new_درازی) {
+        *p_Error_کد = U_میانگیر_سرریز_ERROR;
+        أرجع;
     }
-    if (newSize > pTransform->srcSize) {
-        newSize += 50; // allocate slightly more than needed right now
-        if (pTransform->src != nullptr) {
+    إذا (new_اندازه > pTransform->src_اندازه) {
+        new_اندازه += 50; // allocate slightly more than needed right now
+        إذا (pTransform->src != اشاره_تهی) {
             uprv_free(pTransform->src);
-            pTransform->src = nullptr;
+            pTransform->src = اشاره_تهی;
         }
-        pTransform->src = static_cast<char16_t*>(uprv_malloc(newSize * sizeof(char16_t)));
-        if (pTransform->src == nullptr) {
-            *pErrorCode = U_MEMORY_ALLOCATION_ERROR;
+        pTransform->src = static_cast<char16_t*>(uprv_malloc(new_اندازه * حجم(char16_t)));
+        إذا (pTransform->src == اشاره_تهی) {
+            *p_Error_کد = U_حافظه_تخصیص_ERROR;
             //pTransform->srcLength = pTransform->srcSize = 0;
-            return;
+            أرجع;
         }
-        pTransform->srcSize = newSize;
+        pTransform->src_اندازه = new_اندازه;
     }
-    u_strncpy(pTransform->src, newSrc, newLength);
-    pTransform->srcLength = u_terminateUChars(pTransform->src,
-    		pTransform->srcSize, newLength, pErrorCode);
+    u_strncpy(pTransform->src, newSrc, new_درازی);
+    pTransform->src_درازی = u_terminateUChars(pTransform->src,
+    		pTransform->src_اندازه, new_درازی, p_Error_کد);
 }
 
 /**
@@ -253,12 +253,12 @@ updateSrc(UBiDiTransform *pTransform, const char16_t *newSrc, uint32_t newLength
  * @param options Shaping options.
  * @param pErrorCode Pointer to the error code value.
  */
-static void
-doShape(UBiDiTransform *pTransform, uint32_t options, UErrorCode *pErrorCode)
+ساكن فراغ
+doShape(UBiDiTransform *pTransform, uint32_t options, UError_کد *p_Error_کد)
 {
-    *pTransform->pDestLength = u_shapeArabic(pTransform->src,
-            pTransform->srcLength, pTransform->dest, pTransform->destSize,
-            options, pErrorCode);
+    *pTransform->p_Dest_درازی = u_shapeArabic(pTransform->src,
+            pTransform->src_درازی, pTransform->dest, pTransform->dest_اندازه,
+            options, p_Error_کد);
 }
 
 /**
@@ -270,25 +270,25 @@ doShape(UBiDiTransform *pTransform, uint32_t options, UErrorCode *pErrorCode)
  * @return Whether or not this function modifies the text. Besides the return
  * value, the caller should also check <code>U_SUCCESS(*pErrorCode)</code>.
  */
-static UBool
-action_shapeArabic(UBiDiTransform *pTransform, UErrorCode *pErrorCode)
+ساكن UBool
+action_shapeArabic(UBiDiTransform *pTransform, UError_کد *p_Error_کد)
 {
-    if ((pTransform->letters | pTransform->digits) == 0) {
-        return false;
+    إذا ((pTransform->letters | pTransform->digits) == 0) {
+        أرجع خطأ;
     }
-    if (pTransform->pActiveScheme->lettersDir == pTransform->pActiveScheme->digitsDir) {
-        doShape(pTransform, pTransform->letters | pTransform->digits | pTransform->pActiveScheme->lettersDir,
-                pErrorCode);
-    } else {
-        doShape(pTransform, pTransform->digits | pTransform->pActiveScheme->digitsDir, pErrorCode);
-        if (U_SUCCESS(*pErrorCode)) {
-            updateSrc(pTransform, pTransform->dest, *pTransform->pDestLength,
-                    *pTransform->pDestLength, pErrorCode);
-            doShape(pTransform, pTransform->letters | pTransform->pActiveScheme->lettersDir,
-                    pErrorCode);
+    إذا (pTransform->p_فعال_Scheme->lettersDir == pTransform->p_فعال_Scheme->digitsDir) {
+        doShape(pTransform, pTransform->letters | pTransform->digits | pTransform->p_فعال_Scheme->lettersDir,
+                p_Error_کد);
+    } وإلا {
+        doShape(pTransform, pTransform->digits | pTransform->p_فعال_Scheme->digitsDir, p_Error_کد);
+        إذا (U_SUCCESS(*p_Error_کد)) {
+            updateSrc(pTransform, pTransform->dest, *pTransform->p_Dest_درازی,
+                    *pTransform->p_Dest_درازی, p_Error_کد);
+            doShape(pTransform, pTransform->letters | pTransform->p_فعال_Scheme->lettersDir,
+                    p_Error_کد);
         }
     }
-    return true;
+    أرجع درست;
 }
 
 /**
@@ -300,124 +300,124 @@ action_shapeArabic(UBiDiTransform *pTransform, UErrorCode *pErrorCode)
  * @return Whether or not this function modifies the text. Besides the return
  * value, the caller should also check <code>U_SUCCESS(*pErrorCode)</code>.
  */
-static UBool
-action_mirror(UBiDiTransform *pTransform, UErrorCode *pErrorCode)
+ساكن UBool
+action_mirror(UBiDiTransform *pTransform, UError_کد *p_Error_کد)
 {
     UChar32 c;
     uint32_t i = 0, j = 0;
-    if (0 == (pTransform->reorderingOptions & UBIDI_DO_MIRRORING)) {
-        return false;
+    إذا (0 == (pTransform->reorderingOptions & UBIDI_DO_MIRRORING)) {
+        أرجع خطأ;
     }
-    do {
+    افعل {
         UBool isOdd = ubidi_getLevelAt(pTransform->pBidi, i) & 1;
-        U16_NEXT(pTransform->src, i, pTransform->srcLength, c); 
-        if (isOdd) {
+        U16_بعدی(pTransform->src, i, pTransform->src_درازی, c); 
+        إذا (isOdd) {
             c = u_charMirror(c);
         }
-        uint32_t k = U16_LENGTH(c);
-        if (j + k <= pTransform->destSize) {
+        uint32_t k = U16_درازی(c);
+        إذا (j + k <= pTransform->dest_اندازه) {
             U16_APPEND_UNSAFE(pTransform->dest, j, c);
-        } else {
+        } وإلا {
             j += k;
         }
-    } while (i < pTransform->srcLength);
+    } طالما (i < pTransform->src_درازی);
     
-    *pTransform->pDestLength = j;
-    if (pTransform->destSize < j) {
-        *pErrorCode = U_BUFFER_OVERFLOW_ERROR;
-        return false;
+    *pTransform->p_Dest_درازی = j;
+    إذا (pTransform->dest_اندازه < j) {
+        *p_Error_کد = U_میانگیر_سرریز_ERROR;
+        أرجع خطأ;
     }
     pTransform->reorderingOptions = UBIDI_REORDER_DEFAULT;
-    return true;
+    أرجع درست;
 }
 
 /**
  * All possible reordering schemes.
  *
  */
-static const ReorderingScheme Schemes[] =
+ساكن ثابت ReorderingScheme Schemes[] =
 {
     /* 0: Logical LTR => Visual LTR */
     {LTR, LOGICAL, LTR, VISUAL, SHAPE_LOGICAL, SHAPE_LOGICAL, LTR,
-            {action_shapeArabic, action_resolve, action_reorder, nullptr}},
+            {action_shapeArabic, action_resolve, action_reorder, اشاره_تهی}},
     /* 1: Logical RTL => Visual LTR */
     {RTL, LOGICAL, LTR, VISUAL, SHAPE_LOGICAL, SHAPE_VISUAL, RTL,
-            {action_resolve, action_reorder, action_shapeArabic, nullptr}},
+            {action_resolve, action_reorder, action_shapeArabic, اشاره_تهی}},
     /* 2: Logical LTR => Visual RTL */
     {LTR, LOGICAL, RTL, VISUAL, SHAPE_LOGICAL, SHAPE_LOGICAL, LTR,
-            {action_shapeArabic, action_resolve, action_reorder, action_reverse, nullptr}},
+            {action_shapeArabic, action_resolve, action_reorder, action_معکوس, اشاره_تهی}},
     /* 3: Logical RTL => Visual RTL */
     {RTL, LOGICAL, RTL, VISUAL, SHAPE_LOGICAL, SHAPE_VISUAL, RTL,
-            {action_resolve, action_reorder, action_shapeArabic, action_reverse, nullptr}},
+            {action_resolve, action_reorder, action_shapeArabic, action_معکوس, اشاره_تهی}},
     /* 4: Visual LTR => Logical RTL */
     {LTR, VISUAL, RTL, LOGICAL, SHAPE_LOGICAL, SHAPE_VISUAL, RTL,
-            {action_shapeArabic, action_setInverse, action_resolve, action_reorder, nullptr}},
+            {action_shapeArabic, action_مجموعه_Inverse, action_resolve, action_reorder, اشاره_تهی}},
     /* 5: Visual RTL => Logical RTL */
     {RTL, VISUAL, RTL, LOGICAL, SHAPE_LOGICAL, SHAPE_VISUAL, RTL,
-            {action_reverse, action_shapeArabic, action_setInverse, action_resolve, action_reorder, nullptr}},
+            {action_معکوس, action_shapeArabic, action_مجموعه_Inverse, action_resolve, action_reorder, اشاره_تهی}},
     /* 6: Visual LTR => Logical LTR */
     {LTR, VISUAL, LTR, LOGICAL, SHAPE_LOGICAL, SHAPE_LOGICAL, LTR,
-            {action_setInverse, action_resolve, action_reorder, action_shapeArabic, nullptr}},
+            {action_مجموعه_Inverse, action_resolve, action_reorder, action_shapeArabic, اشاره_تهی}},
     /* 7: Visual RTL => Logical LTR */
     {RTL, VISUAL, LTR, LOGICAL, SHAPE_LOGICAL, SHAPE_LOGICAL, LTR,
-            {action_reverse, action_setInverse, action_resolve, action_reorder, action_shapeArabic, nullptr}},
+            {action_معکوس, action_مجموعه_Inverse, action_resolve, action_reorder, action_shapeArabic, اشاره_تهی}},
     /* 8: Logical LTR => Logical RTL */
     {LTR, LOGICAL, RTL, LOGICAL, SHAPE_LOGICAL, SHAPE_LOGICAL, LTR,
-            {action_shapeArabic, action_resolve, action_mirror, action_setRunsOnly, action_resolve, action_reorder, nullptr}},
+            {action_shapeArabic, action_resolve, action_mirror, action_مجموعه_Runs_Only, action_resolve, action_reorder, اشاره_تهی}},
     /* 9: Logical RTL => Logical LTR */
     {RTL, LOGICAL, LTR, LOGICAL, SHAPE_LOGICAL, SHAPE_LOGICAL, RTL,
-            {action_resolve, action_mirror, action_setRunsOnly, action_resolve, action_reorder, action_shapeArabic, nullptr}},
+            {action_resolve, action_mirror, action_مجموعه_Runs_Only, action_resolve, action_reorder, action_shapeArabic, اشاره_تهی}},
     /* 10: Visual LTR => Visual RTL */
     {LTR, VISUAL, RTL, VISUAL, SHAPE_LOGICAL, SHAPE_VISUAL, LTR,
-            {action_shapeArabic, action_setInverse, action_resolve, action_mirror, action_reverse, nullptr}},
+            {action_shapeArabic, action_مجموعه_Inverse, action_resolve, action_mirror, action_معکوس, اشاره_تهی}},
     /* 11: Visual RTL => Visual LTR */
     {RTL, VISUAL, LTR, VISUAL, SHAPE_LOGICAL, SHAPE_VISUAL, LTR,
-            {action_reverse, action_shapeArabic, action_setInverse, action_resolve, action_mirror, nullptr}},
+            {action_معکوس, action_shapeArabic, action_مجموعه_Inverse, action_resolve, action_mirror, اشاره_تهی}},
     /* 12: Logical LTR => Logical LTR */
     {LTR, LOGICAL, LTR, LOGICAL, SHAPE_LOGICAL, SHAPE_LOGICAL, LTR,
-            {action_resolve, action_mirror, action_shapeArabic, nullptr}},
+            {action_resolve, action_mirror, action_shapeArabic, اشاره_تهی}},
     /* 13: Logical RTL => Logical RTL */
     {RTL, LOGICAL, RTL, LOGICAL, SHAPE_VISUAL, SHAPE_LOGICAL, RTL,
-            {action_resolve, action_mirror, action_shapeArabic, nullptr}},
+            {action_resolve, action_mirror, action_shapeArabic, اشاره_تهی}},
     /* 14: Visual LTR => Visual LTR */
     {LTR, VISUAL, LTR, VISUAL, SHAPE_LOGICAL, SHAPE_VISUAL, LTR,
-            {action_resolve, action_mirror, action_shapeArabic, nullptr}},
+            {action_resolve, action_mirror, action_shapeArabic, اشاره_تهی}},
     /* 15: Visual RTL => Visual RTL */
     {RTL, VISUAL, RTL, VISUAL, SHAPE_LOGICAL, SHAPE_VISUAL, LTR,
-            {action_reverse, action_resolve, action_mirror, action_shapeArabic, action_reverse, nullptr}}
+            {action_معکوس, action_resolve, action_mirror, action_shapeArabic, action_معکوس, اشاره_تهی}}
 };
 
-static const uint32_t nSchemes = sizeof(Schemes) / sizeof(*Schemes);
+ساكن ثابت uint32_t nSchemes = حجم(Schemes) / حجم(*Schemes);
 
 /**
  * When the direction option is <code>UBIDI_DEFAULT_LTR</code> or
  * <code>UBIDI_DEFAULT_RTL</code>, resolve the base direction according to that
  * of the first strong bidi character.
  */
-static void
-resolveBaseDirection(const char16_t *text, uint32_t length,
-        UBiDiLevel *pInLevel, UBiDiLevel *pOutLevel)
+ساكن فراغ
+resolve_پایه_Direction(ثابت char16_t *متن, uint32_t length,
+        UBiDiLevel *p_درون_Level, UBiDiLevel *p_بیرون_Level)
 {
-    switch (*pInLevel) {
-        case UBIDI_DEFAULT_LTR:
-        case UBIDI_DEFAULT_RTL: {
-            UBiDiLevel level = static_cast<UBiDiLevel>(ubidi_getBaseDirection(text, length));
-            *pInLevel = static_cast<UBiDiLevel>(level != UBIDI_NEUTRAL) ? level
-                    : *pInLevel == UBIDI_DEFAULT_RTL ? static_cast<UBiDiLevel>(RTL) : static_cast<UBiDiLevel>(LTR);
-            break;
+    بدل (*p_درون_Level) {
+        حالة UBIDI_DEFAULT_LTR:
+        حالة UBIDI_DEFAULT_RTL: {
+            UBiDiLevel level = static_cast<UBiDiLevel>(ubidi_get_پایه_Direction(متن, length));
+            *p_درون_Level = static_cast<UBiDiLevel>(level != UBIDI_NEUTRAL) ? level
+                    : *p_درون_Level == UBIDI_DEFAULT_RTL ? static_cast<UBiDiLevel>(RTL) : static_cast<UBiDiLevel>(LTR);
+            اكسر;
         }
-        default:
-            *pInLevel &= 1;
-            break;
+        افتراضي:
+            *p_درون_Level &= 1;
+            اكسر;
     }
-    switch (*pOutLevel) {
-        case UBIDI_DEFAULT_LTR:
-        case UBIDI_DEFAULT_RTL:
-            *pOutLevel = *pInLevel;
-            break;
-        default:
-            *pOutLevel &= 1;
-            break;
+    بدل (*p_بیرون_Level) {
+        حالة UBIDI_DEFAULT_LTR:
+        حالة UBIDI_DEFAULT_RTL:
+            *p_بیرون_Level = *p_درون_Level;
+            اكسر;
+        افتراضي:
+            *p_بیرون_Level &= 1;
+            اكسر;
     }
 }
 
@@ -427,112 +427,112 @@ resolveBaseDirection(const char16_t *text, uint32_t length,
  * 
  * @return A valid <code>ReorderingScheme</code> object or nullptr
  */
-static const ReorderingScheme*
-findMatchingScheme(UBiDiLevel inLevel, UBiDiLevel outLevel,
-        UBiDiOrder inOrder, UBiDiOrder outOrder)
+ساكن ثابت ReorderingScheme*
+پیدا_کن_Matching_Scheme(UBiDiLevel درون_Level, UBiDiLevel بیرون_Level,
+        UBi_Di_ترتیب درون_ترتیب, UBi_Di_ترتیب بیرون_ترتیب)
 {
     uint32_t i;
-    for (i = 0; i < nSchemes; i++) {
-        const ReorderingScheme *pScheme = Schemes + i;
-        if (inLevel == pScheme->inLevel && outLevel == pScheme->outLevel
-                && inOrder == pScheme->inOrder && outOrder == pScheme->outOrder) {
-            return pScheme;
+    لكل (i = 0; i < nSchemes; i++) {
+        ثابت ReorderingScheme *pScheme = Schemes + i;
+        إذا (درون_Level == pScheme->درون_Level && بیرون_Level == pScheme->بیرون_Level
+                && درون_ترتیب == pScheme->درون_ترتیب && بیرون_ترتیب == pScheme->بیرون_ترتیب) {
+            أرجع pScheme;
         }
     }
-    return nullptr;
+    أرجع اشاره_تهی;
 }
 
 U_CAPI uint32_t U_EXPORT2
 ubiditransform_transform(UBiDiTransform *pBiDiTransform,
-            const char16_t *src, int32_t srcLength,
-            char16_t *dest, int32_t destSize,
-            UBiDiLevel inParaLevel, UBiDiOrder inOrder,
-            UBiDiLevel outParaLevel, UBiDiOrder outOrder,
+            ثابت char16_t *src, int32_t src_درازی,
+            char16_t *dest, int32_t dest_اندازه,
+            UBiDiLevel درون_Para_Level, UBi_Di_ترتیب درون_ترتیب,
+            UBiDiLevel بیرون_Para_Level, UBi_Di_ترتیب بیرون_ترتیب,
             UBiDiMirroring doMirroring, uint32_t shapingOptions,
-            UErrorCode *pErrorCode)
+            UError_کد *p_Error_کد)
 {
-    uint32_t destLength = 0;
-    UBool textChanged = false;
-    const UBiDiTransform *pOrigTransform = pBiDiTransform;
-    const UBiDiAction *action = nullptr;
+    uint32_t dest_درازی = 0;
+    UBool متن_تغییریافته = خطأ;
+    ثابت UBiDiTransform *pOrigTransform = pBiDiTransform;
+    ثابت UBiDiAction *action = اشاره_تهی;
 
-    if (U_FAILURE(*pErrorCode)) {
-        return 0;
+    إذا (U_FAILURE(*p_Error_کد)) {
+        أرجع 0;
     }
-    if (src == nullptr || dest == nullptr) {
-        *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    إذا (src == اشاره_تهی || dest == اشاره_تهی) {
+        *p_Error_کد = U_ILLEGAL_آرگومان_ERROR;
+        أرجع 0;
     }
-    CHECK_LEN(src, srcLength, pErrorCode);
-    CHECK_LEN(dest, destSize, pErrorCode);
+    CHECK_LEN(src, src_درازی, p_Error_کد);
+    CHECK_LEN(dest, dest_اندازه, p_Error_کد);
 
-    if (pBiDiTransform == nullptr) {
-        pBiDiTransform = ubiditransform_open(pErrorCode);
-        if (U_FAILURE(*pErrorCode)) {
-            return 0;
+    إذا (pBiDiTransform == اشاره_تهی) {
+        pBiDiTransform = ubiditransform_open(p_Error_کد);
+        إذا (U_FAILURE(*p_Error_کد)) {
+            أرجع 0;
         }
     }
     /* Current limitation: in multiple paragraphs will be resolved according
        to the 1st paragraph */
-    resolveBaseDirection(src, srcLength, &inParaLevel, &outParaLevel);
+    resolve_پایه_Direction(src, src_درازی, &درون_Para_Level, &بیرون_Para_Level);
 
-    pBiDiTransform->pActiveScheme = findMatchingScheme(inParaLevel, outParaLevel,
-            inOrder, outOrder);
-    if (pBiDiTransform->pActiveScheme == nullptr) {
-        goto cleanup;
+    pBiDiTransform->p_فعال_Scheme = پیدا_کن_Matching_Scheme(درون_Para_Level, بیرون_Para_Level,
+            درون_ترتیب, بیرون_ترتیب);
+    إذا (pBiDiTransform->p_فعال_Scheme == اشاره_تهی) {
+        اذهب cleanup;
     }
     pBiDiTransform->reorderingOptions = doMirroring ? UBIDI_DO_MIRRORING
             : UBIDI_REORDER_DEFAULT;
 
     /* Ignore TEXT_DIRECTION_* flags, as we apply our own depending on the text
        scheme at the time shaping is invoked. */
-    shapingOptions &= ~U_SHAPE_TEXT_DIRECTION_MASK;
-    pBiDiTransform->digits = shapingOptions & ~U_SHAPE_LETTERS_MASK;
-    pBiDiTransform->letters = shapingOptions & ~U_SHAPE_DIGITS_MASK;
+    shapingOptions &= ~U_SHAPE_متن_DIRECTION_ماسک;
+    pBiDiTransform->digits = shapingOptions & ~U_SHAPE_LETTERS_ماسک;
+    pBiDiTransform->letters = shapingOptions & ~U_SHAPE_DIGITS_ماسک;
 
-    updateSrc(pBiDiTransform, src, srcLength, destSize > srcLength ? destSize : srcLength, pErrorCode);
-    if (U_FAILURE(*pErrorCode)) {
-        goto cleanup;
+    updateSrc(pBiDiTransform, src, src_درازی, dest_اندازه > src_درازی ? dest_اندازه : src_درازی, p_Error_کد);
+    إذا (U_FAILURE(*p_Error_کد)) {
+        اذهب cleanup;
     }
-    if (pBiDiTransform->pBidi == nullptr) {
-        pBiDiTransform->pBidi = ubidi_openSized(0, 0, pErrorCode);
-        if (U_FAILURE(*pErrorCode)) {
-            goto cleanup;
+    إذا (pBiDiTransform->pBidi == اشاره_تهی) {
+        pBiDiTransform->pBidi = ubidi_openSized(0, 0, p_Error_کد);
+        إذا (U_FAILURE(*p_Error_کد)) {
+            اذهب cleanup;
         }
     }
     pBiDiTransform->dest = dest;
-    pBiDiTransform->destSize = destSize;
-    pBiDiTransform->pDestLength = &destLength;
+    pBiDiTransform->dest_اندازه = dest_اندازه;
+    pBiDiTransform->p_Dest_درازی = &dest_درازی;
 
     /* Checking for U_SUCCESS() within the loop to bail out on first failure. */
-    for (action = pBiDiTransform->pActiveScheme->actions; *action && U_SUCCESS(*pErrorCode); action++) {
-        if ((*action)(pBiDiTransform, pErrorCode)) {
-            if (action[1] != nullptr) {
-                updateSrc(pBiDiTransform, pBiDiTransform->dest, *pBiDiTransform->pDestLength,
-                        *pBiDiTransform->pDestLength, pErrorCode);
+    لكل (action = pBiDiTransform->p_فعال_Scheme->actions; *action && U_SUCCESS(*p_Error_کد); action++) {
+        إذا ((*action)(pBiDiTransform, p_Error_کد)) {
+            إذا (action[1] != اشاره_تهی) {
+                updateSrc(pBiDiTransform, pBiDiTransform->dest, *pBiDiTransform->p_Dest_درازی,
+                        *pBiDiTransform->p_Dest_درازی, p_Error_کد);
             }
-            textChanged = true;
+            متن_تغییریافته = درست;
         }
     }
-    ubidi_setInverse(pBiDiTransform->pBidi, false);
+    ubidi_مجموعه_Inverse(pBiDiTransform->pBidi, خطأ);
 
-    if (!textChanged && U_SUCCESS(*pErrorCode)) {
+    إذا (!متن_تغییریافته && U_SUCCESS(*p_Error_کد)) {
         /* Text was not changed - just copy src to dest */
-        if (destSize < srcLength) {
-            *pErrorCode = U_BUFFER_OVERFLOW_ERROR;
-        } else {
-            u_strncpy(dest, src, srcLength);
-            destLength = srcLength;
+        إذا (dest_اندازه < src_درازی) {
+            *p_Error_کد = U_میانگیر_سرریز_ERROR;
+        } وإلا {
+            u_strncpy(dest, src, src_درازی);
+            dest_درازی = src_درازی;
         }
     }
 cleanup:
-    if (pOrigTransform != pBiDiTransform) {
+    إذا (pOrigTransform != pBiDiTransform) {
         ubiditransform_close(pBiDiTransform);
-    } else {
-        pBiDiTransform->dest = nullptr;
-        pBiDiTransform->pDestLength = nullptr;
-        pBiDiTransform->srcLength = 0;
-        pBiDiTransform->destSize = 0;
+    } وإلا {
+        pBiDiTransform->dest = اشاره_تهی;
+        pBiDiTransform->p_Dest_درازی = اشاره_تهی;
+        pBiDiTransform->src_درازی = 0;
+        pBiDiTransform->dest_اندازه = 0;
     }
-    return (U_FAILURE(*pErrorCode) && *pErrorCode != U_BUFFER_OVERFLOW_ERROR) ? 0 : destLength;
+    أرجع (U_FAILURE(*p_Error_کد) && *p_Error_کد != U_میانگیر_سرریز_ERROR) ? 0 : dest_درازی;
 }

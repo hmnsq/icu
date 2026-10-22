@@ -4,16 +4,16 @@
 // ucptrie.h (modified from utrie2.h)
 // created: 2017dec29 Markus W. Scherer
 
-#ifndef __UCPTRIE_H__
-#define __UCPTRIE_H__
+#اگر_تعریف_نشده __UCPTRIE_H__
+#تعریف_کن __UCPTRIE_H__
 
-#include "unicode/utypes.h"
-#include "unicode/ucpmap.h"
-#include "unicode/utf8.h"
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/ucpmap.h"
+#ضمن "unicode/utf8.h"
 
-#if U_SHOW_CPLUSPLUS_API
-#include "unicode/localpointer.h"
-#endif   // U_SHOW_CPLUSPLUS_API
+#إذا U_SHOW_CPLUSPLUS_API
+#ضمن "unicode/localpointer.h"
+#پایان_اگر   // U_SHOW_CPLUSPLUS_API
 
 U_CDECL_BEGIN
 
@@ -25,19 +25,19 @@ U_CDECL_BEGIN
  * @see UMutableCPTrie
  */
 
-#ifndef U_IN_DOXYGEN
+#اگر_تعریف_نشده U_درون_DOXYGEN
 /** @internal */
-typedef union UCPTrieData {
+تعريفنوع اتحاد UCPTrie_داده {
     /** @internal */
-    const void *ptr0;
+    ثابت فراغ *ptr0;
     /** @internal */
-    const uint16_t *ptr16;
+    ثابت uint16_t *ptr16;
     /** @internal */
-    const uint32_t *ptr32;
+    ثابت uint32_t *ptr32;
     /** @internal */
-    const uint8_t *ptr8;
-} UCPTrieData;
-#endif
+    ثابت uint8_t *ptr8;
+} UCPTrie_داده;
+#پایان_اگر
 
 /**
  * Immutable Unicode code point trie structure.
@@ -56,26 +56,26 @@ typedef union UCPTrieData {
  * @see UMutableCPTrie
  * @stable ICU 63
  */
-struct UCPTrie {
-#ifndef U_IN_DOXYGEN
+بنية UCPTrie {
+#اگر_تعریف_نشده U_درون_DOXYGEN
     /** @internal */
-    const uint16_t *index;
+    ثابت uint16_t *شاخص;
     /** @internal */
-    UCPTrieData data;
+    UCPTrie_داده داده;
 
     /** @internal */
-    int32_t indexLength;
+    int32_t شاخص_درازی;
     /** @internal */
-    int32_t dataLength;
+    int32_t داده_درازی;
     /** Start of the last range which ends at U+10FFFF. @internal */
-    UChar32 highStart;
+    UChar32 بالا_شروع;
     /** highStart>>12 @internal */
-    uint16_t shifted12HighStart;
+    uint16_t shifted12_بالا_شروع;
 
     /** @internal */
     int8_t type;  // UCPTrieType
     /** @internal */
-    int8_t valueWidth;  // UCPTrieValueWidth
+    int8_t مقدار_عرض;  // UCPTrieValueWidth
 
     /** padding/reserved @internal */
     uint32_t reserved32;
@@ -87,25 +87,25 @@ struct UCPTrie {
      * Set to an impossibly high value (e.g., 0xffff) if there is no dedicated index-3 null block.
      * @internal
      */
-    uint16_t index3NullOffset;
+    uint16_t index3_Null_جابه_جایی;
     /**
      * Internal data null block offset, not shifted.
      * Set to an impossibly high value (e.g., 0xfffff) if there is no dedicated data null block.
      * @internal
      */
-    int32_t dataNullOffset;
+    int32_t داده_Null_جابه_جایی;
     /** @internal */
-    uint32_t nullValue;
+    uint32_t null_مقدار;
 
-#ifdef UCPTRIE_DEBUG
+#اگر_تعریف_شده UCPTRIE_DEBUG
     /** @internal */
-    const char *name;
-#endif
-#endif
+    ثابت حرف *name;
+#پایان_اگر
+#پایان_اگر
 };
-#ifndef U_IN_DOXYGEN
-typedef struct UCPTrie UCPTrie;
-#endif
+#اگر_تعریف_نشده U_درون_DOXYGEN
+تعريفنوع بنية UCPTrie UCPTrie;
+#پایان_اگر
 
 /**
  * Selectors for the type of a UCPTrie.
@@ -116,7 +116,7 @@ typedef struct UCPTrie UCPTrie;
  * @see ucptrie_getType
  * @stable ICU 63
  */
-enum UCPTrieType {
+تعداد UCPTrieType {
     /**
      * For ucptrie_openFromBinary() to accept any type.
      * ucptrie_getType() will return the actual type.
@@ -134,9 +134,9 @@ enum UCPTrieType {
      */
     UCPTRIE_TYPE_SMALL
 };
-#ifndef U_IN_DOXYGEN
-typedef enum UCPTrieType UCPTrieType;
-#endif
+#اگر_تعریف_نشده U_درون_DOXYGEN
+تعريفنوع تعداد UCPTrieType UCPTrieType;
+#پایان_اگر
 
 /**
  * Selectors for the number of bits in a UCPTrie data value.
@@ -146,34 +146,34 @@ typedef enum UCPTrieType UCPTrieType;
  * @see ucptrie_getValueWidth
  * @stable ICU 63
  */
-enum UCPTrieValueWidth {
+تعداد UCPTrie_مقدار_عرض {
     /**
      * For ucptrie_openFromBinary() to accept any data value width.
      * ucptrie_getValueWidth() will return the actual data value width.
      * @stable ICU 63
      */
-    UCPTRIE_VALUE_BITS_ANY = -1,
+    UCPTRIE_مقدار_بیتها_ANY = -1,
     /**
      * The trie stores 16 bits per data value.
      * It returns them as unsigned values 0..0xffff=65535.
      * @stable ICU 63
      */
-    UCPTRIE_VALUE_BITS_16,
+    UCPTRIE_مقدار_بیتها_16,
     /**
      * The trie stores 32 bits per data value.
      * @stable ICU 63
      */
-    UCPTRIE_VALUE_BITS_32,
+    UCPTRIE_مقدار_بیتها_32,
     /**
      * The trie stores 8 bits per data value.
      * It returns them as unsigned values 0..0xff=255.
      * @stable ICU 63
      */
-    UCPTRIE_VALUE_BITS_8
+    UCPTRIE_مقدار_بیتها_8
 };
-#ifndef U_IN_DOXYGEN
-typedef enum UCPTrieValueWidth UCPTrieValueWidth;
-#endif
+#اگر_تعریف_نشده U_درون_DOXYGEN
+تعريفنوع تعداد UCPTrie_مقدار_عرض UCPTrie_مقدار_عرض;
+#پایان_اگر
 
 /**
  * Opens a trie from its binary form, stored in 32-bit-aligned memory.
@@ -202,12 +202,12 @@ typedef enum UCPTrieValueWidth UCPTrieValueWidth;
  * @stable ICU 63
  */
 U_CAPI UCPTrie* U_EXPORT2
-ucptrie_openFromBinary(UCPTrieType type,
-                       UCPTrieValueWidth valueWidth,
-                       const void* data U_LIFETIME_BOUND,
-                       int32_t length,
-                       int32_t* pActualLength,
-                       UErrorCode* pErrorCode);
+ucptrie_open_From_دودویی(UCPTrieType type,
+                       UCPTrie_مقدار_عرض مقدار_عرض,
+                       ثابت فراغ* داده U_LIFETIME_BOUND,
+                       int32_t درازی,
+                       int32_t* p_Actual_درازی,
+                       UError_کد* p_Error_کد);
 
 /**
  * Closes a trie and releases associated memory.
@@ -215,7 +215,7 @@ ucptrie_openFromBinary(UCPTrieType type,
  * @param trie the trie
  * @stable ICU 63
  */
-U_CAPI void U_EXPORT2
+U_CAPI فراغ U_EXPORT2
 ucptrie_close(UCPTrie *trie);
 
 /**
@@ -228,7 +228,7 @@ ucptrie_close(UCPTrie *trie);
  * @stable ICU 63
  */
 U_CAPI UCPTrieType U_EXPORT2
-ucptrie_getType(const UCPTrie *trie);
+ucptrie_getType(ثابت UCPTrie *trie);
 
 /**
  * Returns the number of bits in a trie data value.
@@ -239,8 +239,8 @@ ucptrie_getType(const UCPTrie *trie);
  * @see UCPTRIE_VALUE_BITS_ANY
  * @stable ICU 63
  */
-U_CAPI UCPTrieValueWidth U_EXPORT2
-ucptrie_getValueWidth(const UCPTrie *trie);
+U_CAPI UCPTrie_مقدار_عرض U_EXPORT2
+ucptrie_get_مقدار_عرض(ثابت UCPTrie *trie);
 
 /**
  * Returns the value for a code point as stored in the trie, with range checking.
@@ -257,7 +257,7 @@ ucptrie_getValueWidth(const UCPTrie *trie);
  * @stable ICU 63
  */
 U_CAPI uint32_t U_EXPORT2
-ucptrie_get(const UCPTrie *trie, UChar32 c);
+ucptrie_get(ثابت UCPTrie *trie, UChar32 c);
 
 /**
  * Returns the last code point such that all those from start to there have the same value.
@@ -296,9 +296,9 @@ ucptrie_get(const UCPTrie *trie, UChar32 c);
  * @stable ICU 63
  */
 U_CAPI UChar32 U_EXPORT2
-ucptrie_getRange(const UCPTrie *trie, UChar32 start,
-                 UCPMapRangeOption option, uint32_t surrogateValue,
-                 UCPMapValueFilter *filter, const void *context, uint32_t *pValue);
+ucptrie_getRange(ثابت UCPTrie *trie, UChar32 شروع,
+                 UCPMapRangeOption option, uint32_t surrogate_مقدار,
+                 UCPMap_مقدار_Filter *filter, ثابت فراغ *context, uint32_t *p_مقدار);
 
 /**
  * Writes a memory-mappable form of the trie into 32-bit aligned memory.
@@ -316,7 +316,7 @@ ucptrie_getRange(const UCPTrie *trie, UChar32 start,
  * @stable ICU 63
  */
 U_CAPI int32_t U_EXPORT2
-ucptrie_toBinary(const UCPTrie *trie, void *data, int32_t capacity, UErrorCode *pErrorCode);
+ucptrie_مقصد_دودویی(ثابت UCPTrie *trie, فراغ *داده, int32_t ظرفیت, UError_کد *p_Error_کد);
 
 /**
  * Macro parameter value for a trie with 16-bit data values.
@@ -326,7 +326,7 @@ ucptrie_toBinary(const UCPTrie *trie, void *data, int32_t capacity, UErrorCode *
  * @see UCPTRIE_VALUE_BITS_16
  * @stable ICU 63
  */
-#define UCPTRIE_16(trie, i) ((trie)->data.ptr16[i])
+#تعریف_کن UCPTRIE_16(trie, i) ((trie)->داده.ptr16[i])
 
 /**
  * Macro parameter value for a trie with 32-bit data values.
@@ -336,7 +336,7 @@ ucptrie_toBinary(const UCPTrie *trie, void *data, int32_t capacity, UErrorCode *
  * @see UCPTRIE_VALUE_BITS_32
  * @stable ICU 63
  */
-#define UCPTRIE_32(trie, i) ((trie)->data.ptr32[i])
+#تعریف_کن UCPTRIE_32(trie, i) ((trie)->داده.ptr32[i])
 
 /**
  * Macro parameter value for a trie with 8-bit data values.
@@ -346,7 +346,7 @@ ucptrie_toBinary(const UCPTrie *trie, void *data, int32_t capacity, UErrorCode *
  * @see UCPTRIE_VALUE_BITS_8
  * @stable ICU 63
  */
-#define UCPTRIE_8(trie, i) ((trie)->data.ptr8[i])
+#تعریف_کن UCPTRIE_8(trie, i) ((trie)->داده.ptr8[i])
 
 /**
  * Returns a trie value for a code point, with range checking.
@@ -358,7 +358,7 @@ ucptrie_toBinary(const UCPTrie *trie, void *data, int32_t capacity, UErrorCode *
  * @return The code point's trie value.
  * @stable ICU 63
  */
-#define UCPTRIE_FAST_GET(trie, dataAccess, c) dataAccess(trie, _UCPTRIE_CP_INDEX(trie, 0xffff, c))
+#تعریف_کن UCPTRIE_FAST_GET(trie, داده_Access, c) داده_Access(trie, UCPTRIE_CP_شاخص(trie, 0xffff, c))
 
 /**
  * Returns a 16-bit trie value for a code point, with range checking.
@@ -370,8 +370,8 @@ ucptrie_toBinary(const UCPTrie *trie, void *data, int32_t capacity, UErrorCode *
  * @return The code point's trie value.
  * @stable ICU 63
  */
-#define UCPTRIE_SMALL_GET(trie, dataAccess, c) \
-    dataAccess(trie, _UCPTRIE_CP_INDEX(trie, UCPTRIE_SMALL_MAX, c))
+#تعریف_کن UCPTRIE_SMALL_GET(trie, داده_Access, c) \
+    داده_Access(trie, UCPTRIE_CP_شاخص(trie, UCPTRIE_SMALL_MAX, c))
 
 /**
  * UTF-16: Reads the next code point (UChar32 c, out), post-increments src,
@@ -386,23 +386,23 @@ ucptrie_toBinary(const UCPTrie *trie, void *data, int32_t capacity, UErrorCode *
  * @param result (out) variable for the trie lookup result
  * @stable ICU 63
  */
-#define UCPTRIE_FAST_U16_NEXT(trie, dataAccess, src, limit, c, result) UPRV_BLOCK_MACRO_BEGIN { \
+#تعریف_کن UCPTRIE_FAST_U16_بعدی(trie, داده_Access, src, حد, c, نتیجه) UPRV_بلوک_MACRO_BEGIN { \
     (c) = *(src)++; \
     int32_t __index; \
-    if (!U16_IS_SURROGATE(c)) { \
-        __index = _UCPTRIE_FAST_INDEX(trie, c); \
-    } else { \
+    إذا (!U16_IS_SURROGATE(c)) { \
+        __index = UCPTRIE_FAST_شاخص(trie, c); \
+    } وإلا { \
         uint16_t __c2; \
-        if (U16_IS_SURROGATE_LEAD(c) && (src) != (limit) && U16_IS_TRAIL(__c2 = *(src))) { \
+        إذا (U16_IS_SURROGATE_LEAD(c) && (src) != (حد) && U16_IS_TRAIL(__c2 = *(src))) { \
             ++(src); \
             (c) = U16_GET_SUPPLEMENTARY((c), __c2); \
-            __index = _UCPTRIE_SMALL_INDEX(trie, c); \
-        } else { \
-            __index = (trie)->dataLength - UCPTRIE_ERROR_VALUE_NEG_DATA_OFFSET; \
+            __index = UCPTRIE_SMALL_شاخص(trie, c); \
+        } وإلا { \
+            __index = (trie)->داده_درازی - UCPTRIE_ERROR_مقدار_NEG_داده_جابه_جایی; \
         } \
     } \
-    (result) = dataAccess(trie, __index); \
-} UPRV_BLOCK_MACRO_END
+    (نتیجه) = داده_Access(trie, __index); \
+} UPRV_بلوک_MACRO_انتها
 
 /**
  * UTF-16: Reads the previous code point (UChar32 c, out), pre-decrements src,
@@ -417,23 +417,23 @@ ucptrie_toBinary(const UCPTrie *trie, void *data, int32_t capacity, UErrorCode *
  * @param result (out) variable for the trie lookup result
  * @stable ICU 63
  */
-#define UCPTRIE_FAST_U16_PREV(trie, dataAccess, start, src, c, result) UPRV_BLOCK_MACRO_BEGIN { \
+#تعریف_کن UCPTRIE_FAST_U16_PREV(trie, داده_Access, شروع, src, c, نتیجه) UPRV_بلوک_MACRO_BEGIN { \
     (c) = *--(src); \
     int32_t __index; \
-    if (!U16_IS_SURROGATE(c)) { \
-        __index = _UCPTRIE_FAST_INDEX(trie, c); \
-    } else { \
+    إذا (!U16_IS_SURROGATE(c)) { \
+        __index = UCPTRIE_FAST_شاخص(trie, c); \
+    } وإلا { \
         uint16_t __c2; \
-        if (U16_IS_SURROGATE_TRAIL(c) && (src) != (start) && U16_IS_LEAD(__c2 = *((src) - 1))) { \
+        إذا (U16_IS_SURROGATE_TRAIL(c) && (src) != (شروع) && U16_IS_LEAD(__c2 = *((src) - 1))) { \
             --(src); \
             (c) = U16_GET_SUPPLEMENTARY(__c2, (c)); \
-            __index = _UCPTRIE_SMALL_INDEX(trie, c); \
-        } else { \
-            __index = (trie)->dataLength - UCPTRIE_ERROR_VALUE_NEG_DATA_OFFSET; \
+            __index = UCPTRIE_SMALL_شاخص(trie, c); \
+        } وإلا { \
+            __index = (trie)->داده_درازی - UCPTRIE_ERROR_مقدار_NEG_داده_جابه_جایی; \
         } \
     } \
-    (result) = dataAccess(trie, __index); \
-} UPRV_BLOCK_MACRO_END
+    (نتیجه) = داده_Access(trie, __index); \
+} UPRV_بلوک_MACRO_انتها
 
 /**
  * UTF-8: Post-increments src and gets a value from the trie.
@@ -451,35 +451,35 @@ ucptrie_toBinary(const UCPTrie *trie, void *data, int32_t capacity, UErrorCode *
  * @param result (out) variable for the trie lookup result
  * @stable ICU 63
  */
-#define UCPTRIE_FAST_U8_NEXT(trie, dataAccess, src, limit, result) UPRV_BLOCK_MACRO_BEGIN { \
+#تعریف_کن UCPTRIE_FAST_U8_بعدی(trie, داده_Access, src, حد, نتیجه) UPRV_بلوک_MACRO_BEGIN { \
     int32_t __lead = (uint8_t)*(src)++; \
-    if (!U8_IS_SINGLE(__lead)) { \
+    إذا (!U8_IS_SINGLE(__lead)) { \
         uint8_t __t1, __t2, __t3; \
-        if ((src) != (limit) && \
+        إذا ((src) != (حد) && \
             (__lead >= 0xe0 ? \
                 __lead < 0xf0 ?  /* U+0800..U+FFFF except surrogates */ \
-                    U8_LEAD3_T1_BITS[__lead &= 0xf] & (1 << ((__t1 = *(src)) >> 5)) && \
-                    ++(src) != (limit) && (__t2 = *(src) - 0x80) <= 0x3f && \
-                    (__lead = ((int32_t)(trie)->index[(__lead << 6) + (__t1 & 0x3f)]) + __t2, 1) \
+                    U8_LEAD3_T1_بیتها[__lead &= 0xf] & (1 << ((__t1 = *(src)) >> 5)) && \
+                    ++(src) != (حد) && (__t2 = *(src) - 0x80) <= 0x3f && \
+                    (__lead = ((int32_t)(trie)->شاخص[(__lead << 6) + (__t1 & 0x3f)]) + __t2, 1) \
                 :  /* U+10000..U+10FFFF */ \
                     (__lead -= 0xf0) <= 4 && \
-                    U8_LEAD4_T1_BITS[(__t1 = *(src)) >> 4] & (1 << __lead) && \
-                    (__lead = (__lead << 6) | (__t1 & 0x3f), ++(src) != (limit)) && \
+                    U8_LEAD4_T1_بیتها[(__t1 = *(src)) >> 4] & (1 << __lead) && \
+                    (__lead = (__lead << 6) | (__t1 & 0x3f), ++(src) != (حد)) && \
                     (__t2 = *(src) - 0x80) <= 0x3f && \
-                    ++(src) != (limit) && (__t3 = *(src) - 0x80) <= 0x3f && \
-                    (__lead = __lead >= (trie)->shifted12HighStart ? \
-                        (trie)->dataLength - UCPTRIE_HIGH_VALUE_NEG_DATA_OFFSET : \
-                        ucptrie_internalSmallU8Index((trie), __lead, __t2, __t3), 1) \
+                    ++(src) != (حد) && (__t3 = *(src) - 0x80) <= 0x3f && \
+                    (__lead = __lead >= (trie)->shifted12_بالا_شروع ? \
+                        (trie)->داده_درازی - UCPTRIE_بالا_مقدار_NEG_داده_جابه_جایی : \
+                        ucptrie_داخلی_Small_U8_شاخص((trie), __lead, __t2, __t3), 1) \
             :  /* U+0080..U+07FF */ \
                 __lead >= 0xc2 && (__t1 = *(src) - 0x80) <= 0x3f && \
-                (__lead = (int32_t)(trie)->index[__lead & 0x1f] + __t1, 1))) { \
+                (__lead = (int32_t)(trie)->شاخص[__lead & 0x1f] + __t1, 1))) { \
             ++(src); \
-        } else { \
-            __lead = (trie)->dataLength - UCPTRIE_ERROR_VALUE_NEG_DATA_OFFSET;  /* ill-formed*/ \
+        } وإلا { \
+            __lead = (trie)->داده_درازی - UCPTRIE_ERROR_مقدار_NEG_داده_جابه_جایی;  /* ill-formed*/ \
         } \
     } \
-    (result) = dataAccess(trie, __lead); \
-} UPRV_BLOCK_MACRO_END
+    (نتیجه) = داده_Access(trie, __lead); \
+} UPRV_بلوک_MACRO_انتها
 
 /**
  * UTF-8: Pre-decrements src and gets a value from the trie.
@@ -497,16 +497,16 @@ ucptrie_toBinary(const UCPTrie *trie, void *data, int32_t capacity, UErrorCode *
  * @param result (out) variable for the trie lookup result
  * @stable ICU 63
  */
-#define UCPTRIE_FAST_U8_PREV(trie, dataAccess, start, src, result) UPRV_BLOCK_MACRO_BEGIN { \
+#تعریف_کن UCPTRIE_FAST_U8_PREV(trie, داده_Access, شروع, src, نتیجه) UPRV_بلوک_MACRO_BEGIN { \
     int32_t __index = (uint8_t)*--(src); \
-    if (!U8_IS_SINGLE(__index)) { \
-        __index = ucptrie_internalU8PrevIndex((trie), __index, (const uint8_t *)(start), \
-                                              (const uint8_t *)(src)); \
+    إذا (!U8_IS_SINGLE(__index)) { \
+        __index = ucptrie_داخلی_U8_Prev_شاخص((trie), __index, (ثابت uint8_t *)(شروع), \
+                                              (ثابت uint8_t *)(src)); \
         (src) -= __index & 7; \
         __index >>= 3; \
     } \
-    (result) = dataAccess(trie, __index); \
-} UPRV_BLOCK_MACRO_END
+    (نتیجه) = داده_Access(trie, __index); \
+} UPRV_بلوک_MACRO_انتها
 
 /**
  * Returns a trie value for an ASCII code point, without range checking.
@@ -517,7 +517,7 @@ ucptrie_toBinary(const UCPTrie *trie, void *data, int32_t capacity, UErrorCode *
  * @return The ASCII code point's trie value.
  * @stable ICU 63
  */
-#define UCPTRIE_ASCII_GET(trie, dataAccess, c) dataAccess(trie, c)
+#تعریف_کن UCPTRIE_ASCII_GET(trie, داده_Access, c) داده_Access(trie, c)
 
 /**
  * Returns a trie value for a BMP code point (U+0000..U+FFFF), without range checking.
@@ -530,7 +530,7 @@ ucptrie_toBinary(const UCPTrie *trie, void *data, int32_t capacity, UErrorCode *
  * @return The BMP code point's trie value.
  * @stable ICU 63
  */
-#define UCPTRIE_FAST_BMP_GET(trie, dataAccess, c) dataAccess(trie, _UCPTRIE_FAST_INDEX(trie, c))
+#تعریف_کن UCPTRIE_FAST_BMP_GET(trie, داده_Access, c) داده_Access(trie, UCPTRIE_FAST_شاخص(trie, c))
 
 /**
  * Returns a trie value for a supplementary code point (U+10000..U+10FFFF),
@@ -542,26 +542,26 @@ ucptrie_toBinary(const UCPTrie *trie, void *data, int32_t capacity, UErrorCode *
  * @return The supplementary code point's trie value.
  * @stable ICU 63
  */
-#define UCPTRIE_FAST_SUPP_GET(trie, dataAccess, c) dataAccess(trie, _UCPTRIE_SMALL_INDEX(trie, c))
+#تعریف_کن UCPTRIE_FAST_SUPP_GET(trie, داده_Access, c) داده_Access(trie, UCPTRIE_SMALL_شاخص(trie, c))
 
 /* Internal definitions ----------------------------------------------------- */
 
-#ifndef U_IN_DOXYGEN
+#اگر_تعریف_نشده U_درون_DOXYGEN
 
 /**
  * Internal implementation constants.
  * These are needed for the API macros, but users should not use these directly.
  * @internal
  */
-enum {
+تعداد {
     /** @internal */
-    UCPTRIE_FAST_SHIFT = 6,
+    UCPTRIE_FAST_لغزش = 6,
 
     /** Number of entries in a data block for code points below the fast limit. 64=0x40 @internal */
-    UCPTRIE_FAST_DATA_BLOCK_LENGTH = 1 << UCPTRIE_FAST_SHIFT,
+    UCPTRIE_FAST_داده_بلوک_درازی = 1 << UCPTRIE_FAST_لغزش,
 
     /** Mask for getting the lower bits for the in-fast-data-block offset. @internal */
-    UCPTRIE_FAST_DATA_MASK = UCPTRIE_FAST_DATA_BLOCK_LENGTH - 1,
+    UCPTRIE_FAST_داده_ماسک = UCPTRIE_FAST_داده_بلوک_درازی - 1,
 
     /** @internal */
     UCPTRIE_SMALL_MAX = 0xfff,
@@ -571,13 +571,13 @@ enum {
      * value returned for out-of-range code points and ill-formed UTF-8/16.
      * @internal
      */
-    UCPTRIE_ERROR_VALUE_NEG_DATA_OFFSET = 1,
+    UCPTRIE_ERROR_مقدار_NEG_داده_جابه_جایی = 1,
     /**
      * Offset from dataLength (to be subtracted) for fetching the
      * value returned for code points highStart..U+10FFFF.
      * @internal
      */
-    UCPTRIE_HIGH_VALUE_NEG_DATA_OFFSET = 2
+    UCPTRIE_بالا_مقدار_NEG_داده_جابه_جایی = 2
 };
 
 /* Internal functions and macros -------------------------------------------- */
@@ -585,11 +585,11 @@ enum {
 
 /** @internal */
 U_CAPI int32_t U_EXPORT2
-ucptrie_internalSmallIndex(const UCPTrie *trie, UChar32 c);
+ucptrie_داخلی_Small_شاخص(ثابت UCPTrie *trie, UChar32 c);
 
 /** @internal */
 U_CAPI int32_t U_EXPORT2
-ucptrie_internalSmallU8Index(const UCPTrie *trie, int32_t lt1, uint8_t t2, uint8_t t3);
+ucptrie_داخلی_Small_U8_شاخص(ثابت UCPTrie *trie, int32_t lt1, uint8_t t2, uint8_t t3);
 
 /**
  * Internal function for part of the UCPTRIE_FAST_U8_PREVxx() macro implementations.
@@ -597,36 +597,36 @@ ucptrie_internalSmallU8Index(const UCPTrie *trie, int32_t lt1, uint8_t t2, uint8
  * @internal
  */
 U_CAPI int32_t U_EXPORT2
-ucptrie_internalU8PrevIndex(const UCPTrie *trie, UChar32 c,
-                            const uint8_t *start, const uint8_t *src);
+ucptrie_داخلی_U8_Prev_شاخص(ثابت UCPTrie *trie, UChar32 c,
+                            ثابت uint8_t *شروع, ثابت uint8_t *src);
 
 /** Internal trie getter for a code point below the fast limit. Returns the data index. @internal */
-#define _UCPTRIE_FAST_INDEX(trie, c) \
-    ((int32_t)(trie)->index[(c) >> UCPTRIE_FAST_SHIFT] + ((c) & UCPTRIE_FAST_DATA_MASK))
+#تعریف_کن UCPTRIE_FAST_شاخص(trie, c) \
+    ((int32_t)(trie)->شاخص[(c) >> UCPTRIE_FAST_لغزش] + ((c) & UCPTRIE_FAST_داده_ماسک))
 
 /** Internal trie getter for a code point at or above the fast limit. Returns the data index. @internal */
-#define _UCPTRIE_SMALL_INDEX(trie, c) \
-    ((c) >= (trie)->highStart ? \
-        (trie)->dataLength - UCPTRIE_HIGH_VALUE_NEG_DATA_OFFSET : \
-        ucptrie_internalSmallIndex(trie, c))
+#تعریف_کن UCPTRIE_SMALL_شاخص(trie, c) \
+    ((c) >= (trie)->بالا_شروع ? \
+        (trie)->داده_درازی - UCPTRIE_بالا_مقدار_NEG_داده_جابه_جایی : \
+        ucptrie_داخلی_Small_شاخص(trie, c))
 
 /**
  * Internal trie getter for a code point, with checking that c is in U+0000..10FFFF.
  * Returns the data index.
  * @internal
  */
-#define _UCPTRIE_CP_INDEX(trie, fastMax, c) \
+#تعریف_کن UCPTRIE_CP_شاخص(trie, fastMax, c) \
     ((uint32_t)(c) <= (uint32_t)(fastMax) ? \
-        _UCPTRIE_FAST_INDEX(trie, c) : \
+        UCPTRIE_FAST_شاخص(trie, c) : \
         (uint32_t)(c) <= 0x10ffff ? \
-            _UCPTRIE_SMALL_INDEX(trie, c) : \
-            (trie)->dataLength - UCPTRIE_ERROR_VALUE_NEG_DATA_OFFSET)
+            UCPTRIE_SMALL_شاخص(trie, c) : \
+            (trie)->داده_درازی - UCPTRIE_ERROR_مقدار_NEG_داده_جابه_جایی)
 
-U_CDECL_END
+U_CDECL_انتها
 
-#endif  // U_IN_DOXYGEN
+#پایان_اگر  // U_IN_DOXYGEN
 
-#if U_SHOW_CPLUSPLUS_API
+#إذا U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -639,10 +639,10 @@ U_NAMESPACE_BEGIN
  * @see LocalPointer
  * @stable ICU 63
  */
-U_DEFINE_LOCAL_OPEN_POINTER(LocalUCPTriePointer, UCPTrie, ucptrie_close);
+U_DEFINE_LOCAL_OPEN_اشاره_گر(Local_UCPTrie_اشاره_گر, UCPTrie, ucptrie_close);
 
-U_NAMESPACE_END
+U_NAMESPACE_انتها
 
-#endif  // U_SHOW_CPLUSPLUS_API
+#پایان_اگر  // U_SHOW_CPLUSPLUS_API
 
-#endif
+#پایان_اگر

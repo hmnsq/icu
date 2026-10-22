@@ -16,22 +16,22 @@
 *   06/29/2000  helena      Major rewrite of the callback APIs.
 */
 
-#ifndef UCNV_CNV_H
-#define UCNV_CNV_H
+#اگر_تعریف_نشده UCNV_CNV_H
+#تعریف_کن UCNV_CNV_H
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#إذا !UCONFIG_NO_CONVERSION
 
-#include "unicode/ucnv.h"
-#include "unicode/ucnv_err.h"
-#include "unicode/uset.h"
-#include "uset_imp.h"
+#ضمن "unicode/ucnv.h"
+#ضمن "unicode/ucnv_err.h"
+#ضمن "unicode/uset.h"
+#ضمن "uset_imp.h"
 
 U_CDECL_BEGIN
 
 /* this is used in fromUnicode DBCS tables as an "unassigned" marker */
-#define missingCharMarker 0xFFFF
+#تعریف_کن missingCharMarker 0xFFFF
 
 /*
  * #define missingUCharMarker 0xfffe
@@ -42,40 +42,40 @@ U_CDECL_BEGIN
  */
 
 /** Forward declaration, see ucnv_bld.h */
-struct UConverterSharedData;
-typedef struct UConverterSharedData UConverterSharedData;
+بنية UConverter_Shared_داده;
+تعريفنوع بنية UConverter_Shared_داده UConverter_Shared_داده;
 
 /* function types for UConverterImpl ---------------------------------------- */
 
 /* struct with arguments for UConverterLoad and ucnv_load() */
-typedef struct {
-    int32_t size;               /* sizeof(UConverterLoadArgs) */
+تعريفنوع بنية {
+    int32_t اندازه_2;               /* sizeof(UConverterLoadArgs) */
     int32_t nestedLoads;        /* count nested ucnv_load() calls */
     UBool onlyTestIsLoadable;   /* input: don't actually load */
     UBool reserved0;            /* reserved - for good alignment of the pointers */
     int16_t reserved;           /* reserved - for good alignment of the pointers */
     uint32_t options;
-    const char *pkg, *name, *locale;
-} UConverterLoadArgs;
+    ثابت حرف *pkg, *name, *locale;
+} UConverter_بارگیری_آرگومانها;
 
-#define UCNV_LOAD_ARGS_INITIALIZER \
-    { (int32_t)sizeof(UConverterLoadArgs), 0, false, false, 0, 0, NULL, NULL, NULL }
+#تعریف_کن UCNV_بارگیری_آرگومانها_INITIALIZER \
+    { (int32_t)حجم(UConverter_بارگیری_آرگومانها), 0, false, false, 0, 0, عدم, عدم, عدم }
 
-typedef void (*UConverterLoad) (UConverterSharedData *sharedData,
-                                UConverterLoadArgs *pArgs,
-                                const uint8_t *raw, UErrorCode *pErrorCode);
-typedef void (*UConverterUnload) (UConverterSharedData *sharedData);
+تعريفنوع فراغ (*UConverter_بارگیری) (UConverter_Shared_داده *shared_داده,
+                                UConverter_بارگیری_آرگومانها *p_آرگومانها,
+                                ثابت uint8_t *raw, UError_کد *p_Error_کد);
+تعريفنوع فراغ (*UConverterUnload) (UConverter_Shared_داده *shared_داده);
 
-typedef void (*UConverterOpen) (UConverter *cnv, UConverterLoadArgs *pArgs, UErrorCode *pErrorCode);
-typedef void (*UConverterClose) (UConverter *cnv);
+تعريفنوع فراغ (*UConverterOpen) (UConverter *cnv, UConverter_بارگیری_آرگومانها *p_آرگومانها, UError_کد *p_Error_کد);
+تعريفنوع فراغ (*UConverterClose) (UConverter *cnv);
 
-typedef enum UConverterResetChoice {
+تعريفنوع تعداد UConverterResetChoice {
     UCNV_RESET_BOTH,
-    UCNV_RESET_TO_UNICODE,
+    UCNV_RESET_مقصد_UNICODE,
     UCNV_RESET_FROM_UNICODE
 } UConverterResetChoice;
 
-typedef void (*UConverterReset) (UConverter *cnv, UConverterResetChoice choice);
+تعريفنوع فراغ (*UConverterReset) (UConverter *cnv, UConverterResetChoice choice);
 
 /*
  * Converter implementation function(s) for ucnv_toUnicode().
@@ -100,7 +100,7 @@ typedef void (*UConverterReset) (UConverter *cnv, UConverterResetChoice choice);
  * The ucnv.c code will handle the end of the input (reset)
  * (reset, and truncation detection) and callbacks.
  */
-typedef void (*UConverterToUnicode) (UConverterToUnicodeArgs *, UErrorCode *);
+تعريفنوع فراغ (*UConverter_مقصد_Unicode) (UConverter_مقصد_Unicode_آرگومانها *, UError_کد *);
 
 /*
  * Same rules as for UConverterToUnicode.
@@ -108,7 +108,7 @@ typedef void (*UConverterToUnicode) (UConverterToUnicodeArgs *, UErrorCode *);
  * occurs, then the offending input code point must be put into fromUChar32
  * as well.
  */
-typedef void (*UConverterFromUnicode) (UConverterFromUnicodeArgs *, UErrorCode *);
+تعريفنوع فراغ (*UConverterFromUnicode) (UConverter_From_Unicode_آرگومانها *, UError_کد *);
 
 /*
  * Converter implementation function for ucnv_convertEx(), for direct conversion
@@ -123,9 +123,9 @@ typedef void (*UConverterFromUnicode) (UConverterFromUnicodeArgs *, UErrorCode *
  * - Continuing a partial match and flushing the toUnicode replay buffer
  *   are handled by pivoting, using the toUnicode and fromUnicode functions.
  */
-typedef void (*UConverterConvert) (UConverterFromUnicodeArgs *pFromUArgs,
-                                   UConverterToUnicodeArgs *pToUArgs,
-                                   UErrorCode *pErrorCode);
+تعريفنوع فراغ (*UConverterConvert) (UConverter_From_Unicode_آرگومانها *pFromUArgs,
+                                   UConverter_مقصد_Unicode_آرگومانها *p_مقصد_UArgs,
+                                   UError_کد *p_Error_کد);
 
 /*
  * Converter implementation function for ucnv_getNextUChar().
@@ -147,17 +147,17 @@ typedef void (*UConverterConvert) (UConverterFromUnicodeArgs *pFromUArgs,
  * The ucnv.c code will handle the end of the input (reset)
  * (except for truncation detection!) and callbacks.
  */
-typedef UChar32 (*UConverterGetNextUChar) (UConverterToUnicodeArgs *, UErrorCode *);
+تعريفنوع UChar32 (*UConverter_Get_بعدی_UChar) (UConverter_مقصد_Unicode_آرگومانها *, UError_کد *);
 
-typedef void (*UConverterGetStarters)(const UConverter* converter,
+تعريفنوع فراغ (*UConverterGetStarters)(ثابت UConverter* converter,
                                       UBool starters[256],
-                                      UErrorCode *pErrorCode);
+                                      UError_کد *p_Error_کد);
 
 /* If this function pointer is null or if the function returns null
  * the name field in static data struct should be returned by 
  * ucnv_getName() API function
  */
-typedef const char * (*UConverterGetName) (const UConverter *cnv);
+تعريفنوع ثابت حرف * (*UConverterGetName) (ثابت UConverter *cnv);
 
 /**
  * Write the codepage substitution character.
@@ -166,7 +166,7 @@ typedef const char * (*UConverterGetName) (const UConverter *cnv);
  * For stateful converters, it is typically necessary to handle this
  * specifically for the converter in order to properly maintain the state.
  */
-typedef void (*UConverterWriteSub) (UConverterFromUnicodeArgs *pArgs, int32_t offsetIndex, UErrorCode *pErrorCode);
+تعريفنوع فراغ (*UConverterWriteSub) (UConverter_From_Unicode_آرگومانها *p_آرگومانها, int32_t جابه_جایی_شاخص, UError_کد *p_Error_کد);
 
 /**
  * For converter-specific safeClone processing
@@ -177,23 +177,23 @@ typedef void (*UConverterWriteSub) (UConverterFromUnicodeArgs *pArgs, int32_t of
  * the initial state of the converter.  It is not expected to increment the
  * reference counts of the standard data types such as the shared data.
  */
-typedef UConverter * (*UConverterSafeClone) (const UConverter   *cnv, 
-                                             void               *stackBuffer,
-                                             int32_t            *pBufferSize, 
-                                             UErrorCode         *status);
+تعريفنوع UConverter * (*UConverter_امن_Clone) (ثابت UConverter   *cnv, 
+                                             فراغ               *پشته_میانگیر,
+                                             int32_t            *p_میانگیر_اندازه, 
+                                             UError_کد         *وضعیت);
 
 /**
  * Filters for some ucnv_getUnicodeSet() implementation code.
  */
-typedef enum UConverterSetFilter {
-    UCNV_SET_FILTER_NONE,
-    UCNV_SET_FILTER_DBCS_ONLY,
-    UCNV_SET_FILTER_2022_CN,
-    UCNV_SET_FILTER_SJIS,
-    UCNV_SET_FILTER_GR94DBCS,
-    UCNV_SET_FILTER_HZ,
-    UCNV_SET_FILTER_COUNT
-} UConverterSetFilter;
+تعريفنوع تعداد UConverter_مجموعه_Filter {
+    UCNV_مجموعه_FILTER_NONE,
+    UCNV_مجموعه_FILTER_DBCS_ONLY,
+    UCNV_مجموعه_FILTER_2022_CN,
+    UCNV_مجموعه_FILTER_SJIS,
+    UCNV_مجموعه_FILTER_GR94_DBCS,
+    UCNV_مجموعه_FILTER_HZ,
+    UCNV_مجموعه_FILTER_شمار
+} UConverter_مجموعه_Filter;
 
 /**
  * Fills the set of Unicode code points that can be converted by an ICU converter.
@@ -206,12 +206,12 @@ typedef enum UConverterSetFilter {
  *
  * For more documentation, see ucnv_getUnicodeSet() in ucnv.h.
  */
-typedef void (*UConverterGetUnicodeSet) (const UConverter *cnv,
-                                         const USetAdder *sa,
-                                         UConverterUnicodeSet which,
-                                         UErrorCode *pErrorCode);
+تعريفنوع فراغ (*UConverter_Get_Unicode_مجموعه) (ثابت UConverter *cnv,
+                                         ثابت USetAdder *sa,
+                                         UConverter_Unicode_مجموعه which,
+                                         UError_کد *p_Error_کد);
 
-UBool CONVERSION_U_SUCCESS (UErrorCode err);
+UBool CONVERSION_U_SUCCESS (UError_کد err);
 
 /**
  * UConverterImpl contains all the data and functions for a converter type.
@@ -229,51 +229,51 @@ UBool CONVERSION_U_SUCCESS (UErrorCode err);
  *
  * When open() fails, then close() will be called, if present.
  */
-struct UConverterImpl {
+بنية UConverterImpl {
     UConverterType type;
 
-    UConverterLoad load;
+    UConverter_بارگیری بارگیری;
     UConverterUnload unload;
 
     UConverterOpen open;
     UConverterClose close;
     UConverterReset reset;
 
-    UConverterToUnicode toUnicode;
-    UConverterToUnicode toUnicodeWithOffsets;
+    UConverter_مقصد_Unicode مقصد_Unicode;
+    UConverter_مقصد_Unicode مقصد_Unicode_With_Offsets;
     UConverterFromUnicode fromUnicode;
     UConverterFromUnicode fromUnicodeWithOffsets;
-    UConverterGetNextUChar getNextUChar;
+    UConverter_Get_بعدی_UChar get_بعدی_UChar;
 
     UConverterGetStarters getStarters;
     UConverterGetName getName;
     UConverterWriteSub writeSub;
-    UConverterSafeClone safeClone;
-    UConverterGetUnicodeSet getUnicodeSet;
+    UConverter_امن_Clone امن_Clone;
+    UConverter_Get_Unicode_مجموعه get_Unicode_مجموعه;
 
-    UConverterConvert toUTF8;
+    UConverterConvert مقصد_UTF8;
     UConverterConvert fromUTF8;
 };
 
-extern const UConverterSharedData
-    _MBCSData, _Latin1Data,
-    _UTF8Data, _UTF16BEData, _UTF16LEData, _UTF32BEData, _UTF32LEData,
-    _ISO2022Data, 
+خارجي ثابت UConverter_Shared_داده
+    _MBCSData, Latin1_داده,
+    UTF8_داده, _UTF16BEData, _UTF16LEData, _UTF32BEData, _UTF32LEData,
+    ISO2022_داده, 
     _LMBCSData1,_LMBCSData2, _LMBCSData3, _LMBCSData4, _LMBCSData5, _LMBCSData6,
     _LMBCSData8,_LMBCSData11,_LMBCSData16,_LMBCSData17,_LMBCSData18,_LMBCSData19,
     _HZData,_ISCIIData, _SCSUData, _ASCIIData,
-    _UTF7Data, _Bocu1Data, _UTF16Data, _UTF32Data, _CESU8Data, _IMAPData, _CompoundTextData;
+    UTF7_داده, Bocu1_داده, UTF16_داده, UTF32_داده, CESU8_داده, _IMAPData, Compound_متن_داده;
 
-U_CDECL_END
+U_CDECL_انتها
 
 /** Always use fallbacks from codepage to Unicode */
-#define TO_U_USE_FALLBACK(useFallback) true
-#define UCNV_TO_U_USE_FALLBACK(cnv) true
+#تعریف_کن مقصد_U_USE_FALLBACK(useFallback) true
+#تعریف_کن UCNV_مقصد_U_USE_FALLBACK(cnv) true
 
 /** Use fallbacks from Unicode to codepage when cnv->useFallback or for private-use code points */
-#define IS_PRIVATE_USE(c) ((uint32_t)((c)-0xe000)<0x1900 || (uint32_t)((c)-0xf0000)<0x20000)
-#define FROM_U_USE_FALLBACK(useFallback, c) ((useFallback) || IS_PRIVATE_USE(c))
-#define UCNV_FROM_U_USE_FALLBACK(cnv, c) FROM_U_USE_FALLBACK((cnv)->useFallback, c)
+#تعریف_کن IS_خصوصی_USE(c) ((uint32_t)((c)-0xe000)<0x1900 || (uint32_t)((c)-0xf0000)<0x20000)
+#تعریف_کن FROM_U_USE_FALLBACK(useFallback, c) ((useFallback) || IS_خصوصی_USE(c))
+#تعریف_کن UCNV_FROM_U_USE_FALLBACK(cnv, c) FROM_U_USE_FALLBACK((cnv)->useFallback, c)
 
 /**
  * Magic number for ucnv_getNextUChar(), returned by a
@@ -281,43 +281,43 @@ U_CDECL_END
  * instead of the native function.
  * @internal
  */
-#define UCNV_GET_NEXT_UCHAR_USE_TO_U -9
+#تعریف_کن UCNV_GET_بعدی_UCHAR_USE_مقصد_U -9
 
-U_CFUNC void
-ucnv_getCompleteUnicodeSet(const UConverter *cnv,
-                   const USetAdder *sa,
-                   UConverterUnicodeSet which,
-                   UErrorCode *pErrorCode);
+U_CFUNC فراغ
+ucnv_get_Complete_Unicode_مجموعه(ثابت UConverter *cnv,
+                   ثابت USetAdder *sa,
+                   UConverter_Unicode_مجموعه which,
+                   UError_کد *p_Error_کد);
 
-U_CFUNC void
-ucnv_getNonSurrogateUnicodeSet(const UConverter *cnv,
-                               const USetAdder *sa,
-                               UConverterUnicodeSet which,
-                               UErrorCode *pErrorCode);
+U_CFUNC فراغ
+ucnv_get_Non_Surrogate_Unicode_مجموعه(ثابت UConverter *cnv,
+                               ثابت USetAdder *sa,
+                               UConverter_Unicode_مجموعه which,
+                               UError_کد *p_Error_کد);
 
-U_CFUNC void
-ucnv_fromUWriteBytes(UConverter *cnv,
-                     const char *bytes, int32_t length,
-                     char **target, const char *targetLimit,
+U_CFUNC فراغ
+ucnv_from_UWrite_بایتها(UConverter *cnv,
+                     ثابت حرف *بایتها, int32_t درازی,
+                     حرف **هدف, ثابت حرف *هدف_حد,
                      int32_t **offsets,
-                     int32_t sourceIndex,
-                     UErrorCode *pErrorCode);
-U_CFUNC void
-ucnv_toUWriteUChars(UConverter *cnv,
-                    const UChar *uchars, int32_t length,
-                    UChar **target, const UChar *targetLimit,
+                     int32_t منبع_شاخص,
+                     UError_کد *p_Error_کد);
+U_CFUNC فراغ
+ucnv_مقصد_UWrite_UChars(UConverter *cnv,
+                    ثابت UChar *uchars, int32_t درازی,
+                    UChar **هدف, ثابت UChar *هدف_حد,
                     int32_t **offsets,
-                    int32_t sourceIndex,
-                    UErrorCode *pErrorCode);
+                    int32_t منبع_شاخص,
+                    UError_کد *p_Error_کد);
 
-U_CFUNC void
-ucnv_toUWriteCodePoint(UConverter *cnv,
+U_CFUNC فراغ
+ucnv_مقصد_UWrite_کد_نقطه(UConverter *cnv,
                        UChar32 c,
-                       UChar **target, const UChar *targetLimit,
+                       UChar **هدف, ثابت UChar *هدف_حد,
                        int32_t **offsets,
-                       int32_t sourceIndex,
-                       UErrorCode *pErrorCode);
+                       int32_t منبع_شاخص,
+                       UError_کد *p_Error_کد);
 
-#endif
+#پایان_اگر
 
-#endif /* UCNV_CNV */
+#پایان_اگر /* UCNV_CNV */

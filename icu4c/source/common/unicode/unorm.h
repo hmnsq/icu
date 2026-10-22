@@ -14,15 +14,15 @@
 * Date        Name        Description
 * 02/01/01    synwee      Added normalization quickcheck enum and method.
 */
-#ifndef UNORM_H
-#define UNORM_H
+#اگر_تعریف_نشده UNORM_H
+#تعریف_کن UNORM_H
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if !UCONFIG_NO_NORMALIZATION
+#إذا !UCONFIG_NO_NORMALIZATION
 
-#include "unicode/uiter.h"
-#include "unicode/unorm2.h"
+#ضمن "unicode/uiter.h"
+#ضمن "unicode/unorm2.h"
 
 /**
  * \file
@@ -131,13 +131,13 @@
 
 // Do not conditionalize the following enum with #ifndef U_HIDE_DEPRECATED_API,
 // it is needed for layout of Normalizer object.
-#ifndef U_FORCE_HIDE_DEPRECATED_API
+#اگر_تعریف_نشده U_FORCE_HIDE_DEPRECATED_API
 
 /**
  * Constants for normalization modes.
  * @deprecated ICU 56 Use unorm2.h instead.
  */
-typedef enum {
+تعريفنوع تعداد {
   /** No decomposition/composition. @deprecated ICU 56 Use unorm2.h instead. */
   UNORM_NONE = 1,
   /** Canonical decomposition. @deprecated ICU 56 Use unorm2.h instead. */
@@ -154,12 +154,12 @@ typedef enum {
   UNORM_FCD = 6,
 
   /** One more than the highest normalization mode constant. @deprecated ICU 56 Use unorm2.h instead. */
-  UNORM_MODE_COUNT
-} UNormalizationMode;
+  UNORM_نما_شمار
+} UNormalization_نما;
 
-#endif  // U_FORCE_HIDE_DEPRECATED_API
+#پایان_اگر  // U_FORCE_HIDE_DEPRECATED_API
 
-#ifndef U_HIDE_DEPRECATED_API
+#اگر_تعریف_نشده U_HIDE_DEPRECATED_API
 
 /**
  * Constants for options flags for normalization.
@@ -168,7 +168,7 @@ typedef enum {
  * that is currently supported by ICU (see u_getUnicodeVersion).
  * @deprecated ICU 56 Use unorm2.h instead.
  */
-enum {
+تعداد {
     /**
      * Options bit set value to select Unicode 3.2 normalization
      * (except NormalizationCorrections).
@@ -193,7 +193,7 @@ enum {
  * @see unorm_compare
  * @deprecated ICU 56 Use unorm2.h instead.
  */
-#define UNORM_COMPARE_NORM_OPTIONS_SHIFT 20
+#تعریف_کن UNORM_COMPARE_NORM_OPTIONS_لغزش 20
 
 /**
  * Normalize a string.
@@ -215,10 +215,10 @@ enum {
  * @deprecated ICU 56 Use unorm2.h instead.
  */
 U_DEPRECATED int32_t U_EXPORT2
-unorm_normalize(const UChar *source, int32_t sourceLength,
-                UNormalizationMode mode, int32_t options,
-                UChar *result, int32_t resultLength,
-                UErrorCode *status);
+unorm_normalize(ثابت UChar *منبع, int32_t منبع_درازی,
+                UNormalization_نما نما, int32_t options,
+                UChar *نتیجه, int32_t نتیجه_درازی,
+                UError_کد *وضعیت);
 
 /**
  * Performing quick check on a string, to quickly determine if the string is
@@ -240,10 +240,10 @@ unorm_normalize(const UChar *source, int32_t sourceLength,
  * @see unorm_isNormalized
  * @deprecated ICU 56 Use unorm2.h instead.
  */
-U_DEPRECATED UNormalizationCheckResult U_EXPORT2
-unorm_quickCheck(const UChar *source, int32_t sourcelength,
-                 UNormalizationMode mode,
-                 UErrorCode *status);
+U_DEPRECATED UNormalization_Check_نتیجه U_EXPORT2
+unorm_سریع_Check(ثابت UChar *منبع, int32_t sourcelength,
+                 UNormalization_نما نما,
+                 UError_کد *وضعیت);
 
 /**
  * Performing quick check on a string; same as unorm_quickCheck but
@@ -261,10 +261,10 @@ unorm_quickCheck(const UChar *source, int32_t sourcelength,
  * @see unorm_isNormalized
  * @deprecated ICU 56 Use unorm2.h instead.
  */
-U_DEPRECATED UNormalizationCheckResult U_EXPORT2
-unorm_quickCheckWithOptions(const UChar *src, int32_t srcLength,
-                            UNormalizationMode mode, int32_t options,
-                            UErrorCode *pErrorCode);
+U_DEPRECATED UNormalization_Check_نتیجه U_EXPORT2
+unorm_سریع_Check_With_Options(ثابت UChar *src, int32_t src_درازی,
+                            UNormalization_نما نما, int32_t options,
+                            UError_کد *p_Error_کد);
 
 /**
  * Test if a string is in a given normalization form.
@@ -288,9 +288,9 @@ unorm_quickCheckWithOptions(const UChar *src, int32_t srcLength,
  * @deprecated ICU 56 Use unorm2.h instead.
  */
 U_DEPRECATED UBool U_EXPORT2
-unorm_isNormalized(const UChar *src, int32_t srcLength,
-                   UNormalizationMode mode,
-                   UErrorCode *pErrorCode);
+unorm_isNormalized(ثابت UChar *src, int32_t src_درازی,
+                   UNormalization_نما نما,
+                   UError_کد *p_Error_کد);
 
 /**
  * Test if a string is in a given normalization form; same as unorm_isNormalized but
@@ -310,9 +310,9 @@ unorm_isNormalized(const UChar *src, int32_t srcLength,
  * @deprecated ICU 56 Use unorm2.h instead.
  */
 U_DEPRECATED UBool U_EXPORT2
-unorm_isNormalizedWithOptions(const UChar *src, int32_t srcLength,
-                              UNormalizationMode mode, int32_t options,
-                              UErrorCode *pErrorCode);
+unorm_isNormalizedWithOptions(ثابت UChar *src, int32_t src_درازی,
+                              UNormalization_نما نما, int32_t options,
+                              UError_کد *p_Error_کد);
 
 /**
  * Iterative normalization forward.
@@ -388,11 +388,11 @@ unorm_isNormalizedWithOptions(const UChar *src, int32_t srcLength,
  * @deprecated ICU 56 Use unorm2.h instead.
  */
 U_DEPRECATED int32_t U_EXPORT2
-unorm_next(UCharIterator *src,
-           UChar *dest, int32_t destCapacity,
-           UNormalizationMode mode, int32_t options,
-           UBool doNormalize, UBool *pNeededToNormalize,
-           UErrorCode *pErrorCode);
+unorm_بعدی(UCharIterator *src,
+           UChar *dest, int32_t dest_ظرفیت,
+           UNormalization_نما نما, int32_t options,
+           UBool doNormalize, UBool *p_Needed_مقصد_Normalize,
+           UError_کد *p_Error_کد);
 
 /**
  * Iterative normalization backward.
@@ -421,11 +421,11 @@ unorm_next(UCharIterator *src,
  * @deprecated ICU 56 Use unorm2.h instead.
  */
 U_DEPRECATED int32_t U_EXPORT2
-unorm_previous(UCharIterator *src,
-               UChar *dest, int32_t destCapacity,
-               UNormalizationMode mode, int32_t options,
-               UBool doNormalize, UBool *pNeededToNormalize,
-               UErrorCode *pErrorCode);
+unorm_قبلی(UCharIterator *src,
+               UChar *dest, int32_t dest_ظرفیت,
+               UNormalization_نما نما, int32_t options,
+               UBool doNormalize, UBool *p_Needed_مقصد_Normalize,
+               UError_کد *p_Error_کد);
 
 /**
  * Concatenate normalized strings, making sure that the result is normalized as well.
@@ -465,12 +465,12 @@ unorm_previous(UCharIterator *src,
  * @deprecated ICU 56 Use unorm2.h instead.
  */
 U_DEPRECATED int32_t U_EXPORT2
-unorm_concatenate(const UChar *left, int32_t leftLength,
-                  const UChar *right, int32_t rightLength,
-                  UChar *dest, int32_t destCapacity,
-                  UNormalizationMode mode, int32_t options,
-                  UErrorCode *pErrorCode);
+unorm_concatenate(ثابت UChar *چپ_2, int32_t چپ_درازی,
+                  ثابت UChar *راست_2, int32_t راست_درازی,
+                  UChar *dest, int32_t dest_ظرفیت,
+                  UNormalization_نما نما, int32_t options,
+                  UError_کد *p_Error_کد);
 
-#endif  /* U_HIDE_DEPRECATED_API */
-#endif /* #if !UCONFIG_NO_NORMALIZATION */
-#endif
+#پایان_اگر  /* U_HIDE_DEPRECATED_API */
+#پایان_اگر /* #if !UCONFIG_NO_NORMALIZATION */
+#پایان_اگر

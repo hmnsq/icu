@@ -16,14 +16,14 @@
 *   created by: Markus W. Scherer
 */
 
-#ifndef __UNORMIMP_H__
-#define __UNORMIMP_H__
+#اگر_تعریف_نشده __UNORMIMP_H__
+#تعریف_کن __UNORMIMP_H__
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if !UCONFIG_NO_NORMALIZATION
+#إذا !UCONFIG_NO_NORMALIZATION
 
-#include "udataswp.h"
+#ضمن "udataswp.h"
 
 /*
  * The 2001-2010 implementation of the normalization code loads its data from
@@ -32,7 +32,7 @@
  */
 
 /* norm32 value constants */
-enum {
+تعداد {
     /* quick check flags 0..3 set mean "no" for their forms */
     _NORM_QC_NFC=0x11,          /* no|maybe */
     _NORM_QC_NFKC=0x22,         /* no|maybe */
@@ -45,103 +45,103 @@ enum {
     _NORM_QC_MAYBE=0x10,
     _NORM_QC_ANY_MAYBE=0x30,
 
-    _NORM_QC_MASK=0x3f,
+    NORM_QC_ماسک=0x3f,
 
     _NORM_COMBINES_FWD=0x40,
-    _NORM_COMBINES_BACK=0x80,
+    NORM_COMBINES_پشت=0x80,
     _NORM_COMBINES_ANY=0xc0,
 
-    _NORM_CC_SHIFT=8,           /* UnicodeData.txt combining class in bits 15..8 */
-    _NORM_CC_MASK=0xff00,
+    NORM_CC_لغزش=8,           /* UnicodeData.txt combining class in bits 15..8 */
+    NORM_CC_ماسک=0xff00,
 
-    _NORM_EXTRA_SHIFT=16,               /* 16 bits for the index to UChars and other extra data */
-    _NORM_EXTRA_INDEX_TOP=0xfc00,       /* start of surrogate specials after shift */
+    NORM_EXTRA_لغزش=16,               /* 16 bits for the index to UChars and other extra data */
+    NORM_EXTRA_شاخص_بالاترین=0xfc00,       /* start of surrogate specials after shift */
 
-    _NORM_EXTRA_SURROGATE_MASK=0x3ff,
-    _NORM_EXTRA_SURROGATE_TOP=0x3f0,    /* hangul etc. */
+    NORM_EXTRA_SURROGATE_ماسک=0x3ff,
+    NORM_EXTRA_SURROGATE_بالاترین=0x3f0,    /* hangul etc. */
 
-    _NORM_EXTRA_HANGUL=_NORM_EXTRA_SURROGATE_TOP,
+    _NORM_EXTRA_HANGUL=NORM_EXTRA_SURROGATE_بالاترین,
     _NORM_EXTRA_JAMO_L,
     _NORM_EXTRA_JAMO_V,
     _NORM_EXTRA_JAMO_T
 };
 
 /* norm32 value constants using >16 bits */
-#define _NORM_MIN_SPECIAL       0xfc000000
-#define _NORM_SURROGATES_TOP    0xfff00000
-#define _NORM_MIN_HANGUL        0xfff00000
-#define _NORM_MIN_JAMO_V        0xfff20000
-#define _NORM_JAMO_V_TOP        0xfff30000
+#تعریف_کن _NORM_MIN_SPECIAL       0xfc000000
+#تعریف_کن NORM_SURROGATES_بالاترین    0xfff00000
+#تعریف_کن _NORM_MIN_HANGUL        0xfff00000
+#تعریف_کن _NORM_MIN_JAMO_V        0xfff20000
+#تعریف_کن NORM_JAMO_V_بالاترین        0xfff30000
 
 /* value constants for auxTrie */
-enum {
-    _NORM_AUX_COMP_EX_SHIFT=10,
-    _NORM_AUX_UNSAFE_SHIFT=11,
-    _NORM_AUX_NFC_SKIPPABLE_F_SHIFT=12
+تعداد {
+    NORM_AUX_COMP_EX_لغزش=10,
+    NORM_AUX_UNSAFE_لغزش=11,
+    NORM_AUX_NFC_SKIPPABLE_F_لغزش=12
 };
 
-#define _NORM_AUX_MAX_FNC           ((int32_t)1<<_NORM_AUX_COMP_EX_SHIFT)
+#تعریف_کن _NORM_AUX_MAX_FNC           ((int32_t)1<<NORM_AUX_COMP_EX_لغزش)
 
-#define _NORM_AUX_FNC_MASK          (uint32_t)(_NORM_AUX_MAX_FNC-1)
-#define _NORM_AUX_COMP_EX_MASK      ((uint32_t)1<<_NORM_AUX_COMP_EX_SHIFT)
-#define _NORM_AUX_UNSAFE_MASK       ((uint32_t)1<<_NORM_AUX_UNSAFE_SHIFT)
-#define _NORM_AUX_NFC_SKIP_F_MASK   ((uint32_t)1<<_NORM_AUX_NFC_SKIPPABLE_F_SHIFT)
+#تعریف_کن NORM_AUX_FNC_ماسک          (uint32_t)(_NORM_AUX_MAX_FNC-1)
+#تعریف_کن NORM_AUX_COMP_EX_ماسک      ((uint32_t)1<<NORM_AUX_COMP_EX_لغزش)
+#تعریف_کن NORM_AUX_UNSAFE_ماسک       ((uint32_t)1<<NORM_AUX_UNSAFE_لغزش)
+#تعریف_کن NORM_AUX_NFC_SKIP_F_ماسک   ((uint32_t)1<<NORM_AUX_NFC_SKIPPABLE_F_لغزش)
 
 /* canonStartSets[0..31] contains indexes for what is in the array */
-enum {
-    _NORM_SET_INDEX_CANON_SETS_LENGTH,      /* number of uint16_t in canonical starter sets */
-    _NORM_SET_INDEX_CANON_BMP_TABLE_LENGTH, /* number of uint16_t in the BMP search table (contains pairs) */
-    _NORM_SET_INDEX_CANON_SUPP_TABLE_LENGTH,/* number of uint16_t in the supplementary search table (contains triplets) */
+تعداد {
+    NORM_مجموعه_شاخص_CANON_SETS_درازی,      /* number of uint16_t in canonical starter sets */
+    NORM_مجموعه_شاخص_CANON_BMP_جدول_درازی, /* number of uint16_t in the BMP search table (contains pairs) */
+    NORM_مجموعه_شاخص_CANON_SUPP_جدول_درازی,/* number of uint16_t in the supplementary search table (contains triplets) */
 
     /* from formatVersion 2.3: */
-    _NORM_SET_INDEX_NX_CJK_COMPAT_OFFSET,   /* uint16_t offset from canonStartSets[0] to the
+    NORM_مجموعه_شاخص_NX_CJK_COMPAT_جابه_جایی,   /* uint16_t offset from canonStartSets[0] to the
                                                exclusion set for CJK compatibility characters */
-    _NORM_SET_INDEX_NX_UNICODE32_OFFSET,    /* uint16_t offset from canonStartSets[0] to the
+    NORM_مجموعه_شاخص_NX_UNICODE32_جابه_جایی,    /* uint16_t offset from canonStartSets[0] to the
                                                exclusion set for Unicode 3.2 characters */
-    _NORM_SET_INDEX_NX_RESERVED_OFFSET,     /* uint16_t offset from canonStartSets[0] to the
+    NORM_مجموعه_شاخص_NX_RESERVED_جابه_جایی,     /* uint16_t offset from canonStartSets[0] to the
                                                end of the previous exclusion set */
 
-    _NORM_SET_INDEX_TOP=32                  /* changing this requires a new formatVersion */
+    NORM_مجموعه_شاخص_بالاترین=32                  /* changing this requires a new formatVersion */
 };
 
 /* more constants for canonical starter sets */
 
 /* 14 bit indexes to canonical USerializedSets */
-#define _NORM_MAX_CANON_SETS            0x4000
+#تعریف_کن _NORM_MAX_CANON_SETS            0x4000
 
 /* single-code point BMP sets are encoded directly in the search table except if result=0x4000..0x7fff */
-#define _NORM_CANON_SET_BMP_MASK        0xc000
-#define _NORM_CANON_SET_BMP_IS_INDEX    0x4000
+#تعریف_کن NORM_CANON_مجموعه_BMP_ماسک        0xc000
+#تعریف_کن NORM_CANON_مجموعه_BMP_IS_شاخص    0x4000
 
 /* indexes[] value names */
-enum {
-    _NORM_INDEX_TRIE_SIZE,              /* number of bytes in normalization trie */
-    _NORM_INDEX_UCHAR_COUNT,            /* number of UChars in extra data */
+تعداد {
+    NORM_شاخص_TRIE_اندازه,              /* number of bytes in normalization trie */
+    NORM_شاخص_UCHAR_شمار,            /* number of UChars in extra data */
 
-    _NORM_INDEX_COMBINE_DATA_COUNT,     /* number of uint16_t words for combining data */
-    _NORM_INDEX_COMBINE_FWD_COUNT,      /* number of code points that combine forward */
-    _NORM_INDEX_COMBINE_BOTH_COUNT,     /* number of code points that combine forward and backward */
-    _NORM_INDEX_COMBINE_BACK_COUNT,     /* number of code points that combine backward */
+    NORM_شاخص_COMBINE_داده_شمار,     /* number of uint16_t words for combining data */
+    NORM_شاخص_COMBINE_FWD_شمار,      /* number of code points that combine forward */
+    NORM_شاخص_COMBINE_BOTH_شمار,     /* number of code points that combine forward and backward */
+    NORM_شاخص_COMBINE_پشت_شمار,     /* number of code points that combine backward */
 
-    _NORM_INDEX_MIN_NFC_NO_MAYBE,       /* first code point with quick check NFC NO/MAYBE */
-    _NORM_INDEX_MIN_NFKC_NO_MAYBE,      /* first code point with quick check NFKC NO/MAYBE */
-    _NORM_INDEX_MIN_NFD_NO_MAYBE,       /* first code point with quick check NFD NO/MAYBE */
-    _NORM_INDEX_MIN_NFKD_NO_MAYBE,      /* first code point with quick check NFKD NO/MAYBE */
+    NORM_شاخص_MIN_NFC_NO_MAYBE,       /* first code point with quick check NFC NO/MAYBE */
+    NORM_شاخص_MIN_NFKC_NO_MAYBE,      /* first code point with quick check NFKC NO/MAYBE */
+    NORM_شاخص_MIN_NFD_NO_MAYBE,       /* first code point with quick check NFD NO/MAYBE */
+    NORM_شاخص_MIN_NFKD_NO_MAYBE,      /* first code point with quick check NFKD NO/MAYBE */
 
-    _NORM_INDEX_FCD_TRIE_SIZE,          /* number of bytes in FCD trie */
+    NORM_شاخص_FCD_TRIE_اندازه,          /* number of bytes in FCD trie */
 
-    _NORM_INDEX_AUX_TRIE_SIZE,          /* number of bytes in the auxiliary trie */
-    _NORM_INDEX_CANON_SET_COUNT,        /* number of uint16_t in the array of serialized USet */
+    NORM_شاخص_AUX_TRIE_اندازه,          /* number of bytes in the auxiliary trie */
+    NORM_شاخص_CANON_مجموعه_شمار,        /* number of uint16_t in the array of serialized USet */
 
-    _NORM_INDEX_TOP=32                  /* changing this requires a new formatVersion */
+    NORM_شاخص_بالاترین=32                  /* changing this requires a new formatVersion */
 };
 
-enum {
+تعداد {
     /* FCD check: everything below this code point is known to have a 0 lead combining class */
     _NORM_MIN_WITH_LEAD_CC=0x300
 };
 
-enum {
+تعداد {
     /**
      * Bit 7 of the length byte for a decomposition string in extra data is
      * a flag indicating whether the decomposition string is
@@ -149,15 +149,15 @@ enum {
      * of the decomposition (like for A-umlaut);
      * if not, then both cc's are zero (like for compatibility ideographs).
      */
-    _NORM_DECOMP_FLAG_LENGTH_HAS_CC=0x80,
+    NORM_DECOMP_FLAG_درازی_HAS_CC=0x80,
     /**
      * Bits 6..0 of the length byte contain the actual length.
      */
-    _NORM_DECOMP_LENGTH_MASK=0x7f
+    NORM_DECOMP_درازی_ماسک=0x7f
 };
 
 /** Constants for options flags for normalization. */
-enum {
+تعداد {
     /** Options bit 0, do not decompose Hangul syllables. */
     UNORM_NX_HANGUL=1,
     /** Options bit 1, do not decompose CJK compatibility characters. */
@@ -483,6 +483,6 @@ enum {
  *     the immediately following one regardless of that one's enum name.
  */
 
-#endif /* #if !UCONFIG_NO_NORMALIZATION */
+#پایان_اگر /* #if !UCONFIG_NO_NORMALIZATION */
 
-#endif
+#پایان_اگر

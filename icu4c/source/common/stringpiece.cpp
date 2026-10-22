@@ -8,109 +8,109 @@
 // Author: wilsonh@google.com (Wilson Hsieh)
 //
 
-#include "unicode/utypes.h"
-#include "unicode/stringpiece.h"
-#include "cstring.h"
-#include "cmemory.h"
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/stringpiece.h"
+#ضمن "cstring.h"
+#ضمن "cmemory.h"
 
 U_NAMESPACE_BEGIN
 
-StringPiece::StringPiece(const char* str U_LIFETIME_BOUND)
-    : ptr_(str), length_((str == nullptr) ? 0 : static_cast<int32_t>(uprv_strlen(str))) { }
+StringPiece::StringPiece(ثابت حرف* str U_LIFETIME_BOUND)
+    : ptr_(str), درازی_2((str == اشاره_تهی) ? 0 : static_cast<int32_t>(uprv_strlen(str))) { }
 
-StringPiece::StringPiece(const StringPiece& x U_LIFETIME_BOUND, int32_t pos) {
-  if (pos < 0) {
+StringPiece::StringPiece(ثابت StringPiece& x U_LIFETIME_BOUND, int32_t pos) {
+  إذا (pos < 0) {
     pos = 0;
-  } else if (pos > x.length_) {
-    pos = x.length_;
+  } وإلا إذا (pos > x.درازی_2) {
+    pos = x.درازی_2;
   }
   ptr_ = x.ptr_ + pos;
-  length_ = x.length_ - pos;
+  درازی_2 = x.درازی_2 - pos;
 }
 
-StringPiece::StringPiece(const StringPiece& x U_LIFETIME_BOUND, int32_t pos, int32_t len) {
-  if (pos < 0) {
+StringPiece::StringPiece(ثابت StringPiece& x U_LIFETIME_BOUND, int32_t pos, int32_t len) {
+  إذا (pos < 0) {
     pos = 0;
-  } else if (pos > x.length_) {
-    pos = x.length_;
+  } وإلا إذا (pos > x.درازی_2) {
+    pos = x.درازی_2;
   }
-  if (len < 0) {
+  إذا (len < 0) {
     len = 0;
-  } else if (len > x.length_ - pos) {
-    len = x.length_ - pos;
+  } وإلا إذا (len > x.درازی_2 - pos) {
+    len = x.درازی_2 - pos;
   }
   ptr_ = x.ptr_ + pos;
-  length_ = len;
+  درازی_2 = len;
 }
 
-void StringPiece::set(const char* str) {
+فراغ StringPiece::مجموعه(ثابت حرف* str) {
   ptr_ = str;
-  if (str != nullptr)
-    length_ = static_cast<int32_t>(uprv_strlen(str));
-  else
-    length_ = 0;
+  إذا (str != اشاره_تهی)
+    درازی_2 = static_cast<int32_t>(uprv_strlen(str));
+  وإلا
+    درازی_2 = 0;
 }
 
-int32_t StringPiece::find(StringPiece needle, int32_t offset) {
-  if (length() == 0 && needle.length() == 0) {
-    return 0;
+int32_t StringPiece::find(StringPiece needle, int32_t جابه_جایی) {
+  إذا (length() == 0 && needle.length() == 0) {
+    أرجع 0;
   }
   // TODO: Improve to be better than O(N^2)?
-  for (int32_t i = offset; i < length(); i++) {
+  لكل (int32_t i = جابه_جایی; i < length(); i++) {
     int32_t j = 0;
-    for (; j < needle.length(); i++, j++) {
-      if (data()[i] != needle.data()[j]) {
+    لكل (; j < needle.length(); i++, j++) {
+      إذا (داده()[i] != needle.داده()[j]) {
         i -= j;
-        goto outer_end;
+        اذهب outer_انتها_2;
       }
     }
-    return i - j;
-    outer_end: void();
+    أرجع i - j;
+    outer_انتها_2: فراغ();
   }
-  return -1;
+  أرجع -1;
 }
 
 int32_t StringPiece::compare(StringPiece other) {
   int32_t i = 0;
-  for (; i < length(); i++) {
-    if (i == other.length()) {
+  لكل (; i < length(); i++) {
+    إذا (i == other.length()) {
       // this is longer
-      return 1;
+      أرجع 1;
     }
-    char a = data()[i];
-    char b = other.data()[i];
-    if (a < b) {
-      return -1;
-    } else if (a > b) {
-      return 1;
+    حرف a = داده()[i];
+    حرف b = other.داده()[i];
+    إذا (a < b) {
+      أرجع -1;
+    } وإلا إذا (a > b) {
+      أرجع 1;
     }
   }
-  if (i < other.length()) {
+  إذا (i < other.length()) {
     // other is longer
-    return -1;
+    أرجع -1;
   }
-  return 0;
+  أرجع 0;
 }
 
 U_EXPORT UBool U_EXPORT2
-operator==(const StringPiece& x, const StringPiece& y) {
+عملگر==(ثابت StringPiece& x, ثابت StringPiece& y) {
   int32_t len = x.size();
-  if (len != y.size()) {
-    return false;
+  إذا (len != y.size()) {
+    أرجع خطأ;
   }
-  if (len == 0) {
-    return true;
+  إذا (len == 0) {
+    أرجع درست;
   }
-  const char* p = x.data();
-  const char* p2 = y.data();
+  ثابت حرف* p = x.داده();
+  ثابت حرف* p2 = y.داده();
   // Test last byte in case strings share large common prefix
   --len;
-  if (p[len] != p2[len]) return false;
+  إذا (p[len] != p2[len]) أرجع خطأ;
   // At this point we can, but don't have to, ignore the last byte.
-  return uprv_memcmp(p, p2, len) == 0;
+  أرجع uprv_memcmp(p, p2, len) == 0;
 }
 
 
-const int32_t StringPiece::npos = 0x7fffffff;
+ثابت int32_t StringPiece::npos = 0x7fffffff;
 
-U_NAMESPACE_END
+U_NAMESPACE_انتها

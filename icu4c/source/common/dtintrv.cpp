@@ -12,7 +12,7 @@
 
 
 
-#include "unicode/dtintrv.h"
+#ضمن "unicode/dtintrv.h"
 
 
 U_NAMESPACE_BEGIN
@@ -22,42 +22,42 @@ UOBJECT_DEFINE_RTTI_IMPLEMENTATION(DateInterval)
 //DateInterval::DateInterval(){}
 
 
-DateInterval::DateInterval(UDate from, UDate to)
+DateInterval::DateInterval(UDate from, UDate مقصد)
 :   fromDate(from),
-    toDate(to)
+    مقصد_Date(مقصد)
 {}
 
 
 DateInterval::~DateInterval(){}
 
 
-DateInterval::DateInterval(const DateInterval& other)
+DateInterval::DateInterval(ثابت DateInterval& other)
 : UObject(other) {
-    *this = other;
+    *هذا = other;
 }   
 
 
 DateInterval&
-DateInterval::operator=(const DateInterval& other) U_LIFETIME_BOUND {
-    if ( this != &other ) {
+DateInterval::عملگر=(ثابت DateInterval& other) U_LIFETIME_BOUND {
+    إذا ( هذا != &other ) {
         fromDate = other.fromDate;
-        toDate = other.toDate;
+        مقصد_Date = other.مقصد_Date;
     }
-    return *this;
+    أرجع *هذا;
 }
 
 
 DateInterval* 
-DateInterval::clone() const {
-    return new DateInterval(*this);
+DateInterval::clone() ثابت {
+    أرجع جديد DateInterval(*هذا);
 }
 
 
-bool
-DateInterval::operator==(const DateInterval& other) const { 
-    return ( fromDate == other.fromDate && toDate == other.toDate );
+منطقي
+DateInterval::عملگر==(ثابت DateInterval& other) ثابت { 
+    أرجع ( fromDate == other.fromDate && مقصد_Date == other.مقصد_Date );
 }
 
 
-U_NAMESPACE_END
+U_NAMESPACE_انتها
 

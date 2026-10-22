@@ -4,13 +4,13 @@
 // uniquecharstr.h
 // created: 2020sep01 Frank Yung-Fong Tang
 
-#ifndef __UNIQUECHARSTR_H__
-#define __UNIQUECHARSTR_H__
+#اگر_تعریف_نشده __UNIQUECHARSTR_H__
+#تعریف_کن __UNIQUECHARSTR_H__
 
-#include "charstr.h"
-#include "uassert.h"
-#include "uhash.h"
-#include "cmemory.h"
+#ضمن "charstr.h"
+#ضمن "uassert.h"
+#ضمن "uhash.h"
+#ضمن "cmemory.h"
 
 U_NAMESPACE_BEGIN
 
@@ -22,29 +22,29 @@ U_NAMESPACE_BEGIN
  * freeze the object, get a char * pointer for each string,
  * call orphanCharStrings() to capture the string storage, and let this object go out of scope.
  */
-class UniqueCharStrings {
-public:
-    UniqueCharStrings(UErrorCode &errorCode) : strings(nullptr) {
+class Unique_Char_رشتهها {
+عام:
+    Unique_Char_رشتهها(UError_کد &error_کد) : رشتهها(nullptr) {
         // Note: We hash on string contents but store stable char16_t * pointers.
         // If the strings are stored in resource bundles which should be built with
         // duplicate elimination, then we should be able to hash on just the pointer values.
-        uhash_init(&map, uhash_hashUChars, uhash_compareUChars, uhash_compareLong, &errorCode);
-        if (U_FAILURE(errorCode)) { return; }
-        strings = new CharString();
-        if (strings == nullptr) {
-            errorCode = U_MEMORY_ALLOCATION_ERROR;
+        uhash_init(&map, uhash_hashUChars, uhash_compareUChars, uhash_compareLong, &error_کد);
+        إذا (U_FAILURE(error_کد)) { أرجع; }
+        رشتهها = new CharString();
+        إذا (رشتهها == nullptr) {
+            error_کد = U_حافظه_تخصیص_ERROR;
         }
     }
-    ~UniqueCharStrings() {
+    ~Unique_Char_رشتهها() {
         uhash_close(&map);
-        delete strings;
+        delete رشتهها;
     }
 
     /** Returns/orphans the CharString that contains all strings. */
-    CharString *orphanCharStrings() {
-        CharString *result = strings;
-        strings = nullptr;
-        return result;
+    CharString *orphan_Char_رشتهها() {
+        CharString *نتیجه = رشتهها;
+        رشتهها = nullptr;
+        أرجع نتیجه;
     }
 
     /**
@@ -55,66 +55,66 @@ public:
      * Best used with string data in a stable storage, such as strings returned
      * by resource bundle functions.
      */
-    int32_t add(const char16_t*p, UErrorCode &errorCode) {
-        if (U_FAILURE(errorCode)) { return -1; }
-        if (isFrozen) {
-            errorCode = U_NO_WRITE_PERMISSION;
-            return -1;
+    int32_t جمع_کن(ثابت char16_t*p, UError_کد &error_کد) {
+        إذا (U_FAILURE(error_کد)) { أرجع -1; }
+        إذا (isFrozen) {
+            error_کد = U_NO_WRITE_PERMISSION;
+            أرجع -1;
         }
         // The string points into the resource bundle.
-        int32_t oldIndex = uhash_geti(&map, p);
-        if (oldIndex != 0) {  // found duplicate
-            return oldIndex;
+        int32_t old_شاخص = uhash_geti(&map, p);
+        إذا (old_شاخص != 0) {  // found duplicate
+            أرجع old_شاخص;
         }
         // Explicit NUL terminator for the previous string.
         // The strings object is also terminated with one implicit NUL.
-        strings->append(0, errorCode);
-        int32_t newIndex = strings->length();
-        strings->appendInvariantChars(p, u_strlen(p), errorCode);
-        uhash_puti(&map, const_cast<char16_t *>(p), newIndex, &errorCode);
-        return newIndex;
+        رشتهها->append(0, error_کد);
+        int32_t new_شاخص = رشتهها->درازی();
+        رشتهها->appendInvariantChars(p, u_strlen(p), error_کد);
+        uhash_puti(&map, const_cast<char16_t *>(p), new_شاخص, &error_کد);
+        أرجع new_شاخص;
     }
 
     /**
      * Adds a unicode string by value and returns a unique number for it.
      */
-    int32_t addByValue(UnicodeString s, UErrorCode &errorCode) {
-        if (U_FAILURE(errorCode)) { return -1; }
-        if (isFrozen) {
-            errorCode = U_NO_WRITE_PERMISSION;
-            return -1;
+    int32_t جمع_کن_By_مقدار(UnicodeString s, UError_کد &error_کد) {
+        إذا (U_FAILURE(error_کد)) { أرجع -1; }
+        إذا (isFrozen) {
+            error_کد = U_NO_WRITE_PERMISSION;
+            أرجع -1;
         }
-        int32_t oldIndex = uhash_geti(&map, s.getTerminatedBuffer());
-        if (oldIndex != 0) {  // found duplicate
-            return oldIndex;
+        int32_t old_شاخص = uhash_geti(&map, s.get_Terminated_میانگیر());
+        إذا (old_شاخص != 0) {  // found duplicate
+            أرجع old_شاخص;
         }
         // We need to store the string content of the UnicodeString.
-        UnicodeString *key = keyStore.create(s);
-        if (key == nullptr) {
-            errorCode = U_MEMORY_ALLOCATION_ERROR;
-            return -1;
+        UnicodeString *کلید = کلید_Store.create(s);
+        إذا (کلید == nullptr) {
+            error_کد = U_حافظه_تخصیص_ERROR;
+            أرجع -1;
         }
-        return add(key->getTerminatedBuffer(), errorCode);
+        أرجع جمع_کن(کلید->get_Terminated_میانگیر(), error_کد);
     }
 
-    void freeze() { isFrozen = true; }
+    فراغ freeze() { isFrozen = true; }
 
     /**
      * Returns a string pointer for its unique number, if this object is frozen.
      * Otherwise nullptr.
      */
-    const char *get(int32_t i) const {
+    ثابت حرف *get(int32_t i) ثابت {
         U_ASSERT(isFrozen);
-        return isFrozen && i > 0 ? strings->data() + i : nullptr;
+        أرجع isFrozen && i > 0 ? رشتهها->داده() + i : nullptr;
     }
 
-private:
+خاص:
     UHashtable map;
-    CharString *strings;
-    MemoryPool<UnicodeString> keyStore;
+    CharString *رشتهها;
+    حافظه_Pool<UnicodeString> کلید_Store;
     bool isFrozen = false;
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_انتها
 
-#endif  // __UNIQUECHARSTR_H__
+#پایان_اگر  // __UNIQUECHARSTR_H__

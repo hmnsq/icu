@@ -10,14 +10,14 @@
 ******************************************************************************
 */
 
-#ifndef __UNISTRAPPENDER_H__
-#define __UNISTRAPPENDER_H__
+#اگر_تعریف_نشده __UNISTRAPPENDER_H__
+#تعریف_کن __UNISTRAPPENDER_H__
 
-#include "unicode/unistr.h"
-#include "unicode/uobject.h"
-#include "unicode/utf16.h"
-#include "unicode/utypes.h"
-#include "cmemory.h"
+#ضمن "unicode/unistr.h"
+#ضمن "unicode/uobject.h"
+#ضمن "unicode/utf16.h"
+#ضمن "unicode/utypes.h"
+#ضمن "cmemory.h"
 
 U_NAMESPACE_BEGIN
 
@@ -36,8 +36,8 @@ U_NAMESPACE_BEGIN
  *     // appender flushed automatically when it goes out of scope.
  * }
  */
-class UnicodeStringAppender : public UMemory {
-public:
+class UnicodeStringAppender : عام UMemory {
+عام:
     
     /**
      * dest is the UnicodeString being appended to. It must always
@@ -45,28 +45,28 @@ public:
      */
     UnicodeStringAppender(UnicodeString &dest) : fDest(&dest), fIdx(0) { }
 
-    inline void append(char16_t x) {
-        if (fIdx == UPRV_LENGTHOF(fBuffer)) {
-            fDest->append(fBuffer, 0, fIdx);
+    مضمن فراغ append(char16_t x) {
+        إذا (fIdx == UPRV_LENGTHOF(f_میانگیر)) {
+            fDest->append(f_میانگیر, 0, fIdx);
             fIdx = 0;
         }
-        fBuffer[fIdx++] = x;
+        f_میانگیر[fIdx++] = x;
     }
 
-    inline void append(UChar32 x) {
-        if (fIdx >= UPRV_LENGTHOF(fBuffer) - 1) {
-            fDest->append(fBuffer, 0, fIdx);
+    مضمن فراغ append(UChar32 x) {
+        إذا (fIdx >= UPRV_LENGTHOF(f_میانگیر) - 1) {
+            fDest->append(f_میانگیر, 0, fIdx);
             fIdx = 0;
         }
-        U16_APPEND_UNSAFE(fBuffer, fIdx, x);
+        U16_APPEND_UNSAFE(f_میانگیر, fIdx, x);
     }
 
     /**
      * Ensures that all appended characters have been written out to dest.
      */
-    inline void flush() {
-        if (fIdx) {
-            fDest->append(fBuffer, 0, fIdx);
+    مضمن فراغ flush() {
+        إذا (fIdx) {
+            fDest->append(f_میانگیر, 0, fIdx);
         }
         fIdx = 0;
     }
@@ -77,14 +77,14 @@ public:
     ~UnicodeStringAppender() {
         flush();
     }
-private:
+خاص:
     UnicodeString *fDest;
     int32_t fIdx;
-    char16_t fBuffer[32];
-    UnicodeStringAppender(const UnicodeStringAppender &other);
-    UnicodeStringAppender &operator=(const UnicodeStringAppender &other);
+    char16_t f_میانگیر[32];
+    UnicodeStringAppender(ثابت UnicodeStringAppender &other);
+    UnicodeStringAppender &عملگر=(ثابت UnicodeStringAppender &other);
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_انتها
 
-#endif
+#پایان_اگر

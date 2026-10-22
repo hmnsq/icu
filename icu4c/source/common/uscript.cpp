@@ -15,102 +15,102 @@
 ******************************************************************************
 */
 
-#include "unicode/uchar.h"
-#include "unicode/uscript.h"
-#include "unicode/uloc.h"
-#include "charstr.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "ulocimp.h"
+#ضمن "unicode/uchar.h"
+#ضمن "unicode/uscript.h"
+#ضمن "unicode/uloc.h"
+#ضمن "charstr.h"
+#ضمن "cmemory.h"
+#ضمن "cstring.h"
+#ضمن "ulocimp.h"
 
-static const UScriptCode JAPANESE[3] = { USCRIPT_KATAKANA, USCRIPT_HIRAGANA, USCRIPT_HAN };
-static const UScriptCode KOREAN[2] = { USCRIPT_HANGUL, USCRIPT_HAN };
-static const UScriptCode HAN_BOPO[2] = { USCRIPT_HAN, USCRIPT_BOPOMOFO };
+ساكن ثابت UScript_کد JAPANESE[3] = { USCRIPT_KATAKANA, USCRIPT_HIRAGANA, USCRIPT_HAN };
+ساكن ثابت UScript_کد KOREAN[2] = { USCRIPT_HANGUL, USCRIPT_HAN };
+ساكن ثابت UScript_کد HAN_BOPO[2] = { USCRIPT_HAN, USCRIPT_BOPOMOFO };
 
-static int32_t
-setCodes(const UScriptCode *src, int32_t length,
-         UScriptCode *dest, int32_t capacity, UErrorCode *err) {
+ساكن int32_t
+مجموعه_Codes(ثابت UScript_کد *src, int32_t length,
+         UScript_کد *dest, int32_t capacity, UError_کد *err) {
     int32_t i;
-    if(U_FAILURE(*err)) { return 0; }
-    if(length > capacity) {
-        *err = U_BUFFER_OVERFLOW_ERROR;
-        return length;
+    إذا(U_FAILURE(*err)) { أرجع 0; }
+    إذا(length > capacity) {
+        *err = U_میانگیر_سرریز_ERROR;
+        أرجع length;
     }
-    for(i = 0; i < length; ++i) {
+    لكل(i = 0; i < length; ++i) {
         dest[i] = src[i];
     }
-    return length;
+    أرجع length;
 }
 
-static int32_t
-setOneCode(UScriptCode script, UScriptCode *scripts, int32_t capacity, UErrorCode *err) {
-    if(U_FAILURE(*err)) { return 0; }
-    if(1 > capacity) {
-        *err = U_BUFFER_OVERFLOW_ERROR;
-        return 1;
+ساكن int32_t
+مجموعه_One_کد(UScript_کد script, UScript_کد *scripts, int32_t capacity, UError_کد *err) {
+    إذا(U_FAILURE(*err)) { أرجع 0; }
+    إذا(1 > capacity) {
+        *err = U_میانگیر_سرریز_ERROR;
+        أرجع 1;
     }
     scripts[0] = script;
-    return 1;
+    أرجع 1;
 }
 
-static int32_t
-getCodesFromLocale(const char *locale,
-                   UScriptCode *scripts, int32_t capacity, UErrorCode *err) {
-    if (U_FAILURE(*err)) { return 0; }
+ساكن int32_t
+getCodesFromLocale(ثابت حرف *locale,
+                   UScript_کد *scripts, int32_t capacity, UError_کد *err) {
+    إذا (U_FAILURE(*err)) { أرجع 0; }
     icu::CharString lang;
     icu::CharString script;
-    if (locale == nullptr) {
+    إذا (locale == اشاره_تهی) {
         locale = uloc_getDefault();
     }
-    ulocimp_getSubtags(locale, &lang, &script, nullptr, nullptr, nullptr, *err);
-    if (U_FAILURE(*err)) { return 0; }
+    ulocimp_getSubtags(locale, &lang, &script, اشاره_تهی, اشاره_تهی, اشاره_تهی, *err);
+    إذا (U_FAILURE(*err)) { أرجع 0; }
     // Multi-script languages, equivalent to the LocaleScript data
     // that we used to load from locale resource bundles.
-    if (lang == "ja") {
-        return setCodes(JAPANESE, UPRV_LENGTHOF(JAPANESE), scripts, capacity, err);
+    إذا (lang == "ja") {
+        أرجع مجموعه_Codes(JAPANESE, UPRV_LENGTHOF(JAPANESE), scripts, capacity, err);
     }
-    if (lang == "ko") {
-        return setCodes(KOREAN, UPRV_LENGTHOF(KOREAN), scripts, capacity, err);
+    إذا (lang == "ko") {
+        أرجع مجموعه_Codes(KOREAN, UPRV_LENGTHOF(KOREAN), scripts, capacity, err);
     }
-    if (lang == "zh" && script == "Hant") {
-        return setCodes(HAN_BOPO, UPRV_LENGTHOF(HAN_BOPO), scripts, capacity, err);
+    إذا (lang == "zh" && script == "Hant") {
+        أرجع مجموعه_Codes(HAN_BOPO, UPRV_LENGTHOF(HAN_BOPO), scripts, capacity, err);
     }
     // Explicit script code.
-    if (!script.isEmpty()) {
-        UScriptCode scriptCode = static_cast<UScriptCode>(u_getPropertyValueEnum(UCHAR_SCRIPT, script.data()));
-        if(scriptCode != USCRIPT_INVALID_CODE) {
-            if(scriptCode == USCRIPT_SIMPLIFIED_HAN || scriptCode == USCRIPT_TRADITIONAL_HAN) {
-                scriptCode = USCRIPT_HAN;
+    إذا (!script.is_خالی()) {
+        UScript_کد script_کد = static_cast<UScript_کد>(u_get_Property_مقدار_Enum(UCHAR_SCRIPT, script.داده()));
+        إذا(script_کد != USCRIPT_INVALID_کد) {
+            إذا(script_کد == USCRIPT_SIMPLIFIED_HAN || script_کد == USCRIPT_TRADITIONAL_HAN) {
+                script_کد = USCRIPT_HAN;
             }
-            return setOneCode(scriptCode, scripts, capacity, err);
+            أرجع مجموعه_One_کد(script_کد, scripts, capacity, err);
         }
     }
-    return 0;
+    أرجع 0;
 }
 
 /* TODO: this is a bad API and should be deprecated, ticket #11141 */
 U_CAPI int32_t  U_EXPORT2
-uscript_getCode(const char* nameOrAbbrOrLocale,
-                UScriptCode* fillIn,
+uscript_get_کد(ثابت حرف* nameOrAbbrOrLocale,
+                UScript_کد* fill_درون,
                 int32_t capacity,
-                UErrorCode* err){
-    UBool triedCode;
-    UErrorCode internalErrorCode;
+                UError_کد* err){
+    UBool tried_کد;
+    UError_کد داخلی_Error_کد;
     int32_t length;
 
-    if(U_FAILURE(*err)) {
-        return 0;
+    إذا(U_FAILURE(*err)) {
+        أرجع 0;
     }
-    if(nameOrAbbrOrLocale==nullptr ||
-            (fillIn == nullptr ? capacity != 0 : capacity < 0)) {
-        *err = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    إذا(nameOrAbbrOrLocale==اشاره_تهی ||
+            (fill_درون == اشاره_تهی ? capacity != 0 : capacity < 0)) {
+        *err = U_ILLEGAL_آرگومان_ERROR;
+        أرجع 0;
     }
 
-    triedCode = false;
-    const char* lastSepPtr = uprv_strrchr(nameOrAbbrOrLocale, '-');
-    if (lastSepPtr==nullptr) {
-        lastSepPtr = uprv_strrchr(nameOrAbbrOrLocale, '_');
+    tried_کد = خطأ;
+    ثابت حرف* آخرین_Sep_Ptr = uprv_strrchr(nameOrAbbrOrLocale, '-');
+    إذا (آخرین_Sep_Ptr==اشاره_تهی) {
+        آخرین_Sep_Ptr = uprv_strrchr(nameOrAbbrOrLocale, '_');
     }
     // Favor interpretation of nameOrAbbrOrLocale as a script alias if either
     // 1. nameOrAbbrOrLocale does not contain -/_. Handles Han, Mro, Nko, etc.
@@ -119,34 +119,34 @@ uscript_getCode(const char* nameOrAbbrOrLocale,
     //    Old_Hungarian, Old_Italic, etc. ("old" is a valid language code)
     // 3. The last instance of -/_ is at offset 7, and the portion after that is
     //    3 characters. This handles New_Tai_Lue ("new" is a valid language code).
-    if (lastSepPtr==nullptr
-            || (lastSepPtr-nameOrAbbrOrLocale == 3 && uprv_strlen(nameOrAbbrOrLocale) > 8)
-            || (lastSepPtr-nameOrAbbrOrLocale == 7 && uprv_strlen(nameOrAbbrOrLocale) == 11) ) {
+    إذا (آخرین_Sep_Ptr==اشاره_تهی
+            || (آخرین_Sep_Ptr-nameOrAbbrOrLocale == 3 && uprv_strlen(nameOrAbbrOrLocale) > 8)
+            || (آخرین_Sep_Ptr-nameOrAbbrOrLocale == 7 && uprv_strlen(nameOrAbbrOrLocale) == 11) ) {
         /* try long and abbreviated script names first */
-        UScriptCode code = (UScriptCode) u_getPropertyValueEnum(UCHAR_SCRIPT, nameOrAbbrOrLocale);
-        if(code!=USCRIPT_INVALID_CODE) {
-            return setOneCode(code, fillIn, capacity, err);
+        UScript_کد کد = (UScript_کد) u_get_Property_مقدار_Enum(UCHAR_SCRIPT, nameOrAbbrOrLocale);
+        إذا(کد!=USCRIPT_INVALID_کد) {
+            أرجع مجموعه_One_کد(کد, fill_درون, capacity, err);
         }
-        triedCode = true;
+        tried_کد = درست;
     }
-    internalErrorCode = U_ZERO_ERROR;
-    length = getCodesFromLocale(nameOrAbbrOrLocale, fillIn, capacity, err);
-    if(U_FAILURE(*err) || length != 0) {
-        return length;
+    داخلی_Error_کد = U_ZERO_ERROR;
+    length = getCodesFromLocale(nameOrAbbrOrLocale, fill_درون, capacity, err);
+    إذا(U_FAILURE(*err) || length != 0) {
+        أرجع length;
     }
-    icu::CharString likely = ulocimp_addLikelySubtags(nameOrAbbrOrLocale, internalErrorCode);
-    if(U_SUCCESS(internalErrorCode) && internalErrorCode != U_STRING_NOT_TERMINATED_WARNING) {
-        length = getCodesFromLocale(likely.data(), fillIn, capacity, err);
-        if(U_FAILURE(*err) || length != 0) {
-            return length;
+    icu::CharString likely = ulocimp_جمع_کن_Likely_Subtags(nameOrAbbrOrLocale, داخلی_Error_کد);
+    إذا(U_SUCCESS(داخلی_Error_کد) && داخلی_Error_کد != U_STRING_NOT_TERMINATED_WARNING) {
+        length = getCodesFromLocale(likely.داده(), fill_درون, capacity, err);
+        إذا(U_FAILURE(*err) || length != 0) {
+            أرجع length;
         }
     }
-    if(!triedCode) {
+    إذا(!tried_کد) {
         /* still not found .. try long and abbreviated script names again */
-        UScriptCode code = (UScriptCode) u_getPropertyValueEnum(UCHAR_SCRIPT, nameOrAbbrOrLocale);
-        if(code!=USCRIPT_INVALID_CODE) {
-            return setOneCode(code, fillIn, capacity, err);
+        UScript_کد کد = (UScript_کد) u_get_Property_مقدار_Enum(UCHAR_SCRIPT, nameOrAbbrOrLocale);
+        إذا(کد!=USCRIPT_INVALID_کد) {
+            أرجع مجموعه_One_کد(کد, fill_درون, capacity, err);
         }
     }
-    return 0;
+    أرجع 0;
 }

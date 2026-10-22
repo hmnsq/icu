@@ -1,133 +1,133 @@
 // © 2019 and later: Unicode, Inc. and others.
 // License & terms of use: http://www.unicode.org/copyright.html
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if U_ENABLE_TRACING
+#إذا U_ENABLE_TRACING
 
-#include "restrace.h"
-#include "charstr.h"
-#include "cstring.h"
-#include "utracimp.h"
-#include "uresimp.h"
-#include "uassert.h"
-#include "util.h"
+#ضمن "restrace.h"
+#ضمن "charstr.h"
+#ضمن "cstring.h"
+#ضمن "utracimp.h"
+#ضمن "uresimp.h"
+#ضمن "uassert.h"
+#ضمن "util.h"
 
 U_NAMESPACE_BEGIN
 
-ResourceTracer::~ResourceTracer() = default;
+ResourceTracer::~ResourceTracer() = افتراضي;
 
-void ResourceTracer::trace(const char* resType) const {
-    U_ASSERT(fResB || fParent);
-    UTRACE_ENTRY(UTRACE_UDATA_RESOURCE);
-    UErrorCode status = U_ZERO_ERROR;
+فراغ ResourceTracer::trace(ثابت حرف* resType) ثابت {
+    U_ASSERT(fResB || f_والد);
+    UTRACE_مدخل(UTRACE_UDATA_RESOURCE);
+    UError_کد وضعیت = U_ZERO_ERROR;
 
-    CharString filePath;
-    getFilePath(filePath, status);
+    CharString file_مسیر;
+    get_File_مسیر(file_مسیر, وضعیت);
 
-    CharString resPath;
-    getResPath(resPath, status);
+    CharString res_مسیر;
+    get_Res_مسیر(res_مسیر, وضعیت);
 
     // The longest type ("intvector") is 9 chars
-    const char kSpaces[] = "         ";
+    ثابت حرف kSpaces[] = "         ";
     CharString format;
-    format.append(kSpaces, sizeof(kSpaces) - 1 - uprv_strlen(resType), status);
-    format.append("(%s) %s @ %s", status);
+    format.append(kSpaces, حجم(kSpaces) - 1 - uprv_strlen(resType), وضعیت);
+    format.append("(%s) %s @ %s", وضعیت);
 
     UTRACE_DATA3(UTRACE_VERBOSE,
-        format.data(),
+        format.داده(),
         resType,
-        filePath.data(),
-        resPath.data());
-    UTRACE_EXIT_STATUS(status);
+        file_مسیر.داده(),
+        res_مسیر.داده());
+    UTRACE_EXIT_وضعیت(وضعیت);
 }
 
-void ResourceTracer::traceOpen() const {
+فراغ ResourceTracer::traceOpen() ثابت {
     U_ASSERT(fResB);
-    UTRACE_ENTRY(UTRACE_UDATA_BUNDLE);
-    UErrorCode status = U_ZERO_ERROR;
+    UTRACE_مدخل(UTRACE_UDATA_BUNDLE);
+    UError_کد وضعیت = U_ZERO_ERROR;
 
-    CharString filePath;
-    UTRACE_DATA1(UTRACE_VERBOSE, "%s", getFilePath(filePath, status).data());
-    UTRACE_EXIT_STATUS(status);
+    CharString file_مسیر;
+    UTRACE_DATA1(UTRACE_VERBOSE, "%s", get_File_مسیر(file_مسیر, وضعیت).داده());
+    UTRACE_EXIT_وضعیت(وضعیت);
 }
 
-CharString& ResourceTracer::getFilePath(CharString& output, UErrorCode& status) const {
-    if (fResB) {
+CharString& ResourceTracer::get_File_مسیر(CharString& output, UError_کد& وضعیت) ثابت {
+    إذا (fResB) {
         // Note: if you get a segfault around here, check that ResourceTable and
         // ResourceArray instances outlive ResourceValue instances referring to
         // their contents:
-        output.append(fResB->fData->fPath, status);
-        output.append('/', status);
-        output.append(fResB->fData->fName, status);
-        output.append(".res", status);
-    } else {
-        fParent->getFilePath(output, status);
+        output.append(fResB->f_داده->f_مسیر, وضعیت);
+        output.append('/', وضعیت);
+        output.append(fResB->f_داده->fName, وضعیت);
+        output.append(".res", وضعیت);
+    } وإلا {
+        f_والد->get_File_مسیر(output, وضعیت);
     }
-    return output;
+    أرجع output;
 }
 
-CharString& ResourceTracer::getResPath(CharString& output, UErrorCode& status) const {
-    if (fResB) {
-        output.append('/', status);
-        output.append(fResB->fResPath, status);
+CharString& ResourceTracer::get_Res_مسیر(CharString& output, UError_کد& وضعیت) ثابت {
+    إذا (fResB) {
+        output.append('/', وضعیت);
+        output.append(fResB->f_Res_مسیر, وضعیت);
         // removing the trailing /
         U_ASSERT(output[output.length()-1] == '/');
         output.truncate(output.length()-1);
-    } else {
-        fParent->getResPath(output, status);
+    } وإلا {
+        f_والد->get_Res_مسیر(output, وضعیت);
     }
-    if (fKey) {
-        output.append('/', status);
-        output.append(fKey, status);
+    إذا (f_کلید) {
+        output.append('/', وضعیت);
+        output.append(f_کلید, وضعیت);
     }
-    if (fIndex != -1) {
-        output.append('[', status);
-        UnicodeString indexString;
-        ICU_Utility::appendNumber(indexString, fIndex);
-        output.appendInvariantChars(indexString, status);
-        output.append(']', status);
+    إذا (f_شاخص != -1) {
+        output.append('[', وضعیت);
+        UnicodeString شاخص_String;
+        ICU_Utility::append_عدد(شاخص_String, f_شاخص);
+        output.appendInvariantChars(شاخص_String, وضعیت);
+        output.append(']', وضعیت);
     }
-    return output;
+    أرجع output;
 }
 
-void FileTracer::traceOpen(const char* path, const char* type, const char* name) {
-    if (uprv_strcmp(type, "res") == 0) {
-        traceOpenResFile(path, name);
-    } else {
-        traceOpenDataFile(path, type, name);
+فراغ FileTracer::traceOpen(ثابت حرف* مسیر, ثابت حرف* type, ثابت حرف* name) {
+    إذا (uprv_strcmp(type, "res") == 0) {
+        traceOpenResFile(مسیر, name);
+    } وإلا {
+        trace_Open_داده_File(مسیر, type, name);
     }
 }
 
-void FileTracer::traceOpenDataFile(const char* path, const char* type, const char* name) {
-    UTRACE_ENTRY(UTRACE_UDATA_DATA_FILE);
-    UErrorCode status = U_ZERO_ERROR;
+فراغ FileTracer::trace_Open_داده_File(ثابت حرف* مسیر, ثابت حرف* type, ثابت حرف* name) {
+    UTRACE_مدخل(UTRACE_UDATA_داده_FILE);
+    UError_کد وضعیت = U_ZERO_ERROR;
 
-    CharString filePath;
-    filePath.append(path, status);
-    filePath.append('/', status);
-    filePath.append(name, status);
-    filePath.append('.', status);
-    filePath.append(type, status);
+    CharString file_مسیر;
+    file_مسیر.append(مسیر, وضعیت);
+    file_مسیر.append('/', وضعیت);
+    file_مسیر.append(name, وضعیت);
+    file_مسیر.append('.', وضعیت);
+    file_مسیر.append(type, وضعیت);
 
-    UTRACE_DATA1(UTRACE_VERBOSE, "%s", filePath.data());
-    UTRACE_EXIT_STATUS(status);
+    UTRACE_DATA1(UTRACE_VERBOSE, "%s", file_مسیر.داده());
+    UTRACE_EXIT_وضعیت(وضعیت);
 }
 
-void FileTracer::traceOpenResFile(const char* path, const char* name) {
-    UTRACE_ENTRY(UTRACE_UDATA_RES_FILE);
-    UErrorCode status = U_ZERO_ERROR;
+فراغ FileTracer::traceOpenResFile(ثابت حرف* مسیر, ثابت حرف* name) {
+    UTRACE_مدخل(UTRACE_UDATA_RES_FILE);
+    UError_کد وضعیت = U_ZERO_ERROR;
 
-    CharString filePath;
-    filePath.append(path, status);
-    filePath.append('/', status);
-    filePath.append(name, status);
-    filePath.append(".res", status);
+    CharString file_مسیر;
+    file_مسیر.append(مسیر, وضعیت);
+    file_مسیر.append('/', وضعیت);
+    file_مسیر.append(name, وضعیت);
+    file_مسیر.append(".res", وضعیت);
 
-    UTRACE_DATA1(UTRACE_VERBOSE, "%s", filePath.data());
-    UTRACE_EXIT_STATUS(status);
+    UTRACE_DATA1(UTRACE_VERBOSE, "%s", file_مسیر.داده());
+    UTRACE_EXIT_وضعیت(وضعیت);
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_انتها
 
-#endif // U_ENABLE_TRACING
+#پایان_اگر // U_ENABLE_TRACING

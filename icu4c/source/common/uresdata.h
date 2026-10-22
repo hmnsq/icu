@@ -15,14 +15,14 @@
 *   06/24/02    weiv        Added support for resource sharing
 */
 
-#ifndef __RESDATA_H__
-#define __RESDATA_H__
+#اگر_تعریف_نشده __RESDATA_H__
+#تعریف_کن __RESDATA_H__
 
-#include "unicode/utypes.h"
-#include "unicode/udata.h"
-#include "unicode/ures.h"
-#include "putilimp.h"
-#include "udataswp.h"
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/udata.h"
+#ضمن "unicode/ures.h"
+#ضمن "putilimp.h"
+#ضمن "udataswp.h"
 
 /**
  * Numeric constants for internal-only types of resource items.
@@ -30,9 +30,9 @@
  * because they are used together.
  * Internal types are never returned by ures_getType().
  */
-typedef enum {
+تعريفنوع تعداد {
     /** Include a negative value so that the compiler uses the same int type as for UResType. */
-    URES_INTERNAL_NONE=-1,
+    URES_داخلی_NONE=-1,
 
     /** Resource type constant for tables with 32-bit count, key offsets and values. */
     URES_TABLE32=4,
@@ -53,42 +53,42 @@ typedef enum {
     URES_ARRAY16=9
 
     /* Resource type 15 is not defined but effectively used by RES_BOGUS=0xffffffff. */
-} UResInternalType;
+} URes_داخلی_Type;
 
 /*
  * A Resource is a 32-bit value that has 2 bit fields:
  * 31..28   4-bit type, see enum below
  * 27..0    28-bit four-byte-offset or value according to the type
  */
-typedef uint32_t Resource;
+تعريفنوع uint32_t Resource;
 
-#define RES_BOGUS 0xffffffff
-#define RES_MAX_OFFSET 0x0fffffff
+#تعریف_کن RES_BOGUS 0xffffffff
+#تعریف_کن RES_MAX_جابه_جایی 0x0fffffff
 
-#define RES_GET_TYPE(res) ((int32_t)((res)>>28UL))
-#define RES_GET_OFFSET(res) ((res)&0x0fffffff)
-#define RES_GET_POINTER(pRoot, res) ((pRoot)+RES_GET_OFFSET(res))
+#تعریف_کن RES_GET_TYPE(res) ((int32_t)((res)>>28UL))
+#تعریف_کن RES_GET_جابه_جایی(res) ((res)&0x0fffffff)
+#تعریف_کن RES_GET_اشاره_گر(p_ریشه, res) ((p_ریشه)+RES_GET_جابه_جایی(res))
 
 /* get signed and unsigned integer values directly from the Resource handle
  * NOTE: For proper logging, please use the res_getInt() constexpr
  */
-#if U_SIGNED_RIGHT_SHIFT_IS_ARITHMETIC
+#إذا U_SIGNED_راست_لغزش_IS_ARITHMETIC
 #   define RES_GET_INT_NO_TRACE(res) (((int32_t)((res)<<4L))>>4L)
-#else
+#وإلا
 #   define RES_GET_INT_NO_TRACE(res) (int32_t)(((res)&0x08000000) ? (res)|0xf0000000 : (res)&0x07ffffff)
-#endif
+#پایان_اگر
 
-#define RES_GET_UINT_NO_TRACE(res) ((res)&0x0fffffff)
+#تعریف_کن RES_GET_UINT_NO_TRACE(res) ((res)&0x0fffffff)
 
-#define URES_IS_ARRAY(type) ((int32_t)(type)==URES_ARRAY || (int32_t)(type)==URES_ARRAY16)
-#define URES_IS_TABLE(type) ((int32_t)(type)==URES_TABLE || (int32_t)(type)==URES_TABLE16 || (int32_t)(type)==URES_TABLE32)
-#define URES_IS_CONTAINER(type) (URES_IS_TABLE(type) || URES_IS_ARRAY(type))
+#تعریف_کن URES_IS_ARRAY(type) ((int32_t)(type)==URES_ARRAY || (int32_t)(type)==URES_ARRAY16)
+#تعریف_کن URES_IS_جدول(type) ((int32_t)(type)==URES_جدول || (int32_t)(type)==URES_TABLE16 || (int32_t)(type)==URES_TABLE32)
+#تعریف_کن URES_IS_CONTAINER(type) (URES_IS_جدول(type) || URES_IS_ARRAY(type))
 
-#define URES_MAKE_RESOURCE(type, offset) (((Resource)(type)<<28)|(Resource)(offset))
-#define URES_MAKE_EMPTY_RESOURCE(type) ((Resource)(type)<<28)
+#تعریف_کن URES_MAKE_RESOURCE(type, جابه_جایی) (((Resource)(type)<<28)|(Resource)(جابه_جایی))
+#تعریف_کن URES_MAKE_خالی_RESOURCE(type) ((Resource)(type)<<28)
 
 /* indexes[] value names; indexes are generally 32-bit (Resource) indexes */
-enum {
+تعداد {
     /**
      * [0] contains the length of indexes[]
      * which is at most URES_INDEX_TOP of the latest format version
@@ -101,21 +101,21 @@ enum {
      * formatVersion>=3:
      *        bits 31..8 poolStringIndexLimit bits 23..0
      */
-    URES_INDEX_LENGTH,
+    URES_شاخص_درازی,
     /**
      * [1] contains the top of the key strings,
      *     same as the bottom of resources or UTF-16 strings, rounded up
      */
-    URES_INDEX_KEYS_TOP,
+    URES_شاخص_کلیدها_بالاترین,
     /** [2] contains the top of all resources */
-    URES_INDEX_RESOURCES_TOP,
+    URES_شاخص_RESOURCES_بالاترین,
     /**
      * [3] contains the top of the bundle,
      *     in case it were ever different from [2]
      */
-    URES_INDEX_BUNDLE_TOP,
+    URES_شاخص_BUNDLE_بالاترین,
     /** [4] max. length of any table */
-    URES_INDEX_MAX_TABLE_LENGTH,
+    URES_شاخص_MAX_جدول_درازی,
     /**
      * [5] attributes bit set, see URES_ATT_* (new in formatVersion 1.2)
      *
@@ -123,15 +123,15 @@ enum {
      *   bits 31..16 poolStringIndex16Limit
      *   bits 15..12 poolStringIndexLimit bits 27..24
      */
-    URES_INDEX_ATTRIBUTES,
+    URES_شاخص_صفات,
     /**
      * [6] top of the 16-bit units (UTF-16 string v2 UChars, URES_TABLE16, URES_ARRAY16),
      *     rounded up (new in formatVersion 2.0, ICU 4.4)
      */
-    URES_INDEX_16BIT_TOP,
+    URES_شاخص_16_بیت_بالاترین,
     /** [7] checksum of the pool bundle (new in formatVersion 2.0, ICU 4.4) */
-    URES_INDEX_POOL_CHECKSUM,
-    URES_INDEX_TOP
+    URES_شاخص_POOL_CHECKSUM,
+    URES_شاخص_بالاترین
 };
 
 /*
@@ -145,7 +145,7 @@ enum {
  * reliably. Dependency checking should ignore such bundles, and loading should
  * use fallbacks.
  */
-#define URES_ATT_NO_FALLBACK 1
+#تعریف_کن URES_ATT_NO_FALLBACK 1
 
 /*
  * Attributes for bundles that are, or use, a pool bundle.
@@ -153,8 +153,8 @@ enum {
  * to reduce their total size.
  * New in formatVersion 2 (ICU 4.4).
  */
-#define URES_ATT_IS_POOL_BUNDLE 2
-#define URES_ATT_USES_POOL_BUNDLE 4
+#تعریف_کن URES_ATT_IS_POOL_BUNDLE 2
+#تعریف_کن URES_ATT_استفاده_میکند_POOL_BUNDLE 4
 
 /*
  * File format for .res resource bundle files
@@ -383,49 +383,49 @@ enum {
 /*
  * Structure for a single, memory-mapped ResourceBundle.
  */
-typedef struct ResourceData {
-    UDataMemory *data;
-    const int32_t *pRoot;
-    const uint16_t *p16BitUnits;
-    const char *poolBundleKeys;
-    Resource rootRes;
-    int32_t localKeyLimit;
-    const uint16_t *poolBundleStrings;
-    int32_t poolStringIndexLimit;
-    int32_t poolStringIndex16Limit;
+تعريفنوع بنية Resource_داده {
+    UData_حافظه *داده;
+    ثابت int32_t *p_ریشه;
+    ثابت uint16_t *p16_بیت_Units;
+    ثابت حرف *pool_Bundle_کلیدها;
+    Resource ریشه_Res;
+    int32_t local_کلید_حد;
+    ثابت uint16_t *pool_Bundle_رشتهها;
+    int32_t pool_String_شاخص_حد;
+    int32_t pool_String_Index16_حد;
     UBool noFallback; /* see URES_ATT_NO_FALLBACK */
     UBool isPoolBundle;
-    UBool usesPoolBundle;
+    UBool استفاده_میکند_Pool_Bundle;
     UBool useNativeStrcmp;
-} ResourceData;
+} Resource_داده;
 
-struct UResourceDataEntry;   // forward declared for ResoureDataValue below; actually defined in uresimp.h
+بنية UResource_داده_مدخل;   // forward declared for ResoureDataValue below; actually defined in uresimp.h
 
 /*
  * Read a resource bundle from memory.
  */
-U_CAPI void U_EXPORT2
-res_read(ResourceData *pResData,
-         const UDataInfo *pInfo, const void *inBytes, int32_t length,
-         UErrorCode *errorCode);
+U_CAPI فراغ U_EXPORT2
+res_read(Resource_داده *p_Res_داده,
+         ثابت UDataInfo *pInfo, ثابت فراغ *درون_بایتها, int32_t درازی,
+         UError_کد *error_کد);
 
 /*
  * Load a resource bundle file.
  * The ResourceData structure must be allocated externally.
  */
-U_CFUNC void
-res_load(ResourceData *pResData,
-         const char *path, const char *name, UErrorCode *errorCode);
+U_CFUNC فراغ
+res_بارگیری(Resource_داده *p_Res_داده,
+         ثابت حرف *مسیر, ثابت حرف *name, UError_کد *error_کد);
 
 /*
  * Release a resource bundle file.
  * This does not release the ResourceData structure itself.
  */
-U_CFUNC void
-res_unload(ResourceData *pResData);
+U_CFUNC فراغ
+res_unload(Resource_داده *p_Res_داده);
 
 U_CAPI UResType U_EXPORT2
-res_getPublicType(Resource res);
+res_get_عمومی_Type(Resource res);
 
 ///////////////////////////////////////////////////////////////////////////
 // To enable tracing, use the inline versions of the res_get* functions. //
@@ -436,32 +436,32 @@ res_getPublicType(Resource res);
  * and set its length in *pLength.
  * Returns NULL if not found.
  */
-U_CAPI const UChar * U_EXPORT2
-res_getStringNoTrace(const ResourceData *pResData, Resource res, int32_t *pLength);
+U_CAPI ثابت UChar * U_EXPORT2
+res_getStringNoTrace(ثابت Resource_داده *p_Res_داده, Resource res, int32_t *p_درازی);
 
-U_CAPI const uint8_t * U_EXPORT2
-res_getBinaryNoTrace(const ResourceData *pResData, Resource res, int32_t *pLength);
+U_CAPI ثابت uint8_t * U_EXPORT2
+res_get_دودویی_No_Trace(ثابت Resource_داده *p_Res_داده, Resource res, int32_t *p_درازی);
 
-U_CAPI const int32_t * U_EXPORT2
-res_getIntVectorNoTrace(const ResourceData *pResData, Resource res, int32_t *pLength);
+U_CAPI ثابت int32_t * U_EXPORT2
+res_get_Int_وکتور_No_Trace(ثابت Resource_داده *p_Res_داده, Resource res, int32_t *p_درازی);
 
-U_CAPI const UChar * U_EXPORT2
-res_getAlias(const ResourceData *pResData, Resource res, int32_t *pLength);
+U_CAPI ثابت UChar * U_EXPORT2
+res_getAlias(ثابت Resource_داده *p_Res_داده, Resource res, int32_t *p_درازی);
 
 U_CAPI Resource U_EXPORT2
-res_getResource(const ResourceData *pResData, const char *key);
+res_getResource(ثابت Resource_داده *p_Res_داده, ثابت حرف *کلید);
 
 U_CAPI int32_t U_EXPORT2
-res_countArrayItems(const ResourceData *pResData, Resource res);
+res_شمار_Array_اقلام(ثابت Resource_داده *p_Res_داده, Resource res);
 
 U_CAPI Resource U_EXPORT2
-res_getArrayItem(const ResourceData *pResData, Resource array, int32_t indexS);
+res_get_Array_قلم(ثابت Resource_داده *p_Res_داده, Resource array, int32_t شاخص_S);
 
 U_CAPI Resource U_EXPORT2
-res_getTableItemByIndex(const ResourceData *pResData, Resource table, int32_t indexS, const char ** key);
+res_get_جدول_قلم_By_شاخص(ثابت Resource_داده *p_Res_داده, Resource جدول, int32_t شاخص_S, ثابت حرف ** کلید);
 
 U_CAPI Resource U_EXPORT2
-res_getTableItemByKey(const ResourceData *pResData, Resource table, int32_t *indexS, const char* * key);
+res_get_جدول_قلم_By_کلید(ثابت Resource_داده *p_Res_داده, Resource جدول, int32_t *شاخص_S, ثابت حرف* * کلید);
 
 /**
  * Iterates over the path and stops when a scalar resource is found.
@@ -472,103 +472,103 @@ res_getTableItemByKey(const ResourceData *pResData, Resource table, int32_t *ind
  * @param path input: "CollationElements/Sequence" or "zoneStrings/3/2" etc.;
  *             output: points to the part that has not yet been processed
  */
-U_CFUNC Resource res_findResource(const ResourceData *pResData, Resource r,
-                                  char** path, const char** key);
+U_CFUNC Resource res_پیدا_کن_Resource(ثابت Resource_داده *p_Res_داده, Resource r,
+                                  حرف** مسیر, ثابت حرف** کلید);
 
-#ifdef __cplusplus
+#اگر_تعریف_شده __cplusplus
 
-#include "resource.h"
-#include "restrace.h"
+#ضمن "resource.h"
+#ضمن "restrace.h"
 
 U_NAMESPACE_BEGIN
 
-inline const char16_t* res_getString(const ResourceTracer& traceInfo,
-        const ResourceData *pResData, Resource res, int32_t *pLength) {
+مضمن ثابت char16_t* res_getString(ثابت ResourceTracer& traceInfo,
+        ثابت Resource_داده *p_Res_داده, Resource res, int32_t *p_درازی) {
     traceInfo.trace("string");
-    return res_getStringNoTrace(pResData, res, pLength);
+    أرجع res_getStringNoTrace(p_Res_داده, res, p_درازی);
 }
 
-inline const uint8_t* res_getBinary(const ResourceTracer& traceInfo,
-        const ResourceData *pResData, Resource res, int32_t *pLength) {
+مضمن ثابت uint8_t* res_get_دودویی(ثابت ResourceTracer& traceInfo,
+        ثابت Resource_داده *p_Res_داده, Resource res, int32_t *p_درازی) {
     traceInfo.trace("binary");
-    return res_getBinaryNoTrace(pResData, res, pLength);
+    أرجع res_get_دودویی_No_Trace(p_Res_داده, res, p_درازی);
 }
 
-inline const int32_t* res_getIntVector(const ResourceTracer& traceInfo,
-        const ResourceData *pResData, Resource res, int32_t *pLength) {
+مضمن ثابت int32_t* res_get_Int_وکتور(ثابت ResourceTracer& traceInfo,
+        ثابت Resource_داده *p_Res_داده, Resource res, int32_t *p_درازی) {
     traceInfo.trace("intvector");
-    return res_getIntVectorNoTrace(pResData, res, pLength);
+    أرجع res_get_Int_وکتور_No_Trace(p_Res_داده, res, p_درازی);
 }
 
-inline int32_t res_getInt(const ResourceTracer& traceInfo, Resource res) {
+مضمن int32_t res_getInt(ثابت ResourceTracer& traceInfo, Resource res) {
     traceInfo.trace("int");
-    return RES_GET_INT_NO_TRACE(res);
+    أرجع RES_GET_INT_NO_TRACE(res);
 }
 
-inline uint32_t res_getUInt(const ResourceTracer& traceInfo, Resource res) {
+مضمن uint32_t res_getUInt(ثابت ResourceTracer& traceInfo, Resource res) {
     traceInfo.trace("uint");
-    return RES_GET_UINT_NO_TRACE(res);
+    أرجع RES_GET_UINT_NO_TRACE(res);
 }
 
-class ResourceDataValue : public ResourceValue {
-public:
-    ResourceDataValue() :
-        pResData(nullptr),
-        validLocaleDataEntry(nullptr),
+class Resource_داده_مقدار : عام Resource_مقدار {
+عام:
+    Resource_داده_مقدار() :
+        p_Res_داده(nullptr),
+        valid_Locale_داده_مدخل(nullptr),
         res(static_cast<Resource>(URES_NONE)),
         fTraceInfo() {}
-    virtual ~ResourceDataValue();
+    مجازی ~Resource_داده_مقدار();
 
-    void setData(const ResourceData &data) {
-        pResData = &data;
+    فراغ مجموعه_داده(ثابت Resource_داده &داده) {
+        p_Res_داده = &داده;
     }
     
-    void setValidLocaleDataEntry(UResourceDataEntry *entry) {
-        validLocaleDataEntry = entry;
+    فراغ مجموعه_Valid_Locale_داده_مدخل(UResource_داده_مدخل *مدخل) {
+        valid_Locale_داده_مدخل = مدخل;
     }
 
-    void setResource(Resource r, ResourceTracer&& traceInfo) {
+    فراغ مجموعه_Resource(Resource r, ResourceTracer&& traceInfo) {
         res = r;
         fTraceInfo = traceInfo;
     }
 
-    const ResourceData &getData() const { return *pResData; }
-    UResourceDataEntry *getValidLocaleDataEntry() const { return validLocaleDataEntry; }
-    Resource getResource() const { return res; }
-    virtual UResType getType() const override;
-    virtual const char16_t *getString(int32_t &length, UErrorCode &errorCode) const override;
-    virtual const char16_t *getAliasString(int32_t &length, UErrorCode &errorCode) const override;
-    virtual int32_t getInt(UErrorCode &errorCode) const override;
-    virtual uint32_t getUInt(UErrorCode &errorCode) const override;
-    virtual const int32_t *getIntVector(int32_t &length, UErrorCode &errorCode) const override;
-    virtual const uint8_t *getBinary(int32_t &length, UErrorCode &errorCode) const override;
-    virtual ResourceArray getArray(UErrorCode &errorCode) const override;
-    virtual ResourceTable getTable(UErrorCode &errorCode) const override;
-    virtual UBool isNoInheritanceMarker() const override;
-    virtual int32_t getStringArray(UnicodeString *dest, int32_t capacity,
-                                   UErrorCode &errorCode) const override;
-    virtual int32_t getStringArrayOrStringAsArray(UnicodeString *dest, int32_t capacity,
-                                                  UErrorCode &errorCode) const override;
-    virtual UnicodeString getStringOrFirstOfArray(UErrorCode &errorCode) const override;
+    ثابت Resource_داده &get_داده() ثابت { أرجع *p_Res_داده; }
+    UResource_داده_مدخل *get_Valid_Locale_داده_مدخل() ثابت { أرجع valid_Locale_داده_مدخل; }
+    Resource getResource() ثابت { أرجع res; }
+    مجازی UResType getType() ثابت override;
+    مجازی ثابت char16_t *getString(int32_t &درازی, UError_کد &error_کد) ثابت override;
+    مجازی ثابت char16_t *getAliasString(int32_t &درازی, UError_کد &error_کد) ثابت override;
+    مجازی int32_t getInt(UError_کد &error_کد) ثابت override;
+    مجازی uint32_t getUInt(UError_کد &error_کد) ثابت override;
+    مجازی ثابت int32_t *get_Int_وکتور(int32_t &درازی, UError_کد &error_کد) ثابت override;
+    مجازی ثابت uint8_t *get_دودویی(int32_t &درازی, UError_کد &error_کد) ثابت override;
+    مجازی ResourceArray getArray(UError_کد &error_کد) ثابت override;
+    مجازی Resource_جدول get_جدول(UError_کد &error_کد) ثابت override;
+    مجازی UBool isNoInheritanceMarker() ثابت override;
+    مجازی int32_t getStringArray(UnicodeString *dest, int32_t ظرفیت,
+                                   UError_کد &error_کد) ثابت override;
+    مجازی int32_t getStringArrayOrStringAsArray(UnicodeString *dest, int32_t ظرفیت,
+                                                  UError_کد &error_کد) ثابت override;
+    مجازی UnicodeString get_String_Or_اولی_از_Array(UError_کد &error_کد) ثابت override;
 
-private:
-    const ResourceData *pResData;
-    UResourceDataEntry *validLocaleDataEntry;
+خاص:
+    ثابت Resource_داده *p_Res_داده;
+    UResource_داده_مدخل *valid_Locale_داده_مدخل;
     Resource res;
     ResourceTracer fTraceInfo;
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_انتها
 
-#endif  /* __cplusplus */
+#پایان_اگر  /* __cplusplus */
 
 /**
  * Swap an ICU resource bundle. See udataswp.h.
  * @internal
  */
 U_CAPI int32_t U_EXPORT2
-ures_swap(const UDataSwapper *ds,
-          const void *inData, int32_t length, void *outData,
-          UErrorCode *pErrorCode);
+ures_جابجا(ثابت UDataSwapper *ds,
+          ثابت فراغ *درون_داده, int32_t درازی, فراغ *بیرون_داده,
+          UError_کد *p_Error_کد);
 
-#endif
+#پایان_اگر

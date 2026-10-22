@@ -17,8 +17,8 @@
 *   *Important*: #include this file before any other header files!
 */
 
-#ifndef __UPOSIXDEFS_H__
-#define __UPOSIXDEFS_H__
+#اگر_تعریف_نشده __UPOSIXDEFS_H__
+#تعریف_کن __UPOSIXDEFS_H__
 
 /*
  * Define _XOPEN_SOURCE for access to POSIX functions.
@@ -31,9 +31,9 @@
  * no header defined by IEEE Std 1003.1-2001 shall be included prior to
  * the definition of the feature test macro."
  */
-#ifdef _XOPEN_SOURCE
+#اگر_تعریف_شده XOPEN_منبع
     /* Use the predefined value. */
-#else
+#وإلا
     /*
      * Version 6.0:
      * The Open Group Base Specifications Issue 6 (IEEE Std 1003.1, 2004 Edition)
@@ -44,8 +44,8 @@
      * and define _XOPEN_SOURCE to different values depending on __STDC_VERSION__.
      * In C++ source code (e.g., putil.cpp), __STDC_VERSION__ is not defined at all.
      */
-#   define _XOPEN_SOURCE 600
-#endif
+#   define XOPEN_منبع 600
+#پایان_اگر
 
 /*
  * Make sure things like realpath and such functions work.
@@ -54,9 +54,9 @@
  *
  * z/OS needs this definition for timeval and to get usleep.
  */
-#if !defined(_XOPEN_SOURCE_EXTENDED) && defined(__TOS_MVS__)
-#   define _XOPEN_SOURCE_EXTENDED 1
-#endif
+#إذا !defined(XOPEN_منبع_EXTENDED) && defined(__TOS_MVS__)
+#   define XOPEN_منبع_EXTENDED 1
+#پایان_اگر
 
 /**
  * Solaris says:
@@ -64,19 +64,19 @@
  *   than a c99 or later compiler."
  * Apparently C++11 is not "or later". Work around this.
  */
-#if defined(__cplusplus) && (defined(sun) || defined(__sun)) && !defined (_STDC_C99)
+#إذا defined(__cplusplus) && (defined(sun) || defined(__sun)) && !defined (_STDC_C99)
 #   define _STDC_C99
-#endif
+#پایان_اگر
 
-#if !defined _POSIX_C_SOURCE && \
+#إذا !defined _POSIX_C_SOURCE && \
     defined(__APPLE__) && defined(__MACH__) && !defined(__clang__)
 // Needed to prevent EOWNERDEAD issues with GCC on Mac
-#define _POSIX_C_SOURCE 200809L
-#endif
+#تعریف_کن _POSIX_C_SOURCE 200809L
+#پایان_اگر
 
 /* Prevent _XOPEN_SOURCE from breaking build on macOS when aligned_alloc exists. */
-#if defined(__APPLE__) && !defined(_DARWIN_C_SOURCE)
-#   define _DARWIN_C_SOURCE
-#endif
+#إذا defined(__APPLE__) && !defined(DARWIN_C_منبع)
+#   define DARWIN_C_منبع
+#پایان_اگر
 
-#endif  /* __UPOSIXDEFS_H__ */
+#پایان_اگر  /* __UPOSIXDEFS_H__ */

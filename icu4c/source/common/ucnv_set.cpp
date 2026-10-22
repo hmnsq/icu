@@ -20,51 +20,51 @@
 *   implementation functions on the USet implementation.
 */
 
-#include "unicode/utypes.h"
-#include "unicode/uset.h"
-#include "unicode/ucnv.h"
-#include "ucnv_bld.h"
-#include "uset_imp.h"
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/uset.h"
+#ضمن "unicode/ucnv.h"
+#ضمن "ucnv_bld.h"
+#ضمن "uset_imp.h"
 
-#if !UCONFIG_NO_CONVERSION
+#إذا !UCONFIG_NO_CONVERSION
 
-U_CAPI void U_EXPORT2
-ucnv_getUnicodeSet(const UConverter *cnv,
-                   USet *setFillIn,
-                   UConverterUnicodeSet whichSet,
-                   UErrorCode *pErrorCode) {
+U_CAPI فراغ U_EXPORT2
+ucnv_get_Unicode_مجموعه(ثابت UConverter *cnv,
+                   USet *مجموعه_Fill_درون,
+                   UConverter_Unicode_مجموعه which_مجموعه,
+                   UError_کد *p_Error_کد) {
     /* argument checking */
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return;
+    إذا(p_Error_کد==اشاره_تهی || U_FAILURE(*p_Error_کد)) {
+        أرجع;
     }
-    if(cnv==nullptr || setFillIn==nullptr || whichSet<UCNV_ROUNDTRIP_SET || UCNV_SET_COUNT<=whichSet) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+    إذا(cnv==اشاره_تهی || مجموعه_Fill_درون==اشاره_تهی || which_مجموعه<UCNV_ROUNDTRIP_مجموعه || UCNV_مجموعه_شمار<=which_مجموعه) {
+        *p_Error_کد=U_ILLEGAL_آرگومان_ERROR;
+        أرجع;
     }
 
     /* does this converter support this function? */
-    if(cnv->sharedData->impl->getUnicodeSet==nullptr) {
-        *pErrorCode=U_UNSUPPORTED_ERROR;
-        return;
+    إذا(cnv->shared_داده->impl->get_Unicode_مجموعه==اشاره_تهی) {
+        *p_Error_کد=U_UNSUPPORTED_ERROR;
+        أرجع;
     }
 
     {
         USetAdder sa={
-            nullptr,
-            uset_add,
-            uset_addRange,
-            uset_addString,
+            اشاره_تهی,
+            uset_جمع_کن,
+            uset_جمع_کن_Range,
+            uset_جمع_کن_String,
             uset_remove,
             uset_removeRange
         };
-        sa.set=setFillIn;
+        sa.مجموعه=مجموعه_Fill_درون;
 
         /* empty the set */
-        uset_clear(setFillIn);
+        uset_clear(مجموعه_Fill_درون);
 
         /* call the converter to add the code points it supports */
-        cnv->sharedData->impl->getUnicodeSet(cnv, &sa, whichSet, pErrorCode);
+        cnv->shared_داده->impl->get_Unicode_مجموعه(cnv, &sa, which_مجموعه, p_Error_کد);
     }
 }
 
-#endif
+#پایان_اگر

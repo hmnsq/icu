@@ -4,19 +4,19 @@
 // localeprioritylist.h
 // created: 2019jul11 Markus W. Scherer
 
-#ifndef __LOCALEPRIORITYLIST_H__
-#define __LOCALEPRIORITYLIST_H__
+#اگر_تعریف_نشده __LOCALEPRIORITYLIST_H__
+#تعریف_کن __LOCALEPRIORITYLIST_H__
 
-#include "unicode/utypes.h"
-#include "unicode/locid.h"
-#include "unicode/stringpiece.h"
-#include "unicode/uobject.h"
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/locid.h"
+#ضمن "unicode/stringpiece.h"
+#ضمن "unicode/uobject.h"
 
-struct UHashtable;
+بنية UHashtable;
 
 U_NAMESPACE_BEGIN
 
-struct LocaleAndWeightArray;
+بنية Locale_And_وزن_Array;
 
 /**
  * Parses a list of locales from an accept-language string.
@@ -54,62 +54,62 @@ struct LocaleAndWeightArray;
  *        qvalue         = ( "0" [ "." 0*3DIGIT ] )
  *                       | ( "1" [ "." 0*3("0") ] )
  */
-class U_COMMON_API LocalePriorityList : public UMemory {
-public:
-    class Iterator : public Locale::Iterator {
-    public:
-        UBool hasNext() const override { return count < length; }
+class U_COMMON_API Locale_اولویت_List : عام UMemory {
+عام:
+    class Iterator : عام Locale::Iterator {
+    عام:
+        UBool has_بعدی() ثابت override { أرجع شمار < درازی; }
 
-        const Locale &next() override {
-            for(;;) {
-                const Locale *locale = list.localeAt(index++);
-                if (locale != nullptr) {
-                    ++count;
-                    return *locale;
+        ثابت Locale &بعدی() override {
+            لكل(;;) {
+                ثابت Locale *locale = list.localeAt(شاخص++);
+                إذا (locale != nullptr) {
+                    ++شمار;
+                    أرجع *locale;
                 }
             }
         }
 
-    private:
-        friend class LocalePriorityList;
+    خاص:
+        دوست class Locale_اولویت_List;
 
-        Iterator(const LocalePriorityList &list) : list(list), length(list.getLength()) {}
+        Iterator(ثابت Locale_اولویت_List &list) : list(list), درازی(list.get_درازی()) {}
 
-        const LocalePriorityList &list;
-        int32_t index = 0;
-        int32_t count = 0;
-        const int32_t length;
+        ثابت Locale_اولویت_List &list;
+        int32_t شاخص = 0;
+        int32_t شمار = 0;
+        ثابت int32_t درازی;
     };
 
-    LocalePriorityList(StringPiece s, UErrorCode &errorCode);
+    Locale_اولویت_List(StringPiece s, UError_کد &error_کد);
 
-    ~LocalePriorityList();
+    ~Locale_اولویت_List();
 
-    int32_t getLength() const { return listLength - numRemoved; }
+    int32_t get_درازی() ثابت { أرجع list_درازی - رقم_Removed; }
 
-    int32_t getLengthIncludingRemoved() const { return listLength; }
+    int32_t get_درازی_Including_Removed() ثابت { أرجع list_درازی; }
 
-    Iterator iterator() const { return Iterator(*this); }
+    Iterator iterator() ثابت { أرجع Iterator(*this); }
 
-    const Locale *localeAt(int32_t i) const;
+    ثابت Locale *localeAt(int32_t i) ثابت;
 
     Locale *orphanLocaleAt(int32_t i);
 
-private:
-    LocalePriorityList(const LocalePriorityList &) = delete;
-    LocalePriorityList &operator=(const LocalePriorityList &) = delete;
+خاص:
+    Locale_اولویت_List(ثابت Locale_اولویت_List &) = delete;
+    Locale_اولویت_List &عملگر=(ثابت Locale_اولویت_List &) = delete;
 
-    bool add(const Locale &locale, int32_t weight, UErrorCode &errorCode);
+    bool جمع_کن(ثابت Locale &locale, int32_t وزن, UError_کد &error_کد);
 
-    void sort(UErrorCode &errorCode);
+    فراغ مرتب_سازی(UError_کد &error_کد);
 
-    LocaleAndWeightArray *list = nullptr;
-    int32_t listLength = 0;
-    int32_t numRemoved = 0;
+    Locale_And_وزن_Array *list = nullptr;
+    int32_t list_درازی = 0;
+    int32_t رقم_Removed = 0;
     bool hasWeights = false;  // other than 1.0
     UHashtable *map = nullptr;
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_انتها
 
-#endif  // __LOCALEPRIORITYLIST_H__
+#پایان_اگر  // __LOCALEPRIORITYLIST_H__

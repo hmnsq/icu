@@ -21,128 +21,128 @@
  *   06/29/2000  helena      Major rewrite of the callback interface.
 */
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#إذا !UCONFIG_NO_CONVERSION
 
-#include "unicode/putil.h"
-#include "unicode/udata.h"
-#include "unicode/ucnv.h"
-#include "unicode/uloc.h"
-#include "mutex.h"
-#include "putilimp.h"
-#include "uassert.h"
-#include "utracimp.h"
-#include "ucnv_io.h"
-#include "ucnv_bld.h"
-#include "ucnvmbcs.h"
-#include "ucnv_ext.h"
-#include "ucnv_cnv.h"
-#include "ucnv_imp.h"
-#include "uhash.h"
-#include "umutex.h"
-#include "cstring.h"
-#include "cmemory.h"
-#include "ucln_cmn.h"
-#include "ustr_cnv.h"
+#ضمن "unicode/putil.h"
+#ضمن "unicode/udata.h"
+#ضمن "unicode/ucnv.h"
+#ضمن "unicode/uloc.h"
+#ضمن "mutex.h"
+#ضمن "putilimp.h"
+#ضمن "uassert.h"
+#ضمن "utracimp.h"
+#ضمن "ucnv_io.h"
+#ضمن "ucnv_bld.h"
+#ضمن "ucnvmbcs.h"
+#ضمن "ucnv_ext.h"
+#ضمن "ucnv_cnv.h"
+#ضمن "ucnv_imp.h"
+#ضمن "uhash.h"
+#ضمن "umutex.h"
+#ضمن "cstring.h"
+#ضمن "cmemory.h"
+#ضمن "ucln_cmn.h"
+#ضمن "ustr_cnv.h"
 
 
-#if 0
-#include <stdio.h>
-extern void UCNV_DEBUG_LOG(char *what, char *who, void *p, int l);
-#define UCNV_DEBUG_LOG(x,y,z) UCNV_DEBUG_LOG(x,y,z,__LINE__)
-#else
+#إذا 0
+#ضمن <stdio.h>
+خارجي فراغ UCNV_DEBUG_LOG(حرف *what, حرف *who, فراغ *p, صحيح l);
+#تعریف_کن UCNV_DEBUG_LOG(x,y,z) UCNV_DEBUG_LOG(x,y,z,__LINE__)
+#وإلا
 # define UCNV_DEBUG_LOG(x,y,z)
-#endif
+#پایان_اگر
 
-static const UConverterSharedData * const
-converterData[UCNV_NUMBER_OF_SUPPORTED_CONVERTER_TYPES]={
-    nullptr, nullptr,
+ساكن ثابت UConverter_Shared_داده * ثابت
+converter_داده[UCNV_عدد_از_SUPPORTED_CONVERTER_TYPES]={
+    اشاره_تهی, اشاره_تهی,
 
-#if UCONFIG_NO_LEGACY_CONVERSION
-    nullptr,
-#else
+#إذا UCONFIG_NO_LEGACY_CONVERSION
+    اشاره_تهی,
+#وإلا
     &_MBCSData,
-#endif
+#پایان_اگر
 
-    &_Latin1Data,
-    &_UTF8Data, &_UTF16BEData, &_UTF16LEData,
-#if UCONFIG_ONLY_HTML_CONVERSION
-    nullptr, nullptr,
-#else
+    &Latin1_داده,
+    &UTF8_داده, &_UTF16BEData, &_UTF16LEData,
+#إذا UCONFIG_ONLY_HTML_CONVERSION
+    اشاره_تهی, اشاره_تهی,
+#وإلا
     &_UTF32BEData, &_UTF32LEData,
-#endif
-    nullptr,
+#پایان_اگر
+    اشاره_تهی,
 
-#if UCONFIG_NO_LEGACY_CONVERSION
-    nullptr,
-#else
-    &_ISO2022Data,
-#endif
+#إذا UCONFIG_NO_LEGACY_CONVERSION
+    اشاره_تهی,
+#وإلا
+    &ISO2022_داده,
+#پایان_اگر
 
-#if UCONFIG_NO_LEGACY_CONVERSION || UCONFIG_ONLY_HTML_CONVERSION
-    nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-    nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-    nullptr,
-#else
+#إذا UCONFIG_NO_LEGACY_CONVERSION || UCONFIG_ONLY_HTML_CONVERSION
+    اشاره_تهی, اشاره_تهی, اشاره_تهی, اشاره_تهی, اشاره_تهی, اشاره_تهی,
+    اشاره_تهی, اشاره_تهی, اشاره_تهی, اشاره_تهی, اشاره_تهی, اشاره_تهی,
+    اشاره_تهی,
+#وإلا
     &_LMBCSData1,&_LMBCSData2, &_LMBCSData3, &_LMBCSData4, &_LMBCSData5, &_LMBCSData6,
     &_LMBCSData8,&_LMBCSData11,&_LMBCSData16,&_LMBCSData17,&_LMBCSData18,&_LMBCSData19,
     &_HZData,
-#endif
+#پایان_اگر
 
-#if UCONFIG_ONLY_HTML_CONVERSION
-    nullptr,
-#else
+#إذا UCONFIG_ONLY_HTML_CONVERSION
+    اشاره_تهی,
+#وإلا
     &_SCSUData,
-#endif
+#پایان_اگر
 
 
-#if UCONFIG_NO_LEGACY_CONVERSION || UCONFIG_ONLY_HTML_CONVERSION
-    nullptr,
-#else
+#إذا UCONFIG_NO_LEGACY_CONVERSION || UCONFIG_ONLY_HTML_CONVERSION
+    اشاره_تهی,
+#وإلا
     &_ISCIIData,
-#endif
+#پایان_اگر
 
     &_ASCIIData,
-#if UCONFIG_ONLY_HTML_CONVERSION
-    nullptr, nullptr, &_UTF16Data, nullptr, nullptr, nullptr,
-#else
-    &_UTF7Data, &_Bocu1Data, &_UTF16Data, &_UTF32Data, &_CESU8Data, &_IMAPData,
-#endif
+#إذا UCONFIG_ONLY_HTML_CONVERSION
+    اشاره_تهی, اشاره_تهی, &UTF16_داده, اشاره_تهی, اشاره_تهی, اشاره_تهی,
+#وإلا
+    &UTF7_داده, &Bocu1_داده, &UTF16_داده, &UTF32_داده, &CESU8_داده, &_IMAPData,
+#پایان_اگر
 
-#if UCONFIG_NO_LEGACY_CONVERSION || UCONFIG_ONLY_HTML_CONVERSION
-    nullptr,
-#else
-    &_CompoundTextData
-#endif
+#إذا UCONFIG_NO_LEGACY_CONVERSION || UCONFIG_ONLY_HTML_CONVERSION
+    اشاره_تهی,
+#وإلا
+    &Compound_متن_داده
+#پایان_اگر
 };
 
 /* Please keep this in binary sorted order for getAlgorithmicTypeFromName.
    Also the name should be in lower case and all spaces, dashes and underscores
    removed
 */
-static struct {
-  const char *name;
-  const UConverterType type;
-} const cnvNameType[] = {
-#if !UCONFIG_ONLY_HTML_CONVERSION
+ساكن بنية {
+  ثابت حرف *name;
+  ثابت UConverterType type;
+} ثابت cnvNameType[] = {
+#إذا !UCONFIG_ONLY_HTML_CONVERSION
   { "bocu1", UCNV_BOCU1 },
   { "cesu8", UCNV_CESU8 },
-#endif
-#if !UCONFIG_NO_LEGACY_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
+#پایان_اگر
+#إذا !UCONFIG_NO_LEGACY_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
   { "hz",UCNV_HZ },
-#endif
-#if !UCONFIG_ONLY_HTML_CONVERSION
+#پایان_اگر
+#إذا !UCONFIG_ONLY_HTML_CONVERSION
   { "imapmailboxname", UCNV_IMAP_MAILBOX },
-#endif
-#if !UCONFIG_NO_LEGACY_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
+#پایان_اگر
+#إذا !UCONFIG_NO_LEGACY_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
   { "iscii", UCNV_ISCII },
-#endif
-#if !UCONFIG_NO_LEGACY_CONVERSION
+#پایان_اگر
+#إذا !UCONFIG_NO_LEGACY_CONVERSION
   { "iso2022", UCNV_ISO_2022 },
-#endif
+#پایان_اگر
   { "iso88591", UCNV_LATIN_1 },
-#if !UCONFIG_NO_LEGACY_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
+#إذا !UCONFIG_NO_LEGACY_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
   { "lmbcs1", UCNV_LMBCS_1 },
   { "lmbcs11",UCNV_LMBCS_11 },
   { "lmbcs16",UCNV_LMBCS_16 },
@@ -155,58 +155,58 @@ static struct {
   { "lmbcs5", UCNV_LMBCS_5 },
   { "lmbcs6", UCNV_LMBCS_6 },
   { "lmbcs8", UCNV_LMBCS_8 },
-#endif
-#if !UCONFIG_ONLY_HTML_CONVERSION
+#پایان_اگر
+#إذا !UCONFIG_ONLY_HTML_CONVERSION
   { "scsu", UCNV_SCSU },
-#endif
+#پایان_اگر
   { "usascii", UCNV_US_ASCII },
   { "utf16", UCNV_UTF16 },
   { "utf16be", UCNV_UTF16_BigEndian },
   { "utf16le", UCNV_UTF16_LittleEndian },
-#if U_IS_BIG_ENDIAN
+#إذا U_IS_BIG_ENDIAN
   { "utf16oppositeendian", UCNV_UTF16_LittleEndian },
   { "utf16platformendian", UCNV_UTF16_BigEndian },
-#else
+#وإلا
   { "utf16oppositeendian", UCNV_UTF16_BigEndian},
   { "utf16platformendian", UCNV_UTF16_LittleEndian },
-#endif
-#if !UCONFIG_ONLY_HTML_CONVERSION
+#پایان_اگر
+#إذا !UCONFIG_ONLY_HTML_CONVERSION
   { "utf32", UCNV_UTF32 },
   { "utf32be", UCNV_UTF32_BigEndian },
   { "utf32le", UCNV_UTF32_LittleEndian },
-#if U_IS_BIG_ENDIAN
+#إذا U_IS_BIG_ENDIAN
   { "utf32oppositeendian", UCNV_UTF32_LittleEndian },
   { "utf32platformendian", UCNV_UTF32_BigEndian },
-#else
+#وإلا
   { "utf32oppositeendian", UCNV_UTF32_BigEndian },
   { "utf32platformendian", UCNV_UTF32_LittleEndian },
-#endif
-#endif
-#if !UCONFIG_ONLY_HTML_CONVERSION
+#پایان_اگر
+#پایان_اگر
+#إذا !UCONFIG_ONLY_HTML_CONVERSION
   { "utf7", UCNV_UTF7 },
-#endif
+#پایان_اگر
   { "utf8", UCNV_UTF8 },
-#if !UCONFIG_ONLY_HTML_CONVERSION
-  { "x11compoundtext", UCNV_COMPOUND_TEXT}
-#endif
+#إذا !UCONFIG_ONLY_HTML_CONVERSION
+  { "x11compoundtext", UCNV_COMPOUND_متن}
+#پایان_اگر
 };
 
 
 /*initializes some global variables */
-static UHashtable *SHARED_DATA_HASHTABLE = nullptr;
-static icu::UMutex cnvCacheMutex;
+ساكن UHashtable *SHARED_داده_HASHTABLE = اشاره_تهی;
+ساكن icu::UMutex cnvCacheMutex;
 /*  Note:  the global mutex is used for      */
 /*         reference count updates.          */
 
-static const char **gAvailableConverters = nullptr;
-static uint16_t gAvailableConverterCount = 0;
-static icu::UInitOnce gAvailableConvertersInitOnce {};
+ساكن ثابت حرف **g_موجود_Converters = اشاره_تهی;
+ساكن uint16_t g_موجود_Converter_شمار = 0;
+ساكن icu::UInitOnce g_موجود_Converters_Init_Once {};
 
-#if !U_CHARSET_IS_UTF8
+#إذا !U_CHARSET_IS_UTF8
 
 /* This contains the resolved converter name. So no further alias lookup is needed again. */
-static char gDefaultConverterNameBuffer[UCNV_MAX_CONVERTER_NAME_LENGTH + 1]; /* +1 for nullptr */
-static const char *gDefaultConverterName = nullptr;
+ساكن حرف g_Default_Converter_Name_میانگیر[UCNV_MAX_CONVERTER_NAME_درازی + 1]; /* +1 for nullptr */
+ساكن ثابت حرف *gDefaultConverterName = اشاره_تهی;
 
 /*
 If the default converter is an algorithmic converter, this is the cached value.
@@ -214,156 +214,156 @@ We don't cache a full UConverter and clone it because ucnv_clone doesn't have
 less overhead than an algorithmic open. We don't cache non-algorithmic converters
 because ucnv_flushCache must be able to unload the default converter and its table.
 */
-static const UConverterSharedData *gDefaultAlgorithmicSharedData = nullptr;
+ساكن ثابت UConverter_Shared_داده *g_Default_Algorithmic_Shared_داده = اشاره_تهی;
 
 /* Does gDefaultConverterName have a converter option and require extra parsing? */
-static UBool gDefaultConverterContainsOption;
+ساكن UBool g_Default_Converter_شامل_است_Option;
 
-#endif  /* !U_CHARSET_IS_UTF8 */
+#پایان_اگر  /* !U_CHARSET_IS_UTF8 */
 
-static const char DATA_TYPE[] = "cnv";
+ساكن ثابت حرف داده_TYPE[] = "cnv";
 
 /* ucnv_flushAvailableConverterCache. This is only called from ucnv_cleanup().
  *                       If it is ever to be called from elsewhere, synchronization
  *                       will need to be considered.
  */
-static void
-ucnv_flushAvailableConverterCache() {
-    gAvailableConverterCount = 0;
-    if (gAvailableConverters) {
-        uprv_free(const_cast<char**>(gAvailableConverters));
-        gAvailableConverters = nullptr;
+ساكن فراغ
+ucnv_flush_موجود_Converter_Cache() {
+    g_موجود_Converter_شمار = 0;
+    إذا (g_موجود_Converters) {
+        uprv_free(const_cast<حرف**>(g_موجود_Converters));
+        g_موجود_Converters = اشاره_تهی;
     }
-    gAvailableConvertersInitOnce.reset();
+    g_موجود_Converters_Init_Once.reset();
 }
 
 /* ucnv_cleanup - delete all storage held by the converter cache, except any  */
 /*                in use by open converters.                                  */
 /*                Not thread safe.                                            */
 /*                Not supported API.                                          */
-static UBool U_CALLCONV ucnv_cleanup() {
+ساكن UBool U_CALLCONV ucnv_cleanup() {
     ucnv_flushCache();
-    if (SHARED_DATA_HASHTABLE != nullptr && uhash_count(SHARED_DATA_HASHTABLE) == 0) {
-        uhash_close(SHARED_DATA_HASHTABLE);
-        SHARED_DATA_HASHTABLE = nullptr;
+    إذا (SHARED_داده_HASHTABLE != اشاره_تهی && uhash_شمار(SHARED_داده_HASHTABLE) == 0) {
+        uhash_close(SHARED_داده_HASHTABLE);
+        SHARED_داده_HASHTABLE = اشاره_تهی;
     }
 
     /* Isn't called from flushCache because other threads may have preexisting references to the table. */
-    ucnv_flushAvailableConverterCache();
+    ucnv_flush_موجود_Converter_Cache();
 
-#if !U_CHARSET_IS_UTF8
-    gDefaultConverterName = nullptr;
-    gDefaultConverterNameBuffer[0] = 0;
-    gDefaultConverterContainsOption = false;
-    gDefaultAlgorithmicSharedData = nullptr;
-#endif
+#إذا !U_CHARSET_IS_UTF8
+    gDefaultConverterName = اشاره_تهی;
+    g_Default_Converter_Name_میانگیر[0] = 0;
+    g_Default_Converter_شامل_است_Option = خطأ;
+    g_Default_Algorithmic_Shared_داده = اشاره_تهی;
+#پایان_اگر
 
-    return (SHARED_DATA_HASHTABLE == nullptr);
+    أرجع (SHARED_داده_HASHTABLE == اشاره_تهی);
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI فراغ U_EXPORT2
 ucnv_enableCleanup() {
-    ucln_common_registerCleanup(UCLN_COMMON_UCNV, ucnv_cleanup);
+    ucln_common_ثبات_Cleanup(UCLN_COMMON_UCNV, ucnv_cleanup);
 }
 
-static UBool U_CALLCONV
-isCnvAcceptable(void * /*context*/,
-                const char * /*type*/, const char * /*name*/,
-                const UDataInfo *pInfo) {
-    return
+ساكن UBool U_CALLCONV
+isCnvAcceptable(فراغ * /*context*/,
+                ثابت حرف * /*type*/, ثابت حرف * /*name*/,
+                ثابت UDataInfo *pInfo) {
+    أرجع
         pInfo->size>=20 &&
         pInfo->isBigEndian==U_IS_BIG_ENDIAN &&
         pInfo->charsetFamily==U_CHARSET_FAMILY &&
         pInfo->sizeofUChar==U_SIZEOF_UCHAR &&
-        pInfo->dataFormat[0]==0x63 &&   /* dataFormat="cnvt" */
-        pInfo->dataFormat[1]==0x6e &&
-        pInfo->dataFormat[2]==0x76 &&
-        pInfo->dataFormat[3]==0x74 &&
-        pInfo->formatVersion[0]==6;  /* Everything will be version 6 */
+        pInfo->داده_Format[0]==0x63 &&   /* dataFormat="cnvt" */
+        pInfo->داده_Format[1]==0x6e &&
+        pInfo->داده_Format[2]==0x76 &&
+        pInfo->داده_Format[3]==0x74 &&
+        pInfo->format_نسخه[0]==6;  /* Everything will be version 6 */
 }
 
 /**
  * Un flatten shared data from a UDATA..
  */
-static UConverterSharedData*
-ucnv_data_unFlattenClone(UConverterLoadArgs *pArgs, UDataMemory *pData, UErrorCode *status)
+ساكن UConverter_Shared_داده*
+ucnv_داده_un_Flatten_Clone(UConverter_بارگیری_آرگومانها *p_آرگومانها, UData_حافظه *p_داده, UError_کد *وضعیت)
 {
     /* UDataInfo info; -- necessary only if some converters have different formatVersion */
-    const uint8_t* raw = static_cast<const uint8_t*>(udata_getMemory(pData));
-    const UConverterStaticData* source = reinterpret_cast<const UConverterStaticData*>(raw);
-    UConverterSharedData *data;
-    UConverterType type = static_cast<UConverterType>(source->conversionType);
+    ثابت uint8_t* raw = static_cast<ثابت uint8_t*>(udata_get_حافظه(p_داده));
+    ثابت UConverter_Static_داده* منبع = reinterpret_cast<ثابت UConverter_Static_داده*>(raw);
+    UConverter_Shared_داده *داده;
+    UConverterType type = static_cast<UConverterType>(منبع->conversionType);
 
-    if(U_FAILURE(*status))
-        return nullptr;
+    إذا(U_FAILURE(*وضعیت))
+        أرجع اشاره_تهی;
 
-    if (static_cast<uint16_t>(type) >= UCNV_NUMBER_OF_SUPPORTED_CONVERTER_TYPES ||
-        converterData[type] == nullptr ||
-        !converterData[type]->isReferenceCounted ||
-        converterData[type]->referenceCounter != 1 ||
-        source->structSize != sizeof(UConverterStaticData))
+    إذا (static_cast<uint16_t>(type) >= UCNV_عدد_از_SUPPORTED_CONVERTER_TYPES ||
+        converter_داده[type] == اشاره_تهی ||
+        !converter_داده[type]->isReferenceCounted ||
+        converter_داده[type]->referenceCounter != 1 ||
+        منبع->struct_اندازه != حجم(UConverter_Static_داده))
     {
-        *status = U_INVALID_TABLE_FORMAT;
-        return nullptr;
+        *وضعیت = U_INVALID_جدول_FORMAT;
+        أرجع اشاره_تهی;
     }
 
-    data = static_cast<UConverterSharedData*>(uprv_malloc(sizeof(UConverterSharedData)));
-    if(data == nullptr) {
-        *status = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+    داده = static_cast<UConverter_Shared_داده*>(uprv_malloc(حجم(UConverter_Shared_داده)));
+    إذا(داده == اشاره_تهی) {
+        *وضعیت = U_حافظه_تخصیص_ERROR;
+        أرجع اشاره_تهی;
     }
 
     /* copy initial values from the static structure for this type */
-    uprv_memcpy(data, converterData[type], sizeof(UConverterSharedData));
+    uprv_memcpy(داده, converter_داده[type], حجم(UConverter_Shared_داده));
 
-    data->staticData = source;
+    داده->static_داده = منبع;
 
-    data->sharedDataCached = false;
+    داده->shared_داده_Cached = خطأ;
 
     /* fill in fields from the loaded data */
-    data->dataMemory = (void*)pData; /* for future use */
+    داده->داده_حافظه = (فراغ*)p_داده; /* for future use */
 
-    if(data->impl->load != nullptr) {
-        data->impl->load(data, pArgs, raw + source->structSize, status);
-        if(U_FAILURE(*status)) {
-            uprv_free(data);
-            return nullptr;
+    إذا(داده->impl->load != اشاره_تهی) {
+        داده->impl->load(داده, p_آرگومانها, raw + منبع->struct_اندازه, وضعیت);
+        إذا(U_FAILURE(*وضعیت)) {
+            uprv_free(داده);
+            أرجع اشاره_تهی;
         }
     }
-    return data;
+    أرجع داده;
 }
 
 /*Takes an alias name gets an actual converter file name
  *goes to disk and opens it.
  *allocates the memory and returns a new UConverter object
  */
-static UConverterSharedData *createConverterFromFile(UConverterLoadArgs *pArgs, UErrorCode * err)
+ساكن UConverter_Shared_داده *createConverterFromFile(UConverter_بارگیری_آرگومانها *p_آرگومانها, UError_کد * err)
 {
-    UDataMemory *data;
-    UConverterSharedData *sharedData;
+    UData_حافظه *داده;
+    UConverter_Shared_داده *shared_داده;
 
-    UTRACE_ENTRY_OC(UTRACE_UCNV_LOAD);
+    UTRACE_مدخل_OC(UTRACE_UCNV_بارگیری);
 
-    if (U_FAILURE (*err)) {
-        UTRACE_EXIT_STATUS(*err);
-        return nullptr;
+    إذا (U_FAILURE (*err)) {
+        UTRACE_EXIT_وضعیت(*err);
+        أرجع اشاره_تهی;
     }
 
-    UTRACE_DATA2(UTRACE_OPEN_CLOSE, "load converter %s from package %s", pArgs->name, pArgs->pkg);
+    UTRACE_DATA2(UTRACE_OPEN_CLOSE, "load converter %s from package %s", p_آرگومانها->name, p_آرگومانها->pkg);
 
-    data = udata_openChoice(pArgs->pkg, DATA_TYPE, pArgs->name, isCnvAcceptable, nullptr, err);
-    if(U_FAILURE(*err))
+    داده = udata_openChoice(p_آرگومانها->pkg, داده_TYPE, p_آرگومانها->name, isCnvAcceptable, اشاره_تهی, err);
+    إذا(U_FAILURE(*err))
     {
-        UTRACE_EXIT_STATUS(*err);
-        return nullptr;
+        UTRACE_EXIT_وضعیت(*err);
+        أرجع اشاره_تهی;
     }
 
-    sharedData = ucnv_data_unFlattenClone(pArgs, data, err);
-    if(U_FAILURE(*err))
+    shared_داده = ucnv_داده_un_Flatten_Clone(p_آرگومانها, داده, err);
+    إذا(U_FAILURE(*err))
     {
-        udata_close(data);
-        UTRACE_EXIT_STATUS(*err);
-        return nullptr;
+        udata_close(داده);
+        UTRACE_EXIT_وضعیت(*err);
+        أرجع اشاره_تهی;
     }
 
     /*
@@ -373,47 +373,47 @@ static UConverterSharedData *createConverterFromFile(UConverterLoadArgs *pArgs, 
      * in the first place, or just set the pkg field to "".
      */
 
-    UTRACE_EXIT_PTR_STATUS(sharedData, *err);
-    return sharedData;
+    UTRACE_EXIT_PTR_وضعیت(shared_داده, *err);
+    أرجع shared_داده;
 }
 
 /*returns a converter type from a string
  */
-static const UConverterSharedData *
-getAlgorithmicTypeFromName(const char *realName)
+ساكن ثابت UConverter_Shared_داده *
+getAlgorithmicTypeFromName(ثابت حرف *realName)
 {
-    uint32_t mid, start, limit;
-    uint32_t lastMid;
-    int result;
-    char strippedName[UCNV_MAX_CONVERTER_NAME_LENGTH];
+    uint32_t mid, شروع, حد;
+    uint32_t آخرین_Mid;
+    صحيح نتیجه;
+    حرف strippedName[UCNV_MAX_CONVERTER_NAME_درازی];
 
     /* Lower case and remove ignoreable characters. */
     ucnv_io_stripForCompare(strippedName, realName);
 
     /* do a binary search for the alias */
-    start = 0;
-    limit = UPRV_LENGTHOF(cnvNameType);
-    mid = limit;
-    lastMid = UINT32_MAX;
+    شروع = 0;
+    حد = UPRV_LENGTHOF(cnvNameType);
+    mid = حد;
+    آخرین_Mid = UINT32_MAX;
 
-    for (;;) {
-        mid = (start + limit) / 2;
-        if (lastMid == mid) {   /* Have we moved? */
-            break;  /* We haven't moved, and it wasn't found. */
+    لكل (;;) {
+        mid = (شروع + حد) / 2;
+        إذا (آخرین_Mid == mid) {   /* Have we moved? */
+            اكسر;  /* We haven't moved, and it wasn't found. */
         }
-        lastMid = mid;
-        result = uprv_strcmp(strippedName, cnvNameType[mid].name);
+        آخرین_Mid = mid;
+        نتیجه = uprv_strcmp(strippedName, cnvNameType[mid].name);
 
-        if (result < 0) {
-            limit = mid;
-        } else if (result > 0) {
-            start = mid;
-        } else {
-            return converterData[cnvNameType[mid].type];
+        إذا (نتیجه < 0) {
+            حد = mid;
+        } وإلا إذا (نتیجه > 0) {
+            شروع = mid;
+        } وإلا {
+            أرجع converter_داده[cnvNameType[mid].type];
         }
     }
 
-    return nullptr;
+    أرجع اشاره_تهی;
 }
 
 /*
@@ -424,7 +424,7 @@ getAlgorithmicTypeFromName(const char *realName)
 * this should be 4.
 * Larger numbers reduce the number of hash collisions, but use more memory.
 */
-#define UCNV_CACHE_LOAD_FACTOR 2
+#تعریف_کن UCNV_CACHE_بارگیری_ضریب 2
 
 /* Puts the shared data in the static hashtable SHARED_DATA_HASHTABLE */
 /*   Will always be called with the cnvCacheMutex already being held   */
@@ -432,22 +432,22 @@ getAlgorithmicTypeFromName(const char *realName)
 /* Stores the shared data in the SHARED_DATA_HASHTABLE
  * @param data The shared data
  */
-static void
-ucnv_shareConverterData(UConverterSharedData * data)
+ساكن فراغ
+ucnv_share_Converter_داده(UConverter_Shared_داده * داده)
 {
-    UErrorCode err = U_ZERO_ERROR;
+    UError_کد err = U_ZERO_ERROR;
     /*Lazy evaluates the Hashtable itself */
     /*void *sanity = nullptr;*/
 
-    if (SHARED_DATA_HASHTABLE == nullptr)
+    إذا (SHARED_داده_HASHTABLE == اشاره_تهی)
     {
-        SHARED_DATA_HASHTABLE = uhash_openSize(uhash_hashChars, uhash_compareChars, nullptr,
-                            ucnv_io_countKnownConverters(&err)*UCNV_CACHE_LOAD_FACTOR,
+        SHARED_داده_HASHTABLE = uhash_open_اندازه(uhash_hashChars, uhash_compareChars, اشاره_تهی,
+                            ucnv_io_شمار_معلوم_Converters(&err)*UCNV_CACHE_بارگیری_ضریب,
                             &err);
         ucnv_enableCleanup();
 
-        if (U_FAILURE(err))
-            return;
+        إذا (U_FAILURE(err))
+            أرجع;
     }
 
     /* ### check to see if the element is not already there! */
@@ -462,14 +462,14 @@ ucnv_shareConverterData(UConverterSharedData * data)
     */
 
     /* Mark it shared */
-    data->sharedDataCached = true;
+    داده->shared_داده_Cached = درست;
 
-    uhash_put(SHARED_DATA_HASHTABLE,
-            (void*) data->staticData->name, /* Okay to cast away const as long as
+    uhash_put(SHARED_داده_HASHTABLE,
+            (فراغ*) داده->static_داده->name, /* Okay to cast away const as long as
             keyDeleter == nullptr */
-            data,
+            داده,
             &err);
-    UCNV_DEBUG_LOG("put", data->staticData->name,data);
+    UCNV_DEBUG_LOG("put", داده->static_داده->name,داده);
 
 }
 
@@ -479,21 +479,21 @@ ucnv_shareConverterData(UConverterSharedData * data)
  * @param name The name of the shared data
  * @return the shared data from the SHARED_DATA_HASHTABLE
  */
-static UConverterSharedData *
-ucnv_getSharedConverterData(const char *name)
+ساكن UConverter_Shared_داده *
+ucnv_get_Shared_Converter_داده(ثابت حرف *name)
 {
     /*special case when no Table has yet been created we return nullptr */
-    if (SHARED_DATA_HASHTABLE == nullptr)
+    إذا (SHARED_داده_HASHTABLE == اشاره_تهی)
     {
-        return nullptr;
+        أرجع اشاره_تهی;
     }
-    else
+    وإلا
     {
-        UConverterSharedData *rc;
+        UConverter_Shared_داده *rc;
 
-        rc = static_cast<UConverterSharedData*>(uhash_get(SHARED_DATA_HASHTABLE, name));
+        rc = static_cast<UConverter_Shared_داده*>(uhash_get(SHARED_داده_HASHTABLE, name));
         UCNV_DEBUG_LOG("get",name,rc);
-        return rc;
+        أرجع rc;
     }
 }
 
@@ -508,73 +508,73 @@ ucnv_getSharedConverterData(const char *name)
  * @return if not it frees all the memory stemming from sharedConverterData and
  * returns true, otherwise returns false
  */
-static UBool
-ucnv_deleteSharedConverterData(UConverterSharedData * deadSharedData)
+ساكن UBool
+ucnv_delete_Shared_Converter_داده(UConverter_Shared_داده * dead_Shared_داده)
 {
-    UTRACE_ENTRY_OC(UTRACE_UCNV_UNLOAD);
-    UTRACE_DATA2(UTRACE_OPEN_CLOSE, "unload converter %s shared data %p", deadSharedData->staticData->name, deadSharedData);
+    UTRACE_مدخل_OC(UTRACE_UCNV_UNLOAD);
+    UTRACE_DATA2(UTRACE_OPEN_CLOSE, "unload converter %s shared data %p", dead_Shared_داده->static_داده->name, dead_Shared_داده);
 
-    if (deadSharedData->referenceCounter > 0) {
-        UTRACE_EXIT_VALUE((int32_t)false);
-        return false;
+    إذا (dead_Shared_داده->referenceCounter > 0) {
+        UTRACE_EXIT_مقدار((int32_t)خطأ);
+        أرجع خطأ;
     }
 
-    if (deadSharedData->impl->unload != nullptr) {
-        deadSharedData->impl->unload(deadSharedData);
+    إذا (dead_Shared_داده->impl->unload != اشاره_تهی) {
+        dead_Shared_داده->impl->unload(dead_Shared_داده);
     }
 
-    if(deadSharedData->dataMemory != nullptr)
+    إذا(dead_Shared_داده->داده_حافظه != اشاره_تهی)
     {
-        UDataMemory *data = (UDataMemory*)deadSharedData->dataMemory;
-        udata_close(data);
+        UData_حافظه *داده = (UData_حافظه*)dead_Shared_داده->داده_حافظه;
+        udata_close(داده);
     }
 
-    uprv_free(deadSharedData);
+    uprv_free(dead_Shared_داده);
 
-    UTRACE_EXIT_VALUE((int32_t)true);
-    return true;
+    UTRACE_EXIT_مقدار((int32_t)درست);
+    أرجع درست;
 }
 
 /**
  * Load a non-algorithmic converter.
  * If pkg==nullptr, then this function must be called inside umtx_lock(&cnvCacheMutex).
  */
-UConverterSharedData *
-ucnv_load(UConverterLoadArgs *pArgs, UErrorCode *err) {
-    UConverterSharedData *mySharedConverterData;
+UConverter_Shared_داده *
+ucnv_بارگیری(UConverter_بارگیری_آرگومانها *p_آرگومانها, UError_کد *err) {
+    UConverter_Shared_داده *my_Shared_Converter_داده;
 
-    if(err == nullptr || U_FAILURE(*err)) {
-        return nullptr;
+    إذا(err == اشاره_تهی || U_FAILURE(*err)) {
+        أرجع اشاره_تهی;
     }
 
-    if(pArgs->pkg != nullptr && *pArgs->pkg != 0) {
+    إذا(p_آرگومانها->pkg != اشاره_تهی && *p_آرگومانها->pkg != 0) {
         /* application-provided converters are not currently cached */
-        return createConverterFromFile(pArgs, err);
+        أرجع createConverterFromFile(p_آرگومانها, err);
     }
 
-    mySharedConverterData = ucnv_getSharedConverterData(pArgs->name);
-    if (mySharedConverterData == nullptr)
+    my_Shared_Converter_داده = ucnv_get_Shared_Converter_داده(p_آرگومانها->name);
+    إذا (my_Shared_Converter_داده == اشاره_تهی)
     {
         /*Not cached, we need to stream it in from file */
-        mySharedConverterData = createConverterFromFile(pArgs, err);
-        if (U_FAILURE (*err) || (mySharedConverterData == nullptr))
+        my_Shared_Converter_داده = createConverterFromFile(p_آرگومانها, err);
+        إذا (U_FAILURE (*err) || (my_Shared_Converter_داده == اشاره_تهی))
         {
-            return nullptr;
+            أرجع اشاره_تهی;
         }
-        else if (!pArgs->onlyTestIsLoadable)
+        وإلا إذا (!p_آرگومانها->onlyTestIsLoadable)
         {
             /* share it with other library clients */
-            ucnv_shareConverterData(mySharedConverterData);
+            ucnv_share_Converter_داده(my_Shared_Converter_داده);
         }
     }
-    else
+    وإلا
     {
         /* The data for this converter was already in the cache.            */
         /* Update the reference counter on the shared data: one more client */
-        mySharedConverterData->referenceCounter++;
+        my_Shared_Converter_داده->referenceCounter++;
     }
 
-    return mySharedConverterData;
+    أرجع my_Shared_Converter_داده;
 }
 
 /**
@@ -582,35 +582,35 @@ ucnv_load(UConverterLoadArgs *pArgs, UErrorCode *err) {
  * It must be sharedData->isReferenceCounted
  * and this function must be called inside umtx_lock(&cnvCacheMutex).
  */
-U_CAPI void
-ucnv_unload(UConverterSharedData *sharedData) {
-    if(sharedData != nullptr) {
-        if (sharedData->referenceCounter > 0) {
-            sharedData->referenceCounter--;
+U_CAPI فراغ
+ucnv_unload(UConverter_Shared_داده *shared_داده) {
+    إذا(shared_داده != اشاره_تهی) {
+        إذا (shared_داده->referenceCounter > 0) {
+            shared_داده->referenceCounter--;
         }
 
-        if((sharedData->referenceCounter <= 0)&&(sharedData->sharedDataCached == false)) {
-            ucnv_deleteSharedConverterData(sharedData);
+        إذا((shared_داده->referenceCounter <= 0)&&(shared_داده->shared_داده_Cached == خطأ)) {
+            ucnv_delete_Shared_Converter_داده(shared_داده);
         }
     }
 }
 
-U_CFUNC void
-ucnv_unloadSharedDataIfReady(UConverterSharedData *sharedData)
+U_CFUNC فراغ
+ucnv_unload_Shared_داده_If_Ready(UConverter_Shared_داده *shared_داده)
 {
-    if(sharedData != nullptr && sharedData->isReferenceCounted) {
-        umtx_lock(&cnvCacheMutex);
-        ucnv_unload(sharedData);
+    إذا(shared_داده != اشاره_تهی && shared_داده->isReferenceCounted) {
+        umtx_قفل(&cnvCacheMutex);
+        ucnv_unload(shared_داده);
         umtx_unlock(&cnvCacheMutex);
     }
 }
 
-U_CFUNC void
-ucnv_incrementRefCount(UConverterSharedData *sharedData)
+U_CFUNC فراغ
+ucnv_increment_Ref_شمار(UConverter_Shared_داده *shared_داده)
 {
-    if(sharedData != nullptr && sharedData->isReferenceCounted) {
-        umtx_lock(&cnvCacheMutex);
-        sharedData->referenceCounter++;
+    إذا(shared_داده != اشاره_تهی && shared_داده->isReferenceCounted) {
+        umtx_قفل(&cnvCacheMutex);
+        shared_داده->referenceCounter++;
         umtx_unlock(&cnvCacheMutex);
     }
 }
@@ -622,80 +622,80 @@ ucnv_incrementRefCount(UConverterSharedData *sharedData)
  * otherwise the existing values in pPieces remain.
  * *pArgs will be set to the pPieces values.
  */
-static void
-parseConverterOptions(const char *inName,
+ساكن فراغ
+parseConverterOptions(ثابت حرف *درون_Name,
                       UConverterNamePieces *pPieces,
-                      UConverterLoadArgs *pArgs,
-                      UErrorCode *err)
+                      UConverter_بارگیری_آرگومانها *p_آرگومانها,
+                      UError_کد *err)
 {
-    char *cnvName = pPieces->cnvName;
-    char c;
+    حرف *cnvName = pPieces->cnvName;
+    حرف c;
     int32_t len = 0;
 
-    pArgs->name=inName;
-    pArgs->locale=pPieces->locale;
-    pArgs->options=pPieces->options;
+    p_آرگومانها->name=درون_Name;
+    p_آرگومانها->locale=pPieces->locale;
+    p_آرگومانها->options=pPieces->options;
 
     /* copy the converter name itself to cnvName */
-    while((c=*inName)!=0 && c!=UCNV_OPTION_SEP_CHAR) {
-        if (++len>=UCNV_MAX_CONVERTER_NAME_LENGTH) {
-            *err = U_ILLEGAL_ARGUMENT_ERROR;    /* bad name */
+    طالما((c=*درون_Name)!=0 && c!=UCNV_OPTION_SEP_CHAR) {
+        إذا (++len>=UCNV_MAX_CONVERTER_NAME_درازی) {
+            *err = U_ILLEGAL_آرگومان_ERROR;    /* bad name */
             pPieces->cnvName[0]=0;
-            return;
+            أرجع;
         }
         *cnvName++=c;
-        inName++;
+        درون_Name++;
     }
     *cnvName=0;
-    pArgs->name=pPieces->cnvName;
+    p_آرگومانها->name=pPieces->cnvName;
 
     /* parse options. No more name copying should occur. */
-    while((c=*inName)!=0) {
-        if(c==UCNV_OPTION_SEP_CHAR) {
-            ++inName;
+    طالما((c=*درون_Name)!=0) {
+        إذا(c==UCNV_OPTION_SEP_CHAR) {
+            ++درون_Name;
         }
 
         /* inName is behind an option separator */
-        if(uprv_strncmp(inName, "locale=", 7)==0) {
+        إذا(uprv_strncmp(درون_Name, "locale=", 7)==0) {
             /* do not modify locale itself in case we have multiple locale options */
-            char *dest=pPieces->locale;
+            حرف *dest=pPieces->locale;
 
             /* copy the locale option value */
-            inName+=7;
+            درون_Name+=7;
             len=0;
-            while((c=*inName)!=0 && c!=UCNV_OPTION_SEP_CHAR) {
-                ++inName;
+            طالما((c=*درون_Name)!=0 && c!=UCNV_OPTION_SEP_CHAR) {
+                ++درون_Name;
 
-                if(++len>=ULOC_FULLNAME_CAPACITY) {
-                    *err=U_ILLEGAL_ARGUMENT_ERROR;    /* bad name */
+                إذا(++len>=ULOC_FULLNAME_ظرفیت) {
+                    *err=U_ILLEGAL_آرگومان_ERROR;    /* bad name */
                     pPieces->locale[0]=0;
-                    return;
+                    أرجع;
                 }
 
                 *dest++=c;
             }
             *dest=0;
-        } else if(uprv_strncmp(inName, "version=", 8)==0) {
+        } وإلا إذا(uprv_strncmp(درون_Name, "version=", 8)==0) {
             /* copy the version option value into bits 3..0 of pPieces->options */
-            inName+=8;
-            c=*inName;
-            if(c==0) {
-                pArgs->options=(pPieces->options&=~UCNV_OPTION_VERSION);
-                return;
-            } else if (static_cast<uint8_t>(c - '0') < 10) {
-                pArgs->options = pPieces->options = (pPieces->options & ~UCNV_OPTION_VERSION) | static_cast<uint32_t>(c - '0');
-                ++inName;
+            درون_Name+=8;
+            c=*درون_Name;
+            إذا(c==0) {
+                p_آرگومانها->options=(pPieces->options&=~UCNV_OPTION_نسخه);
+                أرجع;
+            } وإلا إذا (static_cast<uint8_t>(c - '0') < 10) {
+                p_آرگومانها->options = pPieces->options = (pPieces->options & ~UCNV_OPTION_نسخه) | static_cast<uint32_t>(c - '0');
+                ++درون_Name;
             }
-        } else if(uprv_strncmp(inName, "swaplfnl", 8)==0) {
-            inName+=8;
-            pArgs->options=(pPieces->options|=UCNV_OPTION_SWAP_LFNL);
+        } وإلا إذا(uprv_strncmp(درون_Name, "swaplfnl", 8)==0) {
+            درون_Name+=8;
+            p_آرگومانها->options=(pPieces->options|=UCNV_OPTION_جابجا_LFNL);
         /* add processing for new options here with another } else if(uprv_strncmp(inName, "option-name=", XX)==0) { */
-        } else {
+        } وإلا {
             /* ignore any other options until we define some */
-            while(((c = *inName++) != 0) && (c != UCNV_OPTION_SEP_CHAR)) {
+            طالما(((c = *درون_Name++) != 0) && (c != UCNV_OPTION_SEP_CHAR)) {
             }
-            if(c==0) {
-                return;
+            إذا(c==0) {
+                أرجع;
             }
         }
     }
@@ -708,324 +708,324 @@ parseConverterOptions(const char *inName,
  * -Call dataConverter initializer (Data=true, Cached=true)
  * -Call AlgorithmicConverter initializer (Data=false, Cached=true)
  */
-U_CFUNC UConverterSharedData *
-ucnv_loadSharedData(const char *converterName,
+U_CFUNC UConverter_Shared_داده *
+ucnv_بارگیری_Shared_داده(ثابت حرف *converterName,
                     UConverterNamePieces *pPieces,
-                    UConverterLoadArgs *pArgs,
-                    UErrorCode * err) {
-    UConverterNamePieces stackPieces;
-    UConverterLoadArgs stackArgs;
-    UConverterSharedData *mySharedConverterData = nullptr;
-    UErrorCode internalErrorCode = U_ZERO_ERROR;
-    UBool mayContainOption = true;
-    UBool checkForAlgorithmic = true;
+                    UConverter_بارگیری_آرگومانها *p_آرگومانها,
+                    UError_کد * err) {
+    UConverterNamePieces پشته_Pieces;
+    UConverter_بارگیری_آرگومانها پشته_آرگومانها;
+    UConverter_Shared_داده *my_Shared_Converter_داده = اشاره_تهی;
+    UError_کد داخلی_Error_کد = U_ZERO_ERROR;
+    UBool mayContainOption = درست;
+    UBool checkForAlgorithmic = درست;
 
-    if (U_FAILURE (*err)) {
-        return nullptr;
+    إذا (U_FAILURE (*err)) {
+        أرجع اشاره_تهی;
     }
 
-    if(pPieces == nullptr) {
-        if(pArgs != nullptr) {
+    إذا(pPieces == اشاره_تهی) {
+        إذا(p_آرگومانها != اشاره_تهی) {
             /*
              * Bad: We may set pArgs pointers to stackPieces fields
              * which will be invalid after this function returns.
              */
-            *err = U_INTERNAL_PROGRAM_ERROR;
-            return nullptr;
+            *err = U_داخلی_برنامه_ERROR;
+            أرجع اشاره_تهی;
         }
-        pPieces = &stackPieces;
+        pPieces = &پشته_Pieces;
     }
-    if(pArgs == nullptr) {
-        uprv_memset(&stackArgs, 0, sizeof(stackArgs));
-        stackArgs.size = (int32_t)sizeof(stackArgs);
-        pArgs = &stackArgs;
+    إذا(p_آرگومانها == اشاره_تهی) {
+        uprv_memset(&پشته_آرگومانها, 0, حجم(پشته_آرگومانها));
+        پشته_آرگومانها.size = (int32_t)حجم(پشته_آرگومانها);
+        p_آرگومانها = &پشته_آرگومانها;
     }
 
     pPieces->cnvName[0] = 0;
     pPieces->locale[0] = 0;
     pPieces->options = 0;
 
-    pArgs->name = converterName;
-    pArgs->locale = pPieces->locale;
-    pArgs->options = pPieces->options;
+    p_آرگومانها->name = converterName;
+    p_آرگومانها->locale = pPieces->locale;
+    p_آرگومانها->options = pPieces->options;
 
     /* In case "name" is nullptr we want to open the default converter. */
-    if (converterName == nullptr) {
-#if U_CHARSET_IS_UTF8
-        pArgs->name = "UTF-8";
-        return (UConverterSharedData *)converterData[UCNV_UTF8];
-#else
+    إذا (converterName == اشاره_تهی) {
+#إذا U_CHARSET_IS_UTF8
+        p_آرگومانها->name = "UTF-8";
+        أرجع (UConverter_Shared_داده *)converter_داده[UCNV_UTF8];
+#وإلا
         /* Call ucnv_getDefaultName first to query the name from the OS. */
-        pArgs->name = ucnv_getDefaultName();
-        if (pArgs->name == nullptr) {
+        p_آرگومانها->name = ucnv_getDefaultName();
+        إذا (p_آرگومانها->name == اشاره_تهی) {
             *err = U_MISSING_RESOURCE_ERROR;
-            return nullptr;
+            أرجع اشاره_تهی;
         }
-        mySharedConverterData = (UConverterSharedData *)gDefaultAlgorithmicSharedData;
-        checkForAlgorithmic = false;
-        mayContainOption = gDefaultConverterContainsOption;
+        my_Shared_Converter_داده = (UConverter_Shared_داده *)g_Default_Algorithmic_Shared_داده;
+        checkForAlgorithmic = خطأ;
+        mayContainOption = g_Default_Converter_شامل_است_Option;
         /* the default converter name is already canonical */
-#endif
+#پایان_اگر
     }
-    else if(UCNV_FAST_IS_UTF8(converterName)) {
+    وإلا إذا(UCNV_FAST_IS_UTF8(converterName)) {
         /* fastpath for UTF-8 */
-        pArgs->name = "UTF-8";
-        return (UConverterSharedData *)converterData[UCNV_UTF8];
+        p_آرگومانها->name = "UTF-8";
+        أرجع (UConverter_Shared_داده *)converter_داده[UCNV_UTF8];
     }
-    else {
+    وإلا {
         /* separate the converter name from the options */
-        parseConverterOptions(converterName, pPieces, pArgs, err);
-        if (U_FAILURE(*err)) {
+        parseConverterOptions(converterName, pPieces, p_آرگومانها, err);
+        إذا (U_FAILURE(*err)) {
             /* Very bad name used. */
-            return nullptr;
+            أرجع اشاره_تهی;
         }
 
         /* get the canonical converter name */
-        pArgs->name = ucnv_io_getConverterName(pArgs->name, &mayContainOption, &internalErrorCode);
-        if (U_FAILURE(internalErrorCode) || pArgs->name == nullptr) {
+        p_آرگومانها->name = ucnv_io_getConverterName(p_آرگومانها->name, &mayContainOption, &داخلی_Error_کد);
+        إذا (U_FAILURE(داخلی_Error_کد) || p_آرگومانها->name == اشاره_تهی) {
             /*
             * set the input name in case the converter was added
             * without updating the alias table, or when there is no alias table
             */
-            pArgs->name = pPieces->cnvName;
-        } else if (internalErrorCode == U_AMBIGUOUS_ALIAS_WARNING) {
+            p_آرگومانها->name = pPieces->cnvName;
+        } وإلا إذا (داخلی_Error_کد == U_AMBIGUOUS_ALIAS_WARNING) {
             *err = U_AMBIGUOUS_ALIAS_WARNING;
         }
     }
 
     /* separate the converter name from the options */
-    if(mayContainOption && pArgs->name != pPieces->cnvName) {
-        parseConverterOptions(pArgs->name, pPieces, pArgs, err);
+    إذا(mayContainOption && p_آرگومانها->name != pPieces->cnvName) {
+        parseConverterOptions(p_آرگومانها->name, pPieces, p_آرگومانها, err);
     }
 
     /* get the shared data for an algorithmic converter, if it is one */
-    if (checkForAlgorithmic) {
-        mySharedConverterData = (UConverterSharedData *)getAlgorithmicTypeFromName(pArgs->name);
+    إذا (checkForAlgorithmic) {
+        my_Shared_Converter_داده = (UConverter_Shared_داده *)getAlgorithmicTypeFromName(p_آرگومانها->name);
     }
-    if (mySharedConverterData == nullptr)
+    إذا (my_Shared_Converter_داده == اشاره_تهی)
     {
         /* it is a data-based converter, get its shared data.               */
         /* Hold the cnvCacheMutex through the whole process of checking the */
         /*   converter data cache, and adding new entries to the cache      */
         /*   to prevent other threads from modifying the cache during the   */
         /*   process.                                                       */
-        pArgs->nestedLoads=1;
-        pArgs->pkg=nullptr;
+        p_آرگومانها->nestedLoads=1;
+        p_آرگومانها->pkg=اشاره_تهی;
 
-        umtx_lock(&cnvCacheMutex);
-        mySharedConverterData = ucnv_load(pArgs, err);
+        umtx_قفل(&cnvCacheMutex);
+        my_Shared_Converter_داده = ucnv_بارگیری(p_آرگومانها, err);
         umtx_unlock(&cnvCacheMutex);
-        if (U_FAILURE (*err) || (mySharedConverterData == nullptr))
+        إذا (U_FAILURE (*err) || (my_Shared_Converter_داده == اشاره_تهی))
         {
-            return nullptr;
+            أرجع اشاره_تهی;
         }
     }
 
-    return mySharedConverterData;
+    أرجع my_Shared_Converter_داده;
 }
 
 U_CAPI UConverter*
 ucnv_createConverter(UConverter* myUConverter U_LIFETIME_BOUND,
-                     const char* converterName,
-                     UErrorCode* err)
+                     ثابت حرف* converterName,
+                     UError_کد* err)
 {
-    UConverterNamePieces stackPieces;
-    UConverterLoadArgs stackArgs=UCNV_LOAD_ARGS_INITIALIZER;
-    UConverterSharedData *mySharedConverterData;
+    UConverterNamePieces پشته_Pieces;
+    UConverter_بارگیری_آرگومانها پشته_آرگومانها=UCNV_بارگیری_آرگومانها_INITIALIZER;
+    UConverter_Shared_داده *my_Shared_Converter_داده;
 
-    UTRACE_ENTRY_OC(UTRACE_UCNV_OPEN);
+    UTRACE_مدخل_OC(UTRACE_UCNV_OPEN);
 
-    if(U_SUCCESS(*err)) {
+    إذا(U_SUCCESS(*err)) {
         UTRACE_DATA1(UTRACE_OPEN_CLOSE, "open converter %s", converterName);
 
-        mySharedConverterData = ucnv_loadSharedData(converterName, &stackPieces, &stackArgs, err);
+        my_Shared_Converter_داده = ucnv_بارگیری_Shared_داده(converterName, &پشته_Pieces, &پشته_آرگومانها, err);
 
-        myUConverter = ucnv_createConverterFromSharedData(
-            myUConverter, mySharedConverterData,
-            &stackArgs,
+        myUConverter = ucnv_create_Converter_From_Shared_داده(
+            myUConverter, my_Shared_Converter_داده,
+            &پشته_آرگومانها,
             err);
 
-        if(U_SUCCESS(*err)) {
-            UTRACE_EXIT_PTR_STATUS(myUConverter, *err);
-            return myUConverter;
+        إذا(U_SUCCESS(*err)) {
+            UTRACE_EXIT_PTR_وضعیت(myUConverter, *err);
+            أرجع myUConverter;
         }
     }
 
     /* exit with error */
-    UTRACE_EXIT_STATUS(*err);
-    return nullptr;
+    UTRACE_EXIT_وضعیت(*err);
+    أرجع اشاره_تهی;
 }
 
 U_CFUNC UBool
-ucnv_canCreateConverter(const char *converterName, UErrorCode *err) {
+ucnv_canCreateConverter(ثابت حرف *converterName, UError_کد *err) {
     UConverter myUConverter;
-    UConverterNamePieces stackPieces;
-    UConverterLoadArgs stackArgs=UCNV_LOAD_ARGS_INITIALIZER;
-    UConverterSharedData *mySharedConverterData;
+    UConverterNamePieces پشته_Pieces;
+    UConverter_بارگیری_آرگومانها پشته_آرگومانها=UCNV_بارگیری_آرگومانها_INITIALIZER;
+    UConverter_Shared_داده *my_Shared_Converter_داده;
 
-    UTRACE_ENTRY_OC(UTRACE_UCNV_OPEN);
+    UTRACE_مدخل_OC(UTRACE_UCNV_OPEN);
 
-    if(U_SUCCESS(*err)) {
+    إذا(U_SUCCESS(*err)) {
         UTRACE_DATA1(UTRACE_OPEN_CLOSE, "test if can open converter %s", converterName);
 
-        stackArgs.onlyTestIsLoadable=true;
-        mySharedConverterData = ucnv_loadSharedData(converterName, &stackPieces, &stackArgs, err);
-        ucnv_createConverterFromSharedData(
-            &myUConverter, mySharedConverterData,
-            &stackArgs,
+        پشته_آرگومانها.onlyTestIsLoadable=درست;
+        my_Shared_Converter_داده = ucnv_بارگیری_Shared_داده(converterName, &پشته_Pieces, &پشته_آرگومانها, err);
+        ucnv_create_Converter_From_Shared_داده(
+            &myUConverter, my_Shared_Converter_داده,
+            &پشته_آرگومانها,
             err);
-        ucnv_unloadSharedDataIfReady(mySharedConverterData);
+        ucnv_unload_Shared_داده_If_Ready(my_Shared_Converter_داده);
     }
 
-    UTRACE_EXIT_STATUS(*err);
-    return U_SUCCESS(*err);
+    UTRACE_EXIT_وضعیت(*err);
+    أرجع U_SUCCESS(*err);
 }
 
 UConverter*
 ucnv_createAlgorithmicConverter(UConverter* myUConverter U_LIFETIME_BOUND,
                                 UConverterType type,
-                                const char* locale,
+                                ثابت حرف* locale,
                                 uint32_t options,
-                                UErrorCode* err) {
+                                UError_کد* err) {
     UConverter *cnv;
-    const UConverterSharedData *sharedData;
-    UConverterLoadArgs stackArgs=UCNV_LOAD_ARGS_INITIALIZER;
+    ثابت UConverter_Shared_داده *shared_داده;
+    UConverter_بارگیری_آرگومانها پشته_آرگومانها=UCNV_بارگیری_آرگومانها_INITIALIZER;
 
-    UTRACE_ENTRY_OC(UTRACE_UCNV_OPEN_ALGORITHMIC);
+    UTRACE_مدخل_OC(UTRACE_UCNV_OPEN_ALGORITHMIC);
     UTRACE_DATA1(UTRACE_OPEN_CLOSE, "open algorithmic converter type %d", (int32_t)type);
 
-    if(type<0 || UCNV_NUMBER_OF_SUPPORTED_CONVERTER_TYPES<=type) {
-        *err = U_ILLEGAL_ARGUMENT_ERROR;
-        UTRACE_EXIT_STATUS(U_ILLEGAL_ARGUMENT_ERROR);
-        return nullptr;
+    إذا(type<0 || UCNV_عدد_از_SUPPORTED_CONVERTER_TYPES<=type) {
+        *err = U_ILLEGAL_آرگومان_ERROR;
+        UTRACE_EXIT_وضعیت(U_ILLEGAL_آرگومان_ERROR);
+        أرجع اشاره_تهی;
     }
 
-    sharedData = converterData[type];
-    if(sharedData == nullptr || sharedData->isReferenceCounted) {
+    shared_داده = converter_داده[type];
+    إذا(shared_داده == اشاره_تهی || shared_داده->isReferenceCounted) {
         /* not a valid type, or not an algorithmic converter */
-        *err = U_ILLEGAL_ARGUMENT_ERROR;
-        UTRACE_EXIT_STATUS(U_ILLEGAL_ARGUMENT_ERROR);
-        return nullptr;
+        *err = U_ILLEGAL_آرگومان_ERROR;
+        UTRACE_EXIT_وضعیت(U_ILLEGAL_آرگومان_ERROR);
+        أرجع اشاره_تهی;
     }
 
-    stackArgs.name = "";
-    stackArgs.options = options;
-    stackArgs.locale=locale;
-    cnv = ucnv_createConverterFromSharedData(
-            myUConverter, const_cast<UConverterSharedData*>(sharedData),
-            &stackArgs, err);
+    پشته_آرگومانها.name = "";
+    پشته_آرگومانها.options = options;
+    پشته_آرگومانها.locale=locale;
+    cnv = ucnv_create_Converter_From_Shared_داده(
+            myUConverter, const_cast<UConverter_Shared_داده*>(shared_داده),
+            &پشته_آرگومانها, err);
 
-    UTRACE_EXIT_PTR_STATUS(cnv, *err);
-    return cnv;
+    UTRACE_EXIT_PTR_وضعیت(cnv, *err);
+    أرجع cnv;
 }
 
 U_CFUNC UConverter*
-ucnv_createConverterFromPackage(const char *packageName, const char *converterName, UErrorCode * err)
+ucnv_createConverterFromPackage(ثابت حرف *packageName, ثابت حرف *converterName, UError_کد * err)
 {
     UConverter *myUConverter;
-    UConverterSharedData *mySharedConverterData;
-    UConverterNamePieces stackPieces;
-    UConverterLoadArgs stackArgs=UCNV_LOAD_ARGS_INITIALIZER;
+    UConverter_Shared_داده *my_Shared_Converter_داده;
+    UConverterNamePieces پشته_Pieces;
+    UConverter_بارگیری_آرگومانها پشته_آرگومانها=UCNV_بارگیری_آرگومانها_INITIALIZER;
 
-    UTRACE_ENTRY_OC(UTRACE_UCNV_OPEN_PACKAGE);
+    UTRACE_مدخل_OC(UTRACE_UCNV_OPEN_PACKAGE);
 
-    if(U_FAILURE(*err)) {
-        UTRACE_EXIT_STATUS(*err);
-        return nullptr;
+    إذا(U_FAILURE(*err)) {
+        UTRACE_EXIT_وضعیت(*err);
+        أرجع اشاره_تهی;
     }
 
     UTRACE_DATA2(UTRACE_OPEN_CLOSE, "open converter %s from package %s", converterName, packageName);
 
     /* first, get the options out of the converterName string */
-    stackPieces.cnvName[0] = 0;
-    stackPieces.locale[0] = 0;
-    stackPieces.options = 0;
-    parseConverterOptions(converterName, &stackPieces, &stackArgs, err);
-    if (U_FAILURE(*err)) {
+    پشته_Pieces.cnvName[0] = 0;
+    پشته_Pieces.locale[0] = 0;
+    پشته_Pieces.options = 0;
+    parseConverterOptions(converterName, &پشته_Pieces, &پشته_آرگومانها, err);
+    إذا (U_FAILURE(*err)) {
         /* Very bad name used. */
-        UTRACE_EXIT_STATUS(*err);
-        return nullptr;
+        UTRACE_EXIT_وضعیت(*err);
+        أرجع اشاره_تهی;
     }
-    stackArgs.nestedLoads=1;
-    stackArgs.pkg=packageName;
+    پشته_آرگومانها.nestedLoads=1;
+    پشته_آرگومانها.pkg=packageName;
 
     /* open the data, unflatten the shared structure */
-    mySharedConverterData = createConverterFromFile(&stackArgs, err);
+    my_Shared_Converter_داده = createConverterFromFile(&پشته_آرگومانها, err);
 
-    if (U_FAILURE(*err)) {
-        UTRACE_EXIT_STATUS(*err);
-        return nullptr;
+    إذا (U_FAILURE(*err)) {
+        UTRACE_EXIT_وضعیت(*err);
+        أرجع اشاره_تهی;
     }
 
     /* create the actual converter */
-    myUConverter = ucnv_createConverterFromSharedData(nullptr, mySharedConverterData, &stackArgs, err);
+    myUConverter = ucnv_create_Converter_From_Shared_داده(اشاره_تهی, my_Shared_Converter_داده, &پشته_آرگومانها, err);
 
-    if (U_FAILURE(*err)) {
+    إذا (U_FAILURE(*err)) {
         ucnv_close(myUConverter);
-        UTRACE_EXIT_STATUS(*err);
-        return nullptr;
+        UTRACE_EXIT_وضعیت(*err);
+        أرجع اشاره_تهی;
     }
 
-    UTRACE_EXIT_PTR_STATUS(myUConverter, *err);
-    return myUConverter;
+    UTRACE_EXIT_PTR_وضعیت(myUConverter, *err);
+    أرجع myUConverter;
 }
 
 
 U_CFUNC UConverter*
-ucnv_createConverterFromSharedData(UConverter* myUConverter U_LIFETIME_BOUND,
-                                   UConverterSharedData* mySharedConverterData,
-                                   UConverterLoadArgs* pArgs,
-                                   UErrorCode* err)
+ucnv_create_Converter_From_Shared_داده(UConverter* myUConverter U_LIFETIME_BOUND,
+                                   UConverter_Shared_داده* my_Shared_Converter_داده,
+                                   UConverter_بارگیری_آرگومانها* p_آرگومانها,
+                                   UError_کد* err)
 {
     UBool isCopyLocal;
 
-    if(U_FAILURE(*err)) {
-        ucnv_unloadSharedDataIfReady(mySharedConverterData);
-        return myUConverter;
+    إذا(U_FAILURE(*err)) {
+        ucnv_unload_Shared_داده_If_Ready(my_Shared_Converter_داده);
+        أرجع myUConverter;
     }
-    if(myUConverter == nullptr)
+    إذا(myUConverter == اشاره_تهی)
     {
-        myUConverter = (UConverter *) uprv_malloc (sizeof (UConverter));
-        if(myUConverter == nullptr)
+        myUConverter = (UConverter *) uprv_malloc (حجم (UConverter));
+        إذا(myUConverter == اشاره_تهی)
         {
-            *err = U_MEMORY_ALLOCATION_ERROR;
-            ucnv_unloadSharedDataIfReady(mySharedConverterData);
-            return nullptr;
+            *err = U_حافظه_تخصیص_ERROR;
+            ucnv_unload_Shared_داده_If_Ready(my_Shared_Converter_داده);
+            أرجع اشاره_تهی;
         }
-        isCopyLocal = false;
-    } else {
-        isCopyLocal = true;
+        isCopyLocal = خطأ;
+    } وإلا {
+        isCopyLocal = درست;
     }
 
     /* initialize the converter */
-    uprv_memset(myUConverter, 0, sizeof(UConverter));
+    uprv_memset(myUConverter, 0, حجم(UConverter));
     myUConverter->isCopyLocal = isCopyLocal;
     /*myUConverter->isExtraLocal = false;*/ /* Set by the memset call */
-    myUConverter->sharedData = mySharedConverterData;
-    myUConverter->options = pArgs->options;
-    if(!pArgs->onlyTestIsLoadable) {
+    myUConverter->shared_داده = my_Shared_Converter_داده;
+    myUConverter->options = p_آرگومانها->options;
+    إذا(!p_آرگومانها->onlyTestIsLoadable) {
         myUConverter->preFromUFirstCP = U_SENTINEL;
-        myUConverter->fromCharErrorBehaviour = UCNV_TO_U_DEFAULT_CALLBACK;
+        myUConverter->fromCharErrorBehaviour = UCNV_مقصد_U_DEFAULT_CALLBACK;
         myUConverter->fromUCharErrorBehaviour = UCNV_FROM_U_DEFAULT_CALLBACK;
-        myUConverter->toUnicodeStatus = mySharedConverterData->toUnicodeStatus;
-        myUConverter->maxBytesPerUChar = mySharedConverterData->staticData->maxBytesPerChar;
-        myUConverter->subChar1 = mySharedConverterData->staticData->subChar1;
-        myUConverter->subCharLen = mySharedConverterData->staticData->subCharLen;
+        myUConverter->مقصد_Unicode_وضعیت = my_Shared_Converter_داده->مقصد_Unicode_وضعیت;
+        myUConverter->max_بایتها_در_هر_UChar = my_Shared_Converter_داده->static_داده->max_بایتها_در_هر_Char;
+        myUConverter->subChar1 = my_Shared_Converter_داده->static_داده->subChar1;
+        myUConverter->subCharLen = my_Shared_Converter_داده->static_داده->subCharLen;
         myUConverter->subChars = (uint8_t *)myUConverter->subUChars;
-        uprv_memcpy(myUConverter->subChars, mySharedConverterData->staticData->subChar, myUConverter->subCharLen);
-        myUConverter->toUCallbackReason = UCNV_ILLEGAL; /* default reason to invoke (*fromCharErrorBehaviour) */
+        uprv_memcpy(myUConverter->subChars, my_Shared_Converter_داده->static_داده->subChar, myUConverter->subCharLen);
+        myUConverter->مقصد_UCallback_Reason = UCNV_ILLEGAL; /* default reason to invoke (*fromCharErrorBehaviour) */
     }
 
-    if(mySharedConverterData->impl->open != nullptr) {
-        mySharedConverterData->impl->open(myUConverter, pArgs, err);
-        if(U_FAILURE(*err) && !pArgs->onlyTestIsLoadable) {
+    إذا(my_Shared_Converter_داده->impl->open != اشاره_تهی) {
+        my_Shared_Converter_داده->impl->open(myUConverter, p_آرگومانها, err);
+        إذا(U_FAILURE(*err) && !p_آرگومانها->onlyTestIsLoadable) {
             /* don't ucnv_close() if onlyTestIsLoadable because not fully initialized */
             ucnv_close(myUConverter);
-            return nullptr;
+            أرجع اشاره_تهی;
         }
     }
 
-    return myUConverter;
+    أرجع myUConverter;
 }
 
 /*Frees all shared immutable objects that aren't referred to (reference count = 0)
@@ -1033,14 +1033,14 @@ ucnv_createConverterFromSharedData(UConverter* myUConverter U_LIFETIME_BOUND,
 U_CAPI int32_t U_EXPORT2
 ucnv_flushCache ()
 {
-    UConverterSharedData *mySharedData = nullptr;
+    UConverter_Shared_داده *my_Shared_داده = اشاره_تهی;
     int32_t pos;
-    int32_t tableDeletedNum = 0;
-    const UHashElement *e;
+    int32_t جدول_Deleted_رقم = 0;
+    ثابت UHashElement *e;
     /*UErrorCode status = U_ILLEGAL_ARGUMENT_ERROR;*/
-    int32_t i, remaining;
+    int32_t i, مانده;
 
-    UTRACE_ENTRY_OC(UTRACE_UCNV_FLUSH_CACHE);
+    UTRACE_مدخل_OC(UTRACE_UCNV_FLUSH_CACHE);
 
     /* Close the default converter without creating a new one so that everything will be flushed. */
     u_flushDefaultConverter();
@@ -1048,9 +1048,9 @@ ucnv_flushCache ()
     /*if shared data hasn't even been lazy evaluated yet
     * return 0
     */
-    if (SHARED_DATA_HASHTABLE == nullptr) {
-        UTRACE_EXIT_VALUE((int32_t)0);
-        return 0;
+    إذا (SHARED_داده_HASHTABLE == اشاره_تهی) {
+        UTRACE_EXIT_مقدار((int32_t)0);
+        أرجع 0;
     }
 
     /*creates an enumeration to iterate through every element in the
@@ -1064,7 +1064,7 @@ ucnv_flushCache ()
     *                   because the sequence of looking up in the cache + incrementing
     *                   is protected by cnvCacheMutex.
     */
-    umtx_lock(&cnvCacheMutex);
+    umtx_قفل(&cnvCacheMutex);
     /*
      * double loop: A delta/extension-only converter has a pointer to its base table's
      * shared data; the first iteration of the outer loop may see the delta converter
@@ -1072,67 +1072,67 @@ ucnv_flushCache ()
      * converter's reference counter down to 0.
      */
     i = 0;
-    do {
-        remaining = 0;
-        pos = UHASH_FIRST;
-        while ((e = uhash_nextElement (SHARED_DATA_HASHTABLE, &pos)) != nullptr)
+    افعل {
+        مانده = 0;
+        pos = UHASH_اولی;
+        طالما ((e = uhash_بعدی_Element (SHARED_داده_HASHTABLE, &pos)) != اشاره_تهی)
         {
-            mySharedData = (UConverterSharedData *) e->value.pointer;
+            my_Shared_داده = (UConverter_Shared_داده *) e->value.اشاره_گر;
             /*deletes only if reference counter == 0 */
-            if (mySharedData->referenceCounter == 0)
+            إذا (my_Shared_داده->referenceCounter == 0)
             {
-                tableDeletedNum++;
+                جدول_Deleted_رقم++;
 
-                UCNV_DEBUG_LOG("del",mySharedData->staticData->name,mySharedData);
+                UCNV_DEBUG_LOG("del",my_Shared_داده->static_داده->name,my_Shared_داده);
 
-                uhash_removeElement(SHARED_DATA_HASHTABLE, e);
-                mySharedData->sharedDataCached = false;
-                ucnv_deleteSharedConverterData (mySharedData);
-            } else {
-                ++remaining;
+                uhash_removeElement(SHARED_داده_HASHTABLE, e);
+                my_Shared_داده->shared_داده_Cached = خطأ;
+                ucnv_delete_Shared_Converter_داده (my_Shared_داده);
+            } وإلا {
+                ++مانده;
             }
         }
-    } while(++i == 1 && remaining > 0);
+    } طالما(++i == 1 && مانده > 0);
     umtx_unlock(&cnvCacheMutex);
 
-    UTRACE_DATA1(UTRACE_INFO, "ucnv_flushCache() exits with %d converters remaining", remaining);
+    UTRACE_DATA1(UTRACE_INFO, "ucnv_flushCache() exits with %d converters remaining", مانده);
 
-    UTRACE_EXIT_VALUE(tableDeletedNum);
-    return tableDeletedNum;
+    UTRACE_EXIT_مقدار(جدول_Deleted_رقم);
+    أرجع جدول_Deleted_رقم;
 }
 
 /* available converters list --------------------------------------------------- */
 
-static void U_CALLCONV initAvailableConvertersList(UErrorCode &errCode) {
-    U_ASSERT(gAvailableConverterCount == 0);
-    U_ASSERT(gAvailableConverters == nullptr);
+ساكن فراغ U_CALLCONV init_موجود_Converters_List(UError_کد &err_کد) {
+    U_ASSERT(g_موجود_Converter_شمار == 0);
+    U_ASSERT(g_موجود_Converters == اشاره_تهی);
 
     ucnv_enableCleanup();
-    UEnumeration *allConvEnum = ucnv_openAllNames(&errCode);
-    int32_t allConverterCount = uenum_count(allConvEnum, &errCode);
-    if (U_FAILURE(errCode)) {
-        return;
+    UEnumeration *allConvEnum = ucnv_open_All_نامها(&err_کد);
+    int32_t all_Converter_شمار = uenum_شمار(allConvEnum, &err_کد);
+    إذا (U_FAILURE(err_کد)) {
+        أرجع;
     }
 
     /* We can't have more than "*converterTable" converters to open */
-    gAvailableConverters = static_cast<const char**>(uprv_malloc(allConverterCount * sizeof(char*)));
-    if (!gAvailableConverters) {
-        errCode = U_MEMORY_ALLOCATION_ERROR;
-        return;
+    g_موجود_Converters = static_cast<ثابت حرف**>(uprv_malloc(all_Converter_شمار * حجم(حرف*)));
+    إذا (!g_موجود_Converters) {
+        err_کد = U_حافظه_تخصیص_ERROR;
+        أرجع;
     }
 
     /* Open the default converter to make sure that it has first dibs in the hash table. */
-    UErrorCode localStatus = U_ZERO_ERROR;
-    UConverter tempConverter;
-    ucnv_close(ucnv_createConverter(&tempConverter, nullptr, &localStatus));
+    UError_کد local_وضعیت = U_ZERO_ERROR;
+    UConverter موقت_Converter;
+    ucnv_close(ucnv_createConverter(&موقت_Converter, اشاره_تهی, &local_وضعیت));
 
-    gAvailableConverterCount = 0;
+    g_موجود_Converter_شمار = 0;
 
-    for (int32_t idx = 0; idx < allConverterCount; idx++) {
-        localStatus = U_ZERO_ERROR;
-        const char *converterName = uenum_next(allConvEnum, nullptr, &localStatus);
-        if (ucnv_canCreateConverter(converterName, &localStatus)) {
-            gAvailableConverters[gAvailableConverterCount++] = converterName;
+    لكل (int32_t idx = 0; idx < all_Converter_شمار; idx++) {
+        local_وضعیت = U_ZERO_ERROR;
+        ثابت حرف *converterName = uenum_بعدی(allConvEnum, اشاره_تهی, &local_وضعیت);
+        إذا (ucnv_canCreateConverter(converterName, &local_وضعیت)) {
+            g_موجود_Converters[g_موجود_Converter_شمار++] = converterName;
         }
     }
 
@@ -1140,33 +1140,33 @@ static void U_CALLCONV initAvailableConvertersList(UErrorCode &errCode) {
 }
 
 
-static UBool haveAvailableConverterList(UErrorCode *pErrorCode) {
-    umtx_initOnce(gAvailableConvertersInitOnce, &initAvailableConvertersList, *pErrorCode);
-    return U_SUCCESS(*pErrorCode);
+ساكن UBool have_موجود_Converter_List(UError_کد *p_Error_کد) {
+    umtx_initOnce(g_موجود_Converters_Init_Once, &init_موجود_Converters_List, *p_Error_کد);
+    أرجع U_SUCCESS(*p_Error_کد);
 }
 
 U_CFUNC uint16_t
-ucnv_bld_countAvailableConverters(UErrorCode *pErrorCode) {
-    if (haveAvailableConverterList(pErrorCode)) {
-        return gAvailableConverterCount;
+ucnv_bld_شمار_موجود_Converters(UError_کد *p_Error_کد) {
+    إذا (have_موجود_Converter_List(p_Error_کد)) {
+        أرجع g_موجود_Converter_شمار;
     }
-    return 0;
+    أرجع 0;
 }
 
-U_CFUNC const char *
-ucnv_bld_getAvailableConverter(uint16_t n, UErrorCode *pErrorCode) {
-    if (haveAvailableConverterList(pErrorCode)) {
-        if (n < gAvailableConverterCount) {
-            return gAvailableConverters[n];
+U_CFUNC ثابت حرف *
+ucnv_bld_get_موجود_Converter(uint16_t n, UError_کد *p_Error_کد) {
+    إذا (have_موجود_Converter_List(p_Error_کد)) {
+        إذا (n < g_موجود_Converter_شمار) {
+            أرجع g_موجود_Converters[n];
         }
-        *pErrorCode = U_INDEX_OUTOFBOUNDS_ERROR;
+        *p_Error_کد = U_شاخص_OUTOFBOUNDS_ERROR;
     }
-    return nullptr;
+    أرجع اشاره_تهی;
 }
 
 /* default converter name --------------------------------------------------- */
 
-#if !U_CHARSET_IS_UTF8
+#إذا !U_CHARSET_IS_UTF8
 /*
 Copy the canonical converter name.
 ucnv_getDefaultName must be thread safe, which can call this function.
@@ -1179,45 +1179,45 @@ would be the same type of default converter for a successive string.
 Since the name is a returned via ucnv_getDefaultName without copying,
 you shouldn't be modifying or deleting the string from a separate thread.
 */
-static inline void
-internalSetName(const char *name, UErrorCode *status) {
-    UConverterNamePieces stackPieces;
-    UConverterLoadArgs stackArgs=UCNV_LOAD_ARGS_INITIALIZER;
+ساكن مضمن فراغ
+داخلی_مجموعه_Name(ثابت حرف *name, UError_کد *وضعیت) {
+    UConverterNamePieces پشته_Pieces;
+    UConverter_بارگیری_آرگومانها پشته_آرگومانها=UCNV_بارگیری_آرگومانها_INITIALIZER;
     int32_t length=(int32_t)(uprv_strlen(name));
-    UBool containsOption = (UBool)(uprv_strchr(name, UCNV_OPTION_SEP_CHAR) != nullptr);
-    const UConverterSharedData *algorithmicSharedData;
+    UBool شامل_است_Option = (UBool)(uprv_strchr(name, UCNV_OPTION_SEP_CHAR) != اشاره_تهی);
+    ثابت UConverter_Shared_داده *algorithmic_Shared_داده;
 
-    stackArgs.name = name;
-    if(containsOption) {
-        stackPieces.cnvName[0] = 0;
-        stackPieces.locale[0] = 0;
-        stackPieces.options = 0;
-        parseConverterOptions(name, &stackPieces, &stackArgs, status);
-        if(U_FAILURE(*status)) {
-            return;
+    پشته_آرگومانها.name = name;
+    إذا(شامل_است_Option) {
+        پشته_Pieces.cnvName[0] = 0;
+        پشته_Pieces.locale[0] = 0;
+        پشته_Pieces.options = 0;
+        parseConverterOptions(name, &پشته_Pieces, &پشته_آرگومانها, وضعیت);
+        إذا(U_FAILURE(*وضعیت)) {
+            أرجع;
         }
     }
-    algorithmicSharedData = getAlgorithmicTypeFromName(stackArgs.name);
+    algorithmic_Shared_داده = getAlgorithmicTypeFromName(پشته_آرگومانها.name);
 
-    umtx_lock(&cnvCacheMutex);
+    umtx_قفل(&cnvCacheMutex);
 
-    gDefaultAlgorithmicSharedData = algorithmicSharedData;
-    gDefaultConverterContainsOption = containsOption;
-    uprv_memcpy(gDefaultConverterNameBuffer, name, length);
-    gDefaultConverterNameBuffer[length]=0;
+    g_Default_Algorithmic_Shared_داده = algorithmic_Shared_داده;
+    g_Default_Converter_شامل_است_Option = شامل_است_Option;
+    uprv_memcpy(g_Default_Converter_Name_میانگیر, name, length);
+    g_Default_Converter_Name_میانگیر[length]=0;
 
     /* gDefaultConverterName MUST be the last global var set by this function.  */
     /*    It is the variable checked in ucnv_getDefaultName() to see if initialization is required. */
     //    But there is nothing here preventing that from being reordered, either by the compiler
     //             or hardware. I'm adding the mutex to ucnv_getDefaultName for now. UMTX_CHECK is not enough.
     //             -- Andy
-    gDefaultConverterName = gDefaultConverterNameBuffer;
+    gDefaultConverterName = g_Default_Converter_Name_میانگیر;
 
     ucnv_enableCleanup();
 
     umtx_unlock(&cnvCacheMutex);
 }
-#endif
+#پایان_اگر
 
 /*
  * In order to be really thread-safe, the get function would have to take
@@ -1227,86 +1227,86 @@ internalSetName(const char *name, UErrorCode *status) {
  * It assumes that setting a pointer is atomic.
  */
 
-U_CAPI const char*  U_EXPORT2
+U_CAPI ثابت حرف*  U_EXPORT2
 ucnv_getDefaultName() {
-#if U_CHARSET_IS_UTF8
-    return "UTF-8";
-#else
+#إذا U_CHARSET_IS_UTF8
+    أرجع "UTF-8";
+#وإلا
     /* local variable to be thread-safe */
-    const char *name;
+    ثابت حرف *name;
 
     /*
     Concurrent calls to ucnv_getDefaultName must be thread safe,
     but ucnv_setDefaultName is not thread safe.
     */
     {
-        icu::Mutex lock(&cnvCacheMutex);
+        icu::Mutex قفل(&cnvCacheMutex);
         name = gDefaultConverterName;
     }
-    if(name==nullptr) {
-        UErrorCode errorCode = U_ZERO_ERROR;
-        UConverter *cnv = nullptr;
+    إذا(name==اشاره_تهی) {
+        UError_کد error_کد = U_ZERO_ERROR;
+        UConverter *cnv = اشاره_تهی;
 
         name = uprv_getDefaultCodepage();
 
         /* if the name is there, test it out and get the canonical name with options */
-        if(name != nullptr) {
-            cnv = ucnv_open(name, &errorCode);
-            if(U_SUCCESS(errorCode) && cnv != nullptr) {
-                name = ucnv_getName(cnv, &errorCode);
+        إذا(name != اشاره_تهی) {
+            cnv = ucnv_open(name, &error_کد);
+            إذا(U_SUCCESS(error_کد) && cnv != اشاره_تهی) {
+                name = ucnv_getName(cnv, &error_کد);
             }
         }
 
-        if(name == nullptr || name[0] == 0
-            || U_FAILURE(errorCode) || cnv == nullptr
-            || uprv_strlen(name)>=sizeof(gDefaultConverterNameBuffer))
+        إذا(name == اشاره_تهی || name[0] == 0
+            || U_FAILURE(error_کد) || cnv == اشاره_تهی
+            || uprv_strlen(name)>=حجم(g_Default_Converter_Name_میانگیر))
         {
             /* Panic time, let's use a fallback. */
-#if (U_CHARSET_FAMILY == U_ASCII_FAMILY)
+#إذا (U_CHARSET_FAMILY == U_ASCII_FAMILY)
             name = "US-ASCII";
             /* there is no 'algorithmic' converter for EBCDIC */
-#elif U_PLATFORM == U_PF_OS390
-            name = "ibm-1047_P100-1995" UCNV_SWAP_LFNL_OPTION_STRING;
-#else
+#وإلاإذا U_PLATFORM == U_PF_OS390
+            name = "ibm-1047_P100-1995" UCNV_جابجا_LFNL_OPTION_STRING;
+#وإلا
             name = "ibm-37_P100-1995";
-#endif
+#پایان_اگر
         }
 
-        internalSetName(name, &errorCode);
+        داخلی_مجموعه_Name(name, &error_کد);
 
         /* The close may make the current name go away. */
         ucnv_close(cnv);
     }
 
-    return name;
-#endif
+    أرجع name;
+#پایان_اگر
 }
 
-#if U_CHARSET_IS_UTF8
-U_CAPI void U_EXPORT2 ucnv_setDefaultName(const char *) {}
-#else
+#إذا U_CHARSET_IS_UTF8
+U_CAPI فراغ U_EXPORT2 ucnv_مجموعه_Default_Name(ثابت حرف *) {}
+#وإلا
 /*
 This function is not thread safe, and it can't be thread safe.
 See internalSetName or the API reference for details.
 */
-U_CAPI void U_EXPORT2
-ucnv_setDefaultName(const char *converterName) {
-    if(converterName==nullptr) {
+U_CAPI فراغ U_EXPORT2
+ucnv_مجموعه_Default_Name(ثابت حرف *converterName) {
+    إذا(converterName==اشاره_تهی) {
         /* reset to the default codepage */
-        gDefaultConverterName=nullptr;
-    } else {
-        UErrorCode errorCode = U_ZERO_ERROR;
-        UConverter *cnv = nullptr;
-        const char *name = nullptr;
+        gDefaultConverterName=اشاره_تهی;
+    } وإلا {
+        UError_کد error_کد = U_ZERO_ERROR;
+        UConverter *cnv = اشاره_تهی;
+        ثابت حرف *name = اشاره_تهی;
 
         /* if the name is there, test it out and get the canonical name with options */
-        cnv = ucnv_open(converterName, &errorCode);
-        if(U_SUCCESS(errorCode) && cnv != nullptr) {
-            name = ucnv_getName(cnv, &errorCode);
+        cnv = ucnv_open(converterName, &error_کد);
+        إذا(U_SUCCESS(error_کد) && cnv != اشاره_تهی) {
+            name = ucnv_getName(cnv, &error_کد);
         }
 
-        if(U_SUCCESS(errorCode) && name!=nullptr) {
-            internalSetName(name, &errorCode);
+        إذا(U_SUCCESS(error_کد) && name!=اشاره_تهی) {
+            داخلی_مجموعه_Name(name, &error_کد);
         }
         /* else this converter is bad to use. Don't change it to a bad value. */
 
@@ -1317,175 +1317,175 @@ ucnv_setDefaultName(const char *converterName) {
         u_flushDefaultConverter();
     }
 }
-#endif
+#پایان_اگر
 
 /* data swapping ------------------------------------------------------------ */
 
 /* most of this might belong more properly into ucnvmbcs.c, but that is so large */
 
-#if !UCONFIG_NO_LEGACY_CONVERSION
+#إذا !UCONFIG_NO_LEGACY_CONVERSION
 
 U_CAPI int32_t U_EXPORT2
-ucnv_swap(const UDataSwapper *ds,
-          const void *inData, int32_t length, void *outData,
-          UErrorCode *pErrorCode) {
-    const UDataInfo *pInfo;
-    int32_t headerSize;
+ucnv_جابجا(ثابت UDataSwapper *ds,
+          ثابت فراغ *درون_داده, int32_t length, فراغ *بیرون_داده,
+          UError_کد *p_Error_کد) {
+    ثابت UDataInfo *pInfo;
+    int32_t سرآیند_اندازه;
 
-    const uint8_t *inBytes;
-    uint8_t *outBytes;
+    ثابت uint8_t *درون_بایتها;
+    uint8_t *بیرون_بایتها;
 
-    uint32_t offset, count, staticDataSize;
+    uint32_t جابه_جایی, count, static_داده_اندازه;
     int32_t size;
 
-    const UConverterStaticData *inStaticData;
-    UConverterStaticData *outStaticData;
+    ثابت UConverter_Static_داده *درون_Static_داده;
+    UConverter_Static_داده *بیرون_Static_داده;
 
-    const _MBCSHeader *inMBCSHeader;
-    _MBCSHeader *outMBCSHeader;
-    _MBCSHeader mbcsHeader;
-    uint32_t mbcsHeaderLength;
-    UBool noFromU=false;
+    ثابت _MBCSHeader *درون_MBCSHeader;
+    _MBCSHeader *بیرون_MBCSHeader;
+    _MBCSHeader mbcs_سرآیند;
+    uint32_t mbcs_سرآیند_درازی;
+    UBool noFromU=خطأ;
 
     uint8_t outputType;
 
-    int32_t maxFastUChar, mbcsIndexLength;
+    int32_t maxFastUChar, mbcs_شاخص_درازی;
 
-    const int32_t *inExtIndexes;
-    int32_t extOffset;
+    ثابت int32_t *درون_Ext_Indexes;
+    int32_t ext_جابه_جایی;
 
     /* udata_swapDataHeader checks the arguments */
-    headerSize=udata_swapDataHeader(ds, inData, length, outData, pErrorCode);
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    سرآیند_اندازه=udata_جابجا_داده_سرآیند(ds, درون_داده, length, بیرون_داده, p_Error_کد);
+    إذا(p_Error_کد==اشاره_تهی || U_FAILURE(*p_Error_کد)) {
+        أرجع 0;
     }
 
     /* check data format and format version */
-    pInfo=(const UDataInfo *)((const char *)inData+4);
-    if(!(
-        pInfo->dataFormat[0]==0x63 &&   /* dataFormat="cnvt" */
-        pInfo->dataFormat[1]==0x6e &&
-        pInfo->dataFormat[2]==0x76 &&
-        pInfo->dataFormat[3]==0x74 &&
-        pInfo->formatVersion[0]==6 &&
-        pInfo->formatVersion[1]>=2
+    pInfo=(ثابت UDataInfo *)((ثابت حرف *)درون_داده+4);
+    إذا(!(
+        pInfo->داده_Format[0]==0x63 &&   /* dataFormat="cnvt" */
+        pInfo->داده_Format[1]==0x6e &&
+        pInfo->داده_Format[2]==0x76 &&
+        pInfo->داده_Format[3]==0x74 &&
+        pInfo->format_نسخه[0]==6 &&
+        pInfo->format_نسخه[1]>=2
     )) {
         udata_printError(ds, "ucnv_swap(): data format %02x.%02x.%02x.%02x (format version %02x.%02x) is not recognized as an ICU .cnv conversion table\n",
-                         pInfo->dataFormat[0], pInfo->dataFormat[1],
-                         pInfo->dataFormat[2], pInfo->dataFormat[3],
-                         pInfo->formatVersion[0], pInfo->formatVersion[1]);
-        *pErrorCode=U_UNSUPPORTED_ERROR;
-        return 0;
+                         pInfo->داده_Format[0], pInfo->داده_Format[1],
+                         pInfo->داده_Format[2], pInfo->داده_Format[3],
+                         pInfo->format_نسخه[0], pInfo->format_نسخه[1]);
+        *p_Error_کد=U_UNSUPPORTED_ERROR;
+        أرجع 0;
     }
 
-    inBytes=(const uint8_t *)inData+headerSize;
-    outBytes=(outData == nullptr) ? nullptr : (uint8_t *)outData+headerSize;
+    درون_بایتها=(ثابت uint8_t *)درون_داده+سرآیند_اندازه;
+    بیرون_بایتها=(بیرون_داده == اشاره_تهی) ? اشاره_تهی : (uint8_t *)بیرون_داده+سرآیند_اندازه;
 
     /* read the initial UConverterStaticData structure after the UDataInfo header */
-    inStaticData=(const UConverterStaticData *)inBytes;
-    outStaticData=(UConverterStaticData *)outBytes;
+    درون_Static_داده=(ثابت UConverter_Static_داده *)درون_بایتها;
+    بیرون_Static_داده=(UConverter_Static_داده *)بیرون_بایتها;
 
-    if(length<0) {
-        staticDataSize=ds->readUInt32(inStaticData->structSize);
-    } else {
-        length-=headerSize;
-        if( length<(int32_t)sizeof(UConverterStaticData) ||
-            (uint32_t)length<(staticDataSize=ds->readUInt32(inStaticData->structSize))
+    إذا(length<0) {
+        static_داده_اندازه=ds->readUInt32(درون_Static_داده->struct_اندازه);
+    } وإلا {
+        length-=سرآیند_اندازه;
+        إذا( length<(int32_t)حجم(UConverter_Static_داده) ||
+            (uint32_t)length<(static_داده_اندازه=ds->readUInt32(درون_Static_داده->struct_اندازه))
         ) {
             udata_printError(ds, "ucnv_swap(): too few bytes (%d after header) for an ICU .cnv conversion table\n",
                              length);
-            *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-            return 0;
+            *p_Error_کد=U_شاخص_OUTOFBOUNDS_ERROR;
+            أرجع 0;
         }
     }
 
-    if(length>=0) {
+    إذا(length>=0) {
         /* swap the static data */
-        if(inStaticData!=outStaticData) {
-            uprv_memcpy(outStaticData, inStaticData, staticDataSize);
+        إذا(درون_Static_داده!=بیرون_Static_داده) {
+            uprv_memcpy(بیرون_Static_داده, درون_Static_داده, static_داده_اندازه);
         }
 
-        ds->swapArray32(ds, &inStaticData->structSize, 4,
-                           &outStaticData->structSize, pErrorCode);
-        ds->swapArray32(ds, &inStaticData->codepage, 4,
-                           &outStaticData->codepage, pErrorCode);
+        ds->جابجا_Array32(ds, &درون_Static_داده->struct_اندازه, 4,
+                           &بیرون_Static_داده->struct_اندازه, p_Error_کد);
+        ds->جابجا_Array32(ds, &درون_Static_داده->codepage, 4,
+                           &بیرون_Static_داده->codepage, p_Error_کد);
 
-        ds->swapInvChars(ds, inStaticData->name, (int32_t)uprv_strlen(inStaticData->name),
-                            outStaticData->name, pErrorCode);
-        if(U_FAILURE(*pErrorCode)) {
+        ds->جابجا_Inv_Chars(ds, درون_Static_داده->name, (int32_t)uprv_strlen(درون_Static_داده->name),
+                            بیرون_Static_داده->name, p_Error_کد);
+        إذا(U_FAILURE(*p_Error_کد)) {
             udata_printError(ds, "ucnv_swap(): error swapping converter name\n");
-            return 0;
+            أرجع 0;
         }
     }
 
-    inBytes+=staticDataSize;
-    if (outBytes != nullptr) outBytes+=staticDataSize;
-    if(length>=0) {
-        length-=(int32_t)staticDataSize;
+    درون_بایتها+=static_داده_اندازه;
+    إذا (بیرون_بایتها != اشاره_تهی) بیرون_بایتها+=static_داده_اندازه;
+    إذا(length>=0) {
+        length-=(int32_t)static_داده_اندازه;
     }
 
     /* check for supported conversionType values */
-    if(inStaticData->conversionType==UCNV_MBCS) {
+    إذا(درون_Static_داده->conversionType==UCNV_MBCS) {
         /* swap MBCS data */
-        inMBCSHeader=(const _MBCSHeader *)inBytes;
-        outMBCSHeader=(_MBCSHeader *)outBytes;
+        درون_MBCSHeader=(ثابت _MBCSHeader *)درون_بایتها;
+        بیرون_MBCSHeader=(_MBCSHeader *)بیرون_بایتها;
 
-        if(0<=length && length<(int32_t)sizeof(_MBCSHeader)) {
+        إذا(0<=length && length<(int32_t)حجم(_MBCSHeader)) {
             udata_printError(ds, "ucnv_swap(): too few bytes (%d after headers) for an ICU MBCS .cnv conversion table\n",
                                 length);
-            *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-            return 0;
+            *p_Error_کد=U_شاخص_OUTOFBOUNDS_ERROR;
+            أرجع 0;
         }
-        if(inMBCSHeader->version[0]==4 && inMBCSHeader->version[1]>=1) {
-            mbcsHeaderLength=MBCS_HEADER_V4_LENGTH;
-        } else if(inMBCSHeader->version[0]==5 && inMBCSHeader->version[1]>=3 &&
-                  ((mbcsHeader.options=ds->readUInt32(inMBCSHeader->options))&
-                   MBCS_OPT_UNKNOWN_INCOMPATIBLE_MASK)==0
+        إذا(درون_MBCSHeader->نسخه[0]==4 && درون_MBCSHeader->نسخه[1]>=1) {
+            mbcs_سرآیند_درازی=MBCS_سرآیند_V4_درازی;
+        } وإلا إذا(درون_MBCSHeader->نسخه[0]==5 && درون_MBCSHeader->نسخه[1]>=3 &&
+                  ((mbcs_سرآیند.options=ds->readUInt32(درون_MBCSHeader->options))&
+                   MBCS_OPT_UNKNOWN_INCOMPATIBLE_ماسک)==0
         ) {
-            mbcsHeaderLength=mbcsHeader.options&MBCS_OPT_LENGTH_MASK;
-            noFromU = (mbcsHeader.options & MBCS_OPT_NO_FROM_U) != 0;
-        } else {
+            mbcs_سرآیند_درازی=mbcs_سرآیند.options&MBCS_OPT_درازی_ماسک;
+            noFromU = (mbcs_سرآیند.options & MBCS_OPT_NO_FROM_U) != 0;
+        } وإلا {
             udata_printError(ds, "ucnv_swap(): unsupported _MBCSHeader.version %d.%d\n",
-                             inMBCSHeader->version[0], inMBCSHeader->version[1]);
-            *pErrorCode=U_UNSUPPORTED_ERROR;
-            return 0;
+                             درون_MBCSHeader->نسخه[0], درون_MBCSHeader->نسخه[1]);
+            *p_Error_کد=U_UNSUPPORTED_ERROR;
+            أرجع 0;
         }
 
-        uprv_memcpy(mbcsHeader.version, inMBCSHeader->version, 4);
-        mbcsHeader.countStates=         ds->readUInt32(inMBCSHeader->countStates);
-        mbcsHeader.countToUFallbacks=   ds->readUInt32(inMBCSHeader->countToUFallbacks);
-        mbcsHeader.offsetToUCodeUnits=  ds->readUInt32(inMBCSHeader->offsetToUCodeUnits);
-        mbcsHeader.offsetFromUTable=    ds->readUInt32(inMBCSHeader->offsetFromUTable);
-        mbcsHeader.offsetFromUBytes=    ds->readUInt32(inMBCSHeader->offsetFromUBytes);
-        mbcsHeader.flags=               ds->readUInt32(inMBCSHeader->flags);
-        mbcsHeader.fromUBytesLength=    ds->readUInt32(inMBCSHeader->fromUBytesLength);
+        uprv_memcpy(mbcs_سرآیند.نسخه, درون_MBCSHeader->نسخه, 4);
+        mbcs_سرآیند.شمار_حالتها=         ds->readUInt32(درون_MBCSHeader->شمار_حالتها);
+        mbcs_سرآیند.شمار_مقصد_UFallbacks=   ds->readUInt32(درون_MBCSHeader->شمار_مقصد_UFallbacks);
+        mbcs_سرآیند.جابه_جایی_مقصد_UCode_Units=  ds->readUInt32(درون_MBCSHeader->جابه_جایی_مقصد_UCode_Units);
+        mbcs_سرآیند.جابه_جایی_From_UTable=    ds->readUInt32(درون_MBCSHeader->جابه_جایی_From_UTable);
+        mbcs_سرآیند.جابه_جایی_From_UBytes=    ds->readUInt32(درون_MBCSHeader->جابه_جایی_From_UBytes);
+        mbcs_سرآیند.flags=               ds->readUInt32(درون_MBCSHeader->flags);
+        mbcs_سرآیند.from_UBytes_درازی=    ds->readUInt32(درون_MBCSHeader->from_UBytes_درازی);
         /* mbcsHeader.options have been read above */
 
-        extOffset=(int32_t)(mbcsHeader.flags>>8);
-        outputType=(uint8_t)mbcsHeader.flags;
-        if(noFromU && outputType==MBCS_OUTPUT_1) {
+        ext_جابه_جایی=(int32_t)(mbcs_سرآیند.flags>>8);
+        outputType=(uint8_t)mbcs_سرآیند.flags;
+        إذا(noFromU && outputType==MBCS_OUTPUT_1) {
             udata_printError(ds, "ucnv_swap(): unsupported combination of makeconv --small with SBCS\n");
-            *pErrorCode=U_UNSUPPORTED_ERROR;
-            return 0;
+            *p_Error_کد=U_UNSUPPORTED_ERROR;
+            أرجع 0;
         }
 
         /* make sure that the output type is known */
-        switch(outputType) {
-        case MBCS_OUTPUT_1:
-        case MBCS_OUTPUT_2:
-        case MBCS_OUTPUT_3:
-        case MBCS_OUTPUT_4:
-        case MBCS_OUTPUT_3_EUC:
-        case MBCS_OUTPUT_4_EUC:
-        case MBCS_OUTPUT_2_SISO:
-        case MBCS_OUTPUT_EXT_ONLY:
+        بدل(outputType) {
+        حالة MBCS_OUTPUT_1:
+        حالة MBCS_OUTPUT_2:
+        حالة MBCS_OUTPUT_3:
+        حالة MBCS_OUTPUT_4:
+        حالة MBCS_OUTPUT_3_EUC:
+        حالة MBCS_OUTPUT_4_EUC:
+        حالة MBCS_OUTPUT_2_SISO:
+        حالة MBCS_OUTPUT_EXT_ONLY:
             /* OK */
-            break;
-        default:
+            اكسر;
+        افتراضي:
             udata_printError(ds, "ucnv_swap(): unsupported MBCS output type 0x%x\n",
                              outputType);
-            *pErrorCode=U_UNSUPPORTED_ERROR;
-            return 0;
+            *p_Error_کد=U_UNSUPPORTED_ERROR;
+            أرجع 0;
         }
 
         /* calculate the length of the MBCS data */
@@ -1497,196 +1497,196 @@ ucnv_swap(const UDataSwapper *ds,
          * where maxFastUChar=((mbcsHeader.version[2]<<8)|0xff).
          */
         maxFastUChar=0;
-        mbcsIndexLength=0;
-        if( outputType!=MBCS_OUTPUT_EXT_ONLY && outputType!=MBCS_OUTPUT_1 &&
-            mbcsHeader.version[1]>=3 && (maxFastUChar=mbcsHeader.version[2])!=0
+        mbcs_شاخص_درازی=0;
+        إذا( outputType!=MBCS_OUTPUT_EXT_ONLY && outputType!=MBCS_OUTPUT_1 &&
+            mbcs_سرآیند.نسخه[1]>=3 && (maxFastUChar=mbcs_سرآیند.نسخه[2])!=0
         ) {
             maxFastUChar=(maxFastUChar<<8)|0xff;
-            mbcsIndexLength=((maxFastUChar+1)>>6)*2;  /* number of bytes */
+            mbcs_شاخص_درازی=((maxFastUChar+1)>>6)*2;  /* number of bytes */
         }
 
-        if(extOffset==0) {
-            size=(int32_t)(mbcsHeader.offsetFromUBytes+mbcsIndexLength);
-            if(!noFromU) {
-                size+=(int32_t)mbcsHeader.fromUBytesLength;
+        إذا(ext_جابه_جایی==0) {
+            size=(int32_t)(mbcs_سرآیند.جابه_جایی_From_UBytes+mbcs_شاخص_درازی);
+            إذا(!noFromU) {
+                size+=(int32_t)mbcs_سرآیند.from_UBytes_درازی;
             }
 
             /* avoid compiler warnings - not otherwise necessary, and the value does not matter */
-            inExtIndexes=nullptr;
-        } else {
+            درون_Ext_Indexes=اشاره_تهی;
+        } وإلا {
             /* there is extension data after the base data, see ucnv_ext.h */
-            if(length>=0 && length<(extOffset+UCNV_EXT_INDEXES_MIN_LENGTH*4)) {
+            إذا(length>=0 && length<(ext_جابه_جایی+UCNV_EXT_INDEXES_MIN_درازی*4)) {
                 udata_printError(ds, "ucnv_swap(): too few bytes (%d after headers) for an ICU MBCS .cnv conversion table with extension data\n",
                                  length);
-                *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-                return 0;
+                *p_Error_کد=U_شاخص_OUTOFBOUNDS_ERROR;
+                أرجع 0;
             }
 
-            inExtIndexes=(const int32_t *)(inBytes+extOffset);
-            size=extOffset+udata_readInt32(ds, inExtIndexes[UCNV_EXT_SIZE]);
+            درون_Ext_Indexes=(ثابت int32_t *)(درون_بایتها+ext_جابه_جایی);
+            size=ext_جابه_جایی+udata_readInt32(ds, درون_Ext_Indexes[UCNV_EXT_اندازه]);
         }
 
-        if(length>=0) {
-            if(length<size) {
+        إذا(length>=0) {
+            إذا(length<size) {
                 udata_printError(ds, "ucnv_swap(): too few bytes (%d after headers) for an ICU MBCS .cnv conversion table\n",
                                  length);
-                *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-                return 0;
+                *p_Error_کد=U_شاخص_OUTOFBOUNDS_ERROR;
+                أرجع 0;
             }
 
             /* copy the data for inaccessible bytes */
-            if(inBytes!=outBytes) {
-                uprv_memcpy(outBytes, inBytes, size);
+            إذا(درون_بایتها!=بیرون_بایتها) {
+                uprv_memcpy(بیرون_بایتها, درون_بایتها, size);
             }
 
             /* swap the MBCSHeader, except for the version field */
-            count=mbcsHeaderLength*4;
-            ds->swapArray32(ds, &inMBCSHeader->countStates, count-4,
-                               &outMBCSHeader->countStates, pErrorCode);
+            count=mbcs_سرآیند_درازی*4;
+            ds->جابجا_Array32(ds, &درون_MBCSHeader->شمار_حالتها, count-4,
+                               &بیرون_MBCSHeader->شمار_حالتها, p_Error_کد);
 
-            if(outputType==MBCS_OUTPUT_EXT_ONLY) {
+            إذا(outputType==MBCS_OUTPUT_EXT_ONLY) {
                 /*
                  * extension-only file,
                  * contains a base name instead of normal base table data
                  */
 
                 /* swap the base name, between the header and the extension data */
-                const char *inBaseName=(const char *)inBytes+count;
-                char *outBaseName=(char *)outBytes+count;
-                ds->swapInvChars(ds, inBaseName, (int32_t)uprv_strlen(inBaseName),
-                                    outBaseName, pErrorCode);
-            } else {
+                ثابت حرف *درون_پایه_Name=(ثابت حرف *)درون_بایتها+count;
+                حرف *بیرون_پایه_Name=(حرف *)بیرون_بایتها+count;
+                ds->جابجا_Inv_Chars(ds, درون_پایه_Name, (int32_t)uprv_strlen(درون_پایه_Name),
+                                    بیرون_پایه_Name, p_Error_کد);
+            } وإلا {
                 /* normal file with base table data */
 
                 /* swap the state table, 1kB per state */
-                offset=count;
-                count=mbcsHeader.countStates*1024;
-                ds->swapArray32(ds, inBytes+offset, (int32_t)count,
-                                   outBytes+offset, pErrorCode);
+                جابه_جایی=count;
+                count=mbcs_سرآیند.شمار_حالتها*1024;
+                ds->جابجا_Array32(ds, درون_بایتها+جابه_جایی, (int32_t)count,
+                                   بیرون_بایتها+جابه_جایی, p_Error_کد);
 
                 /* swap the toUFallbacks[] */
-                offset+=count;
-                count=mbcsHeader.countToUFallbacks*8;
-                ds->swapArray32(ds, inBytes+offset, (int32_t)count,
-                                   outBytes+offset, pErrorCode);
+                جابه_جایی+=count;
+                count=mbcs_سرآیند.شمار_مقصد_UFallbacks*8;
+                ds->جابجا_Array32(ds, درون_بایتها+جابه_جایی, (int32_t)count,
+                                   بیرون_بایتها+جابه_جایی, p_Error_کد);
 
                 /* swap the unicodeCodeUnits[] */
-                offset=mbcsHeader.offsetToUCodeUnits;
-                count=mbcsHeader.offsetFromUTable-offset;
-                ds->swapArray16(ds, inBytes+offset, (int32_t)count,
-                                   outBytes+offset, pErrorCode);
+                جابه_جایی=mbcs_سرآیند.جابه_جایی_مقصد_UCode_Units;
+                count=mbcs_سرآیند.جابه_جایی_From_UTable-جابه_جایی;
+                ds->جابجا_Array16(ds, درون_بایتها+جابه_جایی, (int32_t)count,
+                                   بیرون_بایتها+جابه_جایی, p_Error_کد);
 
                 /* offset to the stage 1 table, independent of the outputType */
-                offset=mbcsHeader.offsetFromUTable;
+                جابه_جایی=mbcs_سرآیند.جابه_جایی_From_UTable;
 
-                if(outputType==MBCS_OUTPUT_1) {
+                إذا(outputType==MBCS_OUTPUT_1) {
                     /* SBCS: swap the fromU tables, all 16 bits wide */
-                    count=(mbcsHeader.offsetFromUBytes-offset)+mbcsHeader.fromUBytesLength;
-                    ds->swapArray16(ds, inBytes+offset, (int32_t)count,
-                                       outBytes+offset, pErrorCode);
-                } else {
+                    count=(mbcs_سرآیند.جابه_جایی_From_UBytes-جابه_جایی)+mbcs_سرآیند.from_UBytes_درازی;
+                    ds->جابجا_Array16(ds, درون_بایتها+جابه_جایی, (int32_t)count,
+                                       بیرون_بایتها+جابه_جایی, p_Error_کد);
+                } وإلا {
                     /* otherwise: swap the stage tables separately */
 
                     /* stage 1 table: uint16_t[0x440 or 0x40] */
-                    if(inStaticData->unicodeMask&UCNV_HAS_SUPPLEMENTARY) {
+                    إذا(درون_Static_داده->unicode_ماسک&UCNV_HAS_SUPPLEMENTARY) {
                         count=0x440*2; /* for all of Unicode */
-                    } else {
+                    } وإلا {
                         count=0x40*2; /* only BMP */
                     }
-                    ds->swapArray16(ds, inBytes+offset, (int32_t)count,
-                                       outBytes+offset, pErrorCode);
+                    ds->جابجا_Array16(ds, درون_بایتها+جابه_جایی, (int32_t)count,
+                                       بیرون_بایتها+جابه_جایی, p_Error_کد);
 
                     /* stage 2 table: uint32_t[] */
-                    offset+=count;
-                    count=mbcsHeader.offsetFromUBytes-offset;
-                    ds->swapArray32(ds, inBytes+offset, (int32_t)count,
-                                       outBytes+offset, pErrorCode);
+                    جابه_جایی+=count;
+                    count=mbcs_سرآیند.جابه_جایی_From_UBytes-جابه_جایی;
+                    ds->جابجا_Array32(ds, درون_بایتها+جابه_جایی, (int32_t)count,
+                                       بیرون_بایتها+جابه_جایی, p_Error_کد);
 
                     /* stage 3/result bytes: sometimes uint16_t[] or uint32_t[] */
-                    offset=mbcsHeader.offsetFromUBytes;
-                    count= noFromU ? 0 : mbcsHeader.fromUBytesLength;
-                    switch(outputType) {
-                    case MBCS_OUTPUT_2:
-                    case MBCS_OUTPUT_3_EUC:
-                    case MBCS_OUTPUT_2_SISO:
-                        ds->swapArray16(ds, inBytes+offset, (int32_t)count,
-                                           outBytes+offset, pErrorCode);
-                        break;
-                    case MBCS_OUTPUT_4:
-                        ds->swapArray32(ds, inBytes+offset, (int32_t)count,
-                                           outBytes+offset, pErrorCode);
-                        break;
-                    default:
+                    جابه_جایی=mbcs_سرآیند.جابه_جایی_From_UBytes;
+                    count= noFromU ? 0 : mbcs_سرآیند.from_UBytes_درازی;
+                    بدل(outputType) {
+                    حالة MBCS_OUTPUT_2:
+                    حالة MBCS_OUTPUT_3_EUC:
+                    حالة MBCS_OUTPUT_2_SISO:
+                        ds->جابجا_Array16(ds, درون_بایتها+جابه_جایی, (int32_t)count,
+                                           بیرون_بایتها+جابه_جایی, p_Error_کد);
+                        اكسر;
+                    حالة MBCS_OUTPUT_4:
+                        ds->جابجا_Array32(ds, درون_بایتها+جابه_جایی, (int32_t)count,
+                                           بیرون_بایتها+جابه_جایی, p_Error_کد);
+                        اكسر;
+                    افتراضي:
                         /* just uint8_t[], nothing to swap */
-                        break;
+                        اكسر;
                     }
 
-                    if(mbcsIndexLength!=0) {
-                        offset+=count;
-                        count=mbcsIndexLength;
-                        ds->swapArray16(ds, inBytes+offset, (int32_t)count,
-                                           outBytes+offset, pErrorCode);
+                    إذا(mbcs_شاخص_درازی!=0) {
+                        جابه_جایی+=count;
+                        count=mbcs_شاخص_درازی;
+                        ds->جابجا_Array16(ds, درون_بایتها+جابه_جایی, (int32_t)count,
+                                           بیرون_بایتها+جابه_جایی, p_Error_کد);
                     }
                 }
             }
 
-            if(extOffset!=0) {
+            إذا(ext_جابه_جایی!=0) {
                 /* swap the extension data */
-                inBytes+=extOffset;
-                outBytes+=extOffset;
+                درون_بایتها+=ext_جابه_جایی;
+                بیرون_بایتها+=ext_جابه_جایی;
 
                 /* swap toUTable[] */
-                offset=udata_readInt32(ds, inExtIndexes[UCNV_EXT_TO_U_INDEX]);
-                length=udata_readInt32(ds, inExtIndexes[UCNV_EXT_TO_U_LENGTH]);
-                ds->swapArray32(ds, inBytes+offset, length*4, outBytes+offset, pErrorCode);
+                جابه_جایی=udata_readInt32(ds, درون_Ext_Indexes[UCNV_EXT_مقصد_U_شاخص]);
+                length=udata_readInt32(ds, درون_Ext_Indexes[UCNV_EXT_مقصد_U_درازی]);
+                ds->جابجا_Array32(ds, درون_بایتها+جابه_جایی, length*4, بیرون_بایتها+جابه_جایی, p_Error_کد);
 
                 /* swap toUUChars[] */
-                offset=udata_readInt32(ds, inExtIndexes[UCNV_EXT_TO_U_UCHARS_INDEX]);
-                length=udata_readInt32(ds, inExtIndexes[UCNV_EXT_TO_U_UCHARS_LENGTH]);
-                ds->swapArray16(ds, inBytes+offset, length*2, outBytes+offset, pErrorCode);
+                جابه_جایی=udata_readInt32(ds, درون_Ext_Indexes[UCNV_EXT_مقصد_U_UCHARS_شاخص]);
+                length=udata_readInt32(ds, درون_Ext_Indexes[UCNV_EXT_مقصد_U_UCHARS_درازی]);
+                ds->جابجا_Array16(ds, درون_بایتها+جابه_جایی, length*2, بیرون_بایتها+جابه_جایی, p_Error_کد);
 
                 /* swap fromUTableUChars[] */
-                offset=udata_readInt32(ds, inExtIndexes[UCNV_EXT_FROM_U_UCHARS_INDEX]);
-                length=udata_readInt32(ds, inExtIndexes[UCNV_EXT_FROM_U_LENGTH]);
-                ds->swapArray16(ds, inBytes+offset, length*2, outBytes+offset, pErrorCode);
+                جابه_جایی=udata_readInt32(ds, درون_Ext_Indexes[UCNV_EXT_FROM_U_UCHARS_شاخص]);
+                length=udata_readInt32(ds, درون_Ext_Indexes[UCNV_EXT_FROM_U_درازی]);
+                ds->جابجا_Array16(ds, درون_بایتها+جابه_جایی, length*2, بیرون_بایتها+جابه_جایی, p_Error_کد);
 
                 /* swap fromUTableValues[] */
-                offset=udata_readInt32(ds, inExtIndexes[UCNV_EXT_FROM_U_VALUES_INDEX]);
+                جابه_جایی=udata_readInt32(ds, درون_Ext_Indexes[UCNV_EXT_FROM_U_مقادیر_شاخص]);
                 /* same length as for fromUTableUChars[] */
-                ds->swapArray32(ds, inBytes+offset, length*4, outBytes+offset, pErrorCode);
+                ds->جابجا_Array32(ds, درون_بایتها+جابه_جایی, length*4, بیرون_بایتها+جابه_جایی, p_Error_کد);
 
                 /* no need to swap fromUBytes[] */
 
                 /* swap fromUStage12[] */
-                offset=udata_readInt32(ds, inExtIndexes[UCNV_EXT_FROM_U_STAGE_12_INDEX]);
-                length=udata_readInt32(ds, inExtIndexes[UCNV_EXT_FROM_U_STAGE_12_LENGTH]);
-                ds->swapArray16(ds, inBytes+offset, length*2, outBytes+offset, pErrorCode);
+                جابه_جایی=udata_readInt32(ds, درون_Ext_Indexes[UCNV_EXT_FROM_U_STAGE_12_شاخص]);
+                length=udata_readInt32(ds, درون_Ext_Indexes[UCNV_EXT_FROM_U_STAGE_12_درازی]);
+                ds->جابجا_Array16(ds, درون_بایتها+جابه_جایی, length*2, بیرون_بایتها+جابه_جایی, p_Error_کد);
 
                 /* swap fromUStage3[] */
-                offset=udata_readInt32(ds, inExtIndexes[UCNV_EXT_FROM_U_STAGE_3_INDEX]);
-                length=udata_readInt32(ds, inExtIndexes[UCNV_EXT_FROM_U_STAGE_3_LENGTH]);
-                ds->swapArray16(ds, inBytes+offset, length*2, outBytes+offset, pErrorCode);
+                جابه_جایی=udata_readInt32(ds, درون_Ext_Indexes[UCNV_EXT_FROM_U_STAGE_3_شاخص]);
+                length=udata_readInt32(ds, درون_Ext_Indexes[UCNV_EXT_FROM_U_STAGE_3_درازی]);
+                ds->جابجا_Array16(ds, درون_بایتها+جابه_جایی, length*2, بیرون_بایتها+جابه_جایی, p_Error_کد);
 
                 /* swap fromUStage3b[] */
-                offset=udata_readInt32(ds, inExtIndexes[UCNV_EXT_FROM_U_STAGE_3B_INDEX]);
-                length=udata_readInt32(ds, inExtIndexes[UCNV_EXT_FROM_U_STAGE_3B_LENGTH]);
-                ds->swapArray32(ds, inBytes+offset, length*4, outBytes+offset, pErrorCode);
+                جابه_جایی=udata_readInt32(ds, درون_Ext_Indexes[UCNV_EXT_FROM_U_STAGE_3_B_شاخص]);
+                length=udata_readInt32(ds, درون_Ext_Indexes[UCNV_EXT_FROM_U_STAGE_3_B_درازی]);
+                ds->جابجا_Array32(ds, درون_بایتها+جابه_جایی, length*4, بیرون_بایتها+جابه_جایی, p_Error_کد);
 
                 /* swap indexes[] */
-                length=udata_readInt32(ds, inExtIndexes[UCNV_EXT_INDEXES_LENGTH]);
-                ds->swapArray32(ds, inBytes, length*4, outBytes, pErrorCode);
+                length=udata_readInt32(ds, درون_Ext_Indexes[UCNV_EXT_INDEXES_درازی]);
+                ds->جابجا_Array32(ds, درون_بایتها, length*4, بیرون_بایتها, p_Error_کد);
             }
         }
-    } else {
+    } وإلا {
         udata_printError(ds, "ucnv_swap(): unknown conversionType=%d!=UCNV_MBCS\n",
-                         inStaticData->conversionType);
-        *pErrorCode=U_UNSUPPORTED_ERROR;
-        return 0;
+                         درون_Static_داده->conversionType);
+        *p_Error_کد=U_UNSUPPORTED_ERROR;
+        أرجع 0;
     }
 
-    return headerSize+(int32_t)staticDataSize+size;
+    أرجع سرآیند_اندازه+(int32_t)static_داده_اندازه+size;
 }
 
-#endif /* #if !UCONFIG_NO_LEGACY_CONVERSION */
+#پایان_اگر /* #if !UCONFIG_NO_LEGACY_CONVERSION */
 
-#endif
+#پایان_اگر

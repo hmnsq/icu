@@ -6,81 +6,81 @@
 // Copyright 2007 Google Inc. All Rights Reserved.
 // Author: sanjay@google.com (Sanjay Ghemawat)
 
-#include "unicode/utypes.h"
-#include "unicode/bytestream.h"
-#include "cmemory.h"
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/bytestream.h"
+#ضمن "cmemory.h"
 
 U_NAMESPACE_BEGIN
 
 ByteSink::~ByteSink() {}
 
-char* ByteSink::GetAppendBuffer(int32_t min_capacity,
+حرف* ByteSink::Get_Append_میانگیر(int32_t min_ظرفیت_2,
                                 int32_t /*desired_capacity_hint*/,
-                                char* scratch U_LIFETIME_BOUND,
-                                int32_t scratch_capacity,
-                                int32_t* result_capacity) U_LIFETIME_BOUND {
-  if (min_capacity < 1 || scratch_capacity < min_capacity) {
-    *result_capacity = 0;
-    return nullptr;
+                                حرف* scratch U_LIFETIME_BOUND,
+                                int32_t scratch_ظرفیت_2,
+                                int32_t* نتیجه_ظرفیت_2) U_LIFETIME_BOUND {
+  إذا (min_ظرفیت_2 < 1 || scratch_ظرفیت_2 < min_ظرفیت_2) {
+    *نتیجه_ظرفیت_2 = 0;
+    أرجع اشاره_تهی;
   }
-  *result_capacity = scratch_capacity;
-  return scratch;
+  *نتیجه_ظرفیت_2 = scratch_ظرفیت_2;
+  أرجع scratch;
 }
 
-void ByteSink::Flush() {}
+فراغ ByteSink::Flush() {}
 
-CheckedArrayByteSink::CheckedArrayByteSink(char* outbuf, int32_t capacity)
-    : outbuf_(outbuf), capacity_(capacity < 0 ? 0 : capacity),
-      size_(0), appended_(0), overflowed_(false) {
+CheckedArrayByteSink::CheckedArrayByteSink(حرف* outbuf, int32_t capacity)
+    : outbuf_(outbuf), ظرفیت_2(capacity < 0 ? 0 : capacity),
+      اندازه(0), appended_(0), overflowed_(خطأ) {
 }
 
 CheckedArrayByteSink::~CheckedArrayByteSink() {}
 
 CheckedArrayByteSink& CheckedArrayByteSink::Reset() U_LIFETIME_BOUND {
-  size_ = appended_ = 0;
-  overflowed_ = false;
-  return *this;
+  اندازه = appended_ = 0;
+  overflowed_ = خطأ;
+  أرجع *هذا;
 }
 
-void CheckedArrayByteSink::Append(const char* bytes, int32_t n) {
-  if (n <= 0) {
-    return;
+فراغ CheckedArrayByteSink::Append(ثابت حرف* بایتها, int32_t n) {
+  إذا (n <= 0) {
+    أرجع;
   }
-  if (n > (INT32_MAX - appended_)) {
+  إذا (n > (INT32_MAX - appended_)) {
     // TODO: Report as integer overflow, not merely buffer overflow.
     appended_ = INT32_MAX;
-    overflowed_ = true;
-    return;
+    overflowed_ = درست;
+    أرجع;
   }
   appended_ += n;
-  int32_t available = capacity_ - size_;
-  if (n > available) {
-    n = available;
-    overflowed_ = true;
+  int32_t موجود = ظرفیت_2 - اندازه;
+  إذا (n > موجود) {
+    n = موجود;
+    overflowed_ = درست;
   }
-  if (n > 0 && bytes != (outbuf_ + size_)) {
-    uprv_memcpy(outbuf_ + size_, bytes, n);
+  إذا (n > 0 && بایتها != (outbuf_ + اندازه)) {
+    uprv_memcpy(outbuf_ + اندازه, بایتها, n);
   }
-  size_ += n;
+  اندازه += n;
 }
 
-char* CheckedArrayByteSink::GetAppendBuffer(int32_t min_capacity,
+حرف* CheckedArrayByteSink::Get_Append_میانگیر(int32_t min_ظرفیت_2,
                                             int32_t /*desired_capacity_hint*/,
-                                            char* scratch U_LIFETIME_BOUND,
-                                            int32_t scratch_capacity,
-                                            int32_t* result_capacity) U_LIFETIME_BOUND {
-  if (min_capacity < 1 || scratch_capacity < min_capacity) {
-    *result_capacity = 0;
-    return nullptr;
+                                            حرف* scratch U_LIFETIME_BOUND,
+                                            int32_t scratch_ظرفیت_2,
+                                            int32_t* نتیجه_ظرفیت_2) U_LIFETIME_BOUND {
+  إذا (min_ظرفیت_2 < 1 || scratch_ظرفیت_2 < min_ظرفیت_2) {
+    *نتیجه_ظرفیت_2 = 0;
+    أرجع اشاره_تهی;
   }
-  int32_t available = capacity_ - size_;
-  if (available >= min_capacity) {
-    *result_capacity = available;
-    return outbuf_ + size_;
-  } else {
-    *result_capacity = scratch_capacity;
-    return scratch;
+  int32_t موجود = ظرفیت_2 - اندازه;
+  إذا (موجود >= min_ظرفیت_2) {
+    *نتیجه_ظرفیت_2 = موجود;
+    أرجع outbuf_ + اندازه;
+  } وإلا {
+    *نتیجه_ظرفیت_2 = scratch_ظرفیت_2;
+    أرجع scratch;
   }
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_انتها

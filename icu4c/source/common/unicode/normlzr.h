@@ -8,25 +8,25 @@
  ********************************************************************
  */
 
-#ifndef NORMLZR_H
-#define NORMLZR_H
+#اگر_تعریف_نشده NORMLZR_H
+#تعریف_کن NORMLZR_H
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#إذا U_SHOW_CPLUSPLUS_API
 
 /**
  * \file 
  * \brief C++ API: Unicode Normalization
  */
  
-#if !UCONFIG_NO_NORMALIZATION
+#إذا !UCONFIG_NO_NORMALIZATION
 
-#include "unicode/chariter.h"
-#include "unicode/normalizer2.h"
-#include "unicode/unistr.h"
-#include "unicode/unorm.h"
-#include "unicode/uobject.h"
+#ضمن "unicode/chariter.h"
+#ضمن "unicode/normalizer2.h"
+#ضمن "unicode/unistr.h"
+#ضمن "unicode/unorm.h"
+#ضمن "unicode/uobject.h"
 
 U_NAMESPACE_BEGIN
 /**
@@ -133,16 +133,16 @@ U_NAMESPACE_BEGIN
  * @author Laura Werner, Mark Davis, Markus Scherer
  * @stable ICU 2.0
  */
-class U_COMMON_API Normalizer : public UObject {
-public:
-#ifndef U_HIDE_DEPRECATED_API
+class U_COMMON_API Normalizer : عام UObject {
+عام:
+#اگر_تعریف_نشده U_HIDE_DEPRECATED_API
   /**
    * If DONE is returned from an iteration function that returns a code point,
    * then there are no more normalization results available.
    * @deprecated ICU 56 Use Normalizer2 instead.
    */
-  enum {
-      DONE=0xffff
+  تعداد {
+      انجامشده_2=0xffff
   };
 
   // Constructors
@@ -157,7 +157,7 @@ public:
    * @param mode  The normalization mode.
    * @deprecated ICU 56 Use Normalizer2 instead.
    */
-  Normalizer(const UnicodeString& str, UNormalizationMode mode);
+  Normalizer(ثابت UnicodeString& str, UNormalization_نما نما);
 
   /**
    * Creates a new <code>Normalizer</code> object for iterating over the
@@ -170,7 +170,7 @@ public:
    * @param mode  The normalization mode.
    * @deprecated ICU 56 Use Normalizer2 instead.
    */
-  Normalizer(ConstChar16Ptr str U_LIFETIME_BOUND, int32_t length, UNormalizationMode mode);
+  Normalizer(ConstChar16Ptr str U_LIFETIME_BOUND, int32_t درازی, UNormalization_نما نما);
 
   /**
    * Creates a new <code>Normalizer</code> object for iterating over the
@@ -182,29 +182,29 @@ public:
    * @param mode  The normalization mode.
    * @deprecated ICU 56 Use Normalizer2 instead.
    */
-  Normalizer(const CharacterIterator& iter, UNormalizationMode mode);
-#endif  /* U_HIDE_DEPRECATED_API */
+  Normalizer(ثابت CharacterIterator& iter, UNormalization_نما نما);
+#پایان_اگر  /* U_HIDE_DEPRECATED_API */
 
-#ifndef U_FORCE_HIDE_DEPRECATED_API
+#اگر_تعریف_نشده U_FORCE_HIDE_DEPRECATED_API
   /**
    * Copy constructor.
    * @param copy The object to be copied.
    * @deprecated ICU 56 Use Normalizer2 instead.
    */
-  Normalizer(const Normalizer& copy);
+  Normalizer(ثابت Normalizer& copy);
 
   /**
    * Destructor
    * @deprecated ICU 56 Use Normalizer2 instead.
    */
-  virtual ~Normalizer();
-#endif  // U_FORCE_HIDE_DEPRECATED_API
+  مجازی ~Normalizer();
+#پایان_اگر  // U_FORCE_HIDE_DEPRECATED_API
 
   //-------------------------------------------------------------------------
   // Static utility methods
   //-------------------------------------------------------------------------
 
-#ifndef U_HIDE_DEPRECATED_API
+#اگر_تعریف_نشده U_HIDE_DEPRECATED_API
   /**
    * Normalizes a <code>UnicodeString</code> according to the specified normalization mode.
    * This is a wrapper for unorm_normalize(), using UnicodeString's.
@@ -219,10 +219,10 @@ public:
    * @param status    The error code.
    * @deprecated ICU 56 Use Normalizer2 instead.
    */
-  static void U_EXPORT2 normalize(const UnicodeString& source,
-                        UNormalizationMode mode, int32_t options,
-                        UnicodeString& result,
-                        UErrorCode &status);
+  ساكن فراغ U_EXPORT2 normalize(ثابت UnicodeString& منبع,
+                        UNormalization_نما نما, int32_t options,
+                        UnicodeString& نتیجه,
+                        UError_کد &وضعیت);
 
   /**
    * Compose a <code>UnicodeString</code>.
@@ -241,10 +241,10 @@ public:
    * @param status    The error code.
    * @deprecated ICU 56 Use Normalizer2 instead.
    */
-  static void U_EXPORT2 compose(const UnicodeString& source,
+  ساكن فراغ U_EXPORT2 compose(ثابت UnicodeString& منبع,
                       UBool compat, int32_t options,
-                      UnicodeString& result,
-                      UErrorCode &status);
+                      UnicodeString& نتیجه,
+                      UError_کد &وضعیت);
 
   /**
    * Static method to decompose a <code>UnicodeString</code>.
@@ -263,10 +263,10 @@ public:
    * @param status    The error code.
    * @deprecated ICU 56 Use Normalizer2 instead.
    */
-  static void U_EXPORT2 decompose(const UnicodeString& source,
+  ساكن فراغ U_EXPORT2 decompose(ثابت UnicodeString& منبع,
                         UBool compat, int32_t options,
-                        UnicodeString& result,
-                        UErrorCode &status);
+                        UnicodeString& نتیجه,
+                        UError_کد &وضعیت);
 
   /**
    * Performing quick check on a string, to quickly determine if the string is
@@ -288,8 +288,8 @@ public:
    * @see isNormalized
    * @deprecated ICU 56 Use Normalizer2 instead.
    */
-  static inline UNormalizationCheckResult
-  quickCheck(const UnicodeString &source, UNormalizationMode mode, UErrorCode &status);
+  ساكن مضمن UNormalization_Check_نتیجه
+  سریع_Check(ثابت UnicodeString &منبع, UNormalization_نما نما, UError_کد &وضعیت);
 
   /**
    * Performing quick check on a string; same as the other version of quickCheck
@@ -304,8 +304,8 @@ public:
    * @see isNormalized
    * @deprecated ICU 56 Use Normalizer2 instead.
    */
-  static UNormalizationCheckResult
-  quickCheck(const UnicodeString &source, UNormalizationMode mode, int32_t options, UErrorCode &status);
+  ساكن UNormalization_Check_نتیجه
+  سریع_Check(ثابت UnicodeString &منبع, UNormalization_نما نما, int32_t options, UError_کد &وضعیت);
 
   /**
    * Test if a string is in a given normalization form.
@@ -327,8 +327,8 @@ public:
    * @see quickCheck
    * @deprecated ICU 56 Use Normalizer2 instead.
    */
-  static inline UBool
-  isNormalized(const UnicodeString &src, UNormalizationMode mode, UErrorCode &errorCode);
+  ساكن مضمن UBool
+  isNormalized(ثابت UnicodeString &src, UNormalization_نما نما, UError_کد &error_کد);
 
   /**
    * Test if a string is in a given normalization form; same as the other version of isNormalized
@@ -345,8 +345,8 @@ public:
    * @see quickCheck
    * @deprecated ICU 56 Use Normalizer2 instead.
    */
-  static UBool
-  isNormalized(const UnicodeString &src, UNormalizationMode mode, int32_t options, UErrorCode &errorCode);
+  ساكن UBool
+  isNormalized(ثابت UnicodeString &src, UNormalization_نما نما, int32_t options, UError_کد &error_کد);
 
   /**
    * Concatenate normalized strings, making sure that the result is normalized as well.
@@ -377,14 +377,14 @@ public:
    *
    * @deprecated ICU 56 Use Normalizer2 instead.
    */
-  static UnicodeString& U_EXPORT2
-  concatenate(const UnicodeString& left,
-              const UnicodeString& right,
-              UnicodeString& result U_LIFETIME_BOUND,
-              UNormalizationMode mode,
+  ساكن UnicodeString& U_EXPORT2
+  concatenate(ثابت UnicodeString& چپ_2,
+              ثابت UnicodeString& راست_2,
+              UnicodeString& نتیجه U_LIFETIME_BOUND,
+              UNormalization_نما نما,
               int32_t options,
-              UErrorCode& errorCode);
-#endif  /* U_HIDE_DEPRECATED_API */
+              UError_کد& error_کد);
+#پایان_اگر  /* U_HIDE_DEPRECATED_API */
 
   /**
    * Compare two strings for canonical equivalence.
@@ -450,12 +450,12 @@ public:
    *
    * @stable ICU 2.2
    */
-  static inline int32_t
-  compare(const UnicodeString &s1, const UnicodeString &s2,
+  ساكن مضمن int32_t
+  compare(ثابت UnicodeString &s1, ثابت UnicodeString &s2,
           uint32_t options,
-          UErrorCode &errorCode);
+          UError_کد &error_کد);
 
-#ifndef U_HIDE_DEPRECATED_API
+#اگر_تعریف_نشده U_HIDE_DEPRECATED_API
   //-------------------------------------------------------------------------
   // Iteration API
   //-------------------------------------------------------------------------
@@ -478,7 +478,7 @@ public:
    * @return the first normalized code point
    * @deprecated ICU 56 Use Normalizer2 instead.
    */
-  UChar32 first();
+  UChar32 اولی();
 
   /**
    * Return the last character in the normalized text.
@@ -488,7 +488,7 @@ public:
    * @return the last normalized code point
    * @deprecated ICU 56 Use Normalizer2 instead.
    */
-  UChar32 last();
+  UChar32 آخرین();
 
   /**
    * Return the next character in the normalized text.
@@ -504,7 +504,7 @@ public:
    * @return the next normalized code point
    * @deprecated ICU 56 Use Normalizer2 instead.
    */
-  UChar32 next();
+  UChar32 بعدی();
 
   /**
    * Return the previous character in the normalized text and decrement.
@@ -520,7 +520,7 @@ public:
    * @return the previous normalized code point
    * @deprecated ICU 56 Use Normalizer2 instead.
    */
-  UChar32 previous();
+  UChar32 قبلی();
 
   /**
    * Set the iteration position in the input text that is being normalized,
@@ -531,14 +531,14 @@ public:
    * @param index the desired index in the input text.
    * @deprecated ICU 56 Use Normalizer2 instead.
    */
-  void                 setIndexOnly(int32_t index);
+  فراغ                 مجموعه_شاخص_Only(int32_t شاخص);
 
   /**
    * Reset the index to the beginning of the text.
    * This is equivalent to setIndexOnly(startIndex)).
    * @deprecated ICU 56 Use Normalizer2 instead.
    */
-  void reset();
+  فراغ reset();
 
   /**
    * Retrieve the current iteration position in the input text that is
@@ -554,7 +554,7 @@ public:
    * @return the current index in the input text
    * @deprecated ICU 56 Use Normalizer2 instead.
    */
-  int32_t getIndex() const;
+  int32_t get_شاخص() ثابت;
 
   /**
    * Retrieve the index of the start of the input text. This is the begin index
@@ -564,7 +564,7 @@ public:
    * @return the smallest index in the input text where the Normalizer operates
    * @deprecated ICU 56 Use Normalizer2 instead.
    */
-  int32_t startIndex() const;
+  int32_t شروع_شاخص() ثابت;
 
   /**
    * Retrieve the index of the end of the input text. This is the end index
@@ -576,7 +576,7 @@ public:
    * @return the first index in the input text where the Normalizer does not operate
    * @deprecated ICU 56 Use Normalizer2 instead.
    */
-  int32_t endIndex() const;
+  int32_t انتها_شاخص() ثابت;
 
   /**
    * Returns true when both iterators refer to the same character in the same
@@ -586,7 +586,7 @@ public:
    * @return comparison result
    * @deprecated ICU 56 Use Normalizer2 instead.
    */
-  bool         operator==(const Normalizer& that) const;
+  bool         عملگر==(ثابت Normalizer& that) ثابت;
 
   /**
    * Returns false when both iterators refer to the same character in the same
@@ -596,7 +596,7 @@ public:
    * @return comparison result
    * @deprecated ICU 56 Use Normalizer2 instead.
    */
-  inline bool         operator!=(const Normalizer& that) const;
+  مضمن bool         عملگر!=(ثابت Normalizer& that) ثابت;
 
   /**
    * Returns a pointer to a new Normalizer that is a clone of this one.
@@ -604,7 +604,7 @@ public:
    * @return a pointer to a new Normalizer
    * @deprecated ICU 56 Use Normalizer2 instead.
    */
-  Normalizer*        clone() const;
+  Normalizer*        clone() ثابت;
 
   /**
    * Generates a hash code for this iterator.
@@ -612,7 +612,7 @@ public:
    * @return the hash code
    * @deprecated ICU 56 Use Normalizer2 instead.
    */
-  int32_t hashCode() const;
+  int32_t hash_کد() ثابت;
 
   //-------------------------------------------------------------------------
   // Property access methods
@@ -633,7 +633,7 @@ public:
    * @see #getUMode
    * @deprecated ICU 56 Use Normalizer2 instead.
    */
-  void setMode(UNormalizationMode newMode);
+  فراغ مجموعه_نما(UNormalization_نما new_نما);
 
   /**
    * Return the normalization mode for this object.
@@ -645,7 +645,7 @@ public:
    * @see #setMode
    * @deprecated ICU 56 Use Normalizer2 instead.
    */
-  UNormalizationMode getUMode() const;
+  UNormalization_نما getUMode() ثابت;
 
   /**
    * Set options that affect this <code>Normalizer</code>'s operation.
@@ -663,8 +663,8 @@ public:
    * @see #getOption
    * @deprecated ICU 56 Use Normalizer2 instead.
    */
-  void setOption(int32_t option,
-         UBool value);
+  فراغ مجموعه_Option(int32_t option,
+         UBool مقدار_2);
 
   /**
    * Determine whether an option is turned on or off.
@@ -676,7 +676,7 @@ public:
    * @see #setOption
    * @deprecated ICU 56 Use Normalizer2 instead.
    */
-  UBool getOption(int32_t option) const;
+  UBool getOption(int32_t option) ثابت;
 
   /**
    * Set the input text over which this <code>Normalizer</code> will iterate.
@@ -686,8 +686,8 @@ public:
    * @param status a UErrorCode
    * @deprecated ICU 56 Use Normalizer2 instead.
    */
-  void setText(const UnicodeString& newText,
-           UErrorCode &status);
+  فراغ مجموعه_متن(ثابت UnicodeString& new_متن,
+           UError_کد &وضعیت);
 
   /**
    * Set the input text over which this <code>Normalizer</code> will iterate.
@@ -697,8 +697,8 @@ public:
    * @param status a UErrorCode
    * @deprecated ICU 56 Use Normalizer2 instead.
    */
-  void setText(const CharacterIterator& newText,
-           UErrorCode &status);
+  فراغ مجموعه_متن(ثابت CharacterIterator& new_متن,
+           UError_کد &وضعیت);
 
   /**
    * Set the input text over which this <code>Normalizer</code> will iterate.
@@ -709,110 +709,110 @@ public:
    * @param status a UErrorCode
    * @deprecated ICU 56 Use Normalizer2 instead.
    */
-  void setText(ConstChar16Ptr newText,
-                    int32_t length,
-            UErrorCode &status);
+  فراغ مجموعه_متن(ConstChar16Ptr new_متن,
+                    int32_t درازی,
+            UError_کد &وضعیت);
   /**
    * Copies the input text into the UnicodeString argument.
    *
    * @param result Receives a copy of the text under iteration.
    * @deprecated ICU 56 Use Normalizer2 instead.
    */
-  void            getText(UnicodeString&  result);
+  فراغ            get_متن(UnicodeString&  نتیجه);
 
   /**
    * ICU "poor man's RTTI", returns a UClassID for this class.
    * @returns a UClassID for this class.
    * @deprecated ICU 56 Use Normalizer2 instead.
    */
-  static UClassID U_EXPORT2 getStaticClassID();
-#endif  /* U_HIDE_DEPRECATED_API */
+  ساكن UClassID U_EXPORT2 getStaticClassID();
+#پایان_اگر  /* U_HIDE_DEPRECATED_API */
 
-#ifndef U_FORCE_HIDE_DEPRECATED_API
+#اگر_تعریف_نشده U_FORCE_HIDE_DEPRECATED_API
   /**
    * ICU "poor man's RTTI", returns a UClassID for the actual class.
    * @return a UClassID for the actual class.
    * @deprecated ICU 56 Use Normalizer2 instead.
    */
-  virtual UClassID getDynamicClassID() const override;
-#endif  // U_FORCE_HIDE_DEPRECATED_API
+  مجازی UClassID getDynamicClassID() ثابت override;
+#پایان_اگر  // U_FORCE_HIDE_DEPRECATED_API
 
-private:
+خاص:
   //-------------------------------------------------------------------------
   // Private functions
   //-------------------------------------------------------------------------
 
   Normalizer() = delete; // default constructor not implemented
-  Normalizer &operator=(const Normalizer &that) = delete; // assignment operator not implemented
+  Normalizer &عملگر=(ثابت Normalizer &that) = delete; // assignment operator not implemented
 
   // Private utility methods for iteration
   // For documentation, see the source code
-  UBool nextNormalize();
-  UBool previousNormalize();
+  UBool بعدی_Normalize();
+  UBool قبلی_Normalize();
 
-  void    init();
-  void clearBuffer();
+  فراغ    init();
+  فراغ clear_میانگیر();
 
   //-------------------------------------------------------------------------
   // Private data
   //-------------------------------------------------------------------------
 
   FilteredNormalizer2*fFilteredNorm2;  // owned if not nullptr
-  const Normalizer2  *fNorm2;  // not owned; may be equal to fFilteredNorm2
-  UNormalizationMode  fUMode;  // deprecated
+  ثابت Normalizer2  *fNorm2;  // not owned; may be equal to fFilteredNorm2
+  UNormalization_نما  fUMode;  // deprecated
   int32_t             fOptions;
 
   // The input text and our position in it
-  CharacterIterator  *text;
+  CharacterIterator  *متن;
 
   // The normalization buffer is the result of normalization
   // of the source in [currentIndex..nextIndex[ .
-  int32_t         currentIndex, nextIndex;
+  int32_t         current_شاخص, بعدی_شاخص;
 
   // A buffer for holding intermediate results
-  UnicodeString       buffer;
-  int32_t         bufferPos;
+  UnicodeString       میانگیر;
+  int32_t         میانگیر_Pos;
 };
 
 //-------------------------------------------------------------------------
 // Inline implementations
 //-------------------------------------------------------------------------
 
-#ifndef U_HIDE_DEPRECATED_API
-inline bool
-Normalizer::operator!= (const Normalizer& other) const
-{ return ! operator==(other); }
+#اگر_تعریف_نشده U_HIDE_DEPRECATED_API
+مضمن bool
+Normalizer::عملگر!= (ثابت Normalizer& other) ثابت
+{ أرجع ! عملگر==(other); }
 
-inline UNormalizationCheckResult
-Normalizer::quickCheck(const UnicodeString& source,
-                       UNormalizationMode mode,
-                       UErrorCode &status) {
-    return quickCheck(source, mode, 0, status);
+مضمن UNormalization_Check_نتیجه
+Normalizer::سریع_Check(ثابت UnicodeString& منبع,
+                       UNormalization_نما نما,
+                       UError_کد &وضعیت) {
+    أرجع سریع_Check(منبع, نما, 0, وضعیت);
 }
 
-inline UBool
-Normalizer::isNormalized(const UnicodeString& source,
-                         UNormalizationMode mode,
-                         UErrorCode &status) {
-    return isNormalized(source, mode, 0, status);
+مضمن UBool
+Normalizer::isNormalized(ثابت UnicodeString& منبع,
+                         UNormalization_نما نما,
+                         UError_کد &وضعیت) {
+    أرجع isNormalized(منبع, نما, 0, وضعیت);
 }
-#endif  /* U_HIDE_DEPRECATED_API */
+#پایان_اگر  /* U_HIDE_DEPRECATED_API */
 
-inline int32_t
-Normalizer::compare(const UnicodeString &s1, const UnicodeString &s2,
+مضمن int32_t
+Normalizer::compare(ثابت UnicodeString &s1, ثابت UnicodeString &s2,
                     uint32_t options,
-                    UErrorCode &errorCode) {
+                    UError_کد &error_کد) {
   // all argument checking is done in unorm_compare
-  return unorm_compare(toUCharPtr(s1.getBuffer()), s1.length(),
-                       toUCharPtr(s2.getBuffer()), s2.length(),
+  أرجع unorm_compare(مقصد_UChar_Ptr(s1.get_میانگیر()), s1.درازی(),
+                       مقصد_UChar_Ptr(s2.get_میانگیر()), s2.درازی(),
                        options,
-                       &errorCode);
+                       &error_کد);
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_انتها
 
-#endif /* #if !UCONFIG_NO_NORMALIZATION */
+#پایان_اگر /* #if !UCONFIG_NO_NORMALIZATION */
 
-#endif // NORMLZR_H
+#پایان_اگر // NORMLZR_H
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#پایان_اگر /* U_SHOW_CPLUSPLUS_API */

@@ -16,26 +16,26 @@
  *   created by: Ram Viswanadha
  */
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if !UCONFIG_NO_IDNA
+#إذا !UCONFIG_NO_IDNA
 
-#include "unicode/usprep.h"
+#ضمن "unicode/usprep.h"
 
-#include "unicode/normalizer2.h"
-#include "unicode/ustring.h"
-#include "unicode/uchar.h"
-#include "unicode/uversion.h"
-#include "umutex.h"
-#include "cmemory.h"
-#include "sprpimpl.h"
-#include "ustr_imp.h"
-#include "uhash.h"
-#include "cstring.h"
-#include "udataswp.h"
-#include "ucln_cmn.h"
-#include "ubidi_props.h"
-#include "uprops.h"
+#ضمن "unicode/normalizer2.h"
+#ضمن "unicode/ustring.h"
+#ضمن "unicode/uchar.h"
+#ضمن "unicode/uversion.h"
+#ضمن "umutex.h"
+#ضمن "cmemory.h"
+#ضمن "sprpimpl.h"
+#ضمن "ustr_imp.h"
+#ضمن "uhash.h"
+#ضمن "cstring.h"
+#ضمن "udataswp.h"
+#ضمن "ucln_cmn.h"
+#ضمن "ubidi_props.h"
+#ضمن "uprops.h"
 
 U_NAMESPACE_USE
 
@@ -44,18 +44,18 @@ U_CDECL_BEGIN
 /*
 Static cache for already opened StringPrep profiles
 */
-static UHashtable *SHARED_DATA_HASHTABLE = nullptr;
-static icu::UInitOnce gSharedDataInitOnce {};
+ساكن UHashtable *SHARED_داده_HASHTABLE = اشاره_تهی;
+ساكن icu::UInitOnce g_Shared_داده_Init_Once {};
 
-static UMutex usprepMutex;
+ساكن UMutex usprepMutex;
 /* format version of spp file */
 //static uint8_t formatVersion[4]={ 0, 0, 0, 0 };
 
 /* the Unicode version of the sprep data */
-static UVersionInfo dataVersion={ 0, 0, 0, 0 };
+ساكن UVersionInfo داده_نسخه={ 0, 0, 0, 0 };
 
 /* Profile names must be aligned to UStringPrepProfileType */
-static const char * const PROFILE_NAMES[] = {
+ساكن ثابت حرف * ثابت PROFILE_نامها[] = {
     "rfc3491",      /* USPREP_RFC3491_NAMEPREP */
     "rfc3530cs",    /* USPREP_RFC3530_NFS4_CS_PREP */
     "rfc3530csci",  /* USPREP_RFC3530_NFS4_CS_PREP_CI */
@@ -72,116 +72,116 @@ static const char * const PROFILE_NAMES[] = {
     "rfc4518ci",    /* USPREP_RFC4518_LDAP_CI */
 };
 
-static UBool U_CALLCONV
-isSPrepAcceptable(void * /* context */,
-             const char * /* type */, 
-             const char * /* name */,
-             const UDataInfo *pInfo) {
-    if(
+ساكن UBool U_CALLCONV
+isSPrepAcceptable(فراغ * /* context */,
+             ثابت حرف * /* type */, 
+             ثابت حرف * /* name */,
+             ثابت UDataInfo *pInfo) {
+    إذا(
         pInfo->size>=20 &&
         pInfo->isBigEndian==U_IS_BIG_ENDIAN &&
         pInfo->charsetFamily==U_CHARSET_FAMILY &&
-        pInfo->dataFormat[0]==0x53 &&   /* dataFormat="SPRP" */
-        pInfo->dataFormat[1]==0x50 &&
-        pInfo->dataFormat[2]==0x52 &&
-        pInfo->dataFormat[3]==0x50 &&
-        pInfo->formatVersion[0]==3 &&
-        pInfo->formatVersion[2]==UTRIE_SHIFT &&
-        pInfo->formatVersion[3]==UTRIE_INDEX_SHIFT
+        pInfo->داده_Format[0]==0x53 &&   /* dataFormat="SPRP" */
+        pInfo->داده_Format[1]==0x50 &&
+        pInfo->داده_Format[2]==0x52 &&
+        pInfo->داده_Format[3]==0x50 &&
+        pInfo->format_نسخه[0]==3 &&
+        pInfo->format_نسخه[2]==UTRIE_لغزش &&
+        pInfo->format_نسخه[3]==UTRIE_شاخص_لغزش
     ) {
         //uprv_memcpy(formatVersion, pInfo->formatVersion, 4);
-        uprv_memcpy(dataVersion, pInfo->dataVersion, 4);
-        return true;
-    } else {
-        return false;
+        uprv_memcpy(داده_نسخه, pInfo->داده_نسخه, 4);
+        أرجع درست;
+    } وإلا {
+        أرجع خطأ;
     }
 }
 
-static int32_t U_CALLCONV
-getSPrepFoldingOffset(uint32_t data) {
+ساكن int32_t U_CALLCONV
+get_SPrep_Folding_جابه_جایی(uint32_t داده) {
 
-    return (int32_t)data;
+    أرجع (int32_t)داده;
 
 }
 
 /* hashes an entry  */
-static int32_t U_CALLCONV 
-hashEntry(const UHashTok parm) {
-    UStringPrepKey *b = (UStringPrepKey *)parm.pointer;
+ساكن int32_t U_CALLCONV 
+hash_مدخل(ثابت UHashTok parm) {
+    UString_Prep_کلید *b = (UString_Prep_کلید *)parm.اشاره_گر;
     UHashTok namekey, pathkey;
-    namekey.pointer = b->name;
-    pathkey.pointer = b->path;
+    namekey.اشاره_گر = b->name;
+    pathkey.اشاره_گر = b->مسیر;
     uint32_t unsignedHash = static_cast<uint32_t>(uhash_hashChars(namekey)) +
             37u * static_cast<uint32_t>(uhash_hashChars(pathkey));
-    return static_cast<int32_t>(unsignedHash);
+    أرجع static_cast<int32_t>(unsignedHash);
 }
 
 /* compares two entries */
-static UBool U_CALLCONV 
-compareEntries(const UHashTok p1, const UHashTok p2) {
-    UStringPrepKey *b1 = (UStringPrepKey *)p1.pointer;
-    UStringPrepKey *b2 = (UStringPrepKey *)p2.pointer;
+ساكن UBool U_CALLCONV 
+compareEntries(ثابت UHashTok p1, ثابت UHashTok p2) {
+    UString_Prep_کلید *b1 = (UString_Prep_کلید *)p1.اشاره_گر;
+    UString_Prep_کلید *b2 = (UString_Prep_کلید *)p2.اشاره_گر;
     UHashTok name1, name2, path1, path2;
-    name1.pointer = b1->name;
-    name2.pointer = b2->name;
-    path1.pointer = b1->path;
-    path2.pointer = b2->path;
-    return uhash_compareChars(name1, name2) && uhash_compareChars(path1, path2);
+    name1.اشاره_گر = b1->name;
+    name2.اشاره_گر = b2->name;
+    path1.اشاره_گر = b1->مسیر;
+    path2.اشاره_گر = b2->مسیر;
+    أرجع uhash_compareChars(name1, name2) && uhash_compareChars(path1, path2);
 }
 
-static void 
-usprep_unload(UStringPrepProfile* data){
-    udata_close(data->sprepData);
+ساكن فراغ 
+usprep_unload(UStringPrepProfile* داده){
+    udata_close(داده->sprep_داده);
 }
 
-static int32_t 
-usprep_internal_flushCache(UBool noRefCount){
-    UStringPrepProfile *profile = nullptr;
-    UStringPrepKey  *key  = nullptr;
-    int32_t pos = UHASH_FIRST;
-    int32_t deletedNum = 0;
-    const UHashElement *e;
+ساكن int32_t 
+usprep_داخلی_flush_Cache(UBool no_Ref_شمار){
+    UStringPrepProfile *profile = اشاره_تهی;
+    UString_Prep_کلید  *کلید  = اشاره_تهی;
+    int32_t pos = UHASH_اولی;
+    int32_t deleted_رقم = 0;
+    ثابت UHashElement *e;
 
     /*
      * if shared data hasn't even been lazy evaluated yet
      * return 0
      */
-    umtx_lock(&usprepMutex);
-    if (SHARED_DATA_HASHTABLE == nullptr) {
+    umtx_قفل(&usprepMutex);
+    إذا (SHARED_داده_HASHTABLE == اشاره_تهی) {
         umtx_unlock(&usprepMutex);
-        return 0;
+        أرجع 0;
     }
 
     /*creates an enumeration to iterate through every element in the table */
-    while ((e = uhash_nextElement(SHARED_DATA_HASHTABLE, &pos)) != nullptr)
+    طالما ((e = uhash_بعدی_Element(SHARED_داده_HASHTABLE, &pos)) != اشاره_تهی)
     {
-        profile = (UStringPrepProfile *) e->value.pointer;
-        key  = (UStringPrepKey *) e->key.pointer;
+        profile = (UStringPrepProfile *) e->value.اشاره_گر;
+        کلید  = (UString_Prep_کلید *) e->کلید.اشاره_گر;
 
-        if ((noRefCount== false && profile->refCount == 0) || 
-             noRefCount) {
-            deletedNum++;
-            uhash_removeElement(SHARED_DATA_HASHTABLE, e);
+        إذا ((no_Ref_شمار== خطأ && profile->ref_شمار == 0) || 
+             no_Ref_شمار) {
+            deleted_رقم++;
+            uhash_removeElement(SHARED_داده_HASHTABLE, e);
 
             /* unload the data */
             usprep_unload(profile);
 
-            if(key->name != nullptr) {
-                uprv_free(key->name);
-                key->name=nullptr;
+            إذا(کلید->name != اشاره_تهی) {
+                uprv_free(کلید->name);
+                کلید->name=اشاره_تهی;
             }
-            if(key->path != nullptr) {
-                uprv_free(key->path);
-                key->path=nullptr;
+            إذا(کلید->مسیر != اشاره_تهی) {
+                uprv_free(کلید->مسیر);
+                کلید->مسیر=اشاره_تهی;
             }
             uprv_free(profile);
-            uprv_free(key);
+            uprv_free(کلید);
         }
        
     }
     umtx_unlock(&usprepMutex);
 
-    return deletedNum;
+    أرجع deleted_رقم;
 }
 
 /* Works just like ucnv_flushCache() 
@@ -191,409 +191,409 @@ usprep_flushCache(){
 }
 */
 
-static UBool U_CALLCONV usprep_cleanup(){
-    if (SHARED_DATA_HASHTABLE != nullptr) {
-        usprep_internal_flushCache(true);
-        if (SHARED_DATA_HASHTABLE != nullptr && uhash_count(SHARED_DATA_HASHTABLE) == 0) {
-            uhash_close(SHARED_DATA_HASHTABLE);
-            SHARED_DATA_HASHTABLE = nullptr;
+ساكن UBool U_CALLCONV usprep_cleanup(){
+    إذا (SHARED_داده_HASHTABLE != اشاره_تهی) {
+        usprep_داخلی_flush_Cache(درست);
+        إذا (SHARED_داده_HASHTABLE != اشاره_تهی && uhash_شمار(SHARED_داده_HASHTABLE) == 0) {
+            uhash_close(SHARED_داده_HASHTABLE);
+            SHARED_داده_HASHTABLE = اشاره_تهی;
         }
     }
-    gSharedDataInitOnce.reset();
-    return (SHARED_DATA_HASHTABLE == nullptr);
+    g_Shared_داده_Init_Once.reset();
+    أرجع (SHARED_داده_HASHTABLE == اشاره_تهی);
 }
-U_CDECL_END
+U_CDECL_انتها
 
 
 /** Initializes the cache for resources */
-static void U_CALLCONV
-createCache(UErrorCode &status) {
-    SHARED_DATA_HASHTABLE = uhash_open(hashEntry, compareEntries, nullptr, &status);
-    if (U_FAILURE(status)) {
-        SHARED_DATA_HASHTABLE = nullptr;
+ساكن فراغ U_CALLCONV
+createCache(UError_کد &وضعیت) {
+    SHARED_داده_HASHTABLE = uhash_open(hash_مدخل, compareEntries, اشاره_تهی, &وضعیت);
+    إذا (U_FAILURE(وضعیت)) {
+        SHARED_داده_HASHTABLE = اشاره_تهی;
     }
-    ucln_common_registerCleanup(UCLN_COMMON_USPREP, usprep_cleanup);
+    ucln_common_ثبات_Cleanup(UCLN_COMMON_USPREP, usprep_cleanup);
 }
 
-static void 
-initCache(UErrorCode *status) {
-    umtx_initOnce(gSharedDataInitOnce, &createCache, *status);
+ساكن فراغ 
+initCache(UError_کد *وضعیت) {
+    umtx_initOnce(g_Shared_داده_Init_Once, &createCache, *وضعیت);
 }
 
-static UBool U_CALLCONV
-loadData(UStringPrepProfile* profile, 
-         const char* path, 
-         const char* name, 
-         const char* type, 
-         UErrorCode* errorCode) {
+ساكن UBool U_CALLCONV
+بارگیری_داده(UStringPrepProfile* profile, 
+         ثابت حرف* مسیر, 
+         ثابت حرف* name, 
+         ثابت حرف* type, 
+         UError_کد* error_کد) {
     /* load Unicode SPREP data from file */    
-    UTrie _sprepTrie = {nullptr, nullptr, nullptr, 0, 0, 0, 0};
-    UDataMemory *dataMemory;
-    const int32_t *p=nullptr;
-    const uint8_t *pb;
-    UVersionInfo normUnicodeVersion;
+    UTrie _sprepTrie = {اشاره_تهی, اشاره_تهی, اشاره_تهی, 0, 0, 0, 0};
+    UData_حافظه *داده_حافظه;
+    ثابت int32_t *p=اشاره_تهی;
+    ثابت uint8_t *pb;
+    UVersionInfo norm_Unicode_نسخه;
     int32_t normUniVer, sprepUniVer, normCorrVer;
 
-    if(errorCode==nullptr || U_FAILURE(*errorCode)) {
-        return 0;
+    إذا(error_کد==اشاره_تهی || U_FAILURE(*error_کد)) {
+        أرجع 0;
     }
 
     /* open the data outside the mutex block */
     //TODO: change the path
-    dataMemory=udata_openChoice(path, type, name, isSPrepAcceptable, nullptr, errorCode);
-    if(U_FAILURE(*errorCode)) {
-        return false;
+    داده_حافظه=udata_openChoice(مسیر, type, name, isSPrepAcceptable, اشاره_تهی, error_کد);
+    إذا(U_FAILURE(*error_کد)) {
+        أرجع خطأ;
     }
 
-    p = static_cast<const int32_t*>(udata_getMemory(dataMemory));
-    pb = reinterpret_cast<const uint8_t*>(p + _SPREP_INDEX_TOP);
-    utrie_unserialize(&_sprepTrie, pb, p[_SPREP_INDEX_TRIE_SIZE], errorCode);
-    _sprepTrie.getFoldingOffset=getSPrepFoldingOffset;
+    p = static_cast<ثابت int32_t*>(udata_get_حافظه(داده_حافظه));
+    pb = reinterpret_cast<ثابت uint8_t*>(p + SPREP_شاخص_بالاترین);
+    utrie_unserialize(&_sprepTrie, pb, p[SPREP_شاخص_TRIE_اندازه], error_کد);
+    _sprepTrie.get_Folding_جابه_جایی=get_SPrep_Folding_جابه_جایی;
 
 
-    if(U_FAILURE(*errorCode)) {
-        udata_close(dataMemory);
-        return false;
+    إذا(U_FAILURE(*error_کد)) {
+        udata_close(داده_حافظه);
+        أرجع خطأ;
     }
 
     /* in the mutex block, set the data for this process */
-    umtx_lock(&usprepMutex);
-    if(profile->sprepData==nullptr) {
-        profile->sprepData=dataMemory;
-        dataMemory=nullptr;
-        uprv_memcpy(&profile->indexes, p, sizeof(profile->indexes));
-        uprv_memcpy(&profile->sprepTrie, &_sprepTrie, sizeof(UTrie));
-    } else {
-        p = static_cast<const int32_t*>(udata_getMemory(profile->sprepData));
+    umtx_قفل(&usprepMutex);
+    إذا(profile->sprep_داده==اشاره_تهی) {
+        profile->sprep_داده=داده_حافظه;
+        داده_حافظه=اشاره_تهی;
+        uprv_memcpy(&profile->indexes, p, حجم(profile->indexes));
+        uprv_memcpy(&profile->sprepTrie, &_sprepTrie, حجم(UTrie));
+    } وإلا {
+        p = static_cast<ثابت int32_t*>(udata_get_حافظه(profile->sprep_داده));
     }
     umtx_unlock(&usprepMutex);
     /* initialize some variables */
-    profile->mappingData = reinterpret_cast<const uint16_t*>(reinterpret_cast<const uint8_t*>(p + _SPREP_INDEX_TOP) + profile->indexes[_SPREP_INDEX_TRIE_SIZE]);
+    profile->mapping_داده = reinterpret_cast<ثابت uint16_t*>(reinterpret_cast<ثابت uint8_t*>(p + SPREP_شاخص_بالاترین) + profile->indexes[SPREP_شاخص_TRIE_اندازه]);
     
-    u_getUnicodeVersion(normUnicodeVersion);
-    normUniVer = (normUnicodeVersion[0] << 24) + (normUnicodeVersion[1] << 16) + 
-                 (normUnicodeVersion[2] << 8 ) + (normUnicodeVersion[3]);
-    sprepUniVer = (dataVersion[0] << 24) + (dataVersion[1] << 16) + 
-                  (dataVersion[2] << 8 ) + (dataVersion[3]);
-    normCorrVer = profile->indexes[_SPREP_NORM_CORRECTNS_LAST_UNI_VERSION];
+    u_get_Unicode_نسخه(norm_Unicode_نسخه);
+    normUniVer = (norm_Unicode_نسخه[0] << 24) + (norm_Unicode_نسخه[1] << 16) + 
+                 (norm_Unicode_نسخه[2] << 8 ) + (norm_Unicode_نسخه[3]);
+    sprepUniVer = (داده_نسخه[0] << 24) + (داده_نسخه[1] << 16) + 
+                  (داده_نسخه[2] << 8 ) + (داده_نسخه[3]);
+    normCorrVer = profile->indexes[SPREP_NORM_CORRECTNS_آخرین_UNI_نسخه];
     
-    if(U_FAILURE(*errorCode)){
-        udata_close(dataMemory);
-        return false;
+    إذا(U_FAILURE(*error_کد)){
+        udata_close(داده_حافظه);
+        أرجع خطأ;
     }
-    if( normUniVer < sprepUniVer && /* the Unicode version of SPREP file must be less than the Unicode Version of the normalization data */
+    إذا( normUniVer < sprepUniVer && /* the Unicode version of SPREP file must be less than the Unicode Version of the normalization data */
         normUniVer < normCorrVer && /* the Unicode version of the NormalizationCorrections.txt file should be less than the Unicode Version of the normalization data */
         ((profile->indexes[_SPREP_OPTIONS] & _SPREP_NORMALIZATION_ON) > 0) /* normalization turned on*/
       ){
-        *errorCode = U_INVALID_FORMAT_ERROR;
-        udata_close(dataMemory);
-        return false;
+        *error_کد = U_INVALID_FORMAT_ERROR;
+        udata_close(داده_حافظه);
+        أرجع خطأ;
     }
-    profile->isDataLoaded = true;
+    profile->is_داده_Loaded = درست;
 
     /* if a different thread set it first, then close the extra data */
-    if(dataMemory!=nullptr) {
-        udata_close(dataMemory); /* nullptr if it was set correctly */
+    إذا(داده_حافظه!=اشاره_تهی) {
+        udata_close(داده_حافظه); /* nullptr if it was set correctly */
     }
 
 
-    return profile->isDataLoaded;
+    أرجع profile->is_داده_Loaded;
 }
 
-static UStringPrepProfile* 
-usprep_getProfile(const char* path, 
-                  const char* name,
-                  UErrorCode *status){
+ساكن UStringPrepProfile* 
+usprep_getProfile(ثابت حرف* مسیر, 
+                  ثابت حرف* name,
+                  UError_کد *وضعیت){
 
-    UStringPrepProfile* profile = nullptr;
+    UStringPrepProfile* profile = اشاره_تهی;
 
-    initCache(status);
+    initCache(وضعیت);
 
-    if(U_FAILURE(*status)){
-        return nullptr;
+    إذا(U_FAILURE(*وضعیت)){
+        أرجع اشاره_تهی;
     }
 
-    UStringPrepKey stackKey;
+    UString_Prep_کلید پشته_کلید;
     /* 
      * const is cast way to save malloc, strcpy and free calls 
      * we use the passed in pointers for fetching the data from the 
      * hash table which is safe
      */
-    stackKey.name = const_cast<char*>(name);
-    stackKey.path = const_cast<char*>(path);
+    پشته_کلید.name = const_cast<حرف*>(name);
+    پشته_کلید.مسیر = const_cast<حرف*>(مسیر);
 
     /* fetch the data from the cache */
-    umtx_lock(&usprepMutex);
-    profile = static_cast<UStringPrepProfile*>(uhash_get(SHARED_DATA_HASHTABLE, &stackKey));
-    if(profile != nullptr) {
-        profile->refCount++;
+    umtx_قفل(&usprepMutex);
+    profile = static_cast<UStringPrepProfile*>(uhash_get(SHARED_داده_HASHTABLE, &پشته_کلید));
+    إذا(profile != اشاره_تهی) {
+        profile->ref_شمار++;
     }
     umtx_unlock(&usprepMutex);
     
-    if(profile == nullptr) {
+    إذا(profile == اشاره_تهی) {
         /* else load the data and put the data in the cache */
-        LocalMemory<UStringPrepProfile> newProfile;
-        if(newProfile.allocateInsteadAndReset() == nullptr) {
-            *status = U_MEMORY_ALLOCATION_ERROR;
-            return nullptr;
+        Local_حافظه<UStringPrepProfile> newProfile;
+        إذا(newProfile.allocateInsteadAndReset() == اشاره_تهی) {
+            *وضعیت = U_حافظه_تخصیص_ERROR;
+            أرجع اشاره_تهی;
         }
 
         /* load the data */
-        if(!loadData(newProfile.getAlias(), path, name, _SPREP_DATA_TYPE, status) || U_FAILURE(*status) ){
-            return nullptr;
+        إذا(!بارگیری_داده(newProfile.getAlias(), مسیر, name, SPREP_داده_TYPE, وضعیت) || U_FAILURE(*وضعیت) ){
+            أرجع اشاره_تهی;
         }
 
         /* get the options */
         newProfile->doNFKC = static_cast<UBool>((newProfile->indexes[_SPREP_OPTIONS] & _SPREP_NORMALIZATION_ON) > 0);
         newProfile->checkBiDi = static_cast<UBool>((newProfile->indexes[_SPREP_OPTIONS] & _SPREP_CHECK_BIDI_ON) > 0);
 
-        LocalMemory<UStringPrepKey> key;
-        LocalMemory<char> keyName;
-        LocalMemory<char> keyPath;
-        if( key.allocateInsteadAndReset() == nullptr ||
-            keyName.allocateInsteadAndCopy(static_cast<int32_t>(uprv_strlen(name)+1)) == nullptr ||
-            (path != nullptr &&
-             keyPath.allocateInsteadAndCopy(static_cast<int32_t>(uprv_strlen(path)+1)) == nullptr)
+        Local_حافظه<UString_Prep_کلید> کلید;
+        Local_حافظه<حرف> کلید_Name;
+        Local_حافظه<حرف> کلید_مسیر;
+        إذا( کلید.allocateInsteadAndReset() == اشاره_تهی ||
+            کلید_Name.allocateInsteadAndCopy(static_cast<int32_t>(uprv_strlen(name)+1)) == اشاره_تهی ||
+            (مسیر != اشاره_تهی &&
+             کلید_مسیر.allocateInsteadAndCopy(static_cast<int32_t>(uprv_strlen(مسیر)+1)) == اشاره_تهی)
          ) {
-            *status = U_MEMORY_ALLOCATION_ERROR;
+            *وضعیت = U_حافظه_تخصیص_ERROR;
             usprep_unload(newProfile.getAlias());
-            return nullptr;
+            أرجع اشاره_تهی;
         }
 
-        umtx_lock(&usprepMutex);
+        umtx_قفل(&usprepMutex);
         // If another thread already inserted the same key/value, refcount and cleanup our thread data
-        profile = static_cast<UStringPrepProfile*>(uhash_get(SHARED_DATA_HASHTABLE, &stackKey));
-        if(profile != nullptr) {
-            profile->refCount++;
+        profile = static_cast<UStringPrepProfile*>(uhash_get(SHARED_داده_HASHTABLE, &پشته_کلید));
+        إذا(profile != اشاره_تهی) {
+            profile->ref_شمار++;
             usprep_unload(newProfile.getAlias());
         }
-        else {
+        وإلا {
             /* initialize the key members */
-            key->name = keyName.orphan();
-            uprv_strcpy(key->name, name);
-            if(path != nullptr){
-                key->path = keyPath.orphan();
-                uprv_strcpy(key->path, path);
+            کلید->name = کلید_Name.orphan();
+            uprv_strcpy(کلید->name, name);
+            إذا(مسیر != اشاره_تهی){
+                کلید->مسیر = کلید_مسیر.orphan();
+                uprv_strcpy(کلید->مسیر, مسیر);
             }        
             profile = newProfile.orphan();
     
             /* add the data object to the cache */
-            profile->refCount = 1;
-            uhash_put(SHARED_DATA_HASHTABLE, key.orphan(), profile, status);
+            profile->ref_شمار = 1;
+            uhash_put(SHARED_داده_HASHTABLE, کلید.orphan(), profile, وضعیت);
         }
         umtx_unlock(&usprepMutex);
     }
 
-    return profile;
+    أرجع profile;
 }
 
 U_CAPI UStringPrepProfile* U_EXPORT2
-usprep_open(const char* path, 
-            const char* name,
-            UErrorCode* status){
+usprep_open(ثابت حرف* مسیر, 
+            ثابت حرف* name,
+            UError_کد* وضعیت){
 
-    if(status == nullptr || U_FAILURE(*status)){
-        return nullptr;
+    إذا(وضعیت == اشاره_تهی || U_FAILURE(*وضعیت)){
+        أرجع اشاره_تهی;
     }
        
     /* initialize the profile struct members */
-    return usprep_getProfile(path,name,status);
+    أرجع usprep_getProfile(مسیر,name,وضعیت);
 }
 
 U_CAPI UStringPrepProfile* U_EXPORT2
 usprep_openByType(UStringPrepProfileType type,
-				  UErrorCode* status) {
-    if(status == nullptr || U_FAILURE(*status)){
-        return nullptr;
+				  UError_کد* وضعیت) {
+    إذا(وضعیت == اشاره_تهی || U_FAILURE(*وضعیت)){
+        أرجع اشاره_تهی;
     }
-    int32_t index = (int32_t)type;
-    if (index < 0 || index >= UPRV_LENGTHOF(PROFILE_NAMES)) {
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+    int32_t شاخص = (int32_t)type;
+    إذا (شاخص < 0 || شاخص >= UPRV_LENGTHOF(PROFILE_نامها)) {
+        *وضعیت = U_ILLEGAL_آرگومان_ERROR;
+        أرجع اشاره_تهی;
     }
-    return usprep_open(nullptr, PROFILE_NAMES[index], status);
+    أرجع usprep_open(اشاره_تهی, PROFILE_نامها[شاخص], وضعیت);
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI فراغ U_EXPORT2
 usprep_close(UStringPrepProfile* profile){
-    if(profile==nullptr){
-        return;
+    إذا(profile==اشاره_تهی){
+        أرجع;
     }
 
-    umtx_lock(&usprepMutex);
+    umtx_قفل(&usprepMutex);
     /* decrement the ref count*/
-    if(profile->refCount > 0){
-        profile->refCount--;
+    إذا(profile->ref_شمار > 0){
+        profile->ref_شمار--;
     }
     umtx_unlock(&usprepMutex);
     
 }
 
-U_CFUNC void 
-uprv_syntaxError(const char16_t* rules,
+U_CFUNC فراغ 
+uprv_syntaxError(ثابت char16_t* قواعد,
                  int32_t pos,
-                 int32_t rulesLen,
+                 int32_t قواعد_Len,
                  UParseError* parseError){
-    if(parseError == nullptr){
-        return;
+    إذا(parseError == اشاره_تهی){
+        أرجع;
     }
-    parseError->offset = pos;
-    parseError->line = 0 ; // we are not using line numbers 
+    parseError->جابه_جایی = pos;
+    parseError->سطر = 0 ; // we are not using line numbers 
     
     // for pre-context
-    int32_t start = (pos < U_PARSE_CONTEXT_LEN)? 0 : (pos - (U_PARSE_CONTEXT_LEN-1));
-    int32_t limit = pos;
+    int32_t شروع = (pos < U_PARSE_CONTEXT_LEN)? 0 : (pos - (U_PARSE_CONTEXT_LEN-1));
+    int32_t حد = pos;
     
-    u_memcpy(parseError->preContext,rules+start,limit-start);
+    u_memcpy(parseError->preContext,قواعد+شروع,حد-شروع);
     //null terminate the buffer
-    parseError->preContext[limit-start] = 0;
+    parseError->preContext[حد-شروع] = 0;
     
     // for post-context; include error rules[pos]
-    start = pos;
-    limit = start + (U_PARSE_CONTEXT_LEN-1);
-    if (limit > rulesLen) {
-        limit = rulesLen;
+    شروع = pos;
+    حد = شروع + (U_PARSE_CONTEXT_LEN-1);
+    إذا (حد > قواعد_Len) {
+        حد = قواعد_Len;
     }
-    if (start < rulesLen) {
-        u_memcpy(parseError->postContext,rules+start,limit-start);
+    إذا (شروع < قواعد_Len) {
+        u_memcpy(parseError->postContext,قواعد+شروع,حد-شروع);
     }
     //null terminate the buffer
-    parseError->postContext[limit-start]= 0;
+    parseError->postContext[حد-شروع]= 0;
 }
 
 
-static inline UStringPrepType
-getValues(uint16_t trieWord, int16_t& value, UBool& isIndex){
+ساكن مضمن UStringPrepType
+get_مقادیر(uint16_t trie_کلمه, int16_t& value, UBool& is_شاخص){
 
     UStringPrepType type;
-    if(trieWord == 0){
+    إذا(trie_کلمه == 0){
         /* 
          * Initial value stored in the mapping table 
          * just return USPREP_TYPE_LIMIT .. so that
          * the source codepoint is copied to the destination
          */
-        type = USPREP_TYPE_LIMIT;
-        isIndex =false;
+        type = USPREP_TYPE_حد;
+        is_شاخص =خطأ;
         value = 0;
-    }else if(trieWord >= _SPREP_TYPE_THRESHOLD){
-        type = static_cast<UStringPrepType>(trieWord - _SPREP_TYPE_THRESHOLD);
-        isIndex =false;
+    }وإلا إذا(trie_کلمه >= SPREP_TYPE_آستانه){
+        type = static_cast<UStringPrepType>(trie_کلمه - SPREP_TYPE_آستانه);
+        is_شاخص =خطأ;
         value = 0;
-    }else{
+    }وإلا{
         /* get the type */
         type = USPREP_MAP;
         /* ascertain if the value is index or delta */
-        if(trieWord & 0x02){
-            isIndex = true;
-            value = trieWord  >> 2; //mask off the lower 2 bits and shift
-        }else{
-            isIndex = false;
-            value = static_cast<int16_t>(trieWord);
+        إذا(trie_کلمه & 0x02){
+            is_شاخص = درست;
+            value = trie_کلمه  >> 2; //mask off the lower 2 bits and shift
+        }وإلا{
+            is_شاخص = خطأ;
+            value = static_cast<int16_t>(trie_کلمه);
             value =  (value >> 2);
         }
  
-        if((trieWord>>2) == _SPREP_MAX_INDEX_VALUE){
+        إذا((trie_کلمه>>2) == SPREP_MAX_شاخص_مقدار){
             type = USPREP_DELETE;
-            isIndex =false;
+            is_شاخص =خطأ;
             value = 0;
         }
     }
-    return type;
+    أرجع type;
 }
 
 // TODO: change to writing to UnicodeString not char16_t *
-static int32_t 
-usprep_map(  const UStringPrepProfile* profile, 
-             const char16_t* src, int32_t srcLength,
-             char16_t* dest, int32_t destCapacity,
+ساكن int32_t 
+usprep_map(  ثابت UStringPrepProfile* profile, 
+             ثابت char16_t* src, int32_t src_درازی,
+             char16_t* dest, int32_t dest_ظرفیت,
              int32_t options,
              UParseError* parseError,
-             UErrorCode* status ){
+             UError_کد* وضعیت ){
     
-    uint16_t result;
-    int32_t destIndex=0;
-    int32_t srcIndex;
+    uint16_t نتیجه;
+    int32_t dest_شاخص=0;
+    int32_t src_شاخص;
     UBool allowUnassigned = static_cast<UBool>((options & USPREP_ALLOW_UNASSIGNED) > 0);
     UStringPrepType type;
     int16_t value;
-    UBool isIndex;
-    const int32_t* indexes = profile->indexes;
+    UBool is_شاخص;
+    ثابت int32_t* indexes = profile->indexes;
 
     // no error checking the caller check for error and arguments
     // no string length check the caller finds out the string length
 
-    for(srcIndex=0;srcIndex<srcLength;){
+    لكل(src_شاخص=0;src_شاخص<src_درازی;){
         UChar32 ch;
 
-        U16_NEXT(src,srcIndex,srcLength,ch);
+        U16_بعدی(src,src_شاخص,src_درازی,ch);
         
-        result=0;
+        نتیجه=0;
 
-        UTRIE_GET16(&profile->sprepTrie,ch,result);
+        UTRIE_GET16(&profile->sprepTrie,ch,نتیجه);
         
-        type = getValues(result, value, isIndex);
+        type = get_مقادیر(نتیجه, value, is_شاخص);
 
         // check if the source codepoint is unassigned
-        if(type == USPREP_UNASSIGNED && allowUnassigned == false){
+        إذا(type == USPREP_UNASSIGNED && allowUnassigned == خطأ){
 
-            uprv_syntaxError(src,srcIndex-U16_LENGTH(ch), srcLength,parseError);
-            *status = U_STRINGPREP_UNASSIGNED_ERROR;
-            return 0;
+            uprv_syntaxError(src,src_شاخص-U16_درازی(ch), src_درازی,parseError);
+            *وضعیت = U_STRINGPREP_UNASSIGNED_ERROR;
+            أرجع 0;
             
-        }else if(type == USPREP_MAP){
+        }وإلا إذا(type == USPREP_MAP){
             
-            int32_t index, length;
+            int32_t شاخص, length;
 
-            if(isIndex){
-                index = value;
-                if(index >= indexes[_SPREP_ONE_UCHAR_MAPPING_INDEX_START] &&
-                         index < indexes[_SPREP_TWO_UCHARS_MAPPING_INDEX_START]){
+            إذا(is_شاخص){
+                شاخص = value;
+                إذا(شاخص >= indexes[SPREP_ONE_UCHAR_MAPPING_شاخص_شروع] &&
+                         شاخص < indexes[SPREP_TWO_UCHARS_MAPPING_شاخص_شروع]){
                     length = 1;
-                }else if(index >= indexes[_SPREP_TWO_UCHARS_MAPPING_INDEX_START] &&
-                         index < indexes[_SPREP_THREE_UCHARS_MAPPING_INDEX_START]){
+                }وإلا إذا(شاخص >= indexes[SPREP_TWO_UCHARS_MAPPING_شاخص_شروع] &&
+                         شاخص < indexes[SPREP_THREE_UCHARS_MAPPING_شاخص_شروع]){
                     length = 2;
-                }else if(index >= indexes[_SPREP_THREE_UCHARS_MAPPING_INDEX_START] &&
-                         index < indexes[_SPREP_FOUR_UCHARS_MAPPING_INDEX_START]){
+                }وإلا إذا(شاخص >= indexes[SPREP_THREE_UCHARS_MAPPING_شاخص_شروع] &&
+                         شاخص < indexes[SPREP_FOUR_UCHARS_MAPPING_شاخص_شروع]){
                     length = 3;
-                }else{
-                    length = profile->mappingData[index++];
+                }وإلا{
+                    length = profile->mapping_داده[شاخص++];
          
                 }
 
                 /* copy mapping to destination */
-                for(int32_t i=0; i< length; i++){
-                    if(destIndex < destCapacity  ){
-                        dest[destIndex] = profile->mappingData[index+i];
+                لكل(int32_t i=0; i< length; i++){
+                    إذا(dest_شاخص < dest_ظرفیت  ){
+                        dest[dest_شاخص] = profile->mapping_داده[شاخص+i];
                     }
-                    destIndex++; /* for pre-flighting */
+                    dest_شاخص++; /* for pre-flighting */
                 }  
-                continue;
-            }else{
+                استمر;
+            }وإلا{
                 // subtract the delta to arrive at the code point
                 ch -= value;
             }
 
-        }else if(type==USPREP_DELETE){
+        }وإلا إذا(type==USPREP_DELETE){
              // just consume the codepoint and continue
-            continue;
+            استمر;
         }
         //copy the code point into destination
-        if(ch <= 0xFFFF){
-            if(destIndex < destCapacity ){
-                dest[destIndex] = static_cast<char16_t>(ch);
+        إذا(ch <= 0xFFFF){
+            إذا(dest_شاخص < dest_ظرفیت ){
+                dest[dest_شاخص] = static_cast<char16_t>(ch);
             }
-            destIndex++;
-        }else{
-            if(destIndex+1 < destCapacity ){
-                dest[destIndex]   = U16_LEAD(ch);
-                dest[destIndex+1] = U16_TRAIL(ch);
+            dest_شاخص++;
+        }وإلا{
+            إذا(dest_شاخص+1 < dest_ظرفیت ){
+                dest[dest_شاخص]   = U16_LEAD(ch);
+                dest[dest_شاخص+1] = U16_TRAIL(ch);
             }
-            destIndex +=2;
+            dest_شاخص +=2;
         }
        
     }
         
-    return u_terminateUChars(dest, destCapacity, destIndex, status);
+    أرجع u_terminateUChars(dest, dest_ظرفیت, dest_شاخص, وضعیت);
 }
 
 /*
@@ -635,238 +635,238 @@ usprep_map(  const UStringPrepProfile* profile,
           RandALCat character MUST be the last character of the string.
 */
 U_CAPI int32_t U_EXPORT2
-usprep_prepare(   const UStringPrepProfile* profile,
-                  const char16_t* src, int32_t srcLength,
-                  char16_t* dest, int32_t destCapacity,
+usprep_prepare(   ثابت UStringPrepProfile* profile,
+                  ثابت char16_t* src, int32_t src_درازی,
+                  char16_t* dest, int32_t dest_ظرفیت,
                   int32_t options,
                   UParseError* parseError,
-                  UErrorCode* status ){
+                  UError_کد* وضعیت ){
 
     // check error status
-    if(U_FAILURE(*status)){
-        return 0;
+    إذا(U_FAILURE(*وضعیت)){
+        أرجع 0;
     }
 
     //check arguments
-    if(profile==nullptr ||
-            (src==nullptr ? srcLength!=0 : srcLength<-1) ||
-            (dest==nullptr ? destCapacity!=0 : destCapacity<0)) {
-        *status=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    إذا(profile==اشاره_تهی ||
+            (src==اشاره_تهی ? src_درازی!=0 : src_درازی<-1) ||
+            (dest==اشاره_تهی ? dest_ظرفیت!=0 : dest_ظرفیت<0)) {
+        *وضعیت=U_ILLEGAL_آرگومان_ERROR;
+        أرجع 0;
     }
 
     //get the string length
-    if(srcLength < 0){
-        srcLength = u_strlen(src);
+    إذا(src_درازی < 0){
+        src_درازی = u_strlen(src);
     }
     // map
     UnicodeString s1;
-    char16_t *b1 = s1.getBuffer(srcLength);
-    if(b1==nullptr){
-        *status = U_MEMORY_ALLOCATION_ERROR;
-        return 0;
+    char16_t *b1 = s1.get_میانگیر(src_درازی);
+    إذا(b1==اشاره_تهی){
+        *وضعیت = U_حافظه_تخصیص_ERROR;
+        أرجع 0;
     }
-    UErrorCode bufferStatus = U_ZERO_ERROR;
-    int32_t b1Len = usprep_map(profile, src, srcLength,
-                               b1, s1.getCapacity(), options, parseError, &bufferStatus);
-    s1.releaseBuffer(U_SUCCESS(bufferStatus) ? b1Len : 0);
+    UError_کد میانگیر_وضعیت = U_ZERO_ERROR;
+    int32_t b1Len = usprep_map(profile, src, src_درازی,
+                               b1, s1.get_ظرفیت(), options, parseError, &میانگیر_وضعیت);
+    s1.release_میانگیر(U_SUCCESS(میانگیر_وضعیت) ? b1Len : 0);
 
-    if(bufferStatus == U_BUFFER_OVERFLOW_ERROR){
+    إذا(میانگیر_وضعیت == U_میانگیر_سرریز_ERROR){
         // redo processing of string
         /* we do not have enough room so grow the buffer*/
-        b1 = s1.getBuffer(b1Len);
-        if(b1==nullptr){
-            *status = U_MEMORY_ALLOCATION_ERROR;
-            return 0;
+        b1 = s1.get_میانگیر(b1Len);
+        إذا(b1==اشاره_تهی){
+            *وضعیت = U_حافظه_تخصیص_ERROR;
+            أرجع 0;
         }
 
-        bufferStatus = U_ZERO_ERROR; // reset error
-        b1Len = usprep_map(profile, src, srcLength,
-                           b1, s1.getCapacity(), options, parseError, &bufferStatus);
-        s1.releaseBuffer(U_SUCCESS(bufferStatus) ? b1Len : 0);
+        میانگیر_وضعیت = U_ZERO_ERROR; // reset error
+        b1Len = usprep_map(profile, src, src_درازی,
+                           b1, s1.get_ظرفیت(), options, parseError, &میانگیر_وضعیت);
+        s1.release_میانگیر(U_SUCCESS(میانگیر_وضعیت) ? b1Len : 0);
     }
-    if(U_FAILURE(bufferStatus)){
-        *status = bufferStatus;
-        return 0;
+    إذا(U_FAILURE(میانگیر_وضعیت)){
+        *وضعیت = میانگیر_وضعیت;
+        أرجع 0;
     }
 
     // normalize
     UnicodeString s2;
-    if(profile->doNFKC){
-        const Normalizer2 *n2 = Normalizer2::getNFKCInstance(*status);
-        FilteredNormalizer2 fn2(*n2, *uniset_getUnicode32Instance(*status));
-        if(U_FAILURE(*status)){
-            return 0;
+    إذا(profile->doNFKC){
+        ثابت Normalizer2 *n2 = Normalizer2::getNFKCInstance(*وضعیت);
+        FilteredNormalizer2 fn2(*n2, *uniset_getUnicode32Instance(*وضعیت));
+        إذا(U_FAILURE(*وضعیت)){
+            أرجع 0;
         }
-        fn2.normalize(s1, s2, *status);
-    }else{
+        fn2.normalize(s1, s2, *وضعیت);
+    }وإلا{
         s2.fastCopyFrom(s1);
     }
-    if(U_FAILURE(*status)){
-        return 0;
+    إذا(U_FAILURE(*وضعیت)){
+        أرجع 0;
     }
 
     // Prohibit and checkBiDi in one pass
-    const char16_t *b2 = s2.getBuffer();
+    ثابت char16_t *b2 = s2.get_میانگیر();
     int32_t b2Len = s2.length();
-    UCharDirection direction=U_CHAR_DIRECTION_COUNT, firstCharDir=U_CHAR_DIRECTION_COUNT;
-    UBool leftToRight=false, rightToLeft=false;
+    UCharDirection direction=U_CHAR_DIRECTION_شمار, اولی_Char_Dir=U_CHAR_DIRECTION_شمار;
+    UBool چپ_مقصد_راست=خطأ, راست_مقصد_چپ=خطأ;
     int32_t rtlPos =-1, ltrPos =-1;
 
-    for(int32_t b2Index=0; b2Index<b2Len;){
+    لكل(int32_t b2_شاخص=0; b2_شاخص<b2Len;){
         UChar32 ch = 0;
-        U16_NEXT(b2, b2Index, b2Len, ch);
+        U16_بعدی(b2, b2_شاخص, b2Len, ch);
 
-        uint16_t result;
-        UTRIE_GET16(&profile->sprepTrie,ch,result);
+        uint16_t نتیجه;
+        UTRIE_GET16(&profile->sprepTrie,ch,نتیجه);
 
         int16_t value;
-        UBool isIndex;
-        UStringPrepType type = getValues(result, value, isIndex);
+        UBool is_شاخص;
+        UStringPrepType type = get_مقادیر(نتیجه, value, is_شاخص);
 
-        if( type == USPREP_PROHIBITED || 
-            ((result < _SPREP_TYPE_THRESHOLD) && (result & 0x01) /* first bit says it the code point is prohibited*/)
+        إذا( type == USPREP_PROHIBITED || 
+            ((نتیجه < SPREP_TYPE_آستانه) && (نتیجه & 0x01) /* first bit says it the code point is prohibited*/)
            ){
-            *status = U_STRINGPREP_PROHIBITED_ERROR;
-            uprv_syntaxError(b2, b2Index-U16_LENGTH(ch), b2Len, parseError);
-            return 0;
+            *وضعیت = U_STRINGPREP_PROHIBITED_ERROR;
+            uprv_syntaxError(b2, b2_شاخص-U16_درازی(ch), b2Len, parseError);
+            أرجع 0;
         }
 
-        if(profile->checkBiDi) {
+        إذا(profile->checkBiDi) {
             direction = ubidi_getClass(ch);
-            if(firstCharDir == U_CHAR_DIRECTION_COUNT){
-                firstCharDir = direction;
+            إذا(اولی_Char_Dir == U_CHAR_DIRECTION_شمار){
+                اولی_Char_Dir = direction;
             }
-            if(direction == U_LEFT_TO_RIGHT){
-                leftToRight = true;
-                ltrPos = b2Index-1;
+            إذا(direction == U_چپ_مقصد_راست){
+                چپ_مقصد_راست = درست;
+                ltrPos = b2_شاخص-1;
             }
-            if(direction == U_RIGHT_TO_LEFT || direction == U_RIGHT_TO_LEFT_ARABIC){
-                rightToLeft = true;
-                rtlPos = b2Index-1;
+            إذا(direction == U_راست_مقصد_چپ || direction == U_راست_مقصد_چپ_ARABIC){
+                راست_مقصد_چپ = درست;
+                rtlPos = b2_شاخص-1;
             }
         }
     }
-    if(profile->checkBiDi){
+    إذا(profile->checkBiDi){
         // satisfy 2
-        if( leftToRight && rightToLeft){
-            *status = U_STRINGPREP_CHECK_BIDI_ERROR;
+        إذا( چپ_مقصد_راست && راست_مقصد_چپ){
+            *وضعیت = U_STRINGPREP_CHECK_BIDI_ERROR;
             uprv_syntaxError(b2,(rtlPos>ltrPos) ? rtlPos : ltrPos, b2Len, parseError);
-            return 0;
+            أرجع 0;
         }
 
         //satisfy 3
-        if( rightToLeft && 
-            !((firstCharDir == U_RIGHT_TO_LEFT || firstCharDir == U_RIGHT_TO_LEFT_ARABIC) &&
-              (direction == U_RIGHT_TO_LEFT || direction == U_RIGHT_TO_LEFT_ARABIC))
+        إذا( راست_مقصد_چپ && 
+            !((اولی_Char_Dir == U_راست_مقصد_چپ || اولی_Char_Dir == U_راست_مقصد_چپ_ARABIC) &&
+              (direction == U_راست_مقصد_چپ || direction == U_راست_مقصد_چپ_ARABIC))
            ){
-            *status = U_STRINGPREP_CHECK_BIDI_ERROR;
+            *وضعیت = U_STRINGPREP_CHECK_BIDI_ERROR;
             uprv_syntaxError(b2, rtlPos, b2Len, parseError);
-            return false;
+            أرجع خطأ;
         }
     }
-    return s2.extract(dest, destCapacity, *status);
+    أرجع s2.extract(dest, dest_ظرفیت, *وضعیت);
 }
 
 
 /* data swapping ------------------------------------------------------------ */
 
 U_CAPI int32_t U_EXPORT2
-usprep_swap(const UDataSwapper *ds,
-            const void *inData, int32_t length, void *outData,
-            UErrorCode *pErrorCode) {
-    const UDataInfo *pInfo;
-    int32_t headerSize;
+usprep_جابجا(ثابت UDataSwapper *ds,
+            ثابت فراغ *درون_داده, int32_t length, فراغ *بیرون_داده,
+            UError_کد *p_Error_کد) {
+    ثابت UDataInfo *pInfo;
+    int32_t سرآیند_اندازه;
 
-    const uint8_t *inBytes;
-    uint8_t *outBytes;
+    ثابت uint8_t *درون_بایتها;
+    uint8_t *بیرون_بایتها;
 
-    const int32_t *inIndexes;
+    ثابت int32_t *درون_Indexes;
     int32_t indexes[16];
 
-    int32_t i, offset, count, size;
+    int32_t i, جابه_جایی, count, size;
 
     /* udata_swapDataHeader checks the arguments */
-    headerSize=udata_swapDataHeader(ds, inData, length, outData, pErrorCode);
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    سرآیند_اندازه=udata_جابجا_داده_سرآیند(ds, درون_داده, length, بیرون_داده, p_Error_کد);
+    إذا(p_Error_کد==اشاره_تهی || U_FAILURE(*p_Error_کد)) {
+        أرجع 0;
     }
 
     /* check data format and format version */
-    pInfo=(const UDataInfo *)((const char *)inData+4);
-    if(!(
-        pInfo->dataFormat[0]==0x53 &&   /* dataFormat="SPRP" */
-        pInfo->dataFormat[1]==0x50 &&
-        pInfo->dataFormat[2]==0x52 &&
-        pInfo->dataFormat[3]==0x50 &&
-        pInfo->formatVersion[0]==3
+    pInfo=(ثابت UDataInfo *)((ثابت حرف *)درون_داده+4);
+    إذا(!(
+        pInfo->داده_Format[0]==0x53 &&   /* dataFormat="SPRP" */
+        pInfo->داده_Format[1]==0x50 &&
+        pInfo->داده_Format[2]==0x52 &&
+        pInfo->داده_Format[3]==0x50 &&
+        pInfo->format_نسخه[0]==3
     )) {
         udata_printError(ds, "usprep_swap(): data format %02x.%02x.%02x.%02x (format version %02x) is not recognized as StringPrep .spp data\n",
-                         pInfo->dataFormat[0], pInfo->dataFormat[1],
-                         pInfo->dataFormat[2], pInfo->dataFormat[3],
-                         pInfo->formatVersion[0]);
-        *pErrorCode=U_UNSUPPORTED_ERROR;
-        return 0;
+                         pInfo->داده_Format[0], pInfo->داده_Format[1],
+                         pInfo->داده_Format[2], pInfo->داده_Format[3],
+                         pInfo->format_نسخه[0]);
+        *p_Error_کد=U_UNSUPPORTED_ERROR;
+        أرجع 0;
     }
 
-    inBytes=(const uint8_t *)inData+headerSize;
-    outBytes= (outData == nullptr ) ? nullptr : (uint8_t *)outData+headerSize;
+    درون_بایتها=(ثابت uint8_t *)درون_داده+سرآیند_اندازه;
+    بیرون_بایتها= (بیرون_داده == اشاره_تهی ) ? اشاره_تهی : (uint8_t *)بیرون_داده+سرآیند_اندازه;
 
-    inIndexes=(const int32_t *)inBytes;
+    درون_Indexes=(ثابت int32_t *)درون_بایتها;
 
-    if(length>=0) {
-        length-=headerSize;
-        if(length<16*4) {
+    إذا(length>=0) {
+        length-=سرآیند_اندازه;
+        إذا(length<16*4) {
             udata_printError(ds, "usprep_swap(): too few bytes (%d after header) for StringPrep .spp data\n",
                              length);
-            *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-            return 0;
+            *p_Error_کد=U_شاخص_OUTOFBOUNDS_ERROR;
+            أرجع 0;
         }
     }
 
     /* read the first 16 indexes (ICU 2.8/format version 3: _SPREP_INDEX_TOP==16, might grow) */
-    for(i=0; i<16; ++i) {
-        indexes[i]=udata_readInt32(ds, inIndexes[i]);
+    لكل(i=0; i<16; ++i) {
+        indexes[i]=udata_readInt32(ds, درون_Indexes[i]);
     }
 
     /* calculate the total length of the data */
     size=
         16*4+ /* size of indexes[] */
-        indexes[_SPREP_INDEX_TRIE_SIZE]+
-        indexes[_SPREP_INDEX_MAPPING_DATA_SIZE];
+        indexes[SPREP_شاخص_TRIE_اندازه]+
+        indexes[SPREP_شاخص_MAPPING_داده_اندازه];
 
-    if(length>=0) {
-        if(length<size) {
+    إذا(length>=0) {
+        إذا(length<size) {
             udata_printError(ds, "usprep_swap(): too few bytes (%d after header) for all of StringPrep .spp data\n",
                              length);
-            *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-            return 0;
+            *p_Error_کد=U_شاخص_OUTOFBOUNDS_ERROR;
+            أرجع 0;
         }
 
         /* copy the data for inaccessible bytes */
-        if(inBytes!=outBytes) {
-            uprv_memcpy(outBytes, inBytes, size);
+        إذا(درون_بایتها!=بیرون_بایتها) {
+            uprv_memcpy(بیرون_بایتها, درون_بایتها, size);
         }
 
-        offset=0;
+        جابه_جایی=0;
 
         /* swap the int32_t indexes[] */
         count=16*4;
-        ds->swapArray32(ds, inBytes, count, outBytes, pErrorCode);
-        offset+=count;
+        ds->جابجا_Array32(ds, درون_بایتها, count, بیرون_بایتها, p_Error_کد);
+        جابه_جایی+=count;
 
         /* swap the UTrie */
-        count=indexes[_SPREP_INDEX_TRIE_SIZE];
-        utrie_swap(ds, inBytes+offset, count, outBytes+offset, pErrorCode);
-        offset+=count;
+        count=indexes[SPREP_شاخص_TRIE_اندازه];
+        utrie_جابجا(ds, درون_بایتها+جابه_جایی, count, بیرون_بایتها+جابه_جایی, p_Error_کد);
+        جابه_جایی+=count;
 
         /* swap the uint16_t mappingTable[] */
-        count=indexes[_SPREP_INDEX_MAPPING_DATA_SIZE];
-        ds->swapArray16(ds, inBytes+offset, count, outBytes+offset, pErrorCode);
+        count=indexes[SPREP_شاخص_MAPPING_داده_اندازه];
+        ds->جابجا_Array16(ds, درون_بایتها+جابه_جایی, count, بیرون_بایتها+جابه_جایی, p_Error_کد);
         //offset+=count;
     }
 
-    return headerSize+size;
+    أرجع سرآیند_اندازه+size;
 }
 
-#endif /* #if !UCONFIG_NO_IDNA */
+#پایان_اگر /* #if !UCONFIG_NO_IDNA */

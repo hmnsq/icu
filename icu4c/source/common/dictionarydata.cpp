@@ -11,25 +11,25 @@
 * created by: Markus W. Scherer & Maxime Serrano
 */
 
-#include "dictionarydata.h"
-#include "unicode/ucharstrie.h"
-#include "unicode/bytestrie.h"
-#include "unicode/udata.h"
-#include "cmemory.h"
+#ضمن "dictionarydata.h"
+#ضمن "unicode/ucharstrie.h"
+#ضمن "unicode/bytestrie.h"
+#ضمن "unicode/udata.h"
+#ضمن "cmemory.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#إذا !UCONFIG_NO_BREAK_ITERATION
 
 U_NAMESPACE_BEGIN
 
-const int32_t  DictionaryData::TRIE_TYPE_BYTES = 0;
-const int32_t  DictionaryData::TRIE_TYPE_UCHARS = 1;
-const int32_t  DictionaryData::TRIE_TYPE_MASK = 7;
-const int32_t  DictionaryData::TRIE_HAS_VALUES = 8;
+ثابت int32_t  Dictionary_داده::TRIE_TYPE_بایتها = 0;
+ثابت int32_t  Dictionary_داده::TRIE_TYPE_UCHARS = 1;
+ثابت int32_t  Dictionary_داده::TRIE_TYPE_ماسک = 7;
+ثابت int32_t  Dictionary_داده::TRIE_HAS_مقادیر = 8;
 
-const int32_t  DictionaryData::TRANSFORM_NONE = 0;
-const int32_t  DictionaryData::TRANSFORM_TYPE_OFFSET = 0x1000000;
-const int32_t  DictionaryData::TRANSFORM_TYPE_MASK = 0x7f000000;
-const int32_t  DictionaryData::TRANSFORM_OFFSET_MASK = 0x1fffff;
+ثابت int32_t  Dictionary_داده::TRANSFORM_NONE = 0;
+ثابت int32_t  Dictionary_داده::TRANSFORM_TYPE_جابه_جایی = 0x1000000;
+ثابت int32_t  Dictionary_داده::TRANSFORM_TYPE_ماسک = 0x7f000000;
+ثابت int32_t  Dictionary_داده::TRANSFORM_جابه_جایی_ماسک = 0x1fffff;
     
 DictionaryMatcher::~DictionaryMatcher() {
 }
@@ -38,205 +38,205 @@ UCharsDictionaryMatcher::~UCharsDictionaryMatcher() {
     udata_close(file);
 }
 
-int32_t UCharsDictionaryMatcher::getType() const {
-    return DictionaryData::TRIE_TYPE_UCHARS;
+int32_t UCharsDictionaryMatcher::getType() ثابت {
+    أرجع Dictionary_داده::TRIE_TYPE_UCHARS;
 }
 
-int32_t UCharsDictionaryMatcher::matches(UText *text, int32_t maxLength, int32_t limit,
-                            int32_t *lengths, int32_t *cpLengths, int32_t *values,
-                            int32_t *prefix) const {
+int32_t UCharsDictionaryMatcher::matches(UText *متن, int32_t max_درازی_2, int32_t حد,
+                            int32_t *lengths, int32_t *cpLengths, int32_t *مقادیر,
+                            int32_t *پیشوند) ثابت {
 
     UCharsTrie uct(characters);
-    int32_t startingTextIndex = static_cast<int32_t>(utext_getNativeIndex(text));
-    int32_t wordCount = 0;
-    int32_t codePointsMatched = 0;
+    int32_t starting_متن_شاخص = static_cast<int32_t>(utext_get_Native_شاخص(متن));
+    int32_t کلمه_شمار = 0;
+    int32_t کد_Points_Matched = 0;
 
-    for (UChar32 c = utext_next32(text); c >= 0; c=utext_next32(text)) {
-        UStringTrieResult result = (codePointsMatched == 0) ? uct.first(c) : uct.next(c);
-        int32_t lengthMatched = static_cast<int32_t>(utext_getNativeIndex(text)) - startingTextIndex;
-        codePointsMatched += 1;
-        if (USTRINGTRIE_HAS_VALUE(result)) {
-            if (wordCount < limit) {
-                if (values != nullptr) {
-                    values[wordCount] = uct.getValue();
+    لكل (UChar32 c = utext_next32(متن); c >= 0; c=utext_next32(متن)) {
+        UString_Trie_نتیجه نتیجه = (کد_Points_Matched == 0) ? uct.first(c) : uct.next(c);
+        int32_t درازی_Matched = static_cast<int32_t>(utext_get_Native_شاخص(متن)) - starting_متن_شاخص;
+        کد_Points_Matched += 1;
+        إذا (USTRINGTRIE_HAS_مقدار(نتیجه)) {
+            إذا (کلمه_شمار < حد) {
+                إذا (مقادیر != اشاره_تهی) {
+                    مقادیر[کلمه_شمار] = uct.get_مقدار();
                 }
-                if (lengths != nullptr) {
-                    lengths[wordCount] = lengthMatched;
+                إذا (lengths != اشاره_تهی) {
+                    lengths[کلمه_شمار] = درازی_Matched;
                 }
-                if (cpLengths != nullptr) {
-                    cpLengths[wordCount] = codePointsMatched;
+                إذا (cpLengths != اشاره_تهی) {
+                    cpLengths[کلمه_شمار] = کد_Points_Matched;
                 }
-                ++wordCount;
+                ++کلمه_شمار;
             }
-            if (result == USTRINGTRIE_FINAL_VALUE) {
-                break;
+            إذا (نتیجه == USTRINGTRIE_FINAL_مقدار) {
+                اكسر;
             }
         }
-        else if (result == USTRINGTRIE_NO_MATCH) {
-            break;
+        وإلا إذا (نتیجه == USTRINGTRIE_NO_تطابق) {
+            اكسر;
         }
-        if (lengthMatched >= maxLength) {
-            break;
+        إذا (درازی_Matched >= max_درازی_2) {
+            اكسر;
         }
     }
 
-    if (prefix != nullptr) {
-        *prefix = codePointsMatched;
+    إذا (پیشوند != اشاره_تهی) {
+        *پیشوند = کد_Points_Matched;
     }
-    return wordCount;
+    أرجع کلمه_شمار;
 }
 
-BytesDictionaryMatcher::~BytesDictionaryMatcher() {
+بایتها_Dictionary_Matcher::~بایتها_Dictionary_Matcher() {
     udata_close(file);
 }
 
-UChar32 BytesDictionaryMatcher::transform(UChar32 c) const {
-    if ((transformConstant & DictionaryData::TRANSFORM_TYPE_MASK) == DictionaryData::TRANSFORM_TYPE_OFFSET) {
-        if (c == 0x200D) {
-            return 0xFF;
-        } else if (c == 0x200C) {
-            return 0xFE;
+UChar32 بایتها_Dictionary_Matcher::transform(UChar32 c) ثابت {
+    إذا ((transformConstant & Dictionary_داده::TRANSFORM_TYPE_ماسک) == Dictionary_داده::TRANSFORM_TYPE_جابه_جایی) {
+        إذا (c == 0x200D) {
+            أرجع 0xFF;
+        } وإلا إذا (c == 0x200C) {
+            أرجع 0xFE;
         }
-        int32_t delta = c - (transformConstant & DictionaryData::TRANSFORM_OFFSET_MASK);
-        if (delta < 0 || 0xFD < delta) {
-            return U_SENTINEL;
+        int32_t delta = c - (transformConstant & Dictionary_داده::TRANSFORM_جابه_جایی_ماسک);
+        إذا (delta < 0 || 0xFD < delta) {
+            أرجع U_SENTINEL;
         }
-        return static_cast<UChar32>(delta);
+        أرجع static_cast<UChar32>(delta);
     }
-    return c;
+    أرجع c;
 }
 
-int32_t BytesDictionaryMatcher::getType() const {
-    return DictionaryData::TRIE_TYPE_BYTES;
+int32_t بایتها_Dictionary_Matcher::getType() ثابت {
+    أرجع Dictionary_داده::TRIE_TYPE_بایتها;
 }
 
-int32_t BytesDictionaryMatcher::matches(UText *text, int32_t maxLength, int32_t limit,
-                            int32_t *lengths, int32_t *cpLengths, int32_t *values,
-                            int32_t *prefix) const {
-    BytesTrie bt(characters);
-    int32_t startingTextIndex = static_cast<int32_t>(utext_getNativeIndex(text));
-    int32_t wordCount = 0;
-    int32_t codePointsMatched = 0;
+int32_t بایتها_Dictionary_Matcher::matches(UText *متن, int32_t max_درازی_2, int32_t حد,
+                            int32_t *lengths, int32_t *cpLengths, int32_t *مقادیر,
+                            int32_t *پیشوند) ثابت {
+    بایتها_Trie bt(characters);
+    int32_t starting_متن_شاخص = static_cast<int32_t>(utext_get_Native_شاخص(متن));
+    int32_t کلمه_شمار = 0;
+    int32_t کد_Points_Matched = 0;
 
-    for (UChar32 c = utext_next32(text); c >= 0; c=utext_next32(text)) {
-        UStringTrieResult result = (codePointsMatched == 0) ? bt.first(transform(c)) : bt.next(transform(c));
-        int32_t lengthMatched = static_cast<int32_t>(utext_getNativeIndex(text)) - startingTextIndex;
-        codePointsMatched += 1;
-        if (USTRINGTRIE_HAS_VALUE(result)) {
-            if (wordCount < limit) {
-                if (values != nullptr) {
-                    values[wordCount] = bt.getValue();
+    لكل (UChar32 c = utext_next32(متن); c >= 0; c=utext_next32(متن)) {
+        UString_Trie_نتیجه نتیجه = (کد_Points_Matched == 0) ? bt.first(transform(c)) : bt.next(transform(c));
+        int32_t درازی_Matched = static_cast<int32_t>(utext_get_Native_شاخص(متن)) - starting_متن_شاخص;
+        کد_Points_Matched += 1;
+        إذا (USTRINGTRIE_HAS_مقدار(نتیجه)) {
+            إذا (کلمه_شمار < حد) {
+                إذا (مقادیر != اشاره_تهی) {
+                    مقادیر[کلمه_شمار] = bt.get_مقدار();
                 }
-                if (lengths != nullptr) {
-                    lengths[wordCount] = lengthMatched;
+                إذا (lengths != اشاره_تهی) {
+                    lengths[کلمه_شمار] = درازی_Matched;
                 }
-                if (cpLengths != nullptr) {
-                    cpLengths[wordCount] = codePointsMatched;
+                إذا (cpLengths != اشاره_تهی) {
+                    cpLengths[کلمه_شمار] = کد_Points_Matched;
                 }
-                ++wordCount;
+                ++کلمه_شمار;
             }
-            if (result == USTRINGTRIE_FINAL_VALUE) {
-                break;
+            إذا (نتیجه == USTRINGTRIE_FINAL_مقدار) {
+                اكسر;
             }
         }
-        else if (result == USTRINGTRIE_NO_MATCH) {
-            break;
+        وإلا إذا (نتیجه == USTRINGTRIE_NO_تطابق) {
+            اكسر;
         }
-        if (lengthMatched >= maxLength) {
-            break;
+        إذا (درازی_Matched >= max_درازی_2) {
+            اكسر;
         }
     }
 
-    if (prefix != nullptr) {
-        *prefix = codePointsMatched;
+    إذا (پیشوند != اشاره_تهی) {
+        *پیشوند = کد_Points_Matched;
     }
-    return wordCount;
+    أرجع کلمه_شمار;
 }
 
 
-U_NAMESPACE_END
+U_NAMESPACE_انتها
 
 U_NAMESPACE_USE
 
 U_CAPI int32_t U_EXPORT2
-udict_swap(const UDataSwapper *ds, const void *inData, int32_t length,
-           void *outData, UErrorCode *pErrorCode) {
-    const UDataInfo *pInfo;
-    int32_t headerSize;
-    const uint8_t *inBytes;
-    uint8_t *outBytes;
-    const int32_t *inIndexes;
-    int32_t indexes[DictionaryData::IX_COUNT];
-    int32_t i, offset, size;
+udict_جابجا(ثابت UDataSwapper *ds, ثابت فراغ *درون_داده, int32_t length,
+           فراغ *بیرون_داده, UError_کد *p_Error_کد) {
+    ثابت UDataInfo *pInfo;
+    int32_t سرآیند_اندازه;
+    ثابت uint8_t *درون_بایتها;
+    uint8_t *بیرون_بایتها;
+    ثابت int32_t *درون_Indexes;
+    int32_t indexes[Dictionary_داده::IX_شمار];
+    int32_t i, جابه_جایی, size;
 
-    headerSize = udata_swapDataHeader(ds, inData, length, outData, pErrorCode);
-    if (pErrorCode == nullptr || U_FAILURE(*pErrorCode)) return 0;
-    pInfo = (const UDataInfo *)((const char *)inData + 4);
-    if (!(pInfo->dataFormat[0] == 0x44 && 
-          pInfo->dataFormat[1] == 0x69 && 
-          pInfo->dataFormat[2] == 0x63 && 
-          pInfo->dataFormat[3] == 0x74 && 
-          pInfo->formatVersion[0] == 1)) {
+    سرآیند_اندازه = udata_جابجا_داده_سرآیند(ds, درون_داده, length, بیرون_داده, p_Error_کد);
+    إذا (p_Error_کد == اشاره_تهی || U_FAILURE(*p_Error_کد)) أرجع 0;
+    pInfo = (ثابت UDataInfo *)((ثابت حرف *)درون_داده + 4);
+    إذا (!(pInfo->داده_Format[0] == 0x44 && 
+          pInfo->داده_Format[1] == 0x69 && 
+          pInfo->داده_Format[2] == 0x63 && 
+          pInfo->داده_Format[3] == 0x74 && 
+          pInfo->format_نسخه[0] == 1)) {
         udata_printError(ds, "udict_swap(): data format %02x.%02x.%02x.%02x (format version %02x) is not recognized as dictionary data\n",
-                         pInfo->dataFormat[0], pInfo->dataFormat[1], pInfo->dataFormat[2], pInfo->dataFormat[3], pInfo->formatVersion[0]);
-        *pErrorCode = U_UNSUPPORTED_ERROR;
-        return 0;
+                         pInfo->داده_Format[0], pInfo->داده_Format[1], pInfo->داده_Format[2], pInfo->داده_Format[3], pInfo->format_نسخه[0]);
+        *p_Error_کد = U_UNSUPPORTED_ERROR;
+        أرجع 0;
     }
 
-    inBytes = (const uint8_t *)inData + headerSize;
-    outBytes = (outData == nullptr) ? nullptr : (uint8_t *)outData + headerSize;
+    درون_بایتها = (ثابت uint8_t *)درون_داده + سرآیند_اندازه;
+    بیرون_بایتها = (بیرون_داده == اشاره_تهی) ? اشاره_تهی : (uint8_t *)بیرون_داده + سرآیند_اندازه;
 
-    inIndexes = (const int32_t *)inBytes;
-    if (length >= 0) {
-        length -= headerSize;
-        if (length < (int32_t)(sizeof(indexes))) {
+    درون_Indexes = (ثابت int32_t *)درون_بایتها;
+    إذا (length >= 0) {
+        length -= سرآیند_اندازه;
+        إذا (length < (int32_t)(حجم(indexes))) {
             udata_printError(ds, "udict_swap(): too few bytes (%d after header) for dictionary data\n", length);
-            *pErrorCode = U_INDEX_OUTOFBOUNDS_ERROR;
-            return 0;
+            *p_Error_کد = U_شاخص_OUTOFBOUNDS_ERROR;
+            أرجع 0;
         }
     }
 
-    for (i = 0; i < DictionaryData::IX_COUNT; i++) {
-        indexes[i] = udata_readInt32(ds, inIndexes[i]);
+    لكل (i = 0; i < Dictionary_داده::IX_شمار; i++) {
+        indexes[i] = udata_readInt32(ds, درون_Indexes[i]);
     }
 
-    size = indexes[DictionaryData::IX_TOTAL_SIZE];
+    size = indexes[Dictionary_داده::IX_مجموع_اندازه];
 
-    if (length >= 0) {
-        if (length < size) {
+    إذا (length >= 0) {
+        إذا (length < size) {
             udata_printError(ds, "udict_swap(): too few bytes (%d after header) for all of dictionary data\n", length);
-            *pErrorCode = U_INDEX_OUTOFBOUNDS_ERROR;
-            return 0;
+            *p_Error_کد = U_شاخص_OUTOFBOUNDS_ERROR;
+            أرجع 0;
         }
 
-        if (inBytes != outBytes) {
-            uprv_memcpy(outBytes, inBytes, size);
+        إذا (درون_بایتها != بیرون_بایتها) {
+            uprv_memcpy(بیرون_بایتها, درون_بایتها, size);
         }
 
-        offset = 0;
-        ds->swapArray32(ds, inBytes, sizeof(indexes), outBytes, pErrorCode);
-        offset = (int32_t)sizeof(indexes);
-        int32_t trieType = indexes[DictionaryData::IX_TRIE_TYPE] & DictionaryData::TRIE_TYPE_MASK;
-        int32_t nextOffset = indexes[DictionaryData::IX_RESERVED1_OFFSET];
+        جابه_جایی = 0;
+        ds->جابجا_Array32(ds, درون_بایتها, حجم(indexes), بیرون_بایتها, p_Error_کد);
+        جابه_جایی = (int32_t)حجم(indexes);
+        int32_t trieType = indexes[Dictionary_داده::IX_TRIE_TYPE] & Dictionary_داده::TRIE_TYPE_ماسک;
+        int32_t بعدی_جابه_جایی = indexes[Dictionary_داده::IX_RESERVED1_جابه_جایی];
 
-        if (trieType == DictionaryData::TRIE_TYPE_UCHARS) {
-            ds->swapArray16(ds, inBytes + offset, nextOffset - offset, outBytes + offset, pErrorCode);
-        } else if (trieType == DictionaryData::TRIE_TYPE_BYTES) {
+        إذا (trieType == Dictionary_داده::TRIE_TYPE_UCHARS) {
+            ds->جابجا_Array16(ds, درون_بایتها + جابه_جایی, بعدی_جابه_جایی - جابه_جایی, بیرون_بایتها + جابه_جایی, p_Error_کد);
+        } وإلا إذا (trieType == Dictionary_داده::TRIE_TYPE_بایتها) {
             // nothing to do
-        } else {
+        } وإلا {
             udata_printError(ds, "udict_swap(): unknown trie type!\n");
-            *pErrorCode = U_UNSUPPORTED_ERROR;
-            return 0;
+            *p_Error_کد = U_UNSUPPORTED_ERROR;
+            أرجع 0;
         }
 
         // these next two sections are empty in the current format,
         // but may be used later.
-        offset = nextOffset;
-        nextOffset = indexes[DictionaryData::IX_RESERVED2_OFFSET];
-        offset = nextOffset;
-        nextOffset = indexes[DictionaryData::IX_TOTAL_SIZE];
-        offset = nextOffset;
+        جابه_جایی = بعدی_جابه_جایی;
+        بعدی_جابه_جایی = indexes[Dictionary_داده::IX_RESERVED2_جابه_جایی];
+        جابه_جایی = بعدی_جابه_جایی;
+        بعدی_جابه_جایی = indexes[Dictionary_داده::IX_مجموع_اندازه];
+        جابه_جایی = بعدی_جابه_جایی;
     }
-    return headerSize + size;
+    أرجع سرآیند_اندازه + size;
 }
-#endif
+#پایان_اگر

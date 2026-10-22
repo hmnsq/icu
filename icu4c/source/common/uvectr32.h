@@ -13,13 +13,13 @@
 //            Most of the code is unchanged from UVector.
 //
 
-#ifndef UVECTOR32_H
-#define UVECTOR32_H
+#اگر_تعریف_نشده UVECTOR32_H
+#تعریف_کن UVECTOR32_H
 
-#include "unicode/utypes.h"
-#include "unicode/uobject.h"
-#include "uhash.h"
-#include "uassert.h"
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/uobject.h"
+#ضمن "uhash.h"
+#ضمن "uassert.h"
 
 U_NAMESPACE_BEGIN
 
@@ -58,80 +58,80 @@ U_NAMESPACE_BEGIN
  *
  * @author Alan Liu
  */
-class U_COMMON_API UVector32 : public UObject {
-private:
-    int32_t   count;
+class U_COMMON_API UVector32 : عام UObject {
+خاص:
+    int32_t   شمار;
 
-    int32_t   capacity;
+    int32_t   ظرفیت;
     
-    int32_t   maxCapacity;   // Limit beyond which capacity is not permitted to grow.
+    int32_t   max_ظرفیت;   // Limit beyond which capacity is not permitted to grow.
 
     int32_t*  elements;
 
-public:
-    UVector32(UErrorCode &status);
+عام:
+    UVector32(UError_کد &وضعیت);
 
-    UVector32(int32_t initialCapacity, UErrorCode &status);
+    UVector32(int32_t initial_ظرفیت, UError_کد &وضعیت);
 
-    virtual ~UVector32();
+    مجازی ~UVector32();
 
     /**
      * Assign this object to another (make this a copy of 'other').
      * Use the 'assign' function to assign each element.
      */
-    void assign(const UVector32& other, UErrorCode &ec);
+    فراغ تخصیص_بده(ثابت UVector32& other, UError_کد &ec);
 
     /**
      * Compare this vector with another.  They will be considered
      * equal if they are of the same size and all elements are equal,
      * as compared using this object's comparer.
      */
-    bool operator==(const UVector32& other) const;
+    bool عملگر==(ثابت UVector32& other) ثابت;
 
     /**
      * Equivalent to !operator==()
      */
-    inline bool operator!=(const UVector32& other) const;
+    مضمن bool عملگر!=(ثابت UVector32& other) ثابت;
 
     //------------------------------------------------------------
     // java.util.Vector API
     //------------------------------------------------------------
 
-    inline void addElement(int32_t elem, UErrorCode &status);
+    مضمن فراغ جمع_کن_Element(int32_t elem, UError_کد &وضعیت);
 
-    void setElementAt(int32_t elem, int32_t index);
+    فراغ مجموعه_Element_At(int32_t elem, int32_t شاخص);
 
-    void insertElementAt(int32_t elem, int32_t index, UErrorCode &status);
+    فراغ درج_Element_At(int32_t elem, int32_t شاخص, UError_کد &وضعیت);
     
-    inline int32_t elementAti(int32_t index) const;
+    مضمن int32_t elementAti(int32_t شاخص) ثابت;
 
-    UBool equals(const UVector32 &other) const;
+    UBool equals(ثابت UVector32 &other) ثابت;
 
-    inline int32_t lastElementi() const;
+    مضمن int32_t آخرین_Elementi() ثابت;
 
-    int32_t indexOf(int32_t elem, int32_t startIndex = 0) const;
+    int32_t شاخص_از(int32_t elem, int32_t شروع_شاخص = 0) ثابت;
 
-    inline UBool contains(int32_t elem) const;
+    مضمن UBool شامل_است(int32_t elem) ثابت;
 
-    UBool containsAll(const UVector32& other) const;
+    UBool شامل_است_All(ثابت UVector32& other) ثابت;
 
-    UBool removeAll(const UVector32& other);
+    UBool removeAll(ثابت UVector32& other);
 
-    UBool retainAll(const UVector32& other);
+    UBool retainAll(ثابت UVector32& other);
 
-    void removeElementAt(int32_t index);
+    فراغ removeElementAt(int32_t شاخص);
 
-    void removeAllElements();
+    فراغ removeAllElements();
 
-    inline int32_t size() const;
+    مضمن int32_t اندازه_2() ثابت;
 
-    inline UBool isEmpty() const;
+    مضمن UBool is_خالی() ثابت;
 
     // Inline.  Use this one for speedy size check.
-    inline UBool ensureCapacity(int32_t minimumCapacity, UErrorCode &status);
+    مضمن UBool ensure_ظرفیت(int32_t minimum_ظرفیت, UError_کد &وضعیت);
 
     // Out-of-line, handles actual growth.  Called by ensureCapacity() when necessary.
-    UBool expandCapacity(int32_t minimumCapacity, UErrorCode &status);
+    UBool expand_ظرفیت(int32_t minimum_ظرفیت, UError_کد &وضعیت);
 
     /**
      * Change the size of this vector as follows: If newSize is
@@ -139,7 +139,7 @@ public:
      * elements for i >= newSize.  If newSize is larger, grow the
      * array, filling in new slows with zero.
      */
-    void setSize(int32_t newSize);
+    فراغ مجموعه_اندازه(int32_t new_اندازه);
 
     //------------------------------------------------------------
     // New API
@@ -151,19 +151,19 @@ public:
      * @param other vector to be checked for containment
      * @return true if the test condition is met
      */
-    UBool containsNone(const UVector32& other) const;
+    UBool شامل_است_None(ثابت UVector32& other) ثابت;
 
 
     /**
      * Insert the given integer into this vector at its sorted position.
      * The current elements are assumed to be sorted already.
      */
-    void sortedInsert(int32_t elem, UErrorCode& ec);
+    فراغ sorted_درج(int32_t elem, UError_کد& ec);
 
     /**
      * Returns a pointer to the internal array holding the vector.
      */
-    inline int32_t *getBuffer() const;
+    مضمن int32_t *get_میانگیر() ثابت;
 
     /**
      * Set the maximum allowed buffer capacity for this vector/stack.
@@ -171,136 +171,136 @@ public:
      * A Limit of zero means unlimited capacity.
      * Units are vector elements (32 bits each), not bytes.
      */
-    void setMaxCapacity(int32_t limit);
+    فراغ مجموعه_Max_ظرفیت(int32_t حد);
 
     /**
      * ICU "poor man's RTTI", returns a UClassID for this class.
      */
-    static UClassID U_EXPORT2 getStaticClassID();
+    ساكن UClassID U_EXPORT2 getStaticClassID();
 
     /**
      * ICU "poor man's RTTI", returns a UClassID for the actual class.
      */
-    virtual UClassID getDynamicClassID() const override;
+    مجازی UClassID getDynamicClassID() ثابت override;
 
-private:
-    void _init(int32_t initialCapacity, UErrorCode &status);
-
-    // Disallow
-    UVector32(const UVector32&) = delete;
+خاص:
+    فراغ _init(int32_t initial_ظرفیت, UError_کد &وضعیت);
 
     // Disallow
-    UVector32& operator=(const UVector32&) = delete;
+    UVector32(ثابت UVector32&) = delete;
+
+    // Disallow
+    UVector32& عملگر=(ثابت UVector32&) = delete;
 
 
     //  API Functions for Stack operations.
     //  In the original UVector, these were in a separate derived class, UStack.
     //  Here in UVector32, they are all together.
-public:
-    inline UBool empty() const;   // TODO:  redundant, same as empty().  Remove it?
+عام:
+    مضمن UBool خالی() ثابت;   // TODO:  redundant, same as empty().  Remove it?
 
-    inline int32_t peeki() const;
+    مضمن int32_t peeki() ثابت;
     
-    inline int32_t popi();
+    مضمن int32_t popi();
     
-    inline int32_t push(int32_t i, UErrorCode &status);
+    مضمن int32_t افزودن(int32_t i, UError_کد &وضعیت);
 
-    inline int32_t *reserveBlock(int32_t size, UErrorCode &status);
-    inline int32_t *popFrame(int32_t size);
+    مضمن int32_t *reserve_بلوک(int32_t اندازه_2, UError_کد &وضعیت);
+    مضمن int32_t *برداشت_قاب(int32_t اندازه_2);
 };
 
 
 // UVector32 inlines
 
-inline UBool UVector32::ensureCapacity(int32_t minimumCapacity, UErrorCode &status) {
-    if ((minimumCapacity >= 0) && (capacity >= minimumCapacity)) {
-        return true;
-    } else {
-        return expandCapacity(minimumCapacity, status);
+مضمن UBool UVector32::ensure_ظرفیت(int32_t minimum_ظرفیت, UError_کد &وضعیت) {
+    إذا ((minimum_ظرفیت >= 0) && (ظرفیت >= minimum_ظرفیت)) {
+        أرجع true;
+    } وإلا {
+        أرجع expand_ظرفیت(minimum_ظرفیت, وضعیت);
     }
 }
 
-inline int32_t UVector32::elementAti(int32_t index) const {
-    return (index >= 0 && count > 0 && count - index > 0) ? elements[index] : 0;
+مضمن int32_t UVector32::elementAti(int32_t شاخص) ثابت {
+    أرجع (شاخص >= 0 && شمار > 0 && شمار - شاخص > 0) ? elements[شاخص] : 0;
 }
 
 
-inline void UVector32::addElement(int32_t elem, UErrorCode &status) {
-    if (ensureCapacity(count + 1, status)) {
-        elements[count] = elem;
-        count++;
+مضمن فراغ UVector32::جمع_کن_Element(int32_t elem, UError_کد &وضعیت) {
+    إذا (ensure_ظرفیت(شمار + 1, وضعیت)) {
+        elements[شمار] = elem;
+        شمار++;
     }
 }
 
-inline int32_t *UVector32::reserveBlock(int32_t size, UErrorCode &status) {
-    if (ensureCapacity(count+size, status) == false) {
-        return nullptr;
+مضمن int32_t *UVector32::reserve_بلوک(int32_t اندازه_2, UError_کد &وضعیت) {
+    إذا (ensure_ظرفیت(شمار+اندازه_2, وضعیت) == false) {
+        أرجع nullptr;
     }
-    int32_t  *rp = elements+count;
-    count += size;
-    return rp;
+    int32_t  *rp = elements+شمار;
+    شمار += اندازه_2;
+    أرجع rp;
 }
 
-inline int32_t *UVector32::popFrame(int32_t size) {
-    U_ASSERT(count >= size);
-    count -= size;
-    if (count < 0) {
-        count = 0;
+مضمن int32_t *UVector32::برداشت_قاب(int32_t اندازه_2) {
+    U_ASSERT(شمار >= اندازه_2);
+    شمار -= اندازه_2;
+    إذا (شمار < 0) {
+        شمار = 0;
     }
-    return elements+count-size;
+    أرجع elements+شمار-اندازه_2;
 }
 
 
 
-inline int32_t UVector32::size() const {
-    return count;
+مضمن int32_t UVector32::اندازه_2() ثابت {
+    أرجع شمار;
 }
 
-inline UBool UVector32::isEmpty() const {
-    return count == 0;
+مضمن UBool UVector32::is_خالی() ثابت {
+    أرجع شمار == 0;
 }
 
-inline UBool UVector32::contains(int32_t obj) const {
-    return indexOf(obj) >= 0;
+مضمن UBool UVector32::شامل_است(int32_t obj) ثابت {
+    أرجع شاخص_از(obj) >= 0;
 }
 
-inline int32_t UVector32::lastElementi() const {
-    return elementAti(count-1);
+مضمن int32_t UVector32::آخرین_Elementi() ثابت {
+    أرجع elementAti(شمار-1);
 }
 
-inline bool UVector32::operator!=(const UVector32& other) const {
-    return !operator==(other);
+مضمن bool UVector32::عملگر!=(ثابت UVector32& other) ثابت {
+    أرجع !عملگر==(other);
 }
 
-inline int32_t *UVector32::getBuffer() const {
-    return elements;
+مضمن int32_t *UVector32::get_میانگیر() ثابت {
+    أرجع elements;
 }
 
 
 // UStack inlines
 
-inline UBool UVector32::empty() const {
-    return isEmpty();
+مضمن UBool UVector32::خالی() ثابت {
+    أرجع is_خالی();
 }
 
-inline int32_t UVector32::peeki() const {
-    return lastElementi();
+مضمن int32_t UVector32::peeki() ثابت {
+    أرجع آخرین_Elementi();
 }
 
-inline int32_t UVector32::push(int32_t i, UErrorCode &status) {
-    addElement(i, status);
-    return i;
+مضمن int32_t UVector32::افزودن(int32_t i, UError_کد &وضعیت) {
+    جمع_کن_Element(i, وضعیت);
+    أرجع i;
 }
 
-inline int32_t UVector32::popi() {
-    int32_t result = 0;
-    if (count > 0) {
-        count--;
-        result = elements[count];
+مضمن int32_t UVector32::popi() {
+    int32_t نتیجه = 0;
+    إذا (شمار > 0) {
+        شمار--;
+        نتیجه = elements[شمار];
     }
-    return result;
+    أرجع نتیجه;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_انتها
 
-#endif
+#پایان_اگر

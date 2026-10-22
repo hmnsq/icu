@@ -18,40 +18,40 @@
 *   Character conversion functions moved here from resbund.cpp
 */
 
-#include "unicode/utypes.h"
-#include "unicode/resbund.h"
-#include "uinvchar.h"
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/resbund.h"
+#ضمن "uinvchar.h"
 
 U_NAMESPACE_BEGIN
 
-ResourceBundle::ResourceBundle( const UnicodeString&    path,
-                                const Locale&           locale,
-                                UErrorCode&              error)
-                                :UObject(), fLocale(nullptr)
+ResourceBundle::ResourceBundle( ثابت UnicodeString&    مسیر,
+                                ثابت Locale&           locale,
+                                UError_کد&              error)
+                                :UObject(), fLocale(اشاره_تهی)
 {
-    constructForLocale(path, locale, error);
+    constructForLocale(مسیر, locale, error);
 }
 
-ResourceBundle::ResourceBundle( const UnicodeString&    path,
-                                UErrorCode&              error)
-                                :UObject(), fLocale(nullptr)
+ResourceBundle::ResourceBundle( ثابت UnicodeString&    مسیر,
+                                UError_کد&              error)
+                                :UObject(), fLocale(اشاره_تهی)
 {
-    constructForLocale(path, Locale::getDefault(), error);
+    constructForLocale(مسیر, Locale::getDefault(), error);
 }
 
-void 
-ResourceBundle::constructForLocale(const UnicodeString& path,
-                                   const Locale& locale,
-                                   UErrorCode& error)
+فراغ 
+ResourceBundle::constructForLocale(ثابت UnicodeString& مسیر,
+                                   ثابت Locale& locale,
+                                   UError_کد& error)
 {
-    if (path.isEmpty()) {
-        fResource = ures_open(nullptr, locale.getName(), &error);
+    إذا (مسیر.is_خالی()) {
+        fResource = ures_open(اشاره_تهی, locale.getName(), &error);
     }
-    else {
-        UnicodeString nullTerminatedPath(path);
-        nullTerminatedPath.append(static_cast<char16_t>(0));
-        fResource = ures_openU(nullTerminatedPath.getBuffer(), locale.getName(), &error);
+    وإلا {
+        UnicodeString null_Terminated_مسیر(مسیر);
+        null_Terminated_مسیر.append(static_cast<char16_t>(0));
+        fResource = ures_openU(null_Terminated_مسیر.get_میانگیر(), locale.getName(), &error);
     }
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_انتها

@@ -7,13 +7,13 @@
 **********************************************************************
 */
 
-#ifndef USTRFMT_H
-#define USTRFMT_H
+#اگر_تعریف_نشده USTRFMT_H
+#تعریف_کن USTRFMT_H
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
 U_CAPI int32_t U_EXPORT2
-uprv_itou (UChar * buffer, int32_t capacity, uint32_t i, uint32_t radix, int32_t minwidth);
+uprv_itou (UChar * میانگیر, int32_t ظرفیت, uint32_t i, uint32_t radix, int32_t minwidth);
 
 
-#endif
+#پایان_اگر

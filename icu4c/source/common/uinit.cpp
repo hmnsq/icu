@@ -14,34 +14,34 @@
 *   created by: George Rhoten
 */
 
-#include "unicode/utypes.h"
-#include "unicode/icuplug.h"
-#include "unicode/uclean.h"
-#include "cmemory.h"
-#include "icuplugimp.h"
-#include "ucln_cmn.h"
-#include "ucnv_io.h"
-#include "umutex.h"
-#include "utracimp.h"
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/icuplug.h"
+#ضمن "unicode/uclean.h"
+#ضمن "cmemory.h"
+#ضمن "icuplugimp.h"
+#ضمن "ucln_cmn.h"
+#ضمن "ucnv_io.h"
+#ضمن "umutex.h"
+#ضمن "utracimp.h"
 
 U_NAMESPACE_BEGIN
 
-static UInitOnce gICUInitOnce {};
+ساكن UInitOnce gICUInitOnce {};
 
-static UBool U_CALLCONV uinit_cleanup() {
+ساكن UBool U_CALLCONV uinit_cleanup() {
     gICUInitOnce.reset();
-    return true;
+    أرجع درست;
 }
 
-static void U_CALLCONV
-initData(UErrorCode &status)
+ساكن فراغ U_CALLCONV
+init_داده(UError_کد &وضعیت)
 {
-#if UCONFIG_ENABLE_PLUGINS
+#إذا UCONFIG_ENABLE_PLUGINS
     /* initialize plugins */
-    uplug_init(&status);
-#endif
+    uplug_init(&وضعیت);
+#پایان_اگر
 
-#if !UCONFIG_NO_CONVERSION
+#إذا !UCONFIG_NO_CONVERSION
     /*
      * 2005-may-02
      *
@@ -54,21 +54,21 @@ initData(UErrorCode &status)
      * for errors there, to make sure that the actual items they need are
      * available.
      */
-    ucnv_io_countKnownConverters(&status);
-#endif
-    ucln_common_registerCleanup(UCLN_COMMON_UINIT, uinit_cleanup);
+    ucnv_io_شمار_معلوم_Converters(&وضعیت);
+#پایان_اگر
+    ucln_common_ثبات_Cleanup(UCLN_COMMON_UINIT, uinit_cleanup);
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_انتها
 
 U_NAMESPACE_USE
 
 /*
  * ICU Initialization Function. Need not be called.
  */
-U_CAPI void U_EXPORT2
-u_init(UErrorCode *status) {
-    UTRACE_ENTRY_OC(UTRACE_U_INIT);
-    umtx_initOnce(gICUInitOnce, &initData, *status);
-    UTRACE_EXIT_STATUS(*status);
+U_CAPI فراغ U_EXPORT2
+u_init(UError_کد *وضعیت) {
+    UTRACE_مدخل_OC(UTRACE_U_INIT);
+    umtx_initOnce(gICUInitOnce, &init_داده, *وضعیت);
+    UTRACE_EXIT_وضعیت(*وضعیت);
 }

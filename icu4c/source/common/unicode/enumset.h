@@ -14,12 +14,12 @@
  * \brief C++: internal template EnumSet<>
  */
 
-#ifndef ENUMSET_H
-#define ENUMSET_H
+#اگر_تعریف_نشده ENUMSET_H
+#تعریف_کن ENUMSET_H
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#إذا U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -30,41 +30,41 @@ U_NAMESPACE_BEGIN
  * @internal
  * \cond
  */
-template<typename T, uint32_t minValue, uint32_t limitValue>
-class EnumSet {
-public:
-    inline EnumSet() : fBools(0) {}
-    inline EnumSet(const EnumSet<T,minValue,limitValue>& other) : fBools(other.fBools) {}
-    inline ~EnumSet() {}
-#ifndef U_HIDE_INTERNAL_API
-    inline void clear() { fBools=0; }
-    inline void add(T toAdd) { set(toAdd, 1); }
-    inline void remove(T toRemove) { set(toRemove, 0); }
-    inline int32_t contains(T toCheck) const { return get(toCheck); }
-    inline void set(T toSet, int32_t v) { fBools=(fBools&(~flag(toSet)))|(v?(flag(toSet)):0); }
-    inline int32_t get(T toCheck) const { return (fBools & flag(toCheck))?1:0; }
-    inline UBool isValidEnum(T toCheck) const {  return (toCheck>=minValue&&toCheck<limitValue); }
-    inline UBool isValidValue(int32_t v) const { return (v==0||v==1); }
-    inline const EnumSet<T, minValue, limitValue>&
-    operator=(const EnumSet<T, minValue, limitValue>& other) U_LIFETIME_BOUND {
+قالب<typename T, uint32_t min_مقدار, uint32_t حد_مقدار>
+class Enum_مجموعه {
+عام:
+    مضمن Enum_مجموعه() : fBools(0) {}
+    مضمن Enum_مجموعه(ثابت Enum_مجموعه<T,min_مقدار,حد_مقدار>& other) : fBools(other.fBools) {}
+    مضمن ~Enum_مجموعه() {}
+#اگر_تعریف_نشده U_HIDE_داخلی_API
+    مضمن فراغ clear() { fBools=0; }
+    مضمن فراغ جمع_کن(T مقصد_جمع_کن) { مجموعه(مقصد_جمع_کن, 1); }
+    مضمن فراغ remove(T مقصد_Remove) { مجموعه(مقصد_Remove, 0); }
+    مضمن int32_t شامل_است(T مقصد_Check) ثابت { أرجع get(مقصد_Check); }
+    مضمن فراغ مجموعه(T مقصد_مجموعه, int32_t v) { fBools=(fBools&(~flag(مقصد_مجموعه)))|(v?(flag(مقصد_مجموعه)):0); }
+    مضمن int32_t get(T مقصد_Check) ثابت { أرجع (fBools & flag(مقصد_Check))?1:0; }
+    مضمن UBool isValidEnum(T مقصد_Check) ثابت {  أرجع (مقصد_Check>=min_مقدار&&مقصد_Check<حد_مقدار); }
+    مضمن UBool is_Valid_مقدار(int32_t v) ثابت { أرجع (v==0||v==1); }
+    مضمن ثابت Enum_مجموعه<T, min_مقدار, حد_مقدار>&
+    عملگر=(ثابت Enum_مجموعه<T, min_مقدار, حد_مقدار>& other) U_LIFETIME_BOUND {
         fBools = other.fBools;
-        return *this;
+        أرجع *this;
     }
   
-    inline uint32_t getAll() const {
-        return fBools; 
+    مضمن uint32_t getAll() ثابت {
+        أرجع fBools; 
     }
-#endif /* U_HIDE_INTERNAL_API */
+#پایان_اگر /* U_HIDE_INTERNAL_API */
 
-private:
-    inline uint32_t flag(T toCheck) const { return (1<<(toCheck-minValue)); }
-private:
+خاص:
+    مضمن uint32_t flag(T مقصد_Check) ثابت { أرجع (1<<(مقصد_Check-min_مقدار)); }
+خاص:
     uint32_t fBools;
 };
 
 /** \endcond */
 
-U_NAMESPACE_END
+U_NAMESPACE_انتها
 
-#endif /* U_SHOW_CPLUSPLUS_API */
-#endif /* ENUMSET_H */
+#پایان_اگر /* U_SHOW_CPLUSPLUS_API */
+#پایان_اگر /* ENUMSET_H */

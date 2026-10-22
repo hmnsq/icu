@@ -16,8 +16,8 @@
 *   created by: Markus W. Scherer
 */
 
-#ifndef __UNORM2_H__
-#define __UNORM2_H__
+#اگر_تعریف_نشده __UNORM2_H__
+#تعریف_کن __UNORM2_H__
 
 /**
  * \file
@@ -30,13 +30,13 @@
  * For more details see the Normalizer2 C++ class.
  */
 
-#include "unicode/utypes.h"
-#include "unicode/stringoptions.h"
-#include "unicode/uset.h"
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/stringoptions.h"
+#ضمن "unicode/uset.h"
 
-#if U_SHOW_CPLUSPLUS_API
-#include "unicode/localpointer.h"
-#endif   // U_SHOW_CPLUSPLUS_API
+#إذا U_SHOW_CPLUSPLUS_API
+#ضمن "unicode/localpointer.h"
+#پایان_اگر   // U_SHOW_CPLUSPLUS_API
 
 /**
  * Constants for normalization modes.
@@ -45,7 +45,7 @@
  * see http://www.unicode.org/unicode/reports/tr15/
  * @stable ICU 4.4
  */
-typedef enum {
+تعريفنوع تعداد {
     /**
      * Decomposition followed by composition.
      * Same as standard NFC when using an "nfc" instance.
@@ -87,14 +87,14 @@ typedef enum {
      * @stable ICU 4.4
      */
     UNORM2_COMPOSE_CONTIGUOUS
-} UNormalization2Mode;
+} UNormalization2_نما;
 
 /**
  * Result values for normalization quick check functions.
  * For details see http://www.unicode.org/reports/tr15/#Detecting_Normalization_Forms
  * @stable ICU 2.0
  */
-typedef enum UNormalizationCheckResult {
+تعريفنوع تعداد UNormalization_Check_نتیجه {
   /**
    * The input string is not in the normalization form.
    * @stable ICU 2.0
@@ -113,16 +113,16 @@ typedef enum UNormalizationCheckResult {
    * @stable ICU 2.0
    */
   UNORM_MAYBE
-} UNormalizationCheckResult;
+} UNormalization_Check_نتیجه;
 
 /**
  * Opaque C service object type for the new normalization API.
  * @stable ICU 4.4
  */
-struct UNormalizer2;
-typedef struct UNormalizer2 UNormalizer2;  /**< C typedef for struct UNormalizer2. @stable ICU 4.4 */
+بنية UNormalizer2;
+تعريفنوع بنية UNormalizer2 UNormalizer2;  /**< C typedef for struct UNormalizer2. @stable ICU 4.4 */
 
-#if !UCONFIG_NO_NORMALIZATION
+#إذا !UCONFIG_NO_NORMALIZATION
 
 /**
  * Returns a UNormalizer2 instance for Unicode NFC normalization.
@@ -135,8 +135,8 @@ typedef struct UNormalizer2 UNormalizer2;  /**< C typedef for struct UNormalizer
  * @return the requested Normalizer2, if successful
  * @stable ICU 49
  */
-U_CAPI const UNormalizer2 * U_EXPORT2
-unorm2_getNFCInstance(UErrorCode *pErrorCode);
+U_CAPI ثابت UNormalizer2 * U_EXPORT2
+unorm2_getNFCInstance(UError_کد *p_Error_کد);
 
 /**
  * Returns a UNormalizer2 instance for Unicode NFD normalization.
@@ -149,8 +149,8 @@ unorm2_getNFCInstance(UErrorCode *pErrorCode);
  * @return the requested Normalizer2, if successful
  * @stable ICU 49
  */
-U_CAPI const UNormalizer2 * U_EXPORT2
-unorm2_getNFDInstance(UErrorCode *pErrorCode);
+U_CAPI ثابت UNormalizer2 * U_EXPORT2
+unorm2_getNFDInstance(UError_کد *p_Error_کد);
 
 /**
  * Returns a UNormalizer2 instance for Unicode NFKC normalization.
@@ -163,8 +163,8 @@ unorm2_getNFDInstance(UErrorCode *pErrorCode);
  * @return the requested Normalizer2, if successful
  * @stable ICU 49
  */
-U_CAPI const UNormalizer2 * U_EXPORT2
-unorm2_getNFKCInstance(UErrorCode *pErrorCode);
+U_CAPI ثابت UNormalizer2 * U_EXPORT2
+unorm2_getNFKCInstance(UError_کد *p_Error_کد);
 
 /**
  * Returns a UNormalizer2 instance for Unicode NFKD normalization.
@@ -177,8 +177,8 @@ unorm2_getNFKCInstance(UErrorCode *pErrorCode);
  * @return the requested Normalizer2, if successful
  * @stable ICU 49
  */
-U_CAPI const UNormalizer2 * U_EXPORT2
-unorm2_getNFKDInstance(UErrorCode *pErrorCode);
+U_CAPI ثابت UNormalizer2 * U_EXPORT2
+unorm2_getNFKDInstance(UError_کد *p_Error_کد);
 
 /**
  * Returns a UNormalizer2 instance for Unicode toNFKC_Casefold() normalization
@@ -194,8 +194,8 @@ unorm2_getNFKDInstance(UErrorCode *pErrorCode);
  * @return the requested Normalizer2, if successful
  * @stable ICU 49
  */
-U_CAPI const UNormalizer2 * U_EXPORT2
-unorm2_getNFKCCasefoldInstance(UErrorCode *pErrorCode);
+U_CAPI ثابت UNormalizer2 * U_EXPORT2
+unorm2_getNFKCCasefoldInstance(UError_کد *p_Error_کد);
 
 /**
  * Returns a UNormalizer2 instance for a variant of Unicode toNFKC_Casefold() normalization
@@ -211,8 +211,8 @@ unorm2_getNFKCCasefoldInstance(UErrorCode *pErrorCode);
  * @return the requested Normalizer2, if successful
  * @stable ICU 74
  */
-U_CAPI const UNormalizer2 * U_EXPORT2
-unorm2_getNFKCSimpleCasefoldInstance(UErrorCode *pErrorCode);
+U_CAPI ثابت UNormalizer2 * U_EXPORT2
+unorm2_getNFKCSimpleCasefoldInstance(UError_کد *p_Error_کد);
 
 /**
  * Returns a UNormalizer2 instance which uses the specified data file
@@ -235,11 +235,11 @@ unorm2_getNFKCSimpleCasefoldInstance(UErrorCode *pErrorCode);
  * @return the requested UNormalizer2, if successful
  * @stable ICU 4.4
  */
-U_CAPI const UNormalizer2 * U_EXPORT2
-unorm2_getInstance(const char *packageName,
-                   const char *name,
-                   UNormalization2Mode mode,
-                   UErrorCode *pErrorCode);
+U_CAPI ثابت UNormalizer2 * U_EXPORT2
+unorm2_getInstance(ثابت حرف *packageName,
+                   ثابت حرف *name,
+                   UNormalization2_نما نما,
+                   UError_کد *p_Error_کد);
 
 /**
  * Constructs a filtered normalizer wrapping any UNormalizer2 instance
@@ -257,9 +257,9 @@ unorm2_getInstance(const char *packageName,
  * @stable ICU 4.4
  */
 U_CAPI UNormalizer2* U_EXPORT2
-unorm2_openFiltered(const UNormalizer2* norm2 U_LIFETIME_BOUND,
-                    const USet* filterSet U_LIFETIME_BOUND,
-                    UErrorCode* pErrorCode);
+unorm2_openFiltered(ثابت UNormalizer2* norm2 U_LIFETIME_BOUND,
+                    ثابت USet* filter_مجموعه U_LIFETIME_BOUND,
+                    UError_کد* p_Error_کد);
 
 /**
  * Closes a UNormalizer2 instance from unorm2_openFiltered().
@@ -267,10 +267,10 @@ unorm2_openFiltered(const UNormalizer2* norm2 U_LIFETIME_BOUND,
  * @param norm2 UNormalizer2 instance to be closed
  * @stable ICU 4.4
  */
-U_CAPI void U_EXPORT2
+U_CAPI فراغ U_EXPORT2
 unorm2_close(UNormalizer2 *norm2);
 
-#if U_SHOW_CPLUSPLUS_API
+#إذا U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -283,11 +283,11 @@ U_NAMESPACE_BEGIN
  * @see LocalPointer
  * @stable ICU 4.4
  */
-U_DEFINE_LOCAL_OPEN_POINTER(LocalUNormalizer2Pointer, UNormalizer2, unorm2_close);
+U_DEFINE_LOCAL_OPEN_اشاره_گر(Local_UNormalizer2_اشاره_گر, UNormalizer2, unorm2_close);
 
-U_NAMESPACE_END
+U_NAMESPACE_انتها
 
-#endif
+#پایان_اگر
 
 /**
  * Writes the normalized form of the source string to the destination string
@@ -306,10 +306,10 @@ U_NAMESPACE_END
  * @stable ICU 4.4
  */
 U_CAPI int32_t U_EXPORT2
-unorm2_normalize(const UNormalizer2 *norm2,
-                 const UChar *src, int32_t length,
-                 UChar *dest, int32_t capacity,
-                 UErrorCode *pErrorCode);
+unorm2_normalize(ثابت UNormalizer2 *norm2,
+                 ثابت UChar *src, int32_t درازی,
+                 UChar *dest, int32_t ظرفیت,
+                 UError_کد *p_Error_کد);
 /**
  * Appends the normalized form of the second string to the first string
  * (merging them at the boundary) and returns the length of the first string.
@@ -329,10 +329,10 @@ unorm2_normalize(const UNormalizer2 *norm2,
  * @stable ICU 4.4
  */
 U_CAPI int32_t U_EXPORT2
-unorm2_normalizeSecondAndAppend(const UNormalizer2 *norm2,
-                                UChar *first, int32_t firstLength, int32_t firstCapacity,
-                                const UChar *second, int32_t secondLength,
-                                UErrorCode *pErrorCode);
+unorm2_normalize_دومی_And_Append(ثابت UNormalizer2 *norm2,
+                                UChar *اولی, int32_t اولی_درازی, int32_t اولی_ظرفیت,
+                                ثابت UChar *دومی, int32_t دومی_درازی,
+                                UError_کد *p_Error_کد);
 /**
  * Appends the second string to the first string
  * (merging them at the boundary) and returns the length of the first string.
@@ -352,10 +352,10 @@ unorm2_normalizeSecondAndAppend(const UNormalizer2 *norm2,
  * @stable ICU 4.4
  */
 U_CAPI int32_t U_EXPORT2
-unorm2_append(const UNormalizer2 *norm2,
-              UChar *first, int32_t firstLength, int32_t firstCapacity,
-              const UChar *second, int32_t secondLength,
-              UErrorCode *pErrorCode);
+unorm2_append(ثابت UNormalizer2 *norm2,
+              UChar *اولی, int32_t اولی_درازی, int32_t اولی_ظرفیت,
+              ثابت UChar *دومی, int32_t دومی_درازی,
+              UError_کد *p_Error_کد);
 
 /**
  * Gets the decomposition mapping of c.
@@ -377,9 +377,9 @@ unorm2_append(const UNormalizer2 *norm2,
  * @stable ICU 4.6
  */
 U_CAPI int32_t U_EXPORT2
-unorm2_getDecomposition(const UNormalizer2 *norm2,
-                        UChar32 c, UChar *decomposition, int32_t capacity,
-                        UErrorCode *pErrorCode);
+unorm2_getDecomposition(ثابت UNormalizer2 *norm2,
+                        UChar32 c, UChar *decomposition, int32_t ظرفیت,
+                        UError_کد *p_Error_کد);
 
 /**
  * Gets the raw decomposition mapping of c.
@@ -411,9 +411,9 @@ unorm2_getDecomposition(const UNormalizer2 *norm2,
  * @stable ICU 49
  */
 U_CAPI int32_t U_EXPORT2
-unorm2_getRawDecomposition(const UNormalizer2 *norm2,
-                           UChar32 c, UChar *decomposition, int32_t capacity,
-                           UErrorCode *pErrorCode);
+unorm2_getRawDecomposition(ثابت UNormalizer2 *norm2,
+                           UChar32 c, UChar *decomposition, int32_t ظرفیت,
+                           UError_کد *p_Error_کد);
 
 /**
  * Performs pairwise composition of a & b and returns the composite if there is one.
@@ -431,7 +431,7 @@ unorm2_getRawDecomposition(const UNormalizer2 *norm2,
  * @stable ICU 49
  */
 U_CAPI UChar32 U_EXPORT2
-unorm2_composePair(const UNormalizer2 *norm2, UChar32 a, UChar32 b);
+unorm2_composePair(ثابت UNormalizer2 *norm2, UChar32 a, UChar32 b);
 
 /**
  * Gets the combining class of c.
@@ -443,7 +443,7 @@ unorm2_composePair(const UNormalizer2 *norm2, UChar32 a, UChar32 b);
  * @stable ICU 49
  */
 U_CAPI uint8_t U_EXPORT2
-unorm2_getCombiningClass(const UNormalizer2 *norm2, UChar32 c);
+unorm2_getCombiningClass(ثابت UNormalizer2 *norm2, UChar32 c);
 
 /**
  * Tests if the string is normalized.
@@ -462,9 +462,9 @@ unorm2_getCombiningClass(const UNormalizer2 *norm2, UChar32 c);
  * @stable ICU 4.4
  */
 U_CAPI UBool U_EXPORT2
-unorm2_isNormalized(const UNormalizer2 *norm2,
-                    const UChar *s, int32_t length,
-                    UErrorCode *pErrorCode);
+unorm2_isNormalized(ثابت UNormalizer2 *norm2,
+                    ثابت UChar *s, int32_t درازی,
+                    UError_کد *p_Error_کد);
 
 /**
  * Tests if the string is normalized.
@@ -483,10 +483,10 @@ unorm2_isNormalized(const UNormalizer2 *norm2,
  * @return UNormalizationCheckResult
  * @stable ICU 4.4
  */
-U_CAPI UNormalizationCheckResult U_EXPORT2
-unorm2_quickCheck(const UNormalizer2 *norm2,
-                  const UChar *s, int32_t length,
-                  UErrorCode *pErrorCode);
+U_CAPI UNormalization_Check_نتیجه U_EXPORT2
+unorm2_سریع_Check(ثابت UNormalizer2 *norm2,
+                  ثابت UChar *s, int32_t درازی,
+                  UError_کد *p_Error_کد);
 
 /**
  * Returns the end of the normalized substring of the input string.
@@ -513,9 +513,9 @@ unorm2_quickCheck(const UNormalizer2 *norm2,
  * @stable ICU 4.4
  */
 U_CAPI int32_t U_EXPORT2
-unorm2_spanQuickCheckYes(const UNormalizer2 *norm2,
-                         const UChar *s, int32_t length,
-                         UErrorCode *pErrorCode);
+unorm2_بازه_سریع_Check_Yes(ثابت UNormalizer2 *norm2,
+                         ثابت UChar *s, int32_t درازی,
+                         UError_کد *p_Error_کد);
 
 /**
  * Tests if the character always has a normalization boundary before it,
@@ -527,7 +527,7 @@ unorm2_spanQuickCheckYes(const UNormalizer2 *norm2,
  * @stable ICU 4.4
  */
 U_CAPI UBool U_EXPORT2
-unorm2_hasBoundaryBefore(const UNormalizer2 *norm2, UChar32 c);
+unorm2_hasBoundaryBefore(ثابت UNormalizer2 *norm2, UChar32 c);
 
 /**
  * Tests if the character always has a normalization boundary after it,
@@ -539,7 +539,7 @@ unorm2_hasBoundaryBefore(const UNormalizer2 *norm2, UChar32 c);
  * @stable ICU 4.4
  */
 U_CAPI UBool U_EXPORT2
-unorm2_hasBoundaryAfter(const UNormalizer2 *norm2, UChar32 c);
+unorm2_hasBoundaryAfter(ثابت UNormalizer2 *norm2, UChar32 c);
 
 /**
  * Tests if the character is normalization-inert.
@@ -550,7 +550,7 @@ unorm2_hasBoundaryAfter(const UNormalizer2 *norm2, UChar32 c);
  * @stable ICU 4.4
  */
 U_CAPI UBool U_EXPORT2
-unorm2_isInert(const UNormalizer2 *norm2, UChar32 c);
+unorm2_isInert(ثابت UNormalizer2 *norm2, UChar32 c);
 
 /**
  * Compares two strings for canonical equivalence.
@@ -619,10 +619,10 @@ unorm2_isInert(const UNormalizer2 *norm2, UChar32 c);
  * @stable ICU 2.2
  */
 U_CAPI int32_t U_EXPORT2
-unorm_compare(const UChar *s1, int32_t length1,
-              const UChar *s2, int32_t length2,
+unorm_compare(ثابت UChar *s1, int32_t length1,
+              ثابت UChar *s2, int32_t length2,
               uint32_t options,
-              UErrorCode *pErrorCode);
+              UError_کد *p_Error_کد);
 
-#endif  /* !UCONFIG_NO_NORMALIZATION */
-#endif  /* __UNORM2_H__ */
+#پایان_اگر  /* !UCONFIG_NO_NORMALIZATION */
+#پایان_اگر  /* __UNORM2_H__ */

@@ -10,13 +10,13 @@
 ******************************************************************************
 */
 
-#ifndef HASH_H
-#define HASH_H
+#اگر_تعریف_نشده HASH_H
+#تعریف_کن HASH_H
 
-#include "unicode/unistr.h"
-#include "unicode/uobject.h"
-#include "cmemory.h"
-#include "uhash.h"
+#ضمن "unicode/unistr.h"
+#ضمن "unicode/uobject.h"
+#ضمن "cmemory.h"
+#ضمن "uhash.h"
 
 U_NAMESPACE_BEGIN
 
@@ -27,21 +27,21 @@ U_NAMESPACE_BEGIN
  *
  * Hashtable is an INTERNAL CLASS.
  */
-class U_COMMON_API Hashtable : public UMemory {
+class U_COMMON_API Hashtable : عام UMemory {
     UHashtable* hash;
     UHashtable hashObj;
 
-    inline void init(UHashFunction *keyHash, UKeyComparator *keyComp, UValueComparator *valueComp, UErrorCode& status);
+    مضمن فراغ init(UHashFunction *کلید_Hash, UKeyComparator *کلید_Comp, UValueComparator *مقدار_Comp, UError_کد& وضعیت);
 
-    inline void initSize(UHashFunction *keyHash, UKeyComparator *keyComp, UValueComparator *valueComp, int32_t size, UErrorCode& status);
+    مضمن فراغ init_اندازه(UHashFunction *کلید_Hash, UKeyComparator *کلید_Comp, UValueComparator *مقدار_Comp, int32_t اندازه_2, UError_کد& وضعیت);
 
-public:
+عام:
     /**
      * Construct a hashtable
      * @param ignoreKeyCase If true, keys are case insensitive.
      * @param status Error code
     */
-    inline Hashtable(UBool ignoreKeyCase, UErrorCode& status);
+    مضمن Hashtable(UBool ignore_کلید_Case, UError_کد& وضعیت);
 
     /**
      * Construct a hashtable
@@ -49,7 +49,7 @@ public:
      * @param size initial size allocation
      * @param status Error code
     */
-    inline Hashtable(UBool ignoreKeyCase, int32_t size, UErrorCode& status);
+    مضمن Hashtable(UBool ignore_کلید_Case, int32_t اندازه_2, UError_کد& وضعیت);
 
     /**
      * Construct a hashtable
@@ -57,211 +57,211 @@ public:
      * @param valueComp Comparator for comparing the values
      * @param status Error code
     */
-    inline Hashtable(UKeyComparator *keyComp, UValueComparator *valueComp, UErrorCode& status);
+    مضمن Hashtable(UKeyComparator *کلید_Comp, UValueComparator *مقدار_Comp, UError_کد& وضعیت);
 
     /**
      * Construct a hashtable
      * @param status Error code
     */
-    inline Hashtable(UErrorCode& status);
+    مضمن Hashtable(UError_کد& وضعیت);
 
     /**
      * Construct a hashtable, _disregarding any error_.  Use this constructor
      * with caution.
      */
-    inline Hashtable();
+    مضمن Hashtable();
 
     /**
      * Non-virtual destructor; make this virtual if Hashtable is subclassed
      * in the future.
      */
-    inline ~Hashtable();
+    مضمن ~Hashtable();
 
-    inline UObjectDeleter *setValueDeleter(UObjectDeleter *fn);
+    مضمن UObjectDeleter *مجموعه_مقدار_Deleter(UObjectDeleter *fn);
 
-    inline int32_t count() const;
+    مضمن int32_t شمار() ثابت;
 
-    inline void* put(const UnicodeString& key, void* value, UErrorCode& status);
+    مضمن فراغ* put(ثابت UnicodeString& کلید, فراغ* مقدار_2, UError_کد& وضعیت);
 
-    inline int32_t puti(const UnicodeString& key, int32_t value, UErrorCode& status);
+    مضمن int32_t puti(ثابت UnicodeString& کلید, int32_t مقدار_2, UError_کد& وضعیت);
 
-    inline int32_t putiAllowZero(const UnicodeString& key, int32_t value, UErrorCode& status);
+    مضمن int32_t putiAllowZero(ثابت UnicodeString& کلید, int32_t مقدار_2, UError_کد& وضعیت);
 
-    inline void* get(const UnicodeString& key) const;
+    مضمن فراغ* get(ثابت UnicodeString& کلید) ثابت;
 
-    inline int32_t geti(const UnicodeString& key) const;
+    مضمن int32_t geti(ثابت UnicodeString& کلید) ثابت;
 
-    inline int32_t getiAndFound(const UnicodeString& key, UBool &found) const;
+    مضمن int32_t geti_And_یافت(ثابت UnicodeString& کلید, UBool &یافت) ثابت;
 
-    inline void* remove(const UnicodeString& key);
+    مضمن فراغ* remove(ثابت UnicodeString& کلید);
 
-    inline int32_t removei(const UnicodeString& key);
+    مضمن int32_t removei(ثابت UnicodeString& کلید);
 
-    inline void removeAll();
+    مضمن فراغ removeAll();
 
-    inline UBool containsKey(const UnicodeString& key) const;
+    مضمن UBool شامل_است_کلید(ثابت UnicodeString& کلید) ثابت;
 
-    inline const UHashElement* find(const UnicodeString& key) const;
+    مضمن ثابت UHashElement* پیدا_کن(ثابت UnicodeString& کلید) ثابت;
 
     /**
      * @param pos - must be UHASH_FIRST on first call, and untouched afterwards.
      * @see uhash_nextElement
      */
-    inline const UHashElement* nextElement(int32_t& pos) const;
+    مضمن ثابت UHashElement* بعدی_Element(int32_t& pos) ثابت;
 
-    inline UKeyComparator* setKeyComparator(UKeyComparator*keyComp);
+    مضمن UKeyComparator* مجموعه_کلید_Comparator(UKeyComparator*کلید_Comp);
 
-    inline UValueComparator* setValueComparator(UValueComparator* valueComp);
+    مضمن UValueComparator* مجموعه_مقدار_Comparator(UValueComparator* مقدار_Comp);
 
-    inline UBool equals(const Hashtable& that) const;
-private:
-    Hashtable(const Hashtable &other) = delete; // forbid copying of this class
-    Hashtable &operator=(const Hashtable &other) = delete; // forbid copying of this class
+    مضمن UBool equals(ثابت Hashtable& that) ثابت;
+خاص:
+    Hashtable(ثابت Hashtable &other) = delete; // forbid copying of this class
+    Hashtable &عملگر=(ثابت Hashtable &other) = delete; // forbid copying of this class
 };
 
 /*********************************************************************
  * Implementation
  ********************************************************************/
 
-inline void Hashtable::init(UHashFunction *keyHash, UKeyComparator *keyComp,
-                            UValueComparator *valueComp, UErrorCode& status) {
-    if (U_FAILURE(status)) {
-        return;
+مضمن فراغ Hashtable::init(UHashFunction *کلید_Hash, UKeyComparator *کلید_Comp,
+                            UValueComparator *مقدار_Comp, UError_کد& وضعیت) {
+    إذا (U_FAILURE(وضعیت)) {
+        أرجع;
     }
-    uhash_init(&hashObj, keyHash, keyComp, valueComp, &status);
-    if (U_SUCCESS(status)) {
+    uhash_init(&hashObj, کلید_Hash, کلید_Comp, مقدار_Comp, &وضعیت);
+    إذا (U_SUCCESS(وضعیت)) {
         hash = &hashObj;
-        uhash_setKeyDeleter(hash, uprv_deleteUObject);
+        uhash_مجموعه_کلید_Deleter(hash, uprv_deleteUObject);
     }
 }
 
-inline void Hashtable::initSize(UHashFunction *keyHash, UKeyComparator *keyComp,
-                                UValueComparator *valueComp, int32_t size, UErrorCode& status) {
-    if (U_FAILURE(status)) {
-        return;
+مضمن فراغ Hashtable::init_اندازه(UHashFunction *کلید_Hash, UKeyComparator *کلید_Comp,
+                                UValueComparator *مقدار_Comp, int32_t اندازه_2, UError_کد& وضعیت) {
+    إذا (U_FAILURE(وضعیت)) {
+        أرجع;
     }
-    uhash_initSize(&hashObj, keyHash, keyComp, valueComp, size, &status);
-    if (U_SUCCESS(status)) {
+    uhash_init_اندازه(&hashObj, کلید_Hash, کلید_Comp, مقدار_Comp, اندازه_2, &وضعیت);
+    إذا (U_SUCCESS(وضعیت)) {
         hash = &hashObj;
-        uhash_setKeyDeleter(hash, uprv_deleteUObject);
+        uhash_مجموعه_کلید_Deleter(hash, uprv_deleteUObject);
     }
 }
 
-inline Hashtable::Hashtable(UKeyComparator *keyComp, UValueComparator *valueComp,
-                 UErrorCode& status) : hash(nullptr) {
-    init( uhash_hashUnicodeString, keyComp, valueComp, status);
+مضمن Hashtable::Hashtable(UKeyComparator *کلید_Comp, UValueComparator *مقدار_Comp,
+                 UError_کد& وضعیت) : hash(nullptr) {
+    init( uhash_hashUnicodeString, کلید_Comp, مقدار_Comp, وضعیت);
 }
 
-inline Hashtable::Hashtable(UBool ignoreKeyCase, UErrorCode& status)
+مضمن Hashtable::Hashtable(UBool ignore_کلید_Case, UError_کد& وضعیت)
  : hash(nullptr)
 {
-    init(ignoreKeyCase ? uhash_hashCaselessUnicodeString
+    init(ignore_کلید_Case ? uhash_hashCaselessUnicodeString
                         : uhash_hashUnicodeString,
-            ignoreKeyCase ? uhash_compareCaselessUnicodeString
+            ignore_کلید_Case ? uhash_compareCaselessUnicodeString
                         : uhash_compareUnicodeString,
             nullptr,
-            status);
+            وضعیت);
 }
 
-inline Hashtable::Hashtable(UBool ignoreKeyCase, int32_t size, UErrorCode& status)
+مضمن Hashtable::Hashtable(UBool ignore_کلید_Case, int32_t اندازه_2, UError_کد& وضعیت)
  : hash(nullptr)
 {
-    initSize(ignoreKeyCase ? uhash_hashCaselessUnicodeString
+    init_اندازه(ignore_کلید_Case ? uhash_hashCaselessUnicodeString
                         : uhash_hashUnicodeString,
-            ignoreKeyCase ? uhash_compareCaselessUnicodeString
+            ignore_کلید_Case ? uhash_compareCaselessUnicodeString
                         : uhash_compareUnicodeString,
-            nullptr, size,
-            status);
+            nullptr, اندازه_2,
+            وضعیت);
 }
 
-inline Hashtable::Hashtable(UErrorCode& status)
+مضمن Hashtable::Hashtable(UError_کد& وضعیت)
  : hash(nullptr)
 {
-    init(uhash_hashUnicodeString, uhash_compareUnicodeString, nullptr, status);
+    init(uhash_hashUnicodeString, uhash_compareUnicodeString, nullptr, وضعیت);
 }
 
-inline Hashtable::Hashtable()
+مضمن Hashtable::Hashtable()
  : hash(nullptr)
 {
-    UErrorCode status = U_ZERO_ERROR;
-    init(uhash_hashUnicodeString, uhash_compareUnicodeString, nullptr, status);
+    UError_کد وضعیت = U_ZERO_ERROR;
+    init(uhash_hashUnicodeString, uhash_compareUnicodeString, nullptr, وضعیت);
 }
 
-inline Hashtable::~Hashtable() {
-    if (hash != nullptr) {
+مضمن Hashtable::~Hashtable() {
+    إذا (hash != nullptr) {
         uhash_close(hash);
     }
 }
 
-inline UObjectDeleter *Hashtable::setValueDeleter(UObjectDeleter *fn) {
-    return uhash_setValueDeleter(hash, fn);
+مضمن UObjectDeleter *Hashtable::مجموعه_مقدار_Deleter(UObjectDeleter *fn) {
+    أرجع uhash_مجموعه_مقدار_Deleter(hash, fn);
 }
 
-inline int32_t Hashtable::count() const {
-    return uhash_count(hash);
+مضمن int32_t Hashtable::شمار() ثابت {
+    أرجع uhash_شمار(hash);
 }
 
-inline void* Hashtable::put(const UnicodeString& key, void* value, UErrorCode& status) {
-    return uhash_put(hash, new UnicodeString(key), value, &status);
+مضمن فراغ* Hashtable::put(ثابت UnicodeString& کلید, فراغ* مقدار_2, UError_کد& وضعیت) {
+    أرجع uhash_put(hash, new UnicodeString(کلید), مقدار_2, &وضعیت);
 }
 
-inline int32_t Hashtable::puti(const UnicodeString& key, int32_t value, UErrorCode& status) {
-    return uhash_puti(hash, new UnicodeString(key), value, &status);
+مضمن int32_t Hashtable::puti(ثابت UnicodeString& کلید, int32_t مقدار_2, UError_کد& وضعیت) {
+    أرجع uhash_puti(hash, new UnicodeString(کلید), مقدار_2, &وضعیت);
 }
 
-inline int32_t Hashtable::putiAllowZero(const UnicodeString& key, int32_t value,
-                                        UErrorCode& status) {
-    return uhash_putiAllowZero(hash, new UnicodeString(key), value, &status);
+مضمن int32_t Hashtable::putiAllowZero(ثابت UnicodeString& کلید, int32_t مقدار_2,
+                                        UError_کد& وضعیت) {
+    أرجع uhash_putiAllowZero(hash, new UnicodeString(کلید), مقدار_2, &وضعیت);
 }
 
-inline void* Hashtable::get(const UnicodeString& key) const {
-    return uhash_get(hash, &key);
+مضمن فراغ* Hashtable::get(ثابت UnicodeString& کلید) ثابت {
+    أرجع uhash_get(hash, &کلید);
 }
 
-inline int32_t Hashtable::geti(const UnicodeString& key) const {
-    return uhash_geti(hash, &key);
+مضمن int32_t Hashtable::geti(ثابت UnicodeString& کلید) ثابت {
+    أرجع uhash_geti(hash, &کلید);
 }
 
-inline int32_t Hashtable::getiAndFound(const UnicodeString& key, UBool &found) const {
-    return uhash_getiAndFound(hash, &key, &found);
+مضمن int32_t Hashtable::geti_And_یافت(ثابت UnicodeString& کلید, UBool &یافت) ثابت {
+    أرجع uhash_geti_And_یافت(hash, &کلید, &یافت);
 }
 
-inline void* Hashtable::remove(const UnicodeString& key) {
-    return uhash_remove(hash, &key);
+مضمن فراغ* Hashtable::remove(ثابت UnicodeString& کلید) {
+    أرجع uhash_remove(hash, &کلید);
 }
 
-inline int32_t Hashtable::removei(const UnicodeString& key) {
-    return uhash_removei(hash, &key);
+مضمن int32_t Hashtable::removei(ثابت UnicodeString& کلید) {
+    أرجع uhash_removei(hash, &کلید);
 }
 
-inline UBool Hashtable::containsKey(const UnicodeString& key) const {
-    return uhash_containsKey(hash, &key);
+مضمن UBool Hashtable::شامل_است_کلید(ثابت UnicodeString& کلید) ثابت {
+    أرجع uhash_شامل_است_کلید(hash, &کلید);
 }
 
-inline const UHashElement* Hashtable::find(const UnicodeString& key) const {
-    return uhash_find(hash, &key);
+مضمن ثابت UHashElement* Hashtable::پیدا_کن(ثابت UnicodeString& کلید) ثابت {
+    أرجع uhash_پیدا_کن(hash, &کلید);
 }
 
-inline const UHashElement* Hashtable::nextElement(int32_t& pos) const {
-    return uhash_nextElement(hash, &pos);
+مضمن ثابت UHashElement* Hashtable::بعدی_Element(int32_t& pos) ثابت {
+    أرجع uhash_بعدی_Element(hash, &pos);
 }
 
-inline void Hashtable::removeAll() {
+مضمن فراغ Hashtable::removeAll() {
     uhash_removeAll(hash);
 }
 
-inline UKeyComparator* Hashtable::setKeyComparator(UKeyComparator*keyComp){
-    return uhash_setKeyComparator(hash, keyComp);
+مضمن UKeyComparator* Hashtable::مجموعه_کلید_Comparator(UKeyComparator*کلید_Comp){
+    أرجع uhash_مجموعه_کلید_Comparator(hash, کلید_Comp);
 }
 
-inline UValueComparator* Hashtable::setValueComparator(UValueComparator* valueComp){
-    return uhash_setValueComparator(hash, valueComp);
+مضمن UValueComparator* Hashtable::مجموعه_مقدار_Comparator(UValueComparator* مقدار_Comp){
+    أرجع uhash_مجموعه_مقدار_Comparator(hash, مقدار_Comp);
 }
 
-inline UBool Hashtable::equals(const Hashtable& that)const{
-   return uhash_equals(hash, that.hash);
+مضمن UBool Hashtable::equals(ثابت Hashtable& that)ثابت{
+   أرجع uhash_equals(hash, that.hash);
 }
-U_NAMESPACE_END
+U_NAMESPACE_انتها
 
-#endif
+#پایان_اگر
 

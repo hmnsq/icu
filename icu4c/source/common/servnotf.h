@@ -6,12 +6,12 @@
  * others. All Rights Reserved.                                                *
  *******************************************************************************
  */
-#ifndef ICUNOTIF_H
-#define ICUNOTIF_H
+#اگر_تعریف_نشده ICUNOTIF_H
+#تعریف_کن ICUNOTIF_H
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if UCONFIG_NO_SERVICE
+#إذا UCONFIG_NO_SERVICE
 
 U_NAMESPACE_BEGIN
 
@@ -21,37 +21,37 @@ U_NAMESPACE_BEGIN
  */
 class ICUNotifier;
 
-U_NAMESPACE_END
+U_NAMESPACE_انتها
 
-#else
+#وإلا
 
-#include "unicode/uobject.h"
-#include "unicode/unistr.h"
+#ضمن "unicode/uobject.h"
+#ضمن "unicode/unistr.h"
 
-#include "mutex.h"
-#include "uvector.h"
+#ضمن "mutex.h"
+#ضمن "uvector.h"
 
 U_NAMESPACE_BEGIN
 
-class U_COMMON_API EventListener : public UObject {
-public: 
-    virtual ~EventListener();
+class U_COMMON_API EventListener : عام UObject {
+عام: 
+    مجازی ~EventListener();
 
-public:
-    static UClassID U_EXPORT2 getStaticClassID();
+عام:
+    ساكن UClassID U_EXPORT2 getStaticClassID();
 
-    virtual UClassID getDynamicClassID() const override;
+    مجازی UClassID getDynamicClassID() ثابت override;
 
-public:
-#ifdef SERVICE_DEBUG
-    virtual UnicodeString& debug(UnicodeString& result) const {
-      return debugClass(result);
+عام:
+#اگر_تعریف_شده SERVICE_DEBUG
+    مجازی UnicodeString& debug(UnicodeString& نتیجه) ثابت {
+      أرجع debugClass(نتیجه);
     }
 
-    virtual UnicodeString& debugClass(UnicodeString& result) const {
-      return result.append((UnicodeString)"Key");
+    مجازی UnicodeString& debugClass(UnicodeString& نتیجه) ثابت {
+      أرجع نتیجه.append((UnicodeString)"Key");
     }
-#endif
+#پایان_اگر
 };
 
 /**
@@ -71,13 +71,13 @@ public:
  * type and call the appropriate method on the listener.
  */
 
-class U_COMMON_API ICUNotifier : public UMemory  {
-private: UVector* listeners;
+class U_COMMON_API ICUNotifier : عام UMemory  {
+خاص: UVector* listeners;
          
-public: 
+عام: 
     ICUNotifier();
     
-    virtual ~ICUNotifier();
+    مجازی ~ICUNotifier();
     
     /**
      * Add a listener to be notified when notifyChanged is called.
@@ -86,14 +86,14 @@ public:
      * register the identical listener more than once will be
      * silently ignored.  
      */
-    virtual void addListener(const EventListener* l, UErrorCode& status);
+    مجازی فراغ جمع_کن_Listener(ثابت EventListener* l, UError_کد& وضعیت);
     
     /**
      * Stop notifying this listener.  The listener must
      * not be null. Attempts to remove a listener that is
      * not registered will be silently ignored.
      */
-    virtual void removeListener(const EventListener* l, UErrorCode& status);
+    مجازی فراغ removeListener(ثابت EventListener* l, UError_کد& وضعیت);
     
     /**
      * ICU doesn't spawn its own threads.  All listeners are notified in
@@ -101,25 +101,25 @@ public:
      * indefinitely block the calling thread.  Callers should beware of
      * deadlock situations.  
      */
-    virtual void notifyChanged();
+    مجازی فراغ notify_تغییریافته();
     
-protected: 
+محمي: 
     /**
      * Subclasses implement this to return true if the listener is
      * of the appropriate type.
      */
-    virtual UBool acceptsListener(const EventListener& l) const = 0;
+    مجازی UBool میپذیرد_Listener(ثابت EventListener& l) ثابت = 0;
     
     /**
      * Subclasses implement this to notify the listener.
      */
-    virtual void notifyListener(EventListener& l) const = 0;
+    مجازی فراغ notifyListener(EventListener& l) ثابت = 0;
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_انتها
 
 /* UCONFIG_NO_SERVICE */
-#endif
+#پایان_اگر
 
 /* ICUNOTIF_H */
-#endif
+#پایان_اگر

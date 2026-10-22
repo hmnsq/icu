@@ -16,31 +16,31 @@
 *   created by: Markus W. Scherer
 */
 
-#include "unicode/utypes.h"  /* U_PLATFORM etc. */
+#ضمن "unicode/utypes.h"  /* U_PLATFORM etc. */
 
-#ifdef __GNUC__
+#اگر_تعریف_شده __GNUC__
 /* if gcc
 #define ATTRIBUTE_WEAK __attribute__ ((weak))
 might have to #include some other header
 */
-#endif
+#پایان_اگر
 
-#include "unicode/putil.h"
-#include "unicode/udata.h"
-#include "unicode/uversion.h"
-#include "charstr.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "mutex.h"
-#include "putilimp.h"
-#include "restrace.h"
-#include "uassert.h"
-#include "ucln_cmn.h"
-#include "ucmndata.h"
-#include "udatamem.h"
-#include "uhash.h"
-#include "umapfile.h"
-#include "umutex.h"
+#ضمن "unicode/putil.h"
+#ضمن "unicode/udata.h"
+#ضمن "unicode/uversion.h"
+#ضمن "charstr.h"
+#ضمن "cmemory.h"
+#ضمن "cstring.h"
+#ضمن "mutex.h"
+#ضمن "putilimp.h"
+#ضمن "restrace.h"
+#ضمن "uassert.h"
+#ضمن "ucln_cmn.h"
+#ضمن "ucmndata.h"
+#ضمن "udatamem.h"
+#ضمن "uhash.h"
+#ضمن "umapfile.h"
+#ضمن "umutex.h"
 
 /***********************************************************************
 *
@@ -71,16 +71,16 @@ might have to #include some other header
 /* If you are excruciatingly bored turn this on .. */
 /* #define UDATA_DEBUG 1 */
 
-#if defined(UDATA_DEBUG)
+#إذا defined(UDATA_DEBUG)
 #   include <stdio.h>
-#endif
+#پایان_اگر
 
 U_NAMESPACE_USE
 
 /*
  *  Forward declarations
  */
-static UDataMemory *udata_findCachedData(const char *path, UErrorCode &err);
+ساكن UData_حافظه *udata_پیدا_کن_Cached_داده(ثابت حرف *مسیر, UError_کد &err);
 
 /***********************************************************************
 *
@@ -104,150 +104,150 @@ static UDataMemory *udata_findCachedData(const char *path, UErrorCode &err);
  * that they really need, reducing the size of binaries that take advantage
  * of this.
  */
-static UDataMemory *gCommonICUDataArray[10] = { nullptr };   // Access protected by icu global mutex.
+ساكن UData_حافظه *gCommonICUDataArray[10] = { اشاره_تهی };   // Access protected by icu global mutex.
 
-static u_atomic_int32_t gHaveTriedToLoadCommonData {0};  //  See extendICUData().
+ساكن u_atomic_int32_t g_Have_Tried_مقصد_بارگیری_Common_داده {0};  //  See extendICUData().
 
-static UHashtable  *gCommonDataCache = nullptr;  /* Global hash table of opened ICU data files.  */
-static icu::UInitOnce gCommonDataCacheInitOnce {};
+ساكن UHashtable  *g_Common_داده_Cache = اشاره_تهی;  /* Global hash table of opened ICU data files.  */
+ساكن icu::UInitOnce g_Common_داده_Cache_Init_Once {};
 
-#if !defined(ICU_DATA_DIR_WINDOWS)
-static UDataFileAccess  gDataFileAccess = UDATA_DEFAULT_ACCESS;  // Access not synchronized.
+#إذا !defined(ICU_داده_DIR_WINDOWS)
+ساكن UDataFileAccess  g_داده_File_Access = UDATA_DEFAULT_ACCESS;  // Access not synchronized.
                                                                  // Modifying is documented as thread-unsafe.
-#else
+#وإلا
 // If we are using the Windows data directory, then look in one spot only.
-static UDataFileAccess  gDataFileAccess = UDATA_NO_FILES;
-#endif
+ساكن UDataFileAccess  g_داده_File_Access = UDATA_NO_FILES;
+#پایان_اگر
 
-static UBool U_CALLCONV
+ساكن UBool U_CALLCONV
 udata_cleanup()
 {
     int32_t i;
 
-    if (gCommonDataCache) {             /* Delete the cache of user data mappings.  */
-        uhash_close(gCommonDataCache);  /*   Table owns the contents, and will delete them. */
-        gCommonDataCache = nullptr;        /*   Cleanup is not thread safe.                */
+    إذا (g_Common_داده_Cache) {             /* Delete the cache of user data mappings.  */
+        uhash_close(g_Common_داده_Cache);  /*   Table owns the contents, and will delete them. */
+        g_Common_داده_Cache = اشاره_تهی;        /*   Cleanup is not thread safe.                */
     }
-    gCommonDataCacheInitOnce.reset();
+    g_Common_داده_Cache_Init_Once.reset();
 
-    for (i = 0; i < UPRV_LENGTHOF(gCommonICUDataArray) && gCommonICUDataArray[i] != nullptr; ++i) {
+    لكل (i = 0; i < UPRV_LENGTHOF(gCommonICUDataArray) && gCommonICUDataArray[i] != اشاره_تهی; ++i) {
         udata_close(gCommonICUDataArray[i]);
-        gCommonICUDataArray[i] = nullptr;
+        gCommonICUDataArray[i] = اشاره_تهی;
     }
-    gHaveTriedToLoadCommonData = 0;
+    g_Have_Tried_مقصد_بارگیری_Common_داده = 0;
 
-    return true;                   /* Everything was cleaned up */
+    أرجع درست;                   /* Everything was cleaned up */
 }
 
-static UBool U_CALLCONV
-findCommonICUDataByName(const char *inBasename, UErrorCode &err)
+ساكن UBool U_CALLCONV
+پیدا_کن_Common_ICUData_By_Name(ثابت حرف *درون_Basename, UError_کد &err)
 {
-    UBool found = false;
+    UBool یافت = خطأ;
     int32_t i;
 
-    UDataMemory  *pData = udata_findCachedData(inBasename, err);
-    if (U_FAILURE(err) || pData == nullptr)
-        return false;
+    UData_حافظه  *p_داده = udata_پیدا_کن_Cached_داده(درون_Basename, err);
+    إذا (U_FAILURE(err) || p_داده == اشاره_تهی)
+        أرجع خطأ;
 
     {
-        Mutex lock;
-        for (i = 0; i < UPRV_LENGTHOF(gCommonICUDataArray); ++i) {
-            if ((gCommonICUDataArray[i] != nullptr) && (gCommonICUDataArray[i]->pHeader == pData->pHeader)) {
+        Mutex قفل;
+        لكل (i = 0; i < UPRV_LENGTHOF(gCommonICUDataArray); ++i) {
+            إذا ((gCommonICUDataArray[i] != اشاره_تهی) && (gCommonICUDataArray[i]->p_سرآیند == p_داده->p_سرآیند)) {
                 /* The data pointer is already in the array. */
-                found = true;
-                break;
+                یافت = درست;
+                اكسر;
             }
         }
     }
-    return found;
+    أرجع یافت;
 }
 
 
 /*
  * setCommonICUData.   Set a UDataMemory to be the global ICU Data
  */
-static UBool
-setCommonICUData(UDataMemory *pData,     /*  The new common data.  Belongs to caller, we copy it. */
+ساكن UBool
+مجموعه_Common_ICUData(UData_حافظه *p_داده,     /*  The new common data.  Belongs to caller, we copy it. */
                  UBool       warn,       /*  If true, set USING_DEFAULT warning if ICUData was    */
                                          /*    changed by another thread before we got to it.     */
-                 UErrorCode *pErr)
+                 UError_کد *pErr)
 {
-    UDataMemory  *newCommonData = UDataMemory_createNewInstance(pErr);
+    UData_حافظه  *new_Common_داده = UData_حافظه_create_New_Instance(pErr);
     int32_t i;
-    UBool didUpdate = false;
-    if (U_FAILURE(*pErr)) {
-        return false;
+    UBool didUpdate = خطأ;
+    إذا (U_FAILURE(*pErr)) {
+        أرجع خطأ;
     }
 
     /*  For the assignment, other threads must cleanly see either the old            */
     /*    or the new, not some partially initialized new.  The old can not be        */
     /*    deleted - someone may still have a pointer to it lying around in           */
     /*    their locals.                                                              */
-    UDatamemory_assign(newCommonData, pData);
-    umtx_lock(nullptr);
-    for (i = 0; i < UPRV_LENGTHOF(gCommonICUDataArray); ++i) {
-        if (gCommonICUDataArray[i] == nullptr) {
-            gCommonICUDataArray[i] = newCommonData;
-            didUpdate = true;
-            break;
-        } else if (gCommonICUDataArray[i]->pHeader == pData->pHeader) {
+    UDatamemory_تخصیص_بده(new_Common_داده, p_داده);
+    umtx_قفل(اشاره_تهی);
+    لكل (i = 0; i < UPRV_LENGTHOF(gCommonICUDataArray); ++i) {
+        إذا (gCommonICUDataArray[i] == اشاره_تهی) {
+            gCommonICUDataArray[i] = new_Common_داده;
+            didUpdate = درست;
+            اكسر;
+        } وإلا إذا (gCommonICUDataArray[i]->p_سرآیند == p_داده->p_سرآیند) {
             /* The same data pointer is already in the array. */
-            break;
+            اكسر;
         }
     }
-    umtx_unlock(nullptr);
+    umtx_unlock(اشاره_تهی);
 
-    if (i == UPRV_LENGTHOF(gCommonICUDataArray) && warn) {
+    إذا (i == UPRV_LENGTHOF(gCommonICUDataArray) && warn) {
         *pErr = U_USING_DEFAULT_WARNING;
     }
-    if (didUpdate) {
-        ucln_common_registerCleanup(UCLN_COMMON_UDATA, udata_cleanup);
-    } else {
-        uprv_free(newCommonData);
+    إذا (didUpdate) {
+        ucln_common_ثبات_Cleanup(UCLN_COMMON_UDATA, udata_cleanup);
+    } وإلا {
+        uprv_free(new_Common_داده);
     }
-    return didUpdate;
+    أرجع didUpdate;
 }
 
-#if !defined(ICU_DATA_DIR_WINDOWS)
+#إذا !defined(ICU_داده_DIR_WINDOWS)
 
-static UBool
-setCommonICUDataPointer(const void *pData, UBool /*warn*/, UErrorCode *pErrorCode) {
-    UDataMemory tData;
-    UDataMemory_init(&tData);
-    UDataMemory_setData(&tData, pData);
-    udata_checkCommonData(&tData, pErrorCode);
-    return setCommonICUData(&tData, false, pErrorCode);
+ساكن UBool
+مجموعه_Common_ICUData_اشاره_گر(ثابت فراغ *p_داده, UBool /*warn*/, UError_کد *p_Error_کد) {
+    UData_حافظه t_داده;
+    UData_حافظه_init(&t_داده);
+    UData_حافظه_مجموعه_داده(&t_داده, p_داده);
+    udata_check_Common_داده(&t_داده, p_Error_کد);
+    أرجع مجموعه_Common_ICUData(&t_داده, خطأ, p_Error_کد);
 }
 
-#endif
+#پایان_اگر
 
-static const char *
-findBasename(const char *path) {
-    const char *basename=uprv_strrchr(path, U_FILE_SEP_CHAR);
-    if(basename==nullptr) {
-        return path;
-    } else {
-        return basename+1;
+ساكن ثابت حرف *
+پیدا_کن_Basename(ثابت حرف *مسیر) {
+    ثابت حرف *basename=uprv_strrchr(مسیر, U_FILE_SEP_CHAR);
+    إذا(basename==اشاره_تهی) {
+        أرجع مسیر;
+    } وإلا {
+        أرجع basename+1;
     }
 }
 
-#ifdef UDATA_DEBUG
-static const char *
-packageNameFromPath(const char *path)
+#اگر_تعریف_شده UDATA_DEBUG
+ساكن ثابت حرف *
+package_Name_From_مسیر(ثابت حرف *مسیر)
 {
-    if((path == nullptr) || (*path == 0)) {
-        return U_ICUDATA_NAME;
+    إذا((مسیر == اشاره_تهی) || (*مسیر == 0)) {
+        أرجع U_ICUDATA_NAME;
     }
 
-    path = findBasename(path);
+    مسیر = پیدا_کن_Basename(مسیر);
 
-    if((path == nullptr) || (*path == 0)) {
-        return U_ICUDATA_NAME;
+    إذا((مسیر == اشاره_تهی) || (*مسیر == 0)) {
+        أرجع U_ICUDATA_NAME;
     }
 
-    return path;
+    أرجع مسیر;
 }
-#endif
+#پایان_اگر
 
 /*----------------------------------------------------------------------*
  *                                                                      *
@@ -261,10 +261,10 @@ packageNameFromPath(const char *path)
  *                                                                      *
  *----------------------------------------------------------------------*/
 
-typedef struct DataCacheElement {
-    char          *name;
-    UDataMemory   *item;
-} DataCacheElement;
+تعريفنوع بنية داده_Cache_Element {
+    حرف          *name;
+    UData_حافظه   *قلم;
+} داده_Cache_Element;
 
 
 
@@ -273,130 +273,130 @@ typedef struct DataCacheElement {
  *         udata cleanup function closes the hash table; hash table in turn calls back to
  *         here for each entry.
  */
-static void U_CALLCONV DataCacheElement_deleter(void *pDCEl) {
-    DataCacheElement* p = static_cast<DataCacheElement*>(pDCEl);
-    udata_close(p->item);              /* unmaps storage */
+ساكن فراغ U_CALLCONV داده_Cache_Element_deleter(فراغ *pDCEl) {
+    داده_Cache_Element* p = static_cast<داده_Cache_Element*>(pDCEl);
+    udata_close(p->قلم);              /* unmaps storage */
     uprv_free(p->name);                /* delete the hash key string. */
     uprv_free(pDCEl);                  /* delete 'this'          */
 }
 
-static void U_CALLCONV udata_initHashTable(UErrorCode &err) {
-    U_ASSERT(gCommonDataCache == nullptr);
-    gCommonDataCache = uhash_open(uhash_hashChars, uhash_compareChars, nullptr, &err);
-    if (U_FAILURE(err)) {
-       return;
+ساكن فراغ U_CALLCONV udata_init_Hash_جدول(UError_کد &err) {
+    U_ASSERT(g_Common_داده_Cache == اشاره_تهی);
+    g_Common_داده_Cache = uhash_open(uhash_hashChars, uhash_compareChars, اشاره_تهی, &err);
+    إذا (U_FAILURE(err)) {
+       أرجع;
     }
-    U_ASSERT(gCommonDataCache != nullptr);
-    uhash_setValueDeleter(gCommonDataCache, DataCacheElement_deleter);
-    ucln_common_registerCleanup(UCLN_COMMON_UDATA, udata_cleanup);
+    U_ASSERT(g_Common_داده_Cache != اشاره_تهی);
+    uhash_مجموعه_مقدار_Deleter(g_Common_داده_Cache, داده_Cache_Element_deleter);
+    ucln_common_ثبات_Cleanup(UCLN_COMMON_UDATA, udata_cleanup);
 }
 
  /*   udata_getCacheHashTable()
   *     Get the hash table used to store the data cache entries.
   *     Lazy create it if it doesn't yet exist.
   */
-static UHashtable *udata_getHashTable(UErrorCode &err) {
-    umtx_initOnce(gCommonDataCacheInitOnce, &udata_initHashTable, err);
-    return gCommonDataCache;
+ساكن UHashtable *udata_get_Hash_جدول(UError_کد &err) {
+    umtx_initOnce(g_Common_داده_Cache_Init_Once, &udata_init_Hash_جدول, err);
+    أرجع g_Common_داده_Cache;
 }
 
 
 
-static UDataMemory *udata_findCachedData(const char *path, UErrorCode &err)
+ساكن UData_حافظه *udata_پیدا_کن_Cached_داده(ثابت حرف *مسیر, UError_کد &err)
 {
     UHashtable        *htable;
-    UDataMemory       *retVal = nullptr;
-    DataCacheElement  *el;
-    const char        *baseName;
+    UData_حافظه       *retVal = اشاره_تهی;
+    داده_Cache_Element  *el;
+    ثابت حرف        *پایه_Name;
 
-    htable = udata_getHashTable(err);
-    if (U_FAILURE(err)) {
-        return nullptr;
+    htable = udata_get_Hash_جدول(err);
+    إذا (U_FAILURE(err)) {
+        أرجع اشاره_تهی;
     }
 
-    baseName = findBasename(path);   /* Cache remembers only the base name, not the full path. */
-    umtx_lock(nullptr);
-    el = static_cast<DataCacheElement*>(uhash_get(htable, baseName));
-    umtx_unlock(nullptr);
-    if (el != nullptr) {
-        retVal = el->item;
+    پایه_Name = پیدا_کن_Basename(مسیر);   /* Cache remembers only the base name, not the full path. */
+    umtx_قفل(اشاره_تهی);
+    el = static_cast<داده_Cache_Element*>(uhash_get(htable, پایه_Name));
+    umtx_unlock(اشاره_تهی);
+    إذا (el != اشاره_تهی) {
+        retVal = el->قلم;
     }
-#ifdef UDATA_DEBUG
-    fprintf(stderr, "Cache: [%s] -> %p\n", baseName, (void*) retVal);
-#endif
-    return retVal;
+#اگر_تعریف_شده UDATA_DEBUG
+    fprintf(stderr, "Cache: [%s] -> %p\n", پایه_Name, (فراغ*) retVal);
+#پایان_اگر
+    أرجع retVal;
 }
 
 
-static UDataMemory *udata_cacheDataItem(const char *path, UDataMemory *item, UErrorCode *pErr) {
-    DataCacheElement *newElement;
-    const char       *baseName;
+ساكن UData_حافظه *udata_cache_داده_قلم(ثابت حرف *مسیر, UData_حافظه *قلم, UError_کد *pErr) {
+    داده_Cache_Element *newElement;
+    ثابت حرف       *پایه_Name;
     int32_t           nameLen;
     UHashtable       *htable;
-    DataCacheElement *oldValue = nullptr;
-    UErrorCode        subErr = U_ZERO_ERROR;
+    داده_Cache_Element *old_مقدار = اشاره_تهی;
+    UError_کد        subErr = U_ZERO_ERROR;
 
-    htable = udata_getHashTable(*pErr);
-    if (U_FAILURE(*pErr)) {
-        return nullptr;
+    htable = udata_get_Hash_جدول(*pErr);
+    إذا (U_FAILURE(*pErr)) {
+        أرجع اشاره_تهی;
     }
 
     /* Create a new DataCacheElement - the thingy we store in the hash table -
      * and copy the supplied path and UDataMemoryItems into it.
      */
-    newElement = static_cast<DataCacheElement*>(uprv_malloc(sizeof(DataCacheElement)));
-    if (newElement == nullptr) {
-        *pErr = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+    newElement = static_cast<داده_Cache_Element*>(uprv_malloc(حجم(داده_Cache_Element)));
+    إذا (newElement == اشاره_تهی) {
+        *pErr = U_حافظه_تخصیص_ERROR;
+        أرجع اشاره_تهی;
     }
-    newElement->item = UDataMemory_createNewInstance(pErr);
-    if (U_FAILURE(*pErr)) {
+    newElement->قلم = UData_حافظه_create_New_Instance(pErr);
+    إذا (U_FAILURE(*pErr)) {
         uprv_free(newElement);
-        return nullptr;
+        أرجع اشاره_تهی;
     }
-    UDatamemory_assign(newElement->item, item);
+    UDatamemory_تخصیص_بده(newElement->قلم, قلم);
 
-    baseName = findBasename(path);
-    nameLen = static_cast<int32_t>(uprv_strlen(baseName));
-    newElement->name = static_cast<char*>(uprv_malloc(nameLen + 1));
-    if (newElement->name == nullptr) {
-        *pErr = U_MEMORY_ALLOCATION_ERROR;
-        uprv_free(newElement->item);
+    پایه_Name = پیدا_کن_Basename(مسیر);
+    nameLen = static_cast<int32_t>(uprv_strlen(پایه_Name));
+    newElement->name = static_cast<حرف*>(uprv_malloc(nameLen + 1));
+    إذا (newElement->name == اشاره_تهی) {
+        *pErr = U_حافظه_تخصیص_ERROR;
+        uprv_free(newElement->قلم);
         uprv_free(newElement);
-        return nullptr;
+        أرجع اشاره_تهی;
     }
-    uprv_strcpy(newElement->name, baseName);
+    uprv_strcpy(newElement->name, پایه_Name);
 
     /* Stick the new DataCacheElement into the hash table.
     */
-    umtx_lock(nullptr);
-    oldValue = static_cast<DataCacheElement*>(uhash_get(htable, path));
-    if (oldValue != nullptr) {
+    umtx_قفل(اشاره_تهی);
+    old_مقدار = static_cast<داده_Cache_Element*>(uhash_get(htable, مسیر));
+    إذا (old_مقدار != اشاره_تهی) {
         subErr = U_USING_DEFAULT_WARNING;
     }
-    else {
+    وإلا {
         uhash_put(
             htable,
             newElement->name,               /* Key   */
             newElement,                     /* Value */
             &subErr);
     }
-    umtx_unlock(nullptr);
+    umtx_unlock(اشاره_تهی);
 
-#ifdef UDATA_DEBUG
+#اگر_تعریف_شده UDATA_DEBUG
     fprintf(stderr, "Cache: [%s] <<< %p : %s. vFunc=%p\n", newElement->name, 
-    (void*) newElement->item, u_errorName(subErr), (void*) newElement->item->vFuncs);
-#endif
+    (فراغ*) newElement->قلم, u_errorName(subErr), (فراغ*) newElement->قلم->vFuncs);
+#پایان_اگر
 
-    if (subErr == U_USING_DEFAULT_WARNING || U_FAILURE(subErr)) {
+    إذا (subErr == U_USING_DEFAULT_WARNING || U_FAILURE(subErr)) {
         *pErr = subErr; /* copy sub err unto fillin ONLY if something happens. */
         uprv_free(newElement->name);
-        uprv_free(newElement->item);
+        uprv_free(newElement->قلم);
         uprv_free(newElement);
-        return oldValue ? oldValue->item : nullptr;
+        أرجع old_مقدار ? old_مقدار->قلم : اشاره_تهی;
     }
 
-    return newElement->item;
+    أرجع newElement->قلم;
 }
 
 /*----------------------------------------------------------------------*==============
@@ -408,28 +408,28 @@ static UDataMemory *udata_cacheDataItem(const char *path, UDataMemory *item, UEr
 
 U_NAMESPACE_BEGIN
 
-class UDataPathIterator
+صنف UData_مسیر_Iterator
 {
-public:
-    UDataPathIterator(const char *path, const char *pkg,
-                      const char *item, const char *suffix, UBool doCheckLastFour,
-                      UErrorCode *pErrorCode);
-    const char *next(UErrorCode *pErrorCode);
+عام:
+    UData_مسیر_Iterator(ثابت حرف *مسیر, ثابت حرف *pkg,
+                      ثابت حرف *قلم, ثابت حرف *suffix, UBool do_Check_آخرین_Four,
+                      UError_کد *p_Error_کد);
+    ثابت حرف *next(UError_کد *p_Error_کد);
 
-private:
-    const char *path;                              /* working path (u_icudata_Dir) */
-    const char *nextPath;                          /* path following this one */
-    const char *basename;                          /* item's basename (icudt22e_mt.res)*/
+خاص:
+    ثابت حرف *مسیر;                              /* working path (u_icudata_Dir) */
+    ثابت حرف *بعدی_مسیر;                          /* path following this one */
+    ثابت حرف *basename;                          /* item's basename (icudt22e_mt.res)*/
 
     StringPiece suffix;                            /* item suffix (can be null) */
 
     uint32_t    basenameLen;                       /* length of basename */
 
-    CharString  itemPath;                          /* path passed in with item name */
-    CharString  pathBuffer;                        /* output path for this it'ion */
+    CharString  قلم_مسیر;                          /* path passed in with item name */
+    CharString  مسیر_میانگیر;                        /* output path for this it'ion */
     CharString  packageStub;                       /* example:  "/icudt28b". Will ignore that leaf in set paths. */
 
-    UBool       checkLastFour;                     /* if true then allow paths such as '/foo/myapp.dat'
+    UBool       check_آخرین_Four;                     /* if true then allow paths such as '/foo/myapp.dat'
                                                     * to match, checks last 4 chars of suffix with
                                                     * last 4 of path, then previous chars. */
 };
@@ -445,64 +445,64 @@ private:
  *  Note: inSuffix may also be the 'item' being searched for as well, (ex: "ibm-5348_P100-1997.cnv"), in which case 
  *        the 'item' parameter is often the same as pkg. (Though sometimes might have a tree part as well, ex: "icudt62l-curr").
  */
-UDataPathIterator::UDataPathIterator(const char *inPath, const char *pkg,
-                                     const char *item, const char *inSuffix, UBool doCheckLastFour,
-                                     UErrorCode *pErrorCode)
+UData_مسیر_Iterator::UData_مسیر_Iterator(ثابت حرف *درون_مسیر, ثابت حرف *pkg,
+                                     ثابت حرف *قلم, ثابت حرف *درون_Suffix, UBool do_Check_آخرین_Four,
+                                     UError_کد *p_Error_کد)
 {
-#ifdef UDATA_DEBUG
-        fprintf(stderr, "SUFFIX1=%s PATH=%s\n", inSuffix, inPath);
-#endif
+#اگر_تعریف_شده UDATA_DEBUG
+        fprintf(stderr, "SUFFIX1=%s PATH=%s\n", درون_Suffix, درون_مسیر);
+#پایان_اگر
     /** Path **/
-    if(inPath == nullptr) {
-        path = u_getDataDirectory();
-    } else {
-        path = inPath;
+    إذا(درون_مسیر == اشاره_تهی) {
+        مسیر = u_get_داده_Directory();
+    } وإلا {
+        مسیر = درون_مسیر;
     }
 
     /** Package **/
-    if(pkg != nullptr) {
-      packageStub.append(U_FILE_SEP_CHAR, *pErrorCode).append(pkg, *pErrorCode);
-#ifdef UDATA_DEBUG
-      fprintf(stderr, "STUB=%s [%d]\n", packageStub.data(), packageStub.length());
-#endif
+    إذا(pkg != اشاره_تهی) {
+      packageStub.append(U_FILE_SEP_CHAR, *p_Error_کد).append(pkg, *p_Error_کد);
+#اگر_تعریف_شده UDATA_DEBUG
+      fprintf(stderr, "STUB=%s [%d]\n", packageStub.داده(), packageStub.length());
+#پایان_اگر
     }
 
     /** Item **/
-    basename = findBasename(item);
+    basename = پیدا_کن_Basename(قلم);
     basenameLen = static_cast<int32_t>(uprv_strlen(basename));
 
     /** Item path **/
-    if(basename == item) {
-        nextPath = path;
-    } else {
-        itemPath.append(item, static_cast<int32_t>(basename - item), *pErrorCode);
-        nextPath = itemPath.data();
+    إذا(basename == قلم) {
+        بعدی_مسیر = مسیر;
+    } وإلا {
+        قلم_مسیر.append(قلم, static_cast<int32_t>(basename - قلم), *p_Error_کد);
+        بعدی_مسیر = قلم_مسیر.داده();
     }
-#ifdef UDATA_DEBUG
-    fprintf(stderr, "SUFFIX=%s [%p]\n", inSuffix, (void*) inSuffix);
-#endif
+#اگر_تعریف_شده UDATA_DEBUG
+    fprintf(stderr, "SUFFIX=%s [%p]\n", درون_Suffix, (فراغ*) درون_Suffix);
+#پایان_اگر
 
     /** Suffix  **/
-    if(inSuffix != nullptr) {
-        suffix = inSuffix;
-    } else {
+    إذا(درون_Suffix != اشاره_تهی) {
+        suffix = درون_Suffix;
+    } وإلا {
         suffix = "";
     }
 
-    checkLastFour = doCheckLastFour;
+    check_آخرین_Four = do_Check_آخرین_Four;
 
     /* pathBuffer will hold the output path strings returned by this iterator */
 
-#ifdef UDATA_DEBUG
+#اگر_تعریف_شده UDATA_DEBUG
     fprintf(stderr, "0: init %s -> [path=%s], [base=%s], [suff=%s], [itempath=%s], [nextpath=%s], [checklast4=%s]\n",
-            item,
-            path,
+            قلم,
+            مسیر,
             basename,
-            suffix.data(),
-            itemPath.data(),
-            nextPath,
-            checkLastFour?"true":"false");
-#endif
+            suffix.داده(),
+            قلم_مسیر.داده(),
+            بعدی_مسیر,
+            check_آخرین_Four?"true":"false");
+#پایان_اگر
 }
 
 /**
@@ -512,124 +512,124 @@ UDataPathIterator::UDataPathIterator(const char *inPath, const char *pkg,
  * @param len  If set, pointer to the length of the returned path, for convenience. 
  * @return Pointer to the next path segment, or nullptr if there are no more.
  */
-const char *UDataPathIterator::next(UErrorCode *pErrorCode)
+ثابت حرف *UData_مسیر_Iterator::next(UError_کد *p_Error_کد)
 {
-    if(U_FAILURE(*pErrorCode)) {
-        return nullptr;
+    إذا(U_FAILURE(*p_Error_کد)) {
+        أرجع اشاره_تهی;
     }
 
-    const char *currentPath = nullptr;
-    int32_t     pathLen = 0;
-    const char *pathBasename;
+    ثابت حرف *current_مسیر = اشاره_تهی;
+    int32_t     مسیر_Len = 0;
+    ثابت حرف *مسیر_Basename;
 
-    do
+    افعل
     {
-        if( nextPath == nullptr ) {
-            break;
+        إذا( بعدی_مسیر == اشاره_تهی ) {
+            اكسر;
         }
-        currentPath = nextPath;
+        current_مسیر = بعدی_مسیر;
 
-        if(nextPath == itemPath.data()) { /* we were processing item's path. */
-            nextPath = path; /* start with regular path next tm. */
-            pathLen = static_cast<int32_t>(uprv_strlen(currentPath));
-        } else {
+        إذا(بعدی_مسیر == قلم_مسیر.داده()) { /* we were processing item's path. */
+            بعدی_مسیر = مسیر; /* start with regular path next tm. */
+            مسیر_Len = static_cast<int32_t>(uprv_strlen(current_مسیر));
+        } وإلا {
             /* fix up next for next time */
-            nextPath = uprv_strchr(currentPath, U_PATH_SEP_CHAR);
-            if(nextPath == nullptr) {
+            بعدی_مسیر = uprv_strchr(current_مسیر, U_مسیر_SEP_CHAR);
+            إذا(بعدی_مسیر == اشاره_تهی) {
                 /* segment: entire path */
-                pathLen = static_cast<int32_t>(uprv_strlen(currentPath));
-            } else {
+                مسیر_Len = static_cast<int32_t>(uprv_strlen(current_مسیر));
+            } وإلا {
                 /* segment: until next segment */
-                pathLen = static_cast<int32_t>(nextPath - currentPath);
+                مسیر_Len = static_cast<int32_t>(بعدی_مسیر - current_مسیر);
                 /* skip divider */
-                nextPath ++;
+                بعدی_مسیر ++;
             }
         }
 
-        if(pathLen == 0) {
-            continue;
+        إذا(مسیر_Len == 0) {
+            استمر;
         }
 
-#ifdef UDATA_DEBUG
-        fprintf(stderr, "rest of path (IDD) = %s\n", currentPath);
+#اگر_تعریف_شده UDATA_DEBUG
+        fprintf(stderr, "rest of path (IDD) = %s\n", current_مسیر);
         fprintf(stderr, "                     ");
         { 
             int32_t qqq;
-            for(qqq=0;qqq<pathLen;qqq++)
+            لكل(qqq=0;qqq<مسیر_Len;qqq++)
             {
                 fprintf(stderr, " ");
             }
 
             fprintf(stderr, "^\n");
         }
-#endif
-        pathBuffer.clear().append(currentPath, pathLen, *pErrorCode);
+#پایان_اگر
+        مسیر_میانگیر.clear().append(current_مسیر, مسیر_Len, *p_Error_کد);
 
         /* check for .dat files */
-        pathBasename = findBasename(pathBuffer.data());
+        مسیر_Basename = پیدا_کن_Basename(مسیر_میانگیر.داده());
 
-        if(checkLastFour && 
-           (pathLen>=4) &&
-           uprv_strncmp(pathBuffer.data() +(pathLen-4), suffix.data(), 4)==0 && /* suffix matches */
-           uprv_strncmp(findBasename(pathBuffer.data()), basename, basenameLen)==0  && /* base matches */
-           uprv_strlen(pathBasename)==(basenameLen+4)) { /* base+suffix = full len */
+        إذا(check_آخرین_Four && 
+           (مسیر_Len>=4) &&
+           uprv_strncmp(مسیر_میانگیر.داده() +(مسیر_Len-4), suffix.داده(), 4)==0 && /* suffix matches */
+           uprv_strncmp(پیدا_کن_Basename(مسیر_میانگیر.داده()), basename, basenameLen)==0  && /* base matches */
+           uprv_strlen(مسیر_Basename)==(basenameLen+4)) { /* base+suffix = full len */
 
-#ifdef UDATA_DEBUG
-            fprintf(stderr, "Have %s file on the path: %s\n", suffix.data(), pathBuffer.data());
-#endif
+#اگر_تعریف_شده UDATA_DEBUG
+            fprintf(stderr, "Have %s file on the path: %s\n", suffix.داده(), مسیر_میانگیر.داده());
+#پایان_اگر
             /* do nothing */
         }
-        else 
+        وإلا 
         {       /* regular dir path */
-            if(pathBuffer[pathLen-1] != U_FILE_SEP_CHAR) {
-                if((pathLen>=4) &&
-                   uprv_strncmp(pathBuffer.data()+(pathLen-4), ".dat", 4) == 0)
+            إذا(مسیر_میانگیر[مسیر_Len-1] != U_FILE_SEP_CHAR) {
+                إذا((مسیر_Len>=4) &&
+                   uprv_strncmp(مسیر_میانگیر.داده()+(مسیر_Len-4), ".dat", 4) == 0)
                 {
-#ifdef UDATA_DEBUG
-                    fprintf(stderr, "skipping non-directory .dat file %s\n", pathBuffer.data());
-#endif
-                    continue;
+#اگر_تعریف_شده UDATA_DEBUG
+                    fprintf(stderr, "skipping non-directory .dat file %s\n", مسیر_میانگیر.داده());
+#پایان_اگر
+                    استمر;
                 }
 
                 /* Check if it is a directory with the same name as our package */
-                if(!packageStub.isEmpty() &&
-                   (pathLen > packageStub.length()) &&
-                   !uprv_strcmp(pathBuffer.data() + pathLen - packageStub.length(), packageStub.data())) {
-#ifdef UDATA_DEBUG
-                  fprintf(stderr, "Found stub %s (will add package %s of len %d)\n", packageStub.data(), basename, basenameLen);
-#endif
-                  pathBuffer.truncate(pathLen - packageStub.length());
+                إذا(!packageStub.is_خالی() &&
+                   (مسیر_Len > packageStub.length()) &&
+                   !uprv_strcmp(مسیر_میانگیر.داده() + مسیر_Len - packageStub.length(), packageStub.داده())) {
+#اگر_تعریف_شده UDATA_DEBUG
+                  fprintf(stderr, "Found stub %s (will add package %s of len %d)\n", packageStub.داده(), basename, basenameLen);
+#پایان_اگر
+                  مسیر_میانگیر.truncate(مسیر_Len - packageStub.length());
                 }
-                pathBuffer.append(U_FILE_SEP_CHAR, *pErrorCode);
+                مسیر_میانگیر.append(U_FILE_SEP_CHAR, *p_Error_کد);
             }
 
             /* + basename */
-            pathBuffer.append(packageStub.data()+1, packageStub.length()-1, *pErrorCode);
+            مسیر_میانگیر.append(packageStub.داده()+1, packageStub.length()-1, *p_Error_کد);
 
-            if (!suffix.empty())  /* tack on suffix */
+            إذا (!suffix.empty())  /* tack on suffix */
             {
-                if (suffix.length() > 4) {
+                إذا (suffix.length() > 4) {
                     // If the suffix is actually an item ("ibm-5348_P100-1997.cnv") and not an extension (".res")
                     // then we need to ensure that the path ends with a separator.
-                    pathBuffer.ensureEndsWithFileSeparator(*pErrorCode);
+                    مسیر_میانگیر.ensure_دوسر_With_File_Separator(*p_Error_کد);
                 }
-                pathBuffer.append(suffix, *pErrorCode);
+                مسیر_میانگیر.append(suffix, *p_Error_کد);
             }
         }
 
-#ifdef UDATA_DEBUG
-        fprintf(stderr, " -->  %s\n", pathBuffer.data());
-#endif
+#اگر_تعریف_شده UDATA_DEBUG
+        fprintf(stderr, " -->  %s\n", مسیر_میانگیر.داده());
+#پایان_اگر
 
-        return pathBuffer.data();
+        أرجع مسیر_میانگیر.داده();
 
-    } while(path);
+    } طالما(مسیر);
 
     /* fell way off the end */
-    return nullptr;
+    أرجع اشاره_تهی;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_انتها
 
 /* ==================================================================================*/
 
@@ -641,10 +641,10 @@ U_NAMESPACE_END
  *      our common data.                                                *
  *                                                                      *
  *----------------------------------------------------------------------*/
-#if !defined(ICU_DATA_DIR_WINDOWS)
+#إذا !defined(ICU_داده_DIR_WINDOWS)
 // When using the Windows system data, we expect only a single data file.
-extern "C" const DataHeader U_DATA_API U_ICUDATA_ENTRY_POINT;
-#endif
+خارجي "C" ثابت داده_سرآیند U_داده_API U_ICUDATA_مدخل_نقطه;
+#پایان_اگر
 
 /*
  * This would be a good place for weak-linkage declarations of
@@ -666,42 +666,42 @@ extern const void *uprv_getICUData_conversion() ATTRIBUTE_WEAK;
  *                       just return the cached UDataMem object.        *
  *                                                                      *
  *----------------------------------------------------------------------*/
-static UDataMemory *
-openCommonData(const char *path,          /*  Path from OpenChoice?          */
-               int32_t commonDataIndex,   /*  ICU Data (index >= 0) if path == nullptr */
-               UErrorCode *pErrorCode)
+ساكن UData_حافظه *
+open_Common_داده(ثابت حرف *مسیر,          /*  Path from OpenChoice?          */
+               int32_t common_داده_شاخص,   /*  ICU Data (index >= 0) if path == nullptr */
+               UError_کد *p_Error_کد)
 {
-    UDataMemory tData;
-    const char *pathBuffer;
-    const char *inBasename;
+    UData_حافظه t_داده;
+    ثابت حرف *مسیر_میانگیر;
+    ثابت حرف *درون_Basename;
 
-    if (U_FAILURE(*pErrorCode)) {
-        return nullptr;
+    إذا (U_FAILURE(*p_Error_کد)) {
+        أرجع اشاره_تهی;
     }
 
-    UDataMemory_init(&tData);
+    UData_حافظه_init(&t_داده);
 
     /* ??????? TODO revisit this */ 
-    if (commonDataIndex >= 0) {
+    إذا (common_داده_شاخص >= 0) {
         /* "mini-cache" for common ICU data */
-        if(commonDataIndex >= UPRV_LENGTHOF(gCommonICUDataArray)) {
-            return nullptr;
+        إذا(common_داده_شاخص >= UPRV_LENGTHOF(gCommonICUDataArray)) {
+            أرجع اشاره_تهی;
         }
         {
-            Mutex lock;
-            if(gCommonICUDataArray[commonDataIndex] != nullptr) {
-                return gCommonICUDataArray[commonDataIndex];
+            Mutex قفل;
+            إذا(gCommonICUDataArray[common_داده_شاخص] != اشاره_تهی) {
+                أرجع gCommonICUDataArray[common_داده_شاخص];
             }
-#if !defined(ICU_DATA_DIR_WINDOWS)
+#إذا !defined(ICU_داده_DIR_WINDOWS)
 // When using the Windows system data, we expect only a single data file.
             int32_t i;
-            for(i = 0; i < commonDataIndex; ++i) {
-                if(gCommonICUDataArray[i]->pHeader == &U_ICUDATA_ENTRY_POINT) {
+            لكل(i = 0; i < common_داده_شاخص; ++i) {
+                إذا(gCommonICUDataArray[i]->p_سرآیند == &U_ICUDATA_مدخل_نقطه) {
                     /* The linked-in data is already in the list. */
-                    return nullptr;
+                    أرجع اشاره_تهی;
                 }
             }
-#endif
+#پایان_اگر
         }
 
         /* Add the linked-in data to the list. */
@@ -717,14 +717,14 @@ openCommonData(const char *path,          /*  Path from OpenChoice?          */
             setCommonICUDataPointer(uprv_getICUData_conversion(), false, pErrorCode);
         }
         */
-#if !defined(ICU_DATA_DIR_WINDOWS)
+#إذا !defined(ICU_داده_DIR_WINDOWS)
 // When using the Windows system data, we expect only a single data file.
-        setCommonICUDataPointer(&U_ICUDATA_ENTRY_POINT, false, pErrorCode);
+        مجموعه_Common_ICUData_اشاره_گر(&U_ICUDATA_مدخل_نقطه, خطأ, p_Error_کد);
         {
-            Mutex lock;
-            return gCommonICUDataArray[commonDataIndex];
+            Mutex قفل;
+            أرجع gCommonICUDataArray[common_داده_شاخص];
         }
-#endif
+#پایان_اگر
     }
 
 
@@ -732,68 +732,68 @@ openCommonData(const char *path,          /*  Path from OpenChoice?          */
 
     /* Find the base name portion of the supplied path.   */
     /*   inBasename will be left pointing somewhere within the original path string.      */
-    inBasename = findBasename(path);
-#ifdef UDATA_DEBUG
-    fprintf(stderr, "inBasename = %s\n", inBasename);
-#endif
+    درون_Basename = پیدا_کن_Basename(مسیر);
+#اگر_تعریف_شده UDATA_DEBUG
+    fprintf(stderr, "inBasename = %s\n", درون_Basename);
+#پایان_اگر
 
-    if(*inBasename==0) {
+    إذا(*درون_Basename==0) {
         /* no basename.     This will happen if the original path was a directory name,   */
         /*    like  "a/b/c/".   (Fallback to separate files will still work.)             */
-#ifdef UDATA_DEBUG
-        fprintf(stderr, "ocd: no basename in %s, bailing.\n", path);
-#endif
-        if (U_SUCCESS(*pErrorCode)) {
-            *pErrorCode=U_FILE_ACCESS_ERROR;
+#اگر_تعریف_شده UDATA_DEBUG
+        fprintf(stderr, "ocd: no basename in %s, bailing.\n", مسیر);
+#پایان_اگر
+        إذا (U_SUCCESS(*p_Error_کد)) {
+            *p_Error_کد=U_FILE_ACCESS_ERROR;
         }
-        return nullptr;
+        أرجع اشاره_تهی;
     }
 
    /* Is the requested common data file already open and cached?                     */
    /*   Note that the cache is keyed by the base name only.  The rest of the path,   */
    /*     if any, is not considered.                                                 */
-    UDataMemory  *dataToReturn = udata_findCachedData(inBasename, *pErrorCode);
-    if (dataToReturn != nullptr || U_FAILURE(*pErrorCode)) {
-        return dataToReturn;
+    UData_حافظه  *داده_مقصد_Return = udata_پیدا_کن_Cached_داده(درون_Basename, *p_Error_کد);
+    إذا (داده_مقصد_Return != اشاره_تهی || U_FAILURE(*p_Error_کد)) {
+        أرجع داده_مقصد_Return;
     }
 
     /* Requested item is not in the cache.
      * Hunt it down, trying all the path locations
      */
 
-    UDataPathIterator iter(u_getDataDirectory(), inBasename, path, ".dat", true, pErrorCode);
+    UData_مسیر_Iterator iter(u_get_داده_Directory(), درون_Basename, مسیر, ".dat", درست, p_Error_کد);
 
-    while ((UDataMemory_isLoaded(&tData)==false) && (pathBuffer = iter.next(pErrorCode)) != nullptr)
+    طالما ((UData_حافظه_is_Loaded(&t_داده)==خطأ) && (مسیر_میانگیر = iter.next(p_Error_کد)) != اشاره_تهی)
     {
-#ifdef UDATA_DEBUG
-        fprintf(stderr, "ocd: trying path %s - ", pathBuffer);
-#endif
-        uprv_mapFile(&tData, pathBuffer, pErrorCode);
-#ifdef UDATA_DEBUG
-        fprintf(stderr, "%s\n", UDataMemory_isLoaded(&tData)?"LOADED":"not loaded");
-#endif
+#اگر_تعریف_شده UDATA_DEBUG
+        fprintf(stderr, "ocd: trying path %s - ", مسیر_میانگیر);
+#پایان_اگر
+        uprv_mapFile(&t_داده, مسیر_میانگیر, p_Error_کد);
+#اگر_تعریف_شده UDATA_DEBUG
+        fprintf(stderr, "%s\n", UData_حافظه_is_Loaded(&t_داده)?"LOADED":"not loaded");
+#پایان_اگر
     }
-    if (U_FAILURE(*pErrorCode)) {
-        return nullptr;
+    إذا (U_FAILURE(*p_Error_کد)) {
+        أرجع اشاره_تهی;
     }
 
-    if (U_FAILURE(*pErrorCode)) {
-        return nullptr;
+    إذا (U_FAILURE(*p_Error_کد)) {
+        أرجع اشاره_تهی;
     }
-    if (!UDataMemory_isLoaded(&tData)) {
+    إذا (!UData_حافظه_is_Loaded(&t_داده)) {
         /* no common data */
-        *pErrorCode=U_FILE_ACCESS_ERROR;
-        return nullptr;
+        *p_Error_کد=U_FILE_ACCESS_ERROR;
+        أرجع اشاره_تهی;
     }
 
     /* we have mapped a file, check its header */
-    udata_checkCommonData(&tData, pErrorCode);
+    udata_check_Common_داده(&t_داده, p_Error_کد);
 
 
     /* Cache the UDataMemory struct for this .dat file,
      *   so we won't need to hunt it down and map it again next time
      *   something is needed from it.                */
-    return udata_cacheDataItem(inBasename, &tData, pErrorCode);
+    أرجع udata_cache_داده_قلم(درون_Basename, &t_داده, p_Error_کد);
 }
 
 
@@ -807,11 +807,11 @@ openCommonData(const char *path,          /*  Path from OpenChoice?          */
  *                   return true if new data is loaded, false otherwise.*
  *                                                                      *
  *----------------------------------------------------------------------*/
-static UBool extendICUData(UErrorCode *pErr)
+ساكن UBool extendICUData(UError_کد *pErr)
 {
-    UDataMemory   *pData;
-    UDataMemory   copyPData;
-    UBool         didUpdate = false;
+    UData_حافظه   *p_داده;
+    UData_حافظه   copyPData;
+    UBool         didUpdate = خطأ;
 
     /*
      * There is a chance for a race condition here.
@@ -823,47 +823,47 @@ static UBool extendICUData(UErrorCode *pErr)
      * In this case, use a mutex to prevent the race.
      * Use a specific mutex to avoid nested locks of the global mutex.
      */
-#if MAP_IMPLEMENTATION==MAP_STDIO
-    static UMutex extendICUDataMutex;
-    umtx_lock(&extendICUDataMutex);
-#endif
-    if(!umtx_loadAcquire(gHaveTriedToLoadCommonData)) {
+#إذا MAP_IMPLEMENTATION==MAP_STDIO
+    ساكن UMutex extendICUDataMutex;
+    umtx_قفل(&extendICUDataMutex);
+#پایان_اگر
+    إذا(!umtx_بارگیری_Acquire(g_Have_Tried_مقصد_بارگیری_Common_داده)) {
         /* See if we can explicitly open a .dat file for the ICUData. */
-        pData = openCommonData(
+        p_داده = open_Common_داده(
                    U_ICUDATA_NAME,            /*  "icudt20l" , for example.          */
                    -1,                        /*  Pretend we're not opening ICUData  */
                    pErr);
 
         /* How about if there is no pData, eh... */
 
-       UDataMemory_init(&copyPData);
-       if(pData != nullptr) {
-          UDatamemory_assign(&copyPData, pData);
-          copyPData.map = nullptr;     /* The mapping for this data is owned by the hash table */
-          copyPData.mapAddr = nullptr; /*   which will unmap it when ICU is shut down.         */
+       UData_حافظه_init(&copyPData);
+       إذا(p_داده != اشاره_تهی) {
+          UDatamemory_تخصیص_بده(&copyPData, p_داده);
+          copyPData.map = اشاره_تهی;     /* The mapping for this data is owned by the hash table */
+          copyPData.mapAddr = اشاره_تهی; /*   which will unmap it when ICU is shut down.         */
                                        /* CommonICUData is also unmapped when ICU is shut down.*/
                                        /* To avoid unmapping the data twice, zero out the map  */
                                        /*   fields in the UDataMemory that we're assigning     */
                                        /*   to CommonICUData.                                  */
 
           didUpdate = /* no longer using this result */
-              setCommonICUData(&copyPData,/*  The new common data.                                */
-                       false,             /*  No warnings if write didn't happen                  */
+              مجموعه_Common_ICUData(&copyPData,/*  The new common data.                                */
+                       خطأ,             /*  No warnings if write didn't happen                  */
                        pErr);             /*  setCommonICUData honors errors; NOP if error set    */
         }
 
-        umtx_storeRelease(gHaveTriedToLoadCommonData, 1);
+        umtx_storeRelease(g_Have_Tried_مقصد_بارگیری_Common_داده, 1);
     }
 
-    didUpdate = findCommonICUDataByName(U_ICUDATA_NAME, *pErr);  /* Return 'true' when a racing writes out the extended                 */
+    didUpdate = پیدا_کن_Common_ICUData_By_Name(U_ICUDATA_NAME, *pErr);  /* Return 'true' when a racing writes out the extended                 */
                                                           /* data after another thread has failed to see it (in openCommonData), so     */
                                                           /* extended data can be examined.                                             */
                                                           /* Also handles a race through here before gHaveTriedToLoadCommonData is set. */
 
-#if MAP_IMPLEMENTATION==MAP_STDIO
+#إذا MAP_IMPLEMENTATION==MAP_STDIO
     umtx_unlock(&extendICUDataMutex);
-#endif
-    return didUpdate;               /* Return true if ICUData pointer was updated.   */
+#پایان_اگر
+    أرجع didUpdate;               /* Return true if ICUData pointer was updated.   */
                                     /*   (Could potentially have been done by another thread racing */
                                     /*   us through here, but that's fine, we still return true    */
                                     /*   so that current thread will also examine extended data.   */
@@ -874,28 +874,28 @@ static UBool extendICUData(UErrorCode *pErr)
  *   udata_setCommonData                                                *
  *                                                                      *
  *----------------------------------------------------------------------*/
-U_CAPI void U_EXPORT2
-udata_setCommonData(const void *data, UErrorCode *pErrorCode) {
-    UDataMemory dataMemory;
+U_CAPI فراغ U_EXPORT2
+udata_مجموعه_Common_داده(ثابت فراغ *داده, UError_کد *p_Error_کد) {
+    UData_حافظه داده_حافظه;
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return;
+    إذا(p_Error_کد==اشاره_تهی || U_FAILURE(*p_Error_کد)) {
+        أرجع;
     }
 
-    if(data==nullptr) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+    إذا(داده==اشاره_تهی) {
+        *p_Error_کد=U_ILLEGAL_آرگومان_ERROR;
+        أرجع;
     }
 
     /* set the data pointer and test for validity */
-    UDataMemory_init(&dataMemory);
-    UDataMemory_setData(&dataMemory, data);
-    udata_checkCommonData(&dataMemory, pErrorCode);
-    if (U_FAILURE(*pErrorCode)) {return;}
+    UData_حافظه_init(&داده_حافظه);
+    UData_حافظه_مجموعه_داده(&داده_حافظه, داده);
+    udata_check_Common_داده(&داده_حافظه, p_Error_کد);
+    إذا (U_FAILURE(*p_Error_کد)) {أرجع;}
 
     /* we have good data */
     /* Set it up as the ICU Common Data.  */
-    setCommonICUData(&dataMemory, true, pErrorCode);
+    مجموعه_Common_ICUData(&داده_حافظه, درست, p_Error_کد);
 }
 
 /*---------------------------------------------------------------------------
@@ -903,23 +903,23 @@ udata_setCommonData(const void *data, UErrorCode *pErrorCode) {
  *  udata_setAppData
  *
  *---------------------------------------------------------------------------- */
-U_CAPI void U_EXPORT2
-udata_setAppData(const char *path, const void *data, UErrorCode *err)
+U_CAPI فراغ U_EXPORT2
+udata_مجموعه_App_داده(ثابت حرف *مسیر, ثابت فراغ *داده, UError_کد *err)
 {
-    UDataMemory     udm;
+    UData_حافظه     udm;
 
-    if(err==nullptr || U_FAILURE(*err)) {
-        return;
+    إذا(err==اشاره_تهی || U_FAILURE(*err)) {
+        أرجع;
     }
-    if(data==nullptr) {
-        *err=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+    إذا(داده==اشاره_تهی) {
+        *err=U_ILLEGAL_آرگومان_ERROR;
+        أرجع;
     }
 
-    UDataMemory_init(&udm);
-    UDataMemory_setData(&udm, data);
-    udata_checkCommonData(&udm, err);
-    udata_cacheDataItem(path, &udm, err);
+    UData_حافظه_init(&udm);
+    UData_حافظه_مجموعه_داده(&udm, داده);
+    udata_check_Common_داده(&udm, err);
+    udata_cache_داده_قلم(مسیر, &udm, err);
 }
 
 /*----------------------------------------------------------------------------*
@@ -933,119 +933,119 @@ udata_setAppData(const char *path, const void *data, UErrorCode *err)
  *                    Return nullptr on any sort of failure.                     *
  *                                                                            *
  *----------------------------------------------------------------------------*/
-static UDataMemory *
-checkDataItem
+ساكن UData_حافظه *
+check_داده_قلم
 (
- const DataHeader         *pHeader,         /* The data item to be checked.                */
- UDataMemoryIsAcceptable  *isAcceptable,    /* App's call-back function                    */
- void                     *context,         /*   pass-thru param for above.                */
- const char               *type,            /*   pass-thru param for above.                */
- const char               *name,            /*   pass-thru param for above.                */
- UErrorCode               *nonFatalErr,     /* Error code if this data was not acceptable  */
+ ثابت داده_سرآیند         *p_سرآیند,         /* The data item to be checked.                */
+ UData_حافظه_Is_Acceptable  *isAcceptable,    /* App's call-back function                    */
+ فراغ                     *context,         /*   pass-thru param for above.                */
+ ثابت حرف               *type,            /*   pass-thru param for above.                */
+ ثابت حرف               *name,            /*   pass-thru param for above.                */
+ UError_کد               *nonFatalErr,     /* Error code if this data was not acceptable  */
                                             /*   but openChoice should continue with       */
                                             /*   trying to get data from fallback path.    */
- UErrorCode               *fatalErr         /* Bad error, caller should return immediately */
+ UError_کد               *fatalErr         /* Bad error, caller should return immediately */
  )
 {
-    UDataMemory  *rDataMem = nullptr;          /* the new UDataMemory, to be returned.        */
+    UData_حافظه  *r_داده_Mem = اشاره_تهی;          /* the new UDataMemory, to be returned.        */
 
-    if (U_FAILURE(*fatalErr)) {
-        return nullptr;
+    إذا (U_FAILURE(*fatalErr)) {
+        أرجع اشاره_تهی;
     }
 
-    if(pHeader->dataHeader.magic1==0xda &&
-        pHeader->dataHeader.magic2==0x27 &&
-        (isAcceptable==nullptr || isAcceptable(context, type, name, &pHeader->info))
+    إذا(p_سرآیند->داده_سرآیند_2.magic1==0xda &&
+        p_سرآیند->داده_سرآیند_2.magic2==0x27 &&
+        (isAcceptable==اشاره_تهی || isAcceptable(context, type, name, &p_سرآیند->info))
     ) {
-        rDataMem=UDataMemory_createNewInstance(fatalErr);
-        if (U_FAILURE(*fatalErr)) {
-            return nullptr;
+        r_داده_Mem=UData_حافظه_create_New_Instance(fatalErr);
+        إذا (U_FAILURE(*fatalErr)) {
+            أرجع اشاره_تهی;
         }
-        rDataMem->pHeader = pHeader;
-    } else {
+        r_داده_Mem->p_سرآیند = p_سرآیند;
+    } وإلا {
         /* the data is not acceptable, look further */
         /* If we eventually find something good, this errorcode will be */
         /*    cleared out.                                              */
         *nonFatalErr=U_INVALID_FORMAT_ERROR;
     }
-    return rDataMem;
+    أرجع r_داده_Mem;
 }
 
 /**
  * @return 0 if not loaded, 1 if loaded or err 
  */
-static UDataMemory *doLoadFromIndividualFiles(const char *pkgName, 
-        const char *dataPath, const char *tocEntryPathSuffix,
+ساكن UData_حافظه *do_بارگیری_From_Individual_Files(ثابت حرف *pkgName, 
+        ثابت حرف *داده_مسیر, ثابت حرف *toc_مدخل_مسیر_Suffix,
             /* following arguments are the same as doOpenChoice itself */
-            const char *path, const char *type, const char *name,
-             UDataMemoryIsAcceptable *isAcceptable, void *context,
-             UErrorCode *subErrorCode,
-             UErrorCode *pErrorCode)
+            ثابت حرف *مسیر, ثابت حرف *type, ثابت حرف *name,
+             UData_حافظه_Is_Acceptable *isAcceptable, فراغ *context,
+             UError_کد *sub_Error_کد,
+             UError_کد *p_Error_کد)
 {
-    const char         *pathBuffer;
-    UDataMemory         dataMemory;
-    UDataMemory *pEntryData;
+    ثابت حرف         *مسیر_میانگیر;
+    UData_حافظه         داده_حافظه;
+    UData_حافظه *p_مدخل_داده;
 
     /* look in ind. files: package\nam.typ  ========================= */
     /* init path iterator for individual files */
-    UDataPathIterator iter(dataPath, pkgName, path, tocEntryPathSuffix, false, pErrorCode);
+    UData_مسیر_Iterator iter(داده_مسیر, pkgName, مسیر, toc_مدخل_مسیر_Suffix, خطأ, p_Error_کد);
 
-    while ((pathBuffer = iter.next(pErrorCode)) != nullptr)
+    طالما ((مسیر_میانگیر = iter.next(p_Error_کد)) != اشاره_تهی)
     {
-#ifdef UDATA_DEBUG
-        fprintf(stderr, "UDATA: trying individual file %s\n", pathBuffer);
-#endif
-        if (uprv_mapFile(&dataMemory, pathBuffer, pErrorCode))
+#اگر_تعریف_شده UDATA_DEBUG
+        fprintf(stderr, "UDATA: trying individual file %s\n", مسیر_میانگیر);
+#پایان_اگر
+        إذا (uprv_mapFile(&داده_حافظه, مسیر_میانگیر, p_Error_کد))
         {
-            pEntryData = checkDataItem(dataMemory.pHeader, isAcceptable, context, type, name, subErrorCode, pErrorCode);
-            if (pEntryData != nullptr) {
+            p_مدخل_داده = check_داده_قلم(داده_حافظه.p_سرآیند, isAcceptable, context, type, name, sub_Error_کد, p_Error_کد);
+            إذا (p_مدخل_داده != اشاره_تهی) {
                 /* Data is good.
                 *  Hand off ownership of the backing memory to the user's UDataMemory.
                 *  and return it.   */
-                pEntryData->mapAddr = dataMemory.mapAddr;
-                pEntryData->map     = dataMemory.map;
-                pEntryData->length  = dataMemory.length;
+                p_مدخل_داده->mapAddr = داده_حافظه.mapAddr;
+                p_مدخل_داده->map     = داده_حافظه.map;
+                p_مدخل_داده->length  = داده_حافظه.length;
 
-#ifdef UDATA_DEBUG
-                fprintf(stderr, "** Mapped file: %s\n", pathBuffer);
-#endif
-                return pEntryData;
+#اگر_تعریف_شده UDATA_DEBUG
+                fprintf(stderr, "** Mapped file: %s\n", مسیر_میانگیر);
+#پایان_اگر
+                أرجع p_مدخل_داده;
             }
 
             /* the data is not acceptable, or some error occurred.  Either way, unmap the memory */
-            udata_close(&dataMemory);
+            udata_close(&داده_حافظه);
 
             /* If we had a nasty error, bail out completely.  */
-            if (U_FAILURE(*pErrorCode)) {
-                return nullptr;
+            إذا (U_FAILURE(*p_Error_کد)) {
+                أرجع اشاره_تهی;
             }
 
             /* Otherwise remember that we found data but didn't like it for some reason  */
-            *subErrorCode=U_INVALID_FORMAT_ERROR;
+            *sub_Error_کد=U_INVALID_FORMAT_ERROR;
         }
-#ifdef UDATA_DEBUG
-        fprintf(stderr, "%s\n", UDataMemory_isLoaded(&dataMemory)?"LOADED":"not loaded");
-#endif
+#اگر_تعریف_شده UDATA_DEBUG
+        fprintf(stderr, "%s\n", UData_حافظه_is_Loaded(&داده_حافظه)?"LOADED":"not loaded");
+#پایان_اگر
     }
-    return nullptr;
+    أرجع اشاره_تهی;
 }
 
 /**
  * @return 0 if not loaded, 1 if loaded or err 
  */
-static UDataMemory *doLoadFromCommonData(UBool isICUData, const char * /*pkgName*/, 
-        const char * /*dataPath*/, const char * /*tocEntryPathSuffix*/, const char *tocEntryName,
+ساكن UData_حافظه *do_بارگیری_From_Common_داده(UBool isICUData, ثابت حرف * /*pkgName*/, 
+        ثابت حرف * /*dataPath*/, ثابت حرف * /*tocEntryPathSuffix*/, ثابت حرف *toc_مدخل_Name,
             /* following arguments are the same as doOpenChoice itself */
-            const char *path, const char *type, const char *name,
-             UDataMemoryIsAcceptable *isAcceptable, void *context,
-             UErrorCode *subErrorCode,
-             UErrorCode *pErrorCode)
+            ثابت حرف *مسیر, ثابت حرف *type, ثابت حرف *name,
+             UData_حافظه_Is_Acceptable *isAcceptable, فراغ *context,
+             UError_کد *sub_Error_کد,
+             UError_کد *p_Error_کد)
 {
-    UDataMemory        *pEntryData;
-    const DataHeader   *pHeader;
-    UDataMemory        *pCommonData;
-    int32_t            commonDataIndex;
-    UBool              checkedExtendedICUData = false;
+    UData_حافظه        *p_مدخل_داده;
+    ثابت داده_سرآیند   *p_سرآیند;
+    UData_حافظه        *p_Common_داده;
+    int32_t            common_داده_شاخص;
+    UBool              checkedExtendedICUData = خطأ;
     /* try to get common data.  The loop is for platforms such as the 390 that do
      *  not initially load the full set of ICU data.  If the lookup of an ICU data item
      *  fails, the full (but slower to load) set is loaded, the and the loop repeats,
@@ -1055,49 +1055,49 @@ static UDataMemory *doLoadFromCommonData(UBool isICUData, const char * /*pkgName
      *  The loop also handles the fallback to a .dat file if the application linked
      *   to the stub data library rather than a real library.
      */
-    for (commonDataIndex = isICUData ? 0 : -1;;) {
-        pCommonData=openCommonData(path, commonDataIndex, subErrorCode); /** search for pkg **/
+    لكل (common_داده_شاخص = isICUData ? 0 : -1;;) {
+        p_Common_داده=open_Common_داده(مسیر, common_داده_شاخص, sub_Error_کد); /** search for pkg **/
 
-        if(U_SUCCESS(*subErrorCode) && pCommonData!=nullptr) {
+        إذا(U_SUCCESS(*sub_Error_کد) && p_Common_داده!=اشاره_تهی) {
             int32_t length;
 
             /* look up the data piece in the common data */
-            pHeader=pCommonData->vFuncs->Lookup(pCommonData, tocEntryName, &length, subErrorCode);
-#ifdef UDATA_DEBUG
-            fprintf(stderr, "%s: pHeader=%p - %s\n", tocEntryName, (void*) pHeader, u_errorName(*subErrorCode));
-#endif
+            p_سرآیند=p_Common_داده->vFuncs->Lookup(p_Common_داده, toc_مدخل_Name, &length, sub_Error_کد);
+#اگر_تعریف_شده UDATA_DEBUG
+            fprintf(stderr, "%s: pHeader=%p - %s\n", toc_مدخل_Name, (فراغ*) p_سرآیند, u_errorName(*sub_Error_کد));
+#پایان_اگر
 
-            if(pHeader!=nullptr) {
-                pEntryData = checkDataItem(pHeader, isAcceptable, context, type, name, subErrorCode, pErrorCode);
-#ifdef UDATA_DEBUG
-                fprintf(stderr, "pEntryData=%p\n", (void*) pEntryData);
-#endif
-                if (U_FAILURE(*pErrorCode)) {
-                    return nullptr;
+            إذا(p_سرآیند!=اشاره_تهی) {
+                p_مدخل_داده = check_داده_قلم(p_سرآیند, isAcceptable, context, type, name, sub_Error_کد, p_Error_کد);
+#اگر_تعریف_شده UDATA_DEBUG
+                fprintf(stderr, "pEntryData=%p\n", (فراغ*) p_مدخل_داده);
+#پایان_اگر
+                إذا (U_FAILURE(*p_Error_کد)) {
+                    أرجع اشاره_تهی;
                 }
-                if (pEntryData != nullptr) {
-                    pEntryData->length = length;
-                    return pEntryData;
+                إذا (p_مدخل_داده != اشاره_تهی) {
+                    p_مدخل_داده->length = length;
+                    أرجع p_مدخل_داده;
                 }
             }
         }
         // If we failed due to being out-of-memory, then stop early and report the error.
-        if (*subErrorCode == U_MEMORY_ALLOCATION_ERROR) {
-            *pErrorCode = *subErrorCode;
-            return nullptr;
+        إذا (*sub_Error_کد == U_حافظه_تخصیص_ERROR) {
+            *p_Error_کد = *sub_Error_کد;
+            أرجع اشاره_تهی;
         }
         /* Data wasn't found.  If we were looking for an ICUData item and there is
          * more data available, load it and try again,
          * otherwise break out of this loop. */
-        if (!isICUData) {
-            return nullptr;
-        } else if (pCommonData != nullptr) {
-            ++commonDataIndex;  /* try the next data package */
-        } else if ((!checkedExtendedICUData) && extendICUData(subErrorCode)) {
-            checkedExtendedICUData = true;
+        إذا (!isICUData) {
+            أرجع اشاره_تهی;
+        } وإلا إذا (p_Common_داده != اشاره_تهی) {
+            ++common_داده_شاخص;  /* try the next data package */
+        } وإلا إذا ((!checkedExtendedICUData) && extendICUData(sub_Error_کد)) {
+            checkedExtendedICUData = درست;
             /* try this data package slot again: it changed from nullptr to non-nullptr */
-        } else {
-            return nullptr;
+        } وإلا {
+            أرجع اشاره_تهی;
         }
     }
 }
@@ -1105,8 +1105,8 @@ static UDataMemory *doLoadFromCommonData(UBool isICUData, const char * /*pkgName
 /*
  * Identify the Time Zone resources that are subject to special override data loading.
  */
-static UBool isTimeZoneFile(const char *name, const char *type) {
-    return ((uprv_strcmp(type, "res") == 0) &&
+ساكن UBool is_زمان_Zone_File(ثابت حرف *name, ثابت حرف *type) {
+    أرجع ((uprv_strcmp(type, "res") == 0) &&
             (uprv_strcmp(name, "zoneinfo64") == 0 ||
              uprv_strcmp(name, "timezoneTypes") == 0 ||
              uprv_strcmp(name, "windowsZones") == 0 ||
@@ -1145,104 +1145,104 @@ static UBool isTimeZoneFile(const char *name, const char *type) {
  * main data loading functions                                                *
  *                                                                            *
  *----------------------------------------------------------------------------*/
-static UDataMemory *
-doOpenChoice(const char *path, const char *type, const char *name,
-             UDataMemoryIsAcceptable *isAcceptable, void *context,
-             UErrorCode *pErrorCode)
+ساكن UData_حافظه *
+doOpenChoice(ثابت حرف *مسیر, ثابت حرف *type, ثابت حرف *name,
+             UData_حافظه_Is_Acceptable *isAcceptable, فراغ *context,
+             UError_کد *p_Error_کد)
 {
-    UDataMemory         *retVal = nullptr;
+    UData_حافظه         *retVal = اشاره_تهی;
 
-    const char         *dataPath;
+    ثابت حرف         *داده_مسیر;
 
-    int32_t             tocEntrySuffixIndex;
-    const char         *tocEntryPathSuffix;
-    UErrorCode          subErrorCode=U_ZERO_ERROR;
-    const char         *treeChar;
+    int32_t             toc_مدخل_Suffix_شاخص;
+    ثابت حرف         *toc_مدخل_مسیر_Suffix;
+    UError_کد          sub_Error_کد=U_ZERO_ERROR;
+    ثابت حرف         *درخت_Char;
 
-    UBool               isICUData = false;
+    UBool               isICUData = خطأ;
 
 
-    FileTracer::traceOpen(path, type, name);
+    FileTracer::traceOpen(مسیر, type, name);
 
 
     /* Is this path ICU data? */
-    if(path == nullptr ||
-       !strcmp(path, U_ICUDATA_ALIAS) ||  /* "ICUDATA" */
-       !uprv_strncmp(path, U_ICUDATA_NAME U_TREE_SEPARATOR_STRING, /* "icudt26e-" */
-                     uprv_strlen(U_ICUDATA_NAME U_TREE_SEPARATOR_STRING)) ||  
-       !uprv_strncmp(path, U_ICUDATA_ALIAS U_TREE_SEPARATOR_STRING, /* "ICUDATA-" */
-                     uprv_strlen(U_ICUDATA_ALIAS U_TREE_SEPARATOR_STRING))) {
-      isICUData = true;
+    إذا(مسیر == اشاره_تهی ||
+       !strcmp(مسیر, U_ICUDATA_ALIAS) ||  /* "ICUDATA" */
+       !uprv_strncmp(مسیر, U_ICUDATA_NAME U_درخت_SEPARATOR_STRING, /* "icudt26e-" */
+                     uprv_strlen(U_ICUDATA_NAME U_درخت_SEPARATOR_STRING)) ||  
+       !uprv_strncmp(مسیر, U_ICUDATA_ALIAS U_درخت_SEPARATOR_STRING, /* "ICUDATA-" */
+                     uprv_strlen(U_ICUDATA_ALIAS U_درخت_SEPARATOR_STRING))) {
+      isICUData = درست;
     }
 
-#if (U_FILE_SEP_CHAR != U_FILE_ALT_SEP_CHAR)  /* Windows:  try "foo\bar" and "foo/bar" */
+#إذا (U_FILE_SEP_CHAR != U_FILE_ALT_SEP_CHAR)  /* Windows:  try "foo\bar" and "foo/bar" */
     /* remap from alternate path char to the main one */
-    CharString altSepPath;
-    if(path) {
-        if(uprv_strchr(path,U_FILE_ALT_SEP_CHAR) != nullptr) {
-            altSepPath.append(path, *pErrorCode);
-            char *p;
-            while ((p = uprv_strchr(altSepPath.data(), U_FILE_ALT_SEP_CHAR)) != nullptr) {
+    CharString alt_Sep_مسیر;
+    إذا(مسیر) {
+        إذا(uprv_strchr(مسیر,U_FILE_ALT_SEP_CHAR) != اشاره_تهی) {
+            alt_Sep_مسیر.append(مسیر, *p_Error_کد);
+            حرف *p;
+            طالما ((p = uprv_strchr(alt_Sep_مسیر.داده(), U_FILE_ALT_SEP_CHAR)) != اشاره_تهی) {
                 *p = U_FILE_SEP_CHAR;
             }
-#if defined (UDATA_DEBUG)
-            fprintf(stderr, "Changed path from [%s] to [%s]\n", path, altSepPath.data());
-#endif
-            path = altSepPath.data();
+#إذا defined (UDATA_DEBUG)
+            fprintf(stderr, "Changed path from [%s] to [%s]\n", مسیر, alt_Sep_مسیر.داده());
+#پایان_اگر
+            مسیر = alt_Sep_مسیر.داده();
         }
     }
-#endif
+#پایان_اگر
 
-    CharString tocEntryName; /* entry name in tree format. ex:  'icudt28b/coll/ar.res' */
-    CharString tocEntryPath; /* entry name in path format. ex:  'icudt28b\\coll\\ar.res' */
+    CharString toc_مدخل_Name; /* entry name in tree format. ex:  'icudt28b/coll/ar.res' */
+    CharString toc_مدخل_مسیر; /* entry name in path format. ex:  'icudt28b\\coll\\ar.res' */
 
     CharString pkgName;
-    CharString treeName;
+    CharString درخت_Name;
 
     /* ======= Set up strings */
-    if(path==nullptr) {
-        pkgName.append(U_ICUDATA_NAME, *pErrorCode);
-    } else {
-        const char *pkg;
-        const char *first;
-        pkg = uprv_strrchr(path, U_FILE_SEP_CHAR);
-        first = uprv_strchr(path, U_FILE_SEP_CHAR);
-        if(uprv_pathIsAbsolute(path) || (pkg != first)) { /* more than one slash in the path- not a tree name */
+    إذا(مسیر==اشاره_تهی) {
+        pkgName.append(U_ICUDATA_NAME, *p_Error_کد);
+    } وإلا {
+        ثابت حرف *pkg;
+        ثابت حرف *first;
+        pkg = uprv_strrchr(مسیر, U_FILE_SEP_CHAR);
+        first = uprv_strchr(مسیر, U_FILE_SEP_CHAR);
+        إذا(uprv_مسیر_Is_Absolute(مسیر) || (pkg != first)) { /* more than one slash in the path- not a tree name */
             /* see if this is an /absolute/path/to/package  path */
-            if(pkg) {
-                pkgName.append(pkg+1, *pErrorCode);
-            } else {
-                pkgName.append(path, *pErrorCode);
+            إذا(pkg) {
+                pkgName.append(pkg+1, *p_Error_کد);
+            } وإلا {
+                pkgName.append(مسیر, *p_Error_کد);
             }
-        } else {
-            treeChar = uprv_strchr(path, U_TREE_SEPARATOR);
-            if(treeChar) { 
-                treeName.append(treeChar+1, *pErrorCode); /* following '-' */
-                if(isICUData) {
-                    pkgName.append(U_ICUDATA_NAME, *pErrorCode);
-                } else {
-                    pkgName.append(path, static_cast<int32_t>(treeChar - path), *pErrorCode);
-                    if (first == nullptr) {
+        } وإلا {
+            درخت_Char = uprv_strchr(مسیر, U_درخت_SEPARATOR);
+            إذا(درخت_Char) { 
+                درخت_Name.append(درخت_Char+1, *p_Error_کد); /* following '-' */
+                إذا(isICUData) {
+                    pkgName.append(U_ICUDATA_NAME, *p_Error_کد);
+                } وإلا {
+                    pkgName.append(مسیر, static_cast<int32_t>(درخت_Char - مسیر), *p_Error_کد);
+                    إذا (first == اشاره_تهی) {
                         /*
                         This user data has no path, but there is a tree name.
                         Look up the correct path from the data cache later.
                         */
-                        path = pkgName.data();
+                        مسیر = pkgName.داده();
                     }
                 }
-            } else {
-                if(isICUData) {
-                    pkgName.append(U_ICUDATA_NAME, *pErrorCode);
-                } else {
-                    pkgName.append(path, *pErrorCode);
+            } وإلا {
+                إذا(isICUData) {
+                    pkgName.append(U_ICUDATA_NAME, *p_Error_کد);
+                } وإلا {
+                    pkgName.append(مسیر, *p_Error_کد);
                 }
             }
         }
     }
 
-#ifdef UDATA_DEBUG
-    fprintf(stderr, " P=%s T=%s\n", pkgName.data(), treeName.data());
-#endif
+#اگر_تعریف_شده UDATA_DEBUG
+    fprintf(stderr, " P=%s T=%s\n", pkgName.داده(), درخت_Name.داده());
+#پایان_اگر
 
     /* setting up the entry name and file name 
      * Make up a full name by appending the type to the supplied
@@ -1250,201 +1250,201 @@ doOpenChoice(const char *path, const char *type, const char *name,
      */
 
     /* prepend the package */
-    tocEntryName.append(pkgName, *pErrorCode);
-    tocEntryPath.append(pkgName, *pErrorCode);
-    tocEntrySuffixIndex = tocEntryName.length();
+    toc_مدخل_Name.append(pkgName, *p_Error_کد);
+    toc_مدخل_مسیر.append(pkgName, *p_Error_کد);
+    toc_مدخل_Suffix_شاخص = toc_مدخل_Name.length();
 
-    if(!treeName.isEmpty()) {
-        tocEntryName.append(U_TREE_ENTRY_SEP_CHAR, *pErrorCode).append(treeName, *pErrorCode);
-        tocEntryPath.append(U_FILE_SEP_CHAR, *pErrorCode).append(treeName, *pErrorCode);
+    إذا(!درخت_Name.is_خالی()) {
+        toc_مدخل_Name.append(U_درخت_مدخل_SEP_CHAR, *p_Error_کد).append(درخت_Name, *p_Error_کد);
+        toc_مدخل_مسیر.append(U_FILE_SEP_CHAR, *p_Error_کد).append(درخت_Name, *p_Error_کد);
     }
 
-    tocEntryName.append(U_TREE_ENTRY_SEP_CHAR, *pErrorCode).append(name, *pErrorCode);
-    tocEntryPath.append(U_FILE_SEP_CHAR, *pErrorCode).append(name, *pErrorCode);
-    if(type!=nullptr && *type!=0) {
-        tocEntryName.append(".", *pErrorCode).append(type, *pErrorCode);
-        tocEntryPath.append(".", *pErrorCode).append(type, *pErrorCode);
+    toc_مدخل_Name.append(U_درخت_مدخل_SEP_CHAR, *p_Error_کد).append(name, *p_Error_کد);
+    toc_مدخل_مسیر.append(U_FILE_SEP_CHAR, *p_Error_کد).append(name, *p_Error_کد);
+    إذا(type!=اشاره_تهی && *type!=0) {
+        toc_مدخل_Name.append(".", *p_Error_کد).append(type, *p_Error_کد);
+        toc_مدخل_مسیر.append(".", *p_Error_کد).append(type, *p_Error_کد);
     }
     // The +1 is for the U_FILE_SEP_CHAR that is always appended above.
-    tocEntryPathSuffix = tocEntryPath.data() + tocEntrySuffixIndex + 1; /* suffix starts here */
+    toc_مدخل_مسیر_Suffix = toc_مدخل_مسیر.داده() + toc_مدخل_Suffix_شاخص + 1; /* suffix starts here */
 
-#ifdef UDATA_DEBUG
-    fprintf(stderr, " tocEntryName = %s\n", tocEntryName.data());
-    fprintf(stderr, " tocEntryPath = %s\n", tocEntryPath.data());
-#endif
+#اگر_تعریف_شده UDATA_DEBUG
+    fprintf(stderr, " tocEntryName = %s\n", toc_مدخل_Name.داده());
+    fprintf(stderr, " tocEntryPath = %s\n", toc_مدخل_مسیر.داده());
+#پایان_اگر
 
-#if !defined(ICU_DATA_DIR_WINDOWS)
-    if(path == nullptr) {
-        path = COMMON_DATA_NAME; /* "icudt26e" */
+#إذا !defined(ICU_داده_DIR_WINDOWS)
+    إذا(مسیر == اشاره_تهی) {
+        مسیر = COMMON_داده_NAME; /* "icudt26e" */
     }
-#else
+#وإلا
     // When using the Windows system data, we expects only a single data file.
-    path = COMMON_DATA_NAME; /* "icudt26e" */
-#endif
+    مسیر = COMMON_داده_NAME; /* "icudt26e" */
+#پایان_اگر
 
     /************************ Begin loop looking for ind. files ***************/
-#ifdef UDATA_DEBUG
-    fprintf(stderr, "IND: inBasename = %s, pkg=%s\n", "(n/a)", packageNameFromPath(path));
-#endif
+#اگر_تعریف_شده UDATA_DEBUG
+    fprintf(stderr, "IND: inBasename = %s, pkg=%s\n", "(n/a)", package_Name_From_مسیر(مسیر));
+#پایان_اگر
 
     /* End of dealing with a null basename */
-    dataPath = u_getDataDirectory();
+    داده_مسیر = u_get_داده_Directory();
 
     /****    Time zone individual files override  */
-    if (isICUData && type != nullptr && isTimeZoneFile(name, type)) {
-        const char *tzFilesDir = u_getTimeZoneFilesDirectory(pErrorCode);
-        if (tzFilesDir[0] != 0) {
-#ifdef UDATA_DEBUG
+    إذا (isICUData && type != اشاره_تهی && is_زمان_Zone_File(name, type)) {
+        ثابت حرف *tzFilesDir = u_get_زمان_Zone_Files_Directory(p_Error_کد);
+        إذا (tzFilesDir[0] != 0) {
+#اگر_تعریف_شده UDATA_DEBUG
             fprintf(stderr, "Trying Time Zone Files directory = %s\n", tzFilesDir);
-#endif
-            retVal = doLoadFromIndividualFiles(/* pkgName.data() */ "", tzFilesDir, tocEntryPathSuffix,
-                            /* path */ "", type, name, isAcceptable, context, &subErrorCode, pErrorCode);
-            if((retVal != nullptr) || U_FAILURE(*pErrorCode)) {
-                return retVal;
+#پایان_اگر
+            retVal = do_بارگیری_From_Individual_Files(/* pkgName.data() */ "", tzFilesDir, toc_مدخل_مسیر_Suffix,
+                            /*مسیر*/ "", type, name, isAcceptable, context, &sub_Error_کد, p_Error_کد);
+            إذا((retVal != اشاره_تهی) || U_FAILURE(*p_Error_کد)) {
+                أرجع retVal;
             }
         }
     }
 
     /****    COMMON PACKAGE  - only if packages are first. */
-    if(gDataFileAccess == UDATA_PACKAGES_FIRST) {
-#ifdef UDATA_DEBUG
+    إذا(g_داده_File_Access == UDATA_PACKAGES_اولی) {
+#اگر_تعریف_شده UDATA_DEBUG
         fprintf(stderr, "Trying packages (UDATA_PACKAGES_FIRST)\n");
-#endif
+#پایان_اگر
         /* #2 */
-        retVal = doLoadFromCommonData(isICUData, 
-                            pkgName.data(), dataPath, tocEntryPathSuffix, tocEntryName.data(),
-                            path, type, name, isAcceptable, context, &subErrorCode, pErrorCode);
-        if((retVal != nullptr) || U_FAILURE(*pErrorCode)) {
-            return retVal;
+        retVal = do_بارگیری_From_Common_داده(isICUData, 
+                            pkgName.داده(), داده_مسیر, toc_مدخل_مسیر_Suffix, toc_مدخل_Name.داده(),
+                            مسیر, type, name, isAcceptable, context, &sub_Error_کد, p_Error_کد);
+        إذا((retVal != اشاره_تهی) || U_FAILURE(*p_Error_کد)) {
+            أرجع retVal;
         }
     }
 
     /****    INDIVIDUAL FILES  */
-    if((gDataFileAccess==UDATA_PACKAGES_FIRST) ||
-       (gDataFileAccess==UDATA_FILES_FIRST)) {
-#ifdef UDATA_DEBUG
+    إذا((g_داده_File_Access==UDATA_PACKAGES_اولی) ||
+       (g_داده_File_Access==UDATA_FILES_اولی)) {
+#اگر_تعریف_شده UDATA_DEBUG
         fprintf(stderr, "Trying individual files\n");
-#endif
+#پایان_اگر
         /* Check to make sure that there is a dataPath to iterate over */
-        if ((dataPath && *dataPath) || !isICUData) {
-            retVal = doLoadFromIndividualFiles(pkgName.data(), dataPath, tocEntryPathSuffix,
-                            path, type, name, isAcceptable, context, &subErrorCode, pErrorCode);
-            if((retVal != nullptr) || U_FAILURE(*pErrorCode)) {
-                return retVal;
+        إذا ((داده_مسیر && *داده_مسیر) || !isICUData) {
+            retVal = do_بارگیری_From_Individual_Files(pkgName.داده(), داده_مسیر, toc_مدخل_مسیر_Suffix,
+                            مسیر, type, name, isAcceptable, context, &sub_Error_کد, p_Error_کد);
+            إذا((retVal != اشاره_تهی) || U_FAILURE(*p_Error_کد)) {
+                أرجع retVal;
             }
         }
     }
 
     /****    COMMON PACKAGE  */
-    if((gDataFileAccess==UDATA_ONLY_PACKAGES) || 
-       (gDataFileAccess==UDATA_FILES_FIRST)) {
-#ifdef UDATA_DEBUG
+    إذا((g_داده_File_Access==UDATA_ONLY_PACKAGES) || 
+       (g_داده_File_Access==UDATA_FILES_اولی)) {
+#اگر_تعریف_شده UDATA_DEBUG
         fprintf(stderr, "Trying packages (UDATA_ONLY_PACKAGES || UDATA_FILES_FIRST)\n");
-#endif
-        retVal = doLoadFromCommonData(isICUData,
-                            pkgName.data(), dataPath, tocEntryPathSuffix, tocEntryName.data(),
-                            path, type, name, isAcceptable, context, &subErrorCode, pErrorCode);
-        if((retVal != nullptr) || U_FAILURE(*pErrorCode)) {
-            return retVal;
+#پایان_اگر
+        retVal = do_بارگیری_From_Common_داده(isICUData,
+                            pkgName.داده(), داده_مسیر, toc_مدخل_مسیر_Suffix, toc_مدخل_Name.داده(),
+                            مسیر, type, name, isAcceptable, context, &sub_Error_کد, p_Error_کد);
+        إذا((retVal != اشاره_تهی) || U_FAILURE(*p_Error_کد)) {
+            أرجع retVal;
         }
     }
     
     /* Load from DLL.  If we haven't attempted package load, we also haven't had any chance to
         try a DLL (static or setCommonData/etc)  load.
          If we ever have a "UDATA_ONLY_FILES", add it to the or list here.  */  
-    if(gDataFileAccess==UDATA_NO_FILES) {
-#ifdef UDATA_DEBUG
+    إذا(g_داده_File_Access==UDATA_NO_FILES) {
+#اگر_تعریف_شده UDATA_DEBUG
         fprintf(stderr, "Trying common data (UDATA_NO_FILES)\n");
-#endif
-        retVal = doLoadFromCommonData(isICUData,
-                            pkgName.data(), "", tocEntryPathSuffix, tocEntryName.data(),
-                            path, type, name, isAcceptable, context, &subErrorCode, pErrorCode);
-        if((retVal != nullptr) || U_FAILURE(*pErrorCode)) {
-            return retVal;
+#پایان_اگر
+        retVal = do_بارگیری_From_Common_داده(isICUData,
+                            pkgName.داده(), "", toc_مدخل_مسیر_Suffix, toc_مدخل_Name.داده(),
+                            مسیر, type, name, isAcceptable, context, &sub_Error_کد, p_Error_کد);
+        إذا((retVal != اشاره_تهی) || U_FAILURE(*p_Error_کد)) {
+            أرجع retVal;
         }
     }
 
     /* data not found */
-    if(U_SUCCESS(*pErrorCode)) {
-        if(U_SUCCESS(subErrorCode)) {
+    إذا(U_SUCCESS(*p_Error_کد)) {
+        إذا(U_SUCCESS(sub_Error_کد)) {
             /* file not found */
-            *pErrorCode=U_FILE_ACCESS_ERROR;
-        } else {
+            *p_Error_کد=U_FILE_ACCESS_ERROR;
+        } وإلا {
             /* entry point not found or rejected */
-            *pErrorCode=subErrorCode;
+            *p_Error_کد=sub_Error_کد;
         }
     }
-    return retVal;
+    أرجع retVal;
 }
 
 
 
 /* API ---------------------------------------------------------------------- */
 
-U_CAPI UDataMemory * U_EXPORT2
-udata_open(const char *path, const char *type, const char *name,
-           UErrorCode *pErrorCode) {
-#ifdef UDATA_DEBUG
-  fprintf(stderr, "udata_open(): Opening: %s : %s . %s\n", (path?path:"nullptr"), name, type);
+U_CAPI UData_حافظه * U_EXPORT2
+udata_open(ثابت حرف *مسیر, ثابت حرف *type, ثابت حرف *name,
+           UError_کد *p_Error_کد) {
+#اگر_تعریف_شده UDATA_DEBUG
+  fprintf(stderr, "udata_open(): Opening: %s : %s . %s\n", (مسیر?مسیر:"nullptr"), name, type);
     fflush(stderr);
-#endif
+#پایان_اگر
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return nullptr;
-    } else if(name==nullptr || *name==0) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
-    } else {
-        return doOpenChoice(path, type, name, nullptr, nullptr, pErrorCode);
+    إذا(p_Error_کد==اشاره_تهی || U_FAILURE(*p_Error_کد)) {
+        أرجع اشاره_تهی;
+    } وإلا إذا(name==اشاره_تهی || *name==0) {
+        *p_Error_کد=U_ILLEGAL_آرگومان_ERROR;
+        أرجع اشاره_تهی;
+    } وإلا {
+        أرجع doOpenChoice(مسیر, type, name, اشاره_تهی, اشاره_تهی, p_Error_کد);
     }
 }
 
 
 
-U_CAPI UDataMemory * U_EXPORT2
-udata_openChoice(const char *path, const char *type, const char *name,
-                 UDataMemoryIsAcceptable *isAcceptable, void *context,
-                 UErrorCode *pErrorCode) {
-#ifdef UDATA_DEBUG
-  fprintf(stderr, "udata_openChoice(): Opening: %s : %s . %s\n", (path?path:"nullptr"), name, type);
-#endif
+U_CAPI UData_حافظه * U_EXPORT2
+udata_openChoice(ثابت حرف *مسیر, ثابت حرف *type, ثابت حرف *name,
+                 UData_حافظه_Is_Acceptable *isAcceptable, فراغ *context,
+                 UError_کد *p_Error_کد) {
+#اگر_تعریف_شده UDATA_DEBUG
+  fprintf(stderr, "udata_openChoice(): Opening: %s : %s . %s\n", (مسیر?مسیر:"nullptr"), name, type);
+#پایان_اگر
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return nullptr;
-    } else if(name==nullptr || *name==0 || isAcceptable==nullptr) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
-    } else {
-        return doOpenChoice(path, type, name, isAcceptable, context, pErrorCode);
+    إذا(p_Error_کد==اشاره_تهی || U_FAILURE(*p_Error_کد)) {
+        أرجع اشاره_تهی;
+    } وإلا إذا(name==اشاره_تهی || *name==0 || isAcceptable==اشاره_تهی) {
+        *p_Error_کد=U_ILLEGAL_آرگومان_ERROR;
+        أرجع اشاره_تهی;
+    } وإلا {
+        أرجع doOpenChoice(مسیر, type, name, isAcceptable, context, p_Error_کد);
     }
 }
 
 
 
-U_CAPI void U_EXPORT2
-udata_getInfo(UDataMemory *pData, UDataInfo *pInfo) {
-    if(pInfo!=nullptr) {
-        if(pData!=nullptr && pData->pHeader!=nullptr) {
-            const UDataInfo *info=&pData->pHeader->info;
-            uint16_t dataInfoSize=udata_getInfoSize(info);
-            if(pInfo->size>dataInfoSize) {
-                pInfo->size=dataInfoSize;
+U_CAPI فراغ U_EXPORT2
+udata_getInfo(UData_حافظه *p_داده, UDataInfo *pInfo) {
+    إذا(pInfo!=اشاره_تهی) {
+        إذا(p_داده!=اشاره_تهی && p_داده->p_سرآیند!=اشاره_تهی) {
+            ثابت UDataInfo *info=&p_داده->p_سرآیند->info;
+            uint16_t داده_Info_اندازه=udata_get_Info_اندازه(info);
+            إذا(pInfo->size>داده_Info_اندازه) {
+                pInfo->size=داده_Info_اندازه;
             }
-            uprv_memcpy((uint16_t *)pInfo+1, (const uint16_t *)info+1, pInfo->size-2);
-            if(info->isBigEndian!=U_IS_BIG_ENDIAN) {
+            uprv_memcpy((uint16_t *)pInfo+1, (ثابت uint16_t *)info+1, pInfo->size-2);
+            إذا(info->isBigEndian!=U_IS_BIG_ENDIAN) {
                 /* opposite endianness */
-                uint16_t x=info->reservedWord;
-                pInfo->reservedWord=(uint16_t)((x<<8)|(x>>8));
+                uint16_t x=info->reserved_کلمه;
+                pInfo->reserved_کلمه=(uint16_t)((x<<8)|(x>>8));
             }
-        } else {
+        } وإلا {
             pInfo->size=0;
         }
     }
 }
 
 
-U_CAPI void U_EXPORT2 udata_setFileAccess(UDataFileAccess access, UErrorCode * /*status*/)
+U_CAPI فراغ U_EXPORT2 udata_مجموعه_File_Access(UDataFileAccess access, UError_کد * /*وضعیت*/)
 {
     // Note: this function is documented as not thread safe.
-    gDataFileAccess = access;
+    g_داده_File_Access = access;
 }

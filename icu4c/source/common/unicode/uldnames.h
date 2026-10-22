@@ -7,54 +7,54 @@
 *******************************************************************************
 */
 
-#ifndef __ULDNAMES_H__
-#define __ULDNAMES_H__
+#اگر_تعریف_نشده __ULDNAMES_H__
+#تعریف_کن __ULDNAMES_H__
 
 /**
  * \file
  * \brief C API: Provides display names of Locale ids and their components.
  */
 
-#include "unicode/utypes.h"
-#include "unicode/uscript.h"
-#include "unicode/udisplaycontext.h"
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/uscript.h"
+#ضمن "unicode/udisplaycontext.h"
 
-#if U_SHOW_CPLUSPLUS_API
-#include "unicode/localpointer.h"
-#endif   // U_SHOW_CPLUSPLUS_API
+#إذا U_SHOW_CPLUSPLUS_API
+#ضمن "unicode/localpointer.h"
+#پایان_اگر   // U_SHOW_CPLUSPLUS_API
 
 /**
  * Enum used in LocaleDisplayNames::createInstance.
  * @stable ICU 4.4
  */
-typedef enum {
+تعريفنوع تعداد {
     /**
      * Use standard names when generating a locale name,
      * e.g. en_GB displays as 'English (United Kingdom)'.
      * @stable ICU 4.4
      */
-    ULDN_STANDARD_NAMES = 0,
+    ULDN_STANDARD_نامها = 0,
     /**
      * Use dialect names, when generating a locale name,
      * e.g. en_GB displays as 'British English'.
      * @stable ICU 4.4
      */
-    ULDN_DIALECT_NAMES
+    ULDN_DIALECT_نامها
 } UDialectHandling;
 
 /**
  * Opaque C service object type for the locale display names API
  * @stable ICU 4.4
  */
-struct ULocaleDisplayNames;
+بنية ULocale_Display_نامها;
 
 /** 
  * C typedef for struct ULocaleDisplayNames. 
  * @stable ICU 4.4 
  */
-typedef struct ULocaleDisplayNames ULocaleDisplayNames;  
+تعريفنوع بنية ULocale_Display_نامها ULocale_Display_نامها;  
 
-#if !UCONFIG_NO_FORMATTING
+#إذا !UCONFIG_NO_FORMATTING
 
 /**
  * Returns an instance of LocaleDisplayNames that returns names
@@ -68,20 +68,20 @@ typedef struct ULocaleDisplayNames ULocaleDisplayNames;
  * @param pErrorCode the status code
  * @stable ICU 4.4
  */
-U_CAPI ULocaleDisplayNames * U_EXPORT2
-uldn_open(const char * locale,
+U_CAPI ULocale_Display_نامها * U_EXPORT2
+uldn_open(ثابت حرف * locale,
           UDialectHandling dialectHandling,
-          UErrorCode *pErrorCode);
+          UError_کد *p_Error_کد);
 
 /**
  * Closes a ULocaleDisplayNames instance obtained from uldn_open().
  * @param ldn the ULocaleDisplayNames instance to be closed
  * @stable ICU 4.4
  */
-U_CAPI void U_EXPORT2
-uldn_close(ULocaleDisplayNames *ldn);
+U_CAPI فراغ U_EXPORT2
+uldn_close(ULocale_Display_نامها *ldn);
 
-#if U_SHOW_CPLUSPLUS_API
+#إذا U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -94,11 +94,11 @@ U_NAMESPACE_BEGIN
  * @see LocalPointer
  * @stable ICU 4.4
  */
-U_DEFINE_LOCAL_OPEN_POINTER(LocalULocaleDisplayNamesPointer, ULocaleDisplayNames, uldn_close);
+U_DEFINE_LOCAL_OPEN_اشاره_گر(Local_ULocale_Display_نامها_اشاره_گر, ULocale_Display_نامها, uldn_close);
 
-U_NAMESPACE_END
+U_NAMESPACE_انتها
 
-#endif
+#پایان_اگر
 
 /* getters for state */
 
@@ -109,8 +109,8 @@ U_NAMESPACE_END
  * @return the display locale 
  * @stable ICU 4.4
  */
-U_CAPI const char* U_EXPORT2
-uldn_getLocale(const ULocaleDisplayNames* ldn U_LIFETIME_BOUND);
+U_CAPI ثابت حرف* U_EXPORT2
+uldn_getLocale(ثابت ULocale_Display_نامها* ldn U_LIFETIME_BOUND);
 
 /**
  * Returns the dialect handling used in the display names.
@@ -119,7 +119,7 @@ uldn_getLocale(const ULocaleDisplayNames* ldn U_LIFETIME_BOUND);
  * @stable ICU 4.4
  */
 U_CAPI UDialectHandling U_EXPORT2
-uldn_getDialectHandling(const ULocaleDisplayNames *ldn);
+uldn_getDialectHandling(ثابت ULocale_Display_نامها *ldn);
 
 /* names for entire locales */
 
@@ -135,11 +135,11 @@ uldn_getDialectHandling(const ULocaleDisplayNames *ldn);
  * @stable ICU 4.4
  */
 U_CAPI int32_t U_EXPORT2
-uldn_localeDisplayName(const ULocaleDisplayNames *ldn,
-                       const char *locale,
-                       UChar *result,
-                       int32_t maxResultSize,
-                       UErrorCode *pErrorCode);
+uldn_localeDisplayName(ثابت ULocale_Display_نامها *ldn,
+                       ثابت حرف *locale,
+                       UChar *نتیجه,
+                       int32_t max_نتیجه_اندازه,
+                       UError_کد *p_Error_کد);
 
 /* names for components of a locale */
 
@@ -155,11 +155,11 @@ uldn_localeDisplayName(const ULocaleDisplayNames *ldn,
  * @stable ICU 4.4
  */
 U_CAPI int32_t U_EXPORT2
-uldn_languageDisplayName(const ULocaleDisplayNames *ldn,
-                         const char *lang,
-                         UChar *result,
-                         int32_t maxResultSize,
-                         UErrorCode *pErrorCode);
+uldn_languageDisplayName(ثابت ULocale_Display_نامها *ldn,
+                         ثابت حرف *lang,
+                         UChar *نتیجه,
+                         int32_t max_نتیجه_اندازه,
+                         UError_کد *p_Error_کد);
 
 /**
  * Returns the display name of the provided script.
@@ -173,11 +173,11 @@ uldn_languageDisplayName(const ULocaleDisplayNames *ldn,
  * @stable ICU 4.4
  */
 U_CAPI int32_t U_EXPORT2
-uldn_scriptDisplayName(const ULocaleDisplayNames *ldn,
-                       const char *script,
-                       UChar *result,
-                       int32_t maxResultSize,
-                       UErrorCode *pErrorCode);
+uldn_scriptDisplayName(ثابت ULocale_Display_نامها *ldn,
+                       ثابت حرف *script,
+                       UChar *نتیجه,
+                       int32_t max_نتیجه_اندازه,
+                       UError_کد *p_Error_کد);
 
 /**
  * Returns the display name of the provided script code.
@@ -191,11 +191,11 @@ uldn_scriptDisplayName(const ULocaleDisplayNames *ldn,
  * @stable ICU 4.4
  */
 U_CAPI int32_t U_EXPORT2
-uldn_scriptCodeDisplayName(const ULocaleDisplayNames *ldn,
-                           UScriptCode scriptCode,
-                           UChar *result,
-                           int32_t maxResultSize,
-                           UErrorCode *pErrorCode);
+uldn_script_کد_Display_Name(ثابت ULocale_Display_نامها *ldn,
+                           UScript_کد script_کد,
+                           UChar *نتیجه,
+                           int32_t max_نتیجه_اندازه,
+                           UError_کد *p_Error_کد);
 
 /**
  * Returns the display name of the provided region code.
@@ -209,11 +209,11 @@ uldn_scriptCodeDisplayName(const ULocaleDisplayNames *ldn,
  * @stable ICU 4.4
  */
 U_CAPI int32_t U_EXPORT2
-uldn_regionDisplayName(const ULocaleDisplayNames *ldn,
-                       const char *region,
-                       UChar *result,
-                       int32_t maxResultSize,
-                       UErrorCode *pErrorCode);
+uldn_regionDisplayName(ثابت ULocale_Display_نامها *ldn,
+                       ثابت حرف *region,
+                       UChar *نتیجه,
+                       int32_t max_نتیجه_اندازه,
+                       UError_کد *p_Error_کد);
 
 /**
  * Returns the display name of the provided variant
@@ -227,11 +227,11 @@ uldn_regionDisplayName(const ULocaleDisplayNames *ldn,
  * @stable ICU 4.4
  */
 U_CAPI int32_t U_EXPORT2
-uldn_variantDisplayName(const ULocaleDisplayNames *ldn,
-                        const char *variant,
-                        UChar *result,
-                        int32_t maxResultSize,
-                        UErrorCode *pErrorCode);
+uldn_variantDisplayName(ثابت ULocale_Display_نامها *ldn,
+                        ثابت حرف *variant,
+                        UChar *نتیجه,
+                        int32_t max_نتیجه_اندازه,
+                        UError_کد *p_Error_کد);
 
 /**
  * Returns the display name of the provided locale key
@@ -245,11 +245,11 @@ uldn_variantDisplayName(const ULocaleDisplayNames *ldn,
  * @stable ICU 4.4
  */
 U_CAPI int32_t U_EXPORT2
-uldn_keyDisplayName(const ULocaleDisplayNames *ldn,
-                    const char *key,
-                    UChar *result,
-                    int32_t maxResultSize,
-                    UErrorCode *pErrorCode);
+uldn_کلید_Display_Name(ثابت ULocale_Display_نامها *ldn,
+                    ثابت حرف *کلید,
+                    UChar *نتیجه,
+                    int32_t max_نتیجه_اندازه,
+                    UError_کد *p_Error_کد);
 
 /**
  * Returns the display name of the provided value (used with the provided key).
@@ -264,12 +264,12 @@ uldn_keyDisplayName(const ULocaleDisplayNames *ldn,
  * @stable ICU 4.4
  */
 U_CAPI int32_t U_EXPORT2
-uldn_keyValueDisplayName(const ULocaleDisplayNames *ldn,
-                         const char *key,
-                         const char *value,
-                         UChar *result,
-                         int32_t maxResultSize,
-                         UErrorCode *pErrorCode);
+uldn_کلید_مقدار_Display_Name(ثابت ULocale_Display_نامها *ldn,
+                         ثابت حرف *کلید,
+                         ثابت حرف *مقدار_2,
+                         UChar *نتیجه,
+                         int32_t max_نتیجه_اندازه,
+                         UError_کد *p_Error_کد);
 
 /**
 * Returns an instance of LocaleDisplayNames that returns names formatted
@@ -285,9 +285,9 @@ uldn_keyValueDisplayName(const ULocaleDisplayNames *ldn,
 * @return a ULocaleDisplayNames instance 
 * @stable ICU 51
 */
-U_CAPI ULocaleDisplayNames * U_EXPORT2
-uldn_openForContext(const char * locale, UDisplayContext *contexts,
-                    int32_t length, UErrorCode *pErrorCode);
+U_CAPI ULocale_Display_نامها * U_EXPORT2
+uldn_openForContext(ثابت حرف * locale, UDisplayContext *contexts,
+                    int32_t درازی, UError_کد *p_Error_کد);
 
 /**
 * Returns the UDisplayContext value for the specified UDisplayContextType.
@@ -300,8 +300,8 @@ uldn_openForContext(const char * locale, UDisplayContext *contexts,
 * @stable ICU 51
 */
 U_CAPI UDisplayContext U_EXPORT2
-uldn_getContext(const ULocaleDisplayNames *ldn, UDisplayContextType type,
-                UErrorCode *pErrorCode);
+uldn_getContext(ثابت ULocale_Display_نامها *ldn, UDisplayContextType type,
+                UError_کد *p_Error_کد);
 
-#endif  /* !UCONFIG_NO_FORMATTING */
-#endif  /* __ULDNAMES_H__ */
+#پایان_اگر  /* !UCONFIG_NO_FORMATTING */
+#پایان_اگر  /* __ULDNAMES_H__ */

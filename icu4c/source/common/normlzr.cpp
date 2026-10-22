@@ -8,26 +8,26 @@
  *************************************************************************
  */
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if !UCONFIG_NO_NORMALIZATION
+#إذا !UCONFIG_NO_NORMALIZATION
 
-#include "unicode/uniset.h"
-#include "unicode/unistr.h"
-#include "unicode/chariter.h"
-#include "unicode/schriter.h"
-#include "unicode/uchriter.h"
-#include "unicode/normlzr.h"
-#include "unicode/utf16.h"
-#include "cmemory.h"
-#include "normalizer2impl.h"
-#include "uprops.h"  // for uniset_getUnicode32Instance()
+#ضمن "unicode/uniset.h"
+#ضمن "unicode/unistr.h"
+#ضمن "unicode/chariter.h"
+#ضمن "unicode/schriter.h"
+#ضمن "unicode/uchriter.h"
+#ضمن "unicode/normlzr.h"
+#ضمن "unicode/utf16.h"
+#ضمن "cmemory.h"
+#ضمن "normalizer2impl.h"
+#ضمن "uprops.h"  // for uniset_getUnicode32Instance()
 
-#if defined(move32)
+#إذا defined(move32)
  // System can define move32 intrinsics, but the char iters define move32 method
  // using same undef trick in headers, so undef here to re-enable the method.
-#undef move32
-#endif
+#لغو_تعریف move32
+#پایان_اگر
 
 U_NAMESPACE_BEGIN
 
@@ -37,215 +37,215 @@ UOBJECT_DEFINE_RTTI_IMPLEMENTATION(Normalizer)
 // Constructors and other boilerplate
 //-------------------------------------------------------------------------
 
-Normalizer::Normalizer(const UnicodeString& str, UNormalizationMode mode) :
-    UObject(), fFilteredNorm2(nullptr), fNorm2(nullptr), fUMode(mode), fOptions(0),
-    text(new StringCharacterIterator(str)),
-    currentIndex(0), nextIndex(0),
-    buffer(), bufferPos(0)
+Normalizer::Normalizer(ثابت UnicodeString& str, UNormalization_نما نما) :
+    UObject(), fFilteredNorm2(اشاره_تهی), fNorm2(اشاره_تهی), fUMode(نما), fOptions(0),
+    متن(جديد StringCharacterIterator(str)),
+    current_شاخص(0), بعدی_شاخص(0),
+    میانگیر(), میانگیر_Pos(0)
 {
     init();
 }
 
-Normalizer::Normalizer(ConstChar16Ptr str U_LIFETIME_BOUND, int32_t length, UNormalizationMode mode) :
-    UObject(), fFilteredNorm2(nullptr), fNorm2(nullptr), fUMode(mode), fOptions(0),
-    text(new UCharCharacterIterator(str, length)),
-    currentIndex(0), nextIndex(0),
-    buffer(), bufferPos(0)
+Normalizer::Normalizer(ConstChar16Ptr str U_LIFETIME_BOUND, int32_t length, UNormalization_نما نما) :
+    UObject(), fFilteredNorm2(اشاره_تهی), fNorm2(اشاره_تهی), fUMode(نما), fOptions(0),
+    متن(جديد UCharCharacterIterator(str, length)),
+    current_شاخص(0), بعدی_شاخص(0),
+    میانگیر(), میانگیر_Pos(0)
 {
     init();
 }
 
-Normalizer::Normalizer(const CharacterIterator& iter, UNormalizationMode mode) :
-    UObject(), fFilteredNorm2(nullptr), fNorm2(nullptr), fUMode(mode), fOptions(0),
-    text(iter.clone()),
-    currentIndex(0), nextIndex(0),
-    buffer(), bufferPos(0)
+Normalizer::Normalizer(ثابت CharacterIterator& iter, UNormalization_نما نما) :
+    UObject(), fFilteredNorm2(اشاره_تهی), fNorm2(اشاره_تهی), fUMode(نما), fOptions(0),
+    متن(iter.clone()),
+    current_شاخص(0), بعدی_شاخص(0),
+    میانگیر(), میانگیر_Pos(0)
 {
     init();
 }
 
-Normalizer::Normalizer(const Normalizer &copy) :
-    UObject(copy), fFilteredNorm2(nullptr), fNorm2(nullptr), fUMode(copy.fUMode), fOptions(copy.fOptions),
-    text(copy.text->clone()),
-    currentIndex(copy.currentIndex), nextIndex(copy.nextIndex),
-    buffer(copy.buffer), bufferPos(copy.bufferPos)
+Normalizer::Normalizer(ثابت Normalizer &copy) :
+    UObject(copy), fFilteredNorm2(اشاره_تهی), fNorm2(اشاره_تهی), fUMode(copy.fUMode), fOptions(copy.fOptions),
+    متن(copy.متن->clone()),
+    current_شاخص(copy.current_شاخص), بعدی_شاخص(copy.بعدی_شاخص),
+    میانگیر(copy.میانگیر), میانگیر_Pos(copy.میانگیر_Pos)
 {
     init();
 }
 
-void
+فراغ
 Normalizer::init() {
-    UErrorCode errorCode=U_ZERO_ERROR;
-    fNorm2=Normalizer2Factory::getInstance(fUMode, errorCode);
-    if(fOptions&UNORM_UNICODE_3_2) {
-        delete fFilteredNorm2;
+    UError_کد error_کد=U_ZERO_ERROR;
+    fNorm2=Normalizer2Factory::getInstance(fUMode, error_کد);
+    إذا(fOptions&UNORM_UNICODE_3_2) {
+        حذف fFilteredNorm2;
         fNorm2=fFilteredNorm2=
-            new FilteredNormalizer2(*fNorm2, *uniset_getUnicode32Instance(errorCode));
+            جديد FilteredNormalizer2(*fNorm2, *uniset_getUnicode32Instance(error_کد));
     }
-    if(U_FAILURE(errorCode)) {
-        errorCode=U_ZERO_ERROR;
-        fNorm2=Normalizer2Factory::getNoopInstance(errorCode);
+    إذا(U_FAILURE(error_کد)) {
+        error_کد=U_ZERO_ERROR;
+        fNorm2=Normalizer2Factory::getNoopInstance(error_کد);
     }
 }
 
 Normalizer::~Normalizer()
 {
-    delete fFilteredNorm2;
-    delete text;
+    حذف fFilteredNorm2;
+    حذف متن;
 }
 
 Normalizer* 
-Normalizer::clone() const
+Normalizer::clone() ثابت
 {
-    return new Normalizer(*this);
+    أرجع جديد Normalizer(*هذا);
 }
 
 /**
  * Generates a hash code for this iterator.
  */
-int32_t Normalizer::hashCode() const
+int32_t Normalizer::hash_کد() ثابت
 {
-    return text->hashCode() + fUMode + fOptions + buffer.hashCode() + bufferPos + currentIndex + nextIndex;
+    أرجع متن->hash_کد() + fUMode + fOptions + میانگیر.hash_کد() + میانگیر_Pos + current_شاخص + بعدی_شاخص;
 }
     
-bool Normalizer::operator==(const Normalizer& that) const
+منطقي Normalizer::عملگر==(ثابت Normalizer& that) ثابت
 {
-    return
-        this==&that ||
+    أرجع
+        هذا==&that ||
         (fUMode==that.fUMode &&
         fOptions==that.fOptions &&
-        *text==*that.text &&
-        buffer==that.buffer &&
-        bufferPos==that.bufferPos &&
-        nextIndex==that.nextIndex);
+        *متن==*that.متن &&
+        میانگیر==that.میانگیر &&
+        میانگیر_Pos==that.میانگیر_Pos &&
+        بعدی_شاخص==that.بعدی_شاخص);
 }
 
 //-------------------------------------------------------------------------
 // Static utility methods
 //-------------------------------------------------------------------------
 
-void U_EXPORT2
-Normalizer::normalize(const UnicodeString& source, 
-                      UNormalizationMode mode, int32_t options,
-                      UnicodeString& result, 
-                      UErrorCode &status) {
-    if(source.isBogus() || U_FAILURE(status)) {
-        result.setToBogus();
-        if(U_SUCCESS(status)) {
-            status=U_ILLEGAL_ARGUMENT_ERROR;
+فراغ U_EXPORT2
+Normalizer::normalize(ثابت UnicodeString& منبع, 
+                      UNormalization_نما نما, int32_t options,
+                      UnicodeString& نتیجه, 
+                      UError_کد &وضعیت) {
+    إذا(منبع.isBogus() || U_FAILURE(وضعیت)) {
+        نتیجه.مجموعه_مقصد_Bogus();
+        إذا(U_SUCCESS(وضعیت)) {
+            وضعیت=U_ILLEGAL_آرگومان_ERROR;
         }
-    } else {
+    } وإلا {
         UnicodeString localDest;
         UnicodeString *dest;
 
-        if(&source!=&result) {
-            dest=&result;
-        } else {
+        إذا(&منبع!=&نتیجه) {
+            dest=&نتیجه;
+        } وإلا {
             // the source and result strings are the same object, use a temporary one
             dest=&localDest;
         }
-        const Normalizer2 *n2=Normalizer2Factory::getInstance(mode, status);
-        if(U_SUCCESS(status)) {
-            if(options&UNORM_UNICODE_3_2) {
-                FilteredNormalizer2(*n2, *uniset_getUnicode32Instance(status)).
-                    normalize(source, *dest, status);
-            } else {
-                n2->normalize(source, *dest, status);
+        ثابت Normalizer2 *n2=Normalizer2Factory::getInstance(نما, وضعیت);
+        إذا(U_SUCCESS(وضعیت)) {
+            إذا(options&UNORM_UNICODE_3_2) {
+                FilteredNormalizer2(*n2, *uniset_getUnicode32Instance(وضعیت)).
+                    normalize(منبع, *dest, وضعیت);
+            } وإلا {
+                n2->normalize(منبع, *dest, وضعیت);
             }
         }
-        if(dest==&localDest && U_SUCCESS(status)) {
-            result=*dest;
+        إذا(dest==&localDest && U_SUCCESS(وضعیت)) {
+            نتیجه=*dest;
         }
     }
 }
 
-void U_EXPORT2
-Normalizer::compose(const UnicodeString& source, 
+فراغ U_EXPORT2
+Normalizer::compose(ثابت UnicodeString& منبع, 
                     UBool compat, int32_t options,
-                    UnicodeString& result, 
-                    UErrorCode &status) {
-    normalize(source, compat ? UNORM_NFKC : UNORM_NFC, options, result, status);
+                    UnicodeString& نتیجه, 
+                    UError_کد &وضعیت) {
+    normalize(منبع, compat ? UNORM_NFKC : UNORM_NFC, options, نتیجه, وضعیت);
 }
 
-void U_EXPORT2
-Normalizer::decompose(const UnicodeString& source, 
+فراغ U_EXPORT2
+Normalizer::decompose(ثابت UnicodeString& منبع, 
                       UBool compat, int32_t options,
-                      UnicodeString& result, 
-                      UErrorCode &status) {
-    normalize(source, compat ? UNORM_NFKD : UNORM_NFD, options, result, status);
+                      UnicodeString& نتیجه, 
+                      UError_کد &وضعیت) {
+    normalize(منبع, compat ? UNORM_NFKD : UNORM_NFD, options, نتیجه, وضعیت);
 }
 
-UNormalizationCheckResult
-Normalizer::quickCheck(const UnicodeString& source,
-                       UNormalizationMode mode, int32_t options,
-                       UErrorCode &status) {
-    const Normalizer2 *n2=Normalizer2Factory::getInstance(mode, status);
-    if(U_SUCCESS(status)) {
-        if(options&UNORM_UNICODE_3_2) {
-            return FilteredNormalizer2(*n2, *uniset_getUnicode32Instance(status)).
-                quickCheck(source, status);
-        } else {
-            return n2->quickCheck(source, status);
+UNormalization_Check_نتیجه
+Normalizer::سریع_Check(ثابت UnicodeString& منبع,
+                       UNormalization_نما نما, int32_t options,
+                       UError_کد &وضعیت) {
+    ثابت Normalizer2 *n2=Normalizer2Factory::getInstance(نما, وضعیت);
+    إذا(U_SUCCESS(وضعیت)) {
+        إذا(options&UNORM_UNICODE_3_2) {
+            أرجع FilteredNormalizer2(*n2, *uniset_getUnicode32Instance(وضعیت)).
+                سریع_Check(منبع, وضعیت);
+        } وإلا {
+            أرجع n2->سریع_Check(منبع, وضعیت);
         }
-    } else {
-        return UNORM_MAYBE;
+    } وإلا {
+        أرجع UNORM_MAYBE;
     }
 }
 
 UBool
-Normalizer::isNormalized(const UnicodeString& source,
-                         UNormalizationMode mode, int32_t options,
-                         UErrorCode &status) {
-    const Normalizer2 *n2=Normalizer2Factory::getInstance(mode, status);
-    if(U_SUCCESS(status)) {
-        if(options&UNORM_UNICODE_3_2) {
-            return FilteredNormalizer2(*n2, *uniset_getUnicode32Instance(status)).
-                isNormalized(source, status);
-        } else {
-            return n2->isNormalized(source, status);
+Normalizer::isNormalized(ثابت UnicodeString& منبع,
+                         UNormalization_نما نما, int32_t options,
+                         UError_کد &وضعیت) {
+    ثابت Normalizer2 *n2=Normalizer2Factory::getInstance(نما, وضعیت);
+    إذا(U_SUCCESS(وضعیت)) {
+        إذا(options&UNORM_UNICODE_3_2) {
+            أرجع FilteredNormalizer2(*n2, *uniset_getUnicode32Instance(وضعیت)).
+                isNormalized(منبع, وضعیت);
+        } وإلا {
+            أرجع n2->isNormalized(منبع, وضعیت);
         }
-    } else {
-        return false;
+    } وإلا {
+        أرجع خطأ;
     }
 }
 
 UnicodeString& U_EXPORT2
-Normalizer::concatenate(const UnicodeString& left,
-                        const UnicodeString& right,
-                        UnicodeString& result U_LIFETIME_BOUND,
-                        UNormalizationMode mode,
+Normalizer::concatenate(ثابت UnicodeString& چپ,
+                        ثابت UnicodeString& راست,
+                        UnicodeString& نتیجه U_LIFETIME_BOUND,
+                        UNormalization_نما نما,
                         int32_t options,
-                        UErrorCode& errorCode) {
-    if(left.isBogus() || right.isBogus() || U_FAILURE(errorCode)) {
-        result.setToBogus();
-        if(U_SUCCESS(errorCode)) {
-            errorCode=U_ILLEGAL_ARGUMENT_ERROR;
+                        UError_کد& error_کد) {
+    إذا(چپ.isBogus() || راست.isBogus() || U_FAILURE(error_کد)) {
+        نتیجه.مجموعه_مقصد_Bogus();
+        إذا(U_SUCCESS(error_کد)) {
+            error_کد=U_ILLEGAL_آرگومان_ERROR;
         }
-    } else {
+    } وإلا {
         UnicodeString localDest;
         UnicodeString *dest;
 
-        if(&right!=&result) {
-            dest=&result;
-        } else {
+        إذا(&راست!=&نتیجه) {
+            dest=&نتیجه;
+        } وإلا {
             // the right and result strings are the same object, use a temporary one
             dest=&localDest;
         }
-        *dest=left;
-        const Normalizer2 *n2=Normalizer2Factory::getInstance(mode, errorCode);
-        if(U_SUCCESS(errorCode)) {
-            if(options&UNORM_UNICODE_3_2) {
-                FilteredNormalizer2(*n2, *uniset_getUnicode32Instance(errorCode)).
-                    append(*dest, right, errorCode);
-            } else {
-                n2->append(*dest, right, errorCode);
+        *dest=چپ;
+        ثابت Normalizer2 *n2=Normalizer2Factory::getInstance(نما, error_کد);
+        إذا(U_SUCCESS(error_کد)) {
+            إذا(options&UNORM_UNICODE_3_2) {
+                FilteredNormalizer2(*n2, *uniset_getUnicode32Instance(error_کد)).
+                    append(*dest, راست, error_کد);
+            } وإلا {
+                n2->append(*dest, راست, error_کد);
             }
         }
-        if(dest==&localDest && U_SUCCESS(errorCode)) {
-            result=*dest;
+        إذا(dest==&localDest && U_SUCCESS(error_کد)) {
+            نتیجه=*dest;
         }
     }
-    return result;
+    أرجع نتیجه;
 }
 
 //-------------------------------------------------------------------------
@@ -256,10 +256,10 @@ Normalizer::concatenate(const UnicodeString& left,
  * Return the current character in the normalized text.
  */
 UChar32 Normalizer::current() {
-    if(bufferPos<buffer.length() || nextNormalize()) {
-        return buffer.char32At(bufferPos);
-    } else {
-        return DONE;
+    إذا(میانگیر_Pos<میانگیر.length() || بعدی_Normalize()) {
+        أرجع میانگیر.char32At(میانگیر_Pos);
+    } وإلا {
+        أرجع انجامشده_2;
     }
 }
 
@@ -269,12 +269,12 @@ UChar32 Normalizer::current() {
  * of the text has already been reached, {@link #DONE} is returned.
  */
 UChar32 Normalizer::next() {
-    if(bufferPos<buffer.length() ||  nextNormalize()) {
-        UChar32 c=buffer.char32At(bufferPos);
-        bufferPos+=U16_LENGTH(c);
-        return c;
-    } else {
-        return DONE;
+    إذا(میانگیر_Pos<میانگیر.length() ||  بعدی_Normalize()) {
+        UChar32 c=میانگیر.char32At(میانگیر_Pos);
+        میانگیر_Pos+=U16_درازی(c);
+        أرجع c;
+    } وإلا {
+        أرجع انجامشده_2;
     }
 }
 
@@ -283,26 +283,26 @@ UChar32 Normalizer::next() {
  * the iteration position by one.  If the beginning
  * of the text has already been reached, {@link #DONE} is returned.
  */
-UChar32 Normalizer::previous() {
-    if(bufferPos>0 || previousNormalize()) {
-        UChar32 c=buffer.char32At(bufferPos-1);
-        bufferPos-=U16_LENGTH(c);
-        return c;
-    } else {
-        return DONE;
+UChar32 Normalizer::قبلی() {
+    إذا(میانگیر_Pos>0 || قبلی_Normalize()) {
+        UChar32 c=میانگیر.char32At(میانگیر_Pos-1);
+        میانگیر_Pos-=U16_درازی(c);
+        أرجع c;
+    } وإلا {
+        أرجع انجامشده_2;
     }
 }
 
-void Normalizer::reset() {
-    currentIndex=nextIndex=text->setToStart();
-    clearBuffer();
+فراغ Normalizer::reset() {
+    current_شاخص=بعدی_شاخص=متن->مجموعه_مقصد_شروع();
+    clear_میانگیر();
 }
 
-void
-Normalizer::setIndexOnly(int32_t index) {
-    text->setIndex(index);  // pins index
-    currentIndex=nextIndex=text->getIndex();
-    clearBuffer();
+فراغ
+Normalizer::مجموعه_شاخص_Only(int32_t شاخص) {
+    متن->مجموعه_شاخص(شاخص);  // pins index
+    current_شاخص=بعدی_شاخص=متن->get_شاخص();
+    clear_میانگیر();
 }
 
 /**
@@ -311,7 +311,7 @@ Normalizer::setIndexOnly(int32_t index) {
  */
 UChar32 Normalizer::first() {
     reset();
-    return next();
+    أرجع next();
 }
 
 /**
@@ -319,10 +319,10 @@ UChar32 Normalizer::first() {
  * the <tt>Normalizer's</tt> position to be just before the
  * the input text corresponding to that normalized character.
  */
-UChar32 Normalizer::last() {
-    currentIndex=nextIndex=text->setToEnd();
-    clearBuffer();
-    return previous();
+UChar32 Normalizer::آخرین() {
+    current_شاخص=بعدی_شاخص=متن->مجموعه_مقصد_انتها();
+    clear_میانگیر();
+    أرجع قبلی();
 }
 
 /**
@@ -339,11 +339,11 @@ UChar32 Normalizer::last() {
  * <tt>setIndex</tt> and {@link #getIndex}.
  *
  */
-int32_t Normalizer::getIndex() const {
-    if(bufferPos<buffer.length()) {
-        return currentIndex;
-    } else {
-        return nextIndex;
+int32_t Normalizer::get_شاخص() ثابت {
+    إذا(میانگیر_Pos<میانگیر.length()) {
+        أرجع current_شاخص;
+    } وإلا {
+        أرجع بعدی_شاخص;
     }
 }
 
@@ -352,8 +352,8 @@ int32_t Normalizer::getIndex() const {
  * of the <tt>CharacterIterator</tt> or the start (i.e. 0) of the <tt>String</tt>
  * over which this <tt>Normalizer</tt> is iterating
  */
-int32_t Normalizer::startIndex() const {
-    return text->startIndex();
+int32_t Normalizer::شروع_شاخص() ثابت {
+    أرجع متن->شروع_شاخص();
 }
 
 /**
@@ -361,63 +361,63 @@ int32_t Normalizer::startIndex() const {
  * of the <tt>CharacterIterator</tt> or the length of the <tt>String</tt>
  * over which this <tt>Normalizer</tt> is iterating
  */
-int32_t Normalizer::endIndex() const {
-    return text->endIndex();
+int32_t Normalizer::انتها_شاخص() ثابت {
+    أرجع متن->انتها_شاخص();
 }
 
 //-------------------------------------------------------------------------
 // Property access methods
 //-------------------------------------------------------------------------
 
-void
-Normalizer::setMode(UNormalizationMode newMode) 
+فراغ
+Normalizer::مجموعه_نما(UNormalization_نما new_نما) 
 {
-    fUMode = newMode;
+    fUMode = new_نما;
     init();
 }
 
-UNormalizationMode
-Normalizer::getUMode() const
+UNormalization_نما
+Normalizer::getUMode() ثابت
 {
-    return fUMode;
+    أرجع fUMode;
 }
 
-void
-Normalizer::setOption(int32_t option, 
+فراغ
+Normalizer::مجموعه_Option(int32_t option, 
                       UBool value) 
 {
-    if (value) {
+    إذا (value) {
         fOptions |= option;
-    } else {
+    } وإلا {
         fOptions &= (~option);
     }
     init();
 }
 
 UBool
-Normalizer::getOption(int32_t option) const
+Normalizer::getOption(int32_t option) ثابت
 {
-    return (fOptions & option) != 0;
+    أرجع (fOptions & option) != 0;
 }
 
 /**
  * Set the input text over which this <tt>Normalizer</tt> will iterate.
  * The iteration position is set to the beginning of the input text.
  */
-void
-Normalizer::setText(const UnicodeString& newText, 
-                    UErrorCode &status)
+فراغ
+Normalizer::مجموعه_متن(ثابت UnicodeString& new_متن, 
+                    UError_کد &وضعیت)
 {
-    if (U_FAILURE(status)) {
-        return;
+    إذا (U_FAILURE(وضعیت)) {
+        أرجع;
     }
-    CharacterIterator *newIter = new StringCharacterIterator(newText);
-    if (newIter == nullptr) {
-        status = U_MEMORY_ALLOCATION_ERROR;
-        return;
+    CharacterIterator *newIter = جديد StringCharacterIterator(new_متن);
+    إذا (newIter == اشاره_تهی) {
+        وضعیت = U_حافظه_تخصیص_ERROR;
+        أرجع;
     }
-    delete text;
-    text = newIter;
+    حذف متن;
+    متن = newIter;
     reset();
 }
 
@@ -425,38 +425,38 @@ Normalizer::setText(const UnicodeString& newText,
  * Set the input text over which this <tt>Normalizer</tt> will iterate.
  * The iteration position is set to the beginning of the string.
  */
-void
-Normalizer::setText(const CharacterIterator& newText, 
-                    UErrorCode &status) 
+فراغ
+Normalizer::مجموعه_متن(ثابت CharacterIterator& new_متن, 
+                    UError_کد &وضعیت) 
 {
-    if (U_FAILURE(status)) {
-        return;
+    إذا (U_FAILURE(وضعیت)) {
+        أرجع;
     }
-    CharacterIterator *newIter = newText.clone();
-    if (newIter == nullptr) {
-        status = U_MEMORY_ALLOCATION_ERROR;
-        return;
+    CharacterIterator *newIter = new_متن.clone();
+    إذا (newIter == اشاره_تهی) {
+        وضعیت = U_حافظه_تخصیص_ERROR;
+        أرجع;
     }
-    delete text;
-    text = newIter;
+    حذف متن;
+    متن = newIter;
     reset();
 }
 
-void
-Normalizer::setText(ConstChar16Ptr newText,
+فراغ
+Normalizer::مجموعه_متن(ConstChar16Ptr new_متن,
                     int32_t length,
-                    UErrorCode &status)
+                    UError_کد &وضعیت)
 {
-    if (U_FAILURE(status)) {
-        return;
+    إذا (U_FAILURE(وضعیت)) {
+        أرجع;
     }
-    CharacterIterator *newIter = new UCharCharacterIterator(newText, length);
-    if (newIter == nullptr) {
-        status = U_MEMORY_ALLOCATION_ERROR;
-        return;
+    CharacterIterator *newIter = جديد UCharCharacterIterator(new_متن, length);
+    إذا (newIter == اشاره_تهی) {
+        وضعیت = U_حافظه_تخصیص_ERROR;
+        أرجع;
     }
-    delete text;
-    text = newIter;
+    حذف متن;
+    متن = newIter;
     reset();
 }
 
@@ -464,68 +464,68 @@ Normalizer::setText(ConstChar16Ptr newText,
  * Copies the text under iteration into the UnicodeString referred to by "result".
  * @param result Receives a copy of the text under iteration.
  */
-void
-Normalizer::getText(UnicodeString&  result) 
+فراغ
+Normalizer::get_متن(UnicodeString&  نتیجه) 
 {
-    text->getText(result);
+    متن->get_متن(نتیجه);
 }
 
 //-------------------------------------------------------------------------
 // Private utility methods
 //-------------------------------------------------------------------------
 
-void Normalizer::clearBuffer() {
-    buffer.remove();
-    bufferPos=0;
+فراغ Normalizer::clear_میانگیر() {
+    میانگیر.remove();
+    میانگیر_Pos=0;
 }
 
 UBool
-Normalizer::nextNormalize() {
-    clearBuffer();
-    currentIndex=nextIndex;
-    text->setIndex(nextIndex);
-    if(!text->hasNext()) {
-        return false;
+Normalizer::بعدی_Normalize() {
+    clear_میانگیر();
+    current_شاخص=بعدی_شاخص;
+    متن->مجموعه_شاخص(بعدی_شاخص);
+    إذا(!متن->has_بعدی()) {
+        أرجع خطأ;
     }
     // Skip at least one character so we make progress.
-    UnicodeString segment(text->next32PostInc());
-    while(text->hasNext()) {
+    UnicodeString segment(متن->next32PostInc());
+    طالما(متن->has_بعدی()) {
         UChar32 c;
-        if(fNorm2->hasBoundaryBefore(c=text->next32PostInc())) {
-            text->move32(-1, CharacterIterator::kCurrent);
-            break;
+        إذا(fNorm2->hasBoundaryBefore(c=متن->next32PostInc())) {
+            متن->move32(-1, CharacterIterator::kCurrent);
+            اكسر;
         }
         segment.append(c);
     }
-    nextIndex=text->getIndex();
-    UErrorCode errorCode=U_ZERO_ERROR;
-    fNorm2->normalize(segment, buffer, errorCode);
-    return U_SUCCESS(errorCode) && !buffer.isEmpty();
+    بعدی_شاخص=متن->get_شاخص();
+    UError_کد error_کد=U_ZERO_ERROR;
+    fNorm2->normalize(segment, میانگیر, error_کد);
+    أرجع U_SUCCESS(error_کد) && !میانگیر.is_خالی();
 }
 
 UBool
-Normalizer::previousNormalize() {
-    clearBuffer();
-    nextIndex=currentIndex;
-    text->setIndex(currentIndex);
-    if(!text->hasPrevious()) {
-        return false;
+Normalizer::قبلی_Normalize() {
+    clear_میانگیر();
+    بعدی_شاخص=current_شاخص;
+    متن->مجموعه_شاخص(current_شاخص);
+    إذا(!متن->has_قبلی()) {
+        أرجع خطأ;
     }
     UnicodeString segment;
-    while(text->hasPrevious()) {
-        UChar32 c=text->previous32();
+    طالما(متن->has_قبلی()) {
+        UChar32 c=متن->previous32();
         segment.insert(0, c);
-        if(fNorm2->hasBoundaryBefore(c)) {
-            break;
+        إذا(fNorm2->hasBoundaryBefore(c)) {
+            اكسر;
         }
     }
-    currentIndex=text->getIndex();
-    UErrorCode errorCode=U_ZERO_ERROR;
-    fNorm2->normalize(segment, buffer, errorCode);
-    bufferPos=buffer.length();
-    return U_SUCCESS(errorCode) && !buffer.isEmpty();
+    current_شاخص=متن->get_شاخص();
+    UError_کد error_کد=U_ZERO_ERROR;
+    fNorm2->normalize(segment, میانگیر, error_کد);
+    میانگیر_Pos=میانگیر.length();
+    أرجع U_SUCCESS(error_کد) && !میانگیر.is_خالی();
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_انتها
 
-#endif /* #if !UCONFIG_NO_NORMALIZATION */
+#پایان_اگر /* #if !UCONFIG_NO_NORMALIZATION */

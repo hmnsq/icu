@@ -15,47 +15,47 @@
 ******************************************************************************
 */
 
-#include "unicode/uscript.h"
-#include "usc_impl.h"
-#include "cmemory.h"
+#ضمن "unicode/uscript.h"
+#ضمن "usc_impl.h"
+#ضمن "cmemory.h"
 
-#define PAREN_STACK_DEPTH 32
+#تعریف_کن PAREN_پشته_عمق 32
 
-#define MOD(sp) ((sp) % PAREN_STACK_DEPTH)
-#define LIMIT_INC(sp) (((sp) < PAREN_STACK_DEPTH)? (sp) + 1 : PAREN_STACK_DEPTH)
-#define INC(sp,count) (MOD((sp) + (count)))
-#define INC1(sp) (INC(sp, 1))
-#define DEC(sp,count) (MOD((sp) + PAREN_STACK_DEPTH - (count)))
-#define DEC1(sp) (DEC(sp, 1))
-#define STACK_IS_EMPTY(scriptRun) ((scriptRun)->pushCount <= 0)
-#define STACK_IS_NOT_EMPTY(scriptRun) (! STACK_IS_EMPTY(scriptRun))
-#define TOP(scriptRun) ((scriptRun)->parenStack[(scriptRun)->parenSP])
-#define SYNC_FIXUP(scriptRun) ((scriptRun)->fixupCount = 0)
+#تعریف_کن MOD(sp) ((sp) % PAREN_پشته_عمق)
+#تعریف_کن حد_INC(sp) (((sp) < PAREN_پشته_عمق)? (sp) + 1 : PAREN_پشته_عمق)
+#تعریف_کن INC(sp,count) (MOD((sp) + (count)))
+#تعریف_کن INC1(sp) (INC(sp, 1))
+#تعریف_کن DEC(sp,count) (MOD((sp) + PAREN_پشته_عمق - (count)))
+#تعریف_کن DEC1(sp) (DEC(sp, 1))
+#تعریف_کن پشته_IS_خالی(script_پیاپی) ((script_پیاپی)->افزودن_شمار <= 0)
+#تعریف_کن پشته_IS_NOT_خالی(script_پیاپی) (! پشته_IS_خالی(script_پیاپی))
+#تعریف_کن بالاترین_2(script_پیاپی) ((script_پیاپی)->paren_پشته[(script_پیاپی)->parenSP])
+#تعریف_کن SYNC_FIXUP(script_پیاپی) ((script_پیاپی)->fixup_شمار = 0)
 
-struct ParenStackEntry
+بنية Paren_پشته_مدخل
 {
-    int32_t pairIndex;
-    UScriptCode scriptCode;
+    int32_t pair_شاخص;
+    UScript_کد script_کد;
 };
 
-struct UScriptRun
+بنية UScript_پیاپی
 {
-    int32_t textLength;
-    const char16_t *textArray;
+    int32_t متن_درازی;
+    ثابت char16_t *متن_Array;
 
-    int32_t scriptStart;
-    int32_t scriptLimit;
-    UScriptCode scriptCode;
+    int32_t script_شروع;
+    int32_t script_حد;
+    UScript_کد script_کد;
 
-    struct ParenStackEntry parenStack[PAREN_STACK_DEPTH];
+    بنية Paren_پشته_مدخل paren_پشته[PAREN_پشته_عمق];
     int32_t parenSP;
-    int32_t pushCount;
-    int32_t fixupCount;
+    int32_t افزودن_شمار;
+    int32_t fixup_شمار;
 };
 
-static int8_t highBit(int32_t value);
+ساكن int8_t بالا_بیت(int32_t value);
 
-static const UChar32 pairedChars[] = {
+ساكن ثابت UChar32 pairedChars[] = {
     0x0028, 0x0029, /* ascii paired punctuation */
     0x003c, 0x003e,
     0x005b, 0x005d,
@@ -75,223 +75,223 @@ static const UChar32 pairedChars[] = {
     0x301a, 0x301b
 };
 
-static void push(UScriptRun *scriptRun, int32_t pairIndex, UScriptCode scriptCode)
+ساكن فراغ push(UScript_پیاپی *script_پیاپی, int32_t pair_شاخص, UScript_کد script_کد)
 {
-    scriptRun->pushCount  = LIMIT_INC(scriptRun->pushCount);
-    scriptRun->fixupCount = LIMIT_INC(scriptRun->fixupCount);
+    script_پیاپی->افزودن_شمار  = حد_INC(script_پیاپی->افزودن_شمار);
+    script_پیاپی->fixup_شمار = حد_INC(script_پیاپی->fixup_شمار);
     
-    scriptRun->parenSP = INC1(scriptRun->parenSP);
-    scriptRun->parenStack[scriptRun->parenSP].pairIndex  = pairIndex;
-    scriptRun->parenStack[scriptRun->parenSP].scriptCode = scriptCode;
+    script_پیاپی->parenSP = INC1(script_پیاپی->parenSP);
+    script_پیاپی->paren_پشته[script_پیاپی->parenSP].pair_شاخص  = pair_شاخص;
+    script_پیاپی->paren_پشته[script_پیاپی->parenSP].script_کد = script_کد;
 }
 
-static void pop(UScriptRun *scriptRun)
+ساكن فراغ pop(UScript_پیاپی *script_پیاپی)
 {
-    if (STACK_IS_EMPTY(scriptRun)) {
-        return;
+    إذا (پشته_IS_خالی(script_پیاپی)) {
+        أرجع;
     }
     
-    if (scriptRun->fixupCount > 0) {
-        scriptRun->fixupCount -= 1;
+    إذا (script_پیاپی->fixup_شمار > 0) {
+        script_پیاپی->fixup_شمار -= 1;
     }
     
-    scriptRun->pushCount -= 1;
-    scriptRun->parenSP = DEC1(scriptRun->parenSP);
+    script_پیاپی->افزودن_شمار -= 1;
+    script_پیاپی->parenSP = DEC1(script_پیاپی->parenSP);
     
     /* If the stack is now empty, reset the stack
        pointers to their initial values.
      */
-    if (STACK_IS_EMPTY(scriptRun)) {
-        scriptRun->parenSP = -1;
+    إذا (پشته_IS_خالی(script_پیاپی)) {
+        script_پیاپی->parenSP = -1;
     }
 }
 
-static void fixup(UScriptRun *scriptRun, UScriptCode scriptCode)
+ساكن فراغ fixup(UScript_پیاپی *script_پیاپی, UScript_کد script_کد)
 {
-    int32_t fixupSP = DEC(scriptRun->parenSP, scriptRun->fixupCount);
+    int32_t fixupSP = DEC(script_پیاپی->parenSP, script_پیاپی->fixup_شمار);
     
-    while (scriptRun->fixupCount-- > 0) {
+    طالما (script_پیاپی->fixup_شمار-- > 0) {
         fixupSP = INC1(fixupSP);
-        scriptRun->parenStack[fixupSP].scriptCode = scriptCode;
+        script_پیاپی->paren_پشته[fixupSP].script_کد = script_کد;
     }
 }
 
-static int8_t
-highBit(int32_t value)
+ساكن int8_t
+بالا_بیت(int32_t value)
 {
     int8_t bit = 0;
 
-    if (value <= 0) {
-        return -32;
+    إذا (value <= 0) {
+        أرجع -32;
     }
 
-    if (value >= 1 << 16) {
+    إذا (value >= 1 << 16) {
         value >>= 16;
         bit += 16;
     }
 
-    if (value >= 1 << 8) {
+    إذا (value >= 1 << 8) {
         value >>= 8;
         bit += 8;
     }
 
-    if (value >= 1 << 4) {
+    إذا (value >= 1 << 4) {
         value >>= 4;
         bit += 4;
     }
 
-    if (value >= 1 << 2) {
+    إذا (value >= 1 << 2) {
         value >>= 2;
         bit += 2;
     }
 
-    if (value >= 1 << 1) {
+    إذا (value >= 1 << 1) {
         //value >>= 1;
         bit += 1;
     }
 
-    return bit;
+    أرجع bit;
 }
 
-static int32_t
-getPairIndex(UChar32 ch)
+ساكن int32_t
+get_Pair_شاخص(UChar32 ch)
 {
-    int32_t pairedCharCount = UPRV_LENGTHOF(pairedChars);
-    int32_t pairedCharPower = 1 << highBit(pairedCharCount);
-    int32_t pairedCharExtra = pairedCharCount - pairedCharPower;
+    int32_t paired_Char_شمار = UPRV_LENGTHOF(pairedChars);
+    int32_t pairedCharPower = 1 << بالا_بیت(paired_Char_شمار);
+    int32_t pairedCharExtra = paired_Char_شمار - pairedCharPower;
 
     int32_t probe = pairedCharPower;
-    int32_t pairIndex = 0;
+    int32_t pair_شاخص = 0;
 
-    if (ch >= pairedChars[pairedCharExtra]) {
-        pairIndex = pairedCharExtra;
+    إذا (ch >= pairedChars[pairedCharExtra]) {
+        pair_شاخص = pairedCharExtra;
     }
 
-    while (probe > (1 << 0)) {
+    طالما (probe > (1 << 0)) {
         probe >>= 1;
 
-        if (ch >= pairedChars[pairIndex + probe]) {
-            pairIndex += probe;
+        إذا (ch >= pairedChars[pair_شاخص + probe]) {
+            pair_شاخص += probe;
         }
     }
 
-    if (pairedChars[pairIndex] != ch) {
-        pairIndex = -1;
+    إذا (pairedChars[pair_شاخص] != ch) {
+        pair_شاخص = -1;
     }
 
-    return pairIndex;
+    أرجع pair_شاخص;
 }
 
-static UBool
-sameScript(UScriptCode scriptOne, UScriptCode scriptTwo)
+ساكن UBool
+sameScript(UScript_کد scriptOne, UScript_کد scriptTwo)
 {
-    return scriptOne <= USCRIPT_INHERITED || scriptTwo <= USCRIPT_INHERITED || scriptOne == scriptTwo;
+    أرجع scriptOne <= USCRIPT_INHERITED || scriptTwo <= USCRIPT_INHERITED || scriptOne == scriptTwo;
 }
 
-U_CAPI UScriptRun * U_EXPORT2
-uscript_openRun(const char16_t *src, int32_t length, UErrorCode *pErrorCode)
+U_CAPI UScript_پیاپی * U_EXPORT2
+uscript_open_پیاپی(ثابت char16_t *src, int32_t length, UError_کد *p_Error_کد)
 {
-    UScriptRun *result = nullptr;
+    UScript_پیاپی *نتیجه = اشاره_تهی;
 
-    if (pErrorCode == nullptr || U_FAILURE(*pErrorCode)) {
-        return nullptr;
+    إذا (p_Error_کد == اشاره_تهی || U_FAILURE(*p_Error_کد)) {
+        أرجع اشاره_تهی;
     }
 
-    result = (UScriptRun *)uprv_malloc(sizeof (UScriptRun));
+    نتیجه = (UScript_پیاپی *)uprv_malloc(حجم (UScript_پیاپی));
 
-    if (result == nullptr) {
-        *pErrorCode = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+    إذا (نتیجه == اشاره_تهی) {
+        *p_Error_کد = U_حافظه_تخصیص_ERROR;
+        أرجع اشاره_تهی;
     }
 
-    uscript_setRunText(result, src, length, pErrorCode);
+    uscript_مجموعه_پیاپی_متن(نتیجه, src, length, p_Error_کد);
 
     /* Release the UScriptRun if uscript_setRunText() returns an error */
-    if (U_FAILURE(*pErrorCode)) {
-        uprv_free(result);
-        result = nullptr;
+    إذا (U_FAILURE(*p_Error_کد)) {
+        uprv_free(نتیجه);
+        نتیجه = اشاره_تهی;
     }
 
-    return result;
+    أرجع نتیجه;
 }
 
-U_CAPI void U_EXPORT2
-uscript_closeRun(UScriptRun *scriptRun)
+U_CAPI فراغ U_EXPORT2
+uscript_close_پیاپی(UScript_پیاپی *script_پیاپی)
 {
-    if (scriptRun != nullptr) {
-        uprv_free(scriptRun);
-    }
-}
-
-U_CAPI void U_EXPORT2
-uscript_resetRun(UScriptRun *scriptRun)
-{
-    if (scriptRun != nullptr) {
-        scriptRun->scriptStart = 0;
-        scriptRun->scriptLimit = 0;
-        scriptRun->scriptCode  = USCRIPT_INVALID_CODE;
-        scriptRun->parenSP     = -1;
-        scriptRun->pushCount   =  0;
-        scriptRun->fixupCount  =  0;
+    إذا (script_پیاپی != اشاره_تهی) {
+        uprv_free(script_پیاپی);
     }
 }
 
-U_CAPI void U_EXPORT2
-uscript_setRunText(UScriptRun *scriptRun, const char16_t *src, int32_t length, UErrorCode *pErrorCode)
+U_CAPI فراغ U_EXPORT2
+uscript_reset_پیاپی(UScript_پیاپی *script_پیاپی)
 {
-    if (pErrorCode == nullptr || U_FAILURE(*pErrorCode)) {
-        return;
+    إذا (script_پیاپی != اشاره_تهی) {
+        script_پیاپی->script_شروع = 0;
+        script_پیاپی->script_حد = 0;
+        script_پیاپی->script_کد  = USCRIPT_INVALID_کد;
+        script_پیاپی->parenSP     = -1;
+        script_پیاپی->افزودن_شمار   =  0;
+        script_پیاپی->fixup_شمار  =  0;
+    }
+}
+
+U_CAPI فراغ U_EXPORT2
+uscript_مجموعه_پیاپی_متن(UScript_پیاپی *script_پیاپی, ثابت char16_t *src, int32_t length, UError_کد *p_Error_کد)
+{
+    إذا (p_Error_کد == اشاره_تهی || U_FAILURE(*p_Error_کد)) {
+        أرجع;
     }
 
-    if (scriptRun == nullptr || length < 0 || ((src == nullptr) != (length == 0))) {
-        *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+    إذا (script_پیاپی == اشاره_تهی || length < 0 || ((src == اشاره_تهی) != (length == 0))) {
+        *p_Error_کد = U_ILLEGAL_آرگومان_ERROR;
+        أرجع;
     }
 
-    scriptRun->textArray  = src;
-    scriptRun->textLength = length;
+    script_پیاپی->متن_Array  = src;
+    script_پیاپی->متن_درازی = length;
 
-    uscript_resetRun(scriptRun);
+    uscript_reset_پیاپی(script_پیاپی);
 }
 
 U_CAPI UBool U_EXPORT2
-uscript_nextRun(UScriptRun *scriptRun, int32_t *pRunStart, int32_t *pRunLimit, UScriptCode *pRunScript)
+uscript_بعدی_پیاپی(UScript_پیاپی *script_پیاپی, int32_t *p_پیاپی_شروع, int32_t *p_پیاپی_حد, UScript_کد *p_پیاپی_Script)
 {
-    UErrorCode error = U_ZERO_ERROR;
+    UError_کد error = U_ZERO_ERROR;
 
     /* if we've fallen off the end of the text, we're done */
-    if (scriptRun == nullptr || scriptRun->scriptLimit >= scriptRun->textLength) {
-        return false;
+    إذا (script_پیاپی == اشاره_تهی || script_پیاپی->script_حد >= script_پیاپی->متن_درازی) {
+        أرجع خطأ;
     }
     
-    SYNC_FIXUP(scriptRun);
-    scriptRun->scriptCode = USCRIPT_COMMON;
+    SYNC_FIXUP(script_پیاپی);
+    script_پیاپی->script_کد = USCRIPT_COMMON;
 
-    for (scriptRun->scriptStart = scriptRun->scriptLimit; scriptRun->scriptLimit < scriptRun->textLength; scriptRun->scriptLimit += 1) {
-        char16_t high = scriptRun->textArray[scriptRun->scriptLimit];
-        UChar32  ch   = high;
-        UScriptCode sc;
-        int32_t pairIndex;
+    لكل (script_پیاپی->script_شروع = script_پیاپی->script_حد; script_پیاپی->script_حد < script_پیاپی->متن_درازی; script_پیاپی->script_حد += 1) {
+        char16_t بالا = script_پیاپی->متن_Array[script_پیاپی->script_حد];
+        UChar32  ch   = بالا;
+        UScript_کد sc;
+        int32_t pair_شاخص;
 
         /*
          * if the character is a high surrogate and it's not the last one
          * in the text, see if it's followed by a low surrogate
          */
-        if (high >= 0xD800 && high <= 0xDBFF && scriptRun->scriptLimit < scriptRun->textLength - 1) {
-            char16_t low = scriptRun->textArray[scriptRun->scriptLimit + 1];
+        إذا (بالا >= 0xD800 && بالا <= 0xDBFF && script_پیاپی->script_حد < script_پیاپی->متن_درازی - 1) {
+            char16_t کم = script_پیاپی->متن_Array[script_پیاپی->script_حد + 1];
 
             /*
              * if it is followed by a low surrogate,
              * consume it and form the full character
              */
-            if (low >= 0xDC00 && low <= 0xDFFF) {
-                ch = (high - 0xD800) * 0x0400 + low - 0xDC00 + 0x10000;
-                scriptRun->scriptLimit += 1;
+            إذا (کم >= 0xDC00 && کم <= 0xDFFF) {
+                ch = (بالا - 0xD800) * 0x0400 + کم - 0xDC00 + 0x10000;
+                script_پیاپی->script_حد += 1;
             }
         }
 
         sc = uscript_getScript(ch, &error);
-        pairIndex = getPairIndex(ch);
+        pair_شاخص = get_Pair_شاخص(ch);
 
         /*
          * Paired character handling:
@@ -301,61 +301,61 @@ uscript_nextRun(UScriptRun *scriptRun, int32_t *pRunStart, int32_t *pRunLimit, U
          * stack, and use that script code. Any non-matching open
          * characters above it on the stack will be poped.
          */
-        if (pairIndex >= 0) {
-            if ((pairIndex & 1) == 0) {
-                push(scriptRun, pairIndex, scriptRun->scriptCode);
-            } else {
-                int32_t pi = pairIndex & ~1;
+        إذا (pair_شاخص >= 0) {
+            إذا ((pair_شاخص & 1) == 0) {
+                push(script_پیاپی, pair_شاخص, script_پیاپی->script_کد);
+            } وإلا {
+                int32_t pi = pair_شاخص & ~1;
 
-                while (STACK_IS_NOT_EMPTY(scriptRun) && TOP(scriptRun).pairIndex != pi) {
-                    pop(scriptRun);
+                طالما (پشته_IS_NOT_خالی(script_پیاپی) && بالاترین_2(script_پیاپی).pair_شاخص != pi) {
+                    pop(script_پیاپی);
                 }
 
-                if (STACK_IS_NOT_EMPTY(scriptRun)) {
-                    sc = TOP(scriptRun).scriptCode;
+                إذا (پشته_IS_NOT_خالی(script_پیاپی)) {
+                    sc = بالاترین_2(script_پیاپی).script_کد;
                 }
             }
         }
 
-        if (sameScript(scriptRun->scriptCode, sc)) {
-            if (scriptRun->scriptCode <= USCRIPT_INHERITED && sc > USCRIPT_INHERITED) {
-                scriptRun->scriptCode = sc;
+        إذا (sameScript(script_پیاپی->script_کد, sc)) {
+            إذا (script_پیاپی->script_کد <= USCRIPT_INHERITED && sc > USCRIPT_INHERITED) {
+                script_پیاپی->script_کد = sc;
 
-                fixup(scriptRun, scriptRun->scriptCode);
+                fixup(script_پیاپی, script_پیاپی->script_کد);
             }
 
             /*
              * if this character is a close paired character,
              * pop the matching open character from the stack
              */
-            if (pairIndex >= 0 && (pairIndex & 1) != 0) {
-                pop(scriptRun);
+            إذا (pair_شاخص >= 0 && (pair_شاخص & 1) != 0) {
+                pop(script_پیاپی);
             }
-        } else {
+        } وإلا {
             /*
              * if the run broke on a surrogate pair,
              * end it before the high surrogate
              */
-            if (ch >= 0x10000) {
-                scriptRun->scriptLimit -= 1;
+            إذا (ch >= 0x10000) {
+                script_پیاپی->script_حد -= 1;
             }
 
-            break;
+            اكسر;
         }
     }
 
 
-    if (pRunStart != nullptr) {
-        *pRunStart = scriptRun->scriptStart;
+    إذا (p_پیاپی_شروع != اشاره_تهی) {
+        *p_پیاپی_شروع = script_پیاپی->script_شروع;
     }
 
-    if (pRunLimit != nullptr) {
-        *pRunLimit = scriptRun->scriptLimit;
+    إذا (p_پیاپی_حد != اشاره_تهی) {
+        *p_پیاپی_حد = script_پیاپی->script_حد;
     }
 
-    if (pRunScript != nullptr) {
-        *pRunScript = scriptRun->scriptCode;
+    إذا (p_پیاپی_Script != اشاره_تهی) {
+        *p_پیاپی_Script = script_پیاپی->script_کد;
     }
 
-    return true;
+    أرجع درست;
 }

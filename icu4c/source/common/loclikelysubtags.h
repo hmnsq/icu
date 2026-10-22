@@ -4,52 +4,52 @@
 // loclikelysubtags.h
 // created: 2019may08 Markus W. Scherer
 
-#ifndef __LOCLIKELYSUBTAGS_H__
-#define __LOCLIKELYSUBTAGS_H__
+#اگر_تعریف_نشده __LOCLIKELYSUBTAGS_H__
+#تعریف_کن __LOCLIKELYSUBTAGS_H__
 
-#include <utility>
-#include "unicode/utypes.h"
-#include "unicode/bytestrie.h"
-#include "unicode/locid.h"
-#include "unicode/stringpiece.h"
-#include "unicode/uobject.h"
-#include "unicode/ures.h"
-#include "charstrmap.h"
-#include "lsr.h"
+#ضمن <utility>
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/bytestrie.h"
+#ضمن "unicode/locid.h"
+#ضمن "unicode/stringpiece.h"
+#ضمن "unicode/uobject.h"
+#ضمن "unicode/ures.h"
+#ضمن "charstrmap.h"
+#ضمن "lsr.h"
 
 U_NAMESPACE_BEGIN
 
-struct LikelySubtagsData;
+بنية Likely_Subtags_داده;
 
-struct LocaleDistanceData {
-    LocaleDistanceData() = default;
-    LocaleDistanceData(LocaleDistanceData &&data);
-    ~LocaleDistanceData();
+بنية Locale_فاصله_داده {
+    Locale_فاصله_داده() = افتراضي;
+    Locale_فاصله_داده(Locale_فاصله_داده &&داده);
+    ~Locale_فاصله_داده();
 
-    const uint8_t *distanceTrieBytes = nullptr;
-    const uint8_t *regionToPartitions = nullptr;
-    const char **partitions = nullptr;
-    const LSR *paradigms = nullptr;
-    int32_t paradigmsLength = 0;
-    const int32_t *distances = nullptr;
+    ثابت uint8_t *فاصله_Trie_بایتها = nullptr;
+    ثابت uint8_t *region_مقصد_Partitions = nullptr;
+    ثابت حرف **partitions = nullptr;
+    ثابت LSR *paradigms = nullptr;
+    int32_t paradigms_درازی = 0;
+    ثابت int32_t *distances = nullptr;
 
-private:
-    LocaleDistanceData &operator=(const LocaleDistanceData &) = delete;
+خاص:
+    Locale_فاصله_داده &عملگر=(ثابت Locale_فاصله_داده &) = delete;
 };
 
-class LikelySubtags final : public UMemory {
-public:
+class LikelySubtags final : عام UMemory {
+عام:
     ~LikelySubtags();
 
-    static constexpr int32_t SKIP_SCRIPT = 1;
+    ساكن constexpr int32_t SKIP_SCRIPT = 1;
 
     // VisibleForTesting
-    static const LikelySubtags *getSingleton(UErrorCode &errorCode);
+    ساكن ثابت LikelySubtags *getSingleton(UError_کد &error_کد);
 
     // VisibleForTesting
-    LSR makeMaximizedLsrFrom(const Locale &locale,
-                             bool returnInputIfUnmatch,
-                             UErrorCode &errorCode) const;
+    LSR makeMaximizedLsrFrom(ثابت Locale &locale,
+                             bool return_درون_داد_If_Unmatch,
+                             UError_کد &error_کد) ثابت;
 
     /**
      * Tests whether lsr is "more likely" than other.
@@ -61,68 +61,68 @@ public:
      * with bit 0 set if lsr is "more likely".
      * The initial value of likelyInfo must be negative.
      */
-    int32_t compareLikely(const LSR &lsr, const LSR &other, int32_t likelyInfo) const;
+    int32_t compareLikely(ثابت LSR &lsr, ثابت LSR &other, int32_t likelyInfo) ثابت;
 
     LSR minimizeSubtags(StringPiece language, StringPiece script, StringPiece region,
                         bool favorScript,
-                        UErrorCode &errorCode) const;
+                        UError_کد &error_کد) ثابت;
 
     // visible for LocaleDistance
-    const LocaleDistanceData& getDistanceData() const U_LIFETIME_BOUND { return distanceData; }
+    ثابت Locale_فاصله_داده& get_فاصله_داده() ثابت U_LIFETIME_BOUND { أرجع فاصله_داده; }
 
-private:
-    LikelySubtags(LikelySubtagsData &data);
-    LikelySubtags(const LikelySubtags &other) = delete;
-    LikelySubtags &operator=(const LikelySubtags &other) = delete;
+خاص:
+    LikelySubtags(Likely_Subtags_داده &داده);
+    LikelySubtags(ثابت LikelySubtags &other) = delete;
+    LikelySubtags &عملگر=(ثابت LikelySubtags &other) = delete;
 
-    static void initLikelySubtags(UErrorCode &errorCode);
+    ساكن فراغ initLikelySubtags(UError_کد &error_کد);
 
-    LSR makeMaximizedLsr(const char *language, const char *script, const char *region,
-                         const char *variant,
-                         bool returnInputIfUnmatch,
-                         UErrorCode &errorCode) const;
+    LSR makeMaximizedLsr(ثابت حرف *language, ثابت حرف *script, ثابت حرف *region,
+                         ثابت حرف *variant,
+                         bool return_درون_داد_If_Unmatch,
+                         UError_کد &error_کد) ثابت;
 
     /**
      * Raw access to addLikelySubtags. Input must be in canonical format, eg "en", not "eng" or "EN".
      */
-    LSR maximize(const char *language, const char *script, const char *region,
-                 bool returnInputIfUnmatch,
-                 UErrorCode &errorCode) const;
+    LSR maximize(ثابت حرف *language, ثابت حرف *script, ثابت حرف *region,
+                 bool return_درون_داد_If_Unmatch,
+                 UError_کد &error_کد) ثابت;
     LSR maximize(StringPiece language, StringPiece script, StringPiece region,
-                 bool returnInputIfUnmatch,
-                 UErrorCode &errorCode) const;
+                 bool return_درون_داد_If_Unmatch,
+                 UError_کد &error_کد) ثابت;
 
-    int32_t getLikelyIndex(const char *language, const char *script) const;
-    bool isMacroregion(StringPiece& region, UErrorCode &errorCode) const;
+    int32_t get_Likely_شاخص(ثابت حرف *language, ثابت حرف *script) ثابت;
+    bool isMacroregion(StringPiece& region, UError_کد &error_کد) ثابت;
 
-    static int32_t trieNext(BytesTrie &iter, const char *s, int32_t i);
-    static int32_t trieNext(BytesTrie &iter, StringPiece s, int32_t i);
+    ساكن int32_t trie_بعدی(بایتها_Trie &iter, ثابت حرف *s, int32_t i);
+    ساكن int32_t trie_بعدی(بایتها_Trie &iter, StringPiece s, int32_t i);
 
     UResourceBundle *langInfoBundle;
     // We could store the strings by value, except that if there were few enough strings,
     // moving the contents could copy it to a different array,
     // invalidating the pointers stored in the maps.
-    CharString *strings;
+    CharString *رشتهها;
     CharStringMap languageAliases;
     CharStringMap regionAliases;
 
     // The trie maps each lang+script+region (encoded in ASCII) to an index into lsrs.
     // There is also a trie value for each intermediate lang and lang+script.
     // '*' is used instead of "und", "Zzzz"/"" and "ZZ"/"".
-    BytesTrie trie;
+    بایتها_Trie trie;
     uint64_t trieUndState;
     uint64_t trieUndZzzzState;
-    int32_t defaultLsrIndex;
-    uint64_t trieFirstLetterStates[26];
-    const LSR *lsrs;
-#if U_DEBUG
-    int32_t lsrsLength;
-#endif
+    int32_t default_Lsr_شاخص;
+    uint64_t trie_اولی_Letter_حالتها[26];
+    ثابت LSR *lsrs;
+#إذا U_DEBUG
+    int32_t lsrs_درازی;
+#پایان_اگر
 
     // distance/matcher data: see comment in LikelySubtagsData::load()
-    LocaleDistanceData distanceData;
+    Locale_فاصله_داده فاصله_داده;
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_انتها
 
-#endif  // __LOCLIKELYSUBTAGS_H__
+#پایان_اگر  // __LOCLIKELYSUBTAGS_H__

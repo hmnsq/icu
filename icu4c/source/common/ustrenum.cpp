@@ -10,142 +10,142 @@
 * Since: ICU 2.4
 **********************************************************************
 */
-#include "utypeinfo.h"  // for 'typeid' to work 
+#ضمن "utypeinfo.h"  // for 'typeid' to work 
 
-#include "unicode/ustring.h"
-#include "unicode/strenum.h"
-#include "unicode/putil.h"
-#include "uenumimp.h"
-#include "ustrenum.h"
-#include "cstring.h"
-#include "cmemory.h"
-#include "uassert.h"
+#ضمن "unicode/ustring.h"
+#ضمن "unicode/strenum.h"
+#ضمن "unicode/putil.h"
+#ضمن "uenumimp.h"
+#ضمن "ustrenum.h"
+#ضمن "cstring.h"
+#ضمن "cmemory.h"
+#ضمن "uassert.h"
 
 U_NAMESPACE_BEGIN
 // StringEnumeration implementation ---------------------------------------- ***
 
 StringEnumeration::StringEnumeration()
-    : chars(charsBuffer), charsCapacity(sizeof(charsBuffer)) {
+    : chars(chars_میانگیر), chars_ظرفیت(حجم(chars_میانگیر)) {
 }
 
 StringEnumeration::~StringEnumeration() {
-    if (chars != nullptr && chars != charsBuffer) {
+    إذا (chars != اشاره_تهی && chars != chars_میانگیر) {
         uprv_free(chars);
     }
 }
 
 // StringEnumeration base class clone() default implementation, does not clone
 StringEnumeration *
-StringEnumeration::clone() const {
-  return nullptr;
+StringEnumeration::clone() ثابت {
+  أرجع اشاره_تهی;
 }
 
-const char*
-StringEnumeration::next(int32_t* resultLength, UErrorCode& status) U_LIFETIME_BOUND {
-    const UnicodeString *s=snext(status);
-    if(U_SUCCESS(status) && s!=nullptr) {
+ثابت حرف*
+StringEnumeration::next(int32_t* نتیجه_درازی, UError_کد& وضعیت) U_LIFETIME_BOUND {
+    ثابت UnicodeString *s=snext(وضعیت);
+    إذا(U_SUCCESS(وضعیت) && s!=اشاره_تهی) {
         unistr=*s;
-        ensureCharsCapacity(unistr.length()+1, status);
-        if(U_SUCCESS(status)) {
-            if(resultLength!=nullptr) {
-                *resultLength=unistr.length();
+        ensure_Chars_ظرفیت(unistr.length()+1, وضعیت);
+        إذا(U_SUCCESS(وضعیت)) {
+            إذا(نتیجه_درازی!=اشاره_تهی) {
+                *نتیجه_درازی=unistr.length();
             }
-            unistr.extract(0, INT32_MAX, chars, charsCapacity, US_INV);
-            return chars;
+            unistr.extract(0, INT32_MAX, chars, chars_ظرفیت, US_INV);
+            أرجع chars;
         }
     }
 
-    return nullptr;
+    أرجع اشاره_تهی;
 }
 
-const char16_t*
-StringEnumeration::unext(int32_t* resultLength, UErrorCode& status) U_LIFETIME_BOUND {
-    const UnicodeString *s=snext(status);
-    if(U_SUCCESS(status) && s!=nullptr) {
+ثابت char16_t*
+StringEnumeration::unext(int32_t* نتیجه_درازی, UError_کد& وضعیت) U_LIFETIME_BOUND {
+    ثابت UnicodeString *s=snext(وضعیت);
+    إذا(U_SUCCESS(وضعیت) && s!=اشاره_تهی) {
         unistr=*s;
-        if(resultLength!=nullptr) {
-            *resultLength=unistr.length();
+        إذا(نتیجه_درازی!=اشاره_تهی) {
+            *نتیجه_درازی=unistr.length();
         }
-        return unistr.getTerminatedBuffer();
+        أرجع unistr.get_Terminated_میانگیر();
     }
 
-    return nullptr;
+    أرجع اشاره_تهی;
 }
 
-const UnicodeString*
-StringEnumeration::snext(UErrorCode& status) U_LIFETIME_BOUND {
+ثابت UnicodeString*
+StringEnumeration::snext(UError_کد& وضعیت) U_LIFETIME_BOUND {
     int32_t length;
-    const char *s=next(&length, status);
-    return setChars(s, length, status);
+    ثابت حرف *s=next(&length, وضعیت);
+    أرجع مجموعه_Chars(s, length, وضعیت);
 }
 
-void
-StringEnumeration::ensureCharsCapacity(int32_t capacity, UErrorCode &status) {
-    if(U_SUCCESS(status) && capacity>charsCapacity) {
-        if(capacity<(charsCapacity+charsCapacity/2)) {
+فراغ
+StringEnumeration::ensure_Chars_ظرفیت(int32_t capacity, UError_کد &وضعیت) {
+    إذا(U_SUCCESS(وضعیت) && capacity>chars_ظرفیت) {
+        إذا(capacity<(chars_ظرفیت+chars_ظرفیت/2)) {
             // avoid allocation thrashing
-            capacity=charsCapacity+charsCapacity/2;
+            capacity=chars_ظرفیت+chars_ظرفیت/2;
         }
-        if(chars!=charsBuffer) {
+        إذا(chars!=chars_میانگیر) {
             uprv_free(chars);
         }
-        chars = static_cast<char*>(uprv_malloc(capacity));
-        if(chars==nullptr) {
-            chars=charsBuffer;
-            charsCapacity=sizeof(charsBuffer);
-            status=U_MEMORY_ALLOCATION_ERROR;
-        } else {
-            charsCapacity=capacity;
+        chars = static_cast<حرف*>(uprv_malloc(capacity));
+        إذا(chars==اشاره_تهی) {
+            chars=chars_میانگیر;
+            chars_ظرفیت=حجم(chars_میانگیر);
+            وضعیت=U_حافظه_تخصیص_ERROR;
+        } وإلا {
+            chars_ظرفیت=capacity;
         }
     }
 }
 
 UnicodeString*
-StringEnumeration::setChars(const char* s, int32_t length, UErrorCode& status) U_LIFETIME_BOUND {
-    if(U_SUCCESS(status) && s!=nullptr) {
-        if(length<0) {
+StringEnumeration::مجموعه_Chars(ثابت حرف* s, int32_t length, UError_کد& وضعیت) U_LIFETIME_BOUND {
+    إذا(U_SUCCESS(وضعیت) && s!=اشاره_تهی) {
+        إذا(length<0) {
             length = static_cast<int32_t>(uprv_strlen(s));
         }
 
-        char16_t *buffer=unistr.getBuffer(length+1);
-        if(buffer!=nullptr) {
-            u_charsToUChars(s, buffer, length);
-            buffer[length]=0;
-            unistr.releaseBuffer(length);
-            return &unistr;
-        } else {
-            status=U_MEMORY_ALLOCATION_ERROR;
+        char16_t *میانگیر=unistr.get_میانگیر(length+1);
+        إذا(میانگیر!=اشاره_تهی) {
+            u_chars_مقصد_UChars(s, میانگیر, length);
+            میانگیر[length]=0;
+            unistr.release_میانگیر(length);
+            أرجع &unistr;
+        } وإلا {
+            وضعیت=U_حافظه_تخصیص_ERROR;
         }
     }
 
-    return nullptr;
+    أرجع اشاره_تهی;
 }
-bool
-StringEnumeration::operator==(const StringEnumeration& that)const {
-    return typeid(*this) == typeid(that); 
+منطقي
+StringEnumeration::عملگر==(ثابت StringEnumeration& that)ثابت {
+    أرجع typeid(*هذا) == typeid(that); 
 }
 
-bool
-StringEnumeration::operator!=(const StringEnumeration& that)const {
-    return !operator==(that);
+منطقي
+StringEnumeration::عملگر!=(ثابت StringEnumeration& that)ثابت {
+    أرجع !عملگر==(that);
 }
 
 // UStringEnumeration implementation --------------------------------------- ***
 
 UStringEnumeration * U_EXPORT2
 UStringEnumeration::fromUEnumeration(
-        UEnumeration *uenumToAdopt, UErrorCode &status) {
-    if (U_FAILURE(status)) {
-        uenum_close(uenumToAdopt);
-        return nullptr;
+        UEnumeration *uenum_مقصد_Adopt, UError_کد &وضعیت) {
+    إذا (U_FAILURE(وضعیت)) {
+        uenum_close(uenum_مقصد_Adopt);
+        أرجع اشاره_تهی;
     }
-    UStringEnumeration *result = new UStringEnumeration(uenumToAdopt);
-    if (result == nullptr) {
-        status = U_MEMORY_ALLOCATION_ERROR;
-        uenum_close(uenumToAdopt);
-        return nullptr;
+    UStringEnumeration *نتیجه = جديد UStringEnumeration(uenum_مقصد_Adopt);
+    إذا (نتیجه == اشاره_تهی) {
+        وضعیت = U_حافظه_تخصیص_ERROR;
+        uenum_close(uenum_مقصد_Adopt);
+        أرجع اشاره_تهی;
     }
-    return result;
+    أرجع نتیجه;
 }
 
 UStringEnumeration::UStringEnumeration(UEnumeration* _uenum) :
@@ -157,83 +157,83 @@ UStringEnumeration::~UStringEnumeration() {
     uenum_close(uenum);
 }
 
-int32_t UStringEnumeration::count(UErrorCode& status) const {
-    return uenum_count(uenum, &status);
+int32_t UStringEnumeration::count(UError_کد& وضعیت) ثابت {
+    أرجع uenum_شمار(uenum, &وضعیت);
 }
 
-const char* UStringEnumeration::next(int32_t* resultLength, UErrorCode& status) U_LIFETIME_BOUND {
-    return uenum_next(uenum, resultLength, &status);
+ثابت حرف* UStringEnumeration::next(int32_t* نتیجه_درازی, UError_کد& وضعیت) U_LIFETIME_BOUND {
+    أرجع uenum_بعدی(uenum, نتیجه_درازی, &وضعیت);
 }
 
-const UnicodeString* UStringEnumeration::snext(UErrorCode& status) U_LIFETIME_BOUND {
+ثابت UnicodeString* UStringEnumeration::snext(UError_کد& وضعیت) U_LIFETIME_BOUND {
     int32_t length;
-    const char16_t* str = uenum_unext(uenum, &length, &status);
-    if (str == nullptr || U_FAILURE(status)) {
-        return nullptr;
+    ثابت char16_t* str = uenum_unext(uenum, &length, &وضعیت);
+    إذا (str == اشاره_تهی || U_FAILURE(وضعیت)) {
+        أرجع اشاره_تهی;
     }
-    return &unistr.setTo(str, length);
+    أرجع &unistr.مجموعه_مقصد(str, length);
 }
 
-void UStringEnumeration::reset(UErrorCode& status) {
-    uenum_reset(uenum, &status);
+فراغ UStringEnumeration::reset(UError_کد& وضعیت) {
+    uenum_reset(uenum, &وضعیت);
 }
 
 UOBJECT_DEFINE_RTTI_IMPLEMENTATION(UStringEnumeration)
-U_NAMESPACE_END
+U_NAMESPACE_انتها
 
 // C wrapper --------------------------------------------------------------- ***
 
-#define THIS(en) ((icu::StringEnumeration*)(en->context))
+#تعریف_کن THIS(en) ((icu::StringEnumeration*)(en->context))
 
 U_CDECL_BEGIN
 
 /**
  * Wrapper API to make StringEnumeration look like UEnumeration.
  */
-static void U_CALLCONV
+ساكن فراغ U_CALLCONV
 ustrenum_close(UEnumeration* en) {
-    delete THIS(en);
+    حذف THIS(en);
     uprv_free(en);
 }
 
 /**
  * Wrapper API to make StringEnumeration look like UEnumeration.
  */
-static int32_t U_CALLCONV
-ustrenum_count(UEnumeration* en,
-               UErrorCode* ec)
+ساكن int32_t U_CALLCONV
+ustrenum_شمار(UEnumeration* en,
+               UError_کد* ec)
 {
-    return THIS(en)->count(*ec);
+    أرجع THIS(en)->count(*ec);
 }
 
 /**
  * Wrapper API to make StringEnumeration look like UEnumeration.
  */
-static const char16_t* U_CALLCONV
+ساكن ثابت char16_t* U_CALLCONV
 ustrenum_unext(UEnumeration* en U_LIFETIME_BOUND,
-               int32_t* resultLength,
-               UErrorCode* ec)
+               int32_t* نتیجه_درازی,
+               UError_کد* ec)
 {
-    return THIS(en)->unext(resultLength, *ec);
+    أرجع THIS(en)->unext(نتیجه_درازی, *ec);
 }
 
 /**
  * Wrapper API to make StringEnumeration look like UEnumeration.
  */
-static const char* U_CALLCONV
-ustrenum_next(UEnumeration* en U_LIFETIME_BOUND,
-              int32_t* resultLength,
-              UErrorCode* ec)
+ساكن ثابت حرف* U_CALLCONV
+ustrenum_بعدی(UEnumeration* en U_LIFETIME_BOUND,
+              int32_t* نتیجه_درازی,
+              UError_کد* ec)
 {
-    return THIS(en)->next(resultLength, *ec);
+    أرجع THIS(en)->next(نتیجه_درازی, *ec);
 }
 
 /**
  * Wrapper API to make StringEnumeration look like UEnumeration.
  */
-static void U_CALLCONV
+ساكن فراغ U_CALLCONV
 ustrenum_reset(UEnumeration* en,
-               UErrorCode* ec)
+               UError_کد* ec)
 {
     THIS(en)->reset(*ec);
 }
@@ -242,17 +242,17 @@ ustrenum_reset(UEnumeration* en,
  * Pseudo-vtable for UEnumeration wrapper around StringEnumeration.
  * The StringEnumeration pointer will be stored in 'context'.
  */
-static const UEnumeration USTRENUM_VT = {
-    nullptr,
-    nullptr, // store StringEnumeration pointer here
+ساكن ثابت UEnumeration USTRENUM_VT = {
+    اشاره_تهی,
+    اشاره_تهی, // store StringEnumeration pointer here
     ustrenum_close,
-    ustrenum_count,
+    ustrenum_شمار,
     ustrenum_unext,
-    ustrenum_next,
+    ustrenum_بعدی,
     ustrenum_reset
 };
 
-U_CDECL_END
+U_CDECL_انتها
 
 /**
  * Given a StringEnumeration, wrap it in a UEnumeration.  The
@@ -260,140 +260,140 @@ U_CDECL_END
  * delete it (regardless of error status).
  */
 U_CAPI UEnumeration* U_EXPORT2
-uenum_openFromStringEnumeration(icu::StringEnumeration* adopted, UErrorCode* ec) { 
-    UEnumeration* result = nullptr;
-    if (U_SUCCESS(*ec) && adopted != nullptr) {
-        result = (UEnumeration*) uprv_malloc(sizeof(UEnumeration));
-        if (result == nullptr) {
-            *ec = U_MEMORY_ALLOCATION_ERROR;
-        } else {
-            uprv_memcpy(result, &USTRENUM_VT, sizeof(USTRENUM_VT));
-            result->context = adopted;
+uenum_openFromStringEnumeration(icu::StringEnumeration* adopted, UError_کد* ec) { 
+    UEnumeration* نتیجه = اشاره_تهی;
+    إذا (U_SUCCESS(*ec) && adopted != اشاره_تهی) {
+        نتیجه = (UEnumeration*) uprv_malloc(حجم(UEnumeration));
+        إذا (نتیجه == اشاره_تهی) {
+            *ec = U_حافظه_تخصیص_ERROR;
+        } وإلا {
+            uprv_memcpy(نتیجه, &USTRENUM_VT, حجم(USTRENUM_VT));
+            نتیجه->context = adopted;
         }
     }
-    if (result == nullptr) {
-        delete adopted;
+    إذا (نتیجه == اشاره_تهی) {
+        حذف adopted;
     }
-    return result;
+    أرجع نتیجه;
 }
 
 // C wrapper --------------------------------------------------------------- ***
 
 U_CDECL_BEGIN
 
-typedef struct UCharStringEnumeration {
+تعريفنوع بنية UCharStringEnumeration {
     UEnumeration uenum;
-    int32_t index, count;
+    int32_t شاخص, count;
 } UCharStringEnumeration;
 
-static void U_CALLCONV
+ساكن فراغ U_CALLCONV
 ucharstrenum_close(UEnumeration* en) {
     uprv_free(en);
 }
 
-static int32_t U_CALLCONV
-ucharstrenum_count(UEnumeration* en,
-                   UErrorCode* /*ec*/) {
-    return ((UCharStringEnumeration*)en)->count;
+ساكن int32_t U_CALLCONV
+ucharstrenum_شمار(UEnumeration* en,
+                   UError_کد* /*ec*/) {
+    أرجع ((UCharStringEnumeration*)en)->count;
 }
 
-static const char16_t* U_CALLCONV
+ساكن ثابت char16_t* U_CALLCONV
 ucharstrenum_unext(UEnumeration* en U_LIFETIME_BOUND,
-                  int32_t* resultLength,
-                  UErrorCode* /*ec*/) {
+                  int32_t* نتیجه_درازی,
+                  UError_کد* /*ec*/) {
     UCharStringEnumeration *e = (UCharStringEnumeration*) en;
-    if (e->index >= e->count) {
-        return nullptr;
+    إذا (e->شاخص >= e->count) {
+        أرجع اشاره_تهی;
     }
-    const char16_t* result = ((const char16_t**)e->uenum.context)[e->index++];
-    if (resultLength) {
-        *resultLength = u_strlen(result);
+    ثابت char16_t* نتیجه = ((ثابت char16_t**)e->uenum.context)[e->شاخص++];
+    إذا (نتیجه_درازی) {
+        *نتیجه_درازی = u_strlen(نتیجه);
     }
-    return result;
+    أرجع نتیجه;
 }
 
 
-static const char* U_CALLCONV
-ucharstrenum_next(UEnumeration* en U_LIFETIME_BOUND,
-                  int32_t* resultLength,
-                  UErrorCode* /*ec*/) {
+ساكن ثابت حرف* U_CALLCONV
+ucharstrenum_بعدی(UEnumeration* en U_LIFETIME_BOUND,
+                  int32_t* نتیجه_درازی,
+                  UError_کد* /*ec*/) {
     UCharStringEnumeration *e = (UCharStringEnumeration*) en;
-    if (e->index >= e->count) {
-        return nullptr;
+    إذا (e->شاخص >= e->count) {
+        أرجع اشاره_تهی;
     }
-    const char* result = ((const char**)e->uenum.context)[e->index++];
-    if (resultLength) {
-        *resultLength = (int32_t)uprv_strlen(result);
+    ثابت حرف* نتیجه = ((ثابت حرف**)e->uenum.context)[e->شاخص++];
+    إذا (نتیجه_درازی) {
+        *نتیجه_درازی = (int32_t)uprv_strlen(نتیجه);
     }
-    return result;
+    أرجع نتیجه;
 }
 
-static void U_CALLCONV
+ساكن فراغ U_CALLCONV
 ucharstrenum_reset(UEnumeration* en,
-                   UErrorCode* /*ec*/) {
-    ((UCharStringEnumeration*)en)->index = 0;
+                   UError_کد* /*ec*/) {
+    ((UCharStringEnumeration*)en)->شاخص = 0;
 }
 
-static const UEnumeration UCHARSTRENUM_VT = {
-    nullptr,
-    nullptr, // store StringEnumeration pointer here
+ساكن ثابت UEnumeration UCHARSTRENUM_VT = {
+    اشاره_تهی,
+    اشاره_تهی, // store StringEnumeration pointer here
     ucharstrenum_close,
-    ucharstrenum_count,
+    ucharstrenum_شمار,
     uenum_unextDefault,
-    ucharstrenum_next,
+    ucharstrenum_بعدی,
     ucharstrenum_reset
 };
 
-static const UEnumeration UCHARSTRENUM_U_VT = {
-    nullptr,
-    nullptr, // store StringEnumeration pointer here
+ساكن ثابت UEnumeration UCHARSTRENUM_U_VT = {
+    اشاره_تهی,
+    اشاره_تهی, // store StringEnumeration pointer here
     ucharstrenum_close,
-    ucharstrenum_count,
+    ucharstrenum_شمار,
     ucharstrenum_unext,
-    uenum_nextDefault,
+    uenum_بعدی_Default,
     ucharstrenum_reset
 };
 
-U_CDECL_END
+U_CDECL_انتها
 
 U_CAPI UEnumeration* U_EXPORT2
-uenum_openCharStringsEnumeration(U_LIFETIME_BOUND const char* const strings[],
+uenum_open_Char_رشتهها_Enumeration(U_LIFETIME_BOUND ثابت حرف* ثابت رشتهها[],
                                  int32_t count,
-                                 UErrorCode* ec) {
-    UCharStringEnumeration* result = nullptr;
-    if (U_SUCCESS(*ec) && count >= 0 && (count == 0 || strings != nullptr)) {
-        result = (UCharStringEnumeration*) uprv_malloc(sizeof(UCharStringEnumeration));
-        if (result == nullptr) {
-            *ec = U_MEMORY_ALLOCATION_ERROR;
-        } else {
-            U_ASSERT((char*)result==(char*)(&result->uenum));
-            uprv_memcpy(result, &UCHARSTRENUM_VT, sizeof(UCHARSTRENUM_VT));
-            result->uenum.context = (void*)strings;
-            result->index = 0;
-            result->count = count;
+                                 UError_کد* ec) {
+    UCharStringEnumeration* نتیجه = اشاره_تهی;
+    إذا (U_SUCCESS(*ec) && count >= 0 && (count == 0 || رشتهها != اشاره_تهی)) {
+        نتیجه = (UCharStringEnumeration*) uprv_malloc(حجم(UCharStringEnumeration));
+        إذا (نتیجه == اشاره_تهی) {
+            *ec = U_حافظه_تخصیص_ERROR;
+        } وإلا {
+            U_ASSERT((حرف*)نتیجه==(حرف*)(&نتیجه->uenum));
+            uprv_memcpy(نتیجه, &UCHARSTRENUM_VT, حجم(UCHARSTRENUM_VT));
+            نتیجه->uenum.context = (فراغ*)رشتهها;
+            نتیجه->شاخص = 0;
+            نتیجه->count = count;
         }
     }
-    return (UEnumeration*) result;
+    أرجع (UEnumeration*) نتیجه;
 }
 
 U_CAPI UEnumeration* U_EXPORT2
-uenum_openUCharStringsEnumeration(U_LIFETIME_BOUND const char16_t* const strings[],
+uenum_open_UChar_رشتهها_Enumeration(U_LIFETIME_BOUND ثابت char16_t* ثابت رشتهها[],
                                   int32_t count,
-                                  UErrorCode* ec) {
-    UCharStringEnumeration* result = nullptr;
-    if (U_SUCCESS(*ec) && count >= 0 && (count == 0 || strings != nullptr)) {
-        result = (UCharStringEnumeration*) uprv_malloc(sizeof(UCharStringEnumeration));
-        if (result == nullptr) {
-            *ec = U_MEMORY_ALLOCATION_ERROR;
-        } else {
-            U_ASSERT((char*)result==(char*)(&result->uenum));
-            uprv_memcpy(result, &UCHARSTRENUM_U_VT, sizeof(UCHARSTRENUM_U_VT));
-            result->uenum.context = (void*)strings;
-            result->index = 0;
-            result->count = count;
+                                  UError_کد* ec) {
+    UCharStringEnumeration* نتیجه = اشاره_تهی;
+    إذا (U_SUCCESS(*ec) && count >= 0 && (count == 0 || رشتهها != اشاره_تهی)) {
+        نتیجه = (UCharStringEnumeration*) uprv_malloc(حجم(UCharStringEnumeration));
+        إذا (نتیجه == اشاره_تهی) {
+            *ec = U_حافظه_تخصیص_ERROR;
+        } وإلا {
+            U_ASSERT((حرف*)نتیجه==(حرف*)(&نتیجه->uenum));
+            uprv_memcpy(نتیجه, &UCHARSTRENUM_U_VT, حجم(UCHARSTRENUM_U_VT));
+            نتیجه->uenum.context = (فراغ*)رشتهها;
+            نتیجه->شاخص = 0;
+            نتیجه->count = count;
         }
     }
-    return (UEnumeration*) result;
+    أرجع (UEnumeration*) نتیجه;
 }
 
 

@@ -10,39 +10,39 @@
 * Since: ICU 2.8
 **********************************************************************
 */
-#include "locbased.h"
-#include "uresimp.h"
+#ضمن "locbased.h"
+#ضمن "uresimp.h"
 
 U_NAMESPACE_BEGIN
 
-const Locale& LocaleBased::getLocale(const Locale& valid U_LIFETIME_BOUND,
-                                     const Locale& actual U_LIFETIME_BOUND,
-                                     ULocDataLocaleType type,
-                                     UErrorCode& status) {
-    if (U_FAILURE(status)) {
-        return Locale::getRoot();
+ثابت Locale& LocaleBased::getLocale(ثابت Locale& valid U_LIFETIME_BOUND,
+                                     ثابت Locale& actual U_LIFETIME_BOUND,
+                                     ULoc_داده_Locale_Type type,
+                                     UError_کد& وضعیت) {
+    إذا (U_FAILURE(وضعیت)) {
+        أرجع Locale::get_ریشه();
     }
 
-    switch(type) {
-    case ULOC_VALID_LOCALE:
-        return valid;
-    case ULOC_ACTUAL_LOCALE:
-        return actual;
-    default:
-        status = U_ILLEGAL_ARGUMENT_ERROR;
-        return Locale::getRoot();
+    بدل(type) {
+    حالة ULOC_VALID_LOCALE:
+        أرجع valid;
+    حالة ULOC_ACTUAL_LOCALE:
+        أرجع actual;
+    افتراضي:
+        وضعیت = U_ILLEGAL_آرگومان_ERROR;
+        أرجع Locale::get_ریشه();
     }
 }
 
-const char* LocaleBased::getLocaleID(const Locale& valid, const Locale& actual,
-                                     ULocDataLocaleType type, UErrorCode& status) {
-    const Locale& locale = getLocale(valid, actual, type, status);
+ثابت حرف* LocaleBased::getLocaleID(ثابت Locale& valid, ثابت Locale& actual,
+                                     ULoc_داده_Locale_Type type, UError_کد& وضعیت) {
+    ثابت Locale& locale = getLocale(valid, actual, type, وضعیت);
 
-    if (U_FAILURE(status)) {
-        return nullptr;
+    إذا (U_FAILURE(وضعیت)) {
+        أرجع اشاره_تهی;
     }
 
-    return locale == Locale::getRoot() ? kRootLocaleName : locale.getName();
+    أرجع locale == Locale::get_ریشه() ? k_ریشه_Locale_Name : locale.getName();
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_انتها

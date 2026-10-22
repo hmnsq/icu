@@ -16,14 +16,14 @@
 *   created by: Markus W. Scherer
 */
 
-#ifndef __UOBJECT_H__
-#define __UOBJECT_H__
+#اگر_تعریف_نشده __UOBJECT_H__
+#تعریف_کن __UOBJECT_H__
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#إذا U_SHOW_CPLUSPLUS_API
 
-#include "unicode/platform.h"
+#ضمن "unicode/platform.h"
 
 /**
  * \file
@@ -45,9 +45,9 @@
  *
  * @stable ICU 4.2. Since ICU 64, Use noexcept instead. See ICU-20422.
  */
-#ifndef U_NO_THROW
-#define U_NO_THROW noexcept
-#endif
+#اگر_تعریف_نشده U_NO_THROW
+#تعریف_کن U_NO_THROW noexcept
+#پایان_اگر
 
 /*===========================================================================*/
 /* UClassID-based RTTI */
@@ -93,7 +93,7 @@
  * \endcode
  * @stable ICU 2.0
  */
-typedef void* UClassID;
+تعريفنوع فراغ* UClassID;
 
 U_NAMESPACE_BEGIN
 
@@ -113,16 +113,16 @@ U_NAMESPACE_BEGIN
  * @stable ICU 2.4
  */
 class U_COMMON_API UMemory {
-public:
+عام:
 
 /* test versions for debugging shaper heap memory problems */
-#ifdef SHAPER_MEMORY_DEBUG  
-    static void * NewArray(int size, int count);
-    static void * GrowArray(void * array, int newSize );
-    static void   FreeArray(void * array );
-#endif
+#اگر_تعریف_شده SHAPER_حافظه_DEBUG  
+    ساكن فراغ * NewArray(صحيح اندازه_2, صحيح شمار);
+    ساكن فراغ * GrowArray(فراغ * array, صحيح new_اندازه );
+    ساكن فراغ   FreeArray(فراغ * array );
+#پایان_اگر
 
-#if U_OVERRIDE_CXX_ALLOCATION
+#إذا U_OVERRIDE_CXX_تخصیص
     /**
      * Override for ICU4C C++ memory management.
      * simple, non-class types are allocated using the macros in common/cmemory.h
@@ -131,14 +131,14 @@ public:
      * for ICU4C C++ classes
      * @stable ICU 2.4
      */
-    static void * U_EXPORT2 operator new(size_t size) noexcept;
+    ساكن فراغ * U_EXPORT2 عملگر new(size_t اندازه_2) noexcept;
 
     /**
      * Override for ICU4C C++ memory management.
      * See new().
      * @stable ICU 2.4
      */
-    static void * U_EXPORT2 operator new[](size_t size) noexcept;
+    ساكن فراغ * U_EXPORT2 عملگر new[](size_t اندازه_2) noexcept;
 
     /**
      * Override for ICU4C C++ memory management.
@@ -148,30 +148,30 @@ public:
      * for ICU4C C++ classes
      * @stable ICU 2.4
      */
-    static void U_EXPORT2 operator delete(void *p) noexcept;
+    ساكن فراغ U_EXPORT2 عملگر delete(فراغ *p) noexcept;
 
     /**
      * Override for ICU4C C++ memory management.
      * See delete().
      * @stable ICU 2.4
      */
-    static void U_EXPORT2 operator delete[](void *p) noexcept;
+    ساكن فراغ U_EXPORT2 عملگر delete[](فراغ *p) noexcept;
 
     /**
      * Override for ICU4C C++ memory management for STL.
      * See new().
      * @stable ICU 2.6
      */
-    static inline void * U_EXPORT2 operator new(size_t, void *ptr) noexcept { return ptr; }
+    ساكن مضمن فراغ * U_EXPORT2 عملگر new(size_t, فراغ *ptr) noexcept { أرجع ptr; }
 
     /**
      * Override for ICU4C C++ memory management for STL.
      * See delete().
      * @stable ICU 2.6
      */
-    static inline void U_EXPORT2 operator delete(void *, void *) noexcept {}
+    ساكن مضمن فراغ U_EXPORT2 عملگر delete(فراغ *, فراغ *) noexcept {}
 
-#if U_HAVE_DEBUG_LOCATION_NEW
+#إذا U_HAVE_DEBUG_LOCATION_NEW
     /**
       * This method overrides the MFC debug version of the operator new
       * 
@@ -179,7 +179,7 @@ public:
       * @param file   The file where the allocation was requested
       * @param line   The line where the allocation was requested 
       */ 
-    static void * U_EXPORT2 operator new(size_t size, const char* file, int line) noexcept;
+    ساكن فراغ * U_EXPORT2 عملگر new(size_t اندازه_2, ثابت حرف* file, صحيح سطر) noexcept;
     /**
       * This method provides a matching delete for the MFC debug new
       * 
@@ -187,9 +187,9 @@ public:
       * @param file   The file where the allocation was requested
       * @param line   The line where the allocation was requested 
       */ 
-    static void U_EXPORT2 operator delete(void* p, const char* file, int line) noexcept;
-#endif /* U_HAVE_DEBUG_LOCATION_NEW */
-#endif /* U_OVERRIDE_CXX_ALLOCATION */
+    ساكن فراغ U_EXPORT2 عملگر delete(فراغ* p, ثابت حرف* file, صحيح سطر) noexcept;
+#پایان_اگر /* U_HAVE_DEBUG_LOCATION_NEW */
+#پایان_اگر /* U_OVERRIDE_CXX_ALLOCATION */
 
     /*
      * Assignment operator not declared. The compiler will provide one
@@ -219,14 +219,14 @@ public:
  *
  * @stable ICU 2.2
  */
-class U_COMMON_API UObject : public UMemory {
-public:
+class U_COMMON_API UObject : عام UMemory {
+عام:
     /**
      * Destructor.
      *
      * @stable ICU 2.2
      */
-    virtual ~UObject();
+    مجازی ~UObject();
 
     /**
      * ICU4C "poor man's RTTI", returns a UClassID for the actual ICU class.
@@ -237,9 +237,9 @@ public:
      *
      * @stable ICU 2.2
      */
-    virtual UClassID getDynamicClassID() const;
+    مجازی UClassID getDynamicClassID() ثابت;
 
-protected:
+محمي:
     // the following functions are protected to prevent instantiation and
     // direct use of UObject itself
 
@@ -249,7 +249,7 @@ protected:
     // copy constructor
     // inline UObject(const UObject &other) {}
 
-#if 0
+#إذا 0
     // TODO Sometime in the future. Implement operator==().
     // (This comment inserted in 2.2)
     // some or all of the following "boilerplate" functions may be made public
@@ -261,15 +261,15 @@ protected:
     // UObject &operator=(const UObject &other) { return *this; }
 
     // comparison operators
-    virtual inline bool operator==(const UObject &other) const { return this==&other; }
-    inline bool operator!=(const UObject &other) const { return !operator==(other); }
+    مجازی مضمن bool عملگر==(ثابت UObject &other) ثابت { أرجع this==&other; }
+    مضمن bool عملگر!=(ثابت UObject &other) ثابت { أرجع !عملگر==(other); }
 
     // clone() commented out from the base class:
     // some compilers do not support co-variant return types
     // (i.e., subclasses would have to return UObject * as well, instead of SubClass *)
     // see also UObject class documentation.
     // virtual UObject *clone() const;
-#endif
+#پایان_اگر
 
     /*
      * Assignment operator not declared. The compiler will provide one
@@ -283,7 +283,7 @@ protected:
      */
 };
 
-#ifndef U_HIDE_INTERNAL_API
+#اگر_تعریف_نشده U_HIDE_داخلی_API
 /**
  * This is a simple macro to add ICU RTTI to an ICU object implementation.
  * This does not go into the header. This should only be used in *.cpp files.
@@ -291,13 +291,13 @@ protected:
  * @param myClass The name of the class that needs RTTI defined.
  * @internal
  */
-#define UOBJECT_DEFINE_RTTI_IMPLEMENTATION(myClass) \
+#تعریف_کن UOBJECT_DEFINE_RTTI_IMPLEMENTATION(myClass) \
     UClassID U_EXPORT2 myClass::getStaticClassID() { \
-        static char classID = 0; \
-        return (UClassID)&classID; \
+        ساكن حرف classID = 0; \
+        أرجع (UClassID)&classID; \
     } \
-    UClassID myClass::getDynamicClassID() const \
-    { return myClass::getStaticClassID(); }
+    UClassID myClass::getDynamicClassID() ثابت \
+    { أرجع myClass::getStaticClassID(); }
 
 
 /**
@@ -308,16 +308,16 @@ protected:
  * @param myClass The name of the class that needs RTTI defined.
  * @internal
  */
-#define UOBJECT_DEFINE_ABSTRACT_RTTI_IMPLEMENTATION(myClass) \
+#تعریف_کن UOBJECT_DEFINE_ABSTRACT_RTTI_IMPLEMENTATION(myClass) \
     UClassID U_EXPORT2 myClass::getStaticClassID() { \
-        static char classID = 0; \
-        return (UClassID)&classID; \
+        ساكن حرف classID = 0; \
+        أرجع (UClassID)&classID; \
     }
 
-#endif  /* U_HIDE_INTERNAL_API */
+#پایان_اگر  /* U_HIDE_INTERNAL_API */
 
-U_NAMESPACE_END
+U_NAMESPACE_انتها
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#پایان_اگر /* U_SHOW_CPLUSPLUS_API */
 
-#endif
+#پایان_اگر

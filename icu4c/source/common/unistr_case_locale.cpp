@@ -17,11 +17,11 @@
 *   were moved here to break dependency cycles among parts of the common library.
 */
 
-#include "unicode/utypes.h"
-#include "unicode/locid.h"
-#include "unicode/ucasemap.h"
-#include "unicode/unistr.h"
-#include "ucasemap_imp.h"
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/locid.h"
+#ضمن "unicode/ucasemap.h"
+#ضمن "unicode/unistr.h"
+#ضمن "ucasemap_imp.h"
 
 U_NAMESPACE_BEGIN
 
@@ -30,27 +30,27 @@ U_NAMESPACE_BEGIN
 //========================================
 
 UnicodeString&
-UnicodeString::toLower() U_LIFETIME_BOUND {
-  return caseMap(ustrcase_getCaseLocale(nullptr), 0,
-                 UCASEMAP_BREAK_ITERATOR_NULL ustrcase_internalToLower);
+UnicodeString::مقصد_پایینی() U_LIFETIME_BOUND {
+  أرجع caseMap(ustrcase_getCaseLocale(اشاره_تهی), 0,
+                 UCASEMAP_BREAK_ITERATOR_NULL ustrcase_داخلی_مقصد_پایینی);
 }
 
 UnicodeString&
-UnicodeString::toLower(const Locale& locale) U_LIFETIME_BOUND {
-  return caseMap(ustrcase_getCaseLocale(locale.getBaseName()), 0,
-                 UCASEMAP_BREAK_ITERATOR_NULL ustrcase_internalToLower);
+UnicodeString::مقصد_پایینی(ثابت Locale& locale) U_LIFETIME_BOUND {
+  أرجع caseMap(ustrcase_getCaseLocale(locale.get_پایه_Name()), 0,
+                 UCASEMAP_BREAK_ITERATOR_NULL ustrcase_داخلی_مقصد_پایینی);
 }
 
 UnicodeString&
-UnicodeString::toUpper() U_LIFETIME_BOUND {
-  return caseMap(ustrcase_getCaseLocale(nullptr), 0,
-                 UCASEMAP_BREAK_ITERATOR_NULL ustrcase_internalToUpper);
+UnicodeString::مقصد_فوقانی() U_LIFETIME_BOUND {
+  أرجع caseMap(ustrcase_getCaseLocale(اشاره_تهی), 0,
+                 UCASEMAP_BREAK_ITERATOR_NULL ustrcase_داخلی_مقصد_فوقانی);
 }
 
 UnicodeString&
-UnicodeString::toUpper(const Locale& locale) U_LIFETIME_BOUND {
-  return caseMap(ustrcase_getCaseLocale(locale.getBaseName()), 0,
-                 UCASEMAP_BREAK_ITERATOR_NULL ustrcase_internalToUpper);
+UnicodeString::مقصد_فوقانی(ثابت Locale& locale) U_LIFETIME_BOUND {
+  أرجع caseMap(ustrcase_getCaseLocale(locale.get_پایه_Name()), 0,
+                 UCASEMAP_BREAK_ITERATOR_NULL ustrcase_داخلی_مقصد_فوقانی);
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_انتها

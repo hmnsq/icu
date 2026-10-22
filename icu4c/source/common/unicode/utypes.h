@@ -31,18 +31,18 @@
 *******************************************************************************
 */
 
-#ifndef UTYPES_H
-#define UTYPES_H
+#اگر_تعریف_نشده UTYPES_H
+#تعریف_کن UTYPES_H
 
 
-#include "unicode/umachine.h"
-#include "unicode/uversion.h"
-#include "unicode/uconfig.h"
-#include <float.h>
+#ضمن "unicode/umachine.h"
+#ضمن "unicode/uversion.h"
+#ضمن "unicode/uconfig.h"
+#ضمن <float.h>
 
-#if !U_NO_DEFAULT_INCLUDE_UTF_HEADERS
+#إذا !U_NO_DEFAULT_INCLUDE_UTF_سرآیندها
 #   include "unicode/utf.h"
-#endif
+#پایان_اگر
 
 /*!
  * \file
@@ -71,19 +71,19 @@
  * but who still want to use C++ header-only APIs which do not rely on ICU DLL exports.
  * @internal
  */
-#ifdef __cplusplus
+#اگر_تعریف_شده __cplusplus
 #   ifndef U_SHOW_CPLUSPLUS_API
 #       define U_SHOW_CPLUSPLUS_API 1
 #   endif
-#   ifndef U_SHOW_CPLUSPLUS_HEADER_API
-#       define U_SHOW_CPLUSPLUS_HEADER_API 1
+#   ifndef U_SHOW_CPLUSPLUS_سرآیند_API
+#       define U_SHOW_CPLUSPLUS_سرآیند_API 1
 #   endif
-#else
+#وإلا
 #   undef U_SHOW_CPLUSPLUS_API
 #   define U_SHOW_CPLUSPLUS_API 0
-#   undef U_SHOW_CPLUSPLUS_HEADER_API
-#   define U_SHOW_CPLUSPLUS_HEADER_API 0
-#endif
+#   undef U_SHOW_CPLUSPLUS_سرآیند_API
+#   define U_SHOW_CPLUSPLUS_سرآیند_API 0
+#پایان_اگر
 
 /**
  * \def U_HIDE_DRAFT_API
@@ -95,12 +95,12 @@
  * Define this to 1 to request that internal API be "hidden"
  * @internal
  */
-#if !U_DEFAULT_SHOW_DRAFT && !defined(U_SHOW_DRAFT_API)
-#define U_HIDE_DRAFT_API 1
-#endif
-#if !U_DEFAULT_SHOW_DRAFT && !defined(U_SHOW_INTERNAL_API)
-#define U_HIDE_INTERNAL_API 1
-#endif
+#إذا !U_DEFAULT_SHOW_DRAFT && !defined(U_SHOW_DRAFT_API)
+#تعریف_کن U_HIDE_DRAFT_API 1
+#پایان_اگر
+#إذا !U_DEFAULT_SHOW_DRAFT && !defined(U_SHOW_داخلی_API)
+#تعریف_کن U_HIDE_داخلی_API 1
+#پایان_اگر
 
 /** @} */
 
@@ -124,38 +124,38 @@
  * The non-string form of U_ICUDATA_TYPE_LETTER
  * @stable ICU 2.0
  */
-#if U_CHARSET_FAMILY
-#   if U_IS_BIG_ENDIAN
+#إذا U_CHARSET_FAMILY
+#   إذا U_IS_BIG_ENDIAN
    /* EBCDIC - should always be BE */
 #     define U_ICUDATA_TYPE_LETTER "e"
 #     define U_ICUDATA_TYPE_LITLETTER e
-#   else
+#   وإلا
 #     error "Don't know what to do with little endian EBCDIC!"
 #     define U_ICUDATA_TYPE_LETTER "x"
 #     define U_ICUDATA_TYPE_LITLETTER x
 #   endif
-#else
-#   if U_IS_BIG_ENDIAN
+#وإلا
+#   إذا U_IS_BIG_ENDIAN
       /* Big-endian ASCII */
 #     define U_ICUDATA_TYPE_LETTER "b"
 #     define U_ICUDATA_TYPE_LITLETTER b
-#   else
+#   وإلا
       /* Little-endian ASCII */
 #     define U_ICUDATA_TYPE_LETTER "l"
 #     define U_ICUDATA_TYPE_LITLETTER l
 #   endif
-#endif
+#پایان_اگر
 
 /**
  * A single string literal containing the icudata stub name. i.e. 'icudt18e' for
  * ICU 1.8.x on EBCDIC, etc..
  * @stable ICU 2.0
  */
-#define U_ICUDATA_NAME    "icudt" U_ICU_VERSION_SHORT U_ICUDATA_TYPE_LETTER
-#ifndef U_HIDE_INTERNAL_API
-#define U_USRDATA_NAME    "usrdt" U_ICU_VERSION_SHORT U_ICUDATA_TYPE_LETTER  /**< @internal */
-#define U_USE_USRDATA     0  /**< @internal */
-#endif  /* U_HIDE_INTERNAL_API */
+#تعریف_کن U_ICUDATA_NAME    "icudt" U_ICU_نسخه_SHORT U_ICUDATA_TYPE_LETTER
+#اگر_تعریف_نشده U_HIDE_داخلی_API
+#تعریف_کن U_USRDATA_NAME    "usrdt" U_ICU_نسخه_SHORT U_ICUDATA_TYPE_LETTER  /**< @internal */
+#تعریف_کن U_USE_USRDATA     0  /**< @internal */
+#پایان_اگر  /* U_HIDE_INTERNAL_API */
 
 /**
  *  U_ICU_ENTRY_POINT is the name of the DLL entry point to the ICU data library.
@@ -168,41 +168,41 @@
  *                                  \#define U_ICU_ENTRY_POINT icudt19_dat
  * @stable ICU 2.4
  */
-#define U_ICUDATA_ENTRY_POINT  U_DEF2_ICUDATA_ENTRY_POINT(U_ICU_VERSION_MAJOR_NUM,U_LIB_SUFFIX_C_NAME)
+#تعریف_کن U_ICUDATA_مدخل_نقطه  U_DEF2_ICUDATA_مدخل_نقطه(U_ICU_نسخه_MAJOR_رقم,U_LIB_SUFFIX_C_NAME)
 
-#ifndef U_HIDE_INTERNAL_API
+#اگر_تعریف_نشده U_HIDE_داخلی_API
 /**
  * Do not use. Note that it's OK for the 2nd argument to be undefined (literal).
  * @internal
  */
-#define U_DEF2_ICUDATA_ENTRY_POINT(major,suff) U_DEF_ICUDATA_ENTRY_POINT(major,suff)
+#تعریف_کن U_DEF2_ICUDATA_مدخل_نقطه(major,suff) U_DEF_ICUDATA_مدخل_نقطه(major,suff)
 
 /**
  * Do not use.
  * @internal
  */
-#ifndef U_DEF_ICUDATA_ENTRY_POINT
+#اگر_تعریف_نشده U_DEF_ICUDATA_مدخل_نقطه
 /* affected by symbol renaming. See platform.h */
-#ifndef U_LIB_SUFFIX_C_NAME
-#define U_DEF_ICUDATA_ENTRY_POINT(major, suff) icudt##major##_dat
-#else
-#define U_DEF_ICUDATA_ENTRY_POINT(major, suff) icudt##suff ## major##_dat
-#endif
-#endif
-#endif  /* U_HIDE_INTERNAL_API */
+#اگر_تعریف_نشده U_LIB_SUFFIX_C_NAME
+#تعریف_کن U_DEF_ICUDATA_مدخل_نقطه(major, suff) icudt##major##_dat
+#وإلا
+#تعریف_کن U_DEF_ICUDATA_مدخل_نقطه(major, suff) icudt##suff ## major##_dat
+#پایان_اگر
+#پایان_اگر
+#پایان_اگر  /* U_HIDE_INTERNAL_API */
 
 /**
  * \def NULL
  * Define NULL if necessary, to nullptr for C++ and to ((void *)0) for C.
  * @stable ICU 2.0
  */
-#ifndef NULL
-#ifdef __cplusplus
-#define NULL    nullptr
-#else
-#define NULL    ((void *)0)
-#endif
-#endif
+#اگر_تعریف_نشده عدم
+#اگر_تعریف_شده __cplusplus
+#تعریف_کن عدم    nullptr
+#وإلا
+#تعریف_کن عدم    ((فراغ *)0)
+#پایان_اگر
+#پایان_اگر
 
 /*===========================================================================*/
 /* Calendar/TimeZone data types                                              */
@@ -215,28 +215,28 @@
  * UTC leap seconds are ignored.
  * @stable ICU 2.0
  */
-typedef double UDate;
+تعريفنوع مزدوج UDate;
 
 /** The number of milliseconds per second @stable ICU 2.0 */
-#define U_MILLIS_PER_SECOND        (1000)
+#تعریف_کن U_MILLIS_در_هر_دومی        (1000)
 /** The number of milliseconds per minute @stable ICU 2.0 */
-#define U_MILLIS_PER_MINUTE       (60000)
+#تعریف_کن U_MILLIS_در_هر_MINUTE       (60000)
 /** The number of milliseconds per hour @stable ICU 2.0 */
-#define U_MILLIS_PER_HOUR       (3600000)
+#تعریف_کن U_MILLIS_در_هر_HOUR       (3600000)
 /** The number of milliseconds per day @stable ICU 2.0 */
-#define U_MILLIS_PER_DAY       (86400000)
+#تعریف_کن U_MILLIS_در_هر_DAY       (86400000)
 
 /** 
  * Maximum UDate value 
  * @stable ICU 4.8 
  */ 
-#define U_DATE_MAX DBL_MAX
+#تعریف_کن U_DATE_MAX DBL_MAX
 
 /**
  * Minimum UDate value 
  * @stable ICU 4.8 
  */ 
-#define U_DATE_MIN -U_DATE_MAX
+#تعریف_کن U_DATE_MIN -U_DATE_MAX
 
 /*===========================================================================*/
 /* Shared library/DLL import-export API control                              */
@@ -305,86 +305,86 @@ typedef double UDate;
  * @stable ICU 3.4
  */
 
-#ifdef U_IN_DOXYGEN
+#اگر_تعریف_شده U_درون_DOXYGEN
 // This definition is required when generating the API docs.
-#define U_COMBINED_IMPLEMENTATION 1
-#endif
+#تعریف_کن U_COMBINED_IMPLEMENTATION 1
+#پایان_اگر
 
-#if defined(U_COMBINED_IMPLEMENTATION)
-#define U_DATA_API     U_EXPORT
-#define U_COMMON_API   U_EXPORT
-#define U_I18N_API     U_EXPORT
-#define U_LAYOUT_API   U_EXPORT
-#define U_LAYOUTEX_API U_EXPORT
-#define U_IO_API       U_EXPORT
-#define U_TOOLUTIL_API U_EXPORT
-#elif defined(U_STATIC_IMPLEMENTATION)
-#define U_DATA_API
-#define U_COMMON_API
-#define U_I18N_API
-#define U_LAYOUT_API
-#define U_LAYOUTEX_API
-#define U_IO_API
-#define U_TOOLUTIL_API
-#elif defined(U_COMMON_IMPLEMENTATION)
-#define U_DATA_API     U_IMPORT
-#define U_COMMON_API   U_EXPORT
-#define U_I18N_API     U_IMPORT
-#define U_LAYOUT_API   U_IMPORT
-#define U_LAYOUTEX_API U_IMPORT
-#define U_IO_API       U_IMPORT
-#define U_TOOLUTIL_API U_IMPORT
-#elif defined(U_I18N_IMPLEMENTATION)
-#define U_DATA_API     U_IMPORT
-#define U_COMMON_API   U_IMPORT
-#define U_I18N_API     U_EXPORT
-#define U_LAYOUT_API   U_IMPORT
-#define U_LAYOUTEX_API U_IMPORT
-#define U_IO_API       U_IMPORT
-#define U_TOOLUTIL_API U_IMPORT
-#elif defined(U_LAYOUT_IMPLEMENTATION)
-#define U_DATA_API     U_IMPORT
-#define U_COMMON_API   U_IMPORT
-#define U_I18N_API     U_IMPORT
-#define U_LAYOUT_API   U_EXPORT
-#define U_LAYOUTEX_API U_IMPORT
-#define U_IO_API       U_IMPORT
-#define U_TOOLUTIL_API U_IMPORT
-#elif defined(U_LAYOUTEX_IMPLEMENTATION)
-#define U_DATA_API     U_IMPORT
-#define U_COMMON_API   U_IMPORT
-#define U_I18N_API     U_IMPORT
-#define U_LAYOUT_API   U_IMPORT
-#define U_LAYOUTEX_API U_EXPORT
-#define U_IO_API       U_IMPORT
-#define U_TOOLUTIL_API U_IMPORT
-#elif defined(U_IO_IMPLEMENTATION)
-#define U_DATA_API     U_IMPORT
-#define U_COMMON_API   U_IMPORT
-#define U_I18N_API     U_IMPORT
-#define U_LAYOUT_API   U_IMPORT
-#define U_LAYOUTEX_API U_IMPORT
-#define U_IO_API       U_EXPORT
-#define U_TOOLUTIL_API U_IMPORT
-#elif defined(U_TOOLUTIL_IMPLEMENTATION)
-#define U_DATA_API     U_IMPORT
-#define U_COMMON_API   U_IMPORT
-#define U_I18N_API     U_IMPORT
-#define U_LAYOUT_API   U_IMPORT
-#define U_LAYOUTEX_API U_IMPORT
-#define U_IO_API       U_IMPORT
-#define U_TOOLUTIL_API U_EXPORT
-#else
-#define U_DATA_API     U_IMPORT
-#define U_COMMON_API   U_IMPORT
-#define U_I18N_API     U_IMPORT
-#define U_LAYOUT_API   U_IMPORT
-#define U_LAYOUTEX_API U_IMPORT
-#define U_IO_API       U_IMPORT
-#define U_TOOLUTIL_API U_IMPORT
-#endif
+#إذا defined(U_COMBINED_IMPLEMENTATION)
+#تعریف_کن U_داده_API     U_EXPORT
+#تعریف_کن U_COMMON_API   U_EXPORT
+#تعریف_کن U_I18N_API     U_EXPORT
+#تعریف_کن U_LAYOUT_API   U_EXPORT
+#تعریف_کن U_LAYOUTEX_API U_EXPORT
+#تعریف_کن U_IO_API       U_EXPORT
+#تعریف_کن U_TOOLUTIL_API U_EXPORT
+#وإلاإذا defined(U_STATIC_IMPLEMENTATION)
+#تعریف_کن U_داده_API
+#تعریف_کن U_COMMON_API
+#تعریف_کن U_I18N_API
+#تعریف_کن U_LAYOUT_API
+#تعریف_کن U_LAYOUTEX_API
+#تعریف_کن U_IO_API
+#تعریف_کن U_TOOLUTIL_API
+#وإلاإذا defined(U_COMMON_IMPLEMENTATION)
+#تعریف_کن U_داده_API     U_IMPORT
+#تعریف_کن U_COMMON_API   U_EXPORT
+#تعریف_کن U_I18N_API     U_IMPORT
+#تعریف_کن U_LAYOUT_API   U_IMPORT
+#تعریف_کن U_LAYOUTEX_API U_IMPORT
+#تعریف_کن U_IO_API       U_IMPORT
+#تعریف_کن U_TOOLUTIL_API U_IMPORT
+#وإلاإذا defined(U_I18N_IMPLEMENTATION)
+#تعریف_کن U_داده_API     U_IMPORT
+#تعریف_کن U_COMMON_API   U_IMPORT
+#تعریف_کن U_I18N_API     U_EXPORT
+#تعریف_کن U_LAYOUT_API   U_IMPORT
+#تعریف_کن U_LAYOUTEX_API U_IMPORT
+#تعریف_کن U_IO_API       U_IMPORT
+#تعریف_کن U_TOOLUTIL_API U_IMPORT
+#وإلاإذا defined(U_LAYOUT_IMPLEMENTATION)
+#تعریف_کن U_داده_API     U_IMPORT
+#تعریف_کن U_COMMON_API   U_IMPORT
+#تعریف_کن U_I18N_API     U_IMPORT
+#تعریف_کن U_LAYOUT_API   U_EXPORT
+#تعریف_کن U_LAYOUTEX_API U_IMPORT
+#تعریف_کن U_IO_API       U_IMPORT
+#تعریف_کن U_TOOLUTIL_API U_IMPORT
+#وإلاإذا defined(U_LAYOUTEX_IMPLEMENTATION)
+#تعریف_کن U_داده_API     U_IMPORT
+#تعریف_کن U_COMMON_API   U_IMPORT
+#تعریف_کن U_I18N_API     U_IMPORT
+#تعریف_کن U_LAYOUT_API   U_IMPORT
+#تعریف_کن U_LAYOUTEX_API U_EXPORT
+#تعریف_کن U_IO_API       U_IMPORT
+#تعریف_کن U_TOOLUTIL_API U_IMPORT
+#وإلاإذا defined(U_IO_IMPLEMENTATION)
+#تعریف_کن U_داده_API     U_IMPORT
+#تعریف_کن U_COMMON_API   U_IMPORT
+#تعریف_کن U_I18N_API     U_IMPORT
+#تعریف_کن U_LAYOUT_API   U_IMPORT
+#تعریف_کن U_LAYOUTEX_API U_IMPORT
+#تعریف_کن U_IO_API       U_EXPORT
+#تعریف_کن U_TOOLUTIL_API U_IMPORT
+#وإلاإذا defined(U_TOOLUTIL_IMPLEMENTATION)
+#تعریف_کن U_داده_API     U_IMPORT
+#تعریف_کن U_COMMON_API   U_IMPORT
+#تعریف_کن U_I18N_API     U_IMPORT
+#تعریف_کن U_LAYOUT_API   U_IMPORT
+#تعریف_کن U_LAYOUTEX_API U_IMPORT
+#تعریف_کن U_IO_API       U_IMPORT
+#تعریف_کن U_TOOLUTIL_API U_EXPORT
+#وإلا
+#تعریف_کن U_داده_API     U_IMPORT
+#تعریف_کن U_COMMON_API   U_IMPORT
+#تعریف_کن U_I18N_API     U_IMPORT
+#تعریف_کن U_LAYOUT_API   U_IMPORT
+#تعریف_کن U_LAYOUTEX_API U_IMPORT
+#تعریف_کن U_IO_API       U_IMPORT
+#تعریف_کن U_TOOLUTIL_API U_IMPORT
+#پایان_اگر
 
-#ifndef U_FORCE_HIDE_DRAFT_API
+#اگر_تعریف_نشده U_FORCE_HIDE_DRAFT_API
 
 /**
  * \def U_DATA_API_CLASS
@@ -443,36 +443,36 @@ typedef double UDate;
 //
 // https://learn.microsoft.com/en-us/cpp/error-messages/compiler-warnings/compiler-warning-level-1-c4251
 //
-#if U_PLATFORM_HAS_WIN32_API
-#define U_DATA_API_CLASS
-#define U_COMMON_API_CLASS
-#define U_I18N_API_CLASS
-#define U_LAYOUT_API_CLASS
-#define U_LAYOUTEX_API_CLASS
-#define U_IO_API_CLASS
-#define U_TOOLUTIL_API_CLASS
-#else
-#define U_DATA_API_CLASS     U_DATA_API
-#define U_COMMON_API_CLASS   U_COMMON_API
-#define U_I18N_API_CLASS     U_I18N_API
-#define U_LAYOUT_API_CLASS   U_LAYOUT_API
-#define U_LAYOUTEX_API_CLASS U_LAYOUTEX_API
-#define U_IO_API_CLASS       U_IO_API
-#define U_TOOLUTIL_API_CLASS U_TOOLUTIL_API
-#endif
+#إذا U_PLATFORM_HAS_WIN32_API
+#تعریف_کن U_داده_API_CLASS
+#تعریف_کن U_COMMON_API_CLASS
+#تعریف_کن U_I18N_API_CLASS
+#تعریف_کن U_LAYOUT_API_CLASS
+#تعریف_کن U_LAYOUTEX_API_CLASS
+#تعریف_کن U_IO_API_CLASS
+#تعریف_کن U_TOOLUTIL_API_CLASS
+#وإلا
+#تعریف_کن U_داده_API_CLASS     U_داده_API
+#تعریف_کن U_COMMON_API_CLASS   U_COMMON_API
+#تعریف_کن U_I18N_API_CLASS     U_I18N_API
+#تعریف_کن U_LAYOUT_API_CLASS   U_LAYOUT_API
+#تعریف_کن U_LAYOUTEX_API_CLASS U_LAYOUTEX_API
+#تعریف_کن U_IO_API_CLASS       U_IO_API
+#تعریف_کن U_TOOLUTIL_API_CLASS U_TOOLUTIL_API
+#پایان_اگر
 
-#endif  // U_FORCE_HIDE_DRAFT_API
+#پایان_اگر  // U_FORCE_HIDE_DRAFT_API
 
 /**
  * \def U_STANDARD_CPP_NAMESPACE
  * Control of C++ Namespace
  * @stable ICU 2.0
  */
-#ifdef __cplusplus
-#define U_STANDARD_CPP_NAMESPACE        ::
-#else
-#define U_STANDARD_CPP_NAMESPACE
-#endif
+#اگر_تعریف_شده __cplusplus
+#تعریف_کن U_STANDARD_CPP_NAMESPACE        ::
+#وإلا
+#تعریف_کن U_STANDARD_CPP_NAMESPACE
+#پایان_اگر
 
 /*===========================================================================*/
 /* UErrorCode */
@@ -506,7 +506,7 @@ typedef double UDate;
  *
  * @stable ICU 2.0
  */
-typedef enum UErrorCode {
+تعريفنوع تعداد UError_کد {
     /* The ordering of U_ERROR_INFO_START Vs U_USING_FALLBACK_WARNING looks weird
      * and is that way because VC++ debugger displays first encountered constant,
      * which is not the what the code is used for
@@ -514,7 +514,7 @@ typedef enum UErrorCode {
 
     U_USING_FALLBACK_WARNING  = -128,   /**< A resource bundle lookup returned a fallback result (not an error) */
 
-    U_ERROR_WARNING_START     = -128,   /**< Start of information results (semantically successful) */
+    U_ERROR_WARNING_شروع     = -128,   /**< Start of information results (semantically successful) */
 
     U_USING_DEFAULT_WARNING   = -127,   /**< A resource bundle lookup returned a result from the root locale (not an error) */
 
@@ -524,54 +524,54 @@ typedef enum UErrorCode {
 
     U_STRING_NOT_TERMINATED_WARNING = -124,/**< An output string could not be NUL-terminated because output length==destCapacity. */
 
-    U_SORT_KEY_TOO_SHORT_WARNING = -123, /**< Number of levels requested in getBound is higher than the number of levels in the sort key */
+    U_مرتب_سازی_کلید_TOO_SHORT_WARNING = -123, /**< Number of levels requested in getBound is higher than the number of levels in the sort key */
 
     U_AMBIGUOUS_ALIAS_WARNING = -122,   /**< This converter alias can go to different converter implementations */
 
-    U_DIFFERENT_UCA_VERSION = -121,     /**< ucol_open encountered a mismatch between UCA version and collator image version, so the collator was constructed from rules. No impact to further function */
+    U_DIFFERENT_UCA_نسخه = -121,     /**< ucol_open encountered a mismatch between UCA version and collator image version, so the collator was constructed from rules. No impact to further function */
     
-    U_PLUGIN_CHANGED_LEVEL_WARNING = -120, /**< A plugin caused a level change. May not be an error, but later plugins may not load. */
+    U_PLUGIN_تغییریافته_LEVEL_WARNING = -120, /**< A plugin caused a level change. May not be an error, but later plugins may not load. */
 
 
-#ifndef U_HIDE_DEPRECATED_API
+#اگر_تعریف_نشده U_HIDE_DEPRECATED_API
     /**
      * One more than the highest normal UErrorCode warning value.
      * @deprecated ICU 58 The numeric value may change over time, see ICU ticket #12420.
      */
-    U_ERROR_WARNING_LIMIT,
-#endif  // U_HIDE_DEPRECATED_API
+    U_ERROR_WARNING_حد,
+#پایان_اگر  // U_HIDE_DEPRECATED_API
 
     U_ZERO_ERROR              =  0,     /**< No error, no warning. */
 
-    U_ILLEGAL_ARGUMENT_ERROR  =  1,     /**< Start of codes indicating failure */
+    U_ILLEGAL_آرگومان_ERROR  =  1,     /**< Start of codes indicating failure */
     U_MISSING_RESOURCE_ERROR  =  2,     /**< The requested resource cannot be found */
     U_INVALID_FORMAT_ERROR    =  3,     /**< Data format is not what is expected */
     U_FILE_ACCESS_ERROR       =  4,     /**< The requested file cannot be found */
-    U_INTERNAL_PROGRAM_ERROR  =  5,     /**< Indicates a bug in the library code */
-    U_MESSAGE_PARSE_ERROR     =  6,     /**< Unable to parse a message (message format) */
-    U_MEMORY_ALLOCATION_ERROR =  7,     /**< Memory allocation error */
-    U_INDEX_OUTOFBOUNDS_ERROR =  8,     /**< Trying to access the index that is out of bounds */
+    U_داخلی_برنامه_ERROR  =  5,     /**< Indicates a bug in the library code */
+    U_پیام_PARSE_ERROR     =  6,     /**< Unable to parse a message (message format) */
+    U_حافظه_تخصیص_ERROR =  7,     /**< Memory allocation error */
+    U_شاخص_OUTOFBOUNDS_ERROR =  8,     /**< Trying to access the index that is out of bounds */
     U_PARSE_ERROR             =  9,     /**< Equivalent to Java ParseException */
-    U_INVALID_CHAR_FOUND      = 10,     /**< Character conversion: Unmappable input sequence. In other APIs: Invalid character. */
-    U_TRUNCATED_CHAR_FOUND    = 11,     /**< Character conversion: Incomplete input sequence. */
-    U_ILLEGAL_CHAR_FOUND      = 12,     /**< Character conversion: Illegal input sequence/combination of input units. */
-    U_INVALID_TABLE_FORMAT    = 13,     /**< Conversion table file found, but corrupted */
-    U_INVALID_TABLE_FILE      = 14,     /**< Conversion table file not found */
-    U_BUFFER_OVERFLOW_ERROR   = 15,     /**< A result would not fit in the supplied buffer */
+    U_INVALID_CHAR_یافت      = 10,     /**< Character conversion: Unmappable input sequence. In other APIs: Invalid character. */
+    U_TRUNCATED_CHAR_یافت    = 11,     /**< Character conversion: Incomplete input sequence. */
+    U_ILLEGAL_CHAR_یافت      = 12,     /**< Character conversion: Illegal input sequence/combination of input units. */
+    U_INVALID_جدول_FORMAT    = 13,     /**< Conversion table file found, but corrupted */
+    U_INVALID_جدول_FILE      = 14,     /**< Conversion table file not found */
+    U_میانگیر_سرریز_ERROR   = 15,     /**< A result would not fit in the supplied buffer */
     U_UNSUPPORTED_ERROR       = 16,     /**< Requested operation not supported in current context */
     U_RESOURCE_TYPE_MISMATCH  = 17,     /**< an operation is requested over a resource that does not support it */
     U_ILLEGAL_ESCAPE_SEQUENCE = 18,     /**< ISO-2022 illegal escape sequence */
     U_UNSUPPORTED_ESCAPE_SEQUENCE = 19, /**< ISO-2022 unsupported escape sequence */
-    U_NO_SPACE_AVAILABLE      = 20,     /**< No space available for in-buffer expansion for Arabic shaping */
-    U_CE_NOT_FOUND_ERROR      = 21,     /**< Currently used only while setting variable top, but can be used generally */
+    U_NO_SPACE_موجود      = 20,     /**< No space available for in-buffer expansion for Arabic shaping */
+    U_CE_NOT_یافت_ERROR      = 21,     /**< Currently used only while setting variable top, but can be used generally */
     U_PRIMARY_TOO_LONG_ERROR  = 22,     /**< User tried to set variable top to a primary that is longer than two bytes */
     U_STATE_TOO_OLD_ERROR     = 23,     /**< ICU cannot construct a service from this state, as it is no longer supported */
     U_TOO_MANY_ALIASES_ERROR  = 24,     /**< There are too many aliases in the path to the requested resource.
                                              It is very possible that a circular alias definition has occurred */
-    U_ENUM_OUT_OF_SYNC_ERROR  = 25,     /**< UEnumeration out of sync with underlying collection */
+    U_ENUM_بیرون_از_SYNC_ERROR  = 25,     /**< UEnumeration out of sync with underlying collection */
     U_INVARIANT_CONVERSION_ERROR = 26,  /**< Unable to convert a UChar* string to char* with the invariant converter. */
     U_INVALID_STATE_ERROR     = 27,     /**< Requested operation can not be completed with ICU in its current state */
-    U_COLLATOR_VERSION_MISMATCH = 28,   /**< Collator version is not compatible with the base version */
+    U_COLLATOR_نسخه_MISMATCH = 28,   /**< Collator version is not compatible with the base version */
     U_USELESS_COLLATOR_ERROR  = 29,     /**< Collator is options only and no base is specified */
     U_NO_WRITE_PERMISSION     = 30,     /**< Attempt to modify read-only or constant data. */
     /**
@@ -581,193 +581,193 @@ typedef enum UErrorCode {
      *
      * @stable ICU 68
      */
-    U_INPUT_TOO_LONG_ERROR = 31,
+    U_درون_داد_TOO_LONG_ERROR = 31,
 
-#ifndef U_HIDE_DEPRECATED_API
+#اگر_تعریف_نشده U_HIDE_DEPRECATED_API
     /**
      * One more than the highest standard error code.
      * @deprecated ICU 58 The numeric value may change over time, see ICU ticket #12420.
      */
-    U_STANDARD_ERROR_LIMIT = 32,
-#endif  // U_HIDE_DEPRECATED_API
+    U_STANDARD_ERROR_حد = 32,
+#پایان_اگر  // U_HIDE_DEPRECATED_API
 
     /*
      * Error codes in the range 0x10000 0x10100 are reserved for Transliterator.
      */
     U_BAD_VARIABLE_DEFINITION=0x10000,/**< Missing '$' or duplicate variable name */
-    U_PARSE_ERROR_START = 0x10000,    /**< Start of Transliterator errors */
-    U_MALFORMED_RULE,                 /**< Elements of a rule are misplaced */
-    U_MALFORMED_SET,                  /**< A UnicodeSet pattern is invalid*/
-    U_MALFORMED_SYMBOL_REFERENCE,     /**< UNUSED as of ICU 2.4 */
+    U_PARSE_ERROR_شروع = 0x10000,    /**< Start of Transliterator errors */
+    U_MALFORMED_قاعده,                 /**< Elements of a rule are misplaced */
+    U_MALFORMED_مجموعه,                  /**< A UnicodeSet pattern is invalid*/
+    U_MALFORMED_نماد_REFERENCE,     /**< UNUSED as of ICU 2.4 */
     U_MALFORMED_UNICODE_ESCAPE,       /**< A Unicode escape pattern is invalid*/
     U_MALFORMED_VARIABLE_DEFINITION,  /**< A variable definition is invalid */
     U_MALFORMED_VARIABLE_REFERENCE,   /**< A variable reference is invalid */
     U_MISMATCHED_SEGMENT_DELIMITERS,  /**< UNUSED as of ICU 2.4 */
-    U_MISPLACED_ANCHOR_START,         /**< A start anchor appears at an illegal position */
-    U_MISPLACED_CURSOR_OFFSET,        /**< A cursor offset occurs at an illegal position */
+    U_MISPLACED_ANCHOR_شروع,         /**< A start anchor appears at an illegal position */
+    U_MISPLACED_CURSOR_جابه_جایی,        /**< A cursor offset occurs at an illegal position */
     U_MISPLACED_QUANTIFIER,           /**< A quantifier appears after a segment close delimiter */
     U_MISSING_OPERATOR,               /**< A rule contains no operator */
     U_MISSING_SEGMENT_CLOSE,          /**< UNUSED as of ICU 2.4 */
-    U_MULTIPLE_ANTE_CONTEXTS,         /**< More than one ante context */
-    U_MULTIPLE_CURSORS,               /**< More than one cursor */
-    U_MULTIPLE_POST_CONTEXTS,         /**< More than one post context */
+    U_مضرب_ANTE_CONTEXTS,         /**< More than one ante context */
+    U_مضرب_CURSORS,               /**< More than one cursor */
+    U_مضرب_POST_CONTEXTS,         /**< More than one post context */
     U_TRAILING_BACKSLASH,             /**< A dangling backslash */
     U_UNDEFINED_SEGMENT_REFERENCE,    /**< A segment reference does not correspond to a defined segment */
     U_UNDEFINED_VARIABLE,             /**< A variable reference does not correspond to a defined variable */
     U_UNQUOTED_SPECIAL,               /**< A special character was not quoted or escaped */
     U_UNTERMINATED_QUOTE,             /**< A closing single quote is missing */
-    U_RULE_MASK_ERROR,                /**< A rule is hidden by an earlier more general rule */
+    U_قاعده_ماسک_ERROR,                /**< A rule is hidden by an earlier more general rule */
     U_MISPLACED_COMPOUND_FILTER,      /**< A compound filter is in an invalid location */
-    U_MULTIPLE_COMPOUND_FILTERS,      /**< More than one compound filter */
+    U_مضرب_COMPOUND_FILTERS,      /**< More than one compound filter */
     U_INVALID_RBT_SYNTAX,             /**< A "::id" rule was passed to the RuleBasedTransliterator parser */
-    U_INVALID_PROPERTY_PATTERN,       /**< UNUSED as of ICU 2.4 */
+    U_INVALID_PROPERTY_الگو,       /**< UNUSED as of ICU 2.4 */
     U_MALFORMED_PRAGMA,               /**< A 'use' pragma is invalid */
     U_UNCLOSED_SEGMENT,               /**< A closing ')' is missing */
-    U_ILLEGAL_CHAR_IN_SEGMENT,        /**< UNUSED as of ICU 2.4 */
+    U_ILLEGAL_CHAR_درون_SEGMENT,        /**< UNUSED as of ICU 2.4 */
     U_VARIABLE_RANGE_EXHAUSTED,       /**< Too many stand-ins generated for the given variable range */
     U_VARIABLE_RANGE_OVERLAP,         /**< The variable range overlaps characters used in rules */
     U_ILLEGAL_CHARACTER,              /**< A special character is outside its allowed context */
-    U_INTERNAL_TRANSLITERATOR_ERROR,  /**< Internal transliterator system error */
+    U_داخلی_TRANSLITERATOR_ERROR,  /**< Internal transliterator system error */
     U_INVALID_ID,                     /**< A "::id" rule specifies an unknown transliterator */
     U_INVALID_FUNCTION,               /**< A "&fn()" rule specifies an unknown transliterator */
-#ifndef U_HIDE_DEPRECATED_API
+#اگر_تعریف_نشده U_HIDE_DEPRECATED_API
     /**
      * One more than the highest normal Transliterator error code.
      * @deprecated ICU 58 The numeric value may change over time, see ICU ticket #12420.
      */
-    U_PARSE_ERROR_LIMIT,
-#endif  // U_HIDE_DEPRECATED_API
+    U_PARSE_ERROR_حد,
+#پایان_اگر  // U_HIDE_DEPRECATED_API
 
     /*
      * Error codes in the range 0x10100 0x10200 are reserved for the formatting API.
      */
     U_UNEXPECTED_TOKEN=0x10100,       /**< Syntax error in format pattern */
-    U_FMT_PARSE_ERROR_START=0x10100,  /**< Start of format library errors */
-    U_MULTIPLE_DECIMAL_SEPARATORS,    /**< More than one decimal separator in number pattern */
-    U_MULTIPLE_DECIMAL_SEPERATORS = U_MULTIPLE_DECIMAL_SEPARATORS, /**< Typo: kept for backward compatibility. Use U_MULTIPLE_DECIMAL_SEPARATORS */
-    U_MULTIPLE_EXPONENTIAL_SYMBOLS,   /**< More than one exponent symbol in number pattern */
-    U_MALFORMED_EXPONENTIAL_PATTERN,  /**< Grouping symbol in exponent pattern */
-    U_MULTIPLE_PERCENT_SYMBOLS,       /**< More than one percent symbol in number pattern */
-    U_MULTIPLE_PERMILL_SYMBOLS,       /**< More than one permill symbol in number pattern */
-    U_MULTIPLE_PAD_SPECIFIERS,        /**< More than one pad symbol in number pattern */
-    U_PATTERN_SYNTAX_ERROR,           /**< Syntax error in format pattern */
+    U_FMT_PARSE_ERROR_شروع=0x10100,  /**< Start of format library errors */
+    U_مضرب_DECIMAL_SEPARATORS,    /**< More than one decimal separator in number pattern */
+    U_مضرب_DECIMAL_SEPERATORS = U_مضرب_DECIMAL_SEPARATORS, /**< Typo: kept for backward compatibility. Use U_MULTIPLE_DECIMAL_SEPARATORS */
+    U_مضرب_نمایی_SYMBOLS,   /**< More than one exponent symbol in number pattern */
+    U_MALFORMED_نمایی_الگو,  /**< Grouping symbol in exponent pattern */
+    U_مضرب_PERCENT_SYMBOLS,       /**< More than one percent symbol in number pattern */
+    U_مضرب_PERMILL_SYMBOLS,       /**< More than one permill symbol in number pattern */
+    U_مضرب_PAD_SPECIFIERS,        /**< More than one pad symbol in number pattern */
+    U_الگو_SYNTAX_ERROR,           /**< Syntax error in format pattern */
     U_ILLEGAL_PAD_POSITION,           /**< Pad symbol misplaced in number pattern */
     U_UNMATCHED_BRACES,               /**< Braces do not match in message pattern */
     U_UNSUPPORTED_PROPERTY,           /**< UNUSED as of ICU 2.4 */
     U_UNSUPPORTED_ATTRIBUTE,          /**< UNUSED as of ICU 2.4 */
-    U_ARGUMENT_TYPE_MISMATCH,         /**< Argument name and argument index mismatch in MessageFormat functions */
+    U_آرگومان_TYPE_MISMATCH,         /**< Argument name and argument index mismatch in MessageFormat functions */
     U_DUPLICATE_KEYWORD,              /**< Duplicate keyword in PluralFormat */
     U_UNDEFINED_KEYWORD,              /**< Undefined Plural keyword */
     U_DEFAULT_KEYWORD_MISSING,        /**< Missing DEFAULT rule in plural rules */
-    U_DECIMAL_NUMBER_SYNTAX_ERROR,    /**< Decimal number syntax error */
+    U_DECIMAL_عدد_SYNTAX_ERROR,    /**< Decimal number syntax error */
     U_FORMAT_INEXACT_ERROR,           /**< Cannot format a number exactly and rounding mode is ROUND_UNNECESSARY @stable ICU 4.8 */
-    U_NUMBER_ARG_OUTOFBOUNDS_ERROR,   /**< The argument to a NumberFormatter helper method was out of bounds; the bounds are usually 0 to 999. @stable ICU 61 */
-    U_NUMBER_SKELETON_SYNTAX_ERROR,   /**< The number skeleton passed to C++ NumberFormatter or C UNumberFormatter was invalid or contained a syntax error. @stable ICU 62 */
+    U_عدد_ARG_OUTOFBOUNDS_ERROR,   /**< The argument to a NumberFormatter helper method was out of bounds; the bounds are usually 0 to 999. @stable ICU 61 */
+    U_عدد_SKELETON_SYNTAX_ERROR,   /**< The number skeleton passed to C++ NumberFormatter or C UNumberFormatter was invalid or contained a syntax error. @stable ICU 62 */
 
     /* MessageFormat 2.0 errors */
     U_MF_UNRESOLVED_VARIABLE_ERROR,    /**< A variable is referred to but not bound by any definition @internal ICU 75 technology preview @deprecated This API is for technology preview only. */
     U_MF_SYNTAX_ERROR,                 /**< Includes all syntax errors @internal ICU 75 technology preview @deprecated This API is for technology preview only. */
     U_MF_UNKNOWN_FUNCTION_ERROR,       /**< An annotation refers to a function not defined by the standard or custom function registry @internal ICU 75 technology preview @deprecated This API is for technology preview only. */
-    U_MF_VARIANT_KEY_MISMATCH_ERROR,   /**< In a match-construct, one or more variants had a different number of keys from the number of selectors @internal ICU 75 technology preview @deprecated This API is for technology preview only. */
+    U_MF_VARIANT_کلید_MISMATCH_ERROR,   /**< In a match-construct, one or more variants had a different number of keys from the number of selectors @internal ICU 75 technology preview @deprecated This API is for technology preview only. */
     U_MF_FORMATTING_ERROR,             /**< Covers all runtime errors: for example, an internally inconsistent set of options. @internal ICU 75 technology preview @deprecated This API is for technology preview only. */
-    U_MF_NONEXHAUSTIVE_PATTERN_ERROR,  /**< In a match-construct, the variants do not cover all possible values @internal ICU 75 technology preview @deprecated This API is for technology preview only. */
+    U_MF_NONEXHAUSTIVE_الگو_ERROR,  /**< In a match-construct, the variants do not cover all possible values @internal ICU 75 technology preview @deprecated This API is for technology preview only. */
     U_MF_DUPLICATE_OPTION_NAME_ERROR,  /**< In an annotation, the same option name appears more than once @internal ICU 75 technology preview @deprecated This API is for technology preview only. */
     U_MF_SELECTOR_ERROR,               /**< A selector function is applied to an operand of the wrong type @internal ICU 75 technology preview @deprecated This API is for technology preview only. */
     U_MF_MISSING_SELECTOR_ANNOTATION_ERROR,  /**< A selector expression evaluates to an unannotated operand. @internal ICU 75 technology preview @deprecated This API is for technology preview only. */
     U_MF_DUPLICATE_DECLARATION_ERROR, /**< The same variable is declared in more than one .local or .input declaration. @internal ICU 75 technology preview @deprecated This API is for technology preview only. */
-    U_MF_OPERAND_MISMATCH_ERROR,     /**< An operand provided to a function does not have the required form for that function @internal ICU 75 technology preview @deprecated This API is for technology preview only. */
+    U_MF_عملوند_MISMATCH_ERROR,     /**< An operand provided to a function does not have the required form for that function @internal ICU 75 technology preview @deprecated This API is for technology preview only. */
     U_MF_DUPLICATE_VARIANT_ERROR, /**< A message includes a variant with the same key list as another variant. @internal ICU 76 technology preview @deprecated This API is for technology preview only. */
     U_MF_BAD_OPTION,             /**< An option value provided to a function does not have the required form for that option. @internal ICU 77 technology preview @deprecated This API is for technology preview only. */
-#ifndef U_HIDE_DEPRECATED_API
+#اگر_تعریف_نشده U_HIDE_DEPRECATED_API
     /**
      * One more than the highest normal formatting API error code.
      * @deprecated ICU 58 The numeric value may change over time, see ICU ticket #12420.
      */
-    U_FMT_PARSE_ERROR_LIMIT = 0x10121,
-#endif  // U_HIDE_DEPRECATED_API
+    U_FMT_PARSE_ERROR_حد = 0x10121,
+#پایان_اگر  // U_HIDE_DEPRECATED_API
 
     /*
      * Error codes in the range 0x10200 0x102ff are reserved for BreakIterator.
      */
-    U_BRK_INTERNAL_ERROR=0x10200,          /**< An internal error (bug) was detected.             */
-    U_BRK_ERROR_START=0x10200,             /**< Start of codes indicating Break Iterator failures */
+    U_BRK_داخلی_ERROR=0x10200,          /**< An internal error (bug) was detected.             */
+    U_BRK_ERROR_شروع=0x10200,             /**< Start of codes indicating Break Iterator failures */
     U_BRK_HEX_DIGITS_EXPECTED,             /**< Hex digits expected as part of a escaped char in a rule. */
     U_BRK_SEMICOLON_EXPECTED,              /**< Missing ';' at the end of a RBBI rule.            */
-    U_BRK_RULE_SYNTAX,                     /**< Syntax error in RBBI rule.                        */
-    U_BRK_UNCLOSED_SET,                    /**< UnicodeSet writing an RBBI rule missing a closing ']'. */
-    U_BRK_ASSIGN_ERROR,                    /**< Syntax error in RBBI rule assignment statement.   */
+    U_BRK_قاعده_SYNTAX,                     /**< Syntax error in RBBI rule.                        */
+    U_BRK_UNCLOSED_مجموعه,                    /**< UnicodeSet writing an RBBI rule missing a closing ']'. */
+    U_BRK_تخصیص_بده_ERROR,                    /**< Syntax error in RBBI rule assignment statement.   */
     U_BRK_VARIABLE_REDFINITION,            /**< RBBI rule $Variable redefined.                    */
     U_BRK_MISMATCHED_PAREN,                /**< Mis-matched parentheses in an RBBI rule.          */
-    U_BRK_NEW_LINE_IN_QUOTED_STRING,       /**< Missing closing quote in an RBBI rule.            */
+    U_BRK_NEW_سطر_درون_QUOTED_STRING,       /**< Missing closing quote in an RBBI rule.            */
     U_BRK_UNDEFINED_VARIABLE,              /**< Use of an undefined $Variable in an RBBI rule.    */
     U_BRK_INIT_ERROR,                      /**< Initialization failure.  Probable missing ICU Data. */
-    U_BRK_RULE_EMPTY_SET,                  /**< Rule contains an empty Unicode Set.               */
+    U_BRK_قاعده_خالی_مجموعه,                  /**< Rule contains an empty Unicode Set.               */
     U_BRK_UNRECOGNIZED_OPTION,             /**< !!option in RBBI rules not recognized.            */
-    U_BRK_MALFORMED_RULE_TAG,              /**< The {nnn} tag on a rule is malformed              */
-#ifndef U_HIDE_DEPRECATED_API
+    U_BRK_MALFORMED_قاعده_برچسب,              /**< The {nnn} tag on a rule is malformed              */
+#اگر_تعریف_نشده U_HIDE_DEPRECATED_API
     /**
      * One more than the highest normal BreakIterator error code.
      * @deprecated ICU 58 The numeric value may change over time, see ICU ticket #12420.
      */
-    U_BRK_ERROR_LIMIT,
-#endif  // U_HIDE_DEPRECATED_API
+    U_BRK_ERROR_حد,
+#پایان_اگر  // U_HIDE_DEPRECATED_API
 
     /*
      * Error codes in the range 0x10300-0x103ff are reserved for regular expression related errors.
      */
-    U_REGEX_INTERNAL_ERROR=0x10300,       /**< An internal error (bug) was detected.              */
-    U_REGEX_ERROR_START=0x10300,          /**< Start of codes indicating Regexp failures          */
-    U_REGEX_RULE_SYNTAX,                  /**< Syntax error in regexp pattern.                    */
+    U_REGEX_داخلی_ERROR=0x10300,       /**< An internal error (bug) was detected.              */
+    U_REGEX_ERROR_شروع=0x10300,          /**< Start of codes indicating Regexp failures          */
+    U_REGEX_قاعده_SYNTAX,                  /**< Syntax error in regexp pattern.                    */
     U_REGEX_INVALID_STATE,                /**< RegexMatcher in invalid state for requested operation */
     U_REGEX_BAD_ESCAPE_SEQUENCE,          /**< Unrecognized backslash escape sequence in pattern  */
     U_REGEX_PROPERTY_SYNTAX,              /**< Incorrect Unicode property                         */
     U_REGEX_UNIMPLEMENTED,                /**< Use of regexp feature that is not yet implemented. */
     U_REGEX_MISMATCHED_PAREN,             /**< Incorrectly nested parentheses in regexp pattern.  */
-    U_REGEX_NUMBER_TOO_BIG,               /**< Decimal number is too large.                       */
+    U_REGEX_عدد_TOO_BIG,               /**< Decimal number is too large.                       */
     U_REGEX_BAD_INTERVAL,                 /**< Error in {min,max} interval                        */
     U_REGEX_MAX_LT_MIN,                   /**< In {min,max}, max is less than min.                */
-    U_REGEX_INVALID_BACK_REF,             /**< Back-reference to a non-existent capture group.    */
+    U_REGEX_INVALID_پشت_REF,             /**< Back-reference to a non-existent capture group.    */
     U_REGEX_INVALID_FLAG,                 /**< Invalid value for match mode flags.                */
-    U_REGEX_LOOK_BEHIND_LIMIT,            /**< Look-Behind pattern matches must have a bounded maximum length.    */
-    U_REGEX_SET_CONTAINS_STRING,          /**< Regexps cannot have UnicodeSets containing strings.*/
-#ifndef U_HIDE_DEPRECATED_API
+    U_REGEX_LOOK_BEHIND_حد,            /**< Look-Behind pattern matches must have a bounded maximum length.    */
+    U_REGEX_مجموعه_شامل_است_STRING,          /**< Regexps cannot have UnicodeSets containing strings.*/
+#اگر_تعریف_نشده U_HIDE_DEPRECATED_API
     U_REGEX_OCTAL_TOO_BIG,                /**< Octal character constants must be <= 0377. @deprecated ICU 54. This error cannot occur. */
-#endif  /* U_HIDE_DEPRECATED_API */
-    U_REGEX_MISSING_CLOSE_BRACKET=U_REGEX_SET_CONTAINS_STRING+2, /**< Missing closing bracket on a bracket expression. */
+#پایان_اگر  /* U_HIDE_DEPRECATED_API */
+    U_REGEX_MISSING_CLOSE_BRACKET=U_REGEX_مجموعه_شامل_است_STRING+2, /**< Missing closing bracket on a bracket expression. */
     U_REGEX_INVALID_RANGE,                /**< In a character range [x-y], x is greater than y.   */
-    U_REGEX_STACK_OVERFLOW,               /**< Regular expression backtrack stack overflow.       */
-    U_REGEX_TIME_OUT,                     /**< Maximum allowed match time exceeded                */
+    U_REGEX_پشته_سرریز,               /**< Regular expression backtrack stack overflow.       */
+    U_REGEX_زمان_بیرون,                     /**< Maximum allowed match time exceeded                */
     U_REGEX_STOPPED_BY_CALLER,            /**< Matching operation aborted by user callback fn.    */
-    U_REGEX_PATTERN_TOO_BIG,              /**< Pattern exceeds limits on size or complexity. @stable ICU 55 */
-    U_REGEX_INVALID_CAPTURE_GROUP_NAME,   /**< Invalid capture group name. @stable ICU 55 */
-#ifndef U_HIDE_DEPRECATED_API
+    U_REGEX_الگو_TOO_BIG,              /**< Pattern exceeds limits on size or complexity. @stable ICU 55 */
+    U_REGEX_INVALID_CAPTURE_گروه_NAME,   /**< Invalid capture group name. @stable ICU 55 */
+#اگر_تعریف_نشده U_HIDE_DEPRECATED_API
     /**
      * One more than the highest normal regular expression error code.
      * @deprecated ICU 58 The numeric value may change over time, see ICU ticket #12420.
      */
-    U_REGEX_ERROR_LIMIT=U_REGEX_STOPPED_BY_CALLER+3,
-#endif  // U_HIDE_DEPRECATED_API
+    U_REGEX_ERROR_حد=U_REGEX_STOPPED_BY_CALLER+3,
+#پایان_اگر  // U_HIDE_DEPRECATED_API
 
     /*
      * Error codes in the range 0x10400-0x104ff are reserved for IDNA related error codes.
      */
     U_IDNA_PROHIBITED_ERROR=0x10400,
-    U_IDNA_ERROR_START=0x10400,
+    U_IDNA_ERROR_شروع=0x10400,
     U_IDNA_UNASSIGNED_ERROR,
     U_IDNA_CHECK_BIDI_ERROR,
-    U_IDNA_STD3_ASCII_RULES_ERROR,
-    U_IDNA_ACE_PREFIX_ERROR,
+    U_IDNA_STD3_ASCII_قواعد_ERROR,
+    U_IDNA_ACE_پیشوند_ERROR,
     U_IDNA_VERIFICATION_ERROR,
     U_IDNA_LABEL_TOO_LONG_ERROR,
-    U_IDNA_ZERO_LENGTH_LABEL_ERROR,
+    U_IDNA_ZERO_درازی_LABEL_ERROR,
     U_IDNA_DOMAIN_NAME_TOO_LONG_ERROR,
-#ifndef U_HIDE_DEPRECATED_API
+#اگر_تعریف_نشده U_HIDE_DEPRECATED_API
     /**
      * One more than the highest normal IDNA error code.
      * @deprecated ICU 58 The numeric value may change over time, see ICU ticket #12420.
      */
-    U_IDNA_ERROR_LIMIT,
-#endif  // U_HIDE_DEPRECATED_API
+    U_IDNA_ERROR_حد,
+#پایان_اگر  // U_HIDE_DEPRECATED_API
     /*
      * Aliases for StringPrep
      */
@@ -778,43 +778,43 @@ typedef enum UErrorCode {
     /*
      * Error codes in the range 0x10500-0x105ff are reserved for Plugin related error codes.
      */
-    U_PLUGIN_ERROR_START=0x10500,         /**< Start of codes indicating plugin failures */
-    U_PLUGIN_TOO_HIGH=0x10500,            /**< The plugin's level is too high to be loaded right now. */
-    U_PLUGIN_DIDNT_SET_LEVEL,             /**< The plugin didn't call uplug_setPlugLevel in response to a QUERY */
-#ifndef U_HIDE_DEPRECATED_API
+    U_PLUGIN_ERROR_شروع=0x10500,         /**< Start of codes indicating plugin failures */
+    U_PLUGIN_TOO_بالا=0x10500,            /**< The plugin's level is too high to be loaded right now. */
+    U_PLUGIN_DIDNT_مجموعه_LEVEL,             /**< The plugin didn't call uplug_setPlugLevel in response to a QUERY */
+#اگر_تعریف_نشده U_HIDE_DEPRECATED_API
     /**
      * One more than the highest normal plug-in error code.
      * @deprecated ICU 58 The numeric value may change over time, see ICU ticket #12420.
      */
-    U_PLUGIN_ERROR_LIMIT,
-#endif  // U_HIDE_DEPRECATED_API
+    U_PLUGIN_ERROR_حد,
+#پایان_اگر  // U_HIDE_DEPRECATED_API
 
-#ifndef U_HIDE_DEPRECATED_API
+#اگر_تعریف_نشده U_HIDE_DEPRECATED_API
     /**
      * One more than the highest normal error code.
      * @deprecated ICU 58 The numeric value may change over time, see ICU ticket #12420.
      */
-    U_ERROR_LIMIT=U_PLUGIN_ERROR_LIMIT
-#endif  // U_HIDE_DEPRECATED_API
-} UErrorCode;
+    U_ERROR_حد=U_PLUGIN_ERROR_حد
+#پایان_اگر  // U_HIDE_DEPRECATED_API
+} UError_کد;
 
 /* Use the following to determine if an UErrorCode represents */
 /* operational success or failure. */
 
-#ifdef __cplusplus
+#اگر_تعریف_شده __cplusplus
     /**
      * Does the error code indicate success?
      * @stable ICU 2.0
      */
-    static
-    inline UBool U_SUCCESS(UErrorCode code) { return code <= U_ZERO_ERROR; }
+    ساكن
+    مضمن UBool U_SUCCESS(UError_کد کد) { أرجع کد <= U_ZERO_ERROR; }
     /**
      * Does the error code indicate a failure?
      * @stable ICU 2.0
      */
-    static
-    inline UBool U_FAILURE(UErrorCode code) { return code > U_ZERO_ERROR; }
-#else
+    ساكن
+    مضمن UBool U_FAILURE(UError_کد کد) { أرجع کد > U_ZERO_ERROR; }
+#وإلا
     /**
      * Does the error code indicate success?
      * @stable ICU 2.0
@@ -825,33 +825,33 @@ typedef enum UErrorCode {
      * @stable ICU 2.0
      */
 #   define U_FAILURE(x) ((x)>U_ZERO_ERROR)
-#endif
+#پایان_اگر
 
 /* Distinguishing MessageFormat recoverable errors */
-#ifdef __cplusplus
+#اگر_تعریف_شده __cplusplus
     /**
      * Does the error code indicate a MessageFormat recoverable error?
      *
      * @internal ICU 79 technology preview
      * @deprecated This API is for technology preview only.
      */
-    static
-    inline UBool U_MF_RECOVERABLE_ERROR(UErrorCode code) {
-        return (code == U_MF_OPERAND_MISMATCH_ERROR)
-            || (code == U_MF_FORMATTING_ERROR)
-            || (code == U_MF_BAD_OPTION);
+    ساكن
+    مضمن UBool U_MF_RECOVERABLE_ERROR(UError_کد کد) {
+        أرجع (کد == U_MF_عملوند_MISMATCH_ERROR)
+            || (کد == U_MF_FORMATTING_ERROR)
+            || (کد == U_MF_BAD_OPTION);
     }
-#else
+#وإلا
     /**
      * Does the error code indicate success?
      *
      * @internal ICU 79 technology preview
      * @deprecated This API is for technology preview only.
      */
-#   define U_MF_RECOVERABLE_ERROR(x) ((code == U_MF_OPERAND_MISMATCH_ERROR) \
-            || (code == U_MF_FORMATTING_ERROR) \
-            || (code == U_MF_BAD_OPTION))
-#endif
+#   define U_MF_RECOVERABLE_ERROR(x) ((کد == U_MF_عملوند_MISMATCH_ERROR) \
+            || (کد == U_MF_FORMATTING_ERROR) \
+            || (کد == U_MF_BAD_OPTION))
+#پایان_اگر
 
 
 
@@ -861,8 +861,8 @@ typedef enum UErrorCode {
  * in the UErrorCode enum above.
  * @stable ICU 2.0
  */
-U_CAPI const char * U_EXPORT2
-u_errorName(UErrorCode code);
+U_CAPI ثابت حرف * U_EXPORT2
+u_errorName(UError_کد کد);
 
 
-#endif /* _UTYPES */
+#پایان_اگر /* _UTYPES */

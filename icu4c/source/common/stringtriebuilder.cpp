@@ -14,67 +14,67 @@
 *   created by: Markus W. Scherer
 */
 
-#include "utypeinfo.h"  // for 'typeid' to work
-#include "unicode/utypes.h"
-#include "unicode/stringtriebuilder.h"
-#include "uassert.h"
-#include "uhash.h"
+#ضمن "utypeinfo.h"  // for 'typeid' to work
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/stringtriebuilder.h"
+#ضمن "uassert.h"
+#ضمن "uhash.h"
 
 U_CDECL_BEGIN
 
-static int32_t U_CALLCONV
-hashStringTrieNode(const UHashTok key) {
-    return icu::StringTrieBuilder::hashNode(key.pointer);
+ساكن int32_t U_CALLCONV
+hash_String_Trie_گره(ثابت UHashTok کلید) {
+    أرجع icu::StringTrieBuilder::hash_گره(کلید.اشاره_گر);
 }
 
-static UBool U_CALLCONV
-equalStringTrieNodes(const UHashTok key1, const UHashTok key2) {
-    return icu::StringTrieBuilder::equalNodes(key1.pointer, key2.pointer);
+ساكن UBool U_CALLCONV
+equalStringTrieNodes(ثابت UHashTok key1, ثابت UHashTok key2) {
+    أرجع icu::StringTrieBuilder::equalNodes(key1.اشاره_گر, key2.اشاره_گر);
 }
 
-U_CDECL_END
+U_CDECL_انتها
 
 U_NAMESPACE_BEGIN
 
-StringTrieBuilder::StringTrieBuilder() : nodes(nullptr) {}
+StringTrieBuilder::StringTrieBuilder() : nodes(اشاره_تهی) {}
 
 StringTrieBuilder::~StringTrieBuilder() {
     deleteCompactBuilder();
 }
 
-void
-StringTrieBuilder::createCompactBuilder(int32_t sizeGuess, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return;
+فراغ
+StringTrieBuilder::createCompactBuilder(int32_t اندازه_Guess, UError_کد &error_کد) {
+    إذا(U_FAILURE(error_کد)) {
+        أرجع;
     }
-    nodes=uhash_openSize(hashStringTrieNode, equalStringTrieNodes, nullptr,
-                         sizeGuess, &errorCode);
-    if(U_SUCCESS(errorCode)) {
-        if(nodes==nullptr) {
-          errorCode=U_MEMORY_ALLOCATION_ERROR;
-        } else {
-          uhash_setKeyDeleter(nodes, uprv_deleteUObject);
+    nodes=uhash_open_اندازه(hash_String_Trie_گره, equalStringTrieNodes, اشاره_تهی,
+                         اندازه_Guess, &error_کد);
+    إذا(U_SUCCESS(error_کد)) {
+        إذا(nodes==اشاره_تهی) {
+          error_کد=U_حافظه_تخصیص_ERROR;
+        } وإلا {
+          uhash_مجموعه_کلید_Deleter(nodes, uprv_deleteUObject);
         }
     }
 }
 
-void
+فراغ
 StringTrieBuilder::deleteCompactBuilder() {
     uhash_close(nodes);
-    nodes=nullptr;
+    nodes=اشاره_تهی;
 }
 
-void
-StringTrieBuilder::build(UStringTrieBuildOption buildOption, int32_t elementsLength,
-                       UErrorCode &errorCode) {
-    if(buildOption==USTRINGTRIE_BUILD_FAST) {
-        writeNode(0, elementsLength, 0);
-    } else /* USTRINGTRIE_BUILD_SMALL */ {
-        createCompactBuilder(2*elementsLength, errorCode);
-        Node *root=makeNode(0, elementsLength, 0, errorCode);
-        if(U_SUCCESS(errorCode)) {
-            root->markRightEdgesFirst(-1);
-            root->write(*this);
+فراغ
+StringTrieBuilder::build(UStringTrieBuildOption buildOption, int32_t elements_درازی,
+                       UError_کد &error_کد) {
+    إذا(buildOption==USTRINGTRIE_BUILD_FAST) {
+        write_گره(0, elements_درازی, 0);
+    } وإلا /* USTRINGTRIE_BUILD_SMALL */ {
+        createCompactBuilder(2*elements_درازی, error_کد);
+        Node *ریشه=make_گره(0, elements_درازی, 0, error_کد);
+        إذا(U_SUCCESS(error_کد)) {
+            ریشه->mark_راست_یالها_اولی(-1);
+            ریشه->اكتب(*هذا);
         }
         deleteCompactBuilder();
     }
@@ -84,541 +84,541 @@ StringTrieBuilder::build(UStringTrieBuildOption buildOption, int32_t elementsLen
 // and all strings of the [start..limit[ elements must be sorted and
 // have a common prefix of length unitIndex.
 int32_t
-StringTrieBuilder::writeNode(int32_t start, int32_t limit, int32_t unitIndex) {
-    UBool hasValue=false;
+StringTrieBuilder::write_گره(int32_t شروع, int32_t حد, int32_t unit_شاخص) {
+    UBool has_مقدار=خطأ;
     int32_t value=0;
     int32_t type;
-    if(unitIndex==getElementStringLength(start)) {
+    إذا(unit_شاخص==get_Element_String_درازی(شروع)) {
         // An intermediate or final value.
-        value=getElementValue(start++);
-        if(start==limit) {
-            return writeValueAndFinal(value, true);  // final-value node
+        value=get_Element_مقدار(شروع++);
+        إذا(شروع==حد) {
+            أرجع write_مقدار_And_Final(value, درست);  // final-value node
         }
-        hasValue=true;
+        has_مقدار=درست;
     }
     // Now all [start..limit[ strings are longer than unitIndex.
-    int32_t minUnit=getElementUnit(start, unitIndex);
-    int32_t maxUnit=getElementUnit(limit-1, unitIndex);
-    if(minUnit==maxUnit) {
+    int32_t minUnit=getElementUnit(شروع, unit_شاخص);
+    int32_t maxUnit=getElementUnit(حد-1, unit_شاخص);
+    إذا(minUnit==maxUnit) {
         // Linear-match node: All strings have the same character at unitIndex.
-        int32_t lastUnitIndex=getLimitOfLinearMatch(start, limit-1, unitIndex);
-        writeNode(start, limit, lastUnitIndex);
+        int32_t آخرین_Unit_شاخص=get_حد_از_خطی_تطابق(شروع, حد-1, unit_شاخص);
+        write_گره(شروع, حد, آخرین_Unit_شاخص);
         // Break the linear-match sequence into chunks of at most kMaxLinearMatchLength.
-        int32_t length=lastUnitIndex-unitIndex;
-        int32_t maxLinearMatchLength=getMaxLinearMatchLength();
-        while(length>maxLinearMatchLength) {
-            lastUnitIndex-=maxLinearMatchLength;
-            length-=maxLinearMatchLength;
-            writeElementUnits(start, lastUnitIndex, maxLinearMatchLength);
-            write(getMinLinearMatch()+maxLinearMatchLength-1);
+        int32_t length=آخرین_Unit_شاخص-unit_شاخص;
+        int32_t max_خطی_تطابق_درازی=get_Max_خطی_تطابق_درازی();
+        طالما(length>max_خطی_تطابق_درازی) {
+            آخرین_Unit_شاخص-=max_خطی_تطابق_درازی;
+            length-=max_خطی_تطابق_درازی;
+            writeElementUnits(شروع, آخرین_Unit_شاخص, max_خطی_تطابق_درازی);
+            اكتب(get_Min_خطی_تطابق()+max_خطی_تطابق_درازی-1);
         }
-        writeElementUnits(start, unitIndex, length);
-        type=getMinLinearMatch()+length-1;
-    } else {
+        writeElementUnits(شروع, unit_شاخص, length);
+        type=get_Min_خطی_تطابق()+length-1;
+    } وإلا {
         // Branch node.
-        int32_t length=countElementUnits(start, limit, unitIndex);
+        int32_t length=شمار_Element_Units(شروع, حد, unit_شاخص);
         // length>=2 because minUnit!=maxUnit.
-        writeBranchSubNode(start, limit, unitIndex, length);
-        if(--length<getMinLinearMatch()) {
+        write_Branch_Sub_گره(شروع, حد, unit_شاخص, length);
+        إذا(--length<get_Min_خطی_تطابق()) {
             type=length;
-        } else {
-            write(length);
+        } وإلا {
+            اكتب(length);
             type=0;
         }
     }
-    return writeValueAndType(hasValue, value, type);
+    أرجع write_مقدار_And_Type(has_مقدار, value, type);
 }
 
 // start<limit && all strings longer than unitIndex &&
 // length different units at unitIndex
 int32_t
-StringTrieBuilder::writeBranchSubNode(int32_t start, int32_t limit, int32_t unitIndex, int32_t length) {
-    char16_t middleUnits[kMaxSplitBranchLevels];
-    int32_t lessThan[kMaxSplitBranchLevels];
-    int32_t ltLength=0;
-    while(length>getMaxBranchLinearSubNodeLength()) {
+StringTrieBuilder::write_Branch_Sub_گره(int32_t شروع, int32_t حد, int32_t unit_شاخص, int32_t length) {
+    char16_t میانه_Units[k_Max_تقسیم_Branch_سطوح];
+    int32_t lessThan[k_Max_تقسیم_Branch_سطوح];
+    int32_t lt_درازی=0;
+    طالما(length>get_Max_Branch_خطی_Sub_گره_درازی()) {
         // Branch on the middle unit.
         // First, find the middle unit.
-        int32_t i=skipElementsBySomeUnits(start, unitIndex, length/2);
+        int32_t i=skipElementsBySomeUnits(شروع, unit_شاخص, length/2);
         // Encode the less-than branch first.
-        middleUnits[ltLength]=getElementUnit(i, unitIndex);  // middle unit
-        lessThan[ltLength]=writeBranchSubNode(start, i, unitIndex, length/2);
-        ++ltLength;
+        میانه_Units[lt_درازی]=getElementUnit(i, unit_شاخص);  // middle unit
+        lessThan[lt_درازی]=write_Branch_Sub_گره(شروع, i, unit_شاخص, length/2);
+        ++lt_درازی;
         // Continue for the greater-or-equal branch.
-        start=i;
+        شروع=i;
         length=length-length/2;
     }
     // For each unit, find its elements array start and whether it has a final value.
-    int32_t starts[kMaxBranchLinearSubNodeLength];
-    UBool isFinal[kMaxBranchLinearSubNodeLength-1];
-    int32_t unitNumber=0;
-    do {
-        int32_t i=starts[unitNumber]=start;
-        char16_t unit=getElementUnit(i++, unitIndex);
-        i=indexOfElementWithNextUnit(i, unitIndex, unit);
-        isFinal[unitNumber]= start==i-1 && unitIndex+1==getElementStringLength(start);
-        start=i;
-    } while(++unitNumber<length-1);
+    int32_t starts[k_Max_Branch_خطی_Sub_گره_درازی];
+    UBool isFinal[k_Max_Branch_خطی_Sub_گره_درازی-1];
+    int32_t unit_عدد=0;
+    افعل {
+        int32_t i=starts[unit_عدد]=شروع;
+        char16_t unit=getElementUnit(i++, unit_شاخص);
+        i=شاخص_از_Element_With_بعدی_Unit(i, unit_شاخص, unit);
+        isFinal[unit_عدد]= شروع==i-1 && unit_شاخص+1==get_Element_String_درازی(شروع);
+        شروع=i;
+    } طالما(++unit_عدد<length-1);
     // unitNumber==length-1, and the maxUnit elements range is [start..limit[
-    starts[unitNumber]=start;
+    starts[unit_عدد]=شروع;
 
     // Write the sub-nodes in reverse order: The jump lengths are deltas from
     // after their own positions, so if we wrote the minUnit sub-node first,
     // then its jump delta would be larger.
     // Instead we write the minUnit sub-node last, for a shorter delta.
-    int32_t jumpTargets[kMaxBranchLinearSubNodeLength-1];
-    do {
-        --unitNumber;
-        if(!isFinal[unitNumber]) {
-            jumpTargets[unitNumber]=writeNode(starts[unitNumber], starts[unitNumber+1], unitIndex+1);
+    int32_t jumpTargets[k_Max_Branch_خطی_Sub_گره_درازی-1];
+    افعل {
+        --unit_عدد;
+        إذا(!isFinal[unit_عدد]) {
+            jumpTargets[unit_عدد]=write_گره(starts[unit_عدد], starts[unit_عدد+1], unit_شاخص+1);
         }
-    } while(unitNumber>0);
+    } طالما(unit_عدد>0);
     // The maxUnit sub-node is written as the very last one because we do
     // not jump for it at all.
-    unitNumber=length-1;
-    writeNode(start, limit, unitIndex+1);
-    int32_t offset=write(getElementUnit(start, unitIndex));
+    unit_عدد=length-1;
+    write_گره(شروع, حد, unit_شاخص+1);
+    int32_t جابه_جایی=اكتب(getElementUnit(شروع, unit_شاخص));
     // Write the rest of this node's unit-value pairs.
-    while(--unitNumber>=0) {
-        start=starts[unitNumber];
+    طالما(--unit_عدد>=0) {
+        شروع=starts[unit_عدد];
         int32_t value;
-        if(isFinal[unitNumber]) {
+        إذا(isFinal[unit_عدد]) {
             // Write the final value for the one string ending with this unit.
-            value=getElementValue(start);
-        } else {
+            value=get_Element_مقدار(شروع);
+        } وإلا {
             // Write the delta to the start position of the sub-node.
-            value=offset-jumpTargets[unitNumber];
+            value=جابه_جایی-jumpTargets[unit_عدد];
         }
-        writeValueAndFinal(value, isFinal[unitNumber]);
-        offset=write(getElementUnit(start, unitIndex));
+        write_مقدار_And_Final(value, isFinal[unit_عدد]);
+        جابه_جایی=اكتب(getElementUnit(شروع, unit_شاخص));
     }
     // Write the split-branch nodes.
-    while(ltLength>0) {
-        --ltLength;
-        writeDeltaTo(lessThan[ltLength]);
-        offset=write(middleUnits[ltLength]);
+    طالما(lt_درازی>0) {
+        --lt_درازی;
+        write_Delta_مقصد(lessThan[lt_درازی]);
+        جابه_جایی=اكتب(میانه_Units[lt_درازی]);
     }
-    return offset;
+    أرجع جابه_جایی;
 }
 
 // Requires start<limit,
 // and all strings of the [start..limit[ elements must be sorted and
 // have a common prefix of length unitIndex.
 StringTrieBuilder::Node*
-StringTrieBuilder::makeNode(int32_t start,
-                            int32_t limit,
-                            int32_t unitIndex,
-                            UErrorCode& errorCode) U_LIFETIME_BOUND {
-    if(U_FAILURE(errorCode)) {
-        return nullptr;
+StringTrieBuilder::make_گره(int32_t شروع,
+                            int32_t حد,
+                            int32_t unit_شاخص,
+                            UError_کد& error_کد) U_LIFETIME_BOUND {
+    إذا(U_FAILURE(error_کد)) {
+        أرجع اشاره_تهی;
     }
-    UBool hasValue=false;
+    UBool has_مقدار=خطأ;
     int32_t value=0;
-    if(unitIndex==getElementStringLength(start)) {
+    إذا(unit_شاخص==get_Element_String_درازی(شروع)) {
         // An intermediate or final value.
-        value=getElementValue(start++);
-        if(start==limit) {
-            return registerFinalValue(value, errorCode);
+        value=get_Element_مقدار(شروع++);
+        إذا(شروع==حد) {
+            أرجع ثبات_Final_مقدار(value, error_کد);
         }
-        hasValue=true;
+        has_مقدار=درست;
     }
-    Node *node;
+    Node *گره;
     // Now all [start..limit[ strings are longer than unitIndex.
-    int32_t minUnit=getElementUnit(start, unitIndex);
-    int32_t maxUnit=getElementUnit(limit-1, unitIndex);
-    if(minUnit==maxUnit) {
+    int32_t minUnit=getElementUnit(شروع, unit_شاخص);
+    int32_t maxUnit=getElementUnit(حد-1, unit_شاخص);
+    إذا(minUnit==maxUnit) {
         // Linear-match node: All strings have the same character at unitIndex.
-        int32_t lastUnitIndex=getLimitOfLinearMatch(start, limit-1, unitIndex);
-        Node *nextNode=makeNode(start, limit, lastUnitIndex, errorCode);
+        int32_t آخرین_Unit_شاخص=get_حد_از_خطی_تطابق(شروع, حد-1, unit_شاخص);
+        Node *بعدی_گره=make_گره(شروع, حد, آخرین_Unit_شاخص, error_کد);
         // Break the linear-match sequence into chunks of at most kMaxLinearMatchLength.
-        int32_t length=lastUnitIndex-unitIndex;
-        int32_t maxLinearMatchLength=getMaxLinearMatchLength();
-        while(length>maxLinearMatchLength) {
-            lastUnitIndex-=maxLinearMatchLength;
-            length-=maxLinearMatchLength;
-            node=createLinearMatchNode(start, lastUnitIndex, maxLinearMatchLength, nextNode);
-            nextNode=registerNode(node, errorCode);
+        int32_t length=آخرین_Unit_شاخص-unit_شاخص;
+        int32_t max_خطی_تطابق_درازی=get_Max_خطی_تطابق_درازی();
+        طالما(length>max_خطی_تطابق_درازی) {
+            آخرین_Unit_شاخص-=max_خطی_تطابق_درازی;
+            length-=max_خطی_تطابق_درازی;
+            گره=create_خطی_تطابق_گره(شروع, آخرین_Unit_شاخص, max_خطی_تطابق_درازی, بعدی_گره);
+            بعدی_گره=ثبات_گره(گره, error_کد);
         }
-        node=createLinearMatchNode(start, unitIndex, length, nextNode);
-    } else {
+        گره=create_خطی_تطابق_گره(شروع, unit_شاخص, length, بعدی_گره);
+    } وإلا {
         // Branch node.
-        int32_t length=countElementUnits(start, limit, unitIndex);
+        int32_t length=شمار_Element_Units(شروع, حد, unit_شاخص);
         // length>=2 because minUnit!=maxUnit.
-        Node *subNode=makeBranchSubNode(start, limit, unitIndex, length, errorCode);
-        node=new BranchHeadNode(length, subNode);
+        Node *sub_گره=make_Branch_Sub_گره(شروع, حد, unit_شاخص, length, error_کد);
+        گره=جديد Branch_سر_گره(length, sub_گره);
     }
-    if(hasValue && node!=nullptr) {
-        if(matchNodesCanHaveValues()) {
-            ((ValueNode *)node)->setValue(value);
-        } else {
-            node=new IntermediateValueNode(value, registerNode(node, errorCode));
+    إذا(has_مقدار && گره!=اشاره_تهی) {
+        إذا(تطابق_Nodes_Can_Have_مقادیر()) {
+            ((مقدار_گره *)گره)->مجموعه_مقدار(value);
+        } وإلا {
+            گره=جديد Intermediate_مقدار_گره(value, ثبات_گره(گره, error_کد));
         }
     }
-    return registerNode(node, errorCode);
+    أرجع ثبات_گره(گره, error_کد);
 }
 
 // start<limit && all strings longer than unitIndex &&
 // length different units at unitIndex
 StringTrieBuilder::Node*
-StringTrieBuilder::makeBranchSubNode(int32_t start,
-                                     int32_t limit,
-                                     int32_t unitIndex,
+StringTrieBuilder::make_Branch_Sub_گره(int32_t شروع,
+                                     int32_t حد,
+                                     int32_t unit_شاخص,
                                      int32_t length,
-                                     UErrorCode& errorCode) U_LIFETIME_BOUND {
-    if(U_FAILURE(errorCode)) {
-        return nullptr;
+                                     UError_کد& error_کد) U_LIFETIME_BOUND {
+    إذا(U_FAILURE(error_کد)) {
+        أرجع اشاره_تهی;
     }
-    char16_t middleUnits[kMaxSplitBranchLevels];
-    Node *lessThan[kMaxSplitBranchLevels];
-    int32_t ltLength=0;
-    while(length>getMaxBranchLinearSubNodeLength()) {
+    char16_t میانه_Units[k_Max_تقسیم_Branch_سطوح];
+    Node *lessThan[k_Max_تقسیم_Branch_سطوح];
+    int32_t lt_درازی=0;
+    طالما(length>get_Max_Branch_خطی_Sub_گره_درازی()) {
         // Branch on the middle unit.
         // First, find the middle unit.
-        int32_t i=skipElementsBySomeUnits(start, unitIndex, length/2);
+        int32_t i=skipElementsBySomeUnits(شروع, unit_شاخص, length/2);
         // Create the less-than branch.
-        middleUnits[ltLength]=getElementUnit(i, unitIndex);  // middle unit
-        lessThan[ltLength]=makeBranchSubNode(start, i, unitIndex, length/2, errorCode);
-        ++ltLength;
+        میانه_Units[lt_درازی]=getElementUnit(i, unit_شاخص);  // middle unit
+        lessThan[lt_درازی]=make_Branch_Sub_گره(شروع, i, unit_شاخص, length/2, error_کد);
+        ++lt_درازی;
         // Continue for the greater-or-equal branch.
-        start=i;
+        شروع=i;
         length=length-length/2;
     }
-    if(U_FAILURE(errorCode)) {
-        return nullptr;
+    إذا(U_FAILURE(error_کد)) {
+        أرجع اشاره_تهی;
     }
-    ListBranchNode *listNode=new ListBranchNode();
-    if(listNode==nullptr) {
-        errorCode=U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+    List_Branch_گره *list_گره=جديد List_Branch_گره();
+    إذا(list_گره==اشاره_تهی) {
+        error_کد=U_حافظه_تخصیص_ERROR;
+        أرجع اشاره_تهی;
     }
     // For each unit, find its elements array start and whether it has a final value.
-    int32_t unitNumber=0;
-    do {
-        int32_t i=start;
-        char16_t unit=getElementUnit(i++, unitIndex);
-        i=indexOfElementWithNextUnit(i, unitIndex, unit);
-        if(start==i-1 && unitIndex+1==getElementStringLength(start)) {
-            listNode->add(unit, getElementValue(start));
-        } else {
-            listNode->add(unit, makeNode(start, i, unitIndex+1, errorCode));
+    int32_t unit_عدد=0;
+    افعل {
+        int32_t i=شروع;
+        char16_t unit=getElementUnit(i++, unit_شاخص);
+        i=شاخص_از_Element_With_بعدی_Unit(i, unit_شاخص, unit);
+        إذا(شروع==i-1 && unit_شاخص+1==get_Element_String_درازی(شروع)) {
+            list_گره->جمع_کن(unit, get_Element_مقدار(شروع));
+        } وإلا {
+            list_گره->جمع_کن(unit, make_گره(شروع, i, unit_شاخص+1, error_کد));
         }
-        start=i;
-    } while(++unitNumber<length-1);
+        شروع=i;
+    } طالما(++unit_عدد<length-1);
     // unitNumber==length-1, and the maxUnit elements range is [start..limit[
-    char16_t unit=getElementUnit(start, unitIndex);
-    if(start==limit-1 && unitIndex+1==getElementStringLength(start)) {
-        listNode->add(unit, getElementValue(start));
-    } else {
-        listNode->add(unit, makeNode(start, limit, unitIndex+1, errorCode));
+    char16_t unit=getElementUnit(شروع, unit_شاخص);
+    إذا(شروع==حد-1 && unit_شاخص+1==get_Element_String_درازی(شروع)) {
+        list_گره->جمع_کن(unit, get_Element_مقدار(شروع));
+    } وإلا {
+        list_گره->جمع_کن(unit, make_گره(شروع, حد, unit_شاخص+1, error_کد));
     }
-    Node *node=registerNode(listNode, errorCode);
+    Node *گره=ثبات_گره(list_گره, error_کد);
     // Create the split-branch nodes.
-    while(ltLength>0) {
-        --ltLength;
-        node=registerNode(
-            new SplitBranchNode(middleUnits[ltLength], lessThan[ltLength], node), errorCode);
+    طالما(lt_درازی>0) {
+        --lt_درازی;
+        گره=ثبات_گره(
+            جديد تقسیم_Branch_گره(میانه_Units[lt_درازی], lessThan[lt_درازی], گره), error_کد);
     }
-    return node;
+    أرجع گره;
 }
 
 StringTrieBuilder::Node*
-StringTrieBuilder::registerNode(Node* newNode, UErrorCode& errorCode) U_LIFETIME_BOUND {
-    if(U_FAILURE(errorCode)) {
-        delete newNode;
-        return nullptr;
+StringTrieBuilder::ثبات_گره(Node* new_گره, UError_کد& error_کد) U_LIFETIME_BOUND {
+    إذا(U_FAILURE(error_کد)) {
+        حذف new_گره;
+        أرجع اشاره_تهی;
     }
-    if(newNode==nullptr) {
-        errorCode=U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+    إذا(new_گره==اشاره_تهی) {
+        error_کد=U_حافظه_تخصیص_ERROR;
+        أرجع اشاره_تهی;
     }
-    const UHashElement *old=uhash_find(nodes, newNode);
-    if(old!=nullptr) {
-        delete newNode;
-        return static_cast<Node*>(old->key.pointer);
+    ثابت UHashElement *old=uhash_پیدا_کن(nodes, new_گره);
+    إذا(old!=اشاره_تهی) {
+        حذف new_گره;
+        أرجع static_cast<Node*>(old->کلید.اشاره_گر);
     }
     // If uhash_puti() returns a non-zero value from an equivalent, previously
     // registered node, then uhash_find() failed to find that and we will leak newNode.
-#if U_DEBUG
-    int32_t oldValue=  // Only in debug mode to avoid a compiler warning about unused oldValue.
-#endif
-    uhash_puti(nodes, newNode, 1, &errorCode);
-    U_ASSERT(oldValue==0);
-    if(U_FAILURE(errorCode)) {
-        delete newNode;
-        return nullptr;
+#إذا U_DEBUG
+    int32_t old_مقدار=  // Only in debug mode to avoid a compiler warning about unused oldValue.
+#پایان_اگر
+    uhash_puti(nodes, new_گره, 1, &error_کد);
+    U_ASSERT(old_مقدار==0);
+    إذا(U_FAILURE(error_کد)) {
+        حذف new_گره;
+        أرجع اشاره_تهی;
     }
-    return newNode;
+    أرجع new_گره;
 }
 
 StringTrieBuilder::Node*
-StringTrieBuilder::registerFinalValue(int32_t value, UErrorCode& errorCode) U_LIFETIME_BOUND {
-    if(U_FAILURE(errorCode)) {
-        return nullptr;
+StringTrieBuilder::ثبات_Final_مقدار(int32_t value, UError_کد& error_کد) U_LIFETIME_BOUND {
+    إذا(U_FAILURE(error_کد)) {
+        أرجع اشاره_تهی;
     }
-    FinalValueNode key(value);
-    const UHashElement *old=uhash_find(nodes, &key);
-    if(old!=nullptr) {
-        return static_cast<Node*>(old->key.pointer);
+    Final_مقدار_گره کلید(value);
+    ثابت UHashElement *old=uhash_پیدا_کن(nodes, &کلید);
+    إذا(old!=اشاره_تهی) {
+        أرجع static_cast<Node*>(old->کلید.اشاره_گر);
     }
-    Node *newNode=new FinalValueNode(value);
-    if(newNode==nullptr) {
-        errorCode=U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+    Node *new_گره=جديد Final_مقدار_گره(value);
+    إذا(new_گره==اشاره_تهی) {
+        error_کد=U_حافظه_تخصیص_ERROR;
+        أرجع اشاره_تهی;
     }
     // If uhash_puti() returns a non-zero value from an equivalent, previously
     // registered node, then uhash_find() failed to find that and we will leak newNode.
-#if U_DEBUG
-    int32_t oldValue=  // Only in debug mode to avoid a compiler warning about unused oldValue.
-#endif
-    uhash_puti(nodes, newNode, 1, &errorCode);
-    U_ASSERT(oldValue==0);
-    if(U_FAILURE(errorCode)) {
-        delete newNode;
-        return nullptr;
+#إذا U_DEBUG
+    int32_t old_مقدار=  // Only in debug mode to avoid a compiler warning about unused oldValue.
+#پایان_اگر
+    uhash_puti(nodes, new_گره, 1, &error_کد);
+    U_ASSERT(old_مقدار==0);
+    إذا(U_FAILURE(error_کد)) {
+        حذف new_گره;
+        أرجع اشاره_تهی;
     }
-    return newNode;
+    أرجع new_گره;
 }
 
 int32_t
-StringTrieBuilder::hashNode(const void *node) {
-    return static_cast<const Node*>(node)->hashCode();
+StringTrieBuilder::hash_گره(ثابت فراغ *گره) {
+    أرجع static_cast<ثابت Node*>(گره)->hash_کد();
 }
 
 UBool
-StringTrieBuilder::equalNodes(const void *left, const void *right) {
-    return *static_cast<const Node*>(left) == *static_cast<const Node*>(right);
+StringTrieBuilder::equalNodes(ثابت فراغ *چپ, ثابت فراغ *راست) {
+    أرجع *static_cast<ثابت Node*>(چپ) == *static_cast<ثابت Node*>(راست);
 }
 
-bool
-StringTrieBuilder::Node::operator==(const Node &other) const {
-    return this==&other || (typeid(*this)==typeid(other) && hash==other.hash);
-}
-
-int32_t
-StringTrieBuilder::Node::markRightEdgesFirst(int32_t edgeNumber) {
-    if(offset==0) {
-        offset=edgeNumber;
-    }
-    return edgeNumber;
-}
-
-bool
-StringTrieBuilder::FinalValueNode::operator==(const Node &other) const {
-    if(this==&other) {
-        return true;
-    }
-    if(!Node::operator==(other)) {
-        return false;
-    }
-    const FinalValueNode &o=static_cast<const FinalValueNode &>(other);
-    return value==o.value;
-}
-
-void
-StringTrieBuilder::FinalValueNode::write(StringTrieBuilder &builder) {
-    offset=builder.writeValueAndFinal(value, true);
-}
-
-bool
-StringTrieBuilder::ValueNode::operator==(const Node &other) const {
-    if(this==&other) {
-        return true;
-    }
-    if(!Node::operator==(other)) {
-        return false;
-    }
-    const ValueNode &o=static_cast<const ValueNode &>(other);
-    return hasValue==o.hasValue && (!hasValue || value==o.value);
-}
-
-bool
-StringTrieBuilder::IntermediateValueNode::operator==(const Node &other) const {
-    if(this==&other) {
-        return true;
-    }
-    if(!ValueNode::operator==(other)) {
-        return false;
-    }
-    const IntermediateValueNode &o=static_cast<const IntermediateValueNode &>(other);
-    return next==o.next;
+منطقي
+StringTrieBuilder::Node::عملگر==(ثابت Node &other) ثابت {
+    أرجع هذا==&other || (typeid(*هذا)==typeid(other) && hash==other.hash);
 }
 
 int32_t
-StringTrieBuilder::IntermediateValueNode::markRightEdgesFirst(int32_t edgeNumber) {
-    if(offset==0) {
-        offset=edgeNumber=next->markRightEdgesFirst(edgeNumber);
+StringTrieBuilder::Node::mark_راست_یالها_اولی(int32_t یال_عدد) {
+    إذا(جابه_جایی==0) {
+        جابه_جایی=یال_عدد;
     }
-    return edgeNumber;
+    أرجع یال_عدد;
 }
 
-void
-StringTrieBuilder::IntermediateValueNode::write(StringTrieBuilder &builder) {
-    next->write(builder);
-    offset=builder.writeValueAndFinal(value, false);
+منطقي
+StringTrieBuilder::Final_مقدار_گره::عملگر==(ثابت Node &other) ثابت {
+    إذا(هذا==&other) {
+        أرجع درست;
+    }
+    إذا(!Node::عملگر==(other)) {
+        أرجع خطأ;
+    }
+    ثابت Final_مقدار_گره &o=static_cast<ثابت Final_مقدار_گره &>(other);
+    أرجع value==o.value;
 }
 
-bool
-StringTrieBuilder::LinearMatchNode::operator==(const Node &other) const {
-    if(this==&other) {
-        return true;
+فراغ
+StringTrieBuilder::Final_مقدار_گره::اكتب(StringTrieBuilder &builder) {
+    جابه_جایی=builder.write_مقدار_And_Final(value, درست);
+}
+
+منطقي
+StringTrieBuilder::مقدار_گره::عملگر==(ثابت Node &other) ثابت {
+    إذا(هذا==&other) {
+        أرجع درست;
     }
-    if(!ValueNode::operator==(other)) {
-        return false;
+    إذا(!Node::عملگر==(other)) {
+        أرجع خطأ;
     }
-    const LinearMatchNode &o=static_cast<const LinearMatchNode &>(other);
-    return length==o.length && next==o.next;
+    ثابت مقدار_گره &o=static_cast<ثابت مقدار_گره &>(other);
+    أرجع has_مقدار==o.has_مقدار && (!has_مقدار || value==o.value);
+}
+
+منطقي
+StringTrieBuilder::Intermediate_مقدار_گره::عملگر==(ثابت Node &other) ثابت {
+    إذا(هذا==&other) {
+        أرجع درست;
+    }
+    إذا(!مقدار_گره::عملگر==(other)) {
+        أرجع خطأ;
+    }
+    ثابت Intermediate_مقدار_گره &o=static_cast<ثابت Intermediate_مقدار_گره &>(other);
+    أرجع next==o.next;
 }
 
 int32_t
-StringTrieBuilder::LinearMatchNode::markRightEdgesFirst(int32_t edgeNumber) {
-    if(offset==0) {
-        offset=edgeNumber=next->markRightEdgesFirst(edgeNumber);
+StringTrieBuilder::Intermediate_مقدار_گره::mark_راست_یالها_اولی(int32_t یال_عدد) {
+    إذا(جابه_جایی==0) {
+        جابه_جایی=یال_عدد=next->mark_راست_یالها_اولی(یال_عدد);
     }
-    return edgeNumber;
+    أرجع یال_عدد;
 }
 
-bool
-StringTrieBuilder::ListBranchNode::operator==(const Node &other) const {
-    if(this==&other) {
-        return true;
+فراغ
+StringTrieBuilder::Intermediate_مقدار_گره::اكتب(StringTrieBuilder &builder) {
+    next->اكتب(builder);
+    جابه_جایی=builder.write_مقدار_And_Final(value, خطأ);
+}
+
+منطقي
+StringTrieBuilder::خطی_تطابق_گره::عملگر==(ثابت Node &other) ثابت {
+    إذا(هذا==&other) {
+        أرجع درست;
     }
-    if(!Node::operator==(other)) {
-        return false;
+    إذا(!مقدار_گره::عملگر==(other)) {
+        أرجع خطأ;
     }
-    const ListBranchNode &o=static_cast<const ListBranchNode &>(other);
-    for(int32_t i=0; i<length; ++i) {
-        if(units[i]!=o.units[i] || values[i]!=o.values[i] || equal[i]!=o.equal[i]) {
-            return false;
+    ثابت خطی_تطابق_گره &o=static_cast<ثابت خطی_تطابق_گره &>(other);
+    أرجع length==o.length && next==o.next;
+}
+
+int32_t
+StringTrieBuilder::خطی_تطابق_گره::mark_راست_یالها_اولی(int32_t یال_عدد) {
+    إذا(جابه_جایی==0) {
+        جابه_جایی=یال_عدد=next->mark_راست_یالها_اولی(یال_عدد);
+    }
+    أرجع یال_عدد;
+}
+
+منطقي
+StringTrieBuilder::List_Branch_گره::عملگر==(ثابت Node &other) ثابت {
+    إذا(هذا==&other) {
+        أرجع درست;
+    }
+    إذا(!Node::عملگر==(other)) {
+        أرجع خطأ;
+    }
+    ثابت List_Branch_گره &o=static_cast<ثابت List_Branch_گره &>(other);
+    لكل(int32_t i=0; i<length; ++i) {
+        إذا(units[i]!=o.units[i] || مقادیر[i]!=o.مقادیر[i] || equal[i]!=o.equal[i]) {
+            أرجع خطأ;
         }
     }
-    return true;
+    أرجع درست;
 }
 
 int32_t
-StringTrieBuilder::ListBranchNode::markRightEdgesFirst(int32_t edgeNumber) {
-    if(offset==0) {
-        firstEdgeNumber=edgeNumber;
-        int32_t step=0;
+StringTrieBuilder::List_Branch_گره::mark_راست_یالها_اولی(int32_t یال_عدد) {
+    إذا(جابه_جایی==0) {
+        اولی_یال_عدد=یال_عدد;
+        int32_t گام=0;
         int32_t i=length;
-        do {
-            Node *edge=equal[--i];
-            if(edge!=nullptr) {
-                edgeNumber=edge->markRightEdgesFirst(edgeNumber-step);
+        افعل {
+            Node *یال=equal[--i];
+            إذا(یال!=اشاره_تهی) {
+                یال_عدد=یال->mark_راست_یالها_اولی(یال_عدد-گام);
             }
             // For all but the rightmost edge, decrement the edge number.
-            step=1;
-        } while(i>0);
-        offset=edgeNumber;
+            گام=1;
+        } طالما(i>0);
+        جابه_جایی=یال_عدد;
     }
-    return edgeNumber;
+    أرجع یال_عدد;
 }
 
-void
-StringTrieBuilder::ListBranchNode::write(StringTrieBuilder &builder) {
+فراغ
+StringTrieBuilder::List_Branch_گره::اكتب(StringTrieBuilder &builder) {
     // Write the sub-nodes in reverse order: The jump lengths are deltas from
     // after their own positions, so if we wrote the minUnit sub-node first,
     // then its jump delta would be larger.
     // Instead we write the minUnit sub-node last, for a shorter delta.
-    int32_t unitNumber=length-1;
-    Node *rightEdge=equal[unitNumber];
-    int32_t rightEdgeNumber= rightEdge==nullptr ? firstEdgeNumber : rightEdge->getOffset();
-    do {
-        --unitNumber;
-        if(equal[unitNumber]!=nullptr) {
-            equal[unitNumber]->writeUnlessInsideRightEdge(firstEdgeNumber, rightEdgeNumber, builder);
+    int32_t unit_عدد=length-1;
+    Node *راست_یال=equal[unit_عدد];
+    int32_t راست_یال_عدد= راست_یال==اشاره_تهی ? اولی_یال_عدد : راست_یال->get_جابه_جایی();
+    افعل {
+        --unit_عدد;
+        إذا(equal[unit_عدد]!=اشاره_تهی) {
+            equal[unit_عدد]->write_Unless_Inside_راست_یال(اولی_یال_عدد, راست_یال_عدد, builder);
         }
-    } while(unitNumber>0);
+    } طالما(unit_عدد>0);
     // The maxUnit sub-node is written as the very last one because we do
     // not jump for it at all.
-    unitNumber=length-1;
-    if(rightEdge==nullptr) {
-        builder.writeValueAndFinal(values[unitNumber], true);
-    } else {
-        rightEdge->write(builder);
+    unit_عدد=length-1;
+    إذا(راست_یال==اشاره_تهی) {
+        builder.write_مقدار_And_Final(مقادیر[unit_عدد], درست);
+    } وإلا {
+        راست_یال->اكتب(builder);
     }
-    offset=builder.write(units[unitNumber]);
+    جابه_جایی=builder.اكتب(units[unit_عدد]);
     // Write the rest of this node's unit-value pairs.
-    while(--unitNumber>=0) {
+    طالما(--unit_عدد>=0) {
         int32_t value;
         UBool isFinal;
-        if(equal[unitNumber]==nullptr) {
+        إذا(equal[unit_عدد]==اشاره_تهی) {
             // Write the final value for the one string ending with this unit.
-            value=values[unitNumber];
-            isFinal=true;
-        } else {
+            value=مقادیر[unit_عدد];
+            isFinal=درست;
+        } وإلا {
             // Write the delta to the start position of the sub-node.
-            U_ASSERT(equal[unitNumber]->getOffset()>0);
-            value=offset-equal[unitNumber]->getOffset();
-            isFinal=false;
+            U_ASSERT(equal[unit_عدد]->get_جابه_جایی()>0);
+            value=جابه_جایی-equal[unit_عدد]->get_جابه_جایی();
+            isFinal=خطأ;
         }
-        builder.writeValueAndFinal(value, isFinal);
-        offset=builder.write(units[unitNumber]);
+        builder.write_مقدار_And_Final(value, isFinal);
+        جابه_جایی=builder.اكتب(units[unit_عدد]);
     }
 }
 
-bool
-StringTrieBuilder::SplitBranchNode::operator==(const Node &other) const {
-    if(this==&other) {
-        return true;
+منطقي
+StringTrieBuilder::تقسیم_Branch_گره::عملگر==(ثابت Node &other) ثابت {
+    إذا(هذا==&other) {
+        أرجع درست;
     }
-    if(!Node::operator==(other)) {
-        return false;
+    إذا(!Node::عملگر==(other)) {
+        أرجع خطأ;
     }
-    const SplitBranchNode &o=static_cast<const SplitBranchNode &>(other);
-    return unit==o.unit && lessThan==o.lessThan && greaterOrEqual==o.greaterOrEqual;
+    ثابت تقسیم_Branch_گره &o=static_cast<ثابت تقسیم_Branch_گره &>(other);
+    أرجع unit==o.unit && lessThan==o.lessThan && greaterOrEqual==o.greaterOrEqual;
 }
 
 int32_t
-StringTrieBuilder::SplitBranchNode::markRightEdgesFirst(int32_t edgeNumber) {
-    if(offset==0) {
-        firstEdgeNumber=edgeNumber;
-        edgeNumber=greaterOrEqual->markRightEdgesFirst(edgeNumber);
-        offset=edgeNumber=lessThan->markRightEdgesFirst(edgeNumber-1);
+StringTrieBuilder::تقسیم_Branch_گره::mark_راست_یالها_اولی(int32_t یال_عدد) {
+    إذا(جابه_جایی==0) {
+        اولی_یال_عدد=یال_عدد;
+        یال_عدد=greaterOrEqual->mark_راست_یالها_اولی(یال_عدد);
+        جابه_جایی=یال_عدد=lessThan->mark_راست_یالها_اولی(یال_عدد-1);
     }
-    return edgeNumber;
+    أرجع یال_عدد;
 }
 
-void
-StringTrieBuilder::SplitBranchNode::write(StringTrieBuilder &builder) {
+فراغ
+StringTrieBuilder::تقسیم_Branch_گره::اكتب(StringTrieBuilder &builder) {
     // Encode the less-than branch first.
-    lessThan->writeUnlessInsideRightEdge(firstEdgeNumber, greaterOrEqual->getOffset(), builder);
+    lessThan->write_Unless_Inside_راست_یال(اولی_یال_عدد, greaterOrEqual->get_جابه_جایی(), builder);
     // Encode the greater-or-equal branch last because we do not jump for it at all.
-    greaterOrEqual->write(builder);
+    greaterOrEqual->اكتب(builder);
     // Write this node.
-    U_ASSERT(lessThan->getOffset()>0);
-    builder.writeDeltaTo(lessThan->getOffset());  // less-than
-    offset=builder.write(unit);
+    U_ASSERT(lessThan->get_جابه_جایی()>0);
+    builder.write_Delta_مقصد(lessThan->get_جابه_جایی());  // less-than
+    جابه_جایی=builder.اكتب(unit);
 }
 
-bool
-StringTrieBuilder::BranchHeadNode::operator==(const Node &other) const {
-    if(this==&other) {
-        return true;
+منطقي
+StringTrieBuilder::Branch_سر_گره::عملگر==(ثابت Node &other) ثابت {
+    إذا(هذا==&other) {
+        أرجع درست;
     }
-    if(!ValueNode::operator==(other)) {
-        return false;
+    إذا(!مقدار_گره::عملگر==(other)) {
+        أرجع خطأ;
     }
-    const BranchHeadNode &o=static_cast<const BranchHeadNode &>(other);
-    return length==o.length && next==o.next;
+    ثابت Branch_سر_گره &o=static_cast<ثابت Branch_سر_گره &>(other);
+    أرجع length==o.length && next==o.next;
 }
 
 int32_t
-StringTrieBuilder::BranchHeadNode::markRightEdgesFirst(int32_t edgeNumber) {
-    if(offset==0) {
-        offset=edgeNumber=next->markRightEdgesFirst(edgeNumber);
+StringTrieBuilder::Branch_سر_گره::mark_راست_یالها_اولی(int32_t یال_عدد) {
+    إذا(جابه_جایی==0) {
+        جابه_جایی=یال_عدد=next->mark_راست_یالها_اولی(یال_عدد);
     }
-    return edgeNumber;
+    أرجع یال_عدد;
 }
 
-void
-StringTrieBuilder::BranchHeadNode::write(StringTrieBuilder &builder) {
-    next->write(builder);
-    if(length<=builder.getMinLinearMatch()) {
-        offset=builder.writeValueAndType(hasValue, value, length-1);
-    } else {
-        builder.write(length-1);
-        offset=builder.writeValueAndType(hasValue, value, 0);
+فراغ
+StringTrieBuilder::Branch_سر_گره::اكتب(StringTrieBuilder &builder) {
+    next->اكتب(builder);
+    إذا(length<=builder.get_Min_خطی_تطابق()) {
+        جابه_جایی=builder.write_مقدار_And_Type(has_مقدار, value, length-1);
+    } وإلا {
+        builder.اكتب(length-1);
+        جابه_جایی=builder.write_مقدار_And_Type(has_مقدار, value, 0);
     }
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_انتها

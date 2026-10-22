@@ -7,7 +7,7 @@
 **********************************************************************
 */
 
-#include "unicode/unifunct.h"
+#ضمن "unicode/unifunct.h"
 
 U_NAMESPACE_BEGIN
 
@@ -15,14 +15,14 @@ UOBJECT_DEFINE_ABSTRACT_RTTI_IMPLEMENTATION(UnicodeFunctor)
 
 UnicodeFunctor::~UnicodeFunctor() {}
 
-UnicodeMatcher* UnicodeFunctor::toMatcher() const U_LIFETIME_BOUND {
-    return nullptr;
+UnicodeMatcher* UnicodeFunctor::مقصد_Matcher() ثابت U_LIFETIME_BOUND {
+    أرجع اشاره_تهی;
 }
 
-UnicodeReplacer* UnicodeFunctor::toReplacer() const U_LIFETIME_BOUND {
-    return nullptr;
+UnicodeReplacer* UnicodeFunctor::مقصد_Replacer() ثابت U_LIFETIME_BOUND {
+    أرجع اشاره_تهی;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_انتها
 
 //eof

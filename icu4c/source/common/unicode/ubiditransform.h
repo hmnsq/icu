@@ -15,16 +15,16 @@
 *
 */
 
-#ifndef UBIDITRANSFORM_H
-#define UBIDITRANSFORM_H
+#اگر_تعریف_نشده UBIDITRANSFORM_H
+#تعریف_کن UBIDITRANSFORM_H
 
-#include "unicode/utypes.h"
-#include "unicode/ubidi.h"
-#include "unicode/uchar.h"
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/ubidi.h"
+#ضمن "unicode/uchar.h"
 
-#if U_SHOW_CPLUSPLUS_API
-#include "unicode/localpointer.h"
-#endif   // U_SHOW_CPLUSPLUS_API
+#إذا U_SHOW_CPLUSPLUS_API
+#ضمن "unicode/localpointer.h"
+#پایان_اگر   // U_SHOW_CPLUSPLUS_API
 
 /**
  * \file
@@ -68,7 +68,7 @@
  * @see UBIDI_REORDER_RUNS_ONLY
  * @stable ICU 58
  */
-typedef enum {
+تعريفنوع تعداد {
     /** 0: Constant indicating a logical order.
       * This is the default for input text.
       * @stable ICU 58
@@ -79,7 +79,7 @@ typedef enum {
       * @stable ICU 58
       */
     UBIDI_VISUAL
-} UBiDiOrder;
+} UBi_Di_ترتیب;
 
 /**
  * <code>UBiDiMirroring</code> indicates whether or not characters with the
@@ -91,7 +91,7 @@ typedef enum {
  * @see ubidi_writeReverse
  * @stable ICU 58
  */
-typedef enum {
+تعريفنوع تعداد {
     /** 0: Constant indicating that character mirroring should not be
       * performed.
       * This is the default.
@@ -112,7 +112,7 @@ typedef enum {
  * information used by the layout transformation engine.
  * @stable ICU 58
  */
-typedef struct UBiDiTransform UBiDiTransform;
+تعريفنوع بنية UBiDiTransform UBiDiTransform;
 
 /**
  * Performs transformation of text from the bidi layout defined by the input
@@ -250,12 +250,12 @@ typedef struct UBiDiTransform UBiDiTransform;
  */
 U_CAPI uint32_t U_EXPORT2
 ubiditransform_transform(UBiDiTransform *pBiDiTransform,
-            const UChar *src, int32_t srcLength,
-            UChar *dest, int32_t destSize,
-            UBiDiLevel inParaLevel, UBiDiOrder inOrder,
-            UBiDiLevel outParaLevel, UBiDiOrder outOrder,
+            ثابت UChar *src, int32_t src_درازی,
+            UChar *dest, int32_t dest_اندازه,
+            UBiDiLevel درون_Para_Level, UBi_Di_ترتیب درون_ترتیب,
+            UBiDiLevel بیرون_Para_Level, UBi_Di_ترتیب بیرون_ترتیب,
             UBiDiMirroring doMirroring, uint32_t shapingOptions,
-            UErrorCode *pErrorCode);
+            UError_کد *p_Error_کد);
 
 /**
  * Allocates a <code>UBiDiTransform</code> object. This object can be reused,
@@ -295,16 +295,16 @@ ubiditransform_transform(UBiDiTransform *pBiDiTransform,
  * @stable ICU 58
  */
 U_CAPI UBiDiTransform* U_EXPORT2
-ubiditransform_open(UErrorCode *pErrorCode);
+ubiditransform_open(UError_کد *p_Error_کد);
 
 /**
  * Deallocates the given <code>UBiDiTransform</code> object.
  * @stable ICU 58
  */
-U_CAPI void U_EXPORT2
+U_CAPI فراغ U_EXPORT2
 ubiditransform_close(UBiDiTransform *pBidiTransform);
 
-#if U_SHOW_CPLUSPLUS_API
+#إذا U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -317,10 +317,10 @@ U_NAMESPACE_BEGIN
  * @see LocalPointer
  * @stable ICU 58
  */
-U_DEFINE_LOCAL_OPEN_POINTER(LocalUBiDiTransformPointer, UBiDiTransform, ubiditransform_close);
+U_DEFINE_LOCAL_OPEN_اشاره_گر(Local_UBi_Di_Transform_اشاره_گر, UBiDiTransform, ubiditransform_close);
 
-U_NAMESPACE_END
+U_NAMESPACE_انتها
 
-#endif
+#پایان_اگر
 
-#endif
+#پایان_اگر

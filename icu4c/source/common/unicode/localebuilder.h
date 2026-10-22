@@ -1,16 +1,16 @@
 // © 2018 and later: Unicode, Inc. and others.
 // License & terms of use: http://www.unicode.org/copyright.html
-#ifndef __LOCALEBUILDER_H__
-#define __LOCALEBUILDER_H__
+#اگر_تعریف_نشده __LOCALEBUILDER_H__
+#تعریف_کن __LOCALEBUILDER_H__
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#إذا U_SHOW_CPLUSPLUS_API
 
-#include "unicode/locid.h"
-#include "unicode/localematcher.h"
-#include "unicode/stringpiece.h"
-#include "unicode/uobject.h"
+#ضمن "unicode/locid.h"
+#ضمن "unicode/localematcher.h"
+#ضمن "unicode/stringpiece.h"
+#ضمن "unicode/uobject.h"
 
 /**
  * \file
@@ -58,8 +58,8 @@ class FixedString;
  *
  * @stable ICU 64
  */
-class U_COMMON_API LocaleBuilder : public UObject {
-public:
+class U_COMMON_API LocaleBuilder : عام UObject {
+عام:
     /**
      * Constructs an empty LocaleBuilder. The default value of all
      * fields, extensions, and private use information is the
@@ -73,7 +73,7 @@ public:
      * Destructor
      * @stable ICU 64
      */
-    virtual ~LocaleBuilder();
+    مجازی ~LocaleBuilder();
 
     /**
      * Resets the <code>LocaleBuilder</code> to match the provided
@@ -87,7 +87,7 @@ public:
      *
      * @stable ICU 64
      */
-    LocaleBuilder& setLocale(const Locale& locale) U_LIFETIME_BOUND;
+    LocaleBuilder& مجموعه_Locale(ثابت Locale& locale) U_LIFETIME_BOUND;
 
     /**
      * Resets the LocaleBuilder to match the provided IETF BCP 47 language tag.
@@ -104,7 +104,7 @@ public:
      * @return This builder.
      * @stable ICU 64
      */
-    LocaleBuilder& setLanguageTag(StringPiece tag) U_LIFETIME_BOUND;
+    LocaleBuilder& مجموعه_Language_برچسب(StringPiece برچسب) U_LIFETIME_BOUND;
 
     /**
      * Sets the language.  If <code>language</code> is the empty string, the
@@ -119,7 +119,7 @@ public:
      * @return This builder.
      * @stable ICU 64
      */
-    LocaleBuilder& setLanguage(StringPiece language) U_LIFETIME_BOUND;
+    LocaleBuilder& مجموعه_Language(StringPiece language) U_LIFETIME_BOUND;
 
     /**
      * Sets the script. If <code>script</code> is the empty string, the script in
@@ -135,7 +135,7 @@ public:
      * @return This builder.
      * @stable ICU 64
      */
-    LocaleBuilder& setScript(StringPiece script) U_LIFETIME_BOUND;
+    LocaleBuilder& مجموعه_Script(StringPiece script) U_LIFETIME_BOUND;
 
     /**
      * Sets the region.  If region is the empty string, the region in this
@@ -154,7 +154,7 @@ public:
      * @return This builder.
      * @stable ICU 64
      */
-    LocaleBuilder& setRegion(StringPiece region) U_LIFETIME_BOUND;
+    LocaleBuilder& مجموعه_Region(StringPiece region) U_LIFETIME_BOUND;
 
     /**
      * Sets the variant.  If variant is the empty string, the variant in this
@@ -175,7 +175,7 @@ public:
      * @return This builder.
      * @stable ICU 64
      */
-    LocaleBuilder& setVariant(StringPiece variant) U_LIFETIME_BOUND;
+    LocaleBuilder& مجموعه_Variant(StringPiece variant) U_LIFETIME_BOUND;
 
     /**
      * Sets the extension for the given key. If the value is the empty string,
@@ -196,7 +196,7 @@ public:
      * @return This builder.
      * @stable ICU 64
      */
-    LocaleBuilder& setExtension(char key, StringPiece value) U_LIFETIME_BOUND;
+    LocaleBuilder& مجموعه_Extension(حرف کلید, StringPiece مقدار_2) U_LIFETIME_BOUND;
 
     /**
      * Sets the Unicode locale keyword type for the given key. If the type
@@ -216,7 +216,7 @@ public:
      * @return This builder.
      * @stable ICU 64
      */
-    LocaleBuilder& setUnicodeLocaleKeyword(StringPiece key, StringPiece type) U_LIFETIME_BOUND;
+    LocaleBuilder& مجموعه_Unicode_Locale_Keyword(StringPiece کلید, StringPiece type) U_LIFETIME_BOUND;
 
     /**
      * Adds a unicode locale attribute, if not already present, otherwise
@@ -228,7 +228,7 @@ public:
      * @return This builder.
      * @stable ICU 64
      */
-    LocaleBuilder& addUnicodeLocaleAttribute(StringPiece attribute) U_LIFETIME_BOUND;
+    LocaleBuilder& جمع_کن_Unicode_Locale_Attribute(StringPiece attribute) U_LIFETIME_BOUND;
 
     /**
      * Removes a unicode locale attribute, if present, otherwise has no
@@ -274,7 +274,7 @@ public:
      * @return a new Locale
      * @stable ICU 64
      */
-    Locale build(UErrorCode& status);
+    Locale build(UError_کد& وضعیت);
 
     /**
      * Sets the UErrorCode if an error occurred while recording sets.
@@ -285,24 +285,24 @@ public:
      * @return true if U_FAILURE(outErrorCode)
      * @stable ICU 65
      */
-    UBool copyErrorTo(UErrorCode &outErrorCode) const;
+    UBool copy_Error_مقصد(UError_کد &بیرون_Error_کد) ثابت;
 
-private:
-    friend class LocaleMatcher::Result;
+خاص:
+    دوست class LocaleMatcher::نتیجه_2;
 
-    void copyExtensionsFrom(const Locale& src, UErrorCode& errorCode);
+    فراغ copyExtensionsFrom(ثابت Locale& src, UError_کد& error_کد);
 
-    UErrorCode status_;
-    char language_[9];
-    char script_[5];
-    char region_[4];
+    UError_کد وضعیت_2;
+    حرف language_[9];
+    حرف script_[5];
+    حرف region_[4];
     FixedString *variant_;  // Pointer not object so we need not #include internal fixedstring.h.
     icu::Locale *extensions_;  // Pointer not object. Storage for all other fields.
 
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_انتها
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#پایان_اگر /* U_SHOW_CPLUSPLUS_API */
 
-#endif  // __LOCALEBUILDER_H__
+#پایان_اگر  // __LOCALEBUILDER_H__

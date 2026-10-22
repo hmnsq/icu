@@ -19,123 +19,123 @@
 *   moved here from ustrtrns.c for better modularization.
 */
 
-#include "unicode/utypes.h"
-#include "unicode/ustring.h"
-#include "cstring.h"
-#include "cwchar.h"
-#include "cmemory.h"
-#include "ustr_imp.h"
-#include "ustr_cnv.h"
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/ustring.h"
+#ضمن "cstring.h"
+#ضمن "cwchar.h"
+#ضمن "cmemory.h"
+#ضمن "ustr_imp.h"
+#ضمن "ustr_cnv.h"
 
-#if defined(U_WCHAR_IS_UTF16) || defined(U_WCHAR_IS_UTF32) || !UCONFIG_NO_CONVERSION
+#إذا defined(U_WCHAR_IS_UTF16) || defined(U_WCHAR_IS_UTF32) || !UCONFIG_NO_CONVERSION
 
-#define _STACK_BUFFER_CAPACITY 1000
-#define _BUFFER_CAPACITY_MULTIPLIER 2
+#تعریف_کن پشته_میانگیر_ظرفیت 1000
+#تعریف_کن میانگیر_ظرفیت_MULTIPLIER 2
 
-#if !defined(U_WCHAR_IS_UTF16) && !defined(U_WCHAR_IS_UTF32)
+#إذا !defined(U_WCHAR_IS_UTF16) && !defined(U_WCHAR_IS_UTF32)
 // TODO: We should use CharString for char buffers and UnicodeString for char16_t buffers.
 // Then we could change this to work only with wchar_t buffers.
-static inline UBool 
-u_growAnyBufferFromStatic(void *context,
-                       void **pBuffer, int32_t *pCapacity, int32_t reqCapacity,
+ساكن مضمن UBool 
+u_grow_Any_میانگیر_From_Static(فراغ *context,
+                       فراغ **p_میانگیر, int32_t *p_ظرفیت, int32_t req_ظرفیت,
                        int32_t length, int32_t size) {
     // Use char* not void* to avoid the compiler's strict-aliasing assumptions
     // and related warnings.
-    char *newBuffer=(char *)uprv_malloc(reqCapacity*size);
-    if(newBuffer!=nullptr) {
-        if(length>0) {
-            uprv_memcpy(newBuffer, *pBuffer, (size_t)length*size);
+    حرف *new_میانگیر=(حرف *)uprv_malloc(req_ظرفیت*size);
+    إذا(new_میانگیر!=اشاره_تهی) {
+        إذا(length>0) {
+            uprv_memcpy(new_میانگیر, *p_میانگیر, (size_t)length*size);
         }
-        *pCapacity=reqCapacity;
-    } else {
-        *pCapacity=0;
+        *p_ظرفیت=req_ظرفیت;
+    } وإلا {
+        *p_ظرفیت=0;
     }
 
     /* release the old pBuffer if it was not statically allocated */
-    if(*pBuffer!=(char *)context) {
-        uprv_free(*pBuffer);
+    إذا(*p_میانگیر!=(حرف *)context) {
+        uprv_free(*p_میانگیر);
     }
 
-    *pBuffer=newBuffer;
-    return newBuffer!=nullptr;
+    *p_میانگیر=new_میانگیر;
+    أرجع new_میانگیر!=اشاره_تهی;
 }
 
 /* helper function */
-static wchar_t* 
-_strToWCS(wchar_t *dest, 
-           int32_t destCapacity,
-           int32_t *pDestLength,
-           const char16_t *src,
-           int32_t srcLength,
-           UErrorCode *pErrorCode){
+ساكن wchar_t* 
+str_مقصد_WCS(wchar_t *dest, 
+           int32_t dest_ظرفیت,
+           int32_t *p_Dest_درازی,
+           ثابت char16_t *src,
+           int32_t src_درازی,
+           UError_کد *p_Error_کد){
 
-    char stackBuffer [_STACK_BUFFER_CAPACITY];
-    char* tempBuf = stackBuffer;
-    int32_t tempBufCapacity = _STACK_BUFFER_CAPACITY;
-    char* tempBufLimit = stackBuffer + tempBufCapacity;
-    UConverter* conv = nullptr;
-    char* saveBuf = tempBuf;
-    wchar_t* intTarget=nullptr;
-    int32_t intTargetCapacity=0;
-    int count=0,retVal=0;
+    حرف پشته_میانگیر [پشته_میانگیر_ظرفیت];
+    حرف* موقت_Buf = پشته_میانگیر;
+    int32_t موقت_Buf_ظرفیت = پشته_میانگیر_ظرفیت;
+    حرف* موقت_Buf_حد = پشته_میانگیر + موقت_Buf_ظرفیت;
+    UConverter* conv = اشاره_تهی;
+    حرف* saveBuf = موقت_Buf;
+    wchar_t* int_هدف=اشاره_تهی;
+    int32_t int_هدف_ظرفیت=0;
+    صحيح count=0,retVal=0;
     
-    const char16_t *pSrcLimit =nullptr;
-    const char16_t *pSrc = src;
+    ثابت char16_t *p_Src_حد =اشاره_تهی;
+    ثابت char16_t *pSrc = src;
 
-    conv = u_getDefaultConverter(pErrorCode);
+    conv = u_getDefaultConverter(p_Error_کد);
     
-    if(U_FAILURE(*pErrorCode)){
-        return nullptr;
+    إذا(U_FAILURE(*p_Error_کد)){
+        أرجع اشاره_تهی;
     }
     
-    if(srcLength == -1){
-        srcLength = u_strlen(pSrc);
+    إذا(src_درازی == -1){
+        src_درازی = u_strlen(pSrc);
     }
     
-    pSrcLimit = pSrc + srcLength;
+    p_Src_حد = pSrc + src_درازی;
 
-    for(;;) {
-        UErrorCode bufferStatus = U_ZERO_ERROR;
+    لكل(;;) {
+        UError_کد میانگیر_وضعیت = U_ZERO_ERROR;
 
         /* convert to chars using default converter */
-        ucnv_fromUnicode(conv,&tempBuf,tempBufLimit,&pSrc,pSrcLimit,nullptr,(UBool)(pSrc==pSrcLimit),&bufferStatus);
-        count =(tempBuf - saveBuf);
+        ucnv_fromUnicode(conv,&موقت_Buf,موقت_Buf_حد,&pSrc,p_Src_حد,اشاره_تهی,(UBool)(pSrc==p_Src_حد),&میانگیر_وضعیت);
+        count =(موقت_Buf - saveBuf);
         
         /* This should rarely occur */
-        if(bufferStatus==U_BUFFER_OVERFLOW_ERROR){
-            tempBuf = saveBuf;
+        إذا(میانگیر_وضعیت==U_میانگیر_سرریز_ERROR){
+            موقت_Buf = saveBuf;
             
             /* we don't have enough room on the stack grow the buffer */
-            int32_t newCapacity = 2 * srcLength;
-            if(newCapacity <= tempBufCapacity) {
-                newCapacity = _BUFFER_CAPACITY_MULTIPLIER * tempBufCapacity;
+            int32_t new_ظرفیت = 2 * src_درازی;
+            إذا(new_ظرفیت <= موقت_Buf_ظرفیت) {
+                new_ظرفیت = میانگیر_ظرفیت_MULTIPLIER * موقت_Buf_ظرفیت;
             }
-            if(!u_growAnyBufferFromStatic(stackBuffer,(void**) &tempBuf, &tempBufCapacity,
-                    newCapacity, count, 1)) {
-                goto cleanup;
+            إذا(!u_grow_Any_میانگیر_From_Static(پشته_میانگیر,(فراغ**) &موقت_Buf, &موقت_Buf_ظرفیت,
+                    new_ظرفیت, count, 1)) {
+                اذهب cleanup;
             }
           
-           saveBuf = tempBuf;
-           tempBufLimit = tempBuf + tempBufCapacity;
-           tempBuf = tempBuf + count;
-        } else {
-            if (U_FAILURE(bufferStatus)) {
-                *pErrorCode = bufferStatus;
-                goto cleanup;
+           saveBuf = موقت_Buf;
+           موقت_Buf_حد = موقت_Buf + موقت_Buf_ظرفیت;
+           موقت_Buf = موقت_Buf + count;
+        } وإلا {
+            إذا (U_FAILURE(میانگیر_وضعیت)) {
+                *p_Error_کد = میانگیر_وضعیت;
+                اذهب cleanup;
             }
-            break;
+            اكسر;
         }
     }
 
     /* done with conversion null terminate the char buffer */
-    if(count>=tempBufCapacity){
-        tempBuf = saveBuf;
+    إذا(count>=موقت_Buf_ظرفیت){
+        موقت_Buf = saveBuf;
         /* we don't have enough room on the stack grow the buffer */
-        if(!u_growAnyBufferFromStatic(stackBuffer,(void**) &tempBuf, &tempBufCapacity, 
+        إذا(!u_grow_Any_میانگیر_From_Static(پشته_میانگیر,(فراغ**) &موقت_Buf, &موقت_Buf_ظرفیت, 
                 count+1, count, 1)) {
-            goto cleanup;
+            اذهب cleanup;
         }              
-       saveBuf = tempBuf;
+       saveBuf = موقت_Buf;
     }
     
     saveBuf[count]=0;
@@ -145,281 +145,281 @@ _strToWCS(wchar_t *dest,
      * here we assume that every char requires 
      * no more than 2 wchar_ts
      */
-    intTargetCapacity =  (count * _BUFFER_CAPACITY_MULTIPLIER + 1) /*for null termination */;
-    intTarget = (wchar_t*)uprv_malloc( intTargetCapacity * sizeof(wchar_t) );
+    int_هدف_ظرفیت =  (count * میانگیر_ظرفیت_MULTIPLIER + 1) /*for null termination */;
+    int_هدف = (wchar_t*)uprv_malloc( int_هدف_ظرفیت * حجم(wchar_t) );
 
-    if(intTarget){
+    إذا(int_هدف){
 
         int32_t nulLen = 0;
-        int32_t remaining = intTargetCapacity;
-        wchar_t* pIntTarget=intTarget;
-        tempBuf = saveBuf;
+        int32_t مانده = int_هدف_ظرفیت;
+        wchar_t* p_Int_هدف=int_هدف;
+        موقت_Buf = saveBuf;
         
         /* now convert the mbs to wcs */
-        for(;;){
+        لكل(;;){
             
             /* we can call the system API since we are sure that
              * there is atleast 1 null in the input
              */
-            retVal = uprv_mbstowcs(pIntTarget,(tempBuf+nulLen),remaining);
+            retVal = uprv_mbstowcs(p_Int_هدف,(موقت_Buf+nulLen),مانده);
             
-            if(retVal==-1){
-                *pErrorCode = U_INVALID_CHAR_FOUND;
-                break;
-            }else if(retVal== remaining){/* should never occur */
-                int numWritten = (pIntTarget-intTarget);
-                u_growAnyBufferFromStatic(nullptr,(void**) &intTarget,
-                                          &intTargetCapacity,
-                                          intTargetCapacity * _BUFFER_CAPACITY_MULTIPLIER,
-                                          numWritten,
-                                          sizeof(wchar_t));
-                pIntTarget = intTarget;
-                remaining=intTargetCapacity;
+            إذا(retVal==-1){
+                *p_Error_کد = U_INVALID_CHAR_یافت;
+                اكسر;
+            }وإلا إذا(retVal== مانده){/* should never occur */
+                صحيح رقم_Written = (p_Int_هدف-int_هدف);
+                u_grow_Any_میانگیر_From_Static(اشاره_تهی,(فراغ**) &int_هدف,
+                                          &int_هدف_ظرفیت,
+                                          int_هدف_ظرفیت * میانگیر_ظرفیت_MULTIPLIER,
+                                          رقم_Written,
+                                          حجم(wchar_t));
+                p_Int_هدف = int_هدف;
+                مانده=int_هدف_ظرفیت;
 
-                if(nulLen!=count){ /*there are embedded nulls*/
-                    pIntTarget+=numWritten;
-                    remaining-=numWritten;
+                إذا(nulLen!=count){ /*there are embedded nulls*/
+                    p_Int_هدف+=رقم_Written;
+                    مانده-=رقم_Written;
                 }
 
-            }else{
+            }وإلا{
                 int32_t nulVal;
                 /*scan for nulls */
                 /* we donot check for limit since tempBuf is null terminated */
-                while(tempBuf[nulLen++] != 0){
+                طالما(موقت_Buf[nulLen++] != 0){
                 }
-                nulVal = (nulLen < srcLength) ? 1 : 0; 
-                pIntTarget = pIntTarget + retVal+nulVal;
-                remaining -=(retVal+nulVal);
+                nulVal = (nulLen < src_درازی) ? 1 : 0; 
+                p_Int_هدف = p_Int_هدف + retVal+nulVal;
+                مانده -=(retVal+nulVal);
             
                 /* check if we have reached the source limit*/
-                if(nulLen>=(count)){
-                    break;
+                إذا(nulLen>=(count)){
+                    اكسر;
                 }
             }
         }
-        count = (int32_t)(pIntTarget-intTarget);
+        count = (int32_t)(p_Int_هدف-int_هدف);
        
-        if(0 < count && count <= destCapacity){
-            uprv_memcpy(dest, intTarget, (size_t)count*sizeof(wchar_t));
+        إذا(0 < count && count <= dest_ظرفیت){
+            uprv_memcpy(dest, int_هدف, (size_t)count*حجم(wchar_t));
         }  
 
-        if(pDestLength){
-            *pDestLength = count;
+        إذا(p_Dest_درازی){
+            *p_Dest_درازی = count;
         }
 
         /* free the allocated memory */
-        uprv_free(intTarget);
+        uprv_free(int_هدف);
 
-    }else{
-        *pErrorCode = U_MEMORY_ALLOCATION_ERROR;
+    }وإلا{
+        *p_Error_کد = U_حافظه_تخصیص_ERROR;
     }
 cleanup:
     /* are we still using stack buffer */
-    if(stackBuffer != saveBuf){
+    إذا(پشته_میانگیر != saveBuf){
         uprv_free(saveBuf);
     }
-    u_terminateWChars(dest,destCapacity,count,pErrorCode);
+    u_terminateWChars(dest,dest_ظرفیت,count,p_Error_کد);
 
     u_releaseDefaultConverter(conv);
 
-    return dest;
+    أرجع dest;
 }
-#endif
+#پایان_اگر
 
 U_CAPI wchar_t* U_EXPORT2
-u_strToWCS(wchar_t* dest U_LIFETIME_BOUND,
-           int32_t destCapacity,
-           int32_t* pDestLength,
-           const char16_t* src,
-           int32_t srcLength,
-           UErrorCode* pErrorCode) {
+u_str_مقصد_WCS(wchar_t* dest U_LIFETIME_BOUND,
+           int32_t dest_ظرفیت,
+           int32_t* p_Dest_درازی,
+           ثابت char16_t* src,
+           int32_t src_درازی,
+           UError_کد* p_Error_کد) {
 
     /* args check */
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)){
-        return nullptr;
+    إذا(p_Error_کد==اشاره_تهی || U_FAILURE(*p_Error_کد)){
+        أرجع اشاره_تهی;
     }
         
-    if( (src==nullptr && srcLength!=0) || srcLength < -1 ||
-        (destCapacity<0) || (dest == nullptr && destCapacity > 0)
+    إذا( (src==اشاره_تهی && src_درازی!=0) || src_درازی < -1 ||
+        (dest_ظرفیت<0) || (dest == اشاره_تهی && dest_ظرفیت > 0)
     ) {
-        *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        *p_Error_کد = U_ILLEGAL_آرگومان_ERROR;
+        أرجع اشاره_تهی;
     }
     
-#ifdef U_WCHAR_IS_UTF16
+#اگر_تعریف_شده U_WCHAR_IS_UTF16
     /* wchar_t is UTF-16 just do a memcpy */
-    if(srcLength == -1){
-        srcLength = u_strlen(src);
+    إذا(src_درازی == -1){
+        src_درازی = u_strlen(src);
     }
-    if(0 < srcLength && srcLength <= destCapacity){
-        u_memcpy((char16_t *)dest, src, srcLength);
+    إذا(0 < src_درازی && src_درازی <= dest_ظرفیت){
+        u_memcpy((char16_t *)dest, src, src_درازی);
     }
-    if(pDestLength){
-       *pDestLength = srcLength;
+    إذا(p_Dest_درازی){
+       *p_Dest_درازی = src_درازی;
     }
 
-    u_terminateUChars((char16_t *)dest,destCapacity,srcLength,pErrorCode);
+    u_terminateUChars((char16_t *)dest,dest_ظرفیت,src_درازی,p_Error_کد);
 
-    return dest;
+    أرجع dest;
 
-#elif defined U_WCHAR_IS_UTF32
+#وإلاإذا defined U_WCHAR_IS_UTF32
     
-    return (wchar_t*)u_strToUTF32((UChar32*)dest, destCapacity, pDestLength,
-                                  src, srcLength, pErrorCode);
+    أرجع (wchar_t*)u_str_مقصد_UTF32((UChar32*)dest, dest_ظرفیت, p_Dest_درازی,
+                                  src, src_درازی, p_Error_کد);
 
-#else
+#وإلا
     
-    return _strToWCS(dest,destCapacity,pDestLength,src,srcLength, pErrorCode);
+    أرجع str_مقصد_WCS(dest,dest_ظرفیت,p_Dest_درازی,src,src_درازی, p_Error_کد);
     
-#endif
+#پایان_اگر
 
 }
 
-#if !defined(U_WCHAR_IS_UTF16) && !defined(U_WCHAR_IS_UTF32)
+#إذا !defined(U_WCHAR_IS_UTF16) && !defined(U_WCHAR_IS_UTF32)
 /* helper function */
-static char16_t*
+ساكن char16_t*
 _strFromWCS( char16_t   *dest,
-             int32_t destCapacity, 
-             int32_t *pDestLength,
-             const wchar_t *src,
-             int32_t srcLength,
-             UErrorCode *pErrorCode)
+             int32_t dest_ظرفیت, 
+             int32_t *p_Dest_درازی,
+             ثابت wchar_t *src,
+             int32_t src_درازی,
+             UError_کد *p_Error_کد)
 {
     int32_t retVal =0, count =0 ;
-    UConverter* conv = nullptr;
-    char16_t* pTarget = nullptr;
-    char16_t* pTargetLimit = nullptr;
-    char16_t* target = nullptr;
+    UConverter* conv = اشاره_تهی;
+    char16_t* p_هدف = اشاره_تهی;
+    char16_t* p_هدف_حد = اشاره_تهی;
+    char16_t* هدف = اشاره_تهی;
     
-    char16_t uStack [_STACK_BUFFER_CAPACITY];
+    char16_t u_پشته [پشته_میانگیر_ظرفیت];
 
-    wchar_t wStack[_STACK_BUFFER_CAPACITY];
-    wchar_t* pWStack = wStack;
+    wchar_t w_پشته[پشته_میانگیر_ظرفیت];
+    wchar_t* pWStack = w_پشته;
 
 
-    char cStack[_STACK_BUFFER_CAPACITY];
-    int32_t cStackCap = _STACK_BUFFER_CAPACITY;
-    char* pCSrc=cStack;
-    char* pCSave=pCSrc;
-    char* pCSrcLimit=nullptr;
+    حرف c_پشته[پشته_میانگیر_ظرفیت];
+    int32_t c_پشته_Cap = پشته_میانگیر_ظرفیت;
+    حرف* pCSrc=c_پشته;
+    حرف* pCSave=pCSrc;
+    حرف* p_CSrc_حد=اشاره_تهی;
 
-    const wchar_t* pSrc = src;
-    const wchar_t* pSrcLimit = nullptr;
+    ثابت wchar_t* pSrc = src;
+    ثابت wchar_t* p_Src_حد = اشاره_تهی;
 
-    if(srcLength ==-1){
+    إذا(src_درازی ==-1){
         /* if the wchar_t source is null terminated we can safely
          * assume that there are no embedded nulls, this is a fast
          * path for null terminated strings.
          */
-        for(;;){
+        لكل(;;){
             /* convert wchars  to chars */
-            retVal = uprv_wcstombs(pCSrc,src, cStackCap);
+            retVal = uprv_wcstombs(pCSrc,src, c_پشته_Cap);
     
-            if(retVal == -1){
-                *pErrorCode = U_ILLEGAL_CHAR_FOUND;
-                goto cleanup;
-            }else if(retVal >= (cStackCap-1)){
+            إذا(retVal == -1){
+                *p_Error_کد = U_ILLEGAL_CHAR_یافت;
+                اذهب cleanup;
+            }وإلا إذا(retVal >= (c_پشته_Cap-1)){
                 /* Should rarely occur */
-                u_growAnyBufferFromStatic(cStack,(void**)&pCSrc,&cStackCap,
-                    cStackCap * _BUFFER_CAPACITY_MULTIPLIER, 0, sizeof(char));
+                u_grow_Any_میانگیر_From_Static(c_پشته,(فراغ**)&pCSrc,&c_پشته_Cap,
+                    c_پشته_Cap * میانگیر_ظرفیت_MULTIPLIER, 0, حجم(حرف));
                 pCSave = pCSrc;
-            }else{
+            }وإلا{
                 /* converted every thing */
                 pCSrc = pCSrc+retVal;
-                break;
+                اكسر;
             }
         }
         
-    }else{
+    }وإلا{
         /* here the source is not null terminated 
          * so it may have nulls embedded and we need to
          * do some extra processing 
          */
-        int32_t remaining =cStackCap;
+        int32_t مانده =c_پشته_Cap;
         
-        pSrcLimit = src + srcLength;
+        p_Src_حد = src + src_درازی;
 
-        for(;;){
+        لكل(;;){
             int32_t nulLen = 0;
 
             /* find nulls in the string */
-            while(nulLen<srcLength && pSrc[nulLen++]!=0){
+            طالما(nulLen<src_درازی && pSrc[nulLen++]!=0){
             }
 
-            if((pSrc+nulLen) < pSrcLimit){
+            إذا((pSrc+nulLen) < p_Src_حد){
                 /* check if we have enough room in pCSrc */
-                if(remaining < (nulLen * MB_CUR_MAX)){
+                إذا(مانده < (nulLen * MB_CUR_MAX)){
                     /* should rarely occur */
                     int32_t len = (pCSrc-pCSave);
                     pCSrc = pCSave;
                     /* we do not have enough room so grow the buffer*/
-                    u_growAnyBufferFromStatic(cStack,(void**)&pCSrc,&cStackCap,
-                           _BUFFER_CAPACITY_MULTIPLIER*cStackCap+(nulLen*MB_CUR_MAX),len,sizeof(char));
+                    u_grow_Any_میانگیر_From_Static(c_پشته,(فراغ**)&pCSrc,&c_پشته_Cap,
+                           میانگیر_ظرفیت_MULTIPLIER*c_پشته_Cap+(nulLen*MB_CUR_MAX),len,حجم(حرف));
 
                     pCSave = pCSrc;
                     pCSrc = pCSave+len;
-                    remaining = cStackCap-(pCSrc - pCSave);
+                    مانده = c_پشته_Cap-(pCSrc - pCSave);
                 }
 
                 /* we have found a null  so convert the 
                  * chunk from beginning of non-null char to null
                  */
-                retVal = uprv_wcstombs(pCSrc,pSrc,remaining);
+                retVal = uprv_wcstombs(pCSrc,pSrc,مانده);
 
-                if(retVal==-1){
+                إذا(retVal==-1){
                     /* an error occurred bail out */
-                    *pErrorCode = U_ILLEGAL_CHAR_FOUND;
-                    goto cleanup;
+                    *p_Error_کد = U_ILLEGAL_CHAR_یافت;
+                    اذهب cleanup;
                 }
 
                 pCSrc += retVal+1 /* already null terminated */;
 
                 pSrc += nulLen; /* skip past the null */
-                srcLength-=nulLen; /* decrement the srcLength */
-                remaining -= (pCSrc-pCSave);
+                src_درازی-=nulLen; /* decrement the srcLength */
+                مانده -= (pCSrc-pCSave);
 
 
-            }else{
+            }وإلا{
                 /* the source is not null terminated and we are 
                  * end of source so we copy the source to a temp buffer
                  * null terminate it and convert wchar_ts to chars
                  */
-                if(nulLen >= _STACK_BUFFER_CAPACITY){
+                إذا(nulLen >= پشته_میانگیر_ظرفیت){
                     /* Should rarely occur */
                     /* allocate new buffer buffer */
-                    pWStack =(wchar_t*) uprv_malloc(sizeof(wchar_t) * (nulLen + 1));
-                    if(pWStack==nullptr){
-                        *pErrorCode = U_MEMORY_ALLOCATION_ERROR;
-                        goto cleanup;
+                    pWStack =(wchar_t*) uprv_malloc(حجم(wchar_t) * (nulLen + 1));
+                    إذا(pWStack==اشاره_تهی){
+                        *p_Error_کد = U_حافظه_تخصیص_ERROR;
+                        اذهب cleanup;
                     }
                 }
-                if(nulLen>0){
+                إذا(nulLen>0){
                     /* copy the contents to tempStack */
-                    uprv_memcpy(pWStack, pSrc, (size_t)nulLen*sizeof(wchar_t));
+                    uprv_memcpy(pWStack, pSrc, (size_t)nulLen*حجم(wchar_t));
                 }
             
                 /* null terminate the tempBuffer */
                 pWStack[nulLen] =0 ;
             
-                if(remaining < (nulLen * MB_CUR_MAX)){
+                إذا(مانده < (nulLen * MB_CUR_MAX)){
                     /* Should rarely occur */
                     int32_t len = (pCSrc-pCSave);
                     pCSrc = pCSave;
                     /* we do not have enough room so grow the buffer*/
-                    u_growAnyBufferFromStatic(cStack,(void**)&pCSrc,&cStackCap,
-                           cStackCap+(nulLen*MB_CUR_MAX),len,sizeof(char));
+                    u_grow_Any_میانگیر_From_Static(c_پشته,(فراغ**)&pCSrc,&c_پشته_Cap,
+                           c_پشته_Cap+(nulLen*MB_CUR_MAX),len,حجم(حرف));
 
                     pCSave = pCSrc;
                     pCSrc = pCSave+len;
-                    remaining = cStackCap-(pCSrc - pCSave);
+                    مانده = c_پشته_Cap-(pCSrc - pCSave);
                 }
                 /* convert to chars */
-                retVal = uprv_wcstombs(pCSrc,pWStack,remaining);
+                retVal = uprv_wcstombs(pCSrc,pWStack,مانده);
             
                 pCSrc += retVal;
                 pSrc  += nulLen;
-                srcLength-=nulLen; /* decrement the srcLength */
-                break;
+                src_درازی-=nulLen; /* decrement the srcLength */
+                اكسر;
             }
         }
     }
@@ -427,109 +427,109 @@ _strFromWCS( char16_t   *dest,
     /* OK..now we have converted from wchar_ts to chars now 
      * convert chars to UChars 
      */
-    pCSrcLimit = pCSrc;
+    p_CSrc_حد = pCSrc;
     pCSrc = pCSave;
-    pTarget = target= dest;
-    pTargetLimit = dest + destCapacity;    
+    p_هدف = هدف= dest;
+    p_هدف_حد = dest + dest_ظرفیت;    
     
-    conv= u_getDefaultConverter(pErrorCode);
+    conv= u_getDefaultConverter(p_Error_کد);
     
-    if(U_FAILURE(*pErrorCode)|| conv==nullptr){
-        goto cleanup;
+    إذا(U_FAILURE(*p_Error_کد)|| conv==اشاره_تهی){
+        اذهب cleanup;
     }
     
-    for(;;) {
-        UErrorCode bufferStatus = U_ZERO_ERROR;
+    لكل(;;) {
+        UError_کد میانگیر_وضعیت = U_ZERO_ERROR;
 
         /* convert to stack buffer*/
-        ucnv_toUnicode(conv,&pTarget,pTargetLimit,(const char**)&pCSrc,pCSrcLimit,nullptr,(UBool)(pCSrc==pCSrcLimit),&bufferStatus);
+        ucnv_مقصد_Unicode(conv,&p_هدف,p_هدف_حد,(ثابت حرف**)&pCSrc,p_CSrc_حد,اشاره_تهی,(UBool)(pCSrc==p_CSrc_حد),&میانگیر_وضعیت);
 
         /* increment count to number written to stack */
-        count+= pTarget - target;
+        count+= p_هدف - هدف;
 
-        if(bufferStatus==U_BUFFER_OVERFLOW_ERROR){
-            target = uStack;
-            pTarget = uStack;
-            pTargetLimit = uStack + _STACK_BUFFER_CAPACITY;
-        } else {
-            if (U_FAILURE(bufferStatus)) {
-                *pErrorCode = bufferStatus;
+        إذا(میانگیر_وضعیت==U_میانگیر_سرریز_ERROR){
+            هدف = u_پشته;
+            p_هدف = u_پشته;
+            p_هدف_حد = u_پشته + پشته_میانگیر_ظرفیت;
+        } وإلا {
+            إذا (U_FAILURE(میانگیر_وضعیت)) {
+                *p_Error_کد = میانگیر_وضعیت;
             }
-            break;
+            اكسر;
         }
         
     }
     
-    if(pDestLength){
-        *pDestLength =count;
+    إذا(p_Dest_درازی){
+        *p_Dest_درازی =count;
     }
 
-    u_terminateUChars(dest,destCapacity,count,pErrorCode);
+    u_terminateUChars(dest,dest_ظرفیت,count,p_Error_کد);
     
 cleanup:
  
-    if(cStack != pCSave){
+    إذا(c_پشته != pCSave){
         uprv_free(pCSave);
     }
 
-    if(wStack != pWStack){
+    إذا(w_پشته != pWStack){
         uprv_free(pWStack);
     }
     
     u_releaseDefaultConverter(conv);
 
-    return dest;
+    أرجع dest;
 }
-#endif
+#پایان_اگر
 
 U_CAPI char16_t* U_EXPORT2
 u_strFromWCS(char16_t* dest U_LIFETIME_BOUND,
-             int32_t destCapacity,
-             int32_t* pDestLength,
-             const wchar_t* src,
-             int32_t srcLength,
-             UErrorCode* pErrorCode)
+             int32_t dest_ظرفیت,
+             int32_t* p_Dest_درازی,
+             ثابت wchar_t* src,
+             int32_t src_درازی,
+             UError_کد* p_Error_کد)
 {
 
     /* args check */
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)){
-        return nullptr;
+    إذا(p_Error_کد==اشاره_تهی || U_FAILURE(*p_Error_کد)){
+        أرجع اشاره_تهی;
     }
 
-    if( (src==nullptr && srcLength!=0) || srcLength < -1 ||
-        (destCapacity<0) || (dest == nullptr && destCapacity > 0)
+    إذا( (src==اشاره_تهی && src_درازی!=0) || src_درازی < -1 ||
+        (dest_ظرفیت<0) || (dest == اشاره_تهی && dest_ظرفیت > 0)
     ) {
-        *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        *p_Error_کد = U_ILLEGAL_آرگومان_ERROR;
+        أرجع اشاره_تهی;
     }
 
-#ifdef U_WCHAR_IS_UTF16
+#اگر_تعریف_شده U_WCHAR_IS_UTF16
     /* wchar_t is UTF-16 just do a memcpy */
-    if(srcLength == -1){
-        srcLength = u_strlen((const char16_t *)src);
+    إذا(src_درازی == -1){
+        src_درازی = u_strlen((ثابت char16_t *)src);
     }
-    if(0 < srcLength && srcLength <= destCapacity){
-        u_memcpy(dest, (const char16_t *)src, srcLength);
+    إذا(0 < src_درازی && src_درازی <= dest_ظرفیت){
+        u_memcpy(dest, (ثابت char16_t *)src, src_درازی);
     }
-    if(pDestLength){
-       *pDestLength = srcLength;
+    إذا(p_Dest_درازی){
+       *p_Dest_درازی = src_درازی;
     }
 
-    u_terminateUChars(dest,destCapacity,srcLength,pErrorCode);
+    u_terminateUChars(dest,dest_ظرفیت,src_درازی,p_Error_کد);
 
-    return dest;
+    أرجع dest;
 
-#elif defined U_WCHAR_IS_UTF32
+#وإلاإذا defined U_WCHAR_IS_UTF32
     
-    return u_strFromUTF32(dest, destCapacity, pDestLength,
-                          (UChar32*)src, srcLength, pErrorCode);
+    أرجع u_strFromUTF32(dest, dest_ظرفیت, p_Dest_درازی,
+                          (UChar32*)src, src_درازی, p_Error_کد);
 
-#else
+#وإلا
 
-    return _strFromWCS(dest,destCapacity,pDestLength,src,srcLength,pErrorCode);  
+    أرجع _strFromWCS(dest,dest_ظرفیت,p_Dest_درازی,src,src_درازی,p_Error_کد);  
 
-#endif
+#پایان_اگر
 
 }
 
-#endif /* #if !defined(U_WCHAR_IS_UTF16) && !defined(U_WCHAR_IS_UTF32) && !UCONFIG_NO_CONVERSION */
+#پایان_اگر /* #if !defined(U_WCHAR_IS_UTF16) && !defined(U_WCHAR_IS_UTF32) && !UCONFIG_NO_CONVERSION */

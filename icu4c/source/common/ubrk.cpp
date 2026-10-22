@@ -7,20 +7,20 @@
 ********************************************************************************
 */
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#إذا !UCONFIG_NO_BREAK_ITERATION
 
-#include "unicode/ubrk.h"
+#ضمن "unicode/ubrk.h"
 
-#include "unicode/brkiter.h"
-#include "unicode/uloc.h"
-#include "unicode/ustring.h"
-#include "unicode/uchriter.h"
-#include "unicode/rbbi.h"
-#include "rbbirb.h"
-#include "uassert.h"
-#include "cmemory.h"
+#ضمن "unicode/brkiter.h"
+#ضمن "unicode/uloc.h"
+#ضمن "unicode/ustring.h"
+#ضمن "unicode/uchriter.h"
+#ضمن "unicode/rbbi.h"
+#ضمن "rbbirb.h"
+#ضمن "uassert.h"
+#ضمن "cmemory.h"
 
 U_NAMESPACE_USE
 
@@ -32,57 +32,57 @@ U_NAMESPACE_USE
 //------------------------------------------------------------------------------
 U_CAPI UBreakIterator* U_EXPORT2
 ubrk_open(UBreakIteratorType type,
-      const char *locale,
-      const char16_t *text,
-      int32_t textLength,
-      UErrorCode *status)
+      ثابت حرف *locale,
+      ثابت char16_t *متن,
+      int32_t متن_درازی,
+      UError_کد *وضعیت)
 {
 
-  if (U_FAILURE(*status)) return nullptr;
+  إذا (U_FAILURE(*وضعیت)) أرجع اشاره_تهی;
 
-  BreakIterator *result = nullptr;
+  BreakIterator *نتیجه = اشاره_تهی;
 
-  switch(type) {
+  بدل(type) {
 
-  case UBRK_CHARACTER:
-    result = BreakIterator::createCharacterInstance(Locale(locale), *status);
-    break;
+  حالة UBRK_CHARACTER:
+    نتیجه = BreakIterator::createCharacterInstance(Locale(locale), *وضعیت);
+    اكسر;
 
-  case UBRK_WORD:
-    result = BreakIterator::createWordInstance(Locale(locale), *status);
-    break;
+  حالة UBRK_کلمه:
+    نتیجه = BreakIterator::create_کلمه_Instance(Locale(locale), *وضعیت);
+    اكسر;
 
-  case UBRK_LINE:
-    result = BreakIterator::createLineInstance(Locale(locale), *status);
-    break;
+  حالة UBRK_سطر:
+    نتیجه = BreakIterator::create_سطر_Instance(Locale(locale), *وضعیت);
+    اكسر;
 
-  case UBRK_SENTENCE:
-    result = BreakIterator::createSentenceInstance(Locale(locale), *status);
-    break;
+  حالة UBRK_SENTENCE:
+    نتیجه = BreakIterator::createSentenceInstance(Locale(locale), *وضعیت);
+    اكسر;
 
-  case UBRK_TITLE:
-    result = BreakIterator::createTitleInstance(Locale(locale), *status);
-    break;
+  حالة UBRK_TITLE:
+    نتیجه = BreakIterator::createTitleInstance(Locale(locale), *وضعیت);
+    اكسر;
 
-  default:
-    *status = U_ILLEGAL_ARGUMENT_ERROR;
+  افتراضي:
+    *وضعیت = U_ILLEGAL_آرگومان_ERROR;
   }
 
   // check for allocation error
-  if (U_FAILURE(*status)) {
-    return nullptr;
+  إذا (U_FAILURE(*وضعیت)) {
+    أرجع اشاره_تهی;
   }
-  if (result == nullptr) {
-    *status = U_MEMORY_ALLOCATION_ERROR;
-    return nullptr;
+  إذا (نتیجه == اشاره_تهی) {
+    *وضعیت = U_حافظه_تخصیص_ERROR;
+    أرجع اشاره_تهی;
   }
 
 
-  UBreakIterator *uBI = (UBreakIterator *)result;
-  if (text != nullptr) {
-      ubrk_setText(uBI, text, textLength, status);
+  UBreakIterator *uBI = (UBreakIterator *)نتیجه;
+  إذا (متن != اشاره_تهی) {
+      ubrk_مجموعه_متن(uBI, متن, متن_درازی, وضعیت);
   }
-  return uBI;
+  أرجع uBI;
 }
 
 
@@ -94,119 +94,119 @@ ubrk_open(UBreakIteratorType type,
 //
 //------------------------------------------------------------------------------
 U_CAPI UBreakIterator* U_EXPORT2
-ubrk_openRules(  const char16_t     *rules,
-                       int32_t       rulesLength,
-                 const char16_t     *text,
-                       int32_t       textLength,
+ubrk_open_قواعد(  ثابت char16_t     *قواعد,
+                       int32_t       قواعد_درازی,
+                 ثابت char16_t     *متن,
+                       int32_t       متن_درازی,
                        UParseError  *parseErr,
-                       UErrorCode   *status)  {
+                       UError_کد   *وضعیت)  {
 
-    if (status == nullptr || U_FAILURE(*status)){
-        return nullptr;
+    إذا (وضعیت == اشاره_تهی || U_FAILURE(*وضعیت)){
+        أرجع اشاره_تهی;
     }
 
-    BreakIterator *result = nullptr;
-    UnicodeString ruleString(rules, rulesLength);
-    result = RBBIRuleBuilder::createRuleBasedBreakIterator(ruleString, parseErr, *status);
-    if(U_FAILURE(*status)) {
-        return nullptr;
+    BreakIterator *نتیجه = اشاره_تهی;
+    UnicodeString قاعده_String(قواعد, قواعد_درازی);
+    نتیجه = RBBIRuleBuilder::create_قاعده_Based_Break_Iterator(قاعده_String, parseErr, *وضعیت);
+    إذا(U_FAILURE(*وضعیت)) {
+        أرجع اشاره_تهی;
     }
 
-    UBreakIterator *uBI = (UBreakIterator *)result;
-    if (text != nullptr) {
-        ubrk_setText(uBI, text, textLength, status);
+    UBreakIterator *uBI = (UBreakIterator *)نتیجه;
+    إذا (متن != اشاره_تهی) {
+        ubrk_مجموعه_متن(uBI, متن, متن_درازی, وضعیت);
     }
-    return uBI;
+    أرجع uBI;
 }
 
 
 U_CAPI UBreakIterator* U_EXPORT2
-ubrk_openBinaryRules(const uint8_t *binaryRules, int32_t rulesLength,
-                     const char16_t *  text, int32_t textLength,
-                     UErrorCode *   status)
+ubrk_open_دودویی_قواعد(ثابت uint8_t *دودویی_قواعد, int32_t قواعد_درازی,
+                     ثابت char16_t *  متن, int32_t متن_درازی,
+                     UError_کد *   وضعیت)
 {
-    if (U_FAILURE(*status)) {
-        return nullptr;
+    إذا (U_FAILURE(*وضعیت)) {
+        أرجع اشاره_تهی;
     }
-    if (rulesLength < 0) {
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+    إذا (قواعد_درازی < 0) {
+        *وضعیت = U_ILLEGAL_آرگومان_ERROR;
+        أرجع اشاره_تهی;
     }
-    LocalPointer<RuleBasedBreakIterator> lpRBBI(new RuleBasedBreakIterator(binaryRules, rulesLength, *status), *status);
-    if (U_FAILURE(*status)) {
-        return nullptr;
+    Local_اشاره_گر<قاعده_Based_Break_Iterator> lpRBBI(جديد قاعده_Based_Break_Iterator(دودویی_قواعد, قواعد_درازی, *وضعیت), *وضعیت);
+    إذا (U_FAILURE(*وضعیت)) {
+        أرجع اشاره_تهی;
     }
     UBreakIterator *uBI = reinterpret_cast<UBreakIterator *>(lpRBBI.orphan());
-    if (text != nullptr) {
-        ubrk_setText(uBI, text, textLength, status);
+    إذا (متن != اشاره_تهی) {
+        ubrk_مجموعه_متن(uBI, متن, متن_درازی, وضعیت);
     }
-    return uBI;
+    أرجع uBI;
 }
 
 
 U_CAPI UBreakIterator * U_EXPORT2
-ubrk_safeClone(
-          const UBreakIterator *bi,
-          void * /*stackBuffer*/,
-          int32_t *pBufferSize,
-          UErrorCode *status)
+ubrk_امن_Clone(
+          ثابت UBreakIterator *bi,
+          فراغ * /*stackBuffer*/,
+          int32_t *p_میانگیر_اندازه,
+          UError_کد *وضعیت)
 {
-    if (status == nullptr || U_FAILURE(*status)){
-        return nullptr;
+    إذا (وضعیت == اشاره_تهی || U_FAILURE(*وضعیت)){
+        أرجع اشاره_تهی;
     }
-    if (bi == nullptr) {
-       *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+    إذا (bi == اشاره_تهی) {
+       *وضعیت = U_ILLEGAL_آرگومان_ERROR;
+        أرجع اشاره_تهی;
     }
-    if (pBufferSize != nullptr) {
-        int32_t inputSize = *pBufferSize;
-        *pBufferSize = 1;
-        if (inputSize == 0) {
-            return nullptr;  // preflighting for deprecated functionality
+    إذا (p_میانگیر_اندازه != اشاره_تهی) {
+        int32_t درون_داد_اندازه = *p_میانگیر_اندازه;
+        *p_میانگیر_اندازه = 1;
+        إذا (درون_داد_اندازه == 0) {
+            أرجع اشاره_تهی;  // preflighting for deprecated functionality
         }
     }
     BreakIterator *newBI = ((BreakIterator *)bi)->clone();
-    if (newBI == nullptr) {
-        *status = U_MEMORY_ALLOCATION_ERROR;
-    } else if (pBufferSize != nullptr) {
-        *status = U_SAFECLONE_ALLOCATED_WARNING;
+    إذا (newBI == اشاره_تهی) {
+        *وضعیت = U_حافظه_تخصیص_ERROR;
+    } وإلا إذا (p_میانگیر_اندازه != اشاره_تهی) {
+        *وضعیت = U_SAFECLONE_ALLOCATED_WARNING;
     }
-    return (UBreakIterator *)newBI;
+    أرجع (UBreakIterator *)newBI;
 }
 
 U_CAPI UBreakIterator * U_EXPORT2
-ubrk_clone(const UBreakIterator *bi, UErrorCode *status) {
-    return ubrk_safeClone(bi, nullptr, nullptr, status);
+ubrk_clone(ثابت UBreakIterator *bi, UError_کد *وضعیت) {
+    أرجع ubrk_امن_Clone(bi, اشاره_تهی, اشاره_تهی, وضعیت);
 }
 
 
-U_CAPI void U_EXPORT2
+U_CAPI فراغ U_EXPORT2
 ubrk_close(UBreakIterator *bi)
 {
-    delete (BreakIterator *)bi;
+    حذف (BreakIterator *)bi;
 }
 
-U_CAPI void U_EXPORT2
-ubrk_setText(UBreakIterator* bi,
-             const char16_t*    text,
-             int32_t         textLength,
-             UErrorCode*     status)
+U_CAPI فراغ U_EXPORT2
+ubrk_مجموعه_متن(UBreakIterator* bi,
+             ثابت char16_t*    متن,
+             int32_t         متن_درازی,
+             UError_کد*     وضعیت)
 {
     UText  ut = UTEXT_INITIALIZER;
-    utext_openUChars(&ut, text, textLength, status);
-    ((BreakIterator*)bi)->setText(&ut, *status);
+    utext_openUChars(&ut, متن, متن_درازی, وضعیت);
+    ((BreakIterator*)bi)->مجموعه_متن(&ut, *وضعیت);
     // A stack allocated UText wrapping a char16_t * string
     //   can be dumped without explicitly closing it.
 }
 
 
 
-U_CAPI void U_EXPORT2
-ubrk_setUText(UBreakIterator *bi,
-             UText          *text,
-             UErrorCode     *status)
+U_CAPI فراغ U_EXPORT2
+ubrk_مجموعه_UText(UBreakIterator *bi,
+             UText          *متن,
+             UError_کد     *وضعیت)
 {
-  ((BreakIterator*)bi)->setText(text, *status);
+  ((BreakIterator*)bi)->مجموعه_متن(متن, *وضعیت);
 }
 
 
@@ -214,148 +214,148 @@ ubrk_setUText(UBreakIterator *bi,
 
 
 U_CAPI int32_t U_EXPORT2
-ubrk_current(const UBreakIterator *bi)
+ubrk_current(ثابت UBreakIterator *bi)
 {
 
-  return ((BreakIterator*)bi)->current();
+  أرجع ((BreakIterator*)bi)->current();
 }
 
 U_CAPI int32_t U_EXPORT2
-ubrk_next(UBreakIterator *bi)
+ubrk_بعدی(UBreakIterator *bi)
 {
 
-  return ((BreakIterator*)bi)->next();
+  أرجع ((BreakIterator*)bi)->next();
 }
 
 U_CAPI int32_t U_EXPORT2
-ubrk_previous(UBreakIterator *bi)
+ubrk_قبلی(UBreakIterator *bi)
 {
 
-  return ((BreakIterator*)bi)->previous();
+  أرجع ((BreakIterator*)bi)->قبلی();
 }
 
 U_CAPI int32_t U_EXPORT2
-ubrk_first(UBreakIterator *bi)
+ubrk_اولی(UBreakIterator *bi)
 {
 
-  return ((BreakIterator*)bi)->first();
+  أرجع ((BreakIterator*)bi)->first();
 }
 
 U_CAPI int32_t U_EXPORT2
-ubrk_last(UBreakIterator *bi)
+ubrk_آخرین(UBreakIterator *bi)
 {
 
-  return ((BreakIterator*)bi)->last();
+  أرجع ((BreakIterator*)bi)->آخرین();
 }
 
 U_CAPI int32_t U_EXPORT2
 ubrk_preceding(UBreakIterator *bi,
-           int32_t offset)
+           int32_t جابه_جایی)
 {
 
-  return ((BreakIterator*)bi)->preceding(offset);
+  أرجع ((BreakIterator*)bi)->preceding(جابه_جایی);
 }
 
 U_CAPI int32_t U_EXPORT2
 ubrk_following(UBreakIterator *bi,
-           int32_t offset)
+           int32_t جابه_جایی)
 {
 
-  return ((BreakIterator*)bi)->following(offset);
+  أرجع ((BreakIterator*)bi)->following(جابه_جایی);
 }
 
-U_CAPI const char* U_EXPORT2
-ubrk_getAvailable(int32_t index)
+U_CAPI ثابت حرف* U_EXPORT2
+ubrk_get_موجود(int32_t شاخص)
 {
 
-  return uloc_getAvailable(index);
+  أرجع uloc_get_موجود(شاخص);
 }
 
 U_CAPI int32_t U_EXPORT2
-ubrk_countAvailable()
+ubrk_شمار_موجود()
 {
 
-  return uloc_countAvailable();
+  أرجع uloc_شمار_موجود();
 }
 
 
 U_CAPI  UBool U_EXPORT2
-ubrk_isBoundary(UBreakIterator *bi, int32_t offset)
+ubrk_isBoundary(UBreakIterator *bi, int32_t جابه_جایی)
 {
-    return ((BreakIterator*)bi)->isBoundary(offset);
+    أرجع ((BreakIterator*)bi)->isBoundary(جابه_جایی);
 }
 
 
 U_CAPI  int32_t U_EXPORT2
-ubrk_getRuleStatus(UBreakIterator *bi)
+ubrk_get_قاعده_وضعیت(UBreakIterator *bi)
 {
-    return ((BreakIterator*)bi)->getRuleStatus();
+    أرجع ((BreakIterator*)bi)->get_قاعده_وضعیت();
 }
 
 U_CAPI  int32_t U_EXPORT2
-ubrk_getRuleStatusVec(UBreakIterator *bi, int32_t *fillInVec, int32_t capacity, UErrorCode *status)
+ubrk_get_قاعده_وضعیت_Vec(UBreakIterator *bi, int32_t *fill_درون_Vec, int32_t capacity, UError_کد *وضعیت)
 {
-    return ((BreakIterator*)bi)->getRuleStatusVec(fillInVec, capacity, *status);
+    أرجع ((BreakIterator*)bi)->get_قاعده_وضعیت_Vec(fill_درون_Vec, capacity, *وضعیت);
 }
 
 
-U_CAPI const char* U_EXPORT2
-ubrk_getLocaleByType(const UBreakIterator* bi U_LIFETIME_BOUND,
-                     ULocDataLocaleType type,
-                     UErrorCode* status)
+U_CAPI ثابت حرف* U_EXPORT2
+ubrk_getLocaleByType(ثابت UBreakIterator* bi U_LIFETIME_BOUND,
+                     ULoc_داده_Locale_Type type,
+                     UError_کد* وضعیت)
 {
-    if (bi == nullptr) {
-        if (U_SUCCESS(*status)) {
-            *status = U_ILLEGAL_ARGUMENT_ERROR;
+    إذا (bi == اشاره_تهی) {
+        إذا (U_SUCCESS(*وضعیت)) {
+            *وضعیت = U_ILLEGAL_آرگومان_ERROR;
         }
-        return nullptr;
+        أرجع اشاره_تهی;
     }
-    return ((BreakIterator*)bi)->getLocaleID(type, *status);
+    أرجع ((BreakIterator*)bi)->getLocaleID(type, *وضعیت);
 }
 
 
-U_CAPI void U_EXPORT2
+U_CAPI فراغ U_EXPORT2
 ubrk_refreshUText(UBreakIterator *bi,
-                       UText          *text,
-                       UErrorCode     *status)
+                       UText          *متن,
+                       UError_کد     *وضعیت)
 {
     BreakIterator *bii = reinterpret_cast<BreakIterator *>(bi);
-    bii->refreshInputText(text, *status);
+    bii->refresh_درون_داد_متن(متن, *وضعیت);
 }
 
 U_CAPI int32_t U_EXPORT2
-ubrk_getBinaryRules(UBreakIterator *bi,
-                    uint8_t *       binaryRules, int32_t rulesCapacity,
-                    UErrorCode *    status)
+ubrk_get_دودویی_قواعد(UBreakIterator *bi,
+                    uint8_t *       دودویی_قواعد, int32_t قواعد_ظرفیت,
+                    UError_کد *    وضعیت)
 {
-    if (U_FAILURE(*status)) {
-        return 0;
+    إذا (U_FAILURE(*وضعیت)) {
+        أرجع 0;
     }
-    if ((binaryRules == nullptr && rulesCapacity > 0) || rulesCapacity < 0) {
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    إذا ((دودویی_قواعد == اشاره_تهی && قواعد_ظرفیت > 0) || قواعد_ظرفیت < 0) {
+        *وضعیت = U_ILLEGAL_آرگومان_ERROR;
+        أرجع 0;
     }
-    RuleBasedBreakIterator* rbbi;
-    if ((rbbi = dynamic_cast<RuleBasedBreakIterator*>(reinterpret_cast<BreakIterator*>(bi))) == nullptr) {
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    قاعده_Based_Break_Iterator* rbbi;
+    إذا ((rbbi = dynamic_cast<قاعده_Based_Break_Iterator*>(reinterpret_cast<BreakIterator*>(bi))) == اشاره_تهی) {
+        *وضعیت = U_ILLEGAL_آرگومان_ERROR;
+        أرجع 0;
     }
-    uint32_t rulesLength;
-    const uint8_t * returnedRules = rbbi->getBinaryRules(rulesLength);
-    if (rulesLength > INT32_MAX) {
-        *status = U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0;
+    uint32_t قواعد_درازی;
+    ثابت uint8_t * returned_قواعد = rbbi->get_دودویی_قواعد(قواعد_درازی);
+    إذا (قواعد_درازی > INT32_MAX) {
+        *وضعیت = U_شاخص_OUTOFBOUNDS_ERROR;
+        أرجع 0;
     }
-    if (binaryRules != nullptr) { // if not preflighting
+    إذا (دودویی_قواعد != اشاره_تهی) { // if not preflighting
         // Here we know rulesLength <= INT32_MAX and rulesCapacity >= 0, can cast safely
-        if ((int32_t)rulesLength > rulesCapacity) {
-            *status = U_BUFFER_OVERFLOW_ERROR;
-        } else {
-            uprv_memcpy(binaryRules, returnedRules, rulesLength);
+        إذا ((int32_t)قواعد_درازی > قواعد_ظرفیت) {
+            *وضعیت = U_میانگیر_سرریز_ERROR;
+        } وإلا {
+            uprv_memcpy(دودویی_قواعد, returned_قواعد, قواعد_درازی);
         }
     }
-    return (int32_t)rulesLength;
+    أرجع (int32_t)قواعد_درازی;
 }
 
 
-#endif /* #if !UCONFIG_NO_BREAK_ITERATION */
+#پایان_اگر /* #if !UCONFIG_NO_BREAK_ITERATION */

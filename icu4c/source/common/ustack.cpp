@@ -7,56 +7,56 @@
 **********************************************************************
 */
 
-#include "uvector.h"
+#ضمن "uvector.h"
 
 U_NAMESPACE_BEGIN
 
 UOBJECT_DEFINE_RTTI_IMPLEMENTATION(UStack)
 
-UStack::UStack(UErrorCode &status) :
-    UVector(status)
+UStack::UStack(UError_کد &وضعیت) :
+    UVector(وضعیت)
 {
 }
 
-UStack::UStack(int32_t initialCapacity, UErrorCode &status) :
-    UVector(initialCapacity, status)
+UStack::UStack(int32_t initial_ظرفیت, UError_کد &وضعیت) :
+    UVector(initial_ظرفیت, وضعیت)
 {
 }
 
-UStack::UStack(UObjectDeleter *d, UElementsAreEqual *c, UErrorCode &status) :
-    UVector(d, c, status)
+UStack::UStack(UObjectDeleter *d, UElementsAreEqual *c, UError_کد &وضعیت) :
+    UVector(d, c, وضعیت)
 {
 }
 
-UStack::UStack(UObjectDeleter *d, UElementsAreEqual *c, int32_t initialCapacity, UErrorCode &status) :
-    UVector(d, c, initialCapacity, status)
+UStack::UStack(UObjectDeleter *d, UElementsAreEqual *c, int32_t initial_ظرفیت, UError_کد &وضعیت) :
+    UVector(d, c, initial_ظرفیت, وضعیت)
 {
 }
 
 UStack::~UStack() {}
 
-void* UStack::pop() {
+فراغ* UStack::pop() {
     int32_t n = size() - 1;
-    void* result = nullptr;
-    if (n >= 0) {
-        result = orphanElementAt(n);
+    فراغ* نتیجه = اشاره_تهی;
+    إذا (n >= 0) {
+        نتیجه = orphanElementAt(n);
     }
-    return result;
+    أرجع نتیجه;
 }
 
 int32_t UStack::popi() {
     int32_t n = size() - 1;
-    int32_t result = 0;
-    if (n >= 0) {
-        result = elementAti(n);
+    int32_t نتیجه = 0;
+    إذا (n >= 0) {
+        نتیجه = elementAti(n);
         removeElementAt(n);
     }
-    return result;
+    أرجع نتیجه;
 }
 
-int32_t UStack::search(void* obj) const {
-    int32_t i = indexOf(obj);
-    return (i >= 0) ? size() - i : i;
+int32_t UStack::search(فراغ* obj) ثابت {
+    int32_t i = شاخص_از(obj);
+    أرجع (i >= 0) ? size() - i : i;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_انتها

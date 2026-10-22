@@ -24,363 +24,363 @@
 *   This file contains only the runtime and enumeration code, for read-only access.
 *   See utrie2_builder.c for the builder code.
 */
-#include "unicode/utypes.h"
-#ifdef UCPTRIE_DEBUG
-#include "unicode/umutablecptrie.h"
-#endif
-#include "unicode/utf.h"
-#include "unicode/utf8.h"
-#include "unicode/utf16.h"
-#include "cmemory.h"
-#include "utrie2.h"
-#include "utrie2_impl.h"
-#include "uassert.h"
+#ضمن "unicode/utypes.h"
+#اگر_تعریف_شده UCPTRIE_DEBUG
+#ضمن "unicode/umutablecptrie.h"
+#پایان_اگر
+#ضمن "unicode/utf.h"
+#ضمن "unicode/utf8.h"
+#ضمن "unicode/utf16.h"
+#ضمن "cmemory.h"
+#ضمن "utrie2.h"
+#ضمن "utrie2_impl.h"
+#ضمن "uassert.h"
 
 /* Public UTrie2 API implementation ----------------------------------------- */
 
-static uint32_t
-get32(const UNewTrie2 *trie, UChar32 c, UBool fromLSCP) {
-    int32_t i2, block;
+ساكن uint32_t
+get32(ثابت UNewTrie2 *trie, UChar32 c, UBool fromLSCP) {
+    int32_t i2, بلوک;
 
-    if(c>=trie->highStart && (!U_IS_LEAD(c) || fromLSCP)) {
-        return trie->data[trie->dataLength-UTRIE2_DATA_GRANULARITY];
+    إذا(c>=trie->بالا_شروع && (!U_IS_LEAD(c) || fromLSCP)) {
+        أرجع trie->داده[trie->داده_درازی-UTRIE2_داده_GRANULARITY];
     }
 
-    if(U_IS_LEAD(c) && fromLSCP) {
-        i2=(UTRIE2_LSCP_INDEX_2_OFFSET-(0xd800>>UTRIE2_SHIFT_2))+
-            (c>>UTRIE2_SHIFT_2);
-    } else {
-        i2=trie->index1[c>>UTRIE2_SHIFT_1]+
-            ((c>>UTRIE2_SHIFT_2)&UTRIE2_INDEX_2_MASK);
+    إذا(U_IS_LEAD(c) && fromLSCP) {
+        i2=(UTRIE2_LSCP_شاخص_2_جابه_جایی-(0xd800>>UTRIE2_لغزش_2))+
+            (c>>UTRIE2_لغزش_2);
+    } وإلا {
+        i2=trie->index1[c>>UTRIE2_لغزش_1]+
+            ((c>>UTRIE2_لغزش_2)&UTRIE2_شاخص_2_ماسک);
     }
-    block=trie->index2[i2];
-    return trie->data[block+(c&UTRIE2_DATA_MASK)];
+    بلوک=trie->index2[i2];
+    أرجع trie->داده[بلوک+(c&UTRIE2_داده_ماسک)];
 }
 
 U_CAPI uint32_t U_EXPORT2
-utrie2_get32(const UTrie2 *trie, UChar32 c) {
-    if(trie->data16!=nullptr) {
-        return UTRIE2_GET16(trie, c);
-    } else if(trie->data32!=nullptr) {
-        return UTRIE2_GET32(trie, c);
-    } else if((uint32_t)c>0x10ffff) {
-        return trie->errorValue;
-    } else {
-        return get32(trie->newTrie, c, true);
+utrie2_get32(ثابت UTrie2 *trie, UChar32 c) {
+    إذا(trie->data16!=اشاره_تهی) {
+        أرجع UTRIE2_GET16(trie, c);
+    } وإلا إذا(trie->data32!=اشاره_تهی) {
+        أرجع UTRIE2_GET32(trie, c);
+    } وإلا إذا((uint32_t)c>0x10ffff) {
+        أرجع trie->error_مقدار;
+    } وإلا {
+        أرجع get32(trie->newTrie, c, درست);
     }
 }
 
 U_CAPI uint32_t U_EXPORT2
-utrie2_get32FromLeadSurrogateCodeUnit(const UTrie2 *trie, UChar32 c) {
-    if(!U_IS_LEAD(c)) {
-        return trie->errorValue;
+utrie2_get32_From_Lead_Surrogate_کد_Unit(ثابت UTrie2 *trie, UChar32 c) {
+    إذا(!U_IS_LEAD(c)) {
+        أرجع trie->error_مقدار;
     }
-    if(trie->data16!=nullptr) {
-        return UTRIE2_GET16_FROM_U16_SINGLE_LEAD(trie, c);
-    } else if(trie->data32!=nullptr) {
-        return UTRIE2_GET32_FROM_U16_SINGLE_LEAD(trie, c);
-    } else {
-        return get32(trie->newTrie, c, false);
+    إذا(trie->data16!=اشاره_تهی) {
+        أرجع UTRIE2_GET16_FROM_U16_SINGLE_LEAD(trie, c);
+    } وإلا إذا(trie->data32!=اشاره_تهی) {
+        أرجع UTRIE2_GET32_FROM_U16_SINGLE_LEAD(trie, c);
+    } وإلا {
+        أرجع get32(trie->newTrie, c, خطأ);
     }
 }
 
-static inline int32_t
-u8Index(const UTrie2 *trie, UChar32 c, int32_t i) {
+ساكن مضمن int32_t
+u8_شاخص(ثابت UTrie2 *trie, UChar32 c, int32_t i) {
     int32_t idx=
-        _UTRIE2_INDEX_FROM_CP(
+        UTRIE2_شاخص_FROM_CP(
             trie,
-            trie->data32==nullptr ? trie->indexLength : 0,
+            trie->data32==اشاره_تهی ? trie->شاخص_درازی : 0,
             c);
-    return (idx<<3)|i;
+    أرجع (idx<<3)|i;
 }
 
 U_CAPI int32_t U_EXPORT2
-utrie2_internalU8NextIndex(const UTrie2 *trie, UChar32 c,
-                           const uint8_t *src, const uint8_t *limit) {
+utrie2_داخلی_U8_بعدی_شاخص(ثابت UTrie2 *trie, UChar32 c,
+                           ثابت uint8_t *src, ثابت uint8_t *حد) {
     int32_t i, length;
     i=0;
     /* support 64-bit pointers by avoiding cast of arbitrary difference */
-    if((limit-src)<=7) {
-        length=(int32_t)(limit-src);
-    } else {
+    إذا((حد-src)<=7) {
+        length=(int32_t)(حد-src);
+    } وإلا {
         length=7;
     }
-    c=utf8_nextCharSafeBody(src, &i, length, c, -1);
-    return u8Index(trie, c, i);
+    c=utf8_بعدی_Char_امن_Body(src, &i, length, c, -1);
+    أرجع u8_شاخص(trie, c, i);
 }
 
 U_CAPI int32_t U_EXPORT2
-utrie2_internalU8PrevIndex(const UTrie2 *trie, UChar32 c,
-                           const uint8_t *start, const uint8_t *src) {
+utrie2_داخلی_U8_Prev_شاخص(ثابت UTrie2 *trie, UChar32 c,
+                           ثابت uint8_t *شروع, ثابت uint8_t *src) {
     int32_t i, length;
     /* support 64-bit pointers by avoiding cast of arbitrary difference */
-    if((src-start)<=7) {
-        i=length=(int32_t)(src-start);
-    } else {
+    إذا((src-شروع)<=7) {
+        i=length=(int32_t)(src-شروع);
+    } وإلا {
         i=length=7;
-        start=src-7;
+        شروع=src-7;
     }
-    c=utf8_prevCharSafeBody(start, 0, &i, c, -1);
+    c=utf8_prev_Char_امن_Body(شروع, 0, &i, c, -1);
     i=length-i;  /* number of bytes read backward from src */
-    return u8Index(trie, c, i);
+    أرجع u8_شاخص(trie, c, i);
 }
 
 U_CAPI UTrie2 * U_EXPORT2
-utrie2_openFromSerialized(UTrie2ValueBits valueBits,
-                          const void *data, int32_t length, int32_t *pActualLength,
-                          UErrorCode *pErrorCode) {
-    const UTrie2Header *header;
-    const uint16_t *p16;
-    int32_t actualLength;
+utrie2_openFromSerialized(UTrie2_مقدار_بیتها مقدار_بیتها,
+                          ثابت فراغ *داده, int32_t length, int32_t *p_Actual_درازی,
+                          UError_کد *p_Error_کد) {
+    ثابت UTrie2_سرآیند *سرآیند;
+    ثابت uint16_t *p16;
+    int32_t actual_درازی;
 
-    UTrie2 tempTrie;
+    UTrie2 موقت_Trie;
     UTrie2 *trie;
 
-    if(U_FAILURE(*pErrorCode)) {
-        return nullptr;
+    إذا(U_FAILURE(*p_Error_کد)) {
+        أرجع اشاره_تهی;
     }
 
-    if( length<=0 || (U_POINTER_MASK_LSB(data, 3)!=0) ||
-        valueBits<0 || UTRIE2_COUNT_VALUE_BITS<=valueBits
+    إذا( length<=0 || (U_اشاره_گر_ماسک_LSB(داده, 3)!=0) ||
+        مقدار_بیتها<0 || UTRIE2_شمار_مقدار_بیتها<=مقدار_بیتها
     ) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        *p_Error_کد=U_ILLEGAL_آرگومان_ERROR;
+        أرجع اشاره_تهی;
     }
 
     /* enough data for a trie header? */
-    if(length<(int32_t)sizeof(UTrie2Header)) {
-        *pErrorCode=U_INVALID_FORMAT_ERROR;
-        return nullptr;
+    إذا(length<(int32_t)حجم(UTrie2_سرآیند)) {
+        *p_Error_کد=U_INVALID_FORMAT_ERROR;
+        أرجع اشاره_تهی;
     }
 
     /* check the signature */
-    header=(const UTrie2Header *)data;
-    if(header->signature!=UTRIE2_SIG) {
-        *pErrorCode=U_INVALID_FORMAT_ERROR;
-        return nullptr;
+    سرآیند=(ثابت UTrie2_سرآیند *)داده;
+    إذا(سرآیند->signature!=UTRIE2_SIG) {
+        *p_Error_کد=U_INVALID_FORMAT_ERROR;
+        أرجع اشاره_تهی;
     }
 
     /* get the options */
-    if(valueBits!=(UTrie2ValueBits)(header->options&UTRIE2_OPTIONS_VALUE_BITS_MASK)) {
-        *pErrorCode=U_INVALID_FORMAT_ERROR;
-        return nullptr;
+    إذا(مقدار_بیتها!=(UTrie2_مقدار_بیتها)(سرآیند->options&UTRIE2_OPTIONS_مقدار_بیتها_ماسک)) {
+        *p_Error_کد=U_INVALID_FORMAT_ERROR;
+        أرجع اشاره_تهی;
     }
 
     /* get the length values and offsets */
-    uprv_memset(&tempTrie, 0, sizeof(tempTrie));
-    tempTrie.indexLength=header->indexLength;
-    tempTrie.dataLength=header->shiftedDataLength<<UTRIE2_INDEX_SHIFT;
-    tempTrie.index2NullOffset=header->index2NullOffset;
-    tempTrie.dataNullOffset=header->dataNullOffset;
+    uprv_memset(&موقت_Trie, 0, حجم(موقت_Trie));
+    موقت_Trie.شاخص_درازی=سرآیند->شاخص_درازی;
+    موقت_Trie.داده_درازی=سرآیند->shifted_داده_درازی<<UTRIE2_شاخص_لغزش;
+    موقت_Trie.index2_Null_جابه_جایی=سرآیند->index2_Null_جابه_جایی;
+    موقت_Trie.داده_Null_جابه_جایی=سرآیند->داده_Null_جابه_جایی;
 
-    tempTrie.highStart=header->shiftedHighStart<<UTRIE2_SHIFT_1;
-    tempTrie.highValueIndex=tempTrie.dataLength-UTRIE2_DATA_GRANULARITY;
-    if(valueBits==UTRIE2_16_VALUE_BITS) {
-        tempTrie.highValueIndex+=tempTrie.indexLength;
+    موقت_Trie.بالا_شروع=سرآیند->shifted_بالا_شروع<<UTRIE2_لغزش_1;
+    موقت_Trie.بالا_مقدار_شاخص=موقت_Trie.داده_درازی-UTRIE2_داده_GRANULARITY;
+    إذا(مقدار_بیتها==UTRIE2_16_مقدار_بیتها) {
+        موقت_Trie.بالا_مقدار_شاخص+=موقت_Trie.شاخص_درازی;
     }
 
     /* calculate the actual length */
-    actualLength=(int32_t)sizeof(UTrie2Header)+tempTrie.indexLength*2;
-    if(valueBits==UTRIE2_16_VALUE_BITS) {
-        actualLength+=tempTrie.dataLength*2;
-    } else {
-        actualLength+=tempTrie.dataLength*4;
+    actual_درازی=(int32_t)حجم(UTrie2_سرآیند)+موقت_Trie.شاخص_درازی*2;
+    إذا(مقدار_بیتها==UTRIE2_16_مقدار_بیتها) {
+        actual_درازی+=موقت_Trie.داده_درازی*2;
+    } وإلا {
+        actual_درازی+=موقت_Trie.داده_درازی*4;
     }
-    if(length<actualLength) {
-        *pErrorCode=U_INVALID_FORMAT_ERROR;  /* not enough bytes */
-        return nullptr;
+    إذا(length<actual_درازی) {
+        *p_Error_کد=U_INVALID_FORMAT_ERROR;  /* not enough bytes */
+        أرجع اشاره_تهی;
     }
 
     /* allocate the trie */
-    trie=(UTrie2 *)uprv_malloc(sizeof(UTrie2));
-    if(trie==nullptr) {
-        *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+    trie=(UTrie2 *)uprv_malloc(حجم(UTrie2));
+    إذا(trie==اشاره_تهی) {
+        *p_Error_کد=U_حافظه_تخصیص_ERROR;
+        أرجع اشاره_تهی;
     }
-    uprv_memcpy(trie, &tempTrie, sizeof(tempTrie));
-    trie->memory=(uint32_t *)data;
-    trie->length=actualLength;
-    trie->isMemoryOwned=false;
-#ifdef UTRIE2_DEBUG
+    uprv_memcpy(trie, &موقت_Trie, حجم(موقت_Trie));
+    trie->حافظه=(uint32_t *)داده;
+    trie->length=actual_درازی;
+    trie->is_حافظه_Owned=خطأ;
+#اگر_تعریف_شده UTRIE2_DEBUG
     trie->name="fromSerialized";
-#endif
+#پایان_اگر
 
     /* set the pointers to its index and data arrays */
-    p16=(const uint16_t *)(header+1);
-    trie->index=p16;
-    p16+=trie->indexLength;
+    p16=(ثابت uint16_t *)(سرآیند+1);
+    trie->شاخص=p16;
+    p16+=trie->شاخص_درازی;
 
     /* get the data */
-    switch(valueBits) {
-    case UTRIE2_16_VALUE_BITS:
+    بدل(مقدار_بیتها) {
+    حالة UTRIE2_16_مقدار_بیتها:
         trie->data16=p16;
-        trie->data32=nullptr;
-        trie->initialValue=trie->index[trie->dataNullOffset];
-        trie->errorValue=trie->data16[UTRIE2_BAD_UTF8_DATA_OFFSET];
-        break;
-    case UTRIE2_32_VALUE_BITS:
-        trie->data16=nullptr;
-        trie->data32=(const uint32_t *)p16;
-        trie->initialValue=trie->data32[trie->dataNullOffset];
-        trie->errorValue=trie->data32[UTRIE2_BAD_UTF8_DATA_OFFSET];
-        break;
-    default:
-        *pErrorCode=U_INVALID_FORMAT_ERROR;
-        return nullptr;
+        trie->data32=اشاره_تهی;
+        trie->initial_مقدار=trie->شاخص[trie->داده_Null_جابه_جایی];
+        trie->error_مقدار=trie->data16[UTRIE2_BAD_UTF8_داده_جابه_جایی];
+        اكسر;
+    حالة UTRIE2_32_مقدار_بیتها:
+        trie->data16=اشاره_تهی;
+        trie->data32=(ثابت uint32_t *)p16;
+        trie->initial_مقدار=trie->data32[trie->داده_Null_جابه_جایی];
+        trie->error_مقدار=trie->data32[UTRIE2_BAD_UTF8_داده_جابه_جایی];
+        اكسر;
+    افتراضي:
+        *p_Error_کد=U_INVALID_FORMAT_ERROR;
+        أرجع اشاره_تهی;
     }
 
-    if(pActualLength!=nullptr) {
-        *pActualLength=actualLength;
+    إذا(p_Actual_درازی!=اشاره_تهی) {
+        *p_Actual_درازی=actual_درازی;
     }
-    return trie;
+    أرجع trie;
 }
 
 U_CAPI UTrie2 * U_EXPORT2
-utrie2_openDummy(UTrie2ValueBits valueBits,
-                 uint32_t initialValue, uint32_t errorValue,
-                 UErrorCode *pErrorCode) {
+utrie2_openDummy(UTrie2_مقدار_بیتها مقدار_بیتها,
+                 uint32_t initial_مقدار, uint32_t error_مقدار,
+                 UError_کد *p_Error_کد) {
     UTrie2 *trie;
-    UTrie2Header *header;
+    UTrie2_سرآیند *سرآیند;
     uint32_t *p;
     uint16_t *dest16;
-    int32_t indexLength, dataLength, length, i;
-    int32_t dataMove;  /* >0 if the data is moved to the end of the index array */
+    int32_t شاخص_درازی, داده_درازی, length, i;
+    int32_t داده_Move;  /* >0 if the data is moved to the end of the index array */
 
-    if(U_FAILURE(*pErrorCode)) {
-        return nullptr;
+    إذا(U_FAILURE(*p_Error_کد)) {
+        أرجع اشاره_تهی;
     }
 
-    if(valueBits<0 || UTRIE2_COUNT_VALUE_BITS<=valueBits) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+    إذا(مقدار_بیتها<0 || UTRIE2_شمار_مقدار_بیتها<=مقدار_بیتها) {
+        *p_Error_کد=U_ILLEGAL_آرگومان_ERROR;
+        أرجع اشاره_تهی;
     }
 
     /* calculate the total length of the dummy trie data */
-    indexLength=UTRIE2_INDEX_1_OFFSET;
-    dataLength=UTRIE2_DATA_START_OFFSET+UTRIE2_DATA_GRANULARITY;
-    length=(int32_t)sizeof(UTrie2Header)+indexLength*2;
-    if(valueBits==UTRIE2_16_VALUE_BITS) {
-        length+=dataLength*2;
-    } else {
-        length+=dataLength*4;
+    شاخص_درازی=UTRIE2_شاخص_1_جابه_جایی;
+    داده_درازی=UTRIE2_داده_شروع_جابه_جایی+UTRIE2_داده_GRANULARITY;
+    length=(int32_t)حجم(UTrie2_سرآیند)+شاخص_درازی*2;
+    إذا(مقدار_بیتها==UTRIE2_16_مقدار_بیتها) {
+        length+=داده_درازی*2;
+    } وإلا {
+        length+=داده_درازی*4;
     }
 
     /* allocate the trie */
-    trie=(UTrie2 *)uprv_malloc(sizeof(UTrie2));
-    if(trie==nullptr) {
-        *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+    trie=(UTrie2 *)uprv_malloc(حجم(UTrie2));
+    إذا(trie==اشاره_تهی) {
+        *p_Error_کد=U_حافظه_تخصیص_ERROR;
+        أرجع اشاره_تهی;
     }
-    uprv_memset(trie, 0, sizeof(UTrie2));
-    trie->memory=uprv_malloc(length);
-    if(trie->memory==nullptr) {
+    uprv_memset(trie, 0, حجم(UTrie2));
+    trie->حافظه=uprv_malloc(length);
+    إذا(trie->حافظه==اشاره_تهی) {
         uprv_free(trie);
-        *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        *p_Error_کد=U_حافظه_تخصیص_ERROR;
+        أرجع اشاره_تهی;
     }
     trie->length=length;
-    trie->isMemoryOwned=true;
+    trie->is_حافظه_Owned=درست;
 
     /* set the UTrie2 fields */
-    if(valueBits==UTRIE2_16_VALUE_BITS) {
-        dataMove=indexLength;
-    } else {
-        dataMove=0;
+    إذا(مقدار_بیتها==UTRIE2_16_مقدار_بیتها) {
+        داده_Move=شاخص_درازی;
+    } وإلا {
+        داده_Move=0;
     }
 
-    trie->indexLength=indexLength;
-    trie->dataLength=dataLength;
-    trie->index2NullOffset=UTRIE2_INDEX_2_OFFSET;
-    trie->dataNullOffset=(uint16_t)dataMove;
-    trie->initialValue=initialValue;
-    trie->errorValue=errorValue;
-    trie->highStart=0;
-    trie->highValueIndex=dataMove+UTRIE2_DATA_START_OFFSET;
-#ifdef UTRIE2_DEBUG
+    trie->شاخص_درازی=شاخص_درازی;
+    trie->داده_درازی=داده_درازی;
+    trie->index2_Null_جابه_جایی=UTRIE2_شاخص_2_جابه_جایی;
+    trie->داده_Null_جابه_جایی=(uint16_t)داده_Move;
+    trie->initial_مقدار=initial_مقدار;
+    trie->error_مقدار=error_مقدار;
+    trie->بالا_شروع=0;
+    trie->بالا_مقدار_شاخص=داده_Move+UTRIE2_داده_شروع_جابه_جایی;
+#اگر_تعریف_شده UTRIE2_DEBUG
     trie->name="dummy";
-#endif
+#پایان_اگر
 
     /* set the header fields */
-    header=(UTrie2Header *)trie->memory;
+    سرآیند=(UTrie2_سرآیند *)trie->حافظه;
 
-    header->signature=UTRIE2_SIG; /* "Tri2" */
-    header->options=(uint16_t)valueBits;
+    سرآیند->signature=UTRIE2_SIG; /* "Tri2" */
+    سرآیند->options=(uint16_t)مقدار_بیتها;
 
-    header->indexLength=(uint16_t)indexLength;
-    header->shiftedDataLength=(uint16_t)(dataLength>>UTRIE2_INDEX_SHIFT);
-    header->index2NullOffset=(uint16_t)UTRIE2_INDEX_2_OFFSET;
-    header->dataNullOffset=(uint16_t)dataMove;
-    header->shiftedHighStart=0;
+    سرآیند->شاخص_درازی=(uint16_t)شاخص_درازی;
+    سرآیند->shifted_داده_درازی=(uint16_t)(داده_درازی>>UTRIE2_شاخص_لغزش);
+    سرآیند->index2_Null_جابه_جایی=(uint16_t)UTRIE2_شاخص_2_جابه_جایی;
+    سرآیند->داده_Null_جابه_جایی=(uint16_t)داده_Move;
+    سرآیند->shifted_بالا_شروع=0;
 
     /* fill the index and data arrays */
-    dest16=(uint16_t *)(header+1);
-    trie->index=dest16;
+    dest16=(uint16_t *)(سرآیند+1);
+    trie->شاخص=dest16;
 
     /* write the index-2 array values shifted right by UTRIE2_INDEX_SHIFT */
-    for(i=0; i<UTRIE2_INDEX_2_BMP_LENGTH; ++i) {
-        *dest16++=(uint16_t)(dataMove>>UTRIE2_INDEX_SHIFT);  /* null data block */
+    لكل(i=0; i<UTRIE2_شاخص_2_BMP_درازی; ++i) {
+        *dest16++=(uint16_t)(داده_Move>>UTRIE2_شاخص_لغزش);  /* null data block */
     }
 
     /* write UTF-8 2-byte index-2 values, not right-shifted */
-    for(i=0; i<(0xc2-0xc0); ++i) {                                  /* C0..C1 */
-        *dest16++=(uint16_t)(dataMove+UTRIE2_BAD_UTF8_DATA_OFFSET);
+    لكل(i=0; i<(0xc2-0xc0); ++i) {                                  /* C0..C1 */
+        *dest16++=(uint16_t)(داده_Move+UTRIE2_BAD_UTF8_داده_جابه_جایی);
     }
-    for(; i<(0xe0-0xc0); ++i) {                                     /* C2..DF */
-        *dest16++=(uint16_t)dataMove;
+    لكل(; i<(0xe0-0xc0); ++i) {                                     /* C2..DF */
+        *dest16++=(uint16_t)داده_Move;
     }
 
     /* write the 16/32-bit data array */
-    switch(valueBits) {
-    case UTRIE2_16_VALUE_BITS:
+    بدل(مقدار_بیتها) {
+    حالة UTRIE2_16_مقدار_بیتها:
         /* write 16-bit data values */
         trie->data16=dest16;
-        trie->data32=nullptr;
-        for(i=0; i<0x80; ++i) {
-            *dest16++=(uint16_t)initialValue;
+        trie->data32=اشاره_تهی;
+        لكل(i=0; i<0x80; ++i) {
+            *dest16++=(uint16_t)initial_مقدار;
         }
-        for(; i<0xc0; ++i) {
-            *dest16++=(uint16_t)errorValue;
+        لكل(; i<0xc0; ++i) {
+            *dest16++=(uint16_t)error_مقدار;
         }
         /* highValue and reserved values */
-        for(i=0; i<UTRIE2_DATA_GRANULARITY; ++i) {
-            *dest16++=(uint16_t)initialValue;
+        لكل(i=0; i<UTRIE2_داده_GRANULARITY; ++i) {
+            *dest16++=(uint16_t)initial_مقدار;
         }
-        break;
-    case UTRIE2_32_VALUE_BITS:
+        اكسر;
+    حالة UTRIE2_32_مقدار_بیتها:
         /* write 32-bit data values */
         p=(uint32_t *)dest16;
-        trie->data16=nullptr;
+        trie->data16=اشاره_تهی;
         trie->data32=p;
-        for(i=0; i<0x80; ++i) {
-            *p++=initialValue;
+        لكل(i=0; i<0x80; ++i) {
+            *p++=initial_مقدار;
         }
-        for(; i<0xc0; ++i) {
-            *p++=errorValue;
+        لكل(; i<0xc0; ++i) {
+            *p++=error_مقدار;
         }
         /* highValue and reserved values */
-        for(i=0; i<UTRIE2_DATA_GRANULARITY; ++i) {
-            *p++=initialValue;
+        لكل(i=0; i<UTRIE2_داده_GRANULARITY; ++i) {
+            *p++=initial_مقدار;
         }
-        break;
-    default:
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        اكسر;
+    افتراضي:
+        *p_Error_کد=U_ILLEGAL_آرگومان_ERROR;
+        أرجع اشاره_تهی;
     }
 
-    return trie;
+    أرجع trie;
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI فراغ U_EXPORT2
 utrie2_close(UTrie2 *trie) {
-    if(trie!=nullptr) {
-        if(trie->isMemoryOwned) {
-            uprv_free(trie->memory);
+    إذا(trie!=اشاره_تهی) {
+        إذا(trie->is_حافظه_Owned) {
+            uprv_free(trie->حافظه);
         }
-        if(trie->newTrie!=nullptr) {
-            uprv_free(trie->newTrie->data);
-#ifdef UCPTRIE_DEBUG
+        إذا(trie->newTrie!=اشاره_تهی) {
+            uprv_free(trie->newTrie->داده);
+#اگر_تعریف_شده UCPTRIE_DEBUG
             umutablecptrie_close(trie->newTrie->t3);
-#endif
+#پایان_اگر
             uprv_free(trie->newTrie);
         }
         uprv_free(trie);
@@ -388,42 +388,42 @@ utrie2_close(UTrie2 *trie) {
 }
 
 U_CAPI UBool U_EXPORT2
-utrie2_isFrozen(const UTrie2 *trie) {
-    return trie->newTrie==nullptr;
+utrie2_isFrozen(ثابت UTrie2 *trie) {
+    أرجع trie->newTrie==اشاره_تهی;
 }
 
 U_CAPI int32_t U_EXPORT2
-utrie2_serialize(const UTrie2 *trie,
-                 void *data, int32_t capacity,
-                 UErrorCode *pErrorCode) {
+utrie2_serialize(ثابت UTrie2 *trie,
+                 فراغ *داده, int32_t capacity,
+                 UError_کد *p_Error_کد) {
     /* argument check */
-    if(U_FAILURE(*pErrorCode)) {
-        return 0;
+    إذا(U_FAILURE(*p_Error_کد)) {
+        أرجع 0;
     }
 
-    if( trie==nullptr || trie->memory==nullptr || trie->newTrie!=nullptr ||
-        capacity<0 || (capacity>0 && (data==nullptr || (U_POINTER_MASK_LSB(data, 3)!=0)))
+    إذا( trie==اشاره_تهی || trie->حافظه==اشاره_تهی || trie->newTrie!=اشاره_تهی ||
+        capacity<0 || (capacity>0 && (داده==اشاره_تهی || (U_اشاره_گر_ماسک_LSB(داده, 3)!=0)))
     ) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        *p_Error_کد=U_ILLEGAL_آرگومان_ERROR;
+        أرجع 0;
     }
 
-    if(capacity>=trie->length) {
-        uprv_memcpy(data, trie->memory, trie->length);
-    } else {
-        *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+    إذا(capacity>=trie->length) {
+        uprv_memcpy(داده, trie->حافظه, trie->length);
+    } وإلا {
+        *p_Error_کد=U_میانگیر_سرریز_ERROR;
     }
-    return trie->length;
+    أرجع trie->length;
 }
 
 /* enumeration -------------------------------------------------------------- */
 
-#define MIN_VALUE(a, b) ((a)<(b) ? (a) : (b))
+#تعریف_کن MIN_مقدار(a, b) ((a)<(b) ? (a) : (b))
 
 /* default UTrie2EnumValue() returns the input value itself */
-static uint32_t U_CALLCONV
-enumSameValue(const void * /*context*/, uint32_t value) {
-    return value;
+ساكن uint32_t U_CALLCONV
+enum_Same_مقدار(ثابت فراغ * /*context*/, uint32_t value) {
+    أرجع value;
 }
 
 /**
@@ -439,148 +439,148 @@ enumSameValue(const void * /*context*/, uint32_t value) {
  * - Handle the null block specially because we know a priori that it is filled
  *   with a single value.
  */
-static void
-enumEitherTrie(const UTrie2 *trie,
-               UChar32 start, UChar32 limit,
-               UTrie2EnumValue *enumValue, UTrie2EnumRange *enumRange, const void *context) {
-    const uint32_t *data32;
-    const uint16_t *idx;
+ساكن فراغ
+enumEitherTrie(ثابت UTrie2 *trie,
+               UChar32 شروع, UChar32 حد,
+               UTrie2_Enum_مقدار *enum_مقدار, UTrie2EnumRange *enumRange, ثابت فراغ *context) {
+    ثابت uint32_t *data32;
+    ثابت uint16_t *idx;
 
-    uint32_t value, prevValue, initialValue;
-    UChar32 c, prev, highStart;
-    int32_t j, i2Block, prevI2Block, index2NullOffset, block, prevBlock, nullBlock;
+    uint32_t value, prev_مقدار, initial_مقدار;
+    UChar32 c, prev, بالا_شروع;
+    int32_t j, i2_بلوک, prev_I2_بلوک, index2_Null_جابه_جایی, بلوک, prev_بلوک, null_بلوک;
 
-    if(enumRange==nullptr) {
-        return;
+    إذا(enumRange==اشاره_تهی) {
+        أرجع;
     }
-    if(enumValue==nullptr) {
-        enumValue=enumSameValue;
+    إذا(enum_مقدار==اشاره_تهی) {
+        enum_مقدار=enum_Same_مقدار;
     }
 
-    if(trie->newTrie==nullptr) {
+    إذا(trie->newTrie==اشاره_تهی) {
         /* frozen trie */
-        idx=trie->index;
-        U_ASSERT(idx!=nullptr); /* the following code assumes trie->newTrie is not nullptr when idx is nullptr */
+        idx=trie->شاخص;
+        U_ASSERT(idx!=اشاره_تهی); /* the following code assumes trie->newTrie is not nullptr when idx is nullptr */
         data32=trie->data32;
 
-        index2NullOffset=trie->index2NullOffset;
-        nullBlock=trie->dataNullOffset;
-    } else {
+        index2_Null_جابه_جایی=trie->index2_Null_جابه_جایی;
+        null_بلوک=trie->داده_Null_جابه_جایی;
+    } وإلا {
         /* unfrozen, mutable trie */
-        idx=nullptr;
-        data32=trie->newTrie->data;
-        U_ASSERT(data32!=nullptr); /* the following code assumes idx is not nullptr when data32 is nullptr */
+        idx=اشاره_تهی;
+        data32=trie->newTrie->داده;
+        U_ASSERT(data32!=اشاره_تهی); /* the following code assumes idx is not nullptr when data32 is nullptr */
 
-        index2NullOffset=trie->newTrie->index2NullOffset;
-        nullBlock=trie->newTrie->dataNullOffset;
+        index2_Null_جابه_جایی=trie->newTrie->index2_Null_جابه_جایی;
+        null_بلوک=trie->newTrie->داده_Null_جابه_جایی;
     }
 
-    highStart=trie->highStart;
+    بالا_شروع=trie->بالا_شروع;
 
     /* get the enumeration value that corresponds to an initial-value trie data entry */
-    initialValue=enumValue(context, trie->initialValue);
+    initial_مقدار=enum_مقدار(context, trie->initial_مقدار);
 
     /* set variables for previous range */
-    prevI2Block=-1;
-    prevBlock=-1;
-    prev=start;
-    prevValue=0;
+    prev_I2_بلوک=-1;
+    prev_بلوک=-1;
+    prev=شروع;
+    prev_مقدار=0;
 
     /* enumerate index-2 blocks */
-    for(c=start; c<limit && c<highStart;) {
+    لكل(c=شروع; c<حد && c<بالا_شروع;) {
         /* Code point limit for iterating inside this i2Block. */
-        UChar32 tempLimit=c+UTRIE2_CP_PER_INDEX_1_ENTRY;
-        if(limit<tempLimit) {
-            tempLimit=limit;
+        UChar32 موقت_حد=c+UTRIE2_CP_در_هر_شاخص_1_مدخل;
+        إذا(حد<موقت_حد) {
+            موقت_حد=حد;
         }
-        if(c<=0xffff) {
-            if(!U_IS_SURROGATE(c)) {
-                i2Block=c>>UTRIE2_SHIFT_2;
-            } else if(U_IS_SURROGATE_LEAD(c)) {
+        إذا(c<=0xffff) {
+            إذا(!U_IS_SURROGATE(c)) {
+                i2_بلوک=c>>UTRIE2_لغزش_2;
+            } وإلا إذا(U_IS_SURROGATE_LEAD(c)) {
                 /*
                  * Enumerate values for lead surrogate code points, not code units:
                  * This special block has half the normal length.
                  */
-                i2Block=UTRIE2_LSCP_INDEX_2_OFFSET;
-                tempLimit=MIN_VALUE(0xdc00, limit);
-            } else {
+                i2_بلوک=UTRIE2_LSCP_شاخص_2_جابه_جایی;
+                موقت_حد=MIN_مقدار(0xdc00, حد);
+            } وإلا {
                 /*
                  * Switch back to the normal part of the index-2 table.
                  * Enumerate the second half of the surrogates block.
                  */
-                i2Block=0xd800>>UTRIE2_SHIFT_2;
-                tempLimit=MIN_VALUE(0xe000, limit);
+                i2_بلوک=0xd800>>UTRIE2_لغزش_2;
+                موقت_حد=MIN_مقدار(0xe000, حد);
             }
-        } else {
+        } وإلا {
             /* supplementary code points */
-            if(idx!=nullptr) {
-                i2Block=idx[(UTRIE2_INDEX_1_OFFSET-UTRIE2_OMITTED_BMP_INDEX_1_LENGTH)+
-                              (c>>UTRIE2_SHIFT_1)];
-            } else {
-                i2Block=trie->newTrie->index1[c>>UTRIE2_SHIFT_1];
+            إذا(idx!=اشاره_تهی) {
+                i2_بلوک=idx[(UTRIE2_شاخص_1_جابه_جایی-UTRIE2_OMITTED_BMP_شاخص_1_درازی)+
+                              (c>>UTRIE2_لغزش_1)];
+            } وإلا {
+                i2_بلوک=trie->newTrie->index1[c>>UTRIE2_لغزش_1];
             }
-            if(i2Block==prevI2Block && (c-prev)>=UTRIE2_CP_PER_INDEX_1_ENTRY) {
+            إذا(i2_بلوک==prev_I2_بلوک && (c-prev)>=UTRIE2_CP_در_هر_شاخص_1_مدخل) {
                 /*
                  * The index-2 block is the same as the previous one, and filled with prevValue.
                  * Only possible for supplementary code points because the linear-BMP index-2
                  * table creates unique i2Block values.
                  */
-                c+=UTRIE2_CP_PER_INDEX_1_ENTRY;
-                continue;
+                c+=UTRIE2_CP_در_هر_شاخص_1_مدخل;
+                استمر;
             }
         }
-        prevI2Block=i2Block;
-        if(i2Block==index2NullOffset) {
+        prev_I2_بلوک=i2_بلوک;
+        إذا(i2_بلوک==index2_Null_جابه_جایی) {
             /* this is the null index-2 block */
-            if(prevValue!=initialValue) {
-                if(prev<c && !enumRange(context, prev, c-1, prevValue)) {
-                    return;
+            إذا(prev_مقدار!=initial_مقدار) {
+                إذا(prev<c && !enumRange(context, prev, c-1, prev_مقدار)) {
+                    أرجع;
                 }
-                prevBlock=nullBlock;
+                prev_بلوک=null_بلوک;
                 prev=c;
-                prevValue=initialValue;
+                prev_مقدار=initial_مقدار;
             }
-            c+=UTRIE2_CP_PER_INDEX_1_ENTRY;
-        } else {
+            c+=UTRIE2_CP_در_هر_شاخص_1_مدخل;
+        } وإلا {
             /* enumerate data blocks for one index-2 block */
-            int32_t i2, i2Limit;
-            i2=(c>>UTRIE2_SHIFT_2)&UTRIE2_INDEX_2_MASK;
-            if((c>>UTRIE2_SHIFT_1)==(tempLimit>>UTRIE2_SHIFT_1)) {
-                i2Limit=(tempLimit>>UTRIE2_SHIFT_2)&UTRIE2_INDEX_2_MASK;
-            } else {
-                i2Limit=UTRIE2_INDEX_2_BLOCK_LENGTH;
+            int32_t i2, i2_حد;
+            i2=(c>>UTRIE2_لغزش_2)&UTRIE2_شاخص_2_ماسک;
+            إذا((c>>UTRIE2_لغزش_1)==(موقت_حد>>UTRIE2_لغزش_1)) {
+                i2_حد=(موقت_حد>>UTRIE2_لغزش_2)&UTRIE2_شاخص_2_ماسک;
+            } وإلا {
+                i2_حد=UTRIE2_شاخص_2_بلوک_درازی;
             }
-            for(; i2<i2Limit; ++i2) {
-                if(idx!=nullptr) {
-                    block = static_cast<int32_t>(idx[i2Block + i2]) << UTRIE2_INDEX_SHIFT;
-                } else {
-                    block=trie->newTrie->index2[i2Block+i2];
+            لكل(; i2<i2_حد; ++i2) {
+                إذا(idx!=اشاره_تهی) {
+                    بلوک = static_cast<int32_t>(idx[i2_بلوک + i2]) << UTRIE2_شاخص_لغزش;
+                } وإلا {
+                    بلوک=trie->newTrie->index2[i2_بلوک+i2];
                 }
-                if(block==prevBlock && (c-prev)>=UTRIE2_DATA_BLOCK_LENGTH) {
+                إذا(بلوک==prev_بلوک && (c-prev)>=UTRIE2_داده_بلوک_درازی) {
                     /* the block is the same as the previous one, and filled with prevValue */
-                    c+=UTRIE2_DATA_BLOCK_LENGTH;
-                    continue;
+                    c+=UTRIE2_داده_بلوک_درازی;
+                    استمر;
                 }
-                prevBlock=block;
-                if(block==nullBlock) {
+                prev_بلوک=بلوک;
+                إذا(بلوک==null_بلوک) {
                     /* this is the null data block */
-                    if(prevValue!=initialValue) {
-                        if(prev<c && !enumRange(context, prev, c-1, prevValue)) {
-                            return;
+                    إذا(prev_مقدار!=initial_مقدار) {
+                        إذا(prev<c && !enumRange(context, prev, c-1, prev_مقدار)) {
+                            أرجع;
                         }
                         prev=c;
-                        prevValue=initialValue;
+                        prev_مقدار=initial_مقدار;
                     }
-                    c+=UTRIE2_DATA_BLOCK_LENGTH;
-                } else {
-                    for(j=0; j<UTRIE2_DATA_BLOCK_LENGTH; ++j) {
-                        value=enumValue(context, data32!=nullptr ? data32[block+j] : idx[block+j]);
-                        if(value!=prevValue) {
-                            if(prev<c && !enumRange(context, prev, c-1, prevValue)) {
-                                return;
+                    c+=UTRIE2_داده_بلوک_درازی;
+                } وإلا {
+                    لكل(j=0; j<UTRIE2_داده_بلوک_درازی; ++j) {
+                        value=enum_مقدار(context, data32!=اشاره_تهی ? data32[بلوک+j] : idx[بلوک+j]);
+                        إذا(value!=prev_مقدار) {
+                            إذا(prev<c && !enumRange(context, prev, c-1, prev_مقدار)) {
+                                أرجع;
                             }
                             prev=c;
-                            prevValue=value;
+                            prev_مقدار=value;
                         }
                         ++c;
                     }
@@ -589,49 +589,49 @@ enumEitherTrie(const UTrie2 *trie,
         }
     }
 
-    if(c>limit) {
-        c=limit;  /* could be higher if in the index2NullOffset */
-    } else if(c<limit) {
+    إذا(c>حد) {
+        c=حد;  /* could be higher if in the index2NullOffset */
+    } وإلا إذا(c<حد) {
         /* c==highStart<limit */
-        uint32_t highValue;
-        if(idx!=nullptr) {
-            highValue=
-                data32!=nullptr ?
-                    data32[trie->highValueIndex] :
-                    idx[trie->highValueIndex];
-        } else {
-            highValue=trie->newTrie->data[trie->newTrie->dataLength-UTRIE2_DATA_GRANULARITY];
+        uint32_t بالا_مقدار;
+        إذا(idx!=اشاره_تهی) {
+            بالا_مقدار=
+                data32!=اشاره_تهی ?
+                    data32[trie->بالا_مقدار_شاخص] :
+                    idx[trie->بالا_مقدار_شاخص];
+        } وإلا {
+            بالا_مقدار=trie->newTrie->داده[trie->newTrie->داده_درازی-UTRIE2_داده_GRANULARITY];
         }
-        value=enumValue(context, highValue);
-        if(value!=prevValue) {
-            if(prev<c && !enumRange(context, prev, c-1, prevValue)) {
-                return;
+        value=enum_مقدار(context, بالا_مقدار);
+        إذا(value!=prev_مقدار) {
+            إذا(prev<c && !enumRange(context, prev, c-1, prev_مقدار)) {
+                أرجع;
             }
             prev=c;
-            prevValue=value;
+            prev_مقدار=value;
         }
-        c=limit;
+        c=حد;
     }
 
     /* deliver last range */
-    enumRange(context, prev, c-1, prevValue);
+    enumRange(context, prev, c-1, prev_مقدار);
 }
 
-U_CAPI void U_EXPORT2
-utrie2_enum(const UTrie2 *trie,
-            UTrie2EnumValue *enumValue, UTrie2EnumRange *enumRange, const void *context) {
-    enumEitherTrie(trie, 0, 0x110000, enumValue, enumRange, context);
+U_CAPI فراغ U_EXPORT2
+utrie2_enum(ثابت UTrie2 *trie,
+            UTrie2_Enum_مقدار *enum_مقدار, UTrie2EnumRange *enumRange, ثابت فراغ *context) {
+    enumEitherTrie(trie, 0, 0x110000, enum_مقدار, enumRange, context);
 }
 
-U_CAPI void U_EXPORT2
-utrie2_enumForLeadSurrogate(const UTrie2 *trie, UChar32 lead,
-                            UTrie2EnumValue *enumValue, UTrie2EnumRange *enumRange,
-                            const void *context) {
-    if(!U16_IS_LEAD(lead)) {
-        return;
+U_CAPI فراغ U_EXPORT2
+utrie2_enumForLeadSurrogate(ثابت UTrie2 *trie, UChar32 lead,
+                            UTrie2_Enum_مقدار *enum_مقدار, UTrie2EnumRange *enumRange,
+                            ثابت فراغ *context) {
+    إذا(!U16_IS_LEAD(lead)) {
+        أرجع;
     }
     lead=(lead-0xd7c0)<<10;   /* start code point */
-    enumEitherTrie(trie, lead, lead+0x400, enumValue, enumRange, context);
+    enumEitherTrie(trie, lead, lead+0x400, enum_مقدار, enumRange, context);
 }
 
 /* C++ convenience wrappers ------------------------------------------------- */
@@ -639,25 +639,25 @@ utrie2_enumForLeadSurrogate(const UTrie2 *trie, UChar32 lead,
 U_NAMESPACE_BEGIN
 
 uint16_t BackwardUTrie2StringIterator::previous16() {
-    codePointLimit=codePointStart;
-    if(start>=codePointStart) {
-        codePoint=U_SENTINEL;
-        return static_cast<uint16_t>(trie->errorValue);
+    کد_نقطه_حد=کد_نقطه_شروع;
+    إذا(شروع>=کد_نقطه_شروع) {
+        کد_نقطه=U_SENTINEL;
+        أرجع static_cast<uint16_t>(trie->error_مقدار);
     }
-    uint16_t result;
-    UTRIE2_U16_PREV16(trie, start, codePointStart, codePoint, result);
-    return result;
+    uint16_t نتیجه;
+    UTRIE2_U16_PREV16(trie, شروع, کد_نقطه_شروع, کد_نقطه, نتیجه);
+    أرجع نتیجه;
 }
 
 uint16_t ForwardUTrie2StringIterator::next16() {
-    codePointStart=codePointLimit;
-    if(codePointLimit==limit) {
-        codePoint=U_SENTINEL;
-        return static_cast<uint16_t>(trie->errorValue);
+    کد_نقطه_شروع=کد_نقطه_حد;
+    إذا(کد_نقطه_حد==حد) {
+        کد_نقطه=U_SENTINEL;
+        أرجع static_cast<uint16_t>(trie->error_مقدار);
     }
-    uint16_t result;
-    UTRIE2_U16_NEXT16(trie, codePointLimit, limit, codePoint, result);
-    return result;
+    uint16_t نتیجه;
+    UTRIE2_U16_NEXT16(trie, کد_نقطه_حد, حد, کد_نقطه, نتیجه);
+    أرجع نتیجه;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_انتها

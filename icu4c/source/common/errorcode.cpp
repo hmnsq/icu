@@ -16,27 +16,27 @@
 *   created by: Markus W. Scherer
 */
 
-#include "unicode/utypes.h"
-#include "unicode/errorcode.h"
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/errorcode.h"
 
 U_NAMESPACE_BEGIN
 
-ErrorCode::~ErrorCode() {}
+Error_کد::~Error_کد() {}
 
-UErrorCode ErrorCode::reset() {
-    UErrorCode code = errorCode;
-    errorCode = U_ZERO_ERROR;
-    return code;
+UError_کد Error_کد::reset() {
+    UError_کد کد = error_کد;
+    error_کد = U_ZERO_ERROR;
+    أرجع کد;
 }
 
-void ErrorCode::assertSuccess() const {
-    if(isFailure()) {
+فراغ Error_کد::assertSuccess() ثابت {
+    إذا(isFailure()) {
         handleFailure();
     }
 }
 
-const char* ErrorCode::errorName() const {
-  return u_errorName(errorCode);
+ثابت حرف* Error_کد::errorName() ثابت {
+  أرجع u_errorName(error_کد);
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_انتها

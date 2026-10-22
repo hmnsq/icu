@@ -18,12 +18,12 @@
 */
 
 
-#ifndef ICUPLUGIMP_H
-#define ICUPLUGIMP_H
+#اگر_تعریف_نشده ICUPLUGIMP_H
+#تعریف_کن ICUPLUGIMP_H
 
-#include "unicode/icuplug.h"
+#ضمن "unicode/icuplug.h"
 
-#if UCONFIG_ENABLE_PLUGINS
+#إذا UCONFIG_ENABLE_PLUGINS
 
 /*========================*/
 /** @{ Library Manipulation  
@@ -36,8 +36,8 @@
  * @return the library pointer, or NULL
  * @internal internal use only
  */
-U_CAPI void * U_EXPORT2
-uplug_openLibrary(const char *libName, UErrorCode *status);
+U_CAPI فراغ * U_EXPORT2
+uplug_openLibrary(ثابت حرف *libName, UError_کد *وضعیت);
 
 /**
  * Close a library, if its reference count is 0
@@ -45,8 +45,8 @@ uplug_openLibrary(const char *libName, UErrorCode *status);
  * @param status error code
  * @internal internal use only
  */
-U_CAPI void U_EXPORT2
-uplug_closeLibrary(void *lib, UErrorCode *status);
+U_CAPI فراغ U_EXPORT2
+uplug_closeLibrary(فراغ *lib, UError_کد *وضعیت);
 
 /**
  * Get a library's name, or NULL if not found.
@@ -55,8 +55,8 @@ uplug_closeLibrary(void *lib, UErrorCode *status);
  * @return the library name, or NULL if not found.
  * @internal internal use only
  */
-U_CAPI  char * U_EXPORT2
-uplug_findLibrary(void *lib, UErrorCode *status);
+U_CAPI  حرف * U_EXPORT2
+uplug_پیدا_کن_Library(فراغ *lib, UError_کد *وضعیت);
 
 /** @} */
 
@@ -69,25 +69,25 @@ uplug_findLibrary(void *lib, UErrorCode *status);
  * @param status error result
  * @internal - Internal use only.
  */
-U_CAPI void U_EXPORT2
-uplug_init(UErrorCode *status);
+U_CAPI فراغ U_EXPORT2
+uplug_init(UError_کد *وضعیت);
 
 /**
  * Get raw plug N
  * @internal - Internal use only
  */ 
-U_CAPI UPlugData* U_EXPORT2
-uplug_getPlugInternal(int32_t n);
+U_CAPI UPlug_داده* U_EXPORT2
+uplug_get_Plug_داخلی(int32_t n);
 
 /**
  * Get the name of the plugin file. 
  * @internal - Internal use only.
  */
-U_CAPI const char* U_EXPORT2
-uplug_getPluginFile(void);
+U_CAPI ثابت حرف* U_EXPORT2
+uplug_getPluginFile(فراغ);
 
 /** @} */
 
-#endif
+#پایان_اگر
 
-#endif
+#پایان_اگر

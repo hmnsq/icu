@@ -18,20 +18,20 @@
 *   Character conversion functions moved here from unistr.cpp
 */
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#إذا !UCONFIG_NO_CONVERSION
 
-#include "unicode/putil.h"
-#include "cstring.h"
-#include "cmemory.h"
-#include "unicode/ustring.h"
-#include "unicode/unistr.h"
-#include "unicode/ucnv.h"
-#include "ucnv_imp.h"
-#include "putilimp.h"
-#include "ustr_cnv.h"
-#include "ustr_imp.h"
+#ضمن "unicode/putil.h"
+#ضمن "cstring.h"
+#ضمن "cmemory.h"
+#ضمن "unicode/ustring.h"
+#ضمن "unicode/unistr.h"
+#ضمن "unicode/ucnv.h"
+#ضمن "ucnv_imp.h"
+#ضمن "putilimp.h"
+#ضمن "ustr_cnv.h"
+#ضمن "ustr_imp.h"
 
 U_NAMESPACE_BEGIN
 
@@ -39,74 +39,74 @@ U_NAMESPACE_BEGIN
 // Constructors
 //========================================
 
-#if !U_CHARSET_IS_UTF8
+#إذا !U_CHARSET_IS_UTF8
 
-UnicodeString::UnicodeString(const char *codepageData) {
-    fUnion.fFields.fLengthAndFlags = kShortString;
-    if(codepageData != 0) {
-        doCodepageCreate(codepageData, (int32_t)uprv_strlen(codepageData), 0);
+UnicodeString::UnicodeString(ثابت حرف *codepage_داده) {
+    fUnion.fFields.f_درازی_And_Flags = kShortString;
+    إذا(codepage_داده != 0) {
+        doCodepageCreate(codepage_داده, (int32_t)uprv_strlen(codepage_داده), 0);
     }
 }
 
-UnicodeString::UnicodeString(const char *codepageData,
-                             int32_t dataLength) {
-    fUnion.fFields.fLengthAndFlags = kShortString;
-    if(codepageData != 0) {
-        doCodepageCreate(codepageData, dataLength, 0);
+UnicodeString::UnicodeString(ثابت حرف *codepage_داده,
+                             int32_t داده_درازی) {
+    fUnion.fFields.f_درازی_And_Flags = kShortString;
+    إذا(codepage_داده != 0) {
+        doCodepageCreate(codepage_داده, داده_درازی, 0);
     }
 }
 
 // else see unistr.cpp
-#endif
+#پایان_اگر
 
-UnicodeString::UnicodeString(const char *codepageData,
-                             const char *codepage) {
-    fUnion.fFields.fLengthAndFlags = kShortString;
-    if (codepageData != nullptr) {
-        doCodepageCreate(codepageData, static_cast<int32_t>(uprv_strlen(codepageData)), codepage);
+UnicodeString::UnicodeString(ثابت حرف *codepage_داده,
+                             ثابت حرف *codepage) {
+    fUnion.fFields.f_درازی_And_Flags = kShortString;
+    إذا (codepage_داده != اشاره_تهی) {
+        doCodepageCreate(codepage_داده, static_cast<int32_t>(uprv_strlen(codepage_داده)), codepage);
     }
 }
 
-UnicodeString::UnicodeString(const char *codepageData,
-                             int32_t dataLength,
-                             const char *codepage) {
-    fUnion.fFields.fLengthAndFlags = kShortString;
-    if (codepageData != nullptr) {
-        doCodepageCreate(codepageData, dataLength, codepage);
+UnicodeString::UnicodeString(ثابت حرف *codepage_داده,
+                             int32_t داده_درازی,
+                             ثابت حرف *codepage) {
+    fUnion.fFields.f_درازی_And_Flags = kShortString;
+    إذا (codepage_داده != اشاره_تهی) {
+        doCodepageCreate(codepage_داده, داده_درازی, codepage);
     }
 }
 
-UnicodeString::UnicodeString(const char *src, int32_t srcLength,
+UnicodeString::UnicodeString(ثابت حرف *src, int32_t src_درازی,
                              UConverter *cnv,
-                             UErrorCode &errorCode) {
-    fUnion.fFields.fLengthAndFlags = kShortString;
-    if(U_SUCCESS(errorCode)) {
+                             UError_کد &error_کد) {
+    fUnion.fFields.f_درازی_And_Flags = kShortString;
+    إذا(U_SUCCESS(error_کد)) {
         // check arguments
-        if(src==nullptr) {
+        إذا(src==اشاره_تهی) {
             // treat as an empty string, do nothing more
-        } else if(srcLength<-1) {
-            errorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        } else {
+        } وإلا إذا(src_درازی<-1) {
+            error_کد=U_ILLEGAL_آرگومان_ERROR;
+        } وإلا {
             // get input length
-            if(srcLength==-1) {
-                srcLength = static_cast<int32_t>(uprv_strlen(src));
+            إذا(src_درازی==-1) {
+                src_درازی = static_cast<int32_t>(uprv_strlen(src));
             }
-            if(srcLength>0) {
-                if (cnv != nullptr) {
+            إذا(src_درازی>0) {
+                إذا (cnv != اشاره_تهی) {
                     // use the provided converter
-                    ucnv_resetToUnicode(cnv);
-                    doCodepageCreate(src, srcLength, cnv, errorCode);
-                } else {
+                    ucnv_reset_مقصد_Unicode(cnv);
+                    doCodepageCreate(src, src_درازی, cnv, error_کد);
+                } وإلا {
                     // use the default converter
-                    cnv=u_getDefaultConverter(&errorCode);
-                    doCodepageCreate(src, srcLength, cnv, errorCode);
+                    cnv=u_getDefaultConverter(&error_کد);
+                    doCodepageCreate(src, src_درازی, cnv, error_کد);
                     u_releaseDefaultConverter(cnv);
                 }
             }
         }
 
-        if(U_FAILURE(errorCode)) {
-            setToBogus();
+        إذا(U_FAILURE(error_کد)) {
+            مجموعه_مقصد_Bogus();
         }
     }
 }
@@ -115,33 +115,33 @@ UnicodeString::UnicodeString(const char *src, int32_t srcLength,
 // Codeset conversion
 //========================================
 
-#if !U_CHARSET_IS_UTF8
+#إذا !U_CHARSET_IS_UTF8
 
 int32_t
-UnicodeString::extract(int32_t start,
+UnicodeString::extract(int32_t شروع,
                        int32_t length,
-                       char *target,
-                       uint32_t dstSize) const {
-    return extract(start, length, target, dstSize, 0);
+                       حرف *هدف,
+                       uint32_t dst_اندازه) ثابت {
+    أرجع extract(شروع, length, هدف, dst_اندازه, 0);
 }
 
 // else see unistr.cpp
-#endif
+#پایان_اگر
 
 int32_t
-UnicodeString::extract(int32_t start,
+UnicodeString::extract(int32_t شروع,
                        int32_t length,
-                       char *target,
-                       uint32_t dstSize,
-                       const char *codepage) const
+                       حرف *هدف,
+                       uint32_t dst_اندازه,
+                       ثابت حرف *codepage) ثابت
 {
     // if the arguments are illegal, then do nothing
-    if (/*dstSize < 0 || */(dstSize > 0 && target == nullptr)) {
-        return 0;
+    إذا (/*dstSize < 0 || */(dst_اندازه > 0 && هدف == اشاره_تهی)) {
+        أرجع 0;
     }
 
     // pin the indices to legal values
-    pinIndices(start, length);
+    pinIndices(شروع, length);
 
     // We need to cast dstSize to int32_t for all subsequent code.
     // I don't know why the API was defined with uint32_t but we are stuck with it.
@@ -149,274 +149,274 @@ UnicodeString::extract(int32_t start,
     // as a limit in some functions, it may wrap around and yield a pointer
     // that compares less-than target.
     int32_t capacity;
-    if(dstSize < 0x7fffffff) {
+    إذا(dst_اندازه < 0x7fffffff) {
         // Assume that the capacity is real and a limit pointer won't wrap around.
-        capacity = static_cast<int32_t>(dstSize);
-    } else {
+        capacity = static_cast<int32_t>(dst_اندازه);
+    } وإلا {
         // Pin the capacity so that a limit pointer does not wrap around.
-        char* targetLimit = static_cast<char*>(U_MAX_PTR(target));
+        حرف* هدف_حد = static_cast<حرف*>(U_MAX_PTR(هدف));
         // U_MAX_PTR(target) returns a targetLimit that is at most 0x7fffffff
         // greater than target and does not wrap around the top of the address space.
-        capacity = static_cast<int32_t>(targetLimit - target);
+        capacity = static_cast<int32_t>(هدف_حد - هدف);
     }
 
     // create the converter
     UConverter *converter;
-    UErrorCode status = U_ZERO_ERROR;
+    UError_کد وضعیت = U_ZERO_ERROR;
 
     // just write the NUL if the string length is 0
-    if(length == 0) {
-        return u_terminateChars(target, capacity, 0, &status);
+    إذا(length == 0) {
+        أرجع u_terminateChars(هدف, capacity, 0, &وضعیت);
     }
 
     // if the codepage is the default, use our cache
     // if it is an empty string, then use the "invariant character" conversion
-    if (codepage == nullptr) {
-        const char *defaultName = ucnv_getDefaultName();
-        if(UCNV_FAST_IS_UTF8(defaultName)) {
-            return toUTF8(start, length, target, capacity);
+    إذا (codepage == اشاره_تهی) {
+        ثابت حرف *defaultName = ucnv_getDefaultName();
+        إذا(UCNV_FAST_IS_UTF8(defaultName)) {
+            أرجع مقصد_UTF8(شروع, length, هدف, capacity);
         }
-        converter = u_getDefaultConverter(&status);
-    } else if (*codepage == 0) {
+        converter = u_getDefaultConverter(&وضعیت);
+    } وإلا إذا (*codepage == 0) {
         // use the "invariant characters" conversion
-        int32_t destLength;
-        if(length <= capacity) {
-            destLength = length;
-        } else {
-            destLength = capacity;
+        int32_t dest_درازی;
+        إذا(length <= capacity) {
+            dest_درازی = length;
+        } وإلا {
+            dest_درازی = capacity;
         }
-        u_UCharsToChars(getArrayStart() + start, target, destLength);
-        return u_terminateChars(target, capacity, length, &status);
-    } else {
-        converter = ucnv_open(codepage, &status);
+        u_UChars_مقصد_Chars(get_Array_شروع() + شروع, هدف, dest_درازی);
+        أرجع u_terminateChars(هدف, capacity, length, &وضعیت);
+    } وإلا {
+        converter = ucnv_open(codepage, &وضعیت);
     }
 
-    length = doExtract(start, length, target, capacity, converter, status);
+    length = do_استخراج(شروع, length, هدف, capacity, converter, وضعیت);
 
     // close the converter
-    if (codepage == nullptr) {
+    إذا (codepage == اشاره_تهی) {
         u_releaseDefaultConverter(converter);
-    } else {
+    } وإلا {
         ucnv_close(converter);
     }
 
-    return length;
+    أرجع length;
 }
 
 int32_t
-UnicodeString::extract(char *dest, int32_t destCapacity,
+UnicodeString::extract(حرف *dest, int32_t dest_ظرفیت,
                        UConverter *cnv,
-                       UErrorCode &errorCode) const
+                       UError_کد &error_کد) ثابت
 {
-    if(U_FAILURE(errorCode)) {
-        return 0;
+    إذا(U_FAILURE(error_کد)) {
+        أرجع 0;
     }
 
-    if (isBogus() || destCapacity < 0 || (destCapacity > 0 && dest == nullptr)) {
-        errorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    إذا (isBogus() || dest_ظرفیت < 0 || (dest_ظرفیت > 0 && dest == اشاره_تهی)) {
+        error_کد=U_ILLEGAL_آرگومان_ERROR;
+        أرجع 0;
     }
 
     // nothing to do?
-    if(isEmpty()) {
-        return u_terminateChars(dest, destCapacity, 0, &errorCode);
+    إذا(is_خالی()) {
+        أرجع u_terminateChars(dest, dest_ظرفیت, 0, &error_کد);
     }
 
     // get the converter
     UBool isDefaultConverter;
-    if (cnv == nullptr) {
-        isDefaultConverter=true;
-        cnv=u_getDefaultConverter(&errorCode);
-        if(U_FAILURE(errorCode)) {
-            return 0;
+    إذا (cnv == اشاره_تهی) {
+        isDefaultConverter=درست;
+        cnv=u_getDefaultConverter(&error_کد);
+        إذا(U_FAILURE(error_کد)) {
+            أرجع 0;
         }
-    } else {
-        isDefaultConverter=false;
+    } وإلا {
+        isDefaultConverter=خطأ;
         ucnv_resetFromUnicode(cnv);
     }
 
     // convert
-    int32_t len=doExtract(0, length(), dest, destCapacity, cnv, errorCode);
+    int32_t len=do_استخراج(0, length(), dest, dest_ظرفیت, cnv, error_کد);
 
     // release the converter
-    if(isDefaultConverter) {
+    إذا(isDefaultConverter) {
         u_releaseDefaultConverter(cnv);
     }
 
-    return len;
+    أرجع len;
 }
 
 int32_t
-UnicodeString::doExtract(int32_t start, int32_t length,
-                         char *dest, int32_t destCapacity,
+UnicodeString::do_استخراج(int32_t شروع, int32_t length,
+                         حرف *dest, int32_t dest_ظرفیت,
                          UConverter *cnv,
-                         UErrorCode &errorCode) const
+                         UError_کد &error_کد) ثابت
 {
-    if(U_FAILURE(errorCode)) {
-        if(destCapacity!=0) {
+    إذا(U_FAILURE(error_کد)) {
+        إذا(dest_ظرفیت!=0) {
             *dest=0;
         }
-        return 0;
+        أرجع 0;
     }
 
-    const char16_t *src=getArrayStart()+start, *srcLimit=src+length;
-    char *originalDest=dest;
-    const char *destLimit;
+    ثابت char16_t *src=get_Array_شروع()+شروع, *src_حد=src+length;
+    حرف *originalDest=dest;
+    ثابت حرف *dest_حد;
 
-    if(destCapacity==0) {
-        destLimit=dest=nullptr;
-    } else if(destCapacity==-1) {
+    إذا(dest_ظرفیت==0) {
+        dest_حد=dest=اشاره_تهی;
+    } وإلا إذا(dest_ظرفیت==-1) {
         // Pin the limit to U_MAX_PTR if the "magic" destCapacity is used.
-        destLimit = static_cast<char*>(U_MAX_PTR(dest));
+        dest_حد = static_cast<حرف*>(U_MAX_PTR(dest));
         // for NUL-termination, translate into highest int32_t
-        destCapacity=0x7fffffff;
-    } else {
-        destLimit=dest+destCapacity;
+        dest_ظرفیت=0x7fffffff;
+    } وإلا {
+        dest_حد=dest+dest_ظرفیت;
     }
 
     // perform the conversion
-    UErrorCode bufferStatus = U_ZERO_ERROR;
-    ucnv_fromUnicode(cnv, &dest, destLimit, &src, srcLimit, nullptr, true, &bufferStatus);
+    UError_کد میانگیر_وضعیت = U_ZERO_ERROR;
+    ucnv_fromUnicode(cnv, &dest, dest_حد, &src, src_حد, اشاره_تهی, درست, &میانگیر_وضعیت);
     length = static_cast<int32_t>(dest - originalDest);
 
     // if an overflow occurs, then get the preflighting length
-    if(bufferStatus==U_BUFFER_OVERFLOW_ERROR) {
-        char buffer[1024];
+    إذا(میانگیر_وضعیت==U_میانگیر_سرریز_ERROR) {
+        حرف میانگیر[1024];
 
-        destLimit=buffer+sizeof(buffer);
-        do {
-            dest=buffer;
-            bufferStatus=U_ZERO_ERROR;
-            ucnv_fromUnicode(cnv, &dest, destLimit, &src, srcLimit, nullptr, true, &bufferStatus);
-            length += static_cast<int32_t>(dest - buffer);
-        } while(bufferStatus==U_BUFFER_OVERFLOW_ERROR);
+        dest_حد=میانگیر+حجم(میانگیر);
+        افعل {
+            dest=میانگیر;
+            میانگیر_وضعیت=U_ZERO_ERROR;
+            ucnv_fromUnicode(cnv, &dest, dest_حد, &src, src_حد, اشاره_تهی, درست, &میانگیر_وضعیت);
+            length += static_cast<int32_t>(dest - میانگیر);
+        } طالما(میانگیر_وضعیت==U_میانگیر_سرریز_ERROR);
     }
-    if (U_FAILURE(bufferStatus)) {
-        errorCode = bufferStatus;
+    إذا (U_FAILURE(میانگیر_وضعیت)) {
+        error_کد = میانگیر_وضعیت;
     }
 
-    return u_terminateChars(originalDest, destCapacity, length, &errorCode);
+    أرجع u_terminateChars(originalDest, dest_ظرفیت, length, &error_کد);
 }
 
-void
-UnicodeString::doCodepageCreate(const char *codepageData,
-                                int32_t dataLength,
-                                const char *codepage)
+فراغ
+UnicodeString::doCodepageCreate(ثابت حرف *codepage_داده,
+                                int32_t داده_درازی,
+                                ثابت حرف *codepage)
 {
     // if there's nothing to convert, do nothing
-    if (codepageData == nullptr || dataLength == 0 || dataLength < -1) {
-        return;
+    إذا (codepage_داده == اشاره_تهی || داده_درازی == 0 || داده_درازی < -1) {
+        أرجع;
     }
-    if(dataLength == -1) {
-        dataLength = static_cast<int32_t>(uprv_strlen(codepageData));
+    إذا(داده_درازی == -1) {
+        داده_درازی = static_cast<int32_t>(uprv_strlen(codepage_داده));
     }
 
-    UErrorCode status = U_ZERO_ERROR;
+    UError_کد وضعیت = U_ZERO_ERROR;
 
     // create the converter
     // if the codepage is the default, use our cache
     // if it is an empty string, then use the "invariant character" conversion
     UConverter *converter;
-    if (codepage == nullptr) {
-        const char *defaultName = ucnv_getDefaultName();
-        if(UCNV_FAST_IS_UTF8(defaultName)) {
-            setToUTF8(StringPiece(codepageData, dataLength));
-            return;
+    إذا (codepage == اشاره_تهی) {
+        ثابت حرف *defaultName = ucnv_getDefaultName();
+        إذا(UCNV_FAST_IS_UTF8(defaultName)) {
+            مجموعه_مقصد_UTF8(StringPiece(codepage_داده, داده_درازی));
+            أرجع;
         }
-        converter = u_getDefaultConverter(&status);
-    } else if (*codepage == 0) {
+        converter = u_getDefaultConverter(&وضعیت);
+    } وإلا إذا (*codepage == 0) {
         // use the "invariant characters" conversion
-        if(cloneArrayIfNeeded(dataLength, dataLength, false)) {
-            u_charsToUChars(codepageData, getArrayStart(), dataLength);
-            setLength(dataLength);
-        } else {
-            setToBogus();
+        إذا(cloneArrayIfNeeded(داده_درازی, داده_درازی, خطأ)) {
+            u_chars_مقصد_UChars(codepage_داده, get_Array_شروع(), داده_درازی);
+            مجموعه_درازی(داده_درازی);
+        } وإلا {
+            مجموعه_مقصد_Bogus();
         }
-        return;
-    } else {
-        converter = ucnv_open(codepage, &status);
+        أرجع;
+    } وإلا {
+        converter = ucnv_open(codepage, &وضعیت);
     }
 
     // if we failed, set the appropriate flags and return
-    if(U_FAILURE(status)) {
-        setToBogus();
-        return;
+    إذا(U_FAILURE(وضعیت)) {
+        مجموعه_مقصد_Bogus();
+        أرجع;
     }
 
     // perform the conversion
-    doCodepageCreate(codepageData, dataLength, converter, status);
-    if(U_FAILURE(status)) {
-        setToBogus();
+    doCodepageCreate(codepage_داده, داده_درازی, converter, وضعیت);
+    إذا(U_FAILURE(وضعیت)) {
+        مجموعه_مقصد_Bogus();
     }
 
     // close the converter
-    if (codepage == nullptr) {
+    إذا (codepage == اشاره_تهی) {
         u_releaseDefaultConverter(converter);
-    } else {
+    } وإلا {
         ucnv_close(converter);
     }
 }
 
-void
-UnicodeString::doCodepageCreate(const char *codepageData,
-                                int32_t dataLength,
+فراغ
+UnicodeString::doCodepageCreate(ثابت حرف *codepage_داده,
+                                int32_t داده_درازی,
                                 UConverter *converter,
-                                UErrorCode &status)
+                                UError_کد &وضعیت)
 {
-    if(U_FAILURE(status)) {
-        return;
+    إذا(U_FAILURE(وضعیت)) {
+        أرجع;
     }
 
     // set up the conversion parameters
-    const char *mySource     = codepageData;
-    const char *mySourceEnd  = mySource + dataLength;
-    char16_t *array, *myTarget;
+    ثابت حرف *my_منبع     = codepage_داده;
+    ثابت حرف *my_منبع_انتها  = my_منبع + داده_درازی;
+    char16_t *array, *my_هدف;
 
     // estimate the size needed:
-    int32_t arraySize;
-    if(dataLength <= US_STACKBUF_SIZE) {
+    int32_t array_اندازه;
+    إذا(داده_درازی <= US_STACKBUF_اندازه) {
         // try to use the stack buffer
-        arraySize = US_STACKBUF_SIZE;
-    } else {
+        array_اندازه = US_STACKBUF_اندازه;
+    } وإلا {
         // 1.25 char16_t's per source byte should cover most cases
-        arraySize = dataLength + (dataLength >> 2);
+        array_اندازه = داده_درازی + (داده_درازی >> 2);
     }
 
     // we do not care about the current contents
-    UBool doCopyArray = false;
-    for(;;) {
-        if(!cloneArrayIfNeeded(arraySize, arraySize, doCopyArray)) {
-            setToBogus();
-            break;
+    UBool doCopyArray = خطأ;
+    لكل(;;) {
+        إذا(!cloneArrayIfNeeded(array_اندازه, array_اندازه, doCopyArray)) {
+            مجموعه_مقصد_Bogus();
+            اكسر;
         }
 
         // perform the conversion
-        array = getArrayStart();
-        myTarget = array + length();
-        UErrorCode bufferStatus = U_ZERO_ERROR;
-        ucnv_toUnicode(converter, &myTarget,  array + getCapacity(),
-            &mySource, mySourceEnd, nullptr, true, &bufferStatus);
+        array = get_Array_شروع();
+        my_هدف = array + length();
+        UError_کد میانگیر_وضعیت = U_ZERO_ERROR;
+        ucnv_مقصد_Unicode(converter, &my_هدف,  array + get_ظرفیت(),
+            &my_منبع, my_منبع_انتها, اشاره_تهی, درست, &میانگیر_وضعیت);
 
         // update the conversion parameters
-        setLength(static_cast<int32_t>(myTarget - array));
+        مجموعه_درازی(static_cast<int32_t>(my_هدف - array));
 
         // allocate more space and copy data, if needed
-        if(bufferStatus == U_BUFFER_OVERFLOW_ERROR) {
+        إذا(میانگیر_وضعیت == U_میانگیر_سرریز_ERROR) {
             // keep the previous conversion results
-            doCopyArray = true;
+            doCopyArray = درست;
 
             // estimate the new size needed, larger than before
             // try 2 char16_t's per remaining source byte
-            arraySize = static_cast<int32_t>(length() + 2 * (mySourceEnd - mySource));
-        } else {
-            if (U_FAILURE(bufferStatus)) {
-                status = bufferStatus;
+            array_اندازه = static_cast<int32_t>(length() + 2 * (my_منبع_انتها - my_منبع));
+        } وإلا {
+            إذا (U_FAILURE(میانگیر_وضعیت)) {
+                وضعیت = میانگیر_وضعیت;
             }
-            break;
+            اكسر;
         }
     }
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_انتها
 
-#endif
+#پایان_اگر

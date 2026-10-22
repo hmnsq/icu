@@ -9,15 +9,15 @@
 *******************************************************************************
 */
 
-#ifndef STRENUM_H
-#define STRENUM_H
+#اگر_تعریف_نشده STRENUM_H
+#تعریف_کن STRENUM_H
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#إذا U_SHOW_CPLUSPLUS_API
 
-#include "unicode/uobject.h"
-#include "unicode/unistr.h"
+#ضمن "unicode/uobject.h"
+#ضمن "unicode/unistr.h"
 
 /**
  * \file 
@@ -58,13 +58,13 @@ U_NAMESPACE_BEGIN
  *
  * @stable ICU 2.4 
  */
-class U_COMMON_API StringEnumeration : public UObject { 
-public:
+class U_COMMON_API StringEnumeration : عام UObject { 
+عام:
     /**
      * Destructor.
      * @stable ICU 2.4
      */
-    virtual ~StringEnumeration();
+    مجازی ~StringEnumeration();
 
     /**
      * Clone this object, an instance of a subclass of StringEnumeration.
@@ -78,7 +78,7 @@ public:
      * @see getDynamicClassID
      * @stable ICU 2.8
      */
-    virtual StringEnumeration *clone() const;
+    مجازی StringEnumeration *clone() ثابت;
 
     /**
      * <p>Return the number of elements that the iterator traverses.  If
@@ -97,7 +97,7 @@ public:
      * @return number of elements in the iterator.
      *
      * @stable ICU 2.4 */
-    virtual int32_t count(UErrorCode& status) const = 0;
+    مجازی int32_t شمار(UError_کد& وضعیت) ثابت = 0;
 
     /**
      * <p>Returns the next element as a NUL-terminated char*.  If there
@@ -129,7 +129,7 @@ public:
      *
      * @stable ICU 2.4 
      */
-    virtual const char* next(int32_t* resultLength, UErrorCode& status) U_LIFETIME_BOUND;
+    مجازی ثابت حرف* بعدی(int32_t* نتیجه_درازی, UError_کد& وضعیت) U_LIFETIME_BOUND;
 
     /**
      * <p>Returns the next element as a NUL-terminated char16_t*.  If there
@@ -154,7 +154,7 @@ public:
      *
      * @stable ICU 2.4 
      */
-    virtual const char16_t* unext(int32_t* resultLength, UErrorCode& status) U_LIFETIME_BOUND;
+    مجازی ثابت char16_t* unext(int32_t* نتیجه_درازی, UError_کد& وضعیت) U_LIFETIME_BOUND;
 
     /**
      * <p>Returns the next element a UnicodeString*.  If there are no
@@ -176,7 +176,7 @@ public:
      *
      * @stable ICU 2.4 
      */
-    virtual const UnicodeString* snext(UErrorCode& status) U_LIFETIME_BOUND;
+    مجازی ثابت UnicodeString* snext(UError_کد& وضعیت) U_LIFETIME_BOUND;
 
     /**
      * <p>Resets the iterator.  This re-establishes sync with the
@@ -190,7 +190,7 @@ public:
      *
      * @stable ICU 2.4 
      */
-    virtual void reset(UErrorCode& status) = 0;
+    مجازی فراغ reset(UError_کد& وضعیت) = 0;
 
     /**
      * Compares this enumeration to other to check if both are equal
@@ -199,7 +199,7 @@ public:
      * @return true if the enumerations are equal. false if not.
      * @stable ICU 3.6 
      */
-    virtual bool operator==(const StringEnumeration& that)const;
+    مجازی bool عملگر==(ثابت StringEnumeration& that)ثابت;
     /**
      * Compares this enumeration to other to check if both are not equal
      *
@@ -207,9 +207,9 @@ public:
      * @return true if the enumerations are equal. false if not.
      * @stable ICU 3.6 
      */
-    virtual bool operator!=(const StringEnumeration& that)const;
+    مجازی bool عملگر!=(ثابت StringEnumeration& that)ثابت;
 
-protected:
+محمي:
     /**
      * UnicodeString field for use with default implementations and subclasses.
      * @stable ICU 2.8
@@ -219,18 +219,18 @@ protected:
      * char * default buffer for use with default implementations and subclasses.
      * @stable ICU 2.8
      */
-    char charsBuffer[32];
+    حرف chars_میانگیر[32];
     /**
      * char * buffer for use with default implementations and subclasses.
      * Allocated in constructor and in ensureCharsCapacity().
      * @stable ICU 2.8
      */
-    char *chars;
+    حرف *chars;
     /**
      * Capacity of chars, for use with default implementations and subclasses.
      * @stable ICU 2.8
      */
-    int32_t charsCapacity;
+    int32_t chars_ظرفیت;
 
     /**
      * Default constructor for use with default implementations and subclasses.
@@ -246,7 +246,7 @@ protected:
      * @param status ICU in/out error code.
      * @stable ICU 2.8
      */
-    void ensureCharsCapacity(int32_t capacity, UErrorCode &status);
+    فراغ ensure_Chars_ظرفیت(int32_t ظرفیت, UError_کد &وضعیت);
 
     /**
      * Converts s to Unicode and sets unistr to the result.
@@ -270,12 +270,12 @@ protected:
      * @return A pointer to unistr.
      * @stable ICU 2.8
      */
-    UnicodeString* setChars(const char* s, int32_t length, UErrorCode& status) U_LIFETIME_BOUND;
+    UnicodeString* مجموعه_Chars(ثابت حرف* s, int32_t درازی, UError_کد& وضعیت) U_LIFETIME_BOUND;
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_انتها
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#پایان_اگر /* U_SHOW_CPLUSPLUS_API */
 
 /* STRENUM_H */
-#endif
+#پایان_اگر

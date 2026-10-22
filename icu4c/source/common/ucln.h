@@ -16,10 +16,10 @@
 *   created by: George Rhoten
 */
 
-#ifndef __UCLN_H__
-#define __UCLN_H__
+#اگر_تعریف_نشده __UCLN_H__
+#تعریف_کن __UCLN_H__
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
 /** These are the functions used to register a library's memory cleanup
  * functions.  Each library should define a single library register function
@@ -52,8 +52,8 @@
 /**
  * Data Type for cleanup function selector. These roughly correspond to libraries.
  */
-typedef enum ECleanupLibraryType {
-    UCLN_START = -1,
+تعريفنوع تعداد ECleanupLibraryType {
+    UCLN_شروع = -1,
     UCLN_UPLUG,     /* ICU plugins */
     UCLN_CUSTOM,    /* Custom is for anyone else. */
     UCLN_CTESTFW,
@@ -69,16 +69,16 @@ typedef enum ECleanupLibraryType {
  * Data type for cleanup function pointer
  */
 U_CDECL_BEGIN
-typedef UBool U_CALLCONV cleanupFunc(void);
-typedef void U_CALLCONV initFunc(UErrorCode *);
-U_CDECL_END
+تعريفنوع UBool U_CALLCONV cleanupFunc(فراغ);
+تعريفنوع فراغ U_CALLCONV initFunc(UError_کد *);
+U_CDECL_انتها
 
 /**
  * Register a cleanup function
  * @param type which library to register for.
  * @param func the function pointer
  */
-U_CAPI void U_EXPORT2 ucln_registerCleanup(ECleanupLibraryType type,
+U_CAPI فراغ U_EXPORT2 ucln_ثبات_Cleanup(ECleanupLibraryType type,
                                            cleanupFunc *func);
 
 /**
@@ -86,6 +86,6 @@ U_CAPI void U_EXPORT2 ucln_registerCleanup(ECleanupLibraryType type,
  * Not thread safe.
  * @param type which library to cleanup
  */
-U_CAPI void U_EXPORT2 ucln_cleanupOne(ECleanupLibraryType type);
+U_CAPI فراغ U_EXPORT2 ucln_cleanupOne(ECleanupLibraryType type);
 
-#endif
+#پایان_اگر

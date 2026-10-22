@@ -19,24 +19,24 @@
 // is in the ICU svn repository at icuhtml/trunk/design/strings/contrib
 // (see ICU ticket 6765, r25517).
 
-#ifndef __STRINGPIECE_H__
-#define __STRINGPIECE_H__
+#اگر_تعریف_نشده __STRINGPIECE_H__
+#تعریف_کن __STRINGPIECE_H__
 
 /**
  * \file 
  * \brief C++ API: StringPiece: Read-only byte string wrapper class.
  */
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#إذا U_SHOW_CPLUSPLUS_API
 
-#include <cstddef>
-#include <string_view>
-#include <type_traits>
+#ضمن <cstddef>
+#ضمن <string_view>
+#ضمن <type_traits>
 
-#include "unicode/uobject.h"
-#include "unicode/std_string.h"
+#ضمن "unicode/uobject.h"
+#ضمن "unicode/std_string.h"
 
 // Arghh!  I wish C++ literals were "string".
 
@@ -58,55 +58,55 @@ U_NAMESPACE_BEGIN
  *
  * @stable ICU 4.2
  */
-class U_COMMON_API StringPiece : public UMemory {
- private:
-  const char*   ptr_;
-  int32_t       length_;
+class U_COMMON_API StringPiece : عام UMemory {
+ خاص:
+  ثابت حرف*   ptr_;
+  int32_t       درازی_2;
 
- public:
+ عام:
   /**
    * Default constructor, creates an empty StringPiece.
    * @stable ICU 4.2
    */
-  StringPiece() : ptr_(nullptr), length_(0) { }
+  StringPiece() : ptr_(nullptr), درازی_2(0) { }
 
   /**
    * Constructs from a NUL-terminated const char * pointer.
    * @param str a NUL-terminated const char * pointer
    * @stable ICU 4.2
    */
-  StringPiece(const char* str U_LIFETIME_BOUND);
-#if defined(__cpp_char8_t) || defined(U_IN_DOXYGEN)
+  StringPiece(ثابت حرف* str U_LIFETIME_BOUND);
+#إذا defined(__cpp_char8_t) || defined(U_درون_DOXYGEN)
   /**
    * Constructs from a NUL-terminated const char8_t * pointer.
    * @param str a NUL-terminated const char8_t * pointer
    * @stable ICU 67
    */
-  StringPiece(const char8_t* str U_LIFETIME_BOUND) : StringPiece(reinterpret_cast<const char*>(str)) {}
-#endif
+  StringPiece(ثابت char8_t* str U_LIFETIME_BOUND) : StringPiece(reinterpret_cast<ثابت حرف*>(str)) {}
+#پایان_اگر
   /**
    * Constructs an empty StringPiece.
    * Needed for type disambiguation from multiple other overloads.
    * @param p nullptr
    * @stable ICU 67
    */
-  StringPiece(std::nullptr_t p) : ptr_(p), length_(0) {}
+  StringPiece(std::nullptr_t p) : ptr_(p), درازی_2(0) {}
 
   /**
    * Constructs from a std::string.
    * @stable ICU 4.2
    */
-  StringPiece(const std::string& str U_LIFETIME_BOUND)
-    : ptr_(str.data()), length_(static_cast<int32_t>(str.size())) { }
-#if defined(__cpp_lib_char8_t) || defined(U_IN_DOXYGEN)
+  StringPiece(ثابت std::string& str U_LIFETIME_BOUND)
+    : ptr_(str.داده()), درازی_2(static_cast<int32_t>(str.اندازه_2())) { }
+#إذا defined(__cpp_lib_char8_t) || defined(U_درون_DOXYGEN)
   /**
    * Constructs from a std::u8string.
    * @stable ICU 67
    */
-  StringPiece(const std::u8string& str U_LIFETIME_BOUND)
-    : ptr_(reinterpret_cast<const char*>(str.data())),
-      length_(static_cast<int32_t>(str.size())) { }
-#endif
+  StringPiece(ثابت std::u8string& str U_LIFETIME_BOUND)
+    : ptr_(reinterpret_cast<ثابت حرف*>(str.داده())),
+      درازی_2(static_cast<int32_t>(str.اندازه_2())) { }
+#پایان_اگر
 
   /**
    * Constructs from some other implementation of a string piece class, from any
@@ -130,17 +130,17 @@ class U_COMMON_API StringPiece : public UMemory {
    * @param str the other string piece
    * @stable ICU 65
    */
-  template <typename T,
+  قالب <typename T,
             typename = std::enable_if_t<
-                (std::is_same_v<decltype(T().data()), const char*>
-#if defined(__cpp_char8_t)
-                    || std::is_same_v<decltype(T().data()), const char8_t*>
-#endif
+                (std::is_same_v<decltype(T().داده()), ثابت حرف*>
+#إذا defined(__cpp_char8_t)
+                    || std::is_same_v<decltype(T().داده()), ثابت char8_t*>
+#پایان_اگر
                 ) &&
-                std::is_same_v<decltype(T().size()), size_t>>>
+                std::is_same_v<decltype(T().اندازه_2()), size_t>>>
   StringPiece(T str U_LIFETIME_BOUND)
-      : ptr_(reinterpret_cast<const char*>(str.data())),
-        length_(static_cast<int32_t>(str.size())) {}
+      : ptr_(reinterpret_cast<ثابت حرف*>(str.داده())),
+        درازی_2(static_cast<int32_t>(str.اندازه_2())) {}
 
   /**
    * Constructs from a const char * pointer and a specified length.
@@ -148,17 +148,17 @@ class U_COMMON_API StringPiece : public UMemory {
    * @param len the length of the string; must be non-negative
    * @stable ICU 4.2
    */
-  StringPiece(const char* offset U_LIFETIME_BOUND, int32_t len) : ptr_(offset), length_(len) { }
-#if defined(__cpp_char8_t) || defined(U_IN_DOXYGEN)
+  StringPiece(ثابت حرف* جابه_جایی U_LIFETIME_BOUND, int32_t len) : ptr_(جابه_جایی), درازی_2(len) { }
+#إذا defined(__cpp_char8_t) || defined(U_درون_DOXYGEN)
   /**
    * Constructs from a const char8_t * pointer and a specified length.
    * @param str a const char8_t * pointer (need not be terminated)
    * @param len the length of the string; must be non-negative
    * @stable ICU 67
    */
-  StringPiece(const char8_t* str U_LIFETIME_BOUND, int32_t len) :
-      StringPiece(reinterpret_cast<const char*>(str), len) {}
-#endif
+  StringPiece(ثابت char8_t* str U_LIFETIME_BOUND, int32_t len) :
+      StringPiece(reinterpret_cast<ثابت حرف*>(str), len) {}
+#پایان_اگر
 
   /**
    * Substring of another StringPiece.
@@ -166,7 +166,7 @@ class U_COMMON_API StringPiece : public UMemory {
    * @param pos start position in x; must be non-negative and <= x.length().
    * @stable ICU 4.2
    */
-  StringPiece(const StringPiece& x U_LIFETIME_BOUND, int32_t pos);
+  StringPiece(ثابت StringPiece& x U_LIFETIME_BOUND, int32_t pos);
   /**
    * Substring of another StringPiece.
    * @param x the other StringPiece
@@ -175,17 +175,17 @@ class U_COMMON_API StringPiece : public UMemory {
    *            must be non-negative and will be pinned to at most x.length() - pos.
    * @stable ICU 4.2
    */
-  StringPiece(const StringPiece& x U_LIFETIME_BOUND, int32_t pos, int32_t len);
+  StringPiece(ثابت StringPiece& x U_LIFETIME_BOUND, int32_t pos, int32_t len);
 
-#ifndef U_HIDE_INTERNAL_API
+#اگر_تعریف_نشده U_HIDE_داخلی_API
   /**
    * Converts to a std::string_view().
    * @internal
    */
-  inline operator std::string_view() const {
-    return {data(), static_cast<std::string_view::size_type>(size())};
+  مضمن عملگر std::string_view() ثابت {
+    أرجع {داده(), static_cast<std::string_view::اندازه_type>(اندازه_2())};
   }
-#endif  // U_HIDE_INTERNAL_API
+#پایان_اگر  // U_HIDE_INTERNAL_API
 
   /**
    * Returns the string pointer. May be nullptr if it is empty.
@@ -197,31 +197,31 @@ class U_COMMON_API StringPiece : public UMemory {
    * @return the string pointer
    * @stable ICU 4.2
    */
-  const char* data() const { return ptr_; }
+  ثابت حرف* داده() ثابت { أرجع ptr_; }
   /**
    * Returns the string length. Same as length().
    * @return the string length
    * @stable ICU 4.2
    */
-  int32_t size() const { return length_; }
+  int32_t اندازه_2() ثابت { أرجع درازی_2; }
   /**
    * Returns the string length. Same as size().
    * @return the string length
    * @stable ICU 4.2
    */
-  int32_t length() const { return length_; }
+  int32_t درازی() ثابت { أرجع درازی_2; }
   /**
    * Returns whether the string is empty.
    * @return true if the string is empty
    * @stable ICU 4.2
    */
-  UBool empty() const { return length_ == 0; }
+  UBool خالی() ثابت { أرجع درازی_2 == 0; }
 
   /**
    * Sets to an empty string.
    * @stable ICU 4.2
    */
-  void clear() { ptr_ = nullptr; length_ = 0; }
+  فراغ clear() { ptr_ = nullptr; درازی_2 = 0; }
 
   /**
    * Reset the stringpiece to refer to new data.
@@ -229,24 +229,24 @@ class U_COMMON_API StringPiece : public UMemory {
    * @param len the length of the new data
    * @stable ICU 4.8
    */
-  void set(const char* xdata, int32_t len) { ptr_ = xdata; length_ = len; }
+  فراغ مجموعه(ثابت حرف* xdata, int32_t len) { ptr_ = xdata; درازی_2 = len; }
 
   /**
    * Reset the stringpiece to refer to new data.
    * @param str a pointer to a NUL-terminated string. 
    * @stable ICU 4.8
    */
-  void set(const char* str);
+  فراغ مجموعه(ثابت حرف* str);
 
-#if defined(__cpp_char8_t) || defined(U_IN_DOXYGEN)
+#إذا defined(__cpp_char8_t) || defined(U_درون_DOXYGEN)
   /**
    * Resets the stringpiece to refer to new data.
    * @param xdata pointer the new string data. Need not be NUL-terminated.
    * @param len the length of the new data
    * @stable ICU 67
    */
-  inline void set(const char8_t* xdata, int32_t len) {
-      set(reinterpret_cast<const char*>(xdata), len);
+  مضمن فراغ مجموعه(ثابت char8_t* xdata, int32_t len) {
+      مجموعه(reinterpret_cast<ثابت حرف*>(xdata), len);
   }
 
   /**
@@ -254,23 +254,23 @@ class U_COMMON_API StringPiece : public UMemory {
    * @param str a pointer to a NUL-terminated string.
    * @stable ICU 67
    */
-  inline void set(const char8_t* str) {
-      set(reinterpret_cast<const char*>(str));
+  مضمن فراغ مجموعه(ثابت char8_t* str) {
+      مجموعه(reinterpret_cast<ثابت حرف*>(str));
   }
-#endif
+#پایان_اگر
 
   /**
    * Removes the first n string units.
    * @param n prefix length, must be non-negative and <=length()
    * @stable ICU 4.2
    */
-  void remove_prefix(int32_t n) {
-    if (n >= 0) {
-      if (n > length_) {
-        n = length_;
+  فراغ remove_پیشوند(int32_t n) {
+    إذا (n >= 0) {
+      إذا (n > درازی_2) {
+        n = درازی_2;
       }
       ptr_ += n;
-      length_ -= n;
+      درازی_2 -= n;
     }
   }
 
@@ -279,12 +279,12 @@ class U_COMMON_API StringPiece : public UMemory {
    * @param n suffix length, must be non-negative and <=length()
    * @stable ICU 4.2
    */
-  void remove_suffix(int32_t n) {
-    if (n >= 0) {
-      if (n <= length_) {
-        length_ -= n;
-      } else {
-        length_ = 0;
+  فراغ remove_suffix(int32_t n) {
+    إذا (n >= 0) {
+      إذا (n <= درازی_2) {
+        درازی_2 -= n;
+      } وإلا {
+        درازی_2 = 0;
       }
     }
   }
@@ -296,7 +296,7 @@ class U_COMMON_API StringPiece : public UMemory {
    * @return The offset of needle in haystack, or -1 if not found.
    * @stable ICU 67
    */
-  int32_t find(StringPiece needle, int32_t offset);
+  int32_t پیدا_کن(StringPiece needle, int32_t جابه_جایی);
 
   /**
    * Compares this StringPiece with the other StringPiece, with semantics
@@ -311,7 +311,7 @@ class U_COMMON_API StringPiece : public UMemory {
    * Maximum integer, used as a default value for substring methods.
    * @stable ICU 4.2
    */
-  static const int32_t npos; // = 0x7fffffff;
+  ساكن ثابت int32_t npos; // = 0x7fffffff;
 
   /**
    * Returns a substring of this StringPiece.
@@ -321,8 +321,8 @@ class U_COMMON_API StringPiece : public UMemory {
    * @return the substring StringPiece
    * @stable ICU 4.2
    */
-  StringPiece substr(int32_t pos, int32_t len = npos) const {
-    return StringPiece(*this, pos, len);
+  StringPiece substr(int32_t pos, int32_t len = npos) ثابت {
+    أرجع StringPiece(*this, pos, len);
   }
 };
 
@@ -334,7 +334,7 @@ class U_COMMON_API StringPiece : public UMemory {
  * @stable ICU 4.8
  */
 U_COMMON_API UBool U_EXPORT2 
-operator==(const StringPiece& x, const StringPiece& y);
+عملگر==(ثابت StringPiece& x, ثابت StringPiece& y);
 
 /**
  * Global operator != for StringPiece
@@ -343,12 +343,12 @@ operator==(const StringPiece& x, const StringPiece& y);
  * @return true if the string data is not equal
  * @stable ICU 4.8
  */
-inline bool operator!=(const StringPiece& x, const StringPiece& y) {
-  return !(x == y);
+مضمن bool عملگر!=(ثابت StringPiece& x, ثابت StringPiece& y) {
+  أرجع !(x == y);
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_انتها
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#پایان_اگر /* U_SHOW_CPLUSPLUS_API */
 
-#endif  // __STRINGPIECE_H__
+#پایان_اگر  // __STRINGPIECE_H__
