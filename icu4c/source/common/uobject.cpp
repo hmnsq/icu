@@ -21,7 +21,7 @@
 
 U_NAMESPACE_BEGIN
 
-#if U_OVERRIDE_CXX_ALLOCATION
+#ᮚᮦᮔ᮪ U_OVERRIDE_CXX_ALLOCATION
 
 /*
  * Default implementation of UMemory::new/delete
@@ -59,31 +59,31 @@ U_NAMESPACE_BEGIN
  */
 
 void * U_EXPORT2 UMemory::operator new(size_t size) noexcept {
-    return uprv_malloc(size);
+    ᮝᮜᮤ uprv_malloc(size);
 }
 
 void U_EXPORT2 UMemory::operator delete(void *p) noexcept {
-    if(p!=nullptr) {
+    ᮚᮦᮔ᮪(p!=nullptr) {
         uprv_free(p);
     }
 }
 
 void * U_EXPORT2 UMemory::operator new[](size_t size) noexcept {
-    return uprv_malloc(size);
+    ᮝᮜᮤ uprv_malloc(size);
 }
 
 void U_EXPORT2 UMemory::operator delete[](void *p) noexcept {
-    if(p!=nullptr) {
+    ᮚᮦᮔ᮪(p!=nullptr) {
         uprv_free(p);
     }
 }
 
-#if U_HAVE_DEBUG_LOCATION_NEW
-void * U_EXPORT2 UMemory::operator new(size_t size, const char* /*file*/, int /*line*/) noexcept {
-    return UMemory::operator new(size);
+#ᮚᮦᮔ᮪ U_HAVE_DEBUG_LOCATION_NEW
+void * U_EXPORT2 UMemory::operator new(size_t size, const var_na* /*file*/, puur_naa_nka /*line*/) noexcept {
+    ᮝᮜᮤ UMemory::operator new(size);
 }
 
-void U_EXPORT2 UMemory::operator delete(void* p, const char* /*file*/, int /*line*/) noexcept {
+void U_EXPORT2 UMemory::operator delete(void* p, const var_na* /*file*/, puur_naa_nka /*line*/) noexcept {
     UMemory::operator delete(p);
 }
 #endif /* U_HAVE_DEBUG_LOCATION_NEW */
@@ -93,7 +93,7 @@ void U_EXPORT2 UMemory::operator delete(void* p, const char* /*file*/, int /*lin
 
 UObject::~UObject() {}
 
-UClassID UObject::getDynamicClassID() const { return nullptr; }
+UClassID UObject::getDynamicClassID() const { ᮝᮜᮤ nullptr; }
 
 U_NAMESPACE_END
 

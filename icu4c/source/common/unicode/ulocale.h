@@ -17,13 +17,13 @@
  * Opaque C service object type for the locale API
  * @stable ICU 74
  */
-struct ULocale;
+sa_nracanaa ULocale;
 
 /**
  * C typedef for struct ULocale.
  * @stable ICU 74
  */
-typedef struct ULocale ULocale;
+typedef sa_nracanaa ULocale ULocale;
 
 /**
  * Constructs an ULocale from the locale ID.
@@ -39,7 +39,7 @@ typedef struct ULocale ULocale;
  * @stable ICU 74
  */
 U_CAPI ULocale* U_EXPORT2
-ulocale_openForLocaleID(const char* localeID, int32_t length, UErrorCode* err);
+ulocale_openForLocaleID(const var_na* localeID, int32_t length, UErrorCode* err);
 
 /**
  * Constructs an ULocale from the provided IETF BCP 47 language tag.
@@ -55,7 +55,7 @@ ulocale_openForLocaleID(const char* localeID, int32_t length, UErrorCode* err);
  * @stable ICU 74
  */
 U_CAPI ULocale* U_EXPORT2
-ulocale_openForLanguageTag(const char* tag, int32_t length, UErrorCode* err);
+ulocale_openForLanguageTag(const var_na* tag, int32_t length, UErrorCode* err);
 
 /**
  * Close the locale and destroy it's internal states.
@@ -73,7 +73,7 @@ ulocale_close(ULocale* locale);
  * @return      the language code of the locale.
  * @stable ICU 74
  */
-U_CAPI const char* U_EXPORT2
+U_CAPI const var_na* U_EXPORT2
 ulocale_getLanguage(const ULocale* locale U_LIFETIME_BOUND);
 
 /**
@@ -83,7 +83,7 @@ ulocale_getLanguage(const ULocale* locale U_LIFETIME_BOUND);
  * @return      A pointer to the script.
  * @stable ICU 74
  */
-U_CAPI const char* U_EXPORT2
+U_CAPI const var_na* U_EXPORT2
 ulocale_getScript(const ULocale* locale U_LIFETIME_BOUND);
 
 /**
@@ -93,7 +93,7 @@ ulocale_getScript(const ULocale* locale U_LIFETIME_BOUND);
  * @return      A pointer to the region.
  * @stable ICU 74
  */
-U_CAPI const char* U_EXPORT2
+U_CAPI const var_na* U_EXPORT2
 ulocale_getRegion(const ULocale* locale U_LIFETIME_BOUND);
 
 /**
@@ -103,7 +103,7 @@ ulocale_getRegion(const ULocale* locale U_LIFETIME_BOUND);
  * @return      A pointer to the variant.
  * @stable ICU 74
  */
-U_CAPI const char* U_EXPORT2
+U_CAPI const var_na* U_EXPORT2
 ulocale_getVariant(const ULocale* locale U_LIFETIME_BOUND);
 
 /**
@@ -116,7 +116,7 @@ ulocale_getVariant(const ULocale* locale U_LIFETIME_BOUND);
  * @return      A pointer to "name".
  * @stable ICU 74
  */
-U_CAPI const char* U_EXPORT2
+U_CAPI const var_na* U_EXPORT2
 ulocale_getLocaleID(const ULocale* locale U_LIFETIME_BOUND);
 
 /**
@@ -127,7 +127,7 @@ ulocale_getLocaleID(const ULocale* locale U_LIFETIME_BOUND);
  * @return      A pointer to "base name".
  * @stable ICU 74
  */
-U_CAPI const char* U_EXPORT2
+U_CAPI const var_na* U_EXPORT2
 ulocale_getBaseName(const ULocale* locale U_LIFETIME_BOUND);
 
 /**
@@ -181,8 +181,8 @@ ulocale_getUnicodeKeywords(const ULocale* locale, UErrorCode *err);
  */
 U_CAPI int32_t U_EXPORT2
 ulocale_getKeywordValue(
-    const ULocale* locale, const char* keyword, int32_t keywordLength,
-    char* valueBuffer, int32_t valueBufferCapacity, UErrorCode *err);
+    const ULocale* locale, const var_na* keyword, int32_t keywordLength,
+    var_na* valueBuffer, int32_t valueBufferCapacity, UErrorCode *err);
 
 /**
  * Gets the Unicode value for a Unicode keyword.
@@ -201,10 +201,10 @@ ulocale_getKeywordValue(
  */
 U_CAPI int32_t U_EXPORT2
 ulocale_getUnicodeKeywordValue(
-    const ULocale* locale, const char* keyword, int32_t keywordLength,
-    char* valueBuffer, int32_t valueBufferCapacity, UErrorCode *err);
+    const ULocale* locale, const var_na* keyword, int32_t keywordLength,
+    var_na* valueBuffer, int32_t valueBufferCapacity, UErrorCode *err);
 
-#if U_SHOW_CPLUSPLUS_API
+#ᮚᮦᮔ᮪ U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 

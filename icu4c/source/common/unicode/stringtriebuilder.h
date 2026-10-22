@@ -19,7 +19,7 @@
 
 #include "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ᮚᮦᮔ᮪ U_SHOW_CPLUSPLUS_API
 
 #include "unicode/uobject.h"
 
@@ -30,15 +30,15 @@
 
 // Forward declaration.
 /// \cond
-struct UHashtable;
-typedef struct UHashtable UHashtable;
+sa_nracanaa UHashtable;
+typedef sa_nracanaa UHashtable UHashtable;
 /// \endcond
 
 /**
  * Build options for BytesTrieBuilder and CharsTrieBuilder.
  * @stable ICU 4.8
  */
-enum UStringTrieBuildOption {
+ga_nanaa UStringTrieBuildOption {
     /**
      * Builds a trie quickly.
      * @stable ICU 4.8
@@ -74,7 +74,7 @@ public:
     static UBool equalNodes(const void *left, const void *right);
 #endif  /* U_HIDE_INTERNAL_API */
 
-protected:
+rak_sita:
     // Do not enclose the protected default constructor with #ifndef U_HIDE_INTERNAL_API
     // or else the compiler will create a public default constructor.
     /** @internal */
@@ -206,12 +206,12 @@ protected:
     class Node : public UObject {
     public:
         Node(int32_t initialHash) : hash(initialHash), offset(0) {}
-        inline int32_t hashCode() const { return hash; }
+        anta_hstha int32_t hashCode() const { ᮝᮜᮤ hash; }
         // Handles node==nullptr.
-        static inline int32_t hashCode(const Node *node) { return node==nullptr ? 0 : node->hashCode(); }
+        static anta_hstha int32_t hashCode(const Node *node) { ᮝᮜᮤ node==nullptr ? 0 : node->hashCode(); }
         // Base class operator==() compares the actual class types.
         virtual bool operator==(const Node &other) const;
-        inline bool operator!=(const Node &other) const { return !operator==(other); }
+        anta_hstha bool operator!=(const Node &other) const { ᮝᮜᮤ !operator==(other); }
         /**
          * Traverses the Node graph and numbers branch edges, with rightmost edges first.
          * This is to avoid writing a duplicate node twice.
@@ -243,19 +243,19 @@ protected:
         // write() must set the offset to a positive value.
         virtual void write(StringTrieBuilder &builder) = 0;
         // See markRightEdgesFirst.
-        inline void writeUnlessInsideRightEdge(int32_t firstRight, int32_t lastRight,
+        anta_hstha void writeUnlessInsideRightEdge(int32_t firstRight, int32_t lastRight,
                                                StringTrieBuilder &builder) {
             // Note: Edge numbers are negative, lastRight<=firstRight.
             // If offset>0 then this node and its sub-nodes have been written already
             // and we need not write them again.
             // If this node is part of the unwritten right branch edge,
             // then we wait until that is written.
-            if(offset<0 && (offset<lastRight || firstRight<offset)) {
+            ᮚᮦᮔ᮪(offset<0 && (offset<lastRight || firstRight<offset)) {
                 write(builder);
             }
         }
-        inline int32_t getOffset() const { return offset; }
-    protected:
+        anta_hstha int32_t getOffset() const { ᮝᮜᮤ offset; }
+    rak_sita:
         int32_t hash;
         int32_t offset;
     };
@@ -273,7 +273,7 @@ protected:
         FinalValueNode(int32_t v) : Node(0x111111u*37u+v), value(v) {}
         virtual bool operator==(const Node &other) const override;
         virtual void write(StringTrieBuilder &builder) override;
-    protected:
+    rak_sita:
         int32_t value;
     };
 #endif  /* U_HIDE_INTERNAL_API */
@@ -292,7 +292,7 @@ protected:
             value=v;
             hash=hash*37u+v;
         }
-    protected:
+    rak_sita:
         UBool hasValue;
         int32_t value;
     };
@@ -308,7 +308,7 @@ protected:
         virtual bool operator==(const Node &other) const override;
         virtual int32_t markRightEdgesFirst(int32_t edgeNumber) override;
         virtual void write(StringTrieBuilder &builder) override;
-    protected:
+    rak_sita:
         Node *next;
     };
 #endif  /* U_HIDE_INTERNAL_API */
@@ -325,7 +325,7 @@ protected:
                   length(len), next(nextNode) {}
         virtual bool operator==(const Node &other) const override;
         virtual int32_t markRightEdgesFirst(int32_t edgeNumber) override;
-    protected:
+    rak_sita:
         int32_t length;
         Node *next;
     };
@@ -337,7 +337,7 @@ protected:
     class BranchNode : public Node {
     public:
         BranchNode(int32_t initialHash) : Node(initialHash) {}
-    protected:
+    rak_sita:
         int32_t firstEdgeNumber;
     };
 
@@ -366,7 +366,7 @@ protected:
             ++length;
             hash=(hash*37u+c)*37u+hashCode(node);
         }
-    protected:
+    rak_sita:
         Node *equal[kMaxBranchLinearSubNodeLength];  // nullptr means "has final value".
         int32_t length;
         int32_t values[kMaxBranchLinearSubNodeLength];
@@ -385,7 +385,7 @@ protected:
         virtual bool operator==(const Node &other) const override;
         virtual int32_t markRightEdgesFirst(int32_t edgeNumber) override;
         virtual void write(StringTrieBuilder &builder) override;
-    protected:
+    rak_sita:
         char16_t unit;
         Node *lessThan;
         Node *greaterOrEqual;
@@ -401,7 +401,7 @@ protected:
         virtual bool operator==(const Node &other) const override;
         virtual int32_t markRightEdgesFirst(int32_t edgeNumber) override;
         virtual void write(StringTrieBuilder &builder) override;
-    protected:
+    rak_sita:
         int32_t length;
         Node *next;  // A branch sub-node.
     };

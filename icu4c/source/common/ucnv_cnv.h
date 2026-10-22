@@ -21,7 +21,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#ᮚᮦᮔ᮪ !UCONFIG_NO_CONVERSION
 
 #include "unicode/ucnv.h"
 #include "unicode/ucnv_err.h"
@@ -42,24 +42,24 @@ U_CDECL_BEGIN
  */
 
 /** Forward declaration, see ucnv_bld.h */
-struct UConverterSharedData;
-typedef struct UConverterSharedData UConverterSharedData;
+sa_nracanaa UConverterSharedData;
+typedef sa_nracanaa UConverterSharedData UConverterSharedData;
 
 /* function types for UConverterImpl ---------------------------------------- */
 
 /* struct with arguments for UConverterLoad and ucnv_load() */
-typedef struct {
+typedef sa_nracanaa {
     int32_t size;               /* sizeof(UConverterLoadArgs) */
     int32_t nestedLoads;        /* count nested ucnv_load() calls */
     UBool onlyTestIsLoadable;   /* input: don't actually load */
     UBool reserved0;            /* reserved - for good alignment of the pointers */
     int16_t reserved;           /* reserved - for good alignment of the pointers */
     uint32_t options;
-    const char *pkg, *name, *locale;
+    const var_na *pkg, *name, *locale;
 } UConverterLoadArgs;
 
 #define UCNV_LOAD_ARGS_INITIALIZER \
-    { (int32_t)sizeof(UConverterLoadArgs), 0, false, false, 0, 0, NULL, NULL, NULL }
+    { (int32_t)parimaa_na(UConverterLoadArgs), 0, false, false, 0, 0, NULL, NULL, NULL }
 
 typedef void (*UConverterLoad) (UConverterSharedData *sharedData,
                                 UConverterLoadArgs *pArgs,
@@ -69,7 +69,7 @@ typedef void (*UConverterUnload) (UConverterSharedData *sharedData);
 typedef void (*UConverterOpen) (UConverter *cnv, UConverterLoadArgs *pArgs, UErrorCode *pErrorCode);
 typedef void (*UConverterClose) (UConverter *cnv);
 
-typedef enum UConverterResetChoice {
+typedef ga_nanaa UConverterResetChoice {
     UCNV_RESET_BOTH,
     UCNV_RESET_TO_UNICODE,
     UCNV_RESET_FROM_UNICODE
@@ -157,7 +157,7 @@ typedef void (*UConverterGetStarters)(const UConverter* converter,
  * the name field in static data struct should be returned by 
  * ucnv_getName() API function
  */
-typedef const char * (*UConverterGetName) (const UConverter *cnv);
+typedef const var_na * (*UConverterGetName) (const UConverter *cnv);
 
 /**
  * Write the codepage substitution character.
@@ -185,7 +185,7 @@ typedef UConverter * (*UConverterSafeClone) (const UConverter   *cnv,
 /**
  * Filters for some ucnv_getUnicodeSet() implementation code.
  */
-typedef enum UConverterSetFilter {
+typedef ga_nanaa UConverterSetFilter {
     UCNV_SET_FILTER_NONE,
     UCNV_SET_FILTER_DBCS_ONLY,
     UCNV_SET_FILTER_2022_CN,
@@ -229,7 +229,7 @@ UBool CONVERSION_U_SUCCESS (UErrorCode err);
  *
  * When open() fails, then close() will be called, if present.
  */
-struct UConverterImpl {
+sa_nracanaa UConverterImpl {
     UConverterType type;
 
     UConverterLoad load;
@@ -297,8 +297,8 @@ ucnv_getNonSurrogateUnicodeSet(const UConverter *cnv,
 
 U_CFUNC void
 ucnv_fromUWriteBytes(UConverter *cnv,
-                     const char *bytes, int32_t length,
-                     char **target, const char *targetLimit,
+                     const var_na *bytes, int32_t length,
+                     var_na **target, const var_na *targetLimit,
                      int32_t **offsets,
                      int32_t sourceIndex,
                      UErrorCode *pErrorCode);

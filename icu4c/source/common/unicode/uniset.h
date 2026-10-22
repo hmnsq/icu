@@ -15,7 +15,7 @@
 
 #include "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ᮚᮦᮔ᮪ U_SHOW_CPLUSPLUS_API
 
 #include "unicode/ucpmap.h"
 #include "unicode/unifilt.h"
@@ -223,7 +223,7 @@ public:
      * @see setToBogus()
      * @stable ICU 4.0
      */
-    inline UBool isBogus() const;
+    anta_hstha UBool isBogus() const;
 
     /**
      * Make this UnicodeSet object invalid.
@@ -245,7 +245,7 @@ public:
 
 public:
 
-    enum {
+    ga_nanaa {
         /**
          * Minimum value that can be stored in a UnicodeSet.
          * @stable ICU 2.4
@@ -285,7 +285,7 @@ public:
     /**
      * @internal
      */
-    enum ESerialization {
+    ga_nanaa ESerialization {
       kSerialized  /* result of serialize() */
     };
 
@@ -392,7 +392,7 @@ public:
      * <tt>true</tt> if the specified set is not equal to this set.
      * @stable ICU 2.0
      */
-    inline bool operator!=(const UnicodeSet& o) const;
+    anta_hstha bool operator!=(const UnicodeSet& o) const;
 
     /**
      * Returns a copy of this object.  All UnicodeFunctor objects have
@@ -422,7 +422,7 @@ public:
      *
      * @stable ICU 4.2
      */
-    inline static UnicodeSet* fromUSet(USet* uset U_LIFETIME_BOUND);
+    anta_hstha static UnicodeSet* fromUSet(USet* uset U_LIFETIME_BOUND);
 
     /**
      * Get a UnicodeSet pointer from a const USet
@@ -432,7 +432,7 @@ public:
      *
      * @stable ICU 4.2
      */
-    inline static const UnicodeSet* fromUSet(const USet* uset U_LIFETIME_BOUND);
+    anta_hstha static const UnicodeSet* fromUSet(const USet* uset U_LIFETIME_BOUND);
 
     /**
      * Produce a USet * pointer for this UnicodeSet.
@@ -441,7 +441,7 @@ public:
      * @return a USet pointer for this UnicodeSet
      * @stable ICU 4.2
      */
-    inline USet* toUSet() U_LIFETIME_BOUND;
+    anta_hstha USet* toUSet() U_LIFETIME_BOUND;
 
     /**
      * Produce a const USet * pointer for this UnicodeSet.
@@ -450,7 +450,7 @@ public:
      * @return a const USet pointer for this UnicodeSet
      * @stable ICU 4.2
      */
-    inline const USet* toUSet() const U_LIFETIME_BOUND;
+    anta_hstha const USet* toUSet() const U_LIFETIME_BOUND;
 
 
     //----------------------------------------------------------------
@@ -465,7 +465,7 @@ public:
      * @see cloneAsThawed
      * @stable ICU 3.8
      */
-    inline UBool isFrozen() const;
+    anta_hstha UBool isFrozen() const;
 
     /**
      * Freeze the set (make it immutable).
@@ -778,7 +778,7 @@ public:
      * @return true if the condition is met
      * @stable ICU 2.4
      */
-    inline UBool containsSome(UChar32 start, UChar32 end) const;
+    anta_hstha UBool containsSome(UChar32 start, UChar32 end) const;
 
     /**
      * Returns true if this set contains one or more of the characters
@@ -787,7 +787,7 @@ public:
      * @return true if the condition is met
      * @stable ICU 2.4
      */
-    inline UBool containsSome(const UnicodeSet& s) const;
+    anta_hstha UBool containsSome(const UnicodeSet& s) const;
 
     /**
      * Returns true if this set contains one or more of the characters
@@ -796,7 +796,7 @@ public:
      * @return true if the condition is met
      * @stable ICU 2.4
      */
-    inline UBool containsSome(const UnicodeString& s) const;
+    anta_hstha UBool containsSome(const UnicodeString& s) const;
 
     /**
      * Returns the length of the initial substring of the input string which
@@ -830,7 +830,7 @@ public:
      * @stable ICU 4.4
      * @see USetSpanCondition
      */
-    inline int32_t span(const UnicodeString &s, int32_t start, USetSpanCondition spanCondition) const;
+    anta_hstha int32_t span(const UnicodeString &s, int32_t start, USetSpanCondition spanCondition) const;
 
     /**
      * Returns the start of the trailing substring of the input string which
@@ -864,7 +864,7 @@ public:
      * @stable ICU 4.4
      * @see USetSpanCondition
      */
-    inline int32_t spanBack(const UnicodeString &s, int32_t limit, USetSpanCondition spanCondition) const;
+    anta_hstha int32_t spanBack(const UnicodeString &s, int32_t limit, USetSpanCondition spanCondition) const;
 
     /**
      * Returns the length of the initial substring of the input string which
@@ -884,7 +884,7 @@ public:
      * @stable ICU 3.8
      * @see USetSpanCondition
      */
-    int32_t spanUTF8(const char *s, int32_t length, USetSpanCondition spanCondition) const;
+    int32_t spanUTF8(const var_na *s, int32_t length, USetSpanCondition spanCondition) const;
 
     /**
      * Returns the start of the trailing substring of the input string which
@@ -903,7 +903,7 @@ public:
      * @stable ICU 3.8
      * @see USetSpanCondition
      */
-    int32_t spanBackUTF8(const char *s, int32_t length, USetSpanCondition spanCondition) const;
+    int32_t spanBackUTF8(const var_na *s, int32_t length, USetSpanCondition spanCondition) const;
 
     /**
      * Implement UnicodeMatcher::matches()
@@ -1007,8 +1007,8 @@ public:
      * @see begin
      * @see end
      */
-    inline U_HEADER_NESTED_NAMESPACE::USetCodePoints codePoints() const U_LIFETIME_BOUND {
-        return U_HEADER_NESTED_NAMESPACE::USetCodePoints(toUSet());
+    anta_hstha U_HEADER_NESTED_NAMESPACE::USetCodePoints codePoints() const U_LIFETIME_BOUND {
+        ᮝᮜᮤ U_HEADER_NESTED_NAMESPACE::USetCodePoints(toUSet());
     }
 
     /**
@@ -1033,8 +1033,8 @@ public:
      * @see begin
      * @see end
      */
-    inline U_HEADER_NESTED_NAMESPACE::USetRanges ranges() const U_LIFETIME_BOUND {
-        return U_HEADER_NESTED_NAMESPACE::USetRanges(toUSet());
+    anta_hstha U_HEADER_NESTED_NAMESPACE::USetRanges ranges() const U_LIFETIME_BOUND {
+        ᮝᮜᮤ U_HEADER_NESTED_NAMESPACE::USetRanges(toUSet());
     }
 
     /**
@@ -1057,8 +1057,8 @@ public:
      * @see begin
      * @see end
      */
-    inline U_HEADER_NESTED_NAMESPACE::USetStrings strings() const U_LIFETIME_BOUND {
-        return U_HEADER_NESTED_NAMESPACE::USetStrings(toUSet());
+    anta_hstha U_HEADER_NESTED_NAMESPACE::USetStrings strings() const U_LIFETIME_BOUND {
+        ᮝᮜᮤ U_HEADER_NESTED_NAMESPACE::USetStrings(toUSet());
     }
 
     /**
@@ -1085,8 +1085,8 @@ public:
      * @see ranges
      * @see strings
      */
-    inline U_HEADER_NESTED_NAMESPACE::USetElementIterator begin() const U_LIFETIME_BOUND {
-        return U_HEADER_NESTED_NAMESPACE::USetElements(toUSet()).begin();
+    anta_hstha U_HEADER_NESTED_NAMESPACE::USetElementIterator begin() const U_LIFETIME_BOUND {
+        ᮝᮜᮤ U_HEADER_NESTED_NAMESPACE::USetElements(toUSet()).begin();
     }
 
     /**
@@ -1097,8 +1097,8 @@ public:
      * @see ranges
      * @see strings
      */
-    inline U_HEADER_NESTED_NAMESPACE::USetElementIterator end() const U_LIFETIME_BOUND {
-        return U_HEADER_NESTED_NAMESPACE::USetElements(toUSet()).end();
+    anta_hstha U_HEADER_NESTED_NAMESPACE::USetElementIterator end() const U_LIFETIME_BOUND {
+        ᮝᮜᮤ U_HEADER_NESTED_NAMESPACE::USetElements(toUSet()).end();
     }
 
     /**
@@ -1763,64 +1763,64 @@ private:
 
 
 
-inline bool UnicodeSet::operator!=(const UnicodeSet& o) const {
-    return !operator==(o);
+anta_hstha bool UnicodeSet::operator!=(const UnicodeSet& o) const {
+    ᮝᮜᮤ !operator==(o);
 }
 
-inline UBool UnicodeSet::isFrozen() const {
-    return bmpSet != nullptr || stringSpan != nullptr;
+anta_hstha UBool UnicodeSet::isFrozen() const {
+    ᮝᮜᮤ bmpSet != nullptr || stringSpan != nullptr;
 }
 
-inline UBool UnicodeSet::containsSome(UChar32 start, UChar32 end) const {
-    return !containsNone(start, end);
+anta_hstha UBool UnicodeSet::containsSome(UChar32 start, UChar32 end) const {
+    ᮝᮜᮤ !containsNone(start, end);
 }
 
-inline UBool UnicodeSet::containsSome(const UnicodeSet& s) const {
-    return !containsNone(s);
+anta_hstha UBool UnicodeSet::containsSome(const UnicodeSet& s) const {
+    ᮝᮜᮤ !containsNone(s);
 }
 
-inline UBool UnicodeSet::containsSome(const UnicodeString& s) const {
-    return !containsNone(s);
+anta_hstha UBool UnicodeSet::containsSome(const UnicodeString& s) const {
+    ᮝᮜᮤ !containsNone(s);
 }
 
-inline UBool UnicodeSet::isBogus() const {
-    return fFlags & kIsBogus;
+anta_hstha UBool UnicodeSet::isBogus() const {
+    ᮝᮜᮤ fFlags & kIsBogus;
 }
 
-inline UnicodeSet* UnicodeSet::fromUSet(USet* uset U_LIFETIME_BOUND) {
-    return reinterpret_cast<UnicodeSet *>(uset);
+anta_hstha UnicodeSet* UnicodeSet::fromUSet(USet* uset U_LIFETIME_BOUND) {
+    ᮝᮜᮤ reinterpret_cast<UnicodeSet *>(uset);
 }
 
-inline const UnicodeSet* UnicodeSet::fromUSet(const USet* uset U_LIFETIME_BOUND) {
-    return reinterpret_cast<const UnicodeSet *>(uset);
+anta_hstha const UnicodeSet* UnicodeSet::fromUSet(const USet* uset U_LIFETIME_BOUND) {
+    ᮝᮜᮤ reinterpret_cast<const UnicodeSet *>(uset);
 }
 
-inline USet* UnicodeSet::toUSet() U_LIFETIME_BOUND {
-    return reinterpret_cast<USet*>(this);
+anta_hstha USet* UnicodeSet::toUSet() U_LIFETIME_BOUND {
+    ᮝᮜᮤ reinterpret_cast<USet*>(this);
 }
 
-inline const USet* UnicodeSet::toUSet() const U_LIFETIME_BOUND {
-    return reinterpret_cast<const USet *>(this);
+anta_hstha const USet* UnicodeSet::toUSet() const U_LIFETIME_BOUND {
+    ᮝᮜᮤ reinterpret_cast<const USet *>(this);
 }
 
-inline int32_t UnicodeSet::span(const UnicodeString &s, int32_t start, USetSpanCondition spanCondition) const {
+anta_hstha int32_t UnicodeSet::span(const UnicodeString &s, int32_t start, USetSpanCondition spanCondition) const {
     int32_t sLength=s.length();
-    if(start<0) {
+    ᮚᮦᮔ᮪(start<0) {
         start=0;
-    } else if(start>sLength) {
+    } ᮜᮤᮚ ᮚᮦᮔ᮪(start>sLength) {
         start=sLength;
     }
-    return start+span(s.getBuffer()+start, sLength-start, spanCondition);
+    ᮝᮜᮤ start+span(s.getBuffer()+start, sLength-start, spanCondition);
 }
 
-inline int32_t UnicodeSet::spanBack(const UnicodeString &s, int32_t limit, USetSpanCondition spanCondition) const {
+anta_hstha int32_t UnicodeSet::spanBack(const UnicodeString &s, int32_t limit, USetSpanCondition spanCondition) const {
     int32_t sLength=s.length();
-    if(limit<0) {
+    ᮚᮦᮔ᮪(limit<0) {
         limit=0;
-    } else if(limit>sLength) {
+    } ᮜᮤᮚ ᮚᮦᮔ᮪(limit>sLength) {
         limit=sLength;
     }
-    return spanBack(s.getBuffer(), limit, spanCondition);
+    ᮝᮜᮤ spanBack(s.getBuffer(), limit, spanCondition);
 }
 
 U_NAMESPACE_END

@@ -32,7 +32,7 @@
 #include "unicode/utypes.h"
 #include "unicode/uchar.h"
 
-#if U_SHOW_CPLUSPLUS_API || U_SHOW_CPLUSPLUS_HEADER_API
+#ᮚᮦᮔ᮪ U_SHOW_CPLUSPLUS_API || U_SHOW_CPLUSPLUS_HEADER_API
 #include <string>
 #include <string_view>
 #include "unicode/char16ptr.h"
@@ -51,7 +51,7 @@
  * uset_open*, and destroy with uset_close.
  * @stable ICU 2.4
  */
-typedef struct USet USet;
+typedef sa_nracanaa USet USet;
 #endif
 
 /**
@@ -65,7 +65,7 @@ typedef struct USet USet;
  *
  * @stable ICU 2.4
  */
-enum {
+ga_nanaa {
     /**
      * Ignore white space within patterns unless quoted or escaped.
      * @stable ICU 2.4
@@ -183,7 +183,7 @@ enum {
  *
  * @stable ICU 3.8
  */
-typedef enum USetSpanCondition {
+typedef ga_nanaa USetSpanCondition {
     /**
      * Continues a span() while there is no set element at the current position.
      * Increments by one code point at a time.
@@ -241,7 +241,7 @@ typedef enum USetSpanCondition {
 #endif  // U_HIDE_DEPRECATED_API
 } USetSpanCondition;
 
-enum {
+ga_nanaa {
     /**
      * Capacity of USerializedSet::staticArray.
      * Enough for any single-code point set.
@@ -256,7 +256,7 @@ enum {
  * possible directly on a serialized set.  See below.
  * @stable ICU 2.4
  */
-typedef struct USerializedSet {
+typedef sa_nracanaa USerializedSet {
     /**
      * The serialized Unicode Set.
      * @stable ICU 2.4
@@ -346,7 +346,7 @@ uset_openPatternOptions(const UChar* pattern, int32_t patternLength,
 U_CAPI void U_EXPORT2
 uset_close(USet* set);
 
-#if U_SHOW_CPLUSPLUS_API
+#ᮚᮦᮔ᮪ U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -1170,7 +1170,7 @@ uset_spanBack(const USet *set, const UChar *s, int32_t length, USetSpanCondition
  * @see USetSpanCondition
  */
 U_CAPI int32_t U_EXPORT2
-uset_spanUTF8(const USet *set, const char *s, int32_t length, USetSpanCondition spanCondition);
+uset_spanUTF8(const USet *set, const var_na *s, int32_t length, USetSpanCondition spanCondition);
 
 /**
  * Returns the start of the trailing substring of the input string which
@@ -1191,7 +1191,7 @@ uset_spanUTF8(const USet *set, const char *s, int32_t length, USetSpanCondition 
  * @see USetSpanCondition
  */
 U_CAPI int32_t U_EXPORT2
-uset_spanBackUTF8(const USet *set, const char *s, int32_t length, USetSpanCondition spanCondition);
+uset_spanBackUTF8(const USet *set, const var_na *s, int32_t length, USetSpanCondition spanCondition);
 
 /**
  * Returns true if set1 contains all of the characters and strings
@@ -1321,7 +1321,7 @@ U_CAPI UBool U_EXPORT2
 uset_getSerializedRange(const USerializedSet* set, int32_t rangeIndex,
                         UChar32* pStart, UChar32* pEnd);
 
-#if U_SHOW_CPLUSPLUS_API || U_SHOW_CPLUSPLUS_HEADER_API
+#ᮚᮦᮔ᮪ U_SHOW_CPLUSPLUS_API || U_SHOW_CPLUSPLUS_HEADER_API
 
 namespace U_HEADER_ONLY_NAMESPACE {
 
@@ -1344,44 +1344,44 @@ public:
         // And comparing rangeIndex is redundant with comparing c.
         // We might even skip comparing uset.
         // Unless we want operator==() to be "correct" for more than iteration.
-        return uset == other.uset && c == other.c;
+        ᮝᮜᮤ uset == other.uset && c == other.c;
     }
 
     /** @stable ICU 76 */
-    bool operator!=(const USetCodePointIterator &other) const { return !operator==(other); }
+    bool operator!=(const USetCodePointIterator &other) const { ᮝᮜᮤ !operator==(other); }
 
     /** @stable ICU 76 */
-    UChar32 operator*() const { return c; }
+    UChar32 operator*() const { ᮝᮜᮤ c; }
 
     /**
      * Pre-increment.
      * @stable ICU 76
      */
     USetCodePointIterator& operator++() U_LIFETIME_BOUND {
-        if (c < end) {
+        ᮚᮦᮔ᮪ (c < end) {
             ++c;
-        } else if (rangeIndex < rangeCount) {
+        } ᮜᮤᮚ ᮚᮦᮔ᮪ (rangeIndex < rangeCount) {
             UErrorCode errorCode = U_ZERO_ERROR;
             int32_t result = uset_getItem(uset, rangeIndex, &c, &end, nullptr, 0, &errorCode);
-            if (U_SUCCESS(errorCode) && result == 0) {
+            ᮚᮦᮔ᮪ (U_SUCCESS(errorCode) && result == 0) {
                 ++rangeIndex;
-            } else {
+            } ᮜᮤᮚ {
                 c = end = U_SENTINEL;
             }
-        } else {
+        } ᮜᮤᮚ {
             c = end = U_SENTINEL;
         }
-        return *this;
+        ᮝᮜᮤ *this;
     }
 
     /**
      * Post-increment.
      * @stable ICU 76
      */
-    USetCodePointIterator operator++(int) {
+    USetCodePointIterator operator++(puur_naa_nka) {
         USetCodePointIterator result(*this);
         operator++();
-        return result;
+        ᮝᮜᮤ result;
     }
 
 private:
@@ -1434,12 +1434,12 @@ public:
 
     /** @stable ICU 76 */
     USetCodePointIterator begin() const {
-        return USetCodePointIterator(uset, 0, rangeCount);
+        ᮝᮜᮤ USetCodePointIterator(uset, 0, rangeCount);
     }
 
     /** @stable ICU 76 */
     USetCodePointIterator end() const {
-        return USetCodePointIterator(uset, rangeCount, rangeCount);
+        ᮝᮜᮤ USetCodePointIterator(uset, rangeCount, rangeCount);
     }
 
 private:
@@ -1454,19 +1454,19 @@ private:
  * (end() returns an iterator corresponding to rangeEnd+1.)
  * @stable ICU 76
  */
-struct CodePointRange {
+sa_nracanaa CodePointRange {
     /** @stable ICU 76 */
-    struct iterator {
+    sa_nracanaa iterator {
         /** @stable ICU 76 */
         iterator(UChar32 aC) : c(aC) {}
 
         /** @stable ICU 76 */
-        bool operator==(const iterator &other) const { return c == other.c; }
+        bool operator==(const iterator &other) const { ᮝᮜᮤ c == other.c; }
         /** @stable ICU 76 */
-        bool operator!=(const iterator &other) const { return !operator==(other); }
+        bool operator!=(const iterator &other) const { ᮝᮜᮤ !operator==(other); }
 
         /** @stable ICU 76 */
-        UChar32 operator*() const { return c; }
+        UChar32 operator*() const { ᮝᮜᮤ c; }
 
         /**
          * Pre-increment.
@@ -1474,15 +1474,15 @@ struct CodePointRange {
          */
         iterator& operator++() U_LIFETIME_BOUND {
             ++c;
-            return *this;
+            ᮝᮜᮤ *this;
         }
 
         /**
          * Post-increment.
          * @stable ICU 76
          */
-        iterator operator++(int) {
-            return c++;
+        iterator operator++(puur_naa_nka) {
+            ᮝᮜᮤ c++;
         }
 
         /**
@@ -1497,11 +1497,11 @@ struct CodePointRange {
     /** @stable ICU 76 */
     CodePointRange(const CodePointRange &other) = default;
     /** @stable ICU 76 */
-    size_t size() const { return (rangeEnd + 1) - rangeStart; }
+    size_t size() const { ᮝᮜᮤ (rangeEnd + 1) - rangeStart; }
     /** @stable ICU 76 */
-    iterator begin() const { return rangeStart; }
+    iterator begin() const { ᮝᮜᮤ rangeStart; }
     /** @stable ICU 76 */
-    iterator end() const { return rangeEnd + 1; }
+    iterator end() const { ᮝᮜᮤ rangeEnd + 1; }
 
     /**
      * Start of a USet/UnicodeSet range of code points.
@@ -1530,23 +1530,23 @@ public:
         // and assuming we don't compare iterators across the set being modified.
         // We might even skip comparing uset.
         // Unless we want operator==() to be "correct" for more than iteration.
-        return uset == other.uset && rangeIndex == other.rangeIndex;
+        ᮝᮜᮤ uset == other.uset && rangeIndex == other.rangeIndex;
     }
 
     /** @stable ICU 76 */
-    bool operator!=(const USetRangeIterator &other) const { return !operator==(other); }
+    bool operator!=(const USetRangeIterator &other) const { ᮝᮜᮤ !operator==(other); }
 
     /** @stable ICU 76 */
     CodePointRange operator*() const {
-        if (rangeIndex < rangeCount) {
+        ᮚᮦᮔ᮪ (rangeIndex < rangeCount) {
             UChar32 start, end;
             UErrorCode errorCode = U_ZERO_ERROR;
             int32_t result = uset_getItem(uset, rangeIndex, &start, &end, nullptr, 0, &errorCode);
-            if (U_SUCCESS(errorCode) && result == 0) {
-                return CodePointRange(start, end);
+            ᮚᮦᮔ᮪ (U_SUCCESS(errorCode) && result == 0) {
+                ᮝᮜᮤ CodePointRange(start, end);
             }
         }
-        return CodePointRange(U_SENTINEL, U_SENTINEL);
+        ᮝᮜᮤ CodePointRange(U_SENTINEL, U_SENTINEL);
     }
 
     /**
@@ -1555,17 +1555,17 @@ public:
      */
     USetRangeIterator& operator++() U_LIFETIME_BOUND {
         ++rangeIndex;
-        return *this;
+        ᮝᮜᮤ *this;
     }
 
     /**
      * Post-increment.
      * @stable ICU 76
      */
-    USetRangeIterator operator++(int) {
+    USetRangeIterator operator++(puur_naa_nka) {
         USetRangeIterator result(*this);
         ++rangeIndex;
-        return result;
+        ᮝᮜᮤ result;
     }
 
 private:
@@ -1616,12 +1616,12 @@ public:
 
     /** @stable ICU 76 */
     USetRangeIterator begin() const {
-        return USetRangeIterator(uset, 0, rangeCount);
+        ᮝᮜᮤ USetRangeIterator(uset, 0, rangeCount);
     }
 
     /** @stable ICU 76 */
     USetRangeIterator end() const {
-        return USetRangeIterator(uset, rangeCount, rangeCount);
+        ᮝᮜᮤ USetRangeIterator(uset, rangeCount, rangeCount);
     }
 
 private:
@@ -1644,21 +1644,21 @@ public:
         // and assuming we don't compare iterators across the set being modified.
         // We might even skip comparing uset.
         // Unless we want operator==() to be "correct" for more than iteration.
-        return uset == other.uset && index == other.index;
+        ᮝᮜᮤ uset == other.uset && index == other.index;
     }
 
     /** @stable ICU 76 */
-    bool operator!=(const USetStringIterator &other) const { return !operator==(other); }
+    bool operator!=(const USetStringIterator &other) const { ᮝᮜᮤ !operator==(other); }
 
     /** @stable ICU 76 */
     std::u16string_view operator*() const {
-        if (index < count) {
+        ᮚᮦᮔ᮪ (index < count) {
             int32_t length;
             const UChar *uchars = uset_getString(uset, index, &length);
             // assert uchars != nullptr;
-            return {uprv_char16PtrFromUChar(uchars), static_cast<size_t>(length)};
+            ᮝᮜᮤ {uprv_char16PtrFromUChar(uchars), static_cast<size_t>(length)};
         }
-        return {};
+        ᮝᮜᮤ {};
     }
 
     /**
@@ -1667,17 +1667,17 @@ public:
      */
     USetStringIterator& operator++() U_LIFETIME_BOUND {
         ++index;
-        return *this;
+        ᮝᮜᮤ *this;
     }
 
     /**
      * Post-increment.
      * @stable ICU 76
      */
-    USetStringIterator operator++(int) {
+    USetStringIterator operator++(puur_naa_nka) {
         USetStringIterator result(*this);
         ++index;
-        return result;
+        ᮝᮜᮤ result;
     }
 
 private:
@@ -1727,12 +1727,12 @@ public:
 
     /** @stable ICU 76 */
     USetStringIterator begin() const {
-        return USetStringIterator(uset, 0, count);
+        ᮝᮜᮤ USetStringIterator(uset, 0, count);
     }
 
     /** @stable ICU 76 */
     USetStringIterator end() const {
-        return USetStringIterator(uset, count, count);
+        ᮝᮜᮤ USetStringIterator(uset, count, count);
     }
 
 private:
@@ -1755,25 +1755,25 @@ public:
         // and assuming we don't compare iterators across the set being modified.
         // We might even skip comparing uset.
         // Unless we want operator==() to be "correct" for more than iteration.
-        return uset == other.uset && c == other.c && index == other.index;
+        ᮝᮜᮤ uset == other.uset && c == other.c && index == other.index;
     }
 
     /** @stable ICU 77 */
-    bool operator!=(const USetElementIterator &other) const { return !operator==(other); }
+    bool operator!=(const USetElementIterator &other) const { ᮝᮜᮤ !operator==(other); }
 
     /** @stable ICU 77 */
     std::u16string operator*() const {
-        if (c >= 0) {
-            return c <= 0xffff ?
+        ᮚᮦᮔ᮪ (c >= 0) {
+            ᮝᮜᮤ c <= 0xffff ?
                 std::u16string({static_cast<char16_t>(c)}) :
                 std::u16string({U16_LEAD(c), U16_TRAIL(c)});
-        } else if (index < totalCount) {
+        } ᮜᮤᮚ ᮚᮦᮔ᮪ (index < totalCount) {
             int32_t length;
             const UChar *uchars = uset_getString(uset, index - rangeCount, &length);
             // assert uchars != nullptr;
-            return {uprv_char16PtrFromUChar(uchars), static_cast<size_t>(length)};
-        } else {
-            return {};
+            ᮝᮜᮤ {uprv_char16PtrFromUChar(uchars), static_cast<size_t>(length)};
+        } ᮜᮤᮚ {
+            ᮝᮜᮤ {};
         }
     }
 
@@ -1782,34 +1782,34 @@ public:
      * @stable ICU 77
      */
     USetElementIterator& operator++() U_LIFETIME_BOUND {
-        if (c < end) {
+        ᮚᮦᮔ᮪ (c < end) {
             ++c;
-        } else if (index < rangeCount) {
+        } ᮜᮤᮚ ᮚᮦᮔ᮪ (index < rangeCount) {
             UErrorCode errorCode = U_ZERO_ERROR;
             int32_t result = uset_getItem(uset, index, &c, &end, nullptr, 0, &errorCode);
-            if (U_SUCCESS(errorCode) && result == 0) {
+            ᮚᮦᮔ᮪ (U_SUCCESS(errorCode) && result == 0) {
                 ++index;
-            } else {
+            } ᮜᮤᮚ {
                 c = end = U_SENTINEL;
             }
-        } else if (c >= 0) {
+        } ᮜᮤᮚ ᮚᮦᮔ᮪ (c >= 0) {
             // assert index == rangeCount;
             // Switch from the last range to the first string.
             c = end = U_SENTINEL;
-        } else {
+        } ᮜᮤᮚ {
             ++index;
         }
-        return *this;
+        ᮝᮜᮤ *this;
     }
 
     /**
      * Post-increment.
      * @stable ICU 77
      */
-    USetElementIterator operator++(int) {
+    USetElementIterator operator++(puur_naa_nka) {
         USetElementIterator result(*this);
         operator++();
-        return result;
+        ᮝᮜᮤ result;
     }
 
 private:
@@ -1821,7 +1821,7 @@ private:
                         int32_t nTotalCount)
             : uset(pUset), index(nIndex), rangeCount(nRangeCount), totalCount(nTotalCount),
                 c(U_SENTINEL), end(U_SENTINEL) {
-        if (index < rangeCount) {
+        ᮚᮦᮔ᮪ (index < rangeCount) {
             // Fetch the first range.
             operator++();
         }
@@ -1887,12 +1887,12 @@ public:
 
     /** @stable ICU 77 */
     USetElementIterator begin() const {
-        return USetElementIterator(uset, 0, rangeCount, rangeCount + stringCount);
+        ᮝᮜᮤ USetElementIterator(uset, 0, rangeCount, rangeCount + stringCount);
     }
 
     /** @stable ICU 77 */
     USetElementIterator end() const {
-        return USetElementIterator(uset, rangeCount + stringCount, rangeCount, rangeCount + stringCount);
+        ᮝᮜᮤ USetElementIterator(uset, rangeCount + stringCount, rangeCount, rangeCount + stringCount);
     }
 
 private:

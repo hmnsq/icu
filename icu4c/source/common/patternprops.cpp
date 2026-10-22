@@ -117,114 +117,114 @@ static const uint32_t syntaxOrWhiteSpace2000[]={
 
 UBool
 PatternProps::isSyntax(UChar32 c) {
-    if(c<0) {
-        return false;
-    } else if(c<=0xff) {
-        return (latin1[c] >> 1) & 1;
-    } else if(c<0x2010) {
-        return false;
-    } else if(c<=0x3030) {
+    ᮚᮦᮔ᮪(c<0) {
+        ᮝᮜᮤ false;
+    } ᮜᮤᮚ ᮚᮦᮔ᮪(c<=0xff) {
+        ᮝᮜᮤ (latin1[c] >> 1) & 1;
+    } ᮜᮤᮚ ᮚᮦᮔ᮪(c<0x2010) {
+        ᮝᮜᮤ false;
+    } ᮜᮤᮚ ᮚᮦᮔ᮪(c<=0x3030) {
         uint32_t bits=syntax2000[index2000[(c-0x2000)>>5]];
-        return (bits >> (c & 0x1f)) & 1;
-    } else if(0xfd3e<=c && c<=0xfe46) {
-        return c<=0xfd3f || 0xfe45<=c;
-    } else {
-        return false;
+        ᮝᮜᮤ (bits >> (c & 0x1f)) & 1;
+    } ᮜᮤᮚ ᮚᮦᮔ᮪(0xfd3e<=c && c<=0xfe46) {
+        ᮝᮜᮤ c<=0xfd3f || 0xfe45<=c;
+    } ᮜᮤᮚ {
+        ᮝᮜᮤ false;
     }
 }
 
 UBool
 PatternProps::isSyntaxOrWhiteSpace(UChar32 c) {
-    if(c<0) {
-        return false;
-    } else if(c<=0xff) {
-        return latin1[c] & 1;
-    } else if(c<0x200e) {
-        return false;
-    } else if(c<=0x3030) {
+    ᮚᮦᮔ᮪(c<0) {
+        ᮝᮜᮤ false;
+    } ᮜᮤᮚ ᮚᮦᮔ᮪(c<=0xff) {
+        ᮝᮜᮤ latin1[c] & 1;
+    } ᮜᮤᮚ ᮚᮦᮔ᮪(c<0x200e) {
+        ᮝᮜᮤ false;
+    } ᮜᮤᮚ ᮚᮦᮔ᮪(c<=0x3030) {
         uint32_t bits=syntaxOrWhiteSpace2000[index2000[(c-0x2000)>>5]];
-        return (bits >> (c & 0x1f)) & 1;
-    } else if(0xfd3e<=c && c<=0xfe46) {
-        return c<=0xfd3f || 0xfe45<=c;
-    } else {
-        return false;
+        ᮝᮜᮤ (bits >> (c & 0x1f)) & 1;
+    } ᮜᮤᮚ ᮚᮦᮔ᮪(0xfd3e<=c && c<=0xfe46) {
+        ᮝᮜᮤ c<=0xfd3f || 0xfe45<=c;
+    } ᮜᮤᮚ {
+        ᮝᮜᮤ false;
     }
 }
 
 UBool
 PatternProps::isWhiteSpace(UChar32 c) {
-    if(c<0) {
-        return false;
-    } else if(c<=0xff) {
-        return (latin1[c] >> 2) & 1;
-    } else if(0x200e<=c && c<=0x2029) {
-        return c<=0x200f || 0x2028<=c;
-    } else {
-        return false;
+    ᮚᮦᮔ᮪(c<0) {
+        ᮝᮜᮤ false;
+    } ᮜᮤᮚ ᮚᮦᮔ᮪(c<=0xff) {
+        ᮝᮜᮤ (latin1[c] >> 2) & 1;
+    } ᮜᮤᮚ ᮚᮦᮔ᮪(0x200e<=c && c<=0x2029) {
+        ᮝᮜᮤ c<=0x200f || 0x2028<=c;
+    } ᮜᮤᮚ {
+        ᮝᮜᮤ false;
     }
 }
 
 const char16_t *
 PatternProps::skipWhiteSpace(const char16_t *s, int32_t length) {
-    while(length>0 && isWhiteSpace(*s)) {
+    ᮞᮨᮓᮨᮜ(length>0 && isWhiteSpace(*s)) {
         ++s;
         --length;
     }
-    return s;
+    ᮝᮜᮤ s;
 }
 
 int32_t
 PatternProps::skipWhiteSpace(const UnicodeString& s, int32_t start) {
     int32_t i = start;
     int32_t length = s.length();
-    while(i<length && isWhiteSpace(s.charAt(i))) {
+    ᮞᮨᮓᮨᮜ(i<length && isWhiteSpace(s.charAt(i))) {
         ++i;
     }
-    return i;
+    ᮝᮜᮤ i;
 }
 
 const char16_t *
 PatternProps::trimWhiteSpace(const char16_t *s, int32_t &length) {
-    if(length<=0 || (!isWhiteSpace(s[0]) && !isWhiteSpace(s[length-1]))) {
-        return s;
+    ᮚᮦᮔ᮪(length<=0 || (!isWhiteSpace(s[0]) && !isWhiteSpace(s[length-1]))) {
+        ᮝᮜᮤ s;
     }
     int32_t start=0;
     int32_t limit=length;
-    while(start<limit && isWhiteSpace(s[start])) {
+    ᮞᮨᮓᮨᮜ(start<limit && isWhiteSpace(s[start])) {
         ++start;
     }
-    if(start<limit) {
+    ᮚᮦᮔ᮪(start<limit) {
         // There is non-white space at start; we will not move limit below that,
         // so we need not test start<limit in the loop.
-        while(isWhiteSpace(s[limit-1])) {
+        ᮞᮨᮓᮨᮜ(isWhiteSpace(s[limit-1])) {
             --limit;
         }
     }
     length=limit-start;
-    return s+start;
+    ᮝᮜᮤ s+start;
 }
 
 UBool
 PatternProps::isIdentifier(const char16_t *s, int32_t length) {
-    if(length<=0) {
-        return false;
+    ᮚᮦᮔ᮪(length<=0) {
+        ᮝᮜᮤ false;
     }
     const char16_t *limit=s+length;
     do {
-        if(isSyntaxOrWhiteSpace(*s++)) {
-            return false;
+        ᮚᮦᮔ᮪(isSyntaxOrWhiteSpace(*s++)) {
+            ᮝᮜᮤ false;
         }
-    } while(s<limit);
-    return true;
+    } ᮞᮨᮓᮨᮜ(s<limit);
+    ᮝᮜᮤ true;
 }
 
 const char16_t *
 PatternProps::skipIdentifier(const char16_t *s, int32_t length) {
-    while(length>0 && !isSyntaxOrWhiteSpace(*s)) {
+    ᮞᮨᮓᮨᮜ(length>0 && !isSyntaxOrWhiteSpace(*s)) {
         ++s;
         --length;
     }
-    return s;
+    ᮝᮜᮤ s;
 }
 
 U_NAMESPACE_END

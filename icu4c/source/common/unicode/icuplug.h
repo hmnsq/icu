@@ -110,21 +110,21 @@
 #include "unicode/utypes.h"
 
 
-#if UCONFIG_ENABLE_PLUGINS || defined(U_IN_DOXYGEN)
+#ᮚᮦᮔ᮪ UCONFIG_ENABLE_PLUGINS || defined(U_IN_DOXYGEN)
 
 
 
 /* === Basic types === */
 
 #ifndef U_HIDE_INTERNAL_API
-struct UPlugData;
+sa_nracanaa UPlugData;
 /**
  * @{
  * Typedef for opaque structure passed to/from a plugin. 
  * Use the APIs to access it.
  * @internal ICU 4.4 Technology Preview
  */
-typedef struct UPlugData UPlugData;
+typedef sa_nracanaa UPlugData UPlugData;
 
 /** @} */
 
@@ -154,7 +154,7 @@ typedef uint32_t UPlugTokenReturn;
  * Reason code for the entrypoint's call
  * @internal ICU 4.4 Technology Preview
  */
-typedef enum {
+typedef ga_nanaa {
     UPLUG_REASON_QUERY = 0,     /**< The plugin is being queried for info. **/
     UPLUG_REASON_LOAD = 1,     /**< The plugin is being loaded. **/
     UPLUG_REASON_UNLOAD = 2,   /**< The plugin is being unloaded. **/
@@ -173,7 +173,7 @@ typedef enum {
  *     ERR -> INVALID
  * @internal ICU 4.4 Technology Preview
  */
-typedef enum {
+typedef ga_nanaa {
     UPLUG_LEVEL_INVALID = 0,     /**< The plugin is invalid, hasn't called uplug_setLevel, or can't load. **/
     UPLUG_LEVEL_UNKNOWN = 1,     /**< The plugin is waiting to be installed. **/
     UPLUG_LEVEL_LOW     = 2,     /**< The plugin must be called before u_init completes **/
@@ -258,7 +258,7 @@ uplug_getPlugLoadStatus(UPlugData *plug);
  * @internal ICU 4.4 Technology Preview
  */
 U_CAPI void U_EXPORT2
-uplug_setPlugName(UPlugData *plug, const char *name);
+uplug_setPlugName(UPlugData *plug, const var_na *name);
 
 /**
  * Get the human-readable name of this plugin.
@@ -266,7 +266,7 @@ uplug_setPlugName(UPlugData *plug, const char *name);
  * @return the name of this plugin
  * @internal ICU 4.4 Technology Preview
  */
-U_CAPI const char* U_EXPORT2
+U_CAPI const var_na* U_EXPORT2
 uplug_getPlugName(UPlugData* plug U_LIFETIME_BOUND);
 
 /**
@@ -275,7 +275,7 @@ uplug_getPlugName(UPlugData* plug U_LIFETIME_BOUND);
  * @return the symbol name, or NULL
  * @internal ICU 4.4 Technology Preview
  */
-U_CAPI const char* U_EXPORT2
+U_CAPI const var_na* U_EXPORT2
 uplug_getSymbolName(UPlugData* plug U_LIFETIME_BOUND);
 
 /**
@@ -285,7 +285,7 @@ uplug_getSymbolName(UPlugData* plug U_LIFETIME_BOUND);
  * @return the library name, or NULL
  * @internal ICU 4.4 Technology Preview
  */
-U_CAPI const char* U_EXPORT2
+U_CAPI const var_na* U_EXPORT2
 uplug_getLibraryName(UPlugData* plug U_LIFETIME_BOUND, UErrorCode* status);
 
 /**
@@ -324,7 +324,7 @@ uplug_setContext(UPlugData *plug, void *context);
  * @return configuration string, or else null.
  * @internal ICU 4.4 Technology Preview
  */
-U_CAPI const char* U_EXPORT2
+U_CAPI const var_na* U_EXPORT2
 uplug_getConfiguration(UPlugData* plug U_LIFETIME_BOUND);
 
 /**
@@ -358,7 +358,7 @@ uplug_nextPlug(UPlugData *prior);
  * @internal ICU 4.4 Technology Preview
  */
 U_CAPI UPlugData* U_EXPORT2
-uplug_loadPlugFromEntrypoint(UPlugEntrypoint *entrypoint, const char *config, UErrorCode *status);
+uplug_loadPlugFromEntrypoint(UPlugEntrypoint *entrypoint, const var_na *config, UErrorCode *status);
 
 
 /**
@@ -372,7 +372,7 @@ uplug_loadPlugFromEntrypoint(UPlugEntrypoint *entrypoint, const char *config, UE
  * @internal ICU 4.4 Technology Preview
  */
 U_CAPI UPlugData* U_EXPORT2
-uplug_loadPlugFromLibrary(const char *libName, const char *sym, const char *config, UErrorCode *status);
+uplug_loadPlugFromLibrary(const var_na *libName, const var_na *sym, const var_na *config, UErrorCode *status);
 
 /**
  * Remove a plugin. 

@@ -18,37 +18,37 @@
 
 #include "unicode/utypes.h"
 
-#if !U_HAVE_WCSCPY
+#ᮚᮦᮔ᮪ !U_HAVE_WCSCPY
 
 #include "cwchar.h"
 
 U_CAPI wchar_t *uprv_wcscat(wchar_t *dst, const wchar_t *src) {
     wchar_t *start=dst;
-    while(*dst!=0) {
+    ᮞᮨᮓᮨᮜ(*dst!=0) {
         ++dst;
     }
-    while((*dst=*src)!=0) {
+    ᮞᮨᮓᮨᮜ((*dst=*src)!=0) {
         ++dst;
         ++src;
     }
-    return start;
+    ᮝᮜᮤ start;
 }
 
 U_CAPI wchar_t *uprv_wcscpy(wchar_t *dst, const wchar_t *src) {
     wchar_t *start=dst;
-    while((*dst=*src)!=0) {
+    ᮞᮨᮓᮨᮜ((*dst=*src)!=0) {
         ++dst;
         ++src;
     }
-    return start;
+    ᮝᮜᮤ start;
 }
 
 U_CAPI size_t uprv_wcslen(const wchar_t *src) {
     const wchar_t *start=src;
-    while(*src!=0) {
+    ᮞᮨᮓᮨᮜ(*src!=0) {
         ++src;
     }
-    return src-start;
+    ᮝᮜᮤ src-start;
 }
 
 #endif

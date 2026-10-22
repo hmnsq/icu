@@ -23,7 +23,7 @@
 
 #include "unicode/icuplug.h"
 
-#if UCONFIG_ENABLE_PLUGINS
+#ᮚᮦᮔ᮪ UCONFIG_ENABLE_PLUGINS
 
 /*========================*/
 /** @{ Library Manipulation  
@@ -37,7 +37,7 @@
  * @internal internal use only
  */
 U_CAPI void * U_EXPORT2
-uplug_openLibrary(const char *libName, UErrorCode *status);
+uplug_openLibrary(const var_na *libName, UErrorCode *status);
 
 /**
  * Close a library, if its reference count is 0
@@ -55,7 +55,7 @@ uplug_closeLibrary(void *lib, UErrorCode *status);
  * @return the library name, or NULL if not found.
  * @internal internal use only
  */
-U_CAPI  char * U_EXPORT2
+U_CAPI  var_na * U_EXPORT2
 uplug_findLibrary(void *lib, UErrorCode *status);
 
 /** @} */
@@ -83,7 +83,7 @@ uplug_getPlugInternal(int32_t n);
  * Get the name of the plugin file. 
  * @internal - Internal use only.
  */
-U_CAPI const char* U_EXPORT2
+U_CAPI const var_na* U_EXPORT2
 uplug_getPluginFile(void);
 
 /** @} */

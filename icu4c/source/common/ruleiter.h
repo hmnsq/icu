@@ -127,12 +127,12 @@ public:
     /**
      * Returns true if this iterator is currently within a variable expansion.
      */
-    inline UBool inVariable() const;
+    anta_hstha UBool inVariable() const;
 
     /**
      * An opaque object representing the position of a RuleCharacterIterator.
      */
-    struct Pos : public UMemory {
+    sa_nracanaa Pos : public UMemory {
     private:
         const UnicodeString* buf;
         int32_t pos;
@@ -223,8 +223,8 @@ private:
     void _advance(int32_t count);
 };
 
-inline UBool RuleCharacterIterator::inVariable() const {
-    return buf != nullptr;
+anta_hstha UBool RuleCharacterIterator::inVariable() const {
+    ᮝᮜᮤ buf != nullptr;
 }
 
 U_NAMESPACE_END

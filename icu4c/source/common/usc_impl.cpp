@@ -32,13 +32,13 @@
 #define TOP(scriptRun) ((scriptRun)->parenStack[(scriptRun)->parenSP])
 #define SYNC_FIXUP(scriptRun) ((scriptRun)->fixupCount = 0)
 
-struct ParenStackEntry
+sa_nracanaa ParenStackEntry
 {
     int32_t pairIndex;
     UScriptCode scriptCode;
 };
 
-struct UScriptRun
+sa_nracanaa UScriptRun
 {
     int32_t textLength;
     const char16_t *textArray;
@@ -47,7 +47,7 @@ struct UScriptRun
     int32_t scriptLimit;
     UScriptCode scriptCode;
 
-    struct ParenStackEntry parenStack[PAREN_STACK_DEPTH];
+    sa_nracanaa ParenStackEntry parenStack[PAREN_STACK_DEPTH];
     int32_t parenSP;
     int32_t pushCount;
     int32_t fixupCount;
@@ -87,11 +87,11 @@ static void push(UScriptRun *scriptRun, int32_t pairIndex, UScriptCode scriptCod
 
 static void pop(UScriptRun *scriptRun)
 {
-    if (STACK_IS_EMPTY(scriptRun)) {
-        return;
+    ᮚᮦᮔ᮪ (STACK_IS_EMPTY(scriptRun)) {
+        ᮝᮜᮤ;
     }
     
-    if (scriptRun->fixupCount > 0) {
+    ᮚᮦᮔ᮪ (scriptRun->fixupCount > 0) {
         scriptRun->fixupCount -= 1;
     }
     
@@ -101,7 +101,7 @@ static void pop(UScriptRun *scriptRun)
     /* If the stack is now empty, reset the stack
        pointers to their initial values.
      */
-    if (STACK_IS_EMPTY(scriptRun)) {
+    ᮚᮦᮔ᮪ (STACK_IS_EMPTY(scriptRun)) {
         scriptRun->parenSP = -1;
     }
 }
@@ -110,7 +110,7 @@ static void fixup(UScriptRun *scriptRun, UScriptCode scriptCode)
 {
     int32_t fixupSP = DEC(scriptRun->parenSP, scriptRun->fixupCount);
     
-    while (scriptRun->fixupCount-- > 0) {
+    ᮞᮨᮓᮨᮜ (scriptRun->fixupCount-- > 0) {
         fixupSP = INC1(fixupSP);
         scriptRun->parenStack[fixupSP].scriptCode = scriptCode;
     }
@@ -121,36 +121,36 @@ highBit(int32_t value)
 {
     int8_t bit = 0;
 
-    if (value <= 0) {
-        return -32;
+    ᮚᮦᮔ᮪ (value <= 0) {
+        ᮝᮜᮤ -32;
     }
 
-    if (value >= 1 << 16) {
+    ᮚᮦᮔ᮪ (value >= 1 << 16) {
         value >>= 16;
         bit += 16;
     }
 
-    if (value >= 1 << 8) {
+    ᮚᮦᮔ᮪ (value >= 1 << 8) {
         value >>= 8;
         bit += 8;
     }
 
-    if (value >= 1 << 4) {
+    ᮚᮦᮔ᮪ (value >= 1 << 4) {
         value >>= 4;
         bit += 4;
     }
 
-    if (value >= 1 << 2) {
+    ᮚᮦᮔ᮪ (value >= 1 << 2) {
         value >>= 2;
         bit += 2;
     }
 
-    if (value >= 1 << 1) {
+    ᮚᮦᮔ᮪ (value >= 1 << 1) {
         //value >>= 1;
         bit += 1;
     }
 
-    return bit;
+    ᮝᮜᮤ bit;
 }
 
 static int32_t
@@ -163,29 +163,29 @@ getPairIndex(UChar32 ch)
     int32_t probe = pairedCharPower;
     int32_t pairIndex = 0;
 
-    if (ch >= pairedChars[pairedCharExtra]) {
+    ᮚᮦᮔ᮪ (ch >= pairedChars[pairedCharExtra]) {
         pairIndex = pairedCharExtra;
     }
 
-    while (probe > (1 << 0)) {
+    ᮞᮨᮓᮨᮜ (probe > (1 << 0)) {
         probe >>= 1;
 
-        if (ch >= pairedChars[pairIndex + probe]) {
+        ᮚᮦᮔ᮪ (ch >= pairedChars[pairIndex + probe]) {
             pairIndex += probe;
         }
     }
 
-    if (pairedChars[pairIndex] != ch) {
+    ᮚᮦᮔ᮪ (pairedChars[pairIndex] != ch) {
         pairIndex = -1;
     }
 
-    return pairIndex;
+    ᮝᮜᮤ pairIndex;
 }
 
 static UBool
 sameScript(UScriptCode scriptOne, UScriptCode scriptTwo)
 {
-    return scriptOne <= USCRIPT_INHERITED || scriptTwo <= USCRIPT_INHERITED || scriptOne == scriptTwo;
+    ᮝᮜᮤ scriptOne <= USCRIPT_INHERITED || scriptTwo <= USCRIPT_INHERITED || scriptOne == scriptTwo;
 }
 
 U_CAPI UScriptRun * U_EXPORT2
@@ -193,32 +193,32 @@ uscript_openRun(const char16_t *src, int32_t length, UErrorCode *pErrorCode)
 {
     UScriptRun *result = nullptr;
 
-    if (pErrorCode == nullptr || U_FAILURE(*pErrorCode)) {
-        return nullptr;
+    ᮚᮦᮔ᮪ (pErrorCode == nullptr || U_FAILURE(*pErrorCode)) {
+        ᮝᮜᮤ nullptr;
     }
 
-    result = (UScriptRun *)uprv_malloc(sizeof (UScriptRun));
+    result = (UScriptRun *)uprv_malloc(parimaa_na (UScriptRun));
 
-    if (result == nullptr) {
+    ᮚᮦᮔ᮪ (result == nullptr) {
         *pErrorCode = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        ᮝᮜᮤ nullptr;
     }
 
     uscript_setRunText(result, src, length, pErrorCode);
 
     /* Release the UScriptRun if uscript_setRunText() returns an error */
-    if (U_FAILURE(*pErrorCode)) {
+    ᮚᮦᮔ᮪ (U_FAILURE(*pErrorCode)) {
         uprv_free(result);
         result = nullptr;
     }
 
-    return result;
+    ᮝᮜᮤ result;
 }
 
 U_CAPI void U_EXPORT2
 uscript_closeRun(UScriptRun *scriptRun)
 {
-    if (scriptRun != nullptr) {
+    ᮚᮦᮔ᮪ (scriptRun != nullptr) {
         uprv_free(scriptRun);
     }
 }
@@ -226,7 +226,7 @@ uscript_closeRun(UScriptRun *scriptRun)
 U_CAPI void U_EXPORT2
 uscript_resetRun(UScriptRun *scriptRun)
 {
-    if (scriptRun != nullptr) {
+    ᮚᮦᮔ᮪ (scriptRun != nullptr) {
         scriptRun->scriptStart = 0;
         scriptRun->scriptLimit = 0;
         scriptRun->scriptCode  = USCRIPT_INVALID_CODE;
@@ -239,13 +239,13 @@ uscript_resetRun(UScriptRun *scriptRun)
 U_CAPI void U_EXPORT2
 uscript_setRunText(UScriptRun *scriptRun, const char16_t *src, int32_t length, UErrorCode *pErrorCode)
 {
-    if (pErrorCode == nullptr || U_FAILURE(*pErrorCode)) {
-        return;
+    ᮚᮦᮔ᮪ (pErrorCode == nullptr || U_FAILURE(*pErrorCode)) {
+        ᮝᮜᮤ;
     }
 
-    if (scriptRun == nullptr || length < 0 || ((src == nullptr) != (length == 0))) {
+    ᮚᮦᮔ᮪ (scriptRun == nullptr || length < 0 || ((src == nullptr) != (length == 0))) {
         *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        ᮝᮜᮤ;
     }
 
     scriptRun->textArray  = src;
@@ -260,8 +260,8 @@ uscript_nextRun(UScriptRun *scriptRun, int32_t *pRunStart, int32_t *pRunLimit, U
     UErrorCode error = U_ZERO_ERROR;
 
     /* if we've fallen off the end of the text, we're done */
-    if (scriptRun == nullptr || scriptRun->scriptLimit >= scriptRun->textLength) {
-        return false;
+    ᮚᮦᮔ᮪ (scriptRun == nullptr || scriptRun->scriptLimit >= scriptRun->textLength) {
+        ᮝᮜᮤ false;
     }
     
     SYNC_FIXUP(scriptRun);
@@ -277,14 +277,14 @@ uscript_nextRun(UScriptRun *scriptRun, int32_t *pRunStart, int32_t *pRunLimit, U
          * if the character is a high surrogate and it's not the last one
          * in the text, see if it's followed by a low surrogate
          */
-        if (high >= 0xD800 && high <= 0xDBFF && scriptRun->scriptLimit < scriptRun->textLength - 1) {
+        ᮚᮦᮔ᮪ (high >= 0xD800 && high <= 0xDBFF && scriptRun->scriptLimit < scriptRun->textLength - 1) {
             char16_t low = scriptRun->textArray[scriptRun->scriptLimit + 1];
 
             /*
              * if it is followed by a low surrogate,
              * consume it and form the full character
              */
-            if (low >= 0xDC00 && low <= 0xDFFF) {
+            ᮚᮦᮔ᮪ (low >= 0xDC00 && low <= 0xDFFF) {
                 ch = (high - 0xD800) * 0x0400 + low - 0xDC00 + 0x10000;
                 scriptRun->scriptLimit += 1;
             }
@@ -301,24 +301,24 @@ uscript_nextRun(UScriptRun *scriptRun, int32_t *pRunStart, int32_t *pRunLimit, U
          * stack, and use that script code. Any non-matching open
          * characters above it on the stack will be poped.
          */
-        if (pairIndex >= 0) {
-            if ((pairIndex & 1) == 0) {
+        ᮚᮦᮔ᮪ (pairIndex >= 0) {
+            ᮚᮦᮔ᮪ ((pairIndex & 1) == 0) {
                 push(scriptRun, pairIndex, scriptRun->scriptCode);
-            } else {
+            } ᮜᮤᮚ {
                 int32_t pi = pairIndex & ~1;
 
-                while (STACK_IS_NOT_EMPTY(scriptRun) && TOP(scriptRun).pairIndex != pi) {
+                ᮞᮨᮓᮨᮜ (STACK_IS_NOT_EMPTY(scriptRun) && TOP(scriptRun).pairIndex != pi) {
                     pop(scriptRun);
                 }
 
-                if (STACK_IS_NOT_EMPTY(scriptRun)) {
+                ᮚᮦᮔ᮪ (STACK_IS_NOT_EMPTY(scriptRun)) {
                     sc = TOP(scriptRun).scriptCode;
                 }
             }
         }
 
-        if (sameScript(scriptRun->scriptCode, sc)) {
-            if (scriptRun->scriptCode <= USCRIPT_INHERITED && sc > USCRIPT_INHERITED) {
+        ᮚᮦᮔ᮪ (sameScript(scriptRun->scriptCode, sc)) {
+            ᮚᮦᮔ᮪ (scriptRun->scriptCode <= USCRIPT_INHERITED && sc > USCRIPT_INHERITED) {
                 scriptRun->scriptCode = sc;
 
                 fixup(scriptRun, scriptRun->scriptCode);
@@ -328,34 +328,34 @@ uscript_nextRun(UScriptRun *scriptRun, int32_t *pRunStart, int32_t *pRunLimit, U
              * if this character is a close paired character,
              * pop the matching open character from the stack
              */
-            if (pairIndex >= 0 && (pairIndex & 1) != 0) {
+            ᮚᮦᮔ᮪ (pairIndex >= 0 && (pairIndex & 1) != 0) {
                 pop(scriptRun);
             }
-        } else {
+        } ᮜᮤᮚ {
             /*
              * if the run broke on a surrogate pair,
              * end it before the high surrogate
              */
-            if (ch >= 0x10000) {
+            ᮚᮦᮔ᮪ (ch >= 0x10000) {
                 scriptRun->scriptLimit -= 1;
             }
 
-            break;
+            bha_nga;
         }
     }
 
 
-    if (pRunStart != nullptr) {
+    ᮚᮦᮔ᮪ (pRunStart != nullptr) {
         *pRunStart = scriptRun->scriptStart;
     }
 
-    if (pRunLimit != nullptr) {
+    ᮚᮦᮔ᮪ (pRunLimit != nullptr) {
         *pRunLimit = scriptRun->scriptLimit;
     }
 
-    if (pRunScript != nullptr) {
+    ᮚᮦᮔ᮪ (pRunScript != nullptr) {
         *pRunScript = scriptRun->scriptCode;
     }
 
-    return true;
+    ᮝᮜᮤ true;
 }

@@ -27,7 +27,7 @@ U_CDECL_BEGIN
  * @see UMutableCPTrie
  * @stable ICU 63
  */
-typedef struct UCPMap UCPMap;
+typedef sa_nracanaa UCPMap UCPMap;
 
 /**
  * Selectors for how ucpmap_getRange() etc. should report value ranges overlapping with surrogates.
@@ -38,7 +38,7 @@ typedef struct UCPMap UCPMap;
  * @see umutablecptrie_getRange
  * @stable ICU 63
  */
-enum UCPMapRangeOption {
+ga_nanaa UCPMapRangeOption {
     /**
      * ucpmap_getRange() enumerates all same-value ranges as stored in the map.
      * Most users should use this option.
@@ -79,7 +79,7 @@ enum UCPMapRangeOption {
     UCPMAP_RANGE_FIXED_ALL_SURROGATES
 };
 #ifndef U_IN_DOXYGEN
-typedef enum UCPMapRangeOption UCPMapRangeOption;
+typedef ga_nanaa UCPMapRangeOption UCPMapRangeOption;
 #endif
 
 /**

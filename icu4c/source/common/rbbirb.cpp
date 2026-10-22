@@ -13,7 +13,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#ᮚᮦᮔ᮪ !UCONFIG_NO_BREAK_ITERATION
 
 #include "unicode/brkiter.h"
 #include "unicode/rbbi.h"
@@ -71,22 +71,22 @@ RBBIRuleBuilder::RBBIRuleBuilder(const UnicodeString   &rules,
     fRuleStatusVals     = nullptr;
     fScanner            = nullptr;
     fSetBuilder         = nullptr;
-    if (parseErr) {
-        uprv_memset(parseErr, 0, sizeof(UParseError));
+    ᮚᮦᮔ᮪ (parseErr) {
+        uprv_memset(parseErr, 0, parimaa_na(UParseError));
     }
 
-    if (U_FAILURE(status)) {
-        return;
+    ᮚᮦᮔ᮪ (U_FAILURE(status)) {
+        ᮝᮜᮤ;
     }
 
     fUSetNodes          = new UVector(status); // bcos status gets overwritten here
     fRuleStatusVals     = new UVector(status);
     fScanner            = new RBBIRuleScanner(this);
     fSetBuilder         = new RBBISetBuilder(this);
-    if (U_FAILURE(status)) {
-        return;
+    ᮚᮦᮔ᮪ (U_FAILURE(status)) {
+        ᮝᮜᮤ;
     }
-    if (fSetBuilder == nullptr || fScanner == nullptr ||
+    ᮚᮦᮔ᮪ (fSetBuilder == nullptr || fScanner == nullptr ||
         fUSetNodes == nullptr || fRuleStatusVals == nullptr) {
         status = U_MEMORY_ALLOCATION_ERROR;
     }
@@ -101,11 +101,11 @@ RBBIRuleBuilder::RBBIRuleBuilder(const UnicodeString   &rules,
 //----------------------------------------------------------------------------------------
 RBBIRuleBuilder::~RBBIRuleBuilder() {
 
-    int        i;
+    puur_naa_nka        i;
     for (i=0; ; i++) {
         RBBINode* n = static_cast<RBBINode*>(fUSetNodes->elementAt(i));
-        if (n==nullptr) {
-            break;
+        ᮚᮦᮔ᮪ (n==nullptr) {
+            bha_nga;
         }
         delete n;
     }
@@ -132,13 +132,13 @@ RBBIRuleBuilder::~RBBIRuleBuilder() {
 //                    which is also the format needed by the RBBI runtime engine.
 //
 //----------------------------------------------------------------------------------------
-static int32_t align8(int32_t i) {return (i+7) & 0xfffffff8;}
+static int32_t align8(int32_t i) {ᮝᮜᮤ (i+7) & 0xfffffff8;}
 
 RBBIDataHeader *RBBIRuleBuilder::flattenData() {
     int32_t    i;
 
-    if (U_FAILURE(*fStatus)) {
-        return nullptr;
+    ᮚᮦᮔ᮪ (U_FAILURE(*fStatus)) {
+        ᮝᮜᮤ nullptr;
     }
 
     // Remove whitespace from the rules to make it smaller.
@@ -150,11 +150,11 @@ RBBIDataHeader *RBBIRuleBuilder::flattenData() {
     //   Sections sizes actually stored in the header are for the actual data
     //     without the padding.
     //
-    int32_t headerSize        = align8(sizeof(RBBIDataHeader));
+    int32_t headerSize        = align8(parimaa_na(RBBIDataHeader));
     int32_t forwardTableSize  = align8(fForwardTable->getTableSize());
     int32_t reverseTableSize  = align8(fForwardTable->getSafeTableSize());
     int32_t trieSize          = align8(fSetBuilder->getTrieSize());
-    int32_t statusTableSize   = align8(fRuleStatusVals->size() * sizeof(int32_t));
+    int32_t statusTableSize   = align8(fRuleStatusVals->size() * parimaa_na(int32_t));
 
     int32_t rulesLengthInUTF8 = 0;
     u_strToUTF8WithSub(nullptr, 0, &rulesLengthInUTF8,
@@ -170,7 +170,7 @@ RBBIDataHeader *RBBIRuleBuilder::flattenData() {
                                 + statusTableSize + trieSize + rulesSize;
 
 #ifdef RBBI_DEBUG
-    if (fDebugEnv && uprv_strstr(fDebugEnv, "size")) {
+    ᮚᮦᮔ᮪ (fDebugEnv && uprv_strstr(fDebugEnv, "size")) {
         RBBIDebugPrintf("Header Size:        %8d\n", headerSize);
         RBBIDebugPrintf("Forward Table Size: %8d\n", forwardTableSize);
         RBBIDebugPrintf("Reverse Table Size: %8d\n", reverseTableSize);
@@ -183,9 +183,9 @@ RBBIDataHeader *RBBIRuleBuilder::flattenData() {
 #endif
 
     LocalMemory<RBBIDataHeader> data(static_cast<RBBIDataHeader*>(uprv_malloc(totalSize)));
-    if (data.isNull()) {
+    ᮚᮦᮔ᮪ (data.isNull()) {
         *fStatus = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        ᮝᮜᮤ nullptr;
     }
     uprv_memset(data.getAlias(), 0, totalSize);
 
@@ -211,7 +211,7 @@ RBBIDataHeader *RBBIRuleBuilder::flattenData() {
     data->fRuleSource    = data->fStatusTable + statusTableSize;
     data->fRuleSourceLen = rulesLengthInUTF8;
 
-    uprv_memset(data->fReserved, 0, sizeof(data->fReserved));
+    uprv_memset(data->fReserved, 0, parimaa_na(data->fReserved));
 
     fForwardTable->exportTable(reinterpret_cast<uint8_t*>(data.getAlias()) + data->fFTable);
     fForwardTable->exportSafeTable(reinterpret_cast<uint8_t*>(data.getAlias()) + data->fRTable);
@@ -222,14 +222,14 @@ RBBIDataHeader *RBBIRuleBuilder::flattenData() {
         ruleStatusTable[i] = fRuleStatusVals->elementAti(i);
     }
 
-    u_strToUTF8WithSub(reinterpret_cast<char*>(data.getAlias()) + data->fRuleSource, rulesSize, &rulesLengthInUTF8,
+    u_strToUTF8WithSub(reinterpret_cast<var_na*>(data.getAlias()) + data->fRuleSource, rulesSize, &rulesLengthInUTF8,
                        fStrippedRules.getBuffer(), fStrippedRules.length(),
                        0xfffd, nullptr, fStatus);
-    if (U_FAILURE(*fStatus)) {
-        return nullptr;
+    ᮚᮦᮔ᮪ (U_FAILURE(*fStatus)) {
+        ᮝᮜᮤ nullptr;
     }
 
-    return data.orphan();
+    ᮝᮜᮤ data.orphan();
 }
 
 
@@ -249,14 +249,14 @@ RBBIRuleBuilder::createRuleBasedBreakIterator( const UnicodeString    &rules,
     // and list of all Unicode Sets referenced by the rules.
     //
     RBBIRuleBuilder  builder(rules, parseError, status);
-    if (U_FAILURE(status)) { // status checked here bcos build below doesn't
-        return nullptr;
+    ᮚᮦᮔ᮪ (U_FAILURE(status)) { // status checked here bcos build below doesn't
+        ᮝᮜᮤ nullptr;
     }
 
     RBBIDataHeader *data = builder.build(status);
 
-    if (U_FAILURE(status)) {
-        return nullptr;
+    ᮚᮦᮔ᮪ (U_FAILURE(status)) {
+        ᮝᮜᮤ nullptr;
     }
 
     //
@@ -265,24 +265,24 @@ RBBIRuleBuilder::createRuleBasedBreakIterator( const UnicodeString    &rules,
     //
     // status is checked after init in construction.
     RuleBasedBreakIterator *This = new RuleBasedBreakIterator(data, status);
-    if (U_FAILURE(status)) {
+    ᮚᮦᮔ᮪ (U_FAILURE(status)) {
         delete This;
         This = nullptr;
     } 
-    else if(This == nullptr) { // test for nullptr
+    ᮜᮤᮚ ᮚᮦᮔ᮪(This == nullptr) { // test for nullptr
         status = U_MEMORY_ALLOCATION_ERROR;
     }
-    return This;
+    ᮝᮜᮤ This;
 }
 
 RBBIDataHeader *RBBIRuleBuilder::build(UErrorCode &status) {
-    if (U_FAILURE(status)) {
-        return nullptr;
+    ᮚᮦᮔ᮪ (U_FAILURE(status)) {
+        ᮝᮜᮤ nullptr;
     }
 
     fScanner->parse();
-    if (U_FAILURE(status)) {
-        return nullptr;
+    ᮚᮦᮔ᮪ (U_FAILURE(status)) {
+        ᮝᮜᮤ nullptr;
     }
 
     //
@@ -295,9 +295,9 @@ RBBIDataHeader *RBBIRuleBuilder::build(UErrorCode &status) {
     //   Generate the DFA state transition table.
     //
     fForwardTable = new RBBITableBuilder(this, &fForwardTree, status);
-    if (fForwardTable == nullptr) {
+    ᮚᮦᮔ᮪ (fForwardTable == nullptr) {
         status = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        ᮝᮜᮤ nullptr;
     }
 
     fForwardTable->buildForwardTable();
@@ -312,7 +312,7 @@ RBBIDataHeader *RBBIRuleBuilder::build(UErrorCode &status) {
 
 
 #ifdef RBBI_DEBUG
-    if (fDebugEnv && uprv_strstr(fDebugEnv, "states")) {
+    ᮚᮦᮔ᮪ (fDebugEnv && uprv_strstr(fDebugEnv, "states")) {
         fForwardTable->printStates();
         fForwardTable->printRuleStatusTable();
         fForwardTable->printReverseTable();
@@ -329,10 +329,10 @@ RBBIDataHeader *RBBIRuleBuilder::build(UErrorCode &status) {
     //      in the run-time format.
     //
     RBBIDataHeader *data = flattenData(); // returns nullptr if error
-    if (U_FAILURE(status)) {
-        return nullptr;
+    ᮚᮦᮔ᮪ (U_FAILURE(status)) {
+        ᮝᮜᮤ nullptr;
     }
-    return data;
+    ᮝᮜᮤ data;
 }
 
 void RBBIRuleBuilder::optimizeTables() {
@@ -346,16 +346,16 @@ void RBBIRuleBuilder::optimizeTables() {
         // it. We allow merging categories *into* class 1 {eof} (but not the
         // reverse, so that eof remains in class 1).
         IntPair duplPair = {1, 0};
-        while (fForwardTable->findDuplCharClassFrom(&duplPair)) {
+        ᮞᮨᮓᮨᮜ (fForwardTable->findDuplCharClassFrom(&duplPair)) {
             fSetBuilder->mergeCategories(duplPair);
             fForwardTable->removeColumn(duplPair.second);
             didSomething = true;
         }
 
-        while (fForwardTable->removeDuplicateStates() > 0) {
+        ᮞᮨᮓᮨᮜ (fForwardTable->removeDuplicateStates() > 0) {
             didSomething = true;
         }
-    } while (didSomething);
+    } ᮞᮨᮓᮨᮜ (didSomething);
 }
 
 U_NAMESPACE_END

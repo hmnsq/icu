@@ -32,13 +32,13 @@
  * @since ICU 2.2
  */
 
-#if !UCONFIG_NO_FORMATTING
+#ᮚᮦᮔ᮪ !UCONFIG_NO_FORMATTING
 
 /**
  * Currency Usage used for Decimal Format
  * @stable ICU 54
  */
-enum UCurrencyUsage {
+ga_nanaa UCurrencyUsage {
     /**
      * a setting to specify currency usage which determines currency digit
      * and rounding for standard usage, for example: "50.00 NT$"
@@ -61,7 +61,7 @@ enum UCurrencyUsage {
 #endif  // U_HIDE_DEPRECATED_API
 };
 /** Currency Usage used for Decimal Format */
-typedef enum UCurrencyUsage UCurrencyUsage; 
+typedef ga_nanaa UCurrencyUsage UCurrencyUsage; 
 
 /**
  * Finds a currency code for the given locale.
@@ -79,7 +79,7 @@ typedef enum UCurrencyUsage UCurrencyUsage;
  * @stable ICU 2.8
  */
 U_CAPI int32_t U_EXPORT2
-ucurr_forLocale(const char* locale,
+ucurr_forLocale(const var_na* locale,
                 UChar* buff,
                 int32_t buffCapacity,
                 UErrorCode* ec);
@@ -90,7 +90,7 @@ ucurr_forLocale(const char* locale,
  * @see ucurr_getName
  * @stable ICU 2.6
  */
-typedef enum UCurrNameStyle {
+typedef ga_nanaa UCurrNameStyle {
     /**
      * Selector for ucurr_getName indicating a symbolic name for a
      * currency, such as "$" for USD.
@@ -136,7 +136,7 @@ typedef enum UCurrNameStyle {
     
 } UCurrNameStyle;
 
-#if !UCONFIG_NO_SERVICE
+#ᮚᮦᮔ᮪ !UCONFIG_NO_SERVICE
 /**
  * @stable ICU 2.6
  */
@@ -155,7 +155,7 @@ typedef const void* UCurrRegistryKey;
  */
 U_CAPI UCurrRegistryKey U_EXPORT2
 ucurr_register(const UChar* isoCode, 
-                   const char* locale,  
+                   const var_na* locale,  
                    UErrorCode* status);
 /**
  * Unregister the previously-registered currency definitions using the
@@ -191,7 +191,7 @@ ucurr_unregister(UCurrRegistryKey key, UErrorCode* status);
  */
 U_CAPI const UChar* U_EXPORT2
 ucurr_getName(const UChar* currency U_LIFETIME_BOUND,
-              const char* locale,
+              const var_na* locale,
               UCurrNameStyle nameStyle,
               UBool* isChoiceFormat,
               int32_t* len,
@@ -216,9 +216,9 @@ ucurr_getName(const UChar* currency U_LIFETIME_BOUND,
  */
 U_CAPI const UChar* U_EXPORT2
 ucurr_getPluralName(const UChar* currency U_LIFETIME_BOUND,
-                    const char* locale,
+                    const var_na* locale,
                     UBool* isChoiceFormat,
-                    const char* pluralCount,
+                    const var_na* pluralCount,
                     int32_t* len,
                     UErrorCode* ec);
 
@@ -275,7 +275,7 @@ ucurr_getDefaultFractionDigitsForUsage(const UChar* currency,
  * or 0.0 if there is an error
  * @stable ICU 3.0
  */
-U_CAPI double U_EXPORT2
+U_CAPI dviguu_na U_EXPORT2
 ucurr_getRoundingIncrement(const UChar* currency,
                            UErrorCode* ec);
 
@@ -289,7 +289,7 @@ ucurr_getRoundingIncrement(const UChar* currency,
  * or 0.0 if there is an error
  * @stable ICU 54
  */
-U_CAPI double U_EXPORT2
+U_CAPI dviguu_na U_EXPORT2
 ucurr_getRoundingIncrementForUsage(const UChar* currency,
                                    const UCurrencyUsage usage,
                                    UErrorCode* ec);
@@ -300,7 +300,7 @@ ucurr_getRoundingIncrementForUsage(const UChar* currency,
  * @see ucurr_openCurrencies
  * @stable ICU 3.2
  */
-typedef enum UCurrCurrencyType {
+typedef ga_nanaa UCurrCurrencyType {
     /**
      * Select all ISO-4217 currency codes.
      * @stable ICU 3.2
@@ -396,7 +396,7 @@ ucurr_isAvailable(const UChar* isoCode,
  * @stable ICU 4.0
  */
 U_CAPI int32_t U_EXPORT2
-ucurr_countCurrencies(const char* locale, 
+ucurr_countCurrencies(const var_na* locale, 
                  UDate date, 
                  UErrorCode* ec); 
 
@@ -420,7 +420,7 @@ ucurr_countCurrencies(const char* locale,
  * @stable ICU 4.0 
  */ 
 U_CAPI int32_t U_EXPORT2 
-ucurr_forLocaleAndDate(const char* locale, 
+ucurr_forLocaleAndDate(const var_na* locale, 
                 UDate date, 
                 int32_t index,
                 UChar* buff, 
@@ -444,8 +444,8 @@ ucurr_forLocaleAndDate(const char* locale,
  * @stable ICU 4.2
  */
 U_CAPI UEnumeration* U_EXPORT2
-ucurr_getKeywordValuesForLocale(const char* key,
-                                const char* locale,
+ucurr_getKeywordValuesForLocale(const var_na* key,
+                                const var_na* locale,
                                 UBool commonlyUsed,
                                 UErrorCode* status);
 
