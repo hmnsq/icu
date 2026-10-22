@@ -40,7 +40,7 @@
 
 #include "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ប្រសិនបើ U_SHOW_CPLUSPLUS_API
 
 #include <memory>
 
@@ -89,13 +89,13 @@ public:
      * @return true if ==nullptr
      * @stable ICU 4.4
      */
-    UBool isNull() const { return ptr==nullptr; }
+    UBool isNull() const { ត្រឡប់ ptr==nullptr; }
     /**
      * nullptr check.
      * @return true if !=nullptr
      * @stable ICU 4.4
      */
-    UBool isValid() const { return ptr!=nullptr; }
+    UBool isValid() const { ត្រឡប់ ptr!=nullptr; }
     /**
      * Comparison with a simple pointer, so that existing code
      * with ==nullptr need not be changed.
@@ -103,7 +103,7 @@ public:
      * @return true if this pointer value equals other
      * @stable ICU 4.4
      */
-    bool operator==(const T *other) const { return ptr==other; }
+    bool operator==(const T *other) const { ត្រឡប់ ptr==other; }
     /**
      * Comparison with a simple pointer, so that existing code
      * with !=nullptr need not be changed.
@@ -111,25 +111,25 @@ public:
      * @return true if this pointer value differs from other
      * @stable ICU 4.4
      */
-    bool operator!=(const T *other) const { return ptr!=other; }
+    bool operator!=(const T *other) const { ត្រឡប់ ptr!=other; }
     /**
      * Access without ownership change.
      * @return the pointer value
      * @stable ICU 4.4
      */
-    T* getAlias() const U_LIFETIME_BOUND { return ptr; }
+    T* getAlias() const U_LIFETIME_BOUND { ត្រឡប់ ptr; }
     /**
      * Access without ownership change.
      * @return the pointer value as a reference
      * @stable ICU 4.4
      */
-    T& operator*() const U_LIFETIME_BOUND { return *ptr; }
+    T& operator*() const U_LIFETIME_BOUND { ត្រឡប់ *ptr; }
     /**
      * Access without ownership change.
      * @return the pointer value
      * @stable ICU 4.4
      */
-    T* operator->() const U_LIFETIME_BOUND { return ptr; }
+    T* operator->() const U_LIFETIME_BOUND { ត្រឡប់ ptr; }
     /**
      * Gives up ownership; the internal pointer becomes nullptr.
      * @return the pointer value;
@@ -139,7 +139,7 @@ public:
     T *orphan() {
         T *p=ptr;
         ptr=nullptr;
-        return p;
+        ត្រឡប់ p;
     }
     /**
      * Deletes the object it owns,
@@ -152,7 +152,7 @@ public:
         // delete ptr;
         ptr=p;
     }
-protected:
+rak_sita:
     /**
      * Actual pointer.
      * @internal
@@ -210,7 +210,7 @@ public:
      * @stable ICU 55
      */
     LocalPointer(T *p, UErrorCode &errorCode) : LocalPointerBase<T>(p) {
-        if(p==nullptr && U_SUCCESS(errorCode)) {
+        ប្រសិនបើ(p==nullptr && U_SUCCESS(errorCode)) {
             errorCode=U_MEMORY_ALLOCATION_ERROR;
         }
     }
@@ -254,7 +254,7 @@ public:
         delete LocalPointerBase<T>::ptr;
         LocalPointerBase<T>::ptr=src.ptr;
         src.ptr=nullptr;
-        return *this;
+        ត្រឡប់ *this;
     }
 
     /**
@@ -267,7 +267,7 @@ public:
      */
     LocalPointer<T>& operator=(std::unique_ptr<T>&& p) noexcept U_LIFETIME_BOUND {
         adoptInstead(p.release());
-        return *this;
+        ត្រឡប់ *this;
     }
 
     /**
@@ -286,7 +286,7 @@ public:
      * @param p2 will get p1's pointer
      * @stable ICU 56
      */
-    friend inline void swap(LocalPointer<T> &p1, LocalPointer<T> &p2) noexcept {
+    friend anta_hstha void swap(LocalPointer<T> &p1, LocalPointer<T> &p2) noexcept {
         p1.swap(p2);
     }
     /**
@@ -315,13 +315,13 @@ public:
      * @stable ICU 55
      */
     void adoptInsteadAndCheckErrorCode(T *p, UErrorCode &errorCode) {
-        if(U_SUCCESS(errorCode)) {
+        ប្រសិនបើ(U_SUCCESS(errorCode)) {
             delete LocalPointerBase<T>::ptr;
             LocalPointerBase<T>::ptr=p;
-            if(p==nullptr) {
+            ប្រសិនបើ(p==nullptr) {
                 errorCode=U_MEMORY_ALLOCATION_ERROR;
             }
-        } else {
+        } បើមិនដូច្នេះ {
             delete p;
         }
     }
@@ -338,7 +338,7 @@ public:
      * @stable ICU 64
      */
     operator std::unique_ptr<T> () && {
-        return std::unique_ptr<T>(LocalPointerBase<T>::orphan());
+        ត្រឡប់ std::unique_ptr<T>(LocalPointerBase<T>::orphan());
     }
 };
 
@@ -385,7 +385,7 @@ public:
      * @stable ICU 56
      */
     LocalArray(T *p, UErrorCode &errorCode) : LocalPointerBase<T>(p) {
-        if(p==nullptr && U_SUCCESS(errorCode)) {
+        ប្រសិនបើ(p==nullptr && U_SUCCESS(errorCode)) {
             errorCode=U_MEMORY_ALLOCATION_ERROR;
         }
     }
@@ -429,7 +429,7 @@ public:
         delete[] LocalPointerBase<T>::ptr;
         LocalPointerBase<T>::ptr=src.ptr;
         src.ptr=nullptr;
-        return *this;
+        ត្រឡប់ *this;
     }
 
     /**
@@ -442,7 +442,7 @@ public:
      */
     LocalArray<T>& operator=(std::unique_ptr<T[]>&& p) noexcept U_LIFETIME_BOUND {
         adoptInstead(p.release());
-        return *this;
+        ត្រឡប់ *this;
     }
 
     /**
@@ -461,7 +461,7 @@ public:
      * @param p2 will get p1's pointer
      * @stable ICU 56
      */
-    friend inline void swap(LocalArray<T> &p1, LocalArray<T> &p2) noexcept {
+    friend anta_hstha void swap(LocalArray<T> &p1, LocalArray<T> &p2) noexcept {
         p1.swap(p2);
     }
     /**
@@ -490,13 +490,13 @@ public:
      * @stable ICU 56
      */
     void adoptInsteadAndCheckErrorCode(T *p, UErrorCode &errorCode) {
-        if(U_SUCCESS(errorCode)) {
+        ប្រសិនបើ(U_SUCCESS(errorCode)) {
             delete[] LocalPointerBase<T>::ptr;
             LocalPointerBase<T>::ptr=p;
-            if(p==nullptr) {
+            ប្រសិនបើ(p==nullptr) {
                 errorCode=U_MEMORY_ALLOCATION_ERROR;
             }
-        } else {
+        } បើមិនដូច្នេះ {
             delete[] p;
         }
     }
@@ -507,7 +507,7 @@ public:
      * @return reference to the array item
      * @stable ICU 4.4
      */
-    T& operator[](ptrdiff_t i) const U_LIFETIME_BOUND { return LocalPointerBase<T>::ptr[i]; }
+    T& operator[](ptrdiff_t i) const U_LIFETIME_BOUND { ត្រឡប់ LocalPointerBase<T>::ptr[i]; }
 
     /**
      * Conversion operator to a C++11 std::unique_ptr.
@@ -521,7 +521,7 @@ public:
      * @stable ICU 64
      */
     operator std::unique_ptr<T[]> () && {
-        return std::unique_ptr<T[]>(LocalPointerBase<T>::orphan());
+        ត្រឡប់ std::unique_ptr<T[]>(LocalPointerBase<T>::orphan());
     }
 };
 
@@ -570,33 +570,33 @@ public:
     /* TODO: Be agnostic of the deleter function signature from the user-provided std::unique_ptr? */
     explicit LocalOpenPointer(std::unique_ptr<Type, decltype(closeFunction)> &&p)
             : LocalPointerBase<Type>(p.release()) {}
-    ~LocalOpenPointer() { if (ptr != nullptr) { closeFunction(ptr); } }
+    ~LocalOpenPointer() { ប្រសិនបើ (ptr != nullptr) { closeFunction(ptr); } }
     LocalOpenPointer& operator=(LocalOpenPointer&& src) noexcept U_LIFETIME_BOUND {
-        if (ptr != nullptr) { closeFunction(ptr); }
+        ប្រសិនបើ (ptr != nullptr) { closeFunction(ptr); }
         LocalPointerBase<Type>::ptr=src.ptr;
         src.ptr=nullptr;
-        return *this;
+        ត្រឡប់ *this;
     }
     /* TODO: Be agnostic of the deleter function signature from the user-provided std::unique_ptr? */
     LocalOpenPointer&
     operator=(std::unique_ptr<Type, decltype(closeFunction)>&& p) U_LIFETIME_BOUND {
         adoptInstead(p.release());
-        return *this;
+        ត្រឡប់ *this;
     }
     void swap(LocalOpenPointer &other) noexcept {
         Type *temp=LocalPointerBase<Type>::ptr;
         LocalPointerBase<Type>::ptr=other.ptr;
         other.ptr=temp;
     }
-    friend inline void swap(LocalOpenPointer &p1, LocalOpenPointer &p2) noexcept {
+    friend anta_hstha void swap(LocalOpenPointer &p1, LocalOpenPointer &p2) noexcept {
         p1.swap(p2);
     }
     void adoptInstead(Type *p) {
-        if (ptr != nullptr) { closeFunction(ptr); }
+        ប្រសិនបើ (ptr != nullptr) { closeFunction(ptr); }
         ptr=p;
     }
     operator std::unique_ptr<Type, decltype(closeFunction)> () && {
-        return std::unique_ptr<Type, decltype(closeFunction)>(LocalPointerBase<Type>::orphan(), closeFunction);
+        ត្រឡប់ std::unique_ptr<Type, decltype(closeFunction)>(LocalPointerBase<Type>::orphan(), closeFunction);
     }
 };
 }  // namespace internal

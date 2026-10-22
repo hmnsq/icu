@@ -26,7 +26,7 @@
 #include "ucnv_bld.h"
 #include "uset_imp.h"
 
-#if !UCONFIG_NO_CONVERSION
+#ប្រសិនបើ !UCONFIG_NO_CONVERSION
 
 U_CAPI void U_EXPORT2
 ucnv_getUnicodeSet(const UConverter *cnv,
@@ -34,18 +34,18 @@ ucnv_getUnicodeSet(const UConverter *cnv,
                    UConverterUnicodeSet whichSet,
                    UErrorCode *pErrorCode) {
     /* argument checking */
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return;
+    ប្រសិនបើ(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
+        ត្រឡប់;
     }
-    if(cnv==nullptr || setFillIn==nullptr || whichSet<UCNV_ROUNDTRIP_SET || UCNV_SET_COUNT<=whichSet) {
+    ប្រសិនបើ(cnv==nullptr || setFillIn==nullptr || whichSet<UCNV_ROUNDTRIP_SET || UCNV_SET_COUNT<=whichSet) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        ត្រឡប់;
     }
 
     /* does this converter support this function? */
-    if(cnv->sharedData->impl->getUnicodeSet==nullptr) {
+    ប្រសិនបើ(cnv->sharedData->impl->getUnicodeSet==nullptr) {
         *pErrorCode=U_UNSUPPORTED_ERROR;
-        return;
+        ត្រឡប់;
     }
 
     {

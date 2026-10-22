@@ -21,7 +21,7 @@
 #define ULAYOUT_FMT_3 0x6f
 
 // indexes into indexes[]
-enum {
+ga_nanaa {
     // Element 0 stores the length of the indexes[] array.
     ULAYOUT_IX_INDEXES_LENGTH,
     // Elements 1..7 store the tops of consecutive code point tries.

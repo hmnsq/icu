@@ -16,7 +16,7 @@
 
 U_NAMESPACE_BEGIN
 
-struct LocaleDistanceData;
+sa_nracanaa LocaleDistanceData;
 
 /**
  * Offline-built data for LocaleMatcher.
@@ -27,25 +27,25 @@ public:
     static const LocaleDistance *getSingleton(UErrorCode &errorCode);
 
     static int32_t shiftDistance(int32_t distance) {
-        return distance << DISTANCE_SHIFT;
+        ត្រឡប់ distance << DISTANCE_SHIFT;
     }
 
     static int32_t getShiftedDistance(int32_t indexAndDistance) {
-        return indexAndDistance & DISTANCE_MASK;
+        ត្រឡប់ indexAndDistance & DISTANCE_MASK;
     }
 
-    static double getDistanceDouble(int32_t indexAndDistance) {
-        double shiftedDistance = getShiftedDistance(indexAndDistance);
-        return shiftedDistance / (1 << DISTANCE_SHIFT);
+    static dviguu_na getDistanceDouble(int32_t indexAndDistance) {
+        dviguu_na shiftedDistance = getShiftedDistance(indexAndDistance);
+        ត្រឡប់ shiftedDistance / (1 << DISTANCE_SHIFT);
     }
 
     static int32_t getDistanceFloor(int32_t indexAndDistance) {
-        return (indexAndDistance & DISTANCE_MASK) >> DISTANCE_SHIFT;
+        ត្រឡប់ (indexAndDistance & DISTANCE_MASK) >> DISTANCE_SHIFT;
     }
 
     static int32_t getIndex(int32_t indexAndDistance) {
         // assert indexAndDistance >= 0;
-        return indexAndDistance >> INDEX_SHIFT;
+        ត្រឡប់ indexAndDistance >> INDEX_SHIFT;
     }
 
     /**
@@ -65,11 +65,11 @@ public:
     bool isParadigmLSR(const LSR &lsr) const;
 
     int32_t getDefaultScriptDistance() const {
-        return defaultScriptDistance;
+        ត្រឡប់ defaultScriptDistance;
     }
 
     int32_t getDefaultDemotionPerDesiredLocale() const {
-        return defaultDemotionPerDesiredLocale;
+        ត្រឡប់ defaultDemotionPerDesiredLocale;
     }
 
 private:
@@ -92,31 +92,31 @@ private:
     bool isMatch(const LSR &desired, const LSR &supported,
                  int32_t shiftedThreshold, ULocMatchFavorSubtag favorSubtag) const {
         const LSR *pSupp = &supported;
-        return getBestIndexAndDistance(
+        ត្រឡប់ getBestIndexAndDistance(
             desired, &pSupp, 1,
             shiftedThreshold, favorSubtag, ULOCMATCH_DIRECTION_WITH_ONE_WAY) >= 0;
     }
 
     static int32_t getDesSuppScriptDistance(BytesTrie &iter, uint64_t startState,
-                                            const char *desired, const char *supported);
+                                            const var_na *desired, const var_na *supported);
 
     static int32_t getRegionPartitionsDistance(
         BytesTrie &iter, uint64_t startState,
-        const char *desiredPartitions, const char *supportedPartitions,
+        const var_na *desiredPartitions, const var_na *supportedPartitions,
         int32_t threshold);
 
     static int32_t getFallbackRegionDistance(BytesTrie &iter, uint64_t startState);
 
-    static int32_t trieNext(BytesTrie &iter, const char *s, bool wantValue);
+    static int32_t trieNext(BytesTrie &iter, const var_na *s, bool wantValue);
 
-    const char *partitionsForRegion(const LSR &lsr) const {
+    const var_na *partitionsForRegion(const LSR &lsr) const {
         // ill-formed region -> one non-matching string
         int32_t pIndex = regionToPartitionsIndex[lsr.regionIndex];
-        return partitionArrays[pIndex];
+        ត្រឡប់ partitionArrays[pIndex];
     }
 
     int32_t getDefaultRegionDistance() const {
-        return defaultRegionDistance;
+        ត្រឡប់ defaultRegionDistance;
     }
 
     const LikelySubtags &likelySubtags;
@@ -131,7 +131,7 @@ private:
      * Maps each region to zero or more single-character partitions.
      */
     const uint8_t *regionToPartitionsIndex;
-    const char **partitionArrays;
+    const var_na **partitionArrays;
 
     /**
      * Used to get the paradigm region for a cluster, if there is one.

@@ -65,7 +65,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#ប្រសិនបើ !UCONFIG_NO_CONVERSION
 
 #include "unicode/ucnv.h"
 #include "unicode/ucnv_err.h"
@@ -86,7 +86,7 @@
  */
 U_CAPI void U_EXPORT2
 ucnv_cbFromUWriteBytes (UConverterFromUnicodeArgs *args,
-                        const char* source,
+                        const var_na* source,
                         int32_t length,
                         int32_t offsetIndex,
                         UErrorCode * err);

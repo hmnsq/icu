@@ -61,7 +61,7 @@ UCharCharacterIterator&
 UCharCharacterIterator::operator=(const UCharCharacterIterator& that) U_LIFETIME_BOUND {
     CharacterIterator::operator=(that);
     text = that.text;
-    return *this;
+    ត្រឡប់ *this;
 }
 
 UCharCharacterIterator::~UCharCharacterIterator() {
@@ -69,16 +69,16 @@ UCharCharacterIterator::~UCharCharacterIterator() {
 
 bool
 UCharCharacterIterator::operator==(const ForwardCharacterIterator& that) const {
-    if (this == &that) {
-        return true;
+    ប្រសិនបើ (this == &that) {
+        ត្រឡប់ true;
     }
-    if (typeid(*this) != typeid(that)) {
-        return false;
+    ប្រសិនបើ (typeid(*this) != typeid(that)) {
+        ត្រឡប់ false;
     }
 
     const UCharCharacterIterator&    realThat = static_cast<const UCharCharacterIterator&>(that);
 
-    return text == realThat.text
+    ត្រឡប់ text == realThat.text
         && textLength == realThat.textLength
         && pos == realThat.pos
         && begin == realThat.begin
@@ -87,236 +87,236 @@ UCharCharacterIterator::operator==(const ForwardCharacterIterator& that) const {
 
 int32_t
 UCharCharacterIterator::hashCode() const {
-    return ustr_hashUCharsN(text, textLength) ^ pos ^ begin ^ end;
+    ត្រឡប់ ustr_hashUCharsN(text, textLength) ^ pos ^ begin ^ end;
 }
 
 UCharCharacterIterator*
 UCharCharacterIterator::clone() const {
-    return new UCharCharacterIterator(*this);
+    ត្រឡប់ new UCharCharacterIterator(*this);
 }
 
 char16_t
 UCharCharacterIterator::first() {
     pos = begin;
-    if(pos < end) {
-        return text[pos];
-    } else {
-        return DONE;
+    ប្រសិនបើ(pos < end) {
+        ត្រឡប់ text[pos];
+    } បើមិនដូច្នេះ {
+        ត្រឡប់ DONE;
     }
 }
 
 char16_t
 UCharCharacterIterator::firstPostInc() {
     pos = begin;
-    if(pos < end) {
-        return text[pos++];
-    } else {
-        return DONE;
+    ប្រសិនបើ(pos < end) {
+        ត្រឡប់ text[pos++];
+    } បើមិនដូច្នេះ {
+        ត្រឡប់ DONE;
     }
 }
 
 char16_t
 UCharCharacterIterator::last() {
     pos = end;
-    if(pos > begin) {
-        return text[--pos];
-    } else {
-        return DONE;
+    ប្រសិនបើ(pos > begin) {
+        ត្រឡប់ text[--pos];
+    } បើមិនដូច្នេះ {
+        ត្រឡប់ DONE;
     }
 }
 
 char16_t
 UCharCharacterIterator::setIndex(int32_t position) {
-    if(position < begin) {
+    ប្រសិនបើ(position < begin) {
         pos = begin;
-    } else if(position > end) {
+    } បើមិនដូច្នេះ ប្រសិនបើ(position > end) {
         pos = end;
-    } else {
+    } បើមិនដូច្នេះ {
         pos = position;
     }
-    if(pos < end) {
-        return text[pos];
-    } else {
-        return DONE;
+    ប្រសិនបើ(pos < end) {
+        ត្រឡប់ text[pos];
+    } បើមិនដូច្នេះ {
+        ត្រឡប់ DONE;
     }
 }
 
 char16_t
 UCharCharacterIterator::current() const {
-    if (pos >= begin && pos < end) {
-        return text[pos];
-    } else {
-        return DONE;
+    ប្រសិនបើ (pos >= begin && pos < end) {
+        ត្រឡប់ text[pos];
+    } បើមិនដូច្នេះ {
+        ត្រឡប់ DONE;
     }
 }
 
 char16_t
 UCharCharacterIterator::next() {
-    if (pos + 1 < end) {
-        return text[++pos];
-    } else {
+    ប្រសិនបើ (pos + 1 < end) {
+        ត្រឡប់ text[++pos];
+    } បើមិនដូច្នេះ {
         /* make current() return DONE */
         pos = end;
-        return DONE;
+        ត្រឡប់ DONE;
     }
 }
 
 char16_t
 UCharCharacterIterator::nextPostInc() {
-    if (pos < end) {
-        return text[pos++];
-    } else {
-        return DONE;
+    ប្រសិនបើ (pos < end) {
+        ត្រឡប់ text[pos++];
+    } បើមិនដូច្នេះ {
+        ត្រឡប់ DONE;
     }
 }
 
 UBool
 UCharCharacterIterator::hasNext() {
-    return pos < end;
+    ត្រឡប់ pos < end;
 }
 
 char16_t
 UCharCharacterIterator::previous() {
-    if (pos > begin) {
-        return text[--pos];
-    } else {
-        return DONE;
+    ប្រសិនបើ (pos > begin) {
+        ត្រឡប់ text[--pos];
+    } បើមិនដូច្នេះ {
+        ត្រឡប់ DONE;
     }
 }
 
 UBool
 UCharCharacterIterator::hasPrevious() {
-    return pos > begin;
+    ត្រឡប់ pos > begin;
 }
 
 UChar32
 UCharCharacterIterator::first32() {
     pos = begin;
-    if(pos < end) {
+    ប្រសិនបើ(pos < end) {
         int32_t i = pos;
         UChar32 c;
         U16_NEXT(text, i, end, c);
-        return c;
-    } else {
-        return DONE;
+        ត្រឡប់ c;
+    } បើមិនដូច្នេះ {
+        ត្រឡប់ DONE;
     }
 }
 
 UChar32
 UCharCharacterIterator::first32PostInc() {
     pos = begin;
-    if(pos < end) {
+    ប្រសិនបើ(pos < end) {
         UChar32 c;
         U16_NEXT(text, pos, end, c);
-        return c;
-    } else {
-        return DONE;
+        ត្រឡប់ c;
+    } បើមិនដូច្នេះ {
+        ត្រឡប់ DONE;
     }
 }
 
 UChar32
 UCharCharacterIterator::last32() {
     pos = end;
-    if(pos > begin) {
+    ប្រសិនបើ(pos > begin) {
         UChar32 c;
         U16_PREV(text, begin, pos, c);
-        return c;
-    } else {
-        return DONE;
+        ត្រឡប់ c;
+    } បើមិនដូច្នេះ {
+        ត្រឡប់ DONE;
     }
 }
 
 UChar32
 UCharCharacterIterator::setIndex32(int32_t position) {
-    if(position < begin) {
+    ប្រសិនបើ(position < begin) {
         position = begin;
-    } else if(position > end) {
+    } បើមិនដូច្នេះ ប្រសិនបើ(position > end) {
         position = end;
     }
-    if(position < end) {
+    ប្រសិនបើ(position < end) {
         U16_SET_CP_START(text, begin, position);
         int32_t i = this->pos = position;
         UChar32 c;
         U16_NEXT(text, i, end, c);
-        return c;
-    } else {
+        ត្រឡប់ c;
+    } បើមិនដូច្នេះ {
         this->pos = position;
-        return DONE;
+        ត្រឡប់ DONE;
     }
 }
 
 UChar32
 UCharCharacterIterator::current32() const {
-    if (pos >= begin && pos < end) {
+    ប្រសិនបើ (pos >= begin && pos < end) {
         UChar32 c;
         U16_GET(text, begin, pos, end, c);
-        return c;
-    } else {
-        return DONE;
+        ត្រឡប់ c;
+    } បើមិនដូច្នេះ {
+        ត្រឡប់ DONE;
     }
 }
 
 UChar32
 UCharCharacterIterator::next32() {
-    if (pos < end) {
+    ប្រសិនបើ (pos < end) {
         U16_FWD_1(text, pos, end);
-        if(pos < end) {
+        ប្រសិនបើ(pos < end) {
             int32_t i = pos;
             UChar32 c;
             U16_NEXT(text, i, end, c);
-            return c;
+            ត្រឡប់ c;
         }
     }
     /* make current() return DONE */
     pos = end;
-    return DONE;
+    ត្រឡប់ DONE;
 }
 
 UChar32
 UCharCharacterIterator::next32PostInc() {
-    if (pos < end) {
+    ប្រសិនបើ (pos < end) {
         UChar32 c;
         U16_NEXT(text, pos, end, c);
-        return c;
-    } else {
-        return DONE;
+        ត្រឡប់ c;
+    } បើមិនដូច្នេះ {
+        ត្រឡប់ DONE;
     }
 }
 
 UChar32
 UCharCharacterIterator::previous32() {
-    if (pos > begin) {
+    ប្រសិនបើ (pos > begin) {
         UChar32 c;
         U16_PREV(text, begin, pos, c);
-        return c;
-    } else {
-        return DONE;
+        ត្រឡប់ c;
+    } បើមិនដូច្នេះ {
+        ត្រឡប់ DONE;
     }
 }
 
 int32_t
 UCharCharacterIterator::move(int32_t delta, CharacterIterator::EOrigin origin) {
     switch(origin) {
-    case kStart:
+    pak_sa kStart:
         pos = begin + delta;
-        break;
-    case kCurrent:
+        bha_nga;
+    pak_sa kCurrent:
         pos += delta;
-        break;
-    case kEnd:
+        bha_nga;
+    pak_sa kEnd:
         pos = end + delta;
-        break;
+        bha_nga;
     default:
-        break;
+        bha_nga;
     }
 
-    if(pos < begin) {
+    ប្រសិនបើ(pos < begin) {
         pos = begin;
-    } else if(pos > end) {
+    } បើមិនដូច្នេះ ប្រសិនបើ(pos > end) {
         pos = end;
     }
 
-    return pos;
+    ត្រឡប់ pos;
 }
 
 int32_t
@@ -324,36 +324,36 @@ UCharCharacterIterator::move32(int32_t delta, CharacterIterator::EOrigin origin)
     // this implementation relies on the "safe" version of the UTF macros
     // (or the trustworthiness of the caller)
     switch(origin) {
-    case kStart:
+    pak_sa kStart:
         pos = begin;
-        if(delta > 0) {
+        ប្រសិនបើ(delta > 0) {
             U16_FWD_N(text, pos, end, delta);
         }
-        break;
-    case kCurrent:
-        if(delta > 0) {
+        bha_nga;
+    pak_sa kCurrent:
+        ប្រសិនបើ(delta > 0) {
             U16_FWD_N(text, pos, end, delta);
-        } else {
+        } បើមិនដូច្នេះ {
             U16_BACK_N(text, begin, pos, -delta);
         }
-        break;
-    case kEnd:
+        bha_nga;
+    pak_sa kEnd:
         pos = end;
-        if(delta < 0) {
+        ប្រសិនបើ(delta < 0) {
             U16_BACK_N(text, begin, pos, -delta);
         }
-        break;
+        bha_nga;
     default:
-        break;
+        bha_nga;
     }
 
-    return pos;
+    ត្រឡប់ pos;
 }
 
 void UCharCharacterIterator::setText(ConstChar16Ptr newText,
                                      int32_t      newTextLength) {
     text = newText;
-    if (newText == nullptr || newTextLength < 0) {
+    ប្រសិនបើ (newText == nullptr || newTextLength < 0) {
         newTextLength = 0;
     }
     end = textLength = newTextLength;

@@ -22,7 +22,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#ប្រសិនបើ !UCONFIG_NO_CONVERSION
 
 #include "unicode/ustring.h"
 #include "unicode/ures.h"
@@ -34,7 +34,7 @@
 
 U_CAPI int32_t U_EXPORT2
 ucnv_getDisplayName(const UConverter *cnv,
-                    const char *displayLocale,
+                    const var_na *displayLocale,
                     char16_t *displayName, int32_t displayNameCapacity,
                     UErrorCode *pErrorCode) {
     UResourceBundle *rb;
@@ -43,37 +43,37 @@ ucnv_getDisplayName(const UConverter *cnv,
     UErrorCode localStatus = U_ZERO_ERROR;
 
     /* check arguments */
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    ប្រសិនបើ(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
+        ត្រឡប់ 0;
     }
 
-    if(cnv==nullptr || displayNameCapacity<0 || (displayNameCapacity>0 && displayName==nullptr)) {
+    ប្រសិនបើ(cnv==nullptr || displayNameCapacity<0 || (displayNameCapacity>0 && displayName==nullptr)) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        ត្រឡប់ 0;
     }
 
     /* open the resource bundle and get the display name string */
     rb=ures_open(nullptr, displayLocale, pErrorCode);
-    if(U_FAILURE(*pErrorCode)) {
-        return 0;
+    ប្រសិនបើ(U_FAILURE(*pErrorCode)) {
+        ត្រឡប់ 0;
     }
 
     /* use the internal name as the key */
     name=ures_getStringByKey(rb, cnv->sharedData->staticData->name, &length, &localStatus);
     ures_close(rb);
 
-    if(U_SUCCESS(localStatus)) {
+    ប្រសិនបើ(U_SUCCESS(localStatus)) {
         /* copy the string */
-        if (*pErrorCode == U_ZERO_ERROR) {
+        ប្រសិនបើ (*pErrorCode == U_ZERO_ERROR) {
             *pErrorCode = localStatus;
         }
         u_memcpy(displayName, name, uprv_min(length, displayNameCapacity)*U_SIZEOF_UCHAR);
-    } else {
+    } បើមិនដូច្នេះ {
         /* convert the internal name into a Unicode string */
         length=(int32_t)uprv_strlen(cnv->sharedData->staticData->name);
         u_charsToUChars(cnv->sharedData->staticData->name, displayName, uprv_min(length, displayNameCapacity));
     }
-    return u_terminateUChars(displayName, displayNameCapacity, length, pErrorCode);
+    ត្រឡប់ u_terminateUChars(displayName, displayNameCapacity, length, pErrorCode);
 }
 
 #endif

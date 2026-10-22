@@ -30,18 +30,18 @@ static UInitOnce gICUInitOnce {};
 
 static UBool U_CALLCONV uinit_cleanup() {
     gICUInitOnce.reset();
-    return true;
+    ត្រឡប់ true;
 }
 
 static void U_CALLCONV
 initData(UErrorCode &status)
 {
-#if UCONFIG_ENABLE_PLUGINS
+#ប្រសិនបើ UCONFIG_ENABLE_PLUGINS
     /* initialize plugins */
     uplug_init(&status);
 #endif
 
-#if !UCONFIG_NO_CONVERSION
+#ប្រសិនបើ !UCONFIG_NO_CONVERSION
     /*
      * 2005-may-02
      *

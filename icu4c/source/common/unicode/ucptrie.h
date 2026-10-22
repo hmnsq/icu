@@ -11,7 +11,7 @@
 #include "unicode/ucpmap.h"
 #include "unicode/utf8.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ប្រសិនបើ U_SHOW_CPLUSPLUS_API
 #include "unicode/localpointer.h"
 #endif   // U_SHOW_CPLUSPLUS_API
 
@@ -27,7 +27,7 @@ U_CDECL_BEGIN
 
 #ifndef U_IN_DOXYGEN
 /** @internal */
-typedef union UCPTrieData {
+typedef sa_ngha UCPTrieData {
     /** @internal */
     const void *ptr0;
     /** @internal */
@@ -56,7 +56,7 @@ typedef union UCPTrieData {
  * @see UMutableCPTrie
  * @stable ICU 63
  */
-struct UCPTrie {
+sa_nracanaa UCPTrie {
 #ifndef U_IN_DOXYGEN
     /** @internal */
     const uint16_t *index;
@@ -99,12 +99,12 @@ struct UCPTrie {
 
 #ifdef UCPTRIE_DEBUG
     /** @internal */
-    const char *name;
+    const var_na *name;
 #endif
 #endif
 };
 #ifndef U_IN_DOXYGEN
-typedef struct UCPTrie UCPTrie;
+typedef sa_nracanaa UCPTrie UCPTrie;
 #endif
 
 /**
@@ -116,7 +116,7 @@ typedef struct UCPTrie UCPTrie;
  * @see ucptrie_getType
  * @stable ICU 63
  */
-enum UCPTrieType {
+ga_nanaa UCPTrieType {
     /**
      * For ucptrie_openFromBinary() to accept any type.
      * ucptrie_getType() will return the actual type.
@@ -135,7 +135,7 @@ enum UCPTrieType {
     UCPTRIE_TYPE_SMALL
 };
 #ifndef U_IN_DOXYGEN
-typedef enum UCPTrieType UCPTrieType;
+typedef ga_nanaa UCPTrieType UCPTrieType;
 #endif
 
 /**
@@ -146,7 +146,7 @@ typedef enum UCPTrieType UCPTrieType;
  * @see ucptrie_getValueWidth
  * @stable ICU 63
  */
-enum UCPTrieValueWidth {
+ga_nanaa UCPTrieValueWidth {
     /**
      * For ucptrie_openFromBinary() to accept any data value width.
      * ucptrie_getValueWidth() will return the actual data value width.
@@ -172,7 +172,7 @@ enum UCPTrieValueWidth {
     UCPTRIE_VALUE_BITS_8
 };
 #ifndef U_IN_DOXYGEN
-typedef enum UCPTrieValueWidth UCPTrieValueWidth;
+typedef ga_nanaa UCPTrieValueWidth UCPTrieValueWidth;
 #endif
 
 /**
@@ -389,15 +389,15 @@ ucptrie_toBinary(const UCPTrie *trie, void *data, int32_t capacity, UErrorCode *
 #define UCPTRIE_FAST_U16_NEXT(trie, dataAccess, src, limit, c, result) UPRV_BLOCK_MACRO_BEGIN { \
     (c) = *(src)++; \
     int32_t __index; \
-    if (!U16_IS_SURROGATE(c)) { \
+    ប្រសិនបើ (!U16_IS_SURROGATE(c)) { \
         __index = _UCPTRIE_FAST_INDEX(trie, c); \
-    } else { \
+    } បើមិនដូច្នេះ { \
         uint16_t __c2; \
-        if (U16_IS_SURROGATE_LEAD(c) && (src) != (limit) && U16_IS_TRAIL(__c2 = *(src))) { \
+        ប្រសិនបើ (U16_IS_SURROGATE_LEAD(c) && (src) != (limit) && U16_IS_TRAIL(__c2 = *(src))) { \
             ++(src); \
             (c) = U16_GET_SUPPLEMENTARY((c), __c2); \
             __index = _UCPTRIE_SMALL_INDEX(trie, c); \
-        } else { \
+        } បើមិនដូច្នេះ { \
             __index = (trie)->dataLength - UCPTRIE_ERROR_VALUE_NEG_DATA_OFFSET; \
         } \
     } \
@@ -420,15 +420,15 @@ ucptrie_toBinary(const UCPTrie *trie, void *data, int32_t capacity, UErrorCode *
 #define UCPTRIE_FAST_U16_PREV(trie, dataAccess, start, src, c, result) UPRV_BLOCK_MACRO_BEGIN { \
     (c) = *--(src); \
     int32_t __index; \
-    if (!U16_IS_SURROGATE(c)) { \
+    ប្រសិនបើ (!U16_IS_SURROGATE(c)) { \
         __index = _UCPTRIE_FAST_INDEX(trie, c); \
-    } else { \
+    } បើមិនដូច្នេះ { \
         uint16_t __c2; \
-        if (U16_IS_SURROGATE_TRAIL(c) && (src) != (start) && U16_IS_LEAD(__c2 = *((src) - 1))) { \
+        ប្រសិនបើ (U16_IS_SURROGATE_TRAIL(c) && (src) != (start) && U16_IS_LEAD(__c2 = *((src) - 1))) { \
             --(src); \
             (c) = U16_GET_SUPPLEMENTARY(__c2, (c)); \
             __index = _UCPTRIE_SMALL_INDEX(trie, c); \
-        } else { \
+        } បើមិនដូច្នេះ { \
             __index = (trie)->dataLength - UCPTRIE_ERROR_VALUE_NEG_DATA_OFFSET; \
         } \
     } \
@@ -453,9 +453,9 @@ ucptrie_toBinary(const UCPTrie *trie, void *data, int32_t capacity, UErrorCode *
  */
 #define UCPTRIE_FAST_U8_NEXT(trie, dataAccess, src, limit, result) UPRV_BLOCK_MACRO_BEGIN { \
     int32_t __lead = (uint8_t)*(src)++; \
-    if (!U8_IS_SINGLE(__lead)) { \
+    ប្រសិនបើ (!U8_IS_SINGLE(__lead)) { \
         uint8_t __t1, __t2, __t3; \
-        if ((src) != (limit) && \
+        ប្រសិនបើ ((src) != (limit) && \
             (__lead >= 0xe0 ? \
                 __lead < 0xf0 ?  /* U+0800..U+FFFF except surrogates */ \
                     U8_LEAD3_T1_BITS[__lead &= 0xf] & (1 << ((__t1 = *(src)) >> 5)) && \
@@ -474,7 +474,7 @@ ucptrie_toBinary(const UCPTrie *trie, void *data, int32_t capacity, UErrorCode *
                 __lead >= 0xc2 && (__t1 = *(src) - 0x80) <= 0x3f && \
                 (__lead = (int32_t)(trie)->index[__lead & 0x1f] + __t1, 1))) { \
             ++(src); \
-        } else { \
+        } បើមិនដូច្នេះ { \
             __lead = (trie)->dataLength - UCPTRIE_ERROR_VALUE_NEG_DATA_OFFSET;  /* ill-formed*/ \
         } \
     } \
@@ -499,7 +499,7 @@ ucptrie_toBinary(const UCPTrie *trie, void *data, int32_t capacity, UErrorCode *
  */
 #define UCPTRIE_FAST_U8_PREV(trie, dataAccess, start, src, result) UPRV_BLOCK_MACRO_BEGIN { \
     int32_t __index = (uint8_t)*--(src); \
-    if (!U8_IS_SINGLE(__index)) { \
+    ប្រសិនបើ (!U8_IS_SINGLE(__index)) { \
         __index = ucptrie_internalU8PrevIndex((trie), __index, (const uint8_t *)(start), \
                                               (const uint8_t *)(src)); \
         (src) -= __index & 7; \
@@ -553,7 +553,7 @@ ucptrie_toBinary(const UCPTrie *trie, void *data, int32_t capacity, UErrorCode *
  * These are needed for the API macros, but users should not use these directly.
  * @internal
  */
-enum {
+ga_nanaa {
     /** @internal */
     UCPTRIE_FAST_SHIFT = 6,
 
@@ -626,7 +626,7 @@ U_CDECL_END
 
 #endif  // U_IN_DOXYGEN
 
-#if U_SHOW_CPLUSPLUS_API
+#ប្រសិនបើ U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 

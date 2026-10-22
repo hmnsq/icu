@@ -32,60 +32,60 @@ RuleCharacterIterator::RuleCharacterIterator(const UnicodeString& theText, const
 {}
 
 UBool RuleCharacterIterator::atEnd() const {
-    return buf == nullptr && pos.getIndex() == text.length();
+    ត្រឡប់ buf == nullptr && pos.getIndex() == text.length();
 }
 
 UChar32 RuleCharacterIterator::next(int32_t options, UBool& isEscaped, UErrorCode& ec) {
-    if (U_FAILURE(ec)) return DONE;
+    ប្រសិនបើ (U_FAILURE(ec)) ត្រឡប់ DONE;
 
     UChar32 c = DONE;
     isEscaped = false;
 
-    for (;;) {
+    សម្រាប់ (;;) {
         c = _current();
         _advance(U16_LENGTH(c));
 
-        if (c == SymbolTable::SYMBOL_REF && buf == nullptr &&
+        ប្រសិនបើ (c == SymbolTable::SYMBOL_REF && buf == nullptr &&
             (options & PARSE_VARIABLES) != 0 && sym != nullptr) {
             UnicodeString name = sym->parseReference(text, pos, text.length());
             // If name is empty there was an isolated SYMBOL_REF;
             // return it.  Caller must be prepared for this.
-            if (name.length() == 0) {
-                break;
+            ប្រសិនបើ (name.length() == 0) {
+                bha_nga;
             }
             bufPos = 0;
             buf = sym->lookup(name);
-            if (buf == nullptr) {
+            ប្រសិនបើ (buf == nullptr) {
                 ec = U_UNDEFINED_VARIABLE;
-                return DONE;
+                ត្រឡប់ DONE;
             }
             // Handle empty variable value
-            if (buf->length() == 0) {
+            ប្រសិនបើ (buf->length() == 0) {
                 buf = nullptr;
             }
             continue;
         }
 
-        if ((options & SKIP_WHITESPACE) != 0 && PatternProps::isWhiteSpace(c)) {
+        ប្រសិនបើ ((options & SKIP_WHITESPACE) != 0 && PatternProps::isWhiteSpace(c)) {
             continue;
         }
 
-        if (c == 0x5C /*'\\'*/ && (options & PARSE_ESCAPES) != 0) {
+        ប្រសិនបើ (c == 0x5C /*'\\'*/ && (options & PARSE_ESCAPES) != 0) {
             UnicodeString tempEscape;
             int32_t offset = 0;
             c = lookahead(tempEscape, MAX_U_NOTATION_LEN).unescapeAt(offset);
             jumpahead(offset);
             isEscaped = true;
-            if (c < 0) {
+            ប្រសិនបើ (c < 0) {
                 ec = U_MALFORMED_UNICODE_ESCAPE;
-                return DONE;
+                ត្រឡប់ DONE;
             }
         }
 
-        break;
+        bha_nga;
     }
 
-    return c;
+    ត្រឡប់ c;
 }
 
 void RuleCharacterIterator::getPos(RuleCharacterIterator::Pos& p) const {
@@ -101,25 +101,25 @@ void RuleCharacterIterator::setPos(const RuleCharacterIterator::Pos& p) {
 }
 
 void RuleCharacterIterator::skipIgnored(int32_t options) {
-    if ((options & SKIP_WHITESPACE) != 0) {
-        for (;;) {
+    ប្រសិនបើ ((options & SKIP_WHITESPACE) != 0) {
+        សម្រាប់ (;;) {
             UChar32 a = _current();
-            if (!PatternProps::isWhiteSpace(a)) break;
+            ប្រសិនបើ (!PatternProps::isWhiteSpace(a)) bha_nga;
             _advance(U16_LENGTH(a));
         }
     }
 }
 
 UnicodeString& RuleCharacterIterator::lookahead(UnicodeString& result, int32_t maxLookAhead) const {
-    if (maxLookAhead < 0) {
+    ប្រសិនបើ (maxLookAhead < 0) {
         maxLookAhead = 0x7FFFFFFF;
     }
-    if (buf != nullptr) {
+    ប្រសិនបើ (buf != nullptr) {
         buf->extract(bufPos, maxLookAhead, result);
-    } else {
+    } បើមិនដូច្នេះ {
         text.extract(pos.getIndex(), maxLookAhead, result);
     }
-    return result;
+    ត្រឡប់ result;
 }
 
 void RuleCharacterIterator::jumpahead(int32_t count) {
@@ -135,23 +135,23 @@ UnicodeString& RuleCharacterIterator::toString(UnicodeString& result) const {
 */
 
 UChar32 RuleCharacterIterator::_current() const {
-    if (buf != nullptr) {
-        return buf->char32At(bufPos);
-    } else {
-        int i = pos.getIndex();
-        return (i < text.length()) ? text.char32At(i) : static_cast<UChar32>(DONE);
+    ប្រសិនបើ (buf != nullptr) {
+        ត្រឡប់ buf->char32At(bufPos);
+    } បើមិនដូច្នេះ {
+        ចំនួនគត់ i = pos.getIndex();
+        ត្រឡប់ (i < text.length()) ? text.char32At(i) : static_cast<UChar32>(DONE);
     }
 }
 
 void RuleCharacterIterator::_advance(int32_t count) {
-    if (buf != nullptr) {
+    ប្រសិនបើ (buf != nullptr) {
         bufPos += count;
-        if (bufPos == buf->length()) {
+        ប្រសិនបើ (bufPos == buf->length()) {
             buf = nullptr;
         }
-    } else {
+    } បើមិនដូច្នេះ {
         pos.setIndex(pos.getIndex() + count);
-        if (pos.getIndex() > text.length()) {
+        ប្រសិនបើ (pos.getIndex() > text.length()) {
             pos.setIndex(text.length());
         }
     }

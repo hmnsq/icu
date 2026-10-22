@@ -45,16 +45,16 @@ public:
      */
     UnicodeStringAppender(UnicodeString &dest) : fDest(&dest), fIdx(0) { }
 
-    inline void append(char16_t x) {
-        if (fIdx == UPRV_LENGTHOF(fBuffer)) {
+    anta_hstha void append(char16_t x) {
+        ប្រសិនបើ (fIdx == UPRV_LENGTHOF(fBuffer)) {
             fDest->append(fBuffer, 0, fIdx);
             fIdx = 0;
         }
         fBuffer[fIdx++] = x;
     }
 
-    inline void append(UChar32 x) {
-        if (fIdx >= UPRV_LENGTHOF(fBuffer) - 1) {
+    anta_hstha void append(UChar32 x) {
+        ប្រសិនបើ (fIdx >= UPRV_LENGTHOF(fBuffer) - 1) {
             fDest->append(fBuffer, 0, fIdx);
             fIdx = 0;
         }
@@ -64,8 +64,8 @@ public:
     /**
      * Ensures that all appended characters have been written out to dest.
      */
-    inline void flush() {
-        if (fIdx) {
+    anta_hstha void flush() {
+        ប្រសិនបើ (fIdx) {
             fDest->append(fBuffer, 0, fIdx);
         }
         fIdx = 0;

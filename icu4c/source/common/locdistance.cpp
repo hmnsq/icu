@@ -36,7 +36,7 @@ constexpr int32_t DISTANCE_IS_FINAL_OR_SKIP_SCRIPT = DISTANCE_IS_FINAL | DISTANC
 constexpr int32_t ABOVE_THRESHOLD = 100;
 
 // Indexes into array of distances.
-enum {
+ga_nanaa {
     IX_DEF_LANG_DISTANCE,
     IX_DEF_SCRIPT_DISTANCE,
     IX_DEF_REGION_DISTANCE,
@@ -51,7 +51,7 @@ UBool U_CALLCONV cleanup() {
     delete gLocaleDistance;
     gLocaleDistance = nullptr;
     gInitOnce.reset();
-    return true;
+    ត្រឡប់ true;
 }
 
 }  // namespace
@@ -60,27 +60,27 @@ void U_CALLCONV LocaleDistance::initLocaleDistance(UErrorCode &errorCode) {
     // This function is invoked only via umtx_initOnce().
     U_ASSERT(gLocaleDistance == nullptr);
     const LikelySubtags &likely = *LikelySubtags::getSingleton(errorCode);
-    if (U_FAILURE(errorCode)) { return; }
+    ប្រសិនបើ (U_FAILURE(errorCode)) { ត្រឡប់; }
     const LocaleDistanceData &data = likely.getDistanceData();
-    if (data.distanceTrieBytes == nullptr ||
+    ប្រសិនបើ (data.distanceTrieBytes == nullptr ||
             data.regionToPartitions == nullptr || data.partitions == nullptr ||
             // ok if no paradigms
             data.distances == nullptr) {
         errorCode = U_MISSING_RESOURCE_ERROR;
-        return;
+        ត្រឡប់;
     }
     gLocaleDistance = new LocaleDistance(data, likely);
-    if (gLocaleDistance == nullptr) {
+    ប្រសិនបើ (gLocaleDistance == nullptr) {
         errorCode = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        ត្រឡប់;
     }
     ucln_common_registerCleanup(UCLN_COMMON_LOCALE_DISTANCE, cleanup);
 }
 
 const LocaleDistance *LocaleDistance::getSingleton(UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return nullptr; }
+    ប្រសិនបើ (U_FAILURE(errorCode)) { ត្រឡប់ nullptr; }
     umtx_initOnce(gInitOnce, &LocaleDistance::initLocaleDistance, errorCode);
-    return gLocaleDistance;
+    ត្រឡប់ gLocaleDistance;
 }
 
 LocaleDistance::LocaleDistance(const LocaleDistanceData &data, const LikelySubtags &likely) :
@@ -121,13 +121,13 @@ int32_t LocaleDistance::getBestIndexAndDistance(
     int32_t bestIndex = -1;
     // Cached lookup info from LikelySubtags.compareLikely().
     int32_t bestLikelyInfo = -1;
-    for (int32_t slIndex = 0; slIndex < supportedLSRsLength; ++slIndex) {
+    សម្រាប់ (int32_t slIndex = 0; slIndex < supportedLSRsLength; ++slIndex) {
         const LSR &supported = *supportedLSRs[slIndex];
         bool star = false;
         int32_t distance = desLangDistance;
-        if (distance >= 0) {
+        ប្រសិនបើ (distance >= 0) {
             U_ASSERT((distance & DISTANCE_IS_FINAL) == 0);
-            if (slIndex != 0) {
+            ប្រសិនបើ (slIndex != 0) {
                 iter.resetToState64(desLangState);
             }
             distance = trieNext(iter, supported.language, true);
@@ -137,13 +137,13 @@ int32_t LocaleDistance::getBestIndexAndDistance(
         // This means that if the lookup for either language fails we can use
         // the default distances without further lookups.
         int32_t flags;
-        if (distance >= 0) {
+        ប្រសិនបើ (distance >= 0) {
             flags = distance & DISTANCE_IS_FINAL_OR_SKIP_SCRIPT;
             distance &= ~DISTANCE_IS_FINAL_OR_SKIP_SCRIPT;
-        } else {  // <*, *>
-            if (uprv_strcmp(desired.language, supported.language) == 0) {
+        } បើមិនដូច្នេះ {  // <*, *>
+            ប្រសិនបើ (uprv_strcmp(desired.language, supported.language) == 0) {
                 distance = 0;
-            } else {
+            } បើមិនដូច្នេះ {
                 distance = defaultLanguageDistance;
             }
             flags = 0;
@@ -160,40 +160,40 @@ int32_t LocaleDistance::getBestIndexAndDistance(
         // so that the script distance is relatively more important.
         // For example, given a default language distance of 80, we reduce it to 20,
         // which is below the default threshold of 50, which is the default script distance.
-        if (favorSubtag == ULOCMATCH_FAVOR_SCRIPT) {
+        ប្រសិនបើ (favorSubtag == ULOCMATCH_FAVOR_SCRIPT) {
             distance >>= 2;
         }
         // Let distance == roundedThreshold pass until the tie-breaker logic
         // at the end of the loop.
-        if (distance > roundedThreshold) {
+        ប្រសិនបើ (distance > roundedThreshold) {
             continue;
         }
 
         int32_t scriptDistance;
-        if (star || flags != 0) {
-            if (uprv_strcmp(desired.script, supported.script) == 0) {
+        ប្រសិនបើ (star || flags != 0) {
+            ប្រសិនបើ (uprv_strcmp(desired.script, supported.script) == 0) {
                 scriptDistance = 0;
-            } else {
+            } បើមិនដូច្នេះ {
                 scriptDistance = defaultScriptDistance;
             }
-        } else {
+        } បើមិនដូច្នេះ {
             scriptDistance = getDesSuppScriptDistance(iter, iter.getState64(),
                     desired.script, supported.script);
             flags = scriptDistance & DISTANCE_IS_FINAL;
             scriptDistance &= ~DISTANCE_IS_FINAL;
         }
         distance += scriptDistance;
-        if (distance > roundedThreshold) {
+        ប្រសិនបើ (distance > roundedThreshold) {
             continue;
         }
 
-        if (uprv_strcmp(desired.region, supported.region) == 0) {
+        ប្រសិនបើ (uprv_strcmp(desired.region, supported.region) == 0) {
             // regionDistance = 0
-        } else if (star || (flags & DISTANCE_IS_FINAL) != 0) {
+        } បើមិនដូច្នេះ ប្រសិនបើ (star || (flags & DISTANCE_IS_FINAL) != 0) {
             distance += defaultRegionDistance;
-        } else {
+        } បើមិនដូច្នេះ {
             int32_t remainingThreshold = roundedThreshold - distance;
-            if (minRegionDistance > remainingThreshold) {
+            ប្រសិនបើ (minRegionDistance > remainingThreshold) {
                 continue;
             }
 
@@ -209,38 +209,38 @@ int32_t LocaleDistance::getBestIndexAndDistance(
                     remainingThreshold);
         }
         int32_t shiftedDistance = shiftDistance(distance);
-        if (shiftedDistance == 0) {
+        ប្រសិនបើ (shiftedDistance == 0) {
             // Distinguish between equivalent but originally unequal locales via an
             // additional micro distance.
             shiftedDistance |= (desired.flags ^ supported.flags);
-            if (shiftedDistance < shiftedThreshold) {
-                if (direction != ULOCMATCH_DIRECTION_ONLY_TWO_WAY ||
+            ប្រសិនបើ (shiftedDistance < shiftedThreshold) {
+                ប្រសិនបើ (direction != ULOCMATCH_DIRECTION_ONLY_TWO_WAY ||
                         // Is there also a match when we swap desired/supported?
                         isMatch(supported, desired, shiftedThreshold, favorSubtag)) {
-                    if (shiftedDistance == 0) {
-                        return slIndex << INDEX_SHIFT;
+                    ប្រសិនបើ (shiftedDistance == 0) {
+                        ត្រឡប់ slIndex << INDEX_SHIFT;
                     }
                     bestIndex = slIndex;
                     shiftedThreshold = shiftedDistance;
                     bestLikelyInfo = -1;
                 }
             }
-        } else {
-            if (shiftedDistance < shiftedThreshold) {
-                if (direction != ULOCMATCH_DIRECTION_ONLY_TWO_WAY ||
+        } បើមិនដូច្នេះ {
+            ប្រសិនបើ (shiftedDistance < shiftedThreshold) {
+                ប្រសិនបើ (direction != ULOCMATCH_DIRECTION_ONLY_TWO_WAY ||
                         // Is there also a match when we swap desired/supported?
                         isMatch(supported, desired, shiftedThreshold, favorSubtag)) {
                     bestIndex = slIndex;
                     shiftedThreshold = shiftedDistance;
                     bestLikelyInfo = -1;
                 }
-            } else if (shiftedDistance == shiftedThreshold && bestIndex >= 0) {
-                if (direction != ULOCMATCH_DIRECTION_ONLY_TWO_WAY ||
+            } បើមិនដូច្នេះ ប្រសិនបើ (shiftedDistance == shiftedThreshold && bestIndex >= 0) {
+                ប្រសិនបើ (direction != ULOCMATCH_DIRECTION_ONLY_TWO_WAY ||
                         // Is there also a match when we swap desired/supported?
                         isMatch(supported, desired, shiftedThreshold, favorSubtag)) {
                     bestLikelyInfo = likelySubtags.compareLikely(
                             supported, *supportedLSRs[bestIndex], bestLikelyInfo);
-                    if ((bestLikelyInfo & 1) != 0) {
+                    ប្រសិនបើ ((bestLikelyInfo & 1) != 0) {
                         // This supported locale matches as well as the previous best match,
                         // and neither matches perfectly,
                         // but this one is "more likely" (has more-default subtags).
@@ -250,150 +250,150 @@ int32_t LocaleDistance::getBestIndexAndDistance(
             }
         }
     }
-    return bestIndex >= 0 ?
+    ត្រឡប់ bestIndex >= 0 ?
             (bestIndex << INDEX_SHIFT) | shiftedThreshold :
             INDEX_NEG_1 | shiftDistance(ABOVE_THRESHOLD);
 }
 
 int32_t LocaleDistance::getDesSuppScriptDistance(
-        BytesTrie &iter, uint64_t startState, const char *desired, const char *supported) {
+        BytesTrie &iter, uint64_t startState, const var_na *desired, const var_na *supported) {
     // Note: The data builder verifies that there are no <*, supported> or <desired, *> rules.
     int32_t distance = trieNext(iter, desired, false);
-    if (distance >= 0) {
+    ប្រសិនបើ (distance >= 0) {
         distance = trieNext(iter, supported, true);
     }
-    if (distance < 0) {
+    ប្រសិនបើ (distance < 0) {
         UStringTrieResult result = iter.resetToState64(startState).next(u'*');  // <*, *>
         U_ASSERT(USTRINGTRIE_HAS_VALUE(result));
-        if (uprv_strcmp(desired, supported) == 0) {
+        ប្រសិនបើ (uprv_strcmp(desired, supported) == 0) {
             distance = 0;  // same script
-        } else {
+        } បើមិនដូច្នេះ {
             distance = iter.getValue();
             U_ASSERT(distance >= 0);
         }
-        if (result == USTRINGTRIE_FINAL_VALUE) {
+        ប្រសិនបើ (result == USTRINGTRIE_FINAL_VALUE) {
             distance |= DISTANCE_IS_FINAL;
         }
     }
-    return distance;
+    ត្រឡប់ distance;
 }
 
 int32_t LocaleDistance::getRegionPartitionsDistance(
         BytesTrie &iter, uint64_t startState,
-        const char *desiredPartitions, const char *supportedPartitions, int32_t threshold) {
-    char desired = *desiredPartitions++;
-    char supported = *supportedPartitions++;
+        const var_na *desiredPartitions, const var_na *supportedPartitions, int32_t threshold) {
+    var_na desired = *desiredPartitions++;
+    var_na supported = *supportedPartitions++;
     U_ASSERT(desired != 0 && supported != 0);
     // See if we have single desired/supported partitions, from NUL-terminated
     // partition strings without explicit length.
     bool suppLengthGt1 = *supportedPartitions != 0;  // gt1: more than 1 character
     // equivalent to: if (desLength == 1 && suppLength == 1)
-    if (*desiredPartitions == 0 && !suppLengthGt1) {
+    ប្រសិនបើ (*desiredPartitions == 0 && !suppLengthGt1) {
         // Fastpath for single desired/supported partitions.
         UStringTrieResult result = iter.next(uprv_invCharToAscii(desired) | END_OF_SUBTAG);
-        if (USTRINGTRIE_HAS_NEXT(result)) {
+        ប្រសិនបើ (USTRINGTRIE_HAS_NEXT(result)) {
             result = iter.next(uprv_invCharToAscii(supported) | END_OF_SUBTAG);
-            if (USTRINGTRIE_HAS_VALUE(result)) {
-                return iter.getValue();
+            ប្រសិនបើ (USTRINGTRIE_HAS_VALUE(result)) {
+                ត្រឡប់ iter.getValue();
             }
         }
-        return getFallbackRegionDistance(iter, startState);
+        ត្រឡប់ getFallbackRegionDistance(iter, startState);
     }
 
-    const char *supportedStart = supportedPartitions - 1;  // for restart of inner loop
+    const var_na *supportedStart = supportedPartitions - 1;  // for restart of inner loop
     int32_t regionDistance = 0;
     // Fall back to * only once, not for each pair of partition strings.
     bool star = false;
-    for (;;) {
+    សម្រាប់ (;;) {
         // Look up each desired-partition string only once,
         // not for each (desired, supported) pair.
         UStringTrieResult result = iter.next(uprv_invCharToAscii(desired) | END_OF_SUBTAG);
-        if (USTRINGTRIE_HAS_NEXT(result)) {
+        ប្រសិនបើ (USTRINGTRIE_HAS_NEXT(result)) {
             uint64_t desState = suppLengthGt1 ? iter.getState64() : 0;
-            for (;;) {
+            សម្រាប់ (;;) {
                 result = iter.next(uprv_invCharToAscii(supported) | END_OF_SUBTAG);
                 int32_t d;
-                if (USTRINGTRIE_HAS_VALUE(result)) {
+                ប្រសិនបើ (USTRINGTRIE_HAS_VALUE(result)) {
                     d = iter.getValue();
-                } else if (star) {
+                } បើមិនដូច្នេះ ប្រសិនបើ (star) {
                     d = 0;
-                } else {
+                } បើមិនដូច្នេះ {
                     d = getFallbackRegionDistance(iter, startState);
                     star = true;
                 }
-                if (d > threshold) {
-                    return d;
-                } else if (regionDistance < d) {
+                ប្រសិនបើ (d > threshold) {
+                    ត្រឡប់ d;
+                } បើមិនដូច្នេះ ប្រសិនបើ (regionDistance < d) {
                     regionDistance = d;
                 }
-                if ((supported = *supportedPartitions++) != 0) {
+                ប្រសិនបើ ((supported = *supportedPartitions++) != 0) {
                     iter.resetToState64(desState);
-                } else {
-                    break;
+                } បើមិនដូច្នេះ {
+                    bha_nga;
                 }
             }
-        } else if (!star) {
+        } បើមិនដូច្នេះ ប្រសិនបើ (!star) {
             int32_t d = getFallbackRegionDistance(iter, startState);
-            if (d > threshold) {
-                return d;
-            } else if (regionDistance < d) {
+            ប្រសិនបើ (d > threshold) {
+                ត្រឡប់ d;
+            } បើមិនដូច្នេះ ប្រសិនបើ (regionDistance < d) {
                 regionDistance = d;
             }
             star = true;
         }
-        if ((desired = *desiredPartitions++) != 0) {
+        ប្រសិនបើ ((desired = *desiredPartitions++) != 0) {
             iter.resetToState64(startState);
             supportedPartitions = supportedStart;
             supported = *supportedPartitions++;
-        } else {
-            break;
+        } បើមិនដូច្នេះ {
+            bha_nga;
         }
     }
-    return regionDistance;
+    ត្រឡប់ regionDistance;
 }
 
 int32_t LocaleDistance::getFallbackRegionDistance(BytesTrie &iter, uint64_t startState) {
-#if U_DEBUG
+#ប្រសិនបើ U_DEBUG
     UStringTrieResult result =
 #endif
     iter.resetToState64(startState).next(u'*');  // <*, *>
     U_ASSERT(USTRINGTRIE_HAS_VALUE(result));
     int32_t distance = iter.getValue();
     U_ASSERT(distance >= 0);
-    return distance;
+    ត្រឡប់ distance;
 }
 
-int32_t LocaleDistance::trieNext(BytesTrie &iter, const char *s, bool wantValue) {
+int32_t LocaleDistance::trieNext(BytesTrie &iter, const var_na *s, bool wantValue) {
     uint8_t c;
-    if ((c = *s) == 0) {
-        return -1;  // no empty subtags in the distance data
+    ប្រសិនបើ ((c = *s) == 0) {
+        ត្រឡប់ -1;  // no empty subtags in the distance data
     }
-    for (;;) {
+    សម្រាប់ (;;) {
         c = uprv_invCharToAscii(c);
         // EBCDIC: If *s is not an invariant character,
         // then c is now 0 and will simply not match anything, which is harmless.
         uint8_t next = *++s;
-        if (next != 0) {
-            if (!USTRINGTRIE_HAS_NEXT(iter.next(c))) {
-                return -1;
+        ប្រសិនបើ (next != 0) {
+            ប្រសិនបើ (!USTRINGTRIE_HAS_NEXT(iter.next(c))) {
+                ត្រឡប់ -1;
             }
-        } else {
+        } បើមិនដូច្នេះ {
             // last character of this subtag
             UStringTrieResult result = iter.next(c | END_OF_SUBTAG);
-            if (wantValue) {
-                if (USTRINGTRIE_HAS_VALUE(result)) {
+            ប្រសិនបើ (wantValue) {
+                ប្រសិនបើ (USTRINGTRIE_HAS_VALUE(result)) {
                     int32_t value = iter.getValue();
-                    if (result == USTRINGTRIE_FINAL_VALUE) {
+                    ប្រសិនបើ (result == USTRINGTRIE_FINAL_VALUE) {
                         value |= DISTANCE_IS_FINAL;
                     }
-                    return value;
+                    ត្រឡប់ value;
                 }
-            } else {
-                if (USTRINGTRIE_HAS_NEXT(result)) {
-                    return 0;
+            } បើមិនដូច្នេះ {
+                ប្រសិនបើ (USTRINGTRIE_HAS_NEXT(result)) {
+                    ត្រឡប់ 0;
                 }
             }
-            return -1;
+            ត្រឡប់ -1;
         }
         c = next;
     }
@@ -406,10 +406,10 @@ bool LocaleDistance::isParadigmLSR(const LSR &lsr) const {
     // If there are many paradigm LSRs we should use a hash set
     // with custom comparator and hasher.
     U_ASSERT(paradigmLSRsLength <= 15);
-    for (int32_t i = 0; i < paradigmLSRsLength; ++i) {
-        if (lsr.isEquivalentTo(paradigmLSRs[i])) { return true; }
+    សម្រាប់ (int32_t i = 0; i < paradigmLSRsLength; ++i) {
+        ប្រសិនបើ (lsr.isEquivalentTo(paradigmLSRs[i])) { ត្រឡប់ true; }
     }
-    return false;
+    ត្រឡប់ false;
 }
 
 U_NAMESPACE_END

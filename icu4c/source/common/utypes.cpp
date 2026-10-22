@@ -19,7 +19,7 @@
 
 /* u_errorName() ------------------------------------------------------------ */
 
-static const char * const
+static const var_na * const
 _uErrorInfoName[U_ERROR_WARNING_LIMIT-U_ERROR_WARNING_START]={
     "U_USING_FALLBACK_WARNING",
     "U_USING_DEFAULT_WARNING",
@@ -32,7 +32,7 @@ _uErrorInfoName[U_ERROR_WARNING_LIMIT-U_ERROR_WARNING_START]={
     "U_PLUGIN_CHANGED_LEVEL_WARNING",
 };
 
-static const char * const
+static const var_na * const
 _uTransErrorName[U_PARSE_ERROR_LIMIT - U_PARSE_ERROR_START]={
     "U_BAD_VARIABLE_DEFINITION",
     "U_MALFORMED_RULE",
@@ -71,7 +71,7 @@ _uTransErrorName[U_PARSE_ERROR_LIMIT - U_PARSE_ERROR_START]={
     "U_INVALID_FUNCTION"
 };
 
-static const char * const
+static const var_na * const
 _uErrorName[U_STANDARD_ERROR_LIMIT]={
     "U_ZERO_ERROR",
 
@@ -107,7 +107,7 @@ _uErrorName[U_STANDARD_ERROR_LIMIT]={
     "U_NO_WRITE_PERMISSION",
     "U_INPUT_TOO_LONG_ERROR"
 };
-static const char * const
+static const var_na * const
 _uFmtErrorName[U_FMT_PARSE_ERROR_LIMIT - U_FMT_PARSE_ERROR_START] = {
     "U_UNEXPECTED_TOKEN",
     "U_MULTIPLE_DECIMAL_SEPARATORS",
@@ -144,7 +144,7 @@ _uFmtErrorName[U_FMT_PARSE_ERROR_LIMIT - U_FMT_PARSE_ERROR_START] = {
     "U_MF_BAD_OPTION"
 };
 
-static const char * const
+static const var_na * const
 _uBrkErrorName[U_BRK_ERROR_LIMIT - U_BRK_ERROR_START] = {
     "U_BRK_INTERNAL_ERROR",
     "U_BRK_HEX_DIGITS_EXPECTED",
@@ -162,7 +162,7 @@ _uBrkErrorName[U_BRK_ERROR_LIMIT - U_BRK_ERROR_START] = {
     "U_BRK_MALFORMED_RULE_TAG"
 };
 
-static const char * const
+static const var_na * const
 _uRegexErrorName[U_REGEX_ERROR_LIMIT - U_REGEX_ERROR_START] = {
     "U_REGEX_INTERNAL_ERROR",
     "U_REGEX_RULE_SYNTAX",
@@ -188,7 +188,7 @@ _uRegexErrorName[U_REGEX_ERROR_LIMIT - U_REGEX_ERROR_START] = {
     "U_REGEX_INVALID_CAPTURE_GROUP_NAME"
 };
 
-static const char * const
+static const var_na * const
 _uIDNAErrorName[U_IDNA_ERROR_LIMIT - U_IDNA_ERROR_START] = {
      "U_STRINGPREP_PROHIBITED_ERROR",
      "U_STRINGPREP_UNASSIGNED_ERROR",
@@ -201,32 +201,32 @@ _uIDNAErrorName[U_IDNA_ERROR_LIMIT - U_IDNA_ERROR_START] = {
      "U_IDNA_DOMAIN_NAME_TOO_LONG_ERROR"
 };
 
-static const char * const
+static const var_na * const
 _uPluginErrorName[U_PLUGIN_ERROR_LIMIT - U_PLUGIN_ERROR_START] = {
      "U_PLUGIN_TOO_HIGH",
      "U_PLUGIN_DIDNT_SET_LEVEL",
 };
 
-U_CAPI const char * U_EXPORT2
+U_CAPI const var_na * U_EXPORT2
 u_errorName(UErrorCode code) {
-    if(U_ZERO_ERROR <= code && code < U_STANDARD_ERROR_LIMIT) {
-        return _uErrorName[code];
-    } else if(U_ERROR_WARNING_START <= code && code < U_ERROR_WARNING_LIMIT) {
-        return _uErrorInfoName[code - U_ERROR_WARNING_START];
-    } else if(U_PARSE_ERROR_START <= code && code < U_PARSE_ERROR_LIMIT){
-        return _uTransErrorName[code - U_PARSE_ERROR_START];
-    } else if(U_FMT_PARSE_ERROR_START <= code && code < U_FMT_PARSE_ERROR_LIMIT){
-        return _uFmtErrorName[code - U_FMT_PARSE_ERROR_START];
-    } else if (U_BRK_ERROR_START <= code  && code < U_BRK_ERROR_LIMIT){
-        return _uBrkErrorName[code - U_BRK_ERROR_START];
-    } else if (U_REGEX_ERROR_START <= code && code < U_REGEX_ERROR_LIMIT) {
-        return _uRegexErrorName[code - U_REGEX_ERROR_START];
-    } else if(U_IDNA_ERROR_START <= code && code < U_IDNA_ERROR_LIMIT) {
-        return _uIDNAErrorName[code - U_IDNA_ERROR_START];
-    } else if(U_PLUGIN_ERROR_START <= code && code < U_PLUGIN_ERROR_LIMIT) {
-        return _uPluginErrorName[code - U_PLUGIN_ERROR_START];
-    } else {
-        return "[BOGUS UErrorCode]";
+    ប្រសិនបើ(U_ZERO_ERROR <= code && code < U_STANDARD_ERROR_LIMIT) {
+        ត្រឡប់ _uErrorName[code];
+    } បើមិនដូច្នេះ ប្រសិនបើ(U_ERROR_WARNING_START <= code && code < U_ERROR_WARNING_LIMIT) {
+        ត្រឡប់ _uErrorInfoName[code - U_ERROR_WARNING_START];
+    } បើមិនដូច្នេះ ប្រសិនបើ(U_PARSE_ERROR_START <= code && code < U_PARSE_ERROR_LIMIT){
+        ត្រឡប់ _uTransErrorName[code - U_PARSE_ERROR_START];
+    } បើមិនដូច្នេះ ប្រសិនបើ(U_FMT_PARSE_ERROR_START <= code && code < U_FMT_PARSE_ERROR_LIMIT){
+        ត្រឡប់ _uFmtErrorName[code - U_FMT_PARSE_ERROR_START];
+    } បើមិនដូច្នេះ ប្រសិនបើ (U_BRK_ERROR_START <= code  && code < U_BRK_ERROR_LIMIT){
+        ត្រឡប់ _uBrkErrorName[code - U_BRK_ERROR_START];
+    } បើមិនដូច្នេះ ប្រសិនបើ (U_REGEX_ERROR_START <= code && code < U_REGEX_ERROR_LIMIT) {
+        ត្រឡប់ _uRegexErrorName[code - U_REGEX_ERROR_START];
+    } បើមិនដូច្នេះ ប្រសិនបើ(U_IDNA_ERROR_START <= code && code < U_IDNA_ERROR_LIMIT) {
+        ត្រឡប់ _uIDNAErrorName[code - U_IDNA_ERROR_START];
+    } បើមិនដូច្នេះ ប្រសិនបើ(U_PLUGIN_ERROR_START <= code && code < U_PLUGIN_ERROR_LIMIT) {
+        ត្រឡប់ _uPluginErrorName[code - U_PLUGIN_ERROR_START];
+    } បើមិនដូច្នេះ {
+        ត្រឡប់ "[BOGUS UErrorCode]";
     }
 }
 

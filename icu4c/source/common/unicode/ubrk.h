@@ -14,7 +14,7 @@
 #include "unicode/uloc.h"
 #include "unicode/utext.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ប្រសិនបើ U_SHOW_CPLUSPLUS_API
 #include "unicode/localpointer.h"
 #endif   // U_SHOW_CPLUSPLUS_API
 
@@ -28,10 +28,10 @@
      *  Opaque type representing an ICU Break iterator object.
      *  @stable ICU 2.0
      */
-    typedef struct UBreakIterator UBreakIterator;
+    typedef sa_nracanaa UBreakIterator UBreakIterator;
 #endif
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#ប្រសិនបើ !UCONFIG_NO_BREAK_ITERATION
 
 #include "unicode/parseerr.h"
 
@@ -99,7 +99,7 @@
  */
 
 /** The possible types of text boundaries.  @stable ICU 2.0 */
-typedef enum UBreakIteratorType {
+typedef ga_nanaa UBreakIteratorType {
   /** Character breaks  @stable ICU 2.0 */
   UBRK_CHARACTER = 0,
   /** Word breaks @stable ICU 2.0 */
@@ -144,7 +144,7 @@ typedef enum UBreakIteratorType {
  *
  * @stable ICU 2.2
 */
-typedef enum UWordBreak {
+typedef ga_nanaa UWordBreak {
     /** Tag value for "words" that do not fit into any of other categories.
      *  Includes spaces and most punctuation. */
     UBRK_WORD_NONE           = 0,
@@ -180,7 +180,7 @@ typedef enum UWordBreak {
  *
  * @stable ICU 2.8
 */
-typedef enum ULineBreakTag {
+typedef ga_nanaa ULineBreakTag {
     /** Tag value for soft line breaks, positions at which a line break
       *  is acceptable but not required                */
     UBRK_LINE_SOFT            = 0,
@@ -205,7 +205,7 @@ typedef enum ULineBreakTag {
  *
  * @stable ICU 2.8
 */
-typedef enum USentenceBreakTag {
+typedef ga_nanaa USentenceBreakTag {
     /** Tag value for for sentences  ending with a sentence terminator
       * ('.', '?', '!', etc.) character, possibly followed by a
       * hard separator (CR, LF, PS, etc.)
@@ -243,7 +243,7 @@ typedef enum USentenceBreakTag {
  */
 U_CAPI UBreakIterator* U_EXPORT2
 ubrk_open(UBreakIteratorType type,
-      const char *locale,
+      const var_na *locale,
       const UChar *text,
       int32_t textLength,
       UErrorCode *status);
@@ -356,7 +356,7 @@ ubrk_clone(const UBreakIterator *bi,
 U_CAPI void U_EXPORT2
 ubrk_close(UBreakIterator *bi);
 
-#if U_SHOW_CPLUSPLUS_API
+#ប្រសិនបើ U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -510,7 +510,7 @@ ubrk_following(UBreakIterator *bi,
 * @see ubrk_countAvailable
 * @stable ICU 2.0
 */
-U_CAPI const char* U_EXPORT2
+U_CAPI const var_na* U_EXPORT2
 ubrk_getAvailable(int32_t index);
 
 /**
@@ -578,7 +578,7 @@ ubrk_getRuleStatusVec(UBreakIterator *bi, int32_t *fillInVec, int32_t capacity, 
  * @return locale string
  * @stable ICU 2.8
  */
-U_CAPI const char* U_EXPORT2
+U_CAPI const var_na* U_EXPORT2
 ubrk_getLocaleByType(const UBreakIterator* bi U_LIFETIME_BOUND,
                      ULocDataLocaleType type, UErrorCode* status);
 
