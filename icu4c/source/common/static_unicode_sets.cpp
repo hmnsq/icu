@@ -1,126 +1,126 @@
 // © 2018 and later: Unicode, Inc. and others.
 // License & terms of use: http://www.unicode.org/copyright.html
 
-#include "unicode/utypes.h"
+#अन्तर्भाव "unicode/utypes.h"
 
-#if !UCONFIG_NO_FORMATTING
+#यदि !UCONFIG_NO_FORMATTING
 
 // Allow implicit conversion from char16_t* to UnicodeString for this file:
 // Helpful in toString methods and elsewhere.
 #define UNISTR_FROM_STRING_EXPLICIT
 
-#include "static_unicode_sets.h"
-#include "umutex.h"
-#include "ucln_cmn.h"
-#include "unicode/uniset.h"
-#include "uresimp.h"
-#include "cstring.h"
-#include "uassert.h"
+#अन्तर्भाव "static_unicode_sets.h"
+#अन्तर्भाव "umutex.h"
+#अन्तर्भाव "ucln_cmn.h"
+#अन्तर्भाव "unicode/uniset.h"
+#अन्तर्भाव "uresimp.h"
+#अन्तर्भाव "cstring.h"
+#अन्तर्भाव "uassert.h"
 
-using namespace icu;
-using namespace icu::unisets;
+using नामाकाश icu;
+using नामाकाश icu::unisets;
 
 
-namespace {
+नामाकाश {
 
-UnicodeSet* gUnicodeSets[UNISETS_KEY_COUNT] = {};
+UnicodeSet* gUnicodeSets[UNISETS_कुंजी_गिनती] = {};
 
 // Save the empty instance in static memory to have well-defined behavior if a
 // regular UnicodeSet cannot be allocated.
 alignas(UnicodeSet)
-char gEmptyUnicodeSet[sizeof(UnicodeSet)];
+वर्ण gEmptyUnicodeSet[परिमाण(UnicodeSet)];
 
 // Whether the gEmptyUnicodeSet is initialized and ready to use.
-UBool gEmptyUnicodeSetInitialized = false;
+UBool gEmptyUnicodeSetInitialized = असत्य;
 
-inline UnicodeSet* getImpl(Key key) {
-    UnicodeSet* candidate = gUnicodeSets[key];
-    if (candidate == nullptr) {
-        return reinterpret_cast<UnicodeSet*>(gEmptyUnicodeSet);
+अन्तःस्थ UnicodeSet* getImpl(कुंजी_2 कुंजी) {
+    UnicodeSet* candidate = gUnicodeSets[कुंजी];
+    यदि (candidate == nullptr) {
+        प्रत्यागम reinterpret_cast<UnicodeSet*>(gEmptyUnicodeSet);
     }
-    return candidate;
+    प्रत्यागम candidate;
 }
 
-UnicodeSet* computeUnion(Key k1, Key k2) {
-    UnicodeSet* result = new UnicodeSet();
-    if (result == nullptr) {
-        return nullptr;
+UnicodeSet* computeUnion(कुंजी_2 k1, कुंजी_2 k2) {
+    UnicodeSet* result = नूतन UnicodeSet();
+    यदि (result == nullptr) {
+        प्रत्यागम nullptr;
     }
     result->addAll(*getImpl(k1));
     result->addAll(*getImpl(k2));
     result->freeze();
-    return result;
+    प्रत्यागम result;
 }
 
-UnicodeSet* computeUnion(Key k1, Key k2, Key k3) {
-    UnicodeSet* result = new UnicodeSet();
-    if (result == nullptr) {
-        return nullptr;
+UnicodeSet* computeUnion(कुंजी_2 k1, कुंजी_2 k2, कुंजी_2 k3) {
+    UnicodeSet* result = नूतन UnicodeSet();
+    यदि (result == nullptr) {
+        प्रत्यागम nullptr;
     }
     result->addAll(*getImpl(k1));
     result->addAll(*getImpl(k2));
     result->addAll(*getImpl(k3));
     result->freeze();
-    return result;
+    प्रत्यागम result;
 }
 
 
-void saveSet(Key key, const UnicodeString& unicodeSetPattern, UErrorCode& status) {
+शून्य saveSet(कुंजी_2 कुंजी, ध्रुव UnicodeString& unicodeSetPattern, UErrorCode& status) {
     // assert unicodeSets.get(key) == null;
-    gUnicodeSets[key] = new UnicodeSet(unicodeSetPattern, status);
+    gUnicodeSets[कुंजी] = नूतन UnicodeSet(unicodeSetPattern, status);
 }
 
-class ParseDataSink : public ResourceSink {
-  public:
-    void put(const char* key, ResourceValue& value, UBool /*noFallback*/, UErrorCode& status) override {
+वर्ग ParseDataSink : सार्वजनिक ResourceSink {
+  सार्वजनिक:
+    शून्य put(ध्रुव वर्ण* कुंजी, Resource_मूल्य& value, UBool /*noFallback*/, UErrorCode& status) override {
         ResourceTable contextsTable = value.getTable(status);
-        if (U_FAILURE(status)) { return; }
-        for (int i = 0; contextsTable.getKeyAndValue(i, key, value); i++) {
-            if (uprv_strcmp(key, "date") == 0) {
+        यदि (U_FAILURE(status)) { प्रत्यागम; }
+        प्रति (पूर्णाङ्क i = 0; contextsTable.get_कुंजी_And_मूल्य(i, कुंजी, value); i++) {
+            यदि (uprv_strcmp(कुंजी, "date") == 0) {
                 // ignore
-            } else {
+            } अन्यथा {
                 ResourceTable strictnessTable = value.getTable(status);
-                if (U_FAILURE(status)) { return; }
-                for (int j = 0; strictnessTable.getKeyAndValue(j, key, value); j++) {
-                    bool isLenient = (uprv_strcmp(key, "lenient") == 0);
+                यदि (U_FAILURE(status)) { प्रत्यागम; }
+                प्रति (पूर्णाङ्क j = 0; strictnessTable.get_कुंजी_And_मूल्य(j, कुंजी, value); j++) {
+                    तार्किक isLenient = (uprv_strcmp(कुंजी, "lenient") == 0);
                     ResourceArray array = value.getArray(status);
-                    if (U_FAILURE(status)) { return; }
-                    for (int k = 0; k < array.getSize(); k++) {
-                        array.getValue(k, value);
+                    यदि (U_FAILURE(status)) { प्रत्यागम; }
+                    प्रति (पूर्णाङ्क k = 0; k < array.getSize(); k++) {
+                        array.get_मूल्य(k, value);
                         UnicodeString str = value.getUnicodeString(status);
-                        if (U_FAILURE(status)) { return; }
+                        यदि (U_FAILURE(status)) { प्रत्यागम; }
                         // There is both lenient and strict data for comma/period,
                         // but not for any of the other symbols.
-                        if (str.indexOf(u'.') != -1) {
+                        यदि (str.indexOf(u'.') != -1) {
                             saveSet(isLenient ? PERIOD : STRICT_PERIOD, str, status);
-                        } else if (str.indexOf(u',') != -1) {
+                        } अन्यथा यदि (str.indexOf(u',') != -1) {
                             saveSet(isLenient ? COMMA : STRICT_COMMA, str, status);
-                        } else if (str.indexOf(u'+') != -1) {
+                        } अन्यथा यदि (str.indexOf(u'+') != -1) {
                             saveSet(PLUS_SIGN, str, status);
-                        } else if (str.indexOf(u'-') != -1) {
+                        } अन्यथा यदि (str.indexOf(u'-') != -1) {
                             saveSet(MINUS_SIGN, str, status);
-                        } else if (str.indexOf(u'$') != -1) {
+                        } अन्यथा यदि (str.indexOf(u'$') != -1) {
                             saveSet(DOLLAR_SIGN, str, status);
-                        } else if (str.indexOf(u'£') != -1) {
+                        } अन्यथा यदि (str.indexOf(u'£') != -1) {
                             saveSet(POUND_SIGN, str, status);
-                        } else if (str.indexOf(u'₹') != -1) {
+                        } अन्यथा यदि (str.indexOf(u'₹') != -1) {
                             saveSet(RUPEE_SIGN, str, status);
-                        } else if (str.indexOf(u'¥') != -1) {
+                        } अन्यथा यदि (str.indexOf(u'¥') != -1) {
                             saveSet(YEN_SIGN, str, status);
-                        } else if (str.indexOf(u'₩') != -1) {
+                        } अन्यथा यदि (str.indexOf(u'₩') != -1) {
                             saveSet(WON_SIGN, str, status);
-                        } else if (str.indexOf(u'%') != -1) {
+                        } अन्यथा यदि (str.indexOf(u'%') != -1) {
                             saveSet(PERCENT_SIGN, str, status);
-                        } else if (str.indexOf(u'‰') != -1) {
+                        } अन्यथा यदि (str.indexOf(u'‰') != -1) {
                             saveSet(PERMILLE_SIGN, str, status);
-                        } else if (str.indexOf(u'’') != -1) {
+                        } अन्यथा यदि (str.indexOf(u'’') != -1) {
                             saveSet(APOSTROPHE_SIGN, str, status);
-                        } else {
+                        } अन्यथा {
                             // Unknown class of parse lenients
                             // TODO(ICU-20428): Make ICU automatically accept new classes?
-                            U_ASSERT(false);
+                            U_ASSERT(असत्य);
                         }
-                        if (U_FAILURE(status)) { return; }
+                        यदि (U_FAILURE(status)) { प्रत्यागम; }
                     }
                 }
             }
@@ -129,40 +129,40 @@ class ParseDataSink : public ResourceSink {
 };
 
 
-icu::UInitOnce gNumberParseUniSetsInitOnce {};
+icu::UInitOnce g_संख्या_Parse_Uni_Sets_Init_Once {};
 
-UBool U_CALLCONV cleanupNumberParseUniSets() {
-    if (gEmptyUnicodeSetInitialized) {
+UBool U_CALLCONV cleanup_संख्या_Parse_Uni_Sets() {
+    यदि (gEmptyUnicodeSetInitialized) {
         reinterpret_cast<UnicodeSet*>(gEmptyUnicodeSet)->~UnicodeSet();
-        gEmptyUnicodeSetInitialized = false;
+        gEmptyUnicodeSetInitialized = असत्य;
     }
-    for (int32_t i = 0; i < UNISETS_KEY_COUNT; i++) {
+    प्रति (int32_t i = 0; i < UNISETS_कुंजी_गिनती; i++) {
         delete gUnicodeSets[i];
         gUnicodeSets[i] = nullptr;
     }
-    gNumberParseUniSetsInitOnce.reset();
-    return true;
+    g_संख्या_Parse_Uni_Sets_Init_Once.reset();
+    प्रत्यागम सत्य;
 }
 
-void U_CALLCONV initNumberParseUniSets(UErrorCode& status) {
-    ucln_common_registerCleanup(UCLN_COMMON_NUMPARSE_UNISETS, cleanupNumberParseUniSets);
+शून्य U_CALLCONV init_संख्या_Parse_Uni_Sets(UErrorCode& status) {
+    ucln_common_registerCleanup(UCLN_COMMON_NUMPARSE_UNISETS, cleanup_संख्या_Parse_Uni_Sets);
 
     // Initialize the empty instance for well-defined fallback behavior
-    new(gEmptyUnicodeSet) UnicodeSet();
+    नूतन(gEmptyUnicodeSet) UnicodeSet();
     reinterpret_cast<UnicodeSet*>(gEmptyUnicodeSet)->freeze();
-    gEmptyUnicodeSetInitialized = true;
+    gEmptyUnicodeSetInitialized = सत्य;
 
     // These sets were decided after discussion with icu-design@. See tickets #13084 and #13309.
     // Zs+TAB is "horizontal whitespace" according to UTS #18 (blank property).
-    gUnicodeSets[DEFAULT_IGNORABLES] = new UnicodeSet(
+    gUnicodeSets[DEFAULT_IGNORABLES] = नूतन UnicodeSet(
             u"[[:Zs:][\\u0009][:Bidi_Control:][:Variation_Selector:]]", status);
-    gUnicodeSets[STRICT_IGNORABLES] = new UnicodeSet(u"[[:Bidi_Control:]]", status);
+    gUnicodeSets[STRICT_IGNORABLES] = नूतन UnicodeSet(u"[[:Bidi_Control:]]", status);
 
     LocalUResourceBundlePointer rb(ures_open(nullptr, "root", &status));
-    if (U_FAILURE(status)) { return; }
+    यदि (U_FAILURE(status)) { प्रत्यागम; }
     ParseDataSink sink;
-    ures_getAllItemsWithFallback(rb.getAlias(), "parse", sink, status);
-    if (U_FAILURE(status)) { return; }
+    ures_get_All_वस्तुएँ_With_Fallback(rb.getAlias(), "parse", sink, status);
+    यदि (U_FAILURE(status)) { प्रत्यागम; }
 
     // NOTE: It is OK for these assertions to fail if there was a no-data build.
     U_ASSERT(gUnicodeSets[COMMA] != nullptr);
@@ -171,11 +171,11 @@ void U_CALLCONV initNumberParseUniSets(UErrorCode& status) {
     U_ASSERT(gUnicodeSets[STRICT_PERIOD] != nullptr);
     U_ASSERT(gUnicodeSets[APOSTROPHE_SIGN] != nullptr);
 
-    LocalPointer<UnicodeSet> otherGrouping(new UnicodeSet(
+    LocalPointer<UnicodeSet> otherGrouping(नूतन UnicodeSet(
         u"[٬‘\\u0020\\u00A0\\u2000-\\u200A\\u202F\\u205F\\u3000]",
         status
     ), status);
-    if (U_FAILURE(status)) { return; }
+    यदि (U_FAILURE(status)) { प्रत्यागम; }
     otherGrouping->addAll(*gUnicodeSets[APOSTROPHE_SIGN]);
     gUnicodeSets[OTHER_GROUPING_SEPARATORS] = otherGrouping.orphan();
     gUnicodeSets[ALL_SEPARATORS] = computeUnion(COMMA, PERIOD, OTHER_GROUPING_SEPARATORS);
@@ -189,12 +189,12 @@ void U_CALLCONV initNumberParseUniSets(UErrorCode& status) {
 
     // The following don't currently have parseLenients in data.
     U_ASSERT(gUnicodeSets[INFINITY_SIGN] == nullptr);
-    gUnicodeSets[INFINITY_SIGN] = new UnicodeSet(u"[∞]", status);
+    gUnicodeSets[INFINITY_SIGN] = नूतन UnicodeSet(u"[∞]", status);
     U_ASSERT(gUnicodeSets[APPROXIMATELY_SIGN] == nullptr);
     // This set of characters was manually curated from the
     // values of the approximatelySign element of CLDR common/main/*.xml files.
-    gUnicodeSets[APPROXIMATELY_SIGN] = new UnicodeSet(u"[∼~≈≃約]", status);
-    if (U_FAILURE(status)) { return; }
+    gUnicodeSets[APPROXIMATELY_SIGN] = नूतन UnicodeSet(u"[∼~≈≃約]", status);
+    यदि (U_FAILURE(status)) { प्रत्यागम; }
 
     U_ASSERT(gUnicodeSets[DOLLAR_SIGN] != nullptr);
     U_ASSERT(gUnicodeSets[POUND_SIGN] != nullptr);
@@ -202,13 +202,13 @@ void U_CALLCONV initNumberParseUniSets(UErrorCode& status) {
     U_ASSERT(gUnicodeSets[YEN_SIGN] != nullptr);
     U_ASSERT(gUnicodeSets[WON_SIGN] != nullptr);
 
-    gUnicodeSets[DIGITS] = new UnicodeSet(u"[:digit:]", status);
-    if (U_FAILURE(status)) { return; }
+    gUnicodeSets[DIGITS] = नूतन UnicodeSet(u"[:digit:]", status);
+    यदि (U_FAILURE(status)) { प्रत्यागम; }
     gUnicodeSets[DIGITS_OR_ALL_SEPARATORS] = computeUnion(DIGITS, ALL_SEPARATORS);
     gUnicodeSets[DIGITS_OR_STRICT_ALL_SEPARATORS] = computeUnion(DIGITS, STRICT_ALL_SEPARATORS);
 
-    for (auto* uniset : gUnicodeSets) {
-        if (uniset != nullptr) {
+    प्रति (स्वतः* uniset : gUnicodeSets) {
+        यदि (uniset != nullptr) {
             uniset->freeze();
         }
     }
@@ -216,21 +216,21 @@ void U_CALLCONV initNumberParseUniSets(UErrorCode& status) {
 
 }
 
-const UnicodeSet* unisets::get(Key key) {
+ध्रुव UnicodeSet* unisets::get(कुंजी_2 कुंजी) {
     UErrorCode localStatus = U_ZERO_ERROR;
-    umtx_initOnce(gNumberParseUniSetsInitOnce, &initNumberParseUniSets, localStatus);
-    if (U_FAILURE(localStatus)) {
-        return reinterpret_cast<UnicodeSet*>(gEmptyUnicodeSet);
+    umtx_initOnce(g_संख्या_Parse_Uni_Sets_Init_Once, &init_संख्या_Parse_Uni_Sets, localStatus);
+    यदि (U_FAILURE(localStatus)) {
+        प्रत्यागम reinterpret_cast<UnicodeSet*>(gEmptyUnicodeSet);
     }
-    return getImpl(key);
+    प्रत्यागम getImpl(कुंजी);
 }
 
-Key unisets::chooseFrom(UnicodeString str, Key key1) {
-    return get(key1)->contains(str) ? key1 : NONE;
+कुंजी_2 unisets::chooseFrom(UnicodeString str, कुंजी_2 key1) {
+    प्रत्यागम get(key1)->contains(str) ? key1 : NONE;
 }
 
-Key unisets::chooseFrom(UnicodeString str, Key key1, Key key2) {
-    return get(key1)->contains(str) ? key1 : chooseFrom(str, key2);
+कुंजी_2 unisets::chooseFrom(UnicodeString str, कुंजी_2 key1, कुंजी_2 key2) {
+    प्रत्यागम get(key1)->contains(str) ? key1 : chooseFrom(str, key2);
 }
 
 //Key unisets::chooseCurrency(UnicodeString str) {

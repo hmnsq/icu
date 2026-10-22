@@ -7,45 +7,45 @@
 #ifndef __LOCDISTANCE_H__
 #define __LOCDISTANCE_H__
 
-#include "unicode/utypes.h"
-#include "unicode/bytestrie.h"
-#include "unicode/localematcher.h"
-#include "unicode/locid.h"
-#include "unicode/uobject.h"
-#include "lsr.h"
+#अन्तर्भाव "unicode/utypes.h"
+#अन्तर्भाव "unicode/bytestrie.h"
+#अन्तर्भाव "unicode/localematcher.h"
+#अन्तर्भाव "unicode/locid.h"
+#अन्तर्भाव "unicode/uobject.h"
+#अन्तर्भाव "lsr.h"
 
 U_NAMESPACE_BEGIN
 
-struct LocaleDistanceData;
+संरचना LocaleDistanceData;
 
 /**
  * Offline-built data for LocaleMatcher.
  * Mostly but not only the data for mapping locales to their maximized forms.
  */
-class LocaleDistance final : public UMemory {
-public:
-    static const LocaleDistance *getSingleton(UErrorCode &errorCode);
+class LocaleDistance final : सार्वजनिक UMemory {
+सार्वजनिक:
+    स्थिर ध्रुव LocaleDistance *getSingleton(UErrorCode &errorCode);
 
-    static int32_t shiftDistance(int32_t distance) {
-        return distance << DISTANCE_SHIFT;
+    स्थिर int32_t shiftDistance(int32_t distance) {
+        प्रत्यागम distance << DISTANCE_SHIFT;
     }
 
-    static int32_t getShiftedDistance(int32_t indexAndDistance) {
-        return indexAndDistance & DISTANCE_MASK;
+    स्थिर int32_t getShiftedDistance(int32_t indexAndDistance) {
+        प्रत्यागम indexAndDistance & DISTANCE_MASK;
     }
 
-    static double getDistanceDouble(int32_t indexAndDistance) {
-        double shiftedDistance = getShiftedDistance(indexAndDistance);
-        return shiftedDistance / (1 << DISTANCE_SHIFT);
+    स्थिर द्विगुण getDistanceDouble(int32_t indexAndDistance) {
+        द्विगुण shiftedDistance = getShiftedDistance(indexAndDistance);
+        प्रत्यागम shiftedDistance / (1 << DISTANCE_SHIFT);
     }
 
-    static int32_t getDistanceFloor(int32_t indexAndDistance) {
-        return (indexAndDistance & DISTANCE_MASK) >> DISTANCE_SHIFT;
+    स्थिर int32_t getDistanceFloor(int32_t indexAndDistance) {
+        प्रत्यागम (indexAndDistance & DISTANCE_MASK) >> DISTANCE_SHIFT;
     }
 
-    static int32_t getIndex(int32_t indexAndDistance) {
+    स्थिर int32_t getIndex(int32_t indexAndDistance) {
         // assert indexAndDistance >= 0;
-        return indexAndDistance >> INDEX_SHIFT;
+        प्रत्यागम indexAndDistance >> INDEX_SHIFT;
     }
 
     /**
@@ -56,70 +56,70 @@ public:
      * (negative if none has a distance below the threshold),
      * and its distance (0..ABOVE_THRESHOLD) in the low bits.
      */
-    int32_t getBestIndexAndDistance(const LSR &desired,
-                                    const LSR **supportedLSRs, int32_t supportedLSRsLength,
+    int32_t getBestIndexAndDistance(ध्रुव LSR &desired,
+                                    ध्रुव LSR **supportedLSRs, int32_t supportedLSRsLength,
                                     int32_t shiftedThreshold,
                                     ULocMatchFavorSubtag favorSubtag,
-                                    ULocMatchDirection direction) const;
+                                    ULocMatchDirection direction) ध्रुव;
 
-    bool isParadigmLSR(const LSR &lsr) const;
+    bool isParadigmLSR(ध्रुव LSR &lsr) ध्रुव;
 
-    int32_t getDefaultScriptDistance() const {
-        return defaultScriptDistance;
+    int32_t getDefaultScriptDistance() ध्रुव {
+        प्रत्यागम defaultScriptDistance;
     }
 
-    int32_t getDefaultDemotionPerDesiredLocale() const {
-        return defaultDemotionPerDesiredLocale;
+    int32_t getDefaultDemotionPerDesiredLocale() ध्रुव {
+        प्रत्यागम defaultDemotionPerDesiredLocale;
     }
 
-private:
+गुप्त:
     // The distance is shifted left to gain some fraction bits.
-    static constexpr int32_t DISTANCE_SHIFT = 3;
-    static constexpr int32_t DISTANCE_FRACTION_MASK = 7;
+    स्थिर constexpr int32_t DISTANCE_SHIFT = 3;
+    स्थिर constexpr int32_t DISTANCE_FRACTION_MASK = 7;
     // 7 bits for 0..100
-    static constexpr int32_t DISTANCE_INT_SHIFT = 7;
-    static constexpr int32_t INDEX_SHIFT = DISTANCE_INT_SHIFT + DISTANCE_SHIFT;
-    static constexpr int32_t DISTANCE_MASK = 0x3ff;
+    स्थिर constexpr int32_t DISTANCE_INT_SHIFT = 7;
+    स्थिर constexpr int32_t INDEX_SHIFT = DISTANCE_INT_SHIFT + DISTANCE_SHIFT;
+    स्थिर constexpr int32_t DISTANCE_MASK = 0x3ff;
     // tic constexpr int32_t MAX_INDEX = 0x1fffff;  // avoids sign bit
-    static constexpr int32_t INDEX_NEG_1 = 0xfffffc00;
+    स्थिर constexpr int32_t INDEX_NEG_1 = 0xfffffc00;
 
-    LocaleDistance(const LocaleDistanceData &data, const LikelySubtags &likely);
-    LocaleDistance(const LocaleDistance &other) = delete;
-    LocaleDistance &operator=(const LocaleDistance &other) = delete;
+    LocaleDistance(ध्रुव LocaleDistanceData &data, ध्रुव LikelySubtags &likely);
+    LocaleDistance(ध्रुव LocaleDistance &other) = delete;
+    LocaleDistance &चालक=(ध्रुव LocaleDistance &other) = delete;
 
-    static void initLocaleDistance(UErrorCode &errorCode);
+    स्थिर शून्य initLocaleDistance(UErrorCode &errorCode);
 
-    bool isMatch(const LSR &desired, const LSR &supported,
-                 int32_t shiftedThreshold, ULocMatchFavorSubtag favorSubtag) const {
-        const LSR *pSupp = &supported;
-        return getBestIndexAndDistance(
+    bool isMatch(ध्रुव LSR &desired, ध्रुव LSR &supported,
+                 int32_t shiftedThreshold, ULocMatchFavorSubtag favorSubtag) ध्रुव {
+        ध्रुव LSR *pSupp = &supported;
+        प्रत्यागम getBestIndexAndDistance(
             desired, &pSupp, 1,
             shiftedThreshold, favorSubtag, ULOCMATCH_DIRECTION_WITH_ONE_WAY) >= 0;
     }
 
-    static int32_t getDesSuppScriptDistance(BytesTrie &iter, uint64_t startState,
-                                            const char *desired, const char *supported);
+    स्थिर int32_t getDesSuppScriptDistance(BytesTrie &iter, uint64_t startState,
+                                            ध्रुव वर्ण *desired, ध्रुव वर्ण *supported);
 
-    static int32_t getRegionPartitionsDistance(
+    स्थिर int32_t getRegionPartitionsDistance(
         BytesTrie &iter, uint64_t startState,
-        const char *desiredPartitions, const char *supportedPartitions,
+        ध्रुव वर्ण *desiredPartitions, ध्रुव वर्ण *supportedPartitions,
         int32_t threshold);
 
-    static int32_t getFallbackRegionDistance(BytesTrie &iter, uint64_t startState);
+    स्थिर int32_t getFallbackRegionDistance(BytesTrie &iter, uint64_t startState);
 
-    static int32_t trieNext(BytesTrie &iter, const char *s, bool wantValue);
+    स्थिर int32_t trieNext(BytesTrie &iter, ध्रुव वर्ण *s, bool want_मूल्य);
 
-    const char *partitionsForRegion(const LSR &lsr) const {
+    ध्रुव वर्ण *partitionsForRegion(ध्रुव LSR &lsr) ध्रुव {
         // ill-formed region -> one non-matching string
         int32_t pIndex = regionToPartitionsIndex[lsr.regionIndex];
-        return partitionArrays[pIndex];
+        प्रत्यागम partitionArrays[pIndex];
     }
 
-    int32_t getDefaultRegionDistance() const {
-        return defaultRegionDistance;
+    int32_t getDefaultRegionDistance() ध्रुव {
+        प्रत्यागम defaultRegionDistance;
     }
 
-    const LikelySubtags &likelySubtags;
+    ध्रुव LikelySubtags &likelySubtags;
 
     // The trie maps each dlang+slang+dscript+sscript+dregion+sregion
     // (encoded in ASCII with bit 7 set on the last character of each subtag) to a distance.
@@ -130,13 +130,13 @@ private:
     /**
      * Maps each region to zero or more single-character partitions.
      */
-    const uint8_t *regionToPartitionsIndex;
-    const char **partitionArrays;
+    ध्रुव uint8_t *regionToPartitionsIndex;
+    ध्रुव वर्ण **partitionArrays;
 
     /**
      * Used to get the paradigm region for a cluster, if there is one.
      */
-    const LSR *paradigmLSRs;
+    ध्रुव LSR *paradigmLSRs;
     int32_t paradigmLSRsLength;
 
     int32_t defaultLanguageDistance;

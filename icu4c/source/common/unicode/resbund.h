@@ -48,14 +48,14 @@
 #ifndef RESBUND_H
 #define RESBUND_H
 
-#include "unicode/utypes.h"
+#अन्तर्भाव "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#यदि U_SHOW_CPLUSPLUS_API
 
-#include "unicode/uobject.h"
-#include "unicode/ures.h"
-#include "unicode/unistr.h"
-#include "unicode/locid.h"
+#अन्तर्भाव "unicode/uobject.h"
+#अन्तर्भाव "unicode/ures.h"
+#अन्तर्भाव "unicode/unistr.h"
+#अन्तर्भाव "unicode/locid.h"
 
 /**
  * \file 
@@ -80,8 +80,8 @@ U_NAMESPACE_BEGIN
  *
  * @stable ICU 2.0
  */
-class U_COMMON_API ResourceBundle : public UObject {
-public:
+class U_COMMON_API ResourceBundle : सार्वजनिक UObject {
+सार्वजनिक:
     /**
      * Constructor
      *
@@ -108,8 +108,8 @@ public:
      * fall back locales could be found.
      * @stable ICU 2.0
      */
-    ResourceBundle(const UnicodeString&    packageName,
-                   const Locale&           locale,
+    ResourceBundle(ध्रुव UnicodeString&    packageName,
+                   ध्रुव Locale&           locale,
                    UErrorCode&              err);
 
     /**
@@ -123,7 +123,7 @@ public:
      * @param err A UErrorCode value
      * @stable ICU 2.0
      */
-    ResourceBundle(const UnicodeString&    packageName,
+    ResourceBundle(ध्रुव UnicodeString&    packageName,
                    UErrorCode&              err);
 
     /**
@@ -148,8 +148,8 @@ public:
      * @param err A UErrorCode value
      * @stable ICU 2.0
      */
-    ResourceBundle(const char* packageName,
-                   const Locale& locale,
+    ResourceBundle(ध्रुव वर्ण* packageName,
+                   ध्रुव Locale& locale,
                    UErrorCode& err);
 
     /**
@@ -158,7 +158,7 @@ public:
      * @param original The resource bundle to copy.
      * @stable ICU 2.0
      */
-    ResourceBundle(const ResourceBundle &original);
+    ResourceBundle(ध्रुव ResourceBundle &original);
 
     /**
      * Constructor from a C UResourceBundle. The resource bundle is
@@ -178,12 +178,12 @@ public:
      * @param other The resource bundle to copy.
      * @stable ICU 2.0
      */
-    ResourceBundle& operator=(const ResourceBundle& other) U_LIFETIME_BOUND;
+    ResourceBundle& चालक=(ध्रुव ResourceBundle& other) U_LIFETIME_BOUND;
 
     /** Destructor.
      * @stable ICU 2.0
      */
-    virtual ~ResourceBundle();
+    आभास ~ResourceBundle();
 
     /**
      * Clone this object.
@@ -196,7 +196,7 @@ public:
      * @see getDynamicClassID
      * @stable ICU 2.8
      */
-    ResourceBundle *clone() const;
+    ResourceBundle *clone() ध्रुव;
 
     /**
      * Returns the size of a resource. Size for scalar types is always 1, and for vector/table types is
@@ -208,7 +208,7 @@ public:
      * @return number of resources in a given resource.
      * @stable ICU 2.0
      */
-    int32_t getSize() const;
+    int32_t getSize() ध्रुव;
 
     /**
      * returns a string from a string resource type
@@ -220,7 +220,7 @@ public:
      * @return a pointer to a zero-terminated char16_t array which lives in a memory mapped/DLL file.
      * @stable ICU 2.0
      */
-    UnicodeString getString(UErrorCode& status) const U_LIFETIME_BOUND;
+    UnicodeString getString(UErrorCode& status) ध्रुव U_LIFETIME_BOUND;
 
     /**
      * returns a binary data from a resource. Can be used at most primitive resource types (binaries,
@@ -234,7 +234,7 @@ public:
      * @return a pointer to a chunk of unsigned bytes which live in a memory mapped/DLL file.
      * @stable ICU 2.0
      */
-    const uint8_t* getBinary(int32_t& len, UErrorCode& status) const U_LIFETIME_BOUND;
+    ध्रुव uint8_t* get_द्विआधारी(int32_t& len, UErrorCode& status) ध्रुव U_LIFETIME_BOUND;
 
     /**
      * returns an integer vector from a resource.
@@ -247,7 +247,7 @@ public:
      * @return a pointer to a vector of integers that lives in a memory mapped/DLL file.
      * @stable ICU 2.0
      */
-    const int32_t* getIntVector(int32_t& len, UErrorCode& status) const U_LIFETIME_BOUND;
+    ध्रुव int32_t* getIntVector(int32_t& len, UErrorCode& status) ध्रुव U_LIFETIME_BOUND;
 
     /**
      * returns an unsigned integer from a resource.
@@ -261,7 +261,7 @@ public:
      * @stable ICU 2.0
      */
     uint32_t
-      getUInt(UErrorCode& status) const;
+      getUInt(UErrorCode& status) ध्रुव;
 
     /**
      * returns a signed integer from a resource.
@@ -275,7 +275,7 @@ public:
      * @stable ICU 2.0
      */
     int32_t
-      getInt(UErrorCode& status) const;
+      getInt(UErrorCode& status) ध्रुव;
 
     /**
      * Checks whether the resource has another element to iterate over.
@@ -283,14 +283,14 @@ public:
      * @return true if there are more elements, false if there is no more elements
      * @stable ICU 2.0
      */
-    UBool hasNext() const;
+    UBool hasNext() ध्रुव;
 
     /**
      * Resets the internal context of a resource so that iteration starts from the first element.
      *
      * @stable ICU 2.0
      */
-    void resetIterator();
+    शून्य resetIterator();
 
     /**
      * Returns the key associated with this resource. Not all the resources have a key - only
@@ -299,7 +299,7 @@ public:
      * @return a key associated to this resource, or nullptr if it doesn't have a key
      * @stable ICU 2.0
      */
-    const char* getKey() const U_LIFETIME_BOUND;
+    ध्रुव वर्ण* get_कुंजी() ध्रुव U_LIFETIME_BOUND;
 
     /**
      * Gets the locale ID of the resource bundle as a string.
@@ -308,7 +308,7 @@ public:
      * @return the locale ID of the resource bundle as a string
      * @stable ICU 2.0
      */
-    const char* getName() const U_LIFETIME_BOUND;
+    ध्रुव वर्ण* getName() ध्रुव U_LIFETIME_BOUND;
 
     /**
      * Returns the type of a resource. Available types are defined in enum UResType
@@ -316,7 +316,7 @@ public:
      * @return type of the given resource.
      * @stable ICU 2.0
      */
-    UResType getType() const;
+    UResType getType() ध्रुव;
 
     /**
      * Returns the next resource in a given resource or nullptr if there are no more resources
@@ -347,7 +347,7 @@ public:
      * @return an UnicodeString object.
      * @stable ICU 2.0
      */
-    UnicodeString getNextString(const char** key, UErrorCode& status) U_LIFETIME_BOUND;
+    UnicodeString getNextString(ध्रुव वर्ण** कुंजी, UErrorCode& status) U_LIFETIME_BOUND;
 
     /**
      * Returns the resource in a resource at the specified index.
@@ -359,7 +359,7 @@ public:
      */
     ResourceBundle
       get(int32_t index,
-          UErrorCode& status) const;
+          UErrorCode& status) ध्रुव;
 
     /**
      * Returns the string in a given resource at the specified index.
@@ -369,7 +369,7 @@ public:
      * @return                  an UnicodeString object. If there is an error, string is bogus
      * @stable ICU 2.0
      */
-    UnicodeString getStringEx(int32_t index, UErrorCode& status) const U_LIFETIME_BOUND;
+    UnicodeString getStringEx(int32_t index, UErrorCode& status) ध्रुव U_LIFETIME_BOUND;
 
     /**
      * Returns a resource in a resource that has a given key. This procedure works only with table
@@ -381,8 +381,8 @@ public:
      * @stable ICU 2.0
      */
     ResourceBundle
-      get(const char* key,
-          UErrorCode& status) const;
+      get(ध्रुव वर्ण* कुंजी,
+          UErrorCode& status) ध्रुव;
 
     /**
      * Returns a string in a resource that has a given key. This procedure works only with table
@@ -393,7 +393,7 @@ public:
      * @return                  an UnicodeString object. If there is an error, string is bogus
      * @stable ICU 2.0
      */
-    UnicodeString getStringEx(const char* key, UErrorCode& status) const U_LIFETIME_BOUND;
+    UnicodeString getStringEx(ध्रुव वर्ण* कुंजी, UErrorCode& status) ध्रुव U_LIFETIME_BOUND;
 
 #ifndef U_HIDE_DEPRECATED_API
     /**
@@ -405,7 +405,7 @@ public:
      * @see getVersion
      * @deprecated ICU 2.8 Use getVersion instead.
      */
-    const char* getVersionNumber() const U_LIFETIME_BOUND;
+    ध्रुव वर्ण* get_Version_संख्या() ध्रुव U_LIFETIME_BOUND;
 #endif  /* U_HIDE_DEPRECATED_API */
 
     /**
@@ -415,8 +415,8 @@ public:
      *                    as specified in the resource bundle or its parent.
      * @stable ICU 2.0
      */
-    void
-      getVersion(UVersionInfo versionInfo) const;
+    शून्य
+      getVersion(UVersionInfo versionInfo) ध्रुव;
 
 #ifndef U_HIDE_DEPRECATED_API
     /**
@@ -425,7 +425,7 @@ public:
      * @return a Locale object
      * @deprecated ICU 2.8 Use getLocale(ULocDataLocaleType type, UErrorCode &status) overload instead.
      */
-    const Locale& getLocale() const U_LIFETIME_BOUND;
+    ध्रुव Locale& getLocale() ध्रुव U_LIFETIME_BOUND;
 #endif  /* U_HIDE_DEPRECATED_API */
 
     /**
@@ -439,34 +439,34 @@ public:
      * @stable ICU 2.8
      */
     Locale
-      getLocale(ULocDataLocaleType type, UErrorCode &status) const;
+      getLocale(ULocDataLocaleType type, UErrorCode &status) ध्रुव;
 #ifndef U_HIDE_INTERNAL_API
     /**
      * This API implements multilevel fallback
      * @internal
      */
     ResourceBundle
-        getWithFallback(const char* key, UErrorCode& status);
+        getWithFallback(ध्रुव वर्ण* कुंजी, UErrorCode& status);
 #endif  /* U_HIDE_INTERNAL_API */
     /**
      * ICU "poor man's RTTI", returns a UClassID for the actual class.
      *
      * @stable ICU 2.2
      */
-    virtual UClassID getDynamicClassID() const override;
+    आभास UClassID getDynamicClassID() ध्रुव override;
 
     /**
      * ICU "poor man's RTTI", returns a UClassID for this class.
      *
      * @stable ICU 2.2
      */
-    static UClassID U_EXPORT2 getStaticClassID();
+    स्थिर UClassID U_EXPORT2 getStaticClassID();
 
-private:
+गुप्त:
     ResourceBundle() = delete; // default constructor not implemented
 
     UResourceBundle *fResource;
-    void constructForLocale(const UnicodeString& path, const Locale& locale, UErrorCode& error);
+    शून्य constructForLocale(ध्रुव UnicodeString& path, ध्रुव Locale& locale, UErrorCode& error);
     Locale *fLocale;
 };
 
