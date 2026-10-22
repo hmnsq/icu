@@ -20,60 +20,60 @@
 *   09/08/2004  grhoten     split from ucnv.c
 */
 
-#include "unicode/utypes.h"
+#অন্তর্ভাব "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#যদি !UCONFIG_NO_CONVERSION
 
-#include "unicode/ustring.h"
-#include "unicode/ures.h"
-#include "unicode/ucnv.h"
-#include "cstring.h"
-#include "ustr_imp.h"
-#include "ucnv_imp.h"
-#include "putilimp.h"
+#অন্তর্ভাব "unicode/ustring.h"
+#অন্তর্ভাব "unicode/ures.h"
+#অন্তর্ভাব "unicode/ucnv.h"
+#অন্তর্ভাব "cstring.h"
+#অন্তর্ভাব "ustr_imp.h"
+#অন্তর্ভাব "ucnv_imp.h"
+#অন্তর্ভাব "putilimp.h"
 
 U_CAPI int32_t U_EXPORT2
-ucnv_getDisplayName(const UConverter *cnv,
-                    const char *displayLocale,
+ucnv_getDisplayName(ধ্রুবক UConverter *cnv,
+                    ধ্রুবক অক্ষর *displayLocale,
                     char16_t *displayName, int32_t displayNameCapacity,
                     UErrorCode *pErrorCode) {
     UResourceBundle *rb;
-    const char16_t *name;
+    ধ্রুবক char16_t *name;
     int32_t length;
     UErrorCode localStatus = U_ZERO_ERROR;
 
     /* check arguments */
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    যদি(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
+        ফেরত 0;
     }
 
-    if(cnv==nullptr || displayNameCapacity<0 || (displayNameCapacity>0 && displayName==nullptr)) {
+    যদি(cnv==nullptr || displayNameCapacity<0 || (displayNameCapacity>0 && displayName==nullptr)) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        ফেরত 0;
     }
 
     /* open the resource bundle and get the display name string */
     rb=ures_open(nullptr, displayLocale, pErrorCode);
-    if(U_FAILURE(*pErrorCode)) {
-        return 0;
+    যদি(U_FAILURE(*pErrorCode)) {
+        ফেরত 0;
     }
 
     /* use the internal name as the key */
-    name=ures_getStringByKey(rb, cnv->sharedData->staticData->name, &length, &localStatus);
+    name=ures_get_String_By_চাবি(rb, cnv->shared_তথ্য->static_তথ্য->name, &length, &localStatus);
     ures_close(rb);
 
-    if(U_SUCCESS(localStatus)) {
+    যদি(U_SUCCESS(localStatus)) {
         /* copy the string */
-        if (*pErrorCode == U_ZERO_ERROR) {
+        যদি (*pErrorCode == U_ZERO_ERROR) {
             *pErrorCode = localStatus;
         }
         u_memcpy(displayName, name, uprv_min(length, displayNameCapacity)*U_SIZEOF_UCHAR);
-    } else {
+    } অন্যথা {
         /* convert the internal name into a Unicode string */
-        length=(int32_t)uprv_strlen(cnv->sharedData->staticData->name);
-        u_charsToUChars(cnv->sharedData->staticData->name, displayName, uprv_min(length, displayNameCapacity));
+        length=(int32_t)uprv_strlen(cnv->shared_তথ্য->static_তথ্য->name);
+        u_charsToUChars(cnv->shared_তথ্য->static_তথ্য->name, displayName, uprv_min(length, displayNameCapacity));
     }
-    return u_terminateUChars(displayName, displayNameCapacity, length, pErrorCode);
+    ফেরত u_terminateUChars(displayName, displayNameCapacity, length, pErrorCode);
 }
 
 #endif

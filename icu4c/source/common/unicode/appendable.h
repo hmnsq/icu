@@ -22,11 +22,11 @@
  * \brief C++ API: Appendable class: Sink for Unicode code points and 16-bit code units (char16_ts).
  */
 
-#include "unicode/utypes.h"
+#অন্তর্ভাব "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#যদি U_SHOW_CPLUSPLUS_API
 
-#include "unicode/uobject.h"
+#অন্তর্ভাব "unicode/uobject.h"
 
 U_NAMESPACE_BEGIN
 
@@ -51,8 +51,8 @@ class UnicodeString;
  * (e.g., store a UErrorCode, make/keep a UnicodeString bogus).
  * @stable ICU 4.8
  */
-class U_COMMON_API Appendable : public UObject {
-public:
+class U_COMMON_API Appendable : সর্বজনীন UObject {
+সর্বজনীন:
     /**
      * Destructor.
      * @stable ICU 4.8
@@ -65,7 +65,7 @@ public:
      * @return true if the operation succeeded
      * @stable ICU 4.8
      */
-    virtual UBool appendCodeUnit(char16_t c) = 0;
+    আভাসী UBool appendCodeUnit(char16_t c) = 0;
 
     /**
      * Appends a code point.
@@ -74,7 +74,7 @@ public:
      * @return true if the operation succeeded
      * @stable ICU 4.8
      */
-    virtual UBool appendCodePoint(UChar32 c);
+    আভাসী UBool appendCodePoint(UChar32 c);
 
     /**
      * Appends a string.
@@ -84,7 +84,7 @@ public:
      * @return true if the operation succeeded
      * @stable ICU 4.8
      */
-    virtual UBool appendString(const char16_t *s, int32_t length);
+    আভাসী UBool appendString(ধ্রুবক char16_t *s, int32_t দৈর্ঘ্য);
 
     /**
      * Tells the object that the caller is going to append roughly
@@ -95,7 +95,7 @@ public:
      * @return true if the operation succeeded
      * @stable ICU 4.8
      */
-    virtual UBool reserveAppendCapacity(int32_t appendCapacity);
+    আভাসী UBool reserveAppendCapacity(int32_t appendCapacity);
 
     /**
      * Returns a writable buffer for appending and writes the buffer's capacity to
@@ -141,11 +141,11 @@ public:
      * @return a buffer with *resultCapacity>=minCapacity
      * @stable ICU 4.8
      */
-    virtual char16_t* getAppendBuffer(int32_t minCapacity,
+    আভাসী char16_t* get_Append_বাফার(int32_t minCapacity,
                                       int32_t desiredCapacityHint,
                                       char16_t* scratch U_LIFETIME_BOUND,
                                       int32_t scratchCapacity,
-                                      int32_t* resultCapacity) U_LIFETIME_BOUND;
+                                      int32_t* ফলাফল_Capacity) U_LIFETIME_BOUND;
 };
 
 /**
@@ -154,8 +154,8 @@ public:
  * This class is not intended for public subclassing.
  * @stable ICU 4.8
  */
-class U_COMMON_API UnicodeStringAppendable : public Appendable {
-public:
+class U_COMMON_API UnicodeStringAppendable : সর্বজনীন Appendable {
+সর্বজনীন:
     /**
      * Aliases the UnicodeString (keeps its reference) for writing.
      * @param s The UnicodeString to which this Appendable will write.
@@ -175,7 +175,7 @@ public:
      * @return true if the operation succeeded
      * @stable ICU 4.8
      */
-    virtual UBool appendCodeUnit(char16_t c) override;
+    আভাসী UBool appendCodeUnit(char16_t c) override;
 
     /**
      * Appends a code point to the string.
@@ -183,7 +183,7 @@ public:
      * @return true if the operation succeeded
      * @stable ICU 4.8
      */
-    virtual UBool appendCodePoint(UChar32 c) override;
+    আভাসী UBool appendCodePoint(UChar32 c) override;
 
     /**
      * Appends a string to the UnicodeString.
@@ -192,7 +192,7 @@ public:
      * @return true if the operation succeeded
      * @stable ICU 4.8
      */
-    virtual UBool appendString(const char16_t *s, int32_t length) override;
+    আভাসী UBool appendString(ধ্রুবক char16_t *s, int32_t দৈর্ঘ্য) override;
 
     /**
      * Tells the UnicodeString that the caller is going to append roughly
@@ -201,7 +201,7 @@ public:
      * @return true if the operation succeeded
      * @stable ICU 4.8
      */
-    virtual UBool reserveAppendCapacity(int32_t appendCapacity) override;
+    আভাসী UBool reserveAppendCapacity(int32_t appendCapacity) override;
 
     /**
      * Returns a writable buffer for appending and writes the buffer's capacity to
@@ -224,12 +224,12 @@ public:
      * @return a buffer with *resultCapacity>=minCapacity
      * @stable ICU 4.8
      */
-    virtual char16_t* getAppendBuffer(int32_t minCapacity,
+    আভাসী char16_t* get_Append_বাফার(int32_t minCapacity,
                                       int32_t desiredCapacityHint,
                                       char16_t* scratch U_LIFETIME_BOUND, int32_t scratchCapacity,
-                                      int32_t* resultCapacity) U_LIFETIME_BOUND override;
+                                      int32_t* ফলাফল_Capacity) U_LIFETIME_BOUND override;
 
-private:
+ব্যক্তিগত:
     UnicodeString &str;
 };
 

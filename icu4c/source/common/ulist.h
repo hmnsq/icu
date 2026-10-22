@@ -10,40 +10,40 @@
 #ifndef ULIST_H
 #define ULIST_H
 
-#include "unicode/utypes.h"
-#include "unicode/uenum.h"
+#অন্তর্ভাব "unicode/utypes.h"
+#অন্তর্ভাব "unicode/uenum.h"
 
-struct UList;
-typedef struct UList UList;
+কাঠামো UList;
+প্রকারলেখ কাঠামো UList UList;
 
 U_CAPI UList * U_EXPORT2 ulist_createEmptyList(UErrorCode *status);
 
-U_CAPI void U_EXPORT2 ulist_addItemEndList(UList *list, const void *data, UBool forceDelete, UErrorCode *status);
+U_CAPI শূন্য U_EXPORT2 ulist_addItemEndList(UList *list, ধ্রুবক শূন্য *তথ্য, UBool forceDelete, UErrorCode *status);
 
-U_CAPI void U_EXPORT2 ulist_addItemBeginList(UList *list, const void *data, UBool forceDelete, UErrorCode *status);
+U_CAPI শূন্য U_EXPORT2 ulist_addItemBeginList(UList *list, ধ্রুবক শূন্য *তথ্য, UBool forceDelete, UErrorCode *status);
 
-U_CAPI UBool U_EXPORT2 ulist_containsString(const UList *list, const char *data, int32_t length);
+U_CAPI UBool U_EXPORT2 ulist_containsString(ধ্রুবক UList *list, ধ্রুবক অক্ষর *তথ্য, int32_t দৈর্ঘ্য);
 
-U_CAPI UBool U_EXPORT2 ulist_removeString(UList *list, const char *data);
+U_CAPI UBool U_EXPORT2 ulist_removeString(UList *list, ধ্রুবক অক্ষর *তথ্য);
 
-U_CAPI void *U_EXPORT2 ulist_getNext(UList *list);
+U_CAPI শূন্য *U_EXPORT2 ulist_get_পরবর্তী(UList *list);
 
-U_CAPI int32_t U_EXPORT2 ulist_getListSize(const UList *list);
+U_CAPI int32_t U_EXPORT2 ulist_get_List_আকার(ধ্রুবক UList *list);
 
-U_CAPI void U_EXPORT2 ulist_resetList(UList *list);
+U_CAPI শূন্য U_EXPORT2 ulist_resetList(UList *list);
 
-U_CAPI void U_EXPORT2 ulist_deleteList(UList *list);
+U_CAPI শূন্য U_EXPORT2 ulist_deleteList(UList *list);
 
 /*
  * The following are for use when creating UEnumeration object backed by UList.
  */
-U_CAPI void U_EXPORT2 ulist_close_keyword_values_iterator(UEnumeration *en);
+U_CAPI শূন্য U_EXPORT2 ulist_close_keyword_মানসমূহ_iterator(UEnumeration *en);
 
-U_CAPI int32_t U_EXPORT2 ulist_count_keyword_values(UEnumeration *en, UErrorCode *status);
+U_CAPI int32_t U_EXPORT2 ulist_গুনতি_keyword_মানসমূহ(UEnumeration *en, UErrorCode *status);
 
-U_CAPI const char * U_EXPORT2 ulist_next_keyword_value(UEnumeration* en, int32_t *resultLength, UErrorCode* status);
+U_CAPI ধ্রুবক অক্ষর * U_EXPORT2 ulist_পরবর্তী_keyword_মান(UEnumeration* en, int32_t *ফলাফল_দৈর্ঘ্য, UErrorCode* status);
 
-U_CAPI void U_EXPORT2 ulist_reset_keyword_values_iterator(UEnumeration* en, UErrorCode* status);
+U_CAPI শূন্য U_EXPORT2 ulist_reset_keyword_মানসমূহ_iterator(UEnumeration* en, UErrorCode* status);
 
 U_CAPI UList * U_EXPORT2 ulist_getListFromEnum(UEnumeration *en);
 

@@ -7,20 +7,20 @@
 *******************************************************************************
 */
 
-#include "unicode/utypes.h"
-#if !UCONFIG_NO_BREAK_ITERATION && !UCONFIG_NO_FILTERED_BREAK_ITERATION
+#অন্তর্ভাব "unicode/utypes.h"
+#যদি !UCONFIG_NO_BREAK_ITERATION && !UCONFIG_NO_FILTERED_BREAK_ITERATION
 
-#include "cmemory.h"
+#অন্তর্ভাব "cmemory.h"
 
-#include "unicode/filteredbrk.h"
-#include "unicode/ucharstriebuilder.h"
-#include "unicode/ures.h"
+#অন্তর্ভাব "unicode/filteredbrk.h"
+#অন্তর্ভাব "unicode/ucharstriebuilder.h"
+#অন্তর্ভাব "unicode/ures.h"
 
-#include "uresimp.h" // ures_getByKeyWithFallback
-#include "ubrkimpl.h" // U_ICUDATA_BRKITR
-#include "uvector.h"
-#include "cmemory.h"
-#include "umutex.h"
+#অন্তর্ভাব "uresimp.h" // ures_getByKeyWithFallback
+#অন্তর্ভাব "ubrkimpl.h" // U_ICUDATA_BRKITR
+#অন্তর্ভাব "uvector.h"
+#অন্তর্ভাব "cmemory.h"
+#অন্তর্ভাব "umutex.h"
 
 U_NAMESPACE_BEGIN
 
@@ -28,92 +28,92 @@ U_NAMESPACE_BEGIN
 #define FB_DEBUG 0
 #endif
 
-#if FB_DEBUG
-#include <stdio.h>
-static void _fb_trace(const char *m, const UnicodeString *s, UBool b, int32_t d, const char *f, int l) {
-  char buf[2048];
-  if(s) {
+#যদি FB_DEBUG
+#অন্তর্ভাব <stdio.h>
+স্থির শূন্য _fb_trace(ধ্রুবক অক্ষর *m, ধ্রুবক UnicodeString *s, UBool b, int32_t d, ধ্রুবক অক্ষর *f, পূর্ণসংখ্যা l) {
+  অক্ষর buf[2048];
+  যদি(s) {
     s->extract(0,s->length(),buf,2048);
-  } else {
+  } অন্যথা {
     strcpy(buf,"nullptr");
   }
   fprintf(stderr,"%s:%d: %s. s='%s'(%p), b=%c, d=%d\n",
-          f, l, m, buf, (const void*)s, b?'T':'F',(int)d);
+          f, l, m, buf, (ধ্রুবক শূন্য*)s, b?'T':'F',(পূর্ণসংখ্যা)d);
 }
 
 #define FB_TRACE(m,s,b,d) _fb_trace(m,s,b,d,__FILE__,__LINE__)
-#else
+#অন্যথা
 #define FB_TRACE(m,s,b,d)
 #endif
 
 /**
  * Used with sortedInsert()
  */
-static int32_t U_CALLCONV compareUnicodeString(UElement t1, UElement t2) {
-    const UnicodeString& a = *static_cast<const UnicodeString*>(t1.pointer);
-    const UnicodeString& b = *static_cast<const UnicodeString*>(t2.pointer);
-    return a.compare(b);
+স্থির int32_t U_CALLCONV compareUnicodeString(UElement t1, UElement t2) {
+    ধ্রুবক UnicodeString& a = *static_cast<ধ্রুবক UnicodeString*>(t1.pointer);
+    ধ্রুবক UnicodeString& b = *static_cast<ধ্রুবক UnicodeString*>(t2.pointer);
+    ফেরত a.compare(b);
 }
 
 /**
  * A UVector which implements a set of strings.
  */
-class UStringSet : public UVector {
- public:
+শ্রেণী UStringSet : সর্বজনীন UVector {
+ সর্বজনীন:
   UStringSet(UErrorCode &status) : UVector(uprv_deleteUObject,
                                            uhash_compareUnicodeString,
                                            1,
                                            status) {}
-  virtual ~UStringSet();
+  আভাসী ~UStringSet();
   /**
    * Is this UnicodeSet contained?
    */
-  inline UBool contains(const UnicodeString& s) {
-    return contains((void*) &s);
+  অন্তঃরেখ UBool contains(ধ্রুবক UnicodeString& s) {
+    ফেরত contains((শূন্য*) &s);
   }
   using UVector::contains;
   /**
    * Return the ith UnicodeString alias
    */
-  inline const UnicodeString* getStringAt(int32_t i) const U_LIFETIME_BOUND {
-    return static_cast<const UnicodeString*>(elementAt(i));
+  অন্তঃরেখ ধ্রুবক UnicodeString* getStringAt(int32_t i) ধ্রুবক U_LIFETIME_BOUND {
+    ফেরত static_cast<ধ্রুবক UnicodeString*>(elementAt(i));
   }
   /**
    * Adopt the UnicodeString if not already contained.
    * Caller no longer owns the pointer in any case.
    * @return true if adopted successfully, false otherwise (error, or else duplicate)
    */
-  inline UBool adopt(UnicodeString *str, UErrorCode &status) {
-    if(U_FAILURE(status) || contains(*str)) {
+  অন্তঃরেখ UBool adopt(UnicodeString *str, UErrorCode &status) {
+    যদি(U_FAILURE(status) || contains(*str)) {
       delete str;
-      return false;
-    } else {
-      sortedInsert(str, compareUnicodeString, status);
-      if(U_FAILURE(status)) {
-        return false;
+      ফেরত মিথ্যা;
+    } অন্যথা {
+      sorted_ঢোকাও(str, compareUnicodeString, status);
+      যদি(U_FAILURE(status)) {
+        ফেরত মিথ্যা;
       }
-      return true;
+      ফেরত সত্য;
     }
   }
   /**
    * Add by value.
    * @return true if successfully adopted.
    */
-  inline UBool add(const UnicodeString& str, UErrorCode &status) {
-    if(U_FAILURE(status)) return false;
-    UnicodeString *t = new UnicodeString(str);
-    if(t==nullptr) {
-      status = U_MEMORY_ALLOCATION_ERROR; return false;
+  অন্তঃরেখ UBool add(ধ্রুবক UnicodeString& str, UErrorCode &status) {
+    যদি(U_FAILURE(status)) ফেরত মিথ্যা;
+    UnicodeString *t = নতুন UnicodeString(str);
+    যদি(t==nullptr) {
+      status = U_MEMORY_ALLOCATION_ERROR; ফেরত মিথ্যা;
     }
-    return adopt(t, status);
+    ফেরত adopt(t, status);
   }
   /**
    * Remove this string.
    * @return true if successfully removed, false otherwise (error, or else it wasn't there)
    */
-  inline UBool remove(const UnicodeString &s, UErrorCode &status) {
-    if(U_FAILURE(status)) return false;
-    return removeElement((void*) &s);
+  অন্তঃরেখ UBool remove(ধ্রুবক UnicodeString &s, UErrorCode &status) {
+    যদি(U_FAILURE(status)) ফেরত মিথ্যা;
+    ফেরত removeElement((শূন্য*) &s);
   }
 };
 
@@ -126,40 +126,40 @@ UStringSet::~UStringSet() {}
 
 
 /* Filtered Break constants */
-static const int32_t kPARTIAL = (1<<0); //< partial - need to run through forward trie
-static const int32_t kMATCH   = (1<<1); //< exact match - skip this one.
-static const int32_t kSuppressInReverse = (1<<0);
-static const int32_t kAddToForward = (1<<1);
-static const char16_t kFULLSTOP = 0x002E; // '.'
+স্থির ধ্রুবক int32_t kPARTIAL = (1<<0); //< partial - need to run through forward trie
+স্থির ধ্রুবক int32_t kMATCH   = (1<<1); //< exact match - skip this one.
+স্থির ধ্রুবক int32_t kSuppressInReverse = (1<<0);
+স্থির ধ্রুবক int32_t kAddToForward = (1<<1);
+স্থির ধ্রুবক char16_t kFULLSTOP = 0x002E; // '.'
 
 /**
  * Shared data for SimpleFilteredSentenceBreakIterator
  */
-class SimpleFilteredSentenceBreakData : public UMemory {
-public:
-  SimpleFilteredSentenceBreakData(UCharsTrie *forwards, UCharsTrie *backwards ) 
+শ্রেণী Simple_Filtered_Sentence_Break_তথ্য : সর্বজনীন UMemory {
+সর্বজনীন:
+  Simple_Filtered_Sentence_Break_তথ্য(UCharsTrie *forwards, UCharsTrie *backwards ) 
       : fForwardsPartialTrie(forwards), fBackwardsTrie(backwards), refcount(1) { }
-    SimpleFilteredSentenceBreakData* incr() U_LIFETIME_BOUND {
+    Simple_Filtered_Sentence_Break_তথ্য* incr() U_LIFETIME_BOUND {
         umtx_atomic_inc(&refcount);
-        return this;
+        ফেরত এই;
     }
-    SimpleFilteredSentenceBreakData *decr() {
-        if(umtx_atomic_dec(&refcount) <= 0) {
-            delete this;
+    Simple_Filtered_Sentence_Break_তথ্য *decr() {
+        যদি(umtx_atomic_dec(&refcount) <= 0) {
+            delete এই;
         }
-        return nullptr;
+        ফেরত nullptr;
     }
-    virtual ~SimpleFilteredSentenceBreakData();
+    আভাসী ~Simple_Filtered_Sentence_Break_তথ্য();
 
-    bool hasForwardsPartialTrie() const { return fForwardsPartialTrie.isValid(); }
-    bool hasBackwardsTrie() const { return fBackwardsTrie.isValid(); }
+    যৌক্তিক hasForwardsPartialTrie() ধ্রুবক { ফেরত fForwardsPartialTrie.isValid(); }
+    যৌক্তিক hasBackwardsTrie() ধ্রুবক { ফেরত fBackwardsTrie.isValid(); }
 
-    const UCharsTrie& getForwardsPartialTrie() const U_LIFETIME_BOUND {
-        return *fForwardsPartialTrie;
+    ধ্রুবক UCharsTrie& getForwardsPartialTrie() ধ্রুবক U_LIFETIME_BOUND {
+        ফেরত *fForwardsPartialTrie;
     }
-    const UCharsTrie& getBackwardsTrie() const U_LIFETIME_BOUND { return *fBackwardsTrie; }
+    ধ্রুবক UCharsTrie& getBackwardsTrie() ধ্রুবক U_LIFETIME_BOUND { ফেরত *fBackwardsTrie; }
 
-private:
+ব্যক্তিগত:
     // These tries own their data arrays.
     // They are shared and must therefore not be modified.
     LocalPointer<UCharsTrie>    fForwardsPartialTrie; //  Has ".a" for "a.M."
@@ -167,140 +167,140 @@ private:
     u_atomic_int32_t            refcount;
 };
 
-SimpleFilteredSentenceBreakData::~SimpleFilteredSentenceBreakData() {}
+Simple_Filtered_Sentence_Break_তথ্য::~Simple_Filtered_Sentence_Break_তথ্য() {}
 
 /**
  * Concrete implementation
  */
-class SimpleFilteredSentenceBreakIterator : public BreakIterator {
-public:
+শ্রেণী SimpleFilteredSentenceBreakIterator : সর্বজনীন BreakIterator {
+সর্বজনীন:
   SimpleFilteredSentenceBreakIterator(BreakIterator *adopt, UCharsTrie *forwards, UCharsTrie *backwards, UErrorCode &status);
-  SimpleFilteredSentenceBreakIterator(const SimpleFilteredSentenceBreakIterator& other);
-  virtual ~SimpleFilteredSentenceBreakIterator();
-private:
-  SimpleFilteredSentenceBreakData *fData;
+  SimpleFilteredSentenceBreakIterator(ধ্রুবক SimpleFilteredSentenceBreakIterator& other);
+  আভাসী ~SimpleFilteredSentenceBreakIterator();
+ব্যক্তিগত:
+  Simple_Filtered_Sentence_Break_তথ্য *f_তথ্য;
   LocalPointer<BreakIterator> fDelegate;
   LocalUTextPointer           fText;
 
   /* -- subclass interface -- */
-public:
+সর্বজনীন:
   /* -- cloning and other subclass stuff -- */
-  virtual BreakIterator *  createBufferClone(void * /*stackBuffer*/,
+  আভাসী BreakIterator *  create_বাফার_Clone(শূন্য * /*stackBuffer*/,
                                              int32_t &/*BufferSize*/,
                                              UErrorCode &status) override {
     // for now - always deep clone
     status = U_SAFECLONE_ALLOCATED_WARNING;
-    return clone();
+    ফেরত clone();
   }
-  virtual SimpleFilteredSentenceBreakIterator* clone() const override { return new SimpleFilteredSentenceBreakIterator(*this); }
-  virtual UClassID getDynamicClassID() const override { return nullptr; }
-  virtual bool operator==(const BreakIterator& o) const override { if(this==&o) return true; return false; }
+  আভাসী SimpleFilteredSentenceBreakIterator* clone() ধ্রুবক override { ফেরত নতুন SimpleFilteredSentenceBreakIterator(*এই); }
+  আভাসী UClassID getDynamicClassID() ধ্রুবক override { ফেরত nullptr; }
+  আভাসী যৌক্তিক operator==(ধ্রুবক BreakIterator& o) ধ্রুবক override { যদি(এই==&o) ফেরত সত্য; ফেরত মিথ্যা; }
 
   /* -- text modifying -- */
-  virtual void setText(UText *text, UErrorCode &status) override { fDelegate->setText(text,status); }
-  virtual BreakIterator& refreshInputText(UText* input,
+  আভাসী শূন্য setText(UText *text, UErrorCode &status) override { fDelegate->setText(text,status); }
+  আভাসী BreakIterator& refresh_প্রবেশ_Text(UText* input,
                                           UErrorCode& status) U_LIFETIME_BOUND override {
-      fDelegate->refreshInputText(input, status);
-      return *this;
+      fDelegate->refresh_প্রবেশ_Text(input, status);
+      ফেরত *এই;
   }
-  virtual void adoptText(CharacterIterator* it) override { fDelegate->adoptText(it); }
-  virtual void setText(const UnicodeString &text) override { fDelegate->setText(text); }
+  আভাসী শূন্য adoptText(CharacterIterator* it) override { fDelegate->adoptText(it); }
+  আভাসী শূন্য setText(ধ্রুবক UnicodeString &text) override { fDelegate->setText(text); }
 
   /* -- other functions that are just delegated -- */
-  virtual UText* getUText(UText* fillIn U_LIFETIME_BOUND, UErrorCode& status) const override {
-      return fDelegate->getUText(fillIn, status);
+  আভাসী UText* getUText(UText* fillIn U_LIFETIME_BOUND, UErrorCode& status) ধ্রুবক override {
+      ফেরত fDelegate->getUText(fillIn, status);
   }
-  virtual CharacterIterator& getText() const U_LIFETIME_BOUND override {
-      return fDelegate->getText();
+  আভাসী CharacterIterator& getText() ধ্রুবক U_LIFETIME_BOUND override {
+      ফেরত fDelegate->getText();
   }
 
   /* -- ITERATION -- */
-  virtual int32_t first() override;
-  virtual int32_t preceding(int32_t offset) override;
-  virtual int32_t previous() override;
-  virtual UBool isBoundary(int32_t offset) override;
-  virtual int32_t current() const override { return fDelegate->current(); } // we keep the delegate current, so this should be correct.
+  আভাসী int32_t first() override;
+  আভাসী int32_t preceding(int32_t offset) override;
+  আভাসী int32_t previous() override;
+  আভাসী UBool isBoundary(int32_t offset) override;
+  আভাসী int32_t current() ধ্রুবক override { ফেরত fDelegate->current(); } // we keep the delegate current, so this should be correct.
 
-  virtual int32_t next() override;
+  আভাসী int32_t next() override;
 
-  virtual int32_t next(int32_t n) override;
-  virtual int32_t following(int32_t offset) override;
-  virtual int32_t last() override;
+  আভাসী int32_t next(int32_t n) override;
+  আভাসী int32_t following(int32_t offset) override;
+  আভাসী int32_t last() override;
 
-private:
+ব্যক্তিগত:
     /**
      * Given that the fDelegate has already given its "initial" answer,
      * find the NEXT actual (non-excepted) break.
      * @param n initial position from delegate
      * @return new break position or UBRK_DONE
      */
-    int32_t internalNext(int32_t n);
+    int32_t internal_পরবর্তী(int32_t n);
     /**
      * Given that the fDelegate has already given its "initial" answer,
      * find the PREV actual (non-excepted) break.
      * @param n initial position from delegate
      * @return new break position or UBRK_DONE
      */
-    int32_t internalPrev(int32_t n);
+    int32_t internal_পূর্ব(int32_t n);
     /**
      * set up the UText with the value of the fDelegate.
      * Call this before calling breakExceptionAt. 
      * May be able to avoid excess calls
      */
-    void resetState(UErrorCode &status);
+    শূন্য resetState(UErrorCode &status);
     /**
      * Is there a match  (exception) at this spot?
      */
-    enum EFBMatchResult { kNoExceptionHere, kExceptionHere };
+    গণনা EFBMatch_ফলাফল { kNoExceptionHere, kExceptionHere };
     /**
      * Determine if there is an exception at this spot
      * @param n spot to check
      * @return kNoExceptionHere or kExceptionHere
      **/
-    enum EFBMatchResult breakExceptionAt(int32_t n);
+    গণনা EFBMatch_ফলাফল breakExceptionAt(int32_t n);
 };
 
-SimpleFilteredSentenceBreakIterator::SimpleFilteredSentenceBreakIterator(const SimpleFilteredSentenceBreakIterator& other)
-  : BreakIterator(other), fData(other.fData->incr()), fDelegate(other.fDelegate->clone())
+SimpleFilteredSentenceBreakIterator::SimpleFilteredSentenceBreakIterator(ধ্রুবক SimpleFilteredSentenceBreakIterator& other)
+  : BreakIterator(other), f_তথ্য(other.f_তথ্য->incr()), fDelegate(other.fDelegate->clone())
 {
 }
 
 
 SimpleFilteredSentenceBreakIterator::SimpleFilteredSentenceBreakIterator(BreakIterator *adopt, UCharsTrie *forwards, UCharsTrie *backwards, UErrorCode &status) :
   BreakIterator(adopt->getLocale(ULOC_VALID_LOCALE,status),adopt->getLocale(ULOC_ACTUAL_LOCALE,status)),
-  fData(new SimpleFilteredSentenceBreakData(forwards, backwards)),
+  f_তথ্য(নতুন Simple_Filtered_Sentence_Break_তথ্য(forwards, backwards)),
   fDelegate(adopt)
 {
-    if (fData == nullptr) {
+    যদি (f_তথ্য == nullptr) {
         delete forwards;
         delete backwards;
-        if (U_SUCCESS(status)) {
+        যদি (U_SUCCESS(status)) {
             status = U_MEMORY_ALLOCATION_ERROR;
         }
     }
 }
 
 SimpleFilteredSentenceBreakIterator::~SimpleFilteredSentenceBreakIterator() {
-    fData = fData->decr();
+    f_তথ্য = f_তথ্য->decr();
 }
 
-void SimpleFilteredSentenceBreakIterator::resetState(UErrorCode &status) {
+শূন্য SimpleFilteredSentenceBreakIterator::resetState(UErrorCode &status) {
   fText.adoptInstead(fDelegate->getUText(fText.orphan(), status));
 }
 
-SimpleFilteredSentenceBreakIterator::EFBMatchResult
+SimpleFilteredSentenceBreakIterator::EFBMatch_ফলাফল
 SimpleFilteredSentenceBreakIterator::breakExceptionAt(int32_t n) {
     int64_t bestPosn = -1;
-    int32_t bestValue = -1;
+    int32_t best_মান = -1;
     // loops while 'n' points to an exception.
-    utext_setNativeIndex(fText.getAlias(), n); // from n..
+    utext_set_Native_সূচক(fText.getAlias(), n); // from n..
 
     //if(debug2) u_printf(" n@ %d\n", n);
     // Assume a space is following the '.'  (so we handle the case:  "Mr. /Brown")
-    if(utext_previous32(fText.getAlias())==u' ') {  // TODO: skip a class of chars here??
+    যদি(utext_previous32(fText.getAlias())==u' ') {  // TODO: skip a class of chars here??
       // TODO only do this the 1st time?
       //if(debug2) u_printf("skipping prev: |%C| \n", (char16_t)uch);
-    } else {
+    } অন্যথা {
       //if(debug2) u_printf("not skipping prev: |%C| \n", (char16_t)uch);
       utext_next32(fText.getAlias());
       //if(debug2) u_printf(" -> : |%C| \n", (char16_t)uch);
@@ -308,16 +308,16 @@ SimpleFilteredSentenceBreakIterator::breakExceptionAt(int32_t n) {
 
     {
         // Do not modify the shared trie!
-        UCharsTrie iter(fData->getBackwardsTrie());
+        UCharsTrie iter(f_তথ্য->getBackwardsTrie());
         UChar32 uch;
-        while((uch=utext_previous32(fText.getAlias()))!=U_SENTINEL) {  // more to consume backwards
-            UStringTrieResult r = iter.nextForCodePoint(uch);
-            if(USTRINGTRIE_HAS_VALUE(r)) { // remember the best match so far
-                bestPosn = utext_getNativeIndex(fText.getAlias());
-                bestValue = iter.getValue();
+        যখন((uch=utext_previous32(fText.getAlias()))!=U_SENTINEL) {  // more to consume backwards
+            UString_Trie_ফলাফল r = iter.পরবর্তী_For_Code_Point(uch);
+            যদি(USTRINGTRIE_HAS_মান(r)) { // remember the best match so far
+                bestPosn = utext_get_Native_সূচক(fText.getAlias());
+                best_মান = iter.get_মান();
             }
-            if(!USTRINGTRIE_HAS_NEXT(r)) {
-                break;
+            যদি(!USTRINGTRIE_HAS_পরবর্তী(r)) {
+                বিরতি;
             }
             //if(debug2) u_printf("rev< /%C/ cont?%d @%d\n", (char16_t)uch, r, utext_getNativeIndex(fText.getAlias()));
         }
@@ -327,180 +327,180 @@ SimpleFilteredSentenceBreakIterator::breakExceptionAt(int32_t n) {
         //if(debug2) u_printf("rev<+/%C/+end of seq.. r=%d, bestPosn=%d, bestValue=%d\n", (char16_t)uch, r, bestPosn, bestValue);
     //}
 
-    if(bestPosn>=0) {
+    যদি(bestPosn>=0) {
       //if(debug2) u_printf("rev< /%C/ end of seq.. r=%d, bestPosn=%d, bestValue=%d\n", (char16_t)uch, r, bestPosn, bestValue);
 
       //if(USTRINGTRIE_MATCHES(r)) {  // matched - so, now what?
       //int32_t bestValue = iter.getValue();
       ////if(debug2) u_printf("rev< /%C/ matched, skip..%d  bestValue=%d\n", (char16_t)uch, r, bestValue);
 
-      if(bestValue == kMATCH) { // exact match!
+      যদি(best_মান == kMATCH) { // exact match!
         //if(debug2) u_printf(" exact backward match\n");
-        return kExceptionHere; // See if the next is another exception.
-      } else if(bestValue == kPARTIAL
-                && fData->hasForwardsPartialTrie()) { // make sure there's a forward trie
+        ফেরত kExceptionHere; // See if the next is another exception.
+      } অন্যথা যদি(best_মান == kPARTIAL
+                && f_তথ্য->hasForwardsPartialTrie()) { // make sure there's a forward trie
         //if(debug2) u_printf(" partial backward match\n");
         // We matched the "Ph." in "Ph.D." - now we need to run everything through the forwards trie
         // to see if it matches something going forward.
-        UStringTrieResult rfwd = USTRINGTRIE_INTERMEDIATE_VALUE;
-        utext_setNativeIndex(fText.getAlias(), bestPosn); // hope that's close ..
+        UString_Trie_ফলাফল rfwd = USTRINGTRIE_INTERMEDIATE_মান;
+        utext_set_Native_সূচক(fText.getAlias(), bestPosn); // hope that's close ..
         //if(debug2) u_printf("Retrying at %d\n", bestPosn);
         // Do not modify the shared trie!
-        UCharsTrie iter(fData->getForwardsPartialTrie());
+        UCharsTrie iter(f_তথ্য->getForwardsPartialTrie());
         UChar32 uch;
-        while((uch=utext_next32(fText.getAlias()))!=U_SENTINEL &&
-              USTRINGTRIE_HAS_NEXT(rfwd=iter.nextForCodePoint(uch))) {
+        যখন((uch=utext_next32(fText.getAlias()))!=U_SENTINEL &&
+              USTRINGTRIE_HAS_পরবর্তী(rfwd=iter.পরবর্তী_For_Code_Point(uch))) {
           //if(debug2) u_printf("fwd> /%C/ cont?%d @%d\n", (char16_t)uch, rfwd, utext_getNativeIndex(fText.getAlias()));
         }
-        if(USTRINGTRIE_MATCHES(rfwd)) {
+        যদি(USTRINGTRIE_MATCHES(rfwd)) {
           //if(debug2) u_printf("fwd> /%C/ == forward match!\n", (char16_t)uch);
           // only full matches here, nothing to check
           // skip the next:
-            return kExceptionHere;
-        } else {
+            ফেরত kExceptionHere;
+        } অন্যথা {
           //if(debug2) u_printf("fwd> /%C/ no match.\n", (char16_t)uch);
           // no match (no exception) -return the 'underlying' break
-          return kNoExceptionHere;
+          ফেরত kNoExceptionHere;
         }
-      } else {
-        return kNoExceptionHere; // internal error and/or no forwards trie
+      } অন্যথা {
+        ফেরত kNoExceptionHere; // internal error and/or no forwards trie
       }
-    } else {
+    } অন্যথা {
       //if(debug2) u_printf("rev< /%C/ .. no match..%d\n", (char16_t)uch, r);  // no best match
-      return kNoExceptionHere; // No match - so exit. Not an exception.
+      ফেরত kNoExceptionHere; // No match - so exit. Not an exception.
     }
 }
 
 // the workhorse single next.
 int32_t
-SimpleFilteredSentenceBreakIterator::internalNext(int32_t n) {
-  if(n == UBRK_DONE || // at end  or
-    !fData->hasBackwardsTrie()) { // .. no backwards table loaded == no exceptions
-      return n;
+SimpleFilteredSentenceBreakIterator::internal_পরবর্তী(int32_t n) {
+  যদি(n == UBRK_DONE || // at end  or
+    !f_তথ্য->hasBackwardsTrie()) { // .. no backwards table loaded == no exceptions
+      ফেরত n;
   }
   // OK, do we need to break here?
   UErrorCode status = U_ZERO_ERROR;
   // refresh text
   resetState(status);
-  if(U_FAILURE(status)) return UBRK_DONE; // bail out
-  int64_t utextLen = utext_nativeLength(fText.getAlias());
+  যদি(U_FAILURE(status)) ফেরত UBRK_DONE; // bail out
+  int64_t utextLen = utext_native_দৈর্ঘ্য(fText.getAlias());
 
   //if(debug2) u_printf("str, native len=%d\n", utext_nativeLength(fText.getAlias()));
-  while (n != UBRK_DONE && n != utextLen) { // outer loop runs once per underlying break (from fDelegate).
-    SimpleFilteredSentenceBreakIterator::EFBMatchResult m = breakExceptionAt(n);
+  যখন (n != UBRK_DONE && n != utextLen) { // outer loop runs once per underlying break (from fDelegate).
+    SimpleFilteredSentenceBreakIterator::EFBMatch_ফলাফল m = breakExceptionAt(n);
 
-    switch(m) {
-    case kExceptionHere:
+    নির্বাচন(m) {
+    ক্ষেত্র kExceptionHere:
       n = fDelegate->next(); // skip this one. Find the next lowerlevel break.
-      continue;
+      চালু;
 
-    default:
-    case kNoExceptionHere:
-      return n;
+    পূর্বনির্ধারিত:
+    ক্ষেত্র kNoExceptionHere:
+      ফেরত n;
     }    
   }
-  return n;
+  ফেরত n;
 }
 
 int32_t
-SimpleFilteredSentenceBreakIterator::internalPrev(int32_t n) {
-  if(n == 0 || n == UBRK_DONE || // at end  or
-    !fData->hasBackwardsTrie()) { // .. no backwards table loaded == no exceptions
-      return n;
+SimpleFilteredSentenceBreakIterator::internal_পূর্ব(int32_t n) {
+  যদি(n == 0 || n == UBRK_DONE || // at end  or
+    !f_তথ্য->hasBackwardsTrie()) { // .. no backwards table loaded == no exceptions
+      ফেরত n;
   }
   // OK, do we need to break here?
   UErrorCode status = U_ZERO_ERROR;
   // refresh text
   resetState(status);
-  if(U_FAILURE(status)) return UBRK_DONE; // bail out
+  যদি(U_FAILURE(status)) ফেরত UBRK_DONE; // bail out
 
   //if(debug2) u_printf("str, native len=%d\n", utext_nativeLength(fText.getAlias()));
-  while (n != UBRK_DONE && n != 0) { // outer loop runs once per underlying break (from fDelegate).
-    SimpleFilteredSentenceBreakIterator::EFBMatchResult m = breakExceptionAt(n);
+  যখন (n != UBRK_DONE && n != 0) { // outer loop runs once per underlying break (from fDelegate).
+    SimpleFilteredSentenceBreakIterator::EFBMatch_ফলাফল m = breakExceptionAt(n);
 
-    switch(m) {
-    case kExceptionHere:
+    নির্বাচন(m) {
+    ক্ষেত্র kExceptionHere:
       n = fDelegate->previous(); // skip this one. Find the next lowerlevel break.
-      continue;
+      চালু;
 
-    default:
-    case kNoExceptionHere:
-      return n;
+    পূর্বনির্ধারিত:
+    ক্ষেত্র kNoExceptionHere:
+      ফেরত n;
     }    
   }
-  return n;
+  ফেরত n;
 }
 
 
 int32_t
 SimpleFilteredSentenceBreakIterator::next() {
-  return internalNext(fDelegate->next());
+  ফেরত internal_পরবর্তী(fDelegate->next());
 }
 
 int32_t
 SimpleFilteredSentenceBreakIterator::first() {
   // Don't suppress a break opportunity at the beginning of text.
-  return fDelegate->first();
+  ফেরত fDelegate->first();
 }
 
 int32_t
 SimpleFilteredSentenceBreakIterator::preceding(int32_t offset) {
-  return internalPrev(fDelegate->preceding(offset));
+  ফেরত internal_পূর্ব(fDelegate->preceding(offset));
 }
 
 int32_t
 SimpleFilteredSentenceBreakIterator::previous() {
-  return internalPrev(fDelegate->previous());
+  ফেরত internal_পূর্ব(fDelegate->previous());
 }
 
 UBool SimpleFilteredSentenceBreakIterator::isBoundary(int32_t offset) {
-  if (!fDelegate->isBoundary(offset)) return false; // no break to suppress
+  যদি (!fDelegate->isBoundary(offset)) ফেরত মিথ্যা; // no break to suppress
 
-  if (!fData->hasBackwardsTrie()) return true; // no data = no suppressions
+  যদি (!f_তথ্য->hasBackwardsTrie()) ফেরত সত্য; // no data = no suppressions
 
   UErrorCode status = U_ZERO_ERROR;
   resetState(status);
 
-  SimpleFilteredSentenceBreakIterator::EFBMatchResult m = breakExceptionAt(offset);
+  SimpleFilteredSentenceBreakIterator::EFBMatch_ফলাফল m = breakExceptionAt(offset);
 
-  switch(m) {
-  case kExceptionHere:
-    return false;
-  default:
-  case kNoExceptionHere:
-    return true;
+  নির্বাচন(m) {
+  ক্ষেত্র kExceptionHere:
+    ফেরত মিথ্যা;
+  পূর্বনির্ধারিত:
+  ক্ষেত্র kNoExceptionHere:
+    ফেরত সত্য;
   }    
 }
  
 int32_t
 SimpleFilteredSentenceBreakIterator::next(int32_t offset) {
-  return internalNext(fDelegate->next(offset));
+  ফেরত internal_পরবর্তী(fDelegate->next(offset));
 }
 
 int32_t
 SimpleFilteredSentenceBreakIterator::following(int32_t offset) {
-  return internalNext(fDelegate->following(offset));
+  ফেরত internal_পরবর্তী(fDelegate->following(offset));
 }
 
 int32_t
 SimpleFilteredSentenceBreakIterator::last() {
   // Don't suppress a break opportunity at the end of text.
-  return fDelegate->last();
+  ফেরত fDelegate->last();
 }
 
 
 /**
  * Concrete implementation of builder class.
  */
-class SimpleFilteredBreakIteratorBuilder : public FilteredBreakIteratorBuilder {
-public:
-  virtual ~SimpleFilteredBreakIteratorBuilder();
-  SimpleFilteredBreakIteratorBuilder(const Locale &fromLocale, UErrorCode &status);
+শ্রেণী SimpleFilteredBreakIteratorBuilder : সর্বজনীন FilteredBreakIteratorBuilder {
+সর্বজনীন:
+  আভাসী ~SimpleFilteredBreakIteratorBuilder();
+  SimpleFilteredBreakIteratorBuilder(ধ্রুবক Locale &fromLocale, UErrorCode &status);
   SimpleFilteredBreakIteratorBuilder(UErrorCode &status);
-  virtual UBool suppressBreakAfter(const UnicodeString& exception, UErrorCode& status) override;
-  virtual UBool unsuppressBreakAfter(const UnicodeString& exception, UErrorCode& status) override;
-  virtual BreakIterator *build(BreakIterator* adoptBreakIterator, UErrorCode& status) override;
-private:
+  আভাসী UBool suppressBreakAfter(ধ্রুবক UnicodeString& exception, UErrorCode& status) override;
+  আভাসী UBool unsuppressBreakAfter(ধ্রুবক UnicodeString& exception, UErrorCode& status) override;
+  আভাসী BreakIterator *build(BreakIterator* adoptBreakIterator, UErrorCode& status) override;
+ব্যক্তিগত:
   UStringSet fSet;
 };
 
@@ -513,73 +513,73 @@ SimpleFilteredBreakIteratorBuilder::SimpleFilteredBreakIteratorBuilder(UErrorCod
 {
 }
 
-SimpleFilteredBreakIteratorBuilder::SimpleFilteredBreakIteratorBuilder(const Locale &fromLocale, UErrorCode &status)
+SimpleFilteredBreakIteratorBuilder::SimpleFilteredBreakIteratorBuilder(ধ্রুবক Locale &fromLocale, UErrorCode &status)
   : fSet(status)
 {
-  if(U_SUCCESS(status)) {
+  যদি(U_SUCCESS(status)) {
     UErrorCode subStatus = U_ZERO_ERROR;
     LocalUResourceBundlePointer b(ures_open(U_ICUDATA_BRKITR, fromLocale.getBaseName(), &subStatus));
-    if (U_FAILURE(subStatus) || (subStatus == U_USING_DEFAULT_WARNING) ) {    
+    যদি (U_FAILURE(subStatus) || (subStatus == U_USING_DEFAULT_WARNING) ) {    
       status = subStatus; // copy the failing status 
-#if FB_DEBUG
+#যদি FB_DEBUG
       fprintf(stderr, "open BUNDLE %s : %s, %s\n", fromLocale.getBaseName(), "[exit]", u_errorName(status));
 #endif
-      return;  // leaves the builder empty, if you try to use it.
+      ফেরত;  // leaves the builder empty, if you try to use it.
     }
-    LocalUResourceBundlePointer exceptions(ures_getByKeyWithFallback(b.getAlias(), "exceptions", nullptr, &subStatus));
-    if (U_FAILURE(subStatus) || (subStatus == U_USING_DEFAULT_WARNING) ) {    
+    LocalUResourceBundlePointer exceptions(ures_get_By_চাবি_With_Fallback(b.getAlias(), "exceptions", nullptr, &subStatus));
+    যদি (U_FAILURE(subStatus) || (subStatus == U_USING_DEFAULT_WARNING) ) {    
       status = subStatus; // copy the failing status 
-#if FB_DEBUG
+#যদি FB_DEBUG
       fprintf(stderr, "open EXCEPTIONS %s : %s, %s\n", fromLocale.getBaseName(), "[exit]", u_errorName(status));
 #endif
-      return;  // leaves the builder empty, if you try to use it.
+      ফেরত;  // leaves the builder empty, if you try to use it.
     }
-    LocalUResourceBundlePointer breaks(ures_getByKeyWithFallback(exceptions.getAlias(), "SentenceBreak", nullptr, &subStatus));
+    LocalUResourceBundlePointer breaks(ures_get_By_চাবি_With_Fallback(exceptions.getAlias(), "SentenceBreak", nullptr, &subStatus));
 
-#if FB_DEBUG
+#যদি FB_DEBUG
     {
       UErrorCode subsub = subStatus;
       fprintf(stderr, "open SentenceBreak %s => %s, %s\n", fromLocale.getBaseName(), ures_getLocale(breaks.getAlias(), &subsub), u_errorName(subStatus));
     }
 #endif
     
-    if (U_FAILURE(subStatus) || (subStatus == U_USING_DEFAULT_WARNING) ) {    
+    যদি (U_FAILURE(subStatus) || (subStatus == U_USING_DEFAULT_WARNING) ) {    
       status = subStatus; // copy the failing status 
-#if FB_DEBUG
+#যদি FB_DEBUG
       fprintf(stderr, "open %s : %s, %s\n", fromLocale.getBaseName(), "[exit]", u_errorName(status));
 #endif
-      return;  // leaves the builder empty, if you try to use it.
+      ফেরত;  // leaves the builder empty, if you try to use it.
     }
 
     LocalUResourceBundlePointer strs;
     subStatus = status; // Pick up inherited warning status now 
-    do {
-      strs.adoptInstead(ures_getNextResource(breaks.getAlias(), strs.orphan(), &subStatus));
-      if(strs.isValid() && U_SUCCESS(subStatus)) {
+    করো {
+      strs.adoptInstead(ures_get_পরবর্তী_Resource(breaks.getAlias(), strs.orphan(), &subStatus));
+      যদি(strs.isValid() && U_SUCCESS(subStatus)) {
         UnicodeString str(ures_getUnicodeString(strs.getAlias(), &status));
         suppressBreakAfter(str, status); // load the string
       }
-    } while (strs.isValid() && U_SUCCESS(subStatus));
-    if(U_FAILURE(subStatus)&&subStatus!=U_INDEX_OUTOFBOUNDS_ERROR&&U_SUCCESS(status)) {
+    } যখন (strs.isValid() && U_SUCCESS(subStatus));
+    যদি(U_FAILURE(subStatus)&&subStatus!=U_সূচক_OUTOFBOUNDS_ERROR&&U_SUCCESS(status)) {
       status = subStatus;
     }
   }
 }
 
 UBool
-SimpleFilteredBreakIteratorBuilder::suppressBreakAfter(const UnicodeString& exception, UErrorCode& status)
+SimpleFilteredBreakIteratorBuilder::suppressBreakAfter(ধ্রুবক UnicodeString& exception, UErrorCode& status)
 {
   UBool r = fSet.add(exception, status);
   FB_TRACE("suppressBreakAfter",&exception,r,0);
-  return r;
+  ফেরত r;
 }
 
 UBool
-SimpleFilteredBreakIteratorBuilder::unsuppressBreakAfter(const UnicodeString& exception, UErrorCode& status)
+SimpleFilteredBreakIteratorBuilder::unsuppressBreakAfter(ধ্রুবক UnicodeString& exception, UErrorCode& status)
 {
   UBool r = fSet.remove(exception, status);
   FB_TRACE("unsuppressBreakAfter",&exception,r,0);
-  return r;
+  ফেরত r;
 }
 
 /**
@@ -589,128 +589,128 @@ SimpleFilteredBreakIteratorBuilder::unsuppressBreakAfter(const UnicodeString& ex
  * Note: "new UnicodeString[subCount]" ends up calling global operator new
  * on MSVC2012 for some reason.
  */
-static inline UnicodeString* newUnicodeStringArray(size_t count) {
-    return new UnicodeString[count ? count : 1];
+স্থির অন্তঃরেখ UnicodeString* newUnicodeStringArray(size_t count) {
+    ফেরত নতুন UnicodeString[count ? count : 1];
 }
 
 BreakIterator *
 SimpleFilteredBreakIteratorBuilder::build(BreakIterator* adoptBreakIterator, UErrorCode& status) {
   LocalPointer<BreakIterator> adopt(adoptBreakIterator);
 
-  LocalPointer<UCharsTrieBuilder> builder(new UCharsTrieBuilder(status), status);
-  LocalPointer<UCharsTrieBuilder> builder2(new UCharsTrieBuilder(status), status);
-  if(U_FAILURE(status)) {
-    return nullptr;
+  LocalPointer<UCharsTrieBuilder> builder(নতুন UCharsTrieBuilder(status), status);
+  LocalPointer<UCharsTrieBuilder> builder2(নতুন UCharsTrieBuilder(status), status);
+  যদি(U_FAILURE(status)) {
+    ফেরত nullptr;
   }
 
-  int32_t revCount = 0;
-  int32_t fwdCount = 0;
+  int32_t rev_গুনতি = 0;
+  int32_t fwd_গুনতি = 0;
 
-  int32_t subCount = fSet.size();
+  int32_t sub_গুনতি = fSet.size();
 
-  UnicodeString *ustrs_ptr = newUnicodeStringArray(subCount);
+  UnicodeString *ustrs_ptr = newUnicodeStringArray(sub_গুনতি);
   
   LocalArray<UnicodeString> ustrs(ustrs_ptr);
 
-  LocalMemory<int> partials;
-  partials.allocateInsteadAndReset(subCount);
+  LocalMemory<পূর্ণসংখ্যা> partials;
+  partials.allocateInsteadAndReset(sub_গুনতি);
 
   LocalPointer<UCharsTrie>    backwardsTrie; //  i.e. ".srM" for Mrs.
   LocalPointer<UCharsTrie>    forwardsPartialTrie; //  Has ".a" for "a.M."
 
-  int n=0;
-  for ( int32_t i = 0;
+  পূর্ণসংখ্যা n=0;
+  জন্য ( int32_t i = 0;
         i<fSet.size();
         i++) {
-    const UnicodeString *abbr = fSet.getStringAt(i);
-    if(abbr) {
-      FB_TRACE("build",abbr,true,i);
+    ধ্রুবক UnicodeString *abbr = fSet.getStringAt(i);
+    যদি(abbr) {
+      FB_TRACE("build",abbr,সত্য,i);
       ustrs[n] = *abbr; // copy by value
-      FB_TRACE("ustrs[n]",&ustrs[n],true,i);
-    } else {
-      FB_TRACE("build",abbr,false,i);
+      FB_TRACE("ustrs[n]",&ustrs[n],সত্য,i);
+    } অন্যথা {
+      FB_TRACE("build",abbr,মিথ্যা,i);
       status = U_MEMORY_ALLOCATION_ERROR;
-      return nullptr;
+      ফেরত nullptr;
     }
     partials[n] = 0; // default: not partial
     n++;
   }
   // first pass - find partials.
-  for(int i=0;i<subCount;i++) {
-    int nn = ustrs[i].indexOf(kFULLSTOP); // TODO: non-'.' abbreviations
-    if(nn>-1 && (nn+1)!=ustrs[i].length()) {
-      FB_TRACE("partial",&ustrs[i],false,i);
+  জন্য(পূর্ণসংখ্যা i=0;i<sub_গুনতি;i++) {
+    পূর্ণসংখ্যা nn = ustrs[i].সূচক_Of(kFULLSTOP); // TODO: non-'.' abbreviations
+    যদি(nn>-1 && (nn+1)!=ustrs[i].length()) {
+      FB_TRACE("partial",&ustrs[i],মিথ্যা,i);
       // is partial.
       // is it unique?
-      int sameAs = -1;
-      for(int j=0;j<subCount;j++) {
-        if(j==i) continue;
-        if(ustrs[i].compare(0,nn+1,ustrs[j],0,nn+1)==0) {
-          FB_TRACE("prefix",&ustrs[j],false,nn+1);
+      পূর্ণসংখ্যা sameAs = -1;
+      জন্য(পূর্ণসংখ্যা j=0;j<sub_গুনতি;j++) {
+        যদি(j==i) চালু;
+        যদি(ustrs[i].compare(0,nn+1,ustrs[j],0,nn+1)==0) {
+          FB_TRACE("prefix",&ustrs[j],মিথ্যা,nn+1);
           //UBool otherIsPartial = ((nn+1)!=ustrs[j].length());  // true if ustrs[j] doesn't end at nn
-          if(partials[j]==0) { // hasn't been processed yet
+          যদি(partials[j]==0) { // hasn't been processed yet
             partials[j] = kSuppressInReverse | kAddToForward;
-            FB_TRACE("suppressing",&ustrs[j],false,j);
-          } else if(partials[j] & kSuppressInReverse) {
+            FB_TRACE("suppressing",&ustrs[j],মিথ্যা,j);
+          } অন্যথা যদি(partials[j] & kSuppressInReverse) {
             sameAs = j; // the other entry is already in the reverse table.
           }
         }
       }
-      FB_TRACE("for partial same-",&ustrs[i],false,sameAs);
-      FB_TRACE(" == partial #",&ustrs[i],false,partials[i]);
+      FB_TRACE("for partial same-",&ustrs[i],মিথ্যা,sameAs);
+      FB_TRACE(" == partial #",&ustrs[i],মিথ্যা,partials[i]);
       UnicodeString prefix(ustrs[i], 0, nn+1);
-      if(sameAs == -1 && partials[i] == 0) {
+      যদি(sameAs == -1 && partials[i] == 0) {
         // first one - add the prefix to the reverse table.
         prefix.reverse();
         builder->add(prefix, kPARTIAL, status);
-        revCount++;
-        FB_TRACE("Added partial",&prefix,false, i);
-        FB_TRACE(u_errorName(status),&ustrs[i],false,i);
+        rev_গুনতি++;
+        FB_TRACE("Added partial",&prefix,মিথ্যা, i);
+        FB_TRACE(u_errorName(status),&ustrs[i],মিথ্যা,i);
         partials[i] = kSuppressInReverse | kAddToForward;
-      } else {
-        FB_TRACE("NOT adding partial",&prefix,false, i);
-        FB_TRACE(u_errorName(status),&ustrs[i],false,i);
+      } অন্যথা {
+        FB_TRACE("NOT adding partial",&prefix,মিথ্যা, i);
+        FB_TRACE(u_errorName(status),&ustrs[i],মিথ্যা,i);
       }
     }
   }
-  for(int i=0;i<subCount;i++) {
-    if(partials[i]==0) {
+  জন্য(পূর্ণসংখ্যা i=0;i<sub_গুনতি;i++) {
+    যদি(partials[i]==0) {
       ustrs[i].reverse();
       builder->add(ustrs[i], kMATCH, status);
-      revCount++;
-      FB_TRACE(u_errorName(status), &ustrs[i], false, i);
-    } else {
-      FB_TRACE("Adding fwd",&ustrs[i], false, i);
+      rev_গুনতি++;
+      FB_TRACE(u_errorName(status), &ustrs[i], মিথ্যা, i);
+    } অন্যথা {
+      FB_TRACE("Adding fwd",&ustrs[i], মিথ্যা, i);
 
       // an optimization would be to only add the portion after the '.'
       // for example, for "Ph.D." we store ".hP" in the reverse table. We could just store "D." in the forward,
       // instead of "Ph.D." since we already know the "Ph." part is a match.
       // would need the trie to be able to hold 0-length strings, though.
       builder2->add(ustrs[i], kMATCH, status); // forward
-      fwdCount++;
+      fwd_গুনতি++;
       //ustrs[i].reverse();
       ////if(debug2) u_printf("SUPPRESS- not Added(%d):  /%S/ status=%s\n",partials[i], ustrs[i].getTerminatedBuffer(), u_errorName(status));
     }
   }
-  FB_TRACE("AbbrCount",nullptr,false, subCount);
+  FB_TRACE("AbbrCount",nullptr,মিথ্যা, sub_গুনতি);
 
-  if(revCount>0) {
+  যদি(rev_গুনতি>0) {
     backwardsTrie.adoptInstead(builder->build(USTRINGTRIE_BUILD_FAST, status));
-    if(U_FAILURE(status)) {
-      FB_TRACE(u_errorName(status),nullptr,false, -1);
-      return nullptr;
+    যদি(U_FAILURE(status)) {
+      FB_TRACE(u_errorName(status),nullptr,মিথ্যা, -1);
+      ফেরত nullptr;
     }
   }
 
-  if(fwdCount>0) {
+  যদি(fwd_গুনতি>0) {
     forwardsPartialTrie.adoptInstead(builder2->build(USTRINGTRIE_BUILD_FAST, status));
-    if(U_FAILURE(status)) {
-      FB_TRACE(u_errorName(status),nullptr,false, -1);
-      return nullptr;
+    যদি(U_FAILURE(status)) {
+      FB_TRACE(u_errorName(status),nullptr,মিথ্যা, -1);
+      ফেরত nullptr;
     }
   }
 
-  return new SimpleFilteredSentenceBreakIterator(adopt.orphan(), forwardsPartialTrie.orphan(), backwardsTrie.orphan(), status);
+  ফেরত নতুন SimpleFilteredSentenceBreakIterator(adopt.orphan(), forwardsPartialTrie.orphan(), backwardsTrie.orphan(), status);
 }
 
 
@@ -723,22 +723,22 @@ FilteredBreakIteratorBuilder::~FilteredBreakIteratorBuilder() {
 }
 
 FilteredBreakIteratorBuilder *
-FilteredBreakIteratorBuilder::createInstance(const Locale& where, UErrorCode& status) {
-  if(U_FAILURE(status)) return nullptr;
-  LocalPointer<FilteredBreakIteratorBuilder> ret(new SimpleFilteredBreakIteratorBuilder(where, status), status);
-  return (U_SUCCESS(status))? ret.orphan(): nullptr;
+FilteredBreakIteratorBuilder::createInstance(ধ্রুবক Locale& where, UErrorCode& status) {
+  যদি(U_FAILURE(status)) ফেরত nullptr;
+  LocalPointer<FilteredBreakIteratorBuilder> ret(নতুন SimpleFilteredBreakIteratorBuilder(where, status), status);
+  ফেরত (U_SUCCESS(status))? ret.orphan(): nullptr;
 }
 
 FilteredBreakIteratorBuilder *
 FilteredBreakIteratorBuilder::createInstance(UErrorCode &status) {
-  return createEmptyInstance(status);
+  ফেরত createEmptyInstance(status);
 }
 
 FilteredBreakIteratorBuilder *
 FilteredBreakIteratorBuilder::createEmptyInstance(UErrorCode& status) {
-  if(U_FAILURE(status)) return nullptr;
-  LocalPointer<FilteredBreakIteratorBuilder> ret(new SimpleFilteredBreakIteratorBuilder(status), status);
-  return (U_SUCCESS(status))? ret.orphan(): nullptr;
+  যদি(U_FAILURE(status)) ফেরত nullptr;
+  LocalPointer<FilteredBreakIteratorBuilder> ret(নতুন SimpleFilteredBreakIteratorBuilder(status), status);
+  ফেরত (U_SUCCESS(status))? ret.orphan(): nullptr;
 }
 
 U_NAMESPACE_END

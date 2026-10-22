@@ -6,80 +6,80 @@
 // Copyright 2007 Google Inc. All Rights Reserved.
 // Author: sanjay@google.com (Sanjay Ghemawat)
 
-#include "unicode/utypes.h"
-#include "unicode/bytestream.h"
-#include "cmemory.h"
+#অন্তর্ভাব "unicode/utypes.h"
+#অন্তর্ভাব "unicode/bytestream.h"
+#অন্তর্ভাব "cmemory.h"
 
 U_NAMESPACE_BEGIN
 
 ByteSink::~ByteSink() {}
 
-char* ByteSink::GetAppendBuffer(int32_t min_capacity,
+অক্ষর* ByteSink::Get_Append_বাফার(int32_t min_capacity,
                                 int32_t /*desired_capacity_hint*/,
-                                char* scratch U_LIFETIME_BOUND,
+                                অক্ষর* scratch U_LIFETIME_BOUND,
                                 int32_t scratch_capacity,
-                                int32_t* result_capacity) U_LIFETIME_BOUND {
-  if (min_capacity < 1 || scratch_capacity < min_capacity) {
-    *result_capacity = 0;
-    return nullptr;
+                                int32_t* ফলাফল_capacity) U_LIFETIME_BOUND {
+  যদি (min_capacity < 1 || scratch_capacity < min_capacity) {
+    *ফলাফল_capacity = 0;
+    ফেরত nullptr;
   }
-  *result_capacity = scratch_capacity;
-  return scratch;
+  *ফলাফল_capacity = scratch_capacity;
+  ফেরত scratch;
 }
 
-void ByteSink::Flush() {}
+শূন্য ByteSink::Flush() {}
 
-CheckedArrayByteSink::CheckedArrayByteSink(char* outbuf, int32_t capacity)
+CheckedArrayByteSink::CheckedArrayByteSink(অক্ষর* outbuf, int32_t capacity)
     : outbuf_(outbuf), capacity_(capacity < 0 ? 0 : capacity),
-      size_(0), appended_(0), overflowed_(false) {
+      আকার_2(0), appended_(0), overflowed_(মিথ্যা) {
 }
 
 CheckedArrayByteSink::~CheckedArrayByteSink() {}
 
 CheckedArrayByteSink& CheckedArrayByteSink::Reset() U_LIFETIME_BOUND {
-  size_ = appended_ = 0;
-  overflowed_ = false;
-  return *this;
+  আকার_2 = appended_ = 0;
+  overflowed_ = মিথ্যা;
+  ফেরত *এই;
 }
 
-void CheckedArrayByteSink::Append(const char* bytes, int32_t n) {
-  if (n <= 0) {
-    return;
+শূন্য CheckedArrayByteSink::Append(ধ্রুবক অক্ষর* bytes, int32_t n) {
+  যদি (n <= 0) {
+    ফেরত;
   }
-  if (n > (INT32_MAX - appended_)) {
+  যদি (n > (INT32_MAX - appended_)) {
     // TODO: Report as integer overflow, not merely buffer overflow.
     appended_ = INT32_MAX;
-    overflowed_ = true;
-    return;
+    overflowed_ = সত্য;
+    ফেরত;
   }
   appended_ += n;
-  int32_t available = capacity_ - size_;
-  if (n > available) {
+  int32_t available = capacity_ - আকার_2;
+  যদি (n > available) {
     n = available;
-    overflowed_ = true;
+    overflowed_ = সত্য;
   }
-  if (n > 0 && bytes != (outbuf_ + size_)) {
-    uprv_memcpy(outbuf_ + size_, bytes, n);
+  যদি (n > 0 && bytes != (outbuf_ + আকার_2)) {
+    uprv_memcpy(outbuf_ + আকার_2, bytes, n);
   }
-  size_ += n;
+  আকার_2 += n;
 }
 
-char* CheckedArrayByteSink::GetAppendBuffer(int32_t min_capacity,
+অক্ষর* CheckedArrayByteSink::Get_Append_বাফার(int32_t min_capacity,
                                             int32_t /*desired_capacity_hint*/,
-                                            char* scratch U_LIFETIME_BOUND,
+                                            অক্ষর* scratch U_LIFETIME_BOUND,
                                             int32_t scratch_capacity,
-                                            int32_t* result_capacity) U_LIFETIME_BOUND {
-  if (min_capacity < 1 || scratch_capacity < min_capacity) {
-    *result_capacity = 0;
-    return nullptr;
+                                            int32_t* ফলাফল_capacity) U_LIFETIME_BOUND {
+  যদি (min_capacity < 1 || scratch_capacity < min_capacity) {
+    *ফলাফল_capacity = 0;
+    ফেরত nullptr;
   }
-  int32_t available = capacity_ - size_;
-  if (available >= min_capacity) {
-    *result_capacity = available;
-    return outbuf_ + size_;
-  } else {
-    *result_capacity = scratch_capacity;
-    return scratch;
+  int32_t available = capacity_ - আকার_2;
+  যদি (available >= min_capacity) {
+    *ফলাফল_capacity = available;
+    ফেরত outbuf_ + আকার_2;
+  } অন্যথা {
+    *ফলাফল_capacity = scratch_capacity;
+    ফেরত scratch;
   }
 }
 

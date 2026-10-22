@@ -26,9 +26,9 @@
  * @see UCharIterator
  */
 
-#include "unicode/utypes.h"
+#অন্তর্ভাব "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#যদি U_SHOW_CPLUSPLUS_API
     U_NAMESPACE_BEGIN
 
     class CharacterIterator;
@@ -39,8 +39,8 @@
 
 U_CDECL_BEGIN
 
-struct UCharIterator;
-typedef struct UCharIterator UCharIterator; /**< C typedef for struct UCharIterator. @stable ICU 2.1 */
+কাঠামো UCharIterator;
+প্রকারলেখ কাঠামো UCharIterator UCharIterator; /**< C typedef for struct UCharIterator. @stable ICU 2.1 */
 
 /**
  * Origin constants for UCharIterator.getIndex() and UCharIterator.move().
@@ -48,12 +48,12 @@ typedef struct UCharIterator UCharIterator; /**< C typedef for struct UCharItera
  * @see UCharIterator
  * @stable ICU 2.1
  */
-typedef enum UCharIteratorOrigin {
-    UITER_START, UITER_CURRENT, UITER_LIMIT, UITER_ZERO, UITER_LENGTH
+প্রকারলেখ গণনা UCharIteratorOrigin {
+    UITER_START, UITER_CURRENT, UITER_LIMIT, UITER_ZERO, UITER_দৈর্ঘ্য
 } UCharIteratorOrigin;
 
 /** Constants for UCharIterator. @stable ICU 2.6 */
-enum {
+গণনা {
     /**
      * Constant value that may be returned by UCharIteratorMove
      * indicating that the final UTF-16 index is not known, but that the move succeeded.
@@ -68,7 +68,7 @@ enum {
      *
      * @stable ICU 2.6
      */
-    UITER_UNKNOWN_INDEX=-2
+    UITER_UNKNOWN_সূচক=-2
 };
 
 
@@ -103,8 +103,8 @@ enum {
  * @see UCharIterator
  * @stable ICU 2.1
  */
-typedef int32_t U_CALLCONV
-UCharIteratorGetIndex(UCharIterator *iter, UCharIteratorOrigin origin);
+প্রকারলেখ int32_t U_CALLCONV
+UChar_Iterator_Get_সূচক(UCharIterator *iter, UCharIteratorOrigin origin);
 
 /**
  * Function type declaration for UCharIterator.move().
@@ -140,7 +140,7 @@ UCharIteratorGetIndex(UCharIterator *iter, UCharIteratorOrigin origin);
  * @see UITER_UNKNOWN_INDEX
  * @stable ICU 2.1
  */
-typedef int32_t U_CALLCONV
+প্রকারলেখ int32_t U_CALLCONV
 UCharIteratorMove(UCharIterator *iter, int32_t delta, UCharIteratorOrigin origin);
 
 /**
@@ -155,8 +155,8 @@ UCharIteratorMove(UCharIterator *iter, int32_t delta, UCharIteratorOrigin origin
  * @see UCharIterator
  * @stable ICU 2.1
  */
-typedef UBool U_CALLCONV
-UCharIteratorHasNext(UCharIterator *iter);
+প্রকারলেখ UBool U_CALLCONV
+UChar_Iterator_Has_পরবর্তী(UCharIterator *iter);
 
 /**
  * Function type declaration for UCharIterator.hasPrevious().
@@ -169,7 +169,7 @@ UCharIteratorHasNext(UCharIterator *iter);
  * @see UCharIterator
  * @stable ICU 2.1
  */
-typedef UBool U_CALLCONV
+প্রকারলেখ UBool U_CALLCONV
 UCharIteratorHasPrevious(UCharIterator *iter);
  
 /**
@@ -184,7 +184,7 @@ UCharIteratorHasPrevious(UCharIterator *iter);
  * @see UCharIterator
  * @stable ICU 2.1
  */
-typedef UChar32 U_CALLCONV
+প্রকারলেখ UChar32 U_CALLCONV
 UCharIteratorCurrent(UCharIterator *iter);
 
 /**
@@ -200,8 +200,8 @@ UCharIteratorCurrent(UCharIterator *iter);
  * @see UCharIterator
  * @stable ICU 2.1
  */
-typedef UChar32 U_CALLCONV
-UCharIteratorNext(UCharIterator *iter);
+প্রকারলেখ UChar32 U_CALLCONV
+UChar_Iterator_পরবর্তী(UCharIterator *iter);
 
 /**
  * Function type declaration for UCharIterator.previous().
@@ -216,7 +216,7 @@ UCharIteratorNext(UCharIterator *iter);
  * @see UCharIterator
  * @stable ICU 2.1
  */
-typedef UChar32 U_CALLCONV
+প্রকারলেখ UChar32 U_CALLCONV
 UCharIteratorPrevious(UCharIterator *iter);
 
 /**
@@ -230,7 +230,7 @@ UCharIteratorPrevious(UCharIterator *iter);
  * @see UCharIterator
  * @stable ICU 2.1
  */
-typedef int32_t U_CALLCONV
+প্রকারলেখ int32_t U_CALLCONV
 UCharIteratorReserved(UCharIterator *iter, int32_t something);
 
 /**
@@ -277,8 +277,8 @@ UCharIteratorReserved(UCharIterator *iter, int32_t something);
  * @see UITER_NO_STATE
  * @stable ICU 2.6
  */
-typedef uint32_t U_CALLCONV
-UCharIteratorGetState(const UCharIterator *iter);
+প্রকারলেখ uint32_t U_CALLCONV
+UCharIteratorGetState(ধ্রুবক UCharIterator *iter);
 
 /**
  * Function type declaration for UCharIterator.setState().
@@ -305,7 +305,7 @@ UCharIteratorGetState(const UCharIterator *iter);
  * @see UCharIteratorGetState
  * @stable ICU 2.6
  */
-typedef void U_CALLCONV
+প্রকারলেখ শূন্য U_CALLCONV
 UCharIteratorSetState(UCharIterator *iter, uint32_t state, UErrorCode *pErrorCode);
 
 
@@ -338,20 +338,20 @@ UCharIteratorSetState(UCharIterator *iter, uint32_t state, UErrorCode *pErrorCod
  *
  * @stable ICU 2.1
  */
-struct UCharIterator {
+কাঠামো UCharIterator {
     /**
      * (protected) Pointer to string or wrapped object or similar.
      * Not used by caller.
      * @stable ICU 2.1
      */
-    const void *context;
+    ধ্রুবক শূন্য *context;
 
     /**
      * (protected) Length of string or similar.
      * Not used by caller.
      * @stable ICU 2.1
      */
-    int32_t length;
+    int32_t দৈর্ঘ্য;
 
     /**
      * (protected) Start index or similar.
@@ -365,7 +365,7 @@ struct UCharIterator {
      * Not used by caller.
      * @stable ICU 2.1
      */
-    int32_t index;
+    int32_t সূচক;
 
     /**
      * (protected) Limit index or similar.
@@ -387,7 +387,7 @@ struct UCharIterator {
      * @see UCharIteratorGetIndex
      * @stable ICU 2.1
      */
-    UCharIteratorGetIndex *getIndex;
+    UChar_Iterator_Get_সূচক *get_সূচক;
 
     /**
      * (public) Moves the current position relative to the start or limit of the
@@ -407,7 +407,7 @@ struct UCharIterator {
      * @see UCharIteratorHasNext
      * @stable ICU 2.1
      */
-    UCharIteratorHasNext *hasNext;
+    UChar_Iterator_Has_পরবর্তী *has_পরবর্তী;
 
     /**
      * (public) Check if previous() can still return another code unit.
@@ -434,7 +434,7 @@ struct UCharIterator {
      * @see UCharIteratorNext
      * @stable ICU 2.1
      */
-    UCharIteratorNext *next;
+    UChar_Iterator_পরবর্তী *পরবর্তী;
 
     /**
      * (public) Decrement the index and return the code unit from there
@@ -548,7 +548,7 @@ uiter_previous32(UCharIterator *iter);
  * @stable ICU 2.6
  */
 U_CAPI uint32_t U_EXPORT2
-uiter_getState(const UCharIterator *iter);
+uiter_getState(ধ্রুবক UCharIterator *iter);
 
 /**
  * Restore the "state" of the iterator using a state word from a getState() call.
@@ -565,7 +565,7 @@ uiter_getState(const UCharIterator *iter);
  * @see UCharIteratorSetState
  * @stable ICU 2.6
  */
-U_CAPI void U_EXPORT2
+U_CAPI শূন্য U_EXPORT2
 uiter_setState(UCharIterator *iter, uint32_t state, UErrorCode *pErrorCode);
 
 /**
@@ -590,8 +590,8 @@ uiter_setState(UCharIterator *iter, uint32_t state, UErrorCode *pErrorCode);
  * @see UCharIterator
  * @stable ICU 2.1
  */
-U_CAPI void U_EXPORT2
-uiter_setString(UCharIterator *iter, const UChar *s, int32_t length);
+U_CAPI শূন্য U_EXPORT2
+uiter_setString(UCharIterator *iter, ধ্রুবক UChar *s, int32_t দৈর্ঘ্য);
 
 /**
  * Set up a UCharIterator to iterate over a UTF-16BE string
@@ -613,8 +613,8 @@ uiter_setString(UCharIterator *iter, const UChar *s, int32_t length);
  * @see uiter_setString
  * @stable ICU 2.6
  */
-U_CAPI void U_EXPORT2
-uiter_setUTF16BE(UCharIterator *iter, const char *s, int32_t length);
+U_CAPI শূন্য U_EXPORT2
+uiter_setUTF16BE(UCharIterator *iter, ধ্রুবক অক্ষর *s, int32_t দৈর্ঘ্য);
 
 /**
  * Set up a UCharIterator to iterate over a UTF-8 string.
@@ -649,10 +649,10 @@ uiter_setUTF16BE(UCharIterator *iter, const char *s, int32_t length);
  * @see UCharIterator
  * @stable ICU 2.6
  */
-U_CAPI void U_EXPORT2
-uiter_setUTF8(UCharIterator *iter, const char *s, int32_t length);
+U_CAPI শূন্য U_EXPORT2
+uiter_setUTF8(UCharIterator *iter, ধ্রুবক অক্ষর *s, int32_t দৈর্ঘ্য);
 
-#if U_SHOW_CPLUSPLUS_API
+#যদি U_SHOW_CPLUSPLUS_API
 
 /**
  * Set up a UCharIterator to wrap around a C++ CharacterIterator.
@@ -674,7 +674,7 @@ uiter_setUTF8(UCharIterator *iter, const char *s, int32_t length);
  * @see UCharIterator
  * @stable ICU 2.1
  */
-U_CAPI void U_EXPORT2
+U_CAPI শূন্য U_EXPORT2
 uiter_setCharacterIterator(UCharIterator *iter, icu::CharacterIterator *charIter);
 
 /**
@@ -699,8 +699,8 @@ uiter_setCharacterIterator(UCharIterator *iter, icu::CharacterIterator *charIter
  * @see UCharIterator
  * @stable ICU 2.1
  */
-U_CAPI void U_EXPORT2
-uiter_setReplaceable(UCharIterator *iter, const icu::Replaceable *rep);
+U_CAPI শূন্য U_EXPORT2
+uiter_setReplaceable(UCharIterator *iter, ধ্রুবক icu::Replaceable *rep);
 
 #endif
 

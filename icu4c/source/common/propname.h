@@ -14,11 +14,11 @@
 #ifndef PROPNAME_H
 #define PROPNAME_H
 
-#include "unicode/utypes.h"
-#include "unicode/bytestrie.h"
-#include "unicode/uchar.h"
-#include "udataswp.h"
-#include "uprops.h"
+#অন্তর্ভাব "unicode/utypes.h"
+#অন্তর্ভাব "unicode/bytestrie.h"
+#অন্তর্ভাব "unicode/uchar.h"
+#অন্তর্ভাব "udataswp.h"
+#অন্তর্ভাব "uprops.h"
 
 /*
  * This header defines the in-memory layout of the property names data
@@ -51,16 +51,16 @@ U_CDECL_BEGIN
  */
 
 U_CAPI int32_t U_EXPORT2
-uprv_compareASCIIPropertyNames(const char *name1, const char *name2);
+uprv_compareASCIIPropertyNames(ধ্রুবক অক্ষর *name1, ধ্রুবক অক্ষর *name2);
 
 U_CAPI int32_t U_EXPORT2
-uprv_compareEBCDICPropertyNames(const char *name1, const char *name2);
+uprv_compareEBCDICPropertyNames(ধ্রুবক অক্ষর *name1, ধ্রুবক অক্ষর *name2);
 
-#if U_CHARSET_FAMILY==U_ASCII_FAMILY
+#যদি U_CHARSET_FAMILY==U_ASCII_FAMILY
 #   define uprv_comparePropertyNames uprv_compareASCIIPropertyNames
-#elif U_CHARSET_FAMILY==U_EBCDIC_FAMILY
+#নতুবা_যদি U_CHARSET_FAMILY==U_EBCDIC_FAMILY
 #   define uprv_comparePropertyNames uprv_compareEBCDICPropertyNames
-#else
+#অন্যথা
 #   error U_CHARSET_FAMILY is not valid
 #endif
 
@@ -68,8 +68,8 @@ U_CDECL_END
 
 /* UDataMemory structure and signatures ------------------------------------- */
 
-#define PNAME_DATA_NAME "pnames"
-#define PNAME_DATA_TYPE "icu"
+#define PNAME_তথ্য_NAME "pnames"
+#define PNAME_তথ্য_TYPE "icu"
 
 /* Fields in UDataInfo: */
 
@@ -81,41 +81,41 @@ U_CDECL_END
 
 U_NAMESPACE_BEGIN
 
-class PropNameData {
-public:
-    enum {
+class Prop_Name_তথ্য {
+সর্বজনীন:
+    গণনা {
         // Byte offsets from the start of the data, after the generic header.
-        IX_VALUE_MAPS_OFFSET,
+        IX_মান_MAPS_OFFSET,
         IX_BYTE_TRIES_OFFSET,
         IX_NAME_GROUPS_OFFSET,
         IX_RESERVED3_OFFSET,
         IX_RESERVED4_OFFSET,
-        IX_TOTAL_SIZE,
+        IX_যোগ_আকার,
 
         // Other values.
-        IX_MAX_NAME_LENGTH,
+        IX_MAX_NAME_দৈর্ঘ্য,
         IX_RESERVED7,
-        IX_COUNT
+        IX_গুনতি
     };
 
-    static const char *getPropertyName(int32_t property, int32_t nameChoice);
-    static const char *getPropertyValueName(int32_t property, int32_t value, int32_t nameChoice);
+    স্থির ধ্রুবক অক্ষর *getPropertyName(int32_t property, int32_t nameChoice);
+    স্থির ধ্রুবক অক্ষর *get_Property_মান_Name(int32_t property, int32_t মান_2, int32_t nameChoice);
 
-    static int32_t getPropertyEnum(const char *alias);
-    static int32_t getPropertyValueEnum(int32_t property, const char *alias);
+    স্থির int32_t getPropertyEnum(ধ্রুবক অক্ষর *alias);
+    স্থির int32_t get_Property_মান_Enum(int32_t property, ধ্রুবক অক্ষর *alias);
 
-private:
-    static int32_t findProperty(int32_t property);
-    static int32_t findPropertyValueNameGroup(int32_t valueMapIndex, int32_t value);
-    static const char *getName(const char *nameGroup, int32_t nameIndex);
-    static UBool containsName(BytesTrie &trie, const char *name);
+ব্যক্তিগত:
+    স্থির int32_t findProperty(int32_t property);
+    স্থির int32_t find_Property_মান_Name_Group(int32_t মান_Map_সূচক, int32_t মান_2);
+    স্থির ধ্রুবক অক্ষর *getName(ধ্রুবক অক্ষর *nameGroup, int32_t name_সূচক);
+    স্থির UBool containsName(BytesTrie &trie, ধ্রুবক অক্ষর *name);
 
-    static int32_t getPropertyOrValueEnum(int32_t bytesTrieOffset, const char *alias);
+    স্থির int32_t get_Property_Or_মান_Enum(int32_t bytesTrieOffset, ধ্রুবক অক্ষর *alias);
 
-    static const int32_t indexes[];
-    static const int32_t valueMaps[];
-    static const uint8_t bytesTries[];
-    static const char nameGroups[];
+    স্থির ধ্রুবক int32_t indexes[];
+    স্থির ধ্রুবক int32_t মান_Maps[];
+    স্থির ধ্রুবক uint8_t bytesTries[];
+    স্থির ধ্রুবক অক্ষর nameGroups[];
 };
 
 /*

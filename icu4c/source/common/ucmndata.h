@@ -27,31 +27,31 @@
 #ifndef __UCMNDATA_H__
 #define __UCMNDATA_H__
 
-#include "unicode/udata.h"
-#include "umapfile.h"
+#অন্তর্ভাব "unicode/udata.h"
+#অন্তর্ভাব "umapfile.h"
 
 
-#define COMMON_DATA_NAME U_ICUDATA_NAME
+#define COMMON_তথ্য_NAME U_ICUDATA_NAME
 
-typedef struct  {
-    uint16_t    headerSize;
+প্রকারলেখ কাঠামো  {
+    uint16_t    header_আকার;
     uint8_t     magic1;
     uint8_t     magic2;
-} MappedData;
+} Mapped_তথ্য;
 
 
-typedef struct  {
-    MappedData  dataHeader;
+প্রকারলেখ কাঠামো  {
+    Mapped_তথ্য  তথ্য_Header_2;
     UDataInfo   info;
-} DataHeader;
+} তথ্য_Header;
 
-typedef struct {
+প্রকারলেখ কাঠামো {
     uint32_t nameOffset;
-    uint32_t dataOffset;
+    uint32_t তথ্য_Offset;
 } UDataOffsetTOCEntry;
 
-typedef struct {
-    uint32_t count;
+প্রকারলেখ কাঠামো {
+    uint32_t গুনতি;
     /**
      * Variable-length array declared with length 1 to disable bounds checkers.
      * The actual array length is in the count field.
@@ -66,7 +66,7 @@ typedef struct {
  * @internal
  */
 U_CFUNC uint16_t
-udata_getHeaderSize(const DataHeader *udh);
+udata_get_Header_আকার(ধ্রুবক তথ্য_Header *udh);
 
 /**
  * Get the UDataInfo.size from a const UDataInfo *info.
@@ -75,7 +75,7 @@ udata_getHeaderSize(const DataHeader *udh);
  * @internal
  */
 U_CFUNC uint16_t
-udata_getInfoSize(const UDataInfo *info);
+udata_get_Info_আকার(ধ্রুবক UDataInfo *info);
 
 U_CDECL_BEGIN
 /*
@@ -85,21 +85,21 @@ U_CDECL_BEGIN
  *          (I sure do wish this was written in C++, not C)
  */
 
-typedef const DataHeader *
-(U_CALLCONV * LookupFn)(const UDataMemory *pData,
-                        const char *tocEntryName,
-                        int32_t *pLength,
+প্রকারলেখ ধ্রুবক তথ্য_Header *
+(U_CALLCONV * LookupFn)(ধ্রুবক UDataMemory *p_তথ্য,
+                        ধ্রুবক অক্ষর *tocEntryName,
+                        int32_t *p_দৈর্ঘ্য,
                         UErrorCode *pErrorCode);
 
-typedef uint32_t
-(U_CALLCONV * NumEntriesFn)(const UDataMemory *pData);
+প্রকারলেখ uint32_t
+(U_CALLCONV * অঙ্ক_Entries_Fn)(ধ্রুবক UDataMemory *p_তথ্য);
 
 U_CDECL_END
 
-typedef struct {
+প্রকারলেখ কাঠামো {
     LookupFn      Lookup;
-    NumEntriesFn  NumEntries; 
-} commonDataFuncs;
+    অঙ্ক_Entries_Fn  অঙ্ক_Entries; 
+} common_তথ্য_Funcs;
 
 
 /*
@@ -112,6 +112,6 @@ typedef struct {
  *     otherwise
  *         set an errorcode.
  */
-U_CFUNC void udata_checkCommonData(UDataMemory *pData, UErrorCode *pErrorCode);
+U_CFUNC শূন্য udata_check_Common_তথ্য(UDataMemory *p_তথ্য, UErrorCode *pErrorCode);
 
 #endif

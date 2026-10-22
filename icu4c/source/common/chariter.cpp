@@ -7,7 +7,7 @@
 **********************************************************************
 */
 
-#include "unicode/chariter.h"
+#অন্তর্ভাব "unicode/chariter.h"
 
 U_NAMESPACE_BEGIN
 
@@ -15,72 +15,72 @@ ForwardCharacterIterator::~ForwardCharacterIterator() {}
 ForwardCharacterIterator::ForwardCharacterIterator()
 : UObject()
 {}
-ForwardCharacterIterator::ForwardCharacterIterator(const ForwardCharacterIterator &other)
+ForwardCharacterIterator::ForwardCharacterIterator(ধ্রুবক ForwardCharacterIterator &other)
 : UObject(other)
 {}
 
 
 CharacterIterator::CharacterIterator()
-: textLength(0), pos(0), begin(0), end(0) {
+: text_দৈর্ঘ্য(0), pos(0), begin(0), end(0) {
 }
 
 CharacterIterator::CharacterIterator(int32_t length)
-: textLength(length), pos(0), begin(0), end(length) {
-    if(textLength < 0) {
-        textLength = end = 0;
+: text_দৈর্ঘ্য(length), pos(0), begin(0), end(length) {
+    যদি(text_দৈর্ঘ্য < 0) {
+        text_দৈর্ঘ্য = end = 0;
     }
 }
 
 CharacterIterator::CharacterIterator(int32_t length, int32_t position)
-: textLength(length), pos(position), begin(0), end(length) {
-    if(textLength < 0) {
-        textLength = end = 0;
+: text_দৈর্ঘ্য(length), pos(position), begin(0), end(length) {
+    যদি(text_দৈর্ঘ্য < 0) {
+        text_দৈর্ঘ্য = end = 0;
     }
-    if(pos < 0) {
+    যদি(pos < 0) {
         pos = 0;
-    } else if(pos > end) {
+    } অন্যথা যদি(pos > end) {
         pos = end;
     }
 }
 
 CharacterIterator::CharacterIterator(int32_t length, int32_t textBegin, int32_t textEnd, int32_t position)
-: textLength(length), pos(position), begin(textBegin), end(textEnd) {
-    if(textLength < 0) {
-        textLength = 0;
+: text_দৈর্ঘ্য(length), pos(position), begin(textBegin), end(textEnd) {
+    যদি(text_দৈর্ঘ্য < 0) {
+        text_দৈর্ঘ্য = 0;
     }
-    if(begin < 0) {
+    যদি(begin < 0) {
         begin = 0;
-    } else if(begin > textLength) {
-        begin = textLength;
+    } অন্যথা যদি(begin > text_দৈর্ঘ্য) {
+        begin = text_দৈর্ঘ্য;
     }
-    if(end < begin) {
+    যদি(end < begin) {
         end = begin;
-    } else if(end > textLength) {
-        end = textLength;
+    } অন্যথা যদি(end > text_দৈর্ঘ্য) {
+        end = text_দৈর্ঘ্য;
     }
-    if(pos < begin) {
+    যদি(pos < begin) {
         pos = begin;
-    } else if(pos > end) {
+    } অন্যথা যদি(pos > end) {
         pos = end;
     }
 }
 
 CharacterIterator::~CharacterIterator() {}
 
-CharacterIterator::CharacterIterator(const CharacterIterator &that) :
+CharacterIterator::CharacterIterator(ধ্রুবক CharacterIterator &that) :
 ForwardCharacterIterator(that),
-textLength(that.textLength), pos(that.pos), begin(that.begin), end(that.end)
+text_দৈর্ঘ্য(that.text_দৈর্ঘ্য), pos(that.pos), begin(that.begin), end(that.end)
 {
 }
 
 CharacterIterator&
-CharacterIterator::operator=(const CharacterIterator& that) U_LIFETIME_BOUND {
+CharacterIterator::operator=(ধ্রুবক CharacterIterator& that) U_LIFETIME_BOUND {
     ForwardCharacterIterator::operator=(that);
-    textLength = that.textLength;
+    text_দৈর্ঘ্য = that.text_দৈর্ঘ্য;
     pos = that.pos;
     begin = that.begin;
     end = that.end;
-    return *this;
+    ফেরত *এই;
 }
 
 // implementing first[32]PostInc() directly in a subclass should be faster
@@ -88,13 +88,13 @@ CharacterIterator::operator=(const CharacterIterator& that) U_LIFETIME_BOUND {
 char16_t
 CharacterIterator::firstPostInc() {
     setToStart();
-    return nextPostInc();
+    ফেরত পরবর্তী_Post_Inc();
 }
 
 UChar32
 CharacterIterator::first32PostInc() {
     setToStart();
-    return next32PostInc();
+    ফেরত next32PostInc();
 }
 
 U_NAMESPACE_END

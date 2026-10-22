@@ -17,12 +17,12 @@
 #ifndef UNORM_H
 #define UNORM_H
 
-#include "unicode/utypes.h"
+#অন্তর্ভাব "unicode/utypes.h"
 
-#if !UCONFIG_NO_NORMALIZATION
+#যদি !UCONFIG_NO_NORMALIZATION
 
-#include "unicode/uiter.h"
-#include "unicode/unorm2.h"
+#অন্তর্ভাব "unicode/uiter.h"
+#অন্তর্ভাব "unicode/unorm2.h"
 
 /**
  * \file
@@ -137,7 +137,7 @@
  * Constants for normalization modes.
  * @deprecated ICU 56 Use unorm2.h instead.
  */
-typedef enum {
+প্রকারলেখ গণনা {
   /** No decomposition/composition. @deprecated ICU 56 Use unorm2.h instead. */
   UNORM_NONE = 1,
   /** Canonical decomposition. @deprecated ICU 56 Use unorm2.h instead. */
@@ -154,7 +154,7 @@ typedef enum {
   UNORM_FCD = 6,
 
   /** One more than the highest normalization mode constant. @deprecated ICU 56 Use unorm2.h instead. */
-  UNORM_MODE_COUNT
+  UNORM_MODE_গুনতি
 } UNormalizationMode;
 
 #endif  // U_FORCE_HIDE_DEPRECATED_API
@@ -168,7 +168,7 @@ typedef enum {
  * that is currently supported by ICU (see u_getUnicodeVersion).
  * @deprecated ICU 56 Use unorm2.h instead.
  */
-enum {
+গণনা {
     /**
      * Options bit set value to select Unicode 3.2 normalization
      * (except NormalizationCorrections).
@@ -215,9 +215,9 @@ enum {
  * @deprecated ICU 56 Use unorm2.h instead.
  */
 U_DEPRECATED int32_t U_EXPORT2
-unorm_normalize(const UChar *source, int32_t sourceLength,
+unorm_normalize(ধ্রুবক UChar *source, int32_t source_দৈর্ঘ্য,
                 UNormalizationMode mode, int32_t options,
-                UChar *result, int32_t resultLength,
+                UChar *ফলাফল, int32_t ফলাফল_দৈর্ঘ্য,
                 UErrorCode *status);
 
 /**
@@ -240,8 +240,8 @@ unorm_normalize(const UChar *source, int32_t sourceLength,
  * @see unorm_isNormalized
  * @deprecated ICU 56 Use unorm2.h instead.
  */
-U_DEPRECATED UNormalizationCheckResult U_EXPORT2
-unorm_quickCheck(const UChar *source, int32_t sourcelength,
+U_DEPRECATED UNormalization_Check_ফলাফল U_EXPORT2
+unorm_quickCheck(ধ্রুবক UChar *source, int32_t sourcelength,
                  UNormalizationMode mode,
                  UErrorCode *status);
 
@@ -261,8 +261,8 @@ unorm_quickCheck(const UChar *source, int32_t sourcelength,
  * @see unorm_isNormalized
  * @deprecated ICU 56 Use unorm2.h instead.
  */
-U_DEPRECATED UNormalizationCheckResult U_EXPORT2
-unorm_quickCheckWithOptions(const UChar *src, int32_t srcLength,
+U_DEPRECATED UNormalization_Check_ফলাফল U_EXPORT2
+unorm_quickCheckWithOptions(ধ্রুবক UChar *src, int32_t src_দৈর্ঘ্য,
                             UNormalizationMode mode, int32_t options,
                             UErrorCode *pErrorCode);
 
@@ -288,7 +288,7 @@ unorm_quickCheckWithOptions(const UChar *src, int32_t srcLength,
  * @deprecated ICU 56 Use unorm2.h instead.
  */
 U_DEPRECATED UBool U_EXPORT2
-unorm_isNormalized(const UChar *src, int32_t srcLength,
+unorm_isNormalized(ধ্রুবক UChar *src, int32_t src_দৈর্ঘ্য,
                    UNormalizationMode mode,
                    UErrorCode *pErrorCode);
 
@@ -310,7 +310,7 @@ unorm_isNormalized(const UChar *src, int32_t srcLength,
  * @deprecated ICU 56 Use unorm2.h instead.
  */
 U_DEPRECATED UBool U_EXPORT2
-unorm_isNormalizedWithOptions(const UChar *src, int32_t srcLength,
+unorm_isNormalizedWithOptions(ধ্রুবক UChar *src, int32_t src_দৈর্ঘ্য,
                               UNormalizationMode mode, int32_t options,
                               UErrorCode *pErrorCode);
 
@@ -388,7 +388,7 @@ unorm_isNormalizedWithOptions(const UChar *src, int32_t srcLength,
  * @deprecated ICU 56 Use unorm2.h instead.
  */
 U_DEPRECATED int32_t U_EXPORT2
-unorm_next(UCharIterator *src,
+unorm_পরবর্তী(UCharIterator *src,
            UChar *dest, int32_t destCapacity,
            UNormalizationMode mode, int32_t options,
            UBool doNormalize, UBool *pNeededToNormalize,
@@ -465,8 +465,8 @@ unorm_previous(UCharIterator *src,
  * @deprecated ICU 56 Use unorm2.h instead.
  */
 U_DEPRECATED int32_t U_EXPORT2
-unorm_concatenate(const UChar *left, int32_t leftLength,
-                  const UChar *right, int32_t rightLength,
+unorm_concatenate(ধ্রুবক UChar *বাম, int32_t বাম_দৈর্ঘ্য,
+                  ধ্রুবক UChar *ডান, int32_t ডান_দৈর্ঘ্য,
                   UChar *dest, int32_t destCapacity,
                   UNormalizationMode mode, int32_t options,
                   UErrorCode *pErrorCode);

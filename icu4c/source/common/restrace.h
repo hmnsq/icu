@@ -4,11 +4,11 @@
 #ifndef __RESTRACE_H__
 #define __RESTRACE_H__
 
-#include "unicode/utypes.h"
+#অন্তর্ভাব "unicode/utypes.h"
 
-#if U_ENABLE_TRACING
+#যদি U_ENABLE_TRACING
 
-struct UResourceBundle;
+কাঠামো UResourceBundle;
 
 U_NAMESPACE_BEGIN
 
@@ -26,67 +26,67 @@ class CharString;
  * in other exported types.
  */
 class U_COMMON_API ResourceTracer {
-public:
+সর্বজনীন:
     ResourceTracer() :
         fResB(nullptr),
         fParent(nullptr),
-        fKey(nullptr),
-        fIndex(-1) {}
+        f_চাবি(nullptr),
+        f_সূচক(-1) {}
 
-    ResourceTracer(const UResourceBundle* resB) :
+    ResourceTracer(ধ্রুবক UResourceBundle* resB) :
         fResB(resB),
         fParent(nullptr),
-        fKey(nullptr),
-        fIndex(-1) {}
+        f_চাবি(nullptr),
+        f_সূচক(-1) {}
 
-    ResourceTracer(const UResourceBundle* resB, const char* key) :
+    ResourceTracer(ধ্রুবক UResourceBundle* resB, ধ্রুবক অক্ষর* চাবি) :
         fResB(resB),
         fParent(nullptr),
-        fKey(key),
-        fIndex(-1) {}
+        f_চাবি(চাবি),
+        f_সূচক(-1) {}
 
-    ResourceTracer(const UResourceBundle* resB, int32_t index) :
+    ResourceTracer(ধ্রুবক UResourceBundle* resB, int32_t সূচক) :
         fResB(resB),
         fParent(nullptr),
-        fKey(nullptr),
-        fIndex(index) {}
+        f_চাবি(nullptr),
+        f_সূচক(সূচক) {}
 
-    ResourceTracer(const ResourceTracer& parent, const char* key) :
+    ResourceTracer(ধ্রুবক ResourceTracer& parent, ধ্রুবক অক্ষর* চাবি) :
         fResB(nullptr),
         fParent(&parent),
-        fKey(key),
-        fIndex(-1) {}
+        f_চাবি(চাবি),
+        f_সূচক(-1) {}
 
-    ResourceTracer(const ResourceTracer& parent, int32_t index) :
+    ResourceTracer(ধ্রুবক ResourceTracer& parent, int32_t সূচক) :
         fResB(nullptr),
         fParent(&parent),
-        fKey(nullptr),
-        fIndex(index) {}
+        f_চাবি(nullptr),
+        f_সূচক(সূচক) {}
 
     ~ResourceTracer();
 
-    void trace(const char* type) const;
-    void traceOpen() const;
+    শূন্য trace(ধ্রুবক অক্ষর* type) ধ্রুবক;
+    শূন্য traceOpen() ধ্রুবক;
 
     /**
      * Calls trace() if the resB or parent provided to the constructor was
      * non-null; otherwise, does nothing.
      */
-    void maybeTrace(const char* type) const {
-        if (fResB || fParent) {
+    শূন্য maybeTrace(ধ্রুবক অক্ষর* type) ধ্রুবক {
+        যদি (fResB || fParent) {
             trace(type);
         }
     }
 
-private:
-    const UResourceBundle* fResB;
-    const ResourceTracer* fParent;
-    const char* fKey;
-    int32_t fIndex;
+ব্যক্তিগত:
+    ধ্রুবক UResourceBundle* fResB;
+    ধ্রুবক ResourceTracer* fParent;
+    ধ্রুবক অক্ষর* f_চাবি;
+    int32_t f_সূচক;
 
-    CharString& getFilePath(CharString& output, UErrorCode& status) const;
+    CharString& getFilePath(CharString& output, UErrorCode& status) ধ্রুবক;
 
-    CharString& getResPath(CharString& output, UErrorCode& status) const;
+    CharString& getResPath(CharString& output, UErrorCode& status) ধ্রুবক;
 };
 
 /**
@@ -94,17 +94,17 @@ private:
  * with --enable-tracing.
  */
 class FileTracer {
-public:
-    static void traceOpen(const char* path, const char* type, const char* name);
+সর্বজনীন:
+    স্থির শূন্য traceOpen(ধ্রুবক অক্ষর* path, ধ্রুবক অক্ষর* type, ধ্রুবক অক্ষর* name);
 
-private:
-    static void traceOpenDataFile(const char* path, const char* type, const char* name);
-    static void traceOpenResFile(const char* path, const char* name);
+ব্যক্তিগত:
+    স্থির শূন্য trace_Open_তথ্য_File(ধ্রুবক অক্ষর* path, ধ্রুবক অক্ষর* type, ধ্রুবক অক্ষর* name);
+    স্থির শূন্য traceOpenResFile(ধ্রুবক অক্ষর* path, ধ্রুবক অক্ষর* name);
 };
 
 U_NAMESPACE_END
 
-#else // U_ENABLE_TRACING
+#অন্যথা // U_ENABLE_TRACING
 
 U_NAMESPACE_BEGIN
 
@@ -112,32 +112,32 @@ U_NAMESPACE_BEGIN
  * Default trivial implementation when --enable-tracing is not used.
  */
 class U_COMMON_API ResourceTracer {
-public:
+সর্বজনীন:
     ResourceTracer() {}
 
-    ResourceTracer(const void*) {}
+    ResourceTracer(ধ্রুবক শূন্য*) {}
 
-    ResourceTracer(const void*, const char*) {}
+    ResourceTracer(ধ্রুবক শূন্য*, ধ্রুবক অক্ষর*) {}
 
-    ResourceTracer(const void*, int32_t) {}
+    ResourceTracer(ধ্রুবক শূন্য*, int32_t) {}
 
-    ResourceTracer(const ResourceTracer&, const char*) {}
+    ResourceTracer(ধ্রুবক ResourceTracer&, ধ্রুবক অক্ষর*) {}
 
-    ResourceTracer(const ResourceTracer&, int32_t) {}
+    ResourceTracer(ধ্রুবক ResourceTracer&, int32_t) {}
 
-    void trace(const char*) const {}
+    শূন্য trace(ধ্রুবক অক্ষর*) ধ্রুবক {}
 
-    void traceOpen() const {}
+    শূন্য traceOpen() ধ্রুবক {}
 
-    void maybeTrace(const char*) const {}
+    শূন্য maybeTrace(ধ্রুবক অক্ষর*) ধ্রুবক {}
 };
 
 /**
  * Default trivial implementation when --enable-tracing is not used.
  */
 class FileTracer {
-public:
-    static void traceOpen(const char*, const char*, const char*) {}
+সর্বজনীন:
+    স্থির শূন্য traceOpen(ধ্রুবক অক্ষর*, ধ্রুবক অক্ষর*, ধ্রুবক অক্ষর*) {}
 };
 
 U_NAMESPACE_END

@@ -4,158 +4,158 @@
 // bytesinkutil.cpp
 // created: 2017sep14 Markus W. Scherer
 
-#include "unicode/utypes.h"
-#include "unicode/bytestream.h"
-#include "unicode/edits.h"
-#include "unicode/stringoptions.h"
-#include "unicode/utf8.h"
-#include "unicode/utf16.h"
-#include "bytesinkutil.h"
-#include "charstr.h"
-#include "cmemory.h"
-#include "uassert.h"
+#অন্তর্ভাব "unicode/utypes.h"
+#অন্তর্ভাব "unicode/bytestream.h"
+#অন্তর্ভাব "unicode/edits.h"
+#অন্তর্ভাব "unicode/stringoptions.h"
+#অন্তর্ভাব "unicode/utf8.h"
+#অন্তর্ভাব "unicode/utf16.h"
+#অন্তর্ভাব "bytesinkutil.h"
+#অন্তর্ভাব "charstr.h"
+#অন্তর্ভাব "cmemory.h"
+#অন্তর্ভাব "uassert.h"
 
 U_NAMESPACE_BEGIN
 
 UBool
-ByteSinkUtil::appendChange(int32_t length, const char16_t *s16, int32_t s16Length,
+ByteSinkUtil::appendChange(int32_t length, ধ্রুবক char16_t *s16, int32_t s16_দৈর্ঘ্য,
                            ByteSink &sink, Edits *edits, UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return false; }
-    char scratch[200];
-    int32_t s8Length = 0;
-    for (int32_t i = 0; i < s16Length;) {
+    যদি (U_FAILURE(errorCode)) { ফেরত মিথ্যা; }
+    অক্ষর scratch[200];
+    int32_t s8_দৈর্ঘ্য = 0;
+    জন্য (int32_t i = 0; i < s16_দৈর্ঘ্য;) {
         int32_t capacity;
-        int32_t desiredCapacity = s16Length - i;
-        if (desiredCapacity < (INT32_MAX / 3)) {
+        int32_t desiredCapacity = s16_দৈর্ঘ্য - i;
+        যদি (desiredCapacity < (INT32_MAX / 3)) {
             desiredCapacity *= 3;  // max 3 UTF-8 bytes per UTF-16 code unit
-        } else if (desiredCapacity < (INT32_MAX / 2)) {
+        } অন্যথা যদি (desiredCapacity < (INT32_MAX / 2)) {
             desiredCapacity *= 2;
-        } else {
+        } অন্যথা {
             desiredCapacity = INT32_MAX;
         }
-        char *buffer = sink.GetAppendBuffer(U8_MAX_LENGTH, desiredCapacity,
+        অক্ষর *বাফার = sink.Get_Append_বাফার(U8_MAX_দৈর্ঘ্য, desiredCapacity,
                                             scratch, UPRV_LENGTHOF(scratch), &capacity);
-        capacity -= U8_MAX_LENGTH - 1;
+        capacity -= U8_MAX_দৈর্ঘ্য - 1;
         int32_t j = 0;
-        for (; i < s16Length && j < capacity;) {
+        জন্য (; i < s16_দৈর্ঘ্য && j < capacity;) {
             UChar32 c;
-            U16_NEXT_UNSAFE(s16, i, c);
-            U8_APPEND_UNSAFE(buffer, j, c);
+            U16_পরবর্তী_UNSAFE(s16, i, c);
+            U8_APPEND_UNSAFE(বাফার, j, c);
         }
-        if (j > (INT32_MAX - s8Length)) {
-            errorCode = U_INDEX_OUTOFBOUNDS_ERROR;
-            return false;
+        যদি (j > (INT32_MAX - s8_দৈর্ঘ্য)) {
+            errorCode = U_সূচক_OUTOFBOUNDS_ERROR;
+            ফেরত মিথ্যা;
         }
-        sink.Append(buffer, j);
-        s8Length += j;
+        sink.Append(বাফার, j);
+        s8_দৈর্ঘ্য += j;
     }
-    if (edits != nullptr) {
-        edits->addReplace(length, s8Length);
+    যদি (edits != nullptr) {
+        edits->addReplace(length, s8_দৈর্ঘ্য);
     }
-    return true;
+    ফেরত সত্য;
 }
 
 UBool
-ByteSinkUtil::appendChange(const uint8_t *s, const uint8_t *limit,
-                           const char16_t *s16, int32_t s16Length,
+ByteSinkUtil::appendChange(ধ্রুবক uint8_t *s, ধ্রুবক uint8_t *limit,
+                           ধ্রুবক char16_t *s16, int32_t s16_দৈর্ঘ্য,
                            ByteSink &sink, Edits *edits, UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return false; }
-    if ((limit - s) > INT32_MAX) {
-        errorCode = U_INDEX_OUTOFBOUNDS_ERROR;
-        return false;
+    যদি (U_FAILURE(errorCode)) { ফেরত মিথ্যা; }
+    যদি ((limit - s) > INT32_MAX) {
+        errorCode = U_সূচক_OUTOFBOUNDS_ERROR;
+        ফেরত মিথ্যা;
     }
-    return appendChange(static_cast<int32_t>(limit - s), s16, s16Length, sink, edits, errorCode);
+    ফেরত appendChange(static_cast<int32_t>(limit - s), s16, s16_দৈর্ঘ্য, sink, edits, errorCode);
 }
 
-void
+শূন্য
 ByteSinkUtil::appendCodePoint(int32_t length, UChar32 c, ByteSink &sink, Edits *edits) {
-    char s8[U8_MAX_LENGTH];
-    int32_t s8Length = 0;
-    U8_APPEND_UNSAFE(s8, s8Length, c);
-    if (edits != nullptr) {
-        edits->addReplace(length, s8Length);
+    অক্ষর s8[U8_MAX_দৈর্ঘ্য];
+    int32_t s8_দৈর্ঘ্য = 0;
+    U8_APPEND_UNSAFE(s8, s8_দৈর্ঘ্য, c);
+    যদি (edits != nullptr) {
+        edits->addReplace(length, s8_দৈর্ঘ্য);
     }
-    sink.Append(s8, s8Length);
+    sink.Append(s8, s8_দৈর্ঘ্য);
 }
 
-namespace {
+নামাকাশ {
 
 // See unicode/utf8.h U8_APPEND_UNSAFE().
-inline uint8_t getTwoByteLead(UChar32 c) { return static_cast<uint8_t>((c >> 6) | 0xc0); }
-inline uint8_t getTwoByteTrail(UChar32 c) { return static_cast<uint8_t>((c & 0x3f) | 0x80); }
+অন্তঃরেখ uint8_t getTwoByteLead(UChar32 c) { ফেরত static_cast<uint8_t>((c >> 6) | 0xc0); }
+অন্তঃরেখ uint8_t getTwoByteTrail(UChar32 c) { ফেরত static_cast<uint8_t>((c & 0x3f) | 0x80); }
 
 }  // namespace
 
-void
+শূন্য
 ByteSinkUtil::appendTwoBytes(UChar32 c, ByteSink &sink) {
     U_ASSERT(0x80 <= c && c <= 0x7ff);  // 2-byte UTF-8
-    char s8[2] = {static_cast<char>(getTwoByteLead(c)), static_cast<char>(getTwoByteTrail(c))};
+    অক্ষর s8[2] = {static_cast<অক্ষর>(getTwoByteLead(c)), static_cast<অক্ষর>(getTwoByteTrail(c))};
     sink.Append(s8, 2);
 }
 
-void
-ByteSinkUtil::appendNonEmptyUnchanged(const uint8_t *s, int32_t length,
+শূন্য
+ByteSinkUtil::appendNonEmptyUnchanged(ধ্রুবক uint8_t *s, int32_t length,
                                       ByteSink &sink, uint32_t options, Edits *edits) {
     U_ASSERT(length > 0);
-    if (edits != nullptr) {
+    যদি (edits != nullptr) {
         edits->addUnchanged(length);
     }
-    if ((options & U_OMIT_UNCHANGED_TEXT) == 0) {
-        sink.Append(reinterpret_cast<const char *>(s), length);
+    যদি ((options & U_OMIT_UNCHANGED_TEXT) == 0) {
+        sink.Append(reinterpret_cast<ধ্রুবক অক্ষর *>(s), length);
     }
 }
 
 UBool
-ByteSinkUtil::appendUnchanged(const uint8_t *s, const uint8_t *limit,
+ByteSinkUtil::appendUnchanged(ধ্রুবক uint8_t *s, ধ্রুবক uint8_t *limit,
                               ByteSink &sink, uint32_t options, Edits *edits,
                               UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return false; }
-    if ((limit - s) > INT32_MAX) {
-        errorCode = U_INDEX_OUTOFBOUNDS_ERROR;
-        return false;
+    যদি (U_FAILURE(errorCode)) { ফেরত মিথ্যা; }
+    যদি ((limit - s) > INT32_MAX) {
+        errorCode = U_সূচক_OUTOFBOUNDS_ERROR;
+        ফেরত মিথ্যা;
     }
     int32_t length = static_cast<int32_t>(limit - s);
-    if (length > 0) {
+    যদি (length > 0) {
         appendNonEmptyUnchanged(s, length, sink, options, edits);
     }
-    return true;
+    ফেরত সত্য;
 }
 
 CharStringByteSink::CharStringByteSink(CharString* dest) : dest_(*dest) {
 }
 
-CharStringByteSink::~CharStringByteSink() = default;
+CharStringByteSink::~CharStringByteSink() = পূর্বনির্ধারিত;
 
-void
-CharStringByteSink::Append(const char* bytes, int32_t n) {
+শূন্য
+CharStringByteSink::Append(ধ্রুবক অক্ষর* bytes, int32_t n) {
     UErrorCode status = U_ZERO_ERROR;
     dest_.append(bytes, n, status);
     // Any errors are silently ignored.
 }
 
-char*
-CharStringByteSink::GetAppendBuffer(int32_t min_capacity,
+অক্ষর*
+CharStringByteSink::Get_Append_বাফার(int32_t min_capacity,
                                     int32_t desired_capacity_hint,
-                                    char* scratch U_LIFETIME_BOUND,
+                                    অক্ষর* scratch U_LIFETIME_BOUND,
                                     int32_t scratch_capacity,
-                                    int32_t* result_capacity) U_LIFETIME_BOUND {
-    if (min_capacity < 1 || scratch_capacity < min_capacity) {
-        *result_capacity = 0;
-        return nullptr;
+                                    int32_t* ফলাফল_capacity) U_LIFETIME_BOUND {
+    যদি (min_capacity < 1 || scratch_capacity < min_capacity) {
+        *ফলাফল_capacity = 0;
+        ফেরত nullptr;
     }
 
     UErrorCode status = U_ZERO_ERROR;
-    char* result = dest_.getAppendBuffer(
+    অক্ষর* ফলাফল = dest_.get_Append_বাফার(
             min_capacity,
             desired_capacity_hint,
-            *result_capacity,
+            *ফলাফল_capacity,
             status);
-    if (U_SUCCESS(status)) {
-        return result;
+    যদি (U_SUCCESS(status)) {
+        ফেরত ফলাফল;
     }
 
-    *result_capacity = scratch_capacity;
-    return scratch;
+    *ফলাফল_capacity = scratch_capacity;
+    ফেরত scratch;
 }
 
 U_NAMESPACE_END

@@ -19,17 +19,17 @@
 *   in its MIME-friendly form as defined in http://www.unicode.org/notes/tn6/
 */
 
-#include "unicode/utypes.h"
+#অন্তর্ভাব "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
+#যদি !UCONFIG_NO_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
 
-#include "unicode/ucnv.h"
-#include "unicode/ucnv_cb.h"
-#include "unicode/utf16.h"
-#include "putilimp.h"
-#include "ucnv_bld.h"
-#include "ucnv_cnv.h"
-#include "uassert.h"
+#অন্তর্ভাব "unicode/ucnv.h"
+#অন্তর্ভাব "unicode/ucnv_cb.h"
+#অন্তর্ভাব "unicode/utf16.h"
+#অন্তর্ভাব "putilimp.h"
+#অন্তর্ভাব "ucnv_bld.h"
+#অন্তর্ভাব "ucnv_cnv.h"
+#অন্তর্ভাব "uassert.h"
 
 /* BOCU-1 constants and macros ---------------------------------------------- */
 
@@ -53,24 +53,24 @@
  */
 
 /* initial value for "prev": middle of the ASCII range */
-#define BOCU1_ASCII_PREV        0x40
+#define BOCU1_ASCII_পূর্ব        0x40
 
 /* bounding byte values for differences */
 #define BOCU1_MIN               0x21
-#define BOCU1_MIDDLE            0x90
+#define BOCU1_মধ্য            0x90
 #define BOCU1_MAX_LEAD          0xfe
 #define BOCU1_MAX_TRAIL         0xff
 #define BOCU1_RESET             0xff
 
 /* number of lead bytes */
-#define BOCU1_COUNT             (BOCU1_MAX_LEAD-BOCU1_MIN+1)
+#define BOCU1_গুনতি             (BOCU1_MAX_LEAD-BOCU1_MIN+1)
 
 /* adjust trail byte counts for the use of some C0 control byte values */
-#define BOCU1_TRAIL_CONTROLS_COUNT  20
-#define BOCU1_TRAIL_BYTE_OFFSET     (BOCU1_MIN-BOCU1_TRAIL_CONTROLS_COUNT)
+#define BOCU1_TRAIL_CONTROLS_গুনতি  20
+#define BOCU1_TRAIL_BYTE_OFFSET     (BOCU1_MIN-BOCU1_TRAIL_CONTROLS_গুনতি)
 
 /* number of trail bytes */
-#define BOCU1_TRAIL_COUNT       ((BOCU1_MAX_TRAIL-BOCU1_MIN+1)+BOCU1_TRAIL_CONTROLS_COUNT)
+#define BOCU1_TRAIL_গুনতি       ((BOCU1_MAX_TRAIL-BOCU1_MIN+1)+BOCU1_TRAIL_CONTROLS_গুনতি)
 
 /*
  * number of positive and negative single-byte codes
@@ -88,34 +88,34 @@
 #define BOCU1_REACH_NEG_1   (-BOCU1_SINGLE)
 
 /* The difference value range for double-byters. */
-#define BOCU1_REACH_POS_2   (BOCU1_REACH_POS_1+BOCU1_LEAD_2*BOCU1_TRAIL_COUNT)
-#define BOCU1_REACH_NEG_2   (BOCU1_REACH_NEG_1-BOCU1_LEAD_2*BOCU1_TRAIL_COUNT)
+#define BOCU1_REACH_POS_2   (BOCU1_REACH_POS_1+BOCU1_LEAD_2*BOCU1_TRAIL_গুনতি)
+#define BOCU1_REACH_NEG_2   (BOCU1_REACH_NEG_1-BOCU1_LEAD_2*BOCU1_TRAIL_গুনতি)
 
 /* The difference value range for 3-byters. */
 #define BOCU1_REACH_POS_3   \
-    (BOCU1_REACH_POS_2+BOCU1_LEAD_3*BOCU1_TRAIL_COUNT*BOCU1_TRAIL_COUNT)
+    (BOCU1_REACH_POS_2+BOCU1_LEAD_3*BOCU1_TRAIL_গুনতি*BOCU1_TRAIL_গুনতি)
 
-#define BOCU1_REACH_NEG_3   (BOCU1_REACH_NEG_2-BOCU1_LEAD_3*BOCU1_TRAIL_COUNT*BOCU1_TRAIL_COUNT)
+#define BOCU1_REACH_NEG_3   (BOCU1_REACH_NEG_2-BOCU1_LEAD_3*BOCU1_TRAIL_গুনতি*BOCU1_TRAIL_গুনতি)
 
 /* The lead byte start values. */
-#define BOCU1_START_POS_2   (BOCU1_MIDDLE+BOCU1_REACH_POS_1+1)
+#define BOCU1_START_POS_2   (BOCU1_মধ্য+BOCU1_REACH_POS_1+1)
 #define BOCU1_START_POS_3   (BOCU1_START_POS_2+BOCU1_LEAD_2)
 #define BOCU1_START_POS_4   (BOCU1_START_POS_3+BOCU1_LEAD_3)
      /* ==BOCU1_MAX_LEAD */
 
-#define BOCU1_START_NEG_2   (BOCU1_MIDDLE+BOCU1_REACH_NEG_1)
+#define BOCU1_START_NEG_2   (BOCU1_মধ্য+BOCU1_REACH_NEG_1)
 #define BOCU1_START_NEG_3   (BOCU1_START_NEG_2-BOCU1_LEAD_2)
 #define BOCU1_START_NEG_4   (BOCU1_START_NEG_3-BOCU1_LEAD_3)
      /* ==BOCU1_MIN+1 */
 
 /* The length of a byte sequence, according to the lead byte (!=BOCU1_RESET). */
-#define BOCU1_LENGTH_FROM_LEAD(lead) \
+#define BOCU1_দৈর্ঘ্য_FROM_LEAD(lead) \
     ((BOCU1_START_NEG_2<=(lead) && (lead)<BOCU1_START_POS_2) ? 1 : \
      (BOCU1_START_NEG_3<=(lead) && (lead)<BOCU1_START_POS_3) ? 2 : \
      (BOCU1_START_NEG_4<=(lead) && (lead)<BOCU1_START_POS_4) ? 3 : 4)
 
 /* The length of a byte sequence, according to its packed form. */
-#define BOCU1_LENGTH_FROM_PACKED(packed) \
+#define BOCU1_দৈর্ঘ্য_FROM_PACKED(packed) \
     ((uint32_t)(packed)<0x04000000 ? (packed)>>24 : 4)
 
 /*
@@ -146,7 +146,7 @@
  * but are also used as trail bytes in difference encoding
  * (for better compression).
  */
-#define BOCU1_TRAIL_TO_BYTE(t) ((t)>=BOCU1_TRAIL_CONTROLS_COUNT ? (t)+BOCU1_TRAIL_BYTE_OFFSET : bocu1TrailToByte[t])
+#define BOCU1_TRAIL_TO_BYTE(t) ((t)>=BOCU1_TRAIL_CONTROLS_গুনতি ? (t)+BOCU1_TRAIL_BYTE_OFFSET : bocu1TrailToByte[t])
 
 /*
  * Byte value map for control codes,
@@ -154,7 +154,7 @@
  * to trail byte values 0..19 (0..0x13) as used in the difference calculation.
  * External byte values that are illegal as trail bytes are mapped to -1.
  */
-static const int8_t
+স্থির ধ্রুবক int8_t
 bocu1ByteToTrail[BOCU1_MIN]={
 /*  0     1     2     3     4     5     6     7    */
     -1,   0x00, 0x01, 0x02, 0x03, 0x04, 0x05, -1,
@@ -177,8 +177,8 @@ bocu1ByteToTrail[BOCU1_MIN]={
  * from trail byte values 0..19 (0..0x13) as used in the difference calculation
  * to external byte values 0x00..0x20.
  */
-static const int8_t
-bocu1TrailToByte[BOCU1_TRAIL_CONTROLS_COUNT]={
+স্থির ধ্রুবক int8_t
+bocu1TrailToByte[BOCU1_TRAIL_CONTROLS_গুনতি]={
 /*  0     1     2     3     4     5     6     7    */
     0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x10, 0x11,
 
@@ -205,7 +205,7 @@ bocu1TrailToByte[BOCU1_TRAIL_CONTROLS_COUNT]={
 #define NEGDIVMOD(n, d, m) UPRV_BLOCK_MACRO_BEGIN { \
     (m)=(n)%(d); \
     (n)/=(d); \
-    if((m)<0) { \
+    যদি((m)<0) { \
         --(n); \
         (m)+=(d); \
     } \
@@ -217,14 +217,14 @@ bocu1TrailToByte[BOCU1_TRAIL_CONTROLS_COUNT]={
 #define DIFF_IS_SINGLE(diff) (BOCU1_REACH_NEG_1<=(diff) && (diff)<=BOCU1_REACH_POS_1)
 
 /** Encode a diff value in a single byte. */
-#define PACK_SINGLE_DIFF(diff) (BOCU1_MIDDLE+(diff))
+#define PACK_SINGLE_DIFF(diff) (BOCU1_মধ্য+(diff))
 
 /** Is a diff value encodable in two bytes? */
 #define DIFF_IS_DOUBLE(diff) (BOCU1_REACH_NEG_2<=(diff) && (diff)<=BOCU1_REACH_POS_2)
 
 /* BOCU-1 implementation functions ------------------------------------------ */
 
-#define BOCU1_SIMPLE_PREV(c) (((c)&~0x7f)+BOCU1_ASCII_PREV)
+#define BOCU1_SIMPLE_পূর্ব(c) (((c)&~0x7f)+BOCU1_ASCII_পূর্ব)
 
 /**
  * Compute the next "previous" value for differencing
@@ -233,26 +233,26 @@ bocu1TrailToByte[BOCU1_TRAIL_CONTROLS_COUNT]={
  * @param c current code point, 0x3040..0xd7a3 (rest handled by macro below)
  * @return "previous code point" state value
  */
-static inline int32_t
-bocu1Prev(int32_t c) {
+স্থির অন্তঃরেখ int32_t
+bocu1_পূর্ব(int32_t c) {
     /* compute new prev */
-    if(/* 0x3040<=c && */ c<=0x309f) {
+    যদি(/* 0x3040<=c && */ c<=0x309f) {
         /* Hiragana is not 128-aligned */
-        return 0x3070;
-    } else if(0x4e00<=c && c<=0x9fa5) {
+        ফেরত 0x3070;
+    } অন্যথা যদি(0x4e00<=c && c<=0x9fa5) {
         /* CJK Unihan */
-        return 0x4e00-BOCU1_REACH_NEG_2;
-    } else if(0xac00<=c /* && c<=0xd7a3 */) {
+        ফেরত 0x4e00-BOCU1_REACH_NEG_2;
+    } অন্যথা যদি(0xac00<=c /* && c<=0xd7a3 */) {
         /* Korean Hangul */
-        return (0xd7a3+0xac00)/2;
-    } else {
+        ফেরত (0xd7a3+0xac00)/2;
+    } অন্যথা {
         /* mostly small scripts */
-        return BOCU1_SIMPLE_PREV(c);
+        ফেরত BOCU1_SIMPLE_পূর্ব(c);
     }
 }
 
 /** Fast version of bocu1Prev() for most scripts. */
-#define BOCU1_PREV(c) ((c)<0x3040 || (c)>0xd7a3 ? BOCU1_SIMPLE_PREV(c) : bocu1Prev(c))
+#define BOCU1_পূর্ব(c) ((c)<0x3040 || (c)>0xd7a3 ? BOCU1_SIMPLE_পূর্ব(c) : bocu1_পূর্ব(c))
 
 /*
  * The BOCU-1 converter uses the standard setup code in ucnv.c/ucnv_bld.c.
@@ -283,123 +283,123 @@ bocu1Prev(int32_t c) {
  *      0x03xxyyzz for 3-byte sequence xx yy zz
  *      0xwwxxyyzz for 4-byte sequence ww xx yy zz (ww>0x03)
  */
-static int32_t
+স্থির int32_t
 packDiff(int32_t diff) {
-    int32_t result, m;
+    int32_t ফলাফল, m;
 
     U_ASSERT(!DIFF_IS_SINGLE(diff)); /* assume we won't be called where diff==BOCU1_REACH_NEG_1=-64 */
-    if(diff>=BOCU1_REACH_NEG_1) {
+    যদি(diff>=BOCU1_REACH_NEG_1) {
         /* mostly positive differences, and single-byte negative ones */
-#if 0   /* single-byte case handled in macros, see below */
-        if(diff<=BOCU1_REACH_POS_1) {
+#যদি 0   /* single-byte case handled in macros, see below */
+        যদি(diff<=BOCU1_REACH_POS_1) {
             /* single byte */
-            return 0x01000000|(BOCU1_MIDDLE+diff);
-        } else
+            ফেরত 0x01000000|(BOCU1_মধ্য+diff);
+        } অন্যথা
 #endif
-        if(diff<=BOCU1_REACH_POS_2) {
+        যদি(diff<=BOCU1_REACH_POS_2) {
             /* two bytes */
             diff-=BOCU1_REACH_POS_1+1;
-            result=0x02000000;
+            ফলাফল=0x02000000;
 
-            m=diff%BOCU1_TRAIL_COUNT;
-            diff/=BOCU1_TRAIL_COUNT;
-            result|=BOCU1_TRAIL_TO_BYTE(m);
+            m=diff%BOCU1_TRAIL_গুনতি;
+            diff/=BOCU1_TRAIL_গুনতি;
+            ফলাফল|=BOCU1_TRAIL_TO_BYTE(m);
 
-            result|=(BOCU1_START_POS_2+diff)<<8;
-        } else if(diff<=BOCU1_REACH_POS_3) {
+            ফলাফল|=(BOCU1_START_POS_2+diff)<<8;
+        } অন্যথা যদি(diff<=BOCU1_REACH_POS_3) {
             /* three bytes */
             diff-=BOCU1_REACH_POS_2+1;
-            result=0x03000000;
+            ফলাফল=0x03000000;
 
-            m=diff%BOCU1_TRAIL_COUNT;
-            diff/=BOCU1_TRAIL_COUNT;
-            result|=BOCU1_TRAIL_TO_BYTE(m);
+            m=diff%BOCU1_TRAIL_গুনতি;
+            diff/=BOCU1_TRAIL_গুনতি;
+            ফলাফল|=BOCU1_TRAIL_TO_BYTE(m);
 
-            m=diff%BOCU1_TRAIL_COUNT;
-            diff/=BOCU1_TRAIL_COUNT;
-            result|=BOCU1_TRAIL_TO_BYTE(m)<<8;
+            m=diff%BOCU1_TRAIL_গুনতি;
+            diff/=BOCU1_TRAIL_গুনতি;
+            ফলাফল|=BOCU1_TRAIL_TO_BYTE(m)<<8;
 
-            result|=(BOCU1_START_POS_3+diff)<<16;
-        } else {
+            ফলাফল|=(BOCU1_START_POS_3+diff)<<16;
+        } অন্যথা {
             /* four bytes */
             diff-=BOCU1_REACH_POS_3+1;
 
-            m=diff%BOCU1_TRAIL_COUNT;
-            diff/=BOCU1_TRAIL_COUNT;
-            result=BOCU1_TRAIL_TO_BYTE(m);
+            m=diff%BOCU1_TRAIL_গুনতি;
+            diff/=BOCU1_TRAIL_গুনতি;
+            ফলাফল=BOCU1_TRAIL_TO_BYTE(m);
 
-            m=diff%BOCU1_TRAIL_COUNT;
-            diff/=BOCU1_TRAIL_COUNT;
-            result|=BOCU1_TRAIL_TO_BYTE(m)<<8;
+            m=diff%BOCU1_TRAIL_গুনতি;
+            diff/=BOCU1_TRAIL_গুনতি;
+            ফলাফল|=BOCU1_TRAIL_TO_BYTE(m)<<8;
 
             /*
              * We know that / and % would deliver quotient 0 and rest=diff.
              * Avoid division and modulo for performance.
              */
-            result|=BOCU1_TRAIL_TO_BYTE(diff)<<16;
+            ফলাফল|=BOCU1_TRAIL_TO_BYTE(diff)<<16;
 
-            result |= static_cast<uint32_t>(BOCU1_START_POS_4) << 24;
+            ফলাফল |= static_cast<uint32_t>(BOCU1_START_POS_4) << 24;
         }
-    } else {
+    } অন্যথা {
         /* two- to four-byte negative differences */
-        if(diff>=BOCU1_REACH_NEG_2) {
+        যদি(diff>=BOCU1_REACH_NEG_2) {
             /* two bytes */
             diff-=BOCU1_REACH_NEG_1;
-            result=0x02000000;
+            ফলাফল=0x02000000;
 
-            NEGDIVMOD(diff, BOCU1_TRAIL_COUNT, m);
-            result|=BOCU1_TRAIL_TO_BYTE(m);
+            NEGDIVMOD(diff, BOCU1_TRAIL_গুনতি, m);
+            ফলাফল|=BOCU1_TRAIL_TO_BYTE(m);
 
-            result|=(BOCU1_START_NEG_2+diff)<<8;
-        } else if(diff>=BOCU1_REACH_NEG_3) {
+            ফলাফল|=(BOCU1_START_NEG_2+diff)<<8;
+        } অন্যথা যদি(diff>=BOCU1_REACH_NEG_3) {
             /* three bytes */
             diff-=BOCU1_REACH_NEG_2;
-            result=0x03000000;
+            ফলাফল=0x03000000;
 
-            NEGDIVMOD(diff, BOCU1_TRAIL_COUNT, m);
-            result|=BOCU1_TRAIL_TO_BYTE(m);
+            NEGDIVMOD(diff, BOCU1_TRAIL_গুনতি, m);
+            ফলাফল|=BOCU1_TRAIL_TO_BYTE(m);
 
-            NEGDIVMOD(diff, BOCU1_TRAIL_COUNT, m);
-            result|=BOCU1_TRAIL_TO_BYTE(m)<<8;
+            NEGDIVMOD(diff, BOCU1_TRAIL_গুনতি, m);
+            ফলাফল|=BOCU1_TRAIL_TO_BYTE(m)<<8;
 
-            result|=(BOCU1_START_NEG_3+diff)<<16;
-        } else {
+            ফলাফল|=(BOCU1_START_NEG_3+diff)<<16;
+        } অন্যথা {
             /* four bytes */
             diff-=BOCU1_REACH_NEG_3;
 
-            NEGDIVMOD(diff, BOCU1_TRAIL_COUNT, m);
-            result=BOCU1_TRAIL_TO_BYTE(m);
+            NEGDIVMOD(diff, BOCU1_TRAIL_গুনতি, m);
+            ফলাফল=BOCU1_TRAIL_TO_BYTE(m);
 
-            NEGDIVMOD(diff, BOCU1_TRAIL_COUNT, m);
-            result|=BOCU1_TRAIL_TO_BYTE(m)<<8;
+            NEGDIVMOD(diff, BOCU1_TRAIL_গুনতি, m);
+            ফলাফল|=BOCU1_TRAIL_TO_BYTE(m)<<8;
 
             /*
              * We know that NEGDIVMOD would deliver
              * quotient -1 and rest=diff+BOCU1_TRAIL_COUNT.
              * Avoid division and modulo for performance.
              */
-            m=diff+BOCU1_TRAIL_COUNT;
-            result|=BOCU1_TRAIL_TO_BYTE(m)<<16;
+            m=diff+BOCU1_TRAIL_গুনতি;
+            ফলাফল|=BOCU1_TRAIL_TO_BYTE(m)<<16;
 
-            result|=BOCU1_MIN<<24;
+            ফলাফল|=BOCU1_MIN<<24;
         }
     }
-    return result;
+    ফেরত ফলাফল;
 }
 
 
-static void U_CALLCONV
+স্থির শূন্য U_CALLCONV
 _Bocu1FromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
                              UErrorCode *pErrorCode) {
     UConverter *cnv;
-    const char16_t *source, *sourceLimit;
+    ধ্রুবক char16_t *source, *sourceLimit;
     uint8_t *target;
     int32_t targetCapacity;
     int32_t *offsets;
 
-    int32_t prev, c, diff;
+    int32_t পূর্ব, c, diff;
 
-    int32_t sourceIndex, nextSourceIndex;
+    int32_t source_সূচক, পরবর্তী_Source_সূচক;
 
     /* set up the local pointers */
     cnv=pArgs->converter;
@@ -411,90 +411,90 @@ _Bocu1FromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
 
     /* get the converter state from UConverter */
     c=cnv->fromUChar32;
-    prev = static_cast<int32_t>(cnv->fromUnicodeStatus);
-    if(prev==0) {
-        prev=BOCU1_ASCII_PREV;
+    পূর্ব = static_cast<int32_t>(cnv->fromUnicodeStatus);
+    যদি(পূর্ব==0) {
+        পূর্ব=BOCU1_ASCII_পূর্ব;
     }
 
     /* sourceIndex=-1 if the current character began in the previous buffer */
-    sourceIndex= c==0 ? 0 : -1;
-    nextSourceIndex=0;
+    source_সূচক= c==0 ? 0 : -1;
+    পরবর্তী_Source_সূচক=0;
 
     /* conversion loop */
-    if(c!=0 && targetCapacity>0) {
-        goto getTrail;
+    যদি(c!=0 && targetCapacity>0) {
+        যাও getTrail;
     }
 
 fastSingle:
     /* fast loop for single-byte differences */
     /* use only one loop counter variable, targetCapacity, not also source */
     diff = static_cast<int32_t>(sourceLimit - source);
-    if(targetCapacity>diff) {
+    যদি(targetCapacity>diff) {
         targetCapacity=diff;
     }
-    while(targetCapacity>0 && (c=*source)<0x3000) {
-        if(c<=0x20) {
-            if(c!=0x20) {
-                prev=BOCU1_ASCII_PREV;
+    যখন(targetCapacity>0 && (c=*source)<0x3000) {
+        যদি(c<=0x20) {
+            যদি(c!=0x20) {
+                পূর্ব=BOCU1_ASCII_পূর্ব;
             }
             *target++ = static_cast<uint8_t>(c);
-            *offsets++=nextSourceIndex++;
+            *offsets++=পরবর্তী_Source_সূচক++;
             ++source;
             --targetCapacity;
-        } else {
-            diff=c-prev;
-            if(DIFF_IS_SINGLE(diff)) {
-                prev=BOCU1_SIMPLE_PREV(c);
+        } অন্যথা {
+            diff=c-পূর্ব;
+            যদি(DIFF_IS_SINGLE(diff)) {
+                পূর্ব=BOCU1_SIMPLE_পূর্ব(c);
                 *target++ = static_cast<uint8_t>(PACK_SINGLE_DIFF(diff));
-                *offsets++=nextSourceIndex++;
+                *offsets++=পরবর্তী_Source_সূচক++;
                 ++source;
                 --targetCapacity;
-            } else {
-                break;
+            } অন্যথা {
+                বিরতি;
             }
         }
     }
     /* restore real values */
-    targetCapacity = static_cast<int32_t>(reinterpret_cast<const uint8_t*>(pArgs->targetLimit) - target);
-    sourceIndex=nextSourceIndex; /* wrong if offsets==nullptr but does not matter */
+    targetCapacity = static_cast<int32_t>(reinterpret_cast<ধ্রুবক uint8_t*>(pArgs->targetLimit) - target);
+    source_সূচক=পরবর্তী_Source_সূচক; /* wrong if offsets==nullptr but does not matter */
 
     /* regular loop for all cases */
-    while(source<sourceLimit) {
-        if(targetCapacity>0) {
+    যখন(source<sourceLimit) {
+        যদি(targetCapacity>0) {
             c=*source++;
-            ++nextSourceIndex;
+            ++পরবর্তী_Source_সূচক;
 
-            if(c<=0x20) {
+            যদি(c<=0x20) {
                 /*
                  * ISO C0 control & space:
                  * Encode directly for MIME compatibility,
                  * and reset state except for space, to not disrupt compression.
                  */
-                if(c!=0x20) {
-                    prev=BOCU1_ASCII_PREV;
+                যদি(c!=0x20) {
+                    পূর্ব=BOCU1_ASCII_পূর্ব;
                 }
                 *target++ = static_cast<uint8_t>(c);
-                *offsets++=sourceIndex;
+                *offsets++=source_সূচক;
                 --targetCapacity;
 
-                sourceIndex=nextSourceIndex;
-                continue;
+                source_সূচক=পরবর্তী_Source_সূচক;
+                চালু;
             }
 
-            if(U16_IS_LEAD(c)) {
+            যদি(U16_IS_LEAD(c)) {
 getTrail:
-                if(source<sourceLimit) {
+                যদি(source<sourceLimit) {
                     /* test the following code unit */
                     char16_t trail=*source;
-                    if(U16_IS_TRAIL(trail)) {
+                    যদি(U16_IS_TRAIL(trail)) {
                         ++source;
-                        ++nextSourceIndex;
+                        ++পরবর্তী_Source_সূচক;
                         c=U16_GET_SUPPLEMENTARY(c, trail);
                     }
-                } else {
+                } অন্যথা {
                     /* no more input */
                     c=-c; /* negative lead surrogate as "incomplete" indicator to avoid c=0 everywhere else */
-                    break;
+                    বিরতি;
                 }
             }
 
@@ -507,70 +507,70 @@ getTrail:
              * in the middle of the Unihan and Hangul blocks
              * to statistically minimize the following difference
              */
-            diff=c-prev;
-            prev=BOCU1_PREV(c);
-            if(DIFF_IS_SINGLE(diff)) {
+            diff=c-পূর্ব;
+            পূর্ব=BOCU1_পূর্ব(c);
+            যদি(DIFF_IS_SINGLE(diff)) {
                 *target++ = static_cast<uint8_t>(PACK_SINGLE_DIFF(diff));
-                *offsets++=sourceIndex;
+                *offsets++=source_সূচক;
                 --targetCapacity;
-                sourceIndex=nextSourceIndex;
-                if(c<0x3000) {
-                    goto fastSingle;
+                source_সূচক=পরবর্তী_Source_সূচক;
+                যদি(c<0x3000) {
+                    যাও fastSingle;
                 }
-            } else if(DIFF_IS_DOUBLE(diff) && 2<=targetCapacity) {
+            } অন্যথা যদি(DIFF_IS_DOUBLE(diff) && 2<=targetCapacity) {
                 /* optimize 2-byte case */
                 int32_t m;
 
-                if(diff>=0) {
+                যদি(diff>=0) {
                     diff-=BOCU1_REACH_POS_1+1;
-                    m=diff%BOCU1_TRAIL_COUNT;
-                    diff/=BOCU1_TRAIL_COUNT;
+                    m=diff%BOCU1_TRAIL_গুনতি;
+                    diff/=BOCU1_TRAIL_গুনতি;
                     diff+=BOCU1_START_POS_2;
-                } else {
+                } অন্যথা {
                     diff-=BOCU1_REACH_NEG_1;
-                    NEGDIVMOD(diff, BOCU1_TRAIL_COUNT, m);
+                    NEGDIVMOD(diff, BOCU1_TRAIL_গুনতি, m);
                     diff+=BOCU1_START_NEG_2;
                 }
                 *target++ = static_cast<uint8_t>(diff);
                 *target++ = static_cast<uint8_t>(BOCU1_TRAIL_TO_BYTE(m));
-                *offsets++=sourceIndex;
-                *offsets++=sourceIndex;
+                *offsets++=source_সূচক;
+                *offsets++=source_সূচক;
                 targetCapacity-=2;
-                sourceIndex=nextSourceIndex;
-            } else {
+                source_সূচক=পরবর্তী_Source_সূচক;
+            } অন্যথা {
                 int32_t length; /* will be 2..4 */
 
                 diff=packDiff(diff);
-                length=BOCU1_LENGTH_FROM_PACKED(diff);
+                length=BOCU1_দৈর্ঘ্য_FROM_PACKED(diff);
 
                 /* write the output character bytes from diff and length */
                 /* from the first if in the loop we know that targetCapacity>0 */
-                if(length<=targetCapacity) {
-                    switch(length) {
+                যদি(length<=targetCapacity) {
+                    নির্বাচন(length) {
                         /* each branch falls through to the next one */
-                    case 4:
+                    ক্ষেত্র 4:
                         *target++ = static_cast<uint8_t>(diff >> 24);
-                        *offsets++=sourceIndex;
+                        *offsets++=source_সূচক;
                         U_FALLTHROUGH;
-                    case 3:
+                    ক্ষেত্র 3:
                         *target++ = static_cast<uint8_t>(diff >> 16);
-                        *offsets++=sourceIndex;
+                        *offsets++=source_সূচক;
                         U_FALLTHROUGH;
-                    case 2:
+                    ক্ষেত্র 2:
                         *target++ = static_cast<uint8_t>(diff >> 8);
-                        *offsets++=sourceIndex;
+                        *offsets++=source_সূচক;
                     /* case 1: handled above */
                         *target++ = static_cast<uint8_t>(diff);
-                        *offsets++=sourceIndex;
+                        *offsets++=source_সূচক;
                         U_FALLTHROUGH;
-                    default:
+                    পূর্বনির্ধারিত:
                         /* will never occur */
-                        break;
+                        বিরতি;
                     }
                     targetCapacity-=length;
-                    sourceIndex=nextSourceIndex;
-                } else {
-                    uint8_t *charErrorBuffer;
+                    source_সূচক=পরবর্তী_Source_সূচক;
+                } অন্যথা {
+                    uint8_t *char_Error_বাফার;
 
                     /*
                      * We actually do this backwards here:
@@ -580,65 +580,65 @@ getTrail:
                      */
                     /* we know that 1<=targetCapacity<length<=4 */
                     length-=targetCapacity;
-                    charErrorBuffer=(uint8_t *)cnv->charErrorBuffer;
-                    switch(length) {
+                    char_Error_বাফার=(uint8_t *)cnv->char_Error_বাফার;
+                    নির্বাচন(length) {
                         /* each branch falls through to the next one */
-                    case 3:
-                        *charErrorBuffer++ = static_cast<uint8_t>(diff >> 16);
+                    ক্ষেত্র 3:
+                        *char_Error_বাফার++ = static_cast<uint8_t>(diff >> 16);
                         U_FALLTHROUGH;
-                    case 2:
-                        *charErrorBuffer++ = static_cast<uint8_t>(diff >> 8);
+                    ক্ষেত্র 2:
+                        *char_Error_বাফার++ = static_cast<uint8_t>(diff >> 8);
                         U_FALLTHROUGH;
-                    case 1:
-                        *charErrorBuffer = static_cast<uint8_t>(diff);
+                    ক্ষেত্র 1:
+                        *char_Error_বাফার = static_cast<uint8_t>(diff);
                         U_FALLTHROUGH;
-                    default:
+                    পূর্বনির্ধারিত:
                         /* will never occur */
-                        break;
+                        বিরতি;
                     }
-                    cnv->charErrorBufferLength = static_cast<int8_t>(length);
+                    cnv->char_Error_বাফার_দৈর্ঘ্য = static_cast<int8_t>(length);
 
                     /* now output what fits into the regular target */
                     diff>>=8*length; /* length was reduced by targetCapacity */
-                    switch(targetCapacity) {
+                    নির্বাচন(targetCapacity) {
                         /* each branch falls through to the next one */
-                    case 3:
+                    ক্ষেত্র 3:
                         *target++ = static_cast<uint8_t>(diff >> 16);
-                        *offsets++=sourceIndex;
+                        *offsets++=source_সূচক;
                         U_FALLTHROUGH;
-                    case 2:
+                    ক্ষেত্র 2:
                         *target++ = static_cast<uint8_t>(diff >> 8);
-                        *offsets++=sourceIndex;
+                        *offsets++=source_সূচক;
                         U_FALLTHROUGH;
-                    case 1:
+                    ক্ষেত্র 1:
                         *target++ = static_cast<uint8_t>(diff);
-                        *offsets++=sourceIndex;
+                        *offsets++=source_সূচক;
                         U_FALLTHROUGH;
-                    default:
+                    পূর্বনির্ধারিত:
                         /* will never occur */
-                        break;
+                        বিরতি;
                     }
 
                     /* target overflow */
                     targetCapacity=0;
-                    *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                    break;
+                    *pErrorCode=U_বাফার_OVERFLOW_ERROR;
+                    বিরতি;
                 }
             }
-        } else {
+        } অন্যথা {
             /* target is full */
-            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-            break;
+            *pErrorCode=U_বাফার_OVERFLOW_ERROR;
+            বিরতি;
         }
     }
 
     /* set the converter state back into UConverter */
     cnv->fromUChar32= c<0 ? -c : 0;
-    cnv->fromUnicodeStatus = static_cast<uint32_t>(prev);
+    cnv->fromUnicodeStatus = static_cast<uint32_t>(পূর্ব);
 
     /* write back the updated pointers */
     pArgs->source=source;
-    pArgs->target = reinterpret_cast<char*>(target);
+    pArgs->target = reinterpret_cast<অক্ষর*>(target);
     pArgs->offsets=offsets;
 }
 
@@ -649,15 +649,15 @@ getTrail:
  * re-copy the original function and remove the variables
  * offsets, sourceIndex, and nextSourceIndex.
  */
-static void U_CALLCONV
+স্থির শূন্য U_CALLCONV
 _Bocu1FromUnicode(UConverterFromUnicodeArgs *pArgs,
                   UErrorCode *pErrorCode) {
     UConverter *cnv;
-    const char16_t *source, *sourceLimit;
+    ধ্রুবক char16_t *source, *sourceLimit;
     uint8_t *target;
     int32_t targetCapacity;
 
-    int32_t prev, c, diff;
+    int32_t পূর্ব, c, diff;
 
     /* set up the local pointers */
     cnv=pArgs->converter;
@@ -668,76 +668,76 @@ _Bocu1FromUnicode(UConverterFromUnicodeArgs *pArgs,
 
     /* get the converter state from UConverter */
     c=cnv->fromUChar32;
-    prev = static_cast<int32_t>(cnv->fromUnicodeStatus);
-    if(prev==0) {
-        prev=BOCU1_ASCII_PREV;
+    পূর্ব = static_cast<int32_t>(cnv->fromUnicodeStatus);
+    যদি(পূর্ব==0) {
+        পূর্ব=BOCU1_ASCII_পূর্ব;
     }
 
     /* conversion loop */
-    if(c!=0 && targetCapacity>0) {
-        goto getTrail;
+    যদি(c!=0 && targetCapacity>0) {
+        যাও getTrail;
     }
 
 fastSingle:
     /* fast loop for single-byte differences */
     /* use only one loop counter variable, targetCapacity, not also source */
     diff = static_cast<int32_t>(sourceLimit - source);
-    if(targetCapacity>diff) {
+    যদি(targetCapacity>diff) {
         targetCapacity=diff;
     }
-    while(targetCapacity>0 && (c=*source)<0x3000) {
-        if(c<=0x20) {
-            if(c!=0x20) {
-                prev=BOCU1_ASCII_PREV;
+    যখন(targetCapacity>0 && (c=*source)<0x3000) {
+        যদি(c<=0x20) {
+            যদি(c!=0x20) {
+                পূর্ব=BOCU1_ASCII_পূর্ব;
             }
             *target++ = static_cast<uint8_t>(c);
-        } else {
-            diff=c-prev;
-            if(DIFF_IS_SINGLE(diff)) {
-                prev=BOCU1_SIMPLE_PREV(c);
+        } অন্যথা {
+            diff=c-পূর্ব;
+            যদি(DIFF_IS_SINGLE(diff)) {
+                পূর্ব=BOCU1_SIMPLE_পূর্ব(c);
                 *target++ = static_cast<uint8_t>(PACK_SINGLE_DIFF(diff));
-            } else {
-                break;
+            } অন্যথা {
+                বিরতি;
             }
         }
         ++source;
         --targetCapacity;
     }
     /* restore real values */
-    targetCapacity = static_cast<int32_t>(reinterpret_cast<const uint8_t*>(pArgs->targetLimit) - target);
+    targetCapacity = static_cast<int32_t>(reinterpret_cast<ধ্রুবক uint8_t*>(pArgs->targetLimit) - target);
 
     /* regular loop for all cases */
-    while(source<sourceLimit) {
-        if(targetCapacity>0) {
+    যখন(source<sourceLimit) {
+        যদি(targetCapacity>0) {
             c=*source++;
 
-            if(c<=0x20) {
+            যদি(c<=0x20) {
                 /*
                  * ISO C0 control & space:
                  * Encode directly for MIME compatibility,
                  * and reset state except for space, to not disrupt compression.
                  */
-                if(c!=0x20) {
-                    prev=BOCU1_ASCII_PREV;
+                যদি(c!=0x20) {
+                    পূর্ব=BOCU1_ASCII_পূর্ব;
                 }
                 *target++ = static_cast<uint8_t>(c);
                 --targetCapacity;
-                continue;
+                চালু;
             }
 
-            if(U16_IS_LEAD(c)) {
+            যদি(U16_IS_LEAD(c)) {
 getTrail:
-                if(source<sourceLimit) {
+                যদি(source<sourceLimit) {
                     /* test the following code unit */
                     char16_t trail=*source;
-                    if(U16_IS_TRAIL(trail)) {
+                    যদি(U16_IS_TRAIL(trail)) {
                         ++source;
                         c=U16_GET_SUPPLEMENTARY(c, trail);
                     }
-                } else {
+                } অন্যথা {
                     /* no more input */
                     c=-c; /* negative lead surrogate as "incomplete" indicator to avoid c=0 everywhere else */
-                    break;
+                    বিরতি;
                 }
             }
 
@@ -750,59 +750,59 @@ getTrail:
              * in the middle of the Unihan and Hangul blocks
              * to statistically minimize the following difference
              */
-            diff=c-prev;
-            prev=BOCU1_PREV(c);
-            if(DIFF_IS_SINGLE(diff)) {
+            diff=c-পূর্ব;
+            পূর্ব=BOCU1_পূর্ব(c);
+            যদি(DIFF_IS_SINGLE(diff)) {
                 *target++ = static_cast<uint8_t>(PACK_SINGLE_DIFF(diff));
                 --targetCapacity;
-                if(c<0x3000) {
-                    goto fastSingle;
+                যদি(c<0x3000) {
+                    যাও fastSingle;
                 }
-            } else if(DIFF_IS_DOUBLE(diff) && 2<=targetCapacity) {
+            } অন্যথা যদি(DIFF_IS_DOUBLE(diff) && 2<=targetCapacity) {
                 /* optimize 2-byte case */
                 int32_t m;
 
-                if(diff>=0) {
+                যদি(diff>=0) {
                     diff-=BOCU1_REACH_POS_1+1;
-                    m=diff%BOCU1_TRAIL_COUNT;
-                    diff/=BOCU1_TRAIL_COUNT;
+                    m=diff%BOCU1_TRAIL_গুনতি;
+                    diff/=BOCU1_TRAIL_গুনতি;
                     diff+=BOCU1_START_POS_2;
-                } else {
+                } অন্যথা {
                     diff-=BOCU1_REACH_NEG_1;
-                    NEGDIVMOD(diff, BOCU1_TRAIL_COUNT, m);
+                    NEGDIVMOD(diff, BOCU1_TRAIL_গুনতি, m);
                     diff+=BOCU1_START_NEG_2;
                 }
                 *target++ = static_cast<uint8_t>(diff);
                 *target++ = static_cast<uint8_t>(BOCU1_TRAIL_TO_BYTE(m));
                 targetCapacity-=2;
-            } else {
+            } অন্যথা {
                 int32_t length; /* will be 2..4 */
 
                 diff=packDiff(diff);
-                length=BOCU1_LENGTH_FROM_PACKED(diff);
+                length=BOCU1_দৈর্ঘ্য_FROM_PACKED(diff);
 
                 /* write the output character bytes from diff and length */
                 /* from the first if in the loop we know that targetCapacity>0 */
-                if(length<=targetCapacity) {
-                    switch(length) {
+                যদি(length<=targetCapacity) {
+                    নির্বাচন(length) {
                         /* each branch falls through to the next one */
-                    case 4:
+                    ক্ষেত্র 4:
                         *target++ = static_cast<uint8_t>(diff >> 24);
                         U_FALLTHROUGH;
-                    case 3:
+                    ক্ষেত্র 3:
                         *target++ = static_cast<uint8_t>(diff >> 16);
                     /* case 2: handled above */
                         *target++ = static_cast<uint8_t>(diff >> 8);
                     /* case 1: handled above */
                         *target++ = static_cast<uint8_t>(diff);
                         U_FALLTHROUGH;
-                    default:
+                    পূর্বনির্ধারিত:
                         /* will never occur */
-                        break;
+                        বিরতি;
                     }
                     targetCapacity-=length;
-                } else {
-                    uint8_t *charErrorBuffer;
+                } অন্যথা {
+                    uint8_t *char_Error_বাফার;
 
                     /*
                      * We actually do this backwards here:
@@ -812,62 +812,62 @@ getTrail:
                      */
                     /* we know that 1<=targetCapacity<length<=4 */
                     length-=targetCapacity;
-                    charErrorBuffer=(uint8_t *)cnv->charErrorBuffer;
-                    switch(length) {
+                    char_Error_বাফার=(uint8_t *)cnv->char_Error_বাফার;
+                    নির্বাচন(length) {
                         /* each branch falls through to the next one */
-                    case 3:
-                        *charErrorBuffer++ = static_cast<uint8_t>(diff >> 16);
+                    ক্ষেত্র 3:
+                        *char_Error_বাফার++ = static_cast<uint8_t>(diff >> 16);
                         U_FALLTHROUGH;
-                    case 2:
-                        *charErrorBuffer++ = static_cast<uint8_t>(diff >> 8);
+                    ক্ষেত্র 2:
+                        *char_Error_বাফার++ = static_cast<uint8_t>(diff >> 8);
                         U_FALLTHROUGH;
-                    case 1:
-                        *charErrorBuffer = static_cast<uint8_t>(diff);
+                    ক্ষেত্র 1:
+                        *char_Error_বাফার = static_cast<uint8_t>(diff);
                         U_FALLTHROUGH;
-                    default:
+                    পূর্বনির্ধারিত:
                         /* will never occur */
-                        break;
+                        বিরতি;
                     }
-                    cnv->charErrorBufferLength = static_cast<int8_t>(length);
+                    cnv->char_Error_বাফার_দৈর্ঘ্য = static_cast<int8_t>(length);
 
                     /* now output what fits into the regular target */
                     diff>>=8*length; /* length was reduced by targetCapacity */
-                    switch(targetCapacity) {
+                    নির্বাচন(targetCapacity) {
                         /* each branch falls through to the next one */
-                    case 3:
+                    ক্ষেত্র 3:
                         *target++ = static_cast<uint8_t>(diff >> 16);
                         U_FALLTHROUGH;
-                    case 2:
+                    ক্ষেত্র 2:
                         *target++ = static_cast<uint8_t>(diff >> 8);
                         U_FALLTHROUGH;
-                    case 1:
+                    ক্ষেত্র 1:
                         *target++ = static_cast<uint8_t>(diff);
                         U_FALLTHROUGH;
-                    default:
+                    পূর্বনির্ধারিত:
                         /* will never occur */
-                        break;
+                        বিরতি;
                     }
 
                     /* target overflow */
                     targetCapacity=0;
-                    *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                    break;
+                    *pErrorCode=U_বাফার_OVERFLOW_ERROR;
+                    বিরতি;
                 }
             }
-        } else {
+        } অন্যথা {
             /* target is full */
-            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-            break;
+            *pErrorCode=U_বাফার_OVERFLOW_ERROR;
+            বিরতি;
         }
     }
 
     /* set the converter state back into UConverter */
     cnv->fromUChar32= c<0 ? -c : 0;
-    cnv->fromUnicodeStatus = static_cast<uint32_t>(prev);
+    cnv->fromUnicodeStatus = static_cast<uint32_t>(পূর্ব);
 
     /* write back the updated pointers */
     pArgs->source=source;
-    pArgs->target = reinterpret_cast<char*>(target);
+    pArgs->target = reinterpret_cast<অক্ষর*>(target);
 }
 
 /* BOCU-1-to-Unicode conversion functions ----------------------------------- */
@@ -879,44 +879,44 @@ getTrail:
  *          BOCU1_MIN<=b<BOCU1_START_NEG_2 or BOCU1_START_POS_2<=b<BOCU1_MAX_LEAD
  * @return (diff<<2)|count
  */
-static inline int32_t
+স্থির অন্তঃরেখ int32_t
 decodeBocu1LeadByte(int32_t b) {
     int32_t diff, count;
 
-    if(b>=BOCU1_START_NEG_2) {
+    যদি(b>=BOCU1_START_NEG_2) {
         /* positive difference */
-        if(b<BOCU1_START_POS_3) {
+        যদি(b<BOCU1_START_POS_3) {
             /* two bytes */
-            diff = (b - BOCU1_START_POS_2) * BOCU1_TRAIL_COUNT + BOCU1_REACH_POS_1 + 1;
+            diff = (b - BOCU1_START_POS_2) * BOCU1_TRAIL_গুনতি + BOCU1_REACH_POS_1 + 1;
             count=1;
-        } else if(b<BOCU1_START_POS_4) {
+        } অন্যথা যদি(b<BOCU1_START_POS_4) {
             /* three bytes */
-            diff = (b - BOCU1_START_POS_3) * BOCU1_TRAIL_COUNT * BOCU1_TRAIL_COUNT + BOCU1_REACH_POS_2 + 1;
+            diff = (b - BOCU1_START_POS_3) * BOCU1_TRAIL_গুনতি * BOCU1_TRAIL_গুনতি + BOCU1_REACH_POS_2 + 1;
             count=2;
-        } else {
+        } অন্যথা {
             /* four bytes */
             diff=BOCU1_REACH_POS_3+1;
             count=3;
         }
-    } else {
+    } অন্যথা {
         /* negative difference */
-        if(b>=BOCU1_START_NEG_3) {
+        যদি(b>=BOCU1_START_NEG_3) {
             /* two bytes */
-            diff = (b - BOCU1_START_NEG_2) * BOCU1_TRAIL_COUNT + BOCU1_REACH_NEG_1;
+            diff = (b - BOCU1_START_NEG_2) * BOCU1_TRAIL_গুনতি + BOCU1_REACH_NEG_1;
             count=1;
-        } else if(b>BOCU1_MIN) {
+        } অন্যথা যদি(b>BOCU1_MIN) {
             /* three bytes */
-            diff = (b - BOCU1_START_NEG_3) * BOCU1_TRAIL_COUNT * BOCU1_TRAIL_COUNT + BOCU1_REACH_NEG_2;
+            diff = (b - BOCU1_START_NEG_3) * BOCU1_TRAIL_গুনতি * BOCU1_TRAIL_গুনতি + BOCU1_REACH_NEG_2;
             count=2;
-        } else {
+        } অন্যথা {
             /* four bytes */
-            diff=-BOCU1_TRAIL_COUNT*BOCU1_TRAIL_COUNT*BOCU1_TRAIL_COUNT+BOCU1_REACH_NEG_3;
+            diff=-BOCU1_TRAIL_গুনতি*BOCU1_TRAIL_গুনতি*BOCU1_TRAIL_গুনতি+BOCU1_REACH_NEG_3;
             count=3;
         }
     }
 
     /* return the state for decoding the trail byte(s) */
-    return (static_cast<uint32_t>(diff) << 2) | count;
+    ফেরত (static_cast<uint32_t>(diff) << 2) | count;
 }
 
 /**
@@ -928,73 +928,73 @@ decodeBocu1LeadByte(int32_t b) {
  *
  * @see decodeBocu1
  */
-static inline int32_t
+স্থির অন্তঃরেখ int32_t
 decodeBocu1TrailByte(int32_t count, int32_t b) {
-    if(b<=0x20) {
+    যদি(b<=0x20) {
         /* skip some C0 controls and make the trail byte range contiguous */
         b=bocu1ByteToTrail[b];
         /* b<0 for an illegal trail byte value will result in return<0 below */
-#if BOCU1_MAX_TRAIL<0xff
-    } else if(b>BOCU1_MAX_TRAIL) {
-        return -99;
+#যদি BOCU1_MAX_TRAIL<0xff
+    } অন্যথা যদি(b>BOCU1_MAX_TRAIL) {
+        ফেরত -99;
 #endif
-    } else {
+    } অন্যথা {
         b-=BOCU1_TRAIL_BYTE_OFFSET;
     }
 
     /* add trail byte into difference and decrement count */
-    if(count==1) {
-        return b;
-    } else if(count==2) {
-        return b*BOCU1_TRAIL_COUNT;
-    } else /* count==3 */ {
-        return b*(BOCU1_TRAIL_COUNT*BOCU1_TRAIL_COUNT);
+    যদি(count==1) {
+        ফেরত b;
+    } অন্যথা যদি(count==2) {
+        ফেরত b*BOCU1_TRAIL_গুনতি;
+    } অন্যথা /* count==3 */ {
+        ফেরত b*(BOCU1_TRAIL_গুনতি*BOCU1_TRAIL_গুনতি);
     }
 }
 
-static void U_CALLCONV
+স্থির শূন্য U_CALLCONV
 _Bocu1ToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
                            UErrorCode *pErrorCode) {
     UConverter *cnv;
-    const uint8_t *source, *sourceLimit;
+    ধ্রুবক uint8_t *source, *sourceLimit;
     char16_t *target;
-    const char16_t *targetLimit;
+    ধ্রুবক char16_t *targetLimit;
     int32_t *offsets;
 
-    int32_t prev, count, diff, c;
+    int32_t পূর্ব, count, diff, c;
 
-    int8_t byteIndex;
+    int8_t byte_সূচক;
     uint8_t *bytes;
 
-    int32_t sourceIndex, nextSourceIndex;
+    int32_t source_সূচক, পরবর্তী_Source_সূচক;
 
     /* set up the local pointers */
     cnv=pArgs->converter;
-    source = reinterpret_cast<const uint8_t*>(pArgs->source);
-    sourceLimit = reinterpret_cast<const uint8_t*>(pArgs->sourceLimit);
+    source = reinterpret_cast<ধ্রুবক uint8_t*>(pArgs->source);
+    sourceLimit = reinterpret_cast<ধ্রুবক uint8_t*>(pArgs->sourceLimit);
     target=pArgs->target;
     targetLimit=pArgs->targetLimit;
     offsets=pArgs->offsets;
 
     /* get the converter state from UConverter */
-    prev = static_cast<int32_t>(cnv->toUnicodeStatus);
-    if(prev==0) {
-        prev=BOCU1_ASCII_PREV;
+    পূর্ব = static_cast<int32_t>(cnv->toUnicodeStatus);
+    যদি(পূর্ব==0) {
+        পূর্ব=BOCU1_ASCII_পূর্ব;
     }
     diff=cnv->mode; /* mode may be set to UCNV_SI by ucnv_bld.c but then toULength==0 */
     count=diff&3;
     diff>>=2;
 
-    byteIndex=cnv->toULength;
+    byte_সূচক=cnv->toULength;
     bytes=cnv->toUBytes;
 
     /* sourceIndex=-1 if the current character began in the previous buffer */
-    sourceIndex=byteIndex==0 ? 0 : -1;
-    nextSourceIndex=0;
+    source_সূচক=byte_সূচক==0 ? 0 : -1;
+    পরবর্তী_Source_সূচক=0;
 
     /* conversion "loop" similar to _SCSUToUnicodeWithOffsets() */
-    if(count>0 && byteIndex>0 && target<targetLimit) {
-        goto getTrail;
+    যদি(count>0 && byte_সূচক>0 && target<targetLimit) {
+        যাও getTrail;
     }
 
 fastSingle:
@@ -1002,167 +1002,167 @@ fastSingle:
     /* use count as the only loop counter variable */
     diff = static_cast<int32_t>(sourceLimit - source);
     count = static_cast<int32_t>(pArgs->targetLimit - target);
-    if(count>diff) {
+    যদি(count>diff) {
         count=diff;
     }
-    while(count>0) {
-        if(BOCU1_START_NEG_2<=(c=*source) && c<BOCU1_START_POS_2) {
-            c=prev+(c-BOCU1_MIDDLE);
-            if(c<0x3000) {
+    যখন(count>0) {
+        যদি(BOCU1_START_NEG_2<=(c=*source) && c<BOCU1_START_POS_2) {
+            c=পূর্ব+(c-BOCU1_মধ্য);
+            যদি(c<0x3000) {
                 *target++ = static_cast<char16_t>(c);
-                *offsets++=nextSourceIndex++;
-                prev=BOCU1_SIMPLE_PREV(c);
-            } else {
-                break;
+                *offsets++=পরবর্তী_Source_সূচক++;
+                পূর্ব=BOCU1_SIMPLE_পূর্ব(c);
+            } অন্যথা {
+                বিরতি;
             }
-        } else if(c<=0x20) {
-            if(c!=0x20) {
-                prev=BOCU1_ASCII_PREV;
+        } অন্যথা যদি(c<=0x20) {
+            যদি(c!=0x20) {
+                পূর্ব=BOCU1_ASCII_পূর্ব;
             }
             *target++ = static_cast<char16_t>(c);
-            *offsets++=nextSourceIndex++;
-        } else {
-            break;
+            *offsets++=পরবর্তী_Source_সূচক++;
+        } অন্যথা {
+            বিরতি;
         }
         ++source;
         --count;
     }
-    sourceIndex=nextSourceIndex; /* wrong if offsets==nullptr but does not matter */
+    source_সূচক=পরবর্তী_Source_সূচক; /* wrong if offsets==nullptr but does not matter */
 
     /* decode a sequence of single and lead bytes */
-    while(source<sourceLimit) {
-        if(target>=targetLimit) {
+    যখন(source<sourceLimit) {
+        যদি(target>=targetLimit) {
             /* target is full */
-            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-            break;
+            *pErrorCode=U_বাফার_OVERFLOW_ERROR;
+            বিরতি;
         }
 
-        ++nextSourceIndex;
+        ++পরবর্তী_Source_সূচক;
         c=*source++;
-        if(BOCU1_START_NEG_2<=c && c<BOCU1_START_POS_2) {
+        যদি(BOCU1_START_NEG_2<=c && c<BOCU1_START_POS_2) {
             /* Write a code point directly from a single-byte difference. */
-            c=prev+(c-BOCU1_MIDDLE);
-            if(c<0x3000) {
+            c=পূর্ব+(c-BOCU1_মধ্য);
+            যদি(c<0x3000) {
                 *target++ = static_cast<char16_t>(c);
-                *offsets++=sourceIndex;
-                prev=BOCU1_SIMPLE_PREV(c);
-                sourceIndex=nextSourceIndex;
-                goto fastSingle;
+                *offsets++=source_সূচক;
+                পূর্ব=BOCU1_SIMPLE_পূর্ব(c);
+                source_সূচক=পরবর্তী_Source_সূচক;
+                যাও fastSingle;
             }
-        } else if(c<=0x20) {
+        } অন্যথা যদি(c<=0x20) {
             /*
              * Direct-encoded C0 control code or space.
              * Reset prev for C0 control codes but not for space.
              */
-            if(c!=0x20) {
-                prev=BOCU1_ASCII_PREV;
+            যদি(c!=0x20) {
+                পূর্ব=BOCU1_ASCII_পূর্ব;
             }
             *target++ = static_cast<char16_t>(c);
-            *offsets++=sourceIndex;
-            sourceIndex=nextSourceIndex;
-            continue;
-        } else if(BOCU1_START_NEG_3<=c && c<BOCU1_START_POS_3 && source<sourceLimit) {
+            *offsets++=source_সূচক;
+            source_সূচক=পরবর্তী_Source_সূচক;
+            চালু;
+        } অন্যথা যদি(BOCU1_START_NEG_3<=c && c<BOCU1_START_POS_3 && source<sourceLimit) {
             /* Optimize two-byte case. */
-            if(c>=BOCU1_MIDDLE) {
-                diff = (c - BOCU1_START_POS_2) * BOCU1_TRAIL_COUNT + BOCU1_REACH_POS_1 + 1;
-            } else {
-                diff = (c - BOCU1_START_NEG_2) * BOCU1_TRAIL_COUNT + BOCU1_REACH_NEG_1;
+            যদি(c>=BOCU1_মধ্য) {
+                diff = (c - BOCU1_START_POS_2) * BOCU1_TRAIL_গুনতি + BOCU1_REACH_POS_1 + 1;
+            } অন্যথা {
+                diff = (c - BOCU1_START_NEG_2) * BOCU1_TRAIL_গুনতি + BOCU1_REACH_NEG_1;
             }
 
             /* trail byte */
-            ++nextSourceIndex;
+            ++পরবর্তী_Source_সূচক;
             c=decodeBocu1TrailByte(1, *source++);
-            if (c < 0 || static_cast<uint32_t>(c = prev + diff + c) > 0x10ffff) {
+            যদি (c < 0 || static_cast<uint32_t>(c = পূর্ব + diff + c) > 0x10ffff) {
                 bytes[0]=source[-2];
                 bytes[1]=source[-1];
-                byteIndex=2;
+                byte_সূচক=2;
                 *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                break;
+                বিরতি;
             }
-        } else if(c==BOCU1_RESET) {
+        } অন্যথা যদি(c==BOCU1_RESET) {
             /* only reset the state, no code point */
-            prev=BOCU1_ASCII_PREV;
-            sourceIndex=nextSourceIndex;
-            continue;
-        } else {
+            পূর্ব=BOCU1_ASCII_পূর্ব;
+            source_সূচক=পরবর্তী_Source_সূচক;
+            চালু;
+        } অন্যথা {
             /*
              * For multi-byte difference lead bytes, set the decoder state
              * with the partial difference value from the lead byte and
              * with the number of trail bytes.
              */
             bytes[0] = static_cast<uint8_t>(c);
-            byteIndex=1;
+            byte_সূচক=1;
 
             diff=decodeBocu1LeadByte(c);
             count=diff&3;
             diff>>=2;
 getTrail:
-            for(;;) {
-                if(source>=sourceLimit) {
-                    goto endloop;
+            জন্য(;;) {
+                যদি(source>=sourceLimit) {
+                    যাও endloop;
                 }
-                ++nextSourceIndex;
-                c=bytes[byteIndex++]=*source++;
+                ++পরবর্তী_Source_সূচক;
+                c=bytes[byte_সূচক++]=*source++;
 
                 /* trail byte in any position */
                 c=decodeBocu1TrailByte(count, c);
-                if(c<0) {
+                যদি(c<0) {
                     *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                    goto endloop;
+                    যাও endloop;
                 }
 
                 diff+=c;
-                if(--count==0) {
+                যদি(--count==0) {
                     /* final trail byte, deliver a code point */
-                    byteIndex=0;
-                    c=prev+diff;
-                    if (static_cast<uint32_t>(c) > 0x10ffff) {
+                    byte_সূচক=0;
+                    c=পূর্ব+diff;
+                    যদি (static_cast<uint32_t>(c) > 0x10ffff) {
                         *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                        goto endloop;
+                        যাও endloop;
                     }
-                    break;
+                    বিরতি;
                 }
             }
         }
 
         /* calculate the next prev and output c */
-        prev=BOCU1_PREV(c);
-        if(c<=0xffff) {
+        পূর্ব=BOCU1_পূর্ব(c);
+        যদি(c<=0xffff) {
             *target++ = static_cast<char16_t>(c);
-            *offsets++=sourceIndex;
-        } else {
+            *offsets++=source_সূচক;
+        } অন্যথা {
             /* output surrogate pair */
             *target++=U16_LEAD(c);
-            if(target<targetLimit) {
+            যদি(target<targetLimit) {
                 *target++=U16_TRAIL(c);
-                *offsets++=sourceIndex;
-                *offsets++=sourceIndex;
-            } else {
+                *offsets++=source_সূচক;
+                *offsets++=source_সূচক;
+            } অন্যথা {
                 /* target overflow */
-                *offsets++=sourceIndex;
-                cnv->UCharErrorBuffer[0]=U16_TRAIL(c);
-                cnv->UCharErrorBufferLength=1;
-                *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                break;
+                *offsets++=source_সূচক;
+                cnv->UChar_Error_বাফার[0]=U16_TRAIL(c);
+                cnv->UChar_Error_বাফার_দৈর্ঘ্য=1;
+                *pErrorCode=U_বাফার_OVERFLOW_ERROR;
+                বিরতি;
             }
         }
-        sourceIndex=nextSourceIndex;
+        source_সূচক=পরবর্তী_Source_সূচক;
     }
 endloop:
 
-    if(*pErrorCode==U_ILLEGAL_CHAR_FOUND) {
+    যদি(*pErrorCode==U_ILLEGAL_CHAR_FOUND) {
         /* set the converter state in UConverter to deal with the next character */
-        cnv->toUnicodeStatus=BOCU1_ASCII_PREV;
+        cnv->toUnicodeStatus=BOCU1_ASCII_পূর্ব;
         cnv->mode=0;
-    } else {
+    } অন্যথা {
         /* set the converter state back into UConverter */
-        cnv->toUnicodeStatus = static_cast<uint32_t>(prev);
+        cnv->toUnicodeStatus = static_cast<uint32_t>(পূর্ব);
         cnv->mode = static_cast<int32_t>(static_cast<uint32_t>(diff) << 2) | count;
     }
-    cnv->toULength=byteIndex;
+    cnv->toULength=byte_সূচক;
 
     /* write back the updated pointers */
-    pArgs->source = reinterpret_cast<const char*>(source);
+    pArgs->source = reinterpret_cast<ধ্রুবক অক্ষর*>(source);
     pArgs->target=target;
     pArgs->offsets=offsets;
 }
@@ -1174,41 +1174,41 @@ endloop:
  * re-copy the original function and remove the variables
  * offsets, sourceIndex, and nextSourceIndex.
  */
-static void U_CALLCONV
+স্থির শূন্য U_CALLCONV
 _Bocu1ToUnicode(UConverterToUnicodeArgs *pArgs,
                 UErrorCode *pErrorCode) {
     UConverter *cnv;
-    const uint8_t *source, *sourceLimit;
+    ধ্রুবক uint8_t *source, *sourceLimit;
     char16_t *target;
-    const char16_t *targetLimit;
+    ধ্রুবক char16_t *targetLimit;
 
-    int32_t prev, count, diff, c;
+    int32_t পূর্ব, count, diff, c;
 
-    int8_t byteIndex;
+    int8_t byte_সূচক;
     uint8_t *bytes;
 
     /* set up the local pointers */
     cnv=pArgs->converter;
-    source = reinterpret_cast<const uint8_t*>(pArgs->source);
-    sourceLimit = reinterpret_cast<const uint8_t*>(pArgs->sourceLimit);
+    source = reinterpret_cast<ধ্রুবক uint8_t*>(pArgs->source);
+    sourceLimit = reinterpret_cast<ধ্রুবক uint8_t*>(pArgs->sourceLimit);
     target=pArgs->target;
     targetLimit=pArgs->targetLimit;
 
     /* get the converter state from UConverter */
-    prev = static_cast<int32_t>(cnv->toUnicodeStatus);
-    if(prev==0) {
-        prev=BOCU1_ASCII_PREV;
+    পূর্ব = static_cast<int32_t>(cnv->toUnicodeStatus);
+    যদি(পূর্ব==0) {
+        পূর্ব=BOCU1_ASCII_পূর্ব;
     }
     diff=cnv->mode; /* mode may be set to UCNV_SI by ucnv_bld.c but then toULength==0 */
     count=diff&3;
     diff>>=2;
 
-    byteIndex=cnv->toULength;
+    byte_সূচক=cnv->toULength;
     bytes=cnv->toUBytes;
 
     /* conversion "loop" similar to _SCSUToUnicodeWithOffsets() */
-    if(count>0 && byteIndex>0 && target<targetLimit) {
-        goto getTrail;
+    যদি(count>0 && byte_সূচক>0 && target<targetLimit) {
+        যাও getTrail;
     }
 
 fastSingle:
@@ -1216,157 +1216,157 @@ fastSingle:
     /* use count as the only loop counter variable */
     diff = static_cast<int32_t>(sourceLimit - source);
     count = static_cast<int32_t>(pArgs->targetLimit - target);
-    if(count>diff) {
+    যদি(count>diff) {
         count=diff;
     }
-    while(count>0) {
-        if(BOCU1_START_NEG_2<=(c=*source) && c<BOCU1_START_POS_2) {
-            c=prev+(c-BOCU1_MIDDLE);
-            if(c<0x3000) {
+    যখন(count>0) {
+        যদি(BOCU1_START_NEG_2<=(c=*source) && c<BOCU1_START_POS_2) {
+            c=পূর্ব+(c-BOCU1_মধ্য);
+            যদি(c<0x3000) {
                 *target++ = static_cast<char16_t>(c);
-                prev=BOCU1_SIMPLE_PREV(c);
-            } else {
-                break;
+                পূর্ব=BOCU1_SIMPLE_পূর্ব(c);
+            } অন্যথা {
+                বিরতি;
             }
-        } else if(c<=0x20) {
-            if(c!=0x20) {
-                prev=BOCU1_ASCII_PREV;
+        } অন্যথা যদি(c<=0x20) {
+            যদি(c!=0x20) {
+                পূর্ব=BOCU1_ASCII_পূর্ব;
             }
             *target++ = static_cast<char16_t>(c);
-        } else {
-            break;
+        } অন্যথা {
+            বিরতি;
         }
         ++source;
         --count;
     }
 
     /* decode a sequence of single and lead bytes */
-    while(source<sourceLimit) {
-        if(target>=targetLimit) {
+    যখন(source<sourceLimit) {
+        যদি(target>=targetLimit) {
             /* target is full */
-            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-            break;
+            *pErrorCode=U_বাফার_OVERFLOW_ERROR;
+            বিরতি;
         }
 
         c=*source++;
-        if(BOCU1_START_NEG_2<=c && c<BOCU1_START_POS_2) {
+        যদি(BOCU1_START_NEG_2<=c && c<BOCU1_START_POS_2) {
             /* Write a code point directly from a single-byte difference. */
-            c=prev+(c-BOCU1_MIDDLE);
-            if(c<0x3000) {
+            c=পূর্ব+(c-BOCU1_মধ্য);
+            যদি(c<0x3000) {
                 *target++ = static_cast<char16_t>(c);
-                prev=BOCU1_SIMPLE_PREV(c);
-                goto fastSingle;
+                পূর্ব=BOCU1_SIMPLE_পূর্ব(c);
+                যাও fastSingle;
             }
-        } else if(c<=0x20) {
+        } অন্যথা যদি(c<=0x20) {
             /*
              * Direct-encoded C0 control code or space.
              * Reset prev for C0 control codes but not for space.
              */
-            if(c!=0x20) {
-                prev=BOCU1_ASCII_PREV;
+            যদি(c!=0x20) {
+                পূর্ব=BOCU1_ASCII_পূর্ব;
             }
             *target++ = static_cast<char16_t>(c);
-            continue;
-        } else if(BOCU1_START_NEG_3<=c && c<BOCU1_START_POS_3 && source<sourceLimit) {
+            চালু;
+        } অন্যথা যদি(BOCU1_START_NEG_3<=c && c<BOCU1_START_POS_3 && source<sourceLimit) {
             /* Optimize two-byte case. */
-            if(c>=BOCU1_MIDDLE) {
-                diff = (c - BOCU1_START_POS_2) * BOCU1_TRAIL_COUNT + BOCU1_REACH_POS_1 + 1;
-            } else {
-                diff = (c - BOCU1_START_NEG_2) * BOCU1_TRAIL_COUNT + BOCU1_REACH_NEG_1;
+            যদি(c>=BOCU1_মধ্য) {
+                diff = (c - BOCU1_START_POS_2) * BOCU1_TRAIL_গুনতি + BOCU1_REACH_POS_1 + 1;
+            } অন্যথা {
+                diff = (c - BOCU1_START_NEG_2) * BOCU1_TRAIL_গুনতি + BOCU1_REACH_NEG_1;
             }
 
             /* trail byte */
             c=decodeBocu1TrailByte(1, *source++);
-            if (c < 0 || static_cast<uint32_t>(c = prev + diff + c) > 0x10ffff) {
+            যদি (c < 0 || static_cast<uint32_t>(c = পূর্ব + diff + c) > 0x10ffff) {
                 bytes[0]=source[-2];
                 bytes[1]=source[-1];
-                byteIndex=2;
+                byte_সূচক=2;
                 *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                break;
+                বিরতি;
             }
-        } else if(c==BOCU1_RESET) {
+        } অন্যথা যদি(c==BOCU1_RESET) {
             /* only reset the state, no code point */
-            prev=BOCU1_ASCII_PREV;
-            continue;
-        } else {
+            পূর্ব=BOCU1_ASCII_পূর্ব;
+            চালু;
+        } অন্যথা {
             /*
              * For multi-byte difference lead bytes, set the decoder state
              * with the partial difference value from the lead byte and
              * with the number of trail bytes.
              */
             bytes[0] = static_cast<uint8_t>(c);
-            byteIndex=1;
+            byte_সূচক=1;
 
             diff=decodeBocu1LeadByte(c);
             count=diff&3;
             diff>>=2;
 getTrail:
-            for(;;) {
-                if(source>=sourceLimit) {
-                    goto endloop;
+            জন্য(;;) {
+                যদি(source>=sourceLimit) {
+                    যাও endloop;
                 }
-                c=bytes[byteIndex++]=*source++;
+                c=bytes[byte_সূচক++]=*source++;
 
                 /* trail byte in any position */
                 c=decodeBocu1TrailByte(count, c);
-                if(c<0) {
+                যদি(c<0) {
                     *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                    goto endloop;
+                    যাও endloop;
                 }
 
                 diff+=c;
-                if(--count==0) {
+                যদি(--count==0) {
                     /* final trail byte, deliver a code point */
-                    byteIndex=0;
-                    c=prev+diff;
-                    if (static_cast<uint32_t>(c) > 0x10ffff) {
+                    byte_সূচক=0;
+                    c=পূর্ব+diff;
+                    যদি (static_cast<uint32_t>(c) > 0x10ffff) {
                         *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                        goto endloop;
+                        যাও endloop;
                     }
-                    break;
+                    বিরতি;
                 }
             }
         }
 
         /* calculate the next prev and output c */
-        prev=BOCU1_PREV(c);
-        if(c<=0xffff) {
+        পূর্ব=BOCU1_পূর্ব(c);
+        যদি(c<=0xffff) {
             *target++ = static_cast<char16_t>(c);
-        } else {
+        } অন্যথা {
             /* output surrogate pair */
             *target++=U16_LEAD(c);
-            if(target<targetLimit) {
+            যদি(target<targetLimit) {
                 *target++=U16_TRAIL(c);
-            } else {
+            } অন্যথা {
                 /* target overflow */
-                cnv->UCharErrorBuffer[0]=U16_TRAIL(c);
-                cnv->UCharErrorBufferLength=1;
-                *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                break;
+                cnv->UChar_Error_বাফার[0]=U16_TRAIL(c);
+                cnv->UChar_Error_বাফার_দৈর্ঘ্য=1;
+                *pErrorCode=U_বাফার_OVERFLOW_ERROR;
+                বিরতি;
             }
         }
     }
 endloop:
 
-    if(*pErrorCode==U_ILLEGAL_CHAR_FOUND) {
+    যদি(*pErrorCode==U_ILLEGAL_CHAR_FOUND) {
         /* set the converter state in UConverter to deal with the next character */
-        cnv->toUnicodeStatus=BOCU1_ASCII_PREV;
+        cnv->toUnicodeStatus=BOCU1_ASCII_পূর্ব;
         cnv->mode=0;
-    } else {
+    } অন্যথা {
         /* set the converter state back into UConverter */
-        cnv->toUnicodeStatus = static_cast<uint32_t>(prev);
+        cnv->toUnicodeStatus = static_cast<uint32_t>(পূর্ব);
         cnv->mode = (static_cast<uint32_t>(diff) << 2) | count;
     }
-    cnv->toULength=byteIndex;
+    cnv->toULength=byte_সূচক;
 
     /* write back the updated pointers */
-    pArgs->source = reinterpret_cast<const char*>(source);
+    pArgs->source = reinterpret_cast<ধ্রুবক অক্ষর*>(source);
     pArgs->target=target;
 }
 
 /* miscellaneous ------------------------------------------------------------ */
 
-static const UConverterImpl _Bocu1Impl={
+স্থির ধ্রুবক UConverterImpl _Bocu1Impl={
     UCNV_BOCU1,
 
     nullptr,
@@ -1392,20 +1392,20 @@ static const UConverterImpl _Bocu1Impl={
     nullptr
 };
 
-static const UConverterStaticData _Bocu1StaticData={
-    sizeof(UConverterStaticData),
+স্থির ধ্রুবক UConverter_Static_তথ্য Bocu1_Static_তথ্য={
+    আকার(UConverter_Static_তথ্য),
     "BOCU-1",
     1214, /* CCSID for BOCU-1 */
     UCNV_IBM, UCNV_BOCU1,
     1, 4, /* one char16_t generates at least 1 byte and at most 4 bytes */
     { 0x1a, 0, 0, 0 }, 1, /* BOCU-1 never needs to write a subchar */
-    false, false,
+    মিথ্যা, মিথ্যা,
     0,
     0,
     { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 } /* reserved */
 };
 
-const UConverterSharedData _Bocu1Data=
-        UCNV_IMMUTABLE_SHARED_DATA_INITIALIZER(&_Bocu1StaticData, &_Bocu1Impl);
+ধ্রুবক UConverter_Shared_তথ্য Bocu1_তথ্য=
+        UCNV_IMMUTABLE_SHARED_তথ্য_INITIALIZER(&Bocu1_Static_তথ্য, &_Bocu1Impl);
 
 #endif

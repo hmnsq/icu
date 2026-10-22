@@ -8,18 +8,18 @@
  *
  *******************************************************************************
  */
-#include "unicode/utypes.h"
+#অন্তর্ভাব "unicode/utypes.h"
 
-#if !UCONFIG_NO_SERVICE
+#যদি !UCONFIG_NO_SERVICE
 
-#include "unicode/resbund.h"
-#include "uresimp.h"
-#include "cmemory.h"
-#include "servloc.h"
-#include "ustrfmt.h"
-#include "uhash.h"
-#include "charstr.h"
-#include "uassert.h"
+#অন্তর্ভাব "unicode/resbund.h"
+#অন্তর্ভাব "uresimp.h"
+#অন্তর্ভাব "cmemory.h"
+#অন্তর্ভাব "servloc.h"
+#অন্তর্ভাব "ustrfmt.h"
+#অন্তর্ভাব "uhash.h"
+#অন্তর্ভাব "charstr.h"
+#অন্তর্ভাব "uassert.h"
 
 #define UNDERSCORE_CHAR ((char16_t)0x005f)
 #define AT_SIGN_CHAR    ((char16_t)64)
@@ -27,41 +27,41 @@
 
 U_NAMESPACE_BEGIN
 
-LocaleKey*
-LocaleKey::createWithCanonicalFallback(const UnicodeString* primaryID,
-                                       const UnicodeString* canonicalFallbackID,
+Locale_চাবি*
+Locale_চাবি::createWithCanonicalFallback(ধ্রুবক UnicodeString* primaryID,
+                                       ধ্রুবক UnicodeString* canonicalFallbackID,
                                        UErrorCode& status)
 {
-    return LocaleKey::createWithCanonicalFallback(primaryID, canonicalFallbackID, KIND_ANY, status);
+    ফেরত Locale_চাবি::createWithCanonicalFallback(primaryID, canonicalFallbackID, KIND_ANY, status);
 }
 
-LocaleKey*
-LocaleKey::createWithCanonicalFallback(const UnicodeString* primaryID,
-                                       const UnicodeString* canonicalFallbackID,
+Locale_চাবি*
+Locale_চাবি::createWithCanonicalFallback(ধ্রুবক UnicodeString* primaryID,
+                                       ধ্রুবক UnicodeString* canonicalFallbackID,
                                        int32_t kind,
                                        UErrorCode& status)
 {
-    if (primaryID == nullptr || U_FAILURE(status)) {
-        return nullptr;
+    যদি (primaryID == nullptr || U_FAILURE(status)) {
+        ফেরত nullptr;
     }
     UnicodeString canonicalPrimaryID;
     LocaleUtility::canonicalLocaleString(primaryID, canonicalPrimaryID);
-    return new LocaleKey(*primaryID, canonicalPrimaryID, canonicalFallbackID, kind);
+    ফেরত নতুন Locale_চাবি(*primaryID, canonicalPrimaryID, canonicalFallbackID, kind);
 }
 
-LocaleKey::LocaleKey(const UnicodeString& primaryID,
-                     const UnicodeString& canonicalPrimaryID,
-                     const UnicodeString* canonicalFallbackID,
+Locale_চাবি::Locale_চাবি(ধ্রুবক UnicodeString& primaryID,
+                     ধ্রুবক UnicodeString& canonicalPrimaryID,
+                     ধ্রুবক UnicodeString* canonicalFallbackID,
                      int32_t kind)
-  : ICUServiceKey(primaryID)
+  : ICUService_চাবি(primaryID)
   , _kind(kind)
   , _primaryID(canonicalPrimaryID)
   , _fallbackID()
   , _currentID()
 {
     _fallbackID.setToBogus();
-    if (_primaryID.length() != 0) {
-        if (canonicalFallbackID != nullptr && _primaryID != *canonicalFallbackID) {
+    যদি (_primaryID.length() != 0) {
+        যদি (canonicalFallbackID != nullptr && _primaryID != *canonicalFallbackID) {
             _fallbackID = *canonicalFallbackID;
         }
     }
@@ -69,116 +69,116 @@ LocaleKey::LocaleKey(const UnicodeString& primaryID,
     _currentID = _primaryID;
 }
 
-LocaleKey::~LocaleKey() {}
+Locale_চাবি::~Locale_চাবি() {}
 
 UnicodeString&
-LocaleKey::prefix(UnicodeString& result) const {
-    if (_kind != KIND_ANY) {
-        char16_t buffer[64];
-        uprv_itou(buffer, 64, _kind, 10, 0);
-        UnicodeString temp(buffer);
-        result.append(temp);
+Locale_চাবি::prefix(UnicodeString& ফলাফল) ধ্রুবক {
+    যদি (_kind != KIND_ANY) {
+        char16_t বাফার[64];
+        uprv_itou(বাফার, 64, _kind, 10, 0);
+        UnicodeString অস্থায়ী(বাফার);
+        ফলাফল.append(অস্থায়ী);
     }
-    return result;
+    ফেরত ফলাফল;
 }
 
 int32_t
-LocaleKey::kind() const {
-    return _kind;
+Locale_চাবি::kind() ধ্রুবক {
+    ফেরত _kind;
 }
 
 UnicodeString&
-LocaleKey::canonicalID(UnicodeString& result) const {
-    return result.append(_primaryID);
+Locale_চাবি::canonicalID(UnicodeString& ফলাফল) ধ্রুবক {
+    ফেরত ফলাফল.append(_primaryID);
 }
 
 UnicodeString&
-LocaleKey::currentID(UnicodeString& result) const {
-    if (!_currentID.isBogus()) {
-        result.append(_currentID);
+Locale_চাবি::currentID(UnicodeString& ফলাফল) ধ্রুবক {
+    যদি (!_currentID.isBogus()) {
+        ফলাফল.append(_currentID);
     }
-    return result;
+    ফেরত ফলাফল;
 }
 
 UnicodeString&
-LocaleKey::currentDescriptor(UnicodeString& result) const {
-    if (!_currentID.isBogus()) {
-        prefix(result).append(PREFIX_DELIMITER).append(_currentID);
-    } else {
-        result.setToBogus();
+Locale_চাবি::currentDescriptor(UnicodeString& ফলাফল) ধ্রুবক {
+    যদি (!_currentID.isBogus()) {
+        prefix(ফলাফল).append(PREFIX_DELIMITER).append(_currentID);
+    } অন্যথা {
+        ফলাফল.setToBogus();
     }
-    return result;
+    ফেরত ফলাফল;
 }
 
 Locale&
-LocaleKey::canonicalLocale(Locale& result) const {
-    return LocaleUtility::initLocaleFromName(_primaryID, result);
+Locale_চাবি::canonicalLocale(Locale& ফলাফল) ধ্রুবক {
+    ফেরত LocaleUtility::initLocaleFromName(_primaryID, ফলাফল);
 }
 
 Locale&
-LocaleKey::currentLocale(Locale& result) const {
-    return LocaleUtility::initLocaleFromName(_currentID, result);
+Locale_চাবি::currentLocale(Locale& ফলাফল) ধ্রুবক {
+    ফেরত LocaleUtility::initLocaleFromName(_currentID, ফলাফল);
 }
 
 UBool
-LocaleKey::fallback() {
-    if (!_currentID.isBogus()) {
-        int x = _currentID.lastIndexOf(UNDERSCORE_CHAR);
-        if (x != -1) {
+Locale_চাবি::fallback() {
+    যদি (!_currentID.isBogus()) {
+        পূর্ণসংখ্যা x = _currentID.last_সূচক_Of(UNDERSCORE_CHAR);
+        যদি (x != -1) {
             _currentID.remove(x); // truncate current or fallback, whichever we're pointing to
-            return true;
+            ফেরত সত্য;
         }
 
-        if (!_fallbackID.isBogus()) {
+        যদি (!_fallbackID.isBogus()) {
             _currentID = _fallbackID;
             _fallbackID.setToBogus();
-            return true;
+            ফেরত সত্য;
         }
 
-        if (_currentID.length() > 0) {
+        যদি (_currentID.length() > 0) {
             _currentID.remove(0); // completely truncate
-            return true;
+            ফেরত সত্য;
         }
 
         _currentID.setToBogus();
     }
 
-    return false;
+    ফেরত মিথ্যা;
 }
 
 UBool
-LocaleKey::isFallbackOf(const UnicodeString& id) const {
-    UnicodeString temp(id);
-    parseSuffix(temp);
-    return temp.indexOf(_primaryID) == 0 &&
-        (temp.length() == _primaryID.length() ||
-        temp.charAt(_primaryID.length()) == UNDERSCORE_CHAR);
+Locale_চাবি::isFallbackOf(ধ্রুবক UnicodeString& id) ধ্রুবক {
+    UnicodeString অস্থায়ী(id);
+    parseSuffix(অস্থায়ী);
+    ফেরত অস্থায়ী.সূচক_Of(_primaryID) == 0 &&
+        (অস্থায়ী.length() == _primaryID.length() ||
+        অস্থায়ী.charAt(_primaryID.length()) == UNDERSCORE_CHAR);
 }
 
 #ifdef SERVICE_DEBUG
 UnicodeString&
-LocaleKey::debug(UnicodeString& result) const
+Locale_চাবি::debug(UnicodeString& ফলাফল) ধ্রুবক
 {
-    ICUServiceKey::debug(result);
-    result.append((UnicodeString)" kind: ");
-    result.append(_kind);
-    result.append((UnicodeString)" primaryID: ");
-    result.append(_primaryID);
-    result.append((UnicodeString)" fallbackID: ");
-    result.append(_fallbackID);
-    result.append((UnicodeString)" currentID: ");
-    result.append(_currentID);
-    return result;
+    ICUService_চাবি::debug(ফলাফল);
+    ফলাফল.append((UnicodeString)" kind: ");
+    ফলাফল.append(_kind);
+    ফলাফল.append((UnicodeString)" primaryID: ");
+    ফলাফল.append(_primaryID);
+    ফলাফল.append((UnicodeString)" fallbackID: ");
+    ফলাফল.append(_fallbackID);
+    ফলাফল.append((UnicodeString)" currentID: ");
+    ফলাফল.append(_currentID);
+    ফেরত ফলাফল;
 }
 
 UnicodeString&
-LocaleKey::debugClass(UnicodeString& result) const
+Locale_চাবি::debugClass(UnicodeString& ফলাফল) ধ্রুবক
 {
-    return result.append((UnicodeString)"LocaleKey ");
+    ফেরত ফলাফল.append((UnicodeString)"LocaleKey ");
 }
 #endif
 
-UOBJECT_DEFINE_RTTI_IMPLEMENTATION(LocaleKey)
+UOBJECT_DEFINE_RTTI_IMPLEMENTATION(Locale_চাবি)
 
 U_NAMESPACE_END
 

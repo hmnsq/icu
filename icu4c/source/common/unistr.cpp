@@ -20,57 +20,57 @@
 ******************************************************************************
 */
 
-#include <string_view>
+#অন্তর্ভাব <string_view>
 
-#include "unicode/utypes.h"
-#include "unicode/appendable.h"
-#include "unicode/putil.h"
-#include "cstring.h"
-#include "cmemory.h"
-#include "unicode/ustring.h"
-#include "unicode/unistr.h"
-#include "unicode/utf.h"
-#include "unicode/utf16.h"
-#include "uelement.h"
-#include "ustr_imp.h"
-#include "umutex.h"
-#include "uassert.h"
+#অন্তর্ভাব "unicode/utypes.h"
+#অন্তর্ভাব "unicode/appendable.h"
+#অন্তর্ভাব "unicode/putil.h"
+#অন্তর্ভাব "cstring.h"
+#অন্তর্ভাব "cmemory.h"
+#অন্তর্ভাব "unicode/ustring.h"
+#অন্তর্ভাব "unicode/unistr.h"
+#অন্তর্ভাব "unicode/utf.h"
+#অন্তর্ভাব "unicode/utf16.h"
+#অন্তর্ভাব "uelement.h"
+#অন্তর্ভাব "ustr_imp.h"
+#অন্তর্ভাব "umutex.h"
+#অন্তর্ভাব "uassert.h"
 
-#if 0
+#যদি 0
 
-#include <iostream>
-using namespace std;
+#অন্তর্ভাব <iostream>
+using নামাকাশ std;
 
 //DEBUGGING
-void
-print(const UnicodeString& s,
-      const char *name)
+শূন্য
+print(ধ্রুবক UnicodeString& s,
+      ধ্রুবক অক্ষর *name)
 {
   char16_t c;
   cout << name << ":|";
-  for(int i = 0; i < s.length(); ++i) {
+  জন্য(পূর্ণসংখ্যা i = 0; i < s.length(); ++i) {
     c = s[i];
-    if(c>= 0x007E || c < 0x0020)
+    যদি(c>= 0x007E || c < 0x0020)
       cout << "[0x" << hex << s[i] << "]";
-    else
-      cout << (char) s[i];
+    অন্যথা
+      cout << (অক্ষর) s[i];
   }
   cout << '|' << endl;
 }
 
-void
-print(const char16_t *s,
+শূন্য
+print(ধ্রুবক char16_t *s,
       int32_t len,
-      const char *name)
+      ধ্রুবক অক্ষর *name)
 {
   char16_t c;
   cout << name << ":|";
-  for(int i = 0; i < len; ++i) {
+  জন্য(পূর্ণসংখ্যা i = 0; i < len; ++i) {
     c = s[i];
-    if(c>= 0x007E || c < 0x0020)
+    যদি(c>= 0x007E || c < 0x0020)
       cout << "[0x" << hex << s[i] << "]";
-    else
-      cout << (char) s[i];
+    অন্যথা
+      cout << (অক্ষর) s[i];
   }
   cout << '|' << endl;
 }
@@ -80,21 +80,21 @@ print(const char16_t *s,
 // Local function definitions for now
 
 // need to copy areas that may overlap
-static
-inline void
-us_arrayCopy(const char16_t *src, int32_t srcStart,
+স্থির
+অন্তঃরেখ শূন্য
+us_arrayCopy(ধ্রুবক char16_t *src, int32_t srcStart,
          char16_t *dst, int32_t dstStart, int32_t count)
 {
-  if(count>0) {
-    uprv_memmove(dst+dstStart, src+srcStart, (size_t)count*sizeof(*src));
+  যদি(count>0) {
+    uprv_memmove(dst+dstStart, src+srcStart, (size_t)count*আকার(*src));
   }
 }
 
 // u_unescapeAt() callback to get a char16_t from a UnicodeString
 U_CDECL_BEGIN
-static char16_t U_CALLCONV
-UnicodeString_charAt(int32_t offset, void *context) {
-    return ((icu::UnicodeString*) context)->charAt(offset);
+স্থির char16_t U_CALLCONV
+UnicodeString_charAt(int32_t offset, শূন্য *context) {
+    ফেরত ((icu::UnicodeString*) context)->charAt(offset);
 }
 U_CDECL_END
 
@@ -108,32 +108,32 @@ Replaceable::~Replaceable() {}
 UOBJECT_DEFINE_RTTI_IMPLEMENTATION(UnicodeString)
 
 UnicodeString U_EXPORT2
-operator+ (const UnicodeString &s1, const UnicodeString &s2) {
-  int32_t sumLengths;
-  if (uprv_add32_overflow(s1.length(), s2.length(), &sumLengths)) {
+operator+ (ধ্রুবক UnicodeString &s1, ধ্রুবক UnicodeString &s2) {
+  int32_t যোগ_Lengths;
+  যদি (uprv_add32_overflow(s1.length(), s2.length(), &যোগ_Lengths)) {
     UnicodeString bogus;
     bogus.setToBogus();
-    return bogus;
+    ফেরত bogus;
   }
-  if (sumLengths != INT32_MAX) {
-    ++sumLengths;  // space for a terminating NUL if we need one
+  যদি (যোগ_Lengths != INT32_MAX) {
+    ++যোগ_Lengths;  // space for a terminating NUL if we need one
   }
-  return UnicodeString(sumLengths, static_cast<UChar32>(0), 0).append(s1).append(s2);
+  ফেরত UnicodeString(যোগ_Lengths, static_cast<UChar32>(0), 0).append(s1).append(s2);
 }
 
 U_COMMON_API UnicodeString U_EXPORT2
-unistr_internalConcat(const UnicodeString &s1, std::u16string_view s2) {
-  int32_t sumLengths;
-  if (s2.length() > INT32_MAX ||
-      uprv_add32_overflow(s1.length(), static_cast<int32_t>(s2.length()), &sumLengths)) {
+unistr_internalConcat(ধ্রুবক UnicodeString &s1, std::u16string_view s2) {
+  int32_t যোগ_Lengths;
+  যদি (s2.length() > INT32_MAX ||
+      uprv_add32_overflow(s1.length(), static_cast<int32_t>(s2.length()), &যোগ_Lengths)) {
     UnicodeString bogus;
     bogus.setToBogus();
-    return bogus;
+    ফেরত bogus;
   }
-  if (sumLengths != INT32_MAX) {
-    ++sumLengths;  // space for a terminating NUL if we need one
+  যদি (যোগ_Lengths != INT32_MAX) {
+    ++যোগ_Lengths;  // space for a terminating NUL if we need one
   }
-  return UnicodeString(sumLengths, static_cast<UChar32>(0), 0).append(s1).append(s2);
+  ফেরত UnicodeString(যোগ_Lengths, static_cast<UChar32>(0), 0).append(s1).append(s2);
 }
 
 
@@ -142,24 +142,24 @@ unistr_internalConcat(const UnicodeString &s1, std::u16string_view s2) {
 //                               have a chance to automatically inline.
 //========================================
 
-void
+শূন্য
 UnicodeString::addRef() {
   umtx_atomic_inc(reinterpret_cast<u_atomic_int32_t*>(fUnion.fFields.fArray) - 1);
 }
 
 int32_t
 UnicodeString::removeRef() {
-  return umtx_atomic_dec(reinterpret_cast<u_atomic_int32_t*>(fUnion.fFields.fArray) - 1);
+  ফেরত umtx_atomic_dec(reinterpret_cast<u_atomic_int32_t*>(fUnion.fFields.fArray) - 1);
 }
 
 int32_t
-UnicodeString::refCount() const {
-  return umtx_loadAcquire(*(reinterpret_cast<u_atomic_int32_t*>(fUnion.fFields.fArray) - 1));
+UnicodeString::ref_গুনতি() ধ্রুবক {
+  ফেরত umtx_loadAcquire(*(reinterpret_cast<u_atomic_int32_t*>(fUnion.fFields.fArray) - 1));
 }
 
-void
+শূন্য
 UnicodeString::releaseArray() {
-  if((fUnion.fFields.fLengthAndFlags & kRefCounted) && removeRef() == 0) {
+  যদি((fUnion.fFields.f_দৈর্ঘ্য_And_Flags & kRefCounted) && removeRef() == 0) {
     uprv_free(reinterpret_cast<int32_t*>(fUnion.fFields.fArray) - 1);
   }
 }
@@ -173,126 +173,126 @@ UnicodeString::releaseArray() {
 // The default constructor is inline in unistr.h.
 
 UnicodeString::UnicodeString(int32_t capacity, UChar32 c, int32_t count) {
-  fUnion.fFields.fLengthAndFlags = 0;
-  if (count <= 0 || static_cast<uint32_t>(c) > 0x10ffff) {
+  fUnion.fFields.f_দৈর্ঘ্য_And_Flags = 0;
+  যদি (count <= 0 || static_cast<uint32_t>(c) > 0x10ffff) {
     // just allocate and do not do anything else
     allocate(capacity);
-  } else if(c <= 0xffff) {
+  } অন্যথা যদি(c <= 0xffff) {
     int32_t length = count;
-    if(capacity < length) {
+    যদি(capacity < length) {
       capacity = length;
     }
-    if(allocate(capacity)) {
+    যদি(allocate(capacity)) {
       char16_t *array = getArrayStart();
       char16_t unit = static_cast<char16_t>(c);
-      for(int32_t i = 0; i < length; ++i) {
+      জন্য(int32_t i = 0; i < length; ++i) {
         array[i] = unit;
       }
-      setLength(length);
+      set_দৈর্ঘ্য(length);
     }
-  } else {  // supplementary code point, write surrogate pairs
-    if(count > (INT32_MAX / 2)) {
+  } অন্যথা {  // supplementary code point, write surrogate pairs
+    যদি(count > (INT32_MAX / 2)) {
       // We would get more than 2G UChars.
       allocate(capacity);
-      return;
+      ফেরত;
     }
     int32_t length = count * 2;
-    if(capacity < length) {
+    যদি(capacity < length) {
       capacity = length;
     }
-    if(allocate(capacity)) {
+    যদি(allocate(capacity)) {
       char16_t *array = getArrayStart();
       char16_t lead = U16_LEAD(c);
       char16_t trail = U16_TRAIL(c);
-      for(int32_t i = 0; i < length; i += 2) {
+      জন্য(int32_t i = 0; i < length; i += 2) {
         array[i] = lead;
         array[i + 1] = trail;
       }
-      setLength(length);
+      set_দৈর্ঘ্য(length);
     }
   }
 }
 
 UnicodeString::UnicodeString(char16_t ch) {
-  fUnion.fFields.fLengthAndFlags = kLength1 | kShortString;
-  fUnion.fStackFields.fBuffer[0] = ch;
+  fUnion.fFields.f_দৈর্ঘ্য_And_Flags = kLength1 | kShortString;
+  fUnion.f_স্তূপ_Fields.f_বাফার[0] = ch;
 }
 
 UnicodeString::UnicodeString(UChar32 ch) {
-  fUnion.fFields.fLengthAndFlags = kShortString;
+  fUnion.fFields.f_দৈর্ঘ্য_And_Flags = kShortString;
   int32_t i = 0;
-  UBool isError = false;
-  U16_APPEND(fUnion.fStackFields.fBuffer, i, US_STACKBUF_SIZE, ch, isError);
+  UBool isError = মিথ্যা;
+  U16_APPEND(fUnion.f_স্তূপ_Fields.f_বাফার, i, US_STACKBUF_আকার, ch, isError);
   // We test isError so that the compiler does not complain that we don't.
   // If isError then i==0 which is what we want anyway.
-  if(!isError) {
-    setShortLength(i);
+  যদি(!isError) {
+    set_Short_দৈর্ঘ্য(i);
   }
 }
 
-UnicodeString::UnicodeString(const char16_t *text,
-                             int32_t textLength) {
-  fUnion.fFields.fLengthAndFlags = kShortString;
-  doAppend(text, 0, textLength);
+UnicodeString::UnicodeString(ধ্রুবক char16_t *text,
+                             int32_t text_দৈর্ঘ্য) {
+  fUnion.fFields.f_দৈর্ঘ্য_And_Flags = kShortString;
+  doAppend(text, 0, text_দৈর্ঘ্য);
 }
 
 UnicodeString::UnicodeString(UBool isTerminated,
                              ConstChar16Ptr textPtr U_LIFETIME_BOUND,
-                             int32_t textLength) {
-  fUnion.fFields.fLengthAndFlags = kReadonlyAlias;
-  const char16_t *text = textPtr;
-  if(text == nullptr) {
+                             int32_t text_দৈর্ঘ্য) {
+  fUnion.fFields.f_দৈর্ঘ্য_And_Flags = kReadonlyAlias;
+  ধ্রুবক char16_t *text = textPtr;
+  যদি(text == nullptr) {
     // treat as an empty string, do not alias
     setToEmpty();
-  } else if(textLength < -1 ||
-            (textLength == -1 && !isTerminated) ||
-            (textLength >= 0 && isTerminated && text[textLength] != 0)
+  } অন্যথা যদি(text_দৈর্ঘ্য < -1 ||
+            (text_দৈর্ঘ্য == -1 && !isTerminated) ||
+            (text_দৈর্ঘ্য >= 0 && isTerminated && text[text_দৈর্ঘ্য] != 0)
   ) {
     setToBogus();
-  } else {
-    if(textLength == -1) {
+  } অন্যথা {
+    যদি(text_দৈর্ঘ্য == -1) {
       // text is terminated, or else it would have failed the above test
-      textLength = u_strlen(text);
+      text_দৈর্ঘ্য = u_strlen(text);
     }
-    setArray(const_cast<char16_t *>(text), textLength,
-             isTerminated ? textLength + 1 : textLength);
+    setArray(const_cast<char16_t *>(text), text_দৈর্ঘ্য,
+             isTerminated ? text_দৈর্ঘ্য + 1 : text_দৈর্ঘ্য);
   }
 }
 
 UnicodeString::UnicodeString(char16_t* buff U_LIFETIME_BOUND,
-                             int32_t buffLength,
+                             int32_t buff_দৈর্ঘ্য,
                              int32_t buffCapacity) {
-  fUnion.fFields.fLengthAndFlags = kWritableAlias;
-  if(buff == nullptr) {
+  fUnion.fFields.f_দৈর্ঘ্য_And_Flags = kWritableAlias;
+  যদি(buff == nullptr) {
     // treat as an empty string, do not alias
     setToEmpty();
-  } else if(buffLength < -1 || buffCapacity < 0 || buffLength > buffCapacity) {
+  } অন্যথা যদি(buff_দৈর্ঘ্য < -1 || buffCapacity < 0 || buff_দৈর্ঘ্য > buffCapacity) {
     setToBogus();
-  } else {
-    if(buffLength == -1) {
+  } অন্যথা {
+    যদি(buff_দৈর্ঘ্য == -1) {
       // fLength = u_strlen(buff); but do not look beyond buffCapacity
-      const char16_t *p = buff, *limit = buff + buffCapacity;
-      while(p != limit && *p != 0) {
+      ধ্রুবক char16_t *p = buff, *limit = buff + buffCapacity;
+      যখন(p != limit && *p != 0) {
         ++p;
       }
-      buffLength = static_cast<int32_t>(p - buff);
+      buff_দৈর্ঘ্য = static_cast<int32_t>(p - buff);
     }
-    setArray(buff, buffLength, buffCapacity);
+    setArray(buff, buff_দৈর্ঘ্য, buffCapacity);
   }
 }
 
-UnicodeString::UnicodeString(const char *src, int32_t length, EInvariant) {
-  fUnion.fFields.fLengthAndFlags = kShortString;
-  if(src==nullptr) {
+UnicodeString::UnicodeString(ধ্রুবক অক্ষর *src, int32_t length, EInvariant) {
+  fUnion.fFields.f_দৈর্ঘ্য_And_Flags = kShortString;
+  যদি(src==nullptr) {
     // treat as an empty string
-  } else {
-    if(length<0) {
+  } অন্যথা {
+    যদি(length<0) {
       length = static_cast<int32_t>(uprv_strlen(src));
     }
-    if(cloneArrayIfNeeded(length, length, false)) {
+    যদি(cloneArrayIfNeeded(length, length, মিথ্যা)) {
       u_charsToUChars(src, getArrayStart(), length);
-      setLength(length);
-    } else {
+      set_দৈর্ঘ্য(length);
+    } অন্যথা {
       setToBogus();
     }
   }
@@ -300,92 +300,92 @@ UnicodeString::UnicodeString(const char *src, int32_t length, EInvariant) {
 
 UnicodeString
 UnicodeString::readOnlyAliasFromU16StringView(std::u16string_view text U_LIFETIME_BOUND) {
-  UnicodeString result;
-  if (text.length() <= INT32_MAX) {
-    result.setTo(false, text.data(), static_cast<int32_t>(text.length()));
-  } else {
-    result.setToBogus();
+  UnicodeString ফলাফল;
+  যদি (text.length() <= INT32_MAX) {
+    ফলাফল.setTo(মিথ্যা, text.তথ্য(), static_cast<int32_t>(text.length()));
+  } অন্যথা {
+    ফলাফল.setToBogus();
   }
-  return result;
+  ফেরত ফলাফল;
 }
 
 UnicodeString
-UnicodeString::readOnlyAliasFromUnicodeString(const UnicodeString& text U_LIFETIME_BOUND) {
-  UnicodeString result;
-  if (text.isBogus()) {
-    result.setToBogus();
-  } else {
-    result.setTo(false, text.getBuffer(), text.length());
+UnicodeString::readOnlyAliasFromUnicodeString(ধ্রুবক UnicodeString& text U_LIFETIME_BOUND) {
+  UnicodeString ফলাফল;
+  যদি (text.isBogus()) {
+    ফলাফল.setToBogus();
+  } অন্যথা {
+    ফলাফল.setTo(মিথ্যা, text.get_বাফার(), text.length());
   }
-  return result;
+  ফেরত ফলাফল;
 }
 
-#if U_CHARSET_IS_UTF8
+#যদি U_CHARSET_IS_UTF8
 
-UnicodeString::UnicodeString(const char *codepageData) {
-  fUnion.fFields.fLengthAndFlags = kShortString;
-  if (codepageData != nullptr) {
-    setToUTF8(codepageData);
+UnicodeString::UnicodeString(ধ্রুবক অক্ষর *codepage_তথ্য) {
+  fUnion.fFields.f_দৈর্ঘ্য_And_Flags = kShortString;
+  যদি (codepage_তথ্য != nullptr) {
+    setToUTF8(codepage_তথ্য);
   }
 }
 
-UnicodeString::UnicodeString(const char *codepageData, int32_t dataLength) {
-  fUnion.fFields.fLengthAndFlags = kShortString;
+UnicodeString::UnicodeString(ধ্রুবক অক্ষর *codepage_তথ্য, int32_t তথ্য_দৈর্ঘ্য) {
+  fUnion.fFields.f_দৈর্ঘ্য_And_Flags = kShortString;
   // if there's nothing to convert, do nothing
-  if (codepageData == nullptr || dataLength == 0 || dataLength < -1) {
-    return;
+  যদি (codepage_তথ্য == nullptr || তথ্য_দৈর্ঘ্য == 0 || তথ্য_দৈর্ঘ্য < -1) {
+    ফেরত;
   }
-  if(dataLength == -1) {
-    dataLength = static_cast<int32_t>(uprv_strlen(codepageData));
+  যদি(তথ্য_দৈর্ঘ্য == -1) {
+    তথ্য_দৈর্ঘ্য = static_cast<int32_t>(uprv_strlen(codepage_তথ্য));
   }
-  setToUTF8(StringPiece(codepageData, dataLength));
+  setToUTF8(StringPiece(codepage_তথ্য, তথ্য_দৈর্ঘ্য));
 }
 
 // else see unistr_cnv.cpp
 #endif
 
-UnicodeString::UnicodeString(const UnicodeString& that) {
-  fUnion.fFields.fLengthAndFlags = kShortString;
+UnicodeString::UnicodeString(ধ্রুবক UnicodeString& that) {
+  fUnion.fFields.f_দৈর্ঘ্য_And_Flags = kShortString;
   copyFrom(that);
 }
 
 UnicodeString::UnicodeString(UnicodeString &&src) noexcept {
-  copyFieldsFrom(src, true);
+  copyFieldsFrom(src, সত্য);
 }
 
-UnicodeString::UnicodeString(const UnicodeString& that,
+UnicodeString::UnicodeString(ধ্রুবক UnicodeString& that,
                              int32_t srcStart) {
-  fUnion.fFields.fLengthAndFlags = kShortString;
+  fUnion.fFields.f_দৈর্ঘ্য_And_Flags = kShortString;
   setTo(that, srcStart);
 }
 
-UnicodeString::UnicodeString(const UnicodeString& that,
+UnicodeString::UnicodeString(ধ্রুবক UnicodeString& that,
                              int32_t srcStart,
-                             int32_t srcLength) {
-  fUnion.fFields.fLengthAndFlags = kShortString;
-  setTo(that, srcStart, srcLength);
+                             int32_t src_দৈর্ঘ্য) {
+  fUnion.fFields.f_দৈর্ঘ্য_And_Flags = kShortString;
+  setTo(that, srcStart, src_দৈর্ঘ্য);
 }
 
 // Replaceable base class clone() default implementation, does not clone
 Replaceable *
-Replaceable::clone() const {
-  return nullptr;
+Replaceable::clone() ধ্রুবক {
+  ফেরত nullptr;
 }
 
 // UnicodeString overrides clone() with a real implementation
 UnicodeString *
-UnicodeString::clone() const {
-  LocalPointer<UnicodeString> clonedString(new UnicodeString(*this));
-  return clonedString.isValid() && !clonedString->isBogus() ? clonedString.orphan() : nullptr;
+UnicodeString::clone() ধ্রুবক {
+  LocalPointer<UnicodeString> clonedString(নতুন UnicodeString(*এই));
+  ফেরত clonedString.isValid() && !clonedString->isBogus() ? clonedString.orphan() : nullptr;
 }
 
 //========================================
 // array allocation
 //========================================
 
-namespace {
+নামাকাশ {
 
-const int32_t kGrowSize = 128;
+ধ্রুবক int32_t k_Grow_আকার = 128;
 
 // The number of bytes for one int32_t reference counter and capacity UChars
 // must fit into a 32-bit size_t (at least when on a 32-bit platform).
@@ -394,14 +394,14 @@ const int32_t kGrowSize = 128;
 // This means that capacity must be at most (0xfffffff0 - 4) / 2 - 1 = 0x7ffffff5.
 // (With more complicated checks we could go up to 0x7ffffffd without rounding up,
 // but that does not seem worth it.)
-const int32_t kMaxCapacity = 0x7ffffff5;
+ধ্রুবক int32_t kMaxCapacity = 0x7ffffff5;
 
-int32_t getGrowCapacity(int32_t newLength) {
-  int32_t growSize = (newLength >> 2) + kGrowSize;
-  if(growSize <= (kMaxCapacity - newLength)) {
-    return newLength + growSize;
-  } else {
-    return kMaxCapacity;
+int32_t getGrowCapacity(int32_t new_দৈর্ঘ্য) {
+  int32_t grow_আকার = (new_দৈর্ঘ্য >> 2) + k_Grow_আকার;
+  যদি(grow_আকার <= (kMaxCapacity - new_দৈর্ঘ্য)) {
+    ফেরত new_দৈর্ঘ্য + grow_আকার;
+  } অন্যথা {
+    ফেরত kMaxCapacity;
   }
 }
 
@@ -409,52 +409,52 @@ int32_t getGrowCapacity(int32_t newLength) {
 
 UBool
 UnicodeString::allocate(int32_t capacity) {
-  if(capacity <= US_STACKBUF_SIZE) {
-    fUnion.fFields.fLengthAndFlags = kShortString;
-    return true;
+  যদি(capacity <= US_STACKBUF_আকার) {
+    fUnion.fFields.f_দৈর্ঘ্য_And_Flags = kShortString;
+    ফেরত সত্য;
   }
-  if(capacity <= kMaxCapacity) {
+  যদি(capacity <= kMaxCapacity) {
     ++capacity;  // for the NUL
     // Switch to size_t which is unsigned so that we can allocate up to 4GB.
     // Reference counter + UChars.
-    size_t numBytes = sizeof(int32_t) + static_cast<size_t>(capacity) * U_SIZEOF_UCHAR;
+    size_t অঙ্ক_Bytes = আকার(int32_t) + static_cast<size_t>(capacity) * U_SIZEOF_UCHAR;
     // Round up to a multiple of 16.
-    numBytes = (numBytes + 15) & ~15;
-    int32_t* array = static_cast<int32_t*>(uprv_malloc(numBytes));
-    if(array != nullptr) {
+    অঙ্ক_Bytes = (অঙ্ক_Bytes + 15) & ~15;
+    int32_t* array = static_cast<int32_t*>(uprv_malloc(অঙ্ক_Bytes));
+    যদি(array != nullptr) {
       // set initial refCount and point behind the refCount
       *array++ = 1;
-      numBytes -= sizeof(int32_t);
+      অঙ্ক_Bytes -= আকার(int32_t);
 
       // have fArray point to the first char16_t
       fUnion.fFields.fArray = reinterpret_cast<char16_t*>(array);
-      fUnion.fFields.fCapacity = static_cast<int32_t>(numBytes / U_SIZEOF_UCHAR);
-      fUnion.fFields.fLengthAndFlags = kLongString;
-      return true;
+      fUnion.fFields.fCapacity = static_cast<int32_t>(অঙ্ক_Bytes / U_SIZEOF_UCHAR);
+      fUnion.fFields.f_দৈর্ঘ্য_And_Flags = kLongString;
+      ফেরত সত্য;
     }
   }
-  fUnion.fFields.fLengthAndFlags = kIsBogus;
+  fUnion.fFields.f_দৈর্ঘ্য_And_Flags = kIsBogus;
   fUnion.fFields.fArray = nullptr;
   fUnion.fFields.fCapacity = 0;
-  return false;
+  ফেরত মিথ্যা;
 }
 
 //========================================
 // Destructor
 //========================================
 
-#ifdef UNISTR_COUNT_FINAL_STRING_LENGTHS
-static u_atomic_int32_t finalLengthCounts[0x400];  // UnicodeString::kMaxShortLength+1
-static u_atomic_int32_t beyondCount(0);
+#ifdef UNISTR_গুনতি_FINAL_STRING_LENGTHS
+স্থির u_atomic_int32_t final_দৈর্ঘ্য_Counts[0x400];  // UnicodeString::kMaxShortLength+1
+স্থির u_atomic_int32_t beyond_গুনতি(0);
 
-U_CAPI void unistr_printLengths() {
+U_CAPI শূন্য unistr_printLengths() {
   int32_t i;
-  for(i = 0; i <= 59; ++i) {
-    printf("%2d,  %9d\n", i, (int32_t)finalLengthCounts[i]);
+  জন্য(i = 0; i <= 59; ++i) {
+    printf("%2d,  %9d\n", i, (int32_t)final_দৈর্ঘ্য_Counts[i]);
   }
-  int32_t beyond = beyondCount;
-  for(; i < UPRV_LENGTHOF(finalLengthCounts); ++i) {
-    beyond += finalLengthCounts[i];
+  int32_t beyond = beyond_গুনতি;
+  জন্য(; i < UPRV_LENGTHOF(final_দৈর্ঘ্য_Counts); ++i) {
+    beyond += final_দৈর্ঘ্য_Counts[i];
   }
   printf(">59, %9d\n", beyond);
 }
@@ -462,16 +462,16 @@ U_CAPI void unistr_printLengths() {
 
 UnicodeString::~UnicodeString()
 {
-#ifdef UNISTR_COUNT_FINAL_STRING_LENGTHS
+#ifdef UNISTR_গুনতি_FINAL_STRING_LENGTHS
   // Count lengths of strings at the end of their lifetime.
   // Useful for discussion of a desirable stack buffer size.
   // Count the contents length, not the optional NUL terminator nor further capacity.
   // Ignore open-buffer strings and strings which alias external storage.
-  if((fUnion.fFields.fLengthAndFlags&(kOpenGetBuffer|kReadonlyAlias|kWritableAlias)) == 0) {
-    if(hasShortLength()) {
-      umtx_atomic_inc(finalLengthCounts + getShortLength());
-    } else {
-      umtx_atomic_inc(&beyondCount);
+  যদি((fUnion.fFields.f_দৈর্ঘ্য_And_Flags&(k_Open_Get_বাফার|kReadonlyAlias|kWritableAlias)) == 0) {
+    যদি(has_Short_দৈর্ঘ্য()) {
+      umtx_atomic_inc(final_দৈর্ঘ্য_Counts + get_Short_দৈর্ঘ্য());
+    } অন্যথা {
+      umtx_atomic_inc(&beyond_গুনতি);
     }
   }
 #endif
@@ -484,41 +484,41 @@ UnicodeString::~UnicodeString()
 //========================================
 
 UnicodeString UnicodeString::fromUTF8(StringPiece utf8) {
-  UnicodeString result;
-  result.setToUTF8(utf8);
-  return result;
+  UnicodeString ফলাফল;
+  ফলাফল.setToUTF8(utf8);
+  ফেরত ফলাফল;
 }
 
-UnicodeString UnicodeString::fromUTF32(const UChar32 *utf32, int32_t length) {
-  UnicodeString result;
+UnicodeString UnicodeString::fromUTF32(ধ্রুবক UChar32 *utf32, int32_t length) {
+  UnicodeString ফলাফল;
   int32_t capacity;
   // Most UTF-32 strings will be BMP-only and result in a same-length
   // UTF-16 string. We overestimate the capacity just slightly,
   // just in case there are a few supplementary characters.
-  if(length <= US_STACKBUF_SIZE) {
-    capacity = US_STACKBUF_SIZE;
-  } else {
+  যদি(length <= US_STACKBUF_আকার) {
+    capacity = US_STACKBUF_আকার;
+  } অন্যথা {
     capacity = length + (length >> 4) + 4;
   }
-  do {
-    char16_t *utf16 = result.getBuffer(capacity);
+  করো {
+    char16_t *utf16 = ফলাফল.get_বাফার(capacity);
     int32_t length16;
     UErrorCode errorCode = U_ZERO_ERROR;
-    u_strFromUTF32WithSub(utf16, result.getCapacity(), &length16,
+    u_strFromUTF32WithSub(utf16, ফলাফল.getCapacity(), &length16,
         utf32, length,
         0xfffd,  // Substitution character.
         nullptr,    // Don't care about number of substitutions.
         &errorCode);
-    result.releaseBuffer(length16);
-    if(errorCode == U_BUFFER_OVERFLOW_ERROR) {
+    ফলাফল.release_বাফার(length16);
+    যদি(errorCode == U_বাফার_OVERFLOW_ERROR) {
       capacity = length16 + 1;  // +1 for the terminating NUL.
-      continue;
-    } else if(U_FAILURE(errorCode)) {
-      result.setToBogus();
+      চালু;
+    } অন্যথা যদি(U_FAILURE(errorCode)) {
+      ফলাফল.setToBogus();
     }
-    break;
-  } while(true);
-  return result;
+    বিরতি;
+  } যখন(সত্য);
+  ফেরত ফলাফল;
 }
 
 //========================================
@@ -526,271 +526,271 @@ UnicodeString UnicodeString::fromUTF32(const UChar32 *utf32, int32_t length) {
 //========================================
 
 UnicodeString&
-UnicodeString::operator=(const UnicodeString& src) U_LIFETIME_BOUND {
-  return copyFrom(src);
+UnicodeString::operator=(ধ্রুবক UnicodeString& src) U_LIFETIME_BOUND {
+  ফেরত copyFrom(src);
 }
 
 UnicodeString&
-UnicodeString::fastCopyFrom(const UnicodeString& src) U_LIFETIME_BOUND {
-  return copyFrom(src, true);
+UnicodeString::fastCopyFrom(ধ্রুবক UnicodeString& src) U_LIFETIME_BOUND {
+  ফেরত copyFrom(src, সত্য);
 }
 
 UnicodeString&
-UnicodeString::copyFrom(const UnicodeString& src, UBool fastCopy) U_LIFETIME_BOUND {
+UnicodeString::copyFrom(ধ্রুবক UnicodeString& src, UBool fastCopy) U_LIFETIME_BOUND {
   // if assigning to ourselves, do nothing
-  if(this == &src) {
-    return *this;
+  যদি(এই == &src) {
+    ফেরত *এই;
   }
 
   // is the right side bogus?
-  if(src.isBogus()) {
+  যদি(src.isBogus()) {
     setToBogus();
-    return *this;
+    ফেরত *এই;
   }
 
   // delete the current contents
   releaseArray();
 
-  if(src.isEmpty()) {
+  যদি(src.isEmpty()) {
     // empty string - use the stack buffer
     setToEmpty();
-    return *this;
+    ফেরত *এই;
   }
 
   // fLength>0 and not an "open" src.getBuffer(minCapacity)
-  fUnion.fFields.fLengthAndFlags = src.fUnion.fFields.fLengthAndFlags;
-  switch(src.fUnion.fFields.fLengthAndFlags & kAllStorageFlags) {
-  case kShortString:
+  fUnion.fFields.f_দৈর্ঘ্য_And_Flags = src.fUnion.fFields.f_দৈর্ঘ্য_And_Flags;
+  নির্বাচন(src.fUnion.fFields.f_দৈর্ঘ্য_And_Flags & kAllStorageFlags) {
+  ক্ষেত্র kShortString:
     // short string using the stack buffer, do the same
-    uprv_memcpy(fUnion.fStackFields.fBuffer, src.fUnion.fStackFields.fBuffer,
-                getShortLength() * U_SIZEOF_UCHAR);
-    break;
-  case kLongString:
+    uprv_memcpy(fUnion.f_স্তূপ_Fields.f_বাফার, src.fUnion.f_স্তূপ_Fields.f_বাফার,
+                get_Short_দৈর্ঘ্য() * U_SIZEOF_UCHAR);
+    বিরতি;
+  ক্ষেত্র kLongString:
     // src uses a refCounted string buffer, use that buffer with refCount
     // src is const, use a cast - we don't actually change it
     const_cast<UnicodeString &>(src).addRef();
     // copy all fields, share the reference-counted buffer
     fUnion.fFields.fArray = src.fUnion.fFields.fArray;
     fUnion.fFields.fCapacity = src.fUnion.fFields.fCapacity;
-    if(!hasShortLength()) {
-      fUnion.fFields.fLength = src.fUnion.fFields.fLength;
+    যদি(!has_Short_দৈর্ঘ্য()) {
+      fUnion.fFields.f_দৈর্ঘ্য = src.fUnion.fFields.f_দৈর্ঘ্য;
     }
-    break;
-  case kReadonlyAlias:
-    if(fastCopy) {
+    বিরতি;
+  ক্ষেত্র kReadonlyAlias:
+    যদি(fastCopy) {
       // src is a readonly alias, do the same
       // -> maintain the readonly alias as such
       fUnion.fFields.fArray = src.fUnion.fFields.fArray;
       fUnion.fFields.fCapacity = src.fUnion.fFields.fCapacity;
-      if(!hasShortLength()) {
-        fUnion.fFields.fLength = src.fUnion.fFields.fLength;
+      যদি(!has_Short_দৈর্ঘ্য()) {
+        fUnion.fFields.f_দৈর্ঘ্য = src.fUnion.fFields.f_দৈর্ঘ্য;
       }
-      break;
+      বিরতি;
     }
     // else if(!fastCopy) fall through to case kWritableAlias
     // -> allocate a new buffer and copy the contents
     U_FALLTHROUGH;
-  case kWritableAlias: {
+  ক্ষেত্র kWritableAlias: {
     // src is a writable alias; we make a copy of that instead
-    int32_t srcLength = src.length();
-    if(allocate(srcLength)) {
-      u_memcpy(getArrayStart(), src.getArrayStart(), srcLength);
-      setLength(srcLength);
-      break;
+    int32_t src_দৈর্ঘ্য = src.length();
+    যদি(allocate(src_দৈর্ঘ্য)) {
+      u_memcpy(getArrayStart(), src.getArrayStart(), src_দৈর্ঘ্য);
+      set_দৈর্ঘ্য(src_দৈর্ঘ্য);
+      বিরতি;
     }
     // if there is not enough memory, then fall through to setting to bogus
     U_FALLTHROUGH;
   }
-  default:
+  পূর্বনির্ধারিত:
     // if src is bogus, set ourselves to bogus
     // do not call setToBogus() here because fArray and flags are not consistent here
-    fUnion.fFields.fLengthAndFlags = kIsBogus;
+    fUnion.fFields.f_দৈর্ঘ্য_And_Flags = kIsBogus;
     fUnion.fFields.fArray = nullptr;
     fUnion.fFields.fCapacity = 0;
-    break;
+    বিরতি;
   }
 
-  return *this;
+  ফেরত *এই;
 }
 
 UnicodeString& UnicodeString::operator=(UnicodeString&& src) noexcept U_LIFETIME_BOUND {
   // No explicit check for self move assignment, consistent with standard library.
   // Self move assignment causes no crash nor leak but might make the object bogus.
   releaseArray();
-  copyFieldsFrom(src, true);
-  return *this;
+  copyFieldsFrom(src, সত্য);
+  ফেরত *এই;
 }
 
 // Same as move assignment except without memory management.
-void UnicodeString::copyFieldsFrom(UnicodeString &src, UBool setSrcToBogus) noexcept {
-  int16_t lengthAndFlags = fUnion.fFields.fLengthAndFlags = src.fUnion.fFields.fLengthAndFlags;
-  if(lengthAndFlags & kUsingStackBuffer) {
+শূন্য UnicodeString::copyFieldsFrom(UnicodeString &src, UBool setSrcToBogus) noexcept {
+  int16_t দৈর্ঘ্য_And_Flags = fUnion.fFields.f_দৈর্ঘ্য_And_Flags = src.fUnion.fFields.f_দৈর্ঘ্য_And_Flags;
+  যদি(দৈর্ঘ্য_And_Flags & k_Using_স্তূপ_বাফার) {
     // Short string using the stack buffer, copy the contents.
     // Check for self assignment to prevent "overlap in memcpy" warnings,
     // although it should be harmless to copy a buffer to itself exactly.
-    if(this != &src) {
-      uprv_memcpy(fUnion.fStackFields.fBuffer, src.fUnion.fStackFields.fBuffer,
-                  getShortLength() * U_SIZEOF_UCHAR);
+    যদি(এই != &src) {
+      uprv_memcpy(fUnion.f_স্তূপ_Fields.f_বাফার, src.fUnion.f_স্তূপ_Fields.f_বাফার,
+                  get_Short_দৈর্ঘ্য() * U_SIZEOF_UCHAR);
     }
-  } else {
+  } অন্যথা {
     // In all other cases, copy all fields.
     fUnion.fFields.fArray = src.fUnion.fFields.fArray;
     fUnion.fFields.fCapacity = src.fUnion.fFields.fCapacity;
-    if(!hasShortLength()) {
-      fUnion.fFields.fLength = src.fUnion.fFields.fLength;
+    যদি(!has_Short_দৈর্ঘ্য()) {
+      fUnion.fFields.f_দৈর্ঘ্য = src.fUnion.fFields.f_দৈর্ঘ্য;
     }
-    if(setSrcToBogus) {
+    যদি(setSrcToBogus) {
       // Set src to bogus without releasing any memory.
-      src.fUnion.fFields.fLengthAndFlags = kIsBogus;
+      src.fUnion.fFields.f_দৈর্ঘ্য_And_Flags = kIsBogus;
       src.fUnion.fFields.fArray = nullptr;
       src.fUnion.fFields.fCapacity = 0;
     }
   }
 }
 
-void UnicodeString::swap(UnicodeString &other) noexcept {
-  UnicodeString temp;  // Empty short string: Known not to need releaseArray().
+শূন্য UnicodeString::swap(UnicodeString &other) noexcept {
+  UnicodeString অস্থায়ী;  // Empty short string: Known not to need releaseArray().
   // Copy fields without resetting source values in between.
-  temp.copyFieldsFrom(*this, false);
-  this->copyFieldsFrom(other, false);
-  other.copyFieldsFrom(temp, false);
+  অস্থায়ী.copyFieldsFrom(*এই, মিথ্যা);
+  এই->copyFieldsFrom(other, মিথ্যা);
+  other.copyFieldsFrom(অস্থায়ী, মিথ্যা);
   // Set temp to an empty string so that other's memory is not released twice.
-  temp.fUnion.fFields.fLengthAndFlags = kShortString;
+  অস্থায়ী.fUnion.fFields.f_দৈর্ঘ্য_And_Flags = kShortString;
 }
 
 //========================================
 // Miscellaneous operations
 //========================================
 
-UnicodeString UnicodeString::unescape() const {
-    UnicodeString result(length(), static_cast<UChar32>(0), static_cast<int32_t>(0)); // construct with capacity
-    if (result.isBogus()) {
-        return result;
+UnicodeString UnicodeString::unescape() ধ্রুবক {
+    UnicodeString ফলাফল(length(), static_cast<UChar32>(0), static_cast<int32_t>(0)); // construct with capacity
+    যদি (ফলাফল.isBogus()) {
+        ফেরত ফলাফল;
     }
-    const char16_t *array = getBuffer();
+    ধ্রুবক char16_t *array = get_বাফার();
     int32_t len = length();
-    int32_t prev = 0;
-    for (int32_t i=0;;) {
-        if (i == len) {
-            result.append(array, prev, len - prev);
-            break;
+    int32_t পূর্ব = 0;
+    জন্য (int32_t i=0;;) {
+        যদি (i == len) {
+            ফলাফল.append(array, পূর্ব, len - পূর্ব);
+            বিরতি;
         }
-        if (array[i++] == 0x5C /*'\\'*/) {
-            result.append(array, prev, (i - 1) - prev);
+        যদি (array[i++] == 0x5C /*'\\'*/) {
+            ফলাফল.append(array, পূর্ব, (i - 1) - পূর্ব);
             UChar32 c = unescapeAt(i); // advances i
-            if (c < 0) {
-                result.remove(); // return empty string
-                break; // invalid escape sequence
+            যদি (c < 0) {
+                ফলাফল.remove(); // return empty string
+                বিরতি; // invalid escape sequence
             }
-            result.append(c);
-            prev = i;
+            ফলাফল.append(c);
+            পূর্ব = i;
         }
     }
-    return result;
+    ফেরত ফলাফল;
 }
 
-UChar32 UnicodeString::unescapeAt(int32_t &offset) const {
-    return u_unescapeAt(UnicodeString_charAt, &offset, length(), (void*)this);
+UChar32 UnicodeString::unescapeAt(int32_t &offset) ধ্রুবক {
+    ফেরত u_unescapeAt(UnicodeString_charAt, &offset, length(), (শূন্য*)এই);
 }
 
 //========================================
 // Read-only implementation
 //========================================
 UBool
-UnicodeString::doEquals(const char16_t *text, int32_t len) const {
+UnicodeString::doEquals(ধ্রুবক char16_t *text, int32_t len) ধ্রুবক {
   // Requires: this not bogus and have same lengths.
   // Byte-wise comparison works for equality regardless of endianness.
-  return uprv_memcmp(getArrayStart(), text, len * U_SIZEOF_UCHAR) == 0;
+  ফেরত uprv_memcmp(getArrayStart(), text, len * U_SIZEOF_UCHAR) == 0;
 }
 
 UBool
 UnicodeString::doEqualsSubstring( int32_t start,
               int32_t length,
-              const char16_t *srcChars,
+              ধ্রুবক char16_t *srcChars,
               int32_t srcStart,
-              int32_t srcLength) const
+              int32_t src_দৈর্ঘ্য) ধ্রুবক
 {
   // compare illegal string values
-  if(isBogus()) {
-    return false;
+  যদি(isBogus()) {
+    ফেরত মিথ্যা;
   }
   
   // pin indices to legal values
   pinIndices(start, length);
 
-  if(srcChars == nullptr) {
+  যদি(srcChars == nullptr) {
     // treat const char16_t *srcChars==nullptr as an empty string
-    return length == 0 ? true : false;
+    ফেরত length == 0 ? সত্য : মিথ্যা;
   }
 
   // get the correct pointer
-  const char16_t *chars = getArrayStart();
+  ধ্রুবক char16_t *chars = getArrayStart();
 
   chars += start;
   srcChars += srcStart;
 
   // get the srcLength if necessary
-  if(srcLength < 0) {
-    srcLength = u_strlen(srcChars + srcStart);
+  যদি(src_দৈর্ঘ্য < 0) {
+    src_দৈর্ঘ্য = u_strlen(srcChars + srcStart);
   }
 
-  if (length != srcLength) {
-    return false;
+  যদি (length != src_দৈর্ঘ্য) {
+    ফেরত মিথ্যা;
   }
 
-  if(length == 0 || chars == srcChars) {
-    return true;
+  যদি(length == 0 || chars == srcChars) {
+    ফেরত সত্য;
   }
 
-  return u_memcmp(chars, srcChars, srcLength) == 0;
+  ফেরত u_memcmp(chars, srcChars, src_দৈর্ঘ্য) == 0;
 }
 
 int8_t
 UnicodeString::doCompare( int32_t start,
               int32_t length,
-              const char16_t *srcChars,
+              ধ্রুবক char16_t *srcChars,
               int32_t srcStart,
-              int32_t srcLength) const
+              int32_t src_দৈর্ঘ্য) ধ্রুবক
 {
   // compare illegal string values
-  if(isBogus()) {
-    return -1;
+  যদি(isBogus()) {
+    ফেরত -1;
   }
   
   // pin indices to legal values
   pinIndices(start, length);
 
-  if(srcChars == nullptr) {
+  যদি(srcChars == nullptr) {
     // treat const char16_t *srcChars==nullptr as an empty string
-    return length == 0 ? 0 : 1;
+    ফেরত length == 0 ? 0 : 1;
   }
 
   // get the correct pointer
-  const char16_t *chars = getArrayStart();
+  ধ্রুবক char16_t *chars = getArrayStart();
 
   chars += start;
   srcChars += srcStart;
 
-  int32_t minLength;
-  int8_t lengthResult;
+  int32_t min_দৈর্ঘ্য;
+  int8_t দৈর্ঘ্য_ফলাফল;
 
   // get the srcLength if necessary
-  if(srcLength < 0) {
-    srcLength = u_strlen(srcChars + srcStart);
+  যদি(src_দৈর্ঘ্য < 0) {
+    src_দৈর্ঘ্য = u_strlen(srcChars + srcStart);
   }
 
   // are we comparing different lengths?
-  if(length != srcLength) {
-    if(length < srcLength) {
-      minLength = length;
-      lengthResult = -1;
-    } else {
-      minLength = srcLength;
-      lengthResult = 1;
+  যদি(length != src_দৈর্ঘ্য) {
+    যদি(length < src_দৈর্ঘ্য) {
+      min_দৈর্ঘ্য = length;
+      দৈর্ঘ্য_ফলাফল = -1;
+    } অন্যথা {
+      min_দৈর্ঘ্য = src_দৈর্ঘ্য;
+      দৈর্ঘ্য_ফলাফল = 1;
     }
-  } else {
-    minLength = length;
-    lengthResult = 0;
+  } অন্যথা {
+    min_দৈর্ঘ্য = length;
+    দৈর্ঘ্য_ফলাফল = 0;
   }
 
   /*
@@ -801,247 +801,247 @@ UnicodeString::doCompare( int32_t start,
    * does not become 0 itself
    */
 
-  if(minLength > 0 && chars != srcChars) {
-    int32_t result;
+  যদি(min_দৈর্ঘ্য > 0 && chars != srcChars) {
+    int32_t ফলাফল;
 
-#   if U_IS_BIG_ENDIAN 
+#   যদি U_IS_BIG_ENDIAN 
       // big-endian: byte comparison works
-      result = uprv_memcmp(chars, srcChars, minLength * sizeof(char16_t));
-      if(result != 0) {
-        return (int8_t)(result >> 15 | 1);
+      ফলাফল = uprv_memcmp(chars, srcChars, min_দৈর্ঘ্য * আকার(char16_t));
+      যদি(ফলাফল != 0) {
+        ফেরত (int8_t)(ফলাফল >> 15 | 1);
       }
-#   else
+#   অন্যথা
       // little-endian: compare char16_t units
-      do {
-        result = static_cast<int32_t>(*(chars++)) - static_cast<int32_t>(*(srcChars++));
-        if(result != 0) {
-          return static_cast<int8_t>(result >> 15 | 1);
+      করো {
+        ফলাফল = static_cast<int32_t>(*(chars++)) - static_cast<int32_t>(*(srcChars++));
+        যদি(ফলাফল != 0) {
+          ফেরত static_cast<int8_t>(ফলাফল >> 15 | 1);
         }
-      } while(--minLength > 0);
+      } যখন(--min_দৈর্ঘ্য > 0);
 #   endif
   }
-  return lengthResult;
+  ফেরত দৈর্ঘ্য_ফলাফল;
 }
 
 /* String compare in code point order - doCompare() compares in code unit order. */
 int8_t
 UnicodeString::doCompareCodePointOrder(int32_t start,
                                        int32_t length,
-                                       const char16_t *srcChars,
+                                       ধ্রুবক char16_t *srcChars,
                                        int32_t srcStart,
-                                       int32_t srcLength) const
+                                       int32_t src_দৈর্ঘ্য) ধ্রুবক
 {
   // compare illegal string values
   // treat const char16_t *srcChars==nullptr as an empty string
-  if(isBogus()) {
-    return -1;
+  যদি(isBogus()) {
+    ফেরত -1;
   }
 
   // pin indices to legal values
   pinIndices(start, length);
 
-  if(srcChars == nullptr) {
-    srcStart = srcLength = 0;
+  যদি(srcChars == nullptr) {
+    srcStart = src_দৈর্ঘ্য = 0;
   }
 
-  int32_t diff = uprv_strCompare(getArrayStart() + start, length, (srcChars!=nullptr)?(srcChars + srcStart):nullptr, srcLength, false, true);
+  int32_t diff = uprv_strCompare(getArrayStart() + start, length, (srcChars!=nullptr)?(srcChars + srcStart):nullptr, src_দৈর্ঘ্য, মিথ্যা, সত্য);
   /* translate the 32-bit result into an 8-bit one */
-  if(diff!=0) {
-    return static_cast<int8_t>(diff >> 15 | 1);
-  } else {
-    return 0;
+  যদি(diff!=0) {
+    ফেরত static_cast<int8_t>(diff >> 15 | 1);
+  } অন্যথা {
+    ফেরত 0;
   }
 }
 
 int32_t
-UnicodeString::getLength() const {
-    return length();
+UnicodeString::get_দৈর্ঘ্য() ধ্রুবক {
+    ফেরত length();
 }
 
 char16_t
-UnicodeString::getCharAt(int32_t offset) const {
-  return charAt(offset);
+UnicodeString::getCharAt(int32_t offset) ধ্রুবক {
+  ফেরত charAt(offset);
 }
 
 UChar32
-UnicodeString::getChar32At(int32_t offset) const {
-  return char32At(offset);
+UnicodeString::getChar32At(int32_t offset) ধ্রুবক {
+  ফেরত char32At(offset);
 }
 
 UChar32
-UnicodeString::char32At(int32_t offset) const
+UnicodeString::char32At(int32_t offset) ধ্রুবক
 {
   int32_t len = length();
-  if (static_cast<uint32_t>(offset) < static_cast<uint32_t>(len)) {
-    const char16_t *array = getArrayStart();
+  যদি (static_cast<uint32_t>(offset) < static_cast<uint32_t>(len)) {
+    ধ্রুবক char16_t *array = getArrayStart();
     UChar32 c;
     U16_GET(array, 0, offset, len, c);
-    return c;
-  } else {
-    return kInvalidUChar;
+    ফেরত c;
+  } অন্যথা {
+    ফেরত kInvalidUChar;
   }
 }
 
 int32_t
-UnicodeString::getChar32Start(int32_t offset) const {
-  if (static_cast<uint32_t>(offset) < static_cast<uint32_t>(length())) {
-    const char16_t *array = getArrayStart();
+UnicodeString::getChar32Start(int32_t offset) ধ্রুবক {
+  যদি (static_cast<uint32_t>(offset) < static_cast<uint32_t>(length())) {
+    ধ্রুবক char16_t *array = getArrayStart();
     U16_SET_CP_START(array, 0, offset);
-    return offset;
-  } else {
-    return 0;
+    ফেরত offset;
+  } অন্যথা {
+    ফেরত 0;
   }
 }
 
 int32_t
-UnicodeString::getChar32Limit(int32_t offset) const {
+UnicodeString::getChar32Limit(int32_t offset) ধ্রুবক {
   int32_t len = length();
-  if (static_cast<uint32_t>(offset) < static_cast<uint32_t>(len)) {
-    const char16_t *array = getArrayStart();
+  যদি (static_cast<uint32_t>(offset) < static_cast<uint32_t>(len)) {
+    ধ্রুবক char16_t *array = getArrayStart();
     U16_SET_CP_LIMIT(array, 0, offset, len);
-    return offset;
-  } else {
-    return len;
+    ফেরত offset;
+  } অন্যথা {
+    ফেরত len;
   }
 }
 
 int32_t
-UnicodeString::countChar32(int32_t start, int32_t length) const {
+UnicodeString::গুনতি_Char32(int32_t start, int32_t length) ধ্রুবক {
   pinIndices(start, length);
   // if(isBogus()) then fArray==0 and start==0 - u_countChar32() checks for nullptr
-  return u_countChar32(getArrayStart()+start, length);
+  ফেরত u_গুনতি_Char32(getArrayStart()+start, length);
 }
 
 UBool
-UnicodeString::hasMoreChar32Than(int32_t start, int32_t length, int32_t number) const {
+UnicodeString::hasMoreChar32Than(int32_t start, int32_t length, int32_t number) ধ্রুবক {
   pinIndices(start, length);
   // if(isBogus()) then fArray==0 and start==0 - u_strHasMoreChar32Than() checks for nullptr
-  return u_strHasMoreChar32Than(getArrayStart()+start, length, number);
+  ফেরত u_strHasMoreChar32Than(getArrayStart()+start, length, number);
 }
 
 int32_t
-UnicodeString::moveIndex32(int32_t index, int32_t delta) const {
+UnicodeString::moveIndex32(int32_t সূচক, int32_t delta) ধ্রুবক {
   // pin index
   int32_t len = length();
-  if(index<0) {
-    index=0;
-  } else if(index>len) {
-    index=len;
+  যদি(সূচক<0) {
+    সূচক=0;
+  } অন্যথা যদি(সূচক>len) {
+    সূচক=len;
   }
 
-  const char16_t *array = getArrayStart();
-  if(delta>0) {
-    U16_FWD_N(array, index, len, delta);
-  } else {
-    U16_BACK_N(array, 0, index, -delta);
+  ধ্রুবক char16_t *array = getArrayStart();
+  যদি(delta>0) {
+    U16_FWD_N(array, সূচক, len, delta);
+  } অন্যথা {
+    U16_BACK_N(array, 0, সূচক, -delta);
   }
 
-  return index;
+  ফেরত সূচক;
 }
 
-void
+শূন্য
 UnicodeString::doExtract(int32_t start,
              int32_t length,
              char16_t *dst,
-             int32_t dstStart) const
+             int32_t dstStart) ধ্রুবক
 {
   // pin indices to legal values
   pinIndices(start, length);
 
   // do not copy anything if we alias dst itself
-  const char16_t *array = getArrayStart();
-  if(array + start != dst + dstStart) {
+  ধ্রুবক char16_t *array = getArrayStart();
+  যদি(array + start != dst + dstStart) {
     us_arrayCopy(array, start, dst, dstStart, length);
   }
 }
 
 int32_t
 UnicodeString::extract(Char16Ptr dest, int32_t destCapacity,
-                       UErrorCode &errorCode) const {
+                       UErrorCode &errorCode) ধ্রুবক {
   int32_t len = length();
-  if(U_SUCCESS(errorCode)) {
-    if (isBogus() || destCapacity < 0 || (destCapacity > 0 && dest == nullptr)) {
+  যদি(U_SUCCESS(errorCode)) {
+    যদি (isBogus() || destCapacity < 0 || (destCapacity > 0 && dest == nullptr)) {
       errorCode=U_ILLEGAL_ARGUMENT_ERROR;
-    } else {
-      const char16_t *array = getArrayStart();
-      if(len>0 && len<=destCapacity && array!=dest) {
+    } অন্যথা {
+      ধ্রুবক char16_t *array = getArrayStart();
+      যদি(len>0 && len<=destCapacity && array!=dest) {
         u_memcpy(dest, array, len);
       }
-      return u_terminateUChars(dest, destCapacity, len, &errorCode);
+      ফেরত u_terminateUChars(dest, destCapacity, len, &errorCode);
     }
   }
 
-  return len;
+  ফেরত len;
 }
 
 int32_t
 UnicodeString::extract(int32_t start,
                        int32_t length,
-                       char *target,
+                       অক্ষর *target,
                        int32_t targetCapacity,
-                       enum EInvariant) const
+                       গণনা EInvariant) ধ্রুবক
 {
   // if the arguments are illegal, then do nothing
-  if(targetCapacity < 0 || (targetCapacity > 0 && target == nullptr)) {
-    return 0;
+  যদি(targetCapacity < 0 || (targetCapacity > 0 && target == nullptr)) {
+    ফেরত 0;
   }
 
   // pin the indices to legal values
   pinIndices(start, length);
 
-  if(length <= targetCapacity) {
+  যদি(length <= targetCapacity) {
     u_UCharsToChars(getArrayStart() + start, target, length);
   }
   UErrorCode status = U_ZERO_ERROR;
-  return u_terminateChars(target, targetCapacity, length, &status);
+  ফেরত u_terminateChars(target, targetCapacity, length, &status);
 }
 
 UnicodeString
-UnicodeString::tempSubString(int32_t start, int32_t len) const U_LIFETIME_BOUND {
+UnicodeString::অস্থায়ী_Sub_String(int32_t start, int32_t len) ধ্রুবক U_LIFETIME_BOUND {
   pinIndices(start, len);
-  const char16_t *array = getBuffer();  // not getArrayStart() to check kIsBogus & kOpenGetBuffer
-  if(array==nullptr) {
-    array=fUnion.fStackFields.fBuffer;  // anything not nullptr because that would make an empty string
+  ধ্রুবক char16_t *array = get_বাফার();  // not getArrayStart() to check kIsBogus & kOpenGetBuffer
+  যদি(array==nullptr) {
+    array=fUnion.f_স্তূপ_Fields.f_বাফার;  // anything not nullptr because that would make an empty string
     len=-2;  // bogus result string
   }
-  return UnicodeString(false, array + start, len);
+  ফেরত UnicodeString(মিথ্যা, array + start, len);
 }
 
 int32_t
 UnicodeString::toUTF8(int32_t start, int32_t len,
-                      char *target, int32_t capacity) const {
+                      অক্ষর *target, int32_t capacity) ধ্রুবক {
   pinIndices(start, len);
   int32_t length8;
   UErrorCode errorCode = U_ZERO_ERROR;
   u_strToUTF8WithSub(target, capacity, &length8,
-                     getBuffer() + start, len,
+                     get_বাফার() + start, len,
                      0xFFFD,  // Standard substitution character.
                      nullptr,    // Don't care about number of substitutions.
                      &errorCode);
-  return length8;
+  ফেরত length8;
 }
 
-#if U_CHARSET_IS_UTF8
+#যদি U_CHARSET_IS_UTF8
 
 int32_t
 UnicodeString::extract(int32_t start, int32_t len,
-                       char *target, uint32_t dstSize) const {
+                       অক্ষর *target, uint32_t dst_আকার) ধ্রুবক {
   // if the arguments are illegal, then do nothing
-  if (/*dstSize < 0 || */(dstSize > 0 && target == nullptr)) {
-    return 0;
+  যদি (/*dstSize < 0 || */(dst_আকার > 0 && target == nullptr)) {
+    ফেরত 0;
   }
-  return toUTF8(start, len, target, dstSize <= 0x7fffffff ? static_cast<int32_t>(dstSize) : 0x7fffffff);
+  ফেরত toUTF8(start, len, target, dst_আকার <= 0x7fffffff ? static_cast<int32_t>(dst_আকার) : 0x7fffffff);
 }
 
 // else see unistr_cnv.cpp
 #endif
 
-void 
+শূন্য 
 UnicodeString::extractBetween(int32_t start,
                   int32_t limit,
-                  UnicodeString& target) const {
-  pinIndex(start);
-  pinIndex(limit);
+                  UnicodeString& target) ধ্রুবক {
+  pin_সূচক(start);
+  pin_সূচক(limit);
   doExtract(start, limit - start, target);
 }
 
@@ -1049,191 +1049,191 @@ UnicodeString::extractBetween(int32_t start,
 // as many bytes as the source has UChars.
 // The "worst cases" are writing systems like Indic, Thai and CJK with
 // 3:1 bytes:UChars.
-void
-UnicodeString::toUTF8(ByteSink &sink) const {
+শূন্য
+UnicodeString::toUTF8(ByteSink &sink) ধ্রুবক {
   int32_t length16 = length();
-  if(length16 != 0) {
-    char stackBuffer[1024];
-    int32_t capacity = static_cast<int32_t>(sizeof(stackBuffer));
-    UBool utf8IsOwned = false;
-    char *utf8 = sink.GetAppendBuffer(length16 < capacity ? length16 : capacity,
+  যদি(length16 != 0) {
+    অক্ষর স্তূপ_বাফার[1024];
+    int32_t capacity = static_cast<int32_t>(আকার(স্তূপ_বাফার));
+    UBool utf8IsOwned = মিথ্যা;
+    অক্ষর *utf8 = sink.Get_Append_বাফার(length16 < capacity ? length16 : capacity,
                                       3*length16,
-                                      stackBuffer, capacity,
+                                      স্তূপ_বাফার, capacity,
                                       &capacity);
     int32_t length8 = 0;
     UErrorCode errorCode = U_ZERO_ERROR;
     u_strToUTF8WithSub(utf8, capacity, &length8,
-                       getBuffer(), length16,
+                       get_বাফার(), length16,
                        0xFFFD,  // Standard substitution character.
                        nullptr,    // Don't care about number of substitutions.
                        &errorCode);
-    if(errorCode == U_BUFFER_OVERFLOW_ERROR) {
-      utf8 = static_cast<char*>(uprv_malloc(length8));
-      if(utf8 != nullptr) {
-        utf8IsOwned = true;
+    যদি(errorCode == U_বাফার_OVERFLOW_ERROR) {
+      utf8 = static_cast<অক্ষর*>(uprv_malloc(length8));
+      যদি(utf8 != nullptr) {
+        utf8IsOwned = সত্য;
         errorCode = U_ZERO_ERROR;
         u_strToUTF8WithSub(utf8, length8, &length8,
-                           getBuffer(), length16,
+                           get_বাফার(), length16,
                            0xFFFD,  // Standard substitution character.
                            nullptr,    // Don't care about number of substitutions.
                            &errorCode);
-      } else {
+      } অন্যথা {
         errorCode = U_MEMORY_ALLOCATION_ERROR;
       }
     }
-    if(U_SUCCESS(errorCode)) {
+    যদি(U_SUCCESS(errorCode)) {
       sink.Append(utf8, length8);
       sink.Flush();
     }
-    if(utf8IsOwned) {
+    যদি(utf8IsOwned) {
       uprv_free(utf8);
     }
   }
 }
 
 int32_t
-UnicodeString::toUTF32(UChar32 *utf32, int32_t capacity, UErrorCode &errorCode) const {
+UnicodeString::toUTF32(UChar32 *utf32, int32_t capacity, UErrorCode &errorCode) ধ্রুবক {
   int32_t length32=0;
-  if(U_SUCCESS(errorCode)) {
+  যদি(U_SUCCESS(errorCode)) {
     // getBuffer() and u_strToUTF32WithSub() check for illegal arguments.
     u_strToUTF32WithSub(utf32, capacity, &length32,
-        getBuffer(), length(),
+        get_বাফার(), length(),
         0xfffd,  // Substitution character.
         nullptr,    // Don't care about number of substitutions.
         &errorCode);
   }
-  return length32;
+  ফেরত length32;
 }
 
 int32_t 
-UnicodeString::indexOf(const char16_t *srcChars,
+UnicodeString::সূচক_Of(ধ্রুবক char16_t *srcChars,
                int32_t srcStart,
-               int32_t srcLength,
+               int32_t src_দৈর্ঘ্য,
                int32_t start,
-               int32_t length) const
+               int32_t length) ধ্রুবক
 {
-  if (isBogus() || srcChars == nullptr || srcStart < 0 || srcLength == 0) {
-    return -1;
+  যদি (isBogus() || srcChars == nullptr || srcStart < 0 || src_দৈর্ঘ্য == 0) {
+    ফেরত -1;
   }
 
   // UnicodeString does not find empty substrings
-  if(srcLength < 0 && srcChars[srcStart] == 0) {
-    return -1;
+  যদি(src_দৈর্ঘ্য < 0 && srcChars[srcStart] == 0) {
+    ফেরত -1;
   }
 
   // get the indices within bounds
   pinIndices(start, length);
 
   // find the first occurrence of the substring
-  const char16_t *array = getArrayStart();
-  const char16_t *match = u_strFindFirst(array + start, length, srcChars + srcStart, srcLength);
-  if(match == nullptr) {
-    return -1;
-  } else {
-    return static_cast<int32_t>(match - array);
+  ধ্রুবক char16_t *array = getArrayStart();
+  ধ্রুবক char16_t *match = u_strFindFirst(array + start, length, srcChars + srcStart, src_দৈর্ঘ্য);
+  যদি(match == nullptr) {
+    ফেরত -1;
+  } অন্যথা {
+    ফেরত static_cast<int32_t>(match - array);
   }
 }
 
 int32_t
-UnicodeString::doIndexOf(char16_t c,
+UnicodeString::do_সূচক_Of(char16_t c,
              int32_t start,
-             int32_t length) const
+             int32_t length) ধ্রুবক
 {
   // pin indices
   pinIndices(start, length);
 
   // find the first occurrence of c
-  const char16_t *array = getArrayStart();
-  const char16_t *match = u_memchr(array + start, c, length);
-  if(match == nullptr) {
-    return -1;
-  } else {
-    return static_cast<int32_t>(match - array);
+  ধ্রুবক char16_t *array = getArrayStart();
+  ধ্রুবক char16_t *match = u_memchr(array + start, c, length);
+  যদি(match == nullptr) {
+    ফেরত -1;
+  } অন্যথা {
+    ফেরত static_cast<int32_t>(match - array);
   }
 }
 
 int32_t
-UnicodeString::doIndexOf(UChar32 c,
+UnicodeString::do_সূচক_Of(UChar32 c,
                          int32_t start,
-                         int32_t length) const {
+                         int32_t length) ধ্রুবক {
   // pin indices
   pinIndices(start, length);
 
   // find the first occurrence of c
-  const char16_t *array = getArrayStart();
-  const char16_t *match = u_memchr32(array + start, c, length);
-  if(match == nullptr) {
-    return -1;
-  } else {
-    return static_cast<int32_t>(match - array);
+  ধ্রুবক char16_t *array = getArrayStart();
+  ধ্রুবক char16_t *match = u_memchr32(array + start, c, length);
+  যদি(match == nullptr) {
+    ফেরত -1;
+  } অন্যথা {
+    ফেরত static_cast<int32_t>(match - array);
   }
 }
 
 int32_t 
-UnicodeString::lastIndexOf(const char16_t *srcChars,
+UnicodeString::last_সূচক_Of(ধ্রুবক char16_t *srcChars,
                int32_t srcStart,
-               int32_t srcLength,
+               int32_t src_দৈর্ঘ্য,
                int32_t start,
-               int32_t length) const
+               int32_t length) ধ্রুবক
 {
-  if (isBogus() || srcChars == nullptr || srcStart < 0 || srcLength == 0) {
-    return -1;
+  যদি (isBogus() || srcChars == nullptr || srcStart < 0 || src_দৈর্ঘ্য == 0) {
+    ফেরত -1;
   }
 
   // UnicodeString does not find empty substrings
-  if(srcLength < 0 && srcChars[srcStart] == 0) {
-    return -1;
+  যদি(src_দৈর্ঘ্য < 0 && srcChars[srcStart] == 0) {
+    ফেরত -1;
   }
 
   // get the indices within bounds
   pinIndices(start, length);
 
   // find the last occurrence of the substring
-  const char16_t *array = getArrayStart();
-  const char16_t *match = u_strFindLast(array + start, length, srcChars + srcStart, srcLength);
-  if(match == nullptr) {
-    return -1;
-  } else {
-    return static_cast<int32_t>(match - array);
+  ধ্রুবক char16_t *array = getArrayStart();
+  ধ্রুবক char16_t *match = u_strFindLast(array + start, length, srcChars + srcStart, src_দৈর্ঘ্য);
+  যদি(match == nullptr) {
+    ফেরত -1;
+  } অন্যথা {
+    ফেরত static_cast<int32_t>(match - array);
   }
 }
 
 int32_t
-UnicodeString::doLastIndexOf(char16_t c,
+UnicodeString::do_Last_সূচক_Of(char16_t c,
                  int32_t start,
-                 int32_t length) const
+                 int32_t length) ধ্রুবক
 {
-  if(isBogus()) {
-    return -1;
+  যদি(isBogus()) {
+    ফেরত -1;
   }
 
   // pin indices
   pinIndices(start, length);
 
   // find the last occurrence of c
-  const char16_t *array = getArrayStart();
-  const char16_t *match = u_memrchr(array + start, c, length);
-  if(match == nullptr) {
-    return -1;
-  } else {
-    return static_cast<int32_t>(match - array);
+  ধ্রুবক char16_t *array = getArrayStart();
+  ধ্রুবক char16_t *match = u_memrchr(array + start, c, length);
+  যদি(match == nullptr) {
+    ফেরত -1;
+  } অন্যথা {
+    ফেরত static_cast<int32_t>(match - array);
   }
 }
 
 int32_t
-UnicodeString::doLastIndexOf(UChar32 c,
+UnicodeString::do_Last_সূচক_Of(UChar32 c,
                              int32_t start,
-                             int32_t length) const {
+                             int32_t length) ধ্রুবক {
   // pin indices
   pinIndices(start, length);
 
   // find the last occurrence of c
-  const char16_t *array = getArrayStart();
-  const char16_t *match = u_memrchr32(array + start, c, length);
-  if(match == nullptr) {
-    return -1;
-  } else {
-    return static_cast<int32_t>(match - array);
+  ধ্রুবক char16_t *array = getArrayStart();
+  ধ্রুবক char16_t *match = u_memrchr32(array + start, c, length);
+  যদি(match == nullptr) {
+    ফেরত -1;
+  } অন্যথা {
+    ফেরত static_cast<int32_t>(match - array);
   }
 }
 
@@ -1244,77 +1244,77 @@ UnicodeString::doLastIndexOf(UChar32 c,
 UnicodeString&
 UnicodeString::findAndReplace(int32_t start,
                               int32_t length,
-                              const UnicodeString& oldText,
+                              ধ্রুবক UnicodeString& oldText,
                               int32_t oldStart,
-                              int32_t oldLength,
-                              const UnicodeString& newText,
+                              int32_t old_দৈর্ঘ্য,
+                              ধ্রুবক UnicodeString& newText,
                               int32_t newStart,
-                              int32_t newLength) U_LIFETIME_BOUND
+                              int32_t new_দৈর্ঘ্য) U_LIFETIME_BOUND
 {
-  if(isBogus() || oldText.isBogus() || newText.isBogus()) {
-    return *this;
+  যদি(isBogus() || oldText.isBogus() || newText.isBogus()) {
+    ফেরত *এই;
   }
 
   pinIndices(start, length);
-  oldText.pinIndices(oldStart, oldLength);
-  newText.pinIndices(newStart, newLength);
+  oldText.pinIndices(oldStart, old_দৈর্ঘ্য);
+  newText.pinIndices(newStart, new_দৈর্ঘ্য);
 
-  if(oldLength == 0) {
-    return *this;
+  যদি(old_দৈর্ঘ্য == 0) {
+    ফেরত *এই;
   }
 
-  while(length > 0 && length >= oldLength) {
-    int32_t pos = indexOf(oldText, oldStart, oldLength, start, length);
-    if(pos < 0) {
+  যখন(length > 0 && length >= old_দৈর্ঘ্য) {
+    int32_t pos = সূচক_Of(oldText, oldStart, old_দৈর্ঘ্য, start, length);
+    যদি(pos < 0) {
       // no more oldText's here: done
-      break;
-    } else {
+      বিরতি;
+    } অন্যথা {
       // we found oldText, replace it by newText and go beyond it
-      replace(pos, oldLength, newText, newStart, newLength);
-      length -= pos + oldLength - start;
-      start = pos + newLength;
+      replace(pos, old_দৈর্ঘ্য, newText, newStart, new_দৈর্ঘ্য);
+      length -= pos + old_দৈর্ঘ্য - start;
+      start = pos + new_দৈর্ঘ্য;
     }
   }
 
-  return *this;
+  ফেরত *এই;
 }
 
 
-void
+শূন্য
 UnicodeString::setToBogus()
 {
   releaseArray();
 
-  fUnion.fFields.fLengthAndFlags = kIsBogus;
+  fUnion.fFields.f_দৈর্ঘ্য_And_Flags = kIsBogus;
   fUnion.fFields.fArray = nullptr;
   fUnion.fFields.fCapacity = 0;
 }
 
 // turn a bogus string into an empty one
-void
+শূন্য
 UnicodeString::unBogus() {
-  if(fUnion.fFields.fLengthAndFlags & kIsBogus) {
+  যদি(fUnion.fFields.f_দৈর্ঘ্য_And_Flags & kIsBogus) {
     setToEmpty();
   }
 }
 
-const char16_t*
-UnicodeString::getTerminatedBuffer() U_LIFETIME_BOUND {
-  if(!isWritable()) {
-    return nullptr;
+ধ্রুবক char16_t*
+UnicodeString::get_Terminated_বাফার() U_LIFETIME_BOUND {
+  যদি(!isWritable()) {
+    ফেরত nullptr;
   }
   char16_t *array = getArrayStart();
   int32_t len = length();
-  if(len < getCapacity()) {
-    if(fUnion.fFields.fLengthAndFlags & kBufferIsReadonly) {
+  যদি(len < getCapacity()) {
+    যদি(fUnion.fFields.f_দৈর্ঘ্য_And_Flags & k_বাফার_Is_Readonly) {
       // If len<capacity on a read-only alias, then array[len] is
       // either the original NUL (if constructed with (true, s, length))
       // or one of the original string contents characters (if later truncated),
       // therefore we can assume that array[len] is initialized memory.
-      if(array[len] == 0) {
-        return array;
+      যদি(array[len] == 0) {
+        ফেরত array;
       }
-    } else if(((fUnion.fFields.fLengthAndFlags & kRefCounted) == 0 || refCount() == 1)) {
+    } অন্যথা যদি(((fUnion.fFields.f_দৈর্ঘ্য_And_Flags & kRefCounted) == 0 || ref_গুনতি() == 1)) {
       // kRefCounted: Do not write the NUL if the buffer is shared.
       // That is mostly safe, except when the length of one copy was modified
       // without copy-on-write, e.g., via truncate(newLength) or remove().
@@ -1324,15 +1324,15 @@ UnicodeString::getTerminatedBuffer() U_LIFETIME_BOUND {
       // Do not test if there is a NUL already because it might be uninitialized memory.
       // (That would be safe, but tools like valgrind & Purify would complain.)
       array[len] = 0;
-      return array;
+      ফেরত array;
     }
   }
-  if(len<INT32_MAX && cloneArrayIfNeeded(len+1)) {
+  যদি(len<INT32_MAX && cloneArrayIfNeeded(len+1)) {
     array = getArrayStart();
     array[len] = 0;
-    return array;
-  } else {
-    return nullptr;
+    ফেরত array;
+  } অন্যথা {
+    ফেরত nullptr;
   }
 }
 
@@ -1340,74 +1340,74 @@ UnicodeString::getTerminatedBuffer() U_LIFETIME_BOUND {
 UnicodeString&
 UnicodeString::setTo(UBool isTerminated,
                      ConstChar16Ptr textPtr U_LIFETIME_BOUND,
-                     int32_t textLength) U_LIFETIME_BOUND
+                     int32_t text_দৈর্ঘ্য) U_LIFETIME_BOUND
 {
-  if(fUnion.fFields.fLengthAndFlags & kOpenGetBuffer) {
+  যদি(fUnion.fFields.f_দৈর্ঘ্য_And_Flags & k_Open_Get_বাফার) {
     // do not modify a string that has an "open" getBuffer(minCapacity)
-    return *this;
+    ফেরত *এই;
   }
 
-  const char16_t *text = textPtr;
-  if(text == nullptr) {
+  ধ্রুবক char16_t *text = textPtr;
+  যদি(text == nullptr) {
     // treat as an empty string, do not alias
     releaseArray();
     setToEmpty();
-    return *this;
+    ফেরত *এই;
   }
 
-  if( textLength < -1 ||
-      (textLength == -1 && !isTerminated) ||
-      (textLength >= 0 && isTerminated && text[textLength] != 0)
+  যদি( text_দৈর্ঘ্য < -1 ||
+      (text_দৈর্ঘ্য == -1 && !isTerminated) ||
+      (text_দৈর্ঘ্য >= 0 && isTerminated && text[text_দৈর্ঘ্য] != 0)
   ) {
     setToBogus();
-    return *this;
+    ফেরত *এই;
   }
 
   releaseArray();
 
-  if(textLength == -1) {
+  যদি(text_দৈর্ঘ্য == -1) {
     // text is terminated, or else it would have failed the above test
-    textLength = u_strlen(text);
+    text_দৈর্ঘ্য = u_strlen(text);
   }
-  fUnion.fFields.fLengthAndFlags = kReadonlyAlias;
-  setArray(const_cast<char16_t*>(text), textLength, isTerminated ? textLength + 1 : textLength);
-  return *this;
+  fUnion.fFields.f_দৈর্ঘ্য_And_Flags = kReadonlyAlias;
+  setArray(const_cast<char16_t*>(text), text_দৈর্ঘ্য, isTerminated ? text_দৈর্ঘ্য + 1 : text_দৈর্ঘ্য);
+  ফেরত *এই;
 }
 
 // setTo() analogous to the writable-aliasing constructor with the same signature
 UnicodeString&
-UnicodeString::setTo(char16_t* buffer,
-                     int32_t buffLength U_LIFETIME_BOUND,
+UnicodeString::setTo(char16_t* বাফার,
+                     int32_t buff_দৈর্ঘ্য U_LIFETIME_BOUND,
                      int32_t buffCapacity) U_LIFETIME_BOUND {
-  if(fUnion.fFields.fLengthAndFlags & kOpenGetBuffer) {
+  যদি(fUnion.fFields.f_দৈর্ঘ্য_And_Flags & k_Open_Get_বাফার) {
     // do not modify a string that has an "open" getBuffer(minCapacity)
-    return *this;
+    ফেরত *এই;
   }
 
-  if(buffer == nullptr) {
+  যদি(বাফার == nullptr) {
     // treat as an empty string, do not alias
     releaseArray();
     setToEmpty();
-    return *this;
+    ফেরত *এই;
   }
 
-  if(buffLength < -1 || buffCapacity < 0 || buffLength > buffCapacity) {
+  যদি(buff_দৈর্ঘ্য < -1 || buffCapacity < 0 || buff_দৈর্ঘ্য > buffCapacity) {
     setToBogus();
-    return *this;
-  } else if(buffLength == -1) {
+    ফেরত *এই;
+  } অন্যথা যদি(buff_দৈর্ঘ্য == -1) {
     // buffLength = u_strlen(buff); but do not look beyond buffCapacity
-    const char16_t *p = buffer, *limit = buffer + buffCapacity;
-    while(p != limit && *p != 0) {
+    ধ্রুবক char16_t *p = বাফার, *limit = বাফার + buffCapacity;
+    যখন(p != limit && *p != 0) {
       ++p;
     }
-    buffLength = static_cast<int32_t>(p - buffer);
+    buff_দৈর্ঘ্য = static_cast<int32_t>(p - বাফার);
   }
 
   releaseArray();
 
-  fUnion.fFields.fLengthAndFlags = kWritableAlias;
-  setArray(buffer, buffLength, buffCapacity);
-  return *this;
+  fUnion.fFields.f_দৈর্ঘ্য_And_Flags = kWritableAlias;
+  setArray(বাফার, buff_দৈর্ঘ্য, buffCapacity);
+  ফেরত *এই;
 }
 
 UnicodeString& UnicodeString::setToUTF8(StringPiece utf8) U_LIFETIME_BOUND {
@@ -1415,128 +1415,128 @@ UnicodeString& UnicodeString::setToUTF8(StringPiece utf8) U_LIFETIME_BOUND {
   int32_t length = utf8.length();
   int32_t capacity;
   // The UTF-16 string will be at most as long as the UTF-8 string.
-  if(length <= US_STACKBUF_SIZE) {
-    capacity = US_STACKBUF_SIZE;
-  } else {
+  যদি(length <= US_STACKBUF_আকার) {
+    capacity = US_STACKBUF_আকার;
+  } অন্যথা {
     capacity = length + 1;  // +1 for the terminating NUL.
   }
-  char16_t *utf16 = getBuffer(capacity);
+  char16_t *utf16 = get_বাফার(capacity);
   int32_t length16;
   UErrorCode errorCode = U_ZERO_ERROR;
   u_strFromUTF8WithSub(utf16, getCapacity(), &length16,
-      utf8.data(), length,
+      utf8.তথ্য(), length,
       0xfffd,  // Substitution character.
       nullptr,    // Don't care about number of substitutions.
       &errorCode);
-  releaseBuffer(length16);
-  if(U_FAILURE(errorCode)) {
+  release_বাফার(length16);
+  যদি(U_FAILURE(errorCode)) {
     setToBogus();
   }
-  return *this;
+  ফেরত *এই;
 }
 
 UnicodeString&
 UnicodeString::setCharAt(int32_t offset, char16_t c) U_LIFETIME_BOUND
 {
   int32_t len = length();
-  if(cloneArrayIfNeeded() && len > 0) {
-    if(offset < 0) {
+  যদি(cloneArrayIfNeeded() && len > 0) {
+    যদি(offset < 0) {
       offset = 0;
-    } else if(offset >= len) {
+    } অন্যথা যদি(offset >= len) {
       offset = len - 1;
     }
 
     getArrayStart()[offset] = c;
   }
-  return *this;
+  ফেরত *এই;
 }
 
 UnicodeString&
 UnicodeString::replace(int32_t start,
-                       int32_t _length,
+                       int32_t দৈর্ঘ্য_4,
                        UChar32 srcChar) U_LIFETIME_BOUND {
-  char16_t buffer[U16_MAX_LENGTH];
+  char16_t বাফার[U16_MAX_দৈর্ঘ্য];
   int32_t count = 0;
-  UBool isError = false;
-  U16_APPEND(buffer, count, U16_MAX_LENGTH, srcChar, isError);
+  UBool isError = মিথ্যা;
+  U16_APPEND(বাফার, count, U16_MAX_দৈর্ঘ্য, srcChar, isError);
   // We test isError so that the compiler does not complain that we don't.
   // If isError (srcChar is not a valid code point) then count==0 which means
   // we remove the source segment rather than replacing it with srcChar.
-  return doReplace(start, _length, buffer, 0, isError ? 0 : count);
+  ফেরত doReplace(start, দৈর্ঘ্য_4, বাফার, 0, isError ? 0 : count);
 }
 
 UnicodeString&
 UnicodeString::append(UChar32 srcChar) U_LIFETIME_BOUND {
-  char16_t buffer[U16_MAX_LENGTH];
-  int32_t _length = 0;
-  UBool isError = false;
-  U16_APPEND(buffer, _length, U16_MAX_LENGTH, srcChar, isError);
+  char16_t বাফার[U16_MAX_দৈর্ঘ্য];
+  int32_t দৈর্ঘ্য_4 = 0;
+  UBool isError = মিথ্যা;
+  U16_APPEND(বাফার, দৈর্ঘ্য_4, U16_MAX_দৈর্ঘ্য, srcChar, isError);
   // We test isError so that the compiler does not complain that we don't.
   // If isError then _length==0 which turns the doAppend() into a no-op anyway.
-  return isError ? *this : doAppend(buffer, 0, _length);
+  ফেরত isError ? *এই : doAppend(বাফার, 0, দৈর্ঘ্য_4);
 }
 
 UnicodeString&
 UnicodeString::doReplace(int32_t start,
                          int32_t length,
-                         const UnicodeString& src,
+                         ধ্রুবক UnicodeString& src,
                          int32_t srcStart,
-                         int32_t srcLength) U_LIFETIME_BOUND
+                         int32_t src_দৈর্ঘ্য) U_LIFETIME_BOUND
 {
   // pin the indices to legal values
-  src.pinIndices(srcStart, srcLength);
+  src.pinIndices(srcStart, src_দৈর্ঘ্য);
 
   // get the characters from src
   // and replace the range in ourselves with them
-  return doReplace(start, length, src.getArrayStart(), srcStart, srcLength);
+  ফেরত doReplace(start, length, src.getArrayStart(), srcStart, src_দৈর্ঘ্য);
 }
 
 UnicodeString&
 UnicodeString::doReplace(int32_t start,
                          int32_t length,
-                         const char16_t* srcChars,
+                         ধ্রুবক char16_t* srcChars,
                          int32_t srcStart,
-                         int32_t srcLength) U_LIFETIME_BOUND
+                         int32_t src_দৈর্ঘ্য) U_LIFETIME_BOUND
 {
-  if(!isWritable()) {
-    return *this;
+  যদি(!isWritable()) {
+    ফেরত *এই;
   }
 
-  int32_t oldLength = this->length();
+  int32_t old_দৈর্ঘ্য = এই->length();
 
   // optimize (read-only alias).remove(0, start) and .remove(start, end)
-  if((fUnion.fFields.fLengthAndFlags&kBufferIsReadonly) && srcLength == 0) {
-    if(start == 0) {
+  যদি((fUnion.fFields.f_দৈর্ঘ্য_And_Flags&k_বাফার_Is_Readonly) && src_দৈর্ঘ্য == 0) {
+    যদি(start == 0) {
       // remove prefix by adjusting the array pointer
-      pinIndex(length);
+      pin_সূচক(length);
       fUnion.fFields.fArray += length;
       fUnion.fFields.fCapacity -= length;
-      setLength(oldLength - length);
-      return *this;
-    } else {
-      pinIndex(start);
-      if(length >= (oldLength - start)) {
+      set_দৈর্ঘ্য(old_দৈর্ঘ্য - length);
+      ফেরত *এই;
+    } অন্যথা {
+      pin_সূচক(start);
+      যদি(length >= (old_দৈর্ঘ্য - start)) {
         // remove suffix by reducing the length (like truncate())
-        setLength(start);
+        set_দৈর্ঘ্য(start);
         fUnion.fFields.fCapacity = start;  // not NUL-terminated any more
-        return *this;
+        ফেরত *এই;
       }
     }
   }
 
-  if(start == oldLength) {
-    return doAppend(srcChars, srcStart, srcLength);
+  যদি(start == old_দৈর্ঘ্য) {
+    ফেরত doAppend(srcChars, srcStart, src_দৈর্ঘ্য);
   }
 
-  if (srcChars == nullptr) {
-    srcLength = 0;
-  } else {
+  যদি (srcChars == nullptr) {
+    src_দৈর্ঘ্য = 0;
+  } অন্যথা {
     // Perform all remaining operations relative to srcChars + srcStart.
     // From this point forward, do not use srcStart.
     srcChars += srcStart;
-    if (srcLength < 0) {
+    যদি (src_দৈর্ঘ্য < 0) {
       // get the srcLength if necessary
-      srcLength = u_strlen(srcChars);
+      src_দৈর্ঘ্য = u_strlen(srcChars);
     }
   }
 
@@ -1545,160 +1545,160 @@ UnicodeString::doReplace(int32_t start,
 
   // Calculate the size of the string after the replace.
   // Avoid int32_t overflow.
-  int32_t newLength = oldLength - length;
-  if(srcLength > (INT32_MAX - newLength)) {
+  int32_t new_দৈর্ঘ্য = old_দৈর্ঘ্য - length;
+  যদি(src_দৈর্ঘ্য > (INT32_MAX - new_দৈর্ঘ্য)) {
     setToBogus();
-    return *this;
+    ফেরত *এই;
   }
-  newLength += srcLength;
+  new_দৈর্ঘ্য += src_দৈর্ঘ্য;
 
   // Check for insertion into ourself
-  const char16_t *oldArray = getArrayStart();
-  if (isBufferWritable() &&
-      oldArray < srcChars + srcLength &&
-      srcChars < oldArray + oldLength) {
+  ধ্রুবক char16_t *oldArray = getArrayStart();
+  যদি (is_বাফার_Writable() &&
+      oldArray < srcChars + src_দৈর্ঘ্য &&
+      srcChars < oldArray + old_দৈর্ঘ্য) {
     // Copy into a new UnicodeString and start over
-    UnicodeString copy(srcChars, srcLength);
-    if (copy.isBogus()) {
+    UnicodeString copy(srcChars, src_দৈর্ঘ্য);
+    যদি (copy.isBogus()) {
       setToBogus();
-      return *this;
+      ফেরত *এই;
     }
-    return doReplace(start, length, copy.getArrayStart(), 0, srcLength);
+    ফেরত doReplace(start, length, copy.getArrayStart(), 0, src_দৈর্ঘ্য);
   }
 
   // cloneArrayIfNeeded(doCopyArray=false) may change fArray but will not copy the current contents;
   // therefore we need to keep the current fArray
-  char16_t oldStackBuffer[US_STACKBUF_SIZE];
-  if((fUnion.fFields.fLengthAndFlags&kUsingStackBuffer) && (newLength > US_STACKBUF_SIZE)) {
+  char16_t old_স্তূপ_বাফার[US_STACKBUF_আকার];
+  যদি((fUnion.fFields.f_দৈর্ঘ্য_And_Flags&k_Using_স্তূপ_বাফার) && (new_দৈর্ঘ্য > US_STACKBUF_আকার)) {
     // copy the stack buffer contents because it will be overwritten with
     // fUnion.fFields values
-    u_memcpy(oldStackBuffer, oldArray, oldLength);
-    oldArray = oldStackBuffer;
+    u_memcpy(old_স্তূপ_বাফার, oldArray, old_দৈর্ঘ্য);
+    oldArray = old_স্তূপ_বাফার;
   }
 
   // clone our array and allocate a bigger array if needed
-  int32_t *bufferToDelete = nullptr;
-  if(!cloneArrayIfNeeded(newLength, getGrowCapacity(newLength),
-                         false, &bufferToDelete)
+  int32_t *বাফার_To_Delete = nullptr;
+  যদি(!cloneArrayIfNeeded(new_দৈর্ঘ্য, getGrowCapacity(new_দৈর্ঘ্য),
+                         মিথ্যা, &বাফার_To_Delete)
   ) {
-    return *this;
+    ফেরত *এই;
   }
 
   // now do the replace
 
   char16_t *newArray = getArrayStart();
-  if(newArray != oldArray) {
+  যদি(newArray != oldArray) {
     // if fArray changed, then we need to copy everything except what will change
     us_arrayCopy(oldArray, 0, newArray, 0, start);
     us_arrayCopy(oldArray, start + length,
-                 newArray, start + srcLength,
-                 oldLength - (start + length));
-  } else if(length != srcLength) {
+                 newArray, start + src_দৈর্ঘ্য,
+                 old_দৈর্ঘ্য - (start + length));
+  } অন্যথা যদি(length != src_দৈর্ঘ্য) {
     // fArray did not change; copy only the portion that isn't changing, leaving a hole
     us_arrayCopy(oldArray, start + length,
-                 newArray, start + srcLength,
-                 oldLength - (start + length));
+                 newArray, start + src_দৈর্ঘ্য,
+                 old_দৈর্ঘ্য - (start + length));
   }
 
   // now fill in the hole with the new string
-  us_arrayCopy(srcChars, 0, newArray, start, srcLength);
+  us_arrayCopy(srcChars, 0, newArray, start, src_দৈর্ঘ্য);
 
-  setLength(newLength);
+  set_দৈর্ঘ্য(new_দৈর্ঘ্য);
 
   // delayed delete in case srcChars == fArray when we started, and
   // to keep oldArray alive for the above operations
-  if (bufferToDelete) {
-    uprv_free(bufferToDelete);
+  যদি (বাফার_To_Delete) {
+    uprv_free(বাফার_To_Delete);
   }
 
-  return *this;
+  ফেরত *এই;
 }
 
 UnicodeString&
 UnicodeString::doReplace(int32_t start, int32_t length, std::u16string_view src) U_LIFETIME_BOUND {
-  if (!isWritable()) {
-    return *this;
+  যদি (!isWritable()) {
+    ফেরত *এই;
   }
-  if (src.length() > INT32_MAX) {
+  যদি (src.length() > INT32_MAX) {
     setToBogus();
-    return *this;
+    ফেরত *এই;
   }
-  return doReplace(start, length, src.data(), 0, static_cast<int32_t>(src.length()));
+  ফেরত doReplace(start, length, src.তথ্য(), 0, static_cast<int32_t>(src.length()));
 }
 
 // Versions of doReplace() only for append() variants.
 // doReplace() and doAppend() optimize for different cases.
 
 UnicodeString&
-UnicodeString::doAppend(const UnicodeString& src,
+UnicodeString::doAppend(ধ্রুবক UnicodeString& src,
                         int32_t srcStart,
-                        int32_t srcLength) U_LIFETIME_BOUND {
-  if(srcLength == 0) {
-    return *this;
+                        int32_t src_দৈর্ঘ্য) U_LIFETIME_BOUND {
+  যদি(src_দৈর্ঘ্য == 0) {
+    ফেরত *এই;
   }
 
   // pin the indices to legal values
-  src.pinIndices(srcStart, srcLength);
-  return doAppend(src.getArrayStart(), srcStart, srcLength);
+  src.pinIndices(srcStart, src_দৈর্ঘ্য);
+  ফেরত doAppend(src.getArrayStart(), srcStart, src_দৈর্ঘ্য);
 }
 
 UnicodeString&
-UnicodeString::doAppend(const char16_t* srcChars,
+UnicodeString::doAppend(ধ্রুবক char16_t* srcChars,
                         int32_t srcStart,
-                        int32_t srcLength) U_LIFETIME_BOUND {
-  if(!isWritable() || srcLength == 0 || srcChars == nullptr) {
-    return *this;
+                        int32_t src_দৈর্ঘ্য) U_LIFETIME_BOUND {
+  যদি(!isWritable() || src_দৈর্ঘ্য == 0 || srcChars == nullptr) {
+    ফেরত *এই;
   }
 
   // Perform all remaining operations relative to srcChars + srcStart.
   // From this point forward, do not use srcStart.
   srcChars += srcStart;
 
-  if(srcLength < 0) {
+  যদি(src_দৈর্ঘ্য < 0) {
     // get the srcLength if necessary
-    if((srcLength = u_strlen(srcChars)) == 0) {
-      return *this;
+    যদি((src_দৈর্ঘ্য = u_strlen(srcChars)) == 0) {
+      ফেরত *এই;
     }
   }
 
-  int32_t oldLength = length();
-  int32_t newLength;
+  int32_t old_দৈর্ঘ্য = length();
+  int32_t new_দৈর্ঘ্য;
 
-  if (srcLength <= getCapacity() - oldLength && isBufferWritable()) {
-    newLength = oldLength + srcLength;
+  যদি (src_দৈর্ঘ্য <= getCapacity() - old_দৈর্ঘ্য && is_বাফার_Writable()) {
+    new_দৈর্ঘ্য = old_দৈর্ঘ্য + src_দৈর্ঘ্য;
     // Faster than a memmove
-    if (srcLength <= 4) {
+    যদি (src_দৈর্ঘ্য <= 4) {
       char16_t *arr = getArrayStart();
-      arr[oldLength] = srcChars[0];
-      if (srcLength > 1) arr[oldLength+1] = srcChars[1];
-      if (srcLength > 2) arr[oldLength+2] = srcChars[2];
-      if (srcLength > 3) arr[oldLength+3] = srcChars[3];
-      setLength(newLength);
-      return *this;
+      arr[old_দৈর্ঘ্য] = srcChars[0];
+      যদি (src_দৈর্ঘ্য > 1) arr[old_দৈর্ঘ্য+1] = srcChars[1];
+      যদি (src_দৈর্ঘ্য > 2) arr[old_দৈর্ঘ্য+2] = srcChars[2];
+      যদি (src_দৈর্ঘ্য > 3) arr[old_দৈর্ঘ্য+3] = srcChars[3];
+      set_দৈর্ঘ্য(new_দৈর্ঘ্য);
+      ফেরত *এই;
     }
-  } else {
-    if (uprv_add32_overflow(oldLength, srcLength, &newLength)) {
+  } অন্যথা {
+    যদি (uprv_add32_overflow(old_দৈর্ঘ্য, src_দৈর্ঘ্য, &new_দৈর্ঘ্য)) {
       setToBogus();
-      return *this;
+      ফেরত *এই;
     }
 
     // Check for append onto ourself
-    const char16_t* oldArray = getArrayStart();
-    if (isBufferWritable() &&
-        oldArray < srcChars + srcLength &&
-        srcChars < oldArray + oldLength) {
+    ধ্রুবক char16_t* oldArray = getArrayStart();
+    যদি (is_বাফার_Writable() &&
+        oldArray < srcChars + src_দৈর্ঘ্য &&
+        srcChars < oldArray + old_দৈর্ঘ্য) {
       // Copy into a new UnicodeString and start over
-      UnicodeString copy(srcChars, srcLength);
-      if (copy.isBogus()) {
+      UnicodeString copy(srcChars, src_দৈর্ঘ্য);
+      যদি (copy.isBogus()) {
         setToBogus();
-        return *this;
+        ফেরত *এই;
       }
-      return doAppend(copy.getArrayStart(), 0, srcLength);
+      ফেরত doAppend(copy.getArrayStart(), 0, src_দৈর্ঘ্য);
     }
 
     // optimize append() onto a large-enough, owned string
-    if (!cloneArrayIfNeeded(newLength, getGrowCapacity(newLength))) {
-      return *this;
+    যদি (!cloneArrayIfNeeded(new_দৈর্ঘ্য, getGrowCapacity(new_দৈর্ঘ্য))) {
+      ফেরত *এই;
     }
   }
 
@@ -1710,47 +1710,47 @@ UnicodeString::doAppend(const char16_t* srcChars,
   // or
   //   str.appendString(buffer, length)
   // or similar.
-  if(srcChars != newArray + oldLength) {
-    us_arrayCopy(srcChars, 0, newArray, oldLength, srcLength);
+  যদি(srcChars != newArray + old_দৈর্ঘ্য) {
+    us_arrayCopy(srcChars, 0, newArray, old_দৈর্ঘ্য, src_দৈর্ঘ্য);
   }
-  setLength(newLength);
+  set_দৈর্ঘ্য(new_দৈর্ঘ্য);
 
-  return *this;
+  ফেরত *এই;
 }
 
 UnicodeString&
 UnicodeString::doAppend(std::u16string_view src) U_LIFETIME_BOUND {
-  if (!isWritable() || src.empty()) {
-    return *this;
+  যদি (!isWritable() || src.empty()) {
+    ফেরত *এই;
   }
-  if (src.length() > INT32_MAX) {
+  যদি (src.length() > INT32_MAX) {
     setToBogus();
-    return *this;
+    ফেরত *এই;
   }
-  return doAppend(src.data(), 0, static_cast<int32_t>(src.length()));
+  ফেরত doAppend(src.তথ্য(), 0, static_cast<int32_t>(src.length()));
 }
 
 /**
  * Replaceable API
  */
-void
+শূন্য
 UnicodeString::handleReplaceBetween(int32_t start,
                                     int32_t limit,
-                                    const UnicodeString& text) {
+                                    ধ্রুবক UnicodeString& text) {
     replaceBetween(start, limit, text);
 }
 
 /**
  * Replaceable API
  */
-void 
+শূন্য 
 UnicodeString::copy(int32_t start, int32_t limit, int32_t dest) {
-    if (limit <= start) {
-        return; // Nothing to do; avoid bogus malloc call
+    যদি (limit <= start) {
+        ফেরত; // Nothing to do; avoid bogus malloc call
     }
-    char16_t* text = static_cast<char16_t*>(uprv_malloc(sizeof(char16_t) * (limit - start)));
+    char16_t* text = static_cast<char16_t*>(uprv_malloc(আকার(char16_t) * (limit - start)));
     // Check to make sure text is not null.
-    if (text != nullptr) {
+    যদি (text != nullptr) {
 	    extractBetween(start, limit, text, 0);
 	    insert(dest, text, 0, limit - start);    
 	    uprv_free(text);
@@ -1763,101 +1763,101 @@ UnicodeString::copy(int32_t start, int32_t limit, int32_t dest) {
  * NOTE: This is for the Replaceable class.  There is no rep.cpp,
  * so we implement this function here.
  */
-UBool Replaceable::hasMetaData() const {
-    return true;
+UBool Replaceable::has_Meta_তথ্য() ধ্রুবক {
+    ফেরত সত্য;
 }
 
 /**
  * Replaceable API
  */
-UBool UnicodeString::hasMetaData() const {
-    return false;
+UBool UnicodeString::has_Meta_তথ্য() ধ্রুবক {
+    ফেরত মিথ্যা;
 }
 
 UnicodeString&
 UnicodeString::doReverse(int32_t start, int32_t length) U_LIFETIME_BOUND {
-  if(length <= 1 || !cloneArrayIfNeeded()) {
-    return *this;
+  যদি(length <= 1 || !cloneArrayIfNeeded()) {
+    ফেরত *এই;
   }
 
   // pin the indices to legal values
   pinIndices(start, length);
-  if(length <= 1) {  // pinIndices() might have shrunk the length
-    return *this;
+  যদি(length <= 1) {  // pinIndices() might have shrunk the length
+    ফেরত *এই;
   }
 
   char16_t *left = getArrayStart() + start;
-  char16_t *right = left + length - 1;  // -1 for inclusive boundary (length>=2)
+  char16_t *ডান = left + length - 1;  // -1 for inclusive boundary (length>=2)
   char16_t swap;
-  UBool hasSupplementary = false;
+  UBool hasSupplementary = মিথ্যা;
 
   // Before the loop we know left<right because length>=2.
-  do {
+  করো {
     hasSupplementary |= static_cast<UBool>(U16_IS_LEAD(swap = *left));
-    hasSupplementary |= static_cast<UBool>(U16_IS_LEAD(*left++ = *right));
-    *right-- = swap;
-  } while(left < right);
+    hasSupplementary |= static_cast<UBool>(U16_IS_LEAD(*left++ = *ডান));
+    *ডান-- = swap;
+  } যখন(left < ডান);
   // Make sure to test the middle code unit of an odd-length string.
   // Redundant if the length is even.
   hasSupplementary |= static_cast<UBool>(U16_IS_LEAD(*left));
 
   /* if there are supplementary code points in the reversed range, then re-swap their surrogates */
-  if(hasSupplementary) {
+  যদি(hasSupplementary) {
     char16_t swap2;
 
     left = getArrayStart() + start;
-    right = left + length - 1; // -1 so that we can look at *(left+1) if left<right
-    while(left < right) {
-      if(U16_IS_TRAIL(swap = *left) && U16_IS_LEAD(swap2 = *(left + 1))) {
+    ডান = left + length - 1; // -1 so that we can look at *(left+1) if left<right
+    যখন(left < ডান) {
+      যদি(U16_IS_TRAIL(swap = *left) && U16_IS_LEAD(swap2 = *(left + 1))) {
         *left++ = swap2;
         *left++ = swap;
-      } else {
+      } অন্যথা {
         ++left;
       }
     }
   }
 
-  return *this;
+  ফেরত *এই;
 }
 
 UBool 
-UnicodeString::padLeading(int32_t targetLength,
+UnicodeString::padLeading(int32_t target_দৈর্ঘ্য,
                           char16_t padChar)
 {
-  int32_t oldLength = length();
-  if(oldLength >= targetLength || !cloneArrayIfNeeded(targetLength)) {
-    return false;
-  } else {
+  int32_t old_দৈর্ঘ্য = length();
+  যদি(old_দৈর্ঘ্য >= target_দৈর্ঘ্য || !cloneArrayIfNeeded(target_দৈর্ঘ্য)) {
+    ফেরত মিথ্যা;
+  } অন্যথা {
     // move contents up by padding width
     char16_t *array = getArrayStart();
-    int32_t start = targetLength - oldLength;
-    us_arrayCopy(array, 0, array, start, oldLength);
+    int32_t start = target_দৈর্ঘ্য - old_দৈর্ঘ্য;
+    us_arrayCopy(array, 0, array, start, old_দৈর্ঘ্য);
 
     // fill in padding character
-    while(--start >= 0) {
+    যখন(--start >= 0) {
       array[start] = padChar;
     }
-    setLength(targetLength);
-    return true;
+    set_দৈর্ঘ্য(target_দৈর্ঘ্য);
+    ফেরত সত্য;
   }
 }
 
 UBool 
-UnicodeString::padTrailing(int32_t targetLength,
+UnicodeString::padTrailing(int32_t target_দৈর্ঘ্য,
                            char16_t padChar)
 {
-  int32_t oldLength = length();
-  if(oldLength >= targetLength || !cloneArrayIfNeeded(targetLength)) {
-    return false;
-  } else {
+  int32_t old_দৈর্ঘ্য = length();
+  যদি(old_দৈর্ঘ্য >= target_দৈর্ঘ্য || !cloneArrayIfNeeded(target_দৈর্ঘ্য)) {
+    ফেরত মিথ্যা;
+  } অন্যথা {
     // fill in padding character
     char16_t *array = getArrayStart();
-    int32_t length = targetLength;
-    while(--length >= oldLength) {
+    int32_t length = target_দৈর্ঘ্য;
+    যখন(--length >= old_দৈর্ঘ্য) {
       array[length] = padChar;
     }
-    setLength(targetLength);
-    return true;
+    set_দৈর্ঘ্য(target_দৈর্ঘ্য);
+    ফেরত সত্য;
   }
 }
 
@@ -1865,15 +1865,15 @@ UnicodeString::padTrailing(int32_t targetLength,
 // Hashing
 //========================================
 int32_t
-UnicodeString::doHashCode() const
+UnicodeString::doHashCode() ধ্রুবক
 {
     /* Delegate hash computation to uhash.  This makes UnicodeString
      * hashing consistent with char16_t* hashing.  */
     int32_t hashCode = ustr_hashUCharsN(getArrayStart(), length());
-    if (hashCode == kInvalidHashCode) {
+    যদি (hashCode == kInvalidHashCode) {
         hashCode = kEmptyHashCode;
     }
-    return hashCode;
+    ফেরত hashCode;
 }
 
 //========================================
@@ -1881,33 +1881,33 @@ UnicodeString::doHashCode() const
 //========================================
 
 char16_t*
-UnicodeString::getBuffer(int32_t minCapacity) U_LIFETIME_BOUND {
-  if(minCapacity>=-1 && cloneArrayIfNeeded(minCapacity)) {
-    fUnion.fFields.fLengthAndFlags|=kOpenGetBuffer;
-    setZeroLength();
-    return getArrayStart();
-  } else {
-    return nullptr;
+UnicodeString::get_বাফার(int32_t minCapacity) U_LIFETIME_BOUND {
+  যদি(minCapacity>=-1 && cloneArrayIfNeeded(minCapacity)) {
+    fUnion.fFields.f_দৈর্ঘ্য_And_Flags|=k_Open_Get_বাফার;
+    set_Zero_দৈর্ঘ্য();
+    ফেরত getArrayStart();
+  } অন্যথা {
+    ফেরত nullptr;
   }
 }
 
-void
-UnicodeString::releaseBuffer(int32_t newLength) {
-  if(fUnion.fFields.fLengthAndFlags&kOpenGetBuffer && newLength>=-1) {
+শূন্য
+UnicodeString::release_বাফার(int32_t new_দৈর্ঘ্য) {
+  যদি(fUnion.fFields.f_দৈর্ঘ্য_And_Flags&k_Open_Get_বাফার && new_দৈর্ঘ্য>=-1) {
     // set the new fLength
     int32_t capacity=getCapacity();
-    if(newLength==-1) {
+    যদি(new_দৈর্ঘ্য==-1) {
       // the new length is the string length, capped by fCapacity
-      const char16_t *array=getArrayStart(), *p=array, *limit=array+capacity;
-      while(p<limit && *p!=0) {
+      ধ্রুবক char16_t *array=getArrayStart(), *p=array, *limit=array+capacity;
+      যখন(p<limit && *p!=0) {
         ++p;
       }
-      newLength = static_cast<int32_t>(p - array);
-    } else if(newLength>capacity) {
-      newLength=capacity;
+      new_দৈর্ঘ্য = static_cast<int32_t>(p - array);
+    } অন্যথা যদি(new_দৈর্ঘ্য>capacity) {
+      new_দৈর্ঘ্য=capacity;
     }
-    setLength(newLength);
-    fUnion.fFields.fLengthAndFlags&=~kOpenGetBuffer;
+    set_দৈর্ঘ্য(new_দৈর্ঘ্য);
+    fUnion.fFields.f_দৈর্ঘ্য_And_Flags&=~k_Open_Get_বাফার;
   }
 }
 
@@ -1918,19 +1918,19 @@ UBool
 UnicodeString::cloneArrayIfNeeded(int32_t newCapacity,
                                   int32_t growCapacity,
                                   UBool doCopyArray,
-                                  int32_t **pBufferToDelete,
+                                  int32_t **p_বাফার_To_Delete,
                                   UBool forceClone) {
   // default parameters need to be static, therefore
   // the defaults are -1 to have convenience defaults
-  if(newCapacity == -1) {
+  যদি(newCapacity == -1) {
     newCapacity = getCapacity();
   }
 
   // while a getBuffer(minCapacity) is "open",
   // prevent any modifications of the string by returning false here
   // if the string is bogus, then only an assignment or similar can revive it
-  if(!isWritable()) {
-    return false;
+  যদি(!isWritable()) {
+    ফেরত মিথ্যা;
   }
 
   /*
@@ -1940,94 +1940,94 @@ UnicodeString::cloneArrayIfNeeded(int32_t newCapacity,
    * the buffer is too small.
    * Return false if memory could not be allocated.
    */
-  if(forceClone ||
-     fUnion.fFields.fLengthAndFlags & kBufferIsReadonly ||
-     (fUnion.fFields.fLengthAndFlags & kRefCounted && refCount() > 1) ||
+  যদি(forceClone ||
+     fUnion.fFields.f_দৈর্ঘ্য_And_Flags & k_বাফার_Is_Readonly ||
+     (fUnion.fFields.f_দৈর্ঘ্য_And_Flags & kRefCounted && ref_গুনতি() > 1) ||
      newCapacity > getCapacity()
   ) {
     // check growCapacity for default value and use of the stack buffer
-    if(growCapacity < 0) {
+    যদি(growCapacity < 0) {
       growCapacity = newCapacity;
-    } else if(newCapacity <= US_STACKBUF_SIZE && growCapacity > US_STACKBUF_SIZE) {
-      growCapacity = US_STACKBUF_SIZE;
-    } else if(newCapacity > growCapacity) {
+    } অন্যথা যদি(newCapacity <= US_STACKBUF_আকার && growCapacity > US_STACKBUF_আকার) {
+      growCapacity = US_STACKBUF_আকার;
+    } অন্যথা যদি(newCapacity > growCapacity) {
       setToBogus();
-      return false;  // bad inputs
+      ফেরত মিথ্যা;  // bad inputs
     }
-    if(growCapacity > kMaxCapacity) {
+    যদি(growCapacity > kMaxCapacity) {
       setToBogus();
-      return false;
+      ফেরত মিথ্যা;
     }
 
     // save old values
-    char16_t oldStackBuffer[US_STACKBUF_SIZE];
+    char16_t old_স্তূপ_বাফার[US_STACKBUF_আকার];
     char16_t *oldArray;
-    int32_t oldLength = length();
-    int16_t flags = fUnion.fFields.fLengthAndFlags;
+    int32_t old_দৈর্ঘ্য = length();
+    int16_t flags = fUnion.fFields.f_দৈর্ঘ্য_And_Flags;
 
-    if(flags&kUsingStackBuffer) {
+    যদি(flags&k_Using_স্তূপ_বাফার) {
       U_ASSERT(!(flags&kRefCounted)); /* kRefCounted and kUsingStackBuffer are mutally exclusive */
-      if(doCopyArray && growCapacity > US_STACKBUF_SIZE) {
+      যদি(doCopyArray && growCapacity > US_STACKBUF_আকার) {
         // copy the stack buffer contents because it will be overwritten with
         // fUnion.fFields values
-        us_arrayCopy(fUnion.fStackFields.fBuffer, 0, oldStackBuffer, 0, oldLength);
-        oldArray = oldStackBuffer;
-      } else {
+        us_arrayCopy(fUnion.f_স্তূপ_Fields.f_বাফার, 0, old_স্তূপ_বাফার, 0, old_দৈর্ঘ্য);
+        oldArray = old_স্তূপ_বাফার;
+      } অন্যথা {
         oldArray = nullptr; // no need to copy from the stack buffer to itself
       }
-    } else {
+    } অন্যথা {
       oldArray = fUnion.fFields.fArray;
       U_ASSERT(oldArray!=nullptr); /* when stack buffer is not used, oldArray must have a non-nullptr reference */
     }
 
     // allocate a new array
-    if(allocate(growCapacity) ||
+    যদি(allocate(growCapacity) ||
        (newCapacity < growCapacity && allocate(newCapacity))
     ) {
-      if(doCopyArray) {
+      যদি(doCopyArray) {
         // copy the contents
         // do not copy more than what fits - it may be smaller than before
-        int32_t minLength = oldLength;
+        int32_t min_দৈর্ঘ্য = old_দৈর্ঘ্য;
         newCapacity = getCapacity();
-        if(newCapacity < minLength) {
-          minLength = newCapacity;
+        যদি(newCapacity < min_দৈর্ঘ্য) {
+          min_দৈর্ঘ্য = newCapacity;
         }
-        if(oldArray != nullptr) {
-          us_arrayCopy(oldArray, 0, getArrayStart(), 0, minLength);
+        যদি(oldArray != nullptr) {
+          us_arrayCopy(oldArray, 0, getArrayStart(), 0, min_দৈর্ঘ্য);
         }
-        setLength(minLength);
-      } else {
-        setZeroLength();
+        set_দৈর্ঘ্য(min_দৈর্ঘ্য);
+      } অন্যথা {
+        set_Zero_দৈর্ঘ্য();
       }
 
       // release the old array
-      if(flags & kRefCounted) {
+      যদি(flags & kRefCounted) {
         // the array is refCounted; decrement and release if 0
-        u_atomic_int32_t* pRefCount = reinterpret_cast<u_atomic_int32_t*>(oldArray) - 1;
-        if(umtx_atomic_dec(pRefCount) == 0) {
-          if (pBufferToDelete == nullptr) {
+        u_atomic_int32_t* p_Ref_গুনতি = reinterpret_cast<u_atomic_int32_t*>(oldArray) - 1;
+        যদি(umtx_atomic_dec(p_Ref_গুনতি) == 0) {
+          যদি (p_বাফার_To_Delete == nullptr) {
               // Note: cast to (void *) is needed with MSVC, where u_atomic_int32_t
               // is defined as volatile. (Volatile has useful non-standard behavior
               //   with this compiler.)
-            uprv_free((void *)pRefCount);
-          } else {
+            uprv_free((শূন্য *)p_Ref_গুনতি);
+          } অন্যথা {
             // the caller requested to delete it himself
-            *pBufferToDelete = reinterpret_cast<int32_t*>(pRefCount);
+            *p_বাফার_To_Delete = reinterpret_cast<int32_t*>(p_Ref_গুনতি);
           }
         }
       }
-    } else {
+    } অন্যথা {
       // not enough memory for growCapacity and not even for the smaller newCapacity
       // reset the old values for setToBogus() to release the array
-      if(!(flags&kUsingStackBuffer)) {
+      যদি(!(flags&k_Using_স্তূপ_বাফার)) {
         fUnion.fFields.fArray = oldArray;
       }
-      fUnion.fFields.fLengthAndFlags = flags;
+      fUnion.fFields.f_দৈর্ঘ্য_And_Flags = flags;
       setToBogus();
-      return false;
+      ফেরত মিথ্যা;
     }
   }
-  return true;
+  ফেরত সত্য;
 }
 
 // UnicodeStringAppendable ------------------------------------------------- ***
@@ -2036,46 +2036,46 @@ UnicodeStringAppendable::~UnicodeStringAppendable() {}
 
 UBool
 UnicodeStringAppendable::appendCodeUnit(char16_t c) {
-  return str.doAppend(&c, 0, 1).isWritable();
+  ফেরত str.doAppend(&c, 0, 1).isWritable();
 }
 
 UBool
 UnicodeStringAppendable::appendCodePoint(UChar32 c) {
-  char16_t buffer[U16_MAX_LENGTH];
-  int32_t cLength = 0;
-  UBool isError = false;
-  U16_APPEND(buffer, cLength, U16_MAX_LENGTH, c, isError);
-  return !isError && str.doAppend(buffer, 0, cLength).isWritable();
+  char16_t বাফার[U16_MAX_দৈর্ঘ্য];
+  int32_t c_দৈর্ঘ্য = 0;
+  UBool isError = মিথ্যা;
+  U16_APPEND(বাফার, c_দৈর্ঘ্য, U16_MAX_দৈর্ঘ্য, c, isError);
+  ফেরত !isError && str.doAppend(বাফার, 0, c_দৈর্ঘ্য).isWritable();
 }
 
 UBool
-UnicodeStringAppendable::appendString(const char16_t *s, int32_t length) {
-  return str.doAppend(s, 0, length).isWritable();
+UnicodeStringAppendable::appendString(ধ্রুবক char16_t *s, int32_t length) {
+  ফেরত str.doAppend(s, 0, length).isWritable();
 }
 
 UBool
 UnicodeStringAppendable::reserveAppendCapacity(int32_t appendCapacity) {
-  return str.cloneArrayIfNeeded(str.length() + appendCapacity);
+  ফেরত str.cloneArrayIfNeeded(str.length() + appendCapacity);
 }
 
-char16_t* UnicodeStringAppendable::getAppendBuffer(int32_t minCapacity,
+char16_t* UnicodeStringAppendable::get_Append_বাফার(int32_t minCapacity,
                                                    int32_t desiredCapacityHint,
                                                    char16_t* scratch U_LIFETIME_BOUND,
                                                    int32_t scratchCapacity,
-                                                   int32_t* resultCapacity) U_LIFETIME_BOUND {
-  if(minCapacity < 1 || scratchCapacity < minCapacity) {
-    *resultCapacity = 0;
-    return nullptr;
+                                                   int32_t* ফলাফল_Capacity) U_LIFETIME_BOUND {
+  যদি(minCapacity < 1 || scratchCapacity < minCapacity) {
+    *ফলাফল_Capacity = 0;
+    ফেরত nullptr;
   }
-  int32_t oldLength = str.length();
-  if(minCapacity <= (kMaxCapacity - oldLength) &&
-      desiredCapacityHint <= (kMaxCapacity - oldLength) &&
-      str.cloneArrayIfNeeded(oldLength + minCapacity, oldLength + desiredCapacityHint)) {
-    *resultCapacity = str.getCapacity() - oldLength;
-    return str.getArrayStart() + oldLength;
+  int32_t old_দৈর্ঘ্য = str.length();
+  যদি(minCapacity <= (kMaxCapacity - old_দৈর্ঘ্য) &&
+      desiredCapacityHint <= (kMaxCapacity - old_দৈর্ঘ্য) &&
+      str.cloneArrayIfNeeded(old_দৈর্ঘ্য + minCapacity, old_দৈর্ঘ্য + desiredCapacityHint)) {
+    *ফলাফল_Capacity = str.getCapacity() - old_দৈর্ঘ্য;
+    ফেরত str.getArrayStart() + old_দৈর্ঘ্য;
   }
-  *resultCapacity = scratchCapacity;
-  return scratch;
+  *ফলাফল_Capacity = scratchCapacity;
+  ফেরত scratch;
 }
 
 U_NAMESPACE_END
@@ -2083,24 +2083,24 @@ U_NAMESPACE_END
 U_NAMESPACE_USE
 
 U_CAPI int32_t U_EXPORT2
-uhash_hashUnicodeString(const UElement key) {
-    const UnicodeString *str = (const UnicodeString*) key.pointer;
-    return (str == nullptr) ? 0 : str->hashCode();
+uhash_hashUnicodeString(ধ্রুবক UElement চাবি) {
+    ধ্রুবক UnicodeString *str = (ধ্রুবক UnicodeString*) চাবি.pointer;
+    ফেরত (str == nullptr) ? 0 : str->hashCode();
 }
 
 // Moved here from uhash_us.cpp so that using a UVector of UnicodeString*
 // does not depend on hashtable code.
 U_CAPI UBool U_EXPORT2
-uhash_compareUnicodeString(const UElement key1, const UElement key2) {
-    const UnicodeString *str1 = (const UnicodeString*) key1.pointer;
-    const UnicodeString *str2 = (const UnicodeString*) key2.pointer;
-    if (str1 == str2) {
-        return true;
+uhash_compareUnicodeString(ধ্রুবক UElement key1, ধ্রুবক UElement key2) {
+    ধ্রুবক UnicodeString *str1 = (ধ্রুবক UnicodeString*) key1.pointer;
+    ধ্রুবক UnicodeString *str2 = (ধ্রুবক UnicodeString*) key2.pointer;
+    যদি (str1 == str2) {
+        ফেরত সত্য;
     }
-    if (str1 == nullptr || str2 == nullptr) {
-        return false;
+    যদি (str1 == nullptr || str2 == nullptr) {
+        ফেরত মিথ্যা;
     }
-    return *str1 == *str2;
+    ফেরত *str1 == *str2;
 }
 
 #ifdef U_STATIC_IMPLEMENTATION
@@ -2111,11 +2111,11 @@ The vector deleting destructor is already a part of UObject,
 but defining it here makes sure that it is included with this object file.
 This makes sure that static library dependencies are kept to a minimum.
 */
-#if defined(__clang__) || U_GCC_MAJOR_MINOR >= 1100
+#যদি defined(__clang__) || U_GCC_MAJOR_MINOR >= 1100
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-function"
-static void uprv_UnicodeStringDummy() {
-    delete [] (new UnicodeString[2]);
+স্থির শূন্য uprv_UnicodeStringDummy() {
+    delete [] (নতুন UnicodeString[2]);
 }
 #pragma GCC diagnostic pop
 #endif

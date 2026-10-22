@@ -19,125 +19,125 @@
 *   uniset_props.cpp, split off for modularization.
 */
 
-#include "unicode/utypes.h"
-#include "unicode/uobject.h"
-#include "unicode/uset.h"
-#include "unicode/uniset.h"
-#include "cmemory.h"
-#include "unicode/ustring.h"
-#include "unicode/parsepos.h"
+#অন্তর্ভাব "unicode/utypes.h"
+#অন্তর্ভাব "unicode/uobject.h"
+#অন্তর্ভাব "unicode/uset.h"
+#অন্তর্ভাব "unicode/uniset.h"
+#অন্তর্ভাব "cmemory.h"
+#অন্তর্ভাব "unicode/ustring.h"
+#অন্তর্ভাব "unicode/parsepos.h"
 
 U_NAMESPACE_USE
 
 U_CAPI USet* U_EXPORT2
-uset_openPattern(const char16_t* pattern, int32_t patternLength,
+uset_openPattern(ধ্রুবক char16_t* pattern, int32_t pattern_দৈর্ঘ্য,
                  UErrorCode* ec)
 {
-    UnicodeString pat(patternLength==-1, pattern, patternLength);
-    UnicodeSet* set = new UnicodeSet(pat, *ec);
+    UnicodeString pat(pattern_দৈর্ঘ্য==-1, pattern, pattern_দৈর্ঘ্য);
+    UnicodeSet* set = নতুন UnicodeSet(pat, *ec);
     /* test for nullptr */
-    if (set == nullptr) {
+    যদি (set == nullptr) {
         *ec = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        ফেরত nullptr;
     }
 
-    if (U_FAILURE(*ec)) {
+    যদি (U_FAILURE(*ec)) {
         delete set;
         set = nullptr;
     }
-    return (USet*) set;
+    ফেরত (USet*) set;
 }
 
 U_CAPI USet* U_EXPORT2
-uset_openPatternOptions(const char16_t* pattern, int32_t patternLength,
+uset_openPatternOptions(ধ্রুবক char16_t* pattern, int32_t pattern_দৈর্ঘ্য,
                  uint32_t options,
                  UErrorCode* ec)
 {
-    UnicodeString pat(patternLength==-1, pattern, patternLength);
-    UnicodeSet* set = new UnicodeSet(pat, options, nullptr, *ec);
+    UnicodeString pat(pattern_দৈর্ঘ্য==-1, pattern, pattern_দৈর্ঘ্য);
+    UnicodeSet* set = নতুন UnicodeSet(pat, options, nullptr, *ec);
     /* test for nullptr */
-    if (set == nullptr) {
+    যদি (set == nullptr) {
         *ec = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        ফেরত nullptr;
     }
 
-    if (U_FAILURE(*ec)) {
+    যদি (U_FAILURE(*ec)) {
         delete set;
         set = nullptr;
     }
-    return (USet*) set;
+    ফেরত (USet*) set;
 }
 
 
 U_CAPI int32_t U_EXPORT2 
 uset_applyPattern(USet *set,
-                  const char16_t *pattern, int32_t patternLength,
+                  ধ্রুবক char16_t *pattern, int32_t pattern_দৈর্ঘ্য,
                   uint32_t options,
                   UErrorCode *status){
 
     // status code needs to be checked since we 
     // dereference it
-    if(status == nullptr || U_FAILURE(*status)){
-        return 0;
+    যদি(status == nullptr || U_FAILURE(*status)){
+        ফেরত 0;
     }
 
     // check only the set paramenter
     // if pattern is nullptr or NUL terminated
     // UnicodeString constructor takes care of it
-    if(set == nullptr){
+    যদি(set == nullptr){
         *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        ফেরত 0;
     }
 
-    UnicodeString pat(pattern, patternLength);
+    UnicodeString pat(pattern, pattern_দৈর্ঘ্য);
 
     ParsePosition pos;
    
     ((UnicodeSet*) set)->applyPattern(pat, pos, options, nullptr, *status);
     
-    return pos.getIndex();
+    ফেরত pos.get_সূচক();
 }
 
-U_CAPI void U_EXPORT2
-uset_applyIntPropertyValue(USet* set,
+U_CAPI শূন্য U_EXPORT2
+uset_apply_Int_Property_মান(USet* set,
                UProperty prop, int32_t value, UErrorCode* ec) {
-    ((UnicodeSet*) set)->applyIntPropertyValue(prop, value, *ec);
+    ((UnicodeSet*) set)->apply_Int_Property_মান(prop, value, *ec);
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI শূন্য U_EXPORT2
 uset_applyPropertyAlias(USet* set,
-                        const char16_t *prop, int32_t propLength,
-                        const char16_t *value, int32_t valueLength,
+                        ধ্রুবক char16_t *prop, int32_t prop_দৈর্ঘ্য,
+                        ধ্রুবক char16_t *value, int32_t মান_দৈর্ঘ্য,
             UErrorCode* ec) {
 
-    UnicodeString p(prop, propLength);
-    UnicodeString v(value, valueLength);
+    UnicodeString p(prop, prop_দৈর্ঘ্য);
+    UnicodeString v(value, মান_দৈর্ঘ্য);
 
     ((UnicodeSet*) set)->applyPropertyAlias(p, v, *ec);
 }
 
 U_CAPI UBool U_EXPORT2
-uset_resemblesPattern(const char16_t *pattern, int32_t patternLength,
+uset_resemblesPattern(ধ্রুবক char16_t *pattern, int32_t pattern_দৈর্ঘ্য,
                       int32_t pos) {
 
-    UnicodeString pat(pattern, patternLength);
+    UnicodeString pat(pattern, pattern_দৈর্ঘ্য);
 
-    return ((pos+1) < pat.length() &&
+    ফেরত ((pos+1) < pat.length() &&
             pat.charAt(pos) == (char16_t)91/*[*/) ||
             UnicodeSet::resemblesPattern(pat, pos);
 }
 
 U_CAPI int32_t U_EXPORT2
-uset_toPattern(const USet* set,
-               char16_t* result, int32_t resultCapacity,
+uset_toPattern(ধ্রুবক USet* set,
+               char16_t* ফলাফল, int32_t ফলাফল_Capacity,
                UBool escapeUnprintable,
                UErrorCode* ec) {
     UnicodeString pat;
-    ((const UnicodeSet*) set)->toPattern(pat, escapeUnprintable);
-    return pat.extract(result, resultCapacity, *ec);
+    ((ধ্রুবক UnicodeSet*) set)->toPattern(pat, escapeUnprintable);
+    ফেরত pat.extract(ফলাফল, ফলাফল_Capacity, *ec);
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI শূন্য U_EXPORT2
 uset_closeOver(USet* set, int32_t attributes) {
     ((UnicodeSet*) set)->UnicodeSet::closeOver(attributes);
 }

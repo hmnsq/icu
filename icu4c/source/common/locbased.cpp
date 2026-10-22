@@ -10,39 +10,39 @@
 * Since: ICU 2.8
 **********************************************************************
 */
-#include "locbased.h"
-#include "uresimp.h"
+#অন্তর্ভাব "locbased.h"
+#অন্তর্ভাব "uresimp.h"
 
 U_NAMESPACE_BEGIN
 
-const Locale& LocaleBased::getLocale(const Locale& valid U_LIFETIME_BOUND,
-                                     const Locale& actual U_LIFETIME_BOUND,
-                                     ULocDataLocaleType type,
+ধ্রুবক Locale& LocaleBased::getLocale(ধ্রুবক Locale& valid U_LIFETIME_BOUND,
+                                     ধ্রুবক Locale& actual U_LIFETIME_BOUND,
+                                     ULoc_তথ্য_Locale_Type type,
                                      UErrorCode& status) {
-    if (U_FAILURE(status)) {
-        return Locale::getRoot();
+    যদি (U_FAILURE(status)) {
+        ফেরত Locale::get_মূল();
     }
 
-    switch(type) {
-    case ULOC_VALID_LOCALE:
-        return valid;
-    case ULOC_ACTUAL_LOCALE:
-        return actual;
-    default:
+    নির্বাচন(type) {
+    ক্ষেত্র ULOC_VALID_LOCALE:
+        ফেরত valid;
+    ক্ষেত্র ULOC_ACTUAL_LOCALE:
+        ফেরত actual;
+    পূর্বনির্ধারিত:
         status = U_ILLEGAL_ARGUMENT_ERROR;
-        return Locale::getRoot();
+        ফেরত Locale::get_মূল();
     }
 }
 
-const char* LocaleBased::getLocaleID(const Locale& valid, const Locale& actual,
-                                     ULocDataLocaleType type, UErrorCode& status) {
-    const Locale& locale = getLocale(valid, actual, type, status);
+ধ্রুবক অক্ষর* LocaleBased::getLocaleID(ধ্রুবক Locale& valid, ধ্রুবক Locale& actual,
+                                     ULoc_তথ্য_Locale_Type type, UErrorCode& status) {
+    ধ্রুবক Locale& locale = getLocale(valid, actual, type, status);
 
-    if (U_FAILURE(status)) {
-        return nullptr;
+    যদি (U_FAILURE(status)) {
+        ফেরত nullptr;
     }
 
-    return locale == Locale::getRoot() ? kRootLocaleName : locale.getName();
+    ফেরত locale == Locale::get_মূল() ? k_মূল_Locale_Name : locale.getName();
 }
 
 U_NAMESPACE_END

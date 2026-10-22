@@ -10,9 +10,9 @@
 #ifndef UDISPLAYCONTEXT_H
 #define UDISPLAYCONTEXT_H
 
-#include "unicode/utypes.h"
+#অন্তর্ভাব "unicode/utypes.h"
 
-#if !UCONFIG_NO_FORMATTING
+#যদি !UCONFIG_NO_FORMATTING
 
 /**
  * \file
@@ -24,7 +24,7 @@
  * Note, the specific numeric values are internal and may change.
  * @stable ICU 51
  */
-enum UDisplayContextType {
+গণনা UDisplayContextType {
     /**
      * Type to retrieve the dialect handling setting, e.g.
      * UDISPCTX_STANDARD_NAMES or UDISPCTX_DIALECT_NAMES.
@@ -43,7 +43,7 @@ enum UDisplayContextType {
      * UDISPCTX_LENGTH_FULL, UDISPCTX_LENGTH_SHORT.
      * @stable ICU 54
      */
-    UDISPCTX_TYPE_DISPLAY_LENGTH = 2,
+    UDISPCTX_TYPE_DISPLAY_দৈর্ঘ্য = 2,
     /**
      * Type to retrieve the substitute handling setting, e.g.
      * UDISPCTX_SUBSTITUTE, UDISPCTX_NO_SUBSTITUTE.
@@ -54,14 +54,14 @@ enum UDisplayContextType {
 /**
 *  @stable ICU 51
 */
-typedef enum UDisplayContextType UDisplayContextType;
+প্রকারলেখ গণনা UDisplayContextType UDisplayContextType;
 
 /**
  * Display context settings.
  * Note, the specific numeric values are internal and may change.
  * @stable ICU 51
  */
-enum UDisplayContext {
+গণনা UDisplayContext {
     /**
      * ================================
      * DIALECT_HANDLING can be set to one of UDISPCTX_STANDARD_NAMES or
@@ -101,7 +101,7 @@ enum UDisplayContext {
      * formatted with capitalization appropriate for the middle of a sentence.
      * @stable ICU 51
      */
-    UDISPCTX_CAPITALIZATION_FOR_MIDDLE_OF_SENTENCE = (UDISPCTX_TYPE_CAPITALIZATION<<8) + 1,
+    UDISPCTX_CAPITALIZATION_FOR_মধ্য_OF_SENTENCE = (UDISPCTX_TYPE_CAPITALIZATION<<8) + 1,
     /**
      * The capitalization context if a date, date symbol or display name is to be
      * formatted with capitalization appropriate for the beginning of a sentence.
@@ -133,14 +133,14 @@ enum UDisplayContext {
      * e.g. "United States" for US.
      * @stable ICU 54
      */
-    UDISPCTX_LENGTH_FULL = (UDISPCTX_TYPE_DISPLAY_LENGTH<<8) + 0,
+    UDISPCTX_দৈর্ঘ্য_FULL = (UDISPCTX_TYPE_DISPLAY_দৈর্ঘ্য<<8) + 0,
     /**
      * A possible setting for DISPLAY_LENGTH:
      * use short names when generating a locale name,
      * e.g. "U.S." for US.
      * @stable ICU 54
      */
-    UDISPCTX_LENGTH_SHORT = (UDISPCTX_TYPE_DISPLAY_LENGTH<<8) + 1,
+    UDISPCTX_দৈর্ঘ্য_SHORT = (UDISPCTX_TYPE_DISPLAY_দৈর্ঘ্য<<8) + 1,
     /**
      * ================================
      * SUBSTITUTE_HANDLING can be set to one of UDISPCTX_SUBSTITUTE or
@@ -166,7 +166,7 @@ enum UDisplayContext {
 /**
 *  @stable ICU 51
 */
-typedef enum UDisplayContext UDisplayContext;
+প্রকারলেখ গণনা UDisplayContext UDisplayContext;
 
 #endif /* #if !UCONFIG_NO_FORMATTING */
 

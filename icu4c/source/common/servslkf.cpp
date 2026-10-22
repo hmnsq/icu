@@ -8,18 +8,18 @@
  *
  *******************************************************************************
  */
-#include "unicode/utypes.h"
+#অন্তর্ভাব "unicode/utypes.h"
 
-#if !UCONFIG_NO_SERVICE
+#যদি !UCONFIG_NO_SERVICE
 
-#include "unicode/resbund.h"
-#include "uresimp.h"
-#include "cmemory.h"
-#include "servloc.h"
-#include "ustrfmt.h"
-#include "uhash.h"
-#include "charstr.h"
-#include "uassert.h"
+#অন্তর্ভাব "unicode/resbund.h"
+#অন্তর্ভাব "uresimp.h"
+#অন্তর্ভাব "cmemory.h"
+#অন্তর্ভাব "servloc.h"
+#অন্তর্ভাব "ustrfmt.h"
+#অন্তর্ভাব "uhash.h"
+#অন্তর্ভাব "charstr.h"
+#অন্তর্ভাব "uassert.h"
 
 #define UNDERSCORE_CHAR ((char16_t)0x005f)
 #define AT_SIGN_CHAR    ((char16_t)64)
@@ -31,22 +31,22 @@ U_NAMESPACE_BEGIN
  ******************************************************************
  */
 
-SimpleLocaleKeyFactory::SimpleLocaleKeyFactory(UObject* objToAdopt,
-                                               const UnicodeString& locale,
+Simple_Locale_চাবি_Factory::Simple_Locale_চাবি_Factory(UObject* objToAdopt,
+                                               ধ্রুবক UnicodeString& locale,
                                                int32_t kind,
                                                int32_t coverage)
-  : LocaleKeyFactory(coverage)
+  : Locale_চাবি_Factory(coverage)
   , _obj(objToAdopt)
   , _id(locale)
   , _kind(kind)
 {
 }
 
-SimpleLocaleKeyFactory::SimpleLocaleKeyFactory(UObject* objToAdopt,
-                                               const Locale& locale,
+Simple_Locale_চাবি_Factory::Simple_Locale_চাবি_Factory(UObject* objToAdopt,
+                                               ধ্রুবক Locale& locale,
                                                int32_t kind,
                                                int32_t coverage)
-  : LocaleKeyFactory(coverage)
+  : Locale_চাবি_Factory(coverage)
   , _obj(objToAdopt)
   , _id()
   , _kind(kind)
@@ -54,26 +54,26 @@ SimpleLocaleKeyFactory::SimpleLocaleKeyFactory(UObject* objToAdopt,
     LocaleUtility::initNameFromLocale(locale, _id);
 }
 
-SimpleLocaleKeyFactory::~SimpleLocaleKeyFactory()
+Simple_Locale_চাবি_Factory::~Simple_Locale_চাবি_Factory()
 {
   delete _obj;
   _obj = nullptr;
 }
 
 UObject*
-SimpleLocaleKeyFactory::create(const ICUServiceKey& key, const ICUService* service, UErrorCode& status) const
+Simple_Locale_চাবি_Factory::create(ধ্রুবক ICUService_চাবি& চাবি, ধ্রুবক ICUService* service, UErrorCode& status) ধ্রুবক
 {
-    if (U_SUCCESS(status)) {
-        const LocaleKey& lkey = static_cast<const LocaleKey&>(key);
-        if (_kind == LocaleKey::KIND_ANY || _kind == lkey.kind()) {
-            UnicodeString keyID;
-            lkey.currentID(keyID);
-            if (_id == keyID) {
-                return service->cloneInstance(_obj);
+    যদি (U_SUCCESS(status)) {
+        ধ্রুবক Locale_চাবি& lkey = static_cast<ধ্রুবক Locale_চাবি&>(চাবি);
+        যদি (_kind == Locale_চাবি::KIND_ANY || _kind == lkey.kind()) {
+            UnicodeString চাবি_ID;
+            lkey.currentID(চাবি_ID);
+            যদি (_id == চাবি_ID) {
+                ফেরত service->cloneInstance(_obj);
             }
         }
     }
-    return nullptr;
+    ফেরত nullptr;
 }
 
 //UBool
@@ -82,38 +82,38 @@ SimpleLocaleKeyFactory::create(const ICUServiceKey& key, const ICUService* servi
 //    return id == _id;
 //}
 
-void
-SimpleLocaleKeyFactory::updateVisibleIDs(Hashtable& result, UErrorCode& status) const
+শূন্য
+Simple_Locale_চাবি_Factory::updateVisibleIDs(Hashtable& ফলাফল, UErrorCode& status) ধ্রুবক
 {
-    if (U_SUCCESS(status)) {
-        if (_coverage & 0x1) {
-            result.remove(_id);
-        } else {
-            result.put(_id, (void*)this, status);
+    যদি (U_SUCCESS(status)) {
+        যদি (_coverage & 0x1) {
+            ফলাফল.remove(_id);
+        } অন্যথা {
+            ফলাফল.put(_id, (শূন্য*)এই, status);
         }
     }
 }
 
 #ifdef SERVICE_DEBUG
 UnicodeString&
-SimpleLocaleKeyFactory::debug(UnicodeString& result) const
+Simple_Locale_চাবি_Factory::debug(UnicodeString& ফলাফল) ধ্রুবক
 {
-    LocaleKeyFactory::debug(result);
-    result.append((UnicodeString)", id: ");
-    result.append(_id);
-    result.append((UnicodeString)", kind: ");
-    result.append(_kind);
-    return result;
+    Locale_চাবি_Factory::debug(ফলাফল);
+    ফলাফল.append((UnicodeString)", id: ");
+    ফলাফল.append(_id);
+    ফলাফল.append((UnicodeString)", kind: ");
+    ফলাফল.append(_kind);
+    ফেরত ফলাফল;
 }
 
 UnicodeString&
-SimpleLocaleKeyFactory::debugClass(UnicodeString& result) const
+Simple_Locale_চাবি_Factory::debugClass(UnicodeString& ফলাফল) ধ্রুবক
 {
-    return result.append((UnicodeString)"SimpleLocaleKeyFactory");
+    ফেরত ফলাফল.append((UnicodeString)"SimpleLocaleKeyFactory");
 }
 #endif
 
-UOBJECT_DEFINE_RTTI_IMPLEMENTATION(SimpleLocaleKeyFactory)
+UOBJECT_DEFINE_RTTI_IMPLEMENTATION(Simple_Locale_চাবি_Factory)
 
 U_NAMESPACE_END
 

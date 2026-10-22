@@ -19,8 +19,8 @@
 #ifndef __UTRIE_H__
 #define __UTRIE_H__
 
-#include "unicode/utypes.h"
-#include "unicode/utf16.h"
+#অন্তর্ভাব "unicode/utypes.h"
+#অন্তর্ভাব "unicode/utf16.h"
 
 U_CDECL_BEGIN
 
@@ -50,21 +50,21 @@ U_CDECL_BEGIN
 /**
  * Trie constants, defining shift widths, index array lengths, etc.
  */
-enum {
+গণনা {
     /** Shift size for shifting right the input index. 1..9 */
     UTRIE_SHIFT=5,
 
     /** Number of data values in a stage 2 (data array) block. 2, 4, 8, .., 0x200 */
-    UTRIE_DATA_BLOCK_LENGTH=1<<UTRIE_SHIFT,
+    UTRIE_তথ্য_BLOCK_দৈর্ঘ্য=1<<UTRIE_SHIFT,
 
     /** Mask for getting the lower bits from the input index. */
-    UTRIE_MASK=UTRIE_DATA_BLOCK_LENGTH-1,
+    UTRIE_MASK=UTRIE_তথ্য_BLOCK_দৈর্ঘ্য-1,
 
     /**
      * Lead surrogate code points' index displacement in the index array.
      * 0x10000-0xd800=0x2800
      */
-    UTRIE_LEAD_INDEX_DISP=0x2800>>UTRIE_SHIFT,
+    UTRIE_LEAD_সূচক_DISP=0x2800>>UTRIE_SHIFT,
 
     /**
      * Shift size for shifting left the index array values.
@@ -73,10 +73,10 @@ enum {
      * This requires blocks of stage 2 data to be aligned by UTRIE_DATA_GRANULARITY.
      * 0..UTRIE_SHIFT
      */
-    UTRIE_INDEX_SHIFT=2,
+    UTRIE_সূচক_SHIFT=2,
 
     /** The alignment size of a stage 2 data block. Also the granularity for compaction. */
-    UTRIE_DATA_GRANULARITY=1<<UTRIE_INDEX_SHIFT,
+    UTRIE_তথ্য_GRANULARITY=1<<UTRIE_সূচক_SHIFT,
 
     /** Number of bits of a trail surrogate that are used in index table lookups. */
     UTRIE_SURROGATE_BLOCK_BITS=10-UTRIE_SHIFT,
@@ -86,23 +86,23 @@ enum {
      * Same as number of index entries for 1024 trail surrogates,
      * ==0x400>>UTRIE_SHIFT
      */
-    UTRIE_SURROGATE_BLOCK_COUNT=(1<<UTRIE_SURROGATE_BLOCK_BITS),
+    UTRIE_SURROGATE_BLOCK_গুনতি=(1<<UTRIE_SURROGATE_BLOCK_BITS),
 
     /** Length of the BMP portion of the index (stage 1) array. */
-    UTRIE_BMP_INDEX_LENGTH=0x10000>>UTRIE_SHIFT
+    UTRIE_BMP_সূচক_দৈর্ঘ্য=0x10000>>UTRIE_SHIFT
 };
 
 /**
  * Length of the index (stage 1) array before folding.
  * Maximum number of Unicode code points (0x110000) shifted right by UTRIE_SHIFT.
  */
-#define UTRIE_MAX_INDEX_LENGTH (0x110000>>UTRIE_SHIFT)
+#define UTRIE_MAX_সূচক_দৈর্ঘ্য (0x110000>>UTRIE_SHIFT)
 
 /**
  * Maximum length of the runtime data (stage 2) array.
  * Limited by 16-bit index values that are left-shifted by UTRIE_INDEX_SHIFT.
  */
-#define UTRIE_MAX_DATA_LENGTH (0x10000<<UTRIE_INDEX_SHIFT)
+#define UTRIE_MAX_তথ্য_দৈর্ঘ্য (0x10000<<UTRIE_সূচক_SHIFT)
 
 /**
  * Maximum length of the build-time data (stage 2) array.
@@ -110,7 +110,7 @@ enum {
  * (Number of Unicode code points + one all-initial-value block +
  *  possible duplicate entries for 1024 lead surrogates.)
  */
-#define UTRIE_MAX_BUILD_TIME_DATA_LENGTH (0x110000+UTRIE_DATA_BLOCK_LENGTH+0x400)
+#define UTRIE_MAX_BUILD_TIME_তথ্য_দৈর্ঘ্য (0x110000+UTRIE_তথ্য_BLOCK_দৈর্ঘ্য+0x400)
 
 /**
  * Number of bytes for a dummy trie.
@@ -127,7 +127,7 @@ enum {
  *
  * @see utrie_unserializeDummy
  */
-#define UTRIE_DUMMY_SIZE ((UTRIE_BMP_INDEX_LENGTH+UTRIE_SURROGATE_BLOCK_COUNT)*2+(UTRIE_SHIFT<=8?256:UTRIE_DATA_BLOCK_LENGTH)*4+UTRIE_DATA_BLOCK_LENGTH*4)
+#define UTRIE_DUMMY_আকার ((UTRIE_BMP_সূচক_দৈর্ঘ্য+UTRIE_SURROGATE_BLOCK_গুনতি)*2+(UTRIE_SHIFT<=8?256:UTRIE_তথ্য_BLOCK_দৈর্ঘ্য)*4+UTRIE_তথ্য_BLOCK_দৈর্ঘ্য*4)
 
 /**
  * Runtime UTrie callback function.
@@ -137,8 +137,8 @@ enum {
  * @param data data value for a surrogate from the trie, including the folding offset
  * @return offset>=UTRIE_BMP_INDEX_LENGTH, or 0 if there is no data for the lead surrogate
  */
-typedef int32_t U_CALLCONV
-UTrieGetFoldingOffset(uint32_t data);
+প্রকারলেখ int32_t U_CALLCONV
+UTrieGetFoldingOffset(uint32_t তথ্য);
 
 /**
  * Run-time Trie structure.
@@ -149,9 +149,9 @@ UTrieGetFoldingOffset(uint32_t data);
  *
  * Or the data table is 32 bits wide and accessed via the data32 pointer.
  */
-struct UTrie {
-    const uint16_t *index;
-    const uint32_t *data32; /* NULL if 16b data is used via index */
+কাঠামো UTrie {
+    ধ্রুবক uint16_t *সূচক;
+    ধ্রুবক uint32_t *data32; /* NULL if 16b data is used via index */
 
     /**
      * This function is not used in _FROM_LEAD, _FROM_BMP, and _FROM_OFFSET_TRAIL macros.
@@ -165,98 +165,98 @@ struct UTrie {
      */
     UTrieGetFoldingOffset *getFoldingOffset;
 
-    int32_t indexLength, dataLength;
-    uint32_t initialValue;
+    int32_t সূচক_দৈর্ঘ্য, তথ্য_দৈর্ঘ্য;
+    uint32_t initial_মান;
     UBool isLatin1Linear;
 };
 
 #ifndef __UTRIE2_H__
-typedef struct UTrie UTrie;
+প্রকারলেখ কাঠামো UTrie UTrie;
 #endif
 
 /** Internal trie getter from an offset (0 if c16 is a BMP/lead units) and a 16-bit unit */
-#define _UTRIE_GET_RAW(trie, data, offset, c16) \
-    (trie)->data[ \
-        ((int32_t)((trie)->index[(offset)+((c16)>>UTRIE_SHIFT)])<<UTRIE_INDEX_SHIFT)+ \
+#define _UTRIE_GET_RAW(trie, তথ্য, offset, c16) \
+    (trie)->তথ্য[ \
+        ((int32_t)((trie)->সূচক[(offset)+((c16)>>UTRIE_SHIFT)])<<UTRIE_সূচক_SHIFT)+ \
         ((c16)&UTRIE_MASK) \
     ]
 
 /** Internal trie getter from a pair of surrogates */
-#define _UTRIE_GET_FROM_PAIR(trie, data, c, c2, result, resultType) UPRV_BLOCK_MACRO_BEGIN { \
+#define _UTRIE_GET_FROM_PAIR(trie, তথ্য, c, c2, ফলাফল, ফলাফল_Type) UPRV_BLOCK_MACRO_BEGIN { \
     int32_t __offset; \
 \
     /* get data for lead surrogate */ \
-    (result)=_UTRIE_GET_RAW((trie), data, 0, (c)); \
-    __offset=(trie)->getFoldingOffset(result); \
+    (ফলাফল)=_UTRIE_GET_RAW((trie), তথ্য, 0, (c)); \
+    __offset=(trie)->getFoldingOffset(ফলাফল); \
 \
     /* get the real data from the folded lead/trail units */ \
-    if(__offset>0) { \
-        (result)=_UTRIE_GET_RAW((trie), data, __offset, (c2)&0x3ff); \
-    } else { \
-        (result)=(resultType)((trie)->initialValue); \
+    যদি(__offset>0) { \
+        (ফলাফল)=_UTRIE_GET_RAW((trie), তথ্য, __offset, (c2)&0x3ff); \
+    } অন্যথা { \
+        (ফলাফল)=(ফলাফল_Type)((trie)->initial_মান); \
     } \
 } UPRV_BLOCK_MACRO_END
 
 /** Internal trie getter from a BMP code point, treating a lead surrogate as a normal code point */
-#define _UTRIE_GET_FROM_BMP(trie, data, c16) \
-    _UTRIE_GET_RAW(trie, data, 0xd800<=(c16) && (c16)<=0xdbff ? UTRIE_LEAD_INDEX_DISP : 0, c16)
+#define _UTRIE_GET_FROM_BMP(trie, তথ্য, c16) \
+    _UTRIE_GET_RAW(trie, তথ্য, 0xd800<=(c16) && (c16)<=0xdbff ? UTRIE_LEAD_সূচক_DISP : 0, c16)
 
 /**
  * Internal trie getter from a code point.
  * Could be faster(?) but longer with
  *   if((c32)<=0xd7ff) { (result)=_UTRIE_GET_RAW(trie, data, 0, c32); }
  */
-#define _UTRIE_GET(trie, data, c32, result, resultType) UPRV_BLOCK_MACRO_BEGIN { \
-    if((uint32_t)(c32)<=0xffff) { \
+#define _UTRIE_GET(trie, তথ্য, c32, ফলাফল, ফলাফল_Type) UPRV_BLOCK_MACRO_BEGIN { \
+    যদি((uint32_t)(c32)<=0xffff) { \
         /* BMP code points */ \
-        (result)=_UTRIE_GET_FROM_BMP(trie, data, c32); \
-    } else if((uint32_t)(c32)<=0x10ffff) { \
+        (ফলাফল)=_UTRIE_GET_FROM_BMP(trie, তথ্য, c32); \
+    } অন্যথা যদি((uint32_t)(c32)<=0x10ffff) { \
         /* supplementary code point */ \
         UChar __lead16=U16_LEAD(c32); \
-        _UTRIE_GET_FROM_PAIR(trie, data, __lead16, c32, result, resultType); \
-    } else { \
+        _UTRIE_GET_FROM_PAIR(trie, তথ্য, __lead16, c32, ফলাফল, ফলাফল_Type); \
+    } অন্যথা { \
         /* out of range */ \
-        (result)=(resultType)((trie)->initialValue); \
+        (ফলাফল)=(ফলাফল_Type)((trie)->initial_মান); \
     } \
 } UPRV_BLOCK_MACRO_END
 
 /** Internal next-post-increment: get the next code point (c, c2) and its data */
-#define _UTRIE_NEXT(trie, data, src, limit, c, c2, result, resultType) UPRV_BLOCK_MACRO_BEGIN { \
+#define UTRIE_পরবর্তী(trie, তথ্য, src, limit, c, c2, ফলাফল, ফলাফল_Type) UPRV_BLOCK_MACRO_BEGIN { \
     (c)=*(src)++; \
-    if(!U16_IS_LEAD(c)) { \
+    যদি(!U16_IS_LEAD(c)) { \
         (c2)=0; \
-        (result)=_UTRIE_GET_RAW((trie), data, 0, (c)); \
-    } else if((src)!=(limit) && U16_IS_TRAIL((c2)=*(src))) { \
+        (ফলাফল)=_UTRIE_GET_RAW((trie), তথ্য, 0, (c)); \
+    } অন্যথা যদি((src)!=(limit) && U16_IS_TRAIL((c2)=*(src))) { \
         ++(src); \
-        _UTRIE_GET_FROM_PAIR((trie), data, (c), (c2), (result), resultType); \
-    } else { \
+        _UTRIE_GET_FROM_PAIR((trie), তথ্য, (c), (c2), (ফলাফল), ফলাফল_Type); \
+    } অন্যথা { \
         /* unpaired lead surrogate code point */ \
         (c2)=0; \
-        (result)=_UTRIE_GET_RAW((trie), data, UTRIE_LEAD_INDEX_DISP, (c)); \
+        (ফলাফল)=_UTRIE_GET_RAW((trie), তথ্য, UTRIE_LEAD_সূচক_DISP, (c)); \
     } \
 } UPRV_BLOCK_MACRO_END
 
 /** Internal previous: get the previous code point (c, c2) and its data */
-#define _UTRIE_PREVIOUS(trie, data, start, src, c, c2, result, resultType) UPRV_BLOCK_MACRO_BEGIN { \
+#define _UTRIE_PREVIOUS(trie, তথ্য, start, src, c, c2, ফলাফল, ফলাফল_Type) UPRV_BLOCK_MACRO_BEGIN { \
     (c)=*--(src); \
-    if(!U16_IS_SURROGATE(c)) { \
+    যদি(!U16_IS_SURROGATE(c)) { \
         (c2)=0; \
-        (result)=_UTRIE_GET_RAW((trie), data, 0, (c)); \
-    } else if(!U16_IS_SURROGATE_LEAD(c)) { \
+        (ফলাফল)=_UTRIE_GET_RAW((trie), তথ্য, 0, (c)); \
+    } অন্যথা যদি(!U16_IS_SURROGATE_LEAD(c)) { \
         /* trail surrogate */ \
-        if((start)!=(src) && U16_IS_LEAD((c2)=*((src)-1))) { \
+        যদি((start)!=(src) && U16_IS_LEAD((c2)=*((src)-1))) { \
             --(src); \
-            (result)=(c); (c)=(c2); (c2)=(UChar)(result); /* swap c, c2 */ \
-            _UTRIE_GET_FROM_PAIR((trie), data, (c), (c2), (result), resultType); \
-        } else { \
+            (ফলাফল)=(c); (c)=(c2); (c2)=(UChar)(ফলাফল); /* swap c, c2 */ \
+            _UTRIE_GET_FROM_PAIR((trie), তথ্য, (c), (c2), (ফলাফল), ফলাফল_Type); \
+        } অন্যথা { \
             /* unpaired trail surrogate code point */ \
             (c2)=0; \
-            (result)=_UTRIE_GET_RAW((trie), data, 0, (c)); \
+            (ফলাফল)=_UTRIE_GET_RAW((trie), তথ্য, 0, (c)); \
         } \
-    } else { \
+    } অন্যথা { \
         /* unpaired lead surrogate code point */ \
         (c2)=0; \
-        (result)=_UTRIE_GET_RAW((trie), data, UTRIE_LEAD_INDEX_DISP, (c)); \
+        (ফলাফল)=_UTRIE_GET_RAW((trie), তথ্য, UTRIE_LEAD_সূচক_DISP, (c)); \
     } \
 } UPRV_BLOCK_MACRO_END
 
@@ -271,7 +271,7 @@ typedef struct UTrie UTrie;
  * @param trie (const UTrie *, in) a pointer to the runtime trie structure
  * @return (const uint16_t *) pointer to values for Latin-1 code points
  */
-#define UTRIE_GET16_LATIN1(trie) ((trie)->index+(trie)->indexLength+UTRIE_DATA_BLOCK_LENGTH)
+#define UTRIE_GET16_LATIN1(trie) ((trie)->সূচক+(trie)->সূচক_দৈর্ঘ্য+UTRIE_তথ্য_BLOCK_দৈর্ঘ্য)
 
 /**
  * Get a pointer to the contiguous part of the data array
@@ -282,7 +282,7 @@ typedef struct UTrie UTrie;
  * @param trie (const UTrie *, in) a pointer to the runtime trie structure
  * @return (const uint32_t *) pointer to values for Latin-1 code points
  */
-#define UTRIE_GET32_LATIN1(trie) ((trie)->data32+UTRIE_DATA_BLOCK_LENGTH)
+#define UTRIE_GET32_LATIN1(trie) ((trie)->data32+UTRIE_তথ্য_BLOCK_দৈর্ঘ্য)
 
 /**
  * Get a 16-bit trie value from a BMP code point (UChar, <=U+ffff).
@@ -292,7 +292,7 @@ typedef struct UTrie UTrie;
  * @param c16 (UChar, in) the input BMP code point
  * @return (uint16_t) trie lookup result
  */
-#define UTRIE_GET16_FROM_LEAD(trie, c16) _UTRIE_GET_RAW(trie, index, 0, c16)
+#define UTRIE_GET16_FROM_LEAD(trie, c16) _UTRIE_GET_RAW(trie, সূচক, 0, c16)
 
 /**
  * Get a 32-bit trie value from a BMP code point (UChar, <=U+ffff).
@@ -313,7 +313,7 @@ typedef struct UTrie UTrie;
  * @param c16 (UChar, in) the input BMP code point
  * @return (uint16_t) trie lookup result
  */
-#define UTRIE_GET16_FROM_BMP(trie, c16) _UTRIE_GET_FROM_BMP(trie, index, c16)
+#define UTRIE_GET16_FROM_BMP(trie, c16) _UTRIE_GET_FROM_BMP(trie, সূচক, c16)
 
 /**
  * Get a 32-bit trie value from a BMP code point (UChar, <=U+ffff).
@@ -335,7 +335,7 @@ typedef struct UTrie UTrie;
  * @param c32 (UChar32, in) the input code point
  * @param result (uint16_t, out) uint16_t variable for the trie lookup result
  */
-#define UTRIE_GET16(trie, c32, result) _UTRIE_GET(trie, index, c32, result, uint16_t)
+#define UTRIE_GET16(trie, c32, ফলাফল) _UTRIE_GET(trie, সূচক, c32, ফলাফল, uint16_t)
 
 /**
  * Get a 32-bit trie value from a code point.
@@ -346,7 +346,7 @@ typedef struct UTrie UTrie;
  * @param c32 (UChar32, in) the input code point
  * @param result (uint32_t, out) uint32_t variable for the trie lookup result
  */
-#define UTRIE_GET32(trie, c32, result) _UTRIE_GET(trie, data32, c32, result, uint32_t)
+#define UTRIE_GET32(trie, c32, ফলাফল) _UTRIE_GET(trie, data32, c32, ফলাফল, uint32_t)
 
 /**
  * Get the next code point (c, c2), post-increment src,
@@ -359,7 +359,7 @@ typedef struct UTrie UTrie;
  * @param c2 (UChar, out) variable for 0 or the trail code unit
  * @param result (uint16_t, out) uint16_t variable for the trie lookup result
  */
-#define UTRIE_NEXT16(trie, src, limit, c, c2, result) _UTRIE_NEXT(trie, index, src, limit, c, c2, result, uint16_t)
+#define UTRIE_NEXT16(trie, src, limit, c, c2, ফলাফল) UTRIE_পরবর্তী(trie, সূচক, src, limit, c, c2, ফলাফল, uint16_t)
 
 /**
  * Get the next code point (c, c2), post-increment src,
@@ -372,7 +372,7 @@ typedef struct UTrie UTrie;
  * @param c2 (UChar, out) variable for 0 or the trail code unit
  * @param result (uint32_t, out) uint32_t variable for the trie lookup result
  */
-#define UTRIE_NEXT32(trie, src, limit, c, c2, result) _UTRIE_NEXT(trie, data32, src, limit, c, c2, result, uint32_t)
+#define UTRIE_NEXT32(trie, src, limit, c, c2, ফলাফল) UTRIE_পরবর্তী(trie, data32, src, limit, c, c2, ফলাফল, uint32_t)
 
 /**
  * Get the previous code point (c, c2), pre-decrement src,
@@ -385,7 +385,7 @@ typedef struct UTrie UTrie;
  * @param c2 (UChar, out) variable for 0 or the trail code unit
  * @param result (uint16_t, out) uint16_t variable for the trie lookup result
  */
-#define UTRIE_PREVIOUS16(trie, start, src, c, c2, result) _UTRIE_PREVIOUS(trie, index, start, src, c, c2, result, uint16_t)
+#define UTRIE_PREVIOUS16(trie, start, src, c, c2, ফলাফল) _UTRIE_PREVIOUS(trie, সূচক, start, src, c, c2, ফলাফল, uint16_t)
 
 /**
  * Get the previous code point (c, c2), pre-decrement src,
@@ -398,7 +398,7 @@ typedef struct UTrie UTrie;
  * @param c2 (UChar, out) variable for 0 or the trail code unit
  * @param result (uint32_t, out) uint32_t variable for the trie lookup result
  */
-#define UTRIE_PREVIOUS32(trie, start, src, c, c2, result) _UTRIE_PREVIOUS(trie, data32, start, src, c, c2, result, uint32_t)
+#define UTRIE_PREVIOUS32(trie, start, src, c, c2, ফলাফল) _UTRIE_PREVIOUS(trie, data32, start, src, c, c2, ফলাফল, uint32_t)
 
 /**
  * Get a 16-bit trie value from a pair of surrogates.
@@ -408,7 +408,7 @@ typedef struct UTrie UTrie;
  * @param c2 (UChar, in) a trail surrogate
  * @param result (uint16_t, out) uint16_t variable for the trie lookup result
  */
-#define UTRIE_GET16_FROM_PAIR(trie, c, c2, result) _UTRIE_GET_FROM_PAIR(trie, index, c, c2, result, uint16_t)
+#define UTRIE_GET16_FROM_PAIR(trie, c, c2, ফলাফল) _UTRIE_GET_FROM_PAIR(trie, সূচক, c, c2, ফলাফল, uint16_t)
 
 /**
  * Get a 32-bit trie value from a pair of surrogates.
@@ -418,7 +418,7 @@ typedef struct UTrie UTrie;
  * @param c2 (UChar, in) a trail surrogate
  * @param result (uint32_t, out) uint32_t variable for the trie lookup result
  */
-#define UTRIE_GET32_FROM_PAIR(trie, c, c2, result) _UTRIE_GET_FROM_PAIR(trie, data32, c, c2, result, uint32_t)
+#define UTRIE_GET32_FROM_PAIR(trie, c, c2, ফলাফল) _UTRIE_GET_FROM_PAIR(trie, data32, c, c2, ফলাফল, uint32_t)
 
 /**
  * Get a 16-bit trie value from a folding offset (from the value of a lead surrogate)
@@ -429,7 +429,7 @@ typedef struct UTrie UTrie;
  * @param c2 (UChar, in) a trail surrogate (only the 10 low bits are significant)
  * @return (uint16_t) trie lookup result
  */
-#define UTRIE_GET16_FROM_OFFSET_TRAIL(trie, offset, c2) _UTRIE_GET_RAW(trie, index, offset, (c2)&0x3ff)
+#define UTRIE_GET16_FROM_OFFSET_TRAIL(trie, offset, c2) _UTRIE_GET_RAW(trie, সূচক, offset, (c2)&0x3ff)
 
 /**
  * Get a 32-bit trie value from a folding offset (from the value of a lead surrogate)
@@ -452,8 +452,8 @@ typedef struct UTrie UTrie;
  * @param value a value from the trie
  * @return the value that is to be passed on to the UTrieEnumRange function
  */
-typedef uint32_t U_CALLCONV
-UTrieEnumValue(const void *context, uint32_t value);
+প্রকারলেখ uint32_t U_CALLCONV
+UTrie_Enum_মান(ধ্রুবক শূন্য *context, uint32_t মান_2);
 
 /**
  * Callback from utrie_enum(), is called for each contiguous range
@@ -468,8 +468,8 @@ UTrieEnumValue(const void *context, uint32_t value);
  * @param value the value that is set for all code points in [start..limit[
  * @return false to stop the enumeration
  */
-typedef UBool U_CALLCONV
-UTrieEnumRange(const void *context, UChar32 start, UChar32 limit, uint32_t value);
+প্রকারলেখ UBool U_CALLCONV
+UTrieEnumRange(ধ্রুবক শূন্য *context, UChar32 start, UChar32 limit, uint32_t মান_2);
 
 /**
  * Enumerate efficiently all values in a trie.
@@ -487,9 +487,9 @@ UTrieEnumRange(const void *context, UChar32 start, UChar32 limit, uint32_t value
  *                  of code points with the same value
  * @param context an opaque pointer that is passed on to the callback functions
  */
-U_CAPI void U_EXPORT2
-utrie_enum(const UTrie *trie,
-           UTrieEnumValue *enumValue, UTrieEnumRange *enumRange, const void *context);
+U_CAPI শূন্য U_EXPORT2
+utrie_enum(ধ্রুবক UTrie *trie,
+           UTrie_Enum_মান *enum_মান, UTrieEnumRange *enumRange, ধ্রুবক শূন্য *context);
 
 /**
  * Unserialize a trie from 32-bit-aligned memory.
@@ -503,7 +503,7 @@ utrie_enum(const UTrie *trie,
  * @return the number of bytes at data taken up by the trie data
  */
 U_CAPI int32_t U_EXPORT2
-utrie_unserialize(UTrie *trie, const void *data, int32_t length, UErrorCode *pErrorCode);
+utrie_unserialize(UTrie *trie, ধ্রুবক শূন্য *তথ্য, int32_t দৈর্ঘ্য, UErrorCode *pErrorCode);
 
 /**
  * "Unserialize" a dummy trie.
@@ -527,8 +527,8 @@ utrie_unserialize(UTrie *trie, const void *data, int32_t length, UErrorCode *pEr
  */
 U_CAPI int32_t U_EXPORT2
 utrie_unserializeDummy(UTrie *trie,
-                       void *data, int32_t length,
-                       uint32_t initialValue, uint32_t leadUnitValue,
+                       শূন্য *তথ্য, int32_t দৈর্ঘ্য,
+                       uint32_t initial_মান, uint32_t lead_Unit_মান,
                        UBool make16BitTrie,
                        UErrorCode *pErrorCode);
 
@@ -542,7 +542,7 @@ utrie_unserializeDummy(UTrie *trie,
  * @see UTrieGetFoldingOffset
  */
 U_CAPI int32_t U_EXPORT2
-utrie_defaultGetFoldingOffset(uint32_t data);
+utrie_defaultGetFoldingOffset(uint32_t তথ্য);
 
 /* Building a trie ----------------------------------------------------------*/
 
@@ -551,27 +551,27 @@ utrie_defaultGetFoldingOffset(uint32_t data);
  * Opaque definition, here only to make fillIn parameters possible
  * for utrie_open() and utrie_clone().
  */
-struct UNewTrie {
+কাঠামো UNewTrie {
     /**
      * Index values at build-time are 32 bits wide for easier processing.
      * Bit 31 is set if the data block is used by multiple index values (from utrie_setRange()).
      */
-    int32_t index[UTRIE_MAX_INDEX_LENGTH+UTRIE_SURROGATE_BLOCK_COUNT];
-    uint32_t *data;
+    int32_t সূচক[UTRIE_MAX_সূচক_দৈর্ঘ্য+UTRIE_SURROGATE_BLOCK_গুনতি];
+    uint32_t *তথ্য;
 
-    uint32_t leadUnitValue;
-    int32_t indexLength, dataCapacity, dataLength;
-    UBool isAllocated, isDataAllocated;
+    uint32_t lead_Unit_মান;
+    int32_t সূচক_দৈর্ঘ্য, তথ্য_Capacity, তথ্য_দৈর্ঘ্য;
+    UBool isAllocated, is_তথ্য_Allocated;
     UBool isLatin1Linear, isCompacted;
 
     /**
      * Map of adjusted indexes, used in utrie_compact().
      * Maps from original indexes to new ones.
      */
-    int32_t map[UTRIE_MAX_BUILD_TIME_DATA_LENGTH>>UTRIE_SHIFT];
+    int32_t map[UTRIE_MAX_BUILD_TIME_তথ্য_দৈর্ঘ্য>>UTRIE_SHIFT];
 };
 
-typedef struct UNewTrie UNewTrie;
+প্রকারলেখ কাঠামো UNewTrie UNewTrie;
 
 /**
  * Build-time trie callback function, used with utrie_serialize().
@@ -591,8 +591,8 @@ typedef struct UNewTrie UNewTrie;
  *
  * @return a folded value, or 0 if there is no relevant data for the lead surrogate.
  */
-typedef uint32_t U_CALLCONV
-UNewTrieGetFoldedValue(UNewTrie *trie, UChar32 start, int32_t offset);
+প্রকারলেখ uint32_t U_CALLCONV
+UNew_Trie_Get_Folded_মান(UNewTrie *trie, UChar32 start, int32_t offset);
 
 /**
  * Open a build-time trie structure.
@@ -622,8 +622,8 @@ UNewTrieGetFoldedValue(UNewTrie *trie, UChar32 start, int32_t offset);
  */
 U_CAPI UNewTrie * U_EXPORT2
 utrie_open(UNewTrie *fillIn,
-           uint32_t *aliasData, int32_t maxDataLength,
-           uint32_t initialValue, uint32_t leadUnitValue,
+           uint32_t *alias_তথ্য, int32_t max_তথ্য_দৈর্ঘ্য,
+           uint32_t initial_মান, uint32_t lead_Unit_মান,
            UBool latin1Linear);
 
 /**
@@ -637,7 +637,7 @@ utrie_open(UNewTrie *fillIn,
  * @return a pointer to the initialized fillIn or the allocated and initialized new UNewTrie
  */
 U_CAPI UNewTrie * U_EXPORT2
-utrie_clone(UNewTrie *fillIn, const UNewTrie *other, uint32_t *aliasData, int32_t aliasDataLength);
+utrie_clone(UNewTrie *fillIn, ধ্রুবক UNewTrie *other, uint32_t *alias_তথ্য, int32_t alias_তথ্য_দৈর্ঘ্য);
 
 /**
  * Close a build-time trie structure, and release memory
@@ -645,7 +645,7 @@ utrie_clone(UNewTrie *fillIn, const UNewTrie *other, uint32_t *aliasData, int32_
  *
  * @param trie the build-time trie
  */
-U_CAPI void U_EXPORT2
+U_CAPI শূন্য U_EXPORT2
 utrie_close(UNewTrie *trie);
 
 /**
@@ -659,7 +659,7 @@ utrie_close(UNewTrie *trie);
  * @return the data array
  */
 U_CAPI uint32_t * U_EXPORT2
-utrie_getData(UNewTrie *trie, int32_t *pLength);
+utrie_get_তথ্য(UNewTrie *trie, int32_t *p_দৈর্ঘ্য);
 
 /**
  * Set a value for a code point.
@@ -670,7 +670,7 @@ utrie_getData(UNewTrie *trie, int32_t *pLength);
  * @return false if a failure occurred (illegal argument or data array overrun)
  */
 U_CAPI UBool U_EXPORT2
-utrie_set32(UNewTrie *trie, UChar32 c, uint32_t value);
+utrie_set32(UNewTrie *trie, UChar32 c, uint32_t মান_2);
 
 /**
  * Get a value from a code point as stored in the build-time trie.
@@ -698,7 +698,7 @@ utrie_get32(UNewTrie *trie, UChar32 c, UBool *pInBlockZero);
  * @return false if a failure occurred (illegal argument or data array overrun)
  */
 U_CAPI UBool U_EXPORT2
-utrie_setRange32(UNewTrie *trie, UChar32 start, UChar32 limit, uint32_t value, UBool overwrite);
+utrie_setRange32(UNewTrie *trie, UChar32 start, UChar32 limit, uint32_t মান_2, UBool overwrite);
 
 /**
  * Compact the build-time trie after all values are set, and then
@@ -727,8 +727,8 @@ utrie_setRange32(UNewTrie *trie, UChar32 start, UChar32 limit, uint32_t value, U
  * @return the number of bytes written for the trie
  */
 U_CAPI int32_t U_EXPORT2
-utrie_serialize(UNewTrie *trie, void *data, int32_t capacity,
-                UNewTrieGetFoldedValue *getFoldedValue,
+utrie_serialize(UNewTrie *trie, শূন্য *তথ্য, int32_t capacity,
+                UNew_Trie_Get_Folded_মান *get_Folded_মান,
                 UBool reduceTo16Bits,
                 UErrorCode *pErrorCode);
 
@@ -747,7 +747,7 @@ utrie_serialize(UNewTrie *trie, void *data, int32_t capacity,
  * uint16_t data[header.dataLength];
  * @internal
  */
-typedef struct UTrieHeader {
+প্রকারলেখ কাঠামো UTrieHeader {
     /** "Trie" in big-endian US-ASCII (0x54726965) */
     uint32_t signature;
 
@@ -761,25 +761,25 @@ typedef struct UTrieHeader {
     uint32_t options;
 
     /** indexLength is a multiple of UTRIE_SURROGATE_BLOCK_COUNT */
-    int32_t indexLength;
+    int32_t সূচক_দৈর্ঘ্য;
 
     /** dataLength>=UTRIE_DATA_BLOCK_LENGTH */
-    int32_t dataLength;
+    int32_t তথ্য_দৈর্ঘ্য;
 } UTrieHeader;
 
 /**
  * Constants for use with UTrieHeader.options.
  * @internal
  */
-enum {
+গণনা {
     /** Mask to get the UTRIE_SHIFT value from options. */
     UTRIE_OPTIONS_SHIFT_MASK=0xf,
 
     /** Shift options right this much to get the UTRIE_INDEX_SHIFT value. */
-    UTRIE_OPTIONS_INDEX_SHIFT=4,
+    UTRIE_OPTIONS_সূচক_SHIFT=4,
 
     /** If set, then the data (stage 2) array is 32 bits wide. */
-    UTRIE_OPTIONS_DATA_IS_32_BIT=0x100,
+    UTRIE_OPTIONS_তথ্য_IS_32_BIT=0x100,
 
     /**
      * If set, then Latin-1 data (for U+0000..U+00ff) is stored in the data (stage 2) array

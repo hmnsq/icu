@@ -19,123 +19,123 @@
 *   moved here from ustrtrns.c for better modularization.
 */
 
-#include "unicode/utypes.h"
-#include "unicode/ustring.h"
-#include "cstring.h"
-#include "cwchar.h"
-#include "cmemory.h"
-#include "ustr_imp.h"
-#include "ustr_cnv.h"
+#অন্তর্ভাব "unicode/utypes.h"
+#অন্তর্ভাব "unicode/ustring.h"
+#অন্তর্ভাব "cstring.h"
+#অন্তর্ভাব "cwchar.h"
+#অন্তর্ভাব "cmemory.h"
+#অন্তর্ভাব "ustr_imp.h"
+#অন্তর্ভাব "ustr_cnv.h"
 
-#if defined(U_WCHAR_IS_UTF16) || defined(U_WCHAR_IS_UTF32) || !UCONFIG_NO_CONVERSION
+#যদি defined(U_WCHAR_IS_UTF16) || defined(U_WCHAR_IS_UTF32) || !UCONFIG_NO_CONVERSION
 
-#define _STACK_BUFFER_CAPACITY 1000
-#define _BUFFER_CAPACITY_MULTIPLIER 2
+#define স্তূপ_বাফার_CAPACITY 1000
+#define বাফার_CAPACITY_MULTIPLIER 2
 
-#if !defined(U_WCHAR_IS_UTF16) && !defined(U_WCHAR_IS_UTF32)
+#যদি !defined(U_WCHAR_IS_UTF16) && !defined(U_WCHAR_IS_UTF32)
 // TODO: We should use CharString for char buffers and UnicodeString for char16_t buffers.
 // Then we could change this to work only with wchar_t buffers.
-static inline UBool 
-u_growAnyBufferFromStatic(void *context,
-                       void **pBuffer, int32_t *pCapacity, int32_t reqCapacity,
+স্থির অন্তঃরেখ UBool 
+u_grow_Any_বাফার_From_Static(শূন্য *context,
+                       শূন্য **p_বাফার, int32_t *pCapacity, int32_t reqCapacity,
                        int32_t length, int32_t size) {
     // Use char* not void* to avoid the compiler's strict-aliasing assumptions
     // and related warnings.
-    char *newBuffer=(char *)uprv_malloc(reqCapacity*size);
-    if(newBuffer!=nullptr) {
-        if(length>0) {
-            uprv_memcpy(newBuffer, *pBuffer, (size_t)length*size);
+    অক্ষর *new_বাফার=(অক্ষর *)uprv_malloc(reqCapacity*size);
+    যদি(new_বাফার!=nullptr) {
+        যদি(length>0) {
+            uprv_memcpy(new_বাফার, *p_বাফার, (size_t)length*size);
         }
         *pCapacity=reqCapacity;
-    } else {
+    } অন্যথা {
         *pCapacity=0;
     }
 
     /* release the old pBuffer if it was not statically allocated */
-    if(*pBuffer!=(char *)context) {
-        uprv_free(*pBuffer);
+    যদি(*p_বাফার!=(অক্ষর *)context) {
+        uprv_free(*p_বাফার);
     }
 
-    *pBuffer=newBuffer;
-    return newBuffer!=nullptr;
+    *p_বাফার=new_বাফার;
+    ফেরত new_বাফার!=nullptr;
 }
 
 /* helper function */
-static wchar_t* 
+স্থির wchar_t* 
 _strToWCS(wchar_t *dest, 
            int32_t destCapacity,
-           int32_t *pDestLength,
-           const char16_t *src,
-           int32_t srcLength,
+           int32_t *p_Dest_দৈর্ঘ্য,
+           ধ্রুবক char16_t *src,
+           int32_t src_দৈর্ঘ্য,
            UErrorCode *pErrorCode){
 
-    char stackBuffer [_STACK_BUFFER_CAPACITY];
-    char* tempBuf = stackBuffer;
-    int32_t tempBufCapacity = _STACK_BUFFER_CAPACITY;
-    char* tempBufLimit = stackBuffer + tempBufCapacity;
+    অক্ষর স্তূপ_বাফার [স্তূপ_বাফার_CAPACITY];
+    অক্ষর* অস্থায়ী_Buf = স্তূপ_বাফার;
+    int32_t অস্থায়ী_Buf_Capacity = স্তূপ_বাফার_CAPACITY;
+    অক্ষর* অস্থায়ী_Buf_Limit = স্তূপ_বাফার + অস্থায়ী_Buf_Capacity;
     UConverter* conv = nullptr;
-    char* saveBuf = tempBuf;
+    অক্ষর* saveBuf = অস্থায়ী_Buf;
     wchar_t* intTarget=nullptr;
     int32_t intTargetCapacity=0;
-    int count=0,retVal=0;
+    পূর্ণসংখ্যা count=0,retVal=0;
     
-    const char16_t *pSrcLimit =nullptr;
-    const char16_t *pSrc = src;
+    ধ্রুবক char16_t *pSrcLimit =nullptr;
+    ধ্রুবক char16_t *pSrc = src;
 
     conv = u_getDefaultConverter(pErrorCode);
     
-    if(U_FAILURE(*pErrorCode)){
-        return nullptr;
+    যদি(U_FAILURE(*pErrorCode)){
+        ফেরত nullptr;
     }
     
-    if(srcLength == -1){
-        srcLength = u_strlen(pSrc);
+    যদি(src_দৈর্ঘ্য == -1){
+        src_দৈর্ঘ্য = u_strlen(pSrc);
     }
     
-    pSrcLimit = pSrc + srcLength;
+    pSrcLimit = pSrc + src_দৈর্ঘ্য;
 
-    for(;;) {
-        UErrorCode bufferStatus = U_ZERO_ERROR;
+    জন্য(;;) {
+        UErrorCode বাফার_Status = U_ZERO_ERROR;
 
         /* convert to chars using default converter */
-        ucnv_fromUnicode(conv,&tempBuf,tempBufLimit,&pSrc,pSrcLimit,nullptr,(UBool)(pSrc==pSrcLimit),&bufferStatus);
-        count =(tempBuf - saveBuf);
+        ucnv_fromUnicode(conv,&অস্থায়ী_Buf,অস্থায়ী_Buf_Limit,&pSrc,pSrcLimit,nullptr,(UBool)(pSrc==pSrcLimit),&বাফার_Status);
+        count =(অস্থায়ী_Buf - saveBuf);
         
         /* This should rarely occur */
-        if(bufferStatus==U_BUFFER_OVERFLOW_ERROR){
-            tempBuf = saveBuf;
+        যদি(বাফার_Status==U_বাফার_OVERFLOW_ERROR){
+            অস্থায়ী_Buf = saveBuf;
             
             /* we don't have enough room on the stack grow the buffer */
-            int32_t newCapacity = 2 * srcLength;
-            if(newCapacity <= tempBufCapacity) {
-                newCapacity = _BUFFER_CAPACITY_MULTIPLIER * tempBufCapacity;
+            int32_t newCapacity = 2 * src_দৈর্ঘ্য;
+            যদি(newCapacity <= অস্থায়ী_Buf_Capacity) {
+                newCapacity = বাফার_CAPACITY_MULTIPLIER * অস্থায়ী_Buf_Capacity;
             }
-            if(!u_growAnyBufferFromStatic(stackBuffer,(void**) &tempBuf, &tempBufCapacity,
+            যদি(!u_grow_Any_বাফার_From_Static(স্তূপ_বাফার,(শূন্য**) &অস্থায়ী_Buf, &অস্থায়ী_Buf_Capacity,
                     newCapacity, count, 1)) {
-                goto cleanup;
+                যাও cleanup;
             }
           
-           saveBuf = tempBuf;
-           tempBufLimit = tempBuf + tempBufCapacity;
-           tempBuf = tempBuf + count;
-        } else {
-            if (U_FAILURE(bufferStatus)) {
-                *pErrorCode = bufferStatus;
-                goto cleanup;
+           saveBuf = অস্থায়ী_Buf;
+           অস্থায়ী_Buf_Limit = অস্থায়ী_Buf + অস্থায়ী_Buf_Capacity;
+           অস্থায়ী_Buf = অস্থায়ী_Buf + count;
+        } অন্যথা {
+            যদি (U_FAILURE(বাফার_Status)) {
+                *pErrorCode = বাফার_Status;
+                যাও cleanup;
             }
-            break;
+            বিরতি;
         }
     }
 
     /* done with conversion null terminate the char buffer */
-    if(count>=tempBufCapacity){
-        tempBuf = saveBuf;
+    যদি(count>=অস্থায়ী_Buf_Capacity){
+        অস্থায়ী_Buf = saveBuf;
         /* we don't have enough room on the stack grow the buffer */
-        if(!u_growAnyBufferFromStatic(stackBuffer,(void**) &tempBuf, &tempBufCapacity, 
+        যদি(!u_grow_Any_বাফার_From_Static(স্তূপ_বাফার,(শূন্য**) &অস্থায়ী_Buf, &অস্থায়ী_Buf_Capacity, 
                 count+1, count, 1)) {
-            goto cleanup;
+            যাও cleanup;
         }              
-       saveBuf = tempBuf;
+       saveBuf = অস্থায়ী_Buf;
     }
     
     saveBuf[count]=0;
@@ -145,144 +145,144 @@ _strToWCS(wchar_t *dest,
      * here we assume that every char requires 
      * no more than 2 wchar_ts
      */
-    intTargetCapacity =  (count * _BUFFER_CAPACITY_MULTIPLIER + 1) /*for null termination */;
-    intTarget = (wchar_t*)uprv_malloc( intTargetCapacity * sizeof(wchar_t) );
+    intTargetCapacity =  (count * বাফার_CAPACITY_MULTIPLIER + 1) /*for null termination */;
+    intTarget = (wchar_t*)uprv_malloc( intTargetCapacity * আকার(wchar_t) );
 
-    if(intTarget){
+    যদি(intTarget){
 
         int32_t nulLen = 0;
         int32_t remaining = intTargetCapacity;
         wchar_t* pIntTarget=intTarget;
-        tempBuf = saveBuf;
+        অস্থায়ী_Buf = saveBuf;
         
         /* now convert the mbs to wcs */
-        for(;;){
+        জন্য(;;){
             
             /* we can call the system API since we are sure that
              * there is atleast 1 null in the input
              */
-            retVal = uprv_mbstowcs(pIntTarget,(tempBuf+nulLen),remaining);
+            retVal = uprv_mbstowcs(pIntTarget,(অস্থায়ী_Buf+nulLen),remaining);
             
-            if(retVal==-1){
+            যদি(retVal==-1){
                 *pErrorCode = U_INVALID_CHAR_FOUND;
-                break;
-            }else if(retVal== remaining){/* should never occur */
-                int numWritten = (pIntTarget-intTarget);
-                u_growAnyBufferFromStatic(nullptr,(void**) &intTarget,
+                বিরতি;
+            }অন্যথা যদি(retVal== remaining){/* should never occur */
+                পূর্ণসংখ্যা অঙ্ক_Written = (pIntTarget-intTarget);
+                u_grow_Any_বাফার_From_Static(nullptr,(শূন্য**) &intTarget,
                                           &intTargetCapacity,
-                                          intTargetCapacity * _BUFFER_CAPACITY_MULTIPLIER,
-                                          numWritten,
-                                          sizeof(wchar_t));
+                                          intTargetCapacity * বাফার_CAPACITY_MULTIPLIER,
+                                          অঙ্ক_Written,
+                                          আকার(wchar_t));
                 pIntTarget = intTarget;
                 remaining=intTargetCapacity;
 
-                if(nulLen!=count){ /*there are embedded nulls*/
-                    pIntTarget+=numWritten;
-                    remaining-=numWritten;
+                যদি(nulLen!=count){ /*there are embedded nulls*/
+                    pIntTarget+=অঙ্ক_Written;
+                    remaining-=অঙ্ক_Written;
                 }
 
-            }else{
+            }অন্যথা{
                 int32_t nulVal;
                 /*scan for nulls */
                 /* we donot check for limit since tempBuf is null terminated */
-                while(tempBuf[nulLen++] != 0){
+                যখন(অস্থায়ী_Buf[nulLen++] != 0){
                 }
-                nulVal = (nulLen < srcLength) ? 1 : 0; 
+                nulVal = (nulLen < src_দৈর্ঘ্য) ? 1 : 0; 
                 pIntTarget = pIntTarget + retVal+nulVal;
                 remaining -=(retVal+nulVal);
             
                 /* check if we have reached the source limit*/
-                if(nulLen>=(count)){
-                    break;
+                যদি(nulLen>=(count)){
+                    বিরতি;
                 }
             }
         }
         count = (int32_t)(pIntTarget-intTarget);
        
-        if(0 < count && count <= destCapacity){
-            uprv_memcpy(dest, intTarget, (size_t)count*sizeof(wchar_t));
+        যদি(0 < count && count <= destCapacity){
+            uprv_memcpy(dest, intTarget, (size_t)count*আকার(wchar_t));
         }  
 
-        if(pDestLength){
-            *pDestLength = count;
+        যদি(p_Dest_দৈর্ঘ্য){
+            *p_Dest_দৈর্ঘ্য = count;
         }
 
         /* free the allocated memory */
         uprv_free(intTarget);
 
-    }else{
+    }অন্যথা{
         *pErrorCode = U_MEMORY_ALLOCATION_ERROR;
     }
 cleanup:
     /* are we still using stack buffer */
-    if(stackBuffer != saveBuf){
+    যদি(স্তূপ_বাফার != saveBuf){
         uprv_free(saveBuf);
     }
     u_terminateWChars(dest,destCapacity,count,pErrorCode);
 
     u_releaseDefaultConverter(conv);
 
-    return dest;
+    ফেরত dest;
 }
 #endif
 
 U_CAPI wchar_t* U_EXPORT2
 u_strToWCS(wchar_t* dest U_LIFETIME_BOUND,
            int32_t destCapacity,
-           int32_t* pDestLength,
-           const char16_t* src,
-           int32_t srcLength,
+           int32_t* p_Dest_দৈর্ঘ্য,
+           ধ্রুবক char16_t* src,
+           int32_t src_দৈর্ঘ্য,
            UErrorCode* pErrorCode) {
 
     /* args check */
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)){
-        return nullptr;
+    যদি(pErrorCode==nullptr || U_FAILURE(*pErrorCode)){
+        ফেরত nullptr;
     }
         
-    if( (src==nullptr && srcLength!=0) || srcLength < -1 ||
+    যদি( (src==nullptr && src_দৈর্ঘ্য!=0) || src_দৈর্ঘ্য < -1 ||
         (destCapacity<0) || (dest == nullptr && destCapacity > 0)
     ) {
         *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        ফেরত nullptr;
     }
     
 #ifdef U_WCHAR_IS_UTF16
     /* wchar_t is UTF-16 just do a memcpy */
-    if(srcLength == -1){
-        srcLength = u_strlen(src);
+    যদি(src_দৈর্ঘ্য == -1){
+        src_দৈর্ঘ্য = u_strlen(src);
     }
-    if(0 < srcLength && srcLength <= destCapacity){
-        u_memcpy((char16_t *)dest, src, srcLength);
+    যদি(0 < src_দৈর্ঘ্য && src_দৈর্ঘ্য <= destCapacity){
+        u_memcpy((char16_t *)dest, src, src_দৈর্ঘ্য);
     }
-    if(pDestLength){
-       *pDestLength = srcLength;
+    যদি(p_Dest_দৈর্ঘ্য){
+       *p_Dest_দৈর্ঘ্য = src_দৈর্ঘ্য;
     }
 
-    u_terminateUChars((char16_t *)dest,destCapacity,srcLength,pErrorCode);
+    u_terminateUChars((char16_t *)dest,destCapacity,src_দৈর্ঘ্য,pErrorCode);
 
-    return dest;
+    ফেরত dest;
 
-#elif defined U_WCHAR_IS_UTF32
+#নতুবা_যদি defined U_WCHAR_IS_UTF32
     
-    return (wchar_t*)u_strToUTF32((UChar32*)dest, destCapacity, pDestLength,
-                                  src, srcLength, pErrorCode);
+    ফেরত (wchar_t*)u_strToUTF32((UChar32*)dest, destCapacity, p_Dest_দৈর্ঘ্য,
+                                  src, src_দৈর্ঘ্য, pErrorCode);
 
-#else
+#অন্যথা
     
-    return _strToWCS(dest,destCapacity,pDestLength,src,srcLength, pErrorCode);
+    ফেরত _strToWCS(dest,destCapacity,p_Dest_দৈর্ঘ্য,src,src_দৈর্ঘ্য, pErrorCode);
     
 #endif
 
 }
 
-#if !defined(U_WCHAR_IS_UTF16) && !defined(U_WCHAR_IS_UTF32)
+#যদি !defined(U_WCHAR_IS_UTF16) && !defined(U_WCHAR_IS_UTF32)
 /* helper function */
-static char16_t*
+স্থির char16_t*
 _strFromWCS( char16_t   *dest,
              int32_t destCapacity, 
-             int32_t *pDestLength,
-             const wchar_t *src,
-             int32_t srcLength,
+             int32_t *p_Dest_দৈর্ঘ্য,
+             ধ্রুবক wchar_t *src,
+             int32_t src_দৈর্ঘ্য,
              UErrorCode *pErrorCode)
 {
     int32_t retVal =0, count =0 ;
@@ -291,74 +291,74 @@ _strFromWCS( char16_t   *dest,
     char16_t* pTargetLimit = nullptr;
     char16_t* target = nullptr;
     
-    char16_t uStack [_STACK_BUFFER_CAPACITY];
+    char16_t u_স্তূপ [স্তূপ_বাফার_CAPACITY];
 
-    wchar_t wStack[_STACK_BUFFER_CAPACITY];
-    wchar_t* pWStack = wStack;
+    wchar_t w_স্তূপ[স্তূপ_বাফার_CAPACITY];
+    wchar_t* pWStack = w_স্তূপ;
 
 
-    char cStack[_STACK_BUFFER_CAPACITY];
-    int32_t cStackCap = _STACK_BUFFER_CAPACITY;
-    char* pCSrc=cStack;
-    char* pCSave=pCSrc;
-    char* pCSrcLimit=nullptr;
+    অক্ষর c_স্তূপ[স্তূপ_বাফার_CAPACITY];
+    int32_t c_স্তূপ_Cap = স্তূপ_বাফার_CAPACITY;
+    অক্ষর* pCSrc=c_স্তূপ;
+    অক্ষর* pCSave=pCSrc;
+    অক্ষর* pCSrcLimit=nullptr;
 
-    const wchar_t* pSrc = src;
-    const wchar_t* pSrcLimit = nullptr;
+    ধ্রুবক wchar_t* pSrc = src;
+    ধ্রুবক wchar_t* pSrcLimit = nullptr;
 
-    if(srcLength ==-1){
+    যদি(src_দৈর্ঘ্য ==-1){
         /* if the wchar_t source is null terminated we can safely
          * assume that there are no embedded nulls, this is a fast
          * path for null terminated strings.
          */
-        for(;;){
+        জন্য(;;){
             /* convert wchars  to chars */
-            retVal = uprv_wcstombs(pCSrc,src, cStackCap);
+            retVal = uprv_wcstombs(pCSrc,src, c_স্তূপ_Cap);
     
-            if(retVal == -1){
+            যদি(retVal == -1){
                 *pErrorCode = U_ILLEGAL_CHAR_FOUND;
-                goto cleanup;
-            }else if(retVal >= (cStackCap-1)){
+                যাও cleanup;
+            }অন্যথা যদি(retVal >= (c_স্তূপ_Cap-1)){
                 /* Should rarely occur */
-                u_growAnyBufferFromStatic(cStack,(void**)&pCSrc,&cStackCap,
-                    cStackCap * _BUFFER_CAPACITY_MULTIPLIER, 0, sizeof(char));
+                u_grow_Any_বাফার_From_Static(c_স্তূপ,(শূন্য**)&pCSrc,&c_স্তূপ_Cap,
+                    c_স্তূপ_Cap * বাফার_CAPACITY_MULTIPLIER, 0, আকার(অক্ষর));
                 pCSave = pCSrc;
-            }else{
+            }অন্যথা{
                 /* converted every thing */
                 pCSrc = pCSrc+retVal;
-                break;
+                বিরতি;
             }
         }
         
-    }else{
+    }অন্যথা{
         /* here the source is not null terminated 
          * so it may have nulls embedded and we need to
          * do some extra processing 
          */
-        int32_t remaining =cStackCap;
+        int32_t remaining =c_স্তূপ_Cap;
         
-        pSrcLimit = src + srcLength;
+        pSrcLimit = src + src_দৈর্ঘ্য;
 
-        for(;;){
+        জন্য(;;){
             int32_t nulLen = 0;
 
             /* find nulls in the string */
-            while(nulLen<srcLength && pSrc[nulLen++]!=0){
+            যখন(nulLen<src_দৈর্ঘ্য && pSrc[nulLen++]!=0){
             }
 
-            if((pSrc+nulLen) < pSrcLimit){
+            যদি((pSrc+nulLen) < pSrcLimit){
                 /* check if we have enough room in pCSrc */
-                if(remaining < (nulLen * MB_CUR_MAX)){
+                যদি(remaining < (nulLen * MB_CUR_MAX)){
                     /* should rarely occur */
                     int32_t len = (pCSrc-pCSave);
                     pCSrc = pCSave;
                     /* we do not have enough room so grow the buffer*/
-                    u_growAnyBufferFromStatic(cStack,(void**)&pCSrc,&cStackCap,
-                           _BUFFER_CAPACITY_MULTIPLIER*cStackCap+(nulLen*MB_CUR_MAX),len,sizeof(char));
+                    u_grow_Any_বাফার_From_Static(c_স্তূপ,(শূন্য**)&pCSrc,&c_স্তূপ_Cap,
+                           বাফার_CAPACITY_MULTIPLIER*c_স্তূপ_Cap+(nulLen*MB_CUR_MAX),len,আকার(অক্ষর));
 
                     pCSave = pCSrc;
                     pCSrc = pCSave+len;
-                    remaining = cStackCap-(pCSrc - pCSave);
+                    remaining = c_স্তূপ_Cap-(pCSrc - pCSave);
                 }
 
                 /* we have found a null  so convert the 
@@ -366,60 +366,60 @@ _strFromWCS( char16_t   *dest,
                  */
                 retVal = uprv_wcstombs(pCSrc,pSrc,remaining);
 
-                if(retVal==-1){
+                যদি(retVal==-1){
                     /* an error occurred bail out */
                     *pErrorCode = U_ILLEGAL_CHAR_FOUND;
-                    goto cleanup;
+                    যাও cleanup;
                 }
 
                 pCSrc += retVal+1 /* already null terminated */;
 
                 pSrc += nulLen; /* skip past the null */
-                srcLength-=nulLen; /* decrement the srcLength */
+                src_দৈর্ঘ্য-=nulLen; /* decrement the srcLength */
                 remaining -= (pCSrc-pCSave);
 
 
-            }else{
+            }অন্যথা{
                 /* the source is not null terminated and we are 
                  * end of source so we copy the source to a temp buffer
                  * null terminate it and convert wchar_ts to chars
                  */
-                if(nulLen >= _STACK_BUFFER_CAPACITY){
+                যদি(nulLen >= স্তূপ_বাফার_CAPACITY){
                     /* Should rarely occur */
                     /* allocate new buffer buffer */
-                    pWStack =(wchar_t*) uprv_malloc(sizeof(wchar_t) * (nulLen + 1));
-                    if(pWStack==nullptr){
+                    pWStack =(wchar_t*) uprv_malloc(আকার(wchar_t) * (nulLen + 1));
+                    যদি(pWStack==nullptr){
                         *pErrorCode = U_MEMORY_ALLOCATION_ERROR;
-                        goto cleanup;
+                        যাও cleanup;
                     }
                 }
-                if(nulLen>0){
+                যদি(nulLen>0){
                     /* copy the contents to tempStack */
-                    uprv_memcpy(pWStack, pSrc, (size_t)nulLen*sizeof(wchar_t));
+                    uprv_memcpy(pWStack, pSrc, (size_t)nulLen*আকার(wchar_t));
                 }
             
                 /* null terminate the tempBuffer */
                 pWStack[nulLen] =0 ;
             
-                if(remaining < (nulLen * MB_CUR_MAX)){
+                যদি(remaining < (nulLen * MB_CUR_MAX)){
                     /* Should rarely occur */
                     int32_t len = (pCSrc-pCSave);
                     pCSrc = pCSave;
                     /* we do not have enough room so grow the buffer*/
-                    u_growAnyBufferFromStatic(cStack,(void**)&pCSrc,&cStackCap,
-                           cStackCap+(nulLen*MB_CUR_MAX),len,sizeof(char));
+                    u_grow_Any_বাফার_From_Static(c_স্তূপ,(শূন্য**)&pCSrc,&c_স্তূপ_Cap,
+                           c_স্তূপ_Cap+(nulLen*MB_CUR_MAX),len,আকার(অক্ষর));
 
                     pCSave = pCSrc;
                     pCSrc = pCSave+len;
-                    remaining = cStackCap-(pCSrc - pCSave);
+                    remaining = c_স্তূপ_Cap-(pCSrc - pCSave);
                 }
                 /* convert to chars */
                 retVal = uprv_wcstombs(pCSrc,pWStack,remaining);
             
                 pCSrc += retVal;
                 pSrc  += nulLen;
-                srcLength-=nulLen; /* decrement the srcLength */
-                break;
+                src_দৈর্ঘ্য-=nulLen; /* decrement the srcLength */
+                বিরতি;
             }
         }
     }
@@ -434,99 +434,99 @@ _strFromWCS( char16_t   *dest,
     
     conv= u_getDefaultConverter(pErrorCode);
     
-    if(U_FAILURE(*pErrorCode)|| conv==nullptr){
-        goto cleanup;
+    যদি(U_FAILURE(*pErrorCode)|| conv==nullptr){
+        যাও cleanup;
     }
     
-    for(;;) {
-        UErrorCode bufferStatus = U_ZERO_ERROR;
+    জন্য(;;) {
+        UErrorCode বাফার_Status = U_ZERO_ERROR;
 
         /* convert to stack buffer*/
-        ucnv_toUnicode(conv,&pTarget,pTargetLimit,(const char**)&pCSrc,pCSrcLimit,nullptr,(UBool)(pCSrc==pCSrcLimit),&bufferStatus);
+        ucnv_toUnicode(conv,&pTarget,pTargetLimit,(ধ্রুবক অক্ষর**)&pCSrc,pCSrcLimit,nullptr,(UBool)(pCSrc==pCSrcLimit),&বাফার_Status);
 
         /* increment count to number written to stack */
         count+= pTarget - target;
 
-        if(bufferStatus==U_BUFFER_OVERFLOW_ERROR){
-            target = uStack;
-            pTarget = uStack;
-            pTargetLimit = uStack + _STACK_BUFFER_CAPACITY;
-        } else {
-            if (U_FAILURE(bufferStatus)) {
-                *pErrorCode = bufferStatus;
+        যদি(বাফার_Status==U_বাফার_OVERFLOW_ERROR){
+            target = u_স্তূপ;
+            pTarget = u_স্তূপ;
+            pTargetLimit = u_স্তূপ + স্তূপ_বাফার_CAPACITY;
+        } অন্যথা {
+            যদি (U_FAILURE(বাফার_Status)) {
+                *pErrorCode = বাফার_Status;
             }
-            break;
+            বিরতি;
         }
         
     }
     
-    if(pDestLength){
-        *pDestLength =count;
+    যদি(p_Dest_দৈর্ঘ্য){
+        *p_Dest_দৈর্ঘ্য =count;
     }
 
     u_terminateUChars(dest,destCapacity,count,pErrorCode);
     
 cleanup:
  
-    if(cStack != pCSave){
+    যদি(c_স্তূপ != pCSave){
         uprv_free(pCSave);
     }
 
-    if(wStack != pWStack){
+    যদি(w_স্তূপ != pWStack){
         uprv_free(pWStack);
     }
     
     u_releaseDefaultConverter(conv);
 
-    return dest;
+    ফেরত dest;
 }
 #endif
 
 U_CAPI char16_t* U_EXPORT2
 u_strFromWCS(char16_t* dest U_LIFETIME_BOUND,
              int32_t destCapacity,
-             int32_t* pDestLength,
-             const wchar_t* src,
-             int32_t srcLength,
+             int32_t* p_Dest_দৈর্ঘ্য,
+             ধ্রুবক wchar_t* src,
+             int32_t src_দৈর্ঘ্য,
              UErrorCode* pErrorCode)
 {
 
     /* args check */
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)){
-        return nullptr;
+    যদি(pErrorCode==nullptr || U_FAILURE(*pErrorCode)){
+        ফেরত nullptr;
     }
 
-    if( (src==nullptr && srcLength!=0) || srcLength < -1 ||
+    যদি( (src==nullptr && src_দৈর্ঘ্য!=0) || src_দৈর্ঘ্য < -1 ||
         (destCapacity<0) || (dest == nullptr && destCapacity > 0)
     ) {
         *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        ফেরত nullptr;
     }
 
 #ifdef U_WCHAR_IS_UTF16
     /* wchar_t is UTF-16 just do a memcpy */
-    if(srcLength == -1){
-        srcLength = u_strlen((const char16_t *)src);
+    যদি(src_দৈর্ঘ্য == -1){
+        src_দৈর্ঘ্য = u_strlen((ধ্রুবক char16_t *)src);
     }
-    if(0 < srcLength && srcLength <= destCapacity){
-        u_memcpy(dest, (const char16_t *)src, srcLength);
+    যদি(0 < src_দৈর্ঘ্য && src_দৈর্ঘ্য <= destCapacity){
+        u_memcpy(dest, (ধ্রুবক char16_t *)src, src_দৈর্ঘ্য);
     }
-    if(pDestLength){
-       *pDestLength = srcLength;
+    যদি(p_Dest_দৈর্ঘ্য){
+       *p_Dest_দৈর্ঘ্য = src_দৈর্ঘ্য;
     }
 
-    u_terminateUChars(dest,destCapacity,srcLength,pErrorCode);
+    u_terminateUChars(dest,destCapacity,src_দৈর্ঘ্য,pErrorCode);
 
-    return dest;
+    ফেরত dest;
 
-#elif defined U_WCHAR_IS_UTF32
+#নতুবা_যদি defined U_WCHAR_IS_UTF32
     
-    return u_strFromUTF32(dest, destCapacity, pDestLength,
-                          (UChar32*)src, srcLength, pErrorCode);
+    ফেরত u_strFromUTF32(dest, destCapacity, p_Dest_দৈর্ঘ্য,
+                          (UChar32*)src, src_দৈর্ঘ্য, pErrorCode);
 
-#else
+#অন্যথা
 
-    return _strFromWCS(dest,destCapacity,pDestLength,src,srcLength,pErrorCode);  
+    ফেরত _strFromWCS(dest,destCapacity,p_Dest_দৈর্ঘ্য,src,src_দৈর্ঘ্য,pErrorCode);  
 
 #endif
 

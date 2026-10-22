@@ -14,25 +14,25 @@
 *   created by: Michael Ow
 */
 
-#include "unicode/utypes.h"
+#অন্তর্ভাব "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION && !UCONFIG_NO_LEGACY_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
+#যদি !UCONFIG_NO_CONVERSION && !UCONFIG_NO_LEGACY_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
 
-#include "unicode/ucnv.h"
-#include "unicode/uset.h"
-#include "unicode/ucnv_err.h"
-#include "unicode/ucnv_cb.h"
-#include "unicode/utf16.h"
-#include "ucnv_imp.h"
-#include "ucnv_bld.h"
-#include "ucnv_cnv.h"
-#include "ucnvmbcs.h"
-#include "cstring.h"
-#include "cmemory.h"
+#অন্তর্ভাব "unicode/ucnv.h"
+#অন্তর্ভাব "unicode/uset.h"
+#অন্তর্ভাব "unicode/ucnv_err.h"
+#অন্তর্ভাব "unicode/ucnv_cb.h"
+#অন্তর্ভাব "unicode/utf16.h"
+#অন্তর্ভাব "ucnv_imp.h"
+#অন্তর্ভাব "ucnv_bld.h"
+#অন্তর্ভাব "ucnv_cnv.h"
+#অন্তর্ভাব "ucnvmbcs.h"
+#অন্তর্ভাব "cstring.h"
+#অন্তর্ভাব "cmemory.h"
 
-typedef enum {
+প্রকারলেখ গণনা {
     INVALID = -2,
-    DO_SEARCH = -1,
+    DO_অনুসন্ধান = -1,
 
     COMPOUND_TEXT_SINGLE_0 = 0,
     COMPOUND_TEXT_SINGLE_1 = 1,
@@ -57,12 +57,12 @@ typedef enum {
     IBM_913 = 17,
     ISO_8859_14 = 18,
     IBM_923 = 19,
-    NUM_OF_CONVERTERS = 20
+    অঙ্ক_OF_CONVERTERS = 20
 } COMPOUND_TEXT_CONVERTERS;
 
-#define SEARCH_LENGTH 12
+#define অনুসন্ধান_দৈর্ঘ্য 12
 
-static const uint8_t escSeqCompoundText[NUM_OF_CONVERTERS][5] = {
+স্থির ধ্রুবক uint8_t escSeqCompoundText[অঙ্ক_OF_CONVERTERS][5] = {
     /* Single */
     { 0x1B, 0x2D, 0x41, 0, 0 },
     { 0x1B, 0x2D, 0x4D, 0, 0 },
@@ -159,158 +159,158 @@ static const uint8_t escSeqCompoundText[NUM_OF_CONVERTERS][5] = {
         ((codepoint == 0x0152) || (codepoint == 0x0153) || (codepoint == 0x0178) || (codepoint == 0x20AC))
 
 
-typedef struct{
-    UConverterSharedData *myConverterArray[NUM_OF_CONVERTERS];
+প্রকারলেখ কাঠামো{
+    UConverter_Shared_তথ্য *myConverterArray[অঙ্ক_OF_CONVERTERS];
     COMPOUND_TEXT_CONVERTERS state;
-} UConverterDataCompoundText;
+} UConverter_তথ্য_Compound_Text;
 
 /*********** Compound Text Converter Protos ***********/
 U_CDECL_BEGIN
-static void U_CALLCONV
+স্থির শূন্য U_CALLCONV
 _CompoundTextOpen(UConverter *cnv, UConverterLoadArgs *pArgs, UErrorCode *errorCode);
 
-static void U_CALLCONV
+স্থির শূন্য U_CALLCONV
  _CompoundTextClose(UConverter *converter);
 
-static void U_CALLCONV
+স্থির শূন্য U_CALLCONV
 _CompoundTextReset(UConverter *converter, UConverterResetChoice choice);
 
-static const char* U_CALLCONV
-_CompoundTextgetName(const UConverter* cnv);
+স্থির ধ্রুবক অক্ষর* U_CALLCONV
+_CompoundTextgetName(ধ্রুবক UConverter* cnv);
 
 
-static int32_t findNextEsc(const char *source, const char *sourceLimit) {
+স্থির int32_t find_পরবর্তী_Esc(ধ্রুবক অক্ষর *source, ধ্রুবক অক্ষর *sourceLimit) {
     int32_t length = static_cast<int32_t>(sourceLimit - source);
     int32_t i;
-    for (i = 1; i < length; i++) {
-        if (*(source + i) == 0x1B) {
-            return i;
+    জন্য (i = 1; i < length; i++) {
+        যদি (*(source + i) == 0x1B) {
+            ফেরত i;
         }
     }
 
-    return length;
+    ফেরত length;
 }
 
-static COMPOUND_TEXT_CONVERTERS getState(int codepoint) {
-    COMPOUND_TEXT_CONVERTERS state = DO_SEARCH;
+স্থির COMPOUND_TEXT_CONVERTERS getState(পূর্ণসংখ্যা codepoint) {
+    COMPOUND_TEXT_CONVERTERS state = DO_অনুসন্ধান;
 
-    if (isASCIIRange(codepoint)) {
+    যদি (isASCIIRange(codepoint)) {
         state = COMPOUND_TEXT_SINGLE_0;
-    } else if (isIBM912(codepoint)) {
+    } অন্যথা যদি (isIBM912(codepoint)) {
         state = IBM_912;
-    }else if (isIBM913(codepoint)) {
+    }অন্যথা যদি (isIBM913(codepoint)) {
         state = IBM_913;
-    } else if (isISO8859_14(codepoint)) {
+    } অন্যথা যদি (isISO8859_14(codepoint)) {
         state = ISO_8859_14;
-    } else if (isIBM923(codepoint)) {
+    } অন্যথা যদি (isIBM923(codepoint)) {
         state = IBM_923;
-    } else if (isIBM874(codepoint)) {
+    } অন্যথা যদি (isIBM874(codepoint)) {
         state = IBM_874;
-    } else if (isIBM914(codepoint)) {
+    } অন্যথা যদি (isIBM914(codepoint)) {
         state = IBM_914;
-    } else if (isCompoundS2(codepoint)) {
+    } অন্যথা যদি (isCompoundS2(codepoint)) {
         state = COMPOUND_TEXT_SINGLE_2;
-    } else if (isCompoundS3(codepoint)) {
+    } অন্যথা যদি (isCompoundS3(codepoint)) {
         state = COMPOUND_TEXT_SINGLE_3;
-    } else if (isIBM916(codepoint)) {
+    } অন্যথা যদি (isIBM916(codepoint)) {
         state = IBM_916;
-    } else if (isIBM915(codepoint)) {
+    } অন্যথা যদি (isIBM915(codepoint)) {
         state = IBM_915;
-    } else if (isCompoundS1(codepoint)) {
+    } অন্যথা যদি (isCompoundS1(codepoint)) {
         state = COMPOUND_TEXT_SINGLE_1;
     }
 
-    return state;
+    ফেরত state;
 }
 
-static COMPOUND_TEXT_CONVERTERS findStateFromEscSeq(const char* source, const char* sourceLimit, const uint8_t* toUBytesBuffer, int32_t toUBytesBufferLength, UErrorCode *err) {
+স্থির COMPOUND_TEXT_CONVERTERS findStateFromEscSeq(ধ্রুবক অক্ষর* source, ধ্রুবক অক্ষর* sourceLimit, ধ্রুবক uint8_t* to_UBytes_বাফার, int32_t to_UBytes_বাফার_দৈর্ঘ্য, UErrorCode *err) {
     COMPOUND_TEXT_CONVERTERS state = INVALID;
-    UBool matchFound = false;
-    int32_t i, n, offset = toUBytesBufferLength;
+    UBool matchFound = মিথ্যা;
+    int32_t i, n, offset = to_UBytes_বাফার_দৈর্ঘ্য;
 
-    for (i = 0; i < NUM_OF_CONVERTERS; i++) {
-        matchFound = true;
-        for (n = 0; escSeqCompoundText[i][n] != 0; n++) {
-            if (n < toUBytesBufferLength) {
-                if (toUBytesBuffer[n] != escSeqCompoundText[i][n]) {
-                    matchFound = false;
-                    break;
+    জন্য (i = 0; i < অঙ্ক_OF_CONVERTERS; i++) {
+        matchFound = সত্য;
+        জন্য (n = 0; escSeqCompoundText[i][n] != 0; n++) {
+            যদি (n < to_UBytes_বাফার_দৈর্ঘ্য) {
+                যদি (to_UBytes_বাফার[n] != escSeqCompoundText[i][n]) {
+                    matchFound = মিথ্যা;
+                    বিরতি;
                 }
-            } else if ((source + (n - offset)) >= sourceLimit) {
+            } অন্যথা যদি ((source + (n - offset)) >= sourceLimit) {
                 *err = U_TRUNCATED_CHAR_FOUND;
-                matchFound = false;
-                break;
-            } else if (*(source + (n - offset)) != escSeqCompoundText[i][n]) {
-                matchFound = false;
-                break;
+                matchFound = মিথ্যা;
+                বিরতি;
+            } অন্যথা যদি (*(source + (n - offset)) != escSeqCompoundText[i][n]) {
+                matchFound = মিথ্যা;
+                বিরতি;
             }
         }
 
-        if (matchFound) {
-            break;
+        যদি (matchFound) {
+            বিরতি;
         }
     }
 
-    if (matchFound) {
+    যদি (matchFound) {
         state = (COMPOUND_TEXT_CONVERTERS)i;
     }
 
-    return state;
+    ফেরত state;
 }
 
-static void U_CALLCONV
+স্থির শূন্য U_CALLCONV
 _CompoundTextOpen(UConverter *cnv, UConverterLoadArgs *pArgs, UErrorCode *errorCode){
-    cnv->extraInfo = uprv_malloc (sizeof (UConverterDataCompoundText));
-    if (cnv->extraInfo != nullptr) {
-        UConverterDataCompoundText *myConverterData = (UConverterDataCompoundText *) cnv->extraInfo;
+    cnv->extraInfo = uprv_malloc (আকার (UConverter_তথ্য_Compound_Text));
+    যদি (cnv->extraInfo != nullptr) {
+        UConverter_তথ্য_Compound_Text *my_Converter_তথ্য = (UConverter_তথ্য_Compound_Text *) cnv->extraInfo;
 
-        UConverterNamePieces stackPieces;
-        UConverterLoadArgs stackArgs=UCNV_LOAD_ARGS_INITIALIZER;
+        UConverterNamePieces স্তূপ_Pieces;
+        UConverterLoadArgs স্তূপ_Args=UCNV_LOAD_ARGS_INITIALIZER;
 
-        myConverterData->myConverterArray[COMPOUND_TEXT_SINGLE_0] = nullptr;
-        myConverterData->myConverterArray[COMPOUND_TEXT_SINGLE_1] = ucnv_loadSharedData("icu-internal-compound-s1", &stackPieces, &stackArgs, errorCode);
-        myConverterData->myConverterArray[COMPOUND_TEXT_SINGLE_2] = ucnv_loadSharedData("icu-internal-compound-s2", &stackPieces, &stackArgs, errorCode);
-        myConverterData->myConverterArray[COMPOUND_TEXT_SINGLE_3] = ucnv_loadSharedData("icu-internal-compound-s3", &stackPieces, &stackArgs, errorCode);
-        myConverterData->myConverterArray[COMPOUND_TEXT_DOUBLE_1] = ucnv_loadSharedData("icu-internal-compound-d1", &stackPieces, &stackArgs, errorCode);
-        myConverterData->myConverterArray[COMPOUND_TEXT_DOUBLE_2] = ucnv_loadSharedData("icu-internal-compound-d2", &stackPieces, &stackArgs, errorCode);
-        myConverterData->myConverterArray[COMPOUND_TEXT_DOUBLE_3] = ucnv_loadSharedData("icu-internal-compound-d3", &stackPieces, &stackArgs, errorCode);
-        myConverterData->myConverterArray[COMPOUND_TEXT_DOUBLE_4] = ucnv_loadSharedData("icu-internal-compound-d4", &stackPieces, &stackArgs, errorCode);
-        myConverterData->myConverterArray[COMPOUND_TEXT_DOUBLE_5] = ucnv_loadSharedData("icu-internal-compound-d5", &stackPieces, &stackArgs, errorCode);
-        myConverterData->myConverterArray[COMPOUND_TEXT_DOUBLE_6] = ucnv_loadSharedData("icu-internal-compound-d6", &stackPieces, &stackArgs, errorCode);
-        myConverterData->myConverterArray[COMPOUND_TEXT_DOUBLE_7] = ucnv_loadSharedData("icu-internal-compound-d7", &stackPieces, &stackArgs, errorCode);
-        myConverterData->myConverterArray[COMPOUND_TEXT_TRIPLE_DOUBLE] = ucnv_loadSharedData("icu-internal-compound-t", &stackPieces, &stackArgs, errorCode);
+        my_Converter_তথ্য->myConverterArray[COMPOUND_TEXT_SINGLE_0] = nullptr;
+        my_Converter_তথ্য->myConverterArray[COMPOUND_TEXT_SINGLE_1] = ucnv_load_Shared_তথ্য("icu-internal-compound-s1", &স্তূপ_Pieces, &স্তূপ_Args, errorCode);
+        my_Converter_তথ্য->myConverterArray[COMPOUND_TEXT_SINGLE_2] = ucnv_load_Shared_তথ্য("icu-internal-compound-s2", &স্তূপ_Pieces, &স্তূপ_Args, errorCode);
+        my_Converter_তথ্য->myConverterArray[COMPOUND_TEXT_SINGLE_3] = ucnv_load_Shared_তথ্য("icu-internal-compound-s3", &স্তূপ_Pieces, &স্তূপ_Args, errorCode);
+        my_Converter_তথ্য->myConverterArray[COMPOUND_TEXT_DOUBLE_1] = ucnv_load_Shared_তথ্য("icu-internal-compound-d1", &স্তূপ_Pieces, &স্তূপ_Args, errorCode);
+        my_Converter_তথ্য->myConverterArray[COMPOUND_TEXT_DOUBLE_2] = ucnv_load_Shared_তথ্য("icu-internal-compound-d2", &স্তূপ_Pieces, &স্তূপ_Args, errorCode);
+        my_Converter_তথ্য->myConverterArray[COMPOUND_TEXT_DOUBLE_3] = ucnv_load_Shared_তথ্য("icu-internal-compound-d3", &স্তূপ_Pieces, &স্তূপ_Args, errorCode);
+        my_Converter_তথ্য->myConverterArray[COMPOUND_TEXT_DOUBLE_4] = ucnv_load_Shared_তথ্য("icu-internal-compound-d4", &স্তূপ_Pieces, &স্তূপ_Args, errorCode);
+        my_Converter_তথ্য->myConverterArray[COMPOUND_TEXT_DOUBLE_5] = ucnv_load_Shared_তথ্য("icu-internal-compound-d5", &স্তূপ_Pieces, &স্তূপ_Args, errorCode);
+        my_Converter_তথ্য->myConverterArray[COMPOUND_TEXT_DOUBLE_6] = ucnv_load_Shared_তথ্য("icu-internal-compound-d6", &স্তূপ_Pieces, &স্তূপ_Args, errorCode);
+        my_Converter_তথ্য->myConverterArray[COMPOUND_TEXT_DOUBLE_7] = ucnv_load_Shared_তথ্য("icu-internal-compound-d7", &স্তূপ_Pieces, &স্তূপ_Args, errorCode);
+        my_Converter_তথ্য->myConverterArray[COMPOUND_TEXT_TRIPLE_DOUBLE] = ucnv_load_Shared_তথ্য("icu-internal-compound-t", &স্তূপ_Pieces, &স্তূপ_Args, errorCode);
 
-        myConverterData->myConverterArray[IBM_915] = ucnv_loadSharedData("ibm-915_P100-1995", &stackPieces, &stackArgs, errorCode);
-        myConverterData->myConverterArray[IBM_916] = ucnv_loadSharedData("ibm-916_P100-1995", &stackPieces, &stackArgs, errorCode);
-        myConverterData->myConverterArray[IBM_914] = ucnv_loadSharedData("ibm-914_P100-1995", &stackPieces, &stackArgs, errorCode);
-        myConverterData->myConverterArray[IBM_874] = ucnv_loadSharedData("ibm-874_P100-1995", &stackPieces, &stackArgs, errorCode);
-        myConverterData->myConverterArray[IBM_912] = ucnv_loadSharedData("ibm-912_P100-1995", &stackPieces, &stackArgs, errorCode);
-        myConverterData->myConverterArray[IBM_913] = ucnv_loadSharedData("ibm-913_P100-2000", &stackPieces, &stackArgs, errorCode);
-        myConverterData->myConverterArray[ISO_8859_14] = ucnv_loadSharedData("iso-8859_14-1998", &stackPieces, &stackArgs, errorCode);
-        myConverterData->myConverterArray[IBM_923] = ucnv_loadSharedData("ibm-923_P100-1998", &stackPieces, &stackArgs, errorCode);
+        my_Converter_তথ্য->myConverterArray[IBM_915] = ucnv_load_Shared_তথ্য("ibm-915_P100-1995", &স্তূপ_Pieces, &স্তূপ_Args, errorCode);
+        my_Converter_তথ্য->myConverterArray[IBM_916] = ucnv_load_Shared_তথ্য("ibm-916_P100-1995", &স্তূপ_Pieces, &স্তূপ_Args, errorCode);
+        my_Converter_তথ্য->myConverterArray[IBM_914] = ucnv_load_Shared_তথ্য("ibm-914_P100-1995", &স্তূপ_Pieces, &স্তূপ_Args, errorCode);
+        my_Converter_তথ্য->myConverterArray[IBM_874] = ucnv_load_Shared_তথ্য("ibm-874_P100-1995", &স্তূপ_Pieces, &স্তূপ_Args, errorCode);
+        my_Converter_তথ্য->myConverterArray[IBM_912] = ucnv_load_Shared_তথ্য("ibm-912_P100-1995", &স্তূপ_Pieces, &স্তূপ_Args, errorCode);
+        my_Converter_তথ্য->myConverterArray[IBM_913] = ucnv_load_Shared_তথ্য("ibm-913_P100-2000", &স্তূপ_Pieces, &স্তূপ_Args, errorCode);
+        my_Converter_তথ্য->myConverterArray[ISO_8859_14] = ucnv_load_Shared_তথ্য("iso-8859_14-1998", &স্তূপ_Pieces, &স্তূপ_Args, errorCode);
+        my_Converter_তথ্য->myConverterArray[IBM_923] = ucnv_load_Shared_তথ্য("ibm-923_P100-1998", &স্তূপ_Pieces, &স্তূপ_Args, errorCode);
 
-        if (U_FAILURE(*errorCode) || pArgs->onlyTestIsLoadable) {
+        যদি (U_FAILURE(*errorCode) || pArgs->onlyTestIsLoadable) {
             _CompoundTextClose(cnv);
-            return;
+            ফেরত;
         }
 
-        myConverterData->state = (COMPOUND_TEXT_CONVERTERS)0;
-    } else {
+        my_Converter_তথ্য->state = (COMPOUND_TEXT_CONVERTERS)0;
+    } অন্যথা {
         *errorCode = U_MEMORY_ALLOCATION_ERROR;
     }
 }
 
 
-static void U_CALLCONV
+স্থির শূন্য U_CALLCONV
 _CompoundTextClose(UConverter *converter) {
-    UConverterDataCompoundText* myConverterData = (UConverterDataCompoundText*)(converter->extraInfo);
+    UConverter_তথ্য_Compound_Text* my_Converter_তথ্য = (UConverter_তথ্য_Compound_Text*)(converter->extraInfo);
     int32_t i;
 
-    if (converter->extraInfo != nullptr) {
+    যদি (converter->extraInfo != nullptr) {
         /*close the array of converter pointers and free the memory*/
-        for (i = 0; i < NUM_OF_CONVERTERS; i++) {
-            if (myConverterData->myConverterArray[i] != nullptr) {
-                ucnv_unloadSharedDataIfReady(myConverterData->myConverterArray[i]);
+        জন্য (i = 0; i < অঙ্ক_OF_CONVERTERS; i++) {
+            যদি (my_Converter_তথ্য->myConverterArray[i] != nullptr) {
+                ucnv_unload_Shared_তথ্য_If_Ready(my_Converter_তথ্য->myConverterArray[i]);
             }
         }
 
@@ -319,276 +319,276 @@ _CompoundTextClose(UConverter *converter) {
     }
 }
 
-static void U_CALLCONV
+স্থির শূন্য U_CALLCONV
 _CompoundTextReset(UConverter *converter, UConverterResetChoice choice) {
-    (void)converter;
-    (void)choice;
+    (শূন্য)converter;
+    (শূন্য)choice;
 }
 
-static const char* U_CALLCONV
-_CompoundTextgetName(const UConverter* cnv){
-    (void)cnv;
-    return "x11-compound-text";
+স্থির ধ্রুবক অক্ষর* U_CALLCONV
+_CompoundTextgetName(ধ্রুবক UConverter* cnv){
+    (শূন্য)cnv;
+    ফেরত "x11-compound-text";
 }
 
-static void U_CALLCONV
+স্থির শূন্য U_CALLCONV
 UConverter_fromUnicode_CompoundText_OFFSETS(UConverterFromUnicodeArgs* args, UErrorCode* err){
     UConverter *cnv = args->converter;
     uint8_t *target = (uint8_t *) args->target;
-    const uint8_t *targetLimit = (const uint8_t *) args->targetLimit;
-    const char16_t* source = args->source;
-    const char16_t* sourceLimit = args->sourceLimit;
+    ধ্রুবক uint8_t *targetLimit = (ধ্রুবক uint8_t *) args->targetLimit;
+    ধ্রুবক char16_t* source = args->source;
+    ধ্রুবক char16_t* sourceLimit = args->sourceLimit;
     /* int32_t* offsets = args->offsets; */
     UChar32 sourceChar;
     UBool useFallback = cnv->useFallback;
-    uint8_t tmpTargetBuffer[7];
-    int32_t tmpTargetBufferLength = 0;
+    uint8_t tmp_Target_বাফার[7];
+    int32_t tmp_Target_বাফার_দৈর্ঘ্য = 0;
     COMPOUND_TEXT_CONVERTERS currentState, tmpState;
-    uint32_t pValue;
-    int32_t pValueLength = 0;
+    uint32_t p_মান;
+    int32_t p_মান_দৈর্ঘ্য = 0;
     int32_t i, n, j;
 
-    UConverterDataCompoundText *myConverterData = (UConverterDataCompoundText *) cnv->extraInfo;
+    UConverter_তথ্য_Compound_Text *my_Converter_তথ্য = (UConverter_তথ্য_Compound_Text *) cnv->extraInfo;
 
-    currentState = myConverterData->state;
+    currentState = my_Converter_তথ্য->state;
 
     /* check if the last codepoint of previous buffer was a lead surrogate*/
-    if((sourceChar = cnv->fromUChar32)!=0 && target< targetLimit) {
-        goto getTrail;
+    যদি((sourceChar = cnv->fromUChar32)!=0 && target< targetLimit) {
+        যাও getTrail;
     }
 
-    while( source < sourceLimit){
-        if(target < targetLimit){
+    যখন( source < sourceLimit){
+        যদি(target < targetLimit){
 
             sourceChar  = *(source++);
             /*check if the char is a First surrogate*/
-             if(U16_IS_SURROGATE(sourceChar)) {
-                if(U16_IS_SURROGATE_LEAD(sourceChar)) {
+             যদি(U16_IS_SURROGATE(sourceChar)) {
+                যদি(U16_IS_SURROGATE_LEAD(sourceChar)) {
 getTrail:
                     /*look ahead to find the trail surrogate*/
-                    if(source < sourceLimit) {
+                    যদি(source < sourceLimit) {
                         /* test the following code unit */
                         char16_t trail = *source;
-                        if(U16_IS_TRAIL(trail)) {
+                        যদি(U16_IS_TRAIL(trail)) {
                             source++;
                             sourceChar=U16_GET_SUPPLEMENTARY(sourceChar, trail);
                             cnv->fromUChar32=0x00;
                             /* convert this supplementary code point */
                             /* exit this condition tree */
-                        } else {
+                        } অন্যথা {
                             /* this is an unmatched lead code unit (1st surrogate) */
                             /* callback(illegal) */
                             *err=U_ILLEGAL_CHAR_FOUND;
                             cnv->fromUChar32=sourceChar;
-                            break;
+                            বিরতি;
                         }
-                    } else {
+                    } অন্যথা {
                         /* no more input */
                         cnv->fromUChar32=sourceChar;
-                        break;
+                        বিরতি;
                     }
-                } else {
+                } অন্যথা {
                     /* this is an unmatched trail code unit (2nd surrogate) */
                     /* callback(illegal) */
                     *err=U_ILLEGAL_CHAR_FOUND;
                     cnv->fromUChar32=sourceChar;
-                    break;
+                    বিরতি;
                 }
             }
 
-             tmpTargetBufferLength = 0;
+             tmp_Target_বাফার_দৈর্ঘ্য = 0;
              tmpState = getState(sourceChar);
 
-             if (tmpState != DO_SEARCH && currentState != tmpState) {
+             যদি (tmpState != DO_অনুসন্ধান && currentState != tmpState) {
                  /* Get escape sequence if necessary */
                  currentState = tmpState;
-                 for (i = 0; escSeqCompoundText[currentState][i] != 0; i++) {
-                     tmpTargetBuffer[tmpTargetBufferLength++] = escSeqCompoundText[currentState][i];
+                 জন্য (i = 0; escSeqCompoundText[currentState][i] != 0; i++) {
+                     tmp_Target_বাফার[tmp_Target_বাফার_দৈর্ঘ্য++] = escSeqCompoundText[currentState][i];
                  }
              }
 
-             if (tmpState == DO_SEARCH) {
+             যদি (tmpState == DO_অনুসন্ধান) {
                  /* Test all available converters */
-                 for (i = 1; i < SEARCH_LENGTH; i++) {
-                     pValueLength = ucnv_MBCSFromUChar32(myConverterData->myConverterArray[i], sourceChar, &pValue, useFallback);
-                     if (pValueLength > 0) {
+                 জন্য (i = 1; i < অনুসন্ধান_দৈর্ঘ্য; i++) {
+                     p_মান_দৈর্ঘ্য = ucnv_MBCSFromUChar32(my_Converter_তথ্য->myConverterArray[i], sourceChar, &p_মান, useFallback);
+                     যদি (p_মান_দৈর্ঘ্য > 0) {
                          tmpState = (COMPOUND_TEXT_CONVERTERS)i;
-                         if (currentState != tmpState) {
+                         যদি (currentState != tmpState) {
                              currentState = tmpState;
-                             for (j = 0; escSeqCompoundText[currentState][j] != 0; j++) {
-                                 tmpTargetBuffer[tmpTargetBufferLength++] = escSeqCompoundText[currentState][j];
+                             জন্য (j = 0; escSeqCompoundText[currentState][j] != 0; j++) {
+                                 tmp_Target_বাফার[tmp_Target_বাফার_দৈর্ঘ্য++] = escSeqCompoundText[currentState][j];
                              }
                          }
-                         for (n = (pValueLength - 1); n >= 0; n--) {
-                             tmpTargetBuffer[tmpTargetBufferLength++] = (uint8_t)(pValue >> (n * 8));
+                         জন্য (n = (p_মান_দৈর্ঘ্য - 1); n >= 0; n--) {
+                             tmp_Target_বাফার[tmp_Target_বাফার_দৈর্ঘ্য++] = (uint8_t)(p_মান >> (n * 8));
                          }
-                         break;
+                         বিরতি;
                      }
                  }
-             } else if (tmpState == COMPOUND_TEXT_SINGLE_0) {
-                 tmpTargetBuffer[tmpTargetBufferLength++] = (uint8_t)sourceChar;
-             } else {
-                 pValueLength = ucnv_MBCSFromUChar32(myConverterData->myConverterArray[currentState], sourceChar, &pValue, useFallback);
-                 if (pValueLength > 0) {
-                     for (n = (pValueLength - 1); n >= 0; n--) {
-                         tmpTargetBuffer[tmpTargetBufferLength++] = (uint8_t)(pValue >> (n * 8));
+             } অন্যথা যদি (tmpState == COMPOUND_TEXT_SINGLE_0) {
+                 tmp_Target_বাফার[tmp_Target_বাফার_দৈর্ঘ্য++] = (uint8_t)sourceChar;
+             } অন্যথা {
+                 p_মান_দৈর্ঘ্য = ucnv_MBCSFromUChar32(my_Converter_তথ্য->myConverterArray[currentState], sourceChar, &p_মান, useFallback);
+                 যদি (p_মান_দৈর্ঘ্য > 0) {
+                     জন্য (n = (p_মান_দৈর্ঘ্য - 1); n >= 0; n--) {
+                         tmp_Target_বাফার[tmp_Target_বাফার_দৈর্ঘ্য++] = (uint8_t)(p_মান >> (n * 8));
                      }
                  }
              }
 
-             for (i = 0; i < tmpTargetBufferLength; i++) {
-                 if (target < targetLimit) {
-                     *target++ = tmpTargetBuffer[i];
-                 } else {
-                     *err = U_BUFFER_OVERFLOW_ERROR;
-                     break;
+             জন্য (i = 0; i < tmp_Target_বাফার_দৈর্ঘ্য; i++) {
+                 যদি (target < targetLimit) {
+                     *target++ = tmp_Target_বাফার[i];
+                 } অন্যথা {
+                     *err = U_বাফার_OVERFLOW_ERROR;
+                     বিরতি;
                  }
              }
 
-             if (*err == U_BUFFER_OVERFLOW_ERROR) {
-                 for (; i < tmpTargetBufferLength; i++) {
-                     args->converter->charErrorBuffer[args->converter->charErrorBufferLength++] = tmpTargetBuffer[i];
+             যদি (*err == U_বাফার_OVERFLOW_ERROR) {
+                 জন্য (; i < tmp_Target_বাফার_দৈর্ঘ্য; i++) {
+                     args->converter->char_Error_বাফার[args->converter->char_Error_বাফার_দৈর্ঘ্য++] = tmp_Target_বাফার[i];
                  }
              }
-        } else {
-            *err = U_BUFFER_OVERFLOW_ERROR;
-            break;
+        } অন্যথা {
+            *err = U_বাফার_OVERFLOW_ERROR;
+            বিরতি;
         }
     }
 
     /*save the state and return */
-    myConverterData->state = currentState;
+    my_Converter_তথ্য->state = currentState;
     args->source = source;
-    args->target = (char*)target;
+    args->target = (অক্ষর*)target;
 }
 
 
-static void U_CALLCONV
+স্থির শূন্য U_CALLCONV
 UConverter_toUnicode_CompoundText_OFFSETS(UConverterToUnicodeArgs *args,
                                                UErrorCode* err){
-    const char *mySource = (char *) args->source;
+    ধ্রুবক অক্ষর *mySource = (অক্ষর *) args->source;
     char16_t *myTarget = args->target;
-    const char *mySourceLimit = args->sourceLimit;
-    const char *tmpSourceLimit = mySourceLimit;
+    ধ্রুবক অক্ষর *mySourceLimit = args->sourceLimit;
+    ধ্রুবক অক্ষর *tmpSourceLimit = mySourceLimit;
     uint32_t mySourceChar = 0x0000;
     COMPOUND_TEXT_CONVERTERS currentState, tmpState;
     int32_t sourceOffset = 0;
-    UConverterDataCompoundText *myConverterData = (UConverterDataCompoundText *) args->converter->extraInfo;
-    UConverterSharedData* savedSharedData = nullptr;
+    UConverter_তথ্য_Compound_Text *my_Converter_তথ্য = (UConverter_তথ্য_Compound_Text *) args->converter->extraInfo;
+    UConverter_Shared_তথ্য* saved_Shared_তথ্য = nullptr;
 
     UConverterToUnicodeArgs subArgs;
-    int32_t minArgsSize;
+    int32_t min_Args_আকার;
 
     /* set up the subconverter arguments */
-    if(args->size<sizeof(UConverterToUnicodeArgs)) {
-        minArgsSize = args->size;
-    } else {
-        minArgsSize = (int32_t)sizeof(UConverterToUnicodeArgs);
+    যদি(args->size<আকার(UConverterToUnicodeArgs)) {
+        min_Args_আকার = args->size;
+    } অন্যথা {
+        min_Args_আকার = (int32_t)আকার(UConverterToUnicodeArgs);
     }
 
-    uprv_memcpy(&subArgs, args, minArgsSize);
-    subArgs.size = (uint16_t)minArgsSize;
+    uprv_memcpy(&subArgs, args, min_Args_আকার);
+    subArgs.size = (uint16_t)min_Args_আকার;
 
-    currentState = tmpState =  myConverterData->state;
+    currentState = tmpState =  my_Converter_তথ্য->state;
 
-    while(mySource < mySourceLimit){
-        if(myTarget < args->targetLimit){
-            if (args->converter->toULength > 0) {
+    যখন(mySource < mySourceLimit){
+        যদি(myTarget < args->targetLimit){
+            যদি (args->converter->toULength > 0) {
                 mySourceChar = args->converter->toUBytes[0];
-            } else {
+            } অন্যথা {
                 mySourceChar = (uint8_t)*mySource;
             }
 
-            if (mySourceChar == ESC_START) {
+            যদি (mySourceChar == ESC_START) {
                 tmpState = findStateFromEscSeq(mySource, mySourceLimit, args->converter->toUBytes, args->converter->toULength, err);
 
-                if (*err == U_TRUNCATED_CHAR_FOUND) {
-                    for (; mySource < mySourceLimit;) {
+                যদি (*err == U_TRUNCATED_CHAR_FOUND) {
+                    জন্য (; mySource < mySourceLimit;) {
                         args->converter->toUBytes[args->converter->toULength++] = *mySource++;
                     }
                     *err = U_ZERO_ERROR;
-                    break;
-                } else if (tmpState == INVALID) {
-                    if (args->converter->toULength == 0) {
+                    বিরতি;
+                } অন্যথা যদি (tmpState == INVALID) {
+                    যদি (args->converter->toULength == 0) {
                         mySource++; /* skip over the 0x1b byte */
                     }
                     *err = U_ILLEGAL_CHAR_FOUND;
-                    break;
+                    বিরতি;
                 }
 
-                if (tmpState != currentState) {
+                যদি (tmpState != currentState) {
                     currentState = tmpState;
                 }
 
-                sourceOffset = static_cast<int32_t>(uprv_strlen((char*)escSeqCompoundText[currentState]) - args->converter->toULength);
+                sourceOffset = static_cast<int32_t>(uprv_strlen((অক্ষর*)escSeqCompoundText[currentState]) - args->converter->toULength);
 
                 mySource += sourceOffset;
 
                 args->converter->toULength = 0;
             }
 
-            if (currentState == COMPOUND_TEXT_SINGLE_0) {
-                while (mySource < mySourceLimit) {
-                    if (*mySource == ESC_START) {
-                        break;
+            যদি (currentState == COMPOUND_TEXT_SINGLE_0) {
+                যখন (mySource < mySourceLimit) {
+                    যদি (*mySource == ESC_START) {
+                        বিরতি;
                     }
-                    if (myTarget < args->targetLimit) {
+                    যদি (myTarget < args->targetLimit) {
                         *myTarget++ = 0x00ff&(*mySource++);
-                    } else {
-                        *err = U_BUFFER_OVERFLOW_ERROR;
-                        break;
+                    } অন্যথা {
+                        *err = U_বাফার_OVERFLOW_ERROR;
+                        বিরতি;
                     }
                 }
-            } else if (mySource < mySourceLimit){
-                sourceOffset = findNextEsc(mySource, mySourceLimit);
+            } অন্যথা যদি (mySource < mySourceLimit){
+                sourceOffset = find_পরবর্তী_Esc(mySource, mySourceLimit);
 
                 tmpSourceLimit = mySource + sourceOffset;
 
                 subArgs.source = mySource;
                 subArgs.sourceLimit = tmpSourceLimit;
                 subArgs.target = myTarget;
-                savedSharedData = subArgs.converter->sharedData;
-                subArgs.converter->sharedData = myConverterData->myConverterArray[currentState];
+                saved_Shared_তথ্য = subArgs.converter->shared_তথ্য;
+                subArgs.converter->shared_তথ্য = my_Converter_তথ্য->myConverterArray[currentState];
 
                 ucnv_MBCSToUnicodeWithOffsets(&subArgs, err);
 
-                subArgs.converter->sharedData = savedSharedData;
+                subArgs.converter->shared_তথ্য = saved_Shared_তথ্য;
 
                 mySource = subArgs.source;
                 myTarget = subArgs.target;
 
-                if (U_FAILURE(*err)) {
-                    if(*err == U_BUFFER_OVERFLOW_ERROR) {
-                        if(subArgs.converter->UCharErrorBufferLength > 0) {
-                            uprv_memcpy(args->converter->UCharErrorBuffer, subArgs.converter->UCharErrorBuffer,
-                                        subArgs.converter->UCharErrorBufferLength);
+                যদি (U_FAILURE(*err)) {
+                    যদি(*err == U_বাফার_OVERFLOW_ERROR) {
+                        যদি(subArgs.converter->UChar_Error_বাফার_দৈর্ঘ্য > 0) {
+                            uprv_memcpy(args->converter->UChar_Error_বাফার, subArgs.converter->UChar_Error_বাফার,
+                                        subArgs.converter->UChar_Error_বাফার_দৈর্ঘ্য);
                         }
-                        args->converter->UCharErrorBufferLength=subArgs.converter->UCharErrorBufferLength;
-                        subArgs.converter->UCharErrorBufferLength = 0;
+                        args->converter->UChar_Error_বাফার_দৈর্ঘ্য=subArgs.converter->UChar_Error_বাফার_দৈর্ঘ্য;
+                        subArgs.converter->UChar_Error_বাফার_দৈর্ঘ্য = 0;
                     }
-                    break;
+                    বিরতি;
                 }
             }
-        } else {
-            *err = U_BUFFER_OVERFLOW_ERROR;
-            break;
+        } অন্যথা {
+            *err = U_বাফার_OVERFLOW_ERROR;
+            বিরতি;
         }
     }
-    myConverterData->state = currentState;
+    my_Converter_তথ্য->state = currentState;
     args->target = myTarget;
     args->source = mySource;
 }
 
-static void U_CALLCONV
-_CompoundText_GetUnicodeSet(const UConverter *cnv,
-                    const USetAdder *sa,
+স্থির শূন্য U_CALLCONV
+_CompoundText_GetUnicodeSet(ধ্রুবক UConverter *cnv,
+                    ধ্রুবক USetAdder *sa,
                     UConverterUnicodeSet which,
                     UErrorCode *pErrorCode) {
-    UConverterDataCompoundText *myConverterData = (UConverterDataCompoundText *)cnv->extraInfo;
+    UConverter_তথ্য_Compound_Text *my_Converter_তথ্য = (UConverter_তথ্য_Compound_Text *)cnv->extraInfo;
     int32_t i;
 
-    for (i = 1; i < NUM_OF_CONVERTERS; i++) {
-        ucnv_MBCSGetUnicodeSetForUnicode(myConverterData->myConverterArray[i], sa, which, pErrorCode);
+    জন্য (i = 1; i < অঙ্ক_OF_CONVERTERS; i++) {
+        ucnv_MBCSGetUnicodeSetForUnicode(my_Converter_তথ্য->myConverterArray[i], sa, which, pErrorCode);
     }
     sa->add(sa->set, 0x0000);
     sa->add(sa->set, 0x0009);
@@ -598,7 +598,7 @@ _CompoundText_GetUnicodeSet(const UConverter *cnv,
 }
 U_CDECL_END
 
-static const UConverterImpl _CompoundTextImpl = {
+স্থির ধ্রুবক UConverterImpl _CompoundTextImpl = {
 
     UCNV_COMPOUND_TEXT,
 
@@ -624,8 +624,8 @@ static const UConverterImpl _CompoundTextImpl = {
     nullptr
 };
 
-static const UConverterStaticData _CompoundTextStaticData = {
-    sizeof(UConverterStaticData),
+স্থির ধ্রুবক UConverter_Static_তথ্য Compound_Text_Static_তথ্য = {
+    আকার(UConverter_Static_তথ্য),
     "COMPOUND_TEXT",
     0,
     UCNV_IBM,
@@ -634,13 +634,13 @@ static const UConverterStaticData _CompoundTextStaticData = {
     6,
     { 0xef, 0, 0, 0 },
     1,
-    false,
-    false,
+    মিথ্যা,
+    মিথ্যা,
     0,
     0,
     { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 } /* reserved */
 };
-const UConverterSharedData _CompoundTextData =
-        UCNV_IMMUTABLE_SHARED_DATA_INITIALIZER(&_CompoundTextStaticData, &_CompoundTextImpl);
+ধ্রুবক UConverter_Shared_তথ্য Compound_Text_তথ্য =
+        UCNV_IMMUTABLE_SHARED_তথ্য_INITIALIZER(&Compound_Text_Static_তথ্য, &_CompoundTextImpl);
 
 #endif /* #if !UCONFIG_NO_LEGACY_CONVERSION */

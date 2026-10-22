@@ -4,27 +4,27 @@
 // lsr.cpp
 // created: 2019may08 Markus W. Scherer
 
-#include "unicode/utypes.h"
-#include "charstr.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "lsr.h"
-#include "uinvchar.h"
-#include "ustr_imp.h"
+#অন্তর্ভাব "unicode/utypes.h"
+#অন্তর্ভাব "charstr.h"
+#অন্তর্ভাব "cmemory.h"
+#অন্তর্ভাব "cstring.h"
+#অন্তর্ভাব "lsr.h"
+#অন্তর্ভাব "uinvchar.h"
+#অন্তর্ভাব "ustr_imp.h"
 
 U_NAMESPACE_BEGIN
 
-LSR::LSR(char prefix, const char *lang, const char *scr, const char *r, int32_t f,
+LSR::LSR(অক্ষর prefix, ধ্রুবক অক্ষর *lang, ধ্রুবক অক্ষর *scr, ধ্রুবক অক্ষর *r, int32_t f,
          UErrorCode &errorCode) :
         language(nullptr), script(nullptr), region(r),
-        regionIndex(indexForRegion(region)), flags(f) {
-    if (U_SUCCESS(errorCode)) {
+        region_সূচক(সূচক_For_Region(region)), flags(f) {
+    যদি (U_SUCCESS(errorCode)) {
         CharString langScript;
         langScript.append(prefix, errorCode).append(lang, errorCode).append('\0', errorCode);
         int32_t scriptOffset = langScript.length();
         langScript.append(prefix, errorCode).append(scr, errorCode);
-        owned = langScript.cloneData(errorCode);
-        if (U_SUCCESS(errorCode)) {
+        owned = langScript.clone_তথ্য(errorCode);
+        যদি (U_SUCCESS(errorCode)) {
             language = owned;
             script = owned + scriptOffset;
         }
@@ -34,16 +34,16 @@ LSR::LSR(char prefix, const char *lang, const char *scr, const char *r, int32_t 
 LSR::LSR(StringPiece lang, StringPiece scr, StringPiece r, int32_t f,
          UErrorCode &errorCode) :
         language(nullptr), script(nullptr), region(nullptr),
-        regionIndex(indexForRegion(r.data())), flags(f) {
-    if (U_SUCCESS(errorCode)) {
-        CharString data;
-        data.append(lang, errorCode).append('\0', errorCode);
-        int32_t scriptOffset = data.length();
-        data.append(scr, errorCode).append('\0', errorCode);
-        int32_t regionOffset = data.length();
-        data.append(r, errorCode);
-        owned = data.cloneData(errorCode);
-        if (U_SUCCESS(errorCode)) {
+        region_সূচক(সূচক_For_Region(r.তথ্য())), flags(f) {
+    যদি (U_SUCCESS(errorCode)) {
+        CharString তথ্য;
+        তথ্য.append(lang, errorCode).append('\0', errorCode);
+        int32_t scriptOffset = তথ্য.length();
+        তথ্য.append(scr, errorCode).append('\0', errorCode);
+        int32_t regionOffset = তথ্য.length();
+        তথ্য.append(r, errorCode);
+        owned = তথ্য.clone_তথ্য(errorCode);
+        যদি (U_SUCCESS(errorCode)) {
             language = owned;
             script = owned + scriptOffset;
             region = owned + regionOffset;
@@ -53,82 +53,82 @@ LSR::LSR(StringPiece lang, StringPiece scr, StringPiece r, int32_t f,
 
 LSR::LSR(LSR &&other) noexcept :
         language(other.language), script(other.script), region(other.region), owned(other.owned),
-        regionIndex(other.regionIndex), flags(other.flags),
+        region_সূচক(other.region_সূচক), flags(other.flags),
         hashCode(other.hashCode) {
-    if (owned != nullptr) {
+    যদি (owned != nullptr) {
         other.language = other.script = "";
         other.owned = nullptr;
         other.hashCode = 0;
     }
 }
 
-void LSR::deleteOwned() {
+শূন্য LSR::deleteOwned() {
     uprv_free(owned);
 }
 
 LSR &LSR::operator=(LSR &&other) noexcept {
-    this->~LSR();
+    এই->~LSR();
     language = other.language;
     script = other.script;
     region = other.region;
-    regionIndex = other.regionIndex;
+    region_সূচক = other.region_সূচক;
     flags = other.flags;
     owned = other.owned;
     hashCode = other.hashCode;
-    if (owned != nullptr) {
+    যদি (owned != nullptr) {
         other.language = other.script = "";
         other.owned = nullptr;
         other.hashCode = 0;
     }
-    return *this;
+    ফেরত *এই;
 }
 
-UBool LSR::isEquivalentTo(const LSR &other) const {
-    return
+UBool LSR::isEquivalentTo(ধ্রুবক LSR &other) ধ্রুবক {
+    ফেরত
         uprv_strcmp(language, other.language) == 0 &&
         uprv_strcmp(script, other.script) == 0 &&
-        regionIndex == other.regionIndex &&
+        region_সূচক == other.region_সূচক &&
         // Compare regions if both are ill-formed (and their indexes are 0).
-        (regionIndex > 0 || uprv_strcmp(region, other.region) == 0);
+        (region_সূচক > 0 || uprv_strcmp(region, other.region) == 0);
 }
 
-bool LSR::operator==(const LSR &other) const {
-    return
+যৌক্তিক LSR::operator==(ধ্রুবক LSR &other) ধ্রুবক {
+    ফেরত
         uprv_strcmp(language, other.language) == 0 &&
         uprv_strcmp(script, other.script) == 0 &&
-        regionIndex == other.regionIndex &&
+        region_সূচক == other.region_সূচক &&
         // Compare regions if both are ill-formed (and their indexes are 0).
-        (regionIndex > 0 || uprv_strcmp(region, other.region) == 0) &&
+        (region_সূচক > 0 || uprv_strcmp(region, other.region) == 0) &&
         flags == other.flags;
 }
 
-int32_t LSR::indexForRegion(const char *region) {
+int32_t LSR::সূচক_For_Region(ধ্রুবক অক্ষর *region) {
     int32_t c = region[0];
     int32_t a = c - '0';
-    if (0 <= a && a <= 9) {  // digits: "419"
+    যদি (0 <= a && a <= 9) {  // digits: "419"
         int32_t b = region[1] - '0';
-        if (b < 0 || 9 < b) { return 0; }
+        যদি (b < 0 || 9 < b) { ফেরত 0; }
         c = region[2] - '0';
-        if (c < 0 || 9 < c || region[3] != 0) { return 0; }
-        return (10 * a + b) * 10 + c + 1;
-    } else {  // letters: "DE"
+        যদি (c < 0 || 9 < c || region[3] != 0) { ফেরত 0; }
+        ফেরত (10 * a + b) * 10 + c + 1;
+    } অন্যথা {  // letters: "DE"
         a = uprv_upperOrdinal(c);
-        if (a < 0 || 25 < a) { return 0; }
+        যদি (a < 0 || 25 < a) { ফেরত 0; }
         int32_t b = uprv_upperOrdinal(region[1]);
-        if (b < 0 || 25 < b || region[2] != 0) { return 0; }
-        return 26 * a + b + 1001;
+        যদি (b < 0 || 25 < b || region[2] != 0) { ফেরত 0; }
+        ফেরত 26 * a + b + 1001;
     }
-    return 0;
+    ফেরত 0;
 }
 
 LSR &LSR::setHashCode() {
-    if (hashCode == 0) {
+    যদি (hashCode == 0) {
         uint32_t h = ustr_hashCharsN(language, static_cast<int32_t>(uprv_strlen(language)));
         h = h * 37 + ustr_hashCharsN(script, static_cast<int32_t>(uprv_strlen(script)));
-        h = h * 37 + regionIndex;
+        h = h * 37 + region_সূচক;
         hashCode = h * 37 + flags;
     }
-    return *this;
+    ফেরত *এই;
 }
 
 U_NAMESPACE_END

@@ -18,11 +18,11 @@
 #ifndef PARSEPOS_H
 #define PARSEPOS_H
 
-#include "unicode/utypes.h"
+#অন্তর্ভাব "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#যদি U_SHOW_CPLUSPLUS_API
 
-#include "unicode/uobject.h"
+#অন্তর্ভাব "unicode/uobject.h"
 
  
 U_NAMESPACE_BEGIN
@@ -49,16 +49,16 @@ U_NAMESPACE_BEGIN
  * @see         java.text.Format
  */
 
-class U_COMMON_API ParsePosition : public UObject {
-public:
+class U_COMMON_API ParsePosition : সর্বজনীন UObject {
+সর্বজনীন:
     /**
      * Default constructor, the index starts with 0 as default.
      * @stable ICU 2.0
      */
     ParsePosition()
         : UObject(),
-        index(0),
-        errorIndex(-1)
+        সূচক(0),
+        error_সূচক(-1)
       {}
 
     /**
@@ -66,10 +66,10 @@ public:
      * @param newIndex the new text offset.
      * @stable ICU 2.0
      */
-    ParsePosition(int32_t newIndex)
+    ParsePosition(int32_t new_সূচক)
         : UObject(),
-        index(newIndex),
-        errorIndex(-1)
+        সূচক(new_সূচক),
+        error_সূচক(-1)
       {}
 
     /**
@@ -77,37 +77,37 @@ public:
      * @param copy the object to be copied from.
      * @stable ICU 2.0
      */
-    ParsePosition(const ParsePosition& copy)
+    ParsePosition(ধ্রুবক ParsePosition& copy)
         : UObject(copy),
-        index(copy.index),
-        errorIndex(copy.errorIndex)
+        সূচক(copy.সূচক),
+        error_সূচক(copy.error_সূচক)
       {}
 
     /**
      * Destructor
      * @stable ICU 2.0
      */
-    virtual ~ParsePosition();
+    আভাসী ~ParsePosition();
 
     /**
      * Assignment operator
      * @stable ICU 2.0
      */
-    inline ParsePosition& operator=(const ParsePosition& copy) U_LIFETIME_BOUND;
+    অন্তঃরেখ ParsePosition& operator=(ধ্রুবক ParsePosition& copy) U_LIFETIME_BOUND;
 
     /**
      * Equality operator.
      * @return true if the two parse positions are equal, false otherwise.
      * @stable ICU 2.0
      */
-    inline bool               operator==(const ParsePosition& that) const;
+    অন্তঃরেখ bool               operator==(ধ্রুবক ParsePosition& that) ধ্রুবক;
 
     /**
      * Equality operator.
      * @return true if the two parse positions are not equal, false otherwise.
      * @stable ICU 2.0
      */
-    inline bool               operator!=(const ParsePosition& that) const;
+    অন্তঃরেখ bool               operator!=(ধ্রুবক ParsePosition& that) ধ্রুবক;
 
     /**
      * Clone this object.
@@ -120,7 +120,7 @@ public:
      * @see getDynamicClassID
      * @stable ICU 2.8
      */
-    ParsePosition *clone() const;
+    ParsePosition *clone() ধ্রুবক;
 
     /**
      * Retrieve the current parse position.  On input to a parse method, this
@@ -129,14 +129,14 @@ public:
      * @return the current index.
      * @stable ICU 2.0
      */
-    inline int32_t getIndex() const;
+    অন্তঃরেখ int32_t get_সূচক() ধ্রুবক;
 
     /**
      * Set the current parse position.
      * @param index the new index.
      * @stable ICU 2.0
      */
-    inline void setIndex(int32_t index);
+    অন্তঃরেখ শূন্য set_সূচক(int32_t সূচক);
 
     /**
      * Set the index at which a parse error occurred.  Formatters
@@ -145,90 +145,90 @@ public:
      * set.
      * @stable ICU 2.0
      */
-    inline void setErrorIndex(int32_t ei);
+    অন্তঃরেখ শূন্য set_Error_সূচক(int32_t ei);
 
     /**
      * Retrieve the index at which an error occurred, or -1 if the
      * error index has not been set.
      * @stable ICU 2.0
      */
-    inline int32_t getErrorIndex() const;
+    অন্তঃরেখ int32_t get_Error_সূচক() ধ্রুবক;
 
     /**
      * ICU "poor man's RTTI", returns a UClassID for this class.
      *
      * @stable ICU 2.2
      */
-    static UClassID U_EXPORT2 getStaticClassID();
+    স্থির UClassID U_EXPORT2 getStaticClassID();
 
     /**
      * ICU "poor man's RTTI", returns a UClassID for the actual class.
      *
      * @stable ICU 2.2
      */
-    virtual UClassID getDynamicClassID() const override;
+    আভাসী UClassID getDynamicClassID() ধ্রুবক override;
 
-private:
+ব্যক্তিগত:
     /**
      * Input: the place you start parsing.
      * <br>Output: position where the parse stopped.
      * This is designed to be used serially,
      * with each call setting index up for the next one.
      */
-    int32_t index;
+    int32_t সূচক;
 
     /**
      * The index at which a parse error occurred.
      */
-    int32_t errorIndex;
+    int32_t error_সূচক;
 
 };
 
-inline ParsePosition&
-ParsePosition::operator=(const ParsePosition& copy) U_LIFETIME_BOUND
+অন্তঃরেখ ParsePosition&
+ParsePosition::operator=(ধ্রুবক ParsePosition& copy) U_LIFETIME_BOUND
 {
-  index = copy.index;
-  errorIndex = copy.errorIndex;
-  return *this;
+  সূচক = copy.সূচক;
+  error_সূচক = copy.error_সূচক;
+  ফেরত *this;
 }
 
-inline bool
-ParsePosition::operator==(const ParsePosition& copy) const
+অন্তঃরেখ bool
+ParsePosition::operator==(ধ্রুবক ParsePosition& copy) ধ্রুবক
 {
-  if(index != copy.index || errorIndex != copy.errorIndex)
-  return false;
-  else
-  return true;
+  যদি(সূচক != copy.সূচক || error_সূচক != copy.error_সূচক)
+  ফেরত false;
+  অন্যথা
+  ফেরত true;
 }
 
-inline bool
-ParsePosition::operator!=(const ParsePosition& copy) const
+অন্তঃরেখ bool
+ParsePosition::operator!=(ধ্রুবক ParsePosition& copy) ধ্রুবক
 {
-  return !operator==(copy);
+  ফেরত !operator==(copy);
 }
 
-inline int32_t
-ParsePosition::getIndex() const
+অন্তঃরেখ int32_t
+ParsePosition::get_সূচক() ধ্রুবক
 {
-  return index;
+  ফেরত সূচক;
 }
 
-inline void
-ParsePosition::setIndex(int32_t offset)
+অন্তঃরেখ শূন্য
+ParsePosition::set_সূচক(int32_t offset)
 {
-  this->index = offset;
+  this->সূচক = offset;
 }
 
-inline int32_t
-ParsePosition::getErrorIndex() const
+অন্তঃরেখ int32_t
+ParsePosition::get_Error_সূচক() ধ্রুবক
 {
-  return errorIndex;
+  ফেরত error_সূচক;
 }
 
-inline void
-ParsePosition::setErrorIndex(int32_t ei)
+অন্তঃরেখ শূন্য
+ParsePosition::set_Error_সূচক(int32_t ei)
 {
-  this->errorIndex = ei;
+  this->error_সূচক = ei;
 }
 U_NAMESPACE_END
 

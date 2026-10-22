@@ -21,41 +21,41 @@
 #ifndef __UDATAMEM_H__
 #define __UDATAMEM_H__
 
-#include "unicode/udata.h"
-#include "ucmndata.h"
+#অন্তর্ভাব "unicode/udata.h"
+#অন্তর্ভাব "ucmndata.h"
 
-struct UDataMemory {
-    const commonDataFuncs  *vFuncs;      /* Function Pointers for accessing TOC             */
+কাঠামো UDataMemory {
+    ধ্রুবক common_তথ্য_Funcs  *vFuncs;      /* Function Pointers for accessing TOC             */
 
-    const DataHeader *pHeader;     /* Header of the memory being described by this    */
+    ধ্রুবক তথ্য_Header *pHeader;     /* Header of the memory being described by this    */
                                    /*   UDataMemory object.                           */
-    const void       *toc;         /* For common memory, table of contents for        */
+    ধ্রুবক শূন্য       *toc;         /* For common memory, table of contents for        */
                                    /*   the pieces within.                            */
     UBool             heapAllocated;  /* True if this UDataMemory Object is on the    */
                                    /*  heap and thus needs to be deleted when closed. */
 
-    void             *mapAddr;     /* For mapped or allocated memory, the start addr. */
+    শূন্য             *mapAddr;     /* For mapped or allocated memory, the start addr. */
                                    /* Only non-null if a close operation should unmap */
                                    /*  the associated data.                           */
-    void             *map;         /* Handle, or other data, OS dependent.            */
+    শূন্য             *map;         /* Handle, or other data, OS dependent.            */
                                    /* Only non-null if a close operation should unmap */
                                    /*  the associated data, and additional info       */
                                    /*   beyond the mapAddr is needed to do that.      */
-    int32_t           length;      /* Length of the data in bytes; -1 if unknown.     */
+    int32_t           দৈর্ঘ্য;      /* Length of the data in bytes; -1 if unknown.     */
 };
 
 U_CAPI  UDataMemory* U_EXPORT2 UDataMemory_createNewInstance(UErrorCode *pErr);
-U_CFUNC void         UDatamemory_assign  (UDataMemory *dest, UDataMemory *source);
-U_CFUNC void         UDataMemory_init    (UDataMemory *This);
-U_CFUNC UBool        UDataMemory_isLoaded(const UDataMemory *This);
-U_CFUNC void         UDataMemory_setData (UDataMemory *This, const void *dataAddr);
+U_CFUNC শূন্য         UDatamemory_assign  (UDataMemory *dest, UDataMemory *source);
+U_CFUNC শূন্য         UDataMemory_init    (UDataMemory *This);
+U_CFUNC UBool        UDataMemory_isLoaded(ধ্রুবক UDataMemory *This);
+U_CFUNC শূন্য         UData_Memory_set_তথ্য (UDataMemory *This, ধ্রুবক শূন্য *তথ্য_Addr);
 
-U_CFUNC const DataHeader* UDataMemory_normalizeDataPointer(const void* p U_LIFETIME_BOUND);
+U_CFUNC ধ্রুবক তথ্য_Header* UData_Memory_normalize_তথ্য_Pointer(ধ্রুবক শূন্য* p U_LIFETIME_BOUND);
 
 U_CAPI int32_t U_EXPORT2
-udata_getLength(const UDataMemory *pData);
+udata_get_দৈর্ঘ্য(ধ্রুবক UDataMemory *p_তথ্য);
 
-U_CAPI const void* U_EXPORT2
-udata_getRawMemory(const UDataMemory* pData U_LIFETIME_BOUND);
+U_CAPI ধ্রুবক শূন্য* U_EXPORT2
+udata_getRawMemory(ধ্রুবক UDataMemory* p_তথ্য U_LIFETIME_BOUND);
 
 #endif

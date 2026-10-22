@@ -14,269 +14,269 @@
 *   created by: Markus W. Scherer
 */
 
-#include <cstdlib>
+#অন্তর্ভাব <cstdlib>
 
-#include "unicode/utypes.h"
-#include "unicode/putil.h"
-#include "charstr.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "uinvchar.h"
-#include "ustr_imp.h"
+#অন্তর্ভাব "unicode/utypes.h"
+#অন্তর্ভাব "unicode/putil.h"
+#অন্তর্ভাব "charstr.h"
+#অন্তর্ভাব "cmemory.h"
+#অন্তর্ভাব "cstring.h"
+#অন্তর্ভাব "uinvchar.h"
+#অন্তর্ভাব "ustr_imp.h"
 
 U_NAMESPACE_BEGIN
 
 CharString::CharString(CharString&& src) noexcept
-        : buffer(std::move(src.buffer)), len(src.len) {
+        : বাফার(std::move(src.বাফার)), len(src.len) {
     src.len = 0;  // not strictly necessary because we make no guarantees on the source string
 }
 
 CharString& CharString::operator=(CharString&& src) noexcept {
-    buffer = std::move(src.buffer);
+    বাফার = std::move(src.বাফার);
     len = src.len;
     src.len = 0;  // not strictly necessary because we make no guarantees on the source string
-    return *this;
+    ফেরত *এই;
 }
 
-char *CharString::cloneData(UErrorCode &errorCode) const {
-    if (U_FAILURE(errorCode)) { return nullptr; }
-    char *p = static_cast<char *>(uprv_malloc(len + 1));
-    if (p == nullptr) {
+অক্ষর *CharString::clone_তথ্য(UErrorCode &errorCode) ধ্রুবক {
+    যদি (U_FAILURE(errorCode)) { ফেরত nullptr; }
+    অক্ষর *p = static_cast<অক্ষর *>(uprv_malloc(len + 1));
+    যদি (p == nullptr) {
         errorCode = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        ফেরত nullptr;
     }
-    uprv_memcpy(p, buffer.getAlias(), len + 1);
-    return p;
+    uprv_memcpy(p, বাফার.getAlias(), len + 1);
+    ফেরত p;
 }
 
-int32_t CharString::extract(char *dest, int32_t capacity, UErrorCode &errorCode) const {
-    if (U_FAILURE(errorCode)) { return len; }
-    if (capacity < 0 || (capacity > 0 && dest == nullptr)) {
+int32_t CharString::extract(অক্ষর *dest, int32_t capacity, UErrorCode &errorCode) ধ্রুবক {
+    যদি (U_FAILURE(errorCode)) { ফেরত len; }
+    যদি (capacity < 0 || (capacity > 0 && dest == nullptr)) {
         errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return len;
+        ফেরত len;
     }
-    const char *src = buffer.getAlias();
-    if (0 < len && len <= capacity && src != dest) {
+    ধ্রুবক অক্ষর *src = বাফার.getAlias();
+    যদি (0 < len && len <= capacity && src != dest) {
         uprv_memcpy(dest, src, len);
     }
-    return u_terminateChars(dest, capacity, len, &errorCode);
+    ফেরত u_terminateChars(dest, capacity, len, &errorCode);
 }
 
-CharString &CharString::copyFrom(const CharString &s, UErrorCode &errorCode) {
-    if(U_SUCCESS(errorCode) && this!=&s && ensureCapacity(s.len+1, 0, errorCode)) {
+CharString &CharString::copyFrom(ধ্রুবক CharString &s, UErrorCode &errorCode) {
+    যদি(U_SUCCESS(errorCode) && এই!=&s && ensureCapacity(s.len+1, 0, errorCode)) {
         len=s.len;
-        uprv_memcpy(buffer.getAlias(), s.buffer.getAlias(), len+1);
+        uprv_memcpy(বাফার.getAlias(), s.বাফার.getAlias(), len+1);
     }
-    return *this;
+    ফেরত *এই;
 }
 
 CharString &CharString::copyFrom(StringPiece s, UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) {
-        return *this;
+    যদি (U_FAILURE(errorCode)) {
+        ফেরত *এই;
     }
     len = 0;
     append(s, errorCode);
-    return *this;
+    ফেরত *এই;
 }
 
-int32_t CharString::lastIndexOf(char c) const {
-    for(int32_t i=len; i>0;) {
-        if(buffer[--i]==c) {
-            return i;
+int32_t CharString::last_সূচক_Of(অক্ষর c) ধ্রুবক {
+    জন্য(int32_t i=len; i>0;) {
+        যদি(বাফার[--i]==c) {
+            ফেরত i;
         }
     }
-    return -1;
+    ফেরত -1;
 }
 
-bool CharString::contains(StringPiece s) const {
-    if (s.empty()) { return false; }
-    const char *p = buffer.getAlias();
+যৌক্তিক CharString::contains(StringPiece s) ধ্রুবক {
+    যদি (s.empty()) { ফেরত মিথ্যা; }
+    ধ্রুবক অক্ষর *p = বাফার.getAlias();
     int32_t lastStart = len - s.length();
-    for (int32_t i = 0; i <= lastStart; ++i) {
-        if (uprv_memcmp(p + i, s.data(), s.length()) == 0) {
-            return true;
+    জন্য (int32_t i = 0; i <= lastStart; ++i) {
+        যদি (uprv_memcmp(p + i, s.তথ্য(), s.length()) == 0) {
+            ফেরত সত্য;
         }
     }
-    return false;
+    ফেরত মিথ্যা;
 }
 
-CharString &CharString::truncate(int32_t newLength) {
-    if(newLength<0) {
-        newLength=0;
+CharString &CharString::truncate(int32_t new_দৈর্ঘ্য) {
+    যদি(new_দৈর্ঘ্য<0) {
+        new_দৈর্ঘ্য=0;
     }
-    if(newLength<len) {
-        buffer[len=newLength]=0;
+    যদি(new_দৈর্ঘ্য<len) {
+        বাফার[len=new_দৈর্ঘ্য]=0;
     }
-    return *this;
+    ফেরত *এই;
 }
 
-CharString &CharString::append(char c, UErrorCode &errorCode) {
-    if(ensureCapacity(len+2, 0, errorCode)) {
-        buffer[len++]=c;
-        buffer[len]=0;
+CharString &CharString::append(অক্ষর c, UErrorCode &errorCode) {
+    যদি(ensureCapacity(len+2, 0, errorCode)) {
+        বাফার[len++]=c;
+        বাফার[len]=0;
     }
-    return *this;
+    ফেরত *এই;
 }
 
-CharString &CharString::append(const char *s, int32_t sLength, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return *this;
+CharString &CharString::append(ধ্রুবক অক্ষর *s, int32_t s_দৈর্ঘ্য, UErrorCode &errorCode) {
+    যদি(U_FAILURE(errorCode)) {
+        ফেরত *এই;
     }
-    if(sLength<-1 || (s==nullptr && sLength!=0)) {
+    যদি(s_দৈর্ঘ্য<-1 || (s==nullptr && s_দৈর্ঘ্য!=0)) {
         errorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return *this;
+        ফেরত *এই;
     }
-    if(sLength<0) {
-        sLength= static_cast<int32_t>(uprv_strlen(s));
+    যদি(s_দৈর্ঘ্য<0) {
+        s_দৈর্ঘ্য= static_cast<int32_t>(uprv_strlen(s));
     }
-    if(sLength>0) {
-        if(s==(buffer.getAlias()+len)) {
+    যদি(s_দৈর্ঘ্য>0) {
+        যদি(s==(বাফার.getAlias()+len)) {
             // The caller wrote into the getAppendBuffer().
-            if(sLength>=(buffer.getCapacity()-len)) {
+            যদি(s_দৈর্ঘ্য>=(বাফার.getCapacity()-len)) {
                 // The caller wrote too much.
                 errorCode=U_INTERNAL_PROGRAM_ERROR;
-            } else {
-                buffer[len+=sLength]=0;
+            } অন্যথা {
+                বাফার[len+=s_দৈর্ঘ্য]=0;
             }
-        } else if(buffer.getAlias()<=s && s<(buffer.getAlias()+len) &&
-                  sLength>=(buffer.getCapacity()-len)
+        } অন্যথা যদি(বাফার.getAlias()<=s && s<(বাফার.getAlias()+len) &&
+                  s_দৈর্ঘ্য>=(বাফার.getCapacity()-len)
         ) {
             // (Part of) this string is appended to itself which requires reallocation,
             // so we have to make a copy of the substring and append that.
-            return append(CharString(s, sLength, errorCode), errorCode);
-        } else if(ensureCapacity(len+sLength+1, 0, errorCode)) {
-            uprv_memcpy(buffer.getAlias()+len, s, sLength);
-            buffer[len+=sLength]=0;
+            ফেরত append(CharString(s, s_দৈর্ঘ্য, errorCode), errorCode);
+        } অন্যথা যদি(ensureCapacity(len+s_দৈর্ঘ্য+1, 0, errorCode)) {
+            uprv_memcpy(বাফার.getAlias()+len, s, s_দৈর্ঘ্য);
+            বাফার[len+=s_দৈর্ঘ্য]=0;
         }
     }
-    return *this;
+    ফেরত *এই;
 }
 
-CharString &CharString::appendNumber(int64_t number, UErrorCode &status) {
-    if (number < 0) {
-        this->append('-', status);
-        if (U_FAILURE(status)) {
-            return *this;
+CharString &CharString::append_সংখ্যা(int64_t number, UErrorCode &status) {
+    যদি (number < 0) {
+        এই->append('-', status);
+        যদি (U_FAILURE(status)) {
+            ফেরত *এই;
         }
     }
 
-    if (number == 0) {
-        this->append('0', status);
-        return *this;
+    যদি (number == 0) {
+        এই->append('0', status);
+        ফেরত *এই;
     }
 
-    int32_t numLen = 0;
-    while (number != 0) {
+    int32_t অঙ্ক_Len = 0;
+    যখন (number != 0) {
         int32_t residue = number % 10;
         number /= 10;
-        this->append(std::abs(residue) + '0', status);
-        numLen++;
-        if (U_FAILURE(status)) {
-            return *this;
+        এই->append(std::abs(residue) + '0', status);
+        অঙ্ক_Len++;
+        যদি (U_FAILURE(status)) {
+            ফেরত *এই;
         }
     }
 
-    int32_t start = this->length() - numLen, end = this->length() - 1;
-    while(start < end) {
-        std::swap(this->data()[start++], this->data()[end--]);
+    int32_t start = এই->length() - অঙ্ক_Len, end = এই->length() - 1;
+    যখন(start < end) {
+        std::swap(এই->তথ্য()[start++], এই->তথ্য()[end--]);
     }
 
-    return *this;
+    ফেরত *এই;
 }
 
-char *CharString::getAppendBuffer(int32_t minCapacity,
+অক্ষর *CharString::get_Append_বাফার(int32_t minCapacity,
                                   int32_t desiredCapacityHint,
-                                  int32_t &resultCapacity,
+                                  int32_t &ফলাফল_Capacity,
                                   UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        resultCapacity=0;
-        return nullptr;
+    যদি(U_FAILURE(errorCode)) {
+        ফলাফল_Capacity=0;
+        ফেরত nullptr;
     }
-    int32_t appendCapacity=buffer.getCapacity()-len-1;  // -1 for NUL
-    if(appendCapacity>=minCapacity) {
-        resultCapacity=appendCapacity;
-        return buffer.getAlias()+len;
+    int32_t appendCapacity=বাফার.getCapacity()-len-1;  // -1 for NUL
+    যদি(appendCapacity>=minCapacity) {
+        ফলাফল_Capacity=appendCapacity;
+        ফেরত বাফার.getAlias()+len;
     }
-    if(ensureCapacity(len+minCapacity+1, len+desiredCapacityHint+1, errorCode)) {
-        resultCapacity=buffer.getCapacity()-len-1;
-        return buffer.getAlias()+len;
+    যদি(ensureCapacity(len+minCapacity+1, len+desiredCapacityHint+1, errorCode)) {
+        ফলাফল_Capacity=বাফার.getCapacity()-len-1;
+        ফেরত বাফার.getAlias()+len;
     }
-    resultCapacity=0;
-    return nullptr;
+    ফলাফল_Capacity=0;
+    ফেরত nullptr;
 }
 
-CharString &CharString::appendInvariantChars(const UnicodeString &s, UErrorCode &errorCode) {
-    return appendInvariantChars(s.getBuffer(), s.length(), errorCode);
+CharString &CharString::appendInvariantChars(ধ্রুবক UnicodeString &s, UErrorCode &errorCode) {
+    ফেরত appendInvariantChars(s.get_বাফার(), s.length(), errorCode);
 }
 
-CharString &CharString::appendInvariantChars(const char16_t* uchars, int32_t ucharsLen, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return *this;
+CharString &CharString::appendInvariantChars(ধ্রুবক char16_t* uchars, int32_t ucharsLen, UErrorCode &errorCode) {
+    যদি(U_FAILURE(errorCode)) {
+        ফেরত *এই;
     }
-    if (!uprv_isInvariantUString(uchars, ucharsLen)) {
+    যদি (!uprv_isInvariantUString(uchars, ucharsLen)) {
         errorCode = U_INVARIANT_CONVERSION_ERROR;
-        return *this;
+        ফেরত *এই;
     }
-    if(ensureCapacity(len+ucharsLen+1, 0, errorCode)) {
-        u_UCharsToChars(uchars, buffer.getAlias()+len, ucharsLen);
+    যদি(ensureCapacity(len+ucharsLen+1, 0, errorCode)) {
+        u_UCharsToChars(uchars, বাফার.getAlias()+len, ucharsLen);
         len += ucharsLen;
-        buffer[len] = 0;
+        বাফার[len] = 0;
     }
-    return *this;
+    ফেরত *এই;
 }
 
 UBool CharString::ensureCapacity(int32_t capacity,
                                  int32_t desiredCapacityHint,
                                  UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return false;
+    যদি(U_FAILURE(errorCode)) {
+        ফেরত মিথ্যা;
     }
-    if(capacity>buffer.getCapacity()) {
-        if(desiredCapacityHint==0) {
-            desiredCapacityHint=capacity+buffer.getCapacity();
+    যদি(capacity>বাফার.getCapacity()) {
+        যদি(desiredCapacityHint==0) {
+            desiredCapacityHint=capacity+বাফার.getCapacity();
         }
-        if( (desiredCapacityHint<=capacity || buffer.resize(desiredCapacityHint, len+1)==nullptr) &&
-            buffer.resize(capacity, len+1)==nullptr
+        যদি( (desiredCapacityHint<=capacity || বাফার.resize(desiredCapacityHint, len+1)==nullptr) &&
+            বাফার.resize(capacity, len+1)==nullptr
         ) {
             errorCode=U_MEMORY_ALLOCATION_ERROR;
-            return false;
+            ফেরত মিথ্যা;
         }
     }
-    return true;
+    ফেরত সত্য;
 }
 
 CharString &CharString::appendPathPart(StringPiece s, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return *this;
+    যদি(U_FAILURE(errorCode)) {
+        ফেরত *এই;
     }
-    if(s.length()==0) {
-        return *this;
+    যদি(s.length()==0) {
+        ফেরত *এই;
     }
-    char c;
-    if(len>0 && (c=buffer[len-1])!=U_FILE_SEP_CHAR && c!=U_FILE_ALT_SEP_CHAR) {
+    অক্ষর c;
+    যদি(len>0 && (c=বাফার[len-1])!=U_FILE_SEP_CHAR && c!=U_FILE_ALT_SEP_CHAR) {
         append(getDirSepChar(), errorCode);
     }
     append(s, errorCode);
-    return *this;
+    ফেরত *এই;
 }
 
 CharString &CharString::ensureEndsWithFileSeparator(UErrorCode &errorCode) {
-    char c;
-    if(U_SUCCESS(errorCode) && len>0 &&
-            (c=buffer[len-1])!=U_FILE_SEP_CHAR && c!=U_FILE_ALT_SEP_CHAR) {
+    অক্ষর c;
+    যদি(U_SUCCESS(errorCode) && len>0 &&
+            (c=বাফার[len-1])!=U_FILE_SEP_CHAR && c!=U_FILE_ALT_SEP_CHAR) {
         append(getDirSepChar(), errorCode);
     }
-    return *this;
+    ফেরত *এই;
 }
 
-char CharString::getDirSepChar() const {
-    char dirSepChar = U_FILE_SEP_CHAR;
-#if (U_FILE_SEP_CHAR != U_FILE_ALT_SEP_CHAR)
+অক্ষর CharString::getDirSepChar() ধ্রুবক {
+    অক্ষর dirSepChar = U_FILE_SEP_CHAR;
+#যদি (U_FILE_SEP_CHAR != U_FILE_ALT_SEP_CHAR)
     // We may need to return a different directory separator when building for Cygwin or MSYS2.
-    if(len>0 && !uprv_strchr(data(), U_FILE_SEP_CHAR) && uprv_strchr(data(), U_FILE_ALT_SEP_CHAR))
+    যদি(len>0 && !uprv_strchr(তথ্য(), U_FILE_SEP_CHAR) && uprv_strchr(তথ্য(), U_FILE_ALT_SEP_CHAR))
         dirSepChar = U_FILE_ALT_SEP_CHAR;
 #endif
-    return dirSepChar;
+    ফেরত dirSepChar;
 }
 
 U_NAMESPACE_END

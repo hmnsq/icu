@@ -21,12 +21,12 @@
 #ifndef __UCASE_H__
 #define __UCASE_H__
 
-#include "unicode/utypes.h"
-#include "unicode/uset.h"
-#include "putilimp.h"
-#include "uset_imp.h"
-#include "udataswp.h"
-#include "utrie2.h"
+#অন্তর্ভাব "unicode/utypes.h"
+#অন্তর্ভাব "unicode/uset.h"
+#অন্তর্ভাব "putilimp.h"
+#অন্তর্ভাব "uset_imp.h"
+#অন্তর্ভাব "udataswp.h"
+#অন্তর্ভাব "utrie2.h"
 
 #ifdef __cplusplus
 U_NAMESPACE_BEGIN
@@ -38,8 +38,8 @@ U_NAMESPACE_END
 
 /* library API -------------------------------------------------------------- */
 
-U_CFUNC void U_EXPORT2
-ucase_addPropertyStarts(const USetAdder *sa, UErrorCode *pErrorCode);
+U_CFUNC শূন্য U_EXPORT2
+ucase_addPropertyStarts(ধ্রুবক USetAdder *sa, UErrorCode *pErrorCode);
 
 /**
  * Requires non-NULL locale ID but otherwise does the equivalent of
@@ -47,12 +47,12 @@ ucase_addPropertyStarts(const USetAdder *sa, UErrorCode *pErrorCode);
  * Accepts both 2- and 3-letter codes and accepts case variants.
  */
 U_CFUNC int32_t
-ucase_getCaseLocale(const char *locale);
+ucase_getCaseLocale(ধ্রুবক অক্ষর *locale);
 
 /* Casing locale types for ucase_getCaseLocale */
-enum {
+গণনা {
     UCASE_LOC_UNKNOWN,
-    UCASE_LOC_ROOT,
+    UCASE_LOC_মূল,
     UCASE_LOC_TURKISH,
     UCASE_LOC_LITHUANIAN,
     UCASE_LOC_GREEK,
@@ -105,12 +105,12 @@ ucase_fold(UChar32 c, uint32_t options);
  * - for sharp s include ss
  * - for k include the Kelvin sign
  */
-U_CFUNC void U_EXPORT2
-ucase_addCaseClosure(UChar32 c, const USetAdder *sa);
+U_CFUNC শূন্য U_EXPORT2
+ucase_addCaseClosure(UChar32 c, ধ্রুবক USetAdder *sa);
 
 /** Case closure with only scf=Simple_Case_Folding. */
-U_CFUNC void U_EXPORT2
-ucase_addSimpleCaseClosure(UChar32 c, const USetAdder *sa);
+U_CFUNC শূন্য U_EXPORT2
+ucase_addSimpleCaseClosure(UChar32 c, ধ্রুবক USetAdder *sa);
 
 /**
  * Maps the string to single code points and adds the associated case closure
@@ -125,7 +125,7 @@ ucase_addSimpleCaseClosure(UChar32 c, const USetAdder *sa);
  * @return true if the string was found
  */
 U_CFUNC UBool U_EXPORT2
-ucase_addStringCaseClosure(const UChar *s, int32_t length, const USetAdder *sa);
+ucase_addStringCaseClosure(ধ্রুবক UChar *s, int32_t দৈর্ঘ্য, ধ্রুবক USetAdder *sa);
 
 #ifdef __cplusplus
 U_NAMESPACE_BEGIN
@@ -134,24 +134,24 @@ U_NAMESPACE_BEGIN
  * Iterator over characters with more than one code point in the full default Case_Folding.
  */
 class U_COMMON_API FullCaseFoldingIterator {
-public:
+সর্বজনীন:
     /** Constructor. */
     FullCaseFoldingIterator();
     /**
      * Returns the next (cp, full) pair where "full" is cp's full default Case_Folding.
      * Returns a negative cp value at the end of the iteration.
      */
-    UChar32 next(UnicodeString &full);
-private:
-    FullCaseFoldingIterator(const FullCaseFoldingIterator &) = delete;  // no copy
-    FullCaseFoldingIterator &operator=(const FullCaseFoldingIterator &) = delete;  // no assignment
+    UChar32 পরবর্তী(UnicodeString &full);
+ব্যক্তিগত:
+    FullCaseFoldingIterator(ধ্রুবক FullCaseFoldingIterator &) = delete;  // no copy
+    FullCaseFoldingIterator &operator=(ধ্রুবক FullCaseFoldingIterator &) = delete;  // no assignment
 
-    const char16_t *unfold;
+    ধ্রুবক char16_t *unfold;
     int32_t unfoldRows;
     int32_t unfoldRowWidth;
     int32_t unfoldStringWidth;
     int32_t currentRow;
-    int32_t rowCpIndex;
+    int32_t row_Cp_সূচক;
 };
 
 /**
@@ -170,14 +170,14 @@ constexpr char16_t LONG_S = 0x17f;
 constexpr int8_t EXC = -0x80;
 
 /** Deltas for lowercasing for most locales, and default case folding. */
-extern const int8_t TO_LOWER_NORMAL[LIMIT];
+বাহ্যিক ধ্রুবক int8_t TO_LOWER_NORMAL[LIMIT];
 /** Deltas for lowercasing for tr/az/lt, and Turkic case folding. */
-extern const int8_t TO_LOWER_TR_LT[LIMIT];
+বাহ্যিক ধ্রুবক int8_t TO_LOWER_TR_LT[LIMIT];
 
 /** Deltas for uppercasing for most locales. */
-extern const int8_t TO_UPPER_NORMAL[LIMIT];
+বাহ্যিক ধ্রুবক int8_t TO_UPPER_NORMAL[LIMIT];
 /** Deltas for uppercasing for tr/az. */
-extern const int8_t TO_UPPER_TR[LIMIT];
+বাহ্যিক ধ্রুবক int8_t TO_UPPER_TR[LIMIT];
 
 }  // namespace LatinCase
 
@@ -220,27 +220,27 @@ U_CDECL_BEGIN
  *            if 0 then continue iterating in the current direction.
  * @return Next code point, or <0 when the iteration is done.
  */
-typedef UChar32 U_CALLCONV
-UCaseContextIterator(void *context, int8_t dir);
+প্রকারলেখ UChar32 U_CALLCONV
+UCaseContextIterator(শূন্য *context, int8_t dir);
 
 /**
  * Sample struct which may be used by some implementations of
  * UCaseContextIterator.
  */
-struct UCaseContext {
-    void *p;
-    int32_t start, index, limit;
+কাঠামো UCaseContext {
+    শূন্য *p;
+    int32_t start, সূচক, limit;
     int32_t cpStart, cpLimit;
     int8_t dir;
     int8_t b1, b2, b3;
 };
-typedef struct UCaseContext UCaseContext;
+প্রকারলেখ কাঠামো UCaseContext UCaseContext;
 
 U_CDECL_END
 
-#define UCASECONTEXT_INITIALIZER { NULL,  0, 0, 0,  0, 0,  0,  0, 0, 0 }
+#define UCASECONTEXT_INITIALIZER { ফাঁকা,  0, 0, 0,  0, 0,  0,  0, 0, 0 }
 
-enum {
+গণনা {
     /**
      * For string case mappings, a single character (a code point) is mapped
      * either to itself (in which case in-place mapping functions do nothing),
@@ -255,7 +255,7 @@ enum {
      * Mapping to a string: The string length (0..UCASE_MAX_STRING_LENGTH) is
      * returned. Note that the string result may indeed have zero length.
      */
-    UCASE_MAX_STRING_LENGTH=0x1f
+    UCASE_MAX_STRING_দৈর্ঘ্য=0x1f
 };
 
 /**
@@ -278,29 +278,29 @@ enum {
  */
 U_CAPI int32_t U_EXPORT2
 ucase_toFullLower(UChar32 c,
-                  UCaseContextIterator *iter, void *context,
-                  const UChar **pString,
+                  UCaseContextIterator *iter, শূন্য *context,
+                  ধ্রুবক UChar **pString,
                   int32_t caseLocale);
 
 U_CAPI int32_t U_EXPORT2
 ucase_toFullUpper(UChar32 c,
-                  UCaseContextIterator *iter, void *context,
-                  const UChar **pString,
+                  UCaseContextIterator *iter, শূন্য *context,
+                  ধ্রুবক UChar **pString,
                   int32_t caseLocale);
 
 U_CAPI int32_t U_EXPORT2
 ucase_toFullTitle(UChar32 c,
-                  UCaseContextIterator *iter, void *context,
-                  const UChar **pString,
+                  UCaseContextIterator *iter, শূন্য *context,
+                  ধ্রুবক UChar **pString,
                   int32_t caseLocale);
 
 U_CAPI int32_t U_EXPORT2
 ucase_toFullFolding(UChar32 c,
-                    const UChar **pString,
+                    ধ্রুবক UChar **pString,
                     uint32_t options);
 
 U_CFUNC int32_t U_EXPORT2
-ucase_hasBinaryProperty(UChar32 c, UProperty which);
+ucase_has_দ্বিমিক_Property(UChar32 c, UProperty which);
 
 
 U_CDECL_BEGIN
@@ -308,33 +308,33 @@ U_CDECL_BEGIN
 /**
  * @internal
  */
-typedef int32_t U_CALLCONV
+প্রকারলেখ int32_t U_CALLCONV
 UCaseMapFull(UChar32 c,
-             UCaseContextIterator *iter, void *context,
-             const UChar **pString,
+             UCaseContextIterator *iter, শূন্য *context,
+             ধ্রুবক UChar **pString,
              int32_t caseLocale);
 
 U_CDECL_END
 
 /* for icuexportdata -------------------------------------------------------- */
 
-struct UCaseProps {
-    void *mem;  // TODO: was unused, and type UDataMemory -- remove
-    const int32_t *indexes;
-    const uint16_t *exceptions;
-    const uint16_t *unfold;
+কাঠামো UCaseProps {
+    শূন্য *mem;  // TODO: was unused, and type UDataMemory -- remove
+    ধ্রুবক int32_t *indexes;
+    ধ্রুবক uint16_t *exceptions;
+    ধ্রুবক uint16_t *unfold;
 
     UTrie2 trie;
     uint8_t formatVersion[4];
 };
 
-U_CAPI const struct UCaseProps * U_EXPORT2
-ucase_getSingleton(int32_t *pExceptionsLength, int32_t *pUnfoldLength);
+U_CAPI ধ্রুবক কাঠামো UCaseProps * U_EXPORT2
+ucase_getSingleton(int32_t *p_Exceptions_দৈর্ঘ্য, int32_t *p_Unfold_দৈর্ঘ্য);
 
 /* file definitions --------------------------------------------------------- */
 
-#define UCASE_DATA_NAME "ucase"
-#define UCASE_DATA_TYPE "icu"
+#define UCASE_তথ্য_NAME "ucase"
+#define UCASE_তথ্য_TYPE "icu"
 
 /* format "cAsE" */
 #define UCASE_FMT_0 0x63
@@ -343,25 +343,25 @@ ucase_getSingleton(int32_t *pExceptionsLength, int32_t *pUnfoldLength);
 #define UCASE_FMT_3 0x45
 
 /* indexes into indexes[] */
-enum {
-    UCASE_IX_INDEX_TOP,
-    UCASE_IX_LENGTH,
-    UCASE_IX_TRIE_SIZE,
-    UCASE_IX_EXC_LENGTH,
-    UCASE_IX_UNFOLD_LENGTH,
+গণনা {
+    UCASE_IX_সূচক_শীর্ষ,
+    UCASE_IX_দৈর্ঘ্য,
+    UCASE_IX_TRIE_আকার,
+    UCASE_IX_EXC_দৈর্ঘ্য,
+    UCASE_IX_UNFOLD_দৈর্ঘ্য,
 
-    UCASE_IX_MAX_FULL_LENGTH=15,
-    UCASE_IX_TOP=16
+    UCASE_IX_MAX_FULL_দৈর্ঘ্য=15,
+    UCASE_IX_শীর্ষ=16
 };
 
 /* definitions for 16-bit case properties word ------------------------------ */
 
-U_CFUNC const UTrie2 * U_EXPORT2
-ucase_getTrie(void);
+U_CFUNC ধ্রুবক UTrie2 * U_EXPORT2
+ucase_getTrie(শূন্য);
 
 /* 2-bit constants for types of cased characters */
 #define UCASE_TYPE_MASK     3
-enum {
+গণনা {
     UCASE_NONE,
     UCASE_LOWER,
     UCASE_UPPER,
@@ -380,7 +380,7 @@ enum {
 #define UCASE_HAS_EXCEPTION(props) ((props)&UCASE_EXCEPTION)
 
 #define UCASE_DOT_MASK      0x60
-enum {
+গণনা {
     UCASE_NO_DOT=0,         /* normal characters with cc=0 */
     UCASE_SOFT_DOTTED=0x20, /* soft-dotted characters with cc=0 */
     UCASE_ABOVE=0x40,       /* "above" accents with cc=230 */
@@ -393,9 +393,9 @@ enum {
 #define UCASE_MAX_DELTA     0xff
 #define UCASE_MIN_DELTA     (-UCASE_MAX_DELTA-1)
 
-#if U_SIGNED_RIGHT_SHIFT_IS_ARITHMETIC
+#যদি U_SIGNED_ডান_SHIFT_IS_ARITHMETIC
 #   define UCASE_GET_DELTA(props) ((int16_t)(props)>>UCASE_DELTA_SHIFT)
-#else
+#অন্যথা
 #   define UCASE_GET_DELTA(props) (int16_t)(((props)&0x8000) ? (((props)>>UCASE_DELTA_SHIFT)|0xfe00) : ((uint16_t)(props)>>UCASE_DELTA_SHIFT))
 #endif
 
@@ -407,7 +407,7 @@ enum {
 /* definitions for 16-bit main exceptions word ------------------------------ */
 
 /* first 8 bits indicate values in optional slots */
-enum {
+গণনা {
     UCASE_EXC_LOWER,
     UCASE_EXC_FOLD,
     UCASE_EXC_UPPER,
@@ -422,7 +422,7 @@ enum {
 /* each slot is 2 uint16_t instead of 1 */
 #define UCASE_EXC_DOUBLE_SLOTS      0x100
 
-enum {
+গণনা {
     UCASE_EXC_NO_SIMPLE_CASE_FOLDING=0x200,
     UCASE_EXC_DELTA_IS_NEGATIVE=0x400,
     UCASE_EXC_SENSITIVE=0x800
@@ -433,7 +433,7 @@ enum {
 
 /* normally stored in the main word, but pushed out for larger exception indexes */
 #define UCASE_EXC_DOT_MASK      0x3000
-enum {
+গণনা {
     UCASE_EXC_NO_DOT=0,
     UCASE_EXC_SOFT_DOTTED=0x1000,
     UCASE_EXC_ABOVE=0x2000,         /* "above" accents with cc=230 */
@@ -451,11 +451,11 @@ enum {
 #define UCASE_FULL_TITLE    0xf000
 
 /* maximum lengths */
-#define UCASE_FULL_MAPPINGS_MAX_LENGTH (4*0xf)
-#define UCASE_CLOSURE_MAX_LENGTH 0xf
+#define UCASE_FULL_MAPPINGS_MAX_দৈর্ঘ্য (4*0xf)
+#define UCASE_CLOSURE_MAX_দৈর্ঘ্য 0xf
 
 /* constants for reverse case folding ("unfold") data */
-enum {
+গণনা {
     UCASE_UNFOLD_ROWS,
     UCASE_UNFOLD_ROW_WIDTH,
     UCASE_UNFOLD_STRING_WIDTH

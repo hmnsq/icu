@@ -22,13 +22,13 @@
 #ifndef __BYTESTRIEBUILDER_H__
 #define __BYTESTRIEBUILDER_H__
 
-#include "unicode/utypes.h"
+#অন্তর্ভাব "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#যদি U_SHOW_CPLUSPLUS_API
 
-#include "unicode/bytestrie.h"
-#include "unicode/stringpiece.h"
-#include "unicode/stringtriebuilder.h"
+#অন্তর্ভাব "unicode/bytestrie.h"
+#অন্তর্ভাব "unicode/stringpiece.h"
+#অন্তর্ভাব "unicode/stringtriebuilder.h"
 
 class BytesTrieTest;
 
@@ -42,8 +42,8 @@ class CharString;
  * This class is not intended for public subclassing.
  * @stable ICU 4.8
  */
-class U_COMMON_API BytesTrieBuilder : public StringTrieBuilder {
-public:
+class U_COMMON_API BytesTrieBuilder : সর্বজনীন StringTrieBuilder {
+সর্বজনীন:
     /**
      * Constructs an empty builder.
      * @param errorCode Standard ICU error code.
@@ -55,7 +55,7 @@ public:
      * Destructor.
      * @stable ICU 4.8
      */
-    virtual ~BytesTrieBuilder();
+    আভাসী ~BytesTrieBuilder();
 
     /**
      * Adds a (byte sequence, value) pair.
@@ -71,7 +71,7 @@ public:
      * @return *this
      * @stable ICU 4.8
      */
-    BytesTrieBuilder& add(StringPiece s, int32_t value, UErrorCode& errorCode) U_LIFETIME_BOUND;
+    BytesTrieBuilder& add(StringPiece s, int32_t মান_2, UErrorCode& errorCode) U_LIFETIME_BOUND;
 
     /**
      * Builds a BytesTrie for the add()ed data.
@@ -127,61 +127,61 @@ public:
      */
     BytesTrieBuilder& clear() U_LIFETIME_BOUND;
 
-private:
+ব্যক্তিগত:
     friend class ::BytesTrieTest;
 
-    BytesTrieBuilder(const BytesTrieBuilder &other) = delete;  // no copy constructor
-    BytesTrieBuilder &operator=(const BytesTrieBuilder &other) = delete;  // no assignment operator
+    BytesTrieBuilder(ধ্রুবক BytesTrieBuilder &other) = delete;  // no copy constructor
+    BytesTrieBuilder &operator=(ধ্রুবক BytesTrieBuilder &other) = delete;  // no assignment operator
 
-    void buildBytes(UStringTrieBuildOption buildOption, UErrorCode &errorCode);
+    শূন্য buildBytes(UStringTrieBuildOption buildOption, UErrorCode &errorCode);
 
-    virtual int32_t getElementStringLength(int32_t i) const override;
-    virtual char16_t getElementUnit(int32_t i, int32_t byteIndex) const override;
-    virtual int32_t getElementValue(int32_t i) const override;
+    আভাসী int32_t get_Element_String_দৈর্ঘ্য(int32_t i) ধ্রুবক override;
+    আভাসী char16_t getElementUnit(int32_t i, int32_t byte_সূচক) ধ্রুবক override;
+    আভাসী int32_t get_Element_মান(int32_t i) ধ্রুবক override;
 
-    virtual int32_t getLimitOfLinearMatch(int32_t first, int32_t last, int32_t byteIndex) const override;
+    আভাসী int32_t getLimitOfLinearMatch(int32_t first, int32_t last, int32_t byte_সূচক) ধ্রুবক override;
 
-    virtual int32_t countElementUnits(int32_t start, int32_t limit, int32_t byteIndex) const override;
-    virtual int32_t skipElementsBySomeUnits(int32_t i, int32_t byteIndex, int32_t count) const override;
-    virtual int32_t indexOfElementWithNextUnit(int32_t i, int32_t byteIndex, char16_t byte) const override;
+    আভাসী int32_t গুনতি_Element_Units(int32_t start, int32_t limit, int32_t byte_সূচক) ধ্রুবক override;
+    আভাসী int32_t skipElementsBySomeUnits(int32_t i, int32_t byte_সূচক, int32_t গুনতি) ধ্রুবক override;
+    আভাসী int32_t সূচক_Of_Element_With_পরবর্তী_Unit(int32_t i, int32_t byte_সূচক, char16_t byte) ধ্রুবক override;
 
-    virtual UBool matchNodesCanHaveValues() const override { return false; }
+    আভাসী UBool match_Nodes_Can_Have_মানসমূহ() ধ্রুবক override { ফেরত false; }
 
-    virtual int32_t getMaxBranchLinearSubNodeLength() const override { return BytesTrie::kMaxBranchLinearSubNodeLength; }
-    virtual int32_t getMinLinearMatch() const override { return BytesTrie::kMinLinearMatch; }
-    virtual int32_t getMaxLinearMatchLength() const override { return BytesTrie::kMaxLinearMatchLength; }
+    আভাসী int32_t get_Max_Branch_Linear_Sub_গ্রন্থি_দৈর্ঘ্য() ধ্রুবক override { ফেরত BytesTrie::k_Max_Branch_Linear_Sub_গ্রন্থি_দৈর্ঘ্য; }
+    আভাসী int32_t getMinLinearMatch() ধ্রুবক override { ফেরত BytesTrie::kMinLinearMatch; }
+    আভাসী int32_t get_Max_Linear_Match_দৈর্ঘ্য() ধ্রুবক override { ফেরত BytesTrie::k_Max_Linear_Match_দৈর্ঘ্য; }
 
-    class BTLinearMatchNode : public LinearMatchNode {
-    public:
-        BTLinearMatchNode(const char *units, int32_t len, Node *nextNode);
-        virtual bool operator==(const Node &other) const override;
-        virtual void write(StringTrieBuilder &builder) override;
-    private:
-        const char *s;
+    class BTLinear_Match_গ্রন্থি : সর্বজনীন Linear_Match_গ্রন্থি {
+    সর্বজনীন:
+        BTLinear_Match_গ্রন্থি(ধ্রুবক অক্ষর *units, int32_t len, গ্রন্থি_2 *পরবর্তী_গ্রন্থি);
+        আভাসী bool operator==(ধ্রুবক গ্রন্থি_2 &other) ধ্রুবক override;
+        আভাসী শূন্য লিখ(StringTrieBuilder &builder) override;
+    ব্যক্তিগত:
+        ধ্রুবক অক্ষর *s;
     };
     
-    virtual Node *createLinearMatchNode(int32_t i, int32_t byteIndex, int32_t length,
-                                        Node *nextNode) const override;
+    আভাসী গ্রন্থি_2 *create_Linear_Match_গ্রন্থি(int32_t i, int32_t byte_সূচক, int32_t দৈর্ঘ্য,
+                                        গ্রন্থি_2 *পরবর্তী_গ্রন্থি) ধ্রুবক override;
 
-    UBool ensureCapacity(int32_t length);
-    virtual int32_t write(int32_t byte) override;
-    int32_t write(const char *b, int32_t length);
-    virtual int32_t writeElementUnits(int32_t i, int32_t byteIndex, int32_t length) override;
-    virtual int32_t writeValueAndFinal(int32_t i, UBool isFinal) override;
-    virtual int32_t writeValueAndType(UBool hasValue, int32_t value, int32_t node) override;
-    virtual int32_t writeDeltaTo(int32_t jumpTarget) override;
-    static int32_t internalEncodeDelta(int32_t i, char intBytes[]);
+    UBool ensureCapacity(int32_t দৈর্ঘ্য);
+    আভাসী int32_t লিখ(int32_t byte) override;
+    int32_t লিখ(ধ্রুবক অক্ষর *b, int32_t দৈর্ঘ্য);
+    আভাসী int32_t writeElementUnits(int32_t i, int32_t byte_সূচক, int32_t দৈর্ঘ্য) override;
+    আভাসী int32_t write_মান_And_Final(int32_t i, UBool isFinal) override;
+    আভাসী int32_t write_মান_And_Type(UBool has_মান, int32_t মান_2, int32_t গ্রন্থি) override;
+    আভাসী int32_t writeDeltaTo(int32_t jumpTarget) override;
+    স্থির int32_t internalEncodeDelta(int32_t i, অক্ষর intBytes[]);
 
     CharString *strings;  // Pointer not object so we need not #include internal charstr.h.
     BytesTrieElement *elements;
     int32_t elementsCapacity;
-    int32_t elementsLength;
+    int32_t elements_দৈর্ঘ্য;
 
     // Byte serialization of the trie.
     // Grows from the back: bytesLength measures from the end of the buffer!
-    char *bytes;
+    অক্ষর *bytes;
     int32_t bytesCapacity;
-    int32_t bytesLength;
+    int32_t bytes_দৈর্ঘ্য;
 };
 
 U_NAMESPACE_END

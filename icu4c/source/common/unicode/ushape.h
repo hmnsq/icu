@@ -19,7 +19,7 @@
 #ifndef __USHAPE_H__
 #define __USHAPE_H__
 
-#include "unicode/utypes.h"
+#অন্তর্ভাব "unicode/utypes.h"
 
 /**
  * \file
@@ -99,8 +99,8 @@
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-u_shapeArabic(const UChar *source, int32_t sourceLength,
-              UChar *dest, int32_t destSize,
+u_shapeArabic(ধ্রুবক UChar *source, int32_t source_দৈর্ঘ্য,
+              UChar *dest, int32_t dest_আকার,
               uint32_t options,
               UErrorCode *pErrorCode);
 
@@ -109,7 +109,7 @@ u_shapeArabic(const UChar *source, int32_t sourceLength,
  * Affects: LamAlef options
  * @stable ICU 2.0
  */
-#define U_SHAPE_LENGTH_GROW_SHRINK              0
+#define U_SHAPE_দৈর্ঘ্য_GROW_SHRINK              0
 
 /**
  * Memory option: allow the result to have a different length than the source.
@@ -124,7 +124,7 @@ u_shapeArabic(const UChar *source, int32_t sourceLength,
  * If more room is necessary, then try to consume spaces next to modified characters.
  * @stable ICU 2.0
  */
-#define U_SHAPE_LENGTH_FIXED_SPACES_NEAR        1
+#define U_SHAPE_দৈর্ঘ্য_FIXED_SPACES_NEAR        1
 
 /**
  * Memory option: the result must have the same length as the source.
@@ -140,7 +140,7 @@ u_shapeArabic(const UChar *source, int32_t sourceLength,
  * If more room is necessary, then try to consume spaces at the end of the text.
  * @stable ICU 2.0
  */
-#define U_SHAPE_LENGTH_FIXED_SPACES_AT_END      2
+#define U_SHAPE_দৈর্ঘ্য_FIXED_SPACES_AT_END      2
 
 /**
  * Memory option: the result must have the same length as the source.
@@ -156,7 +156,7 @@ u_shapeArabic(const UChar *source, int32_t sourceLength,
  * If more room is necessary, then try to consume spaces at the beginning of the text.
  * @stable ICU 2.0
  */
-#define U_SHAPE_LENGTH_FIXED_SPACES_AT_BEGINNING 3
+#define U_SHAPE_দৈর্ঘ্য_FIXED_SPACES_AT_BEGINNING 3
 
 /**
  * Memory option: the result must have the same length as the source.
@@ -184,7 +184,7 @@ u_shapeArabic(const UChar *source, int32_t sourceLength,
 #define U_SHAPE_LAMALEF_AUTO                     0x10000 
 
 /** Bit mask for memory options. @stable ICU 2.0 */
-#define U_SHAPE_LENGTH_MASK                      0x10003 /* Changed old value 3 */
+#define U_SHAPE_দৈর্ঘ্য_MASK                      0x10003 /* Changed old value 3 */
 
 
 /**
@@ -465,12 +465,12 @@ u_shapeArabic(const UChar *source, int32_t sourceLength,
  * Affects: All Seen options
  * @stable ICU 4.8
  */
-#define U_SHAPE_TAIL_NEW_UNICODE        0x8000000
+#define U_SHAPE_লেজ_NEW_UNICODE        0x8000000
 
 /**
  * Bit mask for new Unicode Tail option 
  * @stable ICU 4.8
  */
-#define U_SHAPE_TAIL_TYPE_MASK          0x8000000
+#define U_SHAPE_লেজ_TYPE_MASK          0x8000000
 
 #endif

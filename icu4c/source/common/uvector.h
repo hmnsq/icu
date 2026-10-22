@@ -14,11 +14,11 @@
 #ifndef UVECTOR_H
 #define UVECTOR_H
 
-#include "unicode/utypes.h"
-#include "unicode/uobject.h"
-#include "cmemory.h"
-#include "uarrsort.h"
-#include "uelement.h"
+#অন্তর্ভাব "unicode/utypes.h"
+#অন্তর্ভাব "unicode/uobject.h"
+#অন্তর্ভাব "cmemory.h"
+#অন্তর্ভাব "uarrsort.h"
+#অন্তর্ভাব "uelement.h"
 
 U_NAMESPACE_BEGIN
 
@@ -73,14 +73,14 @@ U_NAMESPACE_BEGIN
  *
  * @author Alan Liu
  */
-class U_COMMON_API UVector : public UObject {
+class U_COMMON_API UVector : সর্বজনীন UObject {
     // NOTE: UVector uses the UElement (union of void* and int32_t) as
     // its basic storage type.  It uses UElementsAreEqual as its
     // comparison function.  It uses UObjectDeleter as its deleter
     // function.  This allows sharing of support functions with UHashtable.
 
-private:
-    int32_t count = 0;
+ব্যক্তিগত:
+    int32_t গুনতি = 0;
 
     int32_t capacity = 0;
 
@@ -90,7 +90,7 @@ private:
 
     UElementsAreEqual *comparer = nullptr;
 
-public:
+সর্বজনীন:
     UVector(UErrorCode &status);
 
     UVector(int32_t initialCapacity, UErrorCode &status);
@@ -99,25 +99,25 @@ public:
 
     UVector(UObjectDeleter *d, UElementsAreEqual *c, int32_t initialCapacity, UErrorCode &status);
 
-    virtual ~UVector();
+    আভাসী ~UVector();
 
     /**
      * Assign this object to another (make this a copy of 'other').
      * Use the 'assign' function to assign each element.
      */
-    void assign(const UVector& other, UElementAssigner *assign, UErrorCode &ec);
+    শূন্য assign(ধ্রুবক UVector& other, UElementAssigner *assign, UErrorCode &ec);
 
     /**
      * Compare this vector with another.  They will be considered
      * equal if they are of the same size and all elements are equal,
      * as compared using this object's comparer.
      */
-    bool operator==(const UVector& other) const;
+    bool operator==(ধ্রুবক UVector& other) ধ্রুবক;
 
     /**
      * Equivalent to !operator==()
      */
-    inline bool operator!=(const UVector& other) const {return !operator==(other);}
+    অন্তঃরেখ bool operator!=(ধ্রুবক UVector& other) ধ্রুবক {ফেরত !operator==(other);}
 
     //------------------------------------------------------------
     // java.util.Vector API
@@ -128,7 +128,7 @@ public:
      * For use only with vectors that do not adopt their elements, which is to say,
      * have not set an element deleter function. See `adoptElement()`.
      */
-    void addElement(void *obj, UErrorCode &status);
+    শূন্য addElement(শূন্য *obj, UErrorCode &status);
 
     /**
      * Add an element at the end of the vector.
@@ -143,53 +143,53 @@ public:
      * to see what the function is doing at call sites. Having a single combined function,
      * as in earlier versions of UVector, had proved to be error-prone.
      */
-    void adoptElement(void *obj, UErrorCode &status);
+    শূন্য adoptElement(শূন্য *obj, UErrorCode &status);
 
-    void addElement(int32_t elem, UErrorCode &status);
+    শূন্য addElement(int32_t elem, UErrorCode &status);
 
-    void setElementAt(void* obj, int32_t index);
+    শূন্য setElementAt(শূন্য* obj, int32_t সূচক);
 
-    void setElementAt(int32_t elem, int32_t index);
+    শূন্য setElementAt(int32_t elem, int32_t সূচক);
 
-    void insertElementAt(void* obj, int32_t index, UErrorCode &status);
+    শূন্য ঢোকাও_Element_At(শূন্য* obj, int32_t সূচক, UErrorCode &status);
 
-    void insertElementAt(int32_t elem, int32_t index, UErrorCode &status);
+    শূন্য ঢোকাও_Element_At(int32_t elem, int32_t সূচক, UErrorCode &status);
     
-    void* elementAt(int32_t index) const;
+    শূন্য* elementAt(int32_t সূচক) ধ্রুবক;
 
-    int32_t elementAti(int32_t index) const;
+    int32_t elementAti(int32_t সূচক) ধ্রুবক;
 
-    UBool equals(const UVector &other) const;
+    UBool equals(ধ্রুবক UVector &other) ধ্রুবক;
 
-    inline void* firstElement() const {return elementAt(0);}
+    অন্তঃরেখ শূন্য* firstElement() ধ্রুবক {ফেরত elementAt(0);}
 
-    inline void* lastElement() const {return elementAt(count-1);}
+    অন্তঃরেখ শূন্য* lastElement() ধ্রুবক {ফেরত elementAt(গুনতি-1);}
 
-    inline int32_t lastElementi() const {return elementAti(count-1);}
+    অন্তঃরেখ int32_t lastElementi() ধ্রুবক {ফেরত elementAti(গুনতি-1);}
 
-    int32_t indexOf(void* obj, int32_t startIndex = 0) const;
+    int32_t সূচক_Of(শূন্য* obj, int32_t start_সূচক = 0) ধ্রুবক;
 
-    int32_t indexOf(int32_t obj, int32_t startIndex = 0) const;
+    int32_t সূচক_Of(int32_t obj, int32_t start_সূচক = 0) ধ্রুবক;
 
-    inline UBool contains(void* obj) const {return indexOf(obj) >= 0;}
+    অন্তঃরেখ UBool contains(শূন্য* obj) ধ্রুবক {ফেরত সূচক_Of(obj) >= 0;}
 
-    inline UBool contains(int32_t obj) const {return indexOf(obj) >= 0;}
+    অন্তঃরেখ UBool contains(int32_t obj) ধ্রুবক {ফেরত সূচক_Of(obj) >= 0;}
 
-    UBool containsAll(const UVector& other) const;
+    UBool containsAll(ধ্রুবক UVector& other) ধ্রুবক;
 
-    UBool removeAll(const UVector& other);
+    UBool removeAll(ধ্রুবক UVector& other);
 
-    UBool retainAll(const UVector& other);
+    UBool retainAll(ধ্রুবক UVector& other);
 
-    void removeElementAt(int32_t index);
+    শূন্য removeElementAt(int32_t সূচক);
 
-    UBool removeElement(void* obj);
+    UBool removeElement(শূন্য* obj);
 
-    void removeAllElements();
+    শূন্য removeAllElements();
 
-    inline int32_t size() const {return count;}
+    অন্তঃরেখ int32_t আকার_3() ধ্রুবক {ফেরত গুনতি;}
 
-    inline UBool isEmpty() const {return count == 0;}
+    অন্তঃরেখ UBool isEmpty() ধ্রুবক {ফেরত গুনতি == 0;}
 
     UBool ensureCapacity(int32_t minimumCapacity, UErrorCode &status);
 
@@ -199,23 +199,23 @@ public:
      * elements for i >= newSize.  If newSize is larger, grow the
      * array, filling in new slots with nullptr.
      */
-    void setSize(int32_t newSize, UErrorCode &status);
+    শূন্য set_আকার(int32_t new_আকার, UErrorCode &status);
 
     /**
      * Fill in the given array with all elements of this vector.
      */
-    void** toArray(void** result) const;
+    শূন্য** toArray(শূন্য** ফলাফল) ধ্রুবক;
 
     //------------------------------------------------------------
     // New API
     //------------------------------------------------------------
 
     UObjectDeleter *setDeleter(UObjectDeleter *d);
-    bool hasDeleter() {return deleter != nullptr;}
+    bool hasDeleter() {ফেরত deleter != nullptr;}
 
     UElementsAreEqual *setComparer(UElementsAreEqual *c);
 
-    inline void* operator[](int32_t index) const {return elementAt(index);}
+    অন্তঃরেখ শূন্য* operator[](int32_t সূচক) ধ্রুবক {ফেরত elementAt(সূচক);}
 
     /**
      * Removes the element at the given index from this vector and
@@ -226,7 +226,7 @@ public:
      * index is out of range or if there is no item at the given index
      * then 0 is returned and the vector is unchanged.
      */
-    void* orphanElementAt(int32_t index);
+    শূন্য* orphanElementAt(int32_t সূচক);
 
     /**
      * Returns true if this vector contains none of the elements
@@ -234,27 +234,27 @@ public:
      * @param other vector to be checked for containment
      * @return true if the test condition is met
      */
-    UBool containsNone(const UVector& other) const;
+    UBool containsNone(ধ্রুবক UVector& other) ধ্রুবক;
 
     /**
      * Insert the given object into this vector at its sorted position
      * as defined by 'compare'.  The current elements are assumed to
      * be sorted already.
      */
-    void sortedInsert(void* obj, UElementComparator *compare, UErrorCode& ec);
+    শূন্য sorted_ঢোকাও(শূন্য* obj, UElementComparator *compare, UErrorCode& ec);
 
     /**
      * Insert the given integer into this vector at its sorted position
      * as defined by 'compare'.  The current elements are assumed to
      * be sorted already.
      */
-    void sortedInsert(int32_t obj, UElementComparator *compare, UErrorCode& ec);
+    শূন্য sorted_ঢোকাও(int32_t obj, UElementComparator *compare, UErrorCode& ec);
 
     /**
      * Sort the contents of the vector, assuming that the contents of the
      * vector are of type int32_t.
      */
-    void sorti(UErrorCode &ec);
+    শূন্য sorti(UErrorCode &ec);
 
     /**
       * Sort the contents of this vector, using a caller-supplied function
@@ -262,7 +262,7 @@ public:
       *  UVector's UElementComparator function is different from the
       *  UComparator function type defined in uarrsort.h)
       */
-    void sort(UElementComparator *compare, UErrorCode &ec);
+    শূন্য sort(UElementComparator *compare, UErrorCode &ec);
 
     /**
      * Stable sort the contents of this vector using a caller-supplied function
@@ -270,29 +270,29 @@ public:
      * than UVector::sort() because an additional user parameter can be passed to
      * the comparison function.
      */
-    void sortWithUComparator(UComparator *compare, const void *context, UErrorCode &ec);
+    শূন্য sortWithUComparator(UComparator *compare, ধ্রুবক শূন্য *context, UErrorCode &ec);
 
     /**
      * ICU "poor man's RTTI", returns a UClassID for this class.
      */
-    static UClassID U_EXPORT2 getStaticClassID();
+    স্থির UClassID U_EXPORT2 getStaticClassID();
 
     /**
      * ICU "poor man's RTTI", returns a UClassID for the actual class.
      */
-    virtual UClassID getDynamicClassID() const override;
+    আভাসী UClassID getDynamicClassID() ধ্রুবক override;
 
-private:
-    int32_t indexOf(UElement key, int32_t startIndex = 0, int8_t hint = 0) const;
+ব্যক্তিগত:
+    int32_t সূচক_Of(UElement চাবি, int32_t start_সূচক = 0, int8_t hint = 0) ধ্রুবক;
 
-    void sortedInsert(UElement e, UElementComparator *compare, UErrorCode& ec);
+    শূন্য sorted_ঢোকাও(UElement e, UElementComparator *compare, UErrorCode& ec);
 
-public:
+সর্বজনীন:
     // Disallow
-    UVector(const UVector&) = delete;
+    UVector(ধ্রুবক UVector&) = delete;
 
     // Disallow
-    UVector& operator=(const UVector&) = delete;
+    UVector& operator=(ধ্রুবক UVector&) = delete;
 
 };
 
@@ -313,8 +313,8 @@ public:
  *
  * @author Alan Liu
  */
-class U_COMMON_API UStack : public UVector {
-public:
+class U_COMMON_API UStack : সর্বজনীন UVector {
+সর্বজনীন:
     UStack(UErrorCode &status);
 
     UStack(int32_t initialCapacity, UErrorCode &status);
@@ -323,62 +323,62 @@ public:
 
     UStack(UObjectDeleter *d, UElementsAreEqual *c, int32_t initialCapacity, UErrorCode &status);
 
-    virtual ~UStack();
+    আভাসী ~UStack();
 
     // It's okay not to have a virtual destructor (in UVector)
     // because UStack has no special cleanup to do.
 
-    inline UBool empty() const {return isEmpty();}
+    অন্তঃরেখ UBool empty() ধ্রুবক {ফেরত isEmpty();}
 
-    inline void* peek() const {return lastElement();}
+    অন্তঃরেখ শূন্য* peek() ধ্রুবক {ফেরত lastElement();}
 
-    inline int32_t peeki() const {return lastElementi();}
+    অন্তঃরেখ int32_t peeki() ধ্রুবক {ফেরত lastElementi();}
     
     /**
      * Pop and return an element from the stack.
      * For stacks with a deleter function, the caller takes ownership
      * of the popped element.
      */
-    void* pop();
+    শূন্য* বের_করো();
     
     int32_t popi();
     
-    inline void* push(void* obj, UErrorCode &status) {
-        if (hasDeleter()) {
+    অন্তঃরেখ শূন্য* ঠেলো(শূন্য* obj, UErrorCode &status) {
+        যদি (hasDeleter()) {
             adoptElement(obj, status);
-            return (U_SUCCESS(status)) ? obj : nullptr;
-        } else {
+            ফেরত (U_SUCCESS(status)) ? obj : nullptr;
+        } অন্যথা {
             addElement(obj, status);
-            return obj;
+            ফেরত obj;
         }
     }
 
-    inline int32_t push(int32_t i, UErrorCode &status) {
+    অন্তঃরেখ int32_t ঠেলো(int32_t i, UErrorCode &status) {
         addElement(i, status);
-        return i;
+        ফেরত i;
     }
 
     /*
     If the object o occurs as an item in this stack,
     this method returns the 1-based distance from the top of the stack.
     */
-    int32_t search(void* obj) const;
+    int32_t অনুসন্ধান(শূন্য* obj) ধ্রুবক;
 
     /**
      * ICU "poor man's RTTI", returns a UClassID for this class.
      */
-    static UClassID U_EXPORT2 getStaticClassID();
+    স্থির UClassID U_EXPORT2 getStaticClassID();
 
     /**
      * ICU "poor man's RTTI", returns a UClassID for the actual class.
      */
-    virtual UClassID getDynamicClassID() const override;
+    আভাসী UClassID getDynamicClassID() ধ্রুবক override;
 
     // Disallow
-    UStack(const UStack&) = delete;
+    UStack(ধ্রুবক UStack&) = delete;
 
     // Disallow
-    UStack& operator=(const UStack&) = delete;
+    UStack& operator=(ধ্রুবক UStack&) = delete;
 };
 
 U_NAMESPACE_END

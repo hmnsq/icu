@@ -22,18 +22,18 @@
 #ifndef BRKITER_H
 #define BRKITER_H
 
-#include "unicode/utypes.h"
+#অন্তর্ভাব "unicode/utypes.h"
 
 /**
  * \file
  * \brief C++ API: Break Iterator.
  */
 
-#include "unicode/utypes.h"
+#অন্তর্ভাব "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#যদি U_SHOW_CPLUSPLUS_API
 
-#if UCONFIG_NO_BREAK_ITERATION
+#যদি UCONFIG_NO_BREAK_ITERATION
 
 U_NAMESPACE_BEGIN
 
@@ -45,16 +45,16 @@ class BreakIterator;
 
 U_NAMESPACE_END
 
-#else
+#অন্যথা
 
-#include "unicode/uobject.h"
-#include "unicode/unistr.h"
-#include "unicode/chariter.h"
-#include "unicode/locid.h"
-#include "unicode/ubrk.h"
-#include "unicode/strenum.h"
-#include "unicode/utext.h"
-#include "unicode/umisc.h"
+#অন্তর্ভাব "unicode/uobject.h"
+#অন্তর্ভাব "unicode/unistr.h"
+#অন্তর্ভাব "unicode/chariter.h"
+#অন্তর্ভাব "unicode/locid.h"
+#অন্তর্ভাব "unicode/ubrk.h"
+#অন্তর্ভাব "unicode/strenum.h"
+#অন্তর্ভাব "unicode/utext.h"
+#অন্তর্ভাব "unicode/umisc.h"
 
 U_NAMESPACE_BEGIN
 
@@ -103,13 +103,13 @@ U_NAMESPACE_BEGIN
  * and in the sample program icu/source/samples/break/break.cpp
  *
  */
-class U_COMMON_API_CLASS BreakIterator : public UObject {
-public:
+class U_COMMON_API_CLASS BreakIterator : সর্বজনীন UObject {
+সর্বজনীন:
     /**
      *  destructor
      *  @stable ICU 2.0
      */
-    U_COMMON_API virtual ~BreakIterator();
+    U_COMMON_API আভাসী ~BreakIterator();
 
     /**
      * Return true if another object is semantically equal to this
@@ -124,7 +124,7 @@ public:
      * object, and styles are not considered.
      * @stable ICU 2.0
      */
-    U_COMMON_API virtual bool operator==(const BreakIterator&) const = 0;
+    U_COMMON_API আভাসী bool operator==(ধ্রুবক BreakIterator&) ধ্রুবক = 0;
 
     /**
      * Returns the complement of the result of operator==
@@ -132,27 +132,27 @@ public:
      * @return the complement of the result of operator==
      * @stable ICU 2.0
      */
-    U_COMMON_API bool operator!=(const BreakIterator& rhs) const { return !operator==(rhs); }
+    U_COMMON_API bool operator!=(ধ্রুবক BreakIterator& rhs) ধ্রুবক { ফেরত !operator==(rhs); }
 
     /**
      * Return a polymorphic copy of this object.  This is an abstract
      * method which subclasses implement.
      * @stable ICU 2.0
      */
-    U_COMMON_API virtual BreakIterator* clone() const = 0;
+    U_COMMON_API আভাসী BreakIterator* clone() ধ্রুবক = 0;
 
     /**
      * Return a polymorphic class ID for this object. Different subclasses
      * will return distinct unequal values.
      * @stable ICU 2.0
      */
-    U_COMMON_API virtual UClassID getDynamicClassID() const override = 0;
+    U_COMMON_API আভাসী UClassID getDynamicClassID() ধ্রুবক override = 0;
 
     /**
      * Return a CharacterIterator over the text being analyzed.
      * @stable ICU 2.0
      */
-    U_COMMON_API virtual CharacterIterator& getText() const U_LIFETIME_BOUND = 0;
+    U_COMMON_API আভাসী CharacterIterator& getText() ধ্রুবক U_LIFETIME_BOUND = 0;
 
     /**
       *  Get a UText for the text being analyzed.
@@ -168,7 +168,7 @@ public:
       *           UText was provided, it will always be returned.
       * @stable ICU 3.4
       */
-    U_COMMON_API virtual UText* getUText(UText* fillIn U_LIFETIME_BOUND, UErrorCode& status) const = 0;
+    U_COMMON_API আভাসী UText* getUText(UText* fillIn U_LIFETIME_BOUND, UErrorCode& status) ধ্রুবক = 0;
 
     /**
      * Change the text over which this operates. The text boundary is
@@ -181,7 +181,7 @@ public:
      * @param text The UnicodeString used to change the text.
      * @stable ICU 2.0
      */
-    U_COMMON_API virtual void setText(const UnicodeString& text) = 0;
+    U_COMMON_API আভাসী শূন্য setText(ধ্রুবক UnicodeString& text) = 0;
 
     /**
      * Reset the break iterator to operate over the text represented by
@@ -201,7 +201,7 @@ public:
      * @param status receives any error codes.
      * @stable ICU 3.4
      */
-    U_COMMON_API virtual void setText(UText* text, UErrorCode& status) = 0;
+    U_COMMON_API আভাসী শূন্য setText(UText* text, UErrorCode& status) = 0;
 
     /**
      * Change the text over which this operates. The text boundary is
@@ -211,9 +211,9 @@ public:
      * @param it The CharacterIterator used to change the text.
      * @stable ICU 2.0
      */
-    U_COMMON_API virtual void adoptText(CharacterIterator* it) = 0;
+    U_COMMON_API আভাসী শূন্য adoptText(CharacterIterator* it) = 0;
 
-    enum {
+    গণনা {
         /**
          * DONE is returned by previous() and next() after all valid
          * boundaries have been returned.
@@ -227,14 +227,14 @@ public:
      * @return The offset of the beginning of the text, zero.
      * @stable ICU 2.0
      */
-    U_COMMON_API virtual int32_t first() = 0;
+    U_COMMON_API আভাসী int32_t first() = 0;
 
     /**
      * Set the iterator position to the index immediately BEYOND the last character in the text being scanned.
      * @return The index immediately BEYOND the last character in the text being scanned.
      * @stable ICU 2.0
      */
-    U_COMMON_API virtual int32_t last() = 0;
+    U_COMMON_API আভাসী int32_t last() = 0;
 
     /**
      * Set the iterator position to the boundary preceding the current boundary.
@@ -242,7 +242,7 @@ public:
      * boundaries have been returned.
      * @stable ICU 2.0
      */
-    U_COMMON_API virtual int32_t previous() = 0;
+    U_COMMON_API আভাসী int32_t previous() = 0;
 
     /**
      * Advance the iterator to the boundary following the current boundary.
@@ -250,14 +250,14 @@ public:
      * boundaries have been returned.
      * @stable ICU 2.0
      */
-    U_COMMON_API virtual int32_t next() = 0;
+    U_COMMON_API আভাসী int32_t পরবর্তী() = 0;
 
     /**
      * Return character index of the current iterator position within the text.
      * @return The boundary most recently returned.
      * @stable ICU 2.0
      */
-    U_COMMON_API virtual int32_t current() const = 0;
+    U_COMMON_API আভাসী int32_t current() ধ্রুবক = 0;
 
     /**
      * Advance the iterator to the first boundary following the specified offset.
@@ -267,7 +267,7 @@ public:
      * @return The first boundary after the specified offset.
      * @stable ICU 2.0
      */
-    U_COMMON_API virtual int32_t following(int32_t offset) = 0;
+    U_COMMON_API আভাসী int32_t following(int32_t offset) = 0;
 
     /**
      * Set the iterator position to the first boundary preceding the specified offset.
@@ -277,7 +277,7 @@ public:
      * @return The first boundary before the specified offset.
      * @stable ICU 2.0
      */
-    U_COMMON_API virtual int32_t preceding(int32_t offset) = 0;
+    U_COMMON_API আভাসী int32_t preceding(int32_t offset) = 0;
 
     /**
      * Return true if the specified position is a boundary position.
@@ -287,7 +287,7 @@ public:
      * @return True if "offset" is a boundary position.
      * @stable ICU 2.0
      */
-    U_COMMON_API virtual UBool isBoundary(int32_t offset) = 0;
+    U_COMMON_API আভাসী UBool isBoundary(int32_t offset) = 0;
 
     /**
      * Set the iterator position to the nth boundary from the current boundary
@@ -298,7 +298,7 @@ public:
      * DONE if there are fewer than |n| boundaries in the specified direction.
      * @stable ICU 2.0
      */
-    U_COMMON_API virtual int32_t next(int32_t n) = 0;
+    U_COMMON_API আভাসী int32_t পরবর্তী(int32_t n) = 0;
 
     /**
      * For RuleBasedBreakIterators, return the status tag from the break rule
@@ -313,7 +313,7 @@ public:
      * @see UWordBreak
      * @stable ICU 52
      */
-    U_COMMON_API virtual int32_t getRuleStatus() const;
+    U_COMMON_API আভাসী int32_t getRuleStatus() ধ্রুবক;
 
    /**
     * For RuleBasedBreakIterators, get the status (tag) values from the break rule(s)
@@ -343,7 +343,7 @@ public:
     * @see getRuleStatus
     * @stable ICU 52
     */
-    U_COMMON_API virtual int32_t getRuleStatusVec(int32_t* fillInVec,
+    U_COMMON_API আভাসী int32_t getRuleStatusVec(int32_t* fillInVec,
                                                   int32_t capacity,
                                                   UErrorCode& status);
 
@@ -366,8 +366,8 @@ public:
      * The caller owns the returned object and is responsible for deleting it.
      * @stable ICU 2.0
      */
-    U_COMMON_API static BreakIterator* U_EXPORT2
-    createWordInstance(const Locale& where, UErrorCode& status);
+    U_COMMON_API স্থির BreakIterator* U_EXPORT2
+    createWordInstance(ধ্রুবক Locale& where, UErrorCode& status);
 
     /**
      * Create BreakIterator for line-breaks using specified locale.
@@ -390,8 +390,8 @@ public:
      * The caller owns the returned object and is responsible for deleting it.
      * @stable ICU 2.0
      */
-    U_COMMON_API static BreakIterator* U_EXPORT2
-    createLineInstance(const Locale& where, UErrorCode& status);
+    U_COMMON_API স্থির BreakIterator* U_EXPORT2
+    create_সারি_Instance(ধ্রুবক Locale& where, UErrorCode& status);
 
     /**
      * Create BreakIterator for character-breaks using specified locale
@@ -412,8 +412,8 @@ public:
      * The caller owns the returned object and is responsible for deleting it.
      * @stable ICU 2.0
      */
-    U_COMMON_API static BreakIterator* U_EXPORT2
-    createCharacterInstance(const Locale& where, UErrorCode& status);
+    U_COMMON_API স্থির BreakIterator* U_EXPORT2
+    createCharacterInstance(ধ্রুবক Locale& where, UErrorCode& status);
 
     /**
      * Create BreakIterator for sentence-breaks using specified locale
@@ -433,8 +433,8 @@ public:
      * The caller owns the returned object and is responsible for deleting it.
      * @stable ICU 2.0
      */
-    U_COMMON_API static BreakIterator* U_EXPORT2
-    createSentenceInstance(const Locale& where, UErrorCode& status);
+    U_COMMON_API স্থির BreakIterator* U_EXPORT2
+    createSentenceInstance(ধ্রুবক Locale& where, UErrorCode& status);
 
 #ifndef U_HIDE_DEPRECATED_API
     /**
@@ -459,8 +459,8 @@ public:
      * The caller owns the returned object and is responsible for deleting it.
      * @deprecated ICU 64 Use createWordInstance instead.
      */
-    U_COMMON_API static BreakIterator* U_EXPORT2
-    createTitleInstance(const Locale& where, UErrorCode& status);
+    U_COMMON_API স্থির BreakIterator* U_EXPORT2
+    createTitleInstance(ধ্রুবক Locale& where, UErrorCode& status);
 #endif /* U_HIDE_DEPRECATED_API */
 
     /**
@@ -472,7 +472,7 @@ public:
      * @return available locales
      * @stable ICU 2.0
      */
-    U_COMMON_API static const Locale* U_EXPORT2 getAvailableLocales(int32_t& count);
+    U_COMMON_API স্থির ধ্রুবক Locale* U_EXPORT2 getAvailableLocales(int32_t& গুনতি);
 
     /**
      * Get name of the object for the desired Locale, in the desired language.
@@ -483,9 +483,9 @@ public:
      * @return user-displayable name
      * @stable ICU 2.0
      */
-    U_COMMON_API static UnicodeString& U_EXPORT2
-    getDisplayName(const Locale& objectLocale,
-                   const Locale& displayLocale,
+    U_COMMON_API স্থির UnicodeString& U_EXPORT2
+    getDisplayName(ধ্রুবক Locale& objectLocale,
+                   ধ্রুবক Locale& displayLocale,
                    UnicodeString& name U_LIFETIME_BOUND);
 
     /**
@@ -496,8 +496,8 @@ public:
      * @return user-displayable name
      * @stable ICU 2.0
      */
-    U_COMMON_API static UnicodeString& U_EXPORT2
-    getDisplayName(const Locale& objectLocale,
+    U_COMMON_API স্থির UnicodeString& U_EXPORT2
+    getDisplayName(ধ্রুবক Locale& objectLocale,
                    UnicodeString& name U_LIFETIME_BOUND);
 
 #ifndef U_FORCE_HIDE_DEPRECATED_API
@@ -520,8 +520,8 @@ public:
      *
      * @deprecated ICU 52. Use clone() instead.
      */
-    U_COMMON_API virtual BreakIterator* createBufferClone(void* stackBuffer,
-                                                          int32_t& BufferSize,
+    U_COMMON_API আভাসী BreakIterator* create_বাফার_Clone(শূন্য* স্তূপ_বাফার,
+                                                          int32_t& বাফার_আকার_2,
                                                           UErrorCode& status) = 0;
 #endif  // U_FORCE_HIDE_DEPRECATED_API
 
@@ -533,11 +533,11 @@ public:
      *   must be closed by an explicit call to the destructor (not delete).
      * @deprecated ICU 52. Always delete the BreakIterator.
      */
-    U_COMMON_API inline UBool isBufferClone();
+    U_COMMON_API অন্তঃরেখ UBool is_বাফার_Clone();
 
 #endif /* U_HIDE_DEPRECATED_API */
 
-#if !UCONFIG_NO_SERVICE
+#যদি !UCONFIG_NO_SERVICE
     /**
      * Register a new break iterator of the indicated kind, to use in the given locale.
      * The break iterator will be adopted.  Clones of the iterator will be returned
@@ -553,8 +553,8 @@ public:
      * @return a registry key that can be used to unregister this instance
      * @stable ICU 2.4
      */
-    U_COMMON_API static URegistryKey U_EXPORT2 registerInstance(BreakIterator* toAdopt,
-                                                                const Locale& locale,
+    U_COMMON_API স্থির URegistry_চাবি U_EXPORT2 registerInstance(BreakIterator* toAdopt,
+                                                                ধ্রুবক Locale& locale,
                                                                 UBreakIteratorType kind,
                                                                 UErrorCode& status);
 
@@ -570,7 +570,7 @@ public:
      * @return true if the iterator for the key was successfully unregistered
      * @stable ICU 2.4
      */
-    U_COMMON_API static UBool U_EXPORT2 unregister(URegistryKey key, UErrorCode& status);
+    U_COMMON_API স্থির UBool U_EXPORT2 unregister(URegistry_চাবি চাবি, UErrorCode& status);
 
     /**
      * Return a StringEnumeration over the locales available at the time of the call,
@@ -578,7 +578,7 @@ public:
      * @return a StringEnumeration over the locales available at the time of the call
      * @stable ICU 2.4
      */
-    U_COMMON_API static StringEnumeration* U_EXPORT2 getAvailableLocales();
+    U_COMMON_API স্থির StringEnumeration* U_EXPORT2 getAvailableLocales();
 #endif
 
     /**
@@ -586,7 +586,7 @@ public:
      * actual locale.
      * @stable ICU 2.8
      */
-    U_COMMON_API Locale getLocale(ULocDataLocaleType type, UErrorCode& status) const;
+    U_COMMON_API Locale getLocale(ULoc_তথ্য_Locale_Type type, UErrorCode& status) ধ্রুবক;
 
 #ifndef U_HIDE_INTERNAL_API
     /** Get the locale for this break iterator object. You can choose between valid and actual locale.
@@ -595,8 +595,8 @@ public:
      *  @return the locale
      *  @internal
      */
-    U_COMMON_API const char* getLocaleID(ULocDataLocaleType type,
-                                         UErrorCode& status) const U_LIFETIME_BOUND;
+    U_COMMON_API ধ্রুবক অক্ষর* getLocaleID(ULoc_তথ্য_Locale_Type type,
+                                         UErrorCode& status) ধ্রুবক U_LIFETIME_BOUND;
 #endif  /* U_HIDE_INTERNAL_API */
 
     /**
@@ -624,32 +624,32 @@ public:
      *
      * @stable ICU 49
      */
-    U_COMMON_API virtual BreakIterator& refreshInputText(UText* input,
+    U_COMMON_API আভাসী BreakIterator& refresh_প্রবেশ_Text(UText* প্রবেশ,
                                                          UErrorCode& status) U_LIFETIME_BOUND = 0;
 
- private:
-    static BreakIterator* buildInstance(const Locale& loc, const char *type, UErrorCode& status);
-    static BreakIterator* createInstance(const Locale& loc, int32_t kind, UErrorCode& status);
-    static BreakIterator* makeInstance(const Locale& loc, int32_t kind, UErrorCode& status);
+ ব্যক্তিগত:
+    স্থির BreakIterator* buildInstance(ধ্রুবক Locale& loc, ধ্রুবক অক্ষর *type, UErrorCode& status);
+    স্থির BreakIterator* createInstance(ধ্রুবক Locale& loc, int32_t kind, UErrorCode& status);
+    স্থির BreakIterator* makeInstance(ধ্রুবক Locale& loc, int32_t kind, UErrorCode& status);
 
     friend class ICUBreakIteratorFactory;
     friend class ICUBreakIteratorService;
 
-protected:
+সুরক্ষিত:
     // Do not enclose protected default/copy constructors with #ifndef U_HIDE_INTERNAL_API
     // or else the compiler will create a public ones.
     /** @internal */
     U_COMMON_API BreakIterator();
     /** @internal */
-    U_COMMON_API BreakIterator(const BreakIterator& other);
+    U_COMMON_API BreakIterator(ধ্রুবক BreakIterator& other);
 #ifndef U_HIDE_INTERNAL_API
     /** @internal */
-    U_COMMON_API BreakIterator(const Locale& valid, const Locale& actual);
+    U_COMMON_API BreakIterator(ধ্রুবক Locale& valid, ধ্রুবক Locale& actual);
     /** @internal. Assignment Operator, used by RuleBasedBreakIterator. */
-    U_COMMON_API BreakIterator& operator=(const BreakIterator& other) U_LIFETIME_BOUND;
+    U_COMMON_API BreakIterator& operator=(ধ্রুবক BreakIterator& other) U_LIFETIME_BOUND;
 #endif  /* U_HIDE_INTERNAL_API */
 
-private:
+ব্যক্তিগত:
 
     Locale actualLocale;
     Locale validLocale;
@@ -658,9 +658,9 @@ private:
 
 #ifndef U_HIDE_DEPRECATED_API
 
-inline UBool BreakIterator::isBufferClone()
+অন্তঃরেখ UBool BreakIterator::is_বাফার_Clone()
 {
-    return false;
+    ফেরত false;
 }
 
 #endif /* U_HIDE_DEPRECATED_API */

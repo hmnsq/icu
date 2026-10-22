@@ -16,29 +16,29 @@
 #ifndef RBBI_H
 #define RBBI_H
 
-#include "unicode/utypes.h"
+#অন্তর্ভাব "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#যদি U_SHOW_CPLUSPLUS_API
 
 /**
  * \file
  * \brief C++ API: Rule Based Break Iterator
  */
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#যদি !UCONFIG_NO_BREAK_ITERATION
 
-#include "unicode/brkiter.h"
-#include "unicode/udata.h"
-#include "unicode/parseerr.h"
-#include "unicode/schriter.h"
+#অন্তর্ভাব "unicode/brkiter.h"
+#অন্তর্ভাব "unicode/udata.h"
+#অন্তর্ভাব "unicode/parseerr.h"
+#অন্তর্ভাব "unicode/schriter.h"
 
-struct UCPTrie;
+কাঠামো UCPTrie;
 
 U_NAMESPACE_BEGIN
 
 /** @internal */
 class  LanguageBreakEngine;
-struct RBBIDataHeader;
+কাঠামো RBBIDataHeader;
 class  RBBIDataWrapper;
 class  UnhandledEngine;
 class  UStack;
@@ -57,13 +57,13 @@ class  UStack;
  * event.
  * @internal ICU 74 technology preview
  */
-class ExternalBreakEngine : public UObject {
-  public:
+class ExternalBreakEngine : সর্বজনীন UObject {
+  সর্বজনীন:
     /**
      * destructor
      * @internal ICU 74 technology preview
      */
-    virtual ~ExternalBreakEngine() {}
+    আভাসী ~ExternalBreakEngine() {}
 
     /**
      * <p>Indicate whether this engine handles a particular character when
@@ -74,7 +74,7 @@ class ExternalBreakEngine : public UObject {
      * @return true if this engine handles the particular character for that locale.
      * @internal ICU 74 technology preview
      */
-    virtual bool isFor(UChar32 c, const char* locale) const = 0;
+    আভাসী bool isFor(UChar32 c, ধ্রুবক অক্ষর* locale) ধ্রুবক = 0;
 
     /**
      * <p>Indicate whether this engine handles a particular character.This method is
@@ -84,7 +84,7 @@ class ExternalBreakEngine : public UObject {
      * @return true if this engine handles the particular character.
      * @internal ICU 74 technology preview
      */
-    virtual bool handles(UChar32 c) const = 0;
+    আভাসী bool handles(UChar32 c) ধ্রুবক = 0;
 
     /**
      * <p>Divide up a range of text handled by this break engine.</p>
@@ -99,9 +99,9 @@ class ExternalBreakEngine : public UObject {
      * @return The number of breaks found
      * @internal ICU 74 technology preview
      */
-     virtual int32_t fillBreaks(UText* text,  int32_t start, int32_t end,
+     আভাসী int32_t fillBreaks(UText* text,  int32_t start, int32_t end,
                                int32_t* foundBreaks, int32_t foundBreaksCapacity,
-                               UErrorCode& status) const = 0;
+                               UErrorCode& status) ধ্রুবক = 0;
 };
 #endif  /* U_HIDE_INTERNAL_API */
 
@@ -117,25 +117,25 @@ class ExternalBreakEngine : public UObject {
  *
  * <p>This class is not intended to be subclassed.</p>
  */
-class U_COMMON_API RuleBasedBreakIterator /*final*/ : public BreakIterator {
+class U_COMMON_API RuleBasedBreakIterator /*final*/ : সর্বজনীন BreakIterator {
 
-private:
+ব্যক্তিগত:
     /**
      * The UText through which this BreakIterator accesses the text
      */
     UText  fText = UTEXT_INITIALIZER;
 
 #ifndef U_HIDE_INTERNAL_API
-public:
+সর্বজনীন:
 #endif /* U_HIDE_INTERNAL_API */
     /**
      * The rule data for this BreakIterator instance.
      * Not for general use; Public only for testing purposes.
      * @internal
      */
-    RBBIDataWrapper    *fData = nullptr;
+    RBBIDataWrapper    *f_তথ্য = nullptr;
 
-private:
+ব্যক্তিগত:
     /**
       * The saved error code associated with this break iterator.
       * This is the value to be returned by copyErrorTo().
@@ -151,7 +151,7 @@ private:
     /**
       * TODO:
       */
-    int32_t         fRuleStatusIndex = 0;
+    int32_t         f_Rule_Status_সূচক = 0;
 
     /**
      *   Cache of previously determined boundary positions.
@@ -186,7 +186,7 @@ private:
      * Counter for the number of characters encountered with the "dictionary"
      *   flag set.
      */
-    uint32_t            fDictionaryCharCount = 0;
+    uint32_t            f_Dictionary_Char_গুনতি = 0;
 
     /**
      *   A character iterator that refers to the same text as the UText, above.
@@ -230,7 +230,7 @@ private:
      *             The break iterator adopts the memory, and will
      *             free it when done.
      */
-    RuleBasedBreakIterator(RBBIDataHeader* data, UErrorCode &status);
+    RuleBasedBreakIterator(RBBIDataHeader* তথ্য, UErrorCode &status);
 
     /**
      * This constructor uses the udata interface to create a BreakIterator
@@ -256,7 +256,7 @@ private:
      */
     RuleBasedBreakIterator(UErrorCode *status);
 
-public:
+সর্বজনীন:
 
     /** Default constructor.  Creates an empty shell of an iterator, with no
      *  rules or text to iterate over.   Object can subsequently be assigned to,
@@ -271,7 +271,7 @@ public:
      * @param that The RuleBasedBreakIterator passed to be copied
      * @stable ICU 2.0
      */
-    RuleBasedBreakIterator(const RuleBasedBreakIterator& that);
+    RuleBasedBreakIterator(ধ্রুবক RuleBasedBreakIterator& that);
 
     /**
      * Construct a RuleBasedBreakIterator from a set of rules supplied as a string.
@@ -281,7 +281,7 @@ public:
      * @param status Information on any errors encountered.
      * @stable ICU 2.2
      */
-    RuleBasedBreakIterator( const UnicodeString    &rules,
+    RuleBasedBreakIterator( ধ্রুবক UnicodeString    &rules,
                              UParseError           &parseError,
                              UErrorCode            &status);
 
@@ -308,8 +308,8 @@ public:
      *   binary rules.
      * @stable ICU 4.8
      */
-    RuleBasedBreakIterator(const uint8_t *compiledRules,
-                           uint32_t       ruleLength,
+    RuleBasedBreakIterator(ধ্রুবক uint8_t *compiledRules,
+                           uint32_t       rule_দৈর্ঘ্য,
                            UErrorCode    &status);
 
     /**
@@ -330,7 +330,7 @@ public:
      * Destructor
      *  @stable ICU 2.0
      */
-    virtual ~RuleBasedBreakIterator();
+    আভাসী ~RuleBasedBreakIterator();
 
     /**
      * Assignment operator.  Sets this iterator to have the same behavior,
@@ -339,7 +339,7 @@ public:
      * @return the newly created RuleBasedBreakIterator
      *  @stable ICU 2.0
      */
-    RuleBasedBreakIterator& operator=(const RuleBasedBreakIterator& that) U_LIFETIME_BOUND;
+    RuleBasedBreakIterator& operator=(ধ্রুবক RuleBasedBreakIterator& that) U_LIFETIME_BOUND;
 
     /**
      * Equality operator.  Returns true if both BreakIterators are of the
@@ -349,7 +349,7 @@ public:
      * same class, have the same behavior, and iterate over the same text.
      *  @stable ICU 2.0
      */
-    virtual bool operator==(const BreakIterator& that) const override;
+    আভাসী bool operator==(ধ্রুবক BreakIterator& that) ধ্রুবক override;
 
     /**
      * Not-equal operator.  If operator== returns true, this returns false,
@@ -358,8 +358,8 @@ public:
      * @return true if both BreakIterators are not same.
      *  @stable ICU 2.0
      */
-    inline bool operator!=(const BreakIterator& that) const {
-        return !operator==(that);
+    অন্তঃরেখ bool operator!=(ধ্রুবক BreakIterator& that) ধ্রুবক {
+        ফেরত !operator==(that);
     }
 
     /**
@@ -372,21 +372,21 @@ public:
      * @return a newly-constructed RuleBasedBreakIterator
      * @stable ICU 2.0
      */
-    virtual RuleBasedBreakIterator* clone() const override;
+    আভাসী RuleBasedBreakIterator* clone() ধ্রুবক override;
 
     /**
      * Compute a hash code for this BreakIterator
      * @return A hash code
      *  @stable ICU 2.0
      */
-    virtual int32_t hashCode() const;
+    আভাসী int32_t hashCode() ধ্রুবক;
 
     /**
      * Returns the description used to create this iterator
      * @return the description used to create this iterator
      *  @stable ICU 2.0
      */
-    virtual const UnicodeString& getRules() const U_LIFETIME_BOUND;
+    আভাসী ধ্রুবক UnicodeString& getRules() ধ্রুবক U_LIFETIME_BOUND;
 
     //=======================================================================
     // BreakIterator overrides
@@ -416,7 +416,7 @@ public:
      * @return An iterator over the text being analyzed.
      * @stable ICU 2.0
      */
-    virtual CharacterIterator& getText() const U_LIFETIME_BOUND override;
+    আভাসী CharacterIterator& getText() ধ্রুবক U_LIFETIME_BOUND override;
 
     /**
       *  Get a UText for the text being analyzed.
@@ -432,7 +432,7 @@ public:
       *           UText was provided, it will always be returned.
       * @stable ICU 3.4
       */
-    virtual UText* getUText(UText* fillIn U_LIFETIME_BOUND, UErrorCode& status) const override;
+    আভাসী UText* getUText(UText* fillIn U_LIFETIME_BOUND, UErrorCode& status) ধ্রুবক override;
 
     /**
      * Set the iterator to analyze a new piece of text.  This function resets
@@ -441,7 +441,7 @@ public:
      * takes ownership of the character iterator.  The caller MUST NOT delete it!
      *  @stable ICU 2.0
      */
-    virtual void adoptText(CharacterIterator* newText) override;
+    আভাসী শূন্য adoptText(CharacterIterator* newText) override;
 
     /**
      * Set the iterator to analyze a new piece of text.  This function resets
@@ -454,7 +454,7 @@ public:
      * @param newText The text to analyze.
      *  @stable ICU 2.0
      */
-    virtual void setText(const UnicodeString& newText) override;
+    আভাসী শূন্য setText(ধ্রুবক UnicodeString& newText) override;
 
     /**
      * Reset the break iterator to operate over the text represented by
@@ -469,21 +469,21 @@ public:
      * @param status  Receives any error codes.
      * @stable ICU 3.4
      */
-    virtual void  setText(UText *text, UErrorCode &status) override;
+    আভাসী শূন্য  setText(UText *text, UErrorCode &status) override;
 
     /**
      * Sets the current iteration position to the beginning of the text, position zero.
      * @return The offset of the beginning of the text, zero.
      *  @stable ICU 2.0
      */
-    virtual int32_t first() override;
+    আভাসী int32_t first() override;
 
     /**
      * Sets the current iteration position to the end of the text.
      * @return The text's past-the-end offset.
      *  @stable ICU 2.0
      */
-    virtual int32_t last() override;
+    আভাসী int32_t last() override;
 
     /**
      * Advances the iterator either forward or backward the specified number of steps.
@@ -495,21 +495,21 @@ public:
      * the current one.
      *  @stable ICU 2.0
      */
-    virtual int32_t next(int32_t n) override;
+    আভাসী int32_t পরবর্তী(int32_t n) override;
 
     /**
      * Advances the iterator to the next boundary position.
      * @return The position of the first boundary after this one.
      *  @stable ICU 2.0
      */
-    virtual int32_t next() override;
+    আভাসী int32_t পরবর্তী() override;
 
     /**
      * Moves the iterator backwards, to the last boundary preceding this one.
      * @return The position of the last boundary position preceding this one.
      *  @stable ICU 2.0
      */
-    virtual int32_t previous() override;
+    আভাসী int32_t previous() override;
 
     /**
      * Sets the iterator to refer to the first boundary position following
@@ -518,7 +518,7 @@ public:
      * @return The position of the first break after the current position.
      *  @stable ICU 2.0
      */
-    virtual int32_t following(int32_t offset) override;
+    আভাসী int32_t following(int32_t offset) override;
 
     /**
      * Sets the iterator to refer to the last boundary position before the
@@ -527,7 +527,7 @@ public:
      * @return The position of the last boundary before the starting position.
      *  @stable ICU 2.0
      */
-    virtual int32_t preceding(int32_t offset) override;
+    আভাসী int32_t preceding(int32_t offset) override;
 
     /**
      * Returns true if the specified position is a boundary position.  As a side
@@ -537,7 +537,7 @@ public:
      * @return True if "offset" is a boundary position.
      *  @stable ICU 2.0
      */
-    virtual UBool isBoundary(int32_t offset) override;
+    আভাসী UBool isBoundary(int32_t offset) override;
 
     /**
      * Returns the current iteration position. Note that UBRK_DONE is never
@@ -547,7 +547,7 @@ public:
      * @return The current iteration position.
      * @stable ICU 2.0
      */
-    virtual int32_t current() const override;
+    আভাসী int32_t current() ধ্রুবক override;
 
     /**
      * Return the status tag from the break rule that determined the boundary at
@@ -580,7 +580,7 @@ public:
      * @see UWordBreak
      * @stable ICU 2.2
      */
-    virtual int32_t getRuleStatus() const override;
+    আভাসী int32_t getRuleStatus() ধ্রুবক override;
 
    /**
     * Get the status (tag) values from the break rule(s) that determined the boundary
@@ -605,7 +605,7 @@ public:
     * @see getRuleStatus
     * @stable ICU 3.0
     */
-    virtual int32_t getRuleStatusVec(int32_t *fillInVec, int32_t capacity, UErrorCode &status) override;
+    আভাসী int32_t getRuleStatusVec(int32_t *fillInVec, int32_t capacity, UErrorCode &status) override;
 
     /**
      * Returns a unique class ID POLYMORPHICALLY.  Pure virtual override.
@@ -618,7 +618,7 @@ public:
      *                  other classes have different class IDs.
      * @stable ICU 2.0
      */
-    virtual UClassID getDynamicClassID() const override;
+    আভাসী UClassID getDynamicClassID() ধ্রুবক override;
 
     /**
      * Returns the class ID for this class.  This is useful only for
@@ -631,7 +631,7 @@ public:
      * @return          The class ID for all objects of this class.
      * @stable ICU 2.0
      */
-    static UClassID U_EXPORT2 getStaticClassID();
+    স্থির UClassID U_EXPORT2 getStaticClassID();
 
 #ifndef U_FORCE_HIDE_DEPRECATED_API
     /**
@@ -660,8 +660,8 @@ public:
      *          or if the stackBuffer was too small to hold the clone.
      * @deprecated ICU 52. Use clone() instead.
      */
-    virtual RuleBasedBreakIterator *createBufferClone(void *stackBuffer,
-                                                      int32_t &BufferSize,
+    আভাসী RuleBasedBreakIterator *create_বাফার_Clone(শূন্য *স্তূপ_বাফার,
+                                                      int32_t &বাফার_আকার_2,
                                                       UErrorCode &status) override;
 #endif  // U_FORCE_HIDE_DEPRECATED_API
 
@@ -682,7 +682,7 @@ public:
      *           caller, and must not be modified or deleted.
      * @stable ICU 4.8
      */
-    virtual const uint8_t* getBinaryRules(uint32_t& length) U_LIFETIME_BOUND;
+    আভাসী ধ্রুবক uint8_t* get_দ্বিমিক_Rules(uint32_t& দৈর্ঘ্য) U_LIFETIME_BOUND;
 
     /**
      *  Set the subject text string upon which the break iterator is operating
@@ -709,17 +709,17 @@ public:
      *
      * @stable ICU 49
      */
-    virtual RuleBasedBreakIterator& refreshInputText(UText* input,
+    আভাসী RuleBasedBreakIterator& refresh_প্রবেশ_Text(UText* প্রবেশ,
                                                      UErrorCode& status) U_LIFETIME_BOUND override;
 
 
-private:
+ব্যক্তিগত:
     //=======================================================================
     // implementation
     //=======================================================================
 
 #ifndef U_HIDE_INTERNAL_API
-public:
+সর্বজনীন:
 #endif /* U_HIDE_INTERNAL_API */
     /**
      * Iterate backwards from an arbitrary position in the input text using the
@@ -734,7 +734,7 @@ public:
      */
     int32_t handleSafePrevious(int32_t fromPosition);
 
-private:
+ব্যক্তিগত:
     /**
      * Find a rule-based boundary by running the state machine.
      * Input
@@ -745,7 +745,7 @@ private:
      *                         If > 0, the segment will be further subdivided
      *    fRuleStatusIndex     Info from the state table indicating which rules caused the boundary.
      */
-    int32_t handleNext();
+    int32_t handle_পরবর্তী();
 
     /*
      * Templatized version of handleNext() and handleSafePrevious().
@@ -761,13 +761,13 @@ private:
      * signature)
      */
 
-    typedef uint16_t (*PTrieFunc)(const UCPTrie *, UChar32);
+    প্রকারলেখ uint16_t (*PTrieFunc)(ধ্রুবক UCPTrie *, UChar32);
 
     template<typename RowType, PTrieFunc trieFunc>
     int32_t handleSafePrevious(int32_t fromPosition);
 
     template<typename RowType, PTrieFunc trieFunc>
-    int32_t handleNext();
+    int32_t handle_পরবর্তী();
 
 
     /**
@@ -776,22 +776,22 @@ private:
      * @param c         A character in the dictionary set
      * @param locale    The locale.
      */
-    const LanguageBreakEngine* getLanguageBreakEngine(UChar32 c,
-                                                      const char* locale) U_LIFETIME_BOUND;
+    ধ্রুবক LanguageBreakEngine* getLanguageBreakEngine(UChar32 c,
+                                                      ধ্রুবক অক্ষর* locale) U_LIFETIME_BOUND;
 
-  public:
+  সর্বজনীন:
 #ifndef U_HIDE_INTERNAL_API
     /**
      *   Debugging function only.
      *   @internal
      */
-     void dumpCache();
+     শূন্য dumpCache();
 
     /**
      * Debugging function only.
      * @internal
      */
-    void dumpTables();
+    শূন্য dumpTables();
 #endif  /* U_HIDE_INTERNAL_API */
 
 #ifndef U_HIDE_INTERNAL_API
@@ -804,7 +804,7 @@ private:
      * @param status the in/out status code, no special meanings are assigned
      * @internal ICU 74 technology preview
      */
-    static void U_EXPORT2 registerExternalBreakEngine(
+    স্থির শূন্য U_EXPORT2 registerExternalBreakEngine(
                   ExternalBreakEngine* toAdopt, UErrorCode& status);
 #endif  /* U_HIDE_INTERNAL_API */
 

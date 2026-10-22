@@ -21,99 +21,99 @@
  *   06/29/2000  helena      Major rewrite of the callback interface.
 */
 
-#include "unicode/utypes.h"
+#অন্তর্ভাব "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#যদি !UCONFIG_NO_CONVERSION
 
-#include "unicode/putil.h"
-#include "unicode/udata.h"
-#include "unicode/ucnv.h"
-#include "unicode/uloc.h"
-#include "mutex.h"
-#include "putilimp.h"
-#include "uassert.h"
-#include "utracimp.h"
-#include "ucnv_io.h"
-#include "ucnv_bld.h"
-#include "ucnvmbcs.h"
-#include "ucnv_ext.h"
-#include "ucnv_cnv.h"
-#include "ucnv_imp.h"
-#include "uhash.h"
-#include "umutex.h"
-#include "cstring.h"
-#include "cmemory.h"
-#include "ucln_cmn.h"
-#include "ustr_cnv.h"
+#অন্তর্ভাব "unicode/putil.h"
+#অন্তর্ভাব "unicode/udata.h"
+#অন্তর্ভাব "unicode/ucnv.h"
+#অন্তর্ভাব "unicode/uloc.h"
+#অন্তর্ভাব "mutex.h"
+#অন্তর্ভাব "putilimp.h"
+#অন্তর্ভাব "uassert.h"
+#অন্তর্ভাব "utracimp.h"
+#অন্তর্ভাব "ucnv_io.h"
+#অন্তর্ভাব "ucnv_bld.h"
+#অন্তর্ভাব "ucnvmbcs.h"
+#অন্তর্ভাব "ucnv_ext.h"
+#অন্তর্ভাব "ucnv_cnv.h"
+#অন্তর্ভাব "ucnv_imp.h"
+#অন্তর্ভাব "uhash.h"
+#অন্তর্ভাব "umutex.h"
+#অন্তর্ভাব "cstring.h"
+#অন্তর্ভাব "cmemory.h"
+#অন্তর্ভাব "ucln_cmn.h"
+#অন্তর্ভাব "ustr_cnv.h"
 
 
-#if 0
-#include <stdio.h>
-extern void UCNV_DEBUG_LOG(char *what, char *who, void *p, int l);
+#যদি 0
+#অন্তর্ভাব <stdio.h>
+বাহ্যিক শূন্য UCNV_DEBUG_LOG(অক্ষর *what, অক্ষর *who, শূন্য *p, পূর্ণসংখ্যা l);
 #define UCNV_DEBUG_LOG(x,y,z) UCNV_DEBUG_LOG(x,y,z,__LINE__)
-#else
+#অন্যথা
 # define UCNV_DEBUG_LOG(x,y,z)
 #endif
 
-static const UConverterSharedData * const
-converterData[UCNV_NUMBER_OF_SUPPORTED_CONVERTER_TYPES]={
+স্থির ধ্রুবক UConverter_Shared_তথ্য * ধ্রুবক
+converter_তথ্য[UCNV_সংখ্যা_OF_SUPPORTED_CONVERTER_TYPES]={
     nullptr, nullptr,
 
-#if UCONFIG_NO_LEGACY_CONVERSION
+#যদি UCONFIG_NO_LEGACY_CONVERSION
     nullptr,
-#else
+#অন্যথা
     &_MBCSData,
 #endif
 
-    &_Latin1Data,
-    &_UTF8Data, &_UTF16BEData, &_UTF16LEData,
-#if UCONFIG_ONLY_HTML_CONVERSION
+    &Latin1_তথ্য,
+    &UTF8_তথ্য, &_UTF16BEData, &_UTF16LEData,
+#যদি UCONFIG_ONLY_HTML_CONVERSION
     nullptr, nullptr,
-#else
+#অন্যথা
     &_UTF32BEData, &_UTF32LEData,
 #endif
     nullptr,
 
-#if UCONFIG_NO_LEGACY_CONVERSION
+#যদি UCONFIG_NO_LEGACY_CONVERSION
     nullptr,
-#else
-    &_ISO2022Data,
+#অন্যথা
+    &ISO2022_তথ্য,
 #endif
 
-#if UCONFIG_NO_LEGACY_CONVERSION || UCONFIG_ONLY_HTML_CONVERSION
+#যদি UCONFIG_NO_LEGACY_CONVERSION || UCONFIG_ONLY_HTML_CONVERSION
     nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
     nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
     nullptr,
-#else
+#অন্যথা
     &_LMBCSData1,&_LMBCSData2, &_LMBCSData3, &_LMBCSData4, &_LMBCSData5, &_LMBCSData6,
     &_LMBCSData8,&_LMBCSData11,&_LMBCSData16,&_LMBCSData17,&_LMBCSData18,&_LMBCSData19,
     &_HZData,
 #endif
 
-#if UCONFIG_ONLY_HTML_CONVERSION
+#যদি UCONFIG_ONLY_HTML_CONVERSION
     nullptr,
-#else
+#অন্যথা
     &_SCSUData,
 #endif
 
 
-#if UCONFIG_NO_LEGACY_CONVERSION || UCONFIG_ONLY_HTML_CONVERSION
+#যদি UCONFIG_NO_LEGACY_CONVERSION || UCONFIG_ONLY_HTML_CONVERSION
     nullptr,
-#else
+#অন্যথা
     &_ISCIIData,
 #endif
 
     &_ASCIIData,
-#if UCONFIG_ONLY_HTML_CONVERSION
-    nullptr, nullptr, &_UTF16Data, nullptr, nullptr, nullptr,
-#else
-    &_UTF7Data, &_Bocu1Data, &_UTF16Data, &_UTF32Data, &_CESU8Data, &_IMAPData,
+#যদি UCONFIG_ONLY_HTML_CONVERSION
+    nullptr, nullptr, &UTF16_তথ্য, nullptr, nullptr, nullptr,
+#অন্যথা
+    &UTF7_তথ্য, &Bocu1_তথ্য, &UTF16_তথ্য, &UTF32_তথ্য, &CESU8_তথ্য, &_IMAPData,
 #endif
 
-#if UCONFIG_NO_LEGACY_CONVERSION || UCONFIG_ONLY_HTML_CONVERSION
+#যদি UCONFIG_NO_LEGACY_CONVERSION || UCONFIG_ONLY_HTML_CONVERSION
     nullptr,
-#else
-    &_CompoundTextData
+#অন্যথা
+    &Compound_Text_তথ্য
 #endif
 };
 
@@ -121,28 +121,28 @@ converterData[UCNV_NUMBER_OF_SUPPORTED_CONVERTER_TYPES]={
    Also the name should be in lower case and all spaces, dashes and underscores
    removed
 */
-static struct {
-  const char *name;
-  const UConverterType type;
-} const cnvNameType[] = {
-#if !UCONFIG_ONLY_HTML_CONVERSION
+স্থির কাঠামো {
+  ধ্রুবক অক্ষর *name;
+  ধ্রুবক UConverterType type;
+} ধ্রুবক cnvNameType[] = {
+#যদি !UCONFIG_ONLY_HTML_CONVERSION
   { "bocu1", UCNV_BOCU1 },
   { "cesu8", UCNV_CESU8 },
 #endif
-#if !UCONFIG_NO_LEGACY_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
+#যদি !UCONFIG_NO_LEGACY_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
   { "hz",UCNV_HZ },
 #endif
-#if !UCONFIG_ONLY_HTML_CONVERSION
+#যদি !UCONFIG_ONLY_HTML_CONVERSION
   { "imapmailboxname", UCNV_IMAP_MAILBOX },
 #endif
-#if !UCONFIG_NO_LEGACY_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
+#যদি !UCONFIG_NO_LEGACY_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
   { "iscii", UCNV_ISCII },
 #endif
-#if !UCONFIG_NO_LEGACY_CONVERSION
+#যদি !UCONFIG_NO_LEGACY_CONVERSION
   { "iso2022", UCNV_ISO_2022 },
 #endif
   { "iso88591", UCNV_LATIN_1 },
-#if !UCONFIG_NO_LEGACY_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
+#যদি !UCONFIG_NO_LEGACY_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
   { "lmbcs1", UCNV_LMBCS_1 },
   { "lmbcs11",UCNV_LMBCS_11 },
   { "lmbcs16",UCNV_LMBCS_16 },
@@ -156,57 +156,57 @@ static struct {
   { "lmbcs6", UCNV_LMBCS_6 },
   { "lmbcs8", UCNV_LMBCS_8 },
 #endif
-#if !UCONFIG_ONLY_HTML_CONVERSION
+#যদি !UCONFIG_ONLY_HTML_CONVERSION
   { "scsu", UCNV_SCSU },
 #endif
   { "usascii", UCNV_US_ASCII },
   { "utf16", UCNV_UTF16 },
   { "utf16be", UCNV_UTF16_BigEndian },
   { "utf16le", UCNV_UTF16_LittleEndian },
-#if U_IS_BIG_ENDIAN
+#যদি U_IS_BIG_ENDIAN
   { "utf16oppositeendian", UCNV_UTF16_LittleEndian },
   { "utf16platformendian", UCNV_UTF16_BigEndian },
-#else
+#অন্যথা
   { "utf16oppositeendian", UCNV_UTF16_BigEndian},
   { "utf16platformendian", UCNV_UTF16_LittleEndian },
 #endif
-#if !UCONFIG_ONLY_HTML_CONVERSION
+#যদি !UCONFIG_ONLY_HTML_CONVERSION
   { "utf32", UCNV_UTF32 },
   { "utf32be", UCNV_UTF32_BigEndian },
   { "utf32le", UCNV_UTF32_LittleEndian },
-#if U_IS_BIG_ENDIAN
+#যদি U_IS_BIG_ENDIAN
   { "utf32oppositeendian", UCNV_UTF32_LittleEndian },
   { "utf32platformendian", UCNV_UTF32_BigEndian },
-#else
+#অন্যথা
   { "utf32oppositeendian", UCNV_UTF32_BigEndian },
   { "utf32platformendian", UCNV_UTF32_LittleEndian },
 #endif
 #endif
-#if !UCONFIG_ONLY_HTML_CONVERSION
+#যদি !UCONFIG_ONLY_HTML_CONVERSION
   { "utf7", UCNV_UTF7 },
 #endif
   { "utf8", UCNV_UTF8 },
-#if !UCONFIG_ONLY_HTML_CONVERSION
+#যদি !UCONFIG_ONLY_HTML_CONVERSION
   { "x11compoundtext", UCNV_COMPOUND_TEXT}
 #endif
 };
 
 
 /*initializes some global variables */
-static UHashtable *SHARED_DATA_HASHTABLE = nullptr;
-static icu::UMutex cnvCacheMutex;
+স্থির UHashtable *SHARED_তথ্য_HASHTABLE = nullptr;
+স্থির icu::UMutex cnvCacheMutex;
 /*  Note:  the global mutex is used for      */
 /*         reference count updates.          */
 
-static const char **gAvailableConverters = nullptr;
-static uint16_t gAvailableConverterCount = 0;
-static icu::UInitOnce gAvailableConvertersInitOnce {};
+স্থির ধ্রুবক অক্ষর **gAvailableConverters = nullptr;
+স্থির uint16_t g_Available_Converter_গুনতি = 0;
+স্থির icu::UInitOnce gAvailableConvertersInitOnce {};
 
-#if !U_CHARSET_IS_UTF8
+#যদি !U_CHARSET_IS_UTF8
 
 /* This contains the resolved converter name. So no further alias lookup is needed again. */
-static char gDefaultConverterNameBuffer[UCNV_MAX_CONVERTER_NAME_LENGTH + 1]; /* +1 for nullptr */
-static const char *gDefaultConverterName = nullptr;
+স্থির অক্ষর g_Default_Converter_Name_বাফার[UCNV_MAX_CONVERTER_NAME_দৈর্ঘ্য + 1]; /* +1 for nullptr */
+স্থির ধ্রুবক অক্ষর *gDefaultConverterName = nullptr;
 
 /*
 If the default converter is an algorithmic converter, this is the cached value.
@@ -214,24 +214,24 @@ We don't cache a full UConverter and clone it because ucnv_clone doesn't have
 less overhead than an algorithmic open. We don't cache non-algorithmic converters
 because ucnv_flushCache must be able to unload the default converter and its table.
 */
-static const UConverterSharedData *gDefaultAlgorithmicSharedData = nullptr;
+স্থির ধ্রুবক UConverter_Shared_তথ্য *g_Default_Algorithmic_Shared_তথ্য = nullptr;
 
 /* Does gDefaultConverterName have a converter option and require extra parsing? */
-static UBool gDefaultConverterContainsOption;
+স্থির UBool gDefaultConverterContainsOption;
 
 #endif  /* !U_CHARSET_IS_UTF8 */
 
-static const char DATA_TYPE[] = "cnv";
+স্থির ধ্রুবক অক্ষর তথ্য_TYPE[] = "cnv";
 
 /* ucnv_flushAvailableConverterCache. This is only called from ucnv_cleanup().
  *                       If it is ever to be called from elsewhere, synchronization
  *                       will need to be considered.
  */
-static void
+স্থির শূন্য
 ucnv_flushAvailableConverterCache() {
-    gAvailableConverterCount = 0;
-    if (gAvailableConverters) {
-        uprv_free(const_cast<char**>(gAvailableConverters));
+    g_Available_Converter_গুনতি = 0;
+    যদি (gAvailableConverters) {
+        uprv_free(const_cast<অক্ষর**>(gAvailableConverters));
         gAvailableConverters = nullptr;
     }
     gAvailableConvertersInitOnce.reset();
@@ -241,129 +241,129 @@ ucnv_flushAvailableConverterCache() {
 /*                in use by open converters.                                  */
 /*                Not thread safe.                                            */
 /*                Not supported API.                                          */
-static UBool U_CALLCONV ucnv_cleanup() {
+স্থির UBool U_CALLCONV ucnv_cleanup() {
     ucnv_flushCache();
-    if (SHARED_DATA_HASHTABLE != nullptr && uhash_count(SHARED_DATA_HASHTABLE) == 0) {
-        uhash_close(SHARED_DATA_HASHTABLE);
-        SHARED_DATA_HASHTABLE = nullptr;
+    যদি (SHARED_তথ্য_HASHTABLE != nullptr && uhash_গুনতি(SHARED_তথ্য_HASHTABLE) == 0) {
+        uhash_close(SHARED_তথ্য_HASHTABLE);
+        SHARED_তথ্য_HASHTABLE = nullptr;
     }
 
     /* Isn't called from flushCache because other threads may have preexisting references to the table. */
     ucnv_flushAvailableConverterCache();
 
-#if !U_CHARSET_IS_UTF8
+#যদি !U_CHARSET_IS_UTF8
     gDefaultConverterName = nullptr;
-    gDefaultConverterNameBuffer[0] = 0;
-    gDefaultConverterContainsOption = false;
-    gDefaultAlgorithmicSharedData = nullptr;
+    g_Default_Converter_Name_বাফার[0] = 0;
+    gDefaultConverterContainsOption = মিথ্যা;
+    g_Default_Algorithmic_Shared_তথ্য = nullptr;
 #endif
 
-    return (SHARED_DATA_HASHTABLE == nullptr);
+    ফেরত (SHARED_তথ্য_HASHTABLE == nullptr);
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI শূন্য U_EXPORT2
 ucnv_enableCleanup() {
     ucln_common_registerCleanup(UCLN_COMMON_UCNV, ucnv_cleanup);
 }
 
-static UBool U_CALLCONV
-isCnvAcceptable(void * /*context*/,
-                const char * /*type*/, const char * /*name*/,
-                const UDataInfo *pInfo) {
-    return
+স্থির UBool U_CALLCONV
+isCnvAcceptable(শূন্য * /*context*/,
+                ধ্রুবক অক্ষর * /*type*/, ধ্রুবক অক্ষর * /*name*/,
+                ধ্রুবক UDataInfo *pInfo) {
+    ফেরত
         pInfo->size>=20 &&
         pInfo->isBigEndian==U_IS_BIG_ENDIAN &&
         pInfo->charsetFamily==U_CHARSET_FAMILY &&
         pInfo->sizeofUChar==U_SIZEOF_UCHAR &&
-        pInfo->dataFormat[0]==0x63 &&   /* dataFormat="cnvt" */
-        pInfo->dataFormat[1]==0x6e &&
-        pInfo->dataFormat[2]==0x76 &&
-        pInfo->dataFormat[3]==0x74 &&
+        pInfo->তথ্য_Format[0]==0x63 &&   /* dataFormat="cnvt" */
+        pInfo->তথ্য_Format[1]==0x6e &&
+        pInfo->তথ্য_Format[2]==0x76 &&
+        pInfo->তথ্য_Format[3]==0x74 &&
         pInfo->formatVersion[0]==6;  /* Everything will be version 6 */
 }
 
 /**
  * Un flatten shared data from a UDATA..
  */
-static UConverterSharedData*
-ucnv_data_unFlattenClone(UConverterLoadArgs *pArgs, UDataMemory *pData, UErrorCode *status)
+স্থির UConverter_Shared_তথ্য*
+ucnv_তথ্য_un_Flatten_Clone(UConverterLoadArgs *pArgs, UDataMemory *p_তথ্য, UErrorCode *status)
 {
     /* UDataInfo info; -- necessary only if some converters have different formatVersion */
-    const uint8_t* raw = static_cast<const uint8_t*>(udata_getMemory(pData));
-    const UConverterStaticData* source = reinterpret_cast<const UConverterStaticData*>(raw);
-    UConverterSharedData *data;
+    ধ্রুবক uint8_t* raw = static_cast<ধ্রুবক uint8_t*>(udata_getMemory(p_তথ্য));
+    ধ্রুবক UConverter_Static_তথ্য* source = reinterpret_cast<ধ্রুবক UConverter_Static_তথ্য*>(raw);
+    UConverter_Shared_তথ্য *তথ্য;
     UConverterType type = static_cast<UConverterType>(source->conversionType);
 
-    if(U_FAILURE(*status))
-        return nullptr;
+    যদি(U_FAILURE(*status))
+        ফেরত nullptr;
 
-    if (static_cast<uint16_t>(type) >= UCNV_NUMBER_OF_SUPPORTED_CONVERTER_TYPES ||
-        converterData[type] == nullptr ||
-        !converterData[type]->isReferenceCounted ||
-        converterData[type]->referenceCounter != 1 ||
-        source->structSize != sizeof(UConverterStaticData))
+    যদি (static_cast<uint16_t>(type) >= UCNV_সংখ্যা_OF_SUPPORTED_CONVERTER_TYPES ||
+        converter_তথ্য[type] == nullptr ||
+        !converter_তথ্য[type]->isReferenceCounted ||
+        converter_তথ্য[type]->reference_গণক != 1 ||
+        source->struct_আকার != আকার(UConverter_Static_তথ্য))
     {
         *status = U_INVALID_TABLE_FORMAT;
-        return nullptr;
+        ফেরত nullptr;
     }
 
-    data = static_cast<UConverterSharedData*>(uprv_malloc(sizeof(UConverterSharedData)));
-    if(data == nullptr) {
+    তথ্য = static_cast<UConverter_Shared_তথ্য*>(uprv_malloc(আকার(UConverter_Shared_তথ্য)));
+    যদি(তথ্য == nullptr) {
         *status = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        ফেরত nullptr;
     }
 
     /* copy initial values from the static structure for this type */
-    uprv_memcpy(data, converterData[type], sizeof(UConverterSharedData));
+    uprv_memcpy(তথ্য, converter_তথ্য[type], আকার(UConverter_Shared_তথ্য));
 
-    data->staticData = source;
+    তথ্য->static_তথ্য = source;
 
-    data->sharedDataCached = false;
+    তথ্য->shared_তথ্য_Cached = মিথ্যা;
 
     /* fill in fields from the loaded data */
-    data->dataMemory = (void*)pData; /* for future use */
+    তথ্য->তথ্য_Memory = (শূন্য*)p_তথ্য; /* for future use */
 
-    if(data->impl->load != nullptr) {
-        data->impl->load(data, pArgs, raw + source->structSize, status);
-        if(U_FAILURE(*status)) {
-            uprv_free(data);
-            return nullptr;
+    যদি(তথ্য->impl->load != nullptr) {
+        তথ্য->impl->load(তথ্য, pArgs, raw + source->struct_আকার, status);
+        যদি(U_FAILURE(*status)) {
+            uprv_free(তথ্য);
+            ফেরত nullptr;
         }
     }
-    return data;
+    ফেরত তথ্য;
 }
 
 /*Takes an alias name gets an actual converter file name
  *goes to disk and opens it.
  *allocates the memory and returns a new UConverter object
  */
-static UConverterSharedData *createConverterFromFile(UConverterLoadArgs *pArgs, UErrorCode * err)
+স্থির UConverter_Shared_তথ্য *createConverterFromFile(UConverterLoadArgs *pArgs, UErrorCode * err)
 {
-    UDataMemory *data;
-    UConverterSharedData *sharedData;
+    UDataMemory *তথ্য;
+    UConverter_Shared_তথ্য *shared_তথ্য;
 
     UTRACE_ENTRY_OC(UTRACE_UCNV_LOAD);
 
-    if (U_FAILURE (*err)) {
+    যদি (U_FAILURE (*err)) {
         UTRACE_EXIT_STATUS(*err);
-        return nullptr;
+        ফেরত nullptr;
     }
 
     UTRACE_DATA2(UTRACE_OPEN_CLOSE, "load converter %s from package %s", pArgs->name, pArgs->pkg);
 
-    data = udata_openChoice(pArgs->pkg, DATA_TYPE, pArgs->name, isCnvAcceptable, nullptr, err);
-    if(U_FAILURE(*err))
+    তথ্য = udata_openChoice(pArgs->pkg, তথ্য_TYPE, pArgs->name, isCnvAcceptable, nullptr, err);
+    যদি(U_FAILURE(*err))
     {
         UTRACE_EXIT_STATUS(*err);
-        return nullptr;
+        ফেরত nullptr;
     }
 
-    sharedData = ucnv_data_unFlattenClone(pArgs, data, err);
-    if(U_FAILURE(*err))
+    shared_তথ্য = ucnv_তথ্য_un_Flatten_Clone(pArgs, তথ্য, err);
+    যদি(U_FAILURE(*err))
     {
-        udata_close(data);
+        udata_close(তথ্য);
         UTRACE_EXIT_STATUS(*err);
-        return nullptr;
+        ফেরত nullptr;
     }
 
     /*
@@ -373,19 +373,19 @@ static UConverterSharedData *createConverterFromFile(UConverterLoadArgs *pArgs, 
      * in the first place, or just set the pkg field to "".
      */
 
-    UTRACE_EXIT_PTR_STATUS(sharedData, *err);
-    return sharedData;
+    UTRACE_EXIT_PTR_STATUS(shared_তথ্য, *err);
+    ফেরত shared_তথ্য;
 }
 
 /*returns a converter type from a string
  */
-static const UConverterSharedData *
-getAlgorithmicTypeFromName(const char *realName)
+স্থির ধ্রুবক UConverter_Shared_তথ্য *
+getAlgorithmicTypeFromName(ধ্রুবক অক্ষর *realName)
 {
     uint32_t mid, start, limit;
     uint32_t lastMid;
-    int result;
-    char strippedName[UCNV_MAX_CONVERTER_NAME_LENGTH];
+    পূর্ণসংখ্যা ফলাফল;
+    অক্ষর strippedName[UCNV_MAX_CONVERTER_NAME_দৈর্ঘ্য];
 
     /* Lower case and remove ignoreable characters. */
     ucnv_io_stripForCompare(strippedName, realName);
@@ -396,24 +396,24 @@ getAlgorithmicTypeFromName(const char *realName)
     mid = limit;
     lastMid = UINT32_MAX;
 
-    for (;;) {
+    জন্য (;;) {
         mid = (start + limit) / 2;
-        if (lastMid == mid) {   /* Have we moved? */
-            break;  /* We haven't moved, and it wasn't found. */
+        যদি (lastMid == mid) {   /* Have we moved? */
+            বিরতি;  /* We haven't moved, and it wasn't found. */
         }
         lastMid = mid;
-        result = uprv_strcmp(strippedName, cnvNameType[mid].name);
+        ফলাফল = uprv_strcmp(strippedName, cnvNameType[mid].name);
 
-        if (result < 0) {
+        যদি (ফলাফল < 0) {
             limit = mid;
-        } else if (result > 0) {
+        } অন্যথা যদি (ফলাফল > 0) {
             start = mid;
-        } else {
-            return converterData[cnvNameType[mid].type];
+        } অন্যথা {
+            ফেরত converter_তথ্য[cnvNameType[mid].type];
         }
     }
 
-    return nullptr;
+    ফেরত nullptr;
 }
 
 /*
@@ -432,22 +432,22 @@ getAlgorithmicTypeFromName(const char *realName)
 /* Stores the shared data in the SHARED_DATA_HASHTABLE
  * @param data The shared data
  */
-static void
-ucnv_shareConverterData(UConverterSharedData * data)
+স্থির শূন্য
+ucnv_share_Converter_তথ্য(UConverter_Shared_তথ্য * তথ্য)
 {
     UErrorCode err = U_ZERO_ERROR;
     /*Lazy evaluates the Hashtable itself */
     /*void *sanity = nullptr;*/
 
-    if (SHARED_DATA_HASHTABLE == nullptr)
+    যদি (SHARED_তথ্য_HASHTABLE == nullptr)
     {
-        SHARED_DATA_HASHTABLE = uhash_openSize(uhash_hashChars, uhash_compareChars, nullptr,
-                            ucnv_io_countKnownConverters(&err)*UCNV_CACHE_LOAD_FACTOR,
+        SHARED_তথ্য_HASHTABLE = uhash_open_আকার(uhash_hashChars, uhash_compareChars, nullptr,
+                            ucnv_io_গুনতি_Known_Converters(&err)*UCNV_CACHE_LOAD_FACTOR,
                             &err);
         ucnv_enableCleanup();
 
-        if (U_FAILURE(err))
-            return;
+        যদি (U_FAILURE(err))
+            ফেরত;
     }
 
     /* ### check to see if the element is not already there! */
@@ -462,14 +462,14 @@ ucnv_shareConverterData(UConverterSharedData * data)
     */
 
     /* Mark it shared */
-    data->sharedDataCached = true;
+    তথ্য->shared_তথ্য_Cached = সত্য;
 
-    uhash_put(SHARED_DATA_HASHTABLE,
-            (void*) data->staticData->name, /* Okay to cast away const as long as
+    uhash_put(SHARED_তথ্য_HASHTABLE,
+            (শূন্য*) তথ্য->static_তথ্য->name, /* Okay to cast away const as long as
             keyDeleter == nullptr */
-            data,
+            তথ্য,
             &err);
-    UCNV_DEBUG_LOG("put", data->staticData->name,data);
+    UCNV_DEBUG_LOG("put", তথ্য->static_তথ্য->name,তথ্য);
 
 }
 
@@ -479,21 +479,21 @@ ucnv_shareConverterData(UConverterSharedData * data)
  * @param name The name of the shared data
  * @return the shared data from the SHARED_DATA_HASHTABLE
  */
-static UConverterSharedData *
-ucnv_getSharedConverterData(const char *name)
+স্থির UConverter_Shared_তথ্য *
+ucnv_get_Shared_Converter_তথ্য(ধ্রুবক অক্ষর *name)
 {
     /*special case when no Table has yet been created we return nullptr */
-    if (SHARED_DATA_HASHTABLE == nullptr)
+    যদি (SHARED_তথ্য_HASHTABLE == nullptr)
     {
-        return nullptr;
+        ফেরত nullptr;
     }
-    else
+    অন্যথা
     {
-        UConverterSharedData *rc;
+        UConverter_Shared_তথ্য *rc;
 
-        rc = static_cast<UConverterSharedData*>(uhash_get(SHARED_DATA_HASHTABLE, name));
+        rc = static_cast<UConverter_Shared_তথ্য*>(uhash_get(SHARED_তথ্য_HASHTABLE, name));
         UCNV_DEBUG_LOG("get",name,rc);
-        return rc;
+        ফেরত rc;
     }
 }
 
@@ -508,73 +508,73 @@ ucnv_getSharedConverterData(const char *name)
  * @return if not it frees all the memory stemming from sharedConverterData and
  * returns true, otherwise returns false
  */
-static UBool
-ucnv_deleteSharedConverterData(UConverterSharedData * deadSharedData)
+স্থির UBool
+ucnv_delete_Shared_Converter_তথ্য(UConverter_Shared_তথ্য * dead_Shared_তথ্য)
 {
     UTRACE_ENTRY_OC(UTRACE_UCNV_UNLOAD);
-    UTRACE_DATA2(UTRACE_OPEN_CLOSE, "unload converter %s shared data %p", deadSharedData->staticData->name, deadSharedData);
+    UTRACE_DATA2(UTRACE_OPEN_CLOSE, "unload converter %s shared data %p", dead_Shared_তথ্য->static_তথ্য->name, dead_Shared_তথ্য);
 
-    if (deadSharedData->referenceCounter > 0) {
-        UTRACE_EXIT_VALUE((int32_t)false);
-        return false;
+    যদি (dead_Shared_তথ্য->reference_গণক > 0) {
+        UTRACE_EXIT_মান((int32_t)মিথ্যা);
+        ফেরত মিথ্যা;
     }
 
-    if (deadSharedData->impl->unload != nullptr) {
-        deadSharedData->impl->unload(deadSharedData);
+    যদি (dead_Shared_তথ্য->impl->unload != nullptr) {
+        dead_Shared_তথ্য->impl->unload(dead_Shared_তথ্য);
     }
 
-    if(deadSharedData->dataMemory != nullptr)
+    যদি(dead_Shared_তথ্য->তথ্য_Memory != nullptr)
     {
-        UDataMemory *data = (UDataMemory*)deadSharedData->dataMemory;
-        udata_close(data);
+        UDataMemory *তথ্য = (UDataMemory*)dead_Shared_তথ্য->তথ্য_Memory;
+        udata_close(তথ্য);
     }
 
-    uprv_free(deadSharedData);
+    uprv_free(dead_Shared_তথ্য);
 
-    UTRACE_EXIT_VALUE((int32_t)true);
-    return true;
+    UTRACE_EXIT_মান((int32_t)সত্য);
+    ফেরত সত্য;
 }
 
 /**
  * Load a non-algorithmic converter.
  * If pkg==nullptr, then this function must be called inside umtx_lock(&cnvCacheMutex).
  */
-UConverterSharedData *
+UConverter_Shared_তথ্য *
 ucnv_load(UConverterLoadArgs *pArgs, UErrorCode *err) {
-    UConverterSharedData *mySharedConverterData;
+    UConverter_Shared_তথ্য *my_Shared_Converter_তথ্য;
 
-    if(err == nullptr || U_FAILURE(*err)) {
-        return nullptr;
+    যদি(err == nullptr || U_FAILURE(*err)) {
+        ফেরত nullptr;
     }
 
-    if(pArgs->pkg != nullptr && *pArgs->pkg != 0) {
+    যদি(pArgs->pkg != nullptr && *pArgs->pkg != 0) {
         /* application-provided converters are not currently cached */
-        return createConverterFromFile(pArgs, err);
+        ফেরত createConverterFromFile(pArgs, err);
     }
 
-    mySharedConverterData = ucnv_getSharedConverterData(pArgs->name);
-    if (mySharedConverterData == nullptr)
+    my_Shared_Converter_তথ্য = ucnv_get_Shared_Converter_তথ্য(pArgs->name);
+    যদি (my_Shared_Converter_তথ্য == nullptr)
     {
         /*Not cached, we need to stream it in from file */
-        mySharedConverterData = createConverterFromFile(pArgs, err);
-        if (U_FAILURE (*err) || (mySharedConverterData == nullptr))
+        my_Shared_Converter_তথ্য = createConverterFromFile(pArgs, err);
+        যদি (U_FAILURE (*err) || (my_Shared_Converter_তথ্য == nullptr))
         {
-            return nullptr;
+            ফেরত nullptr;
         }
-        else if (!pArgs->onlyTestIsLoadable)
+        অন্যথা যদি (!pArgs->onlyTestIsLoadable)
         {
             /* share it with other library clients */
-            ucnv_shareConverterData(mySharedConverterData);
+            ucnv_share_Converter_তথ্য(my_Shared_Converter_তথ্য);
         }
     }
-    else
+    অন্যথা
     {
         /* The data for this converter was already in the cache.            */
         /* Update the reference counter on the shared data: one more client */
-        mySharedConverterData->referenceCounter++;
+        my_Shared_Converter_তথ্য->reference_গণক++;
     }
 
-    return mySharedConverterData;
+    ফেরত my_Shared_Converter_তথ্য;
 }
 
 /**
@@ -582,35 +582,35 @@ ucnv_load(UConverterLoadArgs *pArgs, UErrorCode *err) {
  * It must be sharedData->isReferenceCounted
  * and this function must be called inside umtx_lock(&cnvCacheMutex).
  */
-U_CAPI void
-ucnv_unload(UConverterSharedData *sharedData) {
-    if(sharedData != nullptr) {
-        if (sharedData->referenceCounter > 0) {
-            sharedData->referenceCounter--;
+U_CAPI শূন্য
+ucnv_unload(UConverter_Shared_তথ্য *shared_তথ্য) {
+    যদি(shared_তথ্য != nullptr) {
+        যদি (shared_তথ্য->reference_গণক > 0) {
+            shared_তথ্য->reference_গণক--;
         }
 
-        if((sharedData->referenceCounter <= 0)&&(sharedData->sharedDataCached == false)) {
-            ucnv_deleteSharedConverterData(sharedData);
+        যদি((shared_তথ্য->reference_গণক <= 0)&&(shared_তথ্য->shared_তথ্য_Cached == মিথ্যা)) {
+            ucnv_delete_Shared_Converter_তথ্য(shared_তথ্য);
         }
     }
 }
 
-U_CFUNC void
-ucnv_unloadSharedDataIfReady(UConverterSharedData *sharedData)
+U_CFUNC শূন্য
+ucnv_unload_Shared_তথ্য_If_Ready(UConverter_Shared_তথ্য *shared_তথ্য)
 {
-    if(sharedData != nullptr && sharedData->isReferenceCounted) {
+    যদি(shared_তথ্য != nullptr && shared_তথ্য->isReferenceCounted) {
         umtx_lock(&cnvCacheMutex);
-        ucnv_unload(sharedData);
+        ucnv_unload(shared_তথ্য);
         umtx_unlock(&cnvCacheMutex);
     }
 }
 
-U_CFUNC void
-ucnv_incrementRefCount(UConverterSharedData *sharedData)
+U_CFUNC শূন্য
+ucnv_increment_Ref_গুনতি(UConverter_Shared_তথ্য *shared_তথ্য)
 {
-    if(sharedData != nullptr && sharedData->isReferenceCounted) {
+    যদি(shared_তথ্য != nullptr && shared_তথ্য->isReferenceCounted) {
         umtx_lock(&cnvCacheMutex);
-        sharedData->referenceCounter++;
+        shared_তথ্য->reference_গণক++;
         umtx_unlock(&cnvCacheMutex);
     }
 }
@@ -622,14 +622,14 @@ ucnv_incrementRefCount(UConverterSharedData *sharedData)
  * otherwise the existing values in pPieces remain.
  * *pArgs will be set to the pPieces values.
  */
-static void
-parseConverterOptions(const char *inName,
+স্থির শূন্য
+parseConverterOptions(ধ্রুবক অক্ষর *inName,
                       UConverterNamePieces *pPieces,
                       UConverterLoadArgs *pArgs,
                       UErrorCode *err)
 {
-    char *cnvName = pPieces->cnvName;
-    char c;
+    অক্ষর *cnvName = pPieces->cnvName;
+    অক্ষর c;
     int32_t len = 0;
 
     pArgs->name=inName;
@@ -637,11 +637,11 @@ parseConverterOptions(const char *inName,
     pArgs->options=pPieces->options;
 
     /* copy the converter name itself to cnvName */
-    while((c=*inName)!=0 && c!=UCNV_OPTION_SEP_CHAR) {
-        if (++len>=UCNV_MAX_CONVERTER_NAME_LENGTH) {
+    যখন((c=*inName)!=0 && c!=UCNV_OPTION_SEP_CHAR) {
+        যদি (++len>=UCNV_MAX_CONVERTER_NAME_দৈর্ঘ্য) {
             *err = U_ILLEGAL_ARGUMENT_ERROR;    /* bad name */
             pPieces->cnvName[0]=0;
-            return;
+            ফেরত;
         }
         *cnvName++=c;
         inName++;
@@ -650,52 +650,52 @@ parseConverterOptions(const char *inName,
     pArgs->name=pPieces->cnvName;
 
     /* parse options. No more name copying should occur. */
-    while((c=*inName)!=0) {
-        if(c==UCNV_OPTION_SEP_CHAR) {
+    যখন((c=*inName)!=0) {
+        যদি(c==UCNV_OPTION_SEP_CHAR) {
             ++inName;
         }
 
         /* inName is behind an option separator */
-        if(uprv_strncmp(inName, "locale=", 7)==0) {
+        যদি(uprv_strncmp(inName, "locale=", 7)==0) {
             /* do not modify locale itself in case we have multiple locale options */
-            char *dest=pPieces->locale;
+            অক্ষর *dest=pPieces->locale;
 
             /* copy the locale option value */
             inName+=7;
             len=0;
-            while((c=*inName)!=0 && c!=UCNV_OPTION_SEP_CHAR) {
+            যখন((c=*inName)!=0 && c!=UCNV_OPTION_SEP_CHAR) {
                 ++inName;
 
-                if(++len>=ULOC_FULLNAME_CAPACITY) {
+                যদি(++len>=ULOC_FULLNAME_CAPACITY) {
                     *err=U_ILLEGAL_ARGUMENT_ERROR;    /* bad name */
                     pPieces->locale[0]=0;
-                    return;
+                    ফেরত;
                 }
 
                 *dest++=c;
             }
             *dest=0;
-        } else if(uprv_strncmp(inName, "version=", 8)==0) {
+        } অন্যথা যদি(uprv_strncmp(inName, "version=", 8)==0) {
             /* copy the version option value into bits 3..0 of pPieces->options */
             inName+=8;
             c=*inName;
-            if(c==0) {
+            যদি(c==0) {
                 pArgs->options=(pPieces->options&=~UCNV_OPTION_VERSION);
-                return;
-            } else if (static_cast<uint8_t>(c - '0') < 10) {
+                ফেরত;
+            } অন্যথা যদি (static_cast<uint8_t>(c - '0') < 10) {
                 pArgs->options = pPieces->options = (pPieces->options & ~UCNV_OPTION_VERSION) | static_cast<uint32_t>(c - '0');
                 ++inName;
             }
-        } else if(uprv_strncmp(inName, "swaplfnl", 8)==0) {
+        } অন্যথা যদি(uprv_strncmp(inName, "swaplfnl", 8)==0) {
             inName+=8;
             pArgs->options=(pPieces->options|=UCNV_OPTION_SWAP_LFNL);
         /* add processing for new options here with another } else if(uprv_strncmp(inName, "option-name=", XX)==0) { */
-        } else {
+        } অন্যথা {
             /* ignore any other options until we define some */
-            while(((c = *inName++) != 0) && (c != UCNV_OPTION_SEP_CHAR)) {
+            যখন(((c = *inName++) != 0) && (c != UCNV_OPTION_SEP_CHAR)) {
             }
-            if(c==0) {
-                return;
+            যদি(c==0) {
+                ফেরত;
             }
         }
     }
@@ -708,37 +708,37 @@ parseConverterOptions(const char *inName,
  * -Call dataConverter initializer (Data=true, Cached=true)
  * -Call AlgorithmicConverter initializer (Data=false, Cached=true)
  */
-U_CFUNC UConverterSharedData *
-ucnv_loadSharedData(const char *converterName,
+U_CFUNC UConverter_Shared_তথ্য *
+ucnv_load_Shared_তথ্য(ধ্রুবক অক্ষর *converterName,
                     UConverterNamePieces *pPieces,
                     UConverterLoadArgs *pArgs,
                     UErrorCode * err) {
-    UConverterNamePieces stackPieces;
-    UConverterLoadArgs stackArgs;
-    UConverterSharedData *mySharedConverterData = nullptr;
+    UConverterNamePieces স্তূপ_Pieces;
+    UConverterLoadArgs স্তূপ_Args;
+    UConverter_Shared_তথ্য *my_Shared_Converter_তথ্য = nullptr;
     UErrorCode internalErrorCode = U_ZERO_ERROR;
-    UBool mayContainOption = true;
-    UBool checkForAlgorithmic = true;
+    UBool mayContainOption = সত্য;
+    UBool checkForAlgorithmic = সত্য;
 
-    if (U_FAILURE (*err)) {
-        return nullptr;
+    যদি (U_FAILURE (*err)) {
+        ফেরত nullptr;
     }
 
-    if(pPieces == nullptr) {
-        if(pArgs != nullptr) {
+    যদি(pPieces == nullptr) {
+        যদি(pArgs != nullptr) {
             /*
              * Bad: We may set pArgs pointers to stackPieces fields
              * which will be invalid after this function returns.
              */
             *err = U_INTERNAL_PROGRAM_ERROR;
-            return nullptr;
+            ফেরত nullptr;
         }
-        pPieces = &stackPieces;
+        pPieces = &স্তূপ_Pieces;
     }
-    if(pArgs == nullptr) {
-        uprv_memset(&stackArgs, 0, sizeof(stackArgs));
-        stackArgs.size = (int32_t)sizeof(stackArgs);
-        pArgs = &stackArgs;
+    যদি(pArgs == nullptr) {
+        uprv_memset(&স্তূপ_Args, 0, আকার(স্তূপ_Args));
+        স্তূপ_Args.size = (int32_t)আকার(স্তূপ_Args);
+        pArgs = &স্তূপ_Args;
     }
 
     pPieces->cnvName[0] = 0;
@@ -750,59 +750,59 @@ ucnv_loadSharedData(const char *converterName,
     pArgs->options = pPieces->options;
 
     /* In case "name" is nullptr we want to open the default converter. */
-    if (converterName == nullptr) {
-#if U_CHARSET_IS_UTF8
+    যদি (converterName == nullptr) {
+#যদি U_CHARSET_IS_UTF8
         pArgs->name = "UTF-8";
-        return (UConverterSharedData *)converterData[UCNV_UTF8];
-#else
+        ফেরত (UConverter_Shared_তথ্য *)converter_তথ্য[UCNV_UTF8];
+#অন্যথা
         /* Call ucnv_getDefaultName first to query the name from the OS. */
         pArgs->name = ucnv_getDefaultName();
-        if (pArgs->name == nullptr) {
+        যদি (pArgs->name == nullptr) {
             *err = U_MISSING_RESOURCE_ERROR;
-            return nullptr;
+            ফেরত nullptr;
         }
-        mySharedConverterData = (UConverterSharedData *)gDefaultAlgorithmicSharedData;
-        checkForAlgorithmic = false;
+        my_Shared_Converter_তথ্য = (UConverter_Shared_তথ্য *)g_Default_Algorithmic_Shared_তথ্য;
+        checkForAlgorithmic = মিথ্যা;
         mayContainOption = gDefaultConverterContainsOption;
         /* the default converter name is already canonical */
 #endif
     }
-    else if(UCNV_FAST_IS_UTF8(converterName)) {
+    অন্যথা যদি(UCNV_FAST_IS_UTF8(converterName)) {
         /* fastpath for UTF-8 */
         pArgs->name = "UTF-8";
-        return (UConverterSharedData *)converterData[UCNV_UTF8];
+        ফেরত (UConverter_Shared_তথ্য *)converter_তথ্য[UCNV_UTF8];
     }
-    else {
+    অন্যথা {
         /* separate the converter name from the options */
         parseConverterOptions(converterName, pPieces, pArgs, err);
-        if (U_FAILURE(*err)) {
+        যদি (U_FAILURE(*err)) {
             /* Very bad name used. */
-            return nullptr;
+            ফেরত nullptr;
         }
 
         /* get the canonical converter name */
         pArgs->name = ucnv_io_getConverterName(pArgs->name, &mayContainOption, &internalErrorCode);
-        if (U_FAILURE(internalErrorCode) || pArgs->name == nullptr) {
+        যদি (U_FAILURE(internalErrorCode) || pArgs->name == nullptr) {
             /*
             * set the input name in case the converter was added
             * without updating the alias table, or when there is no alias table
             */
             pArgs->name = pPieces->cnvName;
-        } else if (internalErrorCode == U_AMBIGUOUS_ALIAS_WARNING) {
+        } অন্যথা যদি (internalErrorCode == U_AMBIGUOUS_ALIAS_WARNING) {
             *err = U_AMBIGUOUS_ALIAS_WARNING;
         }
     }
 
     /* separate the converter name from the options */
-    if(mayContainOption && pArgs->name != pPieces->cnvName) {
+    যদি(mayContainOption && pArgs->name != pPieces->cnvName) {
         parseConverterOptions(pArgs->name, pPieces, pArgs, err);
     }
 
     /* get the shared data for an algorithmic converter, if it is one */
-    if (checkForAlgorithmic) {
-        mySharedConverterData = (UConverterSharedData *)getAlgorithmicTypeFromName(pArgs->name);
+    যদি (checkForAlgorithmic) {
+        my_Shared_Converter_তথ্য = (UConverter_Shared_তথ্য *)getAlgorithmicTypeFromName(pArgs->name);
     }
-    if (mySharedConverterData == nullptr)
+    যদি (my_Shared_Converter_তথ্য == nullptr)
     {
         /* it is a data-based converter, get its shared data.               */
         /* Hold the cnvCacheMutex through the whole process of checking the */
@@ -813,219 +813,219 @@ ucnv_loadSharedData(const char *converterName,
         pArgs->pkg=nullptr;
 
         umtx_lock(&cnvCacheMutex);
-        mySharedConverterData = ucnv_load(pArgs, err);
+        my_Shared_Converter_তথ্য = ucnv_load(pArgs, err);
         umtx_unlock(&cnvCacheMutex);
-        if (U_FAILURE (*err) || (mySharedConverterData == nullptr))
+        যদি (U_FAILURE (*err) || (my_Shared_Converter_তথ্য == nullptr))
         {
-            return nullptr;
+            ফেরত nullptr;
         }
     }
 
-    return mySharedConverterData;
+    ফেরত my_Shared_Converter_তথ্য;
 }
 
 U_CAPI UConverter*
 ucnv_createConverter(UConverter* myUConverter U_LIFETIME_BOUND,
-                     const char* converterName,
+                     ধ্রুবক অক্ষর* converterName,
                      UErrorCode* err)
 {
-    UConverterNamePieces stackPieces;
-    UConverterLoadArgs stackArgs=UCNV_LOAD_ARGS_INITIALIZER;
-    UConverterSharedData *mySharedConverterData;
+    UConverterNamePieces স্তূপ_Pieces;
+    UConverterLoadArgs স্তূপ_Args=UCNV_LOAD_ARGS_INITIALIZER;
+    UConverter_Shared_তথ্য *my_Shared_Converter_তথ্য;
 
     UTRACE_ENTRY_OC(UTRACE_UCNV_OPEN);
 
-    if(U_SUCCESS(*err)) {
+    যদি(U_SUCCESS(*err)) {
         UTRACE_DATA1(UTRACE_OPEN_CLOSE, "open converter %s", converterName);
 
-        mySharedConverterData = ucnv_loadSharedData(converterName, &stackPieces, &stackArgs, err);
+        my_Shared_Converter_তথ্য = ucnv_load_Shared_তথ্য(converterName, &স্তূপ_Pieces, &স্তূপ_Args, err);
 
-        myUConverter = ucnv_createConverterFromSharedData(
-            myUConverter, mySharedConverterData,
-            &stackArgs,
+        myUConverter = ucnv_create_Converter_From_Shared_তথ্য(
+            myUConverter, my_Shared_Converter_তথ্য,
+            &স্তূপ_Args,
             err);
 
-        if(U_SUCCESS(*err)) {
+        যদি(U_SUCCESS(*err)) {
             UTRACE_EXIT_PTR_STATUS(myUConverter, *err);
-            return myUConverter;
+            ফেরত myUConverter;
         }
     }
 
     /* exit with error */
     UTRACE_EXIT_STATUS(*err);
-    return nullptr;
+    ফেরত nullptr;
 }
 
 U_CFUNC UBool
-ucnv_canCreateConverter(const char *converterName, UErrorCode *err) {
+ucnv_canCreateConverter(ধ্রুবক অক্ষর *converterName, UErrorCode *err) {
     UConverter myUConverter;
-    UConverterNamePieces stackPieces;
-    UConverterLoadArgs stackArgs=UCNV_LOAD_ARGS_INITIALIZER;
-    UConverterSharedData *mySharedConverterData;
+    UConverterNamePieces স্তূপ_Pieces;
+    UConverterLoadArgs স্তূপ_Args=UCNV_LOAD_ARGS_INITIALIZER;
+    UConverter_Shared_তথ্য *my_Shared_Converter_তথ্য;
 
     UTRACE_ENTRY_OC(UTRACE_UCNV_OPEN);
 
-    if(U_SUCCESS(*err)) {
+    যদি(U_SUCCESS(*err)) {
         UTRACE_DATA1(UTRACE_OPEN_CLOSE, "test if can open converter %s", converterName);
 
-        stackArgs.onlyTestIsLoadable=true;
-        mySharedConverterData = ucnv_loadSharedData(converterName, &stackPieces, &stackArgs, err);
-        ucnv_createConverterFromSharedData(
-            &myUConverter, mySharedConverterData,
-            &stackArgs,
+        স্তূপ_Args.onlyTestIsLoadable=সত্য;
+        my_Shared_Converter_তথ্য = ucnv_load_Shared_তথ্য(converterName, &স্তূপ_Pieces, &স্তূপ_Args, err);
+        ucnv_create_Converter_From_Shared_তথ্য(
+            &myUConverter, my_Shared_Converter_তথ্য,
+            &স্তূপ_Args,
             err);
-        ucnv_unloadSharedDataIfReady(mySharedConverterData);
+        ucnv_unload_Shared_তথ্য_If_Ready(my_Shared_Converter_তথ্য);
     }
 
     UTRACE_EXIT_STATUS(*err);
-    return U_SUCCESS(*err);
+    ফেরত U_SUCCESS(*err);
 }
 
 UConverter*
 ucnv_createAlgorithmicConverter(UConverter* myUConverter U_LIFETIME_BOUND,
                                 UConverterType type,
-                                const char* locale,
+                                ধ্রুবক অক্ষর* locale,
                                 uint32_t options,
                                 UErrorCode* err) {
     UConverter *cnv;
-    const UConverterSharedData *sharedData;
-    UConverterLoadArgs stackArgs=UCNV_LOAD_ARGS_INITIALIZER;
+    ধ্রুবক UConverter_Shared_তথ্য *shared_তথ্য;
+    UConverterLoadArgs স্তূপ_Args=UCNV_LOAD_ARGS_INITIALIZER;
 
     UTRACE_ENTRY_OC(UTRACE_UCNV_OPEN_ALGORITHMIC);
     UTRACE_DATA1(UTRACE_OPEN_CLOSE, "open algorithmic converter type %d", (int32_t)type);
 
-    if(type<0 || UCNV_NUMBER_OF_SUPPORTED_CONVERTER_TYPES<=type) {
+    যদি(type<0 || UCNV_সংখ্যা_OF_SUPPORTED_CONVERTER_TYPES<=type) {
         *err = U_ILLEGAL_ARGUMENT_ERROR;
         UTRACE_EXIT_STATUS(U_ILLEGAL_ARGUMENT_ERROR);
-        return nullptr;
+        ফেরত nullptr;
     }
 
-    sharedData = converterData[type];
-    if(sharedData == nullptr || sharedData->isReferenceCounted) {
+    shared_তথ্য = converter_তথ্য[type];
+    যদি(shared_তথ্য == nullptr || shared_তথ্য->isReferenceCounted) {
         /* not a valid type, or not an algorithmic converter */
         *err = U_ILLEGAL_ARGUMENT_ERROR;
         UTRACE_EXIT_STATUS(U_ILLEGAL_ARGUMENT_ERROR);
-        return nullptr;
+        ফেরত nullptr;
     }
 
-    stackArgs.name = "";
-    stackArgs.options = options;
-    stackArgs.locale=locale;
-    cnv = ucnv_createConverterFromSharedData(
-            myUConverter, const_cast<UConverterSharedData*>(sharedData),
-            &stackArgs, err);
+    স্তূপ_Args.name = "";
+    স্তূপ_Args.options = options;
+    স্তূপ_Args.locale=locale;
+    cnv = ucnv_create_Converter_From_Shared_তথ্য(
+            myUConverter, const_cast<UConverter_Shared_তথ্য*>(shared_তথ্য),
+            &স্তূপ_Args, err);
 
     UTRACE_EXIT_PTR_STATUS(cnv, *err);
-    return cnv;
+    ফেরত cnv;
 }
 
 U_CFUNC UConverter*
-ucnv_createConverterFromPackage(const char *packageName, const char *converterName, UErrorCode * err)
+ucnv_createConverterFromPackage(ধ্রুবক অক্ষর *packageName, ধ্রুবক অক্ষর *converterName, UErrorCode * err)
 {
     UConverter *myUConverter;
-    UConverterSharedData *mySharedConverterData;
-    UConverterNamePieces stackPieces;
-    UConverterLoadArgs stackArgs=UCNV_LOAD_ARGS_INITIALIZER;
+    UConverter_Shared_তথ্য *my_Shared_Converter_তথ্য;
+    UConverterNamePieces স্তূপ_Pieces;
+    UConverterLoadArgs স্তূপ_Args=UCNV_LOAD_ARGS_INITIALIZER;
 
     UTRACE_ENTRY_OC(UTRACE_UCNV_OPEN_PACKAGE);
 
-    if(U_FAILURE(*err)) {
+    যদি(U_FAILURE(*err)) {
         UTRACE_EXIT_STATUS(*err);
-        return nullptr;
+        ফেরত nullptr;
     }
 
     UTRACE_DATA2(UTRACE_OPEN_CLOSE, "open converter %s from package %s", converterName, packageName);
 
     /* first, get the options out of the converterName string */
-    stackPieces.cnvName[0] = 0;
-    stackPieces.locale[0] = 0;
-    stackPieces.options = 0;
-    parseConverterOptions(converterName, &stackPieces, &stackArgs, err);
-    if (U_FAILURE(*err)) {
+    স্তূপ_Pieces.cnvName[0] = 0;
+    স্তূপ_Pieces.locale[0] = 0;
+    স্তূপ_Pieces.options = 0;
+    parseConverterOptions(converterName, &স্তূপ_Pieces, &স্তূপ_Args, err);
+    যদি (U_FAILURE(*err)) {
         /* Very bad name used. */
         UTRACE_EXIT_STATUS(*err);
-        return nullptr;
+        ফেরত nullptr;
     }
-    stackArgs.nestedLoads=1;
-    stackArgs.pkg=packageName;
+    স্তূপ_Args.nestedLoads=1;
+    স্তূপ_Args.pkg=packageName;
 
     /* open the data, unflatten the shared structure */
-    mySharedConverterData = createConverterFromFile(&stackArgs, err);
+    my_Shared_Converter_তথ্য = createConverterFromFile(&স্তূপ_Args, err);
 
-    if (U_FAILURE(*err)) {
+    যদি (U_FAILURE(*err)) {
         UTRACE_EXIT_STATUS(*err);
-        return nullptr;
+        ফেরত nullptr;
     }
 
     /* create the actual converter */
-    myUConverter = ucnv_createConverterFromSharedData(nullptr, mySharedConverterData, &stackArgs, err);
+    myUConverter = ucnv_create_Converter_From_Shared_তথ্য(nullptr, my_Shared_Converter_তথ্য, &স্তূপ_Args, err);
 
-    if (U_FAILURE(*err)) {
+    যদি (U_FAILURE(*err)) {
         ucnv_close(myUConverter);
         UTRACE_EXIT_STATUS(*err);
-        return nullptr;
+        ফেরত nullptr;
     }
 
     UTRACE_EXIT_PTR_STATUS(myUConverter, *err);
-    return myUConverter;
+    ফেরত myUConverter;
 }
 
 
 U_CFUNC UConverter*
-ucnv_createConverterFromSharedData(UConverter* myUConverter U_LIFETIME_BOUND,
-                                   UConverterSharedData* mySharedConverterData,
+ucnv_create_Converter_From_Shared_তথ্য(UConverter* myUConverter U_LIFETIME_BOUND,
+                                   UConverter_Shared_তথ্য* my_Shared_Converter_তথ্য,
                                    UConverterLoadArgs* pArgs,
                                    UErrorCode* err)
 {
     UBool isCopyLocal;
 
-    if(U_FAILURE(*err)) {
-        ucnv_unloadSharedDataIfReady(mySharedConverterData);
-        return myUConverter;
+    যদি(U_FAILURE(*err)) {
+        ucnv_unload_Shared_তথ্য_If_Ready(my_Shared_Converter_তথ্য);
+        ফেরত myUConverter;
     }
-    if(myUConverter == nullptr)
+    যদি(myUConverter == nullptr)
     {
-        myUConverter = (UConverter *) uprv_malloc (sizeof (UConverter));
-        if(myUConverter == nullptr)
+        myUConverter = (UConverter *) uprv_malloc (আকার (UConverter));
+        যদি(myUConverter == nullptr)
         {
             *err = U_MEMORY_ALLOCATION_ERROR;
-            ucnv_unloadSharedDataIfReady(mySharedConverterData);
-            return nullptr;
+            ucnv_unload_Shared_তথ্য_If_Ready(my_Shared_Converter_তথ্য);
+            ফেরত nullptr;
         }
-        isCopyLocal = false;
-    } else {
-        isCopyLocal = true;
+        isCopyLocal = মিথ্যা;
+    } অন্যথা {
+        isCopyLocal = সত্য;
     }
 
     /* initialize the converter */
-    uprv_memset(myUConverter, 0, sizeof(UConverter));
+    uprv_memset(myUConverter, 0, আকার(UConverter));
     myUConverter->isCopyLocal = isCopyLocal;
     /*myUConverter->isExtraLocal = false;*/ /* Set by the memset call */
-    myUConverter->sharedData = mySharedConverterData;
+    myUConverter->shared_তথ্য = my_Shared_Converter_তথ্য;
     myUConverter->options = pArgs->options;
-    if(!pArgs->onlyTestIsLoadable) {
+    যদি(!pArgs->onlyTestIsLoadable) {
         myUConverter->preFromUFirstCP = U_SENTINEL;
         myUConverter->fromCharErrorBehaviour = UCNV_TO_U_DEFAULT_CALLBACK;
         myUConverter->fromUCharErrorBehaviour = UCNV_FROM_U_DEFAULT_CALLBACK;
-        myUConverter->toUnicodeStatus = mySharedConverterData->toUnicodeStatus;
-        myUConverter->maxBytesPerUChar = mySharedConverterData->staticData->maxBytesPerChar;
-        myUConverter->subChar1 = mySharedConverterData->staticData->subChar1;
-        myUConverter->subCharLen = mySharedConverterData->staticData->subCharLen;
+        myUConverter->toUnicodeStatus = my_Shared_Converter_তথ্য->toUnicodeStatus;
+        myUConverter->maxBytesPerUChar = my_Shared_Converter_তথ্য->static_তথ্য->maxBytesPerChar;
+        myUConverter->subChar1 = my_Shared_Converter_তথ্য->static_তথ্য->subChar1;
+        myUConverter->subCharLen = my_Shared_Converter_তথ্য->static_তথ্য->subCharLen;
         myUConverter->subChars = (uint8_t *)myUConverter->subUChars;
-        uprv_memcpy(myUConverter->subChars, mySharedConverterData->staticData->subChar, myUConverter->subCharLen);
+        uprv_memcpy(myUConverter->subChars, my_Shared_Converter_তথ্য->static_তথ্য->subChar, myUConverter->subCharLen);
         myUConverter->toUCallbackReason = UCNV_ILLEGAL; /* default reason to invoke (*fromCharErrorBehaviour) */
     }
 
-    if(mySharedConverterData->impl->open != nullptr) {
-        mySharedConverterData->impl->open(myUConverter, pArgs, err);
-        if(U_FAILURE(*err) && !pArgs->onlyTestIsLoadable) {
+    যদি(my_Shared_Converter_তথ্য->impl->open != nullptr) {
+        my_Shared_Converter_তথ্য->impl->open(myUConverter, pArgs, err);
+        যদি(U_FAILURE(*err) && !pArgs->onlyTestIsLoadable) {
             /* don't ucnv_close() if onlyTestIsLoadable because not fully initialized */
             ucnv_close(myUConverter);
-            return nullptr;
+            ফেরত nullptr;
         }
     }
 
-    return myUConverter;
+    ফেরত myUConverter;
 }
 
 /*Frees all shared immutable objects that aren't referred to (reference count = 0)
@@ -1033,10 +1033,10 @@ ucnv_createConverterFromSharedData(UConverter* myUConverter U_LIFETIME_BOUND,
 U_CAPI int32_t U_EXPORT2
 ucnv_flushCache ()
 {
-    UConverterSharedData *mySharedData = nullptr;
+    UConverter_Shared_তথ্য *my_Shared_তথ্য = nullptr;
     int32_t pos;
-    int32_t tableDeletedNum = 0;
-    const UHashElement *e;
+    int32_t table_Deleted_অঙ্ক = 0;
+    ধ্রুবক UHashElement *e;
     /*UErrorCode status = U_ILLEGAL_ARGUMENT_ERROR;*/
     int32_t i, remaining;
 
@@ -1048,9 +1048,9 @@ ucnv_flushCache ()
     /*if shared data hasn't even been lazy evaluated yet
     * return 0
     */
-    if (SHARED_DATA_HASHTABLE == nullptr) {
-        UTRACE_EXIT_VALUE((int32_t)0);
-        return 0;
+    যদি (SHARED_তথ্য_HASHTABLE == nullptr) {
+        UTRACE_EXIT_মান((int32_t)0);
+        ফেরত 0;
     }
 
     /*creates an enumeration to iterate through every element in the
@@ -1072,67 +1072,67 @@ ucnv_flushCache ()
      * converter's reference counter down to 0.
      */
     i = 0;
-    do {
+    করো {
         remaining = 0;
         pos = UHASH_FIRST;
-        while ((e = uhash_nextElement (SHARED_DATA_HASHTABLE, &pos)) != nullptr)
+        যখন ((e = uhash_পরবর্তী_Element (SHARED_তথ্য_HASHTABLE, &pos)) != nullptr)
         {
-            mySharedData = (UConverterSharedData *) e->value.pointer;
+            my_Shared_তথ্য = (UConverter_Shared_তথ্য *) e->value.pointer;
             /*deletes only if reference counter == 0 */
-            if (mySharedData->referenceCounter == 0)
+            যদি (my_Shared_তথ্য->reference_গণক == 0)
             {
-                tableDeletedNum++;
+                table_Deleted_অঙ্ক++;
 
-                UCNV_DEBUG_LOG("del",mySharedData->staticData->name,mySharedData);
+                UCNV_DEBUG_LOG("del",my_Shared_তথ্য->static_তথ্য->name,my_Shared_তথ্য);
 
-                uhash_removeElement(SHARED_DATA_HASHTABLE, e);
-                mySharedData->sharedDataCached = false;
-                ucnv_deleteSharedConverterData (mySharedData);
-            } else {
+                uhash_removeElement(SHARED_তথ্য_HASHTABLE, e);
+                my_Shared_তথ্য->shared_তথ্য_Cached = মিথ্যা;
+                ucnv_delete_Shared_Converter_তথ্য (my_Shared_তথ্য);
+            } অন্যথা {
                 ++remaining;
             }
         }
-    } while(++i == 1 && remaining > 0);
+    } যখন(++i == 1 && remaining > 0);
     umtx_unlock(&cnvCacheMutex);
 
     UTRACE_DATA1(UTRACE_INFO, "ucnv_flushCache() exits with %d converters remaining", remaining);
 
-    UTRACE_EXIT_VALUE(tableDeletedNum);
-    return tableDeletedNum;
+    UTRACE_EXIT_মান(table_Deleted_অঙ্ক);
+    ফেরত table_Deleted_অঙ্ক;
 }
 
 /* available converters list --------------------------------------------------- */
 
-static void U_CALLCONV initAvailableConvertersList(UErrorCode &errCode) {
-    U_ASSERT(gAvailableConverterCount == 0);
+স্থির শূন্য U_CALLCONV initAvailableConvertersList(UErrorCode &errCode) {
+    U_ASSERT(g_Available_Converter_গুনতি == 0);
     U_ASSERT(gAvailableConverters == nullptr);
 
     ucnv_enableCleanup();
     UEnumeration *allConvEnum = ucnv_openAllNames(&errCode);
-    int32_t allConverterCount = uenum_count(allConvEnum, &errCode);
-    if (U_FAILURE(errCode)) {
-        return;
+    int32_t all_Converter_গুনতি = uenum_গুনতি(allConvEnum, &errCode);
+    যদি (U_FAILURE(errCode)) {
+        ফেরত;
     }
 
     /* We can't have more than "*converterTable" converters to open */
-    gAvailableConverters = static_cast<const char**>(uprv_malloc(allConverterCount * sizeof(char*)));
-    if (!gAvailableConverters) {
+    gAvailableConverters = static_cast<ধ্রুবক অক্ষর**>(uprv_malloc(all_Converter_গুনতি * আকার(অক্ষর*)));
+    যদি (!gAvailableConverters) {
         errCode = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        ফেরত;
     }
 
     /* Open the default converter to make sure that it has first dibs in the hash table. */
     UErrorCode localStatus = U_ZERO_ERROR;
-    UConverter tempConverter;
-    ucnv_close(ucnv_createConverter(&tempConverter, nullptr, &localStatus));
+    UConverter অস্থায়ী_Converter;
+    ucnv_close(ucnv_createConverter(&অস্থায়ী_Converter, nullptr, &localStatus));
 
-    gAvailableConverterCount = 0;
+    g_Available_Converter_গুনতি = 0;
 
-    for (int32_t idx = 0; idx < allConverterCount; idx++) {
+    জন্য (int32_t idx = 0; idx < all_Converter_গুনতি; idx++) {
         localStatus = U_ZERO_ERROR;
-        const char *converterName = uenum_next(allConvEnum, nullptr, &localStatus);
-        if (ucnv_canCreateConverter(converterName, &localStatus)) {
-            gAvailableConverters[gAvailableConverterCount++] = converterName;
+        ধ্রুবক অক্ষর *converterName = uenum_পরবর্তী(allConvEnum, nullptr, &localStatus);
+        যদি (ucnv_canCreateConverter(converterName, &localStatus)) {
+            gAvailableConverters[g_Available_Converter_গুনতি++] = converterName;
         }
     }
 
@@ -1140,33 +1140,33 @@ static void U_CALLCONV initAvailableConvertersList(UErrorCode &errCode) {
 }
 
 
-static UBool haveAvailableConverterList(UErrorCode *pErrorCode) {
+স্থির UBool haveAvailableConverterList(UErrorCode *pErrorCode) {
     umtx_initOnce(gAvailableConvertersInitOnce, &initAvailableConvertersList, *pErrorCode);
-    return U_SUCCESS(*pErrorCode);
+    ফেরত U_SUCCESS(*pErrorCode);
 }
 
 U_CFUNC uint16_t
-ucnv_bld_countAvailableConverters(UErrorCode *pErrorCode) {
-    if (haveAvailableConverterList(pErrorCode)) {
-        return gAvailableConverterCount;
+ucnv_bld_গুনতি_Available_Converters(UErrorCode *pErrorCode) {
+    যদি (haveAvailableConverterList(pErrorCode)) {
+        ফেরত g_Available_Converter_গুনতি;
     }
-    return 0;
+    ফেরত 0;
 }
 
-U_CFUNC const char *
+U_CFUNC ধ্রুবক অক্ষর *
 ucnv_bld_getAvailableConverter(uint16_t n, UErrorCode *pErrorCode) {
-    if (haveAvailableConverterList(pErrorCode)) {
-        if (n < gAvailableConverterCount) {
-            return gAvailableConverters[n];
+    যদি (haveAvailableConverterList(pErrorCode)) {
+        যদি (n < g_Available_Converter_গুনতি) {
+            ফেরত gAvailableConverters[n];
         }
-        *pErrorCode = U_INDEX_OUTOFBOUNDS_ERROR;
+        *pErrorCode = U_সূচক_OUTOFBOUNDS_ERROR;
     }
-    return nullptr;
+    ফেরত nullptr;
 }
 
 /* default converter name --------------------------------------------------- */
 
-#if !U_CHARSET_IS_UTF8
+#যদি !U_CHARSET_IS_UTF8
 /*
 Copy the canonical converter name.
 ucnv_getDefaultName must be thread safe, which can call this function.
@@ -1179,39 +1179,39 @@ would be the same type of default converter for a successive string.
 Since the name is a returned via ucnv_getDefaultName without copying,
 you shouldn't be modifying or deleting the string from a separate thread.
 */
-static inline void
-internalSetName(const char *name, UErrorCode *status) {
-    UConverterNamePieces stackPieces;
-    UConverterLoadArgs stackArgs=UCNV_LOAD_ARGS_INITIALIZER;
+স্থির অন্তঃরেখ শূন্য
+internalSetName(ধ্রুবক অক্ষর *name, UErrorCode *status) {
+    UConverterNamePieces স্তূপ_Pieces;
+    UConverterLoadArgs স্তূপ_Args=UCNV_LOAD_ARGS_INITIALIZER;
     int32_t length=(int32_t)(uprv_strlen(name));
     UBool containsOption = (UBool)(uprv_strchr(name, UCNV_OPTION_SEP_CHAR) != nullptr);
-    const UConverterSharedData *algorithmicSharedData;
+    ধ্রুবক UConverter_Shared_তথ্য *algorithmic_Shared_তথ্য;
 
-    stackArgs.name = name;
-    if(containsOption) {
-        stackPieces.cnvName[0] = 0;
-        stackPieces.locale[0] = 0;
-        stackPieces.options = 0;
-        parseConverterOptions(name, &stackPieces, &stackArgs, status);
-        if(U_FAILURE(*status)) {
-            return;
+    স্তূপ_Args.name = name;
+    যদি(containsOption) {
+        স্তূপ_Pieces.cnvName[0] = 0;
+        স্তূপ_Pieces.locale[0] = 0;
+        স্তূপ_Pieces.options = 0;
+        parseConverterOptions(name, &স্তূপ_Pieces, &স্তূপ_Args, status);
+        যদি(U_FAILURE(*status)) {
+            ফেরত;
         }
     }
-    algorithmicSharedData = getAlgorithmicTypeFromName(stackArgs.name);
+    algorithmic_Shared_তথ্য = getAlgorithmicTypeFromName(স্তূপ_Args.name);
 
     umtx_lock(&cnvCacheMutex);
 
-    gDefaultAlgorithmicSharedData = algorithmicSharedData;
+    g_Default_Algorithmic_Shared_তথ্য = algorithmic_Shared_তথ্য;
     gDefaultConverterContainsOption = containsOption;
-    uprv_memcpy(gDefaultConverterNameBuffer, name, length);
-    gDefaultConverterNameBuffer[length]=0;
+    uprv_memcpy(g_Default_Converter_Name_বাফার, name, length);
+    g_Default_Converter_Name_বাফার[length]=0;
 
     /* gDefaultConverterName MUST be the last global var set by this function.  */
     /*    It is the variable checked in ucnv_getDefaultName() to see if initialization is required. */
     //    But there is nothing here preventing that from being reordered, either by the compiler
     //             or hardware. I'm adding the mutex to ucnv_getDefaultName for now. UMTX_CHECK is not enough.
     //             -- Andy
-    gDefaultConverterName = gDefaultConverterNameBuffer;
+    gDefaultConverterName = g_Default_Converter_Name_বাফার;
 
     ucnv_enableCleanup();
 
@@ -1227,13 +1227,13 @@ internalSetName(const char *name, UErrorCode *status) {
  * It assumes that setting a pointer is atomic.
  */
 
-U_CAPI const char*  U_EXPORT2
+U_CAPI ধ্রুবক অক্ষর*  U_EXPORT2
 ucnv_getDefaultName() {
-#if U_CHARSET_IS_UTF8
-    return "UTF-8";
-#else
+#যদি U_CHARSET_IS_UTF8
+    ফেরত "UTF-8";
+#অন্যথা
     /* local variable to be thread-safe */
-    const char *name;
+    ধ্রুবক অক্ষর *name;
 
     /*
     Concurrent calls to ucnv_getDefaultName must be thread safe,
@@ -1243,31 +1243,31 @@ ucnv_getDefaultName() {
         icu::Mutex lock(&cnvCacheMutex);
         name = gDefaultConverterName;
     }
-    if(name==nullptr) {
+    যদি(name==nullptr) {
         UErrorCode errorCode = U_ZERO_ERROR;
         UConverter *cnv = nullptr;
 
         name = uprv_getDefaultCodepage();
 
         /* if the name is there, test it out and get the canonical name with options */
-        if(name != nullptr) {
+        যদি(name != nullptr) {
             cnv = ucnv_open(name, &errorCode);
-            if(U_SUCCESS(errorCode) && cnv != nullptr) {
+            যদি(U_SUCCESS(errorCode) && cnv != nullptr) {
                 name = ucnv_getName(cnv, &errorCode);
             }
         }
 
-        if(name == nullptr || name[0] == 0
+        যদি(name == nullptr || name[0] == 0
             || U_FAILURE(errorCode) || cnv == nullptr
-            || uprv_strlen(name)>=sizeof(gDefaultConverterNameBuffer))
+            || uprv_strlen(name)>=আকার(g_Default_Converter_Name_বাফার))
         {
             /* Panic time, let's use a fallback. */
-#if (U_CHARSET_FAMILY == U_ASCII_FAMILY)
+#যদি (U_CHARSET_FAMILY == U_ASCII_FAMILY)
             name = "US-ASCII";
             /* there is no 'algorithmic' converter for EBCDIC */
-#elif U_PLATFORM == U_PF_OS390
+#নতুবা_যদি U_PLATFORM == U_PF_OS390
             name = "ibm-1047_P100-1995" UCNV_SWAP_LFNL_OPTION_STRING;
-#else
+#অন্যথা
             name = "ibm-37_P100-1995";
 #endif
         }
@@ -1278,34 +1278,34 @@ ucnv_getDefaultName() {
         ucnv_close(cnv);
     }
 
-    return name;
+    ফেরত name;
 #endif
 }
 
-#if U_CHARSET_IS_UTF8
-U_CAPI void U_EXPORT2 ucnv_setDefaultName(const char *) {}
-#else
+#যদি U_CHARSET_IS_UTF8
+U_CAPI শূন্য U_EXPORT2 ucnv_setDefaultName(ধ্রুবক অক্ষর *) {}
+#অন্যথা
 /*
 This function is not thread safe, and it can't be thread safe.
 See internalSetName or the API reference for details.
 */
-U_CAPI void U_EXPORT2
-ucnv_setDefaultName(const char *converterName) {
-    if(converterName==nullptr) {
+U_CAPI শূন্য U_EXPORT2
+ucnv_setDefaultName(ধ্রুবক অক্ষর *converterName) {
+    যদি(converterName==nullptr) {
         /* reset to the default codepage */
         gDefaultConverterName=nullptr;
-    } else {
+    } অন্যথা {
         UErrorCode errorCode = U_ZERO_ERROR;
         UConverter *cnv = nullptr;
-        const char *name = nullptr;
+        ধ্রুবক অক্ষর *name = nullptr;
 
         /* if the name is there, test it out and get the canonical name with options */
         cnv = ucnv_open(converterName, &errorCode);
-        if(U_SUCCESS(errorCode) && cnv != nullptr) {
+        যদি(U_SUCCESS(errorCode) && cnv != nullptr) {
             name = ucnv_getName(cnv, &errorCode);
         }
 
-        if(U_SUCCESS(errorCode) && name!=nullptr) {
+        যদি(U_SUCCESS(errorCode) && name!=nullptr) {
             internalSetName(name, &errorCode);
         }
         /* else this converter is bad to use. Don't change it to a bad value. */
@@ -1323,169 +1323,169 @@ ucnv_setDefaultName(const char *converterName) {
 
 /* most of this might belong more properly into ucnvmbcs.c, but that is so large */
 
-#if !UCONFIG_NO_LEGACY_CONVERSION
+#যদি !UCONFIG_NO_LEGACY_CONVERSION
 
 U_CAPI int32_t U_EXPORT2
-ucnv_swap(const UDataSwapper *ds,
-          const void *inData, int32_t length, void *outData,
+ucnv_swap(ধ্রুবক UDataSwapper *ds,
+          ধ্রুবক শূন্য *in_তথ্য, int32_t length, শূন্য *out_তথ্য,
           UErrorCode *pErrorCode) {
-    const UDataInfo *pInfo;
-    int32_t headerSize;
+    ধ্রুবক UDataInfo *pInfo;
+    int32_t header_আকার;
 
-    const uint8_t *inBytes;
+    ধ্রুবক uint8_t *inBytes;
     uint8_t *outBytes;
 
-    uint32_t offset, count, staticDataSize;
+    uint32_t offset, count, static_তথ্য_আকার;
     int32_t size;
 
-    const UConverterStaticData *inStaticData;
-    UConverterStaticData *outStaticData;
+    ধ্রুবক UConverter_Static_তথ্য *in_Static_তথ্য;
+    UConverter_Static_তথ্য *out_Static_তথ্য;
 
-    const _MBCSHeader *inMBCSHeader;
+    ধ্রুবক _MBCSHeader *inMBCSHeader;
     _MBCSHeader *outMBCSHeader;
     _MBCSHeader mbcsHeader;
-    uint32_t mbcsHeaderLength;
-    UBool noFromU=false;
+    uint32_t mbcs_Header_দৈর্ঘ্য;
+    UBool noFromU=মিথ্যা;
 
     uint8_t outputType;
 
-    int32_t maxFastUChar, mbcsIndexLength;
+    int32_t maxFastUChar, mbcs_সূচক_দৈর্ঘ্য;
 
-    const int32_t *inExtIndexes;
+    ধ্রুবক int32_t *inExtIndexes;
     int32_t extOffset;
 
     /* udata_swapDataHeader checks the arguments */
-    headerSize=udata_swapDataHeader(ds, inData, length, outData, pErrorCode);
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    header_আকার=udata_swap_তথ্য_Header(ds, in_তথ্য, length, out_তথ্য, pErrorCode);
+    যদি(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
+        ফেরত 0;
     }
 
     /* check data format and format version */
-    pInfo=(const UDataInfo *)((const char *)inData+4);
-    if(!(
-        pInfo->dataFormat[0]==0x63 &&   /* dataFormat="cnvt" */
-        pInfo->dataFormat[1]==0x6e &&
-        pInfo->dataFormat[2]==0x76 &&
-        pInfo->dataFormat[3]==0x74 &&
+    pInfo=(ধ্রুবক UDataInfo *)((ধ্রুবক অক্ষর *)in_তথ্য+4);
+    যদি(!(
+        pInfo->তথ্য_Format[0]==0x63 &&   /* dataFormat="cnvt" */
+        pInfo->তথ্য_Format[1]==0x6e &&
+        pInfo->তথ্য_Format[2]==0x76 &&
+        pInfo->তথ্য_Format[3]==0x74 &&
         pInfo->formatVersion[0]==6 &&
         pInfo->formatVersion[1]>=2
     )) {
         udata_printError(ds, "ucnv_swap(): data format %02x.%02x.%02x.%02x (format version %02x.%02x) is not recognized as an ICU .cnv conversion table\n",
-                         pInfo->dataFormat[0], pInfo->dataFormat[1],
-                         pInfo->dataFormat[2], pInfo->dataFormat[3],
+                         pInfo->তথ্য_Format[0], pInfo->তথ্য_Format[1],
+                         pInfo->তথ্য_Format[2], pInfo->তথ্য_Format[3],
                          pInfo->formatVersion[0], pInfo->formatVersion[1]);
         *pErrorCode=U_UNSUPPORTED_ERROR;
-        return 0;
+        ফেরত 0;
     }
 
-    inBytes=(const uint8_t *)inData+headerSize;
-    outBytes=(outData == nullptr) ? nullptr : (uint8_t *)outData+headerSize;
+    inBytes=(ধ্রুবক uint8_t *)in_তথ্য+header_আকার;
+    outBytes=(out_তথ্য == nullptr) ? nullptr : (uint8_t *)out_তথ্য+header_আকার;
 
     /* read the initial UConverterStaticData structure after the UDataInfo header */
-    inStaticData=(const UConverterStaticData *)inBytes;
-    outStaticData=(UConverterStaticData *)outBytes;
+    in_Static_তথ্য=(ধ্রুবক UConverter_Static_তথ্য *)inBytes;
+    out_Static_তথ্য=(UConverter_Static_তথ্য *)outBytes;
 
-    if(length<0) {
-        staticDataSize=ds->readUInt32(inStaticData->structSize);
-    } else {
-        length-=headerSize;
-        if( length<(int32_t)sizeof(UConverterStaticData) ||
-            (uint32_t)length<(staticDataSize=ds->readUInt32(inStaticData->structSize))
+    যদি(length<0) {
+        static_তথ্য_আকার=ds->readUInt32(in_Static_তথ্য->struct_আকার);
+    } অন্যথা {
+        length-=header_আকার;
+        যদি( length<(int32_t)আকার(UConverter_Static_তথ্য) ||
+            (uint32_t)length<(static_তথ্য_আকার=ds->readUInt32(in_Static_তথ্য->struct_আকার))
         ) {
             udata_printError(ds, "ucnv_swap(): too few bytes (%d after header) for an ICU .cnv conversion table\n",
                              length);
-            *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-            return 0;
+            *pErrorCode=U_সূচক_OUTOFBOUNDS_ERROR;
+            ফেরত 0;
         }
     }
 
-    if(length>=0) {
+    যদি(length>=0) {
         /* swap the static data */
-        if(inStaticData!=outStaticData) {
-            uprv_memcpy(outStaticData, inStaticData, staticDataSize);
+        যদি(in_Static_তথ্য!=out_Static_তথ্য) {
+            uprv_memcpy(out_Static_তথ্য, in_Static_তথ্য, static_তথ্য_আকার);
         }
 
-        ds->swapArray32(ds, &inStaticData->structSize, 4,
-                           &outStaticData->structSize, pErrorCode);
-        ds->swapArray32(ds, &inStaticData->codepage, 4,
-                           &outStaticData->codepage, pErrorCode);
+        ds->swapArray32(ds, &in_Static_তথ্য->struct_আকার, 4,
+                           &out_Static_তথ্য->struct_আকার, pErrorCode);
+        ds->swapArray32(ds, &in_Static_তথ্য->codepage, 4,
+                           &out_Static_তথ্য->codepage, pErrorCode);
 
-        ds->swapInvChars(ds, inStaticData->name, (int32_t)uprv_strlen(inStaticData->name),
-                            outStaticData->name, pErrorCode);
-        if(U_FAILURE(*pErrorCode)) {
+        ds->swapInvChars(ds, in_Static_তথ্য->name, (int32_t)uprv_strlen(in_Static_তথ্য->name),
+                            out_Static_তথ্য->name, pErrorCode);
+        যদি(U_FAILURE(*pErrorCode)) {
             udata_printError(ds, "ucnv_swap(): error swapping converter name\n");
-            return 0;
+            ফেরত 0;
         }
     }
 
-    inBytes+=staticDataSize;
-    if (outBytes != nullptr) outBytes+=staticDataSize;
-    if(length>=0) {
-        length-=(int32_t)staticDataSize;
+    inBytes+=static_তথ্য_আকার;
+    যদি (outBytes != nullptr) outBytes+=static_তথ্য_আকার;
+    যদি(length>=0) {
+        length-=(int32_t)static_তথ্য_আকার;
     }
 
     /* check for supported conversionType values */
-    if(inStaticData->conversionType==UCNV_MBCS) {
+    যদি(in_Static_তথ্য->conversionType==UCNV_MBCS) {
         /* swap MBCS data */
-        inMBCSHeader=(const _MBCSHeader *)inBytes;
+        inMBCSHeader=(ধ্রুবক _MBCSHeader *)inBytes;
         outMBCSHeader=(_MBCSHeader *)outBytes;
 
-        if(0<=length && length<(int32_t)sizeof(_MBCSHeader)) {
+        যদি(0<=length && length<(int32_t)আকার(_MBCSHeader)) {
             udata_printError(ds, "ucnv_swap(): too few bytes (%d after headers) for an ICU MBCS .cnv conversion table\n",
                                 length);
-            *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-            return 0;
+            *pErrorCode=U_সূচক_OUTOFBOUNDS_ERROR;
+            ফেরত 0;
         }
-        if(inMBCSHeader->version[0]==4 && inMBCSHeader->version[1]>=1) {
-            mbcsHeaderLength=MBCS_HEADER_V4_LENGTH;
-        } else if(inMBCSHeader->version[0]==5 && inMBCSHeader->version[1]>=3 &&
+        যদি(inMBCSHeader->version[0]==4 && inMBCSHeader->version[1]>=1) {
+            mbcs_Header_দৈর্ঘ্য=MBCS_HEADER_V4_দৈর্ঘ্য;
+        } অন্যথা যদি(inMBCSHeader->version[0]==5 && inMBCSHeader->version[1]>=3 &&
                   ((mbcsHeader.options=ds->readUInt32(inMBCSHeader->options))&
                    MBCS_OPT_UNKNOWN_INCOMPATIBLE_MASK)==0
         ) {
-            mbcsHeaderLength=mbcsHeader.options&MBCS_OPT_LENGTH_MASK;
+            mbcs_Header_দৈর্ঘ্য=mbcsHeader.options&MBCS_OPT_দৈর্ঘ্য_MASK;
             noFromU = (mbcsHeader.options & MBCS_OPT_NO_FROM_U) != 0;
-        } else {
+        } অন্যথা {
             udata_printError(ds, "ucnv_swap(): unsupported _MBCSHeader.version %d.%d\n",
                              inMBCSHeader->version[0], inMBCSHeader->version[1]);
             *pErrorCode=U_UNSUPPORTED_ERROR;
-            return 0;
+            ফেরত 0;
         }
 
         uprv_memcpy(mbcsHeader.version, inMBCSHeader->version, 4);
-        mbcsHeader.countStates=         ds->readUInt32(inMBCSHeader->countStates);
-        mbcsHeader.countToUFallbacks=   ds->readUInt32(inMBCSHeader->countToUFallbacks);
+        mbcsHeader.গুনতি_States=         ds->readUInt32(inMBCSHeader->গুনতি_States);
+        mbcsHeader.গুনতি_To_UFallbacks=   ds->readUInt32(inMBCSHeader->গুনতি_To_UFallbacks);
         mbcsHeader.offsetToUCodeUnits=  ds->readUInt32(inMBCSHeader->offsetToUCodeUnits);
         mbcsHeader.offsetFromUTable=    ds->readUInt32(inMBCSHeader->offsetFromUTable);
         mbcsHeader.offsetFromUBytes=    ds->readUInt32(inMBCSHeader->offsetFromUBytes);
         mbcsHeader.flags=               ds->readUInt32(inMBCSHeader->flags);
-        mbcsHeader.fromUBytesLength=    ds->readUInt32(inMBCSHeader->fromUBytesLength);
+        mbcsHeader.from_UBytes_দৈর্ঘ্য=    ds->readUInt32(inMBCSHeader->from_UBytes_দৈর্ঘ্য);
         /* mbcsHeader.options have been read above */
 
         extOffset=(int32_t)(mbcsHeader.flags>>8);
         outputType=(uint8_t)mbcsHeader.flags;
-        if(noFromU && outputType==MBCS_OUTPUT_1) {
+        যদি(noFromU && outputType==MBCS_OUTPUT_1) {
             udata_printError(ds, "ucnv_swap(): unsupported combination of makeconv --small with SBCS\n");
             *pErrorCode=U_UNSUPPORTED_ERROR;
-            return 0;
+            ফেরত 0;
         }
 
         /* make sure that the output type is known */
-        switch(outputType) {
-        case MBCS_OUTPUT_1:
-        case MBCS_OUTPUT_2:
-        case MBCS_OUTPUT_3:
-        case MBCS_OUTPUT_4:
-        case MBCS_OUTPUT_3_EUC:
-        case MBCS_OUTPUT_4_EUC:
-        case MBCS_OUTPUT_2_SISO:
-        case MBCS_OUTPUT_EXT_ONLY:
+        নির্বাচন(outputType) {
+        ক্ষেত্র MBCS_OUTPUT_1:
+        ক্ষেত্র MBCS_OUTPUT_2:
+        ক্ষেত্র MBCS_OUTPUT_3:
+        ক্ষেত্র MBCS_OUTPUT_4:
+        ক্ষেত্র MBCS_OUTPUT_3_EUC:
+        ক্ষেত্র MBCS_OUTPUT_4_EUC:
+        ক্ষেত্র MBCS_OUTPUT_2_SISO:
+        ক্ষেত্র MBCS_OUTPUT_EXT_ONLY:
             /* OK */
-            break;
-        default:
+            বিরতি;
+        পূর্বনির্ধারিত:
             udata_printError(ds, "ucnv_swap(): unsupported MBCS output type 0x%x\n",
                              outputType);
             *pErrorCode=U_UNSUPPORTED_ERROR;
-            return 0;
+            ফেরত 0;
         }
 
         /* calculate the length of the MBCS data */
@@ -1497,76 +1497,76 @@ ucnv_swap(const UDataSwapper *ds,
          * where maxFastUChar=((mbcsHeader.version[2]<<8)|0xff).
          */
         maxFastUChar=0;
-        mbcsIndexLength=0;
-        if( outputType!=MBCS_OUTPUT_EXT_ONLY && outputType!=MBCS_OUTPUT_1 &&
+        mbcs_সূচক_দৈর্ঘ্য=0;
+        যদি( outputType!=MBCS_OUTPUT_EXT_ONLY && outputType!=MBCS_OUTPUT_1 &&
             mbcsHeader.version[1]>=3 && (maxFastUChar=mbcsHeader.version[2])!=0
         ) {
             maxFastUChar=(maxFastUChar<<8)|0xff;
-            mbcsIndexLength=((maxFastUChar+1)>>6)*2;  /* number of bytes */
+            mbcs_সূচক_দৈর্ঘ্য=((maxFastUChar+1)>>6)*2;  /* number of bytes */
         }
 
-        if(extOffset==0) {
-            size=(int32_t)(mbcsHeader.offsetFromUBytes+mbcsIndexLength);
-            if(!noFromU) {
-                size+=(int32_t)mbcsHeader.fromUBytesLength;
+        যদি(extOffset==0) {
+            size=(int32_t)(mbcsHeader.offsetFromUBytes+mbcs_সূচক_দৈর্ঘ্য);
+            যদি(!noFromU) {
+                size+=(int32_t)mbcsHeader.from_UBytes_দৈর্ঘ্য;
             }
 
             /* avoid compiler warnings - not otherwise necessary, and the value does not matter */
             inExtIndexes=nullptr;
-        } else {
+        } অন্যথা {
             /* there is extension data after the base data, see ucnv_ext.h */
-            if(length>=0 && length<(extOffset+UCNV_EXT_INDEXES_MIN_LENGTH*4)) {
+            যদি(length>=0 && length<(extOffset+UCNV_EXT_INDEXES_MIN_দৈর্ঘ্য*4)) {
                 udata_printError(ds, "ucnv_swap(): too few bytes (%d after headers) for an ICU MBCS .cnv conversion table with extension data\n",
                                  length);
-                *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-                return 0;
+                *pErrorCode=U_সূচক_OUTOFBOUNDS_ERROR;
+                ফেরত 0;
             }
 
-            inExtIndexes=(const int32_t *)(inBytes+extOffset);
-            size=extOffset+udata_readInt32(ds, inExtIndexes[UCNV_EXT_SIZE]);
+            inExtIndexes=(ধ্রুবক int32_t *)(inBytes+extOffset);
+            size=extOffset+udata_readInt32(ds, inExtIndexes[UCNV_EXT_আকার]);
         }
 
-        if(length>=0) {
-            if(length<size) {
+        যদি(length>=0) {
+            যদি(length<size) {
                 udata_printError(ds, "ucnv_swap(): too few bytes (%d after headers) for an ICU MBCS .cnv conversion table\n",
                                  length);
-                *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-                return 0;
+                *pErrorCode=U_সূচক_OUTOFBOUNDS_ERROR;
+                ফেরত 0;
             }
 
             /* copy the data for inaccessible bytes */
-            if(inBytes!=outBytes) {
+            যদি(inBytes!=outBytes) {
                 uprv_memcpy(outBytes, inBytes, size);
             }
 
             /* swap the MBCSHeader, except for the version field */
-            count=mbcsHeaderLength*4;
-            ds->swapArray32(ds, &inMBCSHeader->countStates, count-4,
-                               &outMBCSHeader->countStates, pErrorCode);
+            count=mbcs_Header_দৈর্ঘ্য*4;
+            ds->swapArray32(ds, &inMBCSHeader->গুনতি_States, count-4,
+                               &outMBCSHeader->গুনতি_States, pErrorCode);
 
-            if(outputType==MBCS_OUTPUT_EXT_ONLY) {
+            যদি(outputType==MBCS_OUTPUT_EXT_ONLY) {
                 /*
                  * extension-only file,
                  * contains a base name instead of normal base table data
                  */
 
                 /* swap the base name, between the header and the extension data */
-                const char *inBaseName=(const char *)inBytes+count;
-                char *outBaseName=(char *)outBytes+count;
+                ধ্রুবক অক্ষর *inBaseName=(ধ্রুবক অক্ষর *)inBytes+count;
+                অক্ষর *outBaseName=(অক্ষর *)outBytes+count;
                 ds->swapInvChars(ds, inBaseName, (int32_t)uprv_strlen(inBaseName),
                                     outBaseName, pErrorCode);
-            } else {
+            } অন্যথা {
                 /* normal file with base table data */
 
                 /* swap the state table, 1kB per state */
                 offset=count;
-                count=mbcsHeader.countStates*1024;
+                count=mbcsHeader.গুনতি_States*1024;
                 ds->swapArray32(ds, inBytes+offset, (int32_t)count,
                                    outBytes+offset, pErrorCode);
 
                 /* swap the toUFallbacks[] */
                 offset+=count;
-                count=mbcsHeader.countToUFallbacks*8;
+                count=mbcsHeader.গুনতি_To_UFallbacks*8;
                 ds->swapArray32(ds, inBytes+offset, (int32_t)count,
                                    outBytes+offset, pErrorCode);
 
@@ -1579,18 +1579,18 @@ ucnv_swap(const UDataSwapper *ds,
                 /* offset to the stage 1 table, independent of the outputType */
                 offset=mbcsHeader.offsetFromUTable;
 
-                if(outputType==MBCS_OUTPUT_1) {
+                যদি(outputType==MBCS_OUTPUT_1) {
                     /* SBCS: swap the fromU tables, all 16 bits wide */
-                    count=(mbcsHeader.offsetFromUBytes-offset)+mbcsHeader.fromUBytesLength;
+                    count=(mbcsHeader.offsetFromUBytes-offset)+mbcsHeader.from_UBytes_দৈর্ঘ্য;
                     ds->swapArray16(ds, inBytes+offset, (int32_t)count,
                                        outBytes+offset, pErrorCode);
-                } else {
+                } অন্যথা {
                     /* otherwise: swap the stage tables separately */
 
                     /* stage 1 table: uint16_t[0x440 or 0x40] */
-                    if(inStaticData->unicodeMask&UCNV_HAS_SUPPLEMENTARY) {
+                    যদি(in_Static_তথ্য->unicodeMask&UCNV_HAS_SUPPLEMENTARY) {
                         count=0x440*2; /* for all of Unicode */
-                    } else {
+                    } অন্যথা {
                         count=0x40*2; /* only BMP */
                     }
                     ds->swapArray16(ds, inBytes+offset, (int32_t)count,
@@ -1604,87 +1604,87 @@ ucnv_swap(const UDataSwapper *ds,
 
                     /* stage 3/result bytes: sometimes uint16_t[] or uint32_t[] */
                     offset=mbcsHeader.offsetFromUBytes;
-                    count= noFromU ? 0 : mbcsHeader.fromUBytesLength;
-                    switch(outputType) {
-                    case MBCS_OUTPUT_2:
-                    case MBCS_OUTPUT_3_EUC:
-                    case MBCS_OUTPUT_2_SISO:
+                    count= noFromU ? 0 : mbcsHeader.from_UBytes_দৈর্ঘ্য;
+                    নির্বাচন(outputType) {
+                    ক্ষেত্র MBCS_OUTPUT_2:
+                    ক্ষেত্র MBCS_OUTPUT_3_EUC:
+                    ক্ষেত্র MBCS_OUTPUT_2_SISO:
                         ds->swapArray16(ds, inBytes+offset, (int32_t)count,
                                            outBytes+offset, pErrorCode);
-                        break;
-                    case MBCS_OUTPUT_4:
+                        বিরতি;
+                    ক্ষেত্র MBCS_OUTPUT_4:
                         ds->swapArray32(ds, inBytes+offset, (int32_t)count,
                                            outBytes+offset, pErrorCode);
-                        break;
-                    default:
+                        বিরতি;
+                    পূর্বনির্ধারিত:
                         /* just uint8_t[], nothing to swap */
-                        break;
+                        বিরতি;
                     }
 
-                    if(mbcsIndexLength!=0) {
+                    যদি(mbcs_সূচক_দৈর্ঘ্য!=0) {
                         offset+=count;
-                        count=mbcsIndexLength;
+                        count=mbcs_সূচক_দৈর্ঘ্য;
                         ds->swapArray16(ds, inBytes+offset, (int32_t)count,
                                            outBytes+offset, pErrorCode);
                     }
                 }
             }
 
-            if(extOffset!=0) {
+            যদি(extOffset!=0) {
                 /* swap the extension data */
                 inBytes+=extOffset;
                 outBytes+=extOffset;
 
                 /* swap toUTable[] */
-                offset=udata_readInt32(ds, inExtIndexes[UCNV_EXT_TO_U_INDEX]);
-                length=udata_readInt32(ds, inExtIndexes[UCNV_EXT_TO_U_LENGTH]);
+                offset=udata_readInt32(ds, inExtIndexes[UCNV_EXT_TO_U_সূচক]);
+                length=udata_readInt32(ds, inExtIndexes[UCNV_EXT_TO_U_দৈর্ঘ্য]);
                 ds->swapArray32(ds, inBytes+offset, length*4, outBytes+offset, pErrorCode);
 
                 /* swap toUUChars[] */
-                offset=udata_readInt32(ds, inExtIndexes[UCNV_EXT_TO_U_UCHARS_INDEX]);
-                length=udata_readInt32(ds, inExtIndexes[UCNV_EXT_TO_U_UCHARS_LENGTH]);
+                offset=udata_readInt32(ds, inExtIndexes[UCNV_EXT_TO_U_UCHARS_সূচক]);
+                length=udata_readInt32(ds, inExtIndexes[UCNV_EXT_TO_U_UCHARS_দৈর্ঘ্য]);
                 ds->swapArray16(ds, inBytes+offset, length*2, outBytes+offset, pErrorCode);
 
                 /* swap fromUTableUChars[] */
-                offset=udata_readInt32(ds, inExtIndexes[UCNV_EXT_FROM_U_UCHARS_INDEX]);
-                length=udata_readInt32(ds, inExtIndexes[UCNV_EXT_FROM_U_LENGTH]);
+                offset=udata_readInt32(ds, inExtIndexes[UCNV_EXT_FROM_U_UCHARS_সূচক]);
+                length=udata_readInt32(ds, inExtIndexes[UCNV_EXT_FROM_U_দৈর্ঘ্য]);
                 ds->swapArray16(ds, inBytes+offset, length*2, outBytes+offset, pErrorCode);
 
                 /* swap fromUTableValues[] */
-                offset=udata_readInt32(ds, inExtIndexes[UCNV_EXT_FROM_U_VALUES_INDEX]);
+                offset=udata_readInt32(ds, inExtIndexes[UCNV_EXT_FROM_U_মানসমূহ_সূচক]);
                 /* same length as for fromUTableUChars[] */
                 ds->swapArray32(ds, inBytes+offset, length*4, outBytes+offset, pErrorCode);
 
                 /* no need to swap fromUBytes[] */
 
                 /* swap fromUStage12[] */
-                offset=udata_readInt32(ds, inExtIndexes[UCNV_EXT_FROM_U_STAGE_12_INDEX]);
-                length=udata_readInt32(ds, inExtIndexes[UCNV_EXT_FROM_U_STAGE_12_LENGTH]);
+                offset=udata_readInt32(ds, inExtIndexes[UCNV_EXT_FROM_U_STAGE_12_সূচক]);
+                length=udata_readInt32(ds, inExtIndexes[UCNV_EXT_FROM_U_STAGE_12_দৈর্ঘ্য]);
                 ds->swapArray16(ds, inBytes+offset, length*2, outBytes+offset, pErrorCode);
 
                 /* swap fromUStage3[] */
-                offset=udata_readInt32(ds, inExtIndexes[UCNV_EXT_FROM_U_STAGE_3_INDEX]);
-                length=udata_readInt32(ds, inExtIndexes[UCNV_EXT_FROM_U_STAGE_3_LENGTH]);
+                offset=udata_readInt32(ds, inExtIndexes[UCNV_EXT_FROM_U_STAGE_3_সূচক]);
+                length=udata_readInt32(ds, inExtIndexes[UCNV_EXT_FROM_U_STAGE_3_দৈর্ঘ্য]);
                 ds->swapArray16(ds, inBytes+offset, length*2, outBytes+offset, pErrorCode);
 
                 /* swap fromUStage3b[] */
-                offset=udata_readInt32(ds, inExtIndexes[UCNV_EXT_FROM_U_STAGE_3B_INDEX]);
-                length=udata_readInt32(ds, inExtIndexes[UCNV_EXT_FROM_U_STAGE_3B_LENGTH]);
+                offset=udata_readInt32(ds, inExtIndexes[UCNV_EXT_FROM_U_STAGE_3_B_সূচক]);
+                length=udata_readInt32(ds, inExtIndexes[UCNV_EXT_FROM_U_STAGE_3_B_দৈর্ঘ্য]);
                 ds->swapArray32(ds, inBytes+offset, length*4, outBytes+offset, pErrorCode);
 
                 /* swap indexes[] */
-                length=udata_readInt32(ds, inExtIndexes[UCNV_EXT_INDEXES_LENGTH]);
+                length=udata_readInt32(ds, inExtIndexes[UCNV_EXT_INDEXES_দৈর্ঘ্য]);
                 ds->swapArray32(ds, inBytes, length*4, outBytes, pErrorCode);
             }
         }
-    } else {
+    } অন্যথা {
         udata_printError(ds, "ucnv_swap(): unknown conversionType=%d!=UCNV_MBCS\n",
-                         inStaticData->conversionType);
+                         in_Static_তথ্য->conversionType);
         *pErrorCode=U_UNSUPPORTED_ERROR;
-        return 0;
+        ফেরত 0;
     }
 
-    return headerSize+(int32_t)staticDataSize+size;
+    ফেরত header_আকার+(int32_t)static_তথ্য_আকার+size;
 }
 
 #endif /* #if !UCONFIG_NO_LEGACY_CONVERSION */

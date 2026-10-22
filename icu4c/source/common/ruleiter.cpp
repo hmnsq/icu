@@ -10,19 +10,19 @@
 * Since: ICU 2.8
 **********************************************************************
 */
-#include "ruleiter.h"
-#include "unicode/parsepos.h"
-#include "unicode/symtable.h"
-#include "unicode/unistr.h"
-#include "unicode/utf16.h"
-#include "patternprops.h"
+#অন্তর্ভাব "ruleiter.h"
+#অন্তর্ভাব "unicode/parsepos.h"
+#অন্তর্ভাব "unicode/symtable.h"
+#অন্তর্ভাব "unicode/unistr.h"
+#অন্তর্ভাব "unicode/utf16.h"
+#অন্তর্ভাব "patternprops.h"
 
 /* \U87654321 or \ud800\udc00 */
 #define MAX_U_NOTATION_LEN 12
 
 U_NAMESPACE_BEGIN
 
-RuleCharacterIterator::RuleCharacterIterator(const UnicodeString& theText, const SymbolTable* theSym,
+RuleCharacterIterator::RuleCharacterIterator(ধ্রুবক UnicodeString& theText, ধ্রুবক প্রতীক_Table* theSym,
                       ParsePosition& thePos) :
     text(theText),
     pos(thePos),
@@ -31,98 +31,98 @@ RuleCharacterIterator::RuleCharacterIterator(const UnicodeString& theText, const
     bufPos(0)
 {}
 
-UBool RuleCharacterIterator::atEnd() const {
-    return buf == nullptr && pos.getIndex() == text.length();
+UBool RuleCharacterIterator::atEnd() ধ্রুবক {
+    ফেরত buf == nullptr && pos.get_সূচক() == text.length();
 }
 
 UChar32 RuleCharacterIterator::next(int32_t options, UBool& isEscaped, UErrorCode& ec) {
-    if (U_FAILURE(ec)) return DONE;
+    যদি (U_FAILURE(ec)) ফেরত DONE;
 
     UChar32 c = DONE;
-    isEscaped = false;
+    isEscaped = মিথ্যা;
 
-    for (;;) {
+    জন্য (;;) {
         c = _current();
-        _advance(U16_LENGTH(c));
+        _advance(U16_দৈর্ঘ্য(c));
 
-        if (c == SymbolTable::SYMBOL_REF && buf == nullptr &&
+        যদি (c == প্রতীক_Table::প্রতীক_REF && buf == nullptr &&
             (options & PARSE_VARIABLES) != 0 && sym != nullptr) {
             UnicodeString name = sym->parseReference(text, pos, text.length());
             // If name is empty there was an isolated SYMBOL_REF;
             // return it.  Caller must be prepared for this.
-            if (name.length() == 0) {
-                break;
+            যদি (name.length() == 0) {
+                বিরতি;
             }
             bufPos = 0;
             buf = sym->lookup(name);
-            if (buf == nullptr) {
+            যদি (buf == nullptr) {
                 ec = U_UNDEFINED_VARIABLE;
-                return DONE;
+                ফেরত DONE;
             }
             // Handle empty variable value
-            if (buf->length() == 0) {
+            যদি (buf->length() == 0) {
                 buf = nullptr;
             }
-            continue;
+            চালু;
         }
 
-        if ((options & SKIP_WHITESPACE) != 0 && PatternProps::isWhiteSpace(c)) {
-            continue;
+        যদি ((options & SKIP_WHITESPACE) != 0 && PatternProps::isWhiteSpace(c)) {
+            চালু;
         }
 
-        if (c == 0x5C /*'\\'*/ && (options & PARSE_ESCAPES) != 0) {
-            UnicodeString tempEscape;
+        যদি (c == 0x5C /*'\\'*/ && (options & PARSE_ESCAPES) != 0) {
+            UnicodeString অস্থায়ী_Escape;
             int32_t offset = 0;
-            c = lookahead(tempEscape, MAX_U_NOTATION_LEN).unescapeAt(offset);
+            c = lookahead(অস্থায়ী_Escape, MAX_U_NOTATION_LEN).unescapeAt(offset);
             jumpahead(offset);
-            isEscaped = true;
-            if (c < 0) {
+            isEscaped = সত্য;
+            যদি (c < 0) {
                 ec = U_MALFORMED_UNICODE_ESCAPE;
-                return DONE;
+                ফেরত DONE;
             }
         }
 
-        break;
+        বিরতি;
     }
 
-    return c;
+    ফেরত c;
 }
 
-void RuleCharacterIterator::getPos(RuleCharacterIterator::Pos& p) const {
+শূন্য RuleCharacterIterator::getPos(RuleCharacterIterator::Pos& p) ধ্রুবক {
     p.buf = buf;
-    p.pos = pos.getIndex();
+    p.pos = pos.get_সূচক();
     p.bufPos = bufPos;
 }
 
-void RuleCharacterIterator::setPos(const RuleCharacterIterator::Pos& p) {
+শূন্য RuleCharacterIterator::setPos(ধ্রুবক RuleCharacterIterator::Pos& p) {
     buf = p.buf;
-    pos.setIndex(p.pos);
+    pos.set_সূচক(p.pos);
     bufPos = p.bufPos;
 }
 
-void RuleCharacterIterator::skipIgnored(int32_t options) {
-    if ((options & SKIP_WHITESPACE) != 0) {
-        for (;;) {
+শূন্য RuleCharacterIterator::skipIgnored(int32_t options) {
+    যদি ((options & SKIP_WHITESPACE) != 0) {
+        জন্য (;;) {
             UChar32 a = _current();
-            if (!PatternProps::isWhiteSpace(a)) break;
-            _advance(U16_LENGTH(a));
+            যদি (!PatternProps::isWhiteSpace(a)) বিরতি;
+            _advance(U16_দৈর্ঘ্য(a));
         }
     }
 }
 
-UnicodeString& RuleCharacterIterator::lookahead(UnicodeString& result, int32_t maxLookAhead) const {
-    if (maxLookAhead < 0) {
+UnicodeString& RuleCharacterIterator::lookahead(UnicodeString& ফলাফল, int32_t maxLookAhead) ধ্রুবক {
+    যদি (maxLookAhead < 0) {
         maxLookAhead = 0x7FFFFFFF;
     }
-    if (buf != nullptr) {
-        buf->extract(bufPos, maxLookAhead, result);
-    } else {
-        text.extract(pos.getIndex(), maxLookAhead, result);
+    যদি (buf != nullptr) {
+        buf->extract(bufPos, maxLookAhead, ফলাফল);
+    } অন্যথা {
+        text.extract(pos.get_সূচক(), maxLookAhead, ফলাফল);
     }
-    return result;
+    ফেরত ফলাফল;
 }
 
-void RuleCharacterIterator::jumpahead(int32_t count) {
+শূন্য RuleCharacterIterator::jumpahead(int32_t count) {
     _advance(count);
 }
 
@@ -134,25 +134,25 @@ UnicodeString& RuleCharacterIterator::toString(UnicodeString& result) const {
 }
 */
 
-UChar32 RuleCharacterIterator::_current() const {
-    if (buf != nullptr) {
-        return buf->char32At(bufPos);
-    } else {
-        int i = pos.getIndex();
-        return (i < text.length()) ? text.char32At(i) : static_cast<UChar32>(DONE);
+UChar32 RuleCharacterIterator::_current() ধ্রুবক {
+    যদি (buf != nullptr) {
+        ফেরত buf->char32At(bufPos);
+    } অন্যথা {
+        পূর্ণসংখ্যা i = pos.get_সূচক();
+        ফেরত (i < text.length()) ? text.char32At(i) : static_cast<UChar32>(DONE);
     }
 }
 
-void RuleCharacterIterator::_advance(int32_t count) {
-    if (buf != nullptr) {
+শূন্য RuleCharacterIterator::_advance(int32_t count) {
+    যদি (buf != nullptr) {
         bufPos += count;
-        if (bufPos == buf->length()) {
+        যদি (bufPos == buf->length()) {
             buf = nullptr;
         }
-    } else {
-        pos.setIndex(pos.getIndex() + count);
-        if (pos.getIndex() > text.length()) {
-            pos.setIndex(text.length());
+    } অন্যথা {
+        pos.set_সূচক(pos.get_সূচক() + count);
+        যদি (pos.get_সূচক() > text.length()) {
+            pos.set_সূচক(text.length());
         }
     }
 }

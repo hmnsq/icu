@@ -30,12 +30,12 @@
  * For more details see the Normalizer2 C++ class.
  */
 
-#include "unicode/utypes.h"
-#include "unicode/stringoptions.h"
-#include "unicode/uset.h"
+#অন্তর্ভাব "unicode/utypes.h"
+#অন্তর্ভাব "unicode/stringoptions.h"
+#অন্তর্ভাব "unicode/uset.h"
 
-#if U_SHOW_CPLUSPLUS_API
-#include "unicode/localpointer.h"
+#যদি U_SHOW_CPLUSPLUS_API
+#অন্তর্ভাব "unicode/localpointer.h"
 #endif   // U_SHOW_CPLUSPLUS_API
 
 /**
@@ -45,7 +45,7 @@
  * see http://www.unicode.org/unicode/reports/tr15/
  * @stable ICU 4.4
  */
-typedef enum {
+প্রকারলেখ গণনা {
     /**
      * Decomposition followed by composition.
      * Same as standard NFC when using an "nfc" instance.
@@ -94,7 +94,7 @@ typedef enum {
  * For details see http://www.unicode.org/reports/tr15/#Detecting_Normalization_Forms
  * @stable ICU 2.0
  */
-typedef enum UNormalizationCheckResult {
+প্রকারলেখ গণনা UNormalization_Check_ফলাফল {
   /**
    * The input string is not in the normalization form.
    * @stable ICU 2.0
@@ -113,16 +113,16 @@ typedef enum UNormalizationCheckResult {
    * @stable ICU 2.0
    */
   UNORM_MAYBE
-} UNormalizationCheckResult;
+} UNormalization_Check_ফলাফল;
 
 /**
  * Opaque C service object type for the new normalization API.
  * @stable ICU 4.4
  */
-struct UNormalizer2;
-typedef struct UNormalizer2 UNormalizer2;  /**< C typedef for struct UNormalizer2. @stable ICU 4.4 */
+কাঠামো UNormalizer2;
+প্রকারলেখ কাঠামো UNormalizer2 UNormalizer2;  /**< C typedef for struct UNormalizer2. @stable ICU 4.4 */
 
-#if !UCONFIG_NO_NORMALIZATION
+#যদি !UCONFIG_NO_NORMALIZATION
 
 /**
  * Returns a UNormalizer2 instance for Unicode NFC normalization.
@@ -135,7 +135,7 @@ typedef struct UNormalizer2 UNormalizer2;  /**< C typedef for struct UNormalizer
  * @return the requested Normalizer2, if successful
  * @stable ICU 49
  */
-U_CAPI const UNormalizer2 * U_EXPORT2
+U_CAPI ধ্রুবক UNormalizer2 * U_EXPORT2
 unorm2_getNFCInstance(UErrorCode *pErrorCode);
 
 /**
@@ -149,7 +149,7 @@ unorm2_getNFCInstance(UErrorCode *pErrorCode);
  * @return the requested Normalizer2, if successful
  * @stable ICU 49
  */
-U_CAPI const UNormalizer2 * U_EXPORT2
+U_CAPI ধ্রুবক UNormalizer2 * U_EXPORT2
 unorm2_getNFDInstance(UErrorCode *pErrorCode);
 
 /**
@@ -163,7 +163,7 @@ unorm2_getNFDInstance(UErrorCode *pErrorCode);
  * @return the requested Normalizer2, if successful
  * @stable ICU 49
  */
-U_CAPI const UNormalizer2 * U_EXPORT2
+U_CAPI ধ্রুবক UNormalizer2 * U_EXPORT2
 unorm2_getNFKCInstance(UErrorCode *pErrorCode);
 
 /**
@@ -177,7 +177,7 @@ unorm2_getNFKCInstance(UErrorCode *pErrorCode);
  * @return the requested Normalizer2, if successful
  * @stable ICU 49
  */
-U_CAPI const UNormalizer2 * U_EXPORT2
+U_CAPI ধ্রুবক UNormalizer2 * U_EXPORT2
 unorm2_getNFKDInstance(UErrorCode *pErrorCode);
 
 /**
@@ -194,7 +194,7 @@ unorm2_getNFKDInstance(UErrorCode *pErrorCode);
  * @return the requested Normalizer2, if successful
  * @stable ICU 49
  */
-U_CAPI const UNormalizer2 * U_EXPORT2
+U_CAPI ধ্রুবক UNormalizer2 * U_EXPORT2
 unorm2_getNFKCCasefoldInstance(UErrorCode *pErrorCode);
 
 /**
@@ -211,7 +211,7 @@ unorm2_getNFKCCasefoldInstance(UErrorCode *pErrorCode);
  * @return the requested Normalizer2, if successful
  * @stable ICU 74
  */
-U_CAPI const UNormalizer2 * U_EXPORT2
+U_CAPI ধ্রুবক UNormalizer2 * U_EXPORT2
 unorm2_getNFKCSimpleCasefoldInstance(UErrorCode *pErrorCode);
 
 /**
@@ -235,9 +235,9 @@ unorm2_getNFKCSimpleCasefoldInstance(UErrorCode *pErrorCode);
  * @return the requested UNormalizer2, if successful
  * @stable ICU 4.4
  */
-U_CAPI const UNormalizer2 * U_EXPORT2
-unorm2_getInstance(const char *packageName,
-                   const char *name,
+U_CAPI ধ্রুবক UNormalizer2 * U_EXPORT2
+unorm2_getInstance(ধ্রুবক অক্ষর *packageName,
+                   ধ্রুবক অক্ষর *name,
                    UNormalization2Mode mode,
                    UErrorCode *pErrorCode);
 
@@ -257,8 +257,8 @@ unorm2_getInstance(const char *packageName,
  * @stable ICU 4.4
  */
 U_CAPI UNormalizer2* U_EXPORT2
-unorm2_openFiltered(const UNormalizer2* norm2 U_LIFETIME_BOUND,
-                    const USet* filterSet U_LIFETIME_BOUND,
+unorm2_openFiltered(ধ্রুবক UNormalizer2* norm2 U_LIFETIME_BOUND,
+                    ধ্রুবক USet* filterSet U_LIFETIME_BOUND,
                     UErrorCode* pErrorCode);
 
 /**
@@ -267,10 +267,10 @@ unorm2_openFiltered(const UNormalizer2* norm2 U_LIFETIME_BOUND,
  * @param norm2 UNormalizer2 instance to be closed
  * @stable ICU 4.4
  */
-U_CAPI void U_EXPORT2
+U_CAPI শূন্য U_EXPORT2
 unorm2_close(UNormalizer2 *norm2);
 
-#if U_SHOW_CPLUSPLUS_API
+#যদি U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -306,8 +306,8 @@ U_NAMESPACE_END
  * @stable ICU 4.4
  */
 U_CAPI int32_t U_EXPORT2
-unorm2_normalize(const UNormalizer2 *norm2,
-                 const UChar *src, int32_t length,
+unorm2_normalize(ধ্রুবক UNormalizer2 *norm2,
+                 ধ্রুবক UChar *src, int32_t দৈর্ঘ্য,
                  UChar *dest, int32_t capacity,
                  UErrorCode *pErrorCode);
 /**
@@ -329,9 +329,9 @@ unorm2_normalize(const UNormalizer2 *norm2,
  * @stable ICU 4.4
  */
 U_CAPI int32_t U_EXPORT2
-unorm2_normalizeSecondAndAppend(const UNormalizer2 *norm2,
-                                UChar *first, int32_t firstLength, int32_t firstCapacity,
-                                const UChar *second, int32_t secondLength,
+unorm2_normalizeSecondAndAppend(ধ্রুবক UNormalizer2 *norm2,
+                                UChar *first, int32_t first_দৈর্ঘ্য, int32_t firstCapacity,
+                                ধ্রুবক UChar *second, int32_t second_দৈর্ঘ্য,
                                 UErrorCode *pErrorCode);
 /**
  * Appends the second string to the first string
@@ -352,9 +352,9 @@ unorm2_normalizeSecondAndAppend(const UNormalizer2 *norm2,
  * @stable ICU 4.4
  */
 U_CAPI int32_t U_EXPORT2
-unorm2_append(const UNormalizer2 *norm2,
-              UChar *first, int32_t firstLength, int32_t firstCapacity,
-              const UChar *second, int32_t secondLength,
+unorm2_append(ধ্রুবক UNormalizer2 *norm2,
+              UChar *first, int32_t first_দৈর্ঘ্য, int32_t firstCapacity,
+              ধ্রুবক UChar *second, int32_t second_দৈর্ঘ্য,
               UErrorCode *pErrorCode);
 
 /**
@@ -377,7 +377,7 @@ unorm2_append(const UNormalizer2 *norm2,
  * @stable ICU 4.6
  */
 U_CAPI int32_t U_EXPORT2
-unorm2_getDecomposition(const UNormalizer2 *norm2,
+unorm2_getDecomposition(ধ্রুবক UNormalizer2 *norm2,
                         UChar32 c, UChar *decomposition, int32_t capacity,
                         UErrorCode *pErrorCode);
 
@@ -411,7 +411,7 @@ unorm2_getDecomposition(const UNormalizer2 *norm2,
  * @stable ICU 49
  */
 U_CAPI int32_t U_EXPORT2
-unorm2_getRawDecomposition(const UNormalizer2 *norm2,
+unorm2_getRawDecomposition(ধ্রুবক UNormalizer2 *norm2,
                            UChar32 c, UChar *decomposition, int32_t capacity,
                            UErrorCode *pErrorCode);
 
@@ -431,7 +431,7 @@ unorm2_getRawDecomposition(const UNormalizer2 *norm2,
  * @stable ICU 49
  */
 U_CAPI UChar32 U_EXPORT2
-unorm2_composePair(const UNormalizer2 *norm2, UChar32 a, UChar32 b);
+unorm2_composePair(ধ্রুবক UNormalizer2 *norm2, UChar32 a, UChar32 b);
 
 /**
  * Gets the combining class of c.
@@ -443,7 +443,7 @@ unorm2_composePair(const UNormalizer2 *norm2, UChar32 a, UChar32 b);
  * @stable ICU 49
  */
 U_CAPI uint8_t U_EXPORT2
-unorm2_getCombiningClass(const UNormalizer2 *norm2, UChar32 c);
+unorm2_getCombiningClass(ধ্রুবক UNormalizer2 *norm2, UChar32 c);
 
 /**
  * Tests if the string is normalized.
@@ -462,8 +462,8 @@ unorm2_getCombiningClass(const UNormalizer2 *norm2, UChar32 c);
  * @stable ICU 4.4
  */
 U_CAPI UBool U_EXPORT2
-unorm2_isNormalized(const UNormalizer2 *norm2,
-                    const UChar *s, int32_t length,
+unorm2_isNormalized(ধ্রুবক UNormalizer2 *norm2,
+                    ধ্রুবক UChar *s, int32_t দৈর্ঘ্য,
                     UErrorCode *pErrorCode);
 
 /**
@@ -483,9 +483,9 @@ unorm2_isNormalized(const UNormalizer2 *norm2,
  * @return UNormalizationCheckResult
  * @stable ICU 4.4
  */
-U_CAPI UNormalizationCheckResult U_EXPORT2
-unorm2_quickCheck(const UNormalizer2 *norm2,
-                  const UChar *s, int32_t length,
+U_CAPI UNormalization_Check_ফলাফল U_EXPORT2
+unorm2_quickCheck(ধ্রুবক UNormalizer2 *norm2,
+                  ধ্রুবক UChar *s, int32_t দৈর্ঘ্য,
                   UErrorCode *pErrorCode);
 
 /**
@@ -513,8 +513,8 @@ unorm2_quickCheck(const UNormalizer2 *norm2,
  * @stable ICU 4.4
  */
 U_CAPI int32_t U_EXPORT2
-unorm2_spanQuickCheckYes(const UNormalizer2 *norm2,
-                         const UChar *s, int32_t length,
+unorm2_spanQuickCheckYes(ধ্রুবক UNormalizer2 *norm2,
+                         ধ্রুবক UChar *s, int32_t দৈর্ঘ্য,
                          UErrorCode *pErrorCode);
 
 /**
@@ -527,7 +527,7 @@ unorm2_spanQuickCheckYes(const UNormalizer2 *norm2,
  * @stable ICU 4.4
  */
 U_CAPI UBool U_EXPORT2
-unorm2_hasBoundaryBefore(const UNormalizer2 *norm2, UChar32 c);
+unorm2_hasBoundaryBefore(ধ্রুবক UNormalizer2 *norm2, UChar32 c);
 
 /**
  * Tests if the character always has a normalization boundary after it,
@@ -539,7 +539,7 @@ unorm2_hasBoundaryBefore(const UNormalizer2 *norm2, UChar32 c);
  * @stable ICU 4.4
  */
 U_CAPI UBool U_EXPORT2
-unorm2_hasBoundaryAfter(const UNormalizer2 *norm2, UChar32 c);
+unorm2_hasBoundaryAfter(ধ্রুবক UNormalizer2 *norm2, UChar32 c);
 
 /**
  * Tests if the character is normalization-inert.
@@ -550,7 +550,7 @@ unorm2_hasBoundaryAfter(const UNormalizer2 *norm2, UChar32 c);
  * @stable ICU 4.4
  */
 U_CAPI UBool U_EXPORT2
-unorm2_isInert(const UNormalizer2 *norm2, UChar32 c);
+unorm2_isInert(ধ্রুবক UNormalizer2 *norm2, UChar32 c);
 
 /**
  * Compares two strings for canonical equivalence.
@@ -619,8 +619,8 @@ unorm2_isInert(const UNormalizer2 *norm2, UChar32 c);
  * @stable ICU 2.2
  */
 U_CAPI int32_t U_EXPORT2
-unorm_compare(const UChar *s1, int32_t length1,
-              const UChar *s2, int32_t length2,
+unorm_compare(ধ্রুবক UChar *s1, int32_t length1,
+              ধ্রুবক UChar *s2, int32_t length2,
               uint32_t options,
               UErrorCode *pErrorCode);
 

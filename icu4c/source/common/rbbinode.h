@@ -9,9 +9,9 @@
 #ifndef RBBINODE_H
 #define RBBINODE_H
 
-#include "unicode/utypes.h"
-#include "unicode/unistr.h"
-#include "unicode/uobject.h"
+#অন্তর্ভাব "unicode/utypes.h"
+#অন্তর্ভাব "unicode/unistr.h"
+#অন্তর্ভাব "unicode/uobject.h"
 
 //
 //  class RBBINode
@@ -25,9 +25,9 @@ U_NAMESPACE_BEGIN
 class    UnicodeSet;
 class    UVector;
 
-class RBBINode : public UMemory {
-    public:
-        enum NodeType {
+class RBBINode : সর্বজনীন UMemory {
+    সর্বজনীন:
+        গণনা গ্রন্থি_Type {
             setRef,
             uset,
             varRef,
@@ -46,7 +46,7 @@ class RBBINode : public UMemory {
             opLParen
         };
 
-        enum OpPrecedence {      
+        গণনা OpPrecedence {      
             precZero,
             precStart,
             precLParen,
@@ -54,21 +54,21 @@ class RBBINode : public UMemory {
             precOpCat
         };
             
-        NodeType      fType;
+        গ্রন্থি_Type      fType;
         RBBINode      *fParent;
-        RBBINode      *fLeftChild;
-        RBBINode      *fRightChild;
-        UnicodeSet    *fInputSet;           // For uset nodes only.
+        RBBINode      *f_বাম_Child;
+        RBBINode      *f_ডান_Child;
+        UnicodeSet    *f_প্রবেশ_Set;           // For uset nodes only.
         OpPrecedence  fPrecedence;          // For binary ops only.
         
         UnicodeString fText;                // Text corresponding to this node.
                                             //   May be lazily evaluated when (if) needed
                                             //   for some node types.
-        int           fFirstPos;            // Position in the rule source string of the
+        পূর্ণসংখ্যা           fFirstPos;            // Position in the rule source string of the
                                             //   first text associated with the node.
                                             //   If there's a left child, this will be the same
                                             //   as that child's left pos.
-        int           fLastPos;             //  Last position in the rule source string
+        পূর্ণসংখ্যা           fLastPos;             //  Last position in the rule source string
                                             //    of any text associated with this node.
                                             //    If there's a right child, this will be the same
                                             //    as that child's last position.
@@ -82,7 +82,7 @@ class RBBINode : public UMemory {
         UBool         fLookAheadEnd;        // For endMark nodes, set true if
                                             //   marking the end of a look-ahead rule.
 
-        UBool         fRuleRoot;            // True if this node is the root of a rule.
+        UBool         f_Rule_মূল;            // True if this node is the root of a rule.
         UBool         fChainIn;             // True if chaining into this rule is allowed
                                             //     (no '^' present).
 
@@ -91,35 +91,35 @@ class RBBINode : public UMemory {
         UVector       *fFollowPos;
 
 
-        RBBINode(NodeType t, UErrorCode& status);
-        RBBINode(const RBBINode &other, UErrorCode& status);
+        RBBINode(গ্রন্থি_Type t, UErrorCode& status);
+        RBBINode(ধ্রুবক RBBINode &other, UErrorCode& status);
         ~RBBINode();
-        static void  NRDeleteNode(RBBINode *node);
+        স্থির শূন্য  NRDelete_গ্রন্থি(RBBINode *গ্রন্থি);
         
-        RBBINode    *cloneTree(UErrorCode &status, int depth=0);
-        RBBINode    *flattenVariables(UErrorCode &status, int depth=0);
-        void         flattenSets(UErrorCode &status, int depth=0);
-        void         findNodes(UVector *dest, RBBINode::NodeType kind, UErrorCode &status);
+        RBBINode    *clone_বৃক্ষ(UErrorCode &status, পূর্ণসংখ্যা depth=0);
+        RBBINode    *flattenVariables(UErrorCode &status, পূর্ণসংখ্যা depth=0);
+        শূন্য         flattenSets(UErrorCode &status, পূর্ণসংখ্যা depth=0);
+        শূন্য         findNodes(UVector *dest, RBBINode::গ্রন্থি_Type kind, UErrorCode &status);
 
 #ifdef RBBI_DEBUG
-        static void printNodeHeader();
-        static void printNode(const RBBINode *n);
-        static void printTree(const RBBINode *n, UBool withHeading);
+        স্থির শূন্য print_গ্রন্থি_Header();
+        স্থির শূন্য print_গ্রন্থি(ধ্রুবক RBBINode *n);
+        স্থির শূন্য print_বৃক্ষ(ধ্রুবক RBBINode *n, UBool withHeading);
 #endif
 
-    private:
-        RBBINode &operator = (const RBBINode &other); // No defs.
-        bool operator == (const RBBINode &other);     // Private, so these functions won't accidentally be used.
+    ব্যক্তিগত:
+        RBBINode &operator = (ধ্রুবক RBBINode &other); // No defs.
+        bool operator == (ধ্রুবক RBBINode &other);     // Private, so these functions won't accidentally be used.
 
 #ifdef RBBI_DEBUG
-    public:
-        int           fSerialNum;           //  Debugging aids.
+    সর্বজনীন:
+        পূর্ণসংখ্যা           f_Serial_অঙ্ক;           //  Debugging aids.
 #endif
 };
 
 #ifdef RBBI_DEBUG
-U_CFUNC void 
-RBBI_DEBUG_printUnicodeString(const UnicodeString &s, int minWidth=0);
+U_CFUNC শূন্য 
+RBBI_DEBUG_printUnicodeString(ধ্রুবক UnicodeString &s, পূর্ণসংখ্যা minWidth=0);
 #endif
 
 U_NAMESPACE_END

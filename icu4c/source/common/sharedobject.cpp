@@ -7,11 +7,11 @@
 ******************************************************************************
 * sharedobject.cpp
 */
-#include "sharedobject.h"
-#include "mutex.h"
-#include "uassert.h"
-#include "umutex.h"
-#include "unifiedcache.h"
+#অন্তর্ভাব "sharedobject.h"
+#অন্তর্ভাব "mutex.h"
+#অন্তর্ভাব "uassert.h"
+#অন্তর্ভাব "umutex.h"
+#অন্তর্ভাব "unifiedcache.h"
 
 U_NAMESPACE_BEGIN
 
@@ -19,9 +19,9 @@ SharedObject::~SharedObject() {}
 
 UnifiedCacheBase::~UnifiedCacheBase() {}
 
-void
-SharedObject::addRef() const {
-    umtx_atomic_inc(&hardRefCount);
+শূন্য
+SharedObject::addRef() ধ্রুবক {
+    umtx_atomic_inc(&hard_Ref_গুনতি);
 }
 
 // removeRef Decrement the reference count and delete if it is zero.
@@ -32,30 +32,30 @@ SharedObject::addRef() const {
 //           a cache eviction cycle concurrently.
 //           NO ACCESS TO *this PERMITTED AFTER REFERENCE COUNT == 0 for cached objects.
 //           THE OBJECT MAY ALREADY BE GONE.
-void
-SharedObject::removeRef() const {
-    const UnifiedCacheBase *cache = this->cachePtr;
-    int32_t updatedRefCount = umtx_atomic_dec(&hardRefCount);
-    U_ASSERT(updatedRefCount >= 0);
-    if (updatedRefCount == 0) {
-        if (cache) {
+শূন্য
+SharedObject::removeRef() ধ্রুবক {
+    ধ্রুবক UnifiedCacheBase *cache = এই->cachePtr;
+    int32_t updated_Ref_গুনতি = umtx_atomic_dec(&hard_Ref_গুনতি);
+    U_ASSERT(updated_Ref_গুনতি >= 0);
+    যদি (updated_Ref_গুনতি == 0) {
+        যদি (cache) {
             cache->handleUnreferencedObject();
-        } else {
-            delete this;
+        } অন্যথা {
+            delete এই;
         }
     }
 }
 
 
 int32_t
-SharedObject::getRefCount() const {
-    return umtx_loadAcquire(hardRefCount);
+SharedObject::get_Ref_গুনতি() ধ্রুবক {
+    ফেরত umtx_loadAcquire(hard_Ref_গুনতি);
 }
 
-void
-SharedObject::deleteIfZeroRefCount() const {
-    if (this->cachePtr == nullptr && getRefCount() == 0) {
-        delete this;
+শূন্য
+SharedObject::delete_If_Zero_Ref_গুনতি() ধ্রুবক {
+    যদি (এই->cachePtr == nullptr && get_Ref_গুনতি() == 0) {
+        delete এই;
     }
 }
 

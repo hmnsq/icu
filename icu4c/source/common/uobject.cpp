@@ -16,12 +16,12 @@
 *   created by: Markus W. Scherer
 */
 
-#include "unicode/uobject.h"
-#include "cmemory.h"
+#অন্তর্ভাব "unicode/uobject.h"
+#অন্তর্ভাব "cmemory.h"
 
 U_NAMESPACE_BEGIN
 
-#if U_OVERRIDE_CXX_ALLOCATION
+#যদি U_OVERRIDE_CXX_ALLOCATION
 
 /*
  * Default implementation of UMemory::new/delete
@@ -58,32 +58,32 @@ U_NAMESPACE_BEGIN
  * and replace with uprv_malloc/uprv_free.
  */
 
-void * U_EXPORT2 UMemory::operator new(size_t size) noexcept {
-    return uprv_malloc(size);
+শূন্য * U_EXPORT2 UMemory::operator নতুন(size_t size) noexcept {
+    ফেরত uprv_malloc(size);
 }
 
-void U_EXPORT2 UMemory::operator delete(void *p) noexcept {
-    if(p!=nullptr) {
+শূন্য U_EXPORT2 UMemory::operator delete(শূন্য *p) noexcept {
+    যদি(p!=nullptr) {
         uprv_free(p);
     }
 }
 
-void * U_EXPORT2 UMemory::operator new[](size_t size) noexcept {
-    return uprv_malloc(size);
+শূন্য * U_EXPORT2 UMemory::operator নতুন[](size_t size) noexcept {
+    ফেরত uprv_malloc(size);
 }
 
-void U_EXPORT2 UMemory::operator delete[](void *p) noexcept {
-    if(p!=nullptr) {
+শূন্য U_EXPORT2 UMemory::operator delete[](শূন্য *p) noexcept {
+    যদি(p!=nullptr) {
         uprv_free(p);
     }
 }
 
-#if U_HAVE_DEBUG_LOCATION_NEW
-void * U_EXPORT2 UMemory::operator new(size_t size, const char* /*file*/, int /*line*/) noexcept {
-    return UMemory::operator new(size);
+#যদি U_HAVE_DEBUG_LOCATION_NEW
+শূন্য * U_EXPORT2 UMemory::operator নতুন(size_t size, ধ্রুবক অক্ষর* /*file*/, পূর্ণসংখ্যা /*সারি*/) noexcept {
+    ফেরত UMemory::operator নতুন(size);
 }
 
-void U_EXPORT2 UMemory::operator delete(void* p, const char* /*file*/, int /*line*/) noexcept {
+শূন্য U_EXPORT2 UMemory::operator delete(শূন্য* p, ধ্রুবক অক্ষর* /*file*/, পূর্ণসংখ্যা /*সারি*/) noexcept {
     UMemory::operator delete(p);
 }
 #endif /* U_HAVE_DEBUG_LOCATION_NEW */
@@ -93,13 +93,13 @@ void U_EXPORT2 UMemory::operator delete(void* p, const char* /*file*/, int /*lin
 
 UObject::~UObject() {}
 
-UClassID UObject::getDynamicClassID() const { return nullptr; }
+UClassID UObject::getDynamicClassID() ধ্রুবক { ফেরত nullptr; }
 
 U_NAMESPACE_END
 
 U_NAMESPACE_USE
 
-U_CAPI void U_EXPORT2
-uprv_deleteUObject(void *obj) {
+U_CAPI শূন্য U_EXPORT2
+uprv_deleteUObject(শূন্য *obj) {
     delete static_cast<UObject *>(obj);
 }

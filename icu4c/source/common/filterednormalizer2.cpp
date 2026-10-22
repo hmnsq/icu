@@ -16,37 +16,37 @@
 *   created by: Markus W. Scherer
 */
 
-#include "unicode/utypes.h"
+#অন্তর্ভাব "unicode/utypes.h"
 
-#if !UCONFIG_NO_NORMALIZATION
+#যদি !UCONFIG_NO_NORMALIZATION
 
-#include "unicode/edits.h"
-#include "unicode/normalizer2.h"
-#include "unicode/stringoptions.h"
-#include "unicode/uniset.h"
-#include "unicode/unistr.h"
-#include "unicode/unorm.h"
-#include "cpputils.h"
+#অন্তর্ভাব "unicode/edits.h"
+#অন্তর্ভাব "unicode/normalizer2.h"
+#অন্তর্ভাব "unicode/stringoptions.h"
+#অন্তর্ভাব "unicode/uniset.h"
+#অন্তর্ভাব "unicode/unistr.h"
+#অন্তর্ভাব "unicode/unorm.h"
+#অন্তর্ভাব "cpputils.h"
 
 U_NAMESPACE_BEGIN
 
 FilteredNormalizer2::~FilteredNormalizer2() {}
 
 UnicodeString&
-FilteredNormalizer2::normalize(const UnicodeString& src,
+FilteredNormalizer2::normalize(ধ্রুবক UnicodeString& src,
                                UnicodeString& dest U_LIFETIME_BOUND,
-                               UErrorCode& errorCode) const {
-    uprv_checkCanGetBuffer(src, errorCode);
-    if(U_FAILURE(errorCode)) {
+                               UErrorCode& errorCode) ধ্রুবক {
+    uprv_check_Can_Get_বাফার(src, errorCode);
+    যদি(U_FAILURE(errorCode)) {
         dest.setToBogus();
-        return dest;
+        ফেরত dest;
     }
-    if(&dest==&src) {
+    যদি(&dest==&src) {
         errorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return dest;
+        ফেরত dest;
     }
     dest.remove();
-    return normalize(src, dest, USET_SPAN_SIMPLE, errorCode);
+    ফেরত normalize(src, dest, USET_SPAN_SIMPLE, errorCode);
 }
 
 // Internal: No argument checking, and appends to dest.
@@ -57,284 +57,284 @@ FilteredNormalizer2::normalize(const UnicodeString& src,
 // and USET_SPAN_NOT_CONTAINED should be passed in if we continue after
 // an in-filter prefix.
 UnicodeString&
-FilteredNormalizer2::normalize(const UnicodeString& src,
+FilteredNormalizer2::normalize(ধ্রুবক UnicodeString& src,
                                UnicodeString& dest U_LIFETIME_BOUND,
                                USetSpanCondition spanCondition,
-                               UErrorCode& errorCode) const {
-    UnicodeString tempDest;  // Don't throw away destination buffer between iterations.
-    for(int32_t prevSpanLimit=0; prevSpanLimit<src.length();) {
-        int32_t spanLimit=set.span(src, prevSpanLimit, spanCondition);
-        int32_t spanLength=spanLimit-prevSpanLimit;
-        if(spanCondition==USET_SPAN_NOT_CONTAINED) {
-            if(spanLength!=0) {
-                dest.append(src, prevSpanLimit, spanLength);
+                               UErrorCode& errorCode) ধ্রুবক {
+    UnicodeString অস্থায়ী_Dest;  // Don't throw away destination buffer between iterations.
+    জন্য(int32_t পূর্ব_Span_Limit=0; পূর্ব_Span_Limit<src.length();) {
+        int32_t spanLimit=set.span(src, পূর্ব_Span_Limit, spanCondition);
+        int32_t span_দৈর্ঘ্য=spanLimit-পূর্ব_Span_Limit;
+        যদি(spanCondition==USET_SPAN_NOT_CONTAINED) {
+            যদি(span_দৈর্ঘ্য!=0) {
+                dest.append(src, পূর্ব_Span_Limit, span_দৈর্ঘ্য);
             }
             spanCondition=USET_SPAN_SIMPLE;
-        } else {
-            if(spanLength!=0) {
+        } অন্যথা {
+            যদি(span_দৈর্ঘ্য!=0) {
                 // Not norm2.normalizeSecondAndAppend() because we do not want
                 // to modify the non-filter part of dest.
-                dest.append(norm2.normalize(src.tempSubStringBetween(prevSpanLimit, spanLimit),
-                                            tempDest, errorCode));
-                if(U_FAILURE(errorCode)) {
-                    break;
+                dest.append(norm2.normalize(src.অস্থায়ী_Sub_String_Between(পূর্ব_Span_Limit, spanLimit),
+                                            অস্থায়ী_Dest, errorCode));
+                যদি(U_FAILURE(errorCode)) {
+                    বিরতি;
                 }
             }
             spanCondition=USET_SPAN_NOT_CONTAINED;
         }
-        prevSpanLimit=spanLimit;
+        পূর্ব_Span_Limit=spanLimit;
     }
-    return dest;
+    ফেরত dest;
 }
 
-void
+শূন্য
 FilteredNormalizer2::normalizeUTF8(uint32_t options, StringPiece src, ByteSink &sink,
-                                   Edits *edits, UErrorCode &errorCode) const {
-    if (U_FAILURE(errorCode)) {
-        return;
+                                   Edits *edits, UErrorCode &errorCode) ধ্রুবক {
+    যদি (U_FAILURE(errorCode)) {
+        ফেরত;
     }
-    if (edits != nullptr && (options & U_EDITS_NO_RESET) == 0) {
+    যদি (edits != nullptr && (options & U_EDITS_NO_RESET) == 0) {
         edits->reset();
     }
     options |= U_EDITS_NO_RESET;  // Do not reset for each span.
-    normalizeUTF8(options, src.data(), src.length(), sink, edits, USET_SPAN_SIMPLE, errorCode);
+    normalizeUTF8(options, src.তথ্য(), src.length(), sink, edits, USET_SPAN_SIMPLE, errorCode);
 }
 
-void
-FilteredNormalizer2::normalizeUTF8(uint32_t options, const char *src, int32_t length,
+শূন্য
+FilteredNormalizer2::normalizeUTF8(uint32_t options, ধ্রুবক অক্ষর *src, int32_t length,
                                    ByteSink &sink, Edits *edits,
                                    USetSpanCondition spanCondition,
-                                   UErrorCode &errorCode) const {
-    while (length > 0) {
-        int32_t spanLength = set.spanUTF8(src, length, spanCondition);
-        if (spanCondition == USET_SPAN_NOT_CONTAINED) {
-            if (spanLength != 0) {
-                if (edits != nullptr) {
-                    edits->addUnchanged(spanLength);
+                                   UErrorCode &errorCode) ধ্রুবক {
+    যখন (length > 0) {
+        int32_t span_দৈর্ঘ্য = set.spanUTF8(src, length, spanCondition);
+        যদি (spanCondition == USET_SPAN_NOT_CONTAINED) {
+            যদি (span_দৈর্ঘ্য != 0) {
+                যদি (edits != nullptr) {
+                    edits->addUnchanged(span_দৈর্ঘ্য);
                 }
-                if ((options & U_OMIT_UNCHANGED_TEXT) == 0) {
-                    sink.Append(src, spanLength);
+                যদি ((options & U_OMIT_UNCHANGED_TEXT) == 0) {
+                    sink.Append(src, span_দৈর্ঘ্য);
                 }
             }
             spanCondition = USET_SPAN_SIMPLE;
-        } else {
-            if (spanLength != 0) {
+        } অন্যথা {
+            যদি (span_দৈর্ঘ্য != 0) {
                 // Not norm2.normalizeSecondAndAppend() because we do not want
                 // to modify the non-filter part of dest.
-                norm2.normalizeUTF8(options, StringPiece(src, spanLength), sink, edits, errorCode);
-                if (U_FAILURE(errorCode)) {
-                    break;
+                norm2.normalizeUTF8(options, StringPiece(src, span_দৈর্ঘ্য), sink, edits, errorCode);
+                যদি (U_FAILURE(errorCode)) {
+                    বিরতি;
                 }
             }
             spanCondition = USET_SPAN_NOT_CONTAINED;
         }
-        src += spanLength;
-        length -= spanLength;
+        src += span_দৈর্ঘ্য;
+        length -= span_দৈর্ঘ্য;
     }
 }
 
 UnicodeString&
 FilteredNormalizer2::normalizeSecondAndAppend(UnicodeString& first U_LIFETIME_BOUND,
-                                              const UnicodeString& second,
-                                              UErrorCode& errorCode) const {
-    return normalizeSecondAndAppend(first, second, true, errorCode);
+                                              ধ্রুবক UnicodeString& second,
+                                              UErrorCode& errorCode) ধ্রুবক {
+    ফেরত normalizeSecondAndAppend(first, second, সত্য, errorCode);
 }
 
 UnicodeString&
 FilteredNormalizer2::append(UnicodeString& first U_LIFETIME_BOUND,
-                            const UnicodeString& second,
-                            UErrorCode& errorCode) const {
-    return normalizeSecondAndAppend(first, second, false, errorCode);
+                            ধ্রুবক UnicodeString& second,
+                            UErrorCode& errorCode) ধ্রুবক {
+    ফেরত normalizeSecondAndAppend(first, second, মিথ্যা, errorCode);
 }
 
 UnicodeString&
 FilteredNormalizer2::normalizeSecondAndAppend(UnicodeString& first U_LIFETIME_BOUND,
-                                              const UnicodeString& second,
+                                              ধ্রুবক UnicodeString& second,
                                               UBool doNormalize,
-                                              UErrorCode& errorCode) const {
-    uprv_checkCanGetBuffer(first, errorCode);
-    uprv_checkCanGetBuffer(second, errorCode);
-    if(U_FAILURE(errorCode)) {
-        return first;
+                                              UErrorCode& errorCode) ধ্রুবক {
+    uprv_check_Can_Get_বাফার(first, errorCode);
+    uprv_check_Can_Get_বাফার(second, errorCode);
+    যদি(U_FAILURE(errorCode)) {
+        ফেরত first;
     }
-    if(&first==&second) {
+    যদি(&first==&second) {
         errorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return first;
+        ফেরত first;
     }
-    if(first.isEmpty()) {
-        if(doNormalize) {
-            return normalize(second, first, errorCode);
-        } else {
-            return first=second;
+    যদি(first.isEmpty()) {
+        যদি(doNormalize) {
+            ফেরত normalize(second, first, errorCode);
+        } অন্যথা {
+            ফেরত first=second;
         }
     }
     // merge the in-filter suffix of the first string with the in-filter prefix of the second
     int32_t prefixLimit=set.span(second, 0, USET_SPAN_SIMPLE);
-    if(prefixLimit!=0) {
-        UnicodeString prefix(second.tempSubString(0, prefixLimit));
+    যদি(prefixLimit!=0) {
+        UnicodeString prefix(second.অস্থায়ী_Sub_String(0, prefixLimit));
         int32_t suffixStart=set.spanBack(first, INT32_MAX, USET_SPAN_SIMPLE);
-        if(suffixStart==0) {
-            if(doNormalize) {
+        যদি(suffixStart==0) {
+            যদি(doNormalize) {
                 norm2.normalizeSecondAndAppend(first, prefix, errorCode);
-            } else {
+            } অন্যথা {
                 norm2.append(first, prefix, errorCode);
             }
-        } else {
-            UnicodeString middle(first, suffixStart, INT32_MAX);
-            if(doNormalize) {
-                norm2.normalizeSecondAndAppend(middle, prefix, errorCode);
-            } else {
-                norm2.append(middle, prefix, errorCode);
+        } অন্যথা {
+            UnicodeString মধ্য(first, suffixStart, INT32_MAX);
+            যদি(doNormalize) {
+                norm2.normalizeSecondAndAppend(মধ্য, prefix, errorCode);
+            } অন্যথা {
+                norm2.append(মধ্য, prefix, errorCode);
             }
-            first.replace(suffixStart, INT32_MAX, middle);
+            first.replace(suffixStart, INT32_MAX, মধ্য);
         }
     }
-    if(prefixLimit<second.length()) {
-        UnicodeString rest(second.tempSubString(prefixLimit, INT32_MAX));
-        if(doNormalize) {
+    যদি(prefixLimit<second.length()) {
+        UnicodeString rest(second.অস্থায়ী_Sub_String(prefixLimit, INT32_MAX));
+        যদি(doNormalize) {
             normalize(rest, first, USET_SPAN_NOT_CONTAINED, errorCode);
-        } else {
+        } অন্যথা {
             first.append(rest);
         }
     }
-    return first;
+    ফেরত first;
 }
 
 UBool
-FilteredNormalizer2::getDecomposition(UChar32 c, UnicodeString &decomposition) const {
-    return set.contains(c) && norm2.getDecomposition(c, decomposition);
+FilteredNormalizer2::getDecomposition(UChar32 c, UnicodeString &decomposition) ধ্রুবক {
+    ফেরত set.contains(c) && norm2.getDecomposition(c, decomposition);
 }
 
 UBool
-FilteredNormalizer2::getRawDecomposition(UChar32 c, UnicodeString &decomposition) const {
-    return set.contains(c) && norm2.getRawDecomposition(c, decomposition);
+FilteredNormalizer2::getRawDecomposition(UChar32 c, UnicodeString &decomposition) ধ্রুবক {
+    ফেরত set.contains(c) && norm2.getRawDecomposition(c, decomposition);
 }
 
 UChar32
-FilteredNormalizer2::composePair(UChar32 a, UChar32 b) const {
-    return (set.contains(a) && set.contains(b)) ? norm2.composePair(a, b) : U_SENTINEL;
+FilteredNormalizer2::composePair(UChar32 a, UChar32 b) ধ্রুবক {
+    ফেরত (set.contains(a) && set.contains(b)) ? norm2.composePair(a, b) : U_SENTINEL;
 }
 
 uint8_t
-FilteredNormalizer2::getCombiningClass(UChar32 c) const {
-    return set.contains(c) ? norm2.getCombiningClass(c) : 0;
+FilteredNormalizer2::getCombiningClass(UChar32 c) ধ্রুবক {
+    ফেরত set.contains(c) ? norm2.getCombiningClass(c) : 0;
 }
 
 UBool
-FilteredNormalizer2::isNormalized(const UnicodeString &s, UErrorCode &errorCode) const {
-    uprv_checkCanGetBuffer(s, errorCode);
-    if(U_FAILURE(errorCode)) {
-        return false;
+FilteredNormalizer2::isNormalized(ধ্রুবক UnicodeString &s, UErrorCode &errorCode) ধ্রুবক {
+    uprv_check_Can_Get_বাফার(s, errorCode);
+    যদি(U_FAILURE(errorCode)) {
+        ফেরত মিথ্যা;
     }
     USetSpanCondition spanCondition=USET_SPAN_SIMPLE;
-    for(int32_t prevSpanLimit=0; prevSpanLimit<s.length();) {
-        int32_t spanLimit=set.span(s, prevSpanLimit, spanCondition);
-        if(spanCondition==USET_SPAN_NOT_CONTAINED) {
+    জন্য(int32_t পূর্ব_Span_Limit=0; পূর্ব_Span_Limit<s.length();) {
+        int32_t spanLimit=set.span(s, পূর্ব_Span_Limit, spanCondition);
+        যদি(spanCondition==USET_SPAN_NOT_CONTAINED) {
             spanCondition=USET_SPAN_SIMPLE;
-        } else {
-            if( !norm2.isNormalized(s.tempSubStringBetween(prevSpanLimit, spanLimit), errorCode) ||
+        } অন্যথা {
+            যদি( !norm2.isNormalized(s.অস্থায়ী_Sub_String_Between(পূর্ব_Span_Limit, spanLimit), errorCode) ||
                 U_FAILURE(errorCode)
             ) {
-                return false;
+                ফেরত মিথ্যা;
             }
             spanCondition=USET_SPAN_NOT_CONTAINED;
         }
-        prevSpanLimit=spanLimit;
+        পূর্ব_Span_Limit=spanLimit;
     }
-    return true;
+    ফেরত সত্য;
 }
 
 UBool
-FilteredNormalizer2::isNormalizedUTF8(StringPiece sp, UErrorCode &errorCode) const {
-    if(U_FAILURE(errorCode)) {
-        return false;
+FilteredNormalizer2::isNormalizedUTF8(StringPiece sp, UErrorCode &errorCode) ধ্রুবক {
+    যদি(U_FAILURE(errorCode)) {
+        ফেরত মিথ্যা;
     }
-    const char *s = sp.data();
+    ধ্রুবক অক্ষর *s = sp.তথ্য();
     int32_t length = sp.length();
     USetSpanCondition spanCondition = USET_SPAN_SIMPLE;
-    while (length > 0) {
-        int32_t spanLength = set.spanUTF8(s, length, spanCondition);
-        if (spanCondition == USET_SPAN_NOT_CONTAINED) {
+    যখন (length > 0) {
+        int32_t span_দৈর্ঘ্য = set.spanUTF8(s, length, spanCondition);
+        যদি (spanCondition == USET_SPAN_NOT_CONTAINED) {
             spanCondition = USET_SPAN_SIMPLE;
-        } else {
-            if (!norm2.isNormalizedUTF8(StringPiece(s, spanLength), errorCode) ||
+        } অন্যথা {
+            যদি (!norm2.isNormalizedUTF8(StringPiece(s, span_দৈর্ঘ্য), errorCode) ||
                     U_FAILURE(errorCode)) {
-                return false;
+                ফেরত মিথ্যা;
             }
             spanCondition = USET_SPAN_NOT_CONTAINED;
         }
-        s += spanLength;
-        length -= spanLength;
+        s += span_দৈর্ঘ্য;
+        length -= span_দৈর্ঘ্য;
     }
-    return true;
+    ফেরত সত্য;
 }
 
-UNormalizationCheckResult
-FilteredNormalizer2::quickCheck(const UnicodeString &s, UErrorCode &errorCode) const {
-    uprv_checkCanGetBuffer(s, errorCode);
-    if(U_FAILURE(errorCode)) {
-        return UNORM_MAYBE;
+UNormalization_Check_ফলাফল
+FilteredNormalizer2::quickCheck(ধ্রুবক UnicodeString &s, UErrorCode &errorCode) ধ্রুবক {
+    uprv_check_Can_Get_বাফার(s, errorCode);
+    যদি(U_FAILURE(errorCode)) {
+        ফেরত UNORM_MAYBE;
     }
-    UNormalizationCheckResult result=UNORM_YES;
+    UNormalization_Check_ফলাফল ফলাফল=UNORM_YES;
     USetSpanCondition spanCondition=USET_SPAN_SIMPLE;
-    for(int32_t prevSpanLimit=0; prevSpanLimit<s.length();) {
-        int32_t spanLimit=set.span(s, prevSpanLimit, spanCondition);
-        if(spanCondition==USET_SPAN_NOT_CONTAINED) {
+    জন্য(int32_t পূর্ব_Span_Limit=0; পূর্ব_Span_Limit<s.length();) {
+        int32_t spanLimit=set.span(s, পূর্ব_Span_Limit, spanCondition);
+        যদি(spanCondition==USET_SPAN_NOT_CONTAINED) {
             spanCondition=USET_SPAN_SIMPLE;
-        } else {
-            UNormalizationCheckResult qcResult=
-                norm2.quickCheck(s.tempSubStringBetween(prevSpanLimit, spanLimit), errorCode);
-            if(U_FAILURE(errorCode) || qcResult==UNORM_NO) {
-                return qcResult;
-            } else if(qcResult==UNORM_MAYBE) {
-                result=qcResult;
+        } অন্যথা {
+            UNormalization_Check_ফলাফল qc_ফলাফল=
+                norm2.quickCheck(s.অস্থায়ী_Sub_String_Between(পূর্ব_Span_Limit, spanLimit), errorCode);
+            যদি(U_FAILURE(errorCode) || qc_ফলাফল==UNORM_NO) {
+                ফেরত qc_ফলাফল;
+            } অন্যথা যদি(qc_ফলাফল==UNORM_MAYBE) {
+                ফলাফল=qc_ফলাফল;
             }
             spanCondition=USET_SPAN_NOT_CONTAINED;
         }
-        prevSpanLimit=spanLimit;
+        পূর্ব_Span_Limit=spanLimit;
     }
-    return result;
+    ফেরত ফলাফল;
 }
 
 int32_t
-FilteredNormalizer2::spanQuickCheckYes(const UnicodeString &s, UErrorCode &errorCode) const {
-    uprv_checkCanGetBuffer(s, errorCode);
-    if(U_FAILURE(errorCode)) {
-        return 0;
+FilteredNormalizer2::spanQuickCheckYes(ধ্রুবক UnicodeString &s, UErrorCode &errorCode) ধ্রুবক {
+    uprv_check_Can_Get_বাফার(s, errorCode);
+    যদি(U_FAILURE(errorCode)) {
+        ফেরত 0;
     }
     USetSpanCondition spanCondition=USET_SPAN_SIMPLE;
-    for(int32_t prevSpanLimit=0; prevSpanLimit<s.length();) {
-        int32_t spanLimit=set.span(s, prevSpanLimit, spanCondition);
-        if(spanCondition==USET_SPAN_NOT_CONTAINED) {
+    জন্য(int32_t পূর্ব_Span_Limit=0; পূর্ব_Span_Limit<s.length();) {
+        int32_t spanLimit=set.span(s, পূর্ব_Span_Limit, spanCondition);
+        যদি(spanCondition==USET_SPAN_NOT_CONTAINED) {
             spanCondition=USET_SPAN_SIMPLE;
-        } else {
+        } অন্যথা {
             int32_t yesLimit=
-                prevSpanLimit+
+                পূর্ব_Span_Limit+
                 norm2.spanQuickCheckYes(
-                    s.tempSubStringBetween(prevSpanLimit, spanLimit), errorCode);
-            if(U_FAILURE(errorCode) || yesLimit<spanLimit) {
-                return yesLimit;
+                    s.অস্থায়ী_Sub_String_Between(পূর্ব_Span_Limit, spanLimit), errorCode);
+            যদি(U_FAILURE(errorCode) || yesLimit<spanLimit) {
+                ফেরত yesLimit;
             }
             spanCondition=USET_SPAN_NOT_CONTAINED;
         }
-        prevSpanLimit=spanLimit;
+        পূর্ব_Span_Limit=spanLimit;
     }
-    return s.length();
+    ফেরত s.length();
 }
 
 UBool
-FilteredNormalizer2::hasBoundaryBefore(UChar32 c) const {
-    return !set.contains(c) || norm2.hasBoundaryBefore(c);
+FilteredNormalizer2::hasBoundaryBefore(UChar32 c) ধ্রুবক {
+    ফেরত !set.contains(c) || norm2.hasBoundaryBefore(c);
 }
 
 UBool
-FilteredNormalizer2::hasBoundaryAfter(UChar32 c) const {
-    return !set.contains(c) || norm2.hasBoundaryAfter(c);
+FilteredNormalizer2::hasBoundaryAfter(UChar32 c) ধ্রুবক {
+    ফেরত !set.contains(c) || norm2.hasBoundaryAfter(c);
 }
 
 UBool
-FilteredNormalizer2::isInert(UChar32 c) const {
-    return !set.contains(c) || norm2.isInert(c);
+FilteredNormalizer2::isInert(UChar32 c) ধ্রুবক {
+    ফেরত !set.contains(c) || norm2.isInert(c);
 }
 
 U_NAMESPACE_END
@@ -344,22 +344,22 @@ U_NAMESPACE_END
 U_NAMESPACE_USE
 
 U_CAPI UNormalizer2* U_EXPORT2
-unorm2_openFiltered(const UNormalizer2* norm2 U_LIFETIME_BOUND,
-                    const USet* filterSet U_LIFETIME_BOUND,
+unorm2_openFiltered(ধ্রুবক UNormalizer2* norm2 U_LIFETIME_BOUND,
+                    ধ্রুবক USet* filterSet U_LIFETIME_BOUND,
                     UErrorCode* pErrorCode) {
-    if(U_FAILURE(*pErrorCode)) {
-        return nullptr;
+    যদি(U_FAILURE(*pErrorCode)) {
+        ফেরত nullptr;
     }
-    if(filterSet==nullptr) {
+    যদি(filterSet==nullptr) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        ফেরত nullptr;
     }
-    Normalizer2 *fn2=new FilteredNormalizer2(*(Normalizer2 *)norm2,
+    Normalizer2 *fn2=নতুন FilteredNormalizer2(*(Normalizer2 *)norm2,
                                              *UnicodeSet::fromUSet(filterSet));
-    if(fn2==nullptr) {
+    যদি(fn2==nullptr) {
         *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
     }
-    return (UNormalizer2 *)fn2;
+    ফেরত (UNormalizer2 *)fn2;
 }
 
 #endif  // !UCONFIG_NO_NORMALIZATION

@@ -10,124 +10,124 @@
 * Since: ICU 2.4
 **********************************************************************
 */
-#include "utypeinfo.h"  // for 'typeid' to work 
+#অন্তর্ভাব "utypeinfo.h"  // for 'typeid' to work 
 
-#include "unicode/ustring.h"
-#include "unicode/strenum.h"
-#include "unicode/putil.h"
-#include "uenumimp.h"
-#include "ustrenum.h"
-#include "cstring.h"
-#include "cmemory.h"
-#include "uassert.h"
+#অন্তর্ভাব "unicode/ustring.h"
+#অন্তর্ভাব "unicode/strenum.h"
+#অন্তর্ভাব "unicode/putil.h"
+#অন্তর্ভাব "uenumimp.h"
+#অন্তর্ভাব "ustrenum.h"
+#অন্তর্ভাব "cstring.h"
+#অন্তর্ভাব "cmemory.h"
+#অন্তর্ভাব "uassert.h"
 
 U_NAMESPACE_BEGIN
 // StringEnumeration implementation ---------------------------------------- ***
 
 StringEnumeration::StringEnumeration()
-    : chars(charsBuffer), charsCapacity(sizeof(charsBuffer)) {
+    : chars(chars_বাফার), charsCapacity(আকার(chars_বাফার)) {
 }
 
 StringEnumeration::~StringEnumeration() {
-    if (chars != nullptr && chars != charsBuffer) {
+    যদি (chars != nullptr && chars != chars_বাফার) {
         uprv_free(chars);
     }
 }
 
 // StringEnumeration base class clone() default implementation, does not clone
 StringEnumeration *
-StringEnumeration::clone() const {
-  return nullptr;
+StringEnumeration::clone() ধ্রুবক {
+  ফেরত nullptr;
 }
 
-const char*
-StringEnumeration::next(int32_t* resultLength, UErrorCode& status) U_LIFETIME_BOUND {
-    const UnicodeString *s=snext(status);
-    if(U_SUCCESS(status) && s!=nullptr) {
+ধ্রুবক অক্ষর*
+StringEnumeration::next(int32_t* ফলাফল_দৈর্ঘ্য, UErrorCode& status) U_LIFETIME_BOUND {
+    ধ্রুবক UnicodeString *s=snext(status);
+    যদি(U_SUCCESS(status) && s!=nullptr) {
         unistr=*s;
         ensureCharsCapacity(unistr.length()+1, status);
-        if(U_SUCCESS(status)) {
-            if(resultLength!=nullptr) {
-                *resultLength=unistr.length();
+        যদি(U_SUCCESS(status)) {
+            যদি(ফলাফল_দৈর্ঘ্য!=nullptr) {
+                *ফলাফল_দৈর্ঘ্য=unistr.length();
             }
             unistr.extract(0, INT32_MAX, chars, charsCapacity, US_INV);
-            return chars;
+            ফেরত chars;
         }
     }
 
-    return nullptr;
+    ফেরত nullptr;
 }
 
-const char16_t*
-StringEnumeration::unext(int32_t* resultLength, UErrorCode& status) U_LIFETIME_BOUND {
-    const UnicodeString *s=snext(status);
-    if(U_SUCCESS(status) && s!=nullptr) {
+ধ্রুবক char16_t*
+StringEnumeration::unext(int32_t* ফলাফল_দৈর্ঘ্য, UErrorCode& status) U_LIFETIME_BOUND {
+    ধ্রুবক UnicodeString *s=snext(status);
+    যদি(U_SUCCESS(status) && s!=nullptr) {
         unistr=*s;
-        if(resultLength!=nullptr) {
-            *resultLength=unistr.length();
+        যদি(ফলাফল_দৈর্ঘ্য!=nullptr) {
+            *ফলাফল_দৈর্ঘ্য=unistr.length();
         }
-        return unistr.getTerminatedBuffer();
+        ফেরত unistr.get_Terminated_বাফার();
     }
 
-    return nullptr;
+    ফেরত nullptr;
 }
 
-const UnicodeString*
+ধ্রুবক UnicodeString*
 StringEnumeration::snext(UErrorCode& status) U_LIFETIME_BOUND {
     int32_t length;
-    const char *s=next(&length, status);
-    return setChars(s, length, status);
+    ধ্রুবক অক্ষর *s=next(&length, status);
+    ফেরত setChars(s, length, status);
 }
 
-void
+শূন্য
 StringEnumeration::ensureCharsCapacity(int32_t capacity, UErrorCode &status) {
-    if(U_SUCCESS(status) && capacity>charsCapacity) {
-        if(capacity<(charsCapacity+charsCapacity/2)) {
+    যদি(U_SUCCESS(status) && capacity>charsCapacity) {
+        যদি(capacity<(charsCapacity+charsCapacity/2)) {
             // avoid allocation thrashing
             capacity=charsCapacity+charsCapacity/2;
         }
-        if(chars!=charsBuffer) {
+        যদি(chars!=chars_বাফার) {
             uprv_free(chars);
         }
-        chars = static_cast<char*>(uprv_malloc(capacity));
-        if(chars==nullptr) {
-            chars=charsBuffer;
-            charsCapacity=sizeof(charsBuffer);
+        chars = static_cast<অক্ষর*>(uprv_malloc(capacity));
+        যদি(chars==nullptr) {
+            chars=chars_বাফার;
+            charsCapacity=আকার(chars_বাফার);
             status=U_MEMORY_ALLOCATION_ERROR;
-        } else {
+        } অন্যথা {
             charsCapacity=capacity;
         }
     }
 }
 
 UnicodeString*
-StringEnumeration::setChars(const char* s, int32_t length, UErrorCode& status) U_LIFETIME_BOUND {
-    if(U_SUCCESS(status) && s!=nullptr) {
-        if(length<0) {
+StringEnumeration::setChars(ধ্রুবক অক্ষর* s, int32_t length, UErrorCode& status) U_LIFETIME_BOUND {
+    যদি(U_SUCCESS(status) && s!=nullptr) {
+        যদি(length<0) {
             length = static_cast<int32_t>(uprv_strlen(s));
         }
 
-        char16_t *buffer=unistr.getBuffer(length+1);
-        if(buffer!=nullptr) {
-            u_charsToUChars(s, buffer, length);
-            buffer[length]=0;
-            unistr.releaseBuffer(length);
-            return &unistr;
-        } else {
+        char16_t *বাফার=unistr.get_বাফার(length+1);
+        যদি(বাফার!=nullptr) {
+            u_charsToUChars(s, বাফার, length);
+            বাফার[length]=0;
+            unistr.release_বাফার(length);
+            ফেরত &unistr;
+        } অন্যথা {
             status=U_MEMORY_ALLOCATION_ERROR;
         }
     }
 
-    return nullptr;
+    ফেরত nullptr;
 }
-bool
-StringEnumeration::operator==(const StringEnumeration& that)const {
-    return typeid(*this) == typeid(that); 
+যৌক্তিক
+StringEnumeration::operator==(ধ্রুবক StringEnumeration& that)ধ্রুবক {
+    ফেরত typeid(*এই) == typeid(that); 
 }
 
-bool
-StringEnumeration::operator!=(const StringEnumeration& that)const {
-    return !operator==(that);
+যৌক্তিক
+StringEnumeration::operator!=(ধ্রুবক StringEnumeration& that)ধ্রুবক {
+    ফেরত !operator==(that);
 }
 
 // UStringEnumeration implementation --------------------------------------- ***
@@ -135,17 +135,17 @@ StringEnumeration::operator!=(const StringEnumeration& that)const {
 UStringEnumeration * U_EXPORT2
 UStringEnumeration::fromUEnumeration(
         UEnumeration *uenumToAdopt, UErrorCode &status) {
-    if (U_FAILURE(status)) {
+    যদি (U_FAILURE(status)) {
         uenum_close(uenumToAdopt);
-        return nullptr;
+        ফেরত nullptr;
     }
-    UStringEnumeration *result = new UStringEnumeration(uenumToAdopt);
-    if (result == nullptr) {
+    UStringEnumeration *ফলাফল = নতুন UStringEnumeration(uenumToAdopt);
+    যদি (ফলাফল == nullptr) {
         status = U_MEMORY_ALLOCATION_ERROR;
         uenum_close(uenumToAdopt);
-        return nullptr;
+        ফেরত nullptr;
     }
-    return result;
+    ফেরত ফলাফল;
 }
 
 UStringEnumeration::UStringEnumeration(UEnumeration* _uenum) :
@@ -157,24 +157,24 @@ UStringEnumeration::~UStringEnumeration() {
     uenum_close(uenum);
 }
 
-int32_t UStringEnumeration::count(UErrorCode& status) const {
-    return uenum_count(uenum, &status);
+int32_t UStringEnumeration::count(UErrorCode& status) ধ্রুবক {
+    ফেরত uenum_গুনতি(uenum, &status);
 }
 
-const char* UStringEnumeration::next(int32_t* resultLength, UErrorCode& status) U_LIFETIME_BOUND {
-    return uenum_next(uenum, resultLength, &status);
+ধ্রুবক অক্ষর* UStringEnumeration::next(int32_t* ফলাফল_দৈর্ঘ্য, UErrorCode& status) U_LIFETIME_BOUND {
+    ফেরত uenum_পরবর্তী(uenum, ফলাফল_দৈর্ঘ্য, &status);
 }
 
-const UnicodeString* UStringEnumeration::snext(UErrorCode& status) U_LIFETIME_BOUND {
+ধ্রুবক UnicodeString* UStringEnumeration::snext(UErrorCode& status) U_LIFETIME_BOUND {
     int32_t length;
-    const char16_t* str = uenum_unext(uenum, &length, &status);
-    if (str == nullptr || U_FAILURE(status)) {
-        return nullptr;
+    ধ্রুবক char16_t* str = uenum_unext(uenum, &length, &status);
+    যদি (str == nullptr || U_FAILURE(status)) {
+        ফেরত nullptr;
     }
-    return &unistr.setTo(str, length);
+    ফেরত &unistr.setTo(str, length);
 }
 
-void UStringEnumeration::reset(UErrorCode& status) {
+শূন্য UStringEnumeration::reset(UErrorCode& status) {
     uenum_reset(uenum, &status);
 }
 
@@ -190,7 +190,7 @@ U_CDECL_BEGIN
 /**
  * Wrapper API to make StringEnumeration look like UEnumeration.
  */
-static void U_CALLCONV
+স্থির শূন্য U_CALLCONV
 ustrenum_close(UEnumeration* en) {
     delete THIS(en);
     uprv_free(en);
@@ -199,39 +199,39 @@ ustrenum_close(UEnumeration* en) {
 /**
  * Wrapper API to make StringEnumeration look like UEnumeration.
  */
-static int32_t U_CALLCONV
-ustrenum_count(UEnumeration* en,
+স্থির int32_t U_CALLCONV
+ustrenum_গুনতি(UEnumeration* en,
                UErrorCode* ec)
 {
-    return THIS(en)->count(*ec);
+    ফেরত THIS(en)->count(*ec);
 }
 
 /**
  * Wrapper API to make StringEnumeration look like UEnumeration.
  */
-static const char16_t* U_CALLCONV
+স্থির ধ্রুবক char16_t* U_CALLCONV
 ustrenum_unext(UEnumeration* en U_LIFETIME_BOUND,
-               int32_t* resultLength,
+               int32_t* ফলাফল_দৈর্ঘ্য,
                UErrorCode* ec)
 {
-    return THIS(en)->unext(resultLength, *ec);
+    ফেরত THIS(en)->unext(ফলাফল_দৈর্ঘ্য, *ec);
 }
 
 /**
  * Wrapper API to make StringEnumeration look like UEnumeration.
  */
-static const char* U_CALLCONV
-ustrenum_next(UEnumeration* en U_LIFETIME_BOUND,
-              int32_t* resultLength,
+স্থির ধ্রুবক অক্ষর* U_CALLCONV
+ustrenum_পরবর্তী(UEnumeration* en U_LIFETIME_BOUND,
+              int32_t* ফলাফল_দৈর্ঘ্য,
               UErrorCode* ec)
 {
-    return THIS(en)->next(resultLength, *ec);
+    ফেরত THIS(en)->next(ফলাফল_দৈর্ঘ্য, *ec);
 }
 
 /**
  * Wrapper API to make StringEnumeration look like UEnumeration.
  */
-static void U_CALLCONV
+স্থির শূন্য U_CALLCONV
 ustrenum_reset(UEnumeration* en,
                UErrorCode* ec)
 {
@@ -242,13 +242,13 @@ ustrenum_reset(UEnumeration* en,
  * Pseudo-vtable for UEnumeration wrapper around StringEnumeration.
  * The StringEnumeration pointer will be stored in 'context'.
  */
-static const UEnumeration USTRENUM_VT = {
+স্থির ধ্রুবক UEnumeration USTRENUM_VT = {
     nullptr,
     nullptr, // store StringEnumeration pointer here
     ustrenum_close,
-    ustrenum_count,
+    ustrenum_গুনতি,
     ustrenum_unext,
-    ustrenum_next,
+    ustrenum_পরবর্তী,
     ustrenum_reset
 };
 
@@ -261,139 +261,139 @@ U_CDECL_END
  */
 U_CAPI UEnumeration* U_EXPORT2
 uenum_openFromStringEnumeration(icu::StringEnumeration* adopted, UErrorCode* ec) { 
-    UEnumeration* result = nullptr;
-    if (U_SUCCESS(*ec) && adopted != nullptr) {
-        result = (UEnumeration*) uprv_malloc(sizeof(UEnumeration));
-        if (result == nullptr) {
+    UEnumeration* ফলাফল = nullptr;
+    যদি (U_SUCCESS(*ec) && adopted != nullptr) {
+        ফলাফল = (UEnumeration*) uprv_malloc(আকার(UEnumeration));
+        যদি (ফলাফল == nullptr) {
             *ec = U_MEMORY_ALLOCATION_ERROR;
-        } else {
-            uprv_memcpy(result, &USTRENUM_VT, sizeof(USTRENUM_VT));
-            result->context = adopted;
+        } অন্যথা {
+            uprv_memcpy(ফলাফল, &USTRENUM_VT, আকার(USTRENUM_VT));
+            ফলাফল->context = adopted;
         }
     }
-    if (result == nullptr) {
+    যদি (ফলাফল == nullptr) {
         delete adopted;
     }
-    return result;
+    ফেরত ফলাফল;
 }
 
 // C wrapper --------------------------------------------------------------- ***
 
 U_CDECL_BEGIN
 
-typedef struct UCharStringEnumeration {
+প্রকারলেখ কাঠামো UCharStringEnumeration {
     UEnumeration uenum;
-    int32_t index, count;
+    int32_t সূচক, count;
 } UCharStringEnumeration;
 
-static void U_CALLCONV
+স্থির শূন্য U_CALLCONV
 ucharstrenum_close(UEnumeration* en) {
     uprv_free(en);
 }
 
-static int32_t U_CALLCONV
-ucharstrenum_count(UEnumeration* en,
+স্থির int32_t U_CALLCONV
+ucharstrenum_গুনতি(UEnumeration* en,
                    UErrorCode* /*ec*/) {
-    return ((UCharStringEnumeration*)en)->count;
+    ফেরত ((UCharStringEnumeration*)en)->count;
 }
 
-static const char16_t* U_CALLCONV
+স্থির ধ্রুবক char16_t* U_CALLCONV
 ucharstrenum_unext(UEnumeration* en U_LIFETIME_BOUND,
-                  int32_t* resultLength,
+                  int32_t* ফলাফল_দৈর্ঘ্য,
                   UErrorCode* /*ec*/) {
     UCharStringEnumeration *e = (UCharStringEnumeration*) en;
-    if (e->index >= e->count) {
-        return nullptr;
+    যদি (e->সূচক >= e->count) {
+        ফেরত nullptr;
     }
-    const char16_t* result = ((const char16_t**)e->uenum.context)[e->index++];
-    if (resultLength) {
-        *resultLength = u_strlen(result);
+    ধ্রুবক char16_t* ফলাফল = ((ধ্রুবক char16_t**)e->uenum.context)[e->সূচক++];
+    যদি (ফলাফল_দৈর্ঘ্য) {
+        *ফলাফল_দৈর্ঘ্য = u_strlen(ফলাফল);
     }
-    return result;
+    ফেরত ফলাফল;
 }
 
 
-static const char* U_CALLCONV
-ucharstrenum_next(UEnumeration* en U_LIFETIME_BOUND,
-                  int32_t* resultLength,
+স্থির ধ্রুবক অক্ষর* U_CALLCONV
+ucharstrenum_পরবর্তী(UEnumeration* en U_LIFETIME_BOUND,
+                  int32_t* ফলাফল_দৈর্ঘ্য,
                   UErrorCode* /*ec*/) {
     UCharStringEnumeration *e = (UCharStringEnumeration*) en;
-    if (e->index >= e->count) {
-        return nullptr;
+    যদি (e->সূচক >= e->count) {
+        ফেরত nullptr;
     }
-    const char* result = ((const char**)e->uenum.context)[e->index++];
-    if (resultLength) {
-        *resultLength = (int32_t)uprv_strlen(result);
+    ধ্রুবক অক্ষর* ফলাফল = ((ধ্রুবক অক্ষর**)e->uenum.context)[e->সূচক++];
+    যদি (ফলাফল_দৈর্ঘ্য) {
+        *ফলাফল_দৈর্ঘ্য = (int32_t)uprv_strlen(ফলাফল);
     }
-    return result;
+    ফেরত ফলাফল;
 }
 
-static void U_CALLCONV
+স্থির শূন্য U_CALLCONV
 ucharstrenum_reset(UEnumeration* en,
                    UErrorCode* /*ec*/) {
-    ((UCharStringEnumeration*)en)->index = 0;
+    ((UCharStringEnumeration*)en)->সূচক = 0;
 }
 
-static const UEnumeration UCHARSTRENUM_VT = {
+স্থির ধ্রুবক UEnumeration UCHARSTRENUM_VT = {
     nullptr,
     nullptr, // store StringEnumeration pointer here
     ucharstrenum_close,
-    ucharstrenum_count,
+    ucharstrenum_গুনতি,
     uenum_unextDefault,
-    ucharstrenum_next,
+    ucharstrenum_পরবর্তী,
     ucharstrenum_reset
 };
 
-static const UEnumeration UCHARSTRENUM_U_VT = {
+স্থির ধ্রুবক UEnumeration UCHARSTRENUM_U_VT = {
     nullptr,
     nullptr, // store StringEnumeration pointer here
     ucharstrenum_close,
-    ucharstrenum_count,
+    ucharstrenum_গুনতি,
     ucharstrenum_unext,
-    uenum_nextDefault,
+    uenum_পরবর্তী_Default,
     ucharstrenum_reset
 };
 
 U_CDECL_END
 
 U_CAPI UEnumeration* U_EXPORT2
-uenum_openCharStringsEnumeration(U_LIFETIME_BOUND const char* const strings[],
+uenum_openCharStringsEnumeration(U_LIFETIME_BOUND ধ্রুবক অক্ষর* ধ্রুবক strings[],
                                  int32_t count,
                                  UErrorCode* ec) {
-    UCharStringEnumeration* result = nullptr;
-    if (U_SUCCESS(*ec) && count >= 0 && (count == 0 || strings != nullptr)) {
-        result = (UCharStringEnumeration*) uprv_malloc(sizeof(UCharStringEnumeration));
-        if (result == nullptr) {
+    UCharStringEnumeration* ফলাফল = nullptr;
+    যদি (U_SUCCESS(*ec) && count >= 0 && (count == 0 || strings != nullptr)) {
+        ফলাফল = (UCharStringEnumeration*) uprv_malloc(আকার(UCharStringEnumeration));
+        যদি (ফলাফল == nullptr) {
             *ec = U_MEMORY_ALLOCATION_ERROR;
-        } else {
-            U_ASSERT((char*)result==(char*)(&result->uenum));
-            uprv_memcpy(result, &UCHARSTRENUM_VT, sizeof(UCHARSTRENUM_VT));
-            result->uenum.context = (void*)strings;
-            result->index = 0;
-            result->count = count;
+        } অন্যথা {
+            U_ASSERT((অক্ষর*)ফলাফল==(অক্ষর*)(&ফলাফল->uenum));
+            uprv_memcpy(ফলাফল, &UCHARSTRENUM_VT, আকার(UCHARSTRENUM_VT));
+            ফলাফল->uenum.context = (শূন্য*)strings;
+            ফলাফল->সূচক = 0;
+            ফলাফল->count = count;
         }
     }
-    return (UEnumeration*) result;
+    ফেরত (UEnumeration*) ফলাফল;
 }
 
 U_CAPI UEnumeration* U_EXPORT2
-uenum_openUCharStringsEnumeration(U_LIFETIME_BOUND const char16_t* const strings[],
+uenum_openUCharStringsEnumeration(U_LIFETIME_BOUND ধ্রুবক char16_t* ধ্রুবক strings[],
                                   int32_t count,
                                   UErrorCode* ec) {
-    UCharStringEnumeration* result = nullptr;
-    if (U_SUCCESS(*ec) && count >= 0 && (count == 0 || strings != nullptr)) {
-        result = (UCharStringEnumeration*) uprv_malloc(sizeof(UCharStringEnumeration));
-        if (result == nullptr) {
+    UCharStringEnumeration* ফলাফল = nullptr;
+    যদি (U_SUCCESS(*ec) && count >= 0 && (count == 0 || strings != nullptr)) {
+        ফলাফল = (UCharStringEnumeration*) uprv_malloc(আকার(UCharStringEnumeration));
+        যদি (ফলাফল == nullptr) {
             *ec = U_MEMORY_ALLOCATION_ERROR;
-        } else {
-            U_ASSERT((char*)result==(char*)(&result->uenum));
-            uprv_memcpy(result, &UCHARSTRENUM_U_VT, sizeof(UCHARSTRENUM_U_VT));
-            result->uenum.context = (void*)strings;
-            result->index = 0;
-            result->count = count;
+        } অন্যথা {
+            U_ASSERT((অক্ষর*)ফলাফল==(অক্ষর*)(&ফলাফল->uenum));
+            uprv_memcpy(ফলাফল, &UCHARSTRENUM_U_VT, আকার(UCHARSTRENUM_U_VT));
+            ফলাফল->uenum.context = (শূন্য*)strings;
+            ফলাফল->সূচক = 0;
+            ফলাফল->count = count;
         }
     }
-    return (UEnumeration*) result;
+    ফেরত (UEnumeration*) ফলাফল;
 }
 
 

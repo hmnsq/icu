@@ -26,15 +26,15 @@
 #ifndef __UCOL_DATA_H__
 #define __UCOL_DATA_H__
 
-#include "unicode/utypes.h"
+#অন্তর্ভাব "unicode/utypes.h"
 
-#if !UCONFIG_NO_COLLATION
+#যদি !UCONFIG_NO_COLLATION
 
 /* let us know whether reserved fields are reset to zero or junked */
 #define UCOL_HEADER_MAGIC 0x20030618
 
-typedef struct {
-      int32_t size;
+প্রকারলেখ কাঠামো {
+      int32_t আকার_3;
       /* all the offsets are in bytes */
       /* to get the address add to the header address and cast properly */
       uint32_t options; /* these are the default options for the collator */
@@ -43,9 +43,9 @@ typedef struct {
       uint32_t magic;            /* magic number - lets us know whether reserved data is reset or junked */
       uint32_t mappingPosition;  /* const uint8_t *mappingPosition; */
       uint32_t expansion;        /* uint32_t *expansion;            */
-      uint32_t contractionIndex; /* char16_t *contractionIndex;        */
+      uint32_t contraction_সূচক; /* char16_t *contractionIndex;        */
       uint32_t contractionCEs;   /* uint32_t *contractionCEs;       */
-      uint32_t contractionSize;  /* needed for various closures */
+      uint32_t contraction_আকার;  /* needed for various closures */
       /*int32_t latinOneMapping;*/ /* this is now handled in the trie itself *//* fast track to latin1 chars      */
 
       uint32_t endExpansionCE;      /* array of last collation element in
@@ -59,7 +59,7 @@ typedef struct {
       uint32_t contrEndCP;          /* hash table of final code points  */
                                     /*   in contractions.               */
 
-      int32_t contractionUCACombosSize;     /* number of UCA contraction items. */
+      int32_t contraction_UCACombos_আকার;     /* number of UCA contraction items. */
                                             /*Length is contractionUCACombosSize*contractionUCACombosWidth*sizeof(char16_t) */
       UBool jamoSpecial;                    /* is jamoSpecial */
       UBool isBigEndian;                    /* is this data big endian? from the UDataInfo header*/
@@ -74,10 +74,10 @@ typedef struct {
       uint8_t reserved[76];                 /* for future use */
 } UCATableHeader;
 
-typedef struct {
-  uint32_t byteSize;
-  uint32_t tableSize;
-  uint32_t contsSize;
+প্রকারলেখ কাঠামো {
+  uint32_t byte_আকার;
+  uint32_t table_আকার;
+  uint32_t conts_আকার;
   uint32_t table;
   uint32_t conts;
   UVersionInfo UCAVersion;              /* version of the UCA, read from file */

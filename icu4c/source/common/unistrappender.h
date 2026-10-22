@@ -13,11 +13,11 @@
 #ifndef __UNISTRAPPENDER_H__
 #define __UNISTRAPPENDER_H__
 
-#include "unicode/unistr.h"
-#include "unicode/uobject.h"
-#include "unicode/utf16.h"
-#include "unicode/utypes.h"
-#include "cmemory.h"
+#অন্তর্ভাব "unicode/unistr.h"
+#অন্তর্ভাব "unicode/uobject.h"
+#অন্তর্ভাব "unicode/utf16.h"
+#অন্তর্ভাব "unicode/utypes.h"
+#অন্তর্ভাব "cmemory.h"
 
 U_NAMESPACE_BEGIN
 
@@ -36,8 +36,8 @@ U_NAMESPACE_BEGIN
  *     // appender flushed automatically when it goes out of scope.
  * }
  */
-class UnicodeStringAppender : public UMemory {
-public:
+class UnicodeStringAppender : সর্বজনীন UMemory {
+সর্বজনীন:
     
     /**
      * dest is the UnicodeString being appended to. It must always
@@ -45,28 +45,28 @@ public:
      */
     UnicodeStringAppender(UnicodeString &dest) : fDest(&dest), fIdx(0) { }
 
-    inline void append(char16_t x) {
-        if (fIdx == UPRV_LENGTHOF(fBuffer)) {
-            fDest->append(fBuffer, 0, fIdx);
+    অন্তঃরেখ শূন্য append(char16_t x) {
+        যদি (fIdx == UPRV_LENGTHOF(f_বাফার)) {
+            fDest->append(f_বাফার, 0, fIdx);
             fIdx = 0;
         }
-        fBuffer[fIdx++] = x;
+        f_বাফার[fIdx++] = x;
     }
 
-    inline void append(UChar32 x) {
-        if (fIdx >= UPRV_LENGTHOF(fBuffer) - 1) {
-            fDest->append(fBuffer, 0, fIdx);
+    অন্তঃরেখ শূন্য append(UChar32 x) {
+        যদি (fIdx >= UPRV_LENGTHOF(f_বাফার) - 1) {
+            fDest->append(f_বাফার, 0, fIdx);
             fIdx = 0;
         }
-        U16_APPEND_UNSAFE(fBuffer, fIdx, x);
+        U16_APPEND_UNSAFE(f_বাফার, fIdx, x);
     }
 
     /**
      * Ensures that all appended characters have been written out to dest.
      */
-    inline void flush() {
-        if (fIdx) {
-            fDest->append(fBuffer, 0, fIdx);
+    অন্তঃরেখ শূন্য flush() {
+        যদি (fIdx) {
+            fDest->append(f_বাফার, 0, fIdx);
         }
         fIdx = 0;
     }
@@ -77,12 +77,12 @@ public:
     ~UnicodeStringAppender() {
         flush();
     }
-private:
+ব্যক্তিগত:
     UnicodeString *fDest;
     int32_t fIdx;
-    char16_t fBuffer[32];
-    UnicodeStringAppender(const UnicodeStringAppender &other);
-    UnicodeStringAppender &operator=(const UnicodeStringAppender &other);
+    char16_t f_বাফার[32];
+    UnicodeStringAppender(ধ্রুবক UnicodeStringAppender &other);
+    UnicodeStringAppender &operator=(ধ্রুবক UnicodeStringAppender &other);
 };
 
 U_NAMESPACE_END

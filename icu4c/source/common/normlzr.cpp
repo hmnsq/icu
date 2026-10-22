@@ -8,22 +8,22 @@
  *************************************************************************
  */
 
-#include "unicode/utypes.h"
+#অন্তর্ভাব "unicode/utypes.h"
 
-#if !UCONFIG_NO_NORMALIZATION
+#যদি !UCONFIG_NO_NORMALIZATION
 
-#include "unicode/uniset.h"
-#include "unicode/unistr.h"
-#include "unicode/chariter.h"
-#include "unicode/schriter.h"
-#include "unicode/uchriter.h"
-#include "unicode/normlzr.h"
-#include "unicode/utf16.h"
-#include "cmemory.h"
-#include "normalizer2impl.h"
-#include "uprops.h"  // for uniset_getUnicode32Instance()
+#অন্তর্ভাব "unicode/uniset.h"
+#অন্তর্ভাব "unicode/unistr.h"
+#অন্তর্ভাব "unicode/chariter.h"
+#অন্তর্ভাব "unicode/schriter.h"
+#অন্তর্ভাব "unicode/uchriter.h"
+#অন্তর্ভাব "unicode/normlzr.h"
+#অন্তর্ভাব "unicode/utf16.h"
+#অন্তর্ভাব "cmemory.h"
+#অন্তর্ভাব "normalizer2impl.h"
+#অন্তর্ভাব "uprops.h"  // for uniset_getUnicode32Instance()
 
-#if defined(move32)
+#যদি defined(move32)
  // System can define move32 intrinsics, but the char iters define move32 method
  // using same undef trick in headers, so undef here to re-enable the method.
 #undef move32
@@ -37,52 +37,52 @@ UOBJECT_DEFINE_RTTI_IMPLEMENTATION(Normalizer)
 // Constructors and other boilerplate
 //-------------------------------------------------------------------------
 
-Normalizer::Normalizer(const UnicodeString& str, UNormalizationMode mode) :
+Normalizer::Normalizer(ধ্রুবক UnicodeString& str, UNormalizationMode mode) :
     UObject(), fFilteredNorm2(nullptr), fNorm2(nullptr), fUMode(mode), fOptions(0),
-    text(new StringCharacterIterator(str)),
-    currentIndex(0), nextIndex(0),
-    buffer(), bufferPos(0)
+    text(নতুন StringCharacterIterator(str)),
+    current_সূচক(0), পরবর্তী_সূচক(0),
+    বাফার(), বাফার_Pos(0)
 {
     init();
 }
 
 Normalizer::Normalizer(ConstChar16Ptr str U_LIFETIME_BOUND, int32_t length, UNormalizationMode mode) :
     UObject(), fFilteredNorm2(nullptr), fNorm2(nullptr), fUMode(mode), fOptions(0),
-    text(new UCharCharacterIterator(str, length)),
-    currentIndex(0), nextIndex(0),
-    buffer(), bufferPos(0)
+    text(নতুন UCharCharacterIterator(str, length)),
+    current_সূচক(0), পরবর্তী_সূচক(0),
+    বাফার(), বাফার_Pos(0)
 {
     init();
 }
 
-Normalizer::Normalizer(const CharacterIterator& iter, UNormalizationMode mode) :
+Normalizer::Normalizer(ধ্রুবক CharacterIterator& iter, UNormalizationMode mode) :
     UObject(), fFilteredNorm2(nullptr), fNorm2(nullptr), fUMode(mode), fOptions(0),
     text(iter.clone()),
-    currentIndex(0), nextIndex(0),
-    buffer(), bufferPos(0)
+    current_সূচক(0), পরবর্তী_সূচক(0),
+    বাফার(), বাফার_Pos(0)
 {
     init();
 }
 
-Normalizer::Normalizer(const Normalizer &copy) :
+Normalizer::Normalizer(ধ্রুবক Normalizer &copy) :
     UObject(copy), fFilteredNorm2(nullptr), fNorm2(nullptr), fUMode(copy.fUMode), fOptions(copy.fOptions),
     text(copy.text->clone()),
-    currentIndex(copy.currentIndex), nextIndex(copy.nextIndex),
-    buffer(copy.buffer), bufferPos(copy.bufferPos)
+    current_সূচক(copy.current_সূচক), পরবর্তী_সূচক(copy.পরবর্তী_সূচক),
+    বাফার(copy.বাফার), বাফার_Pos(copy.বাফার_Pos)
 {
     init();
 }
 
-void
+শূন্য
 Normalizer::init() {
     UErrorCode errorCode=U_ZERO_ERROR;
     fNorm2=Normalizer2Factory::getInstance(fUMode, errorCode);
-    if(fOptions&UNORM_UNICODE_3_2) {
+    যদি(fOptions&UNORM_UNICODE_3_2) {
         delete fFilteredNorm2;
         fNorm2=fFilteredNorm2=
-            new FilteredNormalizer2(*fNorm2, *uniset_getUnicode32Instance(errorCode));
+            নতুন FilteredNormalizer2(*fNorm2, *uniset_getUnicode32Instance(errorCode));
     }
-    if(U_FAILURE(errorCode)) {
+    যদি(U_FAILURE(errorCode)) {
         errorCode=U_ZERO_ERROR;
         fNorm2=Normalizer2Factory::getNoopInstance(errorCode);
     }
@@ -95,157 +95,157 @@ Normalizer::~Normalizer()
 }
 
 Normalizer* 
-Normalizer::clone() const
+Normalizer::clone() ধ্রুবক
 {
-    return new Normalizer(*this);
+    ফেরত নতুন Normalizer(*এই);
 }
 
 /**
  * Generates a hash code for this iterator.
  */
-int32_t Normalizer::hashCode() const
+int32_t Normalizer::hashCode() ধ্রুবক
 {
-    return text->hashCode() + fUMode + fOptions + buffer.hashCode() + bufferPos + currentIndex + nextIndex;
+    ফেরত text->hashCode() + fUMode + fOptions + বাফার.hashCode() + বাফার_Pos + current_সূচক + পরবর্তী_সূচক;
 }
     
-bool Normalizer::operator==(const Normalizer& that) const
+যৌক্তিক Normalizer::operator==(ধ্রুবক Normalizer& that) ধ্রুবক
 {
-    return
-        this==&that ||
+    ফেরত
+        এই==&that ||
         (fUMode==that.fUMode &&
         fOptions==that.fOptions &&
         *text==*that.text &&
-        buffer==that.buffer &&
-        bufferPos==that.bufferPos &&
-        nextIndex==that.nextIndex);
+        বাফার==that.বাফার &&
+        বাফার_Pos==that.বাফার_Pos &&
+        পরবর্তী_সূচক==that.পরবর্তী_সূচক);
 }
 
 //-------------------------------------------------------------------------
 // Static utility methods
 //-------------------------------------------------------------------------
 
-void U_EXPORT2
-Normalizer::normalize(const UnicodeString& source, 
+শূন্য U_EXPORT2
+Normalizer::normalize(ধ্রুবক UnicodeString& source, 
                       UNormalizationMode mode, int32_t options,
-                      UnicodeString& result, 
+                      UnicodeString& ফলাফল, 
                       UErrorCode &status) {
-    if(source.isBogus() || U_FAILURE(status)) {
-        result.setToBogus();
-        if(U_SUCCESS(status)) {
+    যদি(source.isBogus() || U_FAILURE(status)) {
+        ফলাফল.setToBogus();
+        যদি(U_SUCCESS(status)) {
             status=U_ILLEGAL_ARGUMENT_ERROR;
         }
-    } else {
+    } অন্যথা {
         UnicodeString localDest;
         UnicodeString *dest;
 
-        if(&source!=&result) {
-            dest=&result;
-        } else {
+        যদি(&source!=&ফলাফল) {
+            dest=&ফলাফল;
+        } অন্যথা {
             // the source and result strings are the same object, use a temporary one
             dest=&localDest;
         }
-        const Normalizer2 *n2=Normalizer2Factory::getInstance(mode, status);
-        if(U_SUCCESS(status)) {
-            if(options&UNORM_UNICODE_3_2) {
+        ধ্রুবক Normalizer2 *n2=Normalizer2Factory::getInstance(mode, status);
+        যদি(U_SUCCESS(status)) {
+            যদি(options&UNORM_UNICODE_3_2) {
                 FilteredNormalizer2(*n2, *uniset_getUnicode32Instance(status)).
                     normalize(source, *dest, status);
-            } else {
+            } অন্যথা {
                 n2->normalize(source, *dest, status);
             }
         }
-        if(dest==&localDest && U_SUCCESS(status)) {
-            result=*dest;
+        যদি(dest==&localDest && U_SUCCESS(status)) {
+            ফলাফল=*dest;
         }
     }
 }
 
-void U_EXPORT2
-Normalizer::compose(const UnicodeString& source, 
+শূন্য U_EXPORT2
+Normalizer::compose(ধ্রুবক UnicodeString& source, 
                     UBool compat, int32_t options,
-                    UnicodeString& result, 
+                    UnicodeString& ফলাফল, 
                     UErrorCode &status) {
-    normalize(source, compat ? UNORM_NFKC : UNORM_NFC, options, result, status);
+    normalize(source, compat ? UNORM_NFKC : UNORM_NFC, options, ফলাফল, status);
 }
 
-void U_EXPORT2
-Normalizer::decompose(const UnicodeString& source, 
+শূন্য U_EXPORT2
+Normalizer::decompose(ধ্রুবক UnicodeString& source, 
                       UBool compat, int32_t options,
-                      UnicodeString& result, 
+                      UnicodeString& ফলাফল, 
                       UErrorCode &status) {
-    normalize(source, compat ? UNORM_NFKD : UNORM_NFD, options, result, status);
+    normalize(source, compat ? UNORM_NFKD : UNORM_NFD, options, ফলাফল, status);
 }
 
-UNormalizationCheckResult
-Normalizer::quickCheck(const UnicodeString& source,
+UNormalization_Check_ফলাফল
+Normalizer::quickCheck(ধ্রুবক UnicodeString& source,
                        UNormalizationMode mode, int32_t options,
                        UErrorCode &status) {
-    const Normalizer2 *n2=Normalizer2Factory::getInstance(mode, status);
-    if(U_SUCCESS(status)) {
-        if(options&UNORM_UNICODE_3_2) {
-            return FilteredNormalizer2(*n2, *uniset_getUnicode32Instance(status)).
+    ধ্রুবক Normalizer2 *n2=Normalizer2Factory::getInstance(mode, status);
+    যদি(U_SUCCESS(status)) {
+        যদি(options&UNORM_UNICODE_3_2) {
+            ফেরত FilteredNormalizer2(*n2, *uniset_getUnicode32Instance(status)).
                 quickCheck(source, status);
-        } else {
-            return n2->quickCheck(source, status);
+        } অন্যথা {
+            ফেরত n2->quickCheck(source, status);
         }
-    } else {
-        return UNORM_MAYBE;
+    } অন্যথা {
+        ফেরত UNORM_MAYBE;
     }
 }
 
 UBool
-Normalizer::isNormalized(const UnicodeString& source,
+Normalizer::isNormalized(ধ্রুবক UnicodeString& source,
                          UNormalizationMode mode, int32_t options,
                          UErrorCode &status) {
-    const Normalizer2 *n2=Normalizer2Factory::getInstance(mode, status);
-    if(U_SUCCESS(status)) {
-        if(options&UNORM_UNICODE_3_2) {
-            return FilteredNormalizer2(*n2, *uniset_getUnicode32Instance(status)).
+    ধ্রুবক Normalizer2 *n2=Normalizer2Factory::getInstance(mode, status);
+    যদি(U_SUCCESS(status)) {
+        যদি(options&UNORM_UNICODE_3_2) {
+            ফেরত FilteredNormalizer2(*n2, *uniset_getUnicode32Instance(status)).
                 isNormalized(source, status);
-        } else {
-            return n2->isNormalized(source, status);
+        } অন্যথা {
+            ফেরত n2->isNormalized(source, status);
         }
-    } else {
-        return false;
+    } অন্যথা {
+        ফেরত মিথ্যা;
     }
 }
 
 UnicodeString& U_EXPORT2
-Normalizer::concatenate(const UnicodeString& left,
-                        const UnicodeString& right,
-                        UnicodeString& result U_LIFETIME_BOUND,
+Normalizer::concatenate(ধ্রুবক UnicodeString& left,
+                        ধ্রুবক UnicodeString& ডান,
+                        UnicodeString& ফলাফল U_LIFETIME_BOUND,
                         UNormalizationMode mode,
                         int32_t options,
                         UErrorCode& errorCode) {
-    if(left.isBogus() || right.isBogus() || U_FAILURE(errorCode)) {
-        result.setToBogus();
-        if(U_SUCCESS(errorCode)) {
+    যদি(left.isBogus() || ডান.isBogus() || U_FAILURE(errorCode)) {
+        ফলাফল.setToBogus();
+        যদি(U_SUCCESS(errorCode)) {
             errorCode=U_ILLEGAL_ARGUMENT_ERROR;
         }
-    } else {
+    } অন্যথা {
         UnicodeString localDest;
         UnicodeString *dest;
 
-        if(&right!=&result) {
-            dest=&result;
-        } else {
+        যদি(&ডান!=&ফলাফল) {
+            dest=&ফলাফল;
+        } অন্যথা {
             // the right and result strings are the same object, use a temporary one
             dest=&localDest;
         }
         *dest=left;
-        const Normalizer2 *n2=Normalizer2Factory::getInstance(mode, errorCode);
-        if(U_SUCCESS(errorCode)) {
-            if(options&UNORM_UNICODE_3_2) {
+        ধ্রুবক Normalizer2 *n2=Normalizer2Factory::getInstance(mode, errorCode);
+        যদি(U_SUCCESS(errorCode)) {
+            যদি(options&UNORM_UNICODE_3_2) {
                 FilteredNormalizer2(*n2, *uniset_getUnicode32Instance(errorCode)).
-                    append(*dest, right, errorCode);
-            } else {
-                n2->append(*dest, right, errorCode);
+                    append(*dest, ডান, errorCode);
+            } অন্যথা {
+                n2->append(*dest, ডান, errorCode);
             }
         }
-        if(dest==&localDest && U_SUCCESS(errorCode)) {
-            result=*dest;
+        যদি(dest==&localDest && U_SUCCESS(errorCode)) {
+            ফলাফল=*dest;
         }
     }
-    return result;
+    ফেরত ফলাফল;
 }
 
 //-------------------------------------------------------------------------
@@ -256,10 +256,10 @@ Normalizer::concatenate(const UnicodeString& left,
  * Return the current character in the normalized text.
  */
 UChar32 Normalizer::current() {
-    if(bufferPos<buffer.length() || nextNormalize()) {
-        return buffer.char32At(bufferPos);
-    } else {
-        return DONE;
+    যদি(বাফার_Pos<বাফার.length() || পরবর্তী_Normalize()) {
+        ফেরত বাফার.char32At(বাফার_Pos);
+    } অন্যথা {
+        ফেরত DONE;
     }
 }
 
@@ -269,12 +269,12 @@ UChar32 Normalizer::current() {
  * of the text has already been reached, {@link #DONE} is returned.
  */
 UChar32 Normalizer::next() {
-    if(bufferPos<buffer.length() ||  nextNormalize()) {
-        UChar32 c=buffer.char32At(bufferPos);
-        bufferPos+=U16_LENGTH(c);
-        return c;
-    } else {
-        return DONE;
+    যদি(বাফার_Pos<বাফার.length() ||  পরবর্তী_Normalize()) {
+        UChar32 c=বাফার.char32At(বাফার_Pos);
+        বাফার_Pos+=U16_দৈর্ঘ্য(c);
+        ফেরত c;
+    } অন্যথা {
+        ফেরত DONE;
     }
 }
 
@@ -284,25 +284,25 @@ UChar32 Normalizer::next() {
  * of the text has already been reached, {@link #DONE} is returned.
  */
 UChar32 Normalizer::previous() {
-    if(bufferPos>0 || previousNormalize()) {
-        UChar32 c=buffer.char32At(bufferPos-1);
-        bufferPos-=U16_LENGTH(c);
-        return c;
-    } else {
-        return DONE;
+    যদি(বাফার_Pos>0 || previousNormalize()) {
+        UChar32 c=বাফার.char32At(বাফার_Pos-1);
+        বাফার_Pos-=U16_দৈর্ঘ্য(c);
+        ফেরত c;
+    } অন্যথা {
+        ফেরত DONE;
     }
 }
 
-void Normalizer::reset() {
-    currentIndex=nextIndex=text->setToStart();
-    clearBuffer();
+শূন্য Normalizer::reset() {
+    current_সূচক=পরবর্তী_সূচক=text->setToStart();
+    clear_বাফার();
 }
 
-void
-Normalizer::setIndexOnly(int32_t index) {
-    text->setIndex(index);  // pins index
-    currentIndex=nextIndex=text->getIndex();
-    clearBuffer();
+শূন্য
+Normalizer::set_সূচক_Only(int32_t সূচক) {
+    text->set_সূচক(সূচক);  // pins index
+    current_সূচক=পরবর্তী_সূচক=text->get_সূচক();
+    clear_বাফার();
 }
 
 /**
@@ -311,7 +311,7 @@ Normalizer::setIndexOnly(int32_t index) {
  */
 UChar32 Normalizer::first() {
     reset();
-    return next();
+    ফেরত next();
 }
 
 /**
@@ -320,9 +320,9 @@ UChar32 Normalizer::first() {
  * the input text corresponding to that normalized character.
  */
 UChar32 Normalizer::last() {
-    currentIndex=nextIndex=text->setToEnd();
-    clearBuffer();
-    return previous();
+    current_সূচক=পরবর্তী_সূচক=text->setToEnd();
+    clear_বাফার();
+    ফেরত previous();
 }
 
 /**
@@ -339,11 +339,11 @@ UChar32 Normalizer::last() {
  * <tt>setIndex</tt> and {@link #getIndex}.
  *
  */
-int32_t Normalizer::getIndex() const {
-    if(bufferPos<buffer.length()) {
-        return currentIndex;
-    } else {
-        return nextIndex;
+int32_t Normalizer::get_সূচক() ধ্রুবক {
+    যদি(বাফার_Pos<বাফার.length()) {
+        ফেরত current_সূচক;
+    } অন্যথা {
+        ফেরত পরবর্তী_সূচক;
     }
 }
 
@@ -352,8 +352,8 @@ int32_t Normalizer::getIndex() const {
  * of the <tt>CharacterIterator</tt> or the start (i.e. 0) of the <tt>String</tt>
  * over which this <tt>Normalizer</tt> is iterating
  */
-int32_t Normalizer::startIndex() const {
-    return text->startIndex();
+int32_t Normalizer::start_সূচক() ধ্রুবক {
+    ফেরত text->start_সূচক();
 }
 
 /**
@@ -361,15 +361,15 @@ int32_t Normalizer::startIndex() const {
  * of the <tt>CharacterIterator</tt> or the length of the <tt>String</tt>
  * over which this <tt>Normalizer</tt> is iterating
  */
-int32_t Normalizer::endIndex() const {
-    return text->endIndex();
+int32_t Normalizer::end_সূচক() ধ্রুবক {
+    ফেরত text->end_সূচক();
 }
 
 //-------------------------------------------------------------------------
 // Property access methods
 //-------------------------------------------------------------------------
 
-void
+শূন্য
 Normalizer::setMode(UNormalizationMode newMode) 
 {
     fUMode = newMode;
@@ -377,44 +377,44 @@ Normalizer::setMode(UNormalizationMode newMode)
 }
 
 UNormalizationMode
-Normalizer::getUMode() const
+Normalizer::getUMode() ধ্রুবক
 {
-    return fUMode;
+    ফেরত fUMode;
 }
 
-void
+শূন্য
 Normalizer::setOption(int32_t option, 
                       UBool value) 
 {
-    if (value) {
+    যদি (value) {
         fOptions |= option;
-    } else {
+    } অন্যথা {
         fOptions &= (~option);
     }
     init();
 }
 
 UBool
-Normalizer::getOption(int32_t option) const
+Normalizer::getOption(int32_t option) ধ্রুবক
 {
-    return (fOptions & option) != 0;
+    ফেরত (fOptions & option) != 0;
 }
 
 /**
  * Set the input text over which this <tt>Normalizer</tt> will iterate.
  * The iteration position is set to the beginning of the input text.
  */
-void
-Normalizer::setText(const UnicodeString& newText, 
+শূন্য
+Normalizer::setText(ধ্রুবক UnicodeString& newText, 
                     UErrorCode &status)
 {
-    if (U_FAILURE(status)) {
-        return;
+    যদি (U_FAILURE(status)) {
+        ফেরত;
     }
-    CharacterIterator *newIter = new StringCharacterIterator(newText);
-    if (newIter == nullptr) {
+    CharacterIterator *newIter = নতুন StringCharacterIterator(newText);
+    যদি (newIter == nullptr) {
         status = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        ফেরত;
     }
     delete text;
     text = newIter;
@@ -425,35 +425,35 @@ Normalizer::setText(const UnicodeString& newText,
  * Set the input text over which this <tt>Normalizer</tt> will iterate.
  * The iteration position is set to the beginning of the string.
  */
-void
-Normalizer::setText(const CharacterIterator& newText, 
+শূন্য
+Normalizer::setText(ধ্রুবক CharacterIterator& newText, 
                     UErrorCode &status) 
 {
-    if (U_FAILURE(status)) {
-        return;
+    যদি (U_FAILURE(status)) {
+        ফেরত;
     }
     CharacterIterator *newIter = newText.clone();
-    if (newIter == nullptr) {
+    যদি (newIter == nullptr) {
         status = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        ফেরত;
     }
     delete text;
     text = newIter;
     reset();
 }
 
-void
+শূন্য
 Normalizer::setText(ConstChar16Ptr newText,
                     int32_t length,
                     UErrorCode &status)
 {
-    if (U_FAILURE(status)) {
-        return;
+    যদি (U_FAILURE(status)) {
+        ফেরত;
     }
-    CharacterIterator *newIter = new UCharCharacterIterator(newText, length);
-    if (newIter == nullptr) {
+    CharacterIterator *newIter = নতুন UCharCharacterIterator(newText, length);
+    যদি (newIter == nullptr) {
         status = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        ফেরত;
     }
     delete text;
     text = newIter;
@@ -464,66 +464,66 @@ Normalizer::setText(ConstChar16Ptr newText,
  * Copies the text under iteration into the UnicodeString referred to by "result".
  * @param result Receives a copy of the text under iteration.
  */
-void
-Normalizer::getText(UnicodeString&  result) 
+শূন্য
+Normalizer::getText(UnicodeString&  ফলাফল) 
 {
-    text->getText(result);
+    text->getText(ফলাফল);
 }
 
 //-------------------------------------------------------------------------
 // Private utility methods
 //-------------------------------------------------------------------------
 
-void Normalizer::clearBuffer() {
-    buffer.remove();
-    bufferPos=0;
+শূন্য Normalizer::clear_বাফার() {
+    বাফার.remove();
+    বাফার_Pos=0;
 }
 
 UBool
-Normalizer::nextNormalize() {
-    clearBuffer();
-    currentIndex=nextIndex;
-    text->setIndex(nextIndex);
-    if(!text->hasNext()) {
-        return false;
+Normalizer::পরবর্তী_Normalize() {
+    clear_বাফার();
+    current_সূচক=পরবর্তী_সূচক;
+    text->set_সূচক(পরবর্তী_সূচক);
+    যদি(!text->has_পরবর্তী()) {
+        ফেরত মিথ্যা;
     }
     // Skip at least one character so we make progress.
     UnicodeString segment(text->next32PostInc());
-    while(text->hasNext()) {
+    যখন(text->has_পরবর্তী()) {
         UChar32 c;
-        if(fNorm2->hasBoundaryBefore(c=text->next32PostInc())) {
+        যদি(fNorm2->hasBoundaryBefore(c=text->next32PostInc())) {
             text->move32(-1, CharacterIterator::kCurrent);
-            break;
+            বিরতি;
         }
         segment.append(c);
     }
-    nextIndex=text->getIndex();
+    পরবর্তী_সূচক=text->get_সূচক();
     UErrorCode errorCode=U_ZERO_ERROR;
-    fNorm2->normalize(segment, buffer, errorCode);
-    return U_SUCCESS(errorCode) && !buffer.isEmpty();
+    fNorm2->normalize(segment, বাফার, errorCode);
+    ফেরত U_SUCCESS(errorCode) && !বাফার.isEmpty();
 }
 
 UBool
 Normalizer::previousNormalize() {
-    clearBuffer();
-    nextIndex=currentIndex;
-    text->setIndex(currentIndex);
-    if(!text->hasPrevious()) {
-        return false;
+    clear_বাফার();
+    পরবর্তী_সূচক=current_সূচক;
+    text->set_সূচক(current_সূচক);
+    যদি(!text->hasPrevious()) {
+        ফেরত মিথ্যা;
     }
     UnicodeString segment;
-    while(text->hasPrevious()) {
+    যখন(text->hasPrevious()) {
         UChar32 c=text->previous32();
         segment.insert(0, c);
-        if(fNorm2->hasBoundaryBefore(c)) {
-            break;
+        যদি(fNorm2->hasBoundaryBefore(c)) {
+            বিরতি;
         }
     }
-    currentIndex=text->getIndex();
+    current_সূচক=text->get_সূচক();
     UErrorCode errorCode=U_ZERO_ERROR;
-    fNorm2->normalize(segment, buffer, errorCode);
-    bufferPos=buffer.length();
-    return U_SUCCESS(errorCode) && !buffer.isEmpty();
+    fNorm2->normalize(segment, বাফার, errorCode);
+    বাফার_Pos=বাফার.length();
+    ফেরত U_SUCCESS(errorCode) && !বাফার.isEmpty();
 }
 
 U_NAMESPACE_END

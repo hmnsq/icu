@@ -18,13 +18,13 @@
 *   Internal function for sorting arrays.
 */
 
-#include <cstddef>
+#অন্তর্ভাব <cstddef>
 
-#include "unicode/utypes.h"
-#include "cmemory.h"
-#include "uarrsort.h"
+#অন্তর্ভাব "unicode/utypes.h"
+#অন্তর্ভাব "cmemory.h"
+#অন্তর্ভাব "uarrsort.h"
 
-enum {
+গণনা {
     /**
      * "from Knuth"
      *
@@ -33,55 +33,55 @@ enum {
      * A linear search over 8 items on average also performs 4 comparisons.
      */
     MIN_QSORT=9,
-    STACK_ITEM_SIZE=200
+    স্তূপ_ITEM_আকার=200
 };
 
-static constexpr int32_t sizeInMaxAlignTs(int32_t sizeInBytes) {
-    return (sizeInBytes + sizeof(std::max_align_t) - 1) / sizeof(std::max_align_t);
+স্থির constexpr int32_t আকার_In_Max_Align_Ts(int32_t আকার_In_Bytes) {
+    ফেরত (আকার_In_Bytes + আকার(std::max_align_t) - 1) / আকার(std::max_align_t);
 }
 
 /* UComparator convenience implementations ---------------------------------- */
 
 U_CAPI int32_t U_EXPORT2
-uprv_uint16Comparator(const void *context, const void *left, const void *right) {
-    (void)context;
-    return (int32_t)*(const uint16_t *)left - (int32_t)*(const uint16_t *)right;
+uprv_uint16Comparator(ধ্রুবক শূন্য *context, ধ্রুবক শূন্য *left, ধ্রুবক শূন্য *ডান) {
+    (শূন্য)context;
+    ফেরত (int32_t)*(ধ্রুবক uint16_t *)left - (int32_t)*(ধ্রুবক uint16_t *)ডান;
 }
 
 U_CAPI int32_t U_EXPORT2
-uprv_int32Comparator(const void *context, const void *left, const void *right) {
-    (void)context;
-    return *(const int32_t *)left - *(const int32_t *)right;
+uprv_int32Comparator(ধ্রুবক শূন্য *context, ধ্রুবক শূন্য *left, ধ্রুবক শূন্য *ডান) {
+    (শূন্য)context;
+    ফেরত *(ধ্রুবক int32_t *)left - *(ধ্রুবক int32_t *)ডান;
 }
 
 U_CAPI int32_t U_EXPORT2
-uprv_uint32Comparator(const void *context, const void *left, const void *right) {
-    (void)context;
-    uint32_t l=*(const uint32_t *)left, r=*(const uint32_t *)right;
+uprv_uint32Comparator(ধ্রুবক শূন্য *context, ধ্রুবক শূন্য *left, ধ্রুবক শূন্য *ডান) {
+    (শূন্য)context;
+    uint32_t l=*(ধ্রুবক uint32_t *)left, r=*(ধ্রুবক uint32_t *)ডান;
 
     /* compare directly because (l-r) would overflow the int32_t result */
-    if(l<r) {
-        return -1;
-    } else if(l==r) {
-        return 0;
-    } else /* l>r */ {
-        return 1;
+    যদি(l<r) {
+        ফেরত -1;
+    } অন্যথা যদি(l==r) {
+        ফেরত 0;
+    } অন্যথা /* l>r */ {
+        ফেরত 1;
     }
 }
 
 /* Insertion sort using binary search --------------------------------------- */
 
 U_CAPI int32_t U_EXPORT2
-uprv_stableBinarySearch(char *array, int32_t limit, void *item, int32_t itemSize,
-                        UComparator *cmp, const void *context) {
+uprv_stable_দ্বিমিক_অনুসন্ধান(অক্ষর *array, int32_t limit, শূন্য *item, int32_t item_আকার,
+                        UComparator *cmp, ধ্রুবক শূন্য *context) {
     int32_t start=0;
-    UBool found=false;
+    UBool found=মিথ্যা;
 
     /* Binary search until we get down to a tiny sub-array. */
-    while((limit-start)>=MIN_QSORT) {
+    যখন((limit-start)>=MIN_QSORT) {
         int32_t i=(start+limit)/2;
-        int32_t diff=cmp(context, item, array+i*itemSize);
-        if(diff==0) {
+        int32_t diff=cmp(context, item, array+i*item_আকার);
+        যদি(diff==0) {
             /*
              * Found the item. We look for the *last* occurrence of such
              * an item, for stable sorting.
@@ -93,62 +93,62 @@ uprv_stableBinarySearch(char *array, int32_t limit, void *item, int32_t itemSize
              * (where found will never become true in the insertion sort)
              * or potentially many duplicates.
              */
-            found=true;
+            found=সত্য;
             start=i+1;
-        } else if(diff<0) {
+        } অন্যথা যদি(diff<0) {
             limit=i;
-        } else {
+        } অন্যথা {
             start=i;
         }
     }
 
     /* Linear search over the remaining tiny sub-array. */
-    while(start<limit) {
-        int32_t diff=cmp(context, item, array+start*itemSize);
-        if(diff==0) {
-            found=true;
-        } else if(diff<0) {
-            break;
+    যখন(start<limit) {
+        int32_t diff=cmp(context, item, array+start*item_আকার);
+        যদি(diff==0) {
+            found=সত্য;
+        } অন্যথা যদি(diff<0) {
+            বিরতি;
         }
         ++start;
     }
-    return found ? (start-1) : ~start;
+    ফেরত found ? (start-1) : ~start;
 }
 
-static void
-doInsertionSort(char *array, int32_t length, int32_t itemSize,
-                UComparator *cmp, const void *context, void *pv) {
+স্থির শূন্য
+doInsertionSort(অক্ষর *array, int32_t length, int32_t item_আকার,
+                UComparator *cmp, ধ্রুবক শূন্য *context, শূন্য *pv) {
     int32_t j;
 
-    for(j=1; j<length; ++j) {
-        char *item=array+j*itemSize;
-        int32_t insertionPoint=uprv_stableBinarySearch(array, j, item, itemSize, cmp, context);
-        if(insertionPoint<0) {
+    জন্য(j=1; j<length; ++j) {
+        অক্ষর *item=array+j*item_আকার;
+        int32_t insertionPoint=uprv_stable_দ্বিমিক_অনুসন্ধান(array, j, item, item_আকার, cmp, context);
+        যদি(insertionPoint<0) {
             insertionPoint=~insertionPoint;
-        } else {
+        } অন্যথা {
             ++insertionPoint;  /* one past the last equal item */
         }
-        if(insertionPoint<j) {
-            char *dest=array+insertionPoint*itemSize;
-            uprv_memcpy(pv, item, itemSize);  /* v=array[j] */
-            uprv_memmove(dest+itemSize, dest, (j-insertionPoint)*(size_t)itemSize);
-            uprv_memcpy(dest, pv, itemSize);  /* array[insertionPoint]=v */
+        যদি(insertionPoint<j) {
+            অক্ষর *dest=array+insertionPoint*item_আকার;
+            uprv_memcpy(pv, item, item_আকার);  /* v=array[j] */
+            uprv_memmove(dest+item_আকার, dest, (j-insertionPoint)*(size_t)item_আকার);
+            uprv_memcpy(dest, pv, item_আকার);  /* array[insertionPoint]=v */
         }
     }
 }
 
-static void
-insertionSort(char *array, int32_t length, int32_t itemSize,
-              UComparator *cmp, const void *context, UErrorCode *pErrorCode) {
+স্থির শূন্য
+insertionSort(অক্ষর *array, int32_t length, int32_t item_আকার,
+              UComparator *cmp, ধ্রুবক শূন্য *context, UErrorCode *pErrorCode) {
 
-    icu::MaybeStackArray<std::max_align_t, sizeInMaxAlignTs(STACK_ITEM_SIZE)> v;
-    if (sizeInMaxAlignTs(itemSize) > v.getCapacity() &&
-            v.resize(sizeInMaxAlignTs(itemSize)) == nullptr) {
+    icu::Maybe_স্তূপ_Array<std::max_align_t, আকার_In_Max_Align_Ts(স্তূপ_ITEM_আকার)> v;
+    যদি (আকার_In_Max_Align_Ts(item_আকার) > v.getCapacity() &&
+            v.resize(আকার_In_Max_Align_Ts(item_আকার)) == nullptr) {
         *pErrorCode = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        ফেরত;
     }
 
-    doInsertionSort(array, length, itemSize, cmp, context, v.getAlias());
+    doInsertionSort(array, length, item_আকার, cmp, context, v.getAlias());
 }
 
 /* QuickSort ---------------------------------------------------------------- */
@@ -165,85 +165,85 @@ insertionSort(char *array, int32_t length, int32_t itemSize,
  * 4. Auflage 1986
  * ISBN 3-519-02260-5
  */
-static void
-subQuickSort(char *array, int32_t start, int32_t limit, int32_t itemSize,
-             UComparator *cmp, const void *context,
-             void *px, void *pw) {
-    int32_t left, right;
+স্থির শূন্য
+subQuickSort(অক্ষর *array, int32_t start, int32_t limit, int32_t item_আকার,
+             UComparator *cmp, ধ্রুবক শূন্য *context,
+             শূন্য *px, শূন্য *pw) {
+    int32_t left, ডান;
 
     /* start and left are inclusive, limit and right are exclusive */
-    do {
-        if((start+MIN_QSORT)>=limit) {
-            doInsertionSort(array+start*itemSize, limit-start, itemSize, cmp, context, px);
-            break;
+    করো {
+        যদি((start+MIN_QSORT)>=limit) {
+            doInsertionSort(array+start*item_আকার, limit-start, item_আকার, cmp, context, px);
+            বিরতি;
         }
 
         left=start;
-        right=limit;
+        ডান=limit;
 
         /* x=array[middle] */
-        uprv_memcpy(px, array+(size_t)((start+limit)/2)*itemSize, itemSize);
+        uprv_memcpy(px, array+(size_t)((start+limit)/2)*item_আকার, item_আকার);
 
-        do {
-            while(/* array[left]<x */
-                  cmp(context, array+left*itemSize, px)<0
+        করো {
+            যখন(/* array[left]<x */
+                  cmp(context, array+left*item_আকার, px)<0
             ) {
                 ++left;
             }
-            while(/* x<array[right-1] */
-                  cmp(context, px, array+(right-1)*itemSize)<0
+            যখন(/* x<array[right-1] */
+                  cmp(context, px, array+(ডান-1)*item_আকার)<0
             ) {
-                --right;
+                --ডান;
             }
 
             /* swap array[left] and array[right-1] via w; ++left; --right */
-            if(left<right) {
-                --right;
+            যদি(left<ডান) {
+                --ডান;
 
-                if(left<right) {
-                    uprv_memcpy(pw, array+(size_t)left*itemSize, itemSize);
-                    uprv_memcpy(array+(size_t)left*itemSize, array+(size_t)right*itemSize, itemSize);
-                    uprv_memcpy(array+(size_t)right*itemSize, pw, itemSize);
+                যদি(left<ডান) {
+                    uprv_memcpy(pw, array+(size_t)left*item_আকার, item_আকার);
+                    uprv_memcpy(array+(size_t)left*item_আকার, array+(size_t)ডান*item_আকার, item_আকার);
+                    uprv_memcpy(array+(size_t)ডান*item_আকার, pw, item_আকার);
                 }
 
                 ++left;
             }
-        } while(left<right);
+        } যখন(left<ডান);
 
         /* sort sub-arrays */
-        if((right-start)<(limit-left)) {
+        যদি((ডান-start)<(limit-left)) {
             /* sort [start..right[ */
-            if(start<(right-1)) {
-                subQuickSort(array, start, right, itemSize, cmp, context, px, pw);
+            যদি(start<(ডান-1)) {
+                subQuickSort(array, start, ডান, item_আকার, cmp, context, px, pw);
             }
 
             /* sort [left..limit[ */
             start=left;
-        } else {
+        } অন্যথা {
             /* sort [left..limit[ */
-            if(left<(limit-1)) {
-                subQuickSort(array, left, limit, itemSize, cmp, context, px, pw);
+            যদি(left<(limit-1)) {
+                subQuickSort(array, left, limit, item_আকার, cmp, context, px, pw);
             }
 
             /* sort [start..right[ */
-            limit=right;
+            limit=ডান;
         }
-    } while(start<(limit-1));
+    } যখন(start<(limit-1));
 }
 
-static void
-quickSort(char *array, int32_t length, int32_t itemSize,
-            UComparator *cmp, const void *context, UErrorCode *pErrorCode) {
+স্থির শূন্য
+quickSort(অক্ষর *array, int32_t length, int32_t item_আকার,
+            UComparator *cmp, ধ্রুবক শূন্য *context, UErrorCode *pErrorCode) {
     /* allocate two intermediate item variables (x and w) */
-    icu::MaybeStackArray<std::max_align_t, sizeInMaxAlignTs(STACK_ITEM_SIZE) * 2> xw;
-    if(sizeInMaxAlignTs(itemSize)*2 > xw.getCapacity() &&
-            xw.resize(sizeInMaxAlignTs(itemSize) * 2) == nullptr) {
+    icu::Maybe_স্তূপ_Array<std::max_align_t, আকার_In_Max_Align_Ts(স্তূপ_ITEM_আকার) * 2> xw;
+    যদি(আকার_In_Max_Align_Ts(item_আকার)*2 > xw.getCapacity() &&
+            xw.resize(আকার_In_Max_Align_Ts(item_আকার) * 2) == nullptr) {
         *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-        return;
+        ফেরত;
     }
 
-    subQuickSort(array, 0, length, itemSize, cmp, context,
-                 xw.getAlias(), xw.getAlias() + sizeInMaxAlignTs(itemSize));
+    subQuickSort(array, 0, length, item_আকার, cmp, context,
+                 xw.getAlias(), xw.getAlias() + আকার_In_Max_Align_Ts(item_আকার));
 }
 
 /* uprv_sortArray() API ----------------------------------------------------- */
@@ -252,23 +252,23 @@ quickSort(char *array, int32_t length, int32_t itemSize,
  * Check arguments, select an appropriate implementation,
  * cast the array to char * so that array+i*itemSize works.
  */
-U_CAPI void U_EXPORT2
-uprv_sortArray(void *array, int32_t length, int32_t itemSize,
-               UComparator *cmp, const void *context,
+U_CAPI শূন্য U_EXPORT2
+uprv_sortArray(শূন্য *array, int32_t length, int32_t item_আকার,
+               UComparator *cmp, ধ্রুবক শূন্য *context,
                UBool sortStable, UErrorCode *pErrorCode) {
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return;
+    যদি(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
+        ফেরত;
     }
-    if((length>0 && array==nullptr) || length<0 || itemSize<=0 || cmp==nullptr) {
+    যদি((length>0 && array==nullptr) || length<0 || item_আকার<=0 || cmp==nullptr) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        ফেরত;
     }
 
-    if(length<=1) {
-        return;
-    } else if(length<MIN_QSORT || sortStable) {
-        insertionSort((char *)array, length, itemSize, cmp, context, pErrorCode);
-    } else {
-        quickSort((char *)array, length, itemSize, cmp, context, pErrorCode);
+    যদি(length<=1) {
+        ফেরত;
+    } অন্যথা যদি(length<MIN_QSORT || sortStable) {
+        insertionSort((অক্ষর *)array, length, item_আকার, cmp, context, pErrorCode);
+    } অন্যথা {
+        quickSort((অক্ষর *)array, length, item_আকার, cmp, context, pErrorCode);
     }
 }

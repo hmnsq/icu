@@ -16,10 +16,10 @@
 #ifndef UVECTOR32_H
 #define UVECTOR32_H
 
-#include "unicode/utypes.h"
-#include "unicode/uobject.h"
-#include "uhash.h"
-#include "uassert.h"
+#অন্তর্ভাব "unicode/utypes.h"
+#অন্তর্ভাব "unicode/uobject.h"
+#অন্তর্ভাব "uhash.h"
+#অন্তর্ভাব "uassert.h"
 
 U_NAMESPACE_BEGIN
 
@@ -58,9 +58,9 @@ U_NAMESPACE_BEGIN
  *
  * @author Alan Liu
  */
-class U_COMMON_API UVector32 : public UObject {
-private:
-    int32_t   count;
+class U_COMMON_API UVector32 : সর্বজনীন UObject {
+ব্যক্তিগত:
+    int32_t   গুনতি;
 
     int32_t   capacity;
     
@@ -68,67 +68,67 @@ private:
 
     int32_t*  elements;
 
-public:
+সর্বজনীন:
     UVector32(UErrorCode &status);
 
     UVector32(int32_t initialCapacity, UErrorCode &status);
 
-    virtual ~UVector32();
+    আভাসী ~UVector32();
 
     /**
      * Assign this object to another (make this a copy of 'other').
      * Use the 'assign' function to assign each element.
      */
-    void assign(const UVector32& other, UErrorCode &ec);
+    শূন্য assign(ধ্রুবক UVector32& other, UErrorCode &ec);
 
     /**
      * Compare this vector with another.  They will be considered
      * equal if they are of the same size and all elements are equal,
      * as compared using this object's comparer.
      */
-    bool operator==(const UVector32& other) const;
+    bool operator==(ধ্রুবক UVector32& other) ধ্রুবক;
 
     /**
      * Equivalent to !operator==()
      */
-    inline bool operator!=(const UVector32& other) const;
+    অন্তঃরেখ bool operator!=(ধ্রুবক UVector32& other) ধ্রুবক;
 
     //------------------------------------------------------------
     // java.util.Vector API
     //------------------------------------------------------------
 
-    inline void addElement(int32_t elem, UErrorCode &status);
+    অন্তঃরেখ শূন্য addElement(int32_t elem, UErrorCode &status);
 
-    void setElementAt(int32_t elem, int32_t index);
+    শূন্য setElementAt(int32_t elem, int32_t সূচক);
 
-    void insertElementAt(int32_t elem, int32_t index, UErrorCode &status);
+    শূন্য ঢোকাও_Element_At(int32_t elem, int32_t সূচক, UErrorCode &status);
     
-    inline int32_t elementAti(int32_t index) const;
+    অন্তঃরেখ int32_t elementAti(int32_t সূচক) ধ্রুবক;
 
-    UBool equals(const UVector32 &other) const;
+    UBool equals(ধ্রুবক UVector32 &other) ধ্রুবক;
 
-    inline int32_t lastElementi() const;
+    অন্তঃরেখ int32_t lastElementi() ধ্রুবক;
 
-    int32_t indexOf(int32_t elem, int32_t startIndex = 0) const;
+    int32_t সূচক_Of(int32_t elem, int32_t start_সূচক = 0) ধ্রুবক;
 
-    inline UBool contains(int32_t elem) const;
+    অন্তঃরেখ UBool contains(int32_t elem) ধ্রুবক;
 
-    UBool containsAll(const UVector32& other) const;
+    UBool containsAll(ধ্রুবক UVector32& other) ধ্রুবক;
 
-    UBool removeAll(const UVector32& other);
+    UBool removeAll(ধ্রুবক UVector32& other);
 
-    UBool retainAll(const UVector32& other);
+    UBool retainAll(ধ্রুবক UVector32& other);
 
-    void removeElementAt(int32_t index);
+    শূন্য removeElementAt(int32_t সূচক);
 
-    void removeAllElements();
+    শূন্য removeAllElements();
 
-    inline int32_t size() const;
+    অন্তঃরেখ int32_t আকার_3() ধ্রুবক;
 
-    inline UBool isEmpty() const;
+    অন্তঃরেখ UBool isEmpty() ধ্রুবক;
 
     // Inline.  Use this one for speedy size check.
-    inline UBool ensureCapacity(int32_t minimumCapacity, UErrorCode &status);
+    অন্তঃরেখ UBool ensureCapacity(int32_t minimumCapacity, UErrorCode &status);
 
     // Out-of-line, handles actual growth.  Called by ensureCapacity() when necessary.
     UBool expandCapacity(int32_t minimumCapacity, UErrorCode &status);
@@ -139,7 +139,7 @@ public:
      * elements for i >= newSize.  If newSize is larger, grow the
      * array, filling in new slows with zero.
      */
-    void setSize(int32_t newSize);
+    শূন্য set_আকার(int32_t new_আকার);
 
     //------------------------------------------------------------
     // New API
@@ -151,19 +151,19 @@ public:
      * @param other vector to be checked for containment
      * @return true if the test condition is met
      */
-    UBool containsNone(const UVector32& other) const;
+    UBool containsNone(ধ্রুবক UVector32& other) ধ্রুবক;
 
 
     /**
      * Insert the given integer into this vector at its sorted position.
      * The current elements are assumed to be sorted already.
      */
-    void sortedInsert(int32_t elem, UErrorCode& ec);
+    শূন্য sorted_ঢোকাও(int32_t elem, UErrorCode& ec);
 
     /**
      * Returns a pointer to the internal array holding the vector.
      */
-    inline int32_t *getBuffer() const;
+    অন্তঃরেখ int32_t *get_বাফার() ধ্রুবক;
 
     /**
      * Set the maximum allowed buffer capacity for this vector/stack.
@@ -171,134 +171,134 @@ public:
      * A Limit of zero means unlimited capacity.
      * Units are vector elements (32 bits each), not bytes.
      */
-    void setMaxCapacity(int32_t limit);
+    শূন্য setMaxCapacity(int32_t limit);
 
     /**
      * ICU "poor man's RTTI", returns a UClassID for this class.
      */
-    static UClassID U_EXPORT2 getStaticClassID();
+    স্থির UClassID U_EXPORT2 getStaticClassID();
 
     /**
      * ICU "poor man's RTTI", returns a UClassID for the actual class.
      */
-    virtual UClassID getDynamicClassID() const override;
+    আভাসী UClassID getDynamicClassID() ধ্রুবক override;
 
-private:
-    void _init(int32_t initialCapacity, UErrorCode &status);
-
-    // Disallow
-    UVector32(const UVector32&) = delete;
+ব্যক্তিগত:
+    শূন্য _init(int32_t initialCapacity, UErrorCode &status);
 
     // Disallow
-    UVector32& operator=(const UVector32&) = delete;
+    UVector32(ধ্রুবক UVector32&) = delete;
+
+    // Disallow
+    UVector32& operator=(ধ্রুবক UVector32&) = delete;
 
 
     //  API Functions for Stack operations.
     //  In the original UVector, these were in a separate derived class, UStack.
     //  Here in UVector32, they are all together.
-public:
-    inline UBool empty() const;   // TODO:  redundant, same as empty().  Remove it?
+সর্বজনীন:
+    অন্তঃরেখ UBool empty() ধ্রুবক;   // TODO:  redundant, same as empty().  Remove it?
 
-    inline int32_t peeki() const;
+    অন্তঃরেখ int32_t peeki() ধ্রুবক;
     
-    inline int32_t popi();
+    অন্তঃরেখ int32_t popi();
     
-    inline int32_t push(int32_t i, UErrorCode &status);
+    অন্তঃরেখ int32_t ঠেলো(int32_t i, UErrorCode &status);
 
-    inline int32_t *reserveBlock(int32_t size, UErrorCode &status);
-    inline int32_t *popFrame(int32_t size);
+    অন্তঃরেখ int32_t *reserveBlock(int32_t আকার_3, UErrorCode &status);
+    অন্তঃরেখ int32_t *বের_করো_Frame(int32_t আকার_3);
 };
 
 
 // UVector32 inlines
 
-inline UBool UVector32::ensureCapacity(int32_t minimumCapacity, UErrorCode &status) {
-    if ((minimumCapacity >= 0) && (capacity >= minimumCapacity)) {
-        return true;
-    } else {
-        return expandCapacity(minimumCapacity, status);
+অন্তঃরেখ UBool UVector32::ensureCapacity(int32_t minimumCapacity, UErrorCode &status) {
+    যদি ((minimumCapacity >= 0) && (capacity >= minimumCapacity)) {
+        ফেরত true;
+    } অন্যথা {
+        ফেরত expandCapacity(minimumCapacity, status);
     }
 }
 
-inline int32_t UVector32::elementAti(int32_t index) const {
-    return (index >= 0 && count > 0 && count - index > 0) ? elements[index] : 0;
+অন্তঃরেখ int32_t UVector32::elementAti(int32_t সূচক) ধ্রুবক {
+    ফেরত (সূচক >= 0 && গুনতি > 0 && গুনতি - সূচক > 0) ? elements[সূচক] : 0;
 }
 
 
-inline void UVector32::addElement(int32_t elem, UErrorCode &status) {
-    if (ensureCapacity(count + 1, status)) {
-        elements[count] = elem;
-        count++;
+অন্তঃরেখ শূন্য UVector32::addElement(int32_t elem, UErrorCode &status) {
+    যদি (ensureCapacity(গুনতি + 1, status)) {
+        elements[গুনতি] = elem;
+        গুনতি++;
     }
 }
 
-inline int32_t *UVector32::reserveBlock(int32_t size, UErrorCode &status) {
-    if (ensureCapacity(count+size, status) == false) {
-        return nullptr;
+অন্তঃরেখ int32_t *UVector32::reserveBlock(int32_t আকার_3, UErrorCode &status) {
+    যদি (ensureCapacity(গুনতি+আকার_3, status) == false) {
+        ফেরত nullptr;
     }
-    int32_t  *rp = elements+count;
-    count += size;
-    return rp;
+    int32_t  *rp = elements+গুনতি;
+    গুনতি += আকার_3;
+    ফেরত rp;
 }
 
-inline int32_t *UVector32::popFrame(int32_t size) {
-    U_ASSERT(count >= size);
-    count -= size;
-    if (count < 0) {
-        count = 0;
+অন্তঃরেখ int32_t *UVector32::বের_করো_Frame(int32_t আকার_3) {
+    U_ASSERT(গুনতি >= আকার_3);
+    গুনতি -= আকার_3;
+    যদি (গুনতি < 0) {
+        গুনতি = 0;
     }
-    return elements+count-size;
+    ফেরত elements+গুনতি-আকার_3;
 }
 
 
 
-inline int32_t UVector32::size() const {
-    return count;
+অন্তঃরেখ int32_t UVector32::আকার_3() ধ্রুবক {
+    ফেরত গুনতি;
 }
 
-inline UBool UVector32::isEmpty() const {
-    return count == 0;
+অন্তঃরেখ UBool UVector32::isEmpty() ধ্রুবক {
+    ফেরত গুনতি == 0;
 }
 
-inline UBool UVector32::contains(int32_t obj) const {
-    return indexOf(obj) >= 0;
+অন্তঃরেখ UBool UVector32::contains(int32_t obj) ধ্রুবক {
+    ফেরত সূচক_Of(obj) >= 0;
 }
 
-inline int32_t UVector32::lastElementi() const {
-    return elementAti(count-1);
+অন্তঃরেখ int32_t UVector32::lastElementi() ধ্রুবক {
+    ফেরত elementAti(গুনতি-1);
 }
 
-inline bool UVector32::operator!=(const UVector32& other) const {
-    return !operator==(other);
+অন্তঃরেখ bool UVector32::operator!=(ধ্রুবক UVector32& other) ধ্রুবক {
+    ফেরত !operator==(other);
 }
 
-inline int32_t *UVector32::getBuffer() const {
-    return elements;
+অন্তঃরেখ int32_t *UVector32::get_বাফার() ধ্রুবক {
+    ফেরত elements;
 }
 
 
 // UStack inlines
 
-inline UBool UVector32::empty() const {
-    return isEmpty();
+অন্তঃরেখ UBool UVector32::empty() ধ্রুবক {
+    ফেরত isEmpty();
 }
 
-inline int32_t UVector32::peeki() const {
-    return lastElementi();
+অন্তঃরেখ int32_t UVector32::peeki() ধ্রুবক {
+    ফেরত lastElementi();
 }
 
-inline int32_t UVector32::push(int32_t i, UErrorCode &status) {
+অন্তঃরেখ int32_t UVector32::ঠেলো(int32_t i, UErrorCode &status) {
     addElement(i, status);
-    return i;
+    ফেরত i;
 }
 
-inline int32_t UVector32::popi() {
-    int32_t result = 0;
-    if (count > 0) {
-        count--;
-        result = elements[count];
+অন্তঃরেখ int32_t UVector32::popi() {
+    int32_t ফলাফল = 0;
+    যদি (গুনতি > 0) {
+        গুনতি--;
+        ফলাফল = elements[গুনতি];
     }
-    return result;
+    ফেরত ফলাফল;
 }
 
 U_NAMESPACE_END

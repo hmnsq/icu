@@ -21,17 +21,17 @@
 *   code also builds UnicodeSets from patterns and needs uniset_props.
 */
 
-#include "unicode/brkiter.h"
-#include "unicode/locid.h"
-#include "unicode/parsepos.h"
-#include "unicode/uniset.h"
-#include "unicode/utf16.h"
-#include "cmemory.h"
-#include "ruleiter.h"
-#include "ucase.h"
-#include "uprops.h"
-#include "util.h"
-#include "uvector.h"
+#অন্তর্ভাব "unicode/brkiter.h"
+#অন্তর্ভাব "unicode/locid.h"
+#অন্তর্ভাব "unicode/parsepos.h"
+#অন্তর্ভাব "unicode/uniset.h"
+#অন্তর্ভাব "unicode/utf16.h"
+#অন্তর্ভাব "cmemory.h"
+#অন্তর্ভাব "ruleiter.h"
+#অন্তর্ভাব "ucase.h"
+#অন্তর্ভাব "uprops.h"
+#অন্তর্ভাব "util.h"
+#অন্তর্ভাব "uvector.h"
 
 U_NAMESPACE_BEGIN
 
@@ -44,88 +44,88 @@ U_NAMESPACE_BEGIN
 // Constructors &c
 //----------------------------------------------------------------
 
-UnicodeSet::UnicodeSet(const UnicodeString& pattern,
+UnicodeSet::UnicodeSet(ধ্রুবক UnicodeString& pattern,
                        uint32_t options,
-                       const SymbolTable* symbols,
+                       ধ্রুবক প্রতীক_Table* symbols,
                        UErrorCode& status) {
     applyPattern(pattern, options, symbols, status);
-    _dbgct(this);
+    _dbgct(এই);
 }
 
-UnicodeSet::UnicodeSet(const UnicodeString& pattern, ParsePosition& pos,
+UnicodeSet::UnicodeSet(ধ্রুবক UnicodeString& pattern, ParsePosition& pos,
                        uint32_t options,
-                       const SymbolTable* symbols,
+                       ধ্রুবক প্রতীক_Table* symbols,
                        UErrorCode& status) {
     applyPattern(pattern, pos, options, symbols, status);
-    _dbgct(this);
+    _dbgct(এই);
 }
 
 //----------------------------------------------------------------
 // Public API
 //----------------------------------------------------------------
 
-UnicodeSet& UnicodeSet::applyPattern(const UnicodeString& pattern,
+UnicodeSet& UnicodeSet::applyPattern(ধ্রুবক UnicodeString& pattern,
                                      uint32_t options,
-                                     const SymbolTable* symbols,
+                                     ধ্রুবক প্রতীক_Table* symbols,
                                      UErrorCode& status) U_LIFETIME_BOUND {
     ParsePosition pos(0);
     applyPattern(pattern, pos, options, symbols, status);
-    if (U_FAILURE(status)) return *this;
+    যদি (U_FAILURE(status)) ফেরত *এই;
 
-    int32_t i = pos.getIndex();
+    int32_t i = pos.get_সূচক();
 
-    if (options & USET_IGNORE_SPACE) {
+    যদি (options & USET_IGNORE_SPACE) {
         // Skip over trailing whitespace
-        ICU_Utility::skipWhitespace(pattern, i, true);
+        ICU_Utility::skipWhitespace(pattern, i, সত্য);
     }
 
-    if (i != pattern.length()) {
+    যদি (i != pattern.length()) {
         status = U_ILLEGAL_ARGUMENT_ERROR;
     }
-    return *this;
+    ফেরত *এই;
 }
 
-UnicodeSet& UnicodeSet::applyPattern(const UnicodeString& pattern,
+UnicodeSet& UnicodeSet::applyPattern(ধ্রুবক UnicodeString& pattern,
                                      ParsePosition& pos,
                                      uint32_t options,
-                                     const SymbolTable* symbols,
+                                     ধ্রুবক প্রতীক_Table* symbols,
                                      UErrorCode& status) U_LIFETIME_BOUND {
-    if (U_FAILURE(status)) {
-        return *this;
+    যদি (U_FAILURE(status)) {
+        ফেরত *এই;
     }
-    if (isFrozen()) {
+    যদি (isFrozen()) {
         status = U_NO_WRITE_PERMISSION;
-        return *this;
+        ফেরত *এই;
     }
     // Need to build the pattern in a temporary string because
     // _applyPattern calls add() etc., which set pat to empty.
     UnicodeString rebuiltPat;
     RuleCharacterIterator chars(pattern, symbols, pos);
     applyPattern(pattern, pos, chars, symbols, rebuiltPat, options, &UnicodeSet::closeOver, status);
-    if (U_FAILURE(status)) return *this;
-    if (chars.inVariable()) {
+    যদি (U_FAILURE(status)) ফেরত *এই;
+    যদি (chars.inVariable()) {
         // syntaxError(chars, "Extra chars in variable value");
         status = U_MALFORMED_SET;
-        return *this;
+        ফেরত *এই;
     }
     setPattern(rebuiltPat);
-    return *this;
+    ফেরত *এই;
 }
 
 // USetAdder implementation
 // Does not use uset.h to reduce code dependencies
-static void U_CALLCONV
+স্থির শূন্য U_CALLCONV
 _set_add(USet *set, UChar32 c) {
     reinterpret_cast<UnicodeSet*>(set)->add(c);
 }
 
-static void U_CALLCONV
+স্থির শূন্য U_CALLCONV
 _set_addRange(USet *set, UChar32 start, UChar32 end) {
     reinterpret_cast<UnicodeSet*>(set)->add(start, end);
 }
 
-static void U_CALLCONV
-_set_addString(USet *set, const char16_t *str, int32_t length) {
+স্থির শূন্য U_CALLCONV
+_set_addString(USet *set, ধ্রুবক char16_t *str, int32_t length) {
     reinterpret_cast<UnicodeSet*>(set)->add(UnicodeString(static_cast<UBool>(length < 0), str, length));
 }
 
@@ -135,15 +135,15 @@ _set_addString(USet *set, const char16_t *str, int32_t length) {
 
 // add the result of a full case mapping to the set
 // use str as a temporary string to avoid constructing one
-static inline void
-addCaseMapping(UnicodeSet &set, int32_t result, const char16_t *full, UnicodeString &str) {
-    if(result >= 0) {
-        if(result > UCASE_MAX_STRING_LENGTH) {
+স্থির অন্তঃরেখ শূন্য
+addCaseMapping(UnicodeSet &set, int32_t ফলাফল, ধ্রুবক char16_t *full, UnicodeString &str) {
+    যদি(ফলাফল >= 0) {
+        যদি(ফলাফল > UCASE_MAX_STRING_দৈর্ঘ্য) {
             // add a single-code point case mapping
-            set.add(result);
-        } else {
+            set.add(ফলাফল);
+        } অন্যথা {
             // add a string case mapping from full with length result
-            str.setTo(static_cast<UBool>(false), full, result);
+            str.setTo(static_cast<UBool>(মিথ্যা), full, ফলাফল);
             set.add(str);
         }
     }
@@ -151,98 +151,98 @@ addCaseMapping(UnicodeSet &set, int32_t result, const char16_t *full, UnicodeStr
     // see ucase.h
 }
 
-namespace {
+নামাকাশ {
 
 /** For case closure on a large set, look only at code points with relevant properties. */
-const UnicodeSet &maybeOnlyCaseSensitive(const UnicodeSet &src U_LIFETIME_BOUND,
+ধ্রুবক UnicodeSet &maybeOnlyCaseSensitive(ধ্রুবক UnicodeSet &src U_LIFETIME_BOUND,
                                          UnicodeSet &subset U_LIFETIME_BOUND) {
     // The subset must have been constructed with all code points,
     // so that the retainAll() intersection effectively copies all single code points from src.
     U_ASSERT(subset.contains(0, 0x10ffff));
-    if (src.size() < 30) {
-        return src;
+    যদি (src.size() < 30) {
+        ফেরত src;
     }
     // Return the intersection of the src code points with Case_Sensitive ones.
     UErrorCode errorCode = U_ZERO_ERROR;
-    const UnicodeSet *sensitive =
-        CharacterProperties::getBinaryPropertySet(UCHAR_CASE_SENSITIVE, errorCode);
-    if (U_FAILURE(errorCode)) {
-        return src;
+    ধ্রুবক UnicodeSet *sensitive =
+        CharacterProperties::get_দ্বিমিক_Property_Set(UCHAR_CASE_SENSITIVE, errorCode);
+    যদি (U_FAILURE(errorCode)) {
+        ফেরত src;
     }
     // Start by copying the "smaller" set.
     // (We "copy" by intersecting all Unicode *code points* with the first set,
     // which omits any strings.)
-    if (src.getRangeCount() > sensitive->getRangeCount()) {
+    যদি (src.get_Range_গুনতি() > sensitive->get_Range_গুনতি()) {
         subset.retainAll(*sensitive);
         subset.retainAll(src);
-    } else {
+    } অন্যথা {
         subset.retainAll(src);
         subset.retainAll(*sensitive);
     }
-    return subset;
+    ফেরত subset;
 }
 
 // Per-character scf = Simple_Case_Folding of a string.
 // (Normally when we case-fold a string we use full case foldings.)
-bool scfString(const UnicodeString &s, UnicodeString &scf) {
+যৌক্তিক scfString(ধ্রুবক UnicodeString &s, UnicodeString &scf) {
     // Iterate over the raw buffer for best performance.
-    const char16_t *p = s.getBuffer();
+    ধ্রুবক char16_t *p = s.get_বাফার();
     int32_t length = s.length();
     // Loop while not needing modification.
-    for (int32_t i = 0; i < length;) {
+    জন্য (int32_t i = 0; i < length;) {
         UChar32 c;
-        U16_NEXT(p, i, length, c);  // post-increments i
+        U16_পরবর্তী(p, i, length, c);  // post-increments i
         UChar32 scfChar = u_foldCase(c, U_FOLD_CASE_DEFAULT);
-        if (scfChar != c) {
+        যদি (scfChar != c) {
             // Copy the characters before c.
-            scf.setTo(p, i - U16_LENGTH(c));
+            scf.setTo(p, i - U16_দৈর্ঘ্য(c));
             // Loop over the rest of the string and keep case-folding.
-            for (;;) {
+            জন্য (;;) {
                 scf.append(scfChar);
-                if (i == length) {
-                    return true;
+                যদি (i == length) {
+                    ফেরত সত্য;
                 }
-                U16_NEXT(p, i, length, c);  // post-increments i
+                U16_পরবর্তী(p, i, length, c);  // post-increments i
                 scfChar = u_foldCase(c, U_FOLD_CASE_DEFAULT);
             }
         }
     }
-    return false;
+    ফেরত মিথ্যা;
 }
 
 }  // namespace
 
 UnicodeSet& UnicodeSet::closeOver(int32_t attribute) U_LIFETIME_BOUND {
-    if (isFrozen() || isBogus()) {
-        return *this;
+    যদি (isFrozen() || isBogus()) {
+        ফেরত *এই;
     }
-    switch (attribute & USET_CASE_MASK) {
-    case 0:
-        break;
-    case USET_CASE_INSENSITIVE:
-        closeOverCaseInsensitive(/* simple= */ false);
-        break;
-    case USET_ADD_CASE_MAPPINGS:
+    নির্বাচন (attribute & USET_CASE_MASK) {
+    ক্ষেত্র 0:
+        বিরতি;
+    ক্ষেত্র USET_CASE_INSENSITIVE:
+        closeOverCaseInsensitive(/* simple= */ মিথ্যা);
+        বিরতি;
+    ক্ষেত্র USET_ADD_CASE_MAPPINGS:
         closeOverAddCaseMappings();
-        break;
-    case USET_SIMPLE_CASE_INSENSITIVE:
-        closeOverCaseInsensitive(/* simple= */ true);
-        break;
-    default:
+        বিরতি;
+    ক্ষেত্র USET_SIMPLE_CASE_INSENSITIVE:
+        closeOverCaseInsensitive(/* simple= */ সত্য);
+        বিরতি;
+    পূর্বনির্ধারিত:
         // bad option (unreachable)
-        break;
+        বিরতি;
     }
-    return *this;
+    ফেরত *এই;
 }
 
-void UnicodeSet::closeOverCaseInsensitive(bool simple) {
+শূন্য UnicodeSet::closeOverCaseInsensitive(যৌক্তিক simple) {
     // Start with input set to guarantee inclusion.
-    UnicodeSet foldSet(*this);
+    UnicodeSet foldSet(*এই);
     // Full case mappings closure:
     // Remove strings because the strings will actually be reduced (folded);
     // therefore, start with no strings and add only those needed.
     // Do this before processing code points, because they may add strings.
-    if (!simple && foldSet.hasStrings()) {
+    যদি (!simple && foldSet.hasStrings()) {
         foldSet.strings_->removeAllElements();
     }
 
@@ -256,104 +256,104 @@ void UnicodeSet::closeOverCaseInsensitive(bool simple) {
     };
 
     UnicodeSet subset(0, 0x10ffff);
-    const UnicodeSet &codePoints = maybeOnlyCaseSensitive(*this, subset);
+    ধ্রুবক UnicodeSet &codePoints = maybeOnlyCaseSensitive(*এই, subset);
 
     // Iterate over the ranges of single code points. Nested loop for each code point.
-    int32_t n = codePoints.getRangeCount();
+    int32_t n = codePoints.get_Range_গুনতি();
 
-    for (int32_t i=0; i<n; ++i) {
+    জন্য (int32_t i=0; i<n; ++i) {
         UChar32 start = codePoints.getRangeStart(i);
         UChar32 end   = codePoints.getRangeEnd(i);
 
-        if (simple) {
-            for (UChar32 cp=start; cp<=end; ++cp) {
+        যদি (simple) {
+            জন্য (UChar32 cp=start; cp<=end; ++cp) {
                 ucase_addSimpleCaseClosure(cp, &sa);
             }
-        } else {
-            for (UChar32 cp=start; cp<=end; ++cp) {
+        } অন্যথা {
+            জন্য (UChar32 cp=start; cp<=end; ++cp) {
                 ucase_addCaseClosure(cp, &sa);
             }
         }
     }
-    if (hasStrings()) {
+    যদি (hasStrings()) {
         UnicodeString str;
-        for (int32_t j=0; j<strings_->size(); ++j) {
-            const UnicodeString* pStr = static_cast<const UnicodeString*>(strings_->elementAt(j));
-            if (simple) {
-                if (scfString(*pStr, str)) {
+        জন্য (int32_t j=0; j<strings_->size(); ++j) {
+            ধ্রুবক UnicodeString* pStr = static_cast<ধ্রুবক UnicodeString*>(strings_->elementAt(j));
+            যদি (simple) {
+                যদি (scfString(*pStr, str)) {
                     foldSet.remove(*pStr).add(str);
                 }
-            } else {
+            } অন্যথা {
                 str = *pStr;
                 str.foldCase();
-                if(!ucase_addStringCaseClosure(str.getBuffer(), str.length(), &sa)) {
+                যদি(!ucase_addStringCaseClosure(str.get_বাফার(), str.length(), &sa)) {
                     foldSet.add(str); // does not map to code points: add the folded string itself
                 }
             }
         }
     }
-    *this = foldSet;
+    *এই = foldSet;
 }
 
-void UnicodeSet::closeOverAddCaseMappings() {
+শূন্য UnicodeSet::closeOverAddCaseMappings() {
     // Start with input set to guarantee inclusion.
-    UnicodeSet foldSet(*this);
+    UnicodeSet foldSet(*এই);
 
     UnicodeSet subset(0, 0x10ffff);
-    const UnicodeSet &codePoints = maybeOnlyCaseSensitive(*this, subset);
+    ধ্রুবক UnicodeSet &codePoints = maybeOnlyCaseSensitive(*এই, subset);
 
     // Iterate over the ranges of single code points. Nested loop for each code point.
-    int32_t n = codePoints.getRangeCount();
-    UChar32 result;
-    const char16_t *full;
+    int32_t n = codePoints.get_Range_গুনতি();
+    UChar32 ফলাফল;
+    ধ্রুবক char16_t *full;
     UnicodeString str;
 
-    for (int32_t i=0; i<n; ++i) {
+    জন্য (int32_t i=0; i<n; ++i) {
         UChar32 start = codePoints.getRangeStart(i);
         UChar32 end   = codePoints.getRangeEnd(i);
 
         // add case mappings
         // (does not add long s for regular s, or Kelvin for k, for example)
-        for (UChar32 cp=start; cp<=end; ++cp) {
-            result = ucase_toFullLower(cp, nullptr, nullptr, &full, UCASE_LOC_ROOT);
-            addCaseMapping(foldSet, result, full, str);
+        জন্য (UChar32 cp=start; cp<=end; ++cp) {
+            ফলাফল = ucase_toFullLower(cp, nullptr, nullptr, &full, UCASE_LOC_মূল);
+            addCaseMapping(foldSet, ফলাফল, full, str);
 
-            result = ucase_toFullTitle(cp, nullptr, nullptr, &full, UCASE_LOC_ROOT);
-            addCaseMapping(foldSet, result, full, str);
+            ফলাফল = ucase_toFullTitle(cp, nullptr, nullptr, &full, UCASE_LOC_মূল);
+            addCaseMapping(foldSet, ফলাফল, full, str);
 
-            result = ucase_toFullUpper(cp, nullptr, nullptr, &full, UCASE_LOC_ROOT);
-            addCaseMapping(foldSet, result, full, str);
+            ফলাফল = ucase_toFullUpper(cp, nullptr, nullptr, &full, UCASE_LOC_মূল);
+            addCaseMapping(foldSet, ফলাফল, full, str);
 
-            result = ucase_toFullFolding(cp, &full, 0);
-            addCaseMapping(foldSet, result, full, str);
+            ফলাফল = ucase_toFullFolding(cp, &full, 0);
+            addCaseMapping(foldSet, ফলাফল, full, str);
         }
     }
-    if (hasStrings()) {
-        Locale root("");
-#if !UCONFIG_NO_BREAK_ITERATION
+    যদি (hasStrings()) {
+        Locale মূল("");
+#যদি !UCONFIG_NO_BREAK_ITERATION
         UErrorCode status = U_ZERO_ERROR;
-        BreakIterator *bi = BreakIterator::createWordInstance(root, status);
-        if (U_SUCCESS(status)) {
+        BreakIterator *bi = BreakIterator::createWordInstance(মূল, status);
+        যদি (U_SUCCESS(status)) {
 #endif
-            for (int32_t j=0; j<strings_->size(); ++j) {
-                const UnicodeString* pStr = static_cast<const UnicodeString*>(strings_->elementAt(j));
-                (str = *pStr).toLower(root);
+            জন্য (int32_t j=0; j<strings_->size(); ++j) {
+                ধ্রুবক UnicodeString* pStr = static_cast<ধ্রুবক UnicodeString*>(strings_->elementAt(j));
+                (str = *pStr).toLower(মূল);
                 foldSet.add(str);
-#if !UCONFIG_NO_BREAK_ITERATION
-                (str = *pStr).toTitle(bi, root);
+#যদি !UCONFIG_NO_BREAK_ITERATION
+                (str = *pStr).toTitle(bi, মূল);
                 foldSet.add(str);
 #endif
-                (str = *pStr).toUpper(root);
+                (str = *pStr).toUpper(মূল);
                 foldSet.add(str);
                 (str = *pStr).foldCase();
                 foldSet.add(str);
             }
-#if !UCONFIG_NO_BREAK_ITERATION
+#যদি !UCONFIG_NO_BREAK_ITERATION
         }
         delete bi;
 #endif
     }
-    *this = foldSet;
+    *এই = foldSet;
 }
 
 U_NAMESPACE_END

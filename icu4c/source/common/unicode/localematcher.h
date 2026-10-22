@@ -7,15 +7,15 @@
 #ifndef __LOCALEMATCHER_H__
 #define __LOCALEMATCHER_H__
 
-#include "unicode/utypes.h"
+#অন্তর্ভাব "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#যদি U_SHOW_CPLUSPLUS_API
 
-#include <optional>
+#অন্তর্ভাব <optional>
 
-#include "unicode/locid.h"
-#include "unicode/stringpiece.h"
-#include "unicode/uobject.h"
+#অন্তর্ভাব "unicode/locid.h"
+#অন্তর্ভাব "unicode/stringpiece.h"
+#অন্তর্ভাব "unicode/uobject.h"
 
 /**
  * \file
@@ -28,7 +28,7 @@
  * @see LocaleMatcher::Builder#setFavorSubtag(ULocMatchFavorSubtag)
  * @stable ICU 65
  */
-enum ULocMatchFavorSubtag {
+গণনা ULocMatchFavorSubtag {
     /**
      * Language differences are most important, then script differences, then region differences.
      * (This is the default behavior.)
@@ -44,7 +44,7 @@ enum ULocMatchFavorSubtag {
     ULOCMATCH_FAVOR_SCRIPT
 };
 #ifndef U_IN_DOXYGEN
-typedef enum ULocMatchFavorSubtag ULocMatchFavorSubtag;
+প্রকারলেখ গণনা ULocMatchFavorSubtag ULocMatchFavorSubtag;
 #endif
 
 /**
@@ -54,7 +54,7 @@ typedef enum ULocMatchFavorSubtag ULocMatchFavorSubtag;
  * @see LocaleMatcher::Builder#setDemotionPerDesiredLocale(ULocMatchDemotion)
  * @stable ICU 65
  */
-enum ULocMatchDemotion {
+গণনা ULocMatchDemotion {
     /**
      * All desired locales are treated equally.
      *
@@ -90,7 +90,7 @@ enum ULocMatchDemotion {
     ULOCMATCH_DEMOTION_REGION
 };
 #ifndef U_IN_DOXYGEN
-typedef enum ULocMatchDemotion ULocMatchDemotion;
+প্রকারলেখ গণনা ULocMatchDemotion ULocMatchDemotion;
 #endif
 
 /**
@@ -110,7 +110,7 @@ typedef enum ULocMatchDemotion ULocMatchDemotion;
  * @see LocaleMatcher::Builder#setDirection(ULocMatchDirection)
  * @stable ICU 67
  */
-enum ULocMatchDirection {
+গণনা ULocMatchDirection {
     /**
      * Locale matching includes one-way matches such as Breton→French. (default)
      *
@@ -126,14 +126,14 @@ enum ULocMatchDirection {
     ULOCMATCH_DIRECTION_ONLY_TWO_WAY
 };
 #ifndef U_IN_DOXYGEN
-typedef enum ULocMatchDirection ULocMatchDirection;
+প্রকারলেখ গণনা ULocMatchDirection ULocMatchDirection;
 #endif
 
-struct UHashtable;
+কাঠামো UHashtable;
 
 U_NAMESPACE_BEGIN
 
-struct LSR;
+কাঠামো LSR;
 
 class LikelySubtags;
 class LocaleDistance;
@@ -183,16 +183,16 @@ class UVector;
  *
  * @stable ICU 65
  */
-class U_COMMON_API LocaleMatcher : public UMemory {
-public:
+class U_COMMON_API LocaleMatcher : সর্বজনীন UMemory {
+সর্বজনীন:
     /**
      * Data for the best-matching pair of a desired and a supported locale.
      * Movable but not copyable.
      *
      * @stable ICU 65
      */
-    class U_COMMON_API Result : public UMemory {
-    public:
+    class U_COMMON_API ফলাফল_2 : সর্বজনীন UMemory {
+    সর্বজনীন:
         /**
          * Move constructor; might modify the source.
          * This object will have the same contents that the source object had.
@@ -200,14 +200,14 @@ public:
          * @param src Result to move contents from.
          * @stable ICU 65
          */
-        Result(Result &&src) noexcept;
+        ফলাফল_2(ফলাফল_2 &&src) noexcept;
 
         /**
          * Destructor.
          *
          * @stable ICU 65
          */
-        ~Result();
+        ~ফলাফল_2();
 
         /**
          * Move assignment; might modify the source.
@@ -216,7 +216,7 @@ public:
          * @param src Result to move contents from.
          * @stable ICU 65
          */
-        Result& operator=(Result&& src) noexcept U_LIFETIME_BOUND;
+        ফলাফল_2& operator=(ফলাফল_2&& src) noexcept U_LIFETIME_BOUND;
 
         /**
          * Returns the best-matching desired locale.
@@ -225,7 +225,7 @@ public:
          * @return the best-matching desired locale, or nullptr.
          * @stable ICU 65
          */
-        inline const Locale* getDesiredLocale() const U_LIFETIME_BOUND { return desiredLocale; }
+        অন্তঃরেখ ধ্রুবক Locale* getDesiredLocale() ধ্রুবক U_LIFETIME_BOUND { ফেরত desiredLocale; }
 
         /**
          * Returns the best-matching supported locale.
@@ -236,7 +236,7 @@ public:
          * @return the best-matching supported locale, or nullptr.
          * @stable ICU 65
          */
-        inline const Locale* getSupportedLocale() const U_LIFETIME_BOUND { return supportedLocale; }
+        অন্তঃরেখ ধ্রুবক Locale* getSupportedLocale() ধ্রুবক U_LIFETIME_BOUND { ফেরত supportedLocale; }
 
         /**
          * Returns the index of the best-matching desired locale in the input Iterable order.
@@ -245,7 +245,7 @@ public:
          * @return the index of the best-matching desired locale, or -1.
          * @stable ICU 65
          */
-        inline int32_t getDesiredIndex() const { return desiredIndex; }
+        অন্তঃরেখ int32_t get_Desired_সূচক() ধ্রুবক { ফেরত desired_সূচক; }
 
         /**
          * Returns the index of the best-matching supported locale in the
@@ -257,7 +257,7 @@ public:
          * @return the index of the best-matching supported locale, or -1.
          * @stable ICU 65
          */
-        inline int32_t getSupportedIndex() const { return supportedIndex; }
+        অন্তঃরেখ int32_t get_Supported_সূচক() ধ্রুবক { ফেরত supported_সূচক; }
 
         /**
          * Takes the best-matching supported locale and adds relevant fields of the
@@ -271,22 +271,22 @@ public:
          * @return a locale combining the best-matching desired and supported locales.
          * @stable ICU 65
          */
-        Locale makeResolvedLocale(UErrorCode &errorCode) const;
+        Locale makeResolvedLocale(UErrorCode &errorCode) ধ্রুবক;
 
-    private:
-        Result(const Locale *desired, const Locale *supported,
-               int32_t desIndex, int32_t suppIndex, UBool owned) :
+    ব্যক্তিগত:
+        ফলাফল_2(ধ্রুবক Locale *desired, ধ্রুবক Locale *supported,
+               int32_t des_সূচক, int32_t supp_সূচক, UBool owned) :
                 desiredLocale(desired), supportedLocale(supported),
-                desiredIndex(desIndex), supportedIndex(suppIndex),
+                desired_সূচক(des_সূচক), supported_সূচক(supp_সূচক),
                 desiredIsOwned(owned) {}
 
-        Result(const Result &other) = delete;
-        Result &operator=(const Result &other) = delete;
+        ফলাফল_2(ধ্রুবক ফলাফল_2 &other) = delete;
+        ফলাফল_2 &operator=(ধ্রুবক ফলাফল_2 &other) = delete;
 
-        const Locale *desiredLocale;
-        const Locale *supportedLocale;
-        int32_t desiredIndex;
-        int32_t supportedIndex;
+        ধ্রুবক Locale *desiredLocale;
+        ধ্রুবক Locale *supportedLocale;
+        int32_t desired_সূচক;
+        int32_t supported_সূচক;
         UBool desiredIsOwned;
 
         friend class LocaleMatcher;
@@ -298,8 +298,8 @@ public:
      *
      * @stable ICU 65
      */
-    class U_COMMON_API Builder : public UMemory {
-    public:
+    class U_COMMON_API Builder : সর্বজনীন UMemory {
+    সর্বজনীন:
         /**
          * Constructs a builder used in chaining parameters for building a LocaleMatcher.
          *
@@ -371,12 +371,12 @@ public:
          */
         template <typename Iter>
         Builder& setSupportedLocales(Iter begin, Iter end) U_LIFETIME_BOUND {
-            if (U_FAILURE(errorCode_)) { return *this; }
+            যদি (U_FAILURE(errorCode_)) { ফেরত *this; }
             clearSupportedLocales();
-            while (begin != end) {
+            যখন (begin != end) {
                 addSupportedLocale(*begin++);
             }
-            return *this;
+            ফেরত *this;
         }
 
         /**
@@ -397,12 +397,12 @@ public:
         template <typename Iter, typename Conv>
         Builder& setSupportedLocalesViaConverter(Iter begin, Iter end,
                                                  Conv converter) U_LIFETIME_BOUND {
-            if (U_FAILURE(errorCode_)) { return *this; }
+            যদি (U_FAILURE(errorCode_)) { ফেরত *this; }
             clearSupportedLocales();
-            while (begin != end) {
+            যখন (begin != end) {
                 addSupportedLocale(converter(*begin++));
             }
-            return *this;
+            ফেরত *this;
         }
 
         /**
@@ -413,7 +413,7 @@ public:
          * @return this Builder object
          * @stable ICU 65
          */
-        Builder& addSupportedLocale(const Locale& locale) U_LIFETIME_BOUND;
+        Builder& addSupportedLocale(ধ্রুবক Locale& locale) U_LIFETIME_BOUND;
 
         /**
          * Sets no default locale.
@@ -435,7 +435,7 @@ public:
          * @return this Builder object
          * @stable ICU 65
          */
-        Builder& setDefaultLocale(const Locale* defaultLocale) U_LIFETIME_BOUND;
+        Builder& setDefaultLocale(ধ্রুবক Locale* defaultLocale) U_LIFETIME_BOUND;
 
         /**
          * If ULOCMATCH_FAVOR_SCRIPT, then the language differences are smaller than script
@@ -468,10 +468,10 @@ public:
          * @stable ICU 67
          */
         Builder& setDirection(ULocMatchDirection matchDirection) U_LIFETIME_BOUND {
-            if (U_SUCCESS(errorCode_)) {
+            যদি (U_SUCCESS(errorCode_)) {
                 direction_ = matchDirection;
             }
-            return *this;
+            ফেরত *this;
         }
 
         /**
@@ -495,7 +495,7 @@ public:
          * @return this Builder object
          * @stable ICU 68
          */
-        Builder& setMaxDistance(const Locale& desired, const Locale& supported) U_LIFETIME_BOUND;
+        Builder& setMaxDistance(ধ্রুবক Locale& desired, ধ্রুবক Locale& supported) U_LIFETIME_BOUND;
 
         /**
          * Sets the UErrorCode if an error occurred while setting parameters.
@@ -507,7 +507,7 @@ public:
          * @return true if U_FAILURE(outErrorCode)
          * @stable ICU 65
          */
-        UBool copyErrorTo(UErrorCode &outErrorCode) const;
+        UBool copyErrorTo(UErrorCode &outErrorCode) ধ্রুবক;
 
         /**
          * Builds and returns a new locale matcher.
@@ -519,15 +519,15 @@ public:
          * @return LocaleMatcher
          * @stable ICU 65
          */
-        LocaleMatcher build(UErrorCode &errorCode) const;
+        LocaleMatcher build(UErrorCode &errorCode) ধ্রুবক;
 
-    private:
+    ব্যক্তিগত:
         friend class LocaleMatcher;
 
-        Builder(const Builder &other) = delete;
-        Builder &operator=(const Builder &other) = delete;
+        Builder(ধ্রুবক Builder &other) = delete;
+        Builder &operator=(ধ্রুবক Builder &other) = delete;
 
-        void clearSupportedLocales();
+        শূন্য clearSupportedLocales();
         bool ensureSupportedLocaleVector();
 
         UErrorCode errorCode_ = U_ZERO_ERROR;
@@ -578,8 +578,8 @@ public:
      * @return the best-matching supported locale.
      * @stable ICU 65
      */
-    const Locale* getBestMatch(const Locale& desiredLocale,
-                               UErrorCode& errorCode) const U_LIFETIME_BOUND;
+    ধ্রুবক Locale* getBestMatch(ধ্রুবক Locale& desiredLocale,
+                               UErrorCode& errorCode) ধ্রুবক U_LIFETIME_BOUND;
 
     /**
      * Returns the supported locale which best matches one of the desired locales.
@@ -591,8 +591,8 @@ public:
      * @return the best-matching supported locale.
      * @stable ICU 65
      */
-    const Locale* getBestMatch(Locale::Iterator& desiredLocales,
-                               UErrorCode& errorCode) const U_LIFETIME_BOUND;
+    ধ্রুবক Locale* getBestMatch(Locale::Iterator& desiredLocales,
+                               UErrorCode& errorCode) ধ্রুবক U_LIFETIME_BOUND;
 
     /**
      * Parses an Accept-Language string
@@ -608,8 +608,8 @@ public:
      * @return the best-matching supported locale.
      * @stable ICU 65
      */
-    const Locale* getBestMatchForListString(StringPiece desiredLocaleList,
-                                            UErrorCode& errorCode) const U_LIFETIME_BOUND;
+    ধ্রুবক Locale* getBestMatchForListString(StringPiece desiredLocaleList,
+                                            UErrorCode& errorCode) ধ্রুবক U_LIFETIME_BOUND;
 
     /**
      * Returns the best match between the desired locale and the supported locales.
@@ -623,8 +623,8 @@ public:
      * @return the best-matching pair of the desired and a supported locale.
      * @stable ICU 65
      */
-    Result getBestMatchResult(const Locale& desiredLocale U_LIFETIME_BOUND,
-                              UErrorCode& errorCode) const U_LIFETIME_BOUND;
+    ফলাফল_2 get_Best_Match_ফলাফল(ধ্রুবক Locale& desiredLocale U_LIFETIME_BOUND,
+                              UErrorCode& errorCode) ধ্রুবক U_LIFETIME_BOUND;
 
     /**
      * Returns the best match between the desired and supported locales.
@@ -638,8 +638,8 @@ public:
      * @return the best-matching pair of a desired and a supported locale.
      * @stable ICU 65
      */
-    Result getBestMatchResult(Locale::Iterator& desiredLocales,
-                              UErrorCode& errorCode) const U_LIFETIME_BOUND;
+    ফলাফল_2 get_Best_Match_ফলাফল(Locale::Iterator& desiredLocales,
+                              UErrorCode& errorCode) ধ্রুবক U_LIFETIME_BOUND;
 
     /**
      * Returns true if the pair of locales matches acceptably.
@@ -654,7 +654,7 @@ public:
      * @return true if the pair of locales matches acceptably.
      * @stable ICU 68
      */
-    UBool isMatch(const Locale &desired, const Locale &supported, UErrorCode &errorCode) const;
+    UBool isMatch(ধ্রুবক Locale &desired, ধ্রুবক Locale &supported, UErrorCode &errorCode) ধ্রুবক;
 
 #ifndef U_HIDE_INTERNAL_API
     /**
@@ -675,38 +675,38 @@ public:
      * @return value between 0 and 1, inclusive.
      * @internal (has a known user)
      */
-    double internalMatch(const Locale &desired, const Locale &supported, UErrorCode &errorCode) const;
+    দ্বিগুণ internalMatch(ধ্রুবক Locale &desired, ধ্রুবক Locale &supported, UErrorCode &errorCode) ধ্রুবক;
 #endif  // U_HIDE_INTERNAL_API
 
-private:
-    LocaleMatcher(const Builder &builder, UErrorCode &errorCode);
-    LocaleMatcher(const LocaleMatcher &other) = delete;
-    LocaleMatcher &operator=(const LocaleMatcher &other) = delete;
+ব্যক্তিগত:
+    LocaleMatcher(ধ্রুবক Builder &builder, UErrorCode &errorCode);
+    LocaleMatcher(ধ্রুবক LocaleMatcher &other) = delete;
+    LocaleMatcher &operator=(ধ্রুবক LocaleMatcher &other) = delete;
 
-    int32_t putIfAbsent(const LSR &lsr, int32_t i, int32_t suppLength, UErrorCode &errorCode);
+    int32_t putIfAbsent(ধ্রুবক LSR &lsr, int32_t i, int32_t supp_দৈর্ঘ্য, UErrorCode &errorCode);
 
-    std::optional<int32_t> getBestSuppIndex(LSR desiredLSR, LocaleLsrIterator *remainingIter, UErrorCode &errorCode) const;
+    std::optional<int32_t> get_Best_Supp_সূচক(LSR desiredLSR, LocaleLsrIterator *remainingIter, UErrorCode &errorCode) ধ্রুবক;
 
-    const LikelySubtags &likelySubtags;
-    const LocaleDistance &localeDistance;
+    ধ্রুবক LikelySubtags &likelySubtags;
+    ধ্রুবক LocaleDistance &localeDistance;
     int32_t thresholdDistance;
     int32_t demotionPerDesiredLocale;
     ULocMatchFavorSubtag favorSubtag;
     ULocMatchDirection direction;
 
     // These are in input order.
-    const Locale ** supportedLocales;
+    ধ্রুবক Locale ** supportedLocales;
     LSR *lsrs;
-    int32_t supportedLocalesLength;
+    int32_t supported_Locales_দৈর্ঘ্য;
     // These are in preference order: 1. Default locale 2. paradigm locales 3. others.
-    UHashtable *supportedLsrToIndex;  // Map<LSR, Integer>
+    UHashtable *supported_Lsr_To_সূচক;  // Map<LSR, Integer>
     // Array versions of the supportedLsrToIndex keys and values.
     // The distance lookup loops over the supportedLSRs and returns the index of the best match.
-    const LSR **supportedLSRs;
+    ধ্রুবক LSR **supportedLSRs;
     int32_t *supportedIndexes;
-    int32_t supportedLSRsLength;
+    int32_t supported_LSRs_দৈর্ঘ্য;
     Locale *ownedDefaultLocale;
-    const Locale *defaultLocale;
+    ধ্রুবক Locale *defaultLocale;
 };
 
 U_NAMESPACE_END

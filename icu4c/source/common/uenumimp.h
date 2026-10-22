@@ -19,7 +19,7 @@
 #ifndef __UENUMIMP_H
 #define __UENUMIMP_H
 
-#include "unicode/uenum.h"
+#অন্তর্ভাব "unicode/uenum.h"
 
 U_CDECL_BEGIN
 
@@ -41,7 +41,7 @@ U_CDECL_BEGIN
  *
  * @param en enumeration to be closed
  */
-typedef void U_CALLCONV
+প্রকারলেখ শূন্য U_CALLCONV
 UEnumClose(UEnumeration *en);
 
 /**
@@ -54,8 +54,8 @@ UEnumClose(UEnumeration *en);
  * @param status pointer to UErrorCode variable
  * @return number of elements in enumeration
  */
-typedef int32_t U_CALLCONV
-UEnumCount(UEnumeration *en, UErrorCode *status);
+প্রকারলেখ int32_t U_CALLCONV
+UEnum_গুনতি(UEnumeration *en, UErrorCode *status);
 
 /**
  * Function type declaration for uenum_unext().
@@ -69,9 +69,9 @@ UEnumCount(UEnumeration *en, UErrorCode *status);
  * @return next element as UChar *,
  *         or NULL after all elements haven been enumerated
  */
-typedef const UChar* U_CALLCONV 
+প্রকারলেখ ধ্রুবক UChar* U_CALLCONV 
 UEnumUNext(UEnumeration* en,
-            int32_t* resultLength,
+            int32_t* ফলাফল_দৈর্ঘ্য,
             UErrorCode* status);
 
 /**
@@ -86,9 +86,9 @@ UEnumUNext(UEnumeration* en,
  * @return next element as char *,
  *         or NULL after all elements haven been enumerated
  */
-typedef const char* U_CALLCONV 
-UEnumNext(UEnumeration* en,
-           int32_t* resultLength,
+প্রকারলেখ ধ্রুবক অক্ষর* U_CALLCONV 
+UEnum_পরবর্তী(UEnumeration* en,
+           int32_t* ফলাফল_দৈর্ঘ্য,
            UErrorCode* status);
 
 /**
@@ -100,17 +100,17 @@ UEnumNext(UEnumeration* en,
  * @param en enumeration 
  * @param status pointer to UErrorCode variable
  */
-typedef void U_CALLCONV 
+প্রকারলেখ শূন্য U_CALLCONV 
 UEnumReset(UEnumeration* en, 
             UErrorCode* status);
 
 
-struct UEnumeration {
+কাঠামো UEnumeration {
     /* baseContext. For the base class only. Don't touch! */
-    void *baseContext;
+    শূন্য *baseContext;
 
     /* context. Use it for what you need */
-    void *context;
+    শূন্য *context;
 
     /** 
      * these are functions that will 
@@ -119,11 +119,11 @@ struct UEnumeration {
     /* called from uenum_close */
     UEnumClose *close;
     /* called from uenum_count */
-    UEnumCount *count;
+    UEnum_গুনতি *গুনতি;
     /* called from uenum_unext */
-    UEnumUNext *uNext;
+    UEnumUNext *u_পরবর্তী;
     /* called from uenum_next */
-    UEnumNext  *next;
+    UEnum_পরবর্তী  *পরবর্তী;
     /* called from uenum_reset */
     UEnumReset *reset;
 };
@@ -136,9 +136,9 @@ U_CDECL_END
  * when a UEnumeration is defined with 'uNext' pointing to this
  * function.
  */
-U_CAPI const UChar* U_EXPORT2
+U_CAPI ধ্রুবক UChar* U_EXPORT2
 uenum_unextDefault(UEnumeration* en U_LIFETIME_BOUND,
-                   int32_t* resultLength,
+                   int32_t* ফলাফল_দৈর্ঘ্য,
                    UErrorCode* status);
 
 /* This is the default implementation for uenum_next().
@@ -147,9 +147,9 @@ uenum_unextDefault(UEnumeration* en U_LIFETIME_BOUND,
  * when a UEnumeration is defined with 'next' pointing to this
  * function.
  */
-U_CAPI const char* U_EXPORT2
-uenum_nextDefault(UEnumeration* en U_LIFETIME_BOUND,
-                  int32_t* resultLength,
+U_CAPI ধ্রুবক অক্ষর* U_EXPORT2
+uenum_পরবর্তী_Default(UEnumeration* en U_LIFETIME_BOUND,
+                  int32_t* ফলাফল_দৈর্ঘ্য,
                   UErrorCode* status);
 
 #endif

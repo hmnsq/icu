@@ -6,69 +6,69 @@
 *   Corporation and others.  All Rights Reserved.
 **********************************************************************
 */
-#include <algorithm>
-#include <optional>
-#include <string_view>
+#অন্তর্ভাব <algorithm>
+#অন্তর্ভাব <optional>
+#অন্তর্ভাব <string_view>
 
-#include "unicode/utypes.h"
-#include "unicode/unistr.h"
-#include "unicode/uobject.h"
+#অন্তর্ভাব "unicode/utypes.h"
+#অন্তর্ভাব "unicode/unistr.h"
+#অন্তর্ভাব "unicode/uobject.h"
 
-#include "cmemory.h"
-#include "cstring.h"
-#include "fixedstring.h"
-#include "uassert.h"
-#include "ucln_cmn.h"
-#include "uhash.h"
-#include "ulocimp.h"
-#include "umutex.h"
-#include "uresimp.h"
-#include "uvector.h"
-#include "udataswp.h" /* for InvChar functions */
+#অন্তর্ভাব "cmemory.h"
+#অন্তর্ভাব "cstring.h"
+#অন্তর্ভাব "fixedstring.h"
+#অন্তর্ভাব "uassert.h"
+#অন্তর্ভাব "ucln_cmn.h"
+#অন্তর্ভাব "uhash.h"
+#অন্তর্ভাব "ulocimp.h"
+#অন্তর্ভাব "umutex.h"
+#অন্তর্ভাব "uresimp.h"
+#অন্তর্ভাব "uvector.h"
+#অন্তর্ভাব "udataswp.h" /* for InvChar functions */
 
-static UHashtable* gLocExtKeyMap = nullptr;
-static icu::UInitOnce gLocExtKeyMapInitOnce {};
+স্থির UHashtable* g_Loc_Ext_চাবি_Map = nullptr;
+স্থির icu::UInitOnce g_Loc_Ext_চাবি_Map_Init_Once {};
 
 // bit flags for special types
-typedef enum {
+প্রকারলেখ গণনা {
     SPECIALTYPE_NONE = 0,
     SPECIALTYPE_CODEPOINTS = 1,
     SPECIALTYPE_REORDER_CODE = 2,
-    SPECIALTYPE_RG_KEY_VALUE = 4
+    SPECIALTYPE_RG_চাবি_মান = 4
 } SpecialType;
 
-struct LocExtKeyData : public icu::UMemory {
+কাঠামো Loc_Ext_চাবি_তথ্য : সর্বজনীন icu::UMemory {
     std::string_view legacyId;
     std::string_view bcpId;
     icu::LocalUHashtablePointer typeMap;
     uint32_t        specialTypes;
 };
 
-struct LocExtType : public icu::UMemory {
+কাঠামো LocExtType : সর্বজনীন icu::UMemory {
     std::string_view legacyId;
     std::string_view bcpId;
 };
 
-struct TypeAlias : public icu::UMemory {
+কাঠামো TypeAlias : সর্বজনীন icu::UMemory {
     std::string_view from;
 };
 
-static icu::MemoryPool<icu::FixedString>* gKeyTypeStringPool = nullptr;
-static icu::MemoryPool<LocExtKeyData>* gLocExtKeyDataEntries = nullptr;
-static icu::MemoryPool<LocExtType>* gLocExtTypeEntries = nullptr;
-static icu::MemoryPool<TypeAlias>* gTypeAliasEntries = nullptr;
+স্থির icu::MemoryPool<icu::FixedString>* g_চাবি_Type_String_Pool = nullptr;
+স্থির icu::MemoryPool<Loc_Ext_চাবি_তথ্য>* g_Loc_Ext_চাবি_তথ্য_Entries = nullptr;
+স্থির icu::MemoryPool<LocExtType>* gLocExtTypeEntries = nullptr;
+স্থির icu::MemoryPool<TypeAlias>* gTypeAliasEntries = nullptr;
 
 U_CDECL_BEGIN
 
-static UBool U_CALLCONV
-uloc_key_type_cleanup() {
-    if (gLocExtKeyMap != nullptr) {
-        uhash_close(gLocExtKeyMap);
-        gLocExtKeyMap = nullptr;
+স্থির UBool U_CALLCONV
+uloc_চাবি_type_cleanup() {
+    যদি (g_Loc_Ext_চাবি_Map != nullptr) {
+        uhash_close(g_Loc_Ext_চাবি_Map);
+        g_Loc_Ext_চাবি_Map = nullptr;
     }
 
-    delete gLocExtKeyDataEntries;
-    gLocExtKeyDataEntries = nullptr;
+    delete g_Loc_Ext_চাবি_তথ্য_Entries;
+    g_Loc_Ext_চাবি_তথ্য_Entries = nullptr;
 
     delete gLocExtTypeEntries;
     gLocExtTypeEntries = nullptr;
@@ -76,183 +76,183 @@ uloc_key_type_cleanup() {
     delete gTypeAliasEntries;
     gTypeAliasEntries = nullptr;
 
-    delete gKeyTypeStringPool;
-    gKeyTypeStringPool = nullptr;
+    delete g_চাবি_Type_String_Pool;
+    g_চাবি_Type_String_Pool = nullptr;
 
-    gLocExtKeyMapInitOnce.reset();
-    return true;
+    g_Loc_Ext_চাবি_Map_Init_Once.reset();
+    ফেরত সত্য;
 }
 
 U_CDECL_END
 
-namespace {
+নামাকাশ {
 
-void U_CALLCONV
+শূন্য U_CALLCONV
 initFromResourceBundle(UErrorCode& sts) {
     U_NAMESPACE_USE
-    ucln_common_registerCleanup(UCLN_COMMON_LOCALE_KEY_TYPE, uloc_key_type_cleanup);
+    ucln_common_registerCleanup(UCLN_COMMON_LOCALE_চাবি_TYPE, uloc_চাবি_type_cleanup);
 
-    gLocExtKeyMap = uhash_open(uhash_hashIStringView, uhash_compareIStringView, nullptr, &sts);
+    g_Loc_Ext_চাবি_Map = uhash_open(uhash_hashIStringView, uhash_compareIStringView, nullptr, &sts);
 
-    LocalUResourceBundlePointer keyTypeDataRes(ures_openDirect(nullptr, "keyTypeData", &sts));
-    LocalUResourceBundlePointer keyMapRes(ures_getByKey(keyTypeDataRes.getAlias(), "keyMap", nullptr, &sts));
-    LocalUResourceBundlePointer typeMapRes(ures_getByKey(keyTypeDataRes.getAlias(), "typeMap", nullptr, &sts));
+    LocalUResourceBundlePointer চাবি_Type_তথ্য_Res(ures_openDirect(nullptr, "keyTypeData", &sts));
+    LocalUResourceBundlePointer চাবি_Map_Res(ures_get_By_চাবি(চাবি_Type_তথ্য_Res.getAlias(), "keyMap", nullptr, &sts));
+    LocalUResourceBundlePointer typeMapRes(ures_get_By_চাবি(চাবি_Type_তথ্য_Res.getAlias(), "typeMap", nullptr, &sts));
 
-    if (U_FAILURE(sts)) {
-        return;
+    যদি (U_FAILURE(sts)) {
+        ফেরত;
     }
 
     UErrorCode tmpSts = U_ZERO_ERROR;
-    LocalUResourceBundlePointer typeAliasRes(ures_getByKey(keyTypeDataRes.getAlias(), "typeAlias", nullptr, &tmpSts));
+    LocalUResourceBundlePointer typeAliasRes(ures_get_By_চাবি(চাবি_Type_তথ্য_Res.getAlias(), "typeAlias", nullptr, &tmpSts));
     tmpSts = U_ZERO_ERROR;
-    LocalUResourceBundlePointer bcpTypeAliasRes(ures_getByKey(keyTypeDataRes.getAlias(), "bcpTypeAlias", nullptr, &tmpSts));
+    LocalUResourceBundlePointer bcpTypeAliasRes(ures_get_By_চাবি(চাবি_Type_তথ্য_Res.getAlias(), "bcpTypeAlias", nullptr, &tmpSts));
 
     // initialize pools storing dynamically allocated objects
-    gKeyTypeStringPool = new icu::MemoryPool<icu::FixedString>;
-    if (gKeyTypeStringPool == nullptr) {
+    g_চাবি_Type_String_Pool = নতুন icu::MemoryPool<icu::FixedString>;
+    যদি (g_চাবি_Type_String_Pool == nullptr) {
         sts = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        ফেরত;
     }
-    gLocExtKeyDataEntries = new icu::MemoryPool<LocExtKeyData>;
-    if (gLocExtKeyDataEntries == nullptr) {
+    g_Loc_Ext_চাবি_তথ্য_Entries = নতুন icu::MemoryPool<Loc_Ext_চাবি_তথ্য>;
+    যদি (g_Loc_Ext_চাবি_তথ্য_Entries == nullptr) {
         sts = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        ফেরত;
     }
-    gLocExtTypeEntries = new icu::MemoryPool<LocExtType>;
-    if (gLocExtTypeEntries == nullptr) {
+    gLocExtTypeEntries = নতুন icu::MemoryPool<LocExtType>;
+    যদি (gLocExtTypeEntries == nullptr) {
         sts = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        ফেরত;
     }
-    gTypeAliasEntries = new icu::MemoryPool<TypeAlias>;
-    if (gTypeAliasEntries == nullptr) {
+    gTypeAliasEntries = নতুন icu::MemoryPool<TypeAlias>;
+    যদি (gTypeAliasEntries == nullptr) {
         sts = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        ফেরত;
     }
 
     // iterate through keyMap resource
-    LocalUResourceBundlePointer keyMapEntry;
+    LocalUResourceBundlePointer চাবি_Map_Entry;
 
-    while (ures_hasNext(keyMapRes.getAlias())) {
-        keyMapEntry.adoptInstead(ures_getNextResource(keyMapRes.getAlias(), keyMapEntry.orphan(), &sts));
-        if (U_FAILURE(sts)) {
-            break;
+    যখন (ures_has_পরবর্তী(চাবি_Map_Res.getAlias())) {
+        চাবি_Map_Entry.adoptInstead(ures_get_পরবর্তী_Resource(চাবি_Map_Res.getAlias(), চাবি_Map_Entry.orphan(), &sts));
+        যদি (U_FAILURE(sts)) {
+            বিরতি;
         }
-        const char* legacyKeyId = ures_getKey(keyMapEntry.getAlias());
-        UnicodeString uBcpKeyId = ures_getUnicodeString(keyMapEntry.getAlias(), &sts);
-        if (U_FAILURE(sts)) {
-            break;
+        ধ্রুবক অক্ষর* legacy_চাবি_Id = ures_get_চাবি(চাবি_Map_Entry.getAlias());
+        UnicodeString u_Bcp_চাবি_Id = ures_getUnicodeString(চাবি_Map_Entry.getAlias(), &sts);
+        যদি (U_FAILURE(sts)) {
+            বিরতি;
         }
 
         // empty value indicates that BCP key is same with the legacy key.
-        const char* bcpKeyId = legacyKeyId;
-        if (!uBcpKeyId.isEmpty()) {
-            icu::FixedString* bcpKeyIdBuf = gKeyTypeStringPool->create();
-            if (bcpKeyIdBuf == nullptr) {
+        ধ্রুবক অক্ষর* bcp_চাবি_Id = legacy_চাবি_Id;
+        যদি (!u_Bcp_চাবি_Id.isEmpty()) {
+            icu::FixedString* bcp_চাবি_Id_Buf = g_চাবি_Type_String_Pool->create();
+            যদি (bcp_চাবি_Id_Buf == nullptr) {
                 sts = U_MEMORY_ALLOCATION_ERROR;
-                break;
+                বিরতি;
             }
-            copyInvariantChars(uBcpKeyId, *bcpKeyIdBuf, sts);
-            if (U_FAILURE(sts)) {
-                break;
+            copyInvariantChars(u_Bcp_চাবি_Id, *bcp_চাবি_Id_Buf, sts);
+            যদি (U_FAILURE(sts)) {
+                বিরতি;
             }
-            bcpKeyId = bcpKeyIdBuf->data();
+            bcp_চাবি_Id = bcp_চাবি_Id_Buf->তথ্য();
         }
 
-        bool isTZ = uprv_strcmp(legacyKeyId, "timezone") == 0;
+        যৌক্তিক isTZ = uprv_strcmp(legacy_চাবি_Id, "timezone") == 0;
 
-        UHashtable* typeDataMap = uhash_open(uhash_hashIStringView, uhash_compareIStringView, nullptr, &sts);
-        if (U_FAILURE(sts)) {
-            break;
+        UHashtable* type_তথ্য_Map = uhash_open(uhash_hashIStringView, uhash_compareIStringView, nullptr, &sts);
+        যদি (U_FAILURE(sts)) {
+            বিরতি;
         }
         uint32_t specialTypes = SPECIALTYPE_NONE;
 
-        LocalUResourceBundlePointer typeAliasResByKey;
-        LocalUResourceBundlePointer bcpTypeAliasResByKey;
+        LocalUResourceBundlePointer type_Alias_Res_By_চাবি;
+        LocalUResourceBundlePointer bcp_Type_Alias_Res_By_চাবি;
 
-        if (typeAliasRes.isValid()) {
+        যদি (typeAliasRes.isValid()) {
             tmpSts = U_ZERO_ERROR;
-            typeAliasResByKey.adoptInstead(ures_getByKey(typeAliasRes.getAlias(), legacyKeyId, nullptr, &tmpSts));
-            if (U_FAILURE(tmpSts)) {
-                typeAliasResByKey.orphan();
+            type_Alias_Res_By_চাবি.adoptInstead(ures_get_By_চাবি(typeAliasRes.getAlias(), legacy_চাবি_Id, nullptr, &tmpSts));
+            যদি (U_FAILURE(tmpSts)) {
+                type_Alias_Res_By_চাবি.orphan();
             }
         }
-        if (bcpTypeAliasRes.isValid()) {
+        যদি (bcpTypeAliasRes.isValid()) {
             tmpSts = U_ZERO_ERROR;
-            bcpTypeAliasResByKey.adoptInstead(ures_getByKey(bcpTypeAliasRes.getAlias(), bcpKeyId, nullptr, &tmpSts));
-            if (U_FAILURE(tmpSts)) {
-                bcpTypeAliasResByKey.orphan();
+            bcp_Type_Alias_Res_By_চাবি.adoptInstead(ures_get_By_চাবি(bcpTypeAliasRes.getAlias(), bcp_চাবি_Id, nullptr, &tmpSts));
+            যদি (U_FAILURE(tmpSts)) {
+                bcp_Type_Alias_Res_By_চাবি.orphan();
             }
         }
 
         // look up type map for the key, and walk through the mapping data
-        LocalUResourceBundlePointer typeMapResByKey(ures_getByKey(typeMapRes.getAlias(), legacyKeyId, nullptr, &sts));
-        if (U_FAILURE(sts)) {
+        LocalUResourceBundlePointer type_Map_Res_By_চাবি(ures_get_By_চাবি(typeMapRes.getAlias(), legacy_চাবি_Id, nullptr, &sts));
+        যদি (U_FAILURE(sts)) {
             // We fail here if typeMap does not have an entry corresponding to every entry in keyMap (should
             // not happen for valid keyTypeData), or if ures_getByKeyfails fails for some other reason
             // (e.g. data file cannot be loaded, using stubdata, over-aggressive data filtering has removed
             // something like timezoneTypes.res, etc.). Error code is already set. See ICU-21669.
             UPRV_UNREACHABLE_ASSERT;
-        } else {
+        } অন্যথা {
             LocalUResourceBundlePointer typeMapEntry;
 
-            while (ures_hasNext(typeMapResByKey.getAlias())) {
-                typeMapEntry.adoptInstead(ures_getNextResource(typeMapResByKey.getAlias(), typeMapEntry.orphan(), &sts));
-                if (U_FAILURE(sts)) {
-                    break;
+            যখন (ures_has_পরবর্তী(type_Map_Res_By_চাবি.getAlias())) {
+                typeMapEntry.adoptInstead(ures_get_পরবর্তী_Resource(type_Map_Res_By_চাবি.getAlias(), typeMapEntry.orphan(), &sts));
+                যদি (U_FAILURE(sts)) {
+                    বিরতি;
                 }
-                const char* legacyTypeId = ures_getKey(typeMapEntry.getAlias());
+                ধ্রুবক অক্ষর* legacyTypeId = ures_get_চাবি(typeMapEntry.getAlias());
 
                 // special types
-                if (uprv_strcmp(legacyTypeId, "CODEPOINTS") == 0) {
+                যদি (uprv_strcmp(legacyTypeId, "CODEPOINTS") == 0) {
                     specialTypes |= SPECIALTYPE_CODEPOINTS;
-                    continue;
+                    চালু;
                 }
-                if (uprv_strcmp(legacyTypeId, "REORDER_CODE") == 0) {
+                যদি (uprv_strcmp(legacyTypeId, "REORDER_CODE") == 0) {
                     specialTypes |= SPECIALTYPE_REORDER_CODE;
-                    continue;
+                    চালু;
                 }
-                if (uprv_strcmp(legacyTypeId, "RG_KEY_VALUE") == 0) {
-                    specialTypes |= SPECIALTYPE_RG_KEY_VALUE;
-                    continue;
+                যদি (uprv_strcmp(legacyTypeId, "RG_KEY_VALUE") == 0) {
+                    specialTypes |= SPECIALTYPE_RG_চাবি_মান;
+                    চালু;
                 }
 
-                if (isTZ) {
+                যদি (isTZ) {
                     // a timezone key uses a colon instead of a slash in the resource.
                     // e.g. America:Los_Angeles
-                    if (uprv_strchr(legacyTypeId, ':') != nullptr) {
+                    যদি (uprv_strchr(legacyTypeId, ':') != nullptr) {
                         U_ASSERT(legacyTypeId != nullptr && *legacyTypeId != '\0');
                         std::string_view legacyTypeIdView = legacyTypeId;
-                        icu::FixedString* legacyTypeIdBuf = gKeyTypeStringPool->create(legacyTypeIdView);
-                        if (legacyTypeIdBuf == nullptr || legacyTypeIdBuf->isEmpty()) {
+                        icu::FixedString* legacyTypeIdBuf = g_চাবি_Type_String_Pool->create(legacyTypeIdView);
+                        যদি (legacyTypeIdBuf == nullptr || legacyTypeIdBuf->isEmpty()) {
                             sts = U_MEMORY_ALLOCATION_ERROR;
-                            break;
+                            বিরতি;
                         }
                         std::replace(
                                 legacyTypeIdBuf->getAlias(),
                                 legacyTypeIdBuf->getAlias() + legacyTypeIdView.length(),
                                 ':', '/');
-                        legacyTypeId = legacyTypeIdBuf->data();
+                        legacyTypeId = legacyTypeIdBuf->তথ্য();
                     }
                 }
 
                 UnicodeString uBcpTypeId = ures_getUnicodeString(typeMapEntry.getAlias(), &sts);
-                if (U_FAILURE(sts)) {
-                    break;
+                যদি (U_FAILURE(sts)) {
+                    বিরতি;
                 }
 
                 // empty value indicates that BCP type is same with the legacy type.
-                const char* bcpTypeId = legacyTypeId;
-                if (!uBcpTypeId.isEmpty()) {
-                    icu::FixedString* bcpTypeIdBuf = gKeyTypeStringPool->create();
-                    if (bcpTypeIdBuf == nullptr) {
+                ধ্রুবক অক্ষর* bcpTypeId = legacyTypeId;
+                যদি (!uBcpTypeId.isEmpty()) {
+                    icu::FixedString* bcpTypeIdBuf = g_চাবি_Type_String_Pool->create();
+                    যদি (bcpTypeIdBuf == nullptr) {
                         sts = U_MEMORY_ALLOCATION_ERROR;
-                        break;
+                        বিরতি;
                     }
                     copyInvariantChars(uBcpTypeId, *bcpTypeIdBuf, sts);
-                    if (U_FAILURE(sts)) {
-                        break;
+                    যদি (U_FAILURE(sts)) {
+                        বিরতি;
                     }
-                    bcpTypeId = bcpTypeIdBuf->data();
+                    bcpTypeId = bcpTypeIdBuf->তথ্য();
                 }
 
                 // Note: legacy type value should never be
@@ -260,275 +260,275 @@ initFromResourceBundle(UErrorCode& sts) {
                 // type under the same key. So we use a single
                 // map for lookup.
                 LocExtType* t = gLocExtTypeEntries->create();
-                if (t == nullptr) {
+                যদি (t == nullptr) {
                     sts = U_MEMORY_ALLOCATION_ERROR;
-                    break;
+                    বিরতি;
                 }
                 t->bcpId = bcpTypeId;
                 t->legacyId = legacyTypeId;
 
-                uhash_put(typeDataMap, &t->legacyId, t, &sts);
-                if (bcpTypeId != legacyTypeId) {
+                uhash_put(type_তথ্য_Map, &t->legacyId, t, &sts);
+                যদি (bcpTypeId != legacyTypeId) {
                     // different type value
-                    uhash_put(typeDataMap, &t->bcpId, t, &sts);
+                    uhash_put(type_তথ্য_Map, &t->bcpId, t, &sts);
                 }
-                if (U_FAILURE(sts)) {
-                    break;
+                যদি (U_FAILURE(sts)) {
+                    বিরতি;
                 }
 
                 // also put aliases in the map
-                if (typeAliasResByKey.isValid()) {
-                    LocalUResourceBundlePointer typeAliasDataEntry;
+                যদি (type_Alias_Res_By_চাবি.isValid()) {
+                    LocalUResourceBundlePointer type_Alias_তথ্য_Entry;
 
-                    ures_resetIterator(typeAliasResByKey.getAlias());
-                    while (ures_hasNext(typeAliasResByKey.getAlias()) && U_SUCCESS(sts)) {
+                    ures_resetIterator(type_Alias_Res_By_চাবি.getAlias());
+                    যখন (ures_has_পরবর্তী(type_Alias_Res_By_চাবি.getAlias()) && U_SUCCESS(sts)) {
                         int32_t toLen;
-                        typeAliasDataEntry.adoptInstead(ures_getNextResource(typeAliasResByKey.getAlias(), typeAliasDataEntry.orphan(), &sts));
-                        const char16_t* to = ures_getString(typeAliasDataEntry.getAlias(), &toLen, &sts);
-                        if (U_FAILURE(sts)) {
-                            break;
+                        type_Alias_তথ্য_Entry.adoptInstead(ures_get_পরবর্তী_Resource(type_Alias_Res_By_চাবি.getAlias(), type_Alias_তথ্য_Entry.orphan(), &sts));
+                        ধ্রুবক char16_t* to = ures_getString(type_Alias_তথ্য_Entry.getAlias(), &toLen, &sts);
+                        যদি (U_FAILURE(sts)) {
+                            বিরতি;
                         }
                         // check if this is an alias of canonical legacy type
-                        if (uprv_compareInvWithUChar(
+                        যদি (uprv_compareInvWithUChar(
                                 nullptr,
-                                t->legacyId.data(),
+                                t->legacyId.তথ্য(),
                                 static_cast<int32_t>(t->legacyId.size()),
                                 to,
                                 toLen) == 0) {
-                            const char* from = ures_getKey(typeAliasDataEntry.getAlias());
+                            ধ্রুবক অক্ষর* from = ures_get_চাবি(type_Alias_তথ্য_Entry.getAlias());
                             TypeAlias* alias = gTypeAliasEntries->create(TypeAlias{{}, from});
-                            if (isTZ) {
+                            যদি (isTZ) {
                                 // replace colon with slash if necessary
-                                if (uprv_strchr(from, ':') != nullptr) {
+                                যদি (uprv_strchr(from, ':') != nullptr) {
                                     U_ASSERT(from != nullptr && *from != '\0');
                                     std::string_view fromView = from;
-                                    icu::FixedString* fromBuf = gKeyTypeStringPool->create(fromView);
-                                    if (fromBuf == nullptr || fromBuf->isEmpty()) {
+                                    icu::FixedString* fromBuf = g_চাবি_Type_String_Pool->create(fromView);
+                                    যদি (fromBuf == nullptr || fromBuf->isEmpty()) {
                                         sts = U_MEMORY_ALLOCATION_ERROR;
-                                        break;
+                                        বিরতি;
                                     }
                                     std::replace(
                                             fromBuf->getAlias(),
                                             fromBuf->getAlias() + fromView.length(),
                                             ':', '/');
-                                    alias->from = {fromBuf->data(), fromView.length()};
+                                    alias->from = {fromBuf->তথ্য(), fromView.length()};
                                 }
                             }
-                            uhash_put(typeDataMap, &alias->from, t, &sts);
+                            uhash_put(type_তথ্য_Map, &alias->from, t, &sts);
                         }
                     }
-                    if (U_FAILURE(sts)) {
-                        break;
+                    যদি (U_FAILURE(sts)) {
+                        বিরতি;
                     }
                 }
 
-                if (bcpTypeAliasResByKey.isValid()) {
-                    LocalUResourceBundlePointer bcpTypeAliasDataEntry;
+                যদি (bcp_Type_Alias_Res_By_চাবি.isValid()) {
+                    LocalUResourceBundlePointer bcp_Type_Alias_তথ্য_Entry;
 
-                    ures_resetIterator(bcpTypeAliasResByKey.getAlias());
-                    while (ures_hasNext(bcpTypeAliasResByKey.getAlias()) && U_SUCCESS(sts)) {
+                    ures_resetIterator(bcp_Type_Alias_Res_By_চাবি.getAlias());
+                    যখন (ures_has_পরবর্তী(bcp_Type_Alias_Res_By_চাবি.getAlias()) && U_SUCCESS(sts)) {
                         int32_t toLen;
-                        bcpTypeAliasDataEntry.adoptInstead(ures_getNextResource(bcpTypeAliasResByKey.getAlias(), bcpTypeAliasDataEntry.orphan(), &sts));
-                        const char16_t* to = ures_getString(bcpTypeAliasDataEntry.getAlias(), &toLen, &sts);
-                        if (U_FAILURE(sts)) {
-                            break;
+                        bcp_Type_Alias_তথ্য_Entry.adoptInstead(ures_get_পরবর্তী_Resource(bcp_Type_Alias_Res_By_চাবি.getAlias(), bcp_Type_Alias_তথ্য_Entry.orphan(), &sts));
+                        ধ্রুবক char16_t* to = ures_getString(bcp_Type_Alias_তথ্য_Entry.getAlias(), &toLen, &sts);
+                        যদি (U_FAILURE(sts)) {
+                            বিরতি;
                         }
                         // check if this is an alias of bcp type
-                        if (uprv_compareInvWithUChar(
+                        যদি (uprv_compareInvWithUChar(
                                 nullptr,
-                                t->bcpId.data(),
+                                t->bcpId.তথ্য(),
                                 static_cast<int32_t>(t->bcpId.size()),
                                 to,
                                 toLen) == 0) {
-                            const char* from = ures_getKey(bcpTypeAliasDataEntry.getAlias());
+                            ধ্রুবক অক্ষর* from = ures_get_চাবি(bcp_Type_Alias_তথ্য_Entry.getAlias());
                             TypeAlias* alias = gTypeAliasEntries->create(TypeAlias{{}, from});
-                            uhash_put(typeDataMap, &alias->from, t, &sts);
+                            uhash_put(type_তথ্য_Map, &alias->from, t, &sts);
                         }
                     }
-                    if (U_FAILURE(sts)) {
-                        break;
+                    যদি (U_FAILURE(sts)) {
+                        বিরতি;
                     }
                 }
             }
         }
-        if (U_FAILURE(sts)) {
-            break;
+        যদি (U_FAILURE(sts)) {
+            বিরতি;
         }
 
-        LocExtKeyData* keyData = gLocExtKeyDataEntries->create();
-        if (keyData == nullptr) {
+        Loc_Ext_চাবি_তথ্য* চাবি_তথ্য = g_Loc_Ext_চাবি_তথ্য_Entries->create();
+        যদি (চাবি_তথ্য == nullptr) {
             sts = U_MEMORY_ALLOCATION_ERROR;
-            break;
+            বিরতি;
         }
-        keyData->bcpId = bcpKeyId;
-        keyData->legacyId = legacyKeyId;
-        keyData->specialTypes = specialTypes;
-        keyData->typeMap.adoptInstead(typeDataMap);
+        চাবি_তথ্য->bcpId = bcp_চাবি_Id;
+        চাবি_তথ্য->legacyId = legacy_চাবি_Id;
+        চাবি_তথ্য->specialTypes = specialTypes;
+        চাবি_তথ্য->typeMap.adoptInstead(type_তথ্য_Map);
 
-        uhash_put(gLocExtKeyMap, &keyData->legacyId, keyData, &sts);
-        if (legacyKeyId != bcpKeyId) {
+        uhash_put(g_Loc_Ext_চাবি_Map, &চাবি_তথ্য->legacyId, চাবি_তথ্য, &sts);
+        যদি (legacy_চাবি_Id != bcp_চাবি_Id) {
             // different key value
-            uhash_put(gLocExtKeyMap, &keyData->bcpId, keyData, &sts);
+            uhash_put(g_Loc_Ext_চাবি_Map, &চাবি_তথ্য->bcpId, চাবি_তথ্য, &sts);
         }
-        if (U_FAILURE(sts)) {
-            break;
+        যদি (U_FAILURE(sts)) {
+            বিরতি;
         }
     }
 }
 
-bool
+যৌক্তিক
 init() {
     UErrorCode sts = U_ZERO_ERROR;
-    umtx_initOnce(gLocExtKeyMapInitOnce, &initFromResourceBundle, sts);
-    if (U_FAILURE(sts)) {
-        return false;
+    umtx_initOnce(g_Loc_Ext_চাবি_Map_Init_Once, &initFromResourceBundle, sts);
+    যদি (U_FAILURE(sts)) {
+        ফেরত মিথ্যা;
     }
-    return true;
+    ফেরত সত্য;
 }
 
-bool
+যৌক্তিক
 isSpecialTypeCodepoints(std::string_view val) {
     int32_t subtagLen = 0;
-    for (char c : val) {
-        if (c == '-') {
-            if (subtagLen < 4 || subtagLen > 6) {
-                return false;
+    জন্য (অক্ষর c : val) {
+        যদি (c == '-') {
+            যদি (subtagLen < 4 || subtagLen > 6) {
+                ফেরত মিথ্যা;
             }
             subtagLen = 0;
-        } else if ((c >= '0' && c <= '9') ||
+        } অন্যথা যদি ((c >= '0' && c <= '9') ||
                     (c >= 'A' && c <= 'F') || // A-F/a-f are contiguous
                     (c >= 'a' && c <= 'f')) { // also in EBCDIC
             subtagLen++;
-        } else {
-            return false;
+        } অন্যথা {
+            ফেরত মিথ্যা;
         }
     }
-    return subtagLen >= 4 && subtagLen <= 6;
+    ফেরত subtagLen >= 4 && subtagLen <= 6;
 }
 
-bool
+যৌক্তিক
 isSpecialTypeReorderCode(std::string_view val) {
     int32_t subtagLen = 0;
-    for (char c : val) {
-        if (c == '-') {
-            if (subtagLen < 3 || subtagLen > 8) {
-                return false;
+    জন্য (অক্ষর c : val) {
+        যদি (c == '-') {
+            যদি (subtagLen < 3 || subtagLen > 8) {
+                ফেরত মিথ্যা;
             }
             subtagLen = 0;
-        } else if (uprv_isASCIILetter(c)) {
+        } অন্যথা যদি (uprv_isASCIILetter(c)) {
             subtagLen++;
-        } else {
-            return false;
+        } অন্যথা {
+            ফেরত মিথ্যা;
         }
     }
-    return subtagLen >= 3 && subtagLen <= 8;
+    ফেরত subtagLen >= 3 && subtagLen <= 8;
 }
 
-bool
-isSpecialTypeRgKeyValue(std::string_view val) {
+যৌক্তিক
+is_Special_Type_Rg_চাবি_মান(std::string_view val) {
     int32_t subtagLen = 0;
-    for (char c : val) {
-        if ((subtagLen < 2 && uprv_isASCIILetter(c)) ||
+    জন্য (অক্ষর c : val) {
+        যদি ((subtagLen < 2 && uprv_isASCIILetter(c)) ||
             (subtagLen >= 2 && (c == 'Z' || c == 'z'))) {
             subtagLen++;
-        } else {
-            return false;
+        } অন্যথা {
+            ফেরত মিথ্যা;
         }
     }
-    return subtagLen == 6;
+    ফেরত subtagLen == 6;
 }
 
 }  // namespace
 
 U_EXPORT std::optional<std::string_view>
-ulocimp_toBcpKey(std::string_view key) {
-    if (!init()) {
-        return std::nullopt;
+ulocimp_to_Bcp_চাবি(std::string_view চাবি) {
+    যদি (!init()) {
+        ফেরত std::nullopt;
     }
 
-    LocExtKeyData* keyData = static_cast<LocExtKeyData*>(uhash_get(gLocExtKeyMap, &key));
-    if (keyData != nullptr) {
-        return keyData->bcpId;
+    Loc_Ext_চাবি_তথ্য* চাবি_তথ্য = static_cast<Loc_Ext_চাবি_তথ্য*>(uhash_get(g_Loc_Ext_চাবি_Map, &চাবি));
+    যদি (চাবি_তথ্য != nullptr) {
+        ফেরত চাবি_তথ্য->bcpId;
     }
 
-    return std::nullopt;
+    ফেরত std::nullopt;
 }
 
 U_EXPORT std::optional<std::string_view>
-ulocimp_toLegacyKey(std::string_view key) {
-    if (!init()) {
-        return std::nullopt;
+ulocimp_to_Legacy_চাবি(std::string_view চাবি) {
+    যদি (!init()) {
+        ফেরত std::nullopt;
     }
 
-    LocExtKeyData* keyData = static_cast<LocExtKeyData*>(uhash_get(gLocExtKeyMap, &key));
-    if (keyData != nullptr) {
-        return keyData->legacyId;
+    Loc_Ext_চাবি_তথ্য* চাবি_তথ্য = static_cast<Loc_Ext_চাবি_তথ্য*>(uhash_get(g_Loc_Ext_চাবি_Map, &চাবি));
+    যদি (চাবি_তথ্য != nullptr) {
+        ফেরত চাবি_তথ্য->legacyId;
     }
 
-    return std::nullopt;
+    ফেরত std::nullopt;
 }
 
 U_EXPORT std::optional<std::string_view>
-ulocimp_toBcpType(std::string_view key, std::string_view type U_LIFETIME_BOUND) {
-    if (!init()) {
-        return std::nullopt;
+ulocimp_toBcpType(std::string_view চাবি, std::string_view type U_LIFETIME_BOUND) {
+    যদি (!init()) {
+        ফেরত std::nullopt;
     }
 
-    LocExtKeyData* keyData = static_cast<LocExtKeyData*>(uhash_get(gLocExtKeyMap, &key));
-    if (keyData != nullptr) {
-        LocExtType* t = static_cast<LocExtType*>(uhash_get(keyData->typeMap.getAlias(), &type));
-        if (t != nullptr) {
-            return t->bcpId;
+    Loc_Ext_চাবি_তথ্য* চাবি_তথ্য = static_cast<Loc_Ext_চাবি_তথ্য*>(uhash_get(g_Loc_Ext_চাবি_Map, &চাবি));
+    যদি (চাবি_তথ্য != nullptr) {
+        LocExtType* t = static_cast<LocExtType*>(uhash_get(চাবি_তথ্য->typeMap.getAlias(), &type));
+        যদি (t != nullptr) {
+            ফেরত t->bcpId;
         }
-        if (keyData->specialTypes != SPECIALTYPE_NONE) {
-            bool matched = false;
-            if (keyData->specialTypes & SPECIALTYPE_CODEPOINTS) {
+        যদি (চাবি_তথ্য->specialTypes != SPECIALTYPE_NONE) {
+            যৌক্তিক matched = মিথ্যা;
+            যদি (চাবি_তথ্য->specialTypes & SPECIALTYPE_CODEPOINTS) {
                 matched = isSpecialTypeCodepoints(type);
             }
-            if (!matched && keyData->specialTypes & SPECIALTYPE_REORDER_CODE) {
+            যদি (!matched && চাবি_তথ্য->specialTypes & SPECIALTYPE_REORDER_CODE) {
                 matched = isSpecialTypeReorderCode(type);
             }
-            if (!matched && keyData->specialTypes & SPECIALTYPE_RG_KEY_VALUE) {
-                matched = isSpecialTypeRgKeyValue(type);
+            যদি (!matched && চাবি_তথ্য->specialTypes & SPECIALTYPE_RG_চাবি_মান) {
+                matched = is_Special_Type_Rg_চাবি_মান(type);
             }
-            if (matched) {
-                return type;
+            যদি (matched) {
+                ফেরত type;
             }
         }
     }
 
-    return std::nullopt;
+    ফেরত std::nullopt;
 }
 
 
 U_EXPORT std::optional<std::string_view>
-ulocimp_toLegacyType(std::string_view key, std::string_view type U_LIFETIME_BOUND) {
-    if (!init()) {
-        return std::nullopt;
+ulocimp_toLegacyType(std::string_view চাবি, std::string_view type U_LIFETIME_BOUND) {
+    যদি (!init()) {
+        ফেরত std::nullopt;
     }
 
-    LocExtKeyData* keyData = static_cast<LocExtKeyData*>(uhash_get(gLocExtKeyMap, &key));
-    if (keyData != nullptr) {
-        LocExtType* t = static_cast<LocExtType*>(uhash_get(keyData->typeMap.getAlias(), &type));
-        if (t != nullptr) {
-            return t->legacyId;
+    Loc_Ext_চাবি_তথ্য* চাবি_তথ্য = static_cast<Loc_Ext_চাবি_তথ্য*>(uhash_get(g_Loc_Ext_চাবি_Map, &চাবি));
+    যদি (চাবি_তথ্য != nullptr) {
+        LocExtType* t = static_cast<LocExtType*>(uhash_get(চাবি_তথ্য->typeMap.getAlias(), &type));
+        যদি (t != nullptr) {
+            ফেরত t->legacyId;
         }
-        if (keyData->specialTypes != SPECIALTYPE_NONE) {
-            bool matched = false;
-            if (keyData->specialTypes & SPECIALTYPE_CODEPOINTS) {
+        যদি (চাবি_তথ্য->specialTypes != SPECIALTYPE_NONE) {
+            যৌক্তিক matched = মিথ্যা;
+            যদি (চাবি_তথ্য->specialTypes & SPECIALTYPE_CODEPOINTS) {
                 matched = isSpecialTypeCodepoints(type);
             }
-            if (!matched && keyData->specialTypes & SPECIALTYPE_REORDER_CODE) {
+            যদি (!matched && চাবি_তথ্য->specialTypes & SPECIALTYPE_REORDER_CODE) {
                 matched = isSpecialTypeReorderCode(type);
             }
-            if (!matched && keyData->specialTypes & SPECIALTYPE_RG_KEY_VALUE) {
-                matched = isSpecialTypeRgKeyValue(type);
+            যদি (!matched && চাবি_তথ্য->specialTypes & SPECIALTYPE_RG_চাবি_মান) {
+                matched = is_Special_Type_Rg_চাবি_মান(type);
             }
-            if (matched) {
-                return type;
+            যদি (matched) {
+                ফেরত type;
             }
         }
     }
 
-    return std::nullopt;
+    ফেরত std::nullopt;
 }

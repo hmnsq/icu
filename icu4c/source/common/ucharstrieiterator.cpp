@@ -14,22 +14,22 @@
 *   created by: Markus W. Scherer
 */
 
-#include "unicode/utypes.h"
-#include "unicode/ucharstrie.h"
-#include "unicode/unistr.h"
-#include "uvectr32.h"
+#অন্তর্ভাব "unicode/utypes.h"
+#অন্তর্ভাব "unicode/ucharstrie.h"
+#অন্তর্ভাব "unicode/unistr.h"
+#অন্তর্ভাব "uvectr32.h"
 
 U_NAMESPACE_BEGIN
 
-UCharsTrie::Iterator::Iterator(ConstChar16Ptr trieUChars U_LIFETIME_BOUND, int32_t maxStringLength,
+UCharsTrie::Iterator::Iterator(ConstChar16Ptr trieUChars U_LIFETIME_BOUND, int32_t max_String_দৈর্ঘ্য,
                                UErrorCode &errorCode)
         : uchars_(trieUChars),
           pos_(uchars_), initialPos_(uchars_),
-          remainingMatchLength_(-1), initialRemainingMatchLength_(-1),
-          skipValue_(false),
-          maxLength_(maxStringLength), value_(0), stack_(nullptr) {
-    if(U_FAILURE(errorCode)) {
-        return;
+          remaining_Match_দৈর্ঘ্য(-1), initial_Remaining_Match_দৈর্ঘ্য(-1),
+          skip_মান_2(মিথ্যা),
+          max_দৈর্ঘ্য(max_String_দৈর্ঘ্য), মান(0), স্তূপ(nullptr) {
+    যদি(U_FAILURE(errorCode)) {
+        ফেরত;
     }
     // stack_ is a pointer so that it's easy to turn ucharstrie.h into
     // a public API header for which we would want it to depend only on
@@ -37,143 +37,143 @@ UCharsTrie::Iterator::Iterator(ConstChar16Ptr trieUChars U_LIFETIME_BOUND, int32
     // Unlike UCharsTrie itself, its Iterator performs memory allocations anyway
     // via the UnicodeString and UVector32 implementations, so this additional
     // cost is minimal.
-    stack_=new UVector32(errorCode);
-    if(stack_==nullptr) {
+    স্তূপ=নতুন UVector32(errorCode);
+    যদি(স্তূপ==nullptr) {
         errorCode=U_MEMORY_ALLOCATION_ERROR;
     }
 }
 
-UCharsTrie::Iterator::Iterator(const UCharsTrie &trie, int32_t maxStringLength,
+UCharsTrie::Iterator::Iterator(ধ্রুবক UCharsTrie &trie, int32_t max_String_দৈর্ঘ্য,
                                UErrorCode &errorCode)
         : uchars_(trie.uchars_), pos_(trie.pos_), initialPos_(trie.pos_),
-          remainingMatchLength_(trie.remainingMatchLength_),
-          initialRemainingMatchLength_(trie.remainingMatchLength_),
-          skipValue_(false),
-          maxLength_(maxStringLength), value_(0), stack_(nullptr) {
-    if(U_FAILURE(errorCode)) {
-        return;
+          remaining_Match_দৈর্ঘ্য(trie.remaining_Match_দৈর্ঘ্য),
+          initial_Remaining_Match_দৈর্ঘ্য(trie.remaining_Match_দৈর্ঘ্য),
+          skip_মান_2(মিথ্যা),
+          max_দৈর্ঘ্য(max_String_দৈর্ঘ্য), মান(0), স্তূপ(nullptr) {
+    যদি(U_FAILURE(errorCode)) {
+        ফেরত;
     }
-    stack_=new UVector32(errorCode);
-    if(U_FAILURE(errorCode)) {
-        return;
+    স্তূপ=নতুন UVector32(errorCode);
+    যদি(U_FAILURE(errorCode)) {
+        ফেরত;
     }
-    if(stack_==nullptr) {
+    যদি(স্তূপ==nullptr) {
         errorCode=U_MEMORY_ALLOCATION_ERROR;
-        return;
+        ফেরত;
     }
-    int32_t length=remainingMatchLength_;  // Actual remaining match length minus 1.
-    if(length>=0) {
+    int32_t length=remaining_Match_দৈর্ঘ্য;  // Actual remaining match length minus 1.
+    যদি(length>=0) {
         // Pending linear-match node, append remaining UChars to str_.
         ++length;
-        if(maxLength_>0 && length>maxLength_) {
-            length=maxLength_;  // This will leave remainingMatchLength>=0 as a signal.
+        যদি(max_দৈর্ঘ্য>0 && length>max_দৈর্ঘ্য) {
+            length=max_দৈর্ঘ্য;  // This will leave remainingMatchLength>=0 as a signal.
         }
         str_.append(pos_, length);
         pos_+=length;
-        remainingMatchLength_-=length;
+        remaining_Match_দৈর্ঘ্য-=length;
     }
 }
 
 UCharsTrie::Iterator::~Iterator() {
-    delete stack_;
+    delete স্তূপ;
 }
 
 UCharsTrie::Iterator&
 UCharsTrie::Iterator::reset() U_LIFETIME_BOUND {
     pos_=initialPos_;
-    remainingMatchLength_=initialRemainingMatchLength_;
-    skipValue_=false;
-    int32_t length=remainingMatchLength_+1;  // Remaining match length.
-    if(maxLength_>0 && length>maxLength_) {
-        length=maxLength_;
+    remaining_Match_দৈর্ঘ্য=initial_Remaining_Match_দৈর্ঘ্য;
+    skip_মান_2=মিথ্যা;
+    int32_t length=remaining_Match_দৈর্ঘ্য+1;  // Remaining match length.
+    যদি(max_দৈর্ঘ্য>0 && length>max_দৈর্ঘ্য) {
+        length=max_দৈর্ঘ্য;
     }
     str_.truncate(length);
     pos_+=length;
-    remainingMatchLength_-=length;
-    stack_->setSize(0);
-    return *this;
+    remaining_Match_দৈর্ঘ্য-=length;
+    স্তূপ->set_আকার(0);
+    ফেরত *এই;
 }
 
 UBool
-UCharsTrie::Iterator::hasNext() const { return pos_!=nullptr || !stack_->isEmpty(); }
+UCharsTrie::Iterator::has_পরবর্তী() ধ্রুবক { ফেরত pos_!=nullptr || !স্তূপ->isEmpty(); }
 
 UBool
 UCharsTrie::Iterator::next(UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return false;
+    যদি(U_FAILURE(errorCode)) {
+        ফেরত মিথ্যা;
     }
-    const char16_t *pos=pos_;
-    if(pos==nullptr) {
-        if(stack_->isEmpty()) {
-            return false;
+    ধ্রুবক char16_t *pos=pos_;
+    যদি(pos==nullptr) {
+        যদি(স্তূপ->isEmpty()) {
+            ফেরত মিথ্যা;
         }
         // Pop the state off the stack and continue with the next outbound edge of
         // the branch node.
-        int32_t stackSize=stack_->size();
-        int32_t length=stack_->elementAti(stackSize-1);
-        pos=uchars_+stack_->elementAti(stackSize-2);
-        stack_->setSize(stackSize-2);
+        int32_t স্তূপ_আকার=স্তূপ->size();
+        int32_t length=স্তূপ->elementAti(স্তূপ_আকার-1);
+        pos=uchars_+স্তূপ->elementAti(স্তূপ_আকার-2);
+        স্তূপ->set_আকার(স্তূপ_আকার-2);
         str_.truncate(length&0xffff);
         length = static_cast<int32_t>(static_cast<uint32_t>(length) >> 16);
-        if(length>1) {
-            pos=branchNext(pos, length, errorCode);
-            if(pos==nullptr) {
-                return true;  // Reached a final value.
+        যদি(length>1) {
+            pos=branch_পরবর্তী(pos, length, errorCode);
+            যদি(pos==nullptr) {
+                ফেরত সত্য;  // Reached a final value.
             }
-        } else {
+        } অন্যথা {
             str_.append(*pos++);
         }
     }
-    if(remainingMatchLength_>=0) {
+    যদি(remaining_Match_দৈর্ঘ্য>=0) {
         // We only get here if we started in a pending linear-match node
         // with more than maxLength remaining units.
-        return truncateAndStop();
+        ফেরত truncateAndStop();
     }
-    for(;;) {
-        int32_t node=*pos++;
-        if(node>=kMinValueLead) {
-            if(skipValue_) {
-                pos=skipNodeValue(pos, node);
-                node&=kNodeTypeMask;
-                skipValue_=false;
-            } else {
+    জন্য(;;) {
+        int32_t গ্রন্থি=*pos++;
+        যদি(গ্রন্থি>=k_Min_মান_Lead) {
+            যদি(skip_মান_2) {
+                pos=skip_গ্রন্থি_মান(pos, গ্রন্থি);
+                গ্রন্থি&=k_গ্রন্থি_Type_Mask;
+                skip_মান_2=মিথ্যা;
+            } অন্যথা {
                 // Deliver value for the string so far.
-                UBool isFinal = static_cast<UBool>(node >> 15);
-                if(isFinal) {
-                    value_=readValue(pos, node&0x7fff);
-                } else {
-                    value_=readNodeValue(pos, node);
+                UBool isFinal = static_cast<UBool>(গ্রন্থি >> 15);
+                যদি(isFinal) {
+                    মান=read_মান(pos, গ্রন্থি&0x7fff);
+                } অন্যথা {
+                    মান=read_গ্রন্থি_মান(pos, গ্রন্থি);
                 }
-                if(isFinal || (maxLength_>0 && str_.length()==maxLength_)) {
+                যদি(isFinal || (max_দৈর্ঘ্য>0 && str_.length()==max_দৈর্ঘ্য)) {
                     pos_=nullptr;
-                } else {
+                } অন্যথা {
                     // We cannot skip the value right here because it shares its
                     // lead unit with a match node which we have to evaluate
                     // next time.
                     // Instead, keep pos_ on the node lead unit itself.
                     pos_=pos-1;
-                    skipValue_=true;
+                    skip_মান_2=সত্য;
                 }
-                return true;
+                ফেরত সত্য;
             }
         }
-        if(maxLength_>0 && str_.length()==maxLength_) {
-            return truncateAndStop();
+        যদি(max_দৈর্ঘ্য>0 && str_.length()==max_দৈর্ঘ্য) {
+            ফেরত truncateAndStop();
         }
-        if(node<kMinLinearMatch) {
-            if(node==0) {
-                node=*pos++;
+        যদি(গ্রন্থি<kMinLinearMatch) {
+            যদি(গ্রন্থি==0) {
+                গ্রন্থি=*pos++;
             }
-            pos=branchNext(pos, node+1, errorCode);
-            if(pos==nullptr) {
-                return true;  // Reached a final value.
+            pos=branch_পরবর্তী(pos, গ্রন্থি+1, errorCode);
+            যদি(pos==nullptr) {
+                ফেরত সত্য;  // Reached a final value.
             }
-        } else {
+        } অন্যথা {
             // Linear-match node, append length units to str_.
-            int32_t length=node-kMinLinearMatch+1;
-            if(maxLength_>0 && str_.length()+length>maxLength_) {
-                str_.append(pos, maxLength_-str_.length());
-                return truncateAndStop();
+            int32_t length=গ্রন্থি-kMinLinearMatch+1;
+            যদি(max_দৈর্ঘ্য>0 && str_.length()+length>max_দৈর্ঘ্য) {
+                str_.append(pos, max_দৈর্ঘ্য-str_.length());
+                ফেরত truncateAndStop();
             }
             str_.append(pos, length);
             pos+=length;
@@ -182,15 +182,15 @@ UCharsTrie::Iterator::next(UErrorCode &errorCode) {
 }
 
 // Branch node, needs to take the first outbound edge and push state for the rest.
-const char16_t*
-UCharsTrie::Iterator::branchNext(const char16_t* pos U_LIFETIME_BOUND,
+ধ্রুবক char16_t*
+UCharsTrie::Iterator::branch_পরবর্তী(ধ্রুবক char16_t* pos U_LIFETIME_BOUND,
                                  int32_t length,
                                  UErrorCode& errorCode) {
-    while(length>kMaxBranchLinearSubNodeLength) {
+    যখন(length>k_Max_Branch_Linear_Sub_গ্রন্থি_দৈর্ঘ্য) {
         ++pos;  // ignore the comparison unit
         // Push state for the greater-or-equal edge.
-        stack_->addElement(static_cast<int32_t>(skipDelta(pos) - uchars_), errorCode);
-        stack_->addElement(((length-(length>>1))<<16)|str_.length(), errorCode);
+        স্তূপ->addElement(static_cast<int32_t>(skipDelta(pos) - uchars_), errorCode);
+        স্তূপ->addElement(((length-(length>>1))<<16)|str_.length(), errorCode);
         // Follow the less-than edge.
         length>>=1;
         pos=jumpByDelta(pos);
@@ -198,19 +198,19 @@ UCharsTrie::Iterator::branchNext(const char16_t* pos U_LIFETIME_BOUND,
     // List of key-value pairs where values are either final values or jump deltas.
     // Read the first (key, value) pair.
     char16_t trieUnit=*pos++;
-    int32_t node=*pos++;
-    UBool isFinal = static_cast<UBool>(node >> 15);
-    int32_t value=readValue(pos, node&=0x7fff);
-    pos=skipValue(pos, node);
-    stack_->addElement(static_cast<int32_t>(pos - uchars_), errorCode);
-    stack_->addElement(((length-1)<<16)|str_.length(), errorCode);
+    int32_t গ্রন্থি=*pos++;
+    UBool isFinal = static_cast<UBool>(গ্রন্থি >> 15);
+    int32_t value=read_মান(pos, গ্রন্থি&=0x7fff);
+    pos=skip_মান(pos, গ্রন্থি);
+    স্তূপ->addElement(static_cast<int32_t>(pos - uchars_), errorCode);
+    স্তূপ->addElement(((length-1)<<16)|str_.length(), errorCode);
     str_.append(trieUnit);
-    if(isFinal) {
+    যদি(isFinal) {
         pos_=nullptr;
-        value_=value;
-        return nullptr;
-    } else {
-        return pos+value;
+        মান=value;
+        ফেরত nullptr;
+    } অন্যথা {
+        ফেরত pos+value;
     }
 }
 

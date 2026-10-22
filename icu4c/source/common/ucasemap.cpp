@@ -18,29 +18,29 @@
 *   Case mapping service object and functions using it.
 */
 
-#include "unicode/utypes.h"
-#include "unicode/brkiter.h"
-#include "unicode/bytestream.h"
-#include "unicode/casemap.h"
-#include "unicode/edits.h"
-#include "unicode/stringoptions.h"
-#include "unicode/stringpiece.h"
-#include "unicode/ubrk.h"
-#include "unicode/uloc.h"
-#include "unicode/ustring.h"
-#include "unicode/ucasemap.h"
-#if !UCONFIG_NO_BREAK_ITERATION
-#include "unicode/utext.h"
+#অন্তর্ভাব "unicode/utypes.h"
+#অন্তর্ভাব "unicode/brkiter.h"
+#অন্তর্ভাব "unicode/bytestream.h"
+#অন্তর্ভাব "unicode/casemap.h"
+#অন্তর্ভাব "unicode/edits.h"
+#অন্তর্ভাব "unicode/stringoptions.h"
+#অন্তর্ভাব "unicode/stringpiece.h"
+#অন্তর্ভাব "unicode/ubrk.h"
+#অন্তর্ভাব "unicode/uloc.h"
+#অন্তর্ভাব "unicode/ustring.h"
+#অন্তর্ভাব "unicode/ucasemap.h"
+#যদি !UCONFIG_NO_BREAK_ITERATION
+#অন্তর্ভাব "unicode/utext.h"
 #endif
-#include "unicode/utf.h"
-#include "unicode/utf8.h"
-#include "unicode/utf16.h"
-#include "bytesinkutil.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "uassert.h"
-#include "ucase.h"
-#include "ucasemap_imp.h"
+#অন্তর্ভাব "unicode/utf.h"
+#অন্তর্ভাব "unicode/utf8.h"
+#অন্তর্ভাব "unicode/utf16.h"
+#অন্তর্ভাব "bytesinkutil.h"
+#অন্তর্ভাব "cmemory.h"
+#অন্তর্ভাব "cstring.h"
+#অন্তর্ভাব "uassert.h"
+#অন্তর্ভাব "ucase.h"
+#অন্তর্ভাব "ucasemap_imp.h"
 
 U_NAMESPACE_USE
 
@@ -51,16 +51,16 @@ U_NAMESPACE_USE
 
 U_NAMESPACE_BEGIN
 
-UCaseMapImpl::UCaseMapImpl(const char *localeID, uint32_t opts, UErrorCode *pErrorCode) :
-#if !UCONFIG_NO_BREAK_ITERATION
+UCaseMapImpl::UCaseMapImpl(ধ্রুবক অক্ষর *localeID, uint32_t opts, UErrorCode *pErrorCode) :
+#যদি !UCONFIG_NO_BREAK_ITERATION
         iter(nullptr),
 #endif
         caseLocale(UCASE_LOC_UNKNOWN), options(opts) {
-    ucasemap_setLocale(reinterpret_cast<UCaseMap *>(this), localeID, pErrorCode);
+    ucasemap_setLocale(reinterpret_cast<UCaseMap *>(এই), localeID, pErrorCode);
 }
 
 UCaseMapImpl::~UCaseMapImpl() {
-#if !UCONFIG_NO_BREAK_ITERATION
+#যদি !UCONFIG_NO_BREAK_ITERATION
     delete iter;
 #endif
 }
@@ -68,72 +68,72 @@ UCaseMapImpl::~UCaseMapImpl() {
 U_NAMESPACE_END
 
 U_CAPI UCaseMap * U_EXPORT2
-ucasemap_open(const char *locale, uint32_t options, UErrorCode *pErrorCode) {
-    if(U_FAILURE(*pErrorCode)) {
-        return nullptr;
+ucasemap_open(ধ্রুবক অক্ষর *locale, uint32_t options, UErrorCode *pErrorCode) {
+    যদি(U_FAILURE(*pErrorCode)) {
+        ফেরত nullptr;
     }
-    UCaseMapImpl *csm = new UCaseMapImpl(locale, options, pErrorCode);
-    if(csm==nullptr) {
+    UCaseMapImpl *csm = নতুন UCaseMapImpl(locale, options, pErrorCode);
+    যদি(csm==nullptr) {
         *pErrorCode = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
-    } else if (U_FAILURE(*pErrorCode)) {
+        ফেরত nullptr;
+    } অন্যথা যদি (U_FAILURE(*pErrorCode)) {
         delete csm;
-        return nullptr;
+        ফেরত nullptr;
     }
-    return reinterpret_cast<UCaseMap *>(csm);
+    ফেরত reinterpret_cast<UCaseMap *>(csm);
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI শূন্য U_EXPORT2
 ucasemap_close(UCaseMap *csm) {
     delete reinterpret_cast<UCaseMapImpl *>(csm);
 }
 
-U_CAPI const char* U_EXPORT2
-ucasemap_getLocale(const UCaseMap* csm U_LIFETIME_BOUND) {
-    return reinterpret_cast<const UCaseMapImpl *>(csm)->locale;
+U_CAPI ধ্রুবক অক্ষর* U_EXPORT2
+ucasemap_getLocale(ধ্রুবক UCaseMap* csm U_LIFETIME_BOUND) {
+    ফেরত reinterpret_cast<ধ্রুবক UCaseMapImpl *>(csm)->locale;
 }
 
 U_CAPI uint32_t U_EXPORT2
-ucasemap_getOptions(const UCaseMap *csm) {
-    return reinterpret_cast<const UCaseMapImpl *>(csm)->options;
+ucasemap_getOptions(ধ্রুবক UCaseMap *csm) {
+    ফেরত reinterpret_cast<ধ্রুবক UCaseMapImpl *>(csm)->options;
 }
 
-U_CAPI void U_EXPORT2
-ucasemap_setLocale(UCaseMap *csm, const char *locale, UErrorCode *pErrorCode) {
-    if(U_FAILURE(*pErrorCode)) {
-        return;
+U_CAPI শূন্য U_EXPORT2
+ucasemap_setLocale(UCaseMap *csm, ধ্রুবক অক্ষর *locale, UErrorCode *pErrorCode) {
+    যদি(U_FAILURE(*pErrorCode)) {
+        ফেরত;
     }
     auto *impl = reinterpret_cast<UCaseMapImpl *>(csm);
-    if (locale != nullptr && *locale == 0) {
+    যদি (locale != nullptr && *locale == 0) {
         impl->locale[0] = 0;
-        impl->caseLocale = UCASE_LOC_ROOT;
-        return;
+        impl->caseLocale = UCASE_LOC_মূল;
+        ফেরত;
     }
 
-    UErrorCode bufferStatus = U_ZERO_ERROR;
-    int32_t length=uloc_getName(locale, impl->locale, (int32_t)sizeof(impl->locale), &bufferStatus);
-    if(bufferStatus==U_BUFFER_OVERFLOW_ERROR || (U_SUCCESS(bufferStatus) && length==sizeof(impl->locale))) {
-        bufferStatus = U_ZERO_ERROR;
+    UErrorCode বাফার_Status = U_ZERO_ERROR;
+    int32_t length=uloc_getName(locale, impl->locale, (int32_t)আকার(impl->locale), &বাফার_Status);
+    যদি(বাফার_Status==U_বাফার_OVERFLOW_ERROR || (U_SUCCESS(বাফার_Status) && length==আকার(impl->locale))) {
+        বাফার_Status = U_ZERO_ERROR;
         /* we only really need the language code for case mappings */
-        length=uloc_getLanguage(locale, impl->locale, (int32_t)sizeof(impl->locale), &bufferStatus);
+        length=uloc_getLanguage(locale, impl->locale, (int32_t)আকার(impl->locale), &বাফার_Status);
     }
-    if(U_FAILURE(bufferStatus)) {
-        *pErrorCode=bufferStatus;
-    } else if(length==sizeof(impl->locale)) {
-        *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+    যদি(U_FAILURE(বাফার_Status)) {
+        *pErrorCode=বাফার_Status;
+    } অন্যথা যদি(length==আকার(impl->locale)) {
+        *pErrorCode=U_বাফার_OVERFLOW_ERROR;
     }
-    if(U_SUCCESS(*pErrorCode)) {     
+    যদি(U_SUCCESS(*pErrorCode)) {     
         impl->caseLocale = ucase_getCaseLocale(impl->locale);
-    } else {
+    } অন্যথা {
         impl->locale[0]=0;
-        impl->caseLocale = UCASE_LOC_ROOT;
+        impl->caseLocale = UCASE_LOC_মূল;
     }
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI শূন্য U_EXPORT2
 ucasemap_setOptions(UCaseMap *csm, uint32_t options, UErrorCode *pErrorCode) {
-    if(U_FAILURE(*pErrorCode)) {
-        return;
+    যদি(U_FAILURE(*pErrorCode)) {
+        ফেরত;
     }
     reinterpret_cast<UCaseMapImpl *>(csm)->options=options;
 }
@@ -142,294 +142,294 @@ ucasemap_setOptions(UCaseMap *csm, uint32_t options, UErrorCode *pErrorCode) {
 
 /* TODO(markus): Move to a new, separate utf8case.cpp file. */
 
-namespace {
+নামাকাশ {
 
 /* append a full case mapping result, see UCASE_MAX_STRING_LENGTH */
-inline UBool
-appendResult(int32_t cpLength, int32_t result, const char16_t *s,
+অন্তঃরেখ UBool
+append_ফলাফল(int32_t cp_দৈর্ঘ্য, int32_t ফলাফল, ধ্রুবক char16_t *s,
              ByteSink &sink, uint32_t options, icu::Edits *edits, UErrorCode &errorCode) {
     U_ASSERT(U_SUCCESS(errorCode));
 
     /* decode the result */
-    if(result<0) {
+    যদি(ফলাফল<0) {
         /* (not) original code point */
-        if(edits!=nullptr) {
-            edits->addUnchanged(cpLength);
+        যদি(edits!=nullptr) {
+            edits->addUnchanged(cp_দৈর্ঘ্য);
         }
-        if((options & U_OMIT_UNCHANGED_TEXT) == 0) {
-            ByteSinkUtil::appendCodePoint(cpLength, ~result, sink);
+        যদি((options & U_OMIT_UNCHANGED_TEXT) == 0) {
+            ByteSinkUtil::appendCodePoint(cp_দৈর্ঘ্য, ~ফলাফল, sink);
         }
-    } else {
-        if(result<=UCASE_MAX_STRING_LENGTH) {
+    } অন্যথা {
+        যদি(ফলাফল<=UCASE_MAX_STRING_দৈর্ঘ্য) {
             // string: "result" is the UTF-16 length
-            return ByteSinkUtil::appendChange(cpLength, s, result, sink, edits, errorCode);
-        } else {
-            ByteSinkUtil::appendCodePoint(cpLength, result, sink, edits);
+            ফেরত ByteSinkUtil::appendChange(cp_দৈর্ঘ্য, s, ফলাফল, sink, edits, errorCode);
+        } অন্যথা {
+            ByteSinkUtil::appendCodePoint(cp_দৈর্ঘ্য, ফলাফল, sink, edits);
         }
     }
-    return true;
+    ফেরত সত্য;
 }
 
 // See unicode/utf8.h U8_APPEND_UNSAFE().
-inline uint8_t getTwoByteLead(UChar32 c) { return static_cast<uint8_t>((c >> 6) | 0xc0); }
-inline uint8_t getTwoByteTrail(UChar32 c) { return static_cast<uint8_t>((c & 0x3f) | 0x80); }
+অন্তঃরেখ uint8_t getTwoByteLead(UChar32 c) { ফেরত static_cast<uint8_t>((c >> 6) | 0xc0); }
+অন্তঃরেখ uint8_t getTwoByteTrail(UChar32 c) { ফেরত static_cast<uint8_t>((c & 0x3f) | 0x80); }
 
 UChar32 U_CALLCONV
-utf8_caseContextIterator(void *context, int8_t dir) {
+utf8_caseContextIterator(শূন্য *context, int8_t dir) {
     UCaseContext* csc = static_cast<UCaseContext*>(context);
     UChar32 c;
 
-    if(dir<0) {
+    যদি(dir<0) {
         /* reset for backward iteration */
-        csc->index=csc->cpStart;
+        csc->সূচক=csc->cpStart;
         csc->dir=dir;
-    } else if(dir>0) {
+    } অন্যথা যদি(dir>0) {
         /* reset for forward iteration */
-        csc->index=csc->cpLimit;
+        csc->সূচক=csc->cpLimit;
         csc->dir=dir;
-    } else {
+    } অন্যথা {
         /* continue current iteration direction */
         dir=csc->dir;
     }
 
-    if(dir<0) {
-        if(csc->start<csc->index) {
-            U8_PREV((const uint8_t *)csc->p, csc->start, csc->index, c);
-            return c;
+    যদি(dir<0) {
+        যদি(csc->start<csc->সূচক) {
+            U8_পূর্ব((ধ্রুবক uint8_t *)csc->p, csc->start, csc->সূচক, c);
+            ফেরত c;
         }
-    } else {
-        if(csc->index<csc->limit) {
-            U8_NEXT((const uint8_t *)csc->p, csc->index, csc->limit, c);
-            return c;
+    } অন্যথা {
+        যদি(csc->সূচক<csc->limit) {
+            U8_পরবর্তী((ধ্রুবক uint8_t *)csc->p, csc->সূচক, csc->limit, c);
+            ফেরত c;
         }
     }
-    return U_SENTINEL;
+    ফেরত U_SENTINEL;
 }
 
 /**
  * caseLocale >= 0: Lowercases [srcStart..srcLimit[ but takes context [0..srcLength[ into account.
  * caseLocale < 0: Case-folds [srcStart..srcLimit[.
  */
-void toLower(int32_t caseLocale, uint32_t options,
-             const uint8_t *src, UCaseContext *csc, int32_t srcStart, int32_t srcLimit,
+শূন্য toLower(int32_t caseLocale, uint32_t options,
+             ধ্রুবক uint8_t *src, UCaseContext *csc, int32_t srcStart, int32_t srcLimit,
              icu::ByteSink &sink, icu::Edits *edits, UErrorCode &errorCode) {
-    const int8_t *latinToLower;
-    if (caseLocale == UCASE_LOC_ROOT ||
+    ধ্রুবক int8_t *latinToLower;
+    যদি (caseLocale == UCASE_LOC_মূল ||
             (caseLocale >= 0 ?
                 !(caseLocale == UCASE_LOC_TURKISH || caseLocale == UCASE_LOC_LITHUANIAN) :
                 (options & _FOLD_CASE_OPTIONS_MASK) == U_FOLD_CASE_DEFAULT)) {
         latinToLower = LatinCase::TO_LOWER_NORMAL;
-    } else {
+    } অন্যথা {
         latinToLower = LatinCase::TO_LOWER_TR_LT;
     }
-    const UTrie2 *trie = ucase_getTrie();
-    int32_t prev = srcStart;
-    int32_t srcIndex = srcStart;
-    for (;;) {
+    ধ্রুবক UTrie2 *trie = ucase_getTrie();
+    int32_t পূর্ব = srcStart;
+    int32_t src_সূচক = srcStart;
+    জন্য (;;) {
         // fast path for simple cases
         int32_t cpStart;
         UChar32 c;
-        for (;;) {
-            if (U_FAILURE(errorCode) || srcIndex >= srcLimit) {
+        জন্য (;;) {
+            যদি (U_FAILURE(errorCode) || src_সূচক >= srcLimit) {
                 c = U_SENTINEL;
-                break;
+                বিরতি;
             }
-            uint8_t lead = src[srcIndex++];
-            if (lead <= 0x7f) {
+            uint8_t lead = src[src_সূচক++];
+            যদি (lead <= 0x7f) {
                 int8_t d = latinToLower[lead];
-                if (d == LatinCase::EXC) {
-                    cpStart = srcIndex - 1;
+                যদি (d == LatinCase::EXC) {
+                    cpStart = src_সূচক - 1;
                     c = lead;
-                    break;
+                    বিরতি;
                 }
-                if (d == 0) { continue; }
-                ByteSinkUtil::appendUnchanged(src + prev, srcIndex - 1 - prev,
+                যদি (d == 0) { চালু; }
+                ByteSinkUtil::appendUnchanged(src + পূর্ব, src_সূচক - 1 - পূর্ব,
                                               sink, options, edits, errorCode);
-                char ascii = static_cast<char>(lead + d);
+                অক্ষর ascii = static_cast<অক্ষর>(lead + d);
                 sink.Append(&ascii, 1);
-                if (edits != nullptr) {
+                যদি (edits != nullptr) {
                     edits->addReplace(1, 1);
                 }
-                prev = srcIndex;
-                continue;
-            } else if (lead < 0xe3) {
+                পূর্ব = src_সূচক;
+                চালু;
+            } অন্যথা যদি (lead < 0xe3) {
                 uint8_t t;
-                if (0xc2 <= lead && lead <= 0xc5 && srcIndex < srcLimit &&
-                        (t = src[srcIndex] - 0x80) <= 0x3f) {
+                যদি (0xc2 <= lead && lead <= 0xc5 && src_সূচক < srcLimit &&
+                        (t = src[src_সূচক] - 0x80) <= 0x3f) {
                     // U+0080..U+017F
-                    ++srcIndex;
+                    ++src_সূচক;
                     c = ((lead - 0xc0) << 6) | t;
                     int8_t d = latinToLower[c];
-                    if (d == LatinCase::EXC) {
-                        cpStart = srcIndex - 2;
-                        break;
+                    যদি (d == LatinCase::EXC) {
+                        cpStart = src_সূচক - 2;
+                        বিরতি;
                     }
-                    if (d == 0) { continue; }
-                    ByteSinkUtil::appendUnchanged(src + prev, srcIndex - 2 - prev,
+                    যদি (d == 0) { চালু; }
+                    ByteSinkUtil::appendUnchanged(src + পূর্ব, src_সূচক - 2 - পূর্ব,
                                                   sink, options, edits, errorCode);
                     ByteSinkUtil::appendTwoBytes(c + d, sink);
-                    if (edits != nullptr) {
+                    যদি (edits != nullptr) {
                         edits->addReplace(2, 2);
                     }
-                    prev = srcIndex;
-                    continue;
+                    পূর্ব = src_সূচক;
+                    চালু;
                 }
-            } else if ((lead <= 0xe9 || lead == 0xeb || lead == 0xec) &&
-                    (srcIndex + 2) <= srcLimit &&
-                    U8_IS_TRAIL(src[srcIndex]) && U8_IS_TRAIL(src[srcIndex + 1])) {
+            } অন্যথা যদি ((lead <= 0xe9 || lead == 0xeb || lead == 0xec) &&
+                    (src_সূচক + 2) <= srcLimit &&
+                    U8_IS_TRAIL(src[src_সূচক]) && U8_IS_TRAIL(src[src_সূচক + 1])) {
                 // most of CJK: no case mappings
-                srcIndex += 2;
-                continue;
+                src_সূচক += 2;
+                চালু;
             }
-            cpStart = --srcIndex;
-            U8_NEXT(src, srcIndex, srcLimit, c);
-            if (c < 0) {
+            cpStart = --src_সূচক;
+            U8_পরবর্তী(src, src_সূচক, srcLimit, c);
+            যদি (c < 0) {
                 // ill-formed UTF-8
-                continue;
+                চালু;
             }
             uint16_t props = UTRIE2_GET16(trie, c);
-            if (UCASE_HAS_EXCEPTION(props)) { break; }
+            যদি (UCASE_HAS_EXCEPTION(props)) { বিরতি; }
             int32_t delta;
-            if (!UCASE_IS_UPPER_OR_TITLE(props) || (delta = UCASE_GET_DELTA(props)) == 0) {
-                continue;
+            যদি (!UCASE_IS_UPPER_OR_TITLE(props) || (delta = UCASE_GET_DELTA(props)) == 0) {
+                চালু;
             }
-            ByteSinkUtil::appendUnchanged(src + prev, cpStart - prev,
+            ByteSinkUtil::appendUnchanged(src + পূর্ব, cpStart - পূর্ব,
                                           sink, options, edits, errorCode);
-            ByteSinkUtil::appendCodePoint(srcIndex - cpStart, c + delta, sink, edits);
-            prev = srcIndex;
+            ByteSinkUtil::appendCodePoint(src_সূচক - cpStart, c + delta, sink, edits);
+            পূর্ব = src_সূচক;
         }
-        if (c < 0) {
-            break;
+        যদি (c < 0) {
+            বিরতি;
         }
         // slow path
-        const char16_t *s;
-        if (caseLocale >= 0) {
+        ধ্রুবক char16_t *s;
+        যদি (caseLocale >= 0) {
             csc->cpStart = cpStart;
-            csc->cpLimit = srcIndex;
+            csc->cpLimit = src_সূচক;
             c = ucase_toFullLower(c, utf8_caseContextIterator, csc, &s, caseLocale);
-        } else {
+        } অন্যথা {
             c = ucase_toFullFolding(c, &s, options);
         }
-        if (c >= 0) {
-            ByteSinkUtil::appendUnchanged(src + prev, cpStart - prev,
+        যদি (c >= 0) {
+            ByteSinkUtil::appendUnchanged(src + পূর্ব, cpStart - পূর্ব,
                                           sink, options, edits, errorCode);
-            appendResult(srcIndex - cpStart, c, s, sink, options, edits, errorCode);
-            prev = srcIndex;
+            append_ফলাফল(src_সূচক - cpStart, c, s, sink, options, edits, errorCode);
+            পূর্ব = src_সূচক;
         }
     }
-    ByteSinkUtil::appendUnchanged(src + prev, srcIndex - prev,
+    ByteSinkUtil::appendUnchanged(src + পূর্ব, src_সূচক - পূর্ব,
                                   sink, options, edits, errorCode);
 }
 
-void toUpper(int32_t caseLocale, uint32_t options,
-             const uint8_t *src, UCaseContext *csc, int32_t srcLength,
+শূন্য toUpper(int32_t caseLocale, uint32_t options,
+             ধ্রুবক uint8_t *src, UCaseContext *csc, int32_t src_দৈর্ঘ্য,
              icu::ByteSink &sink, icu::Edits *edits, UErrorCode &errorCode) {
-    const int8_t *latinToUpper;
-    if (caseLocale == UCASE_LOC_TURKISH) {
+    ধ্রুবক int8_t *latinToUpper;
+    যদি (caseLocale == UCASE_LOC_TURKISH) {
         latinToUpper = LatinCase::TO_UPPER_TR;
-    } else {
+    } অন্যথা {
         latinToUpper = LatinCase::TO_UPPER_NORMAL;
     }
-    const UTrie2 *trie = ucase_getTrie();
-    int32_t prev = 0;
-    int32_t srcIndex = 0;
-    for (;;) {
+    ধ্রুবক UTrie2 *trie = ucase_getTrie();
+    int32_t পূর্ব = 0;
+    int32_t src_সূচক = 0;
+    জন্য (;;) {
         // fast path for simple cases
         int32_t cpStart;
         UChar32 c;
-        for (;;) {
-            if (U_FAILURE(errorCode) || srcIndex >= srcLength) {
+        জন্য (;;) {
+            যদি (U_FAILURE(errorCode) || src_সূচক >= src_দৈর্ঘ্য) {
                 c = U_SENTINEL;
-                break;
+                বিরতি;
             }
-            uint8_t lead = src[srcIndex++];
-            if (lead <= 0x7f) {
+            uint8_t lead = src[src_সূচক++];
+            যদি (lead <= 0x7f) {
                 int8_t d = latinToUpper[lead];
-                if (d == LatinCase::EXC) {
-                    cpStart = srcIndex - 1;
+                যদি (d == LatinCase::EXC) {
+                    cpStart = src_সূচক - 1;
                     c = lead;
-                    break;
+                    বিরতি;
                 }
-                if (d == 0) { continue; }
-                ByteSinkUtil::appendUnchanged(src + prev, srcIndex - 1 - prev,
+                যদি (d == 0) { চালু; }
+                ByteSinkUtil::appendUnchanged(src + পূর্ব, src_সূচক - 1 - পূর্ব,
                                               sink, options, edits, errorCode);
-                char ascii = static_cast<char>(lead + d);
+                অক্ষর ascii = static_cast<অক্ষর>(lead + d);
                 sink.Append(&ascii, 1);
-                if (edits != nullptr) {
+                যদি (edits != nullptr) {
                     edits->addReplace(1, 1);
                 }
-                prev = srcIndex;
-                continue;
-            } else if (lead < 0xe3) {
+                পূর্ব = src_সূচক;
+                চালু;
+            } অন্যথা যদি (lead < 0xe3) {
                 uint8_t t;
-                if (0xc2 <= lead && lead <= 0xc5 && srcIndex < srcLength &&
-                        (t = src[srcIndex] - 0x80) <= 0x3f) {
+                যদি (0xc2 <= lead && lead <= 0xc5 && src_সূচক < src_দৈর্ঘ্য &&
+                        (t = src[src_সূচক] - 0x80) <= 0x3f) {
                     // U+0080..U+017F
-                    ++srcIndex;
+                    ++src_সূচক;
                     c = ((lead - 0xc0) << 6) | t;
                     int8_t d = latinToUpper[c];
-                    if (d == LatinCase::EXC) {
-                        cpStart = srcIndex - 2;
-                        break;
+                    যদি (d == LatinCase::EXC) {
+                        cpStart = src_সূচক - 2;
+                        বিরতি;
                     }
-                    if (d == 0) { continue; }
-                    ByteSinkUtil::appendUnchanged(src + prev, srcIndex - 2 - prev,
+                    যদি (d == 0) { চালু; }
+                    ByteSinkUtil::appendUnchanged(src + পূর্ব, src_সূচক - 2 - পূর্ব,
                                                   sink, options, edits, errorCode);
                     ByteSinkUtil::appendTwoBytes(c + d, sink);
-                    if (edits != nullptr) {
+                    যদি (edits != nullptr) {
                         edits->addReplace(2, 2);
                     }
-                    prev = srcIndex;
-                    continue;
+                    পূর্ব = src_সূচক;
+                    চালু;
                 }
-            } else if ((lead <= 0xe9 || lead == 0xeb || lead == 0xec) &&
-                    (srcIndex + 2) <= srcLength &&
-                    U8_IS_TRAIL(src[srcIndex]) && U8_IS_TRAIL(src[srcIndex + 1])) {
+            } অন্যথা যদি ((lead <= 0xe9 || lead == 0xeb || lead == 0xec) &&
+                    (src_সূচক + 2) <= src_দৈর্ঘ্য &&
+                    U8_IS_TRAIL(src[src_সূচক]) && U8_IS_TRAIL(src[src_সূচক + 1])) {
                 // most of CJK: no case mappings
-                srcIndex += 2;
-                continue;
+                src_সূচক += 2;
+                চালু;
             }
-            cpStart = --srcIndex;
-            U8_NEXT(src, srcIndex, srcLength, c);
-            if (c < 0) {
+            cpStart = --src_সূচক;
+            U8_পরবর্তী(src, src_সূচক, src_দৈর্ঘ্য, c);
+            যদি (c < 0) {
                 // ill-formed UTF-8
-                continue;
+                চালু;
             }
             uint16_t props = UTRIE2_GET16(trie, c);
-            if (UCASE_HAS_EXCEPTION(props)) { break; }
+            যদি (UCASE_HAS_EXCEPTION(props)) { বিরতি; }
             int32_t delta;
-            if (UCASE_GET_TYPE(props) != UCASE_LOWER || (delta = UCASE_GET_DELTA(props)) == 0) {
-                continue;
+            যদি (UCASE_GET_TYPE(props) != UCASE_LOWER || (delta = UCASE_GET_DELTA(props)) == 0) {
+                চালু;
             }
-            ByteSinkUtil::appendUnchanged(src + prev, cpStart - prev,
+            ByteSinkUtil::appendUnchanged(src + পূর্ব, cpStart - পূর্ব,
                                           sink, options, edits, errorCode);
-            ByteSinkUtil::appendCodePoint(srcIndex - cpStart, c + delta, sink, edits);
-            prev = srcIndex;
+            ByteSinkUtil::appendCodePoint(src_সূচক - cpStart, c + delta, sink, edits);
+            পূর্ব = src_সূচক;
         }
-        if (c < 0) {
-            break;
+        যদি (c < 0) {
+            বিরতি;
         }
         // slow path
         csc->cpStart = cpStart;
-        csc->cpLimit = srcIndex;
-        const char16_t *s;
+        csc->cpLimit = src_সূচক;
+        ধ্রুবক char16_t *s;
         c = ucase_toFullUpper(c, utf8_caseContextIterator, csc, &s, caseLocale);
-        if (c >= 0) {
-            ByteSinkUtil::appendUnchanged(src + prev, cpStart - prev,
+        যদি (c >= 0) {
+            ByteSinkUtil::appendUnchanged(src + পূর্ব, cpStart - পূর্ব,
                                           sink, options, edits, errorCode);
-            appendResult(srcIndex - cpStart, c, s, sink, options, edits, errorCode);
-            prev = srcIndex;
+            append_ফলাফল(src_সূচক - cpStart, c, s, sink, options, edits, errorCode);
+            পূর্ব = src_সূচক;
         }
     }
-    ByteSinkUtil::appendUnchanged(src + prev, srcIndex - prev,
+    ByteSinkUtil::appendUnchanged(src + পূর্ব, src_সূচক - পূর্ব,
                                   sink, options, edits, errorCode);
 }
 
 }  // namespace
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#যদি !UCONFIG_NO_BREAK_ITERATION
 
-namespace {
+নামাকাশ {
 
 constexpr uint8_t ACUTE_BYTE0 = u8"\u0301"[0];
 
@@ -444,111 +444,111 @@ constexpr uint8_t ACUTE_BYTE1 = u8"\u0301"[1];
  *
  * @return the src index after the titlecased sequence, or the start index if no Dutch IJ
  */
-int32_t maybeTitleDutchIJ(const uint8_t *src, UChar32 c, int32_t start, int32_t segmentLimit,
+int32_t maybeTitleDutchIJ(ধ্রুবক uint8_t *src, UChar32 c, int32_t start, int32_t segmentLimit,
                           ByteSink &sink, uint32_t options, icu::Edits *edits, UErrorCode &errorCode) {
     U_ASSERT(start < segmentLimit);
 
-    int32_t index = start;
-    bool withAcute = false;
+    int32_t সূচক = start;
+    যৌক্তিক withAcute = মিথ্যা;
 
     // If the conditions are met, then the following variables tell us what to output.
     int32_t unchanged1 = 0;  // code units before the j, or the whole sequence (0..3)
-    bool doTitleJ = false;  // true if the j needs to be titlecased
+    যৌক্তিক doTitleJ = মিথ্যা;  // true if the j needs to be titlecased
     int32_t unchanged2 = 0;  // after the j (0 or 1)
 
     // next character after the first letter
     UChar32 c2;
-    c2 = src[index++];
+    c2 = src[সূচক++];
 
     // Is the first letter an i/I with accent?
-    if (c == u'I') {
-        if (c2 == ACUTE_BYTE0 && index < segmentLimit && src[index++] == ACUTE_BYTE1) {
-            withAcute = true;
+    যদি (c == u'I') {
+        যদি (c2 == ACUTE_BYTE0 && সূচক < segmentLimit && src[সূচক++] == ACUTE_BYTE1) {
+            withAcute = সত্য;
             unchanged1 = 2;  // ACUTE is 2 code units in UTF-8
-            if (index == segmentLimit) { return start; }
-            c2 = src[index++];
+            যদি (সূচক == segmentLimit) { ফেরত start; }
+            c2 = src[সূচক++];
         }
-    } else {  // Í
-        withAcute = true;
+    } অন্যথা {  // Í
+        withAcute = সত্য;
     }
 
     // Is the next character a j/J?
-    if (c2 == u'j') {
-        doTitleJ = true;
-    } else if (c2 == u'J') {
+    যদি (c2 == u'j') {
+        doTitleJ = সত্য;
+    } অন্যথা যদি (c2 == u'J') {
         ++unchanged1;
-    } else {
-        return start;
+    } অন্যথা {
+        ফেরত start;
     }
 
     // A plain i/I must be followed by a plain j/J.
     // An i/I with acute must be followed by a j/J with acute.
-    if (withAcute) {
-        if ((index + 1) >= segmentLimit || src[index++] != ACUTE_BYTE0 || src[index++] != ACUTE_BYTE1) {
-            return start;
+    যদি (withAcute) {
+        যদি ((সূচক + 1) >= segmentLimit || src[সূচক++] != ACUTE_BYTE0 || src[সূচক++] != ACUTE_BYTE1) {
+            ফেরত start;
         }
-        if (doTitleJ) {
+        যদি (doTitleJ) {
             unchanged2 = 2;  // ACUTE is 2 code units in UTF-8
-        } else {
+        } অন্যথা {
             unchanged1 = unchanged1 + 2;    // ACUTE is 2 code units in UTF-8
         }
     }
 
     // There must not be another combining mark.
-    if (index < segmentLimit) {
+    যদি (সূচক < segmentLimit) {
         int32_t cp;
-        int32_t i = index;
-        U8_NEXT(src, i, segmentLimit, cp);
+        int32_t i = সূচক;
+        U8_পরবর্তী(src, i, segmentLimit, cp);
         uint32_t typeMask = U_GET_GC_MASK(cp);
-        if ((typeMask & U_GC_M_MASK) != 0) {
-            return start;
+        যদি ((typeMask & U_GC_M_MASK) != 0) {
+            ফেরত start;
         }
     }
 
     // Output the rest of the Dutch IJ.
     ByteSinkUtil::appendUnchanged(src + start, unchanged1, sink, options, edits, errorCode);
     start += unchanged1;
-    if (doTitleJ) {
+    যদি (doTitleJ) {
         ByteSinkUtil::appendCodePoint(1, u'J', sink, edits);
         ++start;
     }
     ByteSinkUtil::appendUnchanged(src + start, unchanged2, sink, options, edits, errorCode);
 
-    U_ASSERT(start + unchanged2 == index);
-    return index;
+    U_ASSERT(start + unchanged2 == সূচক);
+    ফেরত সূচক;
 }
 
 }  // namespace
 
-U_CFUNC void U_CALLCONV
+U_CFUNC শূন্য U_CALLCONV
 ucasemap_internalUTF8ToTitle(
         int32_t caseLocale, uint32_t options, BreakIterator *iter,
-        const uint8_t *src, int32_t srcLength,
+        ধ্রুবক uint8_t *src, int32_t src_দৈর্ঘ্য,
         ByteSink &sink, icu::Edits *edits,
         UErrorCode &errorCode) {
-    if (!ustrcase_checkTitleAdjustmentOptions(options, errorCode)) {
-        return;
+    যদি (!ustrcase_checkTitleAdjustmentOptions(options, errorCode)) {
+        ফেরত;
     }
 
     /* set up local variables */
     UCaseContext csc=UCASECONTEXT_INITIALIZER;
-    csc.p=(void *)src;
-    csc.limit=srcLength;
-    int32_t prev=0;
-    UBool isFirstIndex=true;
+    csc.p=(শূন্য *)src;
+    csc.limit=src_দৈর্ঘ্য;
+    int32_t পূর্ব=0;
+    UBool is_First_সূচক=সত্য;
 
     /* titlecasing loop */
-    while(prev<srcLength) {
+    যখন(পূর্ব<src_দৈর্ঘ্য) {
         /* find next index where to titlecase */
-        int32_t index;
-        if(isFirstIndex) {
-            isFirstIndex=false;
-            index=iter->first();
-        } else {
-            index=iter->next();
+        int32_t সূচক;
+        যদি(is_First_সূচক) {
+            is_First_সূচক=মিথ্যা;
+            সূচক=iter->first();
+        } অন্যথা {
+            সূচক=iter->next();
         }
-        if(index==UBRK_DONE || index>srcLength) {
-            index=srcLength;
+        যদি(সূচক==UBRK_DONE || সূচক>src_দৈর্ঘ্য) {
+            সূচক=src_দৈর্ঘ্য;
         }
 
         /*
@@ -557,338 +557,338 @@ ucasemap_internalUTF8ToTitle(
          * b) first letter (titlecase)              [titleStart..titleLimit[
          * c) subsequent characters (lowercase)                 [titleLimit..index[
          */
-        if(prev<index) {
+        যদি(পূর্ব<সূচক) {
             /* find and copy skipped characters [prev..titleStart[ */
-            int32_t titleStart=prev;
-            int32_t titleLimit=prev;
+            int32_t titleStart=পূর্ব;
+            int32_t titleLimit=পূর্ব;
             UChar32 c;
-            U8_NEXT(src, titleLimit, index, c);
-            if ((options&U_TITLECASE_NO_BREAK_ADJUSTMENT)==0) {
+            U8_পরবর্তী(src, titleLimit, সূচক, c);
+            যদি ((options&U_TITLECASE_NO_BREAK_ADJUSTMENT)==0) {
                 // Adjust the titlecasing index to the next cased character,
                 // or to the next letter/number/symbol/private use.
                 // Stop with titleStart<titleLimit<=index
                 // if there is a character to be titlecased,
                 // or else stop with titleStart==titleLimit==index.
                 UBool toCased = (options&U_TITLECASE_ADJUST_TO_CASED) != 0;
-                while (toCased ? UCASE_NONE==ucase_getType(c) : !ustrcase_isLNS(c)) {
+                যখন (toCased ? UCASE_NONE==ucase_getType(c) : !ustrcase_isLNS(c)) {
                     titleStart=titleLimit;
-                    if(titleLimit==index) {
-                        break;
+                    যদি(titleLimit==সূচক) {
+                        বিরতি;
                     }
-                    U8_NEXT(src, titleLimit, index, c);
+                    U8_পরবর্তী(src, titleLimit, সূচক, c);
                 }
-                if (prev < titleStart) {
-                    if (!ByteSinkUtil::appendUnchanged(src+prev, titleStart-prev,
+                যদি (পূর্ব < titleStart) {
+                    যদি (!ByteSinkUtil::appendUnchanged(src+পূর্ব, titleStart-পূর্ব,
                                                        sink, options, edits, errorCode)) {
-                        return;
+                        ফেরত;
                     }
                 }
             }
 
-            if(titleStart<titleLimit) {
+            যদি(titleStart<titleLimit) {
                 /* titlecase c which is from [titleStart..titleLimit[ */
-                if(c>=0) {
+                যদি(c>=0) {
                     csc.cpStart=titleStart;
                     csc.cpLimit=titleLimit;
-                    const char16_t *s;
+                    ধ্রুবক char16_t *s;
                     c=ucase_toFullTitle(c, utf8_caseContextIterator, &csc, &s, caseLocale);
-                    if (!appendResult(titleLimit-titleStart, c, s, sink, options, edits, errorCode)) {
-                        return;
+                    যদি (!append_ফলাফল(titleLimit-titleStart, c, s, sink, options, edits, errorCode)) {
+                        ফেরত;
                     }
-                } else {
+                } অন্যথা {
                     // Malformed UTF-8.
-                    if (!ByteSinkUtil::appendUnchanged(src+titleStart, titleLimit-titleStart,
+                    যদি (!ByteSinkUtil::appendUnchanged(src+titleStart, titleLimit-titleStart,
                                                        sink, options, edits, errorCode)) {
-                        return;
+                        ফেরত;
                     }
                 }
 
                 /* Special case Dutch IJ titlecasing */
-                if (titleLimit < index &&
+                যদি (titleLimit < সূচক &&
                     caseLocale == UCASE_LOC_DUTCH) {
-                    if (c < 0) {
+                    যদি (c < 0) {
                         c = ~c;
                     }
 
-                    if (c == u'I' || c == u'Í') {
-                        titleLimit = maybeTitleDutchIJ(src, c, titleLimit, index, sink, options, edits, errorCode);
+                    যদি (c == u'I' || c == u'Í') {
+                        titleLimit = maybeTitleDutchIJ(src, c, titleLimit, সূচক, sink, options, edits, errorCode);
                     }
                 }
 
                 /* lowercase [titleLimit..index[ */
-                if(titleLimit<index) {
-                    if((options&U_TITLECASE_NO_LOWERCASE)==0) {
+                যদি(titleLimit<সূচক) {
+                    যদি((options&U_TITLECASE_NO_LOWERCASE)==0) {
                         /* Normal operation: Lowercase the rest of the word. */
                         toLower(caseLocale, options,
-                                src, &csc, titleLimit, index,
+                                src, &csc, titleLimit, সূচক,
                                 sink, edits, errorCode);
-                        if(U_FAILURE(errorCode)) {
-                            return;
+                        যদি(U_FAILURE(errorCode)) {
+                            ফেরত;
                         }
-                    } else {
+                    } অন্যথা {
                         /* Optionally just copy the rest of the word unchanged. */
-                        if (!ByteSinkUtil::appendUnchanged(src+titleLimit, index-titleLimit,
+                        যদি (!ByteSinkUtil::appendUnchanged(src+titleLimit, সূচক-titleLimit,
                                                            sink, options, edits, errorCode)) {
-                            return;
+                            ফেরত;
                         }
                     }
                 }
             }
         }
 
-        prev=index;
+        পূর্ব=সূচক;
     }
 }
 
 #endif
 
 U_NAMESPACE_BEGIN
-namespace GreekUpper {
+নামাকাশ GreekUpper {
 
-UBool isFollowedByCasedLetter(const uint8_t *s, int32_t i, int32_t length) {
-    while (i < length) {
+UBool isFollowedByCasedLetter(ধ্রুবক uint8_t *s, int32_t i, int32_t length) {
+    যখন (i < length) {
         UChar32 c;
-        U8_NEXT(s, i, length, c);
+        U8_পরবর্তী(s, i, length, c);
         int32_t type = ucase_getTypeOrIgnorable(c);
-        if ((type & UCASE_IGNORABLE) != 0) {
+        যদি ((type & UCASE_IGNORABLE) != 0) {
             // Case-ignorable, continue with the loop.
-        } else if (type != UCASE_NONE) {
-            return true;  // Followed by cased letter.
-        } else {
-            return false;  // Uncased and not case-ignorable.
+        } অন্যথা যদি (type != UCASE_NONE) {
+            ফেরত সত্য;  // Followed by cased letter.
+        } অন্যথা {
+            ফেরত মিথ্যা;  // Uncased and not case-ignorable.
         }
     }
-    return false;  // Not followed by cased letter.
+    ফেরত মিথ্যা;  // Not followed by cased letter.
 }
 
 // Keep this consistent with the UTF-16 version in ustrcase.cpp and the Java version in CaseMap.java.
-void toUpper(uint32_t options,
-             const uint8_t *src, int32_t srcLength,
+শূন্য toUpper(uint32_t options,
+             ধ্রুবক uint8_t *src, int32_t src_দৈর্ঘ্য,
              ByteSink &sink, Edits *edits,
              UErrorCode &errorCode) {
     uint32_t state = 0;
-    for (int32_t i = 0; i < srcLength;) {
-        int32_t nextIndex = i;
+    জন্য (int32_t i = 0; i < src_দৈর্ঘ্য;) {
+        int32_t পরবর্তী_সূচক = i;
         UChar32 c;
-        U8_NEXT(src, nextIndex, srcLength, c);
-        uint32_t nextState = 0;
+        U8_পরবর্তী(src, পরবর্তী_সূচক, src_দৈর্ঘ্য, c);
+        uint32_t পরবর্তী_State = 0;
         int32_t type = ucase_getTypeOrIgnorable(c);
-        if ((type & UCASE_IGNORABLE) != 0) {
+        যদি ((type & UCASE_IGNORABLE) != 0) {
             // c is case-ignorable
-            nextState |= (state & AFTER_CASED);
-        } else if (type != UCASE_NONE) {
+            পরবর্তী_State |= (state & AFTER_CASED);
+        } অন্যথা যদি (type != UCASE_NONE) {
             // c is cased
-            nextState |= AFTER_CASED;
+            পরবর্তী_State |= AFTER_CASED;
         }
-        uint32_t data = getLetterData(c);
-        if (data > 0) {
-            uint32_t upper = data & UPPER_MASK;
+        uint32_t তথ্য = get_Letter_তথ্য(c);
+        যদি (তথ্য > 0) {
+            uint32_t upper = তথ্য & UPPER_MASK;
             // Add a dialytika to this iota or ypsilon vowel
             // if we removed a tonos from the previous vowel,
             // and that previous vowel did not also have (or gain) a dialytika.
             // Adding one only to the final vowel in a longer sequence
             // (which does not occur in normal writing) would require lookahead.
             // Set the same flag as for preserving an existing dialytika.
-            if ((data & HAS_VOWEL) != 0 &&
+            যদি ((তথ্য & HAS_VOWEL) != 0 &&
                 (state & (AFTER_VOWEL_WITH_PRECOMPOSED_ACCENT | AFTER_VOWEL_WITH_COMBINING_ACCENT)) !=
                     0 &&
                 (upper == 0x399 || upper == 0x3A5)) {
-                data |= (state & AFTER_VOWEL_WITH_PRECOMPOSED_ACCENT) != 0 ? HAS_DIALYTIKA
+                তথ্য |= (state & AFTER_VOWEL_WITH_PRECOMPOSED_ACCENT) != 0 ? HAS_DIALYTIKA
                                                                            : HAS_COMBINING_DIALYTIKA;
             }
-            int32_t numYpogegrammeni = 0;  // Map each one to a trailing, spacing, capital iota.
-            if ((data & HAS_YPOGEGRAMMENI) != 0) {
-                numYpogegrammeni = 1;
+            int32_t অঙ্ক_Ypogegrammeni = 0;  // Map each one to a trailing, spacing, capital iota.
+            যদি ((তথ্য & HAS_YPOGEGRAMMENI) != 0) {
+                অঙ্ক_Ypogegrammeni = 1;
             }
-            const UBool hasPrecomposedAccent = (data & HAS_ACCENT) != 0;
+            ধ্রুবক UBool hasPrecomposedAccent = (তথ্য & HAS_ACCENT) != 0;
             // Skip combining diacritics after this Greek letter.
-            int32_t nextNextIndex = nextIndex;
-            while (nextIndex < srcLength) {
+            int32_t পরবর্তী_পরবর্তী_সূচক = পরবর্তী_সূচক;
+            যখন (পরবর্তী_সূচক < src_দৈর্ঘ্য) {
                 UChar32 c2;
-                U8_NEXT(src, nextNextIndex, srcLength, c2);
-                uint32_t diacriticData = getDiacriticData(c2);
-                if (diacriticData != 0) {
-                    data |= diacriticData;
-                    if ((diacriticData & HAS_YPOGEGRAMMENI) != 0) {
-                        ++numYpogegrammeni;
+                U8_পরবর্তী(src, পরবর্তী_পরবর্তী_সূচক, src_দৈর্ঘ্য, c2);
+                uint32_t diacritic_তথ্য = get_Diacritic_তথ্য(c2);
+                যদি (diacritic_তথ্য != 0) {
+                    তথ্য |= diacritic_তথ্য;
+                    যদি ((diacritic_তথ্য & HAS_YPOGEGRAMMENI) != 0) {
+                        ++অঙ্ক_Ypogegrammeni;
                     }
-                    nextIndex = nextNextIndex;
-                } else {
-                    break;  // not a Greek diacritic
+                    পরবর্তী_সূচক = পরবর্তী_পরবর্তী_সূচক;
+                } অন্যথা {
+                    বিরতি;  // not a Greek diacritic
                 }
             }
-            if ((data & HAS_VOWEL_AND_ACCENT_AND_DIALYTIKA) == HAS_VOWEL_AND_ACCENT) {
-                nextState |= hasPrecomposedAccent ? AFTER_VOWEL_WITH_PRECOMPOSED_ACCENT
+            যদি ((তথ্য & HAS_VOWEL_AND_ACCENT_AND_DIALYTIKA) == HAS_VOWEL_AND_ACCENT) {
+                পরবর্তী_State |= hasPrecomposedAccent ? AFTER_VOWEL_WITH_PRECOMPOSED_ACCENT
                                                   : AFTER_VOWEL_WITH_COMBINING_ACCENT;
             }
             // Map according to Greek rules.
-            UBool addTonos = false;
-            if (upper == 0x397 &&
-                    (data & HAS_ACCENT) != 0 &&
-                    numYpogegrammeni == 0 &&
+            UBool addTonos = মিথ্যা;
+            যদি (upper == 0x397 &&
+                    (তথ্য & HAS_ACCENT) != 0 &&
+                    অঙ্ক_Ypogegrammeni == 0 &&
                     (state & AFTER_CASED) == 0 &&
-                    !isFollowedByCasedLetter(src, nextIndex, srcLength)) {
+                    !isFollowedByCasedLetter(src, পরবর্তী_সূচক, src_দৈর্ঘ্য)) {
                 // Keep disjunctive "or" with (only) a tonos.
                 // We use the same "word boundary" conditions as for the Final_Sigma test.
-                if (hasPrecomposedAccent) {
+                যদি (hasPrecomposedAccent) {
                     upper = 0x389;  // Preserve the precomposed form.
-                } else {
-                    addTonos = true;
+                } অন্যথা {
+                    addTonos = সত্য;
                 }
-            } else if ((data & HAS_DIALYTIKA) != 0) {
+            } অন্যথা যদি ((তথ্য & HAS_DIALYTIKA) != 0) {
                 // Preserve a vowel with dialytika in precomposed form if it exists.
-                if (upper == 0x399) {
+                যদি (upper == 0x399) {
                     upper = 0x3AA;
-                    data &= ~HAS_EITHER_DIALYTIKA;
-                } else if (upper == 0x3A5) {
+                    তথ্য &= ~HAS_EITHER_DIALYTIKA;
+                } অন্যথা যদি (upper == 0x3A5) {
                     upper = 0x3AB;
-                    data &= ~HAS_EITHER_DIALYTIKA;
+                    তথ্য &= ~HAS_EITHER_DIALYTIKA;
                 }
             }
 
             UBool change;
-            if (edits == nullptr && (options & U_OMIT_UNCHANGED_TEXT) == 0) {
-                change = true;  // common, simple usage
-            } else {
+            যদি (edits == nullptr && (options & U_OMIT_UNCHANGED_TEXT) == 0) {
+                change = সত্য;  // common, simple usage
+            } অন্যথা {
                 // Find out first whether we are changing the text.
                 U_ASSERT(0x370 <= upper && upper <= 0x3ff);  // 2-byte UTF-8, main Greek block
-                change = (i + 2) > nextIndex ||
+                change = (i + 2) > পরবর্তী_সূচক ||
                         src[i] != getTwoByteLead(upper) || src[i + 1] != getTwoByteTrail(upper) ||
-                        numYpogegrammeni > 0;
+                        অঙ্ক_Ypogegrammeni > 0;
                 int32_t i2 = i + 2;
-                if ((data & HAS_EITHER_DIALYTIKA) != 0) {
-                    change |= (i2 + 2) > nextIndex ||
+                যদি ((তথ্য & HAS_EITHER_DIALYTIKA) != 0) {
+                    change |= (i2 + 2) > পরবর্তী_সূচক ||
                             src[i2] != static_cast<uint8_t>(u8"\u0308"[0]) ||
                             src[i2 + 1] != static_cast<uint8_t>(u8"\u0308"[1]);
                     i2 += 2;
                 }
-                if (addTonos) {
-                    change |= (i2 + 2) > nextIndex ||
+                যদি (addTonos) {
+                    change |= (i2 + 2) > পরবর্তী_সূচক ||
                             src[i2] != static_cast<uint8_t>(u8"\u0301"[0]) ||
                             src[i2 + 1] != static_cast<uint8_t>(u8"\u0301"[1]);
                     i2 += 2;
                 }
-                int32_t oldLength = nextIndex - i;
-                int32_t newLength = (i2 - i) + numYpogegrammeni * 2;  // 2 bytes per U+0399
-                change |= oldLength != newLength;
-                if (change) {
-                    if (edits != nullptr) {
-                        edits->addReplace(oldLength, newLength);
+                int32_t old_দৈর্ঘ্য = পরবর্তী_সূচক - i;
+                int32_t new_দৈর্ঘ্য = (i2 - i) + অঙ্ক_Ypogegrammeni * 2;  // 2 bytes per U+0399
+                change |= old_দৈর্ঘ্য != new_দৈর্ঘ্য;
+                যদি (change) {
+                    যদি (edits != nullptr) {
+                        edits->addReplace(old_দৈর্ঘ্য, new_দৈর্ঘ্য);
                     }
-                } else {
-                    if (edits != nullptr) {
-                        edits->addUnchanged(oldLength);
+                } অন্যথা {
+                    যদি (edits != nullptr) {
+                        edits->addUnchanged(old_দৈর্ঘ্য);
                     }
                     // Write unchanged text?
                     change = (options & U_OMIT_UNCHANGED_TEXT) == 0;
                 }
             }
 
-            if (change) {
+            যদি (change) {
                 ByteSinkUtil::appendTwoBytes(upper, sink);
-                if ((data & HAS_EITHER_DIALYTIKA) != 0) {
+                যদি ((তথ্য & HAS_EITHER_DIALYTIKA) != 0) {
                     sink.AppendU8(u8"\u0308", 2);  // restore or add a dialytika
                 }
-                if (addTonos) {
+                যদি (addTonos) {
                     sink.AppendU8(u8"\u0301", 2);
                 }
-                while (numYpogegrammeni > 0) {
+                যখন (অঙ্ক_Ypogegrammeni > 0) {
                     sink.AppendU8(u8"\u0399", 2);
-                    --numYpogegrammeni;
+                    --অঙ্ক_Ypogegrammeni;
                 }
             }
-        } else if(c>=0) {
-            const char16_t *s;
+        } অন্যথা যদি(c>=0) {
+            ধ্রুবক char16_t *s;
             c=ucase_toFullUpper(c, nullptr, nullptr, &s, UCASE_LOC_GREEK);
-            if (!appendResult(nextIndex - i, c, s, sink, options, edits, errorCode)) {
-                return;
+            যদি (!append_ফলাফল(পরবর্তী_সূচক - i, c, s, sink, options, edits, errorCode)) {
+                ফেরত;
             }
-        } else {
+        } অন্যথা {
             // Malformed UTF-8.
-            if (!ByteSinkUtil::appendUnchanged(src+i, nextIndex-i,
+            যদি (!ByteSinkUtil::appendUnchanged(src+i, পরবর্তী_সূচক-i,
                                                sink, options, edits, errorCode)) {
-                return;
+                ফেরত;
             }
         }
-        i = nextIndex;
-        state = nextState;
+        i = পরবর্তী_সূচক;
+        state = পরবর্তী_State;
     }
 }
 
 }  // namespace GreekUpper
 U_NAMESPACE_END
 
-static void U_CALLCONV
+স্থির শূন্য U_CALLCONV
 ucasemap_internalUTF8ToLower(int32_t caseLocale, uint32_t options, UCASEMAP_BREAK_ITERATOR_UNUSED
-                             const uint8_t *src, int32_t srcLength,
+                             ধ্রুবক uint8_t *src, int32_t src_দৈর্ঘ্য,
                              icu::ByteSink &sink, icu::Edits *edits,
                              UErrorCode &errorCode) {
     UCaseContext csc=UCASECONTEXT_INITIALIZER;
-    csc.p=(void *)src;
-    csc.limit=srcLength;
+    csc.p=(শূন্য *)src;
+    csc.limit=src_দৈর্ঘ্য;
     toLower(
         caseLocale, options,
-        src, &csc, 0, srcLength,
+        src, &csc, 0, src_দৈর্ঘ্য,
         sink, edits, errorCode);
 }
 
-static void U_CALLCONV
+স্থির শূন্য U_CALLCONV
 ucasemap_internalUTF8ToUpper(int32_t caseLocale, uint32_t options, UCASEMAP_BREAK_ITERATOR_UNUSED
-                             const uint8_t *src, int32_t srcLength,
+                             ধ্রুবক uint8_t *src, int32_t src_দৈর্ঘ্য,
                              icu::ByteSink &sink, icu::Edits *edits,
                              UErrorCode &errorCode) {
-    if (caseLocale == UCASE_LOC_GREEK) {
-        GreekUpper::toUpper(options, src, srcLength, sink, edits, errorCode);
-    } else {
+    যদি (caseLocale == UCASE_LOC_GREEK) {
+        GreekUpper::toUpper(options, src, src_দৈর্ঘ্য, sink, edits, errorCode);
+    } অন্যথা {
         UCaseContext csc=UCASECONTEXT_INITIALIZER;
-        csc.p=(void *)src;
-        csc.limit=srcLength;
+        csc.p=(শূন্য *)src;
+        csc.limit=src_দৈর্ঘ্য;
         toUpper(
             caseLocale, options,
-            src, &csc, srcLength,
+            src, &csc, src_দৈর্ঘ্য,
             sink, edits, errorCode);
     }
 }
 
-static void U_CALLCONV
+স্থির শূন্য U_CALLCONV
 ucasemap_internalUTF8Fold(int32_t /* caseLocale */, uint32_t options, UCASEMAP_BREAK_ITERATOR_UNUSED
-                          const uint8_t *src, int32_t srcLength,
+                          ধ্রুবক uint8_t *src, int32_t src_দৈর্ঘ্য,
                           icu::ByteSink &sink, icu::Edits *edits,
                           UErrorCode &errorCode) {
     toLower(
         -1, options,
-        src, nullptr, 0, srcLength,
+        src, nullptr, 0, src_দৈর্ঘ্য,
         sink, edits, errorCode);
 }
 
-void
+শূন্য
 ucasemap_mapUTF8(int32_t caseLocale, uint32_t options, UCASEMAP_BREAK_ITERATOR_PARAM
-                 const char *src, int32_t srcLength,
+                 ধ্রুবক অক্ষর *src, int32_t src_দৈর্ঘ্য,
                  UTF8CaseMapper *stringCaseMapper,
                  icu::ByteSink &sink, icu::Edits *edits,
                  UErrorCode &errorCode) {
     /* check argument values */
-    if (U_FAILURE(errorCode)) {
-        return;
+    যদি (U_FAILURE(errorCode)) {
+        ফেরত;
     }
-    if ((src == nullptr && srcLength != 0) || srcLength < -1) {
+    যদি ((src == nullptr && src_দৈর্ঘ্য != 0) || src_দৈর্ঘ্য < -1) {
         errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        ফেরত;
     }
 
     // Get the string length.
-    if (srcLength == -1) {
-        srcLength = static_cast<int32_t>(uprv_strlen(src));
+    যদি (src_দৈর্ঘ্য == -1) {
+        src_দৈর্ঘ্য = static_cast<int32_t>(uprv_strlen(src));
     }
 
-    if (edits != nullptr && (options & U_EDITS_NO_RESET) == 0) {
+    যদি (edits != nullptr && (options & U_EDITS_NO_RESET) == 0) {
         edits->reset();
     }
     stringCaseMapper(caseLocale, options, UCASEMAP_BREAK_ITERATOR
-                     reinterpret_cast<const uint8_t*>(src), srcLength, sink, edits, errorCode);
+                     reinterpret_cast<ধ্রুবক uint8_t*>(src), src_দৈর্ঘ্য, sink, edits, errorCode);
     sink.Flush();
-    if (U_SUCCESS(errorCode)) {
-        if (edits != nullptr) {
+    যদি (U_SUCCESS(errorCode)) {
+        যদি (edits != nullptr) {
             edits->copyErrorTo(errorCode);
         }
     }
@@ -896,159 +896,159 @@ ucasemap_mapUTF8(int32_t caseLocale, uint32_t options, UCASEMAP_BREAK_ITERATOR_P
 
 int32_t
 ucasemap_mapUTF8(int32_t caseLocale, uint32_t options, UCASEMAP_BREAK_ITERATOR_PARAM
-                 char *dest, int32_t destCapacity,
-                 const char *src, int32_t srcLength,
+                 অক্ষর *dest, int32_t destCapacity,
+                 ধ্রুবক অক্ষর *src, int32_t src_দৈর্ঘ্য,
                  UTF8CaseMapper *stringCaseMapper,
                  icu::Edits *edits,
                  UErrorCode &errorCode) {
     /* check argument values */
-    if(U_FAILURE(errorCode)) {
-        return 0;
+    যদি(U_FAILURE(errorCode)) {
+        ফেরত 0;
     }
-    if( destCapacity<0 ||
+    যদি( destCapacity<0 ||
         (dest==nullptr && destCapacity>0) ||
-        (src==nullptr && srcLength!=0) || srcLength<-1
+        (src==nullptr && src_দৈর্ঘ্য!=0) || src_দৈর্ঘ্য<-1
     ) {
         errorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        ফেরত 0;
     }
 
     /* get the string length */
-    if(srcLength==-1) {
-        srcLength = static_cast<int32_t>(uprv_strlen(src));
+    যদি(src_দৈর্ঘ্য==-1) {
+        src_দৈর্ঘ্য = static_cast<int32_t>(uprv_strlen(src));
     }
 
     /* check for overlapping source and destination */
-    if( dest!=nullptr &&
+    যদি( dest!=nullptr &&
         ((src>=dest && src<(dest+destCapacity)) ||
-         (dest>=src && dest<(src+srcLength)))
+         (dest>=src && dest<(src+src_দৈর্ঘ্য)))
     ) {
         errorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        ফেরত 0;
     }
 
-    if (edits != nullptr && (options & U_EDITS_NO_RESET) == 0) {
+    যদি (edits != nullptr && (options & U_EDITS_NO_RESET) == 0) {
         edits->reset();
     }
     int32_t reslen = ByteSinkUtil::viaByteSinkToTerminatedChars(
         dest, destCapacity,
         [&](ByteSink& sink, UErrorCode& status) {
             stringCaseMapper(caseLocale, options, UCASEMAP_BREAK_ITERATOR
-                             reinterpret_cast<const uint8_t*>(src), srcLength, sink, edits, status);
+                             reinterpret_cast<ধ্রুবক uint8_t*>(src), src_দৈর্ঘ্য, sink, edits, status);
         },
         errorCode);
-    if (U_SUCCESS(errorCode) && edits != nullptr) {
+    যদি (U_SUCCESS(errorCode) && edits != nullptr) {
         edits->copyErrorTo(errorCode);
     }
-    return reslen;
+    ফেরত reslen;
 }
 
 /* public API functions */
 
 U_CAPI int32_t U_EXPORT2
-ucasemap_utf8ToLower(const UCaseMap *csm,
-                     char *dest, int32_t destCapacity,
-                     const char *src, int32_t srcLength,
+ucasemap_utf8ToLower(ধ্রুবক UCaseMap *csm,
+                     অক্ষর *dest, int32_t destCapacity,
+                     ধ্রুবক অক্ষর *src, int32_t src_দৈর্ঘ্য,
                      UErrorCode *pErrorCode) {
-    auto *impl = reinterpret_cast<const UCaseMapImpl *>(csm);
-    return ucasemap_mapUTF8(
+    auto *impl = reinterpret_cast<ধ্রুবক UCaseMapImpl *>(csm);
+    ফেরত ucasemap_mapUTF8(
         impl->caseLocale, impl->options, UCASEMAP_BREAK_ITERATOR_NULL
         dest, destCapacity,
-        src, srcLength,
+        src, src_দৈর্ঘ্য,
         ucasemap_internalUTF8ToLower, nullptr, *pErrorCode);
 }
 
 U_CAPI int32_t U_EXPORT2
-ucasemap_utf8ToUpper(const UCaseMap *csm,
-                     char *dest, int32_t destCapacity,
-                     const char *src, int32_t srcLength,
+ucasemap_utf8ToUpper(ধ্রুবক UCaseMap *csm,
+                     অক্ষর *dest, int32_t destCapacity,
+                     ধ্রুবক অক্ষর *src, int32_t src_দৈর্ঘ্য,
                      UErrorCode *pErrorCode) {
-    auto *impl = reinterpret_cast<const UCaseMapImpl *>(csm);
-    return ucasemap_mapUTF8(
+    auto *impl = reinterpret_cast<ধ্রুবক UCaseMapImpl *>(csm);
+    ফেরত ucasemap_mapUTF8(
         impl->caseLocale, impl->options, UCASEMAP_BREAK_ITERATOR_NULL
         dest, destCapacity,
-        src, srcLength,
+        src, src_দৈর্ঘ্য,
         ucasemap_internalUTF8ToUpper, nullptr, *pErrorCode);
 }
 
 U_CAPI int32_t U_EXPORT2
-ucasemap_utf8FoldCase(const UCaseMap *csm,
-                      char *dest, int32_t destCapacity,
-                      const char *src, int32_t srcLength,
+ucasemap_utf8FoldCase(ধ্রুবক UCaseMap *csm,
+                      অক্ষর *dest, int32_t destCapacity,
+                      ধ্রুবক অক্ষর *src, int32_t src_দৈর্ঘ্য,
                       UErrorCode *pErrorCode) {
-    auto *impl = reinterpret_cast<const UCaseMapImpl *>(csm);
-    return ucasemap_mapUTF8(
-        UCASE_LOC_ROOT, impl->options, UCASEMAP_BREAK_ITERATOR_NULL
+    auto *impl = reinterpret_cast<ধ্রুবক UCaseMapImpl *>(csm);
+    ফেরত ucasemap_mapUTF8(
+        UCASE_LOC_মূল, impl->options, UCASEMAP_BREAK_ITERATOR_NULL
         dest, destCapacity,
-        src, srcLength,
+        src, src_দৈর্ঘ্য,
         ucasemap_internalUTF8Fold, nullptr, *pErrorCode);
 }
 
 U_NAMESPACE_BEGIN
 
-void CaseMap::utf8ToLower(
-        const char *locale, uint32_t options,
+শূন্য CaseMap::utf8ToLower(
+        ধ্রুবক অক্ষর *locale, uint32_t options,
         StringPiece src, ByteSink &sink, Edits *edits,
         UErrorCode &errorCode) {
     ucasemap_mapUTF8(
         ustrcase_getCaseLocale(locale), options, UCASEMAP_BREAK_ITERATOR_NULL
-        src.data(), src.length(),
+        src.তথ্য(), src.length(),
         ucasemap_internalUTF8ToLower, sink, edits, errorCode);
 }
 
-void CaseMap::utf8ToUpper(
-        const char *locale, uint32_t options,
+শূন্য CaseMap::utf8ToUpper(
+        ধ্রুবক অক্ষর *locale, uint32_t options,
         StringPiece src, ByteSink &sink, Edits *edits,
         UErrorCode &errorCode) {
     ucasemap_mapUTF8(
         ustrcase_getCaseLocale(locale), options, UCASEMAP_BREAK_ITERATOR_NULL
-        src.data(), src.length(),
+        src.তথ্য(), src.length(),
         ucasemap_internalUTF8ToUpper, sink, edits, errorCode);
 }
 
-void CaseMap::utf8Fold(
+শূন্য CaseMap::utf8Fold(
         uint32_t options,
         StringPiece src, ByteSink &sink, Edits *edits,
         UErrorCode &errorCode) {
     ucasemap_mapUTF8(
-        UCASE_LOC_ROOT, options, UCASEMAP_BREAK_ITERATOR_NULL
-        src.data(), src.length(),
+        UCASE_LOC_মূল, options, UCASEMAP_BREAK_ITERATOR_NULL
+        src.তথ্য(), src.length(),
         ucasemap_internalUTF8Fold, sink, edits, errorCode);
 }
 
 int32_t CaseMap::utf8ToLower(
-        const char *locale, uint32_t options,
-        const char *src, int32_t srcLength,
-        char *dest, int32_t destCapacity, Edits *edits,
+        ধ্রুবক অক্ষর *locale, uint32_t options,
+        ধ্রুবক অক্ষর *src, int32_t src_দৈর্ঘ্য,
+        অক্ষর *dest, int32_t destCapacity, Edits *edits,
         UErrorCode &errorCode) {
-    return ucasemap_mapUTF8(
+    ফেরত ucasemap_mapUTF8(
         ustrcase_getCaseLocale(locale), options, UCASEMAP_BREAK_ITERATOR_NULL
         dest, destCapacity,
-        src, srcLength,
+        src, src_দৈর্ঘ্য,
         ucasemap_internalUTF8ToLower, edits, errorCode);
 }
 
 int32_t CaseMap::utf8ToUpper(
-        const char *locale, uint32_t options,
-        const char *src, int32_t srcLength,
-        char *dest, int32_t destCapacity, Edits *edits,
+        ধ্রুবক অক্ষর *locale, uint32_t options,
+        ধ্রুবক অক্ষর *src, int32_t src_দৈর্ঘ্য,
+        অক্ষর *dest, int32_t destCapacity, Edits *edits,
         UErrorCode &errorCode) {
-    return ucasemap_mapUTF8(
+    ফেরত ucasemap_mapUTF8(
         ustrcase_getCaseLocale(locale), options, UCASEMAP_BREAK_ITERATOR_NULL
         dest, destCapacity,
-        src, srcLength,
+        src, src_দৈর্ঘ্য,
         ucasemap_internalUTF8ToUpper, edits, errorCode);
 }
 
 int32_t CaseMap::utf8Fold(
         uint32_t options,
-        const char *src, int32_t srcLength,
-        char *dest, int32_t destCapacity, Edits *edits,
+        ধ্রুবক অক্ষর *src, int32_t src_দৈর্ঘ্য,
+        অক্ষর *dest, int32_t destCapacity, Edits *edits,
         UErrorCode &errorCode) {
-    return ucasemap_mapUTF8(
-        UCASE_LOC_ROOT, options, UCASEMAP_BREAK_ITERATOR_NULL
+    ফেরত ucasemap_mapUTF8(
+        UCASE_LOC_মূল, options, UCASEMAP_BREAK_ITERATOR_NULL
         dest, destCapacity,
-        src, srcLength,
+        src, src_দৈর্ঘ্য,
         ucasemap_internalUTF8Fold, edits, errorCode);
 }
 
