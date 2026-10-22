@@ -22,12 +22,12 @@
 #ifndef UCNV_IMP_H
 #define UCNV_IMP_H
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#إذا !UCONFIG_NO_CONVERSION
 
-#include "unicode/uloc.h"
-#include "ucnv_bld.h"
+#ضمن "unicode/uloc.h"
+#ضمن "ucnv_bld.h"
 
 /*
  * Fast check for whether a charset name is "UTF-8".
@@ -44,14 +44,14 @@
      (name[4]=='8' && name[5]==0) : \
      (name[3]=='8' && name[4]==0)))
 
-typedef struct {
-    char cnvName[UCNV_MAX_CONVERTER_NAME_LENGTH];
-    char locale[ULOC_FULLNAME_CAPACITY];
+تعريفنوع بنية {
+    حرف cnvName[UCNV_MAX_CONVERTER_NAME_LENGTH];
+    حرف locale[ULOC_FULLNAME_CAPACITY];
     uint32_t options;
 } UConverterNamePieces;
 
 U_CFUNC UBool
-ucnv_canCreateConverter(const char *converterName, UErrorCode *err);
+ucnv_canCreateConverter(ثابت حرف *converterName, UErrorCode *err);
 
 /* figures out if we need to go to file to read in the data tables.
  * @param converterName The name of the converter
@@ -60,7 +60,7 @@ ucnv_canCreateConverter(const char *converterName, UErrorCode *err);
  */
 U_CAPI UConverter*
 ucnv_createConverter(UConverter* myUConverter U_LIFETIME_BOUND,
-                     const char* converterName,
+                     ثابت حرف* converterName,
                      UErrorCode* err);
 
 /*
@@ -77,7 +77,7 @@ ucnv_createConverter(UConverter* myUConverter U_LIFETIME_BOUND,
 U_CFUNC UConverter*
 ucnv_createAlgorithmicConverter(UConverter* myUConverter U_LIFETIME_BOUND,
                                 UConverterType type,
-                                const char* locale,
+                                ثابت حرف* locale,
                                 uint32_t options,
                                 UErrorCode* err);
 
@@ -90,11 +90,11 @@ ucnv_createAlgorithmicConverter(UConverter* myUConverter U_LIFETIME_BOUND,
 U_CFUNC UConverter*
 ucnv_createConverterFromSharedData(UConverter* myUConverter U_LIFETIME_BOUND,
                                    UConverterSharedData* mySharedConverterData,
-                                   UConverterLoadArgs* pArgs,
+                                   UConverter_Load_وسائط* p_وسائط,
                                    UErrorCode* err);
 
 U_CFUNC UConverter *
-ucnv_createConverterFromPackage(const char *packageName, const char *converterName, UErrorCode *err);
+ucnv_createConverterFromPackage(ثابت حرف *packageName, ثابت حرف *converterName, UErrorCode *err);
 
 /**
  * Load a converter but do not create a UConverter object.
@@ -112,23 +112,23 @@ ucnv_createConverterFromPackage(const char *packageName, const char *converterNa
  * @internal
  */
 U_CFUNC UConverterSharedData *
-ucnv_loadSharedData(const char *converterName,
+ucnv_loadSharedData(ثابت حرف *converterName,
                     UConverterNamePieces *pieces,
-                    UConverterLoadArgs *pArgs,
+                    UConverter_Load_وسائط *p_وسائط,
                     UErrorCode * err);
 
 /**
  * This may unload the shared data in a thread safe manner.
  * This will only unload the data if no other converters are sharing it.
  */
-U_CFUNC void
+U_CFUNC فراغ
 ucnv_unloadSharedDataIfReady(UConverterSharedData *sharedData);
 
 /**
  * This is a thread safe way to increment the reference count.
  */
-U_CFUNC void
-ucnv_incrementRefCount(UConverterSharedData *sharedData);
+U_CFUNC فراغ
+ucnv_increment_Ref_عدد(UConverterSharedData *sharedData);
 
 /**
  * These are the default error handling callbacks for the charset conversion framework.

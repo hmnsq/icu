@@ -10,22 +10,22 @@
 #ifndef LOCDSPNM_H
 #define LOCDSPNM_H
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#إذا U_SHOW_CPLUSPLUS_API
 
 /**
  * \file
  * \brief C++ API: Provides display names of Locale and its components.
  */
 
-#if !UCONFIG_NO_FORMATTING
+#إذا !UCONFIG_NO_FORMATTING
 
-#include "unicode/locid.h"
-#include "unicode/strenum.h"
-#include "unicode/uscript.h"
-#include "unicode/uldnames.h"
-#include "unicode/udisplaycontext.h"
+#ضمن "unicode/locid.h"
+#ضمن "unicode/strenum.h"
+#ضمن "unicode/uscript.h"
+#ضمن "unicode/uldnames.h"
+#ضمن "unicode/udisplaycontext.h"
 
 U_NAMESPACE_BEGIN
 
@@ -35,8 +35,8 @@ U_NAMESPACE_BEGIN
  * values, see Locale.
  * @stable ICU 4.4
  */
-class U_COMMON_API LocaleDisplayNames : public UObject {
-public:
+class U_COMMON_API LocaleDisplayNames : عام UObject {
+عام:
     /**
      * Destructor.
      * @stable ICU 4.4
@@ -51,7 +51,7 @@ public:
      * @return a LocaleDisplayNames instance
      * @stable ICU 4.4
      */
-    inline static LocaleDisplayNames* U_EXPORT2 createInstance(const Locale& locale);
+    مضمن ساكن LocaleDisplayNames* U_EXPORT2 createInstance(ثابت Locale& locale);
 
     /**
      * Returns an instance of LocaleDisplayNames that returns names
@@ -63,7 +63,7 @@ public:
      * @return a LocaleDisplayNames instance
      * @stable ICU 4.4
      */
-    static LocaleDisplayNames* U_EXPORT2 createInstance(const Locale& locale,
+    ساكن LocaleDisplayNames* U_EXPORT2 createInstance(ثابت Locale& locale,
                             UDialectHandling dialectHandling);
 
     /**
@@ -77,7 +77,7 @@ public:
      * @return a LocaleDisplayNames instance
      * @stable ICU 51
      */
-    static LocaleDisplayNames* U_EXPORT2 createInstance(const Locale& locale,
+    ساكن LocaleDisplayNames* U_EXPORT2 createInstance(ثابت Locale& locale,
                             UDisplayContext *contexts, int32_t length);
 
     // getters for state
@@ -87,14 +87,14 @@ public:
      * @return the display locale
      * @stable ICU 4.4
      */
-    virtual const Locale& getLocale() const U_LIFETIME_BOUND = 0;
+    virtual ثابت Locale& getLocale() ثابت U_LIFETIME_BOUND = 0;
 
     /**
      * Returns the dialect handling used in the display names.
      * @return the dialect handling enum
      * @stable ICU 4.4
      */
-    virtual UDialectHandling getDialectHandling() const = 0;
+    virtual UDialectHandling getDialectHandling() ثابت = 0;
 
     /**
      * Returns the UDisplayContext value for the specified UDisplayContextType.
@@ -102,7 +102,7 @@ public:
      * @return the UDisplayContext for the specified type.
      * @stable ICU 51
      */
-    virtual UDisplayContext getContext(UDisplayContextType type) const = 0;
+    virtual UDisplayContext getContext(UDisplayContextType type) ثابت = 0;
 
     // names for entire locales
     /**
@@ -112,8 +112,8 @@ public:
      * @return the display name of the provided locale
      * @stable ICU 4.4
      */
-    virtual UnicodeString& localeDisplayName(const Locale& locale,
-                                             UnicodeString& result U_LIFETIME_BOUND) const = 0;
+    virtual UnicodeString& localeDisplayName(ثابت Locale& locale,
+                                             UnicodeString& result U_LIFETIME_BOUND) ثابت = 0;
 
     /**
      * Returns the display name of the provided locale id.
@@ -122,8 +122,8 @@ public:
      * @return the display name of the provided locale
      * @stable ICU 4.4
      */
-    virtual UnicodeString& localeDisplayName(const char* localeId,
-                                             UnicodeString& result U_LIFETIME_BOUND) const = 0;
+    virtual UnicodeString& localeDisplayName(ثابت حرف* localeId,
+                                             UnicodeString& result U_LIFETIME_BOUND) ثابت = 0;
 
     // names for components of a locale id
     /**
@@ -133,8 +133,8 @@ public:
      * @return the display name of the provided language code
      * @stable ICU 4.4
      */
-    virtual UnicodeString& languageDisplayName(const char* lang,
-                                               UnicodeString& result U_LIFETIME_BOUND) const = 0;
+    virtual UnicodeString& languageDisplayName(ثابت حرف* lang,
+                                               UnicodeString& result U_LIFETIME_BOUND) ثابت = 0;
 
     /**
      * Returns the display name of the provided script code.
@@ -143,8 +143,8 @@ public:
      * @return the display name of the provided script code
      * @stable ICU 4.4
      */
-    virtual UnicodeString& scriptDisplayName(const char* script,
-                                             UnicodeString& result U_LIFETIME_BOUND) const = 0;
+    virtual UnicodeString& scriptDisplayName(ثابت حرف* script,
+                                             UnicodeString& result U_LIFETIME_BOUND) ثابت = 0;
 
     /**
      * Returns the display name of the provided script code.
@@ -154,7 +154,7 @@ public:
      * @stable ICU 4.4
      */
     virtual UnicodeString& scriptDisplayName(UScriptCode scriptCode,
-                                             UnicodeString& result U_LIFETIME_BOUND) const = 0;
+                                             UnicodeString& result U_LIFETIME_BOUND) ثابت = 0;
 
     /**
      * Returns the display name of the provided region code.
@@ -163,8 +163,8 @@ public:
      * @return the display name of the provided region code
      * @stable ICU 4.4
      */
-    virtual UnicodeString& regionDisplayName(const char* region,
-                                             UnicodeString& result U_LIFETIME_BOUND) const = 0;
+    virtual UnicodeString& regionDisplayName(ثابت حرف* region,
+                                             UnicodeString& result U_LIFETIME_BOUND) ثابت = 0;
 
     /**
      * Returns the display name of the provided variant.
@@ -173,8 +173,8 @@ public:
      * @return the display name of the provided variant
      * @stable ICU 4.4
      */
-    virtual UnicodeString& variantDisplayName(const char* variant,
-                                              UnicodeString& result U_LIFETIME_BOUND) const = 0;
+    virtual UnicodeString& variantDisplayName(ثابت حرف* variant,
+                                              UnicodeString& result U_LIFETIME_BOUND) ثابت = 0;
 
     /**
      * Returns the display name of the provided locale key.
@@ -183,8 +183,8 @@ public:
      * @return the display name of the provided locale key
      * @stable ICU 4.4
      */
-    virtual UnicodeString& keyDisplayName(const char* key,
-                                          UnicodeString& result U_LIFETIME_BOUND) const = 0;
+    virtual UnicodeString& مفتاح_Display_Name(ثابت حرف* مفتاح,
+                                          UnicodeString& result U_LIFETIME_BOUND) ثابت = 0;
 
     /**
      * Returns the display name of the provided value (used with the provided key).
@@ -194,12 +194,12 @@ public:
      * @return the display name of the provided value
      * @stable ICU 4.4
      */
-    virtual UnicodeString& keyValueDisplayName(const char* key, const char* value,
-                                               UnicodeString& result U_LIFETIME_BOUND) const = 0;
+    virtual UnicodeString& مفتاح_قيمة_Display_Name(ثابت حرف* مفتاح, ثابت حرف* قيمة_2,
+                                               UnicodeString& result U_LIFETIME_BOUND) ثابت = 0;
 };
 
-inline LocaleDisplayNames* LocaleDisplayNames::createInstance(const Locale& locale) {
-  return LocaleDisplayNames::createInstance(locale, ULDN_STANDARD_NAMES);
+مضمن LocaleDisplayNames* LocaleDisplayNames::createInstance(ثابت Locale& locale) {
+  أرجع LocaleDisplayNames::createInstance(locale, ULDN_STANDARD_NAMES);
 }
 
 U_NAMESPACE_END

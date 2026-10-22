@@ -8,109 +8,109 @@
 // Author: wilsonh@google.com (Wilson Hsieh)
 //
 
-#include "unicode/utypes.h"
-#include "unicode/stringpiece.h"
-#include "cstring.h"
-#include "cmemory.h"
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/stringpiece.h"
+#ضمن "cstring.h"
+#ضمن "cmemory.h"
 
 U_NAMESPACE_BEGIN
 
-StringPiece::StringPiece(const char* str U_LIFETIME_BOUND)
+StringPiece::StringPiece(ثابت حرف* str U_LIFETIME_BOUND)
     : ptr_(str), length_((str == nullptr) ? 0 : static_cast<int32_t>(uprv_strlen(str))) { }
 
-StringPiece::StringPiece(const StringPiece& x U_LIFETIME_BOUND, int32_t pos) {
-  if (pos < 0) {
+StringPiece::StringPiece(ثابت StringPiece& x U_LIFETIME_BOUND, int32_t pos) {
+  إذا (pos < 0) {
     pos = 0;
-  } else if (pos > x.length_) {
+  } وإلا إذا (pos > x.length_) {
     pos = x.length_;
   }
   ptr_ = x.ptr_ + pos;
   length_ = x.length_ - pos;
 }
 
-StringPiece::StringPiece(const StringPiece& x U_LIFETIME_BOUND, int32_t pos, int32_t len) {
-  if (pos < 0) {
+StringPiece::StringPiece(ثابت StringPiece& x U_LIFETIME_BOUND, int32_t pos, int32_t len) {
+  إذا (pos < 0) {
     pos = 0;
-  } else if (pos > x.length_) {
+  } وإلا إذا (pos > x.length_) {
     pos = x.length_;
   }
-  if (len < 0) {
+  إذا (len < 0) {
     len = 0;
-  } else if (len > x.length_ - pos) {
+  } وإلا إذا (len > x.length_ - pos) {
     len = x.length_ - pos;
   }
   ptr_ = x.ptr_ + pos;
   length_ = len;
 }
 
-void StringPiece::set(const char* str) {
+فراغ StringPiece::set(ثابت حرف* str) {
   ptr_ = str;
-  if (str != nullptr)
+  إذا (str != nullptr)
     length_ = static_cast<int32_t>(uprv_strlen(str));
-  else
+  وإلا
     length_ = 0;
 }
 
 int32_t StringPiece::find(StringPiece needle, int32_t offset) {
-  if (length() == 0 && needle.length() == 0) {
-    return 0;
+  إذا (length() == 0 && needle.length() == 0) {
+    أرجع 0;
   }
   // TODO: Improve to be better than O(N^2)?
-  for (int32_t i = offset; i < length(); i++) {
+  لكل (int32_t i = offset; i < length(); i++) {
     int32_t j = 0;
-    for (; j < needle.length(); i++, j++) {
-      if (data()[i] != needle.data()[j]) {
+    لكل (; j < needle.length(); i++, j++) {
+      إذا (data()[i] != needle.data()[j]) {
         i -= j;
-        goto outer_end;
+        اذهب outer_end;
       }
     }
-    return i - j;
-    outer_end: void();
+    أرجع i - j;
+    outer_end: فراغ();
   }
-  return -1;
+  أرجع -1;
 }
 
 int32_t StringPiece::compare(StringPiece other) {
   int32_t i = 0;
-  for (; i < length(); i++) {
-    if (i == other.length()) {
+  لكل (; i < length(); i++) {
+    إذا (i == other.length()) {
       // this is longer
-      return 1;
+      أرجع 1;
     }
-    char a = data()[i];
-    char b = other.data()[i];
-    if (a < b) {
-      return -1;
-    } else if (a > b) {
-      return 1;
+    حرف a = data()[i];
+    حرف b = other.data()[i];
+    إذا (a < b) {
+      أرجع -1;
+    } وإلا إذا (a > b) {
+      أرجع 1;
     }
   }
-  if (i < other.length()) {
+  إذا (i < other.length()) {
     // other is longer
-    return -1;
+    أرجع -1;
   }
-  return 0;
+  أرجع 0;
 }
 
 U_EXPORT UBool U_EXPORT2
-operator==(const StringPiece& x, const StringPiece& y) {
+operator==(ثابت StringPiece& x, ثابت StringPiece& y) {
   int32_t len = x.size();
-  if (len != y.size()) {
-    return false;
+  إذا (len != y.size()) {
+    أرجع خطأ;
   }
-  if (len == 0) {
-    return true;
+  إذا (len == 0) {
+    أرجع true;
   }
-  const char* p = x.data();
-  const char* p2 = y.data();
+  ثابت حرف* p = x.data();
+  ثابت حرف* p2 = y.data();
   // Test last byte in case strings share large common prefix
   --len;
-  if (p[len] != p2[len]) return false;
+  إذا (p[len] != p2[len]) أرجع خطأ;
   // At this point we can, but don't have to, ignore the last byte.
-  return uprv_memcmp(p, p2, len) == 0;
+  أرجع uprv_memcmp(p, p2, len) == 0;
 }
 
 
-const int32_t StringPiece::npos = 0x7fffffff;
+ثابت int32_t StringPiece::npos = 0x7fffffff;
 
 U_NAMESPACE_END

@@ -1,35 +1,35 @@
 // © 2019 and later: Unicode, Inc. and others.
 // License & terms of use: http://www.unicode.org/copyright.html
 
-#include <optional>
-#include <string_view>
-#include <utility>
+#ضمن <optional>
+#ضمن <string_view>
+#ضمن <utility>
 
-#include "bytesinkutil.h"  // StringByteSink<CharString>
-#include "charstr.h"
-#include "cstring.h"
-#include "fixedstring.h"
-#include "ulocimp.h"
-#include "unicode/localebuilder.h"
-#include "unicode/locid.h"
+#ضمن "bytesinkutil.h"  // StringByteSink<CharString>
+#ضمن "charstr.h"
+#ضمن "cstring.h"
+#ضمن "fixedstring.h"
+#ضمن "ulocimp.h"
+#ضمن "unicode/localebuilder.h"
+#ضمن "unicode/locid.h"
 
-namespace {
+نطاق {
 
-inline bool UPRV_ISDIGIT(char c) { return c >= '0' && c <= '9'; }
-inline bool UPRV_ISALPHANUM(char c) { return uprv_isASCIILetter(c) || UPRV_ISDIGIT(c); }
+مضمن منطقي UPRV_ISDIGIT(حرف c) { أرجع c >= '0' && c <= '9'; }
+مضمن منطقي UPRV_ISALPHANUM(حرف c) { أرجع uprv_isASCIILetter(c) || UPRV_ISDIGIT(c); }
 
-constexpr const char* kAttributeKey = "attribute";
+constexpr ثابت حرف* k_Attribute_مفتاح = "attribute";
 
-bool _isExtensionSubtags(char key, const char* s, int32_t len) {
-    switch (uprv_tolower(key)) {
-        case 'u':
-            return ultag_isUnicodeExtensionSubtags(s, len);
-        case 't':
-            return ultag_isTransformedExtensionSubtags(s, len);
-        case 'x':
-            return ultag_isPrivateuseValueSubtags(s, len);
-        default:
-            return ultag_isExtensionSubtags(s, len);
+منطقي _isExtensionSubtags(حرف مفتاح, ثابت حرف* s, int32_t len) {
+    بدل (uprv_tolower(مفتاح)) {
+        حالة 'u':
+            أرجع ultag_isUnicodeExtensionSubtags(s, len);
+        حالة 't':
+            أرجع ultag_isTransformedExtensionSubtags(s, len);
+        حالة 'x':
+            أرجع ultag_is_Privateuse_قيمة_Subtags(s, len);
+        افتراضي:
+            أرجع ultag_isExtensionSubtags(s, len);
     }
 }
 
@@ -51,7 +51,7 @@ LocaleBuilder::~LocaleBuilder()
     delete extensions_;
 }
 
-LocaleBuilder& LocaleBuilder::setLocale(const Locale& locale) U_LIFETIME_BOUND
+LocaleBuilder& LocaleBuilder::setLocale(ثابت Locale& locale) U_LIFETIME_BOUND
 {
     clear();
     setLanguage(locale.getLanguage());
@@ -59,33 +59,33 @@ LocaleBuilder& LocaleBuilder::setLocale(const Locale& locale) U_LIFETIME_BOUND
     setRegion(locale.getCountry());
     setVariant(locale.getVariant());
     extensions_ = locale.clone();
-    if (extensions_ == nullptr) {
+    إذا (extensions_ == nullptr) {
         status_ = U_MEMORY_ALLOCATION_ERROR;
     }
-    return *this;
+    أرجع *هذا;
 }
 
 LocaleBuilder& LocaleBuilder::setLanguageTag(StringPiece tag) U_LIFETIME_BOUND
 {
     Locale l = Locale::forLanguageTag(tag, status_);
-    if (U_FAILURE(status_)) { return *this; }
+    إذا (U_FAILURE(status_)) { أرجع *هذا; }
     // Because setLocale will reset status_ we need to return
     // first if we have error in forLanguageTag.
     setLocale(l);
-    return *this;
+    أرجع *هذا;
 }
 
-namespace {
+نطاق {
 
-void setField(StringPiece input, char* dest, UErrorCode& errorCode,
-              bool (*test)(const char*, int32_t)) {
-    if (U_FAILURE(errorCode)) { return; }
-    if (input.empty()) {
+فراغ setField(StringPiece input, حرف* dest, UErrorCode& errorCode,
+              منطقي (*test)(ثابت حرف*, int32_t)) {
+    إذا (U_FAILURE(errorCode)) { أرجع; }
+    إذا (input.empty()) {
         dest[0] = '\0';
-    } else if (test(input.data(), input.length())) {
+    } وإلا إذا (test(input.data(), input.length())) {
         uprv_memcpy(dest, input.data(), input.length());
         dest[input.length()] = '\0';
-    } else {
+    } وإلا {
         errorCode = U_ILLEGAL_ARGUMENT_ERROR;
     }
 }
@@ -95,28 +95,28 @@ void setField(StringPiece input, char* dest, UErrorCode& errorCode,
 LocaleBuilder& LocaleBuilder::setLanguage(StringPiece language) U_LIFETIME_BOUND
 {
     setField(language, language_, status_, &ultag_isLanguageSubtag);
-    return *this;
+    أرجع *هذا;
 }
 
 LocaleBuilder& LocaleBuilder::setScript(StringPiece script) U_LIFETIME_BOUND
 {
     setField(script, script_, status_, &ultag_isScriptSubtag);
-    return *this;
+    أرجع *هذا;
 }
 
 LocaleBuilder& LocaleBuilder::setRegion(StringPiece region) U_LIFETIME_BOUND
 {
     setField(region, region_, status_, &ultag_isRegionSubtag);
-    return *this;
+    أرجع *هذا;
 }
 
-namespace {
+نطاق {
 
-void transform(char* data, int32_t len) {
-    for (int32_t i = 0; i < len; i++, data++) {
-        if (*data == '_') {
+فراغ transform(حرف* data, int32_t len) {
+    لكل (int32_t i = 0; i < len; i++, data++) {
+        إذا (*data == '_') {
             *data = '-';
-        } else {
+        } وإلا {
             *data = uprv_tolower(*data);
         }
     }
@@ -126,263 +126,263 @@ void transform(char* data, int32_t len) {
 
 LocaleBuilder& LocaleBuilder::setVariant(StringPiece variant) U_LIFETIME_BOUND
 {
-    if (U_FAILURE(status_)) { return *this; }
-    if (variant.empty()) {
+    إذا (U_FAILURE(status_)) { أرجع *هذا; }
+    إذا (variant.empty()) {
         delete variant_;
         variant_ = nullptr;
-        return *this;
+        أرجع *هذا;
     }
-    FixedString* new_variant = new FixedString(variant);
-    if (new_variant == nullptr || new_variant->isEmpty()) {
+    FixedString* new_variant = جديد FixedString(variant);
+    إذا (new_variant == nullptr || new_variant->isEmpty()) {
         status_ = U_MEMORY_ALLOCATION_ERROR;
-        return *this;
+        أرجع *هذا;
     }
     transform(new_variant->getAlias(), variant.length());
-    if (!ultag_isVariantSubtags(new_variant->data(), variant.length())) {
+    إذا (!ultag_isVariantSubtags(new_variant->data(), variant.length())) {
         delete new_variant;
         status_ = U_ILLEGAL_ARGUMENT_ERROR;
-        return *this;
+        أرجع *هذا;
     }
     delete variant_;
     variant_ = new_variant;
-    return *this;
+    أرجع *هذا;
 }
 
-namespace {
+نطاق {
 
-bool
-_isKeywordValue(const char* key, const char* value, int32_t value_len)
+منطقي
+is_Keyword_قيمة(ثابت حرف* مفتاح, ثابت حرف* value, int32_t قيمة_len)
 {
-    if (key[1] == '\0') {
+    إذا (مفتاح[1] == '\0') {
         // one char key
-        return (UPRV_ISALPHANUM(uprv_tolower(key[0])) &&
-                _isExtensionSubtags(key[0], value, value_len));
-    } else if (uprv_strcmp(key, kAttributeKey) == 0) {
+        أرجع (UPRV_ISALPHANUM(uprv_tolower(مفتاح[0])) &&
+                _isExtensionSubtags(مفتاح[0], value, قيمة_len));
+    } وإلا إذا (uprv_strcmp(مفتاح, k_Attribute_مفتاح) == 0) {
         // unicode attributes
-        return ultag_isUnicodeLocaleAttributes(value, value_len);
+        أرجع ultag_isUnicodeLocaleAttributes(value, قيمة_len);
     }
     // otherwise: unicode extension value
     // We need to convert from legacy key/value to unicode
     // key/value
-    std::optional<std::string_view> unicode_locale_key = ulocimp_toBcpKeyWithFallback(key);
-    std::optional<std::string_view> unicode_locale_type = ulocimp_toBcpTypeWithFallback(key, value);
+    std::optional<std::string_view> unicode_locale_مفتاح = ulocimp_to_Bcp_مفتاح_With_Fallback(مفتاح);
+    std::optional<std::string_view> unicode_locale_type = ulocimp_toBcpTypeWithFallback(مفتاح, value);
 
-    return unicode_locale_key.has_value() &&
+    أرجع unicode_locale_مفتاح.has_value() &&
            unicode_locale_type.has_value() &&
-           ultag_isUnicodeLocaleKey(unicode_locale_key->data(),
-                                    static_cast<int32_t>(unicode_locale_key->size())) &&
+           ultag_is_Unicode_Locale_مفتاح(unicode_locale_مفتاح->data(),
+                                    static_cast<int32_t>(unicode_locale_مفتاح->size())) &&
            ultag_isUnicodeLocaleType(unicode_locale_type->data(),
                                      static_cast<int32_t>(unicode_locale_type->size()));
 }
 
-void
-_copyExtensions(const Locale& from, icu::StringEnumeration *keywords,
-                Locale& to, bool validate, UErrorCode& errorCode)
+فراغ
+_copyExtensions(ثابت Locale& from, icu::StringEnumeration *keywords,
+                Locale& to, منطقي validate, UErrorCode& errorCode)
 {
-    if (U_FAILURE(errorCode)) { return; }
+    إذا (U_FAILURE(errorCode)) { أرجع; }
     LocalPointer<icu::StringEnumeration> ownedKeywords;
-    if (keywords == nullptr) {
+    إذا (keywords == nullptr) {
         ownedKeywords.adoptInstead(from.createKeywords(errorCode));
-        if (U_FAILURE(errorCode) || ownedKeywords.isNull()) { return; }
+        إذا (U_FAILURE(errorCode) || ownedKeywords.isNull()) { أرجع; }
         keywords = ownedKeywords.getAlias();
     }
-    const char* key;
-    while ((key = keywords->next(nullptr, errorCode)) != nullptr) {
-        auto value = from.getKeywordValue<CharString>(key, errorCode);
-        if (U_FAILURE(errorCode)) { return; }
-        if (uprv_strcmp(key, kAttributeKey) == 0) {
+    ثابت حرف* مفتاح;
+    طالما ((مفتاح = keywords->next(nullptr, errorCode)) != nullptr) {
+        auto value = from.get_Keyword_قيمة<CharString>(مفتاح, errorCode);
+        إذا (U_FAILURE(errorCode)) { أرجع; }
+        إذا (uprv_strcmp(مفتاح, k_Attribute_مفتاح) == 0) {
             transform(value.data(), value.length());
         }
-        if (validate &&
-            !_isKeywordValue(key, value.data(), value.length())) {
+        إذا (validate &&
+            !is_Keyword_قيمة(مفتاح, value.data(), value.length())) {
             errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-            return;
+            أرجع;
         }
-        to.setKeywordValue(key, value.data(), errorCode);
-        if (U_FAILURE(errorCode)) { return; }
+        to.set_Keyword_قيمة(مفتاح, value.data(), errorCode);
+        إذا (U_FAILURE(errorCode)) { أرجع; }
     }
 }
 
-void
-_clearUAttributesAndKeyType(Locale& locale, UErrorCode& errorCode)
+فراغ
+clear_UAttributes_And_مفتاح_Type(Locale& locale, UErrorCode& errorCode)
 {
-    if (U_FAILURE(errorCode)) { return; }
+    إذا (U_FAILURE(errorCode)) { أرجع; }
     // Clear Unicode attributes
-    locale.setKeywordValue(kAttributeKey, "", errorCode);
+    locale.set_Keyword_قيمة(k_Attribute_مفتاح, "", errorCode);
 
     // Clear all Unicode keyword values
     LocalPointer<icu::StringEnumeration> iter(locale.createUnicodeKeywords(errorCode));
-    if (U_FAILURE(errorCode) || iter.isNull()) { return; }
-    const char* key;
-    while ((key = iter->next(nullptr, errorCode)) != nullptr) {
-        locale.setUnicodeKeywordValue(key, nullptr, errorCode);
+    إذا (U_FAILURE(errorCode) || iter.isNull()) { أرجع; }
+    ثابت حرف* مفتاح;
+    طالما ((مفتاح = iter->next(nullptr, errorCode)) != nullptr) {
+        locale.set_Unicode_Keyword_قيمة(مفتاح, nullptr, errorCode);
     }
 }
 
-void
-_setUnicodeExtensions(Locale& locale, const CharString& value, UErrorCode& errorCode)
+فراغ
+_setUnicodeExtensions(Locale& locale, ثابت CharString& value, UErrorCode& errorCode)
 {
-    if (U_FAILURE(errorCode)) { return; }
+    إذا (U_FAILURE(errorCode)) { أرجع; }
     // Add the unicode extensions to extensions_
     CharString locale_str("und-u-", errorCode);
     locale_str.append(value, errorCode);
     _copyExtensions(
         Locale::forLanguageTag(locale_str.data(), errorCode), nullptr,
-        locale, false, errorCode);
+        locale, خطأ, errorCode);
 }
 
 }  // namespace
 
-LocaleBuilder& LocaleBuilder::setExtension(char key, StringPiece value) U_LIFETIME_BOUND
+LocaleBuilder& LocaleBuilder::setExtension(حرف مفتاح, StringPiece value) U_LIFETIME_BOUND
 {
-    if (U_FAILURE(status_)) { return *this; }
-    if (!UPRV_ISALPHANUM(key)) {
+    إذا (U_FAILURE(status_)) { أرجع *هذا; }
+    إذا (!UPRV_ISALPHANUM(مفتاح)) {
         status_ = U_ILLEGAL_ARGUMENT_ERROR;
-        return *this;
+        أرجع *هذا;
     }
-    CharString value_str(value, status_);
-    if (U_FAILURE(status_)) { return *this; }
-    transform(value_str.data(), value_str.length());
-    if (!value_str.isEmpty() &&
-            !_isExtensionSubtags(key, value_str.data(), value_str.length())) {
+    CharString قيمة_str(value, status_);
+    إذا (U_FAILURE(status_)) { أرجع *هذا; }
+    transform(قيمة_str.data(), قيمة_str.length());
+    إذا (!قيمة_str.isEmpty() &&
+            !_isExtensionSubtags(مفتاح, قيمة_str.data(), قيمة_str.length())) {
         status_ = U_ILLEGAL_ARGUMENT_ERROR;
-        return *this;
+        أرجع *هذا;
     }
-    if (extensions_ == nullptr) {
-        extensions_ = Locale::getRoot().clone();
-        if (extensions_ == nullptr) {
+    إذا (extensions_ == nullptr) {
+        extensions_ = Locale::get_جذر().clone();
+        إذا (extensions_ == nullptr) {
             status_ = U_MEMORY_ALLOCATION_ERROR;
-            return *this;
+            أرجع *هذا;
         }
     }
-    if (uprv_tolower(key) != 'u') {
+    إذا (uprv_tolower(مفتاح) != 'u') {
         // for t, x and others extension.
-        extensions_->setKeywordValue(StringPiece(&key, 1), value_str.data(),
+        extensions_->set_Keyword_قيمة(StringPiece(&مفتاح, 1), قيمة_str.data(),
                                      status_);
-        return *this;
+        أرجع *هذا;
     }
-    _clearUAttributesAndKeyType(*extensions_, status_);
-    if (U_FAILURE(status_)) { return *this; }
-    if (!value.empty()) {
-        _setUnicodeExtensions(*extensions_, value_str, status_);
+    clear_UAttributes_And_مفتاح_Type(*extensions_, status_);
+    إذا (U_FAILURE(status_)) { أرجع *هذا; }
+    إذا (!value.empty()) {
+        _setUnicodeExtensions(*extensions_, قيمة_str, status_);
     }
-    return *this;
+    أرجع *هذا;
 }
 
-LocaleBuilder& LocaleBuilder::setUnicodeLocaleKeyword(StringPiece key,
+LocaleBuilder& LocaleBuilder::setUnicodeLocaleKeyword(StringPiece مفتاح,
                                                       StringPiece type) U_LIFETIME_BOUND
 {
-    if (U_FAILURE(status_)) { return *this; }
-    if (!ultag_isUnicodeLocaleKey(key.data(), key.length()) ||
+    إذا (U_FAILURE(status_)) { أرجع *هذا; }
+    إذا (!ultag_is_Unicode_Locale_مفتاح(مفتاح.data(), مفتاح.length()) ||
             (!type.empty() &&
                  !ultag_isUnicodeLocaleType(type.data(), type.length()))) {
       status_ = U_ILLEGAL_ARGUMENT_ERROR;
-      return *this;
+      أرجع *هذا;
     }
-    if (extensions_ == nullptr) {
-        extensions_ = Locale::getRoot().clone();
-        if (extensions_ == nullptr) {
+    إذا (extensions_ == nullptr) {
+        extensions_ = Locale::get_جذر().clone();
+        إذا (extensions_ == nullptr) {
             status_ = U_MEMORY_ALLOCATION_ERROR;
-            return *this;
+            أرجع *هذا;
         }
     }
-    extensions_->setUnicodeKeywordValue(key, type, status_);
-    return *this;
+    extensions_->set_Unicode_Keyword_قيمة(مفتاح, type, status_);
+    أرجع *هذا;
 }
 
 LocaleBuilder& LocaleBuilder::addUnicodeLocaleAttribute(StringPiece value) U_LIFETIME_BOUND
 {
-    CharString value_str(value, status_);
-    if (U_FAILURE(status_)) { return *this; }
-    transform(value_str.data(), value_str.length());
-    if (!ultag_isUnicodeLocaleAttribute(value_str.data(), value_str.length())) {
+    CharString قيمة_str(value, status_);
+    إذا (U_FAILURE(status_)) { أرجع *هذا; }
+    transform(قيمة_str.data(), قيمة_str.length());
+    إذا (!ultag_isUnicodeLocaleAttribute(قيمة_str.data(), قيمة_str.length())) {
         status_ = U_ILLEGAL_ARGUMENT_ERROR;
-        return *this;
+        أرجع *هذا;
     }
-    if (extensions_ == nullptr) {
-        extensions_ = Locale::getRoot().clone();
-        if (extensions_ == nullptr) {
+    إذا (extensions_ == nullptr) {
+        extensions_ = Locale::get_جذر().clone();
+        إذا (extensions_ == nullptr) {
             status_ = U_MEMORY_ALLOCATION_ERROR;
-            return *this;
+            أرجع *هذا;
         }
-        extensions_->setKeywordValue(kAttributeKey, value_str.data(), status_);
-        return *this;
+        extensions_->set_Keyword_قيمة(k_Attribute_مفتاح, قيمة_str.data(), status_);
+        أرجع *هذا;
     }
 
     UErrorCode localErrorCode = U_ZERO_ERROR;
-    auto attributes = extensions_->getKeywordValue<CharString>(kAttributeKey, localErrorCode);
-    if (U_FAILURE(localErrorCode)) {
-        CharString new_attributes(value_str.data(), status_);
+    auto attributes = extensions_->get_Keyword_قيمة<CharString>(k_Attribute_مفتاح, localErrorCode);
+    إذا (U_FAILURE(localErrorCode)) {
+        CharString new_attributes(قيمة_str.data(), status_);
         // No attributes, set the attribute.
-        extensions_->setKeywordValue(kAttributeKey, new_attributes.data(), status_);
-        return *this;
+        extensions_->set_Keyword_قيمة(k_Attribute_مفتاح, new_attributes.data(), status_);
+        أرجع *هذا;
     }
 
     transform(attributes.data(),attributes.length());
-    const char* start = attributes.data();
-    const char* limit = attributes.data() + attributes.length();
+    ثابت حرف* start = attributes.data();
+    ثابت حرف* limit = attributes.data() + attributes.length();
     CharString new_attributes;
-    bool inserted = false;
-    while (start < limit) {
-        if (!inserted) {
-            int cmp = uprv_strcmp(start, value_str.data());
-            if (cmp == 0) { return *this; }  // Found it in attributes: Just return
-            if (cmp > 0) {
-                if (!new_attributes.isEmpty()) new_attributes.append('_', status_);
-                new_attributes.append(value_str.data(), status_);
+    منطقي inserted = خطأ;
+    طالما (start < limit) {
+        إذا (!inserted) {
+            صحيح cmp = uprv_strcmp(start, قيمة_str.data());
+            إذا (cmp == 0) { أرجع *هذا; }  // Found it in attributes: Just return
+            إذا (cmp > 0) {
+                إذا (!new_attributes.isEmpty()) new_attributes.append('_', status_);
+                new_attributes.append(قيمة_str.data(), status_);
                 inserted = true;
             }
         }
-        if (!new_attributes.isEmpty()) {
+        إذا (!new_attributes.isEmpty()) {
             new_attributes.append('_', status_);
         }
         new_attributes.append(start, status_);
         start += uprv_strlen(start) + 1;
     }
-    if (!inserted) {
-        if (!new_attributes.isEmpty()) {
+    إذا (!inserted) {
+        إذا (!new_attributes.isEmpty()) {
             new_attributes.append('_', status_);
         }
-        new_attributes.append(value_str.data(), status_);
+        new_attributes.append(قيمة_str.data(), status_);
     }
     // Not yet in the attributes, set the attribute.
-    extensions_->setKeywordValue(kAttributeKey, new_attributes.data(), status_);
-    return *this;
+    extensions_->set_Keyword_قيمة(k_Attribute_مفتاح, new_attributes.data(), status_);
+    أرجع *هذا;
 }
 
 LocaleBuilder& LocaleBuilder::removeUnicodeLocaleAttribute(StringPiece value) U_LIFETIME_BOUND
 {
-    CharString value_str(value, status_);
-    if (U_FAILURE(status_)) { return *this; }
-    transform(value_str.data(), value_str.length());
-    if (!ultag_isUnicodeLocaleAttribute(value_str.data(), value_str.length())) {
+    CharString قيمة_str(value, status_);
+    إذا (U_FAILURE(status_)) { أرجع *هذا; }
+    transform(قيمة_str.data(), قيمة_str.length());
+    إذا (!ultag_isUnicodeLocaleAttribute(قيمة_str.data(), قيمة_str.length())) {
         status_ = U_ILLEGAL_ARGUMENT_ERROR;
-        return *this;
+        أرجع *هذا;
     }
-    if (extensions_ == nullptr) { return *this; }
+    إذا (extensions_ == nullptr) { أرجع *هذا; }
     UErrorCode localErrorCode = U_ZERO_ERROR;
-    auto attributes = extensions_->getKeywordValue<CharString>(kAttributeKey, localErrorCode);
+    auto attributes = extensions_->get_Keyword_قيمة<CharString>(k_Attribute_مفتاح, localErrorCode);
     // get failure, just return
-    if (U_FAILURE(localErrorCode)) { return *this; }
+    إذا (U_FAILURE(localErrorCode)) { أرجع *هذا; }
     // Do not have any attributes, just return.
-    if (attributes.isEmpty()) { return *this; }
+    إذا (attributes.isEmpty()) { أرجع *هذا; }
 
-    char* p = attributes.data();
+    حرف* p = attributes.data();
     // Replace null terminiator in place for _ and - so later
     // we can use uprv_strcmp to compare.
-    for (int32_t i = 0; i < attributes.length(); i++, p++) {
+    لكل (int32_t i = 0; i < attributes.length(); i++, p++) {
         *p = (*p == '_' || *p == '-') ? '\0' : uprv_tolower(*p);
     }
 
-    const char* start = attributes.data();
-    const char* limit = attributes.data() + attributes.length();
+    ثابت حرف* start = attributes.data();
+    ثابت حرف* limit = attributes.data() + attributes.length();
     CharString new_attributes;
-    bool found = false;
-    while (start < limit) {
-        if (uprv_strcmp(start, value_str.data()) == 0) {
+    منطقي found = خطأ;
+    طالما (start < limit) {
+        إذا (uprv_strcmp(start, قيمة_str.data()) == 0) {
             found = true;
-        } else {
-            if (!new_attributes.isEmpty()) {
+        } وإلا {
+            إذا (!new_attributes.isEmpty()) {
                 new_attributes.append('_', status_);
             }
             new_attributes.append(start, status_);
@@ -390,10 +390,10 @@ LocaleBuilder& LocaleBuilder::removeUnicodeLocaleAttribute(StringPiece value) U_
         start += uprv_strlen(start) + 1;
     }
     // Found the value in attributes, set the attribute.
-    if (found) {
-        extensions_->setKeywordValue(kAttributeKey, new_attributes.data(), status_);
+    إذا (found) {
+        extensions_->set_Keyword_قيمة(k_Attribute_مفتاح, new_attributes.data(), status_);
     }
-    return *this;
+    أرجع *هذا;
 }
 
 LocaleBuilder& LocaleBuilder::clear() U_LIFETIME_BOUND
@@ -405,79 +405,79 @@ LocaleBuilder& LocaleBuilder::clear() U_LIFETIME_BOUND
     delete variant_;
     variant_ = nullptr;
     clearExtensions();
-    return *this;
+    أرجع *هذا;
 }
 
 LocaleBuilder& LocaleBuilder::clearExtensions() U_LIFETIME_BOUND
 {
     delete extensions_;
     extensions_ = nullptr;
-    return *this;
+    أرجع *هذا;
 }
 
 Locale makeBogusLocale() {
   Locale bogus;
   bogus.setToBogus();
-  return bogus;
+  أرجع bogus;
 }
 
-void LocaleBuilder::copyExtensionsFrom(const Locale& src, UErrorCode& errorCode)
+فراغ LocaleBuilder::copyExtensionsFrom(ثابت Locale& src, UErrorCode& errorCode)
 {
-    if (U_FAILURE(errorCode)) { return; }
+    إذا (U_FAILURE(errorCode)) { أرجع; }
     LocalPointer<icu::StringEnumeration> keywords(src.createKeywords(errorCode));
-    if (U_FAILURE(errorCode) || keywords.isNull() || keywords->count(errorCode) == 0) {
+    إذا (U_FAILURE(errorCode) || keywords.isNull() || keywords->count(errorCode) == 0) {
         // Error, or no extensions to copy.
-        return;
+        أرجع;
     }
-    if (extensions_ == nullptr) {
-        extensions_ = Locale::getRoot().clone();
-        if (extensions_ == nullptr) {
+    إذا (extensions_ == nullptr) {
+        extensions_ = Locale::get_جذر().clone();
+        إذا (extensions_ == nullptr) {
             status_ = U_MEMORY_ALLOCATION_ERROR;
-            return;
+            أرجع;
         }
     }
-    _copyExtensions(src, keywords.getAlias(), *extensions_, false, errorCode);
+    _copyExtensions(src, keywords.getAlias(), *extensions_, خطأ, errorCode);
 }
 
 Locale LocaleBuilder::build(UErrorCode& errorCode)
 {
-    if (U_FAILURE(errorCode)) {
-        return makeBogusLocale();
+    إذا (U_FAILURE(errorCode)) {
+        أرجع makeBogusLocale();
     }
-    if (U_FAILURE(status_)) {
+    إذا (U_FAILURE(status_)) {
         errorCode = status_;
-        return makeBogusLocale();
+        أرجع makeBogusLocale();
     }
     CharString locale_str(language_, errorCode);
-    if (uprv_strlen(script_) > 0) {
+    إذا (uprv_strlen(script_) > 0) {
         locale_str.append('-', errorCode).append(StringPiece(script_), errorCode);
     }
-    if (uprv_strlen(region_) > 0) {
+    إذا (uprv_strlen(region_) > 0) {
         locale_str.append('-', errorCode).append(StringPiece(region_), errorCode);
     }
-    if (variant_ != nullptr) {
+    إذا (variant_ != nullptr) {
         locale_str.append('-', errorCode).append(StringPiece(variant_->data()), errorCode);
     }
-    if (U_FAILURE(errorCode)) {
-        return makeBogusLocale();
+    إذا (U_FAILURE(errorCode)) {
+        أرجع makeBogusLocale();
     }
     Locale product(locale_str.data());
-    if (extensions_ != nullptr) {
+    إذا (extensions_ != nullptr) {
         _copyExtensions(*extensions_, nullptr, product, true, errorCode);
     }
-    if (U_FAILURE(errorCode)) {
-        return makeBogusLocale();
+    إذا (U_FAILURE(errorCode)) {
+        أرجع makeBogusLocale();
     }
-    return product;
+    أرجع product;
 }
 
-UBool LocaleBuilder::copyErrorTo(UErrorCode &outErrorCode) const {
-    if (U_FAILURE(outErrorCode)) {
+UBool LocaleBuilder::copyErrorTo(UErrorCode &outErrorCode) ثابت {
+    إذا (U_FAILURE(outErrorCode)) {
         // Do not overwrite the older error code
-        return true;
+        أرجع true;
     }
     outErrorCode = status_;
-    return U_FAILURE(outErrorCode);
+    أرجع U_FAILURE(outErrorCode);
 }
 
 U_NAMESPACE_END
