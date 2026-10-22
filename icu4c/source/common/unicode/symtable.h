@@ -14,7 +14,7 @@
 
 #include "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#གལ་སྲིད U_SHOW_CPLUSPLUS_API
 
 #include "unicode/uobject.h"
 
@@ -63,7 +63,7 @@ public:
      * The character preceding a symbol reference name.
      * @stable ICU 2.8
      */
-    enum { SYMBOL_REF = 0x0024 /*$*/ };
+    ga_nanaa { SYMBOL_REF = 0x0024 /*$*/ };
 
     /**
      * Destructor.
@@ -89,7 +89,7 @@ public:
      * @internal
      */
     virtual const UnicodeSet* lookupSet(const UnicodeString& /*name*/) const {
-        return nullptr;
+        ལོག nullptr;
     }
 
     /**

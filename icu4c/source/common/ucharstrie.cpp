@@ -31,18 +31,18 @@ UCharsTrie::~UCharsTrie() {
 UStringTrieResult
 UCharsTrie::current() const {
     const char16_t *pos=pos_;
-    if(pos==nullptr) {
-        return USTRINGTRIE_NO_MATCH;
-    } else {
+    གལ་སྲིད(pos==nullptr) {
+        ལོག USTRINGTRIE_NO_MATCH;
+    } དེ་མིན {
         int32_t node;
-        return (remainingMatchLength_<0 && (node=*pos)>=kMinValueLead) ?
+        ལོག (remainingMatchLength_<0 && (node=*pos)>=kMinValueLead) ?
                 valueResult(node) : USTRINGTRIE_NO_VALUE;
     }
 }
 
 UStringTrieResult
 UCharsTrie::firstForCodePoint(UChar32 cp) {
-    return cp<=0xffff ?
+    ལོག cp<=0xffff ?
         first(cp) :
         (USTRINGTRIE_HAS_NEXT(first(U16_LEAD(cp))) ?
             next(U16_TRAIL(cp)) :
@@ -51,7 +51,7 @@ UCharsTrie::firstForCodePoint(UChar32 cp) {
 
 UStringTrieResult
 UCharsTrie::nextForCodePoint(UChar32 cp) {
-    return cp<=0xffff ?
+    ལོག cp<=0xffff ?
         next(cp) :
         (USTRINGTRIE_HAS_NEXT(next(U16_LEAD(cp))) ?
             next(U16_TRAIL(cp)) :
@@ -61,17 +61,17 @@ UCharsTrie::nextForCodePoint(UChar32 cp) {
 UStringTrieResult
 UCharsTrie::branchNext(const char16_t *pos, int32_t length, int32_t uchar) {
     // Branch according to the current unit.
-    if(length==0) {
+    གལ་སྲིད(length==0) {
         length=*pos++;
     }
     ++length;
     // The length of the branch is the number of units to select from.
     // The data structure encodes a binary search.
-    while(length>kMaxBranchLinearSubNodeLength) {
-        if(uchar<*pos++) {
+    སྐབས(length>kMaxBranchLinearSubNodeLength) {
+        གལ་སྲིད(uchar<*pos++) {
             length>>=1;
             pos=jumpByDelta(pos);
-        } else {
+        } དེ་མིན {
             length=length-(length>>1);
             pos=skipDelta(pos);
         }
@@ -80,22 +80,22 @@ UCharsTrie::branchNext(const char16_t *pos, int32_t length, int32_t uchar) {
     // length>=2 because the loop body above sees length>kMaxBranchLinearSubNodeLength>=3
     // and divides length by 2.
     do {
-        if(uchar==*pos++) {
+        གལ་སྲིད(uchar==*pos++) {
             UStringTrieResult result;
             int32_t node=*pos;
-            if(node&kValueIsFinal) {
+            གལ་སྲིད(node&kValueIsFinal) {
                 // Leave the final value for getValue() to read.
                 result=USTRINGTRIE_FINAL_VALUE;
-            } else {
+            } དེ་མིན {
                 // Use the non-final value as the jump delta.
                 ++pos;
                 // int32_t delta=readValue(pos, node);
                 int32_t delta;
-                if(node<kMinTwoUnitValueLead) {
+                གལ་སྲིད(node<kMinTwoUnitValueLead) {
                     delta=node;
-                } else if(node<kThreeUnitValueLead) {
+                } དེ་མིན གལ་སྲིད(node<kThreeUnitValueLead) {
                     delta=((node-kMinTwoUnitValueLead)<<16)|*pos++;
-                } else {
+                } དེ་མིན {
                     delta=(pos[0]<<16)|pos[1];
                     pos+=2;
                 }
@@ -105,175 +105,175 @@ UCharsTrie::branchNext(const char16_t *pos, int32_t length, int32_t uchar) {
                 result= node>=kMinValueLead ? valueResult(node) : USTRINGTRIE_NO_VALUE;
             }
             pos_=pos;
-            return result;
+            ལོག result;
         }
         --length;
         pos=skipValue(pos);
-    } while(length>1);
-    if(uchar==*pos++) {
+    } སྐབས(length>1);
+    གལ་སྲིད(uchar==*pos++) {
         pos_=pos;
         int32_t node=*pos;
-        return node>=kMinValueLead ? valueResult(node) : USTRINGTRIE_NO_VALUE;
-    } else {
+        ལོག node>=kMinValueLead ? valueResult(node) : USTRINGTRIE_NO_VALUE;
+    } དེ་མིན {
         stop();
-        return USTRINGTRIE_NO_MATCH;
+        ལོག USTRINGTRIE_NO_MATCH;
     }
 }
 
 UStringTrieResult
 UCharsTrie::nextImpl(const char16_t *pos, int32_t uchar) {
     int32_t node=*pos++;
-    for(;;) {
-        if(node<kMinLinearMatch) {
-            return branchNext(pos, node, uchar);
-        } else if(node<kMinValueLead) {
+    དོན་ལུ(;;) {
+        གལ་སྲིད(node<kMinLinearMatch) {
+            ལོག branchNext(pos, node, uchar);
+        } དེ་མིན གལ་སྲིད(node<kMinValueLead) {
             // Match the first of length+1 units.
             int32_t length=node-kMinLinearMatch;  // Actual match length minus 1.
-            if(uchar==*pos++) {
+            གལ་སྲིད(uchar==*pos++) {
                 remainingMatchLength_=--length;
                 pos_=pos;
-                return (length<0 && (node=*pos)>=kMinValueLead) ?
+                ལོག (length<0 && (node=*pos)>=kMinValueLead) ?
                         valueResult(node) : USTRINGTRIE_NO_VALUE;
-            } else {
+            } དེ་མིན {
                 // No match.
-                break;
+                bha_nga;
             }
-        } else if(node&kValueIsFinal) {
+        } དེ་མིན གལ་སྲིད(node&kValueIsFinal) {
             // No further matching units.
-            break;
-        } else {
+            bha_nga;
+        } དེ་མིན {
             // Skip intermediate value.
             pos=skipNodeValue(pos, node);
             node&=kNodeTypeMask;
         }
     }
     stop();
-    return USTRINGTRIE_NO_MATCH;
+    ལོག USTRINGTRIE_NO_MATCH;
 }
 
 UStringTrieResult
 UCharsTrie::next(int32_t uchar) {
     const char16_t *pos=pos_;
-    if(pos==nullptr) {
-        return USTRINGTRIE_NO_MATCH;
+    གལ་སྲིད(pos==nullptr) {
+        ལོག USTRINGTRIE_NO_MATCH;
     }
     int32_t length=remainingMatchLength_;  // Actual remaining match length minus 1.
-    if(length>=0) {
+    གལ་སྲིད(length>=0) {
         // Remaining part of a linear-match node.
-        if(uchar==*pos++) {
+        གལ་སྲིད(uchar==*pos++) {
             remainingMatchLength_=--length;
             pos_=pos;
             int32_t node;
-            return (length<0 && (node=*pos)>=kMinValueLead) ?
+            ལོག (length<0 && (node=*pos)>=kMinValueLead) ?
                     valueResult(node) : USTRINGTRIE_NO_VALUE;
-        } else {
+        } དེ་མིན {
             stop();
-            return USTRINGTRIE_NO_MATCH;
+            ལོག USTRINGTRIE_NO_MATCH;
         }
     }
-    return nextImpl(pos, uchar);
+    ལོག nextImpl(pos, uchar);
 }
 
 UStringTrieResult
 UCharsTrie::next(ConstChar16Ptr ptr, int32_t sLength) {
     const char16_t *s=ptr;
-    if(sLength<0 ? *s==0 : sLength==0) {
+    གལ་སྲིད(sLength<0 ? *s==0 : sLength==0) {
         // Empty input.
-        return current();
+        ལོག current();
     }
     const char16_t *pos=pos_;
-    if(pos==nullptr) {
-        return USTRINGTRIE_NO_MATCH;
+    གལ་སྲིད(pos==nullptr) {
+        ལོག USTRINGTRIE_NO_MATCH;
     }
     int32_t length=remainingMatchLength_;  // Actual remaining match length minus 1.
-    for(;;) {
+    དོན་ལུ(;;) {
         // Fetch the next input unit, if there is one.
         // Continue a linear-match node without rechecking sLength<0.
         int32_t uchar;
-        if(sLength<0) {
-            for(;;) {
-                if((uchar=*s++)==0) {
+        གལ་སྲིད(sLength<0) {
+            དོན་ལུ(;;) {
+                གལ་སྲིད((uchar=*s++)==0) {
                     remainingMatchLength_=length;
                     pos_=pos;
                     int32_t node;
-                    return (length<0 && (node=*pos)>=kMinValueLead) ?
+                    ལོག (length<0 && (node=*pos)>=kMinValueLead) ?
                             valueResult(node) : USTRINGTRIE_NO_VALUE;
                 }
-                if(length<0) {
+                གལ་སྲིད(length<0) {
                     remainingMatchLength_=length;
-                    break;
+                    bha_nga;
                 }
-                if(uchar!=*pos) {
+                གལ་སྲིད(uchar!=*pos) {
                     stop();
-                    return USTRINGTRIE_NO_MATCH;
+                    ལོག USTRINGTRIE_NO_MATCH;
                 }
                 ++pos;
                 --length;
             }
-        } else {
-            for(;;) {
-                if(sLength==0) {
+        } དེ་མིན {
+            དོན་ལུ(;;) {
+                གལ་སྲིད(sLength==0) {
                     remainingMatchLength_=length;
                     pos_=pos;
                     int32_t node;
-                    return (length<0 && (node=*pos)>=kMinValueLead) ?
+                    ལོག (length<0 && (node=*pos)>=kMinValueLead) ?
                             valueResult(node) : USTRINGTRIE_NO_VALUE;
                 }
                 uchar=*s++;
                 --sLength;
-                if(length<0) {
+                གལ་སྲིད(length<0) {
                     remainingMatchLength_=length;
-                    break;
+                    bha_nga;
                 }
-                if(uchar!=*pos) {
+                གལ་སྲིད(uchar!=*pos) {
                     stop();
-                    return USTRINGTRIE_NO_MATCH;
+                    ལོག USTRINGTRIE_NO_MATCH;
                 }
                 ++pos;
                 --length;
             }
         }
         int32_t node=*pos++;
-        for(;;) {
-            if(node<kMinLinearMatch) {
+        དོན་ལུ(;;) {
+            གལ་སྲིད(node<kMinLinearMatch) {
                 UStringTrieResult result=branchNext(pos, node, uchar);
-                if(result==USTRINGTRIE_NO_MATCH) {
-                    return USTRINGTRIE_NO_MATCH;
+                གལ་སྲིད(result==USTRINGTRIE_NO_MATCH) {
+                    ལོག USTRINGTRIE_NO_MATCH;
                 }
                 // Fetch the next input unit, if there is one.
-                if(sLength<0) {
-                    if((uchar=*s++)==0) {
-                        return result;
+                གལ་སྲིད(sLength<0) {
+                    གལ་སྲིད((uchar=*s++)==0) {
+                        ལོག result;
                     }
-                } else {
-                    if(sLength==0) {
-                        return result;
+                } དེ་མིན {
+                    གལ་སྲིད(sLength==0) {
+                        ལོག result;
                     }
                     uchar=*s++;
                     --sLength;
                 }
-                if(result==USTRINGTRIE_FINAL_VALUE) {
+                གལ་སྲིད(result==USTRINGTRIE_FINAL_VALUE) {
                     // No further matching units.
                     stop();
-                    return USTRINGTRIE_NO_MATCH;
+                    ལོག USTRINGTRIE_NO_MATCH;
                 }
                 pos=pos_;  // branchNext() advanced pos and wrote it to pos_ .
                 node=*pos++;
-            } else if(node<kMinValueLead) {
+            } དེ་མིན གལ་སྲིད(node<kMinValueLead) {
                 // Match length+1 units.
                 length=node-kMinLinearMatch;  // Actual match length minus 1.
-                if(uchar!=*pos) {
+                གལ་སྲིད(uchar!=*pos) {
                     stop();
-                    return USTRINGTRIE_NO_MATCH;
+                    ལོག USTRINGTRIE_NO_MATCH;
                 }
                 ++pos;
                 --length;
-                break;
-            } else if(node&kValueIsFinal) {
+                bha_nga;
+            } དེ་མིན གལ་སྲིད(node&kValueIsFinal) {
                 // No further matching units.
                 stop();
-                return USTRINGTRIE_NO_MATCH;
-            } else {
+                ལོག USTRINGTRIE_NO_MATCH;
+            } དེ་མིན {
                 // Skip intermediate value.
                 pos=skipNodeValue(pos, node);
                 node&=kNodeTypeMask;
@@ -287,10 +287,10 @@ UCharsTrie::findUniqueValueFromBranch(const char16_t* pos U_LIFETIME_BOUND,
                                       int32_t length,
                                       UBool haveUniqueValue,
                                       int32_t& uniqueValue) {
-    while(length>kMaxBranchLinearSubNodeLength) {
+    སྐབས(length>kMaxBranchLinearSubNodeLength) {
         ++pos;  // ignore the comparison unit
-        if(nullptr==findUniqueValueFromBranch(jumpByDelta(pos), length>>1, haveUniqueValue, uniqueValue)) {
-            return nullptr;
+        གལ་སྲིད(nullptr==findUniqueValueFromBranch(jumpByDelta(pos), length>>1, haveUniqueValue, uniqueValue)) {
+            ལོག nullptr;
         }
         length=length-(length>>1);
         pos=skipDelta(pos);
@@ -303,61 +303,61 @@ UCharsTrie::findUniqueValueFromBranch(const char16_t* pos U_LIFETIME_BOUND,
         node&=0x7fff;
         int32_t value=readValue(pos, node);
         pos=skipValue(pos, node);
-        if(isFinal) {
-            if(haveUniqueValue) {
-                if(value!=uniqueValue) {
-                    return nullptr;
+        གལ་སྲིད(isFinal) {
+            གལ་སྲིད(haveUniqueValue) {
+                གལ་སྲིད(value!=uniqueValue) {
+                    ལོག nullptr;
                 }
-            } else {
+            } དེ་མིན {
                 uniqueValue=value;
                 haveUniqueValue=true;
             }
-        } else {
-            if(!findUniqueValue(pos+value, haveUniqueValue, uniqueValue)) {
-                return nullptr;
+        } དེ་མིན {
+            གལ་སྲིད(!findUniqueValue(pos+value, haveUniqueValue, uniqueValue)) {
+                ལོག nullptr;
             }
             haveUniqueValue=true;
         }
-    } while(--length>1);
-    return pos+1;  // ignore the last comparison unit
+    } སྐབས(--length>1);
+    ལོག pos+1;  // ignore the last comparison unit
 }
 
 UBool
 UCharsTrie::findUniqueValue(const char16_t *pos, UBool haveUniqueValue, int32_t &uniqueValue) {
     int32_t node=*pos++;
-    for(;;) {
-        if(node<kMinLinearMatch) {
-            if(node==0) {
+    དོན་ལུ(;;) {
+        གལ་སྲིད(node<kMinLinearMatch) {
+            གལ་སྲིད(node==0) {
                 node=*pos++;
             }
             pos=findUniqueValueFromBranch(pos, node+1, haveUniqueValue, uniqueValue);
-            if(pos==nullptr) {
-                return false;
+            གལ་སྲིད(pos==nullptr) {
+                ལོག false;
             }
             haveUniqueValue=true;
             node=*pos++;
-        } else if(node<kMinValueLead) {
+        } དེ་མིན གལ་སྲིད(node<kMinValueLead) {
             // linear-match node
             pos+=node-kMinLinearMatch+1;  // Ignore the match units.
             node=*pos++;
-        } else {
+        } དེ་མིན {
             UBool isFinal = static_cast<UBool>(node >> 15);
             int32_t value;
-            if(isFinal) {
+            གལ་སྲིད(isFinal) {
                 value=readValue(pos, node&0x7fff);
-            } else {
+            } དེ་མིན {
                 value=readNodeValue(pos, node);
             }
-            if(haveUniqueValue) {
-                if(value!=uniqueValue) {
-                    return false;
+            གལ་སྲིད(haveUniqueValue) {
+                གལ་སྲིད(value!=uniqueValue) {
+                    ལོག false;
                 }
-            } else {
+            } དེ་མིན {
                 uniqueValue=value;
                 haveUniqueValue=true;
             }
-            if(isFinal) {
-                return true;
+            གལ་སྲིད(isFinal) {
+                ལོག true;
             }
             pos=skipNodeValue(pos, node);
             node&=kNodeTypeMask;
@@ -368,39 +368,39 @@ UCharsTrie::findUniqueValue(const char16_t *pos, UBool haveUniqueValue, int32_t 
 int32_t
 UCharsTrie::getNextUChars(Appendable &out) const {
     const char16_t *pos=pos_;
-    if(pos==nullptr) {
-        return 0;
+    གལ་སྲིད(pos==nullptr) {
+        ལོག 0;
     }
-    if(remainingMatchLength_>=0) {
+    གལ་སྲིད(remainingMatchLength_>=0) {
         out.appendCodeUnit(*pos);  // Next unit of a pending linear-match node.
-        return 1;
+        ལོག 1;
     }
     int32_t node=*pos++;
-    if(node>=kMinValueLead) {
-        if(node&kValueIsFinal) {
-            return 0;
-        } else {
+    གལ་སྲིད(node>=kMinValueLead) {
+        གལ་སྲིད(node&kValueIsFinal) {
+            ལོག 0;
+        } དེ་མིན {
             pos=skipNodeValue(pos, node);
             node&=kNodeTypeMask;
         }
     }
-    if(node<kMinLinearMatch) {
-        if(node==0) {
+    གལ་སྲིད(node<kMinLinearMatch) {
+        གལ་སྲིད(node==0) {
             node=*pos++;
         }
         out.reserveAppendCapacity(++node);
         getNextBranchUChars(pos, node, out);
-        return node;
-    } else {
+        ལོག node;
+    } དེ་མིན {
         // First unit of the linear-match node.
         out.appendCodeUnit(*pos);
-        return 1;
+        ལོག 1;
     }
 }
 
 void
 UCharsTrie::getNextBranchUChars(const char16_t *pos, int32_t length, Appendable &out) {
-    while(length>kMaxBranchLinearSubNodeLength) {
+    སྐབས(length>kMaxBranchLinearSubNodeLength) {
         ++pos;  // ignore the comparison unit
         getNextBranchUChars(jumpByDelta(pos), length>>1, out);
         length=length-(length>>1);
@@ -409,7 +409,7 @@ UCharsTrie::getNextBranchUChars(const char16_t *pos, int32_t length, Appendable 
     do {
         out.appendCodeUnit(*pos++);
         pos=skipValue(pos);
-    } while(--length>1);
+    } སྐབས(--length>1);
     out.appendCodeUnit(*pos);
 }
 

@@ -14,7 +14,7 @@
 
 U_NAMESPACE_BEGIN
 
-struct LSR final : public UMemory {
+sa_nracanaa LSR final : public UMemory {
     static constexpr int32_t REGION_INDEX_LIMIT = 1001 + 26 * 26;
 
     static constexpr int32_t EXPLICIT_LSR = 7;
@@ -24,10 +24,10 @@ struct LSR final : public UMemory {
     static constexpr int32_t IMPLICIT_LSR = 0;
     static constexpr int32_t DONT_CARE_FLAGS = 0;
 
-    const char *language;
-    const char *script;
-    const char *region;
-    char *owned = nullptr;
+    const var_na *language;
+    const var_na *script;
+    const var_na *region;
+    var_na *owned = nullptr;
     /** Index for region, 0 if ill-formed. @see indexForRegion */
     int32_t regionIndex = 0;
     int32_t flags = 0;
@@ -37,22 +37,22 @@ struct LSR final : public UMemory {
     LSR() : language("und"), script(""), region("") {}
 
     /** Constructor which aliases all subtag pointers. */
-    LSR(const char *lang, const char *scr, const char *r, int32_t f) :
+    LSR(const var_na *lang, const var_na *scr, const var_na *r, int32_t f) :
             language(lang),  script(scr), region(r),
             regionIndex(indexForRegion(region)), flags(f) {}
     /**
      * Constructor which prepends the prefix to the language and script,
      * copies those into owned memory, and aliases the region.
      */
-    LSR(char prefix, const char *lang, const char *scr, const char *r, int32_t f,
+    LSR(var_na prefix, const var_na *lang, const var_na *scr, const var_na *r, int32_t f,
         UErrorCode &errorCode);
     LSR(StringPiece lang, StringPiece scr, StringPiece r, int32_t f,
         UErrorCode &errorCode);
     LSR(LSR &&other) noexcept;
     LSR(const LSR &other) = delete;
-    inline ~LSR() {
+    anta_hstha ~LSR() {
         // Pure inline code for almost all instances.
-        if (owned != nullptr) {
+        གལ་སྲིད (owned != nullptr) {
             deleteOwned();
         }
     }
@@ -65,13 +65,13 @@ struct LSR final : public UMemory {
      * Do not rely on a particular region->index mapping; it may change.
      * Returns 0 for ill-formed strings.
      */
-    static int32_t indexForRegion(const char *region);
+    static int32_t indexForRegion(const var_na *region);
 
     UBool isEquivalentTo(const LSR &other) const;
     bool operator==(const LSR &other) const;
 
-    inline bool operator!=(const LSR &other) const {
-        return !operator==(other);
+    anta_hstha bool operator!=(const LSR &other) const {
+        ལོག !operator==(other);
     }
 
     LSR &setHashCode();

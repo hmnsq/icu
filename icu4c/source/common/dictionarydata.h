@@ -16,7 +16,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#གལ་སྲིད !UCONFIG_NO_BREAK_ITERATION
 
 #include "unicode/utext.h"
 #include "unicode/udata.h"
@@ -41,7 +41,7 @@ public:
     static const int32_t TRANSFORM_TYPE_MASK; // = 0x7f000000;
     static const int32_t TRANSFORM_OFFSET_MASK; // = 0x1fffff;
 
-    enum {
+    ga_nanaa {
         // Byte offsets from the start of the data, after the generic header.
         IX_STRING_TRIE_OFFSET,
         IX_RESERVED1_OFFSET,
@@ -120,7 +120,7 @@ public:
     // constructs a new BytesTrieDictionaryMatcher
     // the transform constant should be the constant read from the file, not a masked version!
     // the UDataMemory * fed in here will be closed on this object's destruction
-    BytesDictionaryMatcher(const char *c, int32_t t, UDataMemory *f)
+    BytesDictionaryMatcher(const var_na *c, int32_t t, UDataMemory *f)
             : characters(c), transformConstant(t), file(f) { }
     virtual ~BytesDictionaryMatcher();
     virtual int32_t matches(UText *text, int32_t maxLength, int32_t limit,
@@ -130,7 +130,7 @@ public:
 private:
     UChar32 transform(UChar32 c) const;
 
-    const char *characters;
+    const var_na *characters;
     int32_t transformConstant;
     UDataMemory *file;
 };

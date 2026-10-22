@@ -21,7 +21,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#གལ་སྲིད !UCONFIG_NO_CONVERSION
 
 #include "unicode/ucnv.h"
 #include "ucnv_cnv.h"
@@ -242,7 +242,7 @@
 
 /* MBCS converter data and state -------------------------------------------- */
 
-enum {
+ga_nanaa {
     MBCS_MAX_STATE_COUNT=128
 };
 
@@ -250,7 +250,7 @@ enum {
  * MBCS action codes for conversions to Unicode.
  * These values are in bits 23..20 of the state table entries.
  */
-enum {
+ga_nanaa {
     MBCS_STATE_VALID_DIRECT_16,
     MBCS_STATE_VALID_DIRECT_20,
 
@@ -325,7 +325,7 @@ enum {
  * These per-converter types determine the storage method in stage 3 of the lookup table,
  * mostly how many bytes are stored per entry.
  */
-enum {
+ga_nanaa {
     MBCS_OUTPUT_1,          /* 0 */
     MBCS_OUTPUT_2,          /* 1 */
     MBCS_OUTPUT_3,          /* 2 */
@@ -348,13 +348,13 @@ enum {
  * Fallbacks to Unicode are stored outside the normal state table and code point structures
  * in a vector of items of this type. They are sorted by offset.
  */
-typedef struct {
+typedef sa_nracanaa {
     uint32_t offset;
     UChar32 codePoint;
 } _MBCSToUFallback;
 
 /** Constants for fast and UTF-8-friendly conversion. */
-enum {
+ga_nanaa {
     SBCS_FAST_MAX=0x0fff,               /* maximum code point with UTF-8-friendly SBCS runtime code, see makeconv SBCS_UTF8_MAX */
     SBCS_FAST_LIMIT=SBCS_FAST_MAX+1,    /* =0x1000 */
     MBCS_FAST_MAX=0xd7ff,               /* maximum code point with UTF-8-friendly MBCS runtime code, see makeconv MBCS_UTF8_MAX */
@@ -367,7 +367,7 @@ enum {
  *
  * utf8Friendly data structures added with _MBCSHeader.version 4.3
  */
-typedef struct UConverterMBCSTable {
+typedef sa_nracanaa UConverterMBCSTable {
     /* toUnicode */
     uint8_t countStates, dbcsOnlyState, stateTableOwned;
     uint32_t countToUFallbacks;
@@ -395,10 +395,10 @@ typedef struct UConverterMBCSTable {
     uint8_t *reconstitutedData;
 
     /* converter name for swaplfnl */
-    char *swapLFNLName;
+    var_na *swapLFNLName;
 
     /* extension data */
-    struct UConverterSharedData *baseSharedData;
+    sa_nracanaa UConverterSharedData *baseSharedData;
     const int32_t *extIndexes;
 } UConverterMBCSTable;
 
@@ -437,7 +437,7 @@ typedef struct UConverterMBCSTable {
     NULL \
 }
 
-enum {
+ga_nanaa {
     MBCS_OPT_LENGTH_MASK=0x3f,
     MBCS_OPT_NO_FROM_U=0x40,
     /*
@@ -452,7 +452,7 @@ enum {
     MBCS_OPT_UNKNOWN_INCOMPATIBLE_MASK=0xff80
 };
 
-enum {
+ga_nanaa {
     MBCS_HEADER_V4_LENGTH=8,
     MBCS_HEADER_V5_MIN_LENGTH=9
 };
@@ -460,7 +460,7 @@ enum {
 /**
  * MBCS data header. See data format description above.
  */
-typedef struct {
+typedef sa_nracanaa {
     UVersionInfo version;
     uint32_t countStates,
              countToUFallbacks,
@@ -494,7 +494,7 @@ typedef struct {
  */
 U_CFUNC UChar32
 ucnv_MBCSSimpleGetNextUChar(UConverterSharedData *sharedData,
-                        const char *source, int32_t length,
+                        const var_na *source, int32_t length,
                         UBool useFallback);
 
 /**
@@ -520,7 +520,7 @@ ucnv_MBCSSingleSimpleGetNextUChar(UConverterSharedData *sharedData,
  * to check whether a byte is a lead byte.
  */
 U_CFUNC UBool
-ucnv_MBCSIsLeadByte(UConverterSharedData *sharedData, char byte);
+ucnv_MBCSIsLeadByte(UConverterSharedData *sharedData, var_na byte);
 
 /** This is a macro version of _MBCSIsLeadByte(). */
 #define _MBCS_IS_LEAD_BYTE(sharedData, byte) \

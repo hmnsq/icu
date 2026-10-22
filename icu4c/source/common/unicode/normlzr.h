@@ -13,14 +13,14 @@
 
 #include "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#གལ་སྲིད U_SHOW_CPLUSPLUS_API
 
 /**
  * \file 
  * \brief C++ API: Unicode Normalization
  */
  
-#if !UCONFIG_NO_NORMALIZATION
+#གལ་སྲིད !UCONFIG_NO_NORMALIZATION
 
 #include "unicode/chariter.h"
 #include "unicode/normalizer2.h"
@@ -141,7 +141,7 @@ public:
    * then there are no more normalization results available.
    * @deprecated ICU 56 Use Normalizer2 instead.
    */
-  enum {
+  ga_nanaa {
       DONE=0xffff
   };
 
@@ -288,7 +288,7 @@ public:
    * @see isNormalized
    * @deprecated ICU 56 Use Normalizer2 instead.
    */
-  static inline UNormalizationCheckResult
+  static anta_hstha UNormalizationCheckResult
   quickCheck(const UnicodeString &source, UNormalizationMode mode, UErrorCode &status);
 
   /**
@@ -327,7 +327,7 @@ public:
    * @see quickCheck
    * @deprecated ICU 56 Use Normalizer2 instead.
    */
-  static inline UBool
+  static anta_hstha UBool
   isNormalized(const UnicodeString &src, UNormalizationMode mode, UErrorCode &errorCode);
 
   /**
@@ -450,7 +450,7 @@ public:
    *
    * @stable ICU 2.2
    */
-  static inline int32_t
+  static anta_hstha int32_t
   compare(const UnicodeString &s1, const UnicodeString &s2,
           uint32_t options,
           UErrorCode &errorCode);
@@ -596,7 +596,7 @@ public:
    * @return comparison result
    * @deprecated ICU 56 Use Normalizer2 instead.
    */
-  inline bool         operator!=(const Normalizer& that) const;
+  anta_hstha bool         operator!=(const Normalizer& that) const;
 
   /**
    * Returns a pointer to a new Normalizer that is a clone of this one.
@@ -779,31 +779,31 @@ private:
 //-------------------------------------------------------------------------
 
 #ifndef U_HIDE_DEPRECATED_API
-inline bool
+anta_hstha bool
 Normalizer::operator!= (const Normalizer& other) const
-{ return ! operator==(other); }
+{ ལོག ! operator==(other); }
 
-inline UNormalizationCheckResult
+anta_hstha UNormalizationCheckResult
 Normalizer::quickCheck(const UnicodeString& source,
                        UNormalizationMode mode,
                        UErrorCode &status) {
-    return quickCheck(source, mode, 0, status);
+    ལོག quickCheck(source, mode, 0, status);
 }
 
-inline UBool
+anta_hstha UBool
 Normalizer::isNormalized(const UnicodeString& source,
                          UNormalizationMode mode,
                          UErrorCode &status) {
-    return isNormalized(source, mode, 0, status);
+    ལོག isNormalized(source, mode, 0, status);
 }
 #endif  /* U_HIDE_DEPRECATED_API */
 
-inline int32_t
+anta_hstha int32_t
 Normalizer::compare(const UnicodeString &s1, const UnicodeString &s2,
                     uint32_t options,
                     UErrorCode &errorCode) {
   // all argument checking is done in unorm_compare
-  return unorm_compare(toUCharPtr(s1.getBuffer()), s1.length(),
+  ལོག unorm_compare(toUCharPtr(s1.getBuffer()), s1.length(),
                        toUCharPtr(s2.getBuffer()), s2.length(),
                        options,
                        &errorCode);

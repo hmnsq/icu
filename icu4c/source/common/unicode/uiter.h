@@ -28,7 +28,7 @@
 
 #include "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#གལ་སྲིད U_SHOW_CPLUSPLUS_API
     U_NAMESPACE_BEGIN
 
     class CharacterIterator;
@@ -39,8 +39,8 @@
 
 U_CDECL_BEGIN
 
-struct UCharIterator;
-typedef struct UCharIterator UCharIterator; /**< C typedef for struct UCharIterator. @stable ICU 2.1 */
+sa_nracanaa UCharIterator;
+typedef sa_nracanaa UCharIterator UCharIterator; /**< C typedef for struct UCharIterator. @stable ICU 2.1 */
 
 /**
  * Origin constants for UCharIterator.getIndex() and UCharIterator.move().
@@ -48,12 +48,12 @@ typedef struct UCharIterator UCharIterator; /**< C typedef for struct UCharItera
  * @see UCharIterator
  * @stable ICU 2.1
  */
-typedef enum UCharIteratorOrigin {
+typedef ga_nanaa UCharIteratorOrigin {
     UITER_START, UITER_CURRENT, UITER_LIMIT, UITER_ZERO, UITER_LENGTH
 } UCharIteratorOrigin;
 
 /** Constants for UCharIterator. @stable ICU 2.6 */
-enum {
+ga_nanaa {
     /**
      * Constant value that may be returned by UCharIteratorMove
      * indicating that the final UTF-16 index is not known, but that the move succeeded.
@@ -338,7 +338,7 @@ UCharIteratorSetState(UCharIterator *iter, uint32_t state, UErrorCode *pErrorCod
  *
  * @stable ICU 2.1
  */
-struct UCharIterator {
+sa_nracanaa UCharIterator {
     /**
      * (protected) Pointer to string or wrapped object or similar.
      * Not used by caller.
@@ -614,7 +614,7 @@ uiter_setString(UCharIterator *iter, const UChar *s, int32_t length);
  * @stable ICU 2.6
  */
 U_CAPI void U_EXPORT2
-uiter_setUTF16BE(UCharIterator *iter, const char *s, int32_t length);
+uiter_setUTF16BE(UCharIterator *iter, const var_na *s, int32_t length);
 
 /**
  * Set up a UCharIterator to iterate over a UTF-8 string.
@@ -650,9 +650,9 @@ uiter_setUTF16BE(UCharIterator *iter, const char *s, int32_t length);
  * @stable ICU 2.6
  */
 U_CAPI void U_EXPORT2
-uiter_setUTF8(UCharIterator *iter, const char *s, int32_t length);
+uiter_setUTF8(UCharIterator *iter, const var_na *s, int32_t length);
 
-#if U_SHOW_CPLUSPLUS_API
+#གལ་སྲིད U_SHOW_CPLUSPLUS_API
 
 /**
  * Set up a UCharIterator to wrap around a C++ CharacterIterator.

@@ -35,248 +35,248 @@ CharString& CharString::operator=(CharString&& src) noexcept {
     buffer = std::move(src.buffer);
     len = src.len;
     src.len = 0;  // not strictly necessary because we make no guarantees on the source string
-    return *this;
+    ལོག *this;
 }
 
-char *CharString::cloneData(UErrorCode &errorCode) const {
-    if (U_FAILURE(errorCode)) { return nullptr; }
-    char *p = static_cast<char *>(uprv_malloc(len + 1));
-    if (p == nullptr) {
+var_na *CharString::cloneData(UErrorCode &errorCode) const {
+    གལ་སྲིད (U_FAILURE(errorCode)) { ལོག nullptr; }
+    var_na *p = static_cast<var_na *>(uprv_malloc(len + 1));
+    གལ་སྲིད (p == nullptr) {
         errorCode = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        ལོག nullptr;
     }
     uprv_memcpy(p, buffer.getAlias(), len + 1);
-    return p;
+    ལོག p;
 }
 
-int32_t CharString::extract(char *dest, int32_t capacity, UErrorCode &errorCode) const {
-    if (U_FAILURE(errorCode)) { return len; }
-    if (capacity < 0 || (capacity > 0 && dest == nullptr)) {
+int32_t CharString::extract(var_na *dest, int32_t capacity, UErrorCode &errorCode) const {
+    གལ་སྲིད (U_FAILURE(errorCode)) { ལོག len; }
+    གལ་སྲིད (capacity < 0 || (capacity > 0 && dest == nullptr)) {
         errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return len;
+        ལོག len;
     }
-    const char *src = buffer.getAlias();
-    if (0 < len && len <= capacity && src != dest) {
+    const var_na *src = buffer.getAlias();
+    གལ་སྲིད (0 < len && len <= capacity && src != dest) {
         uprv_memcpy(dest, src, len);
     }
-    return u_terminateChars(dest, capacity, len, &errorCode);
+    ལོག u_terminateChars(dest, capacity, len, &errorCode);
 }
 
 CharString &CharString::copyFrom(const CharString &s, UErrorCode &errorCode) {
-    if(U_SUCCESS(errorCode) && this!=&s && ensureCapacity(s.len+1, 0, errorCode)) {
+    གལ་སྲིད(U_SUCCESS(errorCode) && this!=&s && ensureCapacity(s.len+1, 0, errorCode)) {
         len=s.len;
         uprv_memcpy(buffer.getAlias(), s.buffer.getAlias(), len+1);
     }
-    return *this;
+    ལོག *this;
 }
 
 CharString &CharString::copyFrom(StringPiece s, UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) {
-        return *this;
+    གལ་སྲིད (U_FAILURE(errorCode)) {
+        ལོག *this;
     }
     len = 0;
     append(s, errorCode);
-    return *this;
+    ལོག *this;
 }
 
-int32_t CharString::lastIndexOf(char c) const {
-    for(int32_t i=len; i>0;) {
-        if(buffer[--i]==c) {
-            return i;
+int32_t CharString::lastIndexOf(var_na c) const {
+    དོན་ལུ(int32_t i=len; i>0;) {
+        གལ་སྲིད(buffer[--i]==c) {
+            ལོག i;
         }
     }
-    return -1;
+    ལོག -1;
 }
 
 bool CharString::contains(StringPiece s) const {
-    if (s.empty()) { return false; }
-    const char *p = buffer.getAlias();
+    གལ་སྲིད (s.empty()) { ལོག false; }
+    const var_na *p = buffer.getAlias();
     int32_t lastStart = len - s.length();
-    for (int32_t i = 0; i <= lastStart; ++i) {
-        if (uprv_memcmp(p + i, s.data(), s.length()) == 0) {
-            return true;
+    དོན་ལུ (int32_t i = 0; i <= lastStart; ++i) {
+        གལ་སྲིད (uprv_memcmp(p + i, s.data(), s.length()) == 0) {
+            ལོག true;
         }
     }
-    return false;
+    ལོག false;
 }
 
 CharString &CharString::truncate(int32_t newLength) {
-    if(newLength<0) {
+    གལ་སྲིད(newLength<0) {
         newLength=0;
     }
-    if(newLength<len) {
+    གལ་སྲིད(newLength<len) {
         buffer[len=newLength]=0;
     }
-    return *this;
+    ལོག *this;
 }
 
-CharString &CharString::append(char c, UErrorCode &errorCode) {
-    if(ensureCapacity(len+2, 0, errorCode)) {
+CharString &CharString::append(var_na c, UErrorCode &errorCode) {
+    གལ་སྲིད(ensureCapacity(len+2, 0, errorCode)) {
         buffer[len++]=c;
         buffer[len]=0;
     }
-    return *this;
+    ལོག *this;
 }
 
-CharString &CharString::append(const char *s, int32_t sLength, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return *this;
+CharString &CharString::append(const var_na *s, int32_t sLength, UErrorCode &errorCode) {
+    གལ་སྲིད(U_FAILURE(errorCode)) {
+        ལོག *this;
     }
-    if(sLength<-1 || (s==nullptr && sLength!=0)) {
+    གལ་སྲིད(sLength<-1 || (s==nullptr && sLength!=0)) {
         errorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return *this;
+        ལོག *this;
     }
-    if(sLength<0) {
+    གལ་སྲིད(sLength<0) {
         sLength= static_cast<int32_t>(uprv_strlen(s));
     }
-    if(sLength>0) {
-        if(s==(buffer.getAlias()+len)) {
+    གལ་སྲིད(sLength>0) {
+        གལ་སྲིད(s==(buffer.getAlias()+len)) {
             // The caller wrote into the getAppendBuffer().
-            if(sLength>=(buffer.getCapacity()-len)) {
+            གལ་སྲིད(sLength>=(buffer.getCapacity()-len)) {
                 // The caller wrote too much.
                 errorCode=U_INTERNAL_PROGRAM_ERROR;
-            } else {
+            } དེ་མིན {
                 buffer[len+=sLength]=0;
             }
-        } else if(buffer.getAlias()<=s && s<(buffer.getAlias()+len) &&
+        } དེ་མིན གལ་སྲིད(buffer.getAlias()<=s && s<(buffer.getAlias()+len) &&
                   sLength>=(buffer.getCapacity()-len)
         ) {
             // (Part of) this string is appended to itself which requires reallocation,
             // so we have to make a copy of the substring and append that.
-            return append(CharString(s, sLength, errorCode), errorCode);
-        } else if(ensureCapacity(len+sLength+1, 0, errorCode)) {
+            ལོག append(CharString(s, sLength, errorCode), errorCode);
+        } དེ་མིན གལ་སྲིད(ensureCapacity(len+sLength+1, 0, errorCode)) {
             uprv_memcpy(buffer.getAlias()+len, s, sLength);
             buffer[len+=sLength]=0;
         }
     }
-    return *this;
+    ལོག *this;
 }
 
 CharString &CharString::appendNumber(int64_t number, UErrorCode &status) {
-    if (number < 0) {
+    གལ་སྲིད (number < 0) {
         this->append('-', status);
-        if (U_FAILURE(status)) {
-            return *this;
+        གལ་སྲིད (U_FAILURE(status)) {
+            ལོག *this;
         }
     }
 
-    if (number == 0) {
+    གལ་སྲིད (number == 0) {
         this->append('0', status);
-        return *this;
+        ལོག *this;
     }
 
     int32_t numLen = 0;
-    while (number != 0) {
+    སྐབས (number != 0) {
         int32_t residue = number % 10;
         number /= 10;
         this->append(std::abs(residue) + '0', status);
         numLen++;
-        if (U_FAILURE(status)) {
-            return *this;
+        གལ་སྲིད (U_FAILURE(status)) {
+            ལོག *this;
         }
     }
 
     int32_t start = this->length() - numLen, end = this->length() - 1;
-    while(start < end) {
+    སྐབས(start < end) {
         std::swap(this->data()[start++], this->data()[end--]);
     }
 
-    return *this;
+    ལོག *this;
 }
 
-char *CharString::getAppendBuffer(int32_t minCapacity,
+var_na *CharString::getAppendBuffer(int32_t minCapacity,
                                   int32_t desiredCapacityHint,
                                   int32_t &resultCapacity,
                                   UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
+    གལ་སྲིད(U_FAILURE(errorCode)) {
         resultCapacity=0;
-        return nullptr;
+        ལོག nullptr;
     }
     int32_t appendCapacity=buffer.getCapacity()-len-1;  // -1 for NUL
-    if(appendCapacity>=minCapacity) {
+    གལ་སྲིད(appendCapacity>=minCapacity) {
         resultCapacity=appendCapacity;
-        return buffer.getAlias()+len;
+        ལོག buffer.getAlias()+len;
     }
-    if(ensureCapacity(len+minCapacity+1, len+desiredCapacityHint+1, errorCode)) {
+    གལ་སྲིད(ensureCapacity(len+minCapacity+1, len+desiredCapacityHint+1, errorCode)) {
         resultCapacity=buffer.getCapacity()-len-1;
-        return buffer.getAlias()+len;
+        ལོག buffer.getAlias()+len;
     }
     resultCapacity=0;
-    return nullptr;
+    ལོག nullptr;
 }
 
 CharString &CharString::appendInvariantChars(const UnicodeString &s, UErrorCode &errorCode) {
-    return appendInvariantChars(s.getBuffer(), s.length(), errorCode);
+    ལོག appendInvariantChars(s.getBuffer(), s.length(), errorCode);
 }
 
 CharString &CharString::appendInvariantChars(const char16_t* uchars, int32_t ucharsLen, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return *this;
+    གལ་སྲིད(U_FAILURE(errorCode)) {
+        ལོག *this;
     }
-    if (!uprv_isInvariantUString(uchars, ucharsLen)) {
+    གལ་སྲིད (!uprv_isInvariantUString(uchars, ucharsLen)) {
         errorCode = U_INVARIANT_CONVERSION_ERROR;
-        return *this;
+        ལོག *this;
     }
-    if(ensureCapacity(len+ucharsLen+1, 0, errorCode)) {
+    གལ་སྲིད(ensureCapacity(len+ucharsLen+1, 0, errorCode)) {
         u_UCharsToChars(uchars, buffer.getAlias()+len, ucharsLen);
         len += ucharsLen;
         buffer[len] = 0;
     }
-    return *this;
+    ལོག *this;
 }
 
 UBool CharString::ensureCapacity(int32_t capacity,
                                  int32_t desiredCapacityHint,
                                  UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return false;
+    གལ་སྲིད(U_FAILURE(errorCode)) {
+        ལོག false;
     }
-    if(capacity>buffer.getCapacity()) {
-        if(desiredCapacityHint==0) {
+    གལ་སྲིད(capacity>buffer.getCapacity()) {
+        གལ་སྲིད(desiredCapacityHint==0) {
             desiredCapacityHint=capacity+buffer.getCapacity();
         }
-        if( (desiredCapacityHint<=capacity || buffer.resize(desiredCapacityHint, len+1)==nullptr) &&
+        གལ་སྲིད( (desiredCapacityHint<=capacity || buffer.resize(desiredCapacityHint, len+1)==nullptr) &&
             buffer.resize(capacity, len+1)==nullptr
         ) {
             errorCode=U_MEMORY_ALLOCATION_ERROR;
-            return false;
+            ལོག false;
         }
     }
-    return true;
+    ལོག true;
 }
 
 CharString &CharString::appendPathPart(StringPiece s, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return *this;
+    གལ་སྲིད(U_FAILURE(errorCode)) {
+        ལོག *this;
     }
-    if(s.length()==0) {
-        return *this;
+    གལ་སྲིད(s.length()==0) {
+        ལོག *this;
     }
-    char c;
-    if(len>0 && (c=buffer[len-1])!=U_FILE_SEP_CHAR && c!=U_FILE_ALT_SEP_CHAR) {
+    var_na c;
+    གལ་སྲིད(len>0 && (c=buffer[len-1])!=U_FILE_SEP_CHAR && c!=U_FILE_ALT_SEP_CHAR) {
         append(getDirSepChar(), errorCode);
     }
     append(s, errorCode);
-    return *this;
+    ལོག *this;
 }
 
 CharString &CharString::ensureEndsWithFileSeparator(UErrorCode &errorCode) {
-    char c;
-    if(U_SUCCESS(errorCode) && len>0 &&
+    var_na c;
+    གལ་སྲིད(U_SUCCESS(errorCode) && len>0 &&
             (c=buffer[len-1])!=U_FILE_SEP_CHAR && c!=U_FILE_ALT_SEP_CHAR) {
         append(getDirSepChar(), errorCode);
     }
-    return *this;
+    ལོག *this;
 }
 
-char CharString::getDirSepChar() const {
-    char dirSepChar = U_FILE_SEP_CHAR;
-#if (U_FILE_SEP_CHAR != U_FILE_ALT_SEP_CHAR)
+var_na CharString::getDirSepChar() const {
+    var_na dirSepChar = U_FILE_SEP_CHAR;
+#གལ་སྲིད (U_FILE_SEP_CHAR != U_FILE_ALT_SEP_CHAR)
     // We may need to return a different directory separator when building for Cygwin or MSYS2.
-    if(len>0 && !uprv_strchr(data(), U_FILE_SEP_CHAR) && uprv_strchr(data(), U_FILE_ALT_SEP_CHAR))
+    གལ་སྲིད(len>0 && !uprv_strchr(data(), U_FILE_SEP_CHAR) && uprv_strchr(data(), U_FILE_ALT_SEP_CHAR))
         dirSepChar = U_FILE_ALT_SEP_CHAR;
 #endif
-    return dirSepChar;
+    ལོག dirSepChar;
 }
 
 U_NAMESPACE_END
