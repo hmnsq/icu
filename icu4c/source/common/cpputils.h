@@ -13,85 +13,85 @@
 *   indentation:4
 */
 
-#ifndef CPPUTILS_H
-#define CPPUTILS_H
+#که_نه_تعریف_شوی CPPUTILS_H
+#تعریف_کړه CPPUTILS_H
 
-#include "unicode/utypes.h"
-#include "unicode/unistr.h"
-#include "cmemory.h"
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/unistr.h"
+#ضمن "cmemory.h"
 
 /*==========================================================================*/
 /* Array copy utility functions */
 /*==========================================================================*/
 
-static
-inline void uprv_arrayCopy(const double* src, double* dst, int32_t count)
-{ uprv_memcpy(dst, src, (size_t)count * sizeof(*src)); }
+ساكن
+مضمن فراغ uprv_arrayCopy(ثابت مزدوج* src, مزدوج* dst, int32_t شمېر)
+{ uprv_memcpy(dst, src, (size_t)شمېر * حجم(*src)); }
 
-static
-inline void uprv_arrayCopy(const double* src, int32_t srcStart,
-              double* dst, int32_t dstStart, int32_t count)
-{ uprv_memcpy(dst+dstStart, src+srcStart, (size_t)count * sizeof(*src)); }
+ساكن
+مضمن فراغ uprv_arrayCopy(ثابت مزدوج* src, int32_t src_پیل,
+              مزدوج* dst, int32_t dst_پیل, int32_t شمېر)
+{ uprv_memcpy(dst+dst_پیل, src+src_پیل, (size_t)شمېر * حجم(*src)); }
 
-static
-inline void uprv_arrayCopy(const int8_t* src, int8_t* dst, int32_t count)
-    { uprv_memcpy(dst, src, (size_t)count * sizeof(*src)); }
+ساكن
+مضمن فراغ uprv_arrayCopy(ثابت int8_t* src, int8_t* dst, int32_t شمېر)
+    { uprv_memcpy(dst, src, (size_t)شمېر * حجم(*src)); }
 
-static
-inline void uprv_arrayCopy(const int8_t* src, int32_t srcStart,
-              int8_t* dst, int32_t dstStart, int32_t count)
-{ uprv_memcpy(dst+dstStart, src+srcStart, (size_t)count * sizeof(*src)); }
+ساكن
+مضمن فراغ uprv_arrayCopy(ثابت int8_t* src, int32_t src_پیل,
+              int8_t* dst, int32_t dst_پیل, int32_t شمېر)
+{ uprv_memcpy(dst+dst_پیل, src+src_پیل, (size_t)شمېر * حجم(*src)); }
 
-static
-inline void uprv_arrayCopy(const int16_t* src, int16_t* dst, int32_t count)
-{ uprv_memcpy(dst, src, (size_t)count * sizeof(*src)); }
+ساكن
+مضمن فراغ uprv_arrayCopy(ثابت int16_t* src, int16_t* dst, int32_t شمېر)
+{ uprv_memcpy(dst, src, (size_t)شمېر * حجم(*src)); }
 
-static
-inline void uprv_arrayCopy(const int16_t* src, int32_t srcStart,
-              int16_t* dst, int32_t dstStart, int32_t count)
-{ uprv_memcpy(dst+dstStart, src+srcStart, (size_t)count * sizeof(*src)); }
+ساكن
+مضمن فراغ uprv_arrayCopy(ثابت int16_t* src, int32_t src_پیل,
+              int16_t* dst, int32_t dst_پیل, int32_t شمېر)
+{ uprv_memcpy(dst+dst_پیل, src+src_پیل, (size_t)شمېر * حجم(*src)); }
 
-static
-inline void uprv_arrayCopy(const int32_t* src, int32_t* dst, int32_t count)
-{ uprv_memcpy(dst, src, (size_t)count * sizeof(*src)); }
+ساكن
+مضمن فراغ uprv_arrayCopy(ثابت int32_t* src, int32_t* dst, int32_t شمېر)
+{ uprv_memcpy(dst, src, (size_t)شمېر * حجم(*src)); }
 
-static
-inline void uprv_arrayCopy(const int32_t* src, int32_t srcStart,
-              int32_t* dst, int32_t dstStart, int32_t count)
-{ uprv_memcpy(dst+dstStart, src+srcStart, (size_t)count * sizeof(*src)); }
+ساكن
+مضمن فراغ uprv_arrayCopy(ثابت int32_t* src, int32_t src_پیل,
+              int32_t* dst, int32_t dst_پیل, int32_t شمېر)
+{ uprv_memcpy(dst+dst_پیل, src+src_پیل, (size_t)شمېر * حجم(*src)); }
 
-static
-inline void
-uprv_arrayCopy(const char16_t *src, int32_t srcStart,
-        char16_t *dst, int32_t dstStart, int32_t count)
-{ uprv_memcpy(dst+dstStart, src+srcStart, (size_t)count * sizeof(*src)); }
-
-/**
- * Copy an array of UnicodeString OBJECTS (not pointers).
- * @internal
- */
-static inline void
-uprv_arrayCopy(const icu::UnicodeString *src, icu::UnicodeString *dst, int32_t count)
-{ while(count-- > 0) *dst++ = *src++; }
+ساكن
+مضمن فراغ
+uprv_arrayCopy(ثابت char16_t *src, int32_t src_پیل,
+        char16_t *dst, int32_t dst_پیل, int32_t شمېر)
+{ uprv_memcpy(dst+dst_پیل, src+src_پیل, (size_t)شمېر * حجم(*src)); }
 
 /**
  * Copy an array of UnicodeString OBJECTS (not pointers).
  * @internal
  */
-static inline void
-uprv_arrayCopy(const icu::UnicodeString *src, int32_t srcStart,
-               icu::UnicodeString *dst, int32_t dstStart, int32_t count)
-{ uprv_arrayCopy(src+srcStart, dst+dstStart, count); }
+ساكن مضمن فراغ
+uprv_arrayCopy(ثابت icu::UnicodeString *src, icu::UnicodeString *dst, int32_t شمېر)
+{ طالما(شمېر-- > 0) *dst++ = *src++; }
+
+/**
+ * Copy an array of UnicodeString OBJECTS (not pointers).
+ * @internal
+ */
+ساكن مضمن فراغ
+uprv_arrayCopy(ثابت icu::UnicodeString *src, int32_t src_پیل,
+               icu::UnicodeString *dst, int32_t dst_پیل, int32_t شمېر)
+{ uprv_arrayCopy(src+src_پیل, dst+dst_پیل, شمېر); }
 
 /**
  * Checks that the string is readable and writable.
  * Sets U_ILLEGAL_ARGUMENT_ERROR if the string isBogus() or has an open getBuffer().
  */
-inline void
-uprv_checkCanGetBuffer(const icu::UnicodeString &s, UErrorCode &errorCode) {
-    if(U_SUCCESS(errorCode) && s.isBogus()) {
-        errorCode=U_ILLEGAL_ARGUMENT_ERROR;
+مضمن فراغ
+uprv_check_Can_Get_بفر(ثابت icu::UnicodeString &s, UError_کوډ &error_کوډ) {
+    إذا(U_SUCCESS(error_کوډ) && s.isBogus()) {
+        error_کوډ=U_ILLEGAL_دلیل_ERROR;
     }
 }
 
-#endif /* _CPPUTILS */
+#د_که_پای /* _CPPUTILS */

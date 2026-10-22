@@ -15,10 +15,10 @@
 ******************************************************************************
 */
 
-#include "utypeinfo.h"  // for 'typeid' to work
+#ضمن "utypeinfo.h"  // for 'typeid' to work
 
-#include "unicode/chariter.h"
-#include "unicode/schriter.h"
+#ضمن "unicode/chariter.h"
+#ضمن "unicode/schriter.h"
 
 U_NAMESPACE_BEGIN
 
@@ -26,94 +26,94 @@ UOBJECT_DEFINE_RTTI_IMPLEMENTATION(StringCharacterIterator)
 
 StringCharacterIterator::StringCharacterIterator()
   : UCharCharacterIterator(),
-    text()
+    متن()
 {
   // NEVER DEFAULT CONSTRUCT!
 }
 
-StringCharacterIterator::StringCharacterIterator(const UnicodeString& textStr)
-  : UCharCharacterIterator(textStr.getBuffer(), textStr.length()),
-    text(textStr)
+StringCharacterIterator::StringCharacterIterator(ثابت UnicodeString& متن_Str)
+  : UCharCharacterIterator(متن_Str.get_بفر(), متن_Str.length()),
+    متن(متن_Str)
 {
     // we had set the input parameter's array, now we need to set our copy's array
-    UCharCharacterIterator::text = this->text.getBuffer();
+    UCharCharacterIterator::متن = هذا->متن.get_بفر();
 }
 
-StringCharacterIterator::StringCharacterIterator(const UnicodeString& textStr,
-                                                 int32_t textPos)
-  : UCharCharacterIterator(textStr.getBuffer(), textStr.length(), textPos),
-    text(textStr)
+StringCharacterIterator::StringCharacterIterator(ثابت UnicodeString& متن_Str,
+                                                 int32_t متن_Pos)
+  : UCharCharacterIterator(متن_Str.get_بفر(), متن_Str.length(), متن_Pos),
+    متن(متن_Str)
 {
     // we had set the input parameter's array, now we need to set our copy's array
-    UCharCharacterIterator::text = this->text.getBuffer();
+    UCharCharacterIterator::متن = هذا->متن.get_بفر();
 }
 
-StringCharacterIterator::StringCharacterIterator(const UnicodeString& textStr,
-                                                 int32_t textBegin,
-                                                 int32_t textEnd,
-                                                 int32_t textPos)
-  : UCharCharacterIterator(textStr.getBuffer(), textStr.length(), textBegin, textEnd, textPos),
-    text(textStr)
+StringCharacterIterator::StringCharacterIterator(ثابت UnicodeString& متن_Str,
+                                                 int32_t متن_Begin,
+                                                 int32_t متن_پای_ټکی,
+                                                 int32_t متن_Pos)
+  : UCharCharacterIterator(متن_Str.get_بفر(), متن_Str.length(), متن_Begin, متن_پای_ټکی, متن_Pos),
+    متن(متن_Str)
 {
     // we had set the input parameter's array, now we need to set our copy's array
-    UCharCharacterIterator::text = this->text.getBuffer();
+    UCharCharacterIterator::متن = هذا->متن.get_بفر();
 }
 
-StringCharacterIterator::StringCharacterIterator(const StringCharacterIterator& that)
+StringCharacterIterator::StringCharacterIterator(ثابت StringCharacterIterator& that)
   : UCharCharacterIterator(that),
-    text(that.text)
+    متن(that.متن)
 {
     // we had set the input parameter's array, now we need to set our copy's array
-    UCharCharacterIterator::text = this->text.getBuffer();
+    UCharCharacterIterator::متن = هذا->متن.get_بفر();
 }
 
 StringCharacterIterator::~StringCharacterIterator() {
 }
 
 StringCharacterIterator&
-StringCharacterIterator::operator=(const StringCharacterIterator& that) U_LIFETIME_BOUND {
-    UCharCharacterIterator::operator=(that);
-    text = that.text;
+StringCharacterIterator::چلوونکی=(ثابت StringCharacterIterator& that) U_LIFETIME_BOUND {
+    UCharCharacterIterator::چلوونکی=(that);
+    متن = that.متن;
     // we had set the input parameter's array, now we need to set our copy's array
-    UCharCharacterIterator::text = this->text.getBuffer();
-    return *this;
+    UCharCharacterIterator::متن = هذا->متن.get_بفر();
+    أرجع *هذا;
 }
 
-bool
-StringCharacterIterator::operator==(const ForwardCharacterIterator& that) const {
-    if (this == &that) {
-        return true;
+منطقي
+StringCharacterIterator::چلوونکی==(ثابت ForwardCharacterIterator& that) ثابت {
+    إذا (هذا == &that) {
+        أرجع ریښتیا;
     }
 
     // do not call UCharCharacterIterator::operator==()
     // because that checks for array pointer equality
     // while we compare UnicodeString objects
 
-    if (typeid(*this) != typeid(that)) {
-        return false;
+    إذا (typeid(*هذا) != typeid(that)) {
+        أرجع خطأ;
     }
 
-    const StringCharacterIterator&    realThat = static_cast<const StringCharacterIterator&>(that);
+    ثابت StringCharacterIterator&    realThat = static_cast<ثابت StringCharacterIterator&>(that);
 
-    return text == realThat.text
+    أرجع متن == realThat.متن
         && pos == realThat.pos
         && begin == realThat.begin
-        && end == realThat.end;
+        && پای_ټکی == realThat.پای_ټکی;
 }
 
 StringCharacterIterator*
-StringCharacterIterator::clone() const {
-    return new StringCharacterIterator(*this);
+StringCharacterIterator::clone() ثابت {
+    أرجع جديد StringCharacterIterator(*هذا);
 }
 
-void
-StringCharacterIterator::setText(const UnicodeString& newText) {
-    text = newText;
-    UCharCharacterIterator::setText(text.getBuffer(), text.length());
+فراغ
+StringCharacterIterator::سېټ_متن(ثابت UnicodeString& new_متن) {
+    متن = new_متن;
+    UCharCharacterIterator::سېټ_متن(متن.get_بفر(), متن.length());
 }
 
-void
-StringCharacterIterator::getText(UnicodeString& result) {
-    result = text;
+فراغ
+StringCharacterIterator::get_متن(UnicodeString& پایله) {
+    پایله = متن;
 }
-U_NAMESPACE_END
+U_NAMESPACE_پای_ټکی

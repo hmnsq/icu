@@ -14,269 +14,269 @@
 *   created by: Markus W. Scherer
 */
 
-#include <cstdlib>
+#ضمن <cstdlib>
 
-#include "unicode/utypes.h"
-#include "unicode/putil.h"
-#include "charstr.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "uinvchar.h"
-#include "ustr_imp.h"
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/putil.h"
+#ضمن "charstr.h"
+#ضمن "cmemory.h"
+#ضمن "cstring.h"
+#ضمن "uinvchar.h"
+#ضمن "ustr_imp.h"
 
 U_NAMESPACE_BEGIN
 
 CharString::CharString(CharString&& src) noexcept
-        : buffer(std::move(src.buffer)), len(src.len) {
+        : بفر(std::move(src.بفر)), len(src.len) {
     src.len = 0;  // not strictly necessary because we make no guarantees on the source string
 }
 
-CharString& CharString::operator=(CharString&& src) noexcept {
-    buffer = std::move(src.buffer);
+CharString& CharString::چلوونکی=(CharString&& src) noexcept {
+    بفر = std::move(src.بفر);
     len = src.len;
     src.len = 0;  // not strictly necessary because we make no guarantees on the source string
-    return *this;
+    أرجع *هذا;
 }
 
-char *CharString::cloneData(UErrorCode &errorCode) const {
-    if (U_FAILURE(errorCode)) { return nullptr; }
-    char *p = static_cast<char *>(uprv_malloc(len + 1));
-    if (p == nullptr) {
-        errorCode = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+حرف *CharString::clone_معلومات(UError_کوډ &error_کوډ) ثابت {
+    إذا (U_FAILURE(error_کوډ)) { أرجع تش_اشاره; }
+    حرف *p = static_cast<حرف *>(uprv_malloc(len + 1));
+    إذا (p == تش_اشاره) {
+        error_کوډ = U_حافظه_ویش_ERROR;
+        أرجع تش_اشاره;
     }
-    uprv_memcpy(p, buffer.getAlias(), len + 1);
-    return p;
+    uprv_memcpy(p, بفر.getAlias(), len + 1);
+    أرجع p;
 }
 
-int32_t CharString::extract(char *dest, int32_t capacity, UErrorCode &errorCode) const {
-    if (U_FAILURE(errorCode)) { return len; }
-    if (capacity < 0 || (capacity > 0 && dest == nullptr)) {
-        errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return len;
+int32_t CharString::extract(حرف *dest, int32_t capacity, UError_کوډ &error_کوډ) ثابت {
+    إذا (U_FAILURE(error_کوډ)) { أرجع len; }
+    إذا (capacity < 0 || (capacity > 0 && dest == تش_اشاره)) {
+        error_کوډ = U_ILLEGAL_دلیل_ERROR;
+        أرجع len;
     }
-    const char *src = buffer.getAlias();
-    if (0 < len && len <= capacity && src != dest) {
+    ثابت حرف *src = بفر.getAlias();
+    إذا (0 < len && len <= capacity && src != dest) {
         uprv_memcpy(dest, src, len);
     }
-    return u_terminateChars(dest, capacity, len, &errorCode);
+    أرجع u_terminateChars(dest, capacity, len, &error_کوډ);
 }
 
-CharString &CharString::copyFrom(const CharString &s, UErrorCode &errorCode) {
-    if(U_SUCCESS(errorCode) && this!=&s && ensureCapacity(s.len+1, 0, errorCode)) {
+CharString &CharString::copyFrom(ثابت CharString &s, UError_کوډ &error_کوډ) {
+    إذا(U_SUCCESS(error_کوډ) && هذا!=&s && ensure_ظرفیت(s.len+1, 0, error_کوډ)) {
         len=s.len;
-        uprv_memcpy(buffer.getAlias(), s.buffer.getAlias(), len+1);
+        uprv_memcpy(بفر.getAlias(), s.بفر.getAlias(), len+1);
     }
-    return *this;
+    أرجع *هذا;
 }
 
-CharString &CharString::copyFrom(StringPiece s, UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) {
-        return *this;
+CharString &CharString::copyFrom(StringPiece s, UError_کوډ &error_کوډ) {
+    إذا (U_FAILURE(error_کوډ)) {
+        أرجع *هذا;
     }
     len = 0;
-    append(s, errorCode);
-    return *this;
+    append(s, error_کوډ);
+    أرجع *هذا;
 }
 
-int32_t CharString::lastIndexOf(char c) const {
-    for(int32_t i=len; i>0;) {
-        if(buffer[--i]==c) {
-            return i;
+int32_t CharString::وروستی_شاخص_د(حرف c) ثابت {
+    لكل(int32_t i=len; i>0;) {
+        إذا(بفر[--i]==c) {
+            أرجع i;
         }
     }
-    return -1;
+    أرجع -1;
 }
 
-bool CharString::contains(StringPiece s) const {
-    if (s.empty()) { return false; }
-    const char *p = buffer.getAlias();
-    int32_t lastStart = len - s.length();
-    for (int32_t i = 0; i <= lastStart; ++i) {
-        if (uprv_memcmp(p + i, s.data(), s.length()) == 0) {
-            return true;
+منطقي CharString::لري(StringPiece s) ثابت {
+    إذا (s.empty()) { أرجع خطأ; }
+    ثابت حرف *p = بفر.getAlias();
+    int32_t وروستی_پیل = len - s.length();
+    لكل (int32_t i = 0; i <= وروستی_پیل; ++i) {
+        إذا (uprv_memcmp(p + i, s.معلومات(), s.length()) == 0) {
+            أرجع ریښتیا;
         }
     }
-    return false;
+    أرجع خطأ;
 }
 
-CharString &CharString::truncate(int32_t newLength) {
-    if(newLength<0) {
-        newLength=0;
+CharString &CharString::truncate(int32_t new_اوږدتیا) {
+    إذا(new_اوږدتیا<0) {
+        new_اوږدتیا=0;
     }
-    if(newLength<len) {
-        buffer[len=newLength]=0;
+    إذا(new_اوږدتیا<len) {
+        بفر[len=new_اوږدتیا]=0;
     }
-    return *this;
+    أرجع *هذا;
 }
 
-CharString &CharString::append(char c, UErrorCode &errorCode) {
-    if(ensureCapacity(len+2, 0, errorCode)) {
-        buffer[len++]=c;
-        buffer[len]=0;
+CharString &CharString::append(حرف c, UError_کوډ &error_کوډ) {
+    إذا(ensure_ظرفیت(len+2, 0, error_کوډ)) {
+        بفر[len++]=c;
+        بفر[len]=0;
     }
-    return *this;
+    أرجع *هذا;
 }
 
-CharString &CharString::append(const char *s, int32_t sLength, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return *this;
+CharString &CharString::append(ثابت حرف *s, int32_t s_اوږدتیا, UError_کوډ &error_کوډ) {
+    إذا(U_FAILURE(error_کوډ)) {
+        أرجع *هذا;
     }
-    if(sLength<-1 || (s==nullptr && sLength!=0)) {
-        errorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return *this;
+    إذا(s_اوږدتیا<-1 || (s==تش_اشاره && s_اوږدتیا!=0)) {
+        error_کوډ=U_ILLEGAL_دلیل_ERROR;
+        أرجع *هذا;
     }
-    if(sLength<0) {
-        sLength= static_cast<int32_t>(uprv_strlen(s));
+    إذا(s_اوږدتیا<0) {
+        s_اوږدتیا= static_cast<int32_t>(uprv_strlen(s));
     }
-    if(sLength>0) {
-        if(s==(buffer.getAlias()+len)) {
+    إذا(s_اوږدتیا>0) {
+        إذا(s==(بفر.getAlias()+len)) {
             // The caller wrote into the getAppendBuffer().
-            if(sLength>=(buffer.getCapacity()-len)) {
+            إذا(s_اوږدتیا>=(بفر.get_ظرفیت()-len)) {
                 // The caller wrote too much.
-                errorCode=U_INTERNAL_PROGRAM_ERROR;
-            } else {
-                buffer[len+=sLength]=0;
+                error_کوډ=U_دننی_پروګرام_ERROR;
+            } وإلا {
+                بفر[len+=s_اوږدتیا]=0;
             }
-        } else if(buffer.getAlias()<=s && s<(buffer.getAlias()+len) &&
-                  sLength>=(buffer.getCapacity()-len)
+        } وإلا إذا(بفر.getAlias()<=s && s<(بفر.getAlias()+len) &&
+                  s_اوږدتیا>=(بفر.get_ظرفیت()-len)
         ) {
             // (Part of) this string is appended to itself which requires reallocation,
             // so we have to make a copy of the substring and append that.
-            return append(CharString(s, sLength, errorCode), errorCode);
-        } else if(ensureCapacity(len+sLength+1, 0, errorCode)) {
-            uprv_memcpy(buffer.getAlias()+len, s, sLength);
-            buffer[len+=sLength]=0;
+            أرجع append(CharString(s, s_اوږدتیا, error_کوډ), error_کوډ);
+        } وإلا إذا(ensure_ظرفیت(len+s_اوږدتیا+1, 0, error_کوډ)) {
+            uprv_memcpy(بفر.getAlias()+len, s, s_اوږدتیا);
+            بفر[len+=s_اوږدتیا]=0;
         }
     }
-    return *this;
+    أرجع *هذا;
 }
 
-CharString &CharString::appendNumber(int64_t number, UErrorCode &status) {
-    if (number < 0) {
-        this->append('-', status);
-        if (U_FAILURE(status)) {
-            return *this;
+CharString &CharString::append_شمېره(int64_t number, UError_کوډ &حالت) {
+    إذا (number < 0) {
+        هذا->append('-', حالت);
+        إذا (U_FAILURE(حالت)) {
+            أرجع *هذا;
         }
     }
 
-    if (number == 0) {
-        this->append('0', status);
-        return *this;
+    إذا (number == 0) {
+        هذا->append('0', حالت);
+        أرجع *هذا;
     }
 
-    int32_t numLen = 0;
-    while (number != 0) {
+    int32_t عدد_Len = 0;
+    طالما (number != 0) {
         int32_t residue = number % 10;
         number /= 10;
-        this->append(std::abs(residue) + '0', status);
-        numLen++;
-        if (U_FAILURE(status)) {
-            return *this;
+        هذا->append(std::مطلق_قیمت(residue) + '0', حالت);
+        عدد_Len++;
+        إذا (U_FAILURE(حالت)) {
+            أرجع *هذا;
         }
     }
 
-    int32_t start = this->length() - numLen, end = this->length() - 1;
-    while(start < end) {
-        std::swap(this->data()[start++], this->data()[end--]);
+    int32_t پیل = هذا->length() - عدد_Len, پای_ټکی = هذا->length() - 1;
+    طالما(پیل < پای_ټکی) {
+        std::swap(هذا->معلومات()[پیل++], هذا->معلومات()[پای_ټکی--]);
     }
 
-    return *this;
+    أرجع *هذا;
 }
 
-char *CharString::getAppendBuffer(int32_t minCapacity,
-                                  int32_t desiredCapacityHint,
-                                  int32_t &resultCapacity,
-                                  UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        resultCapacity=0;
-        return nullptr;
+حرف *CharString::get_Append_بفر(int32_t min_ظرفیت,
+                                  int32_t desired_ظرفیت_Hint,
+                                  int32_t &پایله_ظرفیت,
+                                  UError_کوډ &error_کوډ) {
+    إذا(U_FAILURE(error_کوډ)) {
+        پایله_ظرفیت=0;
+        أرجع تش_اشاره;
     }
-    int32_t appendCapacity=buffer.getCapacity()-len-1;  // -1 for NUL
-    if(appendCapacity>=minCapacity) {
-        resultCapacity=appendCapacity;
-        return buffer.getAlias()+len;
+    int32_t append_ظرفیت=بفر.get_ظرفیت()-len-1;  // -1 for NUL
+    إذا(append_ظرفیت>=min_ظرفیت) {
+        پایله_ظرفیت=append_ظرفیت;
+        أرجع بفر.getAlias()+len;
     }
-    if(ensureCapacity(len+minCapacity+1, len+desiredCapacityHint+1, errorCode)) {
-        resultCapacity=buffer.getCapacity()-len-1;
-        return buffer.getAlias()+len;
+    إذا(ensure_ظرفیت(len+min_ظرفیت+1, len+desired_ظرفیت_Hint+1, error_کوډ)) {
+        پایله_ظرفیت=بفر.get_ظرفیت()-len-1;
+        أرجع بفر.getAlias()+len;
     }
-    resultCapacity=0;
-    return nullptr;
+    پایله_ظرفیت=0;
+    أرجع تش_اشاره;
 }
 
-CharString &CharString::appendInvariantChars(const UnicodeString &s, UErrorCode &errorCode) {
-    return appendInvariantChars(s.getBuffer(), s.length(), errorCode);
+CharString &CharString::appendInvariantChars(ثابت UnicodeString &s, UError_کوډ &error_کوډ) {
+    أرجع appendInvariantChars(s.get_بفر(), s.length(), error_کوډ);
 }
 
-CharString &CharString::appendInvariantChars(const char16_t* uchars, int32_t ucharsLen, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return *this;
+CharString &CharString::appendInvariantChars(ثابت char16_t* uchars, int32_t ucharsLen, UError_کوډ &error_کوډ) {
+    إذا(U_FAILURE(error_کوډ)) {
+        أرجع *هذا;
     }
-    if (!uprv_isInvariantUString(uchars, ucharsLen)) {
-        errorCode = U_INVARIANT_CONVERSION_ERROR;
-        return *this;
+    إذا (!uprv_isInvariantUString(uchars, ucharsLen)) {
+        error_کوډ = U_INVARIANT_CONVERSION_ERROR;
+        أرجع *هذا;
     }
-    if(ensureCapacity(len+ucharsLen+1, 0, errorCode)) {
-        u_UCharsToChars(uchars, buffer.getAlias()+len, ucharsLen);
+    إذا(ensure_ظرفیت(len+ucharsLen+1, 0, error_کوډ)) {
+        u_UChars_منزل_Chars(uchars, بفر.getAlias()+len, ucharsLen);
         len += ucharsLen;
-        buffer[len] = 0;
+        بفر[len] = 0;
     }
-    return *this;
+    أرجع *هذا;
 }
 
-UBool CharString::ensureCapacity(int32_t capacity,
-                                 int32_t desiredCapacityHint,
-                                 UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return false;
+UBool CharString::ensure_ظرفیت(int32_t capacity,
+                                 int32_t desired_ظرفیت_Hint,
+                                 UError_کوډ &error_کوډ) {
+    إذا(U_FAILURE(error_کوډ)) {
+        أرجع خطأ;
     }
-    if(capacity>buffer.getCapacity()) {
-        if(desiredCapacityHint==0) {
-            desiredCapacityHint=capacity+buffer.getCapacity();
+    إذا(capacity>بفر.get_ظرفیت()) {
+        إذا(desired_ظرفیت_Hint==0) {
+            desired_ظرفیت_Hint=capacity+بفر.get_ظرفیت();
         }
-        if( (desiredCapacityHint<=capacity || buffer.resize(desiredCapacityHint, len+1)==nullptr) &&
-            buffer.resize(capacity, len+1)==nullptr
+        إذا( (desired_ظرفیت_Hint<=capacity || بفر.resize(desired_ظرفیت_Hint, len+1)==تش_اشاره) &&
+            بفر.resize(capacity, len+1)==تش_اشاره
         ) {
-            errorCode=U_MEMORY_ALLOCATION_ERROR;
-            return false;
+            error_کوډ=U_حافظه_ویش_ERROR;
+            أرجع خطأ;
         }
     }
-    return true;
+    أرجع ریښتیا;
 }
 
-CharString &CharString::appendPathPart(StringPiece s, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return *this;
+CharString &CharString::append_لار_Part(StringPiece s, UError_کوډ &error_کوډ) {
+    إذا(U_FAILURE(error_کوډ)) {
+        أرجع *هذا;
     }
-    if(s.length()==0) {
-        return *this;
+    إذا(s.length()==0) {
+        أرجع *هذا;
     }
-    char c;
-    if(len>0 && (c=buffer[len-1])!=U_FILE_SEP_CHAR && c!=U_FILE_ALT_SEP_CHAR) {
-        append(getDirSepChar(), errorCode);
+    حرف c;
+    إذا(len>0 && (c=بفر[len-1])!=U_FILE_SEP_CHAR && c!=U_FILE_ALT_SEP_CHAR) {
+        append(getDirSepChar(), error_کوډ);
     }
-    append(s, errorCode);
-    return *this;
+    append(s, error_کوډ);
+    أرجع *هذا;
 }
 
-CharString &CharString::ensureEndsWithFileSeparator(UErrorCode &errorCode) {
-    char c;
-    if(U_SUCCESS(errorCode) && len>0 &&
-            (c=buffer[len-1])!=U_FILE_SEP_CHAR && c!=U_FILE_ALT_SEP_CHAR) {
-        append(getDirSepChar(), errorCode);
+CharString &CharString::ensure_پایونه_With_File_Separator(UError_کوډ &error_کوډ) {
+    حرف c;
+    إذا(U_SUCCESS(error_کوډ) && len>0 &&
+            (c=بفر[len-1])!=U_FILE_SEP_CHAR && c!=U_FILE_ALT_SEP_CHAR) {
+        append(getDirSepChar(), error_کوډ);
     }
-    return *this;
+    أرجع *هذا;
 }
 
-char CharString::getDirSepChar() const {
-    char dirSepChar = U_FILE_SEP_CHAR;
-#if (U_FILE_SEP_CHAR != U_FILE_ALT_SEP_CHAR)
+حرف CharString::getDirSepChar() ثابت {
+    حرف dirSepChar = U_FILE_SEP_CHAR;
+#إذا (U_FILE_SEP_CHAR != U_FILE_ALT_SEP_CHAR)
     // We may need to return a different directory separator when building for Cygwin or MSYS2.
-    if(len>0 && !uprv_strchr(data(), U_FILE_SEP_CHAR) && uprv_strchr(data(), U_FILE_ALT_SEP_CHAR))
+    إذا(len>0 && !uprv_strchr(معلومات(), U_FILE_SEP_CHAR) && uprv_strchr(معلومات(), U_FILE_ALT_SEP_CHAR))
         dirSepChar = U_FILE_ALT_SEP_CHAR;
-#endif
-    return dirSepChar;
+#د_که_پای
+    أرجع dirSepChar;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_پای_ټکی

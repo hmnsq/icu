@@ -17,18 +17,18 @@
 *
 */
 
-#include <limits>
+#ضمن <limits>
 
-#include "cmemory.h"
-#include "unicode/unistr.h"
-#include "unicode/utypes.h"
-#include "unicode/ustring.h"
-#include "unicode/uchar.h"
-#include "unicode/ubidi.h"
-#include "unicode/utf16.h"
-#include "ubidi_props.h"
-#include "ubidiimp.h"
-#include "uassert.h"
+#ضمن "cmemory.h"
+#ضمن "unicode/unistr.h"
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/ustring.h"
+#ضمن "unicode/uchar.h"
+#ضمن "unicode/ubidi.h"
+#ضمن "unicode/utf16.h"
+#ضمن "ubidi_props.h"
+#ضمن "ubidiimp.h"
+#ضمن "uassert.h"
 
 /*
  * General implementation notes:
@@ -112,76 +112,76 @@
  */
 
 /* to avoid some conditional statements, use tiny constant arrays */
-static const Flags flagLR[2]={ DIRPROP_FLAG(L), DIRPROP_FLAG(R) };
-static const Flags flagE[2]={ DIRPROP_FLAG(LRE), DIRPROP_FLAG(RLE) };
-static const Flags flagO[2]={ DIRPROP_FLAG(LRO), DIRPROP_FLAG(RLO) };
+ساكن ثابت Flags flagLR[2]={ DIRPROP_FLAG(L), DIRPROP_FLAG(R) };
+ساكن ثابت Flags flagE[2]={ DIRPROP_FLAG(LRE), DIRPROP_FLAG(RLE) };
+ساكن ثابت Flags flagO[2]={ DIRPROP_FLAG(LRO), DIRPROP_FLAG(RLO) };
 
-#define DIRPROP_FLAG_LR(level) flagLR[(level)&1]
-#define DIRPROP_FLAG_E(level)  flagE[(level)&1]
-#define DIRPROP_FLAG_O(level)  flagO[(level)&1]
+#تعریف_کړه DIRPROP_FLAG_LR(level) flagLR[(level)&1]
+#تعریف_کړه DIRPROP_FLAG_E(level)  flagE[(level)&1]
+#تعریف_کړه DIRPROP_FLAG_O(level)  flagO[(level)&1]
 
-#define DIR_FROM_STRONG(strong) ((strong)==L ? L : R)
+#تعریف_کړه DIR_FROM_STRONG(strong) ((strong)==L ? L : R)
 
-#define NO_OVERRIDE(level)  ((level)&~UBIDI_LEVEL_OVERRIDE)
+#تعریف_کړه NO_OVERRIDE(level)  ((level)&~UBIDI_LEVEL_OVERRIDE)
 
 /* UBiDi object management -------------------------------------------------- */
 
 U_CAPI UBiDi * U_EXPORT2
 ubidi_open()
 {
-    UErrorCode errorCode=U_ZERO_ERROR;
-    return ubidi_openSized(0, 0, &errorCode);
+    UError_کوډ error_کوډ=U_ZERO_ERROR;
+    أرجع ubidi_openSized(0, 0, &error_کوډ);
 }
 
 U_CAPI UBiDi * U_EXPORT2
-ubidi_openSized(int32_t maxLength, int32_t maxRunCount, UErrorCode *pErrorCode) {
+ubidi_openSized(int32_t max_اوږدتیا_2, int32_t max_پرلپسې_شمېر, UError_کوډ *p_Error_کوډ) {
     UBiDi *pBiDi;
 
     /* check the argument values */
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return nullptr;
-    } else if(maxLength<0 || maxRunCount<0) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;    /* invalid arguments */
+    إذا(p_Error_کوډ==تش_اشاره || U_FAILURE(*p_Error_کوډ)) {
+        أرجع تش_اشاره;
+    } وإلا إذا(max_اوږدتیا_2<0 || max_پرلپسې_شمېر<0) {
+        *p_Error_کوډ=U_ILLEGAL_دلیل_ERROR;
+        أرجع تش_اشاره;    /* invalid arguments */
     }
 
     /* allocate memory for the object */
-    pBiDi=(UBiDi *)uprv_malloc(sizeof(UBiDi));
-    if(pBiDi==nullptr) {
-        *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+    pBiDi=(UBiDi *)uprv_malloc(حجم(UBiDi));
+    إذا(pBiDi==تش_اشاره) {
+        *p_Error_کوډ=U_حافظه_ویش_ERROR;
+        أرجع تش_اشاره;
     }
 
     /* reset the object, all pointers nullptr, all flags false, all sizes 0 */
-    uprv_memset(pBiDi, 0, sizeof(UBiDi));
+    uprv_memset(pBiDi, 0, حجم(UBiDi));
 
     /* allocate memory for arrays as requested */
-    if(maxLength>0) {
-        if( !getInitialDirPropsMemory(pBiDi, maxLength) ||
-            !getInitialLevelsMemory(pBiDi, maxLength)
+    إذا(max_اوږدتیا_2>0) {
+        إذا( !get_Initial_Dir_Props_حافظه(pBiDi, max_اوږدتیا_2) ||
+            !get_Initial_پوړونه_حافظه(pBiDi, max_اوږدتیا_2)
         ) {
-            *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
+            *p_Error_کوډ=U_حافظه_ویش_ERROR;
         }
-    } else {
-        pBiDi->mayAllocateText=true;
+    } وإلا {
+        pBiDi->may_Allocate_متن=ریښتیا;
     }
 
-    if(maxRunCount>0) {
-        if(maxRunCount==1) {
+    إذا(max_پرلپسې_شمېر>0) {
+        إذا(max_پرلپسې_شمېر==1) {
             /* use simpleRuns[] */
-            pBiDi->runsSize=sizeof(Run);
-        } else if(!getInitialRunsMemory(pBiDi, maxRunCount)) {
-            *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
+            pBiDi->runs_اندازه=حجم(پرلپسې);
+        } وإلا إذا(!get_Initial_Runs_حافظه(pBiDi, max_پرلپسې_شمېر)) {
+            *p_Error_کوډ=U_حافظه_ویش_ERROR;
         }
-    } else {
-        pBiDi->mayAllocateRuns=true;
+    } وإلا {
+        pBiDi->mayAllocateRuns=ریښتیا;
     }
 
-    if(U_SUCCESS(*pErrorCode)) {
-        return pBiDi;
-    } else {
+    إذا(U_SUCCESS(*p_Error_کوډ)) {
+        أرجع pBiDi;
+    } وإلا {
         ubidi_close(pBiDi);
-        return nullptr;
+        أرجع تش_اشاره;
     }
 }
 
@@ -199,74 +199,74 @@ ubidi_openSized(int32_t maxLength, int32_t maxRunCount, UErrorCode *pErrorCode) 
  * is this the best way to do this??
  */
 U_CFUNC UBool
-ubidi_getMemory(BidiMemoryForAllocation *bidiMem, int32_t *pSize, UBool mayAllocate, size_t sizeNeeded) {
-    if (sizeNeeded > std::numeric_limits<int32_t>::max()) {
+ubidi_get_حافظه(Bidi_حافظه_For_ویش *bidiMem, int32_t *p_اندازه, UBool mayAllocate, size_t اندازه_Needed) {
+    إذا (اندازه_Needed > std::numeric_limits<int32_t>::max()) {
       // TODO(egg): Ugly guard for ICU-23397.  A cleaner fix would be to change the pSize to size_t*
       // and update callers throughout to use size_t for sizes (just like uprv_malloc already does).
       // Not that anyone should be running the UBA on text with that many runs…
-      return false;
+      أرجع خطأ;
     }
-    void **pMemory = (void **)bidiMem;
+    فراغ **p_حافظه = (فراغ **)bidiMem;
     /* check for existing memory */
-    if(*pMemory==nullptr) {
+    إذا(*p_حافظه==تش_اشاره) {
         /* we need to allocate memory */
-        if(mayAllocate && (*pMemory=uprv_malloc(sizeNeeded))!=nullptr) {
-            *pSize=static_cast<int32_t>(sizeNeeded);
-            return true;
-        } else {
-            return false;
+        إذا(mayAllocate && (*p_حافظه=uprv_malloc(اندازه_Needed))!=تش_اشاره) {
+            *p_اندازه=static_cast<int32_t>(اندازه_Needed);
+            أرجع ریښتیا;
+        } وإلا {
+            أرجع خطأ;
         }
-    } else {
-        if(sizeNeeded<=static_cast<size_t>(*pSize)) {
+    } وإلا {
+        إذا(اندازه_Needed<=static_cast<size_t>(*p_اندازه)) {
             /* there is already enough memory */
-            return true;
+            أرجع ریښتیا;
         }
-        else if(!mayAllocate) {
+        وإلا إذا(!mayAllocate) {
             /* not enough memory, and we must not allocate */
-            return false;
-        } else {
+            أرجع خطأ;
+        } وإلا {
             /* we try to grow */
-            void *memory;
+            فراغ *حافظه;
             /* in most cases, we do not need the copy-old-data part of
              * realloc, but it is needed when adding runs using getRunsMemory()
              * in setParaRunsOnly()
              */
-            if((memory=uprv_realloc(*pMemory, sizeNeeded))!=nullptr) {
-                *pMemory=memory;
-                *pSize=static_cast<int32_t>(sizeNeeded);
-                return true;
-            } else {
+            إذا((حافظه=uprv_realloc(*p_حافظه, اندازه_Needed))!=تش_اشاره) {
+                *p_حافظه=حافظه;
+                *p_اندازه=static_cast<int32_t>(اندازه_Needed);
+                أرجع ریښتیا;
+            } وإلا {
                 /* we failed to grow */
-                return false;
+                أرجع خطأ;
             }
         }
     }
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI فراغ U_EXPORT2
 ubidi_close(UBiDi *pBiDi) {
-    if(pBiDi!=nullptr) {
-        pBiDi->pParaBiDi=nullptr;          /* in case one tries to reuse this block */
-        if(pBiDi->dirPropsMemory!=nullptr) {
-            uprv_free(pBiDi->dirPropsMemory);
+    إذا(pBiDi!=تش_اشاره) {
+        pBiDi->pParaBiDi=تش_اشاره;          /* in case one tries to reuse this block */
+        إذا(pBiDi->dir_Props_حافظه!=تش_اشاره) {
+            uprv_free(pBiDi->dir_Props_حافظه);
         }
-        if(pBiDi->levelsMemory!=nullptr) {
-            uprv_free(pBiDi->levelsMemory);
+        إذا(pBiDi->پوړونه_حافظه!=تش_اشاره) {
+            uprv_free(pBiDi->پوړونه_حافظه);
         }
-        if(pBiDi->openingsMemory!=nullptr) {
-            uprv_free(pBiDi->openingsMemory);
+        إذا(pBiDi->openings_حافظه!=تش_اشاره) {
+            uprv_free(pBiDi->openings_حافظه);
         }
-        if(pBiDi->parasMemory!=nullptr) {
-            uprv_free(pBiDi->parasMemory);
+        إذا(pBiDi->paras_حافظه!=تش_اشاره) {
+            uprv_free(pBiDi->paras_حافظه);
         }
-        if(pBiDi->runsMemory!=nullptr) {
-            uprv_free(pBiDi->runsMemory);
+        إذا(pBiDi->runs_حافظه!=تش_اشاره) {
+            uprv_free(pBiDi->runs_حافظه);
         }
-        if(pBiDi->isolatesMemory!=nullptr) {
-            uprv_free(pBiDi->isolatesMemory);
+        إذا(pBiDi->isolates_حافظه!=تش_اشاره) {
+            uprv_free(pBiDi->isolates_حافظه);
         }
-        if(pBiDi->insertPoints.points!=nullptr) {
-            uprv_free(pBiDi->insertPoints.points);
+        إذا(pBiDi->ورننباسه_Points.points!=تش_اشاره) {
+            uprv_free(pBiDi->ورننباسه_Points.points);
         }
 
         uprv_free(pBiDi);
@@ -275,21 +275,21 @@ ubidi_close(UBiDi *pBiDi) {
 
 /* set to approximate "inverse BiDi" ---------------------------------------- */
 
-U_CAPI void U_EXPORT2
-ubidi_setInverse(UBiDi *pBiDi, UBool isInverse) {
-    if(pBiDi!=nullptr) {
+U_CAPI فراغ U_EXPORT2
+ubidi_سېټ_Inverse(UBiDi *pBiDi, UBool isInverse) {
+    إذا(pBiDi!=تش_اشاره) {
         pBiDi->isInverse=isInverse;
-        pBiDi->reorderingMode = isInverse ? UBIDI_REORDER_INVERSE_NUMBERS_AS_L
+        pBiDi->reordering_ډېرپېښ = isInverse ? UBIDI_REORDER_INVERSE_NUMBERS_AS_L
                                           : UBIDI_REORDER_DEFAULT;
     }
 }
 
 U_CAPI UBool U_EXPORT2
 ubidi_isInverse(UBiDi *pBiDi) {
-    if(pBiDi!=nullptr) {
-        return pBiDi->isInverse;
-    } else {
-        return false;
+    إذا(pBiDi!=تش_اشاره) {
+        أرجع pBiDi->isInverse;
+    } وإلا {
+        أرجع خطأ;
     }
 }
 
@@ -308,69 +308,69 @@ ubidi_isInverse(UBiDi *pBiDi) {
  * This would need to document which ones are supported and what are the
  * fallbacks for unsupported combinations.
  */
-U_CAPI void U_EXPORT2
-ubidi_setReorderingMode(UBiDi *pBiDi, UBiDiReorderingMode reorderingMode) UPRV_NO_SANITIZE_UNDEFINED {
-    if ((pBiDi!=nullptr) && (reorderingMode >= UBIDI_REORDER_DEFAULT)
-                        && (reorderingMode < UBIDI_REORDER_COUNT)) {
-        pBiDi->reorderingMode = reorderingMode;
-        pBiDi->isInverse = reorderingMode == UBIDI_REORDER_INVERSE_NUMBERS_AS_L;
+U_CAPI فراغ U_EXPORT2
+ubidi_سېټ_Reordering_ډېرپېښ(UBiDi *pBiDi, UBi_Di_Reordering_ډېرپېښ reordering_ډېرپېښ) UPRV_NO_SANITIZE_UNDEFINED {
+    إذا ((pBiDi!=تش_اشاره) && (reordering_ډېرپېښ >= UBIDI_REORDER_DEFAULT)
+                        && (reordering_ډېرپېښ < UBIDI_REORDER_شمېر)) {
+        pBiDi->reordering_ډېرپېښ = reordering_ډېرپېښ;
+        pBiDi->isInverse = reordering_ډېرپېښ == UBIDI_REORDER_INVERSE_NUMBERS_AS_L;
     }
 }
 
-U_CAPI UBiDiReorderingMode U_EXPORT2
-ubidi_getReorderingMode(UBiDi *pBiDi) {
-    if (pBiDi!=nullptr) {
-        return pBiDi->reorderingMode;
-    } else {
-        return UBIDI_REORDER_DEFAULT;
+U_CAPI UBi_Di_Reordering_ډېرپېښ U_EXPORT2
+ubidi_get_Reordering_ډېرپېښ(UBiDi *pBiDi) {
+    إذا (pBiDi!=تش_اشاره) {
+        أرجع pBiDi->reordering_ډېرپېښ;
+    } وإلا {
+        أرجع UBIDI_REORDER_DEFAULT;
     }
 }
 
-U_CAPI void U_EXPORT2
-ubidi_setReorderingOptions(UBiDi *pBiDi, uint32_t reorderingOptions) {
-    if (reorderingOptions & UBIDI_OPTION_REMOVE_CONTROLS) {
-        reorderingOptions&=~UBIDI_OPTION_INSERT_MARKS;
+U_CAPI فراغ U_EXPORT2
+ubidi_سېټ_Reordering_Options(UBiDi *pBiDi, uint32_t reorderingOptions) {
+    إذا (reorderingOptions & UBIDI_OPTION_REMOVE_CONTROLS) {
+        reorderingOptions&=~UBIDI_OPTION_ورننباسه_MARKS;
     }
-    if (pBiDi!=nullptr) {
+    إذا (pBiDi!=تش_اشاره) {
         pBiDi->reorderingOptions=reorderingOptions;
     }
 }
 
 U_CAPI uint32_t U_EXPORT2
 ubidi_getReorderingOptions(UBiDi *pBiDi) {
-    if (pBiDi!=nullptr) {
-        return pBiDi->reorderingOptions;
-    } else {
-        return 0;
+    إذا (pBiDi!=تش_اشاره) {
+        أرجع pBiDi->reorderingOptions;
+    } وإلا {
+        أرجع 0;
     }
 }
 
 U_CAPI UBiDiDirection U_EXPORT2
-ubidi_getBaseDirection(const char16_t *text,
+ubidi_get_بنسټ_Direction(ثابت char16_t *متن,
 int32_t length){
 
     int32_t i;
     UChar32 uchar;
     UCharDirection dir;
 
-    if( text==nullptr || length<-1 ){
-        return UBIDI_NEUTRAL;
+    إذا( متن==تش_اشاره || length<-1 ){
+        أرجع UBIDI_NEUTRAL;
     }
 
-    if(length==-1) {
-        length=u_strlen(text);
+    إذا(length==-1) {
+        length=u_strlen(متن);
     }
 
-    for( i = 0 ; i < length; ) {
+    لكل( i = 0 ; i < length; ) {
         /* i is incremented by U16_NEXT */
-        U16_NEXT(text, i, length, uchar);
+        U16_بل(متن, i, length, uchar);
         dir = u_charDirection(uchar);
-        if( dir == U_LEFT_TO_RIGHT )
-                return UBIDI_LTR;
-        if( dir == U_RIGHT_TO_LEFT || dir ==U_RIGHT_TO_LEFT_ARABIC )
-                return UBIDI_RTL;
+        إذا( dir == U_کیڼ_منزل_ښی )
+                أرجع UBIDI_LTR;
+        إذا( dir == U_ښی_منزل_کیڼ || dir ==U_ښی_منزل_کیڼ_ARABIC )
+                أرجع UBIDI_RTL;
     }
-    return UBIDI_NEUTRAL;
+    أرجع UBIDI_NEUTRAL;
 }
 
 /* perform (P2)..(P3) ------------------------------------------------------- */
@@ -380,49 +380,49 @@ int32_t length){
  * after the last B in prologue, if any.
  * Requires prologue!=null.
  */
-static DirProp
-firstL_R_AL(UBiDi *pBiDi) {
-    const char16_t *text=pBiDi->prologue;
-    int32_t length=pBiDi->proLength;
+ساكن DirProp
+لومړی_L_R_AL(UBiDi *pBiDi) {
+    ثابت char16_t *متن=pBiDi->prologue;
+    int32_t length=pBiDi->pro_اوږدتیا;
     int32_t i;
     UChar32 uchar;
-    DirProp dirProp, result=ON;
-    for(i=0; i<length; ) {
+    DirProp dirProp, پایله=ON;
+    لكل(i=0; i<length; ) {
         /* i is incremented by U16_NEXT */
-        U16_NEXT(text, i, length, uchar);
+        U16_بل(متن, i, length, uchar);
         dirProp = static_cast<DirProp>(ubidi_getCustomizedClass(pBiDi, uchar));
-        if(result==ON) {
-            if(dirProp==L || dirProp==R || dirProp==AL) {
-                result=dirProp;
+        إذا(پایله==ON) {
+            إذا(dirProp==L || dirProp==R || dirProp==AL) {
+                پایله=dirProp;
             }
-        } else {
-            if(dirProp==B) {
-                result=ON;
+        } وإلا {
+            إذا(dirProp==B) {
+                پایله=ON;
             }
         }
     }
-    return result;
+    أرجع پایله;
 }
 
 /*
  * Check that there are enough entries in the array pointed to by pBiDi->paras
  */
-static UBool
-checkParaCount(UBiDi *pBiDi) {
-    int32_t count=pBiDi->paraCount;
-    if(pBiDi->paras==pBiDi->simpleParas) {
-        if(count<=SIMPLE_PARAS_COUNT)
-            return true;
-        if(!getInitialParasMemory(pBiDi, SIMPLE_PARAS_COUNT * 2))
-            return false;
-        pBiDi->paras=pBiDi->parasMemory;
-        uprv_memcpy(pBiDi->parasMemory, pBiDi->simpleParas, SIMPLE_PARAS_COUNT * sizeof(Para));
-        return true;
+ساكن UBool
+check_Para_شمېر(UBiDi *pBiDi) {
+    int32_t count=pBiDi->para_شمېر;
+    إذا(pBiDi->paras==pBiDi->simpleParas) {
+        إذا(count<=SIMPLE_PARAS_شمېر)
+            أرجع ریښتیا;
+        إذا(!get_Initial_Paras_حافظه(pBiDi, SIMPLE_PARAS_شمېر * 2))
+            أرجع خطأ;
+        pBiDi->paras=pBiDi->paras_حافظه;
+        uprv_memcpy(pBiDi->paras_حافظه, pBiDi->simpleParas, SIMPLE_PARAS_شمېر * حجم(Para));
+        أرجع ریښتیا;
     }
-    if(!getInitialParasMemory(pBiDi, count * 2))
-        return false;
-    pBiDi->paras=pBiDi->parasMemory;
-    return true;
+    إذا(!get_Initial_Paras_حافظه(pBiDi, count * 2))
+        أرجع خطأ;
+    pBiDi->paras=pBiDi->paras_حافظه;
+    أرجع ریښتیا;
 }
 
 /*
@@ -433,12 +433,12 @@ checkParaCount(UBiDi *pBiDi) {
  * default. Only if a strong R or AL is found within its scope will the LRI be
  * replaced by an RLI.
  */
-static UBool
+ساكن UBool
 getDirProps(UBiDi *pBiDi) {
-    const char16_t *text=pBiDi->text;
-    DirProp *dirProps=pBiDi->dirPropsMemory;    /* pBiDi->dirProps is const */
+    ثابت char16_t *متن=pBiDi->متن;
+    DirProp *dirProps=pBiDi->dir_Props_حافظه;    /* pBiDi->dirProps is const */
 
-    int32_t i=0, originalLength=pBiDi->originalLength;
+    int32_t i=0, original_اوږدتیا=pBiDi->original_اوږدتیا;
     Flags flags=0;      /* collect all directionalities in the text */
     UChar32 uchar;
     DirProp dirProp=0, defaultParaLevel=0;  /* initialize to avoid compiler warnings */
@@ -446,21 +446,21 @@ getDirProps(UBiDi *pBiDi) {
     /* for inverse BiDi, the default para level is set to RTL if there is a
        strong R or AL character at either end of the text                            */
     UBool isDefaultLevelInverse = isDefaultLevel && static_cast<UBool>(
-            pBiDi->reorderingMode == UBIDI_REORDER_INVERSE_LIKE_DIRECT ||
-            pBiDi->reorderingMode == UBIDI_REORDER_INVERSE_FOR_NUMBERS_SPECIAL);
-    int32_t lastArabicPos=-1;
-    int32_t controlCount=0;
+            pBiDi->reordering_ډېرپېښ == UBIDI_REORDER_INVERSE_LIKE_مستقیم ||
+            pBiDi->reordering_ډېرپېښ == UBIDI_REORDER_INVERSE_FOR_NUMBERS_SPECIAL);
+    int32_t وروستی_Arabic_Pos=-1;
+    int32_t control_شمېر=0;
     UBool removeBiDiControls =
         static_cast<UBool>(pBiDi->reorderingOptions & UBIDI_OPTION_REMOVE_CONTROLS);
 
-    enum State {
+    تعداد State {
          NOT_SEEKING_STRONG,            /* 0: not contextual paraLevel, not after FSI */
          SEEKING_STRONG_FOR_PARA,       /* 1: looking for first strong char in para */
          SEEKING_STRONG_FOR_FSI,        /* 2: looking for first strong after FSI */
          LOOKING_FOR_PDI                /* 3: found strong after FSI, looking for PDI */
     };
     State state;
-    DirProp lastStrong=ON;              /* for default level & inverse BiDi */
+    DirProp وروستی_Strong=ON;              /* for default level & inverse BiDi */
     /* The following stacks are used to manage isolate sequences. Those
        sequences may be nested, but obviously never more deeply than the
        maximum explicit embedding level.
@@ -469,29 +469,29 @@ getDirProps(UBiDi *pBiDi) {
        lastStack is reset to -1 on paragraph boundaries. */
     /* The following stack contains the position of the initiator of
        each open isolate sequence */
-    int32_t isolateStartStack[UBIDI_MAX_EXPLICIT_LEVEL+1];
+    int32_t isolate_پیل_ډېری[UBIDI_MAX_EXPLICIT_LEVEL+1];
     /* The following stack contains the last known state before
        encountering the initiator of an isolate sequence */
-    State  previousStateStack[UBIDI_MAX_EXPLICIT_LEVEL+1];
-    int32_t stackLast=-1;
+    State  پخوانی_State_ډېری[UBIDI_MAX_EXPLICIT_LEVEL+1];
+    int32_t ډېری_وروستی=-1;
 
-    if(pBiDi->reorderingOptions & UBIDI_OPTION_STREAMING)
+    إذا(pBiDi->reorderingOptions & UBIDI_OPTION_STREAMING)
         pBiDi->length=0;
     defaultParaLevel=pBiDi->paraLevel&1;
-    if(isDefaultLevel) {
+    إذا(isDefaultLevel) {
         pBiDi->paras[0].level=defaultParaLevel;
-        lastStrong=defaultParaLevel;
-        if(pBiDi->proLength>0 &&                    /* there is a prologue */
-           (dirProp=firstL_R_AL(pBiDi))!=ON) {  /* with a strong character */
-            if(dirProp==L)
+        وروستی_Strong=defaultParaLevel;
+        إذا(pBiDi->pro_اوږدتیا>0 &&                    /* there is a prologue */
+           (dirProp=لومړی_L_R_AL(pBiDi))!=ON) {  /* with a strong character */
+            إذا(dirProp==L)
                 pBiDi->paras[0].level=0;    /* set the default para level */
-            else
+            وإلا
                 pBiDi->paras[0].level=1;    /* set the default para level */
             state=NOT_SEEKING_STRONG;
-        } else {
+        } وإلا {
             state=SEEKING_STRONG_FOR_PARA;
         }
-    } else {
+    } وإلا {
         pBiDi->paras[0].level=pBiDi->paraLevel;
         state=NOT_SEEKING_STRONG;
     }
@@ -501,163 +501,163 @@ getDirProps(UBiDi *pBiDi) {
      * the UBIDI_DEFAULT_XXX values are designed so that
      * their bit 0 alone yields the intended default
      */
-    for( /* i=0 above */ ; i<originalLength; ) {
+    لكل( /* i=0 above */ ; i<original_اوږدتیا; ) {
         /* i is incremented by U16_NEXT */
-        U16_NEXT(text, i, originalLength, uchar);
+        U16_بل(متن, i, original_اوږدتیا, uchar);
         flags|=DIRPROP_FLAG(dirProp=(DirProp)ubidi_getCustomizedClass(pBiDi, uchar));
         dirProps[i-1]=dirProp;
-        if(uchar>0xffff) {  /* set the lead surrogate's property to BN */
+        إذا(uchar>0xffff) {  /* set the lead surrogate's property to BN */
             flags|=DIRPROP_FLAG(BN);
             dirProps[i-2]=BN;
         }
-        if(removeBiDiControls && IS_BIDI_CONTROL_CHAR(uchar))
-            controlCount++;
-        if(dirProp==L) {
-            if(state==SEEKING_STRONG_FOR_PARA) {
-                pBiDi->paras[pBiDi->paraCount-1].level=0;
+        إذا(removeBiDiControls && IS_BIDI_CONTROL_CHAR(uchar))
+            control_شمېر++;
+        إذا(dirProp==L) {
+            إذا(state==SEEKING_STRONG_FOR_PARA) {
+                pBiDi->paras[pBiDi->para_شمېر-1].level=0;
                 state=NOT_SEEKING_STRONG;
             }
-            else if(state==SEEKING_STRONG_FOR_FSI) {
-                if(stackLast<=UBIDI_MAX_EXPLICIT_LEVEL) {
+            وإلا إذا(state==SEEKING_STRONG_FOR_FSI) {
+                إذا(ډېری_وروستی<=UBIDI_MAX_EXPLICIT_LEVEL) {
                     /* no need for next statement, already set by default */
                     /* dirProps[isolateStartStack[stackLast]]=LRI; */
                     flags|=DIRPROP_FLAG(LRI);
                 }
                 state=LOOKING_FOR_PDI;
             }
-            lastStrong=L;
-            continue;
+            وروستی_Strong=L;
+            استمر;
         }
-        if(dirProp==R || dirProp==AL) {
-            if(state==SEEKING_STRONG_FOR_PARA) {
-                pBiDi->paras[pBiDi->paraCount-1].level=1;
+        إذا(dirProp==R || dirProp==AL) {
+            إذا(state==SEEKING_STRONG_FOR_PARA) {
+                pBiDi->paras[pBiDi->para_شمېر-1].level=1;
                 state=NOT_SEEKING_STRONG;
             }
-            else if(state==SEEKING_STRONG_FOR_FSI) {
-                if(stackLast<=UBIDI_MAX_EXPLICIT_LEVEL) {
-                    dirProps[isolateStartStack[stackLast]]=RLI;
+            وإلا إذا(state==SEEKING_STRONG_FOR_FSI) {
+                إذا(ډېری_وروستی<=UBIDI_MAX_EXPLICIT_LEVEL) {
+                    dirProps[isolate_پیل_ډېری[ډېری_وروستی]]=RLI;
                     flags|=DIRPROP_FLAG(RLI);
                 }
                 state=LOOKING_FOR_PDI;
             }
-            lastStrong=R;
-            if(dirProp==AL)
-                lastArabicPos=i-1;
-            continue;
+            وروستی_Strong=R;
+            إذا(dirProp==AL)
+                وروستی_Arabic_Pos=i-1;
+            استمر;
         }
-        if(dirProp>=FSI && dirProp<=RLI) {  /* FSI, LRI or RLI */
-            stackLast++;
-            if(stackLast<=UBIDI_MAX_EXPLICIT_LEVEL) {
-                isolateStartStack[stackLast]=i-1;
-                previousStateStack[stackLast]=state;
+        إذا(dirProp>=FSI && dirProp<=RLI) {  /* FSI, LRI or RLI */
+            ډېری_وروستی++;
+            إذا(ډېری_وروستی<=UBIDI_MAX_EXPLICIT_LEVEL) {
+                isolate_پیل_ډېری[ډېری_وروستی]=i-1;
+                پخوانی_State_ډېری[ډېری_وروستی]=state;
             }
-            if(dirProp==FSI) {
+            إذا(dirProp==FSI) {
                 dirProps[i-1]=LRI;      /* default if no strong char */
                 state=SEEKING_STRONG_FOR_FSI;
             }
-            else
+            وإلا
                 state=LOOKING_FOR_PDI;
-            continue;
+            استمر;
         }
-        if(dirProp==PDI) {
-            if(state==SEEKING_STRONG_FOR_FSI) {
-                if(stackLast<=UBIDI_MAX_EXPLICIT_LEVEL) {
+        إذا(dirProp==PDI) {
+            إذا(state==SEEKING_STRONG_FOR_FSI) {
+                إذا(ډېری_وروستی<=UBIDI_MAX_EXPLICIT_LEVEL) {
                     /* no need for next statement, already set by default */
                     /* dirProps[isolateStartStack[stackLast]]=LRI; */
                     flags|=DIRPROP_FLAG(LRI);
                 }
             }
-            if(stackLast>=0) {
-                if(stackLast<=UBIDI_MAX_EXPLICIT_LEVEL)
-                    state=previousStateStack[stackLast];
-                stackLast--;
+            إذا(ډېری_وروستی>=0) {
+                إذا(ډېری_وروستی<=UBIDI_MAX_EXPLICIT_LEVEL)
+                    state=پخوانی_State_ډېری[ډېری_وروستی];
+                ډېری_وروستی--;
             }
-            continue;
+            استمر;
         }
-        if(dirProp==B) {
-            if(i<originalLength && uchar==CR && text[i]==LF) /* do nothing on the CR */
-                continue;
-            pBiDi->paras[pBiDi->paraCount-1].limit=i;
-            if(isDefaultLevelInverse && lastStrong==R)
-                pBiDi->paras[pBiDi->paraCount-1].level=1;
-            if(pBiDi->reorderingOptions & UBIDI_OPTION_STREAMING) {
+        إذا(dirProp==B) {
+            إذا(i<original_اوږدتیا && uchar==CR && متن[i]==LF) /* do nothing on the CR */
+                استمر;
+            pBiDi->paras[pBiDi->para_شمېر-1].حد=i;
+            إذا(isDefaultLevelInverse && وروستی_Strong==R)
+                pBiDi->paras[pBiDi->para_شمېر-1].level=1;
+            إذا(pBiDi->reorderingOptions & UBIDI_OPTION_STREAMING) {
                 /* When streaming, we only process whole paragraphs
                    thus some updates are only done on paragraph boundaries */
                 pBiDi->length=i;        /* i is index to next character */
-                pBiDi->controlCount=controlCount;
+                pBiDi->control_شمېر=control_شمېر;
             }
-            if(i<originalLength) {              /* B not last char in text */
-                pBiDi->paraCount++;
-                if(checkParaCount(pBiDi)==false)    /* not enough memory for a new para entry */
-                    return false;
-                if(isDefaultLevel) {
-                    pBiDi->paras[pBiDi->paraCount-1].level=defaultParaLevel;
+            إذا(i<original_اوږدتیا) {              /* B not last char in text */
+                pBiDi->para_شمېر++;
+                إذا(check_Para_شمېر(pBiDi)==خطأ)    /* not enough memory for a new para entry */
+                    أرجع خطأ;
+                إذا(isDefaultLevel) {
+                    pBiDi->paras[pBiDi->para_شمېر-1].level=defaultParaLevel;
                     state=SEEKING_STRONG_FOR_PARA;
-                    lastStrong=defaultParaLevel;
-                } else {
-                    pBiDi->paras[pBiDi->paraCount-1].level=pBiDi->paraLevel;
+                    وروستی_Strong=defaultParaLevel;
+                } وإلا {
+                    pBiDi->paras[pBiDi->para_شمېر-1].level=pBiDi->paraLevel;
                     state=NOT_SEEKING_STRONG;
                 }
-                stackLast=-1;
+                ډېری_وروستی=-1;
             }
-            continue;
+            استمر;
         }
     }
     /* Ignore still open isolate sequences with overflow */
-    if(stackLast>UBIDI_MAX_EXPLICIT_LEVEL) {
-        stackLast=UBIDI_MAX_EXPLICIT_LEVEL;
+    إذا(ډېری_وروستی>UBIDI_MAX_EXPLICIT_LEVEL) {
+        ډېری_وروستی=UBIDI_MAX_EXPLICIT_LEVEL;
         state=SEEKING_STRONG_FOR_FSI;   /* to be on the safe side */
     }
     /* Resolve direction of still unresolved open FSI sequences */
-    while(stackLast>=0) {
-        if(state==SEEKING_STRONG_FOR_FSI) {
+    طالما(ډېری_وروستی>=0) {
+        إذا(state==SEEKING_STRONG_FOR_FSI) {
             /* no need for next statement, already set by default */
             /* dirProps[isolateStartStack[stackLast]]=LRI; */
             flags|=DIRPROP_FLAG(LRI);
-            break;
+            اكسر;
         }
-        state=previousStateStack[stackLast];
-        stackLast--;
+        state=پخوانی_State_ډېری[ډېری_وروستی];
+        ډېری_وروستی--;
     }
     /* When streaming, ignore text after the last paragraph separator */
-    if(pBiDi->reorderingOptions & UBIDI_OPTION_STREAMING) {
-        if(pBiDi->length<originalLength)
-            pBiDi->paraCount--;
-    } else {
-        pBiDi->paras[pBiDi->paraCount-1].limit=originalLength;
-        pBiDi->controlCount=controlCount;
+    إذا(pBiDi->reorderingOptions & UBIDI_OPTION_STREAMING) {
+        إذا(pBiDi->length<original_اوږدتیا)
+            pBiDi->para_شمېر--;
+    } وإلا {
+        pBiDi->paras[pBiDi->para_شمېر-1].حد=original_اوږدتیا;
+        pBiDi->control_شمېر=control_شمېر;
     }
     /* For inverse bidi, default para direction is RTL if there is
        a strong R or AL at either end of the paragraph */
-    if(isDefaultLevelInverse && lastStrong==R) {
-        pBiDi->paras[pBiDi->paraCount-1].level=1;
+    إذا(isDefaultLevelInverse && وروستی_Strong==R) {
+        pBiDi->paras[pBiDi->para_شمېر-1].level=1;
     }
-    if(isDefaultLevel) {
+    إذا(isDefaultLevel) {
         pBiDi->paraLevel=static_cast<UBiDiLevel>(pBiDi->paras[0].level);
     }
     /* The following is needed to resolve the text direction for default level
        paragraphs containing no strong character */
-    for(i=0; i<pBiDi->paraCount; i++)
+    لكل(i=0; i<pBiDi->para_شمېر; i++)
         flags|=DIRPROP_FLAG_LR(pBiDi->paras[i].level);
 
-    if(pBiDi->orderParagraphsLTR && (flags&DIRPROP_FLAG(B))) {
+    إذا(pBiDi->ترتیب_Paragraphs_LTR && (flags&DIRPROP_FLAG(B))) {
         flags|=DIRPROP_FLAG(L);
     }
     pBiDi->flags=flags;
-    pBiDi->lastArabicPos=lastArabicPos;
-    return true;
+    pBiDi->وروستی_Arabic_Pos=وروستی_Arabic_Pos;
+    أرجع ریښتیا;
 }
 
 /* determine the paragraph level at position index */
 U_CFUNC UBiDiLevel
-ubidi_getParaLevelAtIndex(const UBiDi *pBiDi, int32_t pindex) {
+ubidi_get_Para_Level_At_شاخص(ثابت UBiDi *pBiDi, int32_t pindex) {
     int32_t i;
-    for(i=0; i<pBiDi->paraCount; i++)
-        if(pindex<pBiDi->paras[i].limit)
-            break;
-    if(i>=pBiDi->paraCount)
-        i=pBiDi->paraCount-1;
-    return (UBiDiLevel)(pBiDi->paras[i].level);
+    لكل(i=0; i<pBiDi->para_شمېر; i++)
+        إذا(pindex<pBiDi->paras[i].حد)
+            اكسر;
+    إذا(i>=pBiDi->para_شمېر)
+        i=pBiDi->para_شمېر-1;
+    أرجع (UBiDiLevel)(pBiDi->paras[i].level);
 }
 
 /* Functions for handling paired brackets ----------------------------------- */
@@ -676,144 +676,144 @@ ubidi_getParaLevelAtIndex(const UBiDi *pBiDi, int32_t pindex) {
    encountered strong character, since these will be needed to resolve
    the level of paired brackets.  */
 
-static void
-bracketInit(UBiDi *pBiDi, BracketData *bd) {
+ساكن فراغ
+bracketInit(UBiDi *pBiDi, Bracket_معلومات *bd) {
     bd->pBiDi=pBiDi;
-    bd->isoRunLast=0;
-    bd->isoRuns[0].start=0;
-    bd->isoRuns[0].limit=0;
+    bd->iso_پرلپسې_وروستی=0;
+    bd->isoRuns[0].پیل=0;
+    bd->isoRuns[0].حد=0;
     bd->isoRuns[0].level=GET_PARALEVEL(pBiDi, 0);
     UBiDiLevel t = GET_PARALEVEL(pBiDi, 0) & 1;
-    bd->isoRuns[0].lastStrong = bd->isoRuns[0].lastBase = t;
+    bd->isoRuns[0].وروستی_Strong = bd->isoRuns[0].وروستی_بنسټ = t;
     bd->isoRuns[0].contextDir = static_cast<UBiDiDirection>(t);
     bd->isoRuns[0].contextPos=0;
-    if(pBiDi->openingsMemory) {
-        bd->openings=pBiDi->openingsMemory;
-        bd->openingsCount=pBiDi->openingsSize / sizeof(Opening);
-    } else {
+    إذا(pBiDi->openings_حافظه) {
+        bd->openings=pBiDi->openings_حافظه;
+        bd->openings_شمېر=pBiDi->openings_اندازه / حجم(Opening);
+    } وإلا {
         bd->openings=bd->simpleOpenings;
-        bd->openingsCount=SIMPLE_OPENINGS_COUNT;
+        bd->openings_شمېر=SIMPLE_OPENINGS_شمېر;
     }
-    bd->isNumbersSpecial=bd->pBiDi->reorderingMode==UBIDI_REORDER_NUMBERS_SPECIAL ||
-                         bd->pBiDi->reorderingMode==UBIDI_REORDER_INVERSE_FOR_NUMBERS_SPECIAL;
+    bd->isNumbersSpecial=bd->pBiDi->reordering_ډېرپېښ==UBIDI_REORDER_NUMBERS_SPECIAL ||
+                         bd->pBiDi->reordering_ډېرپېښ==UBIDI_REORDER_INVERSE_FOR_NUMBERS_SPECIAL;
 }
 
 /* paragraph boundary */
-static void
-bracketProcessB(BracketData *bd, UBiDiLevel level) {
-    bd->isoRunLast=0;
-    bd->isoRuns[0].limit=0;
+ساكن فراغ
+bracketProcessB(Bracket_معلومات *bd, UBiDiLevel level) {
+    bd->iso_پرلپسې_وروستی=0;
+    bd->isoRuns[0].حد=0;
     bd->isoRuns[0].level=level;
-    bd->isoRuns[0].lastStrong=bd->isoRuns[0].lastBase=level&1;
+    bd->isoRuns[0].وروستی_Strong=bd->isoRuns[0].وروستی_بنسټ=level&1;
     bd->isoRuns[0].contextDir = static_cast<UBiDiDirection>(level & 1);
     bd->isoRuns[0].contextPos=0;
 }
 
 /* LRE, LRO, RLE, RLO, PDF */
-static void
-bracketProcessBoundary(BracketData *bd, int32_t lastCcPos,
+ساكن فراغ
+bracketProcessBoundary(Bracket_معلومات *bd, int32_t وروستی_Cc_Pos,
                        UBiDiLevel contextLevel, UBiDiLevel embeddingLevel) {
-    IsoRun *pLastIsoRun=&bd->isoRuns[bd->isoRunLast];
+    Iso_پرلپسې *p_وروستی_Iso_پرلپسې=&bd->isoRuns[bd->iso_پرلپسې_وروستی];
     DirProp *dirProps=bd->pBiDi->dirProps;
-    if(DIRPROP_FLAG(dirProps[lastCcPos])&MASK_ISO)  /* after an isolate */
-        return;
-    if(NO_OVERRIDE(embeddingLevel)>NO_OVERRIDE(contextLevel))   /* not a PDF */
+    إذا(DIRPROP_FLAG(dirProps[وروستی_Cc_Pos])&ماسک_ISO)  /* after an isolate */
+        أرجع;
+    إذا(NO_OVERRIDE(embeddingLevel)>NO_OVERRIDE(contextLevel))   /* not a PDF */
         contextLevel=embeddingLevel;
-    pLastIsoRun->limit=pLastIsoRun->start;
-    pLastIsoRun->level=embeddingLevel;
-    pLastIsoRun->lastStrong=pLastIsoRun->lastBase=contextLevel&1;
-    pLastIsoRun->contextDir = static_cast<UBiDiDirection>(contextLevel & 1);
-    pLastIsoRun->contextPos = static_cast<UBiDiDirection>(lastCcPos);
+    p_وروستی_Iso_پرلپسې->حد=p_وروستی_Iso_پرلپسې->پیل;
+    p_وروستی_Iso_پرلپسې->level=embeddingLevel;
+    p_وروستی_Iso_پرلپسې->وروستی_Strong=p_وروستی_Iso_پرلپسې->وروستی_بنسټ=contextLevel&1;
+    p_وروستی_Iso_پرلپسې->contextDir = static_cast<UBiDiDirection>(contextLevel & 1);
+    p_وروستی_Iso_پرلپسې->contextPos = static_cast<UBiDiDirection>(وروستی_Cc_Pos);
 }
 
 /* LRI or RLI */
-static void
-bracketProcessLRI_RLI(BracketData *bd, UBiDiLevel level) {
-    IsoRun *pLastIsoRun=&bd->isoRuns[bd->isoRunLast];
-    int16_t lastLimit;
-    pLastIsoRun->lastBase=ON;
-    lastLimit=pLastIsoRun->limit;
-    bd->isoRunLast++;
-    pLastIsoRun++;
-    pLastIsoRun->start=pLastIsoRun->limit=lastLimit;
-    pLastIsoRun->level=level;
-    pLastIsoRun->lastStrong=pLastIsoRun->lastBase=level&1;
-    pLastIsoRun->contextDir = static_cast<UBiDiDirection>(level & 1);
-    pLastIsoRun->contextPos=0;
+ساكن فراغ
+bracketProcessLRI_RLI(Bracket_معلومات *bd, UBiDiLevel level) {
+    Iso_پرلپسې *p_وروستی_Iso_پرلپسې=&bd->isoRuns[bd->iso_پرلپسې_وروستی];
+    int16_t وروستی_حد;
+    p_وروستی_Iso_پرلپسې->وروستی_بنسټ=ON;
+    وروستی_حد=p_وروستی_Iso_پرلپسې->حد;
+    bd->iso_پرلپسې_وروستی++;
+    p_وروستی_Iso_پرلپسې++;
+    p_وروستی_Iso_پرلپسې->پیل=p_وروستی_Iso_پرلپسې->حد=وروستی_حد;
+    p_وروستی_Iso_پرلپسې->level=level;
+    p_وروستی_Iso_پرلپسې->وروستی_Strong=p_وروستی_Iso_پرلپسې->وروستی_بنسټ=level&1;
+    p_وروستی_Iso_پرلپسې->contextDir = static_cast<UBiDiDirection>(level & 1);
+    p_وروستی_Iso_پرلپسې->contextPos=0;
 }
 
 /* PDI */
-static void
-bracketProcessPDI(BracketData *bd) {
-    IsoRun *pLastIsoRun;
-    bd->isoRunLast--;
-    pLastIsoRun=&bd->isoRuns[bd->isoRunLast];
-    pLastIsoRun->lastBase=ON;
+ساكن فراغ
+bracketProcessPDI(Bracket_معلومات *bd) {
+    Iso_پرلپسې *p_وروستی_Iso_پرلپسې;
+    bd->iso_پرلپسې_وروستی--;
+    p_وروستی_Iso_پرلپسې=&bd->isoRuns[bd->iso_پرلپسې_وروستی];
+    p_وروستی_Iso_پرلپسې->وروستی_بنسټ=ON;
 }
 
 /* newly found opening bracket: create an openings entry */
-static UBool                            /* return true if success */
-bracketAddOpening(BracketData *bd, char16_t match, int32_t position) {
-    IsoRun *pLastIsoRun=&bd->isoRuns[bd->isoRunLast];
+ساكن UBool                            /* return true if success */
+bracket_جمع_کړه_Opening(Bracket_معلومات *bd, char16_t سمون, int32_t position) {
+    Iso_پرلپسې *p_وروستی_Iso_پرلپسې=&bd->isoRuns[bd->iso_پرلپسې_وروستی];
     Opening *pOpening;
-    if(pLastIsoRun->limit>=bd->openingsCount) {  /* no available new entry */
+    إذا(p_وروستی_Iso_پرلپسې->حد>=bd->openings_شمېر) {  /* no available new entry */
         UBiDi *pBiDi=bd->pBiDi;
-        if(!getInitialOpeningsMemory(pBiDi, pLastIsoRun->limit * 2))
-            return false;
-        if(bd->openings==bd->simpleOpenings)
-            uprv_memcpy(pBiDi->openingsMemory, bd->simpleOpenings,
-                        SIMPLE_OPENINGS_COUNT * sizeof(Opening));
-        bd->openings=pBiDi->openingsMemory;     /* may have changed */
-        bd->openingsCount=pBiDi->openingsSize / sizeof(Opening);
+        إذا(!get_Initial_Openings_حافظه(pBiDi, p_وروستی_Iso_پرلپسې->حد * 2))
+            أرجع خطأ;
+        إذا(bd->openings==bd->simpleOpenings)
+            uprv_memcpy(pBiDi->openings_حافظه, bd->simpleOpenings,
+                        SIMPLE_OPENINGS_شمېر * حجم(Opening));
+        bd->openings=pBiDi->openings_حافظه;     /* may have changed */
+        bd->openings_شمېر=pBiDi->openings_اندازه / حجم(Opening);
     }
-    pOpening=&bd->openings[pLastIsoRun->limit];
+    pOpening=&bd->openings[p_وروستی_Iso_پرلپسې->حد];
     pOpening->position=position;
-    pOpening->match=match;
-    pOpening->contextDir=pLastIsoRun->contextDir;
-    pOpening->contextPos=pLastIsoRun->contextPos;
+    pOpening->سمون=سمون;
+    pOpening->contextDir=p_وروستی_Iso_پرلپسې->contextDir;
+    pOpening->contextPos=p_وروستی_Iso_پرلپسې->contextPos;
     pOpening->flags=0;
-    pLastIsoRun->limit++;
-    return true;
+    p_وروستی_Iso_پرلپسې->حد++;
+    أرجع ریښتیا;
 }
 
 /* change N0c1 to N0c2 when a preceding bracket is assigned the embedding level */
-static void
-fixN0c(BracketData *bd, int32_t openingIndex, int32_t newPropPosition, DirProp newProp) {
+ساكن فراغ
+fixN0c(Bracket_معلومات *bd, int32_t opening_شاخص, int32_t newPropPosition, DirProp newProp) {
     /* This function calls itself recursively */
-    IsoRun *pLastIsoRun=&bd->isoRuns[bd->isoRunLast];
+    Iso_پرلپسې *p_وروستی_Iso_پرلپسې=&bd->isoRuns[bd->iso_پرلپسې_وروستی];
     Opening *qOpening;
     DirProp *dirProps=bd->pBiDi->dirProps;
     int32_t k, openingPosition, closingPosition;
-    for(k=openingIndex+1, qOpening=&bd->openings[k]; k<pLastIsoRun->limit; k++, qOpening++) {
-        if(qOpening->match>=0)      /* not an N0c match */
-            continue;
-        if(newPropPosition<qOpening->contextPos)
-            break;
-        if(newPropPosition>=qOpening->position)
-            continue;
-        if(newProp==qOpening->contextDir)
-            break;
+    لكل(k=opening_شاخص+1, qOpening=&bd->openings[k]; k<p_وروستی_Iso_پرلپسې->حد; k++, qOpening++) {
+        إذا(qOpening->سمون>=0)      /* not an N0c match */
+            استمر;
+        إذا(newPropPosition<qOpening->contextPos)
+            اكسر;
+        إذا(newPropPosition>=qOpening->position)
+            استمر;
+        إذا(newProp==qOpening->contextDir)
+            اكسر;
         openingPosition=qOpening->position;
         dirProps[openingPosition]=newProp;
-        closingPosition=-(qOpening->match);
+        closingPosition=-(qOpening->سمون);
         dirProps[closingPosition]=newProp;
-        qOpening->match=0;                      /* prevent further changes */
+        qOpening->سمون=0;                      /* prevent further changes */
         fixN0c(bd, k, openingPosition, newProp);
         fixN0c(bd, k, closingPosition, newProp);
     }
 }
 
 /* process closing bracket */
-static DirProp              /* return L or R if N0b or N0c, ON if N0d */
-bracketProcessClosing(BracketData *bd, int32_t openIdx, int32_t position) {
-    IsoRun *pLastIsoRun=&bd->isoRuns[bd->isoRunLast];
+ساكن DirProp              /* return L or R if N0b or N0c, ON if N0d */
+bracketProcessClosing(Bracket_معلومات *bd, int32_t openIdx, int32_t position) {
+    Iso_پرلپسې *p_وروستی_Iso_پرلپسې=&bd->isoRuns[bd->iso_پرلپسې_وروستی];
     Opening *pOpening, *qOpening;
     UBiDiDirection direction;
     UBool stable;
     DirProp newProp;
     pOpening=&bd->openings[openIdx];
-    direction = static_cast<UBiDiDirection>(pLastIsoRun->level & 1);
-    stable=true;            /* assume stable until proved otherwise */
+    direction = static_cast<UBiDiDirection>(p_وروستی_Iso_پرلپسې->level & 1);
+    stable=ریښتیا;            /* assume stable until proved otherwise */
 
     /* The stable flag is set when brackets are paired and their
        level is resolved and cannot be changed by what will be
@@ -833,196 +833,196 @@ bracketProcessClosing(BracketData *bd, int32_t openIdx, int32_t position) {
        that N0c2 must be applied to the parentheses rather than
        N0c1. */
 
-    if((direction==0 && pOpening->flags&FOUND_L) ||
-       (direction==1 && pOpening->flags&FOUND_R)) {                         /* N0b */
+    إذا((direction==0 && pOpening->flags&وموندل_L) ||
+       (direction==1 && pOpening->flags&وموندل_R)) {                         /* N0b */
         newProp=static_cast<DirProp>(direction);
     }
-    else if(pOpening->flags&(FOUND_L|FOUND_R)) {                            /* N0c */
+    وإلا إذا(pOpening->flags&(وموندل_L|وموندل_R)) {                            /* N0c */
         /* it is stable if there is no containing pair or in
            conditions too complicated and not worth checking */
-        stable=(openIdx==pLastIsoRun->start);
-        if(direction!=pOpening->contextDir)
+        stable=(openIdx==p_وروستی_Iso_پرلپسې->پیل);
+        إذا(direction!=pOpening->contextDir)
             newProp= static_cast<DirProp>(pOpening->contextDir);           /* N0c1 */
-        else
+        وإلا
             newProp= static_cast<DirProp>(direction);                      /* N0c2 */
-    } else {
+    } وإلا {
         /* forget this and any brackets nested within this pair */
-        pLastIsoRun->limit= static_cast<uint16_t>(openIdx);
-        return ON;                                                          /* N0d */
+        p_وروستی_Iso_پرلپسې->حد= static_cast<uint16_t>(openIdx);
+        أرجع ON;                                                          /* N0d */
     }
     bd->pBiDi->dirProps[pOpening->position]=newProp;
     bd->pBiDi->dirProps[position]=newProp;
     /* Update nested N0c pairs that may be affected */
     fixN0c(bd, openIdx, pOpening->position, newProp);
-    if(stable) {
-        pLastIsoRun->limit= static_cast<uint16_t>(openIdx); /* forget any brackets nested within this pair */
+    إذا(stable) {
+        p_وروستی_Iso_پرلپسې->حد= static_cast<uint16_t>(openIdx); /* forget any brackets nested within this pair */
         /* remove lower located synonyms if any */
-        while(pLastIsoRun->limit>pLastIsoRun->start &&
-              bd->openings[pLastIsoRun->limit-1].position==pOpening->position)
-            pLastIsoRun->limit--;
-    } else {
+        طالما(p_وروستی_Iso_پرلپسې->حد>p_وروستی_Iso_پرلپسې->پیل &&
+              bd->openings[p_وروستی_Iso_پرلپسې->حد-1].position==pOpening->position)
+            p_وروستی_Iso_پرلپسې->حد--;
+    } وإلا {
         int32_t k;
-        pOpening->match=-position;
+        pOpening->سمون=-position;
         /* neutralize lower located synonyms if any */
         k=openIdx-1;
-        while(k>=pLastIsoRun->start &&
+        طالما(k>=p_وروستی_Iso_پرلپسې->پیل &&
               bd->openings[k].position==pOpening->position)
-            bd->openings[k--].match=0;
+            bd->openings[k--].سمون=0;
         /* neutralize any unmatched opening between the current pair;
            this will also neutralize higher located synonyms if any */
-        for(k=openIdx+1; k<pLastIsoRun->limit; k++) {
+        لكل(k=openIdx+1; k<p_وروستی_Iso_پرلپسې->حد; k++) {
             qOpening=&bd->openings[k];
-            if(qOpening->position>=position)
-                break;
-            if(qOpening->match>0)
-                qOpening->match=0;
+            إذا(qOpening->position>=position)
+                اكسر;
+            إذا(qOpening->سمون>0)
+                qOpening->سمون=0;
         }
     }
-    return newProp;
+    أرجع newProp;
 }
 
 /* handle strong characters, digits and candidates for closing brackets */
-static UBool                            /* return true if success */
-bracketProcessChar(BracketData *bd, int32_t position) {
-    IsoRun *pLastIsoRun=&bd->isoRuns[bd->isoRunLast];
+ساكن UBool                            /* return true if success */
+bracketProcessChar(Bracket_معلومات *bd, int32_t position) {
+    Iso_پرلپسې *p_وروستی_Iso_پرلپسې=&bd->isoRuns[bd->iso_پرلپسې_وروستی];
     DirProp *dirProps, dirProp, newProp;
     UBiDiLevel level;
     dirProps=bd->pBiDi->dirProps;
     dirProp=dirProps[position];
-    if(dirProp==ON) {
-        char16_t c, match;
+    إذا(dirProp==ON) {
+        char16_t c, سمون;
         int32_t idx;
         /* First see if it is a matching closing bracket. Hopefully, this is
            more efficient than checking if it is a closing bracket at all */
-        c=bd->pBiDi->text[position];
-        for(idx=pLastIsoRun->limit-1; idx>=pLastIsoRun->start; idx--) {
-            if(bd->openings[idx].match!=c)
-                continue;
+        c=bd->pBiDi->متن[position];
+        لكل(idx=p_وروستی_Iso_پرلپسې->حد-1; idx>=p_وروستی_Iso_پرلپسې->پیل; idx--) {
+            إذا(bd->openings[idx].سمون!=c)
+                استمر;
             /* We have a match */
             newProp=bracketProcessClosing(bd, idx, position);
-            if(newProp==ON) {           /* N0d */
+            إذا(newProp==ON) {           /* N0d */
                 c=0;        /* prevent handling as an opening */
-                break;
+                اكسر;
             }
-            pLastIsoRun->lastBase=ON;
-            pLastIsoRun->contextDir = static_cast<UBiDiDirection>(newProp);
-            pLastIsoRun->contextPos=position;
-            level=bd->pBiDi->levels[position];
-            if(level&UBIDI_LEVEL_OVERRIDE) {    /* X4, X5 */
+            p_وروستی_Iso_پرلپسې->وروستی_بنسټ=ON;
+            p_وروستی_Iso_پرلپسې->contextDir = static_cast<UBiDiDirection>(newProp);
+            p_وروستی_Iso_پرلپسې->contextPos=position;
+            level=bd->pBiDi->پوړونه[position];
+            إذا(level&UBIDI_LEVEL_OVERRIDE) {    /* X4, X5 */
                 uint16_t flag;
                 int32_t i;
                 newProp=level&1;
-                pLastIsoRun->lastStrong=newProp;
+                p_وروستی_Iso_پرلپسې->وروستی_Strong=newProp;
                 flag=DIRPROP_FLAG(newProp);
-                for(i=pLastIsoRun->start; i<idx; i++)
+                لكل(i=p_وروستی_Iso_پرلپسې->پیل; i<idx; i++)
                     bd->openings[i].flags|=flag;
                 /* matching brackets are not overridden by LRO/RLO */
-                bd->pBiDi->levels[position]&=~UBIDI_LEVEL_OVERRIDE;
+                bd->pBiDi->پوړونه[position]&=~UBIDI_LEVEL_OVERRIDE;
             }
             /* matching brackets are not overridden by LRO/RLO */
-            bd->pBiDi->levels[bd->openings[idx].position]&=~UBIDI_LEVEL_OVERRIDE;
-            return true;
+            bd->pBiDi->پوړونه[bd->openings[idx].position]&=~UBIDI_LEVEL_OVERRIDE;
+            أرجع ریښتیا;
         }
         /* We get here only if the ON character is not a matching closing
            bracket or it is a case of N0d */
         /* Now see if it is an opening bracket */
-        if(c)
-            match= static_cast<char16_t>(u_getBidiPairedBracket(c));    /* get the matching char */
-        else
-            match=0;
-        if(match!=c &&                  /* has a matching char */
+        إذا(c)
+            سمون= static_cast<char16_t>(u_getBidiPairedBracket(c));    /* get the matching char */
+        وإلا
+            سمون=0;
+        إذا(سمون!=c &&                  /* has a matching char */
            ubidi_getPairedBracketType(c)==U_BPT_OPEN) { /* opening bracket */
             /* special case: process synonyms
                create an opening entry for each synonym */
-            if(match==0x232A) {     /* RIGHT-POINTING ANGLE BRACKET */
-                if(!bracketAddOpening(bd, 0x3009, position))
-                    return false;
+            إذا(سمون==0x232A) {     /* RIGHT-POINTING ANGLE BRACKET */
+                إذا(!bracket_جمع_کړه_Opening(bd, 0x3009, position))
+                    أرجع خطأ;
             }
-            else if(match==0x3009) {         /* RIGHT ANGLE BRACKET */
-                if(!bracketAddOpening(bd, 0x232A, position))
-                    return false;
+            وإلا إذا(سمون==0x3009) {         /* RIGHT ANGLE BRACKET */
+                إذا(!bracket_جمع_کړه_Opening(bd, 0x232A, position))
+                    أرجع خطأ;
             }
-            if(!bracketAddOpening(bd, match, position))
-                return false;
+            إذا(!bracket_جمع_کړه_Opening(bd, سمون, position))
+                أرجع خطأ;
         }
     }
-    level=bd->pBiDi->levels[position];
-    if(level&UBIDI_LEVEL_OVERRIDE) {    /* X4, X5 */
+    level=bd->pBiDi->پوړونه[position];
+    إذا(level&UBIDI_LEVEL_OVERRIDE) {    /* X4, X5 */
         newProp=level&1;
-        if(dirProp!=S && dirProp!=WS && dirProp!=ON)
+        إذا(dirProp!=S && dirProp!=WS && dirProp!=ON)
             dirProps[position]=newProp;
-        pLastIsoRun->lastBase=newProp;
-        pLastIsoRun->lastStrong=newProp;
-        pLastIsoRun->contextDir = static_cast<UBiDiDirection>(newProp);
-        pLastIsoRun->contextPos=position;
+        p_وروستی_Iso_پرلپسې->وروستی_بنسټ=newProp;
+        p_وروستی_Iso_پرلپسې->وروستی_Strong=newProp;
+        p_وروستی_Iso_پرلپسې->contextDir = static_cast<UBiDiDirection>(newProp);
+        p_وروستی_Iso_پرلپسې->contextPos=position;
     }
-    else if(dirProp<=R || dirProp==AL) {
+    وإلا إذا(dirProp<=R || dirProp==AL) {
         newProp= static_cast<DirProp>(DIR_FROM_STRONG(dirProp));
-        pLastIsoRun->lastBase=dirProp;
-        pLastIsoRun->lastStrong=dirProp;
-        pLastIsoRun->contextDir = static_cast<UBiDiDirection>(newProp);
-        pLastIsoRun->contextPos=position;
+        p_وروستی_Iso_پرلپسې->وروستی_بنسټ=dirProp;
+        p_وروستی_Iso_پرلپسې->وروستی_Strong=dirProp;
+        p_وروستی_Iso_پرلپسې->contextDir = static_cast<UBiDiDirection>(newProp);
+        p_وروستی_Iso_پرلپسې->contextPos=position;
     }
-    else if(dirProp==EN) {
-        pLastIsoRun->lastBase=EN;
-        if(pLastIsoRun->lastStrong==L) {
+    وإلا إذا(dirProp==EN) {
+        p_وروستی_Iso_پرلپسې->وروستی_بنسټ=EN;
+        إذا(p_وروستی_Iso_پرلپسې->وروستی_Strong==L) {
             newProp=L;                  /* W7 */
-            if(!bd->isNumbersSpecial)
+            إذا(!bd->isNumbersSpecial)
                 dirProps[position]=ENL;
-            pLastIsoRun->contextDir = static_cast<UBiDiDirection>(L);
-            pLastIsoRun->contextPos=position;
+            p_وروستی_Iso_پرلپسې->contextDir = static_cast<UBiDiDirection>(L);
+            p_وروستی_Iso_پرلپسې->contextPos=position;
         }
-        else {
+        وإلا {
             newProp=R;                  /* N0 */
-            if(pLastIsoRun->lastStrong==AL)
+            إذا(p_وروستی_Iso_پرلپسې->وروستی_Strong==AL)
                 dirProps[position]=AN;  /* W2 */
-            else
+            وإلا
                 dirProps[position]=ENR;
-            pLastIsoRun->contextDir = static_cast<UBiDiDirection>(R);
-            pLastIsoRun->contextPos=position;
+            p_وروستی_Iso_پرلپسې->contextDir = static_cast<UBiDiDirection>(R);
+            p_وروستی_Iso_پرلپسې->contextPos=position;
         }
     }
-    else if(dirProp==AN) {
+    وإلا إذا(dirProp==AN) {
         newProp=R;                      /* N0 */
-        pLastIsoRun->lastBase=AN;
-        pLastIsoRun->contextDir = static_cast<UBiDiDirection>(R);
-        pLastIsoRun->contextPos=position;
+        p_وروستی_Iso_پرلپسې->وروستی_بنسټ=AN;
+        p_وروستی_Iso_پرلپسې->contextDir = static_cast<UBiDiDirection>(R);
+        p_وروستی_Iso_پرلپسې->contextPos=position;
     }
-    else if(dirProp==NSM) {
+    وإلا إذا(dirProp==NSM) {
         /* if the last real char was ON, change NSM to ON so that it
            will stay ON even if the last real char is a bracket which
            may be changed to L or R */
-        newProp=pLastIsoRun->lastBase;
-        if(newProp==ON)
+        newProp=p_وروستی_Iso_پرلپسې->وروستی_بنسټ;
+        إذا(newProp==ON)
             dirProps[position]=newProp;
     }
-    else {
+    وإلا {
         newProp=dirProp;
-        pLastIsoRun->lastBase=dirProp;
+        p_وروستی_Iso_پرلپسې->وروستی_بنسټ=dirProp;
     }
-    if(newProp<=R || newProp==AL) {
+    إذا(newProp<=R || newProp==AL) {
         int32_t i;
         uint16_t flag=DIRPROP_FLAG(DIR_FROM_STRONG(newProp));
-        for(i=pLastIsoRun->start; i<pLastIsoRun->limit; i++)
-            if(position>bd->openings[i].position)
+        لكل(i=p_وروستی_Iso_پرلپسې->پیل; i<p_وروستی_Iso_پرلپسې->حد; i++)
+            إذا(position>bd->openings[i].position)
                 bd->openings[i].flags|=flag;
     }
-    return true;
+    أرجع ریښتیا;
 }
 
 /* perform (X1)..(X9) ------------------------------------------------------- */
 
 /* determine if the text is mixed-directional or single-directional */
-static UBiDiDirection
+ساكن UBiDiDirection
 directionFromFlags(UBiDi *pBiDi) {
     Flags flags=pBiDi->flags;
     /* if the text contains AN and neutrals, then some neutrals may become RTL */
-    if(!(flags&MASK_RTL || ((flags&DIRPROP_FLAG(AN)) && (flags&MASK_POSSIBLE_N)))) {
-        return UBIDI_LTR;
-    } else if(!(flags&MASK_LTR)) {
-        return UBIDI_RTL;
-    } else {
-        return UBIDI_MIXED;
+    إذا(!(flags&ماسک_RTL || ((flags&DIRPROP_FLAG(AN)) && (flags&ماسک_POSSIBLE_N)))) {
+        أرجع UBIDI_LTR;
+    } وإلا إذا(!(flags&ماسک_LTR)) {
+        أرجع UBIDI_RTL;
+    } وإلا {
+        أرجع UBIDI_MIXED;
     }
 }
 
@@ -1077,78 +1077,78 @@ directionFromFlags(UBiDi *pBiDi) {
  * Returns normally the direction; -1 if there was a memory shortage
  *
  */
-static UBiDiDirection
-resolveExplicitLevels(UBiDi *pBiDi, UErrorCode *pErrorCode) {
+ساكن UBiDiDirection
+resolve_Explicit_پوړونه(UBiDi *pBiDi, UError_کوډ *p_Error_کوډ) {
     DirProp *dirProps=pBiDi->dirProps;
-    UBiDiLevel *levels=pBiDi->levels;
-    const char16_t *text=pBiDi->text;
+    UBiDiLevel *پوړونه=pBiDi->پوړونه;
+    ثابت char16_t *متن=pBiDi->متن;
 
     int32_t i=0, length=pBiDi->length;
     Flags flags=pBiDi->flags;       /* collect all directionalities in the text */
     DirProp dirProp;
     UBiDiLevel level=GET_PARALEVEL(pBiDi, 0);
     UBiDiDirection direction;
-    pBiDi->isolateCount=0;
+    pBiDi->isolate_شمېر=0;
 
-    if(U_FAILURE(*pErrorCode)) { return UBIDI_LTR; }
+    إذا(U_FAILURE(*p_Error_کوډ)) { أرجع UBIDI_LTR; }
 
     /* determine if the text is mixed-directional or single-directional */
     direction=directionFromFlags(pBiDi);
 
     /* we may not need to resolve any explicit levels */
-    if((direction!=UBIDI_MIXED)) {
+    إذا((direction!=UBIDI_MIXED)) {
         /* not mixed directionality: levels don't matter - trailingWSStart will be 0 */
-        return direction;
+        أرجع direction;
     }
-    if(pBiDi->reorderingMode > UBIDI_REORDER_LAST_LOGICAL_TO_VISUAL) {
+    إذا(pBiDi->reordering_ډېرپېښ > UBIDI_REORDER_وروستی_LOGICAL_منزل_VISUAL) {
         /* inverse BiDi: mixed, but all characters are at the same embedding level */
         /* set all levels to the paragraph level */
-        int32_t paraIndex, start, limit;
-        for(paraIndex=0; paraIndex<pBiDi->paraCount; paraIndex++) {
-            if(paraIndex==0)
-                start=0;
-            else
-                start=pBiDi->paras[paraIndex-1].limit;
-            limit=pBiDi->paras[paraIndex].limit;
-            level= static_cast<UBiDiLevel>(pBiDi->paras[paraIndex].level);
-            for(i=start; i<limit; i++)
-                levels[i]=level;
+        int32_t para_شاخص, پیل, حد;
+        لكل(para_شاخص=0; para_شاخص<pBiDi->para_شمېر; para_شاخص++) {
+            إذا(para_شاخص==0)
+                پیل=0;
+            وإلا
+                پیل=pBiDi->paras[para_شاخص-1].حد;
+            حد=pBiDi->paras[para_شاخص].حد;
+            level= static_cast<UBiDiLevel>(pBiDi->paras[para_شاخص].level);
+            لكل(i=پیل; i<حد; i++)
+                پوړونه[i]=level;
         }
-        return direction;   /* no bracket matching for inverse BiDi */
+        أرجع direction;   /* no bracket matching for inverse BiDi */
     }
-    if(!(flags&(MASK_EXPLICIT|MASK_ISO))) {
+    إذا(!(flags&(ماسک_EXPLICIT|ماسک_ISO))) {
         /* no embeddings, set all levels to the paragraph level */
         /* we still have to perform bracket matching */
-        int32_t paraIndex, start, limit;
-        BracketData bracketData;
-        bracketInit(pBiDi, &bracketData);
-        for(paraIndex=0; paraIndex<pBiDi->paraCount; paraIndex++) {
-            if(paraIndex==0)
-                start=0;
-            else
-                start=pBiDi->paras[paraIndex-1].limit;
-            limit=pBiDi->paras[paraIndex].limit;
-            level= static_cast<UBiDiLevel>(pBiDi->paras[paraIndex].level);
-            for(i=start; i<limit; i++) {
-                levels[i]=level;
+        int32_t para_شاخص, پیل, حد;
+        Bracket_معلومات bracket_معلومات;
+        bracketInit(pBiDi, &bracket_معلومات);
+        لكل(para_شاخص=0; para_شاخص<pBiDi->para_شمېر; para_شاخص++) {
+            إذا(para_شاخص==0)
+                پیل=0;
+            وإلا
+                پیل=pBiDi->paras[para_شاخص-1].حد;
+            حد=pBiDi->paras[para_شاخص].حد;
+            level= static_cast<UBiDiLevel>(pBiDi->paras[para_شاخص].level);
+            لكل(i=پیل; i<حد; i++) {
+                پوړونه[i]=level;
                 dirProp=dirProps[i];
-                if(dirProp==BN)
-                    continue;
-                if(dirProp==B) {
-                    if((i+1)<length) {
-                        if(text[i]==CR && text[i+1]==LF)
-                            continue;   /* skip CR when followed by LF */
-                        bracketProcessB(&bracketData, level);
+                إذا(dirProp==BN)
+                    استمر;
+                إذا(dirProp==B) {
+                    إذا((i+1)<length) {
+                        إذا(متن[i]==CR && متن[i+1]==LF)
+                            استمر;   /* skip CR when followed by LF */
+                        bracketProcessB(&bracket_معلومات, level);
                     }
-                    continue;
+                    استمر;
                 }
-                if(!bracketProcessChar(&bracketData, i)) {
-                    *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-                    return UBIDI_LTR;
+                إذا(!bracketProcessChar(&bracket_معلومات, i)) {
+                    *p_Error_کوډ=U_حافظه_ویش_ERROR;
+                    أرجع UBIDI_LTR;
                 }
             }
         }
-        return direction;
+        أرجع direction;
     }
     {
         /* continue to perform (Xn) */
@@ -1156,189 +1156,189 @@ resolveExplicitLevels(UBiDi *pBiDi, UErrorCode *pErrorCode) {
         /* (X1) level is set for all codes, embeddingLevel keeps track of the push/pop operations */
         /* both variables may carry the UBIDI_LEVEL_OVERRIDE flag to indicate the override status */
         UBiDiLevel embeddingLevel=level, newLevel;
-        UBiDiLevel previousLevel=level;     /* previous level for regular (not CC) characters */
-        int32_t lastCcPos=0;                /* index of last effective LRx,RLx, PDx */
+        UBiDiLevel پخوانی_Level=level;     /* previous level for regular (not CC) characters */
+        int32_t وروستی_Cc_Pos=0;                /* index of last effective LRx,RLx, PDx */
 
         /* The following stack remembers the embedding level and the ISOLATE flag of level runs.
            stackLast points to its current entry. */
-        uint16_t stack[UBIDI_MAX_EXPLICIT_LEVEL+2];   /* we never push anything >=UBIDI_MAX_EXPLICIT_LEVEL
+        uint16_t ډېری_2[UBIDI_MAX_EXPLICIT_LEVEL+2];   /* we never push anything >=UBIDI_MAX_EXPLICIT_LEVEL
                                                         but we need one more entry as base */
-        uint32_t stackLast=0;
-        int32_t overflowIsolateCount=0;
-        int32_t overflowEmbeddingCount=0;
-        int32_t validIsolateCount=0;
-        BracketData bracketData;
-        bracketInit(pBiDi, &bracketData);
-        stack[0]=level;     /* initialize base entry to para level, no override, no isolate */
+        uint32_t ډېری_وروستی=0;
+        int32_t ډکېدنه_Isolate_شمېر=0;
+        int32_t ډکېدنه_Embedding_شمېر=0;
+        int32_t valid_Isolate_شمېر=0;
+        Bracket_معلومات bracket_معلومات;
+        bracketInit(pBiDi, &bracket_معلومات);
+        ډېری_2[0]=level;     /* initialize base entry to para level, no override, no isolate */
 
         /* recalculate the flags */
         flags=0;
 
-        for(i=0; i<length; ++i) {
+        لكل(i=0; i<length; ++i) {
             dirProp=dirProps[i];
-            switch(dirProp) {
-            case LRE:
-            case RLE:
-            case LRO:
-            case RLO:
+            بدل(dirProp) {
+            حالة LRE:
+            حالة RLE:
+            حالة LRO:
+            حالة RLO:
                 /* (X2, X3, X4, X5) */
                 flags|=DIRPROP_FLAG(BN);
-                levels[i]=previousLevel;
-                if (dirProp==LRE || dirProp==LRO)
+                پوړونه[i]=پخوانی_Level;
+                إذا (dirProp==LRE || dirProp==LRO)
                     /* least greater even level */
                     newLevel = static_cast<UBiDiLevel>((embeddingLevel + 2) & ~(UBIDI_LEVEL_OVERRIDE | 1));
-                else
+                وإلا
                     /* least greater odd level */
                     newLevel = static_cast<UBiDiLevel>((NO_OVERRIDE(embeddingLevel) + 1) | 1);
-                if(newLevel<=UBIDI_MAX_EXPLICIT_LEVEL && overflowIsolateCount==0 &&
-                                                         overflowEmbeddingCount==0) {
-                    lastCcPos=i;
+                إذا(newLevel<=UBIDI_MAX_EXPLICIT_LEVEL && ډکېدنه_Isolate_شمېر==0 &&
+                                                         ډکېدنه_Embedding_شمېر==0) {
+                    وروستی_Cc_Pos=i;
                     embeddingLevel=newLevel;
-                    if(dirProp==LRO || dirProp==RLO)
+                    إذا(dirProp==LRO || dirProp==RLO)
                         embeddingLevel|=UBIDI_LEVEL_OVERRIDE;
-                    stackLast++;
-                    stack[stackLast]=embeddingLevel;
+                    ډېری_وروستی++;
+                    ډېری_2[ډېری_وروستی]=embeddingLevel;
                     /* we don't need to set UBIDI_LEVEL_OVERRIDE off for LRE and RLE
                        since this has already been done for newLevel which is
                        the source for embeddingLevel.
                      */
-                } else {
-                    if(overflowIsolateCount==0)
-                        overflowEmbeddingCount++;
+                } وإلا {
+                    إذا(ډکېدنه_Isolate_شمېر==0)
+                        ډکېدنه_Embedding_شمېر++;
                 }
-                break;
-            case PDF:
+                اكسر;
+            حالة PDF:
                 /* (X7) */
                 flags|=DIRPROP_FLAG(BN);
-                levels[i]=previousLevel;
+                پوړونه[i]=پخوانی_Level;
                 /* handle all the overflow cases first */
-                if(overflowIsolateCount) {
-                    break;
+                إذا(ډکېدنه_Isolate_شمېر) {
+                    اكسر;
                 }
-                if(overflowEmbeddingCount) {
-                    overflowEmbeddingCount--;
-                    break;
+                إذا(ډکېدنه_Embedding_شمېر) {
+                    ډکېدنه_Embedding_شمېر--;
+                    اكسر;
                 }
-                if(stackLast>0 && stack[stackLast]<ISOLATE) {   /* not an isolate entry */
-                    lastCcPos=i;
-                    stackLast--;
-                    embeddingLevel = static_cast<UBiDiLevel>(stack[stackLast]);
+                إذا(ډېری_وروستی>0 && ډېری_2[ډېری_وروستی]<ISOLATE) {   /* not an isolate entry */
+                    وروستی_Cc_Pos=i;
+                    ډېری_وروستی--;
+                    embeddingLevel = static_cast<UBiDiLevel>(ډېری_2[ډېری_وروستی]);
                 }
-                break;
-            case LRI:
-            case RLI:
+                اكسر;
+            حالة LRI:
+            حالة RLI:
                 flags|=(DIRPROP_FLAG(ON)|DIRPROP_FLAG_LR(embeddingLevel));
-                levels[i]=NO_OVERRIDE(embeddingLevel);
-                if(NO_OVERRIDE(embeddingLevel)!=NO_OVERRIDE(previousLevel)) {
-                    bracketProcessBoundary(&bracketData, lastCcPos,
-                                           previousLevel, embeddingLevel);
+                پوړونه[i]=NO_OVERRIDE(embeddingLevel);
+                إذا(NO_OVERRIDE(embeddingLevel)!=NO_OVERRIDE(پخوانی_Level)) {
+                    bracketProcessBoundary(&bracket_معلومات, وروستی_Cc_Pos,
+                                           پخوانی_Level, embeddingLevel);
                     flags|=DIRPROP_FLAG_MULTI_RUNS;
                 }
-                previousLevel=embeddingLevel;
+                پخوانی_Level=embeddingLevel;
                 /* (X5a, X5b) */
-                if(dirProp==LRI)
+                إذا(dirProp==LRI)
                     /* least greater even level */
                     newLevel = static_cast<UBiDiLevel>((embeddingLevel + 2) & ~(UBIDI_LEVEL_OVERRIDE | 1));
-                else
+                وإلا
                     /* least greater odd level */
                     newLevel = static_cast<UBiDiLevel>((NO_OVERRIDE(embeddingLevel) + 1) | 1);
-                if(newLevel<=UBIDI_MAX_EXPLICIT_LEVEL && overflowIsolateCount==0 &&
-                                                         overflowEmbeddingCount==0) {
+                إذا(newLevel<=UBIDI_MAX_EXPLICIT_LEVEL && ډکېدنه_Isolate_شمېر==0 &&
+                                                         ډکېدنه_Embedding_شمېر==0) {
                     flags|=DIRPROP_FLAG(dirProp);
-                    lastCcPos=i;
-                    validIsolateCount++;
-                    if(validIsolateCount>pBiDi->isolateCount)
-                        pBiDi->isolateCount=validIsolateCount;
+                    وروستی_Cc_Pos=i;
+                    valid_Isolate_شمېر++;
+                    إذا(valid_Isolate_شمېر>pBiDi->isolate_شمېر)
+                        pBiDi->isolate_شمېر=valid_Isolate_شمېر;
                     embeddingLevel=newLevel;
                     /* we can increment stackLast without checking because newLevel
                        will exceed UBIDI_MAX_EXPLICIT_LEVEL before stackLast overflows */
-                    stackLast++;
-                    stack[stackLast]=embeddingLevel+ISOLATE;
-                    bracketProcessLRI_RLI(&bracketData, embeddingLevel);
-                } else {
+                    ډېری_وروستی++;
+                    ډېری_2[ډېری_وروستی]=embeddingLevel+ISOLATE;
+                    bracketProcessLRI_RLI(&bracket_معلومات, embeddingLevel);
+                } وإلا {
                     /* make it WS so that it is handled by adjustWSLevels() */
                     dirProps[i]=WS;
-                    overflowIsolateCount++;
+                    ډکېدنه_Isolate_شمېر++;
                 }
-                break;
-            case PDI:
-                if(NO_OVERRIDE(embeddingLevel)!=NO_OVERRIDE(previousLevel)) {
-                    bracketProcessBoundary(&bracketData, lastCcPos,
-                                           previousLevel, embeddingLevel);
+                اكسر;
+            حالة PDI:
+                إذا(NO_OVERRIDE(embeddingLevel)!=NO_OVERRIDE(پخوانی_Level)) {
+                    bracketProcessBoundary(&bracket_معلومات, وروستی_Cc_Pos,
+                                           پخوانی_Level, embeddingLevel);
                     flags|=DIRPROP_FLAG_MULTI_RUNS;
                 }
                 /* (X6a) */
-                if(overflowIsolateCount) {
-                    overflowIsolateCount--;
+                إذا(ډکېدنه_Isolate_شمېر) {
+                    ډکېدنه_Isolate_شمېر--;
                     /* make it WS so that it is handled by adjustWSLevels() */
                     dirProps[i]=WS;
                 }
-                else if(validIsolateCount) {
+                وإلا إذا(valid_Isolate_شمېر) {
                     flags|=DIRPROP_FLAG(PDI);
-                    lastCcPos=i;
-                    overflowEmbeddingCount=0;
-                    while(stack[stackLast]<ISOLATE) /* pop embedding entries */
-                        stackLast--;                /* until the last isolate entry */
-                    stackLast--;                    /* pop also the last isolate entry */
-                    validIsolateCount--;
-                    bracketProcessPDI(&bracketData);
-                } else
+                    وروستی_Cc_Pos=i;
+                    ډکېدنه_Embedding_شمېر=0;
+                    طالما(ډېری_2[ډېری_وروستی]<ISOLATE) /* pop embedding entries */
+                        ډېری_وروستی--;                /* until the last isolate entry */
+                    ډېری_وروستی--;                    /* pop also the last isolate entry */
+                    valid_Isolate_شمېر--;
+                    bracketProcessPDI(&bracket_معلومات);
+                } وإلا
                     /* make it WS so that it is handled by adjustWSLevels() */
                     dirProps[i]=WS;
-                embeddingLevel = static_cast<UBiDiLevel>(stack[stackLast]) & ~ISOLATE;
+                embeddingLevel = static_cast<UBiDiLevel>(ډېری_2[ډېری_وروستی]) & ~ISOLATE;
                 flags|=(DIRPROP_FLAG(ON)|DIRPROP_FLAG_LR(embeddingLevel));
-                previousLevel=embeddingLevel;
-                levels[i]=NO_OVERRIDE(embeddingLevel);
-                break;
-            case B:
+                پخوانی_Level=embeddingLevel;
+                پوړونه[i]=NO_OVERRIDE(embeddingLevel);
+                اكسر;
+            حالة B:
                 flags|=DIRPROP_FLAG(B);
-                levels[i]=GET_PARALEVEL(pBiDi, i);
-                if((i+1)<length) {
-                    if(text[i]==CR && text[i+1]==LF)
-                        break;          /* skip CR when followed by LF */
-                    overflowEmbeddingCount=overflowIsolateCount=0;
-                    validIsolateCount=0;
-                    stackLast=0;
-                    previousLevel=embeddingLevel=GET_PARALEVEL(pBiDi, i+1);
-                    stack[0]=embeddingLevel; /* initialize base entry to para level, no override, no isolate */
-                    bracketProcessB(&bracketData, embeddingLevel);
+                پوړونه[i]=GET_PARALEVEL(pBiDi, i);
+                إذا((i+1)<length) {
+                    إذا(متن[i]==CR && متن[i+1]==LF)
+                        اكسر;          /* skip CR when followed by LF */
+                    ډکېدنه_Embedding_شمېر=ډکېدنه_Isolate_شمېر=0;
+                    valid_Isolate_شمېر=0;
+                    ډېری_وروستی=0;
+                    پخوانی_Level=embeddingLevel=GET_PARALEVEL(pBiDi, i+1);
+                    ډېری_2[0]=embeddingLevel; /* initialize base entry to para level, no override, no isolate */
+                    bracketProcessB(&bracket_معلومات, embeddingLevel);
                 }
-                break;
-            case BN:
+                اكسر;
+            حالة BN:
                 /* BN, LRE, RLE, and PDF are supposed to be removed (X9) */
                 /* they will get their levels set correctly in adjustWSLevels() */
-                levels[i]=previousLevel;
+                پوړونه[i]=پخوانی_Level;
                 flags|=DIRPROP_FLAG(BN);
-                break;
-            default:
+                اكسر;
+            افتراضي:
                 /* all other types are normal characters and get the "real" level */
-                if(NO_OVERRIDE(embeddingLevel)!=NO_OVERRIDE(previousLevel)) {
-                    bracketProcessBoundary(&bracketData, lastCcPos,
-                                           previousLevel, embeddingLevel);
+                إذا(NO_OVERRIDE(embeddingLevel)!=NO_OVERRIDE(پخوانی_Level)) {
+                    bracketProcessBoundary(&bracket_معلومات, وروستی_Cc_Pos,
+                                           پخوانی_Level, embeddingLevel);
                     flags|=DIRPROP_FLAG_MULTI_RUNS;
-                    if(embeddingLevel&UBIDI_LEVEL_OVERRIDE)
+                    إذا(embeddingLevel&UBIDI_LEVEL_OVERRIDE)
                         flags|=DIRPROP_FLAG_O(embeddingLevel);
-                    else
+                    وإلا
                         flags|=DIRPROP_FLAG_E(embeddingLevel);
                 }
-                previousLevel=embeddingLevel;
-                levels[i]=embeddingLevel;
-                if(!bracketProcessChar(&bracketData, i))
-                    return static_cast<UBiDiDirection>(-1);
+                پخوانی_Level=embeddingLevel;
+                پوړونه[i]=embeddingLevel;
+                إذا(!bracketProcessChar(&bracket_معلومات, i))
+                    أرجع static_cast<UBiDiDirection>(-1);
                 /* the dirProp may have been changed in bracketProcessChar() */
                 flags|=DIRPROP_FLAG(dirProps[i]);
-                break;
+                اكسر;
             }
         }
-        if(flags&MASK_EMBEDDING)
+        إذا(flags&ماسک_EMBEDDING)
             flags|=DIRPROP_FLAG_LR(pBiDi->paraLevel);
-        if(pBiDi->orderParagraphsLTR && (flags&DIRPROP_FLAG(B)))
+        إذا(pBiDi->ترتیب_Paragraphs_LTR && (flags&DIRPROP_FLAG(B)))
             flags|=DIRPROP_FLAG(L);
         /* again, determine if the text is mixed-directional or single-directional */
         pBiDi->flags=flags;
         direction=directionFromFlags(pBiDi);
     }
-    return direction;
+    أرجع direction;
 }
 
 /*
@@ -1351,73 +1351,73 @@ resolveExplicitLevels(UBiDi *pBiDi, UErrorCode *pErrorCode) {
  * Recalculate the flags to have them reflect the real properties
  * after taking the explicit embeddings into account.
  */
-static UBiDiDirection
-checkExplicitLevels(UBiDi *pBiDi, UErrorCode *pErrorCode) {
+ساكن UBiDiDirection
+check_Explicit_پوړونه(UBiDi *pBiDi, UError_کوډ *p_Error_کوډ) {
     DirProp *dirProps=pBiDi->dirProps;
-    UBiDiLevel *levels=pBiDi->levels;
-    int32_t isolateCount=0;
+    UBiDiLevel *پوړونه=pBiDi->پوړونه;
+    int32_t isolate_شمېر=0;
 
     int32_t length=pBiDi->length;
     Flags flags=0;  /* collect all directionalities in the text */
-    pBiDi->isolateCount=0;
+    pBiDi->isolate_شمېر=0;
 
-    int32_t currentParaIndex = 0;
-    int32_t currentParaLimit = pBiDi->paras[0].limit;
+    int32_t current_Para_شاخص = 0;
+    int32_t current_Para_حد = pBiDi->paras[0].حد;
     int32_t currentParaLevel = pBiDi->paraLevel;
 
-    for(int32_t i=0; i<length; ++i) {
-        UBiDiLevel level=levels[i];
+    لكل(int32_t i=0; i<length; ++i) {
+        UBiDiLevel level=پوړونه[i];
         DirProp dirProp=dirProps[i];
-        if(dirProp==LRI || dirProp==RLI) {
-            isolateCount++;
-            if(isolateCount>pBiDi->isolateCount)
-                pBiDi->isolateCount=isolateCount;
+        إذا(dirProp==LRI || dirProp==RLI) {
+            isolate_شمېر++;
+            إذا(isolate_شمېر>pBiDi->isolate_شمېر)
+                pBiDi->isolate_شمېر=isolate_شمېر;
         }
-        else if(dirProp==PDI)
-            isolateCount--;
-        else if(dirProp==B)
-            isolateCount=0;
+        وإلا إذا(dirProp==PDI)
+            isolate_شمېر--;
+        وإلا إذا(dirProp==B)
+            isolate_شمېر=0;
 
         // optimized version of  int32_t currentParaLevel = GET_PARALEVEL(pBiDi, i);
-        if (pBiDi->defaultParaLevel != 0 &&
-                i == currentParaLimit && (currentParaIndex + 1) < pBiDi->paraCount) {
-            currentParaLevel = pBiDi->paras[++currentParaIndex].level;
-            currentParaLimit = pBiDi->paras[currentParaIndex].limit;
+        إذا (pBiDi->defaultParaLevel != 0 &&
+                i == current_Para_حد && (current_Para_شاخص + 1) < pBiDi->para_شمېر) {
+            currentParaLevel = pBiDi->paras[++current_Para_شاخص].level;
+            current_Para_حد = pBiDi->paras[current_Para_شاخص].حد;
         }
 
         UBiDiLevel overrideFlag = level & UBIDI_LEVEL_OVERRIDE;
         level &= ~UBIDI_LEVEL_OVERRIDE;
-        if (level < currentParaLevel || UBIDI_MAX_EXPLICIT_LEVEL < level) {
-            if (level == 0) {
-                if (dirProp == B) {
+        إذا (level < currentParaLevel || UBIDI_MAX_EXPLICIT_LEVEL < level) {
+            إذا (level == 0) {
+                إذا (dirProp == B) {
                     // Paragraph separators are ok with explicit level 0.
                     // Prevents reordering of paragraphs.
-                } else {
+                } وإلا {
                     // Treat explicit level 0 as a wildcard for the paragraph level.
                     // Avoid making the caller guess what the paragraph level would be.
                     level = static_cast<UBiDiLevel>(currentParaLevel);
-                    levels[i] = level | overrideFlag;
+                    پوړونه[i] = level | overrideFlag;
                 }
-            } else {
+            } وإلا {
                 // 1 <= level < currentParaLevel or UBIDI_MAX_EXPLICIT_LEVEL < level
                 /* level out of bounds */
-                *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-                return UBIDI_LTR;
+                *p_Error_کوډ=U_ILLEGAL_دلیل_ERROR;
+                أرجع UBIDI_LTR;
             }
         }
-        if (overrideFlag != 0) {
+        إذا (overrideFlag != 0) {
             /* keep the override flag in levels[i] but adjust the flags */
             flags|=DIRPROP_FLAG_O(level);
-        } else {
+        } وإلا {
             /* set the flags */
             flags|=DIRPROP_FLAG_E(level)|DIRPROP_FLAG(dirProp);
         }
     }
-    if(flags&MASK_EMBEDDING)
+    إذا(flags&ماسک_EMBEDDING)
         flags|=DIRPROP_FLAG_LR(pBiDi->paraLevel);
     /* determine if the text is mixed-directional or single-directional */
     pBiDi->flags=flags;
-    return directionFromFlags(pBiDi);
+    أرجع directionFromFlags(pBiDi);
 }
 
 /******************************************************************
@@ -1437,18 +1437,18 @@ checkExplicitLevels(UBiDi *pBiDi, UErrorCode *pErrorCode) {
  Definitions and type for properties state table
 *******************************************************************
 */
-#define IMPTABPROPS_COLUMNS 16
-#define IMPTABPROPS_RES (IMPTABPROPS_COLUMNS - 1)
-#define GET_STATEPROPS(cell) ((cell)&0x1f)
-#define GET_ACTIONPROPS(cell) ((cell)>>5)
-#define s(action, newState) ((uint8_t)(newState+(action<<5)))
+#تعریف_کړه IMPTABPROPS_COLUMNS 16
+#تعریف_کړه IMPTABPROPS_RES (IMPTABPROPS_COLUMNS - 1)
+#تعریف_کړه GET_STATEPROPS(cell) ((cell)&0x1f)
+#تعریف_کړه GET_ACTIONPROPS(cell) ((cell)>>5)
+#تعریف_کړه s(action, newState) ((uint8_t)(newState+(action<<5)))
 
-static const uint8_t groupProp[] =          /* dirProp regrouped */
+ساكن ثابت uint8_t ډله_Prop[] =          /* dirProp regrouped */
 {
 /*  L   R   EN  ES  ET  AN  CS  B   S   WS  ON  LRE LRO AL  RLE RLO PDF NSM BN  FSI LRI RLI PDI ENL ENR */
     0,  1,  2,  7,  8,  3,  9,  6,  5,  4,  4,  10, 10, 12, 10, 10, 10, 11, 10, 4,  4,  4,  4,  13, 14
 };
-enum { DirProp_L=0, DirProp_R=1, DirProp_EN=2, DirProp_AN=3, DirProp_ON=4, DirProp_S=5, DirProp_B=6 }; /* reduced dirProp */
+تعداد { DirProp_L=0, DirProp_R=1, DirProp_EN=2, DirProp_AN=3, DirProp_ON=4, DirProp_S=5, DirProp_B=6 }; /* reduced dirProp */
 
 /******************************************************************
 
@@ -1485,7 +1485,7 @@ enum { DirProp_L=0, DirProp_R=1, DirProp_EN=2, DirProp_AN=3, DirProp_ON=4, DirPr
 
 
 */
-static const uint8_t impTabProps[][IMPTABPROPS_COLUMNS] =
+ساكن ثابت uint8_t impTabProps[][IMPTABPROPS_COLUMNS] =
 {
 /*                        L ,     R ,    EN ,    AN ,    ON ,     S ,     B ,    ES ,    ET ,    CS ,    BN ,   NSM ,    AL ,   ENL ,   ENR , Res */
 /* 0 Init        */ {     1 ,     2 ,     4 ,     5 ,     7 ,    15 ,    17 ,     7 ,     9 ,     7 ,     0 ,     7 ,     3 ,    18 ,    21 , DirProp_ON },
@@ -1517,7 +1517,7 @@ static const uint8_t impTabProps[][IMPTABPROPS_COLUMNS] =
 /*  we must undef macro s because the levels tables have a different
  *  structure (4 bits for action and 4 bits for next state.
  */
-#undef s
+#تعریف_لغوه s
 
 /******************************************************************
  The levels state machine tables
@@ -1538,21 +1538,21 @@ static const uint8_t impTabProps[][IMPTABPROPS_COLUMNS] =
  Definitions and type for levels state tables
 *******************************************************************
 */
-#define IMPTABLEVELS_COLUMNS (DirProp_B + 2)
-#define IMPTABLEVELS_RES (IMPTABLEVELS_COLUMNS - 1)
-#define GET_STATE(cell) ((cell)&0x0f)
-#define GET_ACTION(cell) ((cell)>>4)
-#define s(action, newState) ((uint8_t)(newState+(action<<4)))
+#تعریف_کړه IMPTABLEVELS_COLUMNS (DirProp_B + 2)
+#تعریف_کړه IMPTABLEVELS_RES (IMPTABLEVELS_COLUMNS - 1)
+#تعریف_کړه GET_STATE(cell) ((cell)&0x0f)
+#تعریف_کړه GET_ACTION(cell) ((cell)>>4)
+#تعریف_کړه s(action, newState) ((uint8_t)(newState+(action<<4)))
 
-typedef uint8_t ImpTab[][IMPTABLEVELS_COLUMNS];
-typedef uint8_t ImpAct[];
+تعريفنوع uint8_t ImpTab[][IMPTABLEVELS_COLUMNS];
+تعريفنوع uint8_t ImpAct[];
 
 /* FOOD FOR THOUGHT: each ImpTab should have its associated ImpAct,
  * instead of having a pair of ImpTab and a pair of ImpAct.
  */
-typedef struct ImpTabPair {
-    const void * pImpTab[2];
-    const void * pImpAct[2];
+تعريفنوع بنية ImpTabPair {
+    ثابت فراغ * pImpTab[2];
+    ثابت فراغ * pImpAct[2];
 } ImpTabPair;
 
 /******************************************************************
@@ -1592,7 +1592,7 @@ typedef struct ImpTabPair {
 
 */
 
-static const ImpTab impTabL_DEFAULT =   /* Even paragraph level */
+ساكن ثابت ImpTab impTabL_DEFAULT =   /* Even paragraph level */
 /*  In this table, conditional sequences receive the lower possible level
     until proven otherwise.
 */
@@ -1605,7 +1605,7 @@ static const ImpTab impTabL_DEFAULT =   /* Even paragraph level */
 /* 4 : R+ON       */ {     0 , s(2,1), s(3,3), s(3,3),     4 ,     4 ,     0 ,  0 },
 /* 5 : AN+ON      */ {     0 , s(2,1),     0 , s(3,2),     5 ,     5 ,     0 ,  0 }
 };
-static const ImpTab impTabR_DEFAULT =   /* Odd  paragraph level */
+ساكن ثابت ImpTab impTabR_DEFAULT =   /* Odd  paragraph level */
 /*  In this table, conditional sequences receive the lower possible level
     until proven otherwise.
 */
@@ -1618,12 +1618,12 @@ static const ImpTab impTabR_DEFAULT =   /* Odd  paragraph level */
 /* 4 : L+ON       */ { s(2,1),     0 , s(2,1),     3 ,     4 ,     4 ,     0 ,  0 },
 /* 5 : L+AN+ON    */ {     1 ,     0 ,     1 ,     3 ,     5 ,     5 ,     0 ,  0 }
 };
-static const ImpAct impAct0 = {0,1,2,3,4};
-static const ImpTabPair impTab_DEFAULT = {{&impTabL_DEFAULT,
+ساكن ثابت ImpAct impAct0 = {0,1,2,3,4};
+ساكن ثابت ImpTabPair impTab_DEFAULT = {{&impTabL_DEFAULT,
                                            &impTabR_DEFAULT},
                                           {&impAct0, &impAct0}};
 
-static const ImpTab impTabL_NUMBERS_SPECIAL =   /* Even paragraph level */
+ساكن ثابت ImpTab impTabL_NUMBERS_SPECIAL =   /* Even paragraph level */
 /*  In this table, conditional sequences receive the lower possible level
     until proven otherwise.
 */
@@ -1635,11 +1635,11 @@ static const ImpTab impTabL_NUMBERS_SPECIAL =   /* Even paragraph level */
 /* 3 : R+ON       */ {     0 , s(2,2), s(3,4), s(3,4),     3 ,     3 ,     0 ,  0 },
 /* 4 : R+EN/AN    */ {     0 ,     2 ,     4 ,     4 , s(1,3), s(1,3),     0 ,  2 }
 };
-static const ImpTabPair impTab_NUMBERS_SPECIAL = {{&impTabL_NUMBERS_SPECIAL,
+ساكن ثابت ImpTabPair impTab_NUMBERS_SPECIAL = {{&impTabL_NUMBERS_SPECIAL,
                                                    &impTabR_DEFAULT},
                                                   {&impAct0, &impAct0}};
 
-static const ImpTab impTabL_GROUP_NUMBERS_WITH_R =
+ساكن ثابت ImpTab imp_Tab_L_ډله_NUMBERS_WITH_R =
 /*  In this table, EN/AN+ON sequences receive levels as if associated with R
     until proven that there is L or sor/eor on both sides. AN is handled like EN.
 */
@@ -1652,7 +1652,7 @@ static const ImpTab impTabL_GROUP_NUMBERS_WITH_R =
 /* 4 R+ON         */ { s(2,0),     3 ,     5 ,     5 ,     4 , s(2,0), s(2,0),  1 },
 /* 5 R+EN/AN      */ {     0 ,     3 ,     5 ,     5 , s(1,4),     0 ,     0 ,  2 }
 };
-static const ImpTab impTabR_GROUP_NUMBERS_WITH_R =
+ساكن ثابت ImpTab imp_Tab_R_ډله_NUMBERS_WITH_R =
 /*  In this table, EN/AN+ON sequences receive levels as if associated with R
     until proven that there is L on both sides. AN is handled like EN.
 */
@@ -1664,13 +1664,13 @@ static const ImpTab impTabR_GROUP_NUMBERS_WITH_R =
 /* 3 L+ON         */ { s(2,2),     0 ,     4 ,     4 ,     3 ,     0 ,     0 ,  0 },
 /* 4 L+EN/AN      */ { s(2,2),     0 ,     4 ,     4 ,     3 ,     0 ,     0 ,  1 }
 };
-static const ImpTabPair impTab_GROUP_NUMBERS_WITH_R = {
-                        {&impTabL_GROUP_NUMBERS_WITH_R,
-                         &impTabR_GROUP_NUMBERS_WITH_R},
+ساكن ثابت ImpTabPair imp_Tab_ډله_NUMBERS_WITH_R = {
+                        {&imp_Tab_L_ډله_NUMBERS_WITH_R,
+                         &imp_Tab_R_ډله_NUMBERS_WITH_R},
                         {&impAct0, &impAct0}};
 
 
-static const ImpTab impTabL_INVERSE_NUMBERS_AS_L =
+ساكن ثابت ImpTab impTabL_INVERSE_NUMBERS_AS_L =
 /*  This table is identical to the Default LTR table except that EN and AN are
     handled like L.
 */
@@ -1683,7 +1683,7 @@ static const ImpTab impTabL_INVERSE_NUMBERS_AS_L =
 /* 4 : R+ON       */ { s(2,0),     1 , s(2,0), s(2,0),     4 ,     4 , s(2,0),  1 },
 /* 5 : AN+ON      */ { s(2,0),     1 , s(2,0), s(2,0),     5 ,     5 , s(2,0),  1 }
 };
-static const ImpTab impTabR_INVERSE_NUMBERS_AS_L =
+ساكن ثابت ImpTab impTabR_INVERSE_NUMBERS_AS_L =
 /*  This table is identical to the Default RTL table except that EN and AN are
     handled like L.
 */
@@ -1696,12 +1696,12 @@ static const ImpTab impTabR_INVERSE_NUMBERS_AS_L =
 /* 4 : L+ON       */ { s(2,1),     0 , s(2,1), s(2,1),     4 ,     4 ,     0 ,  0 },
 /* 5 : L+AN+ON    */ {     1 ,     0 ,     1 ,     1 ,     5 ,     5 ,     0 ,  0 }
 };
-static const ImpTabPair impTab_INVERSE_NUMBERS_AS_L = {
+ساكن ثابت ImpTabPair impTab_INVERSE_NUMBERS_AS_L = {
                         {&impTabL_INVERSE_NUMBERS_AS_L,
                          &impTabR_INVERSE_NUMBERS_AS_L},
                         {&impAct0, &impAct0}};
 
-static const ImpTab impTabR_INVERSE_LIKE_DIRECT =   /* Odd  paragraph level */
+ساكن ثابت ImpTab imp_Tab_R_INVERSE_LIKE_مستقیم =   /* Odd  paragraph level */
 /*  In this table, conditional sequences receive the lower possible level
     until proven otherwise.
 */
@@ -1715,15 +1715,15 @@ static const ImpTab impTabR_INVERSE_LIKE_DIRECT =   /* Odd  paragraph level */
 /* 5 : L+AN+ON    */ { s(2,1), s(3,0),     6 ,     4 ,     5 ,     5 , s(3,0),  2 },
 /* 6 : L+ON+EN    */ { s(2,1), s(3,0),     6 ,     4 ,     3 ,     3 , s(3,0),  1 }
 };
-static const ImpAct impAct1 = {0,1,13,14};
+ساكن ثابت ImpAct impAct1 = {0,1,13,14};
 /* FOOD FOR THOUGHT: in LTR table below, check case "JKL 123abc"
  */
-static const ImpTabPair impTab_INVERSE_LIKE_DIRECT = {
+ساكن ثابت ImpTabPair imp_Tab_INVERSE_LIKE_مستقیم = {
                         {&impTabL_DEFAULT,
-                         &impTabR_INVERSE_LIKE_DIRECT},
+                         &imp_Tab_R_INVERSE_LIKE_مستقیم},
                         {&impAct0, &impAct1}};
 
-static const ImpTab impTabL_INVERSE_LIKE_DIRECT_WITH_MARKS =
+ساكن ثابت ImpTab imp_Tab_L_INVERSE_LIKE_مستقیم_WITH_MARKS =
 /*  The case handled in this table is (visually):  R EN L
 */
 {
@@ -1736,7 +1736,7 @@ static const ImpTab impTabL_INVERSE_LIKE_DIRECT_WITH_MARKS =
 /* 5 : R+EN       */ { s(3,0), s(4,3),     5 , s(5,6), s(1,4), s(3,0), s(3,0),  4 },
 /* 6 : R+AN       */ { s(3,0), s(4,3), s(5,5),     6 , s(1,4), s(3,0), s(3,0),  4 }
 };
-static const ImpTab impTabR_INVERSE_LIKE_DIRECT_WITH_MARKS =
+ساكن ثابت ImpTab imp_Tab_R_INVERSE_LIKE_مستقیم_WITH_MARKS =
 /*  The cases handled in this table are (visually):  R EN L
                                                      R L AN L
 */
@@ -1750,19 +1750,19 @@ static const ImpTab impTabR_INVERSE_LIKE_DIRECT_WITH_MARKS =
 /* 5 : L+ON+EN    */ { s(5,3), s(4,0),     5 , s(3,6),     4 , s(4,0), s(4,0),  1 },
 /* 6 : L+AN       */ { s(5,3), s(4,0),     6 ,     6 ,     4 , s(4,0), s(4,0),  3 }
 };
-static const ImpAct impAct2 = {0,1,2,5,6,7,8};
-static const ImpAct impAct3 = {0,1,9,10,11,12};
-static const ImpTabPair impTab_INVERSE_LIKE_DIRECT_WITH_MARKS = {
-                        {&impTabL_INVERSE_LIKE_DIRECT_WITH_MARKS,
-                         &impTabR_INVERSE_LIKE_DIRECT_WITH_MARKS},
+ساكن ثابت ImpAct impAct2 = {0,1,2,5,6,7,8};
+ساكن ثابت ImpAct impAct3 = {0,1,9,10,11,12};
+ساكن ثابت ImpTabPair imp_Tab_INVERSE_LIKE_مستقیم_WITH_MARKS = {
+                        {&imp_Tab_L_INVERSE_LIKE_مستقیم_WITH_MARKS,
+                         &imp_Tab_R_INVERSE_LIKE_مستقیم_WITH_MARKS},
                         {&impAct2, &impAct3}};
 
-static const ImpTabPair impTab_INVERSE_FOR_NUMBERS_SPECIAL = {
+ساكن ثابت ImpTabPair impTab_INVERSE_FOR_NUMBERS_SPECIAL = {
                         {&impTabL_NUMBERS_SPECIAL,
-                         &impTabR_INVERSE_LIKE_DIRECT},
+                         &imp_Tab_R_INVERSE_LIKE_مستقیم},
                         {&impAct0, &impAct1}};
 
-static const ImpTab impTabL_INVERSE_FOR_NUMBERS_SPECIAL_WITH_MARKS =
+ساكن ثابت ImpTab impTabL_INVERSE_FOR_NUMBERS_SPECIAL_WITH_MARKS =
 /*  The case handled in this table is (visually):  R EN L
 */
 {
@@ -1773,80 +1773,80 @@ static const ImpTab impTabL_INVERSE_FOR_NUMBERS_SPECIAL_WITH_MARKS =
 /* 3 : R+ON       */ { s(3,0), s(4,2), s(5,4), s(5,4),     3 , s(3,0), s(3,0),  3 },
 /* 4 : R+EN/AN    */ { s(3,0), s(4,2),     4 ,     4 , s(1,3), s(3,0), s(3,0),  4 }
 };
-static const ImpTabPair impTab_INVERSE_FOR_NUMBERS_SPECIAL_WITH_MARKS = {
+ساكن ثابت ImpTabPair impTab_INVERSE_FOR_NUMBERS_SPECIAL_WITH_MARKS = {
                         {&impTabL_INVERSE_FOR_NUMBERS_SPECIAL_WITH_MARKS,
-                         &impTabR_INVERSE_LIKE_DIRECT_WITH_MARKS},
+                         &imp_Tab_R_INVERSE_LIKE_مستقیم_WITH_MARKS},
                         {&impAct2, &impAct3}};
 
-#undef s
+#تعریف_لغوه s
 
-typedef struct {
-    const ImpTab * pImpTab;             /* level table pointer          */
-    const ImpAct * pImpAct;             /* action map array             */
-    int32_t startON;                    /* start of ON sequence         */
-    int32_t startL2EN;                  /* start of level 2 sequence    */
-    int32_t lastStrongRTL;              /* index of last found R or AL  */
+تعريفنوع بنية {
+    ثابت ImpTab * pImpTab;             /* level table pointer          */
+    ثابت ImpAct * pImpAct;             /* action map array             */
+    int32_t پیل_ON;                    /* start of ON sequence         */
+    int32_t پیل_L2_EN;                  /* start of level 2 sequence    */
+    int32_t وروستی_Strong_RTL;              /* index of last found R or AL  */
     int32_t state;                      /* current state                */
-    int32_t runStart;                   /* start position of the run    */
-    UBiDiLevel runLevel;                /* run level before implicit solving */
+    int32_t پرلپسې_پیل;                   /* start position of the run    */
+    UBiDiLevel پرلپسې_Level;                /* run level before implicit solving */
 } LevState;
 
 /*------------------------------------------------------------------------*/
 
-static void
-addPoint(UBiDi *pBiDi, int32_t pos, int32_t flag)
+ساكن فراغ
+جمع_کړه_ټکی(UBiDi *pBiDi, int32_t pos, int32_t flag)
   /* param pos:     position where to insert
      param flag:    one of LRM_BEFORE, LRM_AFTER, RLM_BEFORE, RLM_AFTER
   */
 {
-#define FIRSTALLOC  10
-    Point point;
-    InsertPoints * pInsertPoints=&(pBiDi->insertPoints);
+#تعریف_کړه FIRSTALLOC  10
+    ټکی ټکی_2;
+    ورننباسه_Points_2 * p_ورننباسه_Points=&(pBiDi->ورننباسه_Points);
 
-    if (pInsertPoints->capacity == 0)
+    إذا (p_ورننباسه_Points->capacity == 0)
     {
-        pInsertPoints->points=static_cast<Point *>(uprv_malloc(sizeof(Point)*FIRSTALLOC));
-        if (pInsertPoints->points == nullptr)
+        p_ورننباسه_Points->points=static_cast<ټکی *>(uprv_malloc(حجم(ټکی)*FIRSTALLOC));
+        إذا (p_ورننباسه_Points->points == تش_اشاره)
         {
-            pInsertPoints->errorCode=U_MEMORY_ALLOCATION_ERROR;
-            return;
+            p_ورننباسه_Points->error_کوډ=U_حافظه_ویش_ERROR;
+            أرجع;
         }
-        pInsertPoints->capacity=FIRSTALLOC;
+        p_ورننباسه_Points->capacity=FIRSTALLOC;
     }
-    if (pInsertPoints->size >= pInsertPoints->capacity) /* no room for new point */
+    إذا (p_ورننباسه_Points->size >= p_ورننباسه_Points->capacity) /* no room for new point */
     {
-        Point * savePoints=pInsertPoints->points;
-        pInsertPoints->points=static_cast<Point *>(uprv_realloc(pInsertPoints->points,
-                                           pInsertPoints->capacity*2*sizeof(Point)));
-        if (pInsertPoints->points == nullptr)
+        ټکی * savePoints=p_ورننباسه_Points->points;
+        p_ورننباسه_Points->points=static_cast<ټکی *>(uprv_realloc(p_ورننباسه_Points->points,
+                                           p_ورننباسه_Points->capacity*2*حجم(ټکی)));
+        إذا (p_ورننباسه_Points->points == تش_اشاره)
         {
-            pInsertPoints->points=savePoints;
-            pInsertPoints->errorCode=U_MEMORY_ALLOCATION_ERROR;
-            return;
+            p_ورننباسه_Points->points=savePoints;
+            p_ورننباسه_Points->error_کوډ=U_حافظه_ویش_ERROR;
+            أرجع;
         }
-        else  pInsertPoints->capacity*=2;
+        وإلا  p_ورننباسه_Points->capacity*=2;
     }
-    point.pos=pos;
-    point.flag=flag;
-    pInsertPoints->points[pInsertPoints->size]=point;
-    pInsertPoints->size++;
-#undef FIRSTALLOC
+    ټکی_2.pos=pos;
+    ټکی_2.flag=flag;
+    p_ورننباسه_Points->points[p_ورننباسه_Points->size]=ټکی_2;
+    p_ورننباسه_Points->size++;
+#تعریف_لغوه FIRSTALLOC
 }
 
-static void
-setLevelsOutsideIsolates(UBiDi *pBiDi, int32_t start, int32_t limit, UBiDiLevel level)
+ساكن فراغ
+سېټ_پوړونه_Outside_Isolates(UBiDi *pBiDi, int32_t پیل, int32_t حد, UBiDiLevel level)
 {
     DirProp *dirProps=pBiDi->dirProps, dirProp;
-    UBiDiLevel *levels=pBiDi->levels;
-    int32_t isolateCount=0, k;
-    for(k=start; k<limit; k++) {
+    UBiDiLevel *پوړونه=pBiDi->پوړونه;
+    int32_t isolate_شمېر=0, k;
+    لكل(k=پیل; k<حد; k++) {
         dirProp=dirProps[k];
-        if(dirProp==PDI)
-            isolateCount--;
-        if(isolateCount==0)
-            levels[k]=level;
-        if(dirProp==LRI || dirProp==RLI)
-            isolateCount++;
+        إذا(dirProp==PDI)
+            isolate_شمېر--;
+        إذا(isolate_شمېر==0)
+            پوړونه[k]=level;
+        إذا(dirProp==LRI || dirProp==RLI)
+            isolate_شمېر++;
     }
 }
 
@@ -1865,208 +1865,208 @@ setLevelsOutsideIsolates(UBiDi *pBiDi, int32_t start, int32_t limit, UBiDiLevel 
  * to actually store the intermediate directional properties in dirProps[].
  */
 
-static void
+ساكن فراغ
 processPropertySeq(UBiDi *pBiDi, LevState *pLevState, uint8_t _prop,
-                   int32_t start, int32_t limit) {
+                   int32_t پیل, int32_t حد) {
     uint8_t cell, oldStateSeq, actionSeq;
-    const ImpTab * pImpTab=pLevState->pImpTab;
-    const ImpAct * pImpAct=pLevState->pImpAct;
-    UBiDiLevel * levels=pBiDi->levels;
-    UBiDiLevel level, addLevel;
-    InsertPoints * pInsertPoints;
+    ثابت ImpTab * pImpTab=pLevState->pImpTab;
+    ثابت ImpAct * pImpAct=pLevState->pImpAct;
+    UBiDiLevel * پوړونه=pBiDi->پوړونه;
+    UBiDiLevel level, جمع_کړه_Level;
+    ورننباسه_Points_2 * p_ورننباسه_Points;
     int32_t start0, k;
 
-    start0=start;                           /* save original start position */
+    start0=پیل;                           /* save original start position */
     oldStateSeq = static_cast<uint8_t>(pLevState->state);
     cell=(*pImpTab)[oldStateSeq][_prop];
     pLevState->state=GET_STATE(cell);       /* isolate the new state */
     actionSeq=(*pImpAct)[GET_ACTION(cell)]; /* isolate the action */
-    addLevel=(*pImpTab)[pLevState->state][IMPTABLEVELS_RES];
+    جمع_کړه_Level=(*pImpTab)[pLevState->state][IMPTABLEVELS_RES];
 
-    if(actionSeq) {
-        switch(actionSeq) {
-        case 1:                         /* init ON seq */
-            pLevState->startON=start0;
-            break;
+    إذا(actionSeq) {
+        بدل(actionSeq) {
+        حالة 1:                         /* init ON seq */
+            pLevState->پیل_ON=start0;
+            اكسر;
 
-        case 2:                         /* prepend ON seq to current seq */
-            start=pLevState->startON;
-            break;
+        حالة 2:                         /* prepend ON seq to current seq */
+            پیل=pLevState->پیل_ON;
+            اكسر;
 
-        case 3:                         /* EN/AN after R+ON */
-            level=pLevState->runLevel+1;
-            setLevelsOutsideIsolates(pBiDi, pLevState->startON, start0, level);
-            break;
+        حالة 3:                         /* EN/AN after R+ON */
+            level=pLevState->پرلپسې_Level+1;
+            سېټ_پوړونه_Outside_Isolates(pBiDi, pLevState->پیل_ON, start0, level);
+            اكسر;
 
-        case 4:                         /* EN/AN before R for NUMBERS_SPECIAL */
-            level=pLevState->runLevel+2;
-            setLevelsOutsideIsolates(pBiDi, pLevState->startON, start0, level);
-            break;
+        حالة 4:                         /* EN/AN before R for NUMBERS_SPECIAL */
+            level=pLevState->پرلپسې_Level+2;
+            سېټ_پوړونه_Outside_Isolates(pBiDi, pLevState->پیل_ON, start0, level);
+            اكسر;
 
-        case 5:                         /* L or S after possible relevant EN/AN */
+        حالة 5:                         /* L or S after possible relevant EN/AN */
             /* check if we had EN after R/AL */
-            if (pLevState->startL2EN >= 0) {
-                addPoint(pBiDi, pLevState->startL2EN, LRM_BEFORE);
+            إذا (pLevState->پیل_L2_EN >= 0) {
+                جمع_کړه_ټکی(pBiDi, pLevState->پیل_L2_EN, LRM_BEFORE);
             }
-            pLevState->startL2EN=-1;  /* not within previous if since could also be -2 */
+            pLevState->پیل_L2_EN=-1;  /* not within previous if since could also be -2 */
             /* check if we had any relevant EN/AN after R/AL */
-            pInsertPoints=&(pBiDi->insertPoints);
-            if ((pInsertPoints->capacity == 0) ||
-                (pInsertPoints->size <= pInsertPoints->confirmed))
+            p_ورننباسه_Points=&(pBiDi->ورننباسه_Points);
+            إذا ((p_ورننباسه_Points->capacity == 0) ||
+                (p_ورننباسه_Points->size <= p_ورننباسه_Points->confirmed))
             {
                 /* nothing, just clean up */
-                pLevState->lastStrongRTL=-1;
+                pLevState->وروستی_Strong_RTL=-1;
                 /* check if we have a pending conditional segment */
                 level=(*pImpTab)[oldStateSeq][IMPTABLEVELS_RES];
-                if ((level & 1) && (pLevState->startON > 0)) {  /* after ON */
-                    start=pLevState->startON;   /* reset to basic run level */
+                إذا ((level & 1) && (pLevState->پیل_ON > 0)) {  /* after ON */
+                    پیل=pLevState->پیل_ON;   /* reset to basic run level */
                 }
-                if (_prop == DirProp_S)                /* add LRM before S */
+                إذا (_prop == DirProp_S)                /* add LRM before S */
                 {
-                    addPoint(pBiDi, start0, LRM_BEFORE);
-                    pInsertPoints->confirmed=pInsertPoints->size;
+                    جمع_کړه_ټکی(pBiDi, start0, LRM_BEFORE);
+                    p_ورننباسه_Points->confirmed=p_ورننباسه_Points->size;
                 }
-                break;
+                اكسر;
             }
             /* reset previous RTL cont to level for LTR text */
-            for (k=pLevState->lastStrongRTL+1; k<start0; k++)
+            لكل (k=pLevState->وروستی_Strong_RTL+1; k<start0; k++)
             {
                 /* reset odd level, leave runLevel+2 as is */
-                levels[k]=(levels[k] - 2) & ~1;
+                پوړونه[k]=(پوړونه[k] - 2) & ~1;
             }
             /* mark insert points as confirmed */
-            pInsertPoints->confirmed=pInsertPoints->size;
-            pLevState->lastStrongRTL=-1;
-            if (_prop == DirProp_S)            /* add LRM before S */
+            p_ورننباسه_Points->confirmed=p_ورننباسه_Points->size;
+            pLevState->وروستی_Strong_RTL=-1;
+            إذا (_prop == DirProp_S)            /* add LRM before S */
             {
-                addPoint(pBiDi, start0, LRM_BEFORE);
-                pInsertPoints->confirmed=pInsertPoints->size;
+                جمع_کړه_ټکی(pBiDi, start0, LRM_BEFORE);
+                p_ورننباسه_Points->confirmed=p_ورننباسه_Points->size;
             }
-            break;
+            اكسر;
 
-        case 6:                         /* R/AL after possible relevant EN/AN */
+        حالة 6:                         /* R/AL after possible relevant EN/AN */
             /* just clean up */
-            pInsertPoints=&(pBiDi->insertPoints);
-            if (pInsertPoints->capacity > 0)
+            p_ورننباسه_Points=&(pBiDi->ورننباسه_Points);
+            إذا (p_ورننباسه_Points->capacity > 0)
                 /* remove all non confirmed insert points */
-                pInsertPoints->size=pInsertPoints->confirmed;
-            pLevState->startON=-1;
-            pLevState->startL2EN=-1;
-            pLevState->lastStrongRTL=limit - 1;
-            break;
+                p_ورننباسه_Points->size=p_ورننباسه_Points->confirmed;
+            pLevState->پیل_ON=-1;
+            pLevState->پیل_L2_EN=-1;
+            pLevState->وروستی_Strong_RTL=حد - 1;
+            اكسر;
 
-        case 7:                         /* EN/AN after R/AL + possible cont */
+        حالة 7:                         /* EN/AN after R/AL + possible cont */
             /* check for real AN */
-            if ((_prop == DirProp_AN) && (pBiDi->dirProps[start0] == AN) &&
-                (pBiDi->reorderingMode!=UBIDI_REORDER_INVERSE_FOR_NUMBERS_SPECIAL))
+            إذا ((_prop == DirProp_AN) && (pBiDi->dirProps[start0] == AN) &&
+                (pBiDi->reordering_ډېرپېښ!=UBIDI_REORDER_INVERSE_FOR_NUMBERS_SPECIAL))
             {
                 /* real AN */
-                if (pLevState->startL2EN == -1) /* if no relevant EN already found */
+                إذا (pLevState->پیل_L2_EN == -1) /* if no relevant EN already found */
                 {
                     /* just note the righmost digit as a strong RTL */
-                    pLevState->lastStrongRTL=limit - 1;
-                    break;
+                    pLevState->وروستی_Strong_RTL=حد - 1;
+                    اكسر;
                 }
-                if (pLevState->startL2EN >= 0)  /* after EN, no AN */
+                إذا (pLevState->پیل_L2_EN >= 0)  /* after EN, no AN */
                 {
-                    addPoint(pBiDi, pLevState->startL2EN, LRM_BEFORE);
-                    pLevState->startL2EN=-2;
+                    جمع_کړه_ټکی(pBiDi, pLevState->پیل_L2_EN, LRM_BEFORE);
+                    pLevState->پیل_L2_EN=-2;
                 }
                 /* note AN */
-                addPoint(pBiDi, start0, LRM_BEFORE);
-                break;
+                جمع_کړه_ټکی(pBiDi, start0, LRM_BEFORE);
+                اكسر;
             }
             /* if first EN/AN after R/AL */
-            if (pLevState->startL2EN == -1) {
-                pLevState->startL2EN=start0;
+            إذا (pLevState->پیل_L2_EN == -1) {
+                pLevState->پیل_L2_EN=start0;
             }
-            break;
+            اكسر;
 
-        case 8:                         /* note location of latest R/AL */
-            pLevState->lastStrongRTL=limit - 1;
-            pLevState->startON=-1;
-            break;
+        حالة 8:                         /* note location of latest R/AL */
+            pLevState->وروستی_Strong_RTL=حد - 1;
+            pLevState->پیل_ON=-1;
+            اكسر;
 
-        case 9:                         /* L after R+ON/EN/AN */
+        حالة 9:                         /* L after R+ON/EN/AN */
             /* include possible adjacent number on the left */
-            for (k=start0-1; k>=0 && !(levels[k]&1); k--);
-            if(k>=0) {
-                addPoint(pBiDi, k, RLM_BEFORE);             /* add RLM before */
-                pInsertPoints=&(pBiDi->insertPoints);
-                pInsertPoints->confirmed=pInsertPoints->size;   /* confirm it */
+            لكل (k=start0-1; k>=0 && !(پوړونه[k]&1); k--);
+            إذا(k>=0) {
+                جمع_کړه_ټکی(pBiDi, k, RLM_BEFORE);             /* add RLM before */
+                p_ورننباسه_Points=&(pBiDi->ورننباسه_Points);
+                p_ورننباسه_Points->confirmed=p_ورننباسه_Points->size;   /* confirm it */
             }
-            pLevState->startON=start0;
-            break;
+            pLevState->پیل_ON=start0;
+            اكسر;
 
-        case 10:                        /* AN after L */
+        حالة 10:                        /* AN after L */
             /* AN numbers between L text on both sides may be trouble. */
             /* tentatively bracket with LRMs; will be confirmed if followed by L */
-            addPoint(pBiDi, start0, LRM_BEFORE);    /* add LRM before */
-            addPoint(pBiDi, start0, LRM_AFTER);     /* add LRM after  */
-            break;
+            جمع_کړه_ټکی(pBiDi, start0, LRM_BEFORE);    /* add LRM before */
+            جمع_کړه_ټکی(pBiDi, start0, LRM_AFTER);     /* add LRM after  */
+            اكسر;
 
-        case 11:                        /* R after L+ON/EN/AN */
+        حالة 11:                        /* R after L+ON/EN/AN */
             /* false alert, infirm LRMs around previous AN */
-            pInsertPoints=&(pBiDi->insertPoints);
-            pInsertPoints->size=pInsertPoints->confirmed;
-            if (_prop == DirProp_S)            /* add RLM before S */
+            p_ورننباسه_Points=&(pBiDi->ورننباسه_Points);
+            p_ورننباسه_Points->size=p_ورننباسه_Points->confirmed;
+            إذا (_prop == DirProp_S)            /* add RLM before S */
             {
-                addPoint(pBiDi, start0, RLM_BEFORE);
-                pInsertPoints->confirmed=pInsertPoints->size;
+                جمع_کړه_ټکی(pBiDi, start0, RLM_BEFORE);
+                p_ورننباسه_Points->confirmed=p_ورننباسه_Points->size;
             }
-            break;
+            اكسر;
 
-        case 12:                        /* L after L+ON/AN */
-            level=pLevState->runLevel + addLevel;
-            for(k=pLevState->startON; k<start0; k++) {
-                if (levels[k]<level)
-                    levels[k]=level;
+        حالة 12:                        /* L after L+ON/AN */
+            level=pLevState->پرلپسې_Level + جمع_کړه_Level;
+            لكل(k=pLevState->پیل_ON; k<start0; k++) {
+                إذا (پوړونه[k]<level)
+                    پوړونه[k]=level;
             }
-            pInsertPoints=&(pBiDi->insertPoints);
-            pInsertPoints->confirmed=pInsertPoints->size;   /* confirm inserts */
-            pLevState->startON=start0;
-            break;
+            p_ورننباسه_Points=&(pBiDi->ورننباسه_Points);
+            p_ورننباسه_Points->confirmed=p_ورننباسه_Points->size;   /* confirm inserts */
+            pLevState->پیل_ON=start0;
+            اكسر;
 
-        case 13:                        /* L after L+ON+EN/AN/ON */
-            level=pLevState->runLevel;
-            for(k=start0-1; k>=pLevState->startON; k--) {
-                if(levels[k]==level+3) {
-                    while(levels[k]==level+3) {
-                        levels[k--]-=2;
+        حالة 13:                        /* L after L+ON+EN/AN/ON */
+            level=pLevState->پرلپسې_Level;
+            لكل(k=start0-1; k>=pLevState->پیل_ON; k--) {
+                إذا(پوړونه[k]==level+3) {
+                    طالما(پوړونه[k]==level+3) {
+                        پوړونه[k--]-=2;
                     }
-                    while(levels[k]==level) {
+                    طالما(پوړونه[k]==level) {
                         k--;
                     }
                 }
-                if(levels[k]==level+2) {
-                    levels[k]=level;
-                    continue;
+                إذا(پوړونه[k]==level+2) {
+                    پوړونه[k]=level;
+                    استمر;
                 }
-                levels[k]=level+1;
+                پوړونه[k]=level+1;
             }
-            break;
+            اكسر;
 
-        case 14:                        /* R after L+ON+EN/AN/ON */
-            level=pLevState->runLevel+1;
-            for(k=start0-1; k>=pLevState->startON; k--) {
-                if(levels[k]>level) {
-                    levels[k]-=2;
+        حالة 14:                        /* R after L+ON+EN/AN/ON */
+            level=pLevState->پرلپسې_Level+1;
+            لكل(k=start0-1; k>=pLevState->پیل_ON; k--) {
+                إذا(پوړونه[k]>level) {
+                    پوړونه[k]-=2;
                 }
             }
-            break;
+            اكسر;
 
-        default:                        /* we should never get here */
+        افتراضي:                        /* we should never get here */
             UPRV_UNREACHABLE_EXIT;
         }
     }
-    if((addLevel) || (start < start0)) {
-        level=pLevState->runLevel + addLevel;
-        if(start>=pLevState->runStart) {
-            for(k=start; k<limit; k++) {
-                levels[k]=level;
+    إذا((جمع_کړه_Level) || (پیل < start0)) {
+        level=pLevState->پرلپسې_Level + جمع_کړه_Level;
+        إذا(پیل>=pLevState->پرلپسې_پیل) {
+            لكل(k=پیل; k<حد; k++) {
+                پوړونه[k]=level;
             }
-        } else {
-            setLevelsOutsideIsolates(pBiDi, start, limit, level);
+        } وإلا {
+            سېټ_پوړونه_Outside_Isolates(pBiDi, پیل, حد, level);
         }
     }
 }
@@ -2075,74 +2075,74 @@ processPropertySeq(UBiDi *pBiDi, LevState *pLevState, uint8_t _prop,
  * Returns the directionality of the last strong character at the end of the prologue, if any.
  * Requires prologue!=null.
  */
-static DirProp
-lastL_R_AL(UBiDi *pBiDi) {
-    const char16_t *text=pBiDi->prologue;
-    int32_t length=pBiDi->proLength;
+ساكن DirProp
+وروستی_L_R_AL(UBiDi *pBiDi) {
+    ثابت char16_t *متن=pBiDi->prologue;
+    int32_t length=pBiDi->pro_اوږدتیا;
     int32_t i;
     UChar32 uchar;
     DirProp dirProp;
-    for(i=length; i>0; ) {
+    لكل(i=length; i>0; ) {
         /* i is decremented by U16_PREV */
-        U16_PREV(text, 0, i, uchar);
+        U16_PREV(متن, 0, i, uchar);
         dirProp = static_cast<DirProp>(ubidi_getCustomizedClass(pBiDi, uchar));
-        if(dirProp==L) {
-            return DirProp_L;
+        إذا(dirProp==L) {
+            أرجع DirProp_L;
         }
-        if(dirProp==R || dirProp==AL) {
-            return DirProp_R;
+        إذا(dirProp==R || dirProp==AL) {
+            أرجع DirProp_R;
         }
-        if(dirProp==B) {
-            return DirProp_ON;
+        إذا(dirProp==B) {
+            أرجع DirProp_ON;
         }
     }
-    return DirProp_ON;
+    أرجع DirProp_ON;
 }
 
 /**
  * Returns the directionality of the first strong character, or digit, in the epilogue, if any.
  * Requires epilogue!=null.
  */
-static DirProp
-firstL_R_AL_EN_AN(UBiDi *pBiDi) {
-    const char16_t *text=pBiDi->epilogue;
-    int32_t length=pBiDi->epiLength;
+ساكن DirProp
+لومړی_L_R_AL_EN_AN(UBiDi *pBiDi) {
+    ثابت char16_t *متن=pBiDi->epilogue;
+    int32_t length=pBiDi->epi_اوږدتیا;
     int32_t i;
     UChar32 uchar;
     DirProp dirProp;
-    for(i=0; i<length; ) {
+    لكل(i=0; i<length; ) {
         /* i is incremented by U16_NEXT */
-        U16_NEXT(text, i, length, uchar);
+        U16_بل(متن, i, length, uchar);
         dirProp = static_cast<DirProp>(ubidi_getCustomizedClass(pBiDi, uchar));
-        if(dirProp==L) {
-            return DirProp_L;
+        إذا(dirProp==L) {
+            أرجع DirProp_L;
         }
-        if(dirProp==R || dirProp==AL) {
-            return DirProp_R;
+        إذا(dirProp==R || dirProp==AL) {
+            أرجع DirProp_R;
         }
-        if(dirProp==EN) {
-            return DirProp_EN;
+        إذا(dirProp==EN) {
+            أرجع DirProp_EN;
         }
-        if(dirProp==AN) {
-            return DirProp_AN;
+        إذا(dirProp==AN) {
+            أرجع DirProp_AN;
         }
     }
-    return DirProp_ON;
+    أرجع DirProp_ON;
 }
 
-static void
-resolveImplicitLevels(UBiDi *pBiDi,
-                      int32_t start, int32_t limit,
+ساكن فراغ
+resolve_Implicit_پوړونه(UBiDi *pBiDi,
+                      int32_t پیل, int32_t حد,
                       DirProp sor, DirProp eor) {
-    const DirProp *dirProps=pBiDi->dirProps;
+    ثابت DirProp *dirProps=pBiDi->dirProps;
     DirProp dirProp;
     LevState levState;
     int32_t i, start1, start2;
     uint16_t oldStateImp, stateImp, actionImp;
     uint8_t gprop, resProp, cell;
     UBool inverseRTL;
-    DirProp nextStrongProp=R;
-    int32_t nextStrongPos=-1;
+    DirProp بل_Strong_Prop=R;
+    int32_t بل_Strong_Pos=-1;
 
     /* check for RTL inverse BiDi mode */
     /* FOOD FOR THOUGHT: in case of RTL inverse BiDi, it would make sense to
@@ -2152,138 +2152,138 @@ resolveImplicitLevels(UBiDi *pBiDi,
      * LTR corresponding ones.
      */
     inverseRTL =
-        static_cast<UBool>((start < pBiDi->lastArabicPos) && (GET_PARALEVEL(pBiDi, start) & 1) &&
-                           (pBiDi->reorderingMode == UBIDI_REORDER_INVERSE_LIKE_DIRECT ||
-                            pBiDi->reorderingMode == UBIDI_REORDER_INVERSE_FOR_NUMBERS_SPECIAL));
+        static_cast<UBool>((پیل < pBiDi->وروستی_Arabic_Pos) && (GET_PARALEVEL(pBiDi, پیل) & 1) &&
+                           (pBiDi->reordering_ډېرپېښ == UBIDI_REORDER_INVERSE_LIKE_مستقیم ||
+                            pBiDi->reordering_ډېرپېښ == UBIDI_REORDER_INVERSE_FOR_NUMBERS_SPECIAL));
 
     /* initialize for property and levels state tables */
-    levState.startL2EN=-1;              /* used for INVERSE_LIKE_DIRECT_WITH_MARKS */
-    levState.lastStrongRTL=-1;          /* used for INVERSE_LIKE_DIRECT_WITH_MARKS */
-    levState.runStart=start;
-    levState.runLevel=pBiDi->levels[start];
-    levState.pImpTab = static_cast<const ImpTab*>(((pBiDi->pImpTabPair)->pImpTab)[levState.runLevel & 1]);
-    levState.pImpAct = static_cast<const ImpAct*>(((pBiDi->pImpTabPair)->pImpAct)[levState.runLevel & 1]);
-    if(start==0 && pBiDi->proLength>0) {
-        DirProp lastStrong=lastL_R_AL(pBiDi);
-        if(lastStrong!=DirProp_ON) {
-            sor=lastStrong;
+    levState.پیل_L2_EN=-1;              /* used for INVERSE_LIKE_DIRECT_WITH_MARKS */
+    levState.وروستی_Strong_RTL=-1;          /* used for INVERSE_LIKE_DIRECT_WITH_MARKS */
+    levState.پرلپسې_پیل=پیل;
+    levState.پرلپسې_Level=pBiDi->پوړونه[پیل];
+    levState.pImpTab = static_cast<ثابت ImpTab*>(((pBiDi->pImpTabPair)->pImpTab)[levState.پرلپسې_Level & 1]);
+    levState.pImpAct = static_cast<ثابت ImpAct*>(((pBiDi->pImpTabPair)->pImpAct)[levState.پرلپسې_Level & 1]);
+    إذا(پیل==0 && pBiDi->pro_اوږدتیا>0) {
+        DirProp وروستی_Strong=وروستی_L_R_AL(pBiDi);
+        إذا(وروستی_Strong!=DirProp_ON) {
+            sor=وروستی_Strong;
         }
     }
     /* The isolates[] entries contain enough information to
        resume the bidi algorithm in the same state as it was
        when it was interrupted by an isolate sequence. */
-    if(dirProps[start]==PDI  && pBiDi->isolateCount >= 0) {
-        levState.startON=pBiDi->isolates[pBiDi->isolateCount].startON;
-        start1=pBiDi->isolates[pBiDi->isolateCount].start1;
-        stateImp=pBiDi->isolates[pBiDi->isolateCount].stateImp;
-        levState.state=pBiDi->isolates[pBiDi->isolateCount].state;
-        pBiDi->isolateCount--;
-    } else {
-        levState.startON=-1;
-        start1=start;
-        if(dirProps[start]==NSM)
+    إذا(dirProps[پیل]==PDI  && pBiDi->isolate_شمېر >= 0) {
+        levState.پیل_ON=pBiDi->isolates[pBiDi->isolate_شمېر].پیل_ON;
+        start1=pBiDi->isolates[pBiDi->isolate_شمېر].start1;
+        stateImp=pBiDi->isolates[pBiDi->isolate_شمېر].stateImp;
+        levState.state=pBiDi->isolates[pBiDi->isolate_شمېر].state;
+        pBiDi->isolate_شمېر--;
+    } وإلا {
+        levState.پیل_ON=-1;
+        start1=پیل;
+        إذا(dirProps[پیل]==NSM)
             stateImp = 1 + sor;
-        else
+        وإلا
             stateImp=0;
         levState.state=0;
-        processPropertySeq(pBiDi, &levState, sor, start, start);
+        processPropertySeq(pBiDi, &levState, sor, پیل, پیل);
     }
-    start2=start;                       /* to make Java compiler happy */
+    start2=پیل;                       /* to make Java compiler happy */
 
-    for(i=start; i<=limit; i++) {
-        if(i>=limit) {
+    لكل(i=پیل; i<=حد; i++) {
+        إذا(i>=حد) {
             int32_t k;
-            for(k=limit-1; k>start&&(DIRPROP_FLAG(dirProps[k])&MASK_BN_EXPLICIT); k--);
+            لكل(k=حد-1; k>پیل&&(DIRPROP_FLAG(dirProps[k])&ماسک_BN_EXPLICIT); k--);
             dirProp=dirProps[k];
-            if(dirProp==LRI || dirProp==RLI)
-                break;      /* no forced closing for sequence ending with LRI/RLI */
+            إذا(dirProp==LRI || dirProp==RLI)
+                اكسر;      /* no forced closing for sequence ending with LRI/RLI */
             gprop=eor;
-        } else {
+        } وإلا {
             DirProp prop, prop1;
             prop=dirProps[i];
-            if(prop==B) {
-                pBiDi->isolateCount=-1; /* current isolates stack entry == none */
+            إذا(prop==B) {
+                pBiDi->isolate_شمېر=-1; /* current isolates stack entry == none */
             }
-            if(inverseRTL) {
-                if(prop==AL) {
+            إذا(inverseRTL) {
+                إذا(prop==AL) {
                     /* AL before EN does not make it AN */
                     prop=R;
-                } else if(prop==EN) {
-                    if(nextStrongPos<=i) {
+                } وإلا إذا(prop==EN) {
+                    إذا(بل_Strong_Pos<=i) {
                         /* look for next strong char (L/R/AL) */
                         int32_t j;
-                        nextStrongProp=R;   /* set default */
-                        nextStrongPos=limit;
-                        for(j=i+1; j<limit; j++) {
+                        بل_Strong_Prop=R;   /* set default */
+                        بل_Strong_Pos=حد;
+                        لكل(j=i+1; j<حد; j++) {
                             prop1=dirProps[j];
-                            if(prop1==L || prop1==R || prop1==AL) {
-                                nextStrongProp=prop1;
-                                nextStrongPos=j;
-                                break;
+                            إذا(prop1==L || prop1==R || prop1==AL) {
+                                بل_Strong_Prop=prop1;
+                                بل_Strong_Pos=j;
+                                اكسر;
                             }
                         }
                     }
-                    if(nextStrongProp==AL) {
+                    إذا(بل_Strong_Prop==AL) {
                         prop=AN;
                     }
                 }
             }
-            gprop=groupProp[prop];
+            gprop=ډله_Prop[prop];
         }
         oldStateImp=stateImp;
         cell=impTabProps[oldStateImp][gprop];
         stateImp=GET_STATEPROPS(cell);      /* isolate the new state */
         actionImp=GET_ACTIONPROPS(cell);    /* isolate the action */
-        if((i==limit) && (actionImp==0)) {
+        إذا((i==حد) && (actionImp==0)) {
             /* there is an unprocessed sequence if its property == eor   */
             actionImp=1;                    /* process the last sequence */
         }
-        if(actionImp) {
+        إذا(actionImp) {
             resProp=impTabProps[oldStateImp][IMPTABPROPS_RES];
-            switch(actionImp) {
-            case 1:             /* process current seq1, init new seq1 */
+            بدل(actionImp) {
+            حالة 1:             /* process current seq1, init new seq1 */
                 processPropertySeq(pBiDi, &levState, resProp, start1, i);
                 start1=i;
-                break;
-            case 2:             /* init new seq2 */
+                اكسر;
+            حالة 2:             /* init new seq2 */
                 start2=i;
-                break;
-            case 3:             /* process seq1, process seq2, init new seq1 */
+                اكسر;
+            حالة 3:             /* process seq1, process seq2, init new seq1 */
                 processPropertySeq(pBiDi, &levState, resProp, start1, start2);
                 processPropertySeq(pBiDi, &levState, DirProp_ON, start2, i);
                 start1=i;
-                break;
-            case 4:             /* process seq1, set seq1=seq2, init new seq2 */
+                اكسر;
+            حالة 4:             /* process seq1, set seq1=seq2, init new seq2 */
                 processPropertySeq(pBiDi, &levState, resProp, start1, start2);
                 start1=start2;
                 start2=i;
-                break;
-            default:            /* we should never get here */
+                اكسر;
+            افتراضي:            /* we should never get here */
                 UPRV_UNREACHABLE_EXIT;
             }
         }
     }
 
     /* flush possible pending sequence, e.g. ON */
-    if(limit==pBiDi->length && pBiDi->epiLength>0) {
-        DirProp firstStrong=firstL_R_AL_EN_AN(pBiDi);
-        if(firstStrong!=DirProp_ON) {
-            eor=firstStrong;
+    إذا(حد==pBiDi->length && pBiDi->epi_اوږدتیا>0) {
+        DirProp لومړی_Strong=لومړی_L_R_AL_EN_AN(pBiDi);
+        إذا(لومړی_Strong!=DirProp_ON) {
+            eor=لومړی_Strong;
         }
     }
 
     /* look for the last char not a BN or LRE/RLE/LRO/RLO/PDF */
-    for(i=limit-1; i>start&&(DIRPROP_FLAG(dirProps[i])&MASK_BN_EXPLICIT); i--);
+    لكل(i=حد-1; i>پیل&&(DIRPROP_FLAG(dirProps[i])&ماسک_BN_EXPLICIT); i--);
     dirProp=dirProps[i];
-    if((dirProp==LRI || dirProp==RLI) && limit<pBiDi->length) {
-        pBiDi->isolateCount++;
-        pBiDi->isolates[pBiDi->isolateCount].stateImp=stateImp;
-        pBiDi->isolates[pBiDi->isolateCount].state=levState.state;
-        pBiDi->isolates[pBiDi->isolateCount].start1=start1;
-        pBiDi->isolates[pBiDi->isolateCount].startON=levState.startON;
+    إذا((dirProp==LRI || dirProp==RLI) && حد<pBiDi->length) {
+        pBiDi->isolate_شمېر++;
+        pBiDi->isolates[pBiDi->isolate_شمېر].stateImp=stateImp;
+        pBiDi->isolates[pBiDi->isolate_شمېر].state=levState.state;
+        pBiDi->isolates[pBiDi->isolate_شمېر].start1=start1;
+        pBiDi->isolates[pBiDi->isolate_شمېر].پیل_ON=levState.پیل_ON;
     }
-    else
-        processPropertySeq(pBiDi, &levState, eor, limit, limit);
+    وإلا
+        processPropertySeq(pBiDi, &levState, eor, حد, حد);
 }
 
 /* perform (L1) and (X9) ---------------------------------------------------- */
@@ -2294,131 +2294,131 @@ resolveImplicitLevels(UBiDi *pBiDi,
  * explicit embedding types that are supposed to have been removed
  * from the paragraph in (X9).
  */
-static void
+ساكن فراغ
 adjustWSLevels(UBiDi *pBiDi) {
-    const DirProp *dirProps=pBiDi->dirProps;
-    UBiDiLevel *levels=pBiDi->levels;
+    ثابت DirProp *dirProps=pBiDi->dirProps;
+    UBiDiLevel *پوړونه=pBiDi->پوړونه;
     int32_t i;
 
-    if(pBiDi->flags&MASK_WS) {
-        UBool orderParagraphsLTR=pBiDi->orderParagraphsLTR;
+    إذا(pBiDi->flags&ماسک_WS) {
+        UBool ترتیب_Paragraphs_LTR=pBiDi->ترتیب_Paragraphs_LTR;
         Flags flag;
 
         i=pBiDi->trailingWSStart;
-        while(i>0) {
+        طالما(i>0) {
             /* reset a sequence of WS/BN before eop and B/S to the paragraph paraLevel */
-            while(i>0 && (flag=DIRPROP_FLAG(dirProps[--i]))&MASK_WS) {
-                if(orderParagraphsLTR&&(flag&DIRPROP_FLAG(B))) {
-                    levels[i]=0;
-                } else {
-                    levels[i]=GET_PARALEVEL(pBiDi, i);
+            طالما(i>0 && (flag=DIRPROP_FLAG(dirProps[--i]))&ماسک_WS) {
+                إذا(ترتیب_Paragraphs_LTR&&(flag&DIRPROP_FLAG(B))) {
+                    پوړونه[i]=0;
+                } وإلا {
+                    پوړونه[i]=GET_PARALEVEL(pBiDi, i);
                 }
             }
 
             /* reset BN to the next character's paraLevel until B/S, which restarts above loop */
             /* here, i+1 is guaranteed to be <length */
-            while(i>0) {
+            طالما(i>0) {
                 flag=DIRPROP_FLAG(dirProps[--i]);
-                if(flag&MASK_BN_EXPLICIT) {
-                    levels[i]=levels[i+1];
-                } else if(orderParagraphsLTR&&(flag&DIRPROP_FLAG(B))) {
-                    levels[i]=0;
-                    break;
-                } else if(flag&MASK_B_S) {
-                    levels[i]=GET_PARALEVEL(pBiDi, i);
-                    break;
+                إذا(flag&ماسک_BN_EXPLICIT) {
+                    پوړونه[i]=پوړونه[i+1];
+                } وإلا إذا(ترتیب_Paragraphs_LTR&&(flag&DIRPROP_FLAG(B))) {
+                    پوړونه[i]=0;
+                    اكسر;
+                } وإلا إذا(flag&ماسک_B_S) {
+                    پوړونه[i]=GET_PARALEVEL(pBiDi, i);
+                    اكسر;
                 }
             }
         }
     }
 }
 
-U_CAPI void U_EXPORT2
-ubidi_setContext(UBiDi *pBiDi,
-                 const char16_t *prologue, int32_t proLength,
-                 const char16_t *epilogue, int32_t epiLength,
-                 UErrorCode *pErrorCode) {
+U_CAPI فراغ U_EXPORT2
+ubidi_سېټ_Context(UBiDi *pBiDi,
+                 ثابت char16_t *prologue, int32_t pro_اوږدتیا,
+                 ثابت char16_t *epilogue, int32_t epi_اوږدتیا,
+                 UError_کوډ *p_Error_کوډ) {
     /* check the argument values */
-    RETURN_VOID_IF_NULL_OR_FAILING_ERRCODE(pErrorCode);
-    if(pBiDi==nullptr || proLength<-1 || epiLength<-1 ||
-       (prologue==nullptr && proLength!=0) || (epilogue==nullptr && epiLength!=0)) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+    RETURN_VOID_IF_NULL_OR_FAILING_ERRCODE(p_Error_کوډ);
+    إذا(pBiDi==تش_اشاره || pro_اوږدتیا<-1 || epi_اوږدتیا<-1 ||
+       (prologue==تش_اشاره && pro_اوږدتیا!=0) || (epilogue==تش_اشاره && epi_اوږدتیا!=0)) {
+        *p_Error_کوډ=U_ILLEGAL_دلیل_ERROR;
+        أرجع;
     }
 
-    if(proLength==-1) {
-        pBiDi->proLength=u_strlen(prologue);
-    } else {
-        pBiDi->proLength=proLength;
+    إذا(pro_اوږدتیا==-1) {
+        pBiDi->pro_اوږدتیا=u_strlen(prologue);
+    } وإلا {
+        pBiDi->pro_اوږدتیا=pro_اوږدتیا;
     }
-    if(epiLength==-1) {
-        pBiDi->epiLength=u_strlen(epilogue);
-    } else {
-        pBiDi->epiLength=epiLength;
+    إذا(epi_اوږدتیا==-1) {
+        pBiDi->epi_اوږدتیا=u_strlen(epilogue);
+    } وإلا {
+        pBiDi->epi_اوږدتیا=epi_اوږدتیا;
     }
     pBiDi->prologue=prologue;
     pBiDi->epilogue=epilogue;
 }
 
-static void
-setParaSuccess(UBiDi *pBiDi) {
-    pBiDi->proLength=0;                 /* forget the last context */
-    pBiDi->epiLength=0;
+ساكن فراغ
+سېټ_Para_Success(UBiDi *pBiDi) {
+    pBiDi->pro_اوږدتیا=0;                 /* forget the last context */
+    pBiDi->epi_اوږدتیا=0;
     pBiDi->pParaBiDi=pBiDi;             /* mark successful setPara */
 }
 
-#define BIDI_MIN(x, y)   ((x)<(y) ? (x) : (y))
-#define BIDI_ABS(x)      ((x)>=0  ? (x) : (-(x)))
+#تعریف_کړه BIDI_MIN(x, y)   ((x)<(y) ? (x) : (y))
+#تعریف_کړه BIDI_ABS(x)      ((x)>=0  ? (x) : (-(x)))
 
-static void
-setParaRunsOnly(UBiDi *pBiDi, const char16_t *text, int32_t length,
-                UBiDiLevel paraLevel, UErrorCode *pErrorCode) {
-    int32_t *runsOnlyMemory = nullptr;
+ساكن فراغ
+سېټ_Para_Runs_Only(UBiDi *pBiDi, ثابت char16_t *متن, int32_t length,
+                UBiDiLevel paraLevel, UError_کوډ *p_Error_کوډ) {
+    int32_t *runs_Only_حافظه = تش_اشاره;
     int32_t *visualMap;
-    char16_t *visualText;
-    int32_t saveLength, saveTrailingWSStart;
-    const UBiDiLevel *levels;
-    UBiDiLevel *saveLevels;
+    char16_t *visual_متن;
+    int32_t save_اوږدتیا, saveTrailingWSStart;
+    ثابت UBiDiLevel *پوړونه;
+    UBiDiLevel *save_پوړونه;
     UBiDiDirection saveDirection;
-    UBool saveMayAllocateText;
-    Run *runs;
-    int32_t visualLength, i, j, visualStart, logicalStart,
-            runCount, runLength, addedRuns, insertRemove,
-            start, limit, step, indexOddBit, logicalPos,
+    UBool save_May_Allocate_متن;
+    پرلپسې *runs;
+    int32_t visual_اوږدتیا, i, j, visual_پیل, logical_پیل,
+            پرلپسې_شمېر, پرلپسې_اوږدتیا, addedRuns, ورننباسه_Remove,
+            پیل, حد, ګام, شاخص_Odd_بټ, logicalPos,
             index0, index1;
     uint32_t saveOptions;
 
-    pBiDi->reorderingMode=UBIDI_REORDER_DEFAULT;
-    if(length==0) {
-        ubidi_setPara(pBiDi, text, length, paraLevel, nullptr, pErrorCode);
-        goto cleanup3;
+    pBiDi->reordering_ډېرپېښ=UBIDI_REORDER_DEFAULT;
+    إذا(length==0) {
+        ubidi_سېټ_Para(pBiDi, متن, length, paraLevel, تش_اشاره, p_Error_کوډ);
+        اذهب cleanup3;
     }
     /* obtain memory for mapping table and visual text */
-    runsOnlyMemory=static_cast<int32_t *>(uprv_malloc(length*(sizeof(int32_t)+sizeof(char16_t)+sizeof(UBiDiLevel))));
-    if(runsOnlyMemory==nullptr) {
-        *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-        goto cleanup3;
+    runs_Only_حافظه=static_cast<int32_t *>(uprv_malloc(length*(حجم(int32_t)+حجم(char16_t)+حجم(UBiDiLevel))));
+    إذا(runs_Only_حافظه==تش_اشاره) {
+        *p_Error_کوډ=U_حافظه_ویش_ERROR;
+        اذهب cleanup3;
     }
-    visualMap=runsOnlyMemory;
-    visualText = reinterpret_cast<char16_t*>(&visualMap[length]);
-    saveLevels = reinterpret_cast<UBiDiLevel*>(&visualText[length]);
+    visualMap=runs_Only_حافظه;
+    visual_متن = reinterpret_cast<char16_t*>(&visualMap[length]);
+    save_پوړونه = reinterpret_cast<UBiDiLevel*>(&visual_متن[length]);
     saveOptions=pBiDi->reorderingOptions;
-    if(saveOptions & UBIDI_OPTION_INSERT_MARKS) {
-        pBiDi->reorderingOptions&=~UBIDI_OPTION_INSERT_MARKS;
+    إذا(saveOptions & UBIDI_OPTION_ورننباسه_MARKS) {
+        pBiDi->reorderingOptions&=~UBIDI_OPTION_ورننباسه_MARKS;
         pBiDi->reorderingOptions|=UBIDI_OPTION_REMOVE_CONTROLS;
     }
     paraLevel&=1;                       /* accept only 0 or 1 */
-    ubidi_setPara(pBiDi, text, length, paraLevel, nullptr, pErrorCode);
-    if(U_FAILURE(*pErrorCode)) {
-        goto cleanup3;
+    ubidi_سېټ_Para(pBiDi, متن, length, paraLevel, تش_اشاره, p_Error_کوډ);
+    إذا(U_FAILURE(*p_Error_کوډ)) {
+        اذهب cleanup3;
     }
     /* we cannot access directly pBiDi->levels since it is not yet set if
      * direction is not MIXED
      */
-    levels=ubidi_getLevels(pBiDi, pErrorCode);
-    uprv_memcpy(saveLevels, levels, (size_t)pBiDi->length*sizeof(UBiDiLevel));
+    پوړونه=ubidi_get_پوړونه(pBiDi, p_Error_کوډ);
+    uprv_memcpy(save_پوړونه, پوړونه, (size_t)pBiDi->length*حجم(UBiDiLevel));
     saveTrailingWSStart=pBiDi->trailingWSStart;
-    saveLength=pBiDi->length;
+    save_اوږدتیا=pBiDi->length;
     saveDirection=pBiDi->direction;
 
     /* FOOD FOR THOUGHT: instead of writing the visual text, we could use
@@ -2434,15 +2434,15 @@ setParaRunsOnly(UBiDi *pBiDi, const char16_t *text, int32_t length,
      * trailing surrogate half (Bidi class LTR) to act as a run boundary splitter in the
      * subsequent ubidi_setPara call.
      */
-    visualLength=ubidi_writeReordered(pBiDi, visualText, length,
-                                      (saveOptions & UBIDI_DO_MIRRORING) | UBIDI_INTERNAL_RUNS_ONLY, pErrorCode);
-    ubidi_getVisualMap(pBiDi, visualMap, pErrorCode);
-    if(U_FAILURE(*pErrorCode)) {
-        goto cleanup2;
+    visual_اوږدتیا=ubidi_writeReordered(pBiDi, visual_متن, length,
+                                      (saveOptions & UBIDI_DO_MIRRORING) | UBIDI_دننی_RUNS_ONLY, p_Error_کوډ);
+    ubidi_getVisualMap(pBiDi, visualMap, p_Error_کوډ);
+    إذا(U_FAILURE(*p_Error_کوډ)) {
+        اذهب cleanup2;
     }
     pBiDi->reorderingOptions=saveOptions;
 
-    pBiDi->reorderingMode=UBIDI_REORDER_INVERSE_LIKE_DIRECT;
+    pBiDi->reordering_ډېرپېښ=UBIDI_REORDER_INVERSE_LIKE_مستقیم;
     paraLevel^=1;
     /* Because what we did with reorderingOptions, visualText may be shorter
      * than the original text. But we don't want the levels memory to be
@@ -2451,93 +2451,93 @@ setParaRunsOnly(UBiDi *pBiDi, const char16_t *text, int32_t length,
      * We will force mayAllocateText to false before the second call to
      * ubidi_setpara(), and will restore it afterwards.
      */
-    saveMayAllocateText=pBiDi->mayAllocateText;
-    pBiDi->mayAllocateText=false;
-    ubidi_setPara(pBiDi, visualText, visualLength, paraLevel, nullptr, pErrorCode);
-    pBiDi->mayAllocateText=saveMayAllocateText;
-    ubidi_getRuns(pBiDi, pErrorCode);
-    if(U_FAILURE(*pErrorCode)) {
-        goto cleanup1;
+    save_May_Allocate_متن=pBiDi->may_Allocate_متن;
+    pBiDi->may_Allocate_متن=خطأ;
+    ubidi_سېټ_Para(pBiDi, visual_متن, visual_اوږدتیا, paraLevel, تش_اشاره, p_Error_کوډ);
+    pBiDi->may_Allocate_متن=save_May_Allocate_متن;
+    ubidi_getRuns(pBiDi, p_Error_کوډ);
+    إذا(U_FAILURE(*p_Error_کوډ)) {
+        اذهب cleanup1;
     }
     /* check if some runs must be split, count how many splits */
     addedRuns=0;
-    runCount=pBiDi->runCount;
+    پرلپسې_شمېر=pBiDi->پرلپسې_شمېر;
     runs=pBiDi->runs;
-    visualStart=0;
-    for(i=0; i<runCount; i++, visualStart+=runLength) {
-        runLength=runs[i].visualLimit-visualStart;
-        if(runLength<2) {
-            continue;
+    visual_پیل=0;
+    لكل(i=0; i<پرلپسې_شمېر; i++, visual_پیل+=پرلپسې_اوږدتیا) {
+        پرلپسې_اوږدتیا=runs[i].visual_حد-visual_پیل;
+        إذا(پرلپسې_اوږدتیا<2) {
+            استمر;
         }
-        logicalStart=GET_INDEX(runs[i].logicalStart);
-        for(j=logicalStart+1; j<logicalStart+runLength; j++) {
+        logical_پیل=GET_شاخص(runs[i].logical_پیل);
+        لكل(j=logical_پیل+1; j<logical_پیل+پرلپسې_اوږدتیا; j++) {
             index0=visualMap[j];
             index1=visualMap[j-1];
-            if((BIDI_ABS(index0-index1)!=1) || (saveLevels[index0]!=saveLevels[index1])) {
+            إذا((BIDI_ABS(index0-index1)!=1) || (save_پوړونه[index0]!=save_پوړونه[index1])) {
                 addedRuns++;
             }
         }
     }
-    if(addedRuns) {
-        if(getRunsMemory(pBiDi, runCount+addedRuns)) {
-            if(runCount==1) {
+    إذا(addedRuns) {
+        إذا(get_Runs_حافظه(pBiDi, پرلپسې_شمېر+addedRuns)) {
+            إذا(پرلپسې_شمېر==1) {
                 /* because we switch from UBiDi.simpleRuns to UBiDi.runs */
-                pBiDi->runsMemory[0]=runs[0];
+                pBiDi->runs_حافظه[0]=runs[0];
             }
-            runs=pBiDi->runs=pBiDi->runsMemory;
-            pBiDi->runCount+=addedRuns;
-        } else {
-            *pErrorCode = U_MEMORY_ALLOCATION_ERROR;
-            goto cleanup1;
+            runs=pBiDi->runs=pBiDi->runs_حافظه;
+            pBiDi->پرلپسې_شمېر+=addedRuns;
+        } وإلا {
+            *p_Error_کوډ = U_حافظه_ویش_ERROR;
+            اذهب cleanup1;
         }
     }
     /* split runs which are not consecutive in source text */
-    for(i=runCount-1; i>=0; i--) {
-        runLength= i==0 ? runs[0].visualLimit :
-                          runs[i].visualLimit-runs[i-1].visualLimit;
-        logicalStart=runs[i].logicalStart;
-        indexOddBit=GET_ODD_BIT(logicalStart);
-        logicalStart=GET_INDEX(logicalStart);
-        if(runLength<2) {
-            if(addedRuns) {
+    لكل(i=پرلپسې_شمېر-1; i>=0; i--) {
+        پرلپسې_اوږدتیا= i==0 ? runs[0].visual_حد :
+                          runs[i].visual_حد-runs[i-1].visual_حد;
+        logical_پیل=runs[i].logical_پیل;
+        شاخص_Odd_بټ=GET_ODD_بټ(logical_پیل);
+        logical_پیل=GET_شاخص(logical_پیل);
+        إذا(پرلپسې_اوږدتیا<2) {
+            إذا(addedRuns) {
                 runs[i+addedRuns]=runs[i];
             }
-            logicalPos=visualMap[logicalStart];
-            runs[i+addedRuns].logicalStart=MAKE_INDEX_ODD_PAIR(logicalPos,
-                                            saveLevels[logicalPos]^indexOddBit);
-            continue;
+            logicalPos=visualMap[logical_پیل];
+            runs[i+addedRuns].logical_پیل=MAKE_شاخص_ODD_PAIR(logicalPos,
+                                            save_پوړونه[logicalPos]^شاخص_Odd_بټ);
+            استمر;
         }
-        if(indexOddBit) {
-            start=logicalStart;
-            limit=logicalStart+runLength-1;
-            step=1;
-        } else {
-            start=logicalStart+runLength-1;
-            limit=logicalStart;
-            step=-1;
+        إذا(شاخص_Odd_بټ) {
+            پیل=logical_پیل;
+            حد=logical_پیل+پرلپسې_اوږدتیا-1;
+            ګام=1;
+        } وإلا {
+            پیل=logical_پیل+پرلپسې_اوږدتیا-1;
+            حد=logical_پیل;
+            ګام=-1;
         }
-        for(j=start; j!=limit; j+=step) {
+        لكل(j=پیل; j!=حد; j+=ګام) {
             index0=visualMap[j];
-            index1=visualMap[j+step];
-            if((BIDI_ABS(index0-index1)!=1) || (saveLevels[index0]!=saveLevels[index1])) {
-                logicalPos=BIDI_MIN(visualMap[start], index0);
-                runs[i+addedRuns].logicalStart=MAKE_INDEX_ODD_PAIR(logicalPos,
-                                            saveLevels[logicalPos]^indexOddBit);
-                runs[i+addedRuns].visualLimit=runs[i].visualLimit;
-                runs[i].visualLimit-=BIDI_ABS(j-start)+1;
-                insertRemove=runs[i].insertRemove&(LRM_AFTER|RLM_AFTER);
-                runs[i+addedRuns].insertRemove=insertRemove;
-                runs[i].insertRemove&=~insertRemove;
-                start=j+step;
+            index1=visualMap[j+ګام];
+            إذا((BIDI_ABS(index0-index1)!=1) || (save_پوړونه[index0]!=save_پوړونه[index1])) {
+                logicalPos=BIDI_MIN(visualMap[پیل], index0);
+                runs[i+addedRuns].logical_پیل=MAKE_شاخص_ODD_PAIR(logicalPos,
+                                            save_پوړونه[logicalPos]^شاخص_Odd_بټ);
+                runs[i+addedRuns].visual_حد=runs[i].visual_حد;
+                runs[i].visual_حد-=BIDI_ABS(j-پیل)+1;
+                ورننباسه_Remove=runs[i].ورننباسه_Remove&(LRM_AFTER|RLM_AFTER);
+                runs[i+addedRuns].ورننباسه_Remove=ورننباسه_Remove;
+                runs[i].ورننباسه_Remove&=~ورننباسه_Remove;
+                پیل=j+ګام;
                 addedRuns--;
             }
         }
-        if(addedRuns) {
+        إذا(addedRuns) {
             runs[i+addedRuns]=runs[i];
         }
-        logicalPos=BIDI_MIN(visualMap[start], visualMap[limit]);
-        runs[i+addedRuns].logicalStart=MAKE_INDEX_ODD_PAIR(logicalPos,
-                                            saveLevels[logicalPos]^indexOddBit);
+        logicalPos=BIDI_MIN(visualMap[پیل], visualMap[حد]);
+        runs[i+addedRuns].logical_پیل=MAKE_شاخص_ODD_PAIR(logicalPos,
+                                            save_پوړونه[logicalPos]^شاخص_Odd_بټ);
     }
 
   cleanup1:
@@ -2545,95 +2545,95 @@ setParaRunsOnly(UBiDi *pBiDi, const char16_t *text, int32_t length,
     pBiDi->paraLevel^=1;
   cleanup2:
     /* restore real text */
-    pBiDi->text=text;
-    pBiDi->length=saveLength;
-    pBiDi->originalLength=length;
+    pBiDi->متن=متن;
+    pBiDi->length=save_اوږدتیا;
+    pBiDi->original_اوږدتیا=length;
     pBiDi->direction=saveDirection;
     /* the saved levels should never excess levelsSize, but we check anyway */
-    if(saveLength>pBiDi->levelsSize) {
-        saveLength=pBiDi->levelsSize;
+    إذا(save_اوږدتیا>pBiDi->پوړونه_اندازه) {
+        save_اوږدتیا=pBiDi->پوړونه_اندازه;
     }
-    uprv_memcpy(pBiDi->levels, saveLevels, (size_t)saveLength*sizeof(UBiDiLevel));
+    uprv_memcpy(pBiDi->پوړونه, save_پوړونه, (size_t)save_اوږدتیا*حجم(UBiDiLevel));
     pBiDi->trailingWSStart=saveTrailingWSStart;
-    if(pBiDi->runCount>1) {
+    إذا(pBiDi->پرلپسې_شمېر>1) {
         pBiDi->direction=UBIDI_MIXED;
     }
   cleanup3:
     /* free memory for mapping table and visual text */
-    uprv_free(runsOnlyMemory);
+    uprv_free(runs_Only_حافظه);
 
-    pBiDi->reorderingMode=UBIDI_REORDER_RUNS_ONLY;
+    pBiDi->reordering_ډېرپېښ=UBIDI_REORDER_RUNS_ONLY;
 }
 
 /* ubidi_setPara ------------------------------------------------------------ */
 
-U_CAPI void U_EXPORT2
-ubidi_setPara(UBiDi *pBiDi, const char16_t *text, int32_t length,
-              UBiDiLevel paraLevel, UBiDiLevel *embeddingLevels,
-              UErrorCode *pErrorCode) {
+U_CAPI فراغ U_EXPORT2
+ubidi_سېټ_Para(UBiDi *pBiDi, ثابت char16_t *متن, int32_t length,
+              UBiDiLevel paraLevel, UBiDiLevel *embedding_پوړونه,
+              UError_کوډ *p_Error_کوډ) {
     UBiDiDirection direction;
     DirProp *dirProps;
 
     /* check the argument values */
-    RETURN_VOID_IF_NULL_OR_FAILING_ERRCODE(pErrorCode);
-    if(pBiDi==nullptr || text==nullptr || length<-1 ||
+    RETURN_VOID_IF_NULL_OR_FAILING_ERRCODE(p_Error_کوډ);
+    إذا(pBiDi==تش_اشاره || متن==تش_اشاره || length<-1 ||
        (paraLevel>UBIDI_MAX_EXPLICIT_LEVEL && paraLevel<UBIDI_DEFAULT_LTR)) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        *p_Error_کوډ=U_ILLEGAL_دلیل_ERROR;
+        أرجع;
     }
 
-    if(length==-1) {
-        length=u_strlen(text);
+    إذا(length==-1) {
+        length=u_strlen(متن);
     }
 
     /* special treatment for RUNS_ONLY mode */
-    if(pBiDi->reorderingMode==UBIDI_REORDER_RUNS_ONLY) {
-        setParaRunsOnly(pBiDi, text, length, paraLevel, pErrorCode);
-        return;
+    إذا(pBiDi->reordering_ډېرپېښ==UBIDI_REORDER_RUNS_ONLY) {
+        سېټ_Para_Runs_Only(pBiDi, متن, length, paraLevel, p_Error_کوډ);
+        أرجع;
     }
 
     /* initialize the UBiDi structure */
-    pBiDi->pParaBiDi=nullptr;          /* mark unfinished setPara */
-    pBiDi->text=text;
-    pBiDi->length=pBiDi->originalLength=pBiDi->resultLength=length;
+    pBiDi->pParaBiDi=تش_اشاره;          /* mark unfinished setPara */
+    pBiDi->متن=متن;
+    pBiDi->length=pBiDi->original_اوږدتیا=pBiDi->پایله_اوږدتیا=length;
     pBiDi->paraLevel=paraLevel;
     pBiDi->direction=(UBiDiDirection)(paraLevel&1);
-    pBiDi->paraCount=1;
+    pBiDi->para_شمېر=1;
 
-    pBiDi->dirProps=nullptr;
-    pBiDi->levels=nullptr;
-    pBiDi->runs=nullptr;
-    pBiDi->insertPoints.size=0;         /* clean up from last call */
-    pBiDi->insertPoints.confirmed=0;    /* clean up from last call */
+    pBiDi->dirProps=تش_اشاره;
+    pBiDi->پوړونه=تش_اشاره;
+    pBiDi->runs=تش_اشاره;
+    pBiDi->ورننباسه_Points.size=0;         /* clean up from last call */
+    pBiDi->ورننباسه_Points.confirmed=0;    /* clean up from last call */
 
     /*
      * Save the original paraLevel if contextual; otherwise, set to 0.
      */
     pBiDi->defaultParaLevel=IS_DEFAULT_LEVEL(paraLevel);
 
-    if(length==0) {
+    إذا(length==0) {
         /*
          * For an empty paragraph, create a UBiDi object with the paraLevel and
          * the flags and the direction set but without allocating zero-length arrays.
          * There is nothing more to do.
          */
-        if(IS_DEFAULT_LEVEL(paraLevel)) {
+        إذا(IS_DEFAULT_LEVEL(paraLevel)) {
             pBiDi->paraLevel&=1;
             pBiDi->defaultParaLevel=0;
         }
         pBiDi->flags=DIRPROP_FLAG_LR(paraLevel);
-        pBiDi->runCount=0;
-        pBiDi->paraCount=0;
-        setParaSuccess(pBiDi);          /* mark successful setPara */
-        return;
+        pBiDi->پرلپسې_شمېر=0;
+        pBiDi->para_شمېر=0;
+        سېټ_Para_Success(pBiDi);          /* mark successful setPara */
+        أرجع;
     }
 
-    pBiDi->runCount=-1;
+    pBiDi->پرلپسې_شمېر=-1;
 
     /* allocate paras memory */
-    if(pBiDi->parasMemory)
-        pBiDi->paras=pBiDi->parasMemory;
-    else
+    إذا(pBiDi->paras_حافظه)
+        pBiDi->paras=pBiDi->paras_حافظه;
+    وإلا
         pBiDi->paras=pBiDi->simpleParas;
 
     /*
@@ -2641,15 +2641,15 @@ ubidi_setPara(UBiDi *pBiDi, const char16_t *text, int32_t length,
      * the flags bit-set, and
      * determine the paragraph level if necessary.
      */
-    if(getDirPropsMemory(pBiDi, length)) {
-        pBiDi->dirProps=pBiDi->dirPropsMemory;
-        if(!getDirProps(pBiDi)) {
-            *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-            return;
+    إذا(get_Dir_Props_حافظه(pBiDi, length)) {
+        pBiDi->dirProps=pBiDi->dir_Props_حافظه;
+        إذا(!getDirProps(pBiDi)) {
+            *p_Error_کوډ=U_حافظه_ویش_ERROR;
+            أرجع;
         }
-    } else {
-        *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-        return;
+    } وإلا {
+        *p_Error_کوډ=U_حافظه_ویش_ERROR;
+        أرجع;
     }
     dirProps=pBiDi->dirProps;
     /* the processed length may have changed if UBIDI_OPTION_STREAMING */
@@ -2657,89 +2657,89 @@ ubidi_setPara(UBiDi *pBiDi, const char16_t *text, int32_t length,
     pBiDi->trailingWSStart=length;  /* the levels[] will reflect the WS run */
 
     /* are explicit levels specified? */
-    if(embeddingLevels==nullptr) {
+    إذا(embedding_پوړونه==تش_اشاره) {
         /* no: determine explicit levels according to the (Xn) rules */\
-        if(getLevelsMemory(pBiDi, length)) {
-            pBiDi->levels=pBiDi->levelsMemory;
-            direction=resolveExplicitLevels(pBiDi, pErrorCode);
-            if(U_FAILURE(*pErrorCode)) {
-                return;
+        إذا(get_پوړونه_حافظه(pBiDi, length)) {
+            pBiDi->پوړونه=pBiDi->پوړونه_حافظه;
+            direction=resolve_Explicit_پوړونه(pBiDi, p_Error_کوډ);
+            إذا(U_FAILURE(*p_Error_کوډ)) {
+                أرجع;
             }
-        } else {
-            *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-            return;
+        } وإلا {
+            *p_Error_کوډ=U_حافظه_ویش_ERROR;
+            أرجع;
         }
-    } else {
+    } وإلا {
         /* set BN for all explicit codes, check that all levels are 0 or paraLevel..UBIDI_MAX_EXPLICIT_LEVEL */
-        pBiDi->levels=embeddingLevels;
-        direction=checkExplicitLevels(pBiDi, pErrorCode);
-        if(U_FAILURE(*pErrorCode)) {
-            return;
+        pBiDi->پوړونه=embedding_پوړونه;
+        direction=check_Explicit_پوړونه(pBiDi, p_Error_کوډ);
+        إذا(U_FAILURE(*p_Error_کوډ)) {
+            أرجع;
         }
     }
 
     /* allocate isolate memory */
-    if(pBiDi->isolateCount<=SIMPLE_ISOLATES_COUNT)
+    إذا(pBiDi->isolate_شمېر<=SIMPLE_ISOLATES_شمېر)
         pBiDi->isolates=pBiDi->simpleIsolates;
-    else
-        if((int32_t)(pBiDi->isolateCount*sizeof(Isolate))<=pBiDi->isolatesSize)
-            pBiDi->isolates=pBiDi->isolatesMemory;
-        else {
-            if(getInitialIsolatesMemory(pBiDi, pBiDi->isolateCount)) {
-                pBiDi->isolates=pBiDi->isolatesMemory;
-            } else {
-                *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-                return;
+    وإلا
+        إذا((int32_t)(pBiDi->isolate_شمېر*حجم(Isolate))<=pBiDi->isolates_اندازه)
+            pBiDi->isolates=pBiDi->isolates_حافظه;
+        وإلا {
+            إذا(get_Initial_Isolates_حافظه(pBiDi, pBiDi->isolate_شمېر)) {
+                pBiDi->isolates=pBiDi->isolates_حافظه;
+            } وإلا {
+                *p_Error_کوډ=U_حافظه_ویش_ERROR;
+                أرجع;
             }
         }
-    pBiDi->isolateCount=-1;             /* current isolates stack entry == none */
+    pBiDi->isolate_شمېر=-1;             /* current isolates stack entry == none */
 
     /*
      * The steps after (X9) in the UBiDi algorithm are performed only if
      * the paragraph text has mixed directionality!
      */
     pBiDi->direction=direction;
-    switch(direction) {
-    case UBIDI_LTR:
+    بدل(direction) {
+    حالة UBIDI_LTR:
         /* all levels are implicitly at paraLevel (important for ubidi_getLevels()) */
         pBiDi->trailingWSStart=0;
-        break;
-    case UBIDI_RTL:
+        اكسر;
+    حالة UBIDI_RTL:
         /* all levels are implicitly at paraLevel (important for ubidi_getLevels()) */
         pBiDi->trailingWSStart=0;
-        break;
-    default:
+        اكسر;
+    افتراضي:
         /*
          *  Choose the right implicit state table
          */
-        switch(pBiDi->reorderingMode) {
-        case UBIDI_REORDER_DEFAULT:
+        بدل(pBiDi->reordering_ډېرپېښ) {
+        حالة UBIDI_REORDER_DEFAULT:
             pBiDi->pImpTabPair=&impTab_DEFAULT;
-            break;
-        case UBIDI_REORDER_NUMBERS_SPECIAL:
+            اكسر;
+        حالة UBIDI_REORDER_NUMBERS_SPECIAL:
             pBiDi->pImpTabPair=&impTab_NUMBERS_SPECIAL;
-            break;
-        case UBIDI_REORDER_GROUP_NUMBERS_WITH_R:
-            pBiDi->pImpTabPair=&impTab_GROUP_NUMBERS_WITH_R;
-            break;
-        case UBIDI_REORDER_INVERSE_NUMBERS_AS_L:
+            اكسر;
+        حالة UBIDI_REORDER_ډله_NUMBERS_WITH_R:
+            pBiDi->pImpTabPair=&imp_Tab_ډله_NUMBERS_WITH_R;
+            اكسر;
+        حالة UBIDI_REORDER_INVERSE_NUMBERS_AS_L:
             pBiDi->pImpTabPair=&impTab_INVERSE_NUMBERS_AS_L;
-            break;
-        case UBIDI_REORDER_INVERSE_LIKE_DIRECT:
-            if (pBiDi->reorderingOptions & UBIDI_OPTION_INSERT_MARKS) {
-                pBiDi->pImpTabPair=&impTab_INVERSE_LIKE_DIRECT_WITH_MARKS;
-            } else {
-                pBiDi->pImpTabPair=&impTab_INVERSE_LIKE_DIRECT;
+            اكسر;
+        حالة UBIDI_REORDER_INVERSE_LIKE_مستقیم:
+            إذا (pBiDi->reorderingOptions & UBIDI_OPTION_ورننباسه_MARKS) {
+                pBiDi->pImpTabPair=&imp_Tab_INVERSE_LIKE_مستقیم_WITH_MARKS;
+            } وإلا {
+                pBiDi->pImpTabPair=&imp_Tab_INVERSE_LIKE_مستقیم;
             }
-            break;
-        case UBIDI_REORDER_INVERSE_FOR_NUMBERS_SPECIAL:
-            if (pBiDi->reorderingOptions & UBIDI_OPTION_INSERT_MARKS) {
+            اكسر;
+        حالة UBIDI_REORDER_INVERSE_FOR_NUMBERS_SPECIAL:
+            إذا (pBiDi->reorderingOptions & UBIDI_OPTION_ورننباسه_MARKS) {
                 pBiDi->pImpTabPair=&impTab_INVERSE_FOR_NUMBERS_SPECIAL_WITH_MARKS;
-            } else {
+            } وإلا {
                 pBiDi->pImpTabPair=&impTab_INVERSE_FOR_NUMBERS_SPECIAL;
             }
-            break;
-        default:
+            اكسر;
+        افتراضي:
             /* we should never get here */
             UPRV_UNREACHABLE_EXIT;
         }
@@ -2754,265 +2754,265 @@ ubidi_setPara(UBiDi *pBiDi, const char16_t *text, int32_t length,
          * Examples for "insignificant" ones are empty embeddings
          * LRE-PDF, LRE-RLE-PDF-PDF, etc.
          */
-        if(embeddingLevels==nullptr && pBiDi->paraCount<=1 &&
+        إذا(embedding_پوړونه==تش_اشاره && pBiDi->para_شمېر<=1 &&
                                    !(pBiDi->flags&DIRPROP_FLAG_MULTI_RUNS)) {
-            resolveImplicitLevels(pBiDi, 0, length,
+            resolve_Implicit_پوړونه(pBiDi, 0, length,
                                     GET_LR_FROM_LEVEL(GET_PARALEVEL(pBiDi, 0)),
                                     GET_LR_FROM_LEVEL(GET_PARALEVEL(pBiDi, length-1)));
-        } else {
+        } وإلا {
             /* sor, eor: start and end types of same-level-run */
-            UBiDiLevel *levels=pBiDi->levels;
-            int32_t start, limit=0;
-            UBiDiLevel level, nextLevel;
+            UBiDiLevel *پوړونه=pBiDi->پوړونه;
+            int32_t پیل, حد=0;
+            UBiDiLevel level, بل_Level;
             DirProp sor, eor;
 
             /* determine the first sor and set eor to it because of the loop body (sor=eor there) */
             level=GET_PARALEVEL(pBiDi, 0);
-            nextLevel=levels[0];
-            if(level<nextLevel) {
-                eor=GET_LR_FROM_LEVEL(nextLevel);
-            } else {
+            بل_Level=پوړونه[0];
+            إذا(level<بل_Level) {
+                eor=GET_LR_FROM_LEVEL(بل_Level);
+            } وإلا {
                 eor=GET_LR_FROM_LEVEL(level);
             }
 
-            do {
+            افعل {
                 /* determine start and limit of the run (end points just behind the run) */
 
                 /* the values for this run's start are the same as for the previous run's end */
-                start=limit;
-                level=nextLevel;
-                if((start>0) && (dirProps[start-1]==B)) {
+                پیل=حد;
+                level=بل_Level;
+                إذا((پیل>0) && (dirProps[پیل-1]==B)) {
                     /* except if this is a new paragraph, then set sor = para level */
-                    sor=GET_LR_FROM_LEVEL(GET_PARALEVEL(pBiDi, start));
-                } else {
+                    sor=GET_LR_FROM_LEVEL(GET_PARALEVEL(pBiDi, پیل));
+                } وإلا {
                     sor=eor;
                 }
 
                 /* search for the limit of this run */
-                while((++limit<length) &&
-                      ((levels[limit]==level) ||
-                       (DIRPROP_FLAG(dirProps[limit])&MASK_BN_EXPLICIT))) {}
+                طالما((++حد<length) &&
+                      ((پوړونه[حد]==level) ||
+                       (DIRPROP_FLAG(dirProps[حد])&ماسک_BN_EXPLICIT))) {}
 
                 /* get the correct level of the next run */
-                if(limit<length) {
-                    nextLevel=levels[limit];
-                } else {
-                    nextLevel=GET_PARALEVEL(pBiDi, length-1);
+                إذا(حد<length) {
+                    بل_Level=پوړونه[حد];
+                } وإلا {
+                    بل_Level=GET_PARALEVEL(pBiDi, length-1);
                 }
 
                 /* determine eor from max(level, nextLevel); sor is last run's eor */
-                if(NO_OVERRIDE(level)<NO_OVERRIDE(nextLevel)) {
-                    eor=GET_LR_FROM_LEVEL(nextLevel);
-                } else {
+                إذا(NO_OVERRIDE(level)<NO_OVERRIDE(بل_Level)) {
+                    eor=GET_LR_FROM_LEVEL(بل_Level);
+                } وإلا {
                     eor=GET_LR_FROM_LEVEL(level);
                 }
 
                 /* if the run consists of overridden directional types, then there
                    are no implicit types to be resolved */
-                if(!(level&UBIDI_LEVEL_OVERRIDE)) {
-                    resolveImplicitLevels(pBiDi, start, limit, sor, eor);
-                } else {
+                إذا(!(level&UBIDI_LEVEL_OVERRIDE)) {
+                    resolve_Implicit_پوړونه(pBiDi, پیل, حد, sor, eor);
+                } وإلا {
                     /* remove the UBIDI_LEVEL_OVERRIDE flags */
-                    do {
-                        levels[start++]&=~UBIDI_LEVEL_OVERRIDE;
-                    } while(start<limit);
+                    افعل {
+                        پوړونه[پیل++]&=~UBIDI_LEVEL_OVERRIDE;
+                    } طالما(پیل<حد);
                 }
-            } while(limit<length);
+            } طالما(حد<length);
         }
         /* check if we got any memory shortage while adding insert points */
-        if (U_FAILURE(pBiDi->insertPoints.errorCode))
+        إذا (U_FAILURE(pBiDi->ورننباسه_Points.error_کوډ))
         {
-            *pErrorCode=pBiDi->insertPoints.errorCode;
-            return;
+            *p_Error_کوډ=pBiDi->ورننباسه_Points.error_کوډ;
+            أرجع;
         }
         /* reset the embedding levels for some non-graphic characters (L1), (X9) */
         adjustWSLevels(pBiDi);
-        break;
+        اكسر;
     }
     /* add RLM for inverse Bidi with contextual orientation resolving
      * to RTL which would not round-trip otherwise
      */
-    if((pBiDi->defaultParaLevel>0) &&
-       (pBiDi->reorderingOptions & UBIDI_OPTION_INSERT_MARKS) &&
-       ((pBiDi->reorderingMode==UBIDI_REORDER_INVERSE_LIKE_DIRECT) ||
-        (pBiDi->reorderingMode==UBIDI_REORDER_INVERSE_FOR_NUMBERS_SPECIAL))) {
-        int32_t i, j, start, last;
+    إذا((pBiDi->defaultParaLevel>0) &&
+       (pBiDi->reorderingOptions & UBIDI_OPTION_ورننباسه_MARKS) &&
+       ((pBiDi->reordering_ډېرپېښ==UBIDI_REORDER_INVERSE_LIKE_مستقیم) ||
+        (pBiDi->reordering_ډېرپېښ==UBIDI_REORDER_INVERSE_FOR_NUMBERS_SPECIAL))) {
+        int32_t i, j, پیل, وروستی;
         UBiDiLevel level;
         DirProp dirProp;
-        for(i=0; i<pBiDi->paraCount; i++) {
-            last=(pBiDi->paras[i].limit)-1;
+        لكل(i=0; i<pBiDi->para_شمېر; i++) {
+            وروستی=(pBiDi->paras[i].حد)-1;
             level= static_cast<UBiDiLevel>(pBiDi->paras[i].level);
-            if(level==0)
-                continue;           /* LTR paragraph */
-            start= i==0 ? 0 : pBiDi->paras[i-1].limit;
-            for(j=last; j>=start; j--) {
+            إذا(level==0)
+                استمر;           /* LTR paragraph */
+            پیل= i==0 ? 0 : pBiDi->paras[i-1].حد;
+            لكل(j=وروستی; j>=پیل; j--) {
                 dirProp=dirProps[j];
-                if(dirProp==L) {
-                    if(j<last) {
-                        while(dirProps[last]==B) {
-                            last--;
+                إذا(dirProp==L) {
+                    إذا(j<وروستی) {
+                        طالما(dirProps[وروستی]==B) {
+                            وروستی--;
                         }
                     }
-                    addPoint(pBiDi, last, RLM_BEFORE);
-                    break;
+                    جمع_کړه_ټکی(pBiDi, وروستی, RLM_BEFORE);
+                    اكسر;
                 }
-                if(DIRPROP_FLAG(dirProp) & MASK_R_AL) {
-                    break;
+                إذا(DIRPROP_FLAG(dirProp) & ماسک_R_AL) {
+                    اكسر;
                 }
             }
         }
     }
 
-    if(pBiDi->reorderingOptions & UBIDI_OPTION_REMOVE_CONTROLS) {
-        pBiDi->resultLength -= pBiDi->controlCount;
-    } else {
-        pBiDi->resultLength += pBiDi->insertPoints.size;
+    إذا(pBiDi->reorderingOptions & UBIDI_OPTION_REMOVE_CONTROLS) {
+        pBiDi->پایله_اوږدتیا -= pBiDi->control_شمېر;
+    } وإلا {
+        pBiDi->پایله_اوږدتیا += pBiDi->ورننباسه_Points.size;
     }
-    setParaSuccess(pBiDi);              /* mark successful setPara */
+    سېټ_Para_Success(pBiDi);              /* mark successful setPara */
 }
 
-U_CAPI void U_EXPORT2
-ubidi_orderParagraphsLTR(UBiDi *pBiDi, UBool orderParagraphsLTR) {
-    if(pBiDi!=nullptr) {
-        pBiDi->orderParagraphsLTR=orderParagraphsLTR;
+U_CAPI فراغ U_EXPORT2
+ubidi_ترتیب_Paragraphs_LTR(UBiDi *pBiDi, UBool ترتیب_Paragraphs_LTR) {
+    إذا(pBiDi!=تش_اشاره) {
+        pBiDi->ترتیب_Paragraphs_LTR=ترتیب_Paragraphs_LTR;
     }
 }
 
 U_CAPI UBool U_EXPORT2
-ubidi_isOrderParagraphsLTR(UBiDi *pBiDi) {
-    if(pBiDi!=nullptr) {
-        return pBiDi->orderParagraphsLTR;
-    } else {
-        return false;
+ubidi_is_ترتیب_Paragraphs_LTR(UBiDi *pBiDi) {
+    إذا(pBiDi!=تش_اشاره) {
+        أرجع pBiDi->ترتیب_Paragraphs_LTR;
+    } وإلا {
+        أرجع خطأ;
     }
 }
 
 U_CAPI UBiDiDirection U_EXPORT2
-ubidi_getDirection(const UBiDi *pBiDi) {
-    if(IS_VALID_PARA_OR_LINE(pBiDi)) {
-        return pBiDi->direction;
-    } else {
-        return UBIDI_LTR;
+ubidi_getDirection(ثابت UBiDi *pBiDi) {
+    إذا(IS_VALID_PARA_OR_کرښه(pBiDi)) {
+        أرجع pBiDi->direction;
+    } وإلا {
+        أرجع UBIDI_LTR;
     }
 }
 
-U_CAPI const char16_t* U_EXPORT2
-ubidi_getText(const UBiDi* pBiDi) {
-    if(IS_VALID_PARA_OR_LINE(pBiDi)) {
-        return pBiDi->text;
-    } else {
-        return nullptr;
-    }
-}
-
-U_CAPI int32_t U_EXPORT2
-ubidi_getLength(const UBiDi *pBiDi) {
-    if(IS_VALID_PARA_OR_LINE(pBiDi)) {
-        return pBiDi->originalLength;
-    } else {
-        return 0;
+U_CAPI ثابت char16_t* U_EXPORT2
+ubidi_get_متن(ثابت UBiDi* pBiDi) {
+    إذا(IS_VALID_PARA_OR_کرښه(pBiDi)) {
+        أرجع pBiDi->متن;
+    } وإلا {
+        أرجع تش_اشاره;
     }
 }
 
 U_CAPI int32_t U_EXPORT2
-ubidi_getProcessedLength(const UBiDi *pBiDi) {
-    if(IS_VALID_PARA_OR_LINE(pBiDi)) {
-        return pBiDi->length;
-    } else {
-        return 0;
+ubidi_get_اوږدتیا(ثابت UBiDi *pBiDi) {
+    إذا(IS_VALID_PARA_OR_کرښه(pBiDi)) {
+        أرجع pBiDi->original_اوږدتیا;
+    } وإلا {
+        أرجع 0;
     }
 }
 
 U_CAPI int32_t U_EXPORT2
-ubidi_getResultLength(const UBiDi *pBiDi) {
-    if(IS_VALID_PARA_OR_LINE(pBiDi)) {
-        return pBiDi->resultLength;
-    } else {
-        return 0;
+ubidi_get_Processed_اوږدتیا(ثابت UBiDi *pBiDi) {
+    إذا(IS_VALID_PARA_OR_کرښه(pBiDi)) {
+        أرجع pBiDi->length;
+    } وإلا {
+        أرجع 0;
+    }
+}
+
+U_CAPI int32_t U_EXPORT2
+ubidi_get_پایله_اوږدتیا(ثابت UBiDi *pBiDi) {
+    إذا(IS_VALID_PARA_OR_کرښه(pBiDi)) {
+        أرجع pBiDi->پایله_اوږدتیا;
+    } وإلا {
+        أرجع 0;
     }
 }
 
 /* paragraphs API functions ------------------------------------------------- */
 
 U_CAPI UBiDiLevel U_EXPORT2
-ubidi_getParaLevel(const UBiDi *pBiDi) {
-    if(IS_VALID_PARA_OR_LINE(pBiDi)) {
-        return pBiDi->paraLevel;
-    } else {
-        return 0;
+ubidi_getParaLevel(ثابت UBiDi *pBiDi) {
+    إذا(IS_VALID_PARA_OR_کرښه(pBiDi)) {
+        أرجع pBiDi->paraLevel;
+    } وإلا {
+        أرجع 0;
     }
 }
 
 U_CAPI int32_t U_EXPORT2
-ubidi_countParagraphs(UBiDi *pBiDi) {
-    if(!IS_VALID_PARA_OR_LINE(pBiDi)) {
-        return 0;
-    } else {
-        return pBiDi->paraCount;
+ubidi_شمېر_Paragraphs(UBiDi *pBiDi) {
+    إذا(!IS_VALID_PARA_OR_کرښه(pBiDi)) {
+        أرجع 0;
+    } وإلا {
+        أرجع pBiDi->para_شمېر;
     }
 }
 
-U_CAPI void U_EXPORT2
-ubidi_getParagraphByIndex(const UBiDi *pBiDi, int32_t paraIndex,
-                          int32_t *pParaStart, int32_t *pParaLimit,
-                          UBiDiLevel *pParaLevel, UErrorCode *pErrorCode) {
-    int32_t paraStart;
+U_CAPI فراغ U_EXPORT2
+ubidi_get_Paragraph_By_شاخص(ثابت UBiDi *pBiDi, int32_t para_شاخص,
+                          int32_t *p_Para_پیل, int32_t *p_Para_حد,
+                          UBiDiLevel *pParaLevel, UError_کوډ *p_Error_کوډ) {
+    int32_t para_پیل;
 
     /* check the argument values */
-    RETURN_VOID_IF_NULL_OR_FAILING_ERRCODE(pErrorCode);
-    RETURN_VOID_IF_NOT_VALID_PARA_OR_LINE(pBiDi, *pErrorCode);
-    RETURN_VOID_IF_BAD_RANGE(paraIndex, 0, pBiDi->paraCount, *pErrorCode);
+    RETURN_VOID_IF_NULL_OR_FAILING_ERRCODE(p_Error_کوډ);
+    RETURN_VOID_IF_NOT_VALID_PARA_OR_کرښه(pBiDi, *p_Error_کوډ);
+    RETURN_VOID_IF_BAD_RANGE(para_شاخص, 0, pBiDi->para_شمېر, *p_Error_کوډ);
 
     pBiDi=pBiDi->pParaBiDi;             /* get Para object if Line object */
-    if(paraIndex) {
-        paraStart=pBiDi->paras[paraIndex-1].limit;
-    } else {
-        paraStart=0;
+    إذا(para_شاخص) {
+        para_پیل=pBiDi->paras[para_شاخص-1].حد;
+    } وإلا {
+        para_پیل=0;
     }
-    if(pParaStart!=nullptr) {
-        *pParaStart=paraStart;
+    إذا(p_Para_پیل!=تش_اشاره) {
+        *p_Para_پیل=para_پیل;
     }
-    if(pParaLimit!=nullptr) {
-        *pParaLimit=pBiDi->paras[paraIndex].limit;
+    إذا(p_Para_حد!=تش_اشاره) {
+        *p_Para_حد=pBiDi->paras[para_شاخص].حد;
     }
-    if(pParaLevel!=nullptr) {
-        *pParaLevel=GET_PARALEVEL(pBiDi, paraStart);
+    إذا(pParaLevel!=تش_اشاره) {
+        *pParaLevel=GET_PARALEVEL(pBiDi, para_پیل);
     }
 }
 
 U_CAPI int32_t U_EXPORT2
-ubidi_getParagraph(const UBiDi *pBiDi, int32_t charIndex,
-                          int32_t *pParaStart, int32_t *pParaLimit,
-                          UBiDiLevel *pParaLevel, UErrorCode *pErrorCode) {
-    int32_t paraIndex;
+ubidi_getParagraph(ثابت UBiDi *pBiDi, int32_t char_شاخص,
+                          int32_t *p_Para_پیل, int32_t *p_Para_حد,
+                          UBiDiLevel *pParaLevel, UError_کوډ *p_Error_کوډ) {
+    int32_t para_شاخص;
 
     /* check the argument values */
     /* pErrorCode will be checked by the call to ubidi_getParagraphByIndex */
-    RETURN_IF_NULL_OR_FAILING_ERRCODE(pErrorCode, -1);
-    RETURN_IF_NOT_VALID_PARA_OR_LINE(pBiDi, *pErrorCode, -1);
+    RETURN_IF_NULL_OR_FAILING_ERRCODE(p_Error_کوډ, -1);
+    RETURN_IF_NOT_VALID_PARA_OR_کرښه(pBiDi, *p_Error_کوډ, -1);
     pBiDi=pBiDi->pParaBiDi;             /* get Para object if Line object */
-    RETURN_IF_BAD_RANGE(charIndex, 0, pBiDi->length, *pErrorCode, -1);
+    RETURN_IF_BAD_RANGE(char_شاخص, 0, pBiDi->length, *p_Error_کوډ, -1);
 
-    for(paraIndex=0; charIndex>=pBiDi->paras[paraIndex].limit; paraIndex++);
-    ubidi_getParagraphByIndex(pBiDi, paraIndex, pParaStart, pParaLimit, pParaLevel, pErrorCode);
-    return paraIndex;
+    لكل(para_شاخص=0; char_شاخص>=pBiDi->paras[para_شاخص].حد; para_شاخص++);
+    ubidi_get_Paragraph_By_شاخص(pBiDi, para_شاخص, p_Para_پیل, p_Para_حد, pParaLevel, p_Error_کوډ);
+    أرجع para_شاخص;
 }
 
-U_CAPI void U_EXPORT2
-ubidi_setClassCallback(UBiDi *pBiDi, UBiDiClassCallback *newFn,
-                       const void *newContext, UBiDiClassCallback **oldFn,
-                       const void **oldContext, UErrorCode *pErrorCode)
+U_CAPI فراغ U_EXPORT2
+ubidi_سېټ_Class_Callback(UBiDi *pBiDi, UBiDiClassCallback *newFn,
+                       ثابت فراغ *newContext, UBiDiClassCallback **oldFn,
+                       ثابت فراغ **oldContext, UError_کوډ *p_Error_کوډ)
 {
-    RETURN_VOID_IF_NULL_OR_FAILING_ERRCODE(pErrorCode);
-    if(pBiDi==nullptr) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+    RETURN_VOID_IF_NULL_OR_FAILING_ERRCODE(p_Error_کوډ);
+    إذا(pBiDi==تش_اشاره) {
+        *p_Error_کوډ=U_ILLEGAL_دلیل_ERROR;
+        أرجع;
     }
-    if( oldFn )
+    إذا( oldFn )
     {
         *oldFn = pBiDi->fnClassCallback;
     }
-    if( oldContext )
+    إذا( oldContext )
     {
         *oldContext = pBiDi->coClassCallback;
     }
@@ -3020,17 +3020,17 @@ ubidi_setClassCallback(UBiDi *pBiDi, UBiDiClassCallback *newFn,
     pBiDi->coClassCallback = newContext;
 }
 
-U_CAPI void U_EXPORT2
-ubidi_getClassCallback(UBiDi *pBiDi, UBiDiClassCallback **fn, const void **context)
+U_CAPI فراغ U_EXPORT2
+ubidi_getClassCallback(UBiDi *pBiDi, UBiDiClassCallback **fn, ثابت فراغ **context)
 {
-    if(pBiDi==nullptr) {
-        return;
+    إذا(pBiDi==تش_اشاره) {
+        أرجع;
     }
-    if( fn )
+    إذا( fn )
     {
         *fn = pBiDi->fnClassCallback;
     }
-    if( context )
+    إذا( context )
     {
         *context = pBiDi->coClassCallback;
     }
@@ -3041,35 +3041,35 @@ ubidi_getCustomizedClass(UBiDi *pBiDi, UChar32 c)
 {
     UCharDirection dir;
 
-    if( pBiDi->fnClassCallback == nullptr ||
+    إذا( pBiDi->fnClassCallback == تش_اشاره ||
         (dir = (*pBiDi->fnClassCallback)(pBiDi->coClassCallback, c)) == U_BIDI_CLASS_DEFAULT )
     {
         dir = ubidi_getClass(c);
     }
-    if(dir >= U_CHAR_DIRECTION_COUNT) {
+    إذا(dir >= U_CHAR_DIRECTION_شمېر) {
         dir = (UCharDirection)ON;
     }
-    return dir;
+    أرجع dir;
 }
 
 /* Utilities for MessageFormat ------------------------------------------------*/
 
-#if U_SHOW_CPLUSPLUS_API
+#إذا U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
 U_CAPI UMFBidiOption U_EXPORT2
-ubidi_getMFOption(const UnicodeString& s) {
-    if (s == u"ltr") {
-        return U_MF_BIDI_OPTION_LTR;
+ubidi_getMFOption(ثابت UnicodeString& s) {
+    إذا (s == u"ltr") {
+        أرجع U_MF_BIDI_OPTION_LTR;
     }
-    if (s == u"rtl") {
-        return U_MF_BIDI_OPTION_RTL;
+    إذا (s == u"rtl") {
+        أرجع U_MF_BIDI_OPTION_RTL;
     }
-    if (s == u"auto") {
-        return U_MF_BIDI_OPTION_AUTO;
+    إذا (s == u"auto") {
+        أرجع U_MF_BIDI_OPTION_AUTO;
     }
-    return U_MF_BIDI_OPTION_INHERIT; // inherit is default
+    أرجع U_MF_BIDI_OPTION_INHERIT; // inherit is default
 }
 
 // BiDi isolation
@@ -3090,8 +3090,8 @@ ubidi_isolate(UMFBidiIsolationStrategy bidiIsolationStrategy,
     // https://github.com/unicode-org/message-format-wg/blob/main/spec/formatting.md#handling-bidirectional-text
 
     // If strategy is 'none', just return the string
-    if (bidiIsolationStrategy == U_MF_BIDI_OFF)
-        return &fmt;
+    إذا (bidiIsolationStrategy == U_MF_BIDI_OFF)
+        أرجع &fmt;
 
     /* 1. Let msgdir be the directionality of the whole message, one of « 'LTR', 'RTL', 'unknown' ». These correspond to the message having left-to-right directionality, right-to-left directionality, and to the message's directionality not being known. */
 
@@ -3102,54 +3102,54 @@ ubidi_isolate(UMFBidiIsolationStrategy bidiIsolationStrategy,
     // (Passed as argument)
 
     // 2iii. Let the boolean value isolate be True if the u:dir option of the resolved value of exp has a value other than 'inherit', or False otherwise.
-    bool isolate = uDirOption != U_MF_BIDI_OPTION_INHERIT;
+    منطقي isolate = uDirOption != U_MF_BIDI_OPTION_INHERIT;
 
     UnicodeString bdiOpen("<bdi>");
     UnicodeString bdiClose("</bdi>");
 
     // 2iv. If dir is 'LTR'
-    switch (dir) {
-        case U_MF_DIRECTIONALITY_LTR:
-            if (msgdir == U_MF_DIRECTIONALITY_LTR && !isolate) {
+    بدل (dir) {
+        حالة U_MF_DIRECTIONALITY_LTR:
+            إذا (msgdir == U_MF_DIRECTIONALITY_LTR && !isolate) {
                 // 2iv(a). If msgdir is 'LTR' in the formatted output, let fmt be itself
-                return &fmt;
+                أرجع &fmt;
             }
             // 2iii(b) Else, in the formatted output, prefix fmt with U+2066 LEFT-TO-RIGHT ISOLATE and postfix it with U+2069 POP DIRECTIONAL ISOLATE.
-            if (bidiIsolationStyle == U_MF_BIDI_STYLE_CONTROL) {
+            إذا (bidiIsolationStyle == U_MF_BIDI_STYLE_CONTROL) {
                 fmt.insert(0, LRI_CHAR);
                 fmt.insert(fmt.length(), PDI_CHAR);
-            } else {
+            } وإلا {
                 fmt.insert(0, bdiOpen);
                 fmt.insert(fmt.length(), bdiClose);
             }
-            break; // End of 2iii
+            اكسر; // End of 2iii
         // 2iv. Else, if dir is 'RTL':
-        case U_MF_DIRECTIONALITY_RTL:
+        حالة U_MF_DIRECTIONALITY_RTL:
             // 2iv(a). In the formatted output, prefix fmt with U+2067 RIGHT-TO-LEFT ISOLATE and postfix it with U+2069 POP DIRECTIONAL ISOLATE.
-            if (bidiIsolationStyle == U_MF_BIDI_STYLE_CONTROL) {
+            إذا (bidiIsolationStyle == U_MF_BIDI_STYLE_CONTROL) {
                 fmt.insert(0, RLI_CHAR);
                 fmt.insert(fmt.length(), PDI_CHAR);
-            } else {
+            } وإلا {
                 fmt.insert(0, bdiOpen);
                 fmt.insert(fmt.length(), bdiClose);
             }
-            break; // End of 2iv.
+            اكسر; // End of 2iv.
         // 2v. Else:
-        default:
+        افتراضي:
             // 2v(a). In the formatted output, prefix fmt with U+2068 FIRST STRONG ISOLATE and postfix it with U+2069 POP DIRECTIONAL ISOLATE.
-            if (bidiIsolationStyle == U_MF_BIDI_STYLE_CONTROL) {
+            إذا (bidiIsolationStyle == U_MF_BIDI_STYLE_CONTROL) {
                 fmt.insert(0, FSI_CHAR);
                 fmt.insert(fmt.length(), PDI_CHAR);
-            } else {
+            } وإلا {
                 fmt.insert(0, bdiOpen);
                 fmt.insert(fmt.length(), bdiClose);
             }
-            break; // End of 2v
+            اكسر; // End of 2v
     } // `fmt` now contains the isolated string
-    return &fmt;
+    أرجع &fmt;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_پای_ټکی
 
-#endif // #if SHOW_CPLUSPLUS_API
+#د_که_پای // #if SHOW_CPLUSPLUS_API
 

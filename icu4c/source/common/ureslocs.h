@@ -7,21 +7,21 @@
 **********************************************************************
 */
 
-#ifndef __URESLOCS_H__
-#define __URESLOCS_H__
+#که_نه_تعریف_شوی __URESLOCS_H__
+#تعریف_کړه __URESLOCS_H__
 
-#include "unicode/utypes.h"
-#include "unicode/udata.h"
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/udata.h"
 
 U_CDECL_BEGIN
 
 
-#define U_ICUDATA_LANG U_ICUDATA_NAME U_TREE_SEPARATOR_STRING "lang"
-#define U_ICUDATA_REGION U_ICUDATA_NAME U_TREE_SEPARATOR_STRING "region"
-#define U_ICUDATA_CURR U_ICUDATA_NAME U_TREE_SEPARATOR_STRING "curr"
-#define U_ICUDATA_ZONE U_ICUDATA_NAME U_TREE_SEPARATOR_STRING "zone"
-#define U_ICUDATA_UNIT U_ICUDATA_NAME U_TREE_SEPARATOR_STRING "unit"
+#تعریف_کړه U_ICUDATA_LANG U_ICUDATA_NAME U_ونه_SEPARATOR_STRING "lang"
+#تعریف_کړه U_ICUDATA_REGION U_ICUDATA_NAME U_ونه_SEPARATOR_STRING "region"
+#تعریف_کړه U_ICUDATA_CURR U_ICUDATA_NAME U_ونه_SEPARATOR_STRING "curr"
+#تعریف_کړه U_ICUDATA_ZONE U_ICUDATA_NAME U_ونه_SEPARATOR_STRING "zone"
+#تعریف_کړه U_ICUDATA_UNIT U_ICUDATA_NAME U_ونه_SEPARATOR_STRING "unit"
 
-U_CDECL_END
+U_CDECL_پای_ټکی
 
-#endif
+#د_که_پای

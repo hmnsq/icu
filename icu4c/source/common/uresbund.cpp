@@ -21,58 +21,58 @@
 ******************************************************************************
 */
 
-#include "unicode/ures.h"
-#include "unicode/ustring.h"
-#include "unicode/ucnv.h"
-#include "bytesinkutil.h"
-#include "charstr.h"
-#include "uresimp.h"
-#include "ustr_imp.h"
-#include "cwchar.h"
-#include "ucln_cmn.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "mutex.h"
-#include "uhash.h"
-#include "unicode/uenum.h"
-#include "uenumimp.h"
-#include "ulocimp.h"
-#include "umutex.h"
-#include "putilimp.h"
-#include "uassert.h"
-#include "uresdata.h"
+#ضمن "unicode/ures.h"
+#ضمن "unicode/ustring.h"
+#ضمن "unicode/ucnv.h"
+#ضمن "bytesinkutil.h"
+#ضمن "charstr.h"
+#ضمن "uresimp.h"
+#ضمن "ustr_imp.h"
+#ضمن "cwchar.h"
+#ضمن "ucln_cmn.h"
+#ضمن "cmemory.h"
+#ضمن "cstring.h"
+#ضمن "mutex.h"
+#ضمن "uhash.h"
+#ضمن "unicode/uenum.h"
+#ضمن "uenumimp.h"
+#ضمن "ulocimp.h"
+#ضمن "umutex.h"
+#ضمن "putilimp.h"
+#ضمن "uassert.h"
+#ضمن "uresdata.h"
 
-using namespace icu;
+کارول نطاق icu;
 
 /*
 Static cache for already opened resource bundles - mostly for keeping fallback info
 TODO: This cache should probably be removed when the deprecated code is
       completely removed.
 */
-static UHashtable *cache = nullptr;
-static icu::UInitOnce gCacheInitOnce {};
+ساكن UHashtable *cache = تش_اشاره;
+ساكن icu::UInitOnce gCacheInitOnce {};
 
-static UMutex resbMutex;
+ساكن UMutex resbMutex;
 
 /* INTERNAL: hashes an entry  */
-static int32_t U_CALLCONV hashEntry(const UHashTok parm) {
-    UResourceDataEntry* b = static_cast<UResourceDataEntry*>(parm.pointer);
+ساكن int32_t U_CALLCONV hash_ثبت(ثابت UHashTok parm) {
+    UResource_معلومات_ثبت* b = static_cast<UResource_معلومات_ثبت*>(parm.اشاره_ګر);
     UHashTok namekey, pathkey;
-    namekey.pointer = b->fName;
-    pathkey.pointer = b->fPath;
-    return uhash_hashChars(namekey)+37u*uhash_hashChars(pathkey);
+    namekey.اشاره_ګر = b->fName;
+    pathkey.اشاره_ګر = b->f_لار;
+    أرجع uhash_hashChars(namekey)+37u*uhash_hashChars(pathkey);
 }
 
 /* INTERNAL: compares two entries */
-static UBool U_CALLCONV compareEntries(const UHashTok p1, const UHashTok p2) {
-    UResourceDataEntry* b1 = static_cast<UResourceDataEntry*>(p1.pointer);
-    UResourceDataEntry* b2 = static_cast<UResourceDataEntry*>(p2.pointer);
+ساكن UBool U_CALLCONV compareEntries(ثابت UHashTok p1, ثابت UHashTok p2) {
+    UResource_معلومات_ثبت* b1 = static_cast<UResource_معلومات_ثبت*>(p1.اشاره_ګر);
+    UResource_معلومات_ثبت* b2 = static_cast<UResource_معلومات_ثبت*>(p2.اشاره_ګر);
     UHashTok name1, name2, path1, path2;
-    name1.pointer = b1->fName;
-    name2.pointer = b2->fName;
-    path1.pointer = b1->fPath;
-    path2.pointer = b2->fPath;
-    return uhash_compareChars(name1, name2) && uhash_compareChars(path1, path2);
+    name1.اشاره_ګر = b1->fName;
+    name2.اشاره_ګر = b2->fName;
+    path1.اشاره_ګر = b1->f_لار;
+    path2.اشاره_ګر = b2->f_لار;
+    أرجع uhash_compareChars(name1, name2) && uhash_compareChars(path1, path2);
 }
 
 
@@ -80,93 +80,93 @@ static UBool U_CALLCONV compareEntries(const UHashTok p1, const UHashTok p2) {
  *  Internal function, gets parts of locale name according 
  *  to the position of '_' character
  */
-static UBool chopLocale(char *name) {
-    char *i = uprv_strrchr(name, '_');
+ساكن UBool chopLocale(حرف *name) {
+    حرف *i = uprv_strrchr(name, '_');
 
-    if(i != nullptr) {
+    إذا(i != تش_اشاره) {
         *i = '\0';
-        return true;
+        أرجع ریښتیا;
     }
 
-    return false;
+    أرجع خطأ;
 }
 
-static UBool hasVariant(const char* localeID) {
-    UErrorCode err = U_ZERO_ERROR;
-    CheckedArrayByteSink sink(nullptr, 0);
+ساكن UBool hasVariant(ثابت حرف* localeID) {
+    UError_کوډ err = U_ZERO_ERROR;
+    CheckedArrayByteSink sink(تش_اشاره, 0);
     ulocimp_getSubtags(
             localeID,
-            nullptr,
-            nullptr,
-            nullptr,
+            تش_اشاره,
+            تش_اشاره,
+            تش_اشاره,
             &sink,
-            nullptr,
+            تش_اشاره,
             err);
-    return sink.NumberOfBytesAppended() != 0;
+    أرجع sink.شمېره_د_بایټونه_Appended() != 0;
 }
 
 // This file contains the tables for doing locale fallback, which are generated
 // by the CLDR-to-ICU process directly from the CLDR data.  This file should only
 // ever be included from here.
-#define INCLUDED_FROM_URESBUND_CPP
-#include "localefallback_data.h"
+#تعریف_کړه INCLUDED_FROM_URESBUND_CPP
+#ضمن "localefallback_data.h"
 
-static const char* performFallbackLookup(const char* key,
-                                         const char* keyStrs,
-                                         const char* valueStrs U_LIFETIME_BOUND,
-                                         const int32_t* lookupTable,
-                                         int32_t lookupTableLength) {
-    const int32_t* bottom = lookupTable;
-    const int32_t* top = lookupTable + lookupTableLength;
+ساكن ثابت حرف* performFallbackLookup(ثابت حرف* کلی,
+                                         ثابت حرف* کلی_Strs,
+                                         ثابت حرف* ارزښت_Strs U_LIFETIME_BOUND,
+                                         ثابت int32_t* lookup_جدول,
+                                         int32_t lookup_جدول_اوږدتیا) {
+    ثابت int32_t* bottom = lookup_جدول;
+    ثابت int32_t* سر_2 = lookup_جدول + lookup_جدول_اوږدتیا;
 
-    while (bottom < top) {
+    طالما (bottom < سر_2) {
         // Effectively, divide by 2 and round down to an even index
-        const int32_t* middle = bottom + (((top - bottom) / 4) * 2);
-        const char* entryKey = &(keyStrs[*middle]);
-        int32_t strcmpResult = uprv_strcmp(key, entryKey);
-        if (strcmpResult == 0) {
-            return &(valueStrs[middle[1]]);
-        } else if (strcmpResult < 0) {
-            top = middle;
-        } else {
-            bottom = middle + 2;
+        ثابت int32_t* منځ = bottom + (((سر_2 - bottom) / 4) * 2);
+        ثابت حرف* ثبت_کلی = &(کلی_Strs[*منځ]);
+        int32_t strcmp_پایله = uprv_strcmp(کلی, ثبت_کلی);
+        إذا (strcmp_پایله == 0) {
+            أرجع &(ارزښت_Strs[منځ[1]]);
+        } وإلا إذا (strcmp_پایله < 0) {
+            سر_2 = منځ;
+        } وإلا {
+            bottom = منځ + 2;
         }
     }
-    return nullptr;
+    أرجع تش_اشاره;
 }
 
-static CharString getDefaultScript(const CharString& language, const CharString& region) {
-    const char* defaultScript = nullptr;
-    UErrorCode err = U_ZERO_ERROR;
+ساكن CharString getDefaultScript(ثابت CharString& language, ثابت CharString& region) {
+    ثابت حرف* defaultScript = تش_اشاره;
+    UError_کوډ err = U_ZERO_ERROR;
     
     // the default script will be "Latn" if we don't find the locale ID in the tables
-    CharString result("Latn", err);
+    CharString پایله("Latn", err);
     
     // if we were passed both language and region, make them into a locale ID and look that up in the default
     // script table
-    if (!region.isEmpty()) {
+    إذا (!region.is_تشه()) {
         CharString localeID;
         localeID.append(language, err).append("_", err).append(region, err);
-        if (U_FAILURE(err)) {
-            return result;
+        إذا (U_FAILURE(err)) {
+            أرجع پایله;
         }
-        defaultScript = performFallbackLookup(localeID.data(), dsLocaleIDChars, scriptCodeChars, defaultScriptTable, UPRV_LENGTHOF(defaultScriptTable));
+        defaultScript = performFallbackLookup(localeID.معلومات(), dsLocaleIDChars, script_کوډ_Chars, default_Script_جدول, UPRV_LENGTHOF(default_Script_جدول));
     }
     
     // if we didn't find anything, look up just the language in the default script table
-    if (defaultScript == nullptr) {
-        defaultScript = performFallbackLookup(language.data(), dsLocaleIDChars, scriptCodeChars, defaultScriptTable, UPRV_LENGTHOF(defaultScriptTable));
+    إذا (defaultScript == تش_اشاره) {
+        defaultScript = performFallbackLookup(language.معلومات(), dsLocaleIDChars, script_کوډ_Chars, default_Script_جدول, UPRV_LENGTHOF(default_Script_جدول));
     }
     
     // if either lookup above succeeded, copy the result from "defaultScript" into "result"; otherwise, return "Latn"
-    if (defaultScript != nullptr) {
-        result.clear();
-        result.append(defaultScript, err);
+    إذا (defaultScript != تش_اشاره) {
+        پایله.clear();
+        پایله.append(defaultScript, err);
     }
-    return result;
+    أرجع پایله;
 }
 
-enum UResOpenType {
+تعداد UResOpenType {
     /**
      * Open a resource bundle for the locale;
      * if there is not even a base language bundle, then fall back to the default locale;
@@ -174,7 +174,7 @@ enum UResOpenType {
      *
      * This is the default bundle loading behavior.
      */
-    URES_OPEN_LOCALE_DEFAULT_ROOT,
+    URES_OPEN_LOCALE_DEFAULT_ریښه,
     // TODO: ICU ticket #11271 "consistent default locale across locale trees"
     // Add an option to look at the main locale tree for whether to
     // fall back to root directly (if the locale has main data) or
@@ -187,16 +187,16 @@ enum UResOpenType {
      * This is used for algorithms that have good pan-Unicode default behavior,
      * such as case mappings, collation, and segmentation (BreakIterator).
      */
-    URES_OPEN_LOCALE_ROOT,
+    URES_OPEN_LOCALE_ریښه,
     /**
      * Open a resource bundle for the exact bundle name as requested;
      * no fallbacks, do not load parent bundles.
      *
      * This is used for supplemental (non-locale) data.
      */
-    URES_OPEN_DIRECT
+    URES_OPEN_مستقیم
 };
-typedef enum UResOpenType UResOpenType;
+تعريفنوع تعداد UResOpenType UResOpenType;
 
 /**
  *  Internal function, determines the search path for resource bundle files.
@@ -208,22 +208,22 @@ typedef enum UResOpenType UResOpenType;
  *  @param origName The original locale ID the caller of findFirstExisting() requested.  This is the same as `name` on the first call to this function,
  *  but as findFirstExisting() ascends the resource bundle's parent tree, this parameter will continue to be the original locale ID requested.
  */
-static bool getParentLocaleID(char *name, const char *origName, UResOpenType openType) {
+ساكن منطقي get_پلار_Locale_ID(حرف *name, ثابت حرف *origName, UResOpenType openType) {
     // early out if the locale ID has a variant code or ends with _
     size_t nameLen = uprv_strlen(name);
-    if (!nameLen || name[nameLen - 1] == '_' || hasVariant(name)) {
-        return chopLocale(name);
+    إذا (!nameLen || name[nameLen - 1] == '_' || hasVariant(name)) {
+        أرجع chopLocale(name);
     }
     
-    UErrorCode err = U_ZERO_ERROR;
+    UError_کوډ err = U_ZERO_ERROR;
     CharString language;
     CharString script;
     CharString region;
-    ulocimp_getSubtags(name, &language, &script, &region, nullptr, nullptr, err);
+    ulocimp_getSubtags(name, &language, &script, &region, تش_اشاره, تش_اشاره, err);
 
-    if (U_FAILURE(err)) {
+    إذا (U_FAILURE(err)) {
         // hopefully this never happens...
-        return chopLocale(name);
+        أرجع chopLocale(name);
     }
     
     // if the open type is URES_OPEN_LOCALE_DEFAULT_ROOT, first look the locale ID up in the parent locale table;
@@ -231,11 +231,11 @@ static bool getParentLocaleID(char *name, const char *origName, UResOpenType ope
     // falling back through the system default locale, we also want to do straight truncation fallback instead
     // of looking things up in the parent locale table-- see https://www.unicode.org/reports/tr35/tr35.html#Parent_Locales:
     // "Collation data, however, is an exception...")
-    if (openType == URES_OPEN_LOCALE_DEFAULT_ROOT) {
-        const char* parentID = performFallbackLookup(name, parentLocaleChars, parentLocaleChars, parentLocaleTable, UPRV_LENGTHOF(parentLocaleTable));
-        if (parentID != nullptr) {
-            uprv_strcpy(name, parentID);
-            return true;
+    إذا (openType == URES_OPEN_LOCALE_DEFAULT_ریښه) {
+        ثابت حرف* پلار_ID = performFallbackLookup(name, پلار_Locale_Chars, پلار_Locale_Chars, پلار_Locale_جدول, UPRV_LENGTHOF(پلار_Locale_جدول));
+        إذا (پلار_ID != تش_اشاره) {
+            uprv_strcpy(name, پلار_ID);
+            أرجع ریښتیا;
         }
     }
 
@@ -243,49 +243,49 @@ static bool getParentLocaleID(char *name, const char *origName, UResOpenType ope
 
     // if it's not in the parent locale table, figure out the fallback script algorithmically
     // (see CLDR-15265 for an explanation of the algorithm)
-    if (!script.isEmpty() && !region.isEmpty()) {
+    إذا (!script.is_تشه() && !region.is_تشه()) {
         // if "name" has both script and region, is the script the default script?
         // - if so, remove it and keep the region
         // - if not, remove the region and keep the script
-        if (getDefaultScript(language, region) == script) {
+        إذا (getDefaultScript(language, region) == script) {
             workingLocale.append(language, err).append("_", err).append(region, err);
-        } else {
+        } وإلا {
             workingLocale.append(language, err).append("_", err).append(script, err);
         }
-    } else if (!region.isEmpty()) {
+    } وإلا إذا (!region.is_تشه()) {
         // if "name" has region but not script, did the original locale ID specify a script?
         // - if yes, replace the region with the script from the original locale ID
         // - if no, replace the region with the default script for that language and region
-        UErrorCode err = U_ZERO_ERROR;
+        UError_کوډ err = U_ZERO_ERROR;
         CharString origNameLanguage;
         CharString origNameScript;
-        ulocimp_getSubtags(origName, &origNameLanguage, &origNameScript, nullptr, nullptr, nullptr, err);
-        if (!origNameScript.isEmpty()) {
+        ulocimp_getSubtags(origName, &origNameLanguage, &origNameScript, تش_اشاره, تش_اشاره, تش_اشاره, err);
+        إذا (!origNameScript.is_تشه()) {
             workingLocale.append(language, err).append("_", err).append(origNameScript, err);
-        } else {
+        } وإلا {
             workingLocale.append(language, err).append("_", err).append(getDefaultScript(language, region), err);
         }
-    } else if (!script.isEmpty()) {
+    } وإلا إذا (!script.is_تشه()) {
         // if "name" has script but not region (and our open type if URES_OPEN_LOCALE_DEFAULT_ROOT), is the script
         // the default script for the language?
         // - if so, remove it from the locale ID
         // - if not, return false to continue up the chain
         // (we don't do this for other open types for the same reason we don't look things up in the parent
         // locale table for other open types-- see the reference to UTS #35 above)
-        if (openType != URES_OPEN_LOCALE_DEFAULT_ROOT || getDefaultScript(language, CharString()) == script) {
+        إذا (openType != URES_OPEN_LOCALE_DEFAULT_ریښه || getDefaultScript(language, CharString()) == script) {
             workingLocale.append(language, err);
-        } else {
-            return false;
+        } وإلا {
+            أرجع خطأ;
         }
-    } else {
+    } وإلا {
         // if "name" just contains a language code, return false so the calling code falls back to "root"
-        return false;
+        أرجع خطأ;
     }
-    if (U_SUCCESS(err) && !workingLocale.isEmpty()) {
-        uprv_strcpy(name, workingLocale.data());
-        return true;
-    } else {
-        return false;
+    إذا (U_SUCCESS(err) && !workingLocale.is_تشه()) {
+        uprv_strcpy(name, workingLocale.معلومات());
+        أرجع ریښتیا;
+    } وإلا {
+        أرجع خطأ;
     }
 }
 
@@ -294,19 +294,19 @@ static bool getParentLocaleID(char *name, const char *origName, UResOpenType ope
  *  Some code had assumed that locale IDs with '_' could not have a non-root parent.
  *  We may want a better way of doing this.
  */
-static UBool mayHaveParent(char *name) {
-    return (name[0] != 0 && uprv_strstr("nb nn",name) != nullptr);
+ساكن UBool may_Have_پلار(حرف *name) {
+    أرجع (name[0] != 0 && uprv_strstr("nb nn",name) != تش_اشاره);
 }
 
 /**
  *  Internal function
  */
-static void entryIncrease(UResourceDataEntry *entry) {
-    Mutex lock(&resbMutex);
-    entry->fCountExisting++;
-    while(entry->fParent != nullptr) {
-      entry = entry->fParent;
-      entry->fCountExisting++;
+ساكن فراغ ثبت_Increase(UResource_معلومات_ثبت *ثبت) {
+    Mutex قلف(&resbMutex);
+    ثبت->f_شمېر_Existing++;
+    طالما(ثبت->f_پلار != تش_اشاره) {
+      ثبت = ثبت->f_پلار;
+      ثبت->f_شمېر_Existing++;
     }
 }
 
@@ -314,95 +314,95 @@ static void entryIncrease(UResourceDataEntry *entry) {
  *  Internal function. Tries to find a resource in given Resource
  *  Bundle, as well as in its parents
  */
-static UResourceDataEntry *getFallbackData(
-        const UResourceBundle *resBundle,
-        const char **resTag, Resource *res, UErrorCode *status) {
-    UResourceDataEntry *dataEntry = resBundle->fData;
-    int32_t indexR = -1;
+ساكن UResource_معلومات_ثبت *get_Fallback_معلومات(
+        ثابت UResourceBundle *resBundle,
+        ثابت حرف **res_نښان, Resource *res, UError_کوډ *حالت) {
+    UResource_معلومات_ثبت *معلومات_ثبت = resBundle->f_معلومات;
+    int32_t شاخص_R = -1;
     int32_t i = 0;
     *res = RES_BOGUS;
-    if(dataEntry == nullptr) {
-        *status = U_MISSING_RESOURCE_ERROR;
-        return nullptr;
+    إذا(معلومات_ثبت == تش_اشاره) {
+        *حالت = U_MISSING_RESOURCE_ERROR;
+        أرجع تش_اشاره;
     }
-    if(dataEntry->fBogus == U_ZERO_ERROR) { /* if this resource is real, */
-        *res = res_getTableItemByKey(&(dataEntry->fData), dataEntry->fData.rootRes, &indexR, resTag); /* try to get data from there */
+    إذا(معلومات_ثبت->fBogus == U_ZERO_ERROR) { /* if this resource is real, */
+        *res = res_get_جدول_توکی_By_کلی(&(معلومات_ثبت->f_معلومات), معلومات_ثبت->f_معلومات.ریښه_Res, &شاخص_R, res_نښان); /* try to get data from there */
         i++;
     }
-    if(resBundle->fHasFallback) {
+    إذا(resBundle->fHasFallback) {
         // Otherwise, we'll look in parents.
-        while(*res == RES_BOGUS && dataEntry->fParent != nullptr) {
-            dataEntry = dataEntry->fParent;
-            if(dataEntry->fBogus == U_ZERO_ERROR) {
+        طالما(*res == RES_BOGUS && معلومات_ثبت->f_پلار != تش_اشاره) {
+            معلومات_ثبت = معلومات_ثبت->f_پلار;
+            إذا(معلومات_ثبت->fBogus == U_ZERO_ERROR) {
                 i++;
-                *res = res_getTableItemByKey(&(dataEntry->fData), dataEntry->fData.rootRes, &indexR, resTag);
+                *res = res_get_جدول_توکی_By_کلی(&(معلومات_ثبت->f_معلومات), معلومات_ثبت->f_معلومات.ریښه_Res, &شاخص_R, res_نښان);
             }
         }
     }
 
-    if(*res == RES_BOGUS) {
+    إذا(*res == RES_BOGUS) {
         // If the resource is not found, we need to give an error.
-        *status = U_MISSING_RESOURCE_ERROR;
-        return nullptr;
+        *حالت = U_MISSING_RESOURCE_ERROR;
+        أرجع تش_اشاره;
     }
     // If the resource is found in parents, we need to adjust the error.
-    if(i>1) {
-        if(uprv_strcmp(dataEntry->fName, uloc_getDefault())==0 || uprv_strcmp(dataEntry->fName, kRootLocaleName)==0) {
-            *status = U_USING_DEFAULT_WARNING;
-        } else {
-            *status = U_USING_FALLBACK_WARNING;
+    إذا(i>1) {
+        إذا(uprv_strcmp(معلومات_ثبت->fName, uloc_getDefault())==0 || uprv_strcmp(معلومات_ثبت->fName, k_ریښه_Locale_Name)==0) {
+            *حالت = U_USING_DEFAULT_WARNING;
+        } وإلا {
+            *حالت = U_USING_FALLBACK_WARNING;
         }
     }
-    return dataEntry;
+    أرجع معلومات_ثبت;
 }
 
-static void
-free_entry(UResourceDataEntry *entry) {
-    UResourceDataEntry *alias;
-    res_unload(&(entry->fData));
-    if(entry->fName != nullptr && entry->fName != entry->fNameBuffer) {
-        uprv_free(entry->fName);
+ساكن فراغ
+free_ثبت(UResource_معلومات_ثبت *ثبت) {
+    UResource_معلومات_ثبت *alias;
+    res_unload(&(ثبت->f_معلومات));
+    إذا(ثبت->fName != تش_اشاره && ثبت->fName != ثبت->f_Name_بفر) {
+        uprv_free(ثبت->fName);
     }
-    if(entry->fPath != nullptr) {
-        uprv_free(entry->fPath);
+    إذا(ثبت->f_لار != تش_اشاره) {
+        uprv_free(ثبت->f_لار);
     }
-    if(entry->fPool != nullptr) {
-        --entry->fPool->fCountExisting;
+    إذا(ثبت->fPool != تش_اشاره) {
+        --ثبت->fPool->f_شمېر_Existing;
     }
-    alias = entry->fAlias;
-    if(alias != nullptr) {
-        while(alias->fAlias != nullptr) {
+    alias = ثبت->fAlias;
+    إذا(alias != تش_اشاره) {
+        طالما(alias->fAlias != تش_اشاره) {
             alias = alias->fAlias;
         }
-        --alias->fCountExisting;
+        --alias->f_شمېر_Existing;
     }
-    uprv_free(entry);
+    uprv_free(ثبت);
 }
 
 /* Works just like ucnv_flushCache() */
-static int32_t ures_flushCache()
+ساكن int32_t ures_flushCache()
 {
-    UResourceDataEntry *resB;
+    UResource_معلومات_ثبت *resB;
     int32_t pos;
-    int32_t rbDeletedNum = 0;
-    const UHashElement *e;
-    UBool deletedMore;
+    int32_t rb_Deleted_عدد = 0;
+    ثابت UHashElement *e;
+    UBool deleted_نور;
 
     /*if shared data hasn't even been lazy evaluated yet
     * return 0
     */
-    Mutex lock(&resbMutex);
-    if (cache == nullptr) {
-        return 0;
+    Mutex قلف(&resbMutex);
+    إذا (cache == تش_اشاره) {
+        أرجع 0;
     }
 
-    do {
-        deletedMore = false;
+    افعل {
+        deleted_نور = خطأ;
         /*creates an enumeration to iterate through every element in the table */
-        pos = UHASH_FIRST;
-        while ((e = uhash_nextElement(cache, &pos)) != nullptr)
+        pos = UHASH_لومړی;
+        طالما ((e = uhash_بل_Element(cache, &pos)) != تش_اشاره)
         {
-            resB = static_cast<UResourceDataEntry*>(e->value.pointer);
+            resB = static_cast<UResource_معلومات_ثبت*>(e->value.اشاره_ګر);
             /* Deletes only if reference counter == 0
              * Don't worry about the children of this node.
              * Those will eventually get deleted too, if not already.
@@ -412,500 +412,500 @@ static int32_t ures_flushCache()
             /* 04/05/2002 [weiv] fCountExisting should now be accurate. If it's not zero, that means that    */
             /* some resource bundles are still open somewhere. */
 
-            if (resB->fCountExisting == 0) {
-                rbDeletedNum++;
-                deletedMore = true;
+            إذا (resB->f_شمېر_Existing == 0) {
+                rb_Deleted_عدد++;
+                deleted_نور = ریښتیا;
                 uhash_removeElement(cache, e);
-                free_entry(resB);
+                free_ثبت(resB);
             }
         }
         /*
          * Do it again to catch bundles (aliases, pool bundle) whose fCountExisting
          * got decremented by free_entry().
          */
-    } while(deletedMore);
+    } طالما(deleted_نور);
 
-    return rbDeletedNum;
+    أرجع rb_Deleted_عدد;
 }
 
-#ifdef URES_DEBUG
-#include <stdio.h>
+#که_تعریف_شوی URES_DEBUG
+#ضمن <stdio.h>
 
 U_CAPI UBool U_EXPORT2 ures_dumpCacheContents() {
-  UBool cacheNotEmpty = false;
-  int32_t pos = UHASH_FIRST;
-  const UHashElement *e;
-  UResourceDataEntry *resB;
+  UBool cache_Not_تشه = خطأ;
+  int32_t pos = UHASH_لومړی;
+  ثابت UHashElement *e;
+  UResource_معلومات_ثبت *resB;
   
-    Mutex lock(&resbMutex);
-    if (cache == nullptr) {
+    Mutex قلف(&resbMutex);
+    إذا (cache == تش_اشاره) {
       fprintf(stderr,"%s:%d: RB Cache is nullptr.\n", __FILE__, __LINE__);
-      return false;
+      أرجع خطأ;
     }
 
-    while ((e = uhash_nextElement(cache, &pos)) != nullptr) {
-      cacheNotEmpty=true;
-      resB = (UResourceDataEntry *) e->value.pointer;
+    طالما ((e = uhash_بل_Element(cache, &pos)) != تش_اشاره) {
+      cache_Not_تشه=ریښتیا;
+      resB = (UResource_معلومات_ثبت *) e->value.اشاره_ګر;
       fprintf(stderr,"%s:%d: RB Cache: Entry @0x%p, refcount %d, name %s:%s.  Pool 0x%p, alias 0x%p, parent 0x%p\n",
               __FILE__, __LINE__,
-              (void*)resB, resB->fCountExisting,
+              (فراغ*)resB, resB->f_شمېر_Existing,
               resB->fName?resB->fName:"nullptr",
-              resB->fPath?resB->fPath:"nullptr",
-              (void*)resB->fPool,
-              (void*)resB->fAlias,
-              (void*)resB->fParent);       
+              resB->f_لار?resB->f_لار:"nullptr",
+              (فراغ*)resB->fPool,
+              (فراغ*)resB->fAlias,
+              (فراغ*)resB->f_پلار);       
     }
     
-    fprintf(stderr,"%s:%d: RB Cache still contains %d items.\n", __FILE__, __LINE__, uhash_count(cache));
-    return cacheNotEmpty;
+    fprintf(stderr,"%s:%d: RB Cache still contains %d items.\n", __FILE__, __LINE__, uhash_شمېر(cache));
+    أرجع cache_Not_تشه;
 }
 
-#endif
+#د_که_پای
 
-static UBool U_CALLCONV ures_cleanup()
+ساكن UBool U_CALLCONV ures_cleanup()
 {
-    if (cache != nullptr) {
+    إذا (cache != تش_اشاره) {
         ures_flushCache();
         uhash_close(cache);
-        cache = nullptr;
+        cache = تش_اشاره;
     }
     gCacheInitOnce.reset();
-    return true;
+    أرجع ریښتیا;
 }
 
 /** INTERNAL: Initializes the cache for resources */
-static void U_CALLCONV createCache(UErrorCode &status) {
-    U_ASSERT(cache == nullptr);
-    cache = uhash_open(hashEntry, compareEntries, nullptr, &status);
-    ucln_common_registerCleanup(UCLN_COMMON_URES, ures_cleanup);
+ساكن فراغ U_CALLCONV createCache(UError_کوډ &حالت) {
+    U_ASSERT(cache == تش_اشاره);
+    cache = uhash_open(hash_ثبت, compareEntries, تش_اشاره, &حالت);
+    ucln_common_ثبتوونکی_Cleanup(UCLN_COMMON_URES, ures_cleanup);
 }
      
-static void initCache(UErrorCode *status) {
-    umtx_initOnce(gCacheInitOnce, &createCache, *status);
+ساكن فراغ initCache(UError_کوډ *حالت) {
+    umtx_initOnce(gCacheInitOnce, &createCache, *حالت);
 }
 
 /** INTERNAL: sets the name (locale) of the resource bundle to given name */
 
-static void setEntryName(UResourceDataEntry *res, const char *name, UErrorCode *status) {
+ساكن فراغ سېټ_ثبت_Name(UResource_معلومات_ثبت *res, ثابت حرف *name, UError_کوډ *حالت) {
     int32_t len = static_cast<int32_t>(uprv_strlen(name));
-    if(res->fName != nullptr && res->fName != res->fNameBuffer) {
+    إذا(res->fName != تش_اشاره && res->fName != res->f_Name_بفر) {
         uprv_free(res->fName);
     }
-    if (len < static_cast<int32_t>(sizeof(res->fNameBuffer))) {
-        res->fName = res->fNameBuffer;
+    إذا (len < static_cast<int32_t>(حجم(res->f_Name_بفر))) {
+        res->fName = res->f_Name_بفر;
     }
-    else {
-        res->fName = static_cast<char*>(uprv_malloc(len + 1));
+    وإلا {
+        res->fName = static_cast<حرف*>(uprv_malloc(len + 1));
     }
-    if(res->fName == nullptr) {
-        *status = U_MEMORY_ALLOCATION_ERROR;
-    } else {
+    إذا(res->fName == تش_اشاره) {
+        *حالت = U_حافظه_ویش_ERROR;
+    } وإلا {
         uprv_strcpy(res->fName, name);
     }
 }
 
-static UResourceDataEntry *
-getPoolEntry(const char *path, UErrorCode *status);
+ساكن UResource_معلومات_ثبت *
+get_Pool_ثبت(ثابت حرف *لار, UError_کوډ *حالت);
 
 /**
  *  INTERNAL: Inits and opens an entry from a data DLL.
  *    CAUTION:  resbMutex must be locked when calling this function.
  */
-static UResourceDataEntry *init_entry(const char *localeID, const char *path, UErrorCode *status) {
-    UResourceDataEntry *r = nullptr;
-    UResourceDataEntry find;
+ساكن UResource_معلومات_ثبت *init_ثبت(ثابت حرف *localeID, ثابت حرف *لار, UError_کوډ *حالت) {
+    UResource_معلومات_ثبت *r = تش_اشاره;
+    UResource_معلومات_ثبت find;
     /*int32_t hashValue;*/
-    const char *name;
-    char aliasName[100] = { 0 };
+    ثابت حرف *name;
+    حرف aliasName[100] = { 0 };
     int32_t aliasLen = 0;
     /*UBool isAlias = false;*/
     /*UHashTok hashkey; */
 
-    if(U_FAILURE(*status)) {
-        return nullptr;
+    إذا(U_FAILURE(*حالت)) {
+        أرجع تش_اشاره;
     }
 
     /* here we try to deduce the right locale name */
-    if(localeID == nullptr) { /* if localeID is nullptr, we're trying to open default locale */
+    إذا(localeID == تش_اشاره) { /* if localeID is nullptr, we're trying to open default locale */
         name = uloc_getDefault();
-    } else if(*localeID == 0) { /* if localeID is "" then we try to open root locale */
-        name = kRootLocaleName;
-    } else { /* otherwise, we'll open what we're given */
+    } وإلا إذا(*localeID == 0) { /* if localeID is "" then we try to open root locale */
+        name = k_ریښه_Locale_Name;
+    } وإلا { /* otherwise, we'll open what we're given */
         name = localeID;
     }
 
-    find.fName = const_cast<char*>(name);
-    find.fPath = const_cast<char*>(path);
+    find.fName = const_cast<حرف*>(name);
+    find.f_لار = const_cast<حرف*>(لار);
 
     /* calculate the hash value of the entry */
     /*hashkey.pointer = (void *)&find;*/
     /*hashValue = hashEntry(hashkey);*/
 
     /* check to see if we already have this entry */
-    r = static_cast<UResourceDataEntry*>(uhash_get(cache, &find));
-    if(r == nullptr) {
+    r = static_cast<UResource_معلومات_ثبت*>(uhash_get(cache, &find));
+    إذا(r == تش_اشاره) {
         /* if the entry is not yet in the hash table, we'll try to construct a new one */
-        r = static_cast<UResourceDataEntry*>(uprv_malloc(sizeof(UResourceDataEntry)));
-        if(r == nullptr) {
-            *status = U_MEMORY_ALLOCATION_ERROR;
-            return nullptr;
+        r = static_cast<UResource_معلومات_ثبت*>(uprv_malloc(حجم(UResource_معلومات_ثبت)));
+        إذا(r == تش_اشاره) {
+            *حالت = U_حافظه_ویش_ERROR;
+            أرجع تش_اشاره;
         }
 
-        uprv_memset(r, 0, sizeof(UResourceDataEntry));
+        uprv_memset(r, 0, حجم(UResource_معلومات_ثبت));
         /*r->fHashKey = hashValue;*/
 
-        setEntryName(r, name, status);
-        if (U_FAILURE(*status)) {
+        سېټ_ثبت_Name(r, name, حالت);
+        إذا (U_FAILURE(*حالت)) {
             uprv_free(r);
-            return nullptr;
+            أرجع تش_اشاره;
         }
 
-        if(path != nullptr) {
-            r->fPath = uprv_strdup(path);
-            if(r->fPath == nullptr) {
-                *status = U_MEMORY_ALLOCATION_ERROR;
+        إذا(لار != تش_اشاره) {
+            r->f_لار = uprv_strdup(لار);
+            إذا(r->f_لار == تش_اشاره) {
+                *حالت = U_حافظه_ویش_ERROR;
                 uprv_free(r);
-                return nullptr;
+                أرجع تش_اشاره;
             }
         }
 
         /* this is the actual loading */
-        res_load(&(r->fData), r->fPath, r->fName, status);
+        res_بارول(&(r->f_معلومات), r->f_لار, r->fName, حالت);
 
-        if (U_FAILURE(*status)) {
+        إذا (U_FAILURE(*حالت)) {
             /* if we failed to load due to an out-of-memory error, exit early. */
-            if (*status == U_MEMORY_ALLOCATION_ERROR) {
+            إذا (*حالت == U_حافظه_ویش_ERROR) {
                 uprv_free(r);
-                return nullptr;
+                أرجع تش_اشاره;
             }
             /* we have no such entry in dll, so it will always use fallback */
-            *status = U_USING_FALLBACK_WARNING;
+            *حالت = U_USING_FALLBACK_WARNING;
             r->fBogus = U_USING_FALLBACK_WARNING;
-        } else { /* if we have a regular entry */
+        } وإلا { /* if we have a regular entry */
             Resource aliasres;
-            if (r->fData.usesPoolBundle) {
-                r->fPool = getPoolEntry(r->fPath, status);
-                if (U_SUCCESS(*status)) {
-                    const int32_t *poolIndexes = r->fPool->fData.pRoot + 1;
-                    if(r->fData.pRoot[1 + URES_INDEX_POOL_CHECKSUM] == poolIndexes[URES_INDEX_POOL_CHECKSUM]) {
-                        r->fData.poolBundleKeys = reinterpret_cast<const char*>(poolIndexes + (poolIndexes[URES_INDEX_LENGTH] & 0xff));
-                        r->fData.poolBundleStrings = r->fPool->fData.p16BitUnits;
-                    } else {
-                        r->fBogus = *status = U_INVALID_FORMAT_ERROR;
+            إذا (r->f_معلومات.کاروي_Pool_Bundle) {
+                r->fPool = get_Pool_ثبت(r->f_لار, حالت);
+                إذا (U_SUCCESS(*حالت)) {
+                    ثابت int32_t *poolIndexes = r->fPool->f_معلومات.p_ریښه + 1;
+                    إذا(r->f_معلومات.p_ریښه[1 + URES_شاخص_POOL_CHECKSUM] == poolIndexes[URES_شاخص_POOL_CHECKSUM]) {
+                        r->f_معلومات.pool_Bundle_کلیګانې = reinterpret_cast<ثابت حرف*>(poolIndexes + (poolIndexes[URES_شاخص_اوږدتیا] & 0xff));
+                        r->f_معلومات.pool_Bundle_مزي_ګانې = r->fPool->f_معلومات.p16_بټ_Units;
+                    } وإلا {
+                        r->fBogus = *حالت = U_INVALID_FORMAT_ERROR;
                     }
-                } else {
-                    r->fBogus = *status;
+                } وإلا {
+                    r->fBogus = *حالت;
                 }
             }
-            if (U_SUCCESS(*status)) {
+            إذا (U_SUCCESS(*حالت)) {
                 /* handle the alias by trying to get out the %%Alias tag.*/
                 /* We'll try to get alias string from the bundle */
-                aliasres = res_getResource(&(r->fData), "%%ALIAS");
-                if (aliasres != RES_BOGUS) {
+                aliasres = res_getResource(&(r->f_معلومات), "%%ALIAS");
+                إذا (aliasres != RES_BOGUS) {
                     // No tracing: called during initial data loading
-                    const char16_t *alias = res_getStringNoTrace(&(r->fData), aliasres, &aliasLen);
-                    if(alias != nullptr && aliasLen > 0) { /* if there is actual alias - unload and load new data */
-                        u_UCharsToChars(alias, aliasName, aliasLen+1);
-                        r->fAlias = init_entry(aliasName, path, status);
+                    ثابت char16_t *alias = res_getStringNoTrace(&(r->f_معلومات), aliasres, &aliasLen);
+                    إذا(alias != تش_اشاره && aliasLen > 0) { /* if there is actual alias - unload and load new data */
+                        u_UChars_منزل_Chars(alias, aliasName, aliasLen+1);
+                        r->fAlias = init_ثبت(aliasName, لار, حالت);
                     }
                 }
             }
         }
 
         {
-            UResourceDataEntry *oldR = nullptr;
-            if ((oldR = static_cast<UResourceDataEntry*>(uhash_get(cache, r))) == nullptr) { /* if the data is not cached */
+            UResource_معلومات_ثبت *oldR = تش_اشاره;
+            إذا ((oldR = static_cast<UResource_معلومات_ثبت*>(uhash_get(cache, r))) == تش_اشاره) { /* if the data is not cached */
                 /* just insert it in the cache */
-                UErrorCode cacheStatus = U_ZERO_ERROR;
-                uhash_put(cache, (void *)r, r, &cacheStatus);
-                if (U_FAILURE(cacheStatus)) {
-                    *status = cacheStatus;
-                    free_entry(r);
-                    r = nullptr;
+                UError_کوډ cache_حالت = U_ZERO_ERROR;
+                uhash_put(cache, (فراغ *)r, r, &cache_حالت);
+                إذا (U_FAILURE(cache_حالت)) {
+                    *حالت = cache_حالت;
+                    free_ثبت(r);
+                    r = تش_اشاره;
                 }
-            } else {
+            } وإلا {
                 /* somebody have already inserted it while we were working, discard newly opened data */
                 /* Also, we could get here IF we opened an alias */
-                free_entry(r);
+                free_ثبت(r);
                 r = oldR;
             }
         }
 
     }
-    if(r != nullptr) {
+    إذا(r != تش_اشاره) {
         /* return the real bundle */
-        while(r->fAlias != nullptr) {
+        طالما(r->fAlias != تش_اشاره) {
             r = r->fAlias;
         }
-        r->fCountExisting++; /* we increase its reference count */
+        r->f_شمېر_Existing++; /* we increase its reference count */
         /* if the resource has a warning */
         /* we don't want to overwrite a status with no error */
-        if(r->fBogus != U_ZERO_ERROR && U_SUCCESS(*status)) {
-             *status = r->fBogus; /* set the returning status */
+        إذا(r->fBogus != U_ZERO_ERROR && U_SUCCESS(*حالت)) {
+             *حالت = r->fBogus; /* set the returning status */
         }
     }
-    return r;
+    أرجع r;
 }
 
-static UResourceDataEntry *
-getPoolEntry(const char *path, UErrorCode *status) {
-    UResourceDataEntry *poolBundle = init_entry(kPoolBundleName, path, status);
-    if( U_SUCCESS(*status) &&
-        (poolBundle == nullptr || poolBundle->fBogus != U_ZERO_ERROR || !poolBundle->fData.isPoolBundle)
+ساكن UResource_معلومات_ثبت *
+get_Pool_ثبت(ثابت حرف *لار, UError_کوډ *حالت) {
+    UResource_معلومات_ثبت *poolBundle = init_ثبت(kPoolBundleName, لار, حالت);
+    إذا( U_SUCCESS(*حالت) &&
+        (poolBundle == تش_اشاره || poolBundle->fBogus != U_ZERO_ERROR || !poolBundle->f_معلومات.isPoolBundle)
     ) {
-        *status = U_INVALID_FORMAT_ERROR;
+        *حالت = U_INVALID_FORMAT_ERROR;
     }
-    return poolBundle;
+    أرجع poolBundle;
 }
 
 /* INTERNAL: */
 /*   CAUTION:  resbMutex must be locked when calling this function! */
-static UResourceDataEntry *
-findFirstExisting(const char* path, char* name, const char* defaultLocale, UResOpenType openType,
-                  UBool *isRoot, UBool *foundParent, UBool *isDefault, UErrorCode* status) {
-    UResourceDataEntry *r = nullptr;
-    UBool hasRealData = false;
-    *foundParent = true; /* we're starting with a fresh name */
-    char origName[ULOC_FULLNAME_CAPACITY];
+ساكن UResource_معلومات_ثبت *
+پیدا_کړه_لومړی_Existing(ثابت حرف* لار, حرف* name, ثابت حرف* defaultLocale, UResOpenType openType,
+                  UBool *is_ریښه, UBool *وموندل_پلار, UBool *isDefault, UError_کوډ* حالت) {
+    UResource_معلومات_ثبت *r = تش_اشاره;
+    UBool has_Real_معلومات = خطأ;
+    *وموندل_پلار = ریښتیا; /* we're starting with a fresh name */
+    حرف origName[ULOC_FULLNAME_ظرفیت];
 
     uprv_strcpy(origName, name);
-    while(*foundParent && !hasRealData) {
-        r = init_entry(name, path, status);
+    طالما(*وموندل_پلار && !has_Real_معلومات) {
+        r = init_ثبت(name, لار, حالت);
         /* Null pointer test */
-        if (U_FAILURE(*status)) {
-            return nullptr;
+        إذا (U_FAILURE(*حالت)) {
+            أرجع تش_اشاره;
         }
         *isDefault = static_cast<UBool>(uprv_strncmp(name, defaultLocale, uprv_strlen(name)) == 0);
-        hasRealData = static_cast<UBool>(r->fBogus == U_ZERO_ERROR);
-        if(!hasRealData) {
+        has_Real_معلومات = static_cast<UBool>(r->fBogus == U_ZERO_ERROR);
+        إذا(!has_Real_معلومات) {
             /* this entry is not real. We will discard it. */
             /* However, the parent line for this entry is  */
             /* not to be used - as there might be parent   */
             /* lines in cache from previous openings that  */
             /* are not updated yet. */
-            r->fCountExisting--;
+            r->f_شمېر_Existing--;
             /*entryCloseInt(r);*/
-            r = nullptr;
-            *status = U_USING_FALLBACK_WARNING;
-        } else {
+            r = تش_اشاره;
+            *حالت = U_USING_FALLBACK_WARNING;
+        } وإلا {
             uprv_strcpy(name, r->fName); /* this is needed for supporting aliases */
         }
 
-        *isRoot = static_cast<UBool>(uprv_strcmp(name, kRootLocaleName) == 0);
+        *is_ریښه = static_cast<UBool>(uprv_strcmp(name, k_ریښه_Locale_Name) == 0);
 
         /*Fallback data stuff*/
-        if (!hasRealData) {
-            *foundParent = getParentLocaleID(name, origName, openType);
-        } else {
+        إذا (!has_Real_معلومات) {
+            *وموندل_پلار = get_پلار_Locale_ID(name, origName, openType);
+        } وإلا {
             // we've already found a real resource file; what we return to the caller is the parent
             // locale ID for inheritance, which should come from chopLocale(), not getParentLocaleID()
-            *foundParent = chopLocale(name);
+            *وموندل_پلار = chopLocale(name);
         }
-        if (*foundParent && *name == '\0') {
+        إذا (*وموندل_پلار && *name == '\0') {
             uprv_strcpy(name, "und");
         }
     }
-    return r;
+    أرجع r;
 }
 
-static void ures_setIsStackObject( UResourceBundle* resB, UBool state) {
-    if(state) {
+ساكن فراغ ures_سېټ_Is_ډېری_Object( UResourceBundle* resB, UBool state) {
+    إذا(state) {
         resB->fMagic1 = 0;
         resB->fMagic2 = 0;
-    } else {
+    } وإلا {
         resB->fMagic1 = MAGIC1;
         resB->fMagic2 = MAGIC2;
     }
 }
 
-static UBool ures_isStackObject(const UResourceBundle* resB) {
-  return((resB->fMagic1 == MAGIC1 && resB->fMagic2 == MAGIC2)?false:true);
+ساكن UBool ures_is_ډېری_Object(ثابت UResourceBundle* resB) {
+  أرجع((resB->fMagic1 == MAGIC1 && resB->fMagic2 == MAGIC2)?خطأ:ریښتیا);
 }
 
 
-U_CFUNC void ures_initStackObject(UResourceBundle* resB) {
-  uprv_memset(resB, 0, sizeof(UResourceBundle));
-  ures_setIsStackObject(resB, true);
+U_CFUNC فراغ ures_init_ډېری_Object(UResourceBundle* resB) {
+  uprv_memset(resB, 0, حجم(UResourceBundle));
+  ures_سېټ_Is_ډېری_Object(resB, ریښتیا);
 }
 
 U_NAMESPACE_BEGIN
 
-StackUResourceBundle::StackUResourceBundle() {
-    ures_initStackObject(&bundle);
+ډېری_UResource_Bundle::ډېری_UResource_Bundle() {
+    ures_init_ډېری_Object(&bundle);
 }
 
-StackUResourceBundle::~StackUResourceBundle() {
+ډېری_UResource_Bundle::~ډېری_UResource_Bundle() {
     ures_close(&bundle);
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_پای_ټکی
 
-static UBool  // returns U_SUCCESS(*status)
-loadParentsExceptRoot(UResourceDataEntry *&t1,
-                      char name[], int32_t nameCapacity,
-                      UBool usingUSRData, char usrDataPath[], UErrorCode *status) {
-    if (U_FAILURE(*status)) { return false; }
-    UBool checkParent = true;
-    while (checkParent && t1->fParent == nullptr && !t1->fData.noFallback &&
-            res_getResource(&t1->fData,"%%ParentIsRoot") == RES_BOGUS) {
-        Resource parentRes = res_getResource(&t1->fData, "%%Parent");
-        if (parentRes != RES_BOGUS) {  // An explicit parent was found.
-            int32_t parentLocaleLen = 0;
+ساكن UBool  // returns U_SUCCESS(*status)
+بارول_Parents_Except_ریښه(UResource_معلومات_ثبت *&t1,
+                      حرف name[], int32_t name_ظرفیت,
+                      UBool usingUSRData, حرف usr_معلومات_لار[], UError_کوډ *حالت) {
+    إذا (U_FAILURE(*حالت)) { أرجع خطأ; }
+    UBool check_پلار = ریښتیا;
+    طالما (check_پلار && t1->f_پلار == تش_اشاره && !t1->f_معلومات.noFallback &&
+            res_getResource(&t1->f_معلومات,"%%ParentIsRoot") == RES_BOGUS) {
+        Resource پلار_Res = res_getResource(&t1->f_معلومات, "%%Parent");
+        إذا (پلار_Res != RES_BOGUS) {  // An explicit parent was found.
+            int32_t پلار_Locale_Len = 0;
             // No tracing: called during initial data loading
-            const char16_t *parentLocaleName = res_getStringNoTrace(&(t1->fData), parentRes, &parentLocaleLen);
-            if(parentLocaleName != nullptr && 0 < parentLocaleLen && parentLocaleLen < nameCapacity) {
-                u_UCharsToChars(parentLocaleName, name, parentLocaleLen + 1);
-                if (uprv_strcmp(name, kRootLocaleName) == 0) {
-                    return true;
+            ثابت char16_t *پلار_Locale_Name = res_getStringNoTrace(&(t1->f_معلومات), پلار_Res, &پلار_Locale_Len);
+            إذا(پلار_Locale_Name != تش_اشاره && 0 < پلار_Locale_Len && پلار_Locale_Len < name_ظرفیت) {
+                u_UChars_منزل_Chars(پلار_Locale_Name, name, پلار_Locale_Len + 1);
+                إذا (uprv_strcmp(name, k_ریښه_Locale_Name) == 0) {
+                    أرجع ریښتیا;
                 }
             }
         }
         // Insert regular parents.
-        UErrorCode parentStatus = U_ZERO_ERROR;
-        UResourceDataEntry *t2 = init_entry(name, t1->fPath, &parentStatus);
-        if (U_FAILURE(parentStatus)) {
-            *status = parentStatus;
-            return false;
+        UError_کوډ پلار_حالت = U_ZERO_ERROR;
+        UResource_معلومات_ثبت *t2 = init_ثبت(name, t1->f_لار, &پلار_حالت);
+        إذا (U_FAILURE(پلار_حالت)) {
+            *حالت = پلار_حالت;
+            أرجع خطأ;
         }
-        UResourceDataEntry *u2 = nullptr;
-        UErrorCode usrStatus = U_ZERO_ERROR;
-        if (usingUSRData) {  // This code inserts user override data into the inheritance chain.
-            u2 = init_entry(name, usrDataPath, &usrStatus);
+        UResource_معلومات_ثبت *u2 = تش_اشاره;
+        UError_کوډ usr_حالت = U_ZERO_ERROR;
+        إذا (usingUSRData) {  // This code inserts user override data into the inheritance chain.
+            u2 = init_ثبت(name, usr_معلومات_لار, &usr_حالت);
             // If we failed due to out-of-memory, report that to the caller and exit early.
-            if (usrStatus == U_MEMORY_ALLOCATION_ERROR) {
-                *status = usrStatus;
-                return false;
+            إذا (usr_حالت == U_حافظه_ویش_ERROR) {
+                *حالت = usr_حالت;
+                أرجع خطأ;
             }
         }
 
-        if (usingUSRData && U_SUCCESS(usrStatus) && u2->fBogus == U_ZERO_ERROR) {
-            t1->fParent = u2;
-            u2->fParent = t2;
-        } else {
-            t1->fParent = t2;
-            if (usingUSRData) {
+        إذا (usingUSRData && U_SUCCESS(usr_حالت) && u2->fBogus == U_ZERO_ERROR) {
+            t1->f_پلار = u2;
+            u2->f_پلار = t2;
+        } وإلا {
+            t1->f_پلار = t2;
+            إذا (usingUSRData) {
                 // The USR override data wasn't found, set it to be deleted.
-                u2->fCountExisting = 0;
+                u2->f_شمېر_Existing = 0;
             }
         }
         t1 = t2;
-        checkParent = chopLocale(name) || mayHaveParent(name);
+        check_پلار = chopLocale(name) || may_Have_پلار(name);
     }
-    return true;
+    أرجع ریښتیا;
 }
 
-static UBool  // returns U_SUCCESS(*status)
-insertRootBundle(UResourceDataEntry *&t1, UErrorCode *status) {
-    if (U_FAILURE(*status)) { return false; }
-    UErrorCode parentStatus = U_ZERO_ERROR;
-    UResourceDataEntry *t2 = init_entry(kRootLocaleName, t1->fPath, &parentStatus);
-    if (U_FAILURE(parentStatus)) {
-        *status = parentStatus;
-        return false;
+ساكن UBool  // returns U_SUCCESS(*status)
+ورننباسه_ریښه_Bundle(UResource_معلومات_ثبت *&t1, UError_کوډ *حالت) {
+    إذا (U_FAILURE(*حالت)) { أرجع خطأ; }
+    UError_کوډ پلار_حالت = U_ZERO_ERROR;
+    UResource_معلومات_ثبت *t2 = init_ثبت(k_ریښه_Locale_Name, t1->f_لار, &پلار_حالت);
+    إذا (U_FAILURE(پلار_حالت)) {
+        *حالت = پلار_حالت;
+        أرجع خطأ;
     }
-    t1->fParent = t2;
+    t1->f_پلار = t2;
     t1 = t2;
-    return true;
+    أرجع ریښتیا;
 }
 
-static UResourceDataEntry *entryOpen(const char* path, const char* localeID,
-                                     UResOpenType openType, UErrorCode* status) {
-    U_ASSERT(openType != URES_OPEN_DIRECT);
-    UErrorCode intStatus = U_ZERO_ERROR;
-    UResourceDataEntry *r = nullptr;
-    UResourceDataEntry *t1 = nullptr;
-    UBool isDefault = false;
-    UBool isRoot = false;
-    UBool hasRealData = false;
-    UBool hasChopped = true;
-    UBool usingUSRData = U_USE_USRDATA && ( path == nullptr || uprv_strncmp(path,U_ICUDATA_NAME,8) == 0);
+ساكن UResource_معلومات_ثبت *ثبت_Open(ثابت حرف* لار, ثابت حرف* localeID,
+                                     UResOpenType openType, UError_کوډ* حالت) {
+    U_ASSERT(openType != URES_OPEN_مستقیم);
+    UError_کوډ int_حالت = U_ZERO_ERROR;
+    UResource_معلومات_ثبت *r = تش_اشاره;
+    UResource_معلومات_ثبت *t1 = تش_اشاره;
+    UBool isDefault = خطأ;
+    UBool is_ریښه = خطأ;
+    UBool has_Real_معلومات = خطأ;
+    UBool hasChopped = ریښتیا;
+    UBool usingUSRData = U_USE_USRDATA && ( لار == تش_اشاره || uprv_strncmp(لار,U_ICUDATA_NAME,8) == 0);
 
-    char name[ULOC_FULLNAME_CAPACITY];
-    char usrDataPath[96];
+    حرف name[ULOC_FULLNAME_ظرفیت];
+    حرف usr_معلومات_لار[96];
 
-    initCache(status);
+    initCache(حالت);
 
-    if(U_FAILURE(*status)) {
-        return nullptr;
+    إذا(U_FAILURE(*حالت)) {
+        أرجع تش_اشاره;
     }
 
-    uprv_strncpy(name, localeID, sizeof(name) - 1);
-    name[sizeof(name) - 1] = 0;
+    uprv_strncpy(name, localeID, حجم(name) - 1);
+    name[حجم(name) - 1] = 0;
 
-    if ( usingUSRData ) {
-        if ( path == nullptr ) {
-            uprv_strcpy(usrDataPath, U_USRDATA_NAME);
-        } else {
-            uprv_strncpy(usrDataPath, path, sizeof(usrDataPath) - 1);
-            usrDataPath[0] = 'u';
-            usrDataPath[1] = 's';
-            usrDataPath[2] = 'r';
-            usrDataPath[sizeof(usrDataPath) - 1] = 0;
+    إذا ( usingUSRData ) {
+        إذا ( لار == تش_اشاره ) {
+            uprv_strcpy(usr_معلومات_لار, U_USRDATA_NAME);
+        } وإلا {
+            uprv_strncpy(usr_معلومات_لار, لار, حجم(usr_معلومات_لار) - 1);
+            usr_معلومات_لار[0] = 'u';
+            usr_معلومات_لار[1] = 's';
+            usr_معلومات_لار[2] = 'r';
+            usr_معلومات_لار[حجم(usr_معلومات_لار) - 1] = 0;
         }
     }
  
     // Note: We need to query the default locale *before* locking resbMutex.
-    const char *defaultLocale = uloc_getDefault();
+    ثابت حرف *defaultLocale = uloc_getDefault();
 
-    Mutex lock(&resbMutex);    // Lock resbMutex until the end of this function.
+    Mutex قلف(&resbMutex);    // Lock resbMutex until the end of this function.
 
     /* We're going to skip all the locales that do not have any data */
-    r = findFirstExisting(path, name, defaultLocale, openType, &isRoot, &hasChopped, &isDefault, &intStatus);
+    r = پیدا_کړه_لومړی_Existing(لار, name, defaultLocale, openType, &is_ریښه, &hasChopped, &isDefault, &int_حالت);
 
     // If we failed due to out-of-memory, report the failure and exit early.
-    if (intStatus == U_MEMORY_ALLOCATION_ERROR) {
-        *status = intStatus;
-        goto finish;
+    إذا (int_حالت == U_حافظه_ویش_ERROR) {
+        *حالت = int_حالت;
+        اذهب پای;
     }
 
-    if(r != nullptr) { /* if there is one real locale, we can look for parents. */
+    إذا(r != تش_اشاره) { /* if there is one real locale, we can look for parents. */
         t1 = r;
-        hasRealData = true;
-        if ( usingUSRData ) {  /* This code inserts user override data into the inheritance chain */
-            UErrorCode usrStatus = U_ZERO_ERROR;
-            UResourceDataEntry *u1 = init_entry(t1->fName, usrDataPath, &usrStatus);
+        has_Real_معلومات = ریښتیا;
+        إذا ( usingUSRData ) {  /* This code inserts user override data into the inheritance chain */
+            UError_کوډ usr_حالت = U_ZERO_ERROR;
+            UResource_معلومات_ثبت *u1 = init_ثبت(t1->fName, usr_معلومات_لار, &usr_حالت);
             // If we failed due to out-of-memory, report the failure and exit early.
-            if (intStatus == U_MEMORY_ALLOCATION_ERROR) {
-                *status = intStatus;
-                goto finish;
+            إذا (int_حالت == U_حافظه_ویش_ERROR) {
+                *حالت = int_حالت;
+                اذهب پای;
             }
-            if ( u1 != nullptr ) {
-                if(u1->fBogus == U_ZERO_ERROR) {
-                    u1->fParent = t1;
+            إذا ( u1 != تش_اشاره ) {
+                إذا(u1->fBogus == U_ZERO_ERROR) {
+                    u1->f_پلار = t1;
                     r = u1;
-                } else {
+                } وإلا {
                     /* the USR override data wasn't found, set it to be deleted */
-                    u1->fCountExisting = 0;
+                    u1->f_شمېر_Existing = 0;
                 }
             }
         }
-        if ((hasChopped || mayHaveParent(name)) && !isRoot) {
-            if (!loadParentsExceptRoot(t1, name, UPRV_LENGTHOF(name), usingUSRData, usrDataPath, status)) {
-                goto finish;
+        إذا ((hasChopped || may_Have_پلار(name)) && !is_ریښه) {
+            إذا (!بارول_Parents_Except_ریښه(t1, name, UPRV_LENGTHOF(name), usingUSRData, usr_معلومات_لار, حالت)) {
+                اذهب پای;
             }
         }
     }
 
     /* we could have reached this point without having any real data */
     /* if that is the case, we need to chain in the default locale   */
-    if(r==nullptr && openType == URES_OPEN_LOCALE_DEFAULT_ROOT && !isDefault && !isRoot) {
+    إذا(r==تش_اشاره && openType == URES_OPEN_LOCALE_DEFAULT_ریښه && !isDefault && !is_ریښه) {
         /* insert default locale */
         uprv_strcpy(name, defaultLocale);
-        r = findFirstExisting(path, name, defaultLocale, openType, &isRoot, &hasChopped, &isDefault, &intStatus);
+        r = پیدا_کړه_لومړی_Existing(لار, name, defaultLocale, openType, &is_ریښه, &hasChopped, &isDefault, &int_حالت);
         // If we failed due to out-of-memory, report the failure and exit early.
-        if (intStatus == U_MEMORY_ALLOCATION_ERROR) {
-            *status = intStatus;
-            goto finish;
+        إذا (int_حالت == U_حافظه_ویش_ERROR) {
+            *حالت = int_حالت;
+            اذهب پای;
         }
-        intStatus = U_USING_DEFAULT_WARNING;
-        if(r != nullptr) { /* the default locale exists */
+        int_حالت = U_USING_DEFAULT_WARNING;
+        إذا(r != تش_اشاره) { /* the default locale exists */
             t1 = r;
-            hasRealData = true;
-            isDefault = true;
+            has_Real_معلومات = ریښتیا;
+            isDefault = ریښتیا;
             // TODO: Why not if (usingUSRData) { ... } like in the non-default-locale code path?
-            if ((hasChopped || mayHaveParent(name)) && !isRoot) {
-                if (!loadParentsExceptRoot(t1, name, UPRV_LENGTHOF(name), usingUSRData, usrDataPath, status)) {
-                    goto finish;
+            إذا ((hasChopped || may_Have_پلار(name)) && !is_ریښه) {
+                إذا (!بارول_Parents_Except_ریښه(t1, name, UPRV_LENGTHOF(name), usingUSRData, usr_معلومات_لار, حالت)) {
+                    اذهب پای;
                 }
             }
         }
@@ -913,46 +913,46 @@ static UResourceDataEntry *entryOpen(const char* path, const char* localeID,
 
     /* we could still have r == nullptr at this point - maybe even default locale is not */
     /* present */
-    if(r == nullptr) {
-        uprv_strcpy(name, kRootLocaleName);
-        r = findFirstExisting(path, name, defaultLocale, openType, &isRoot, &hasChopped, &isDefault, &intStatus);
+    إذا(r == تش_اشاره) {
+        uprv_strcpy(name, k_ریښه_Locale_Name);
+        r = پیدا_کړه_لومړی_Existing(لار, name, defaultLocale, openType, &is_ریښه, &hasChopped, &isDefault, &int_حالت);
         // If we failed due to out-of-memory, report the failure and exit early.
-        if (intStatus == U_MEMORY_ALLOCATION_ERROR) {
-            *status = intStatus;
-            goto finish;
+        إذا (int_حالت == U_حافظه_ویش_ERROR) {
+            *حالت = int_حالت;
+            اذهب پای;
         }
-        if(r != nullptr) {
+        إذا(r != تش_اشاره) {
             t1 = r;
-            intStatus = U_USING_DEFAULT_WARNING;
-            hasRealData = true;
-        } else { /* we don't even have the root locale */
-            *status = U_MISSING_RESOURCE_ERROR;
-            goto finish;
+            int_حالت = U_USING_DEFAULT_WARNING;
+            has_Real_معلومات = ریښتیا;
+        } وإلا { /* we don't even have the root locale */
+            *حالت = U_MISSING_RESOURCE_ERROR;
+            اذهب پای;
         }
-    } else if(!isRoot && uprv_strcmp(t1->fName, kRootLocaleName) != 0 &&
-            t1->fParent == nullptr && !r->fData.noFallback) {
-        if (!insertRootBundle(t1, status)) {
-            goto finish;
+    } وإلا إذا(!is_ریښه && uprv_strcmp(t1->fName, k_ریښه_Locale_Name) != 0 &&
+            t1->f_پلار == تش_اشاره && !r->f_معلومات.noFallback) {
+        إذا (!ورننباسه_ریښه_Bundle(t1, حالت)) {
+            اذهب پای;
         }
-        if(!hasRealData) {
+        إذا(!has_Real_معلومات) {
             r->fBogus = U_USING_DEFAULT_WARNING;
         }
     }
 
     // TODO: Does this ever loop?
-    while(r != nullptr && !isRoot && t1->fParent != nullptr) {
-        t1->fParent->fCountExisting++;
-        t1 = t1->fParent;
+    طالما(r != تش_اشاره && !is_ریښه && t1->f_پلار != تش_اشاره) {
+        t1->f_پلار->f_شمېر_Existing++;
+        t1 = t1->f_پلار;
     }
 
-finish:
-    if(U_SUCCESS(*status)) {
-        if(intStatus != U_ZERO_ERROR) {
-            *status = intStatus;  
+پای:
+    إذا(U_SUCCESS(*حالت)) {
+        إذا(int_حالت != U_ZERO_ERROR) {
+            *حالت = int_حالت;  
         }
-        return r;
-    } else {
-        return nullptr;
+        أرجع r;
+    } وإلا {
+        أرجع تش_اشاره;
     }
 }
 
@@ -962,62 +962,62 @@ finish:
  * Parent and root locale bundles are loaded if
  * the requested bundle does not have the "nofallback" flag.
  */
-static UResourceDataEntry *
-entryOpenDirect(const char* path, const char* localeID, UErrorCode* status) {
-    initCache(status);
-    if(U_FAILURE(*status)) {
-        return nullptr;
+ساكن UResource_معلومات_ثبت *
+ثبت_Open_مستقیم(ثابت حرف* لار, ثابت حرف* localeID, UError_کوډ* حالت) {
+    initCache(حالت);
+    إذا(U_FAILURE(*حالت)) {
+        أرجع تش_اشاره;
     }
 
     // Note: We need to query the default locale *before* locking resbMutex.
     // If the localeID is nullptr, then we want to use the default locale.
-    if (localeID == nullptr) {
+    إذا (localeID == تش_اشاره) {
         localeID = uloc_getDefault();
-    } else if (*localeID == 0) {
+    } وإلا إذا (*localeID == 0) {
         // If the localeID is "", then we want to use the root locale.
-        localeID = kRootLocaleName;
+        localeID = k_ریښه_Locale_Name;
     }
 
-    Mutex lock(&resbMutex);
+    Mutex قلف(&resbMutex);
 
     // findFirstExisting() without fallbacks.
-    UResourceDataEntry *r = init_entry(localeID, path, status);
-    if(U_SUCCESS(*status)) {
-        if(r->fBogus != U_ZERO_ERROR) {
-            r->fCountExisting--;
-            r = nullptr;
+    UResource_معلومات_ثبت *r = init_ثبت(localeID, لار, حالت);
+    إذا(U_SUCCESS(*حالت)) {
+        إذا(r->fBogus != U_ZERO_ERROR) {
+            r->f_شمېر_Existing--;
+            r = تش_اشاره;
         }
-    } else {
-        r = nullptr;
+    } وإلا {
+        r = تش_اشاره;
     }
 
     // Some code depends on the ures_openDirect() bundle to have a parent bundle chain,
     // unless it is marked with "nofallback".
-    UResourceDataEntry *t1 = r;
-    if(r != nullptr && uprv_strcmp(localeID, kRootLocaleName) != 0 &&  // not root
-            r->fParent == nullptr && !r->fData.noFallback &&
-            uprv_strlen(localeID) < ULOC_FULLNAME_CAPACITY) {
-        char name[ULOC_FULLNAME_CAPACITY];
+    UResource_معلومات_ثبت *t1 = r;
+    إذا(r != تش_اشاره && uprv_strcmp(localeID, k_ریښه_Locale_Name) != 0 &&  // not root
+            r->f_پلار == تش_اشاره && !r->f_معلومات.noFallback &&
+            uprv_strlen(localeID) < ULOC_FULLNAME_ظرفیت) {
+        حرف name[ULOC_FULLNAME_ظرفیت];
         uprv_strcpy(name, localeID);
-        if(!chopLocale(name) || uprv_strcmp(name, kRootLocaleName) == 0 ||
-                loadParentsExceptRoot(t1, name, UPRV_LENGTHOF(name), false, nullptr, status)) {
-            if(uprv_strcmp(t1->fName, kRootLocaleName) != 0 && t1->fParent == nullptr) {
-                insertRootBundle(t1, status);
+        إذا(!chopLocale(name) || uprv_strcmp(name, k_ریښه_Locale_Name) == 0 ||
+                بارول_Parents_Except_ریښه(t1, name, UPRV_LENGTHOF(name), خطأ, تش_اشاره, حالت)) {
+            إذا(uprv_strcmp(t1->fName, k_ریښه_Locale_Name) != 0 && t1->f_پلار == تش_اشاره) {
+                ورننباسه_ریښه_Bundle(t1, حالت);
             }
         }
-        if(U_FAILURE(*status)) {
-            r = nullptr;
+        إذا(U_FAILURE(*حالت)) {
+            r = تش_اشاره;
         }
     }
 
-    if(r != nullptr) {
+    إذا(r != تش_اشاره) {
         // TODO: Does this ever loop?
-        while(t1->fParent != nullptr) {
-            t1->fParent->fCountExisting++;
-            t1 = t1->fParent;
+        طالما(t1->f_پلار != تش_اشاره) {
+            t1->f_پلار->f_شمېر_Existing++;
+            t1 = t1->f_پلار;
         }
     }
-    return r;
+    أرجع r;
 }
 
 /**
@@ -1025,12 +1025,12 @@ entryOpenDirect(const char* path, const char* localeID, UErrorCode* status) {
  *     CAUTION:  resbMutex must be locked when calling this function.
  */
 /* INTERNAL: */
-static void entryCloseInt(UResourceDataEntry *resB) {
-    UResourceDataEntry *p = resB;
+ساكن فراغ ثبت_Close_Int(UResource_معلومات_ثبت *resB) {
+    UResource_معلومات_ثبت *p = resB;
 
-    while(resB != nullptr) {
-        p = resB->fParent;
-        resB->fCountExisting--;
+    طالما(resB != تش_اشاره) {
+        p = resB->f_پلار;
+        resB->f_شمېر_Existing--;
 
         /* Entries are left in the cache. TODO: add ures_flushCache() to force a flush
          of the cache. */
@@ -1058,9 +1058,9 @@ static void entryCloseInt(UResourceDataEntry *resB) {
  *  API: closes a resource bundle and cleans up.
  */
 
-static void entryClose(UResourceDataEntry *resB) {
-  Mutex lock(&resbMutex);
-  entryCloseInt(resB);
+ساكن فراغ ثبت_Close(UResource_معلومات_ثبت *resB) {
+  Mutex قلف(&resbMutex);
+  ثبت_Close_Int(resB);
 }
 
 /*
@@ -1080,108 +1080,108 @@ U_CFUNC void ures_setResPath(UResourceBundle *resB, const char* toAdd) {
   uprv_strcpy(resB->fResPath, toAdd);
 }
 */
-static void ures_appendResPath(UResourceBundle *resB, const char* toAdd, int32_t lenToAdd, UErrorCode *status) {
-    int32_t resPathLenOrig = resB->fResPathLen;
-    if(resB->fResPath == nullptr) {
-        resB->fResPath = resB->fResBuf;
-        *(resB->fResPath) = 0;
-        resB->fResPathLen = 0;
+ساكن فراغ ures_append_Res_لار(UResourceBundle *resB, ثابت حرف* منزل_جمع_کړه, int32_t len_منزل_جمع_کړه, UError_کوډ *حالت) {
+    int32_t res_لار_Len_Orig = resB->f_Res_لار_Len;
+    إذا(resB->f_Res_لار == تش_اشاره) {
+        resB->f_Res_لار = resB->fResBuf;
+        *(resB->f_Res_لار) = 0;
+        resB->f_Res_لار_Len = 0;
     } 
-    resB->fResPathLen += lenToAdd;
-    if(RES_BUFSIZE <= resB->fResPathLen+1) {
-        if(resB->fResPath == resB->fResBuf) {
-            resB->fResPath = static_cast<char*>(uprv_malloc((resB->fResPathLen + 1) * sizeof(char)));
+    resB->f_Res_لار_Len += len_منزل_جمع_کړه;
+    إذا(RES_BUFSIZE <= resB->f_Res_لار_Len+1) {
+        إذا(resB->f_Res_لار == resB->fResBuf) {
+            resB->f_Res_لار = static_cast<حرف*>(uprv_malloc((resB->f_Res_لار_Len + 1) * حجم(حرف)));
             /* Check that memory was allocated correctly. */
-            if (resB->fResPath == nullptr) {
-                *status = U_MEMORY_ALLOCATION_ERROR;
-                return;
+            إذا (resB->f_Res_لار == تش_اشاره) {
+                *حالت = U_حافظه_ویش_ERROR;
+                أرجع;
             }
-            uprv_strcpy(resB->fResPath, resB->fResBuf);
-        } else {
-            char* temp = static_cast<char*>(uprv_realloc(resB->fResPath, (resB->fResPathLen + 1) * sizeof(char)));
+            uprv_strcpy(resB->f_Res_لار, resB->fResBuf);
+        } وإلا {
+            حرف* لنډمهاله = static_cast<حرف*>(uprv_realloc(resB->f_Res_لار, (resB->f_Res_لار_Len + 1) * حجم(حرف)));
             /* Check that memory was reallocated correctly. */
-            if (temp == nullptr) {
-                *status = U_MEMORY_ALLOCATION_ERROR;
-                return;
+            إذا (لنډمهاله == تش_اشاره) {
+                *حالت = U_حافظه_ویش_ERROR;
+                أرجع;
             }
-            resB->fResPath = temp;
+            resB->f_Res_لار = لنډمهاله;
         }
     }
-    uprv_strcpy(resB->fResPath + resPathLenOrig, toAdd);
+    uprv_strcpy(resB->f_Res_لار + res_لار_Len_Orig, منزل_جمع_کړه);
 }
 
-static void ures_freeResPath(UResourceBundle *resB) {
-    if (resB->fResPath && resB->fResPath != resB->fResBuf) {
-        uprv_free(resB->fResPath);
+ساكن فراغ ures_free_Res_لار(UResourceBundle *resB) {
+    إذا (resB->f_Res_لار && resB->f_Res_لار != resB->fResBuf) {
+        uprv_free(resB->f_Res_لار);
     }
-    resB->fResPath = nullptr;
-    resB->fResPathLen = 0;
+    resB->f_Res_لار = تش_اشاره;
+    resB->f_Res_لار_Len = 0;
 }
 
-static void
+ساكن فراغ
 ures_closeBundle(UResourceBundle* resB, UBool freeBundleObj)
 {
-    if(resB != nullptr) {
-        if(resB->fData != nullptr) {
-            entryClose(resB->fData);
+    إذا(resB != تش_اشاره) {
+        إذا(resB->f_معلومات != تش_اشاره) {
+            ثبت_Close(resB->f_معلومات);
         }
-        if(resB->fVersion != nullptr) {
-            uprv_free(resB->fVersion);
+        إذا(resB->f_نسخه != تش_اشاره) {
+            uprv_free(resB->f_نسخه);
         }
-        ures_freeResPath(resB);
+        ures_free_Res_لار(resB);
 
-        if(ures_isStackObject(resB) == false && freeBundleObj) {
+        إذا(ures_is_ډېری_Object(resB) == خطأ && freeBundleObj) {
             uprv_free(resB);
         }
-#if 0 /*U_DEBUG*/
-        else {
+#إذا 0 /*U_DEBUG*/
+        وإلا {
             /* poison the data */
-            uprv_memset(resB, -1, sizeof(UResourceBundle));
+            uprv_memset(resB, -1, حجم(UResourceBundle));
         }
-#endif
+#د_که_پای
     }
 }
 
-U_CAPI void  U_EXPORT2
+U_CAPI فراغ  U_EXPORT2
 ures_close(UResourceBundle* resB)
 {
-    ures_closeBundle(resB, true);
+    ures_closeBundle(resB, ریښتیا);
 }
 
-namespace {
+نطاق {
 
-UResourceBundle* init_resb_result(UResourceDataEntry* dataEntry,
+UResourceBundle* init_resb_پایله(UResource_معلومات_ثبت* معلومات_ثبت,
                                   Resource r,
-                                  const char* key,
+                                  ثابت حرف* کلی,
                                   int32_t idx,
-                                  UResourceDataEntry* validLocaleDataEntry,
-                                  const char* containerResPath,
-                                  int32_t recursionDepth,
+                                  UResource_معلومات_ثبت* valid_Locale_معلومات_ثبت,
+                                  ثابت حرف* container_Res_لار,
+                                  int32_t recursion_ژوروالی,
                                   UResourceBundle* resB U_LIFETIME_BOUND,
-                                  UErrorCode* status);
+                                  UError_کوډ* حالت);
 
 // TODO: Try to refactor further, so that we output a dataEntry + Resource + (optionally) resPath,
 // rather than a UResourceBundle.
 // May need to entryIncrease() the resulting dataEntry.
 UResourceBundle*
-getAliasTargetAsResourceBundle(const ResourceData& resData,
+get_Alias_موخه_As_Resource_Bundle(ثابت Resource_معلومات& res_معلومات,
                                Resource r,
-                               const char* key,
+                               ثابت حرف* کلی,
                                int32_t idx,
-                               UResourceDataEntry* validLocaleDataEntry,
-                               const char* containerResPath,
-                               int32_t recursionDepth,
+                               UResource_معلومات_ثبت* valid_Locale_معلومات_ثبت,
+                               ثابت حرف* container_Res_لار,
+                               int32_t recursion_ژوروالی,
                                UResourceBundle* resB U_LIFETIME_BOUND,
-                               UErrorCode* status) {
+                               UError_کوډ* حالت) {
     // TODO: When an error occurs: Should we return nullptr vs. resB?
-    if (U_FAILURE(*status)) { return resB; }
+    إذا (U_FAILURE(*حالت)) { أرجع resB; }
     U_ASSERT(RES_GET_TYPE(r) == URES_ALIAS);
     int32_t len = 0;
-    const char16_t *alias = res_getAlias(&resData, r, &len);
-    if(len <= 0) {
+    ثابت char16_t *alias = res_getAlias(&res_معلومات, r, &len);
+    إذا(len <= 0) {
         // bad alias
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return resB;
+        *حالت = U_ILLEGAL_دلیل_ERROR;
+        أرجع resB;
     }
 
     // Copy the UTF-16 alias string into an invariant-character string.
@@ -1195,82 +1195,82 @@ getAliasTargetAsResourceBundle(const ResourceData& resData,
     //
     // markus 2003oct17
     CharString chAlias;
-    chAlias.appendInvariantChars(alias, len, *status);
-    if (U_FAILURE(*status)) {
-        return nullptr;
+    chAlias.appendInvariantChars(alias, len, *حالت);
+    إذا (U_FAILURE(*حالت)) {
+        أرجع تش_اشاره;
     }
 
     // We have an alias, now let's cut it up.
-    const char *path = nullptr, *locale = nullptr, *keyPath = nullptr;
-    if(chAlias[0] == RES_PATH_SEPARATOR) {
+    ثابت حرف *لار = تش_اشاره, *locale = تش_اشاره, *کلی_لار = تش_اشاره;
+    إذا(chAlias[0] == RES_لار_SEPARATOR) {
         // There is a path included.
-        char *chAliasData = chAlias.data();
-        char *sep = chAliasData + 1;
-        path = sep;
-        sep = uprv_strchr(sep, RES_PATH_SEPARATOR);
-        if(sep != nullptr) {
+        حرف *ch_Alias_معلومات = chAlias.معلومات();
+        حرف *sep = ch_Alias_معلومات + 1;
+        لار = sep;
+        sep = uprv_strchr(sep, RES_لار_SEPARATOR);
+        إذا(sep != تش_اشاره) {
             *sep++ = 0;
         }
-        if(uprv_strcmp(path, "LOCALE") == 0) {
+        إذا(uprv_strcmp(لار, "LOCALE") == 0) {
             // This is an XPath alias, starting with "/LOCALE/".
             // It contains the path to a resource which should be looked up
             // starting in the valid locale.
             // TODO: Can/should we forbid a /LOCALE alias without key path?
             //   It seems weird to alias to the same path, just starting from the valid locale.
             //   That will often yield an infinite loop.
-            keyPath = sep;
+            کلی_لار = sep;
             // Read from the valid locale which we already have.
-            path = locale = nullptr;
-        } else {
-            if(uprv_strcmp(path, "ICUDATA") == 0) { /* want ICU data */
-                path = nullptr;
+            لار = locale = تش_اشاره;
+        } وإلا {
+            إذا(uprv_strcmp(لار, "ICUDATA") == 0) { /* want ICU data */
+                لار = تش_اشاره;
             }
-            if (sep == nullptr) {
+            إذا (sep == تش_اشاره) {
                 // TODO: This ends up using the root bundle. Can/should we forbid this?
                 locale = "";
-            } else {
+            } وإلا {
                 locale = sep;
-                sep = uprv_strchr(sep, RES_PATH_SEPARATOR);
-                if(sep != nullptr) {
+                sep = uprv_strchr(sep, RES_لار_SEPARATOR);
+                إذا(sep != تش_اشاره) {
                     *sep++ = 0;
                 }
-                keyPath = sep;
+                کلی_لار = sep;
             }
         }
-    } else {
+    } وإلا {
         // No path, start with a locale.
-        char *sep = chAlias.data();
+        حرف *sep = chAlias.معلومات();
         locale = sep;
-        sep = uprv_strchr(sep, RES_PATH_SEPARATOR);
-        if(sep != nullptr) {
+        sep = uprv_strchr(sep, RES_لار_SEPARATOR);
+        إذا(sep != تش_اشاره) {
             *sep++ = 0;
         }
-        keyPath = sep;
-        path = validLocaleDataEntry->fPath;
+        کلی_لار = sep;
+        لار = valid_Locale_معلومات_ثبت->f_لار;
     }
 
     // Got almost everything, let's try to open.
     // First, open the bundle with real data.
-    LocalUResourceBundlePointer mainRes;
-    UResourceDataEntry *dataEntry;
-    if (locale == nullptr) {
+    Local_UResource_Bundle_اشاره_ګر mainRes;
+    UResource_معلومات_ثبت *معلومات_ثبت;
+    إذا (locale == تش_اشاره) {
         // alias = /LOCALE/keyPath
         // Read from the valid locale which we already have.
-        dataEntry = validLocaleDataEntry;
-    } else {
-        UErrorCode intStatus = U_ZERO_ERROR;
+        معلومات_ثبت = valid_Locale_معلومات_ثبت;
+    } وإلا {
+        UError_کوډ int_حالت = U_ZERO_ERROR;
         // TODO: Shouldn't we use ures_open() for locale data bundles (!noFallback)?
-        mainRes.adoptInstead(ures_openDirect(path, locale, &intStatus));
-        if(U_FAILURE(intStatus)) {
+        mainRes.adoptInstead(ures_open_مستقیم(لار, locale, &int_حالت));
+        إذا(U_FAILURE(int_حالت)) {
             // We failed to open the resource bundle we're aliasing to.
-            *status = intStatus;
-            return resB;
+            *حالت = int_حالت;
+            أرجع resB;
         }
-        dataEntry = mainRes->fData;
+        معلومات_ثبت = mainRes->f_معلومات;
     }
 
-    const char* temp = nullptr;
-    if(keyPath == nullptr) {
+    ثابت حرف* لنډمهاله = تش_اشاره;
+    إذا(کلی_لار == تش_اشاره) {
         // No key path. This means that we are going to to use the corresponding resource from
         // another bundle.
         // TODO: Why the special code path?
@@ -1278,161 +1278,161 @@ getAliasTargetAsResourceBundle(const ResourceData& resData,
         //   as a comment below suggests, and go into the regular code branch?
         // First, we are going to get a corresponding container
         // resource to the one we are searching.
-        r = dataEntry->fData.rootRes;
-        if(containerResPath) {
-            chAlias.clear().append(containerResPath, *status);
-            if (U_FAILURE(*status)) {
-                return nullptr;
+        r = معلومات_ثبت->f_معلومات.ریښه_Res;
+        إذا(container_Res_لار) {
+            chAlias.clear().append(container_Res_لار, *حالت);
+            إذا (U_FAILURE(*حالت)) {
+                أرجع تش_اشاره;
             }
-            char *aKey = chAlias.data();
+            حرف *a_کلی = chAlias.معلومات();
             // TODO: should res_findResource() return a new dataEntry, too?
-            r = res_findResource(&dataEntry->fData, r, &aKey, &temp);
+            r = res_پیدا_کړه_Resource(&معلومات_ثبت->f_معلومات, r, &a_کلی, &لنډمهاله);
         }
-        if(key) {
+        إذا(کلی) {
             // We need to make keyPath from the containerResPath and
             // current key, if there is a key associated.
-            chAlias.clear().append(key, *status);
-            if (U_FAILURE(*status)) {
-                return nullptr;
+            chAlias.clear().append(کلی, *حالت);
+            إذا (U_FAILURE(*حالت)) {
+                أرجع تش_اشاره;
             }
-            char *aKey = chAlias.data();
-            r = res_findResource(&dataEntry->fData, r, &aKey, &temp);
-        } else if(idx != -1) {
+            حرف *a_کلی = chAlias.معلومات();
+            r = res_پیدا_کړه_Resource(&معلومات_ثبت->f_معلومات, r, &a_کلی, &لنډمهاله);
+        } وإلا إذا(idx != -1) {
             // If there is no key, but there is an index, try to get by the index.
             // Here we have either a table or an array, so get the element.
             int32_t type = RES_GET_TYPE(r);
-            if(URES_IS_TABLE(type)) {
-                const char *aKey;
-                r = res_getTableItemByIndex(&dataEntry->fData, r, idx, &aKey);
-            } else { /* array */
-                r = res_getArrayItem(&dataEntry->fData, r, idx);
+            إذا(URES_IS_جدول(type)) {
+                ثابت حرف *a_کلی;
+                r = res_get_جدول_توکی_By_شاخص(&معلومات_ثبت->f_معلومات, r, idx, &a_کلی);
+            } وإلا { /* array */
+                r = res_get_Array_توکی(&معلومات_ثبت->f_معلومات, r, idx);
             }
         }
-        if(r != RES_BOGUS) {
-            resB = init_resb_result(
-                dataEntry, r, temp, -1, validLocaleDataEntry, nullptr, recursionDepth+1,
-                resB, status);
-        } else {
-            *status = U_MISSING_RESOURCE_ERROR;
+        إذا(r != RES_BOGUS) {
+            resB = init_resb_پایله(
+                معلومات_ثبت, r, لنډمهاله, -1, valid_Locale_معلومات_ثبت, تش_اشاره, recursion_ژوروالی+1,
+                resB, حالت);
+        } وإلا {
+            *حالت = U_MISSING_RESOURCE_ERROR;
         }
-    } else {
+    } وإلا {
         // This one is a bit trickier.
         // We start finding keys, but after we resolve one alias, the path might continue.
         // Consider:
         //     aliastest:alias { "testtypes/anotheralias/Sequence" }
         //     anotheralias:alias { "/ICUDATA/sh/CollationElements" }
         // aliastest resource should finally have the sequence, not collation elements.
-        CharString pathBuf(keyPath, *status);
-        if (U_FAILURE(*status)) {
-            return nullptr;
+        CharString لار_Buf(کلی_لار, *حالت);
+        إذا (U_FAILURE(*حالت)) {
+            أرجع تش_اشاره;
         }
-        char *myPath = pathBuf.data();
-        containerResPath = nullptr;
+        حرف *my_لار = لار_Buf.معلومات();
+        container_Res_لار = تش_اشاره;
         // Now we have fallback following here.
-        for(;;) {
-            r = dataEntry->fData.rootRes;
+        لكل(;;) {
+            r = معلومات_ثبت->f_معلومات.ریښه_Res;
             // TODO: Move  containerResPath = nullptr  to here,
             // consistent with restarting from the rootRes of another bundle?!
 
             // This loop handles 'found' resources over several levels.
-            while(*myPath && U_SUCCESS(*status)) {
-                r = res_findResource(&(dataEntry->fData), r, &myPath, &temp);
-                if(r == RES_BOGUS) {
+            طالما(*my_لار && U_SUCCESS(*حالت)) {
+                r = res_پیدا_کړه_Resource(&(معلومات_ثبت->f_معلومات), r, &my_لار, &لنډمهاله);
+                إذا(r == RES_BOGUS) {
                     // No resource found, we don't really want to look anymore on this level.
-                    break;
+                    اكسر;
                 }
                 // Found a resource, but it might be an indirection.
-                resB = init_resb_result(
-                    dataEntry, r, temp, -1,
-                    validLocaleDataEntry, containerResPath, recursionDepth+1,
-                    resB, status);
-                if (U_FAILURE(*status)) {
-                    break;
+                resB = init_resb_پایله(
+                    معلومات_ثبت, r, لنډمهاله, -1,
+                    valid_Locale_معلومات_ثبت, container_Res_لار, recursion_ژوروالی+1,
+                    resB, حالت);
+                إذا (U_FAILURE(*حالت)) {
+                    اكسر;
                 }
-                if (temp == nullptr || uprv_strcmp(keyPath, temp) != 0) {
+                إذا (لنډمهاله == تش_اشاره || uprv_strcmp(کلی_لار, لنډمهاله) != 0) {
                     // The call to init_resb_result() above will set resB->fKeyPath to be
                     // the same as resB->fKey,
                     // throwing away any additional path elements if we had them --
                     // if the key path wasn't just a single resource ID, clear out
                     // the bundle's key path and re-set it to be equal to keyPath.
-                    ures_freeResPath(resB);
-                    ures_appendResPath(resB, keyPath, static_cast<int32_t>(uprv_strlen(keyPath)), status);
-                    if(resB->fResPath[resB->fResPathLen-1] != RES_PATH_SEPARATOR) {
-                        ures_appendResPath(resB, RES_PATH_SEPARATOR_S, 1, status);
+                    ures_free_Res_لار(resB);
+                    ures_append_Res_لار(resB, کلی_لار, static_cast<int32_t>(uprv_strlen(کلی_لار)), حالت);
+                    إذا(resB->f_Res_لار[resB->f_Res_لار_Len-1] != RES_لار_SEPARATOR) {
+                        ures_append_Res_لار(resB, RES_لار_SEPARATOR_S, 1, حالت);
                     }
-                    if (U_FAILURE(*status)) {
-                        break;
+                    إذا (U_FAILURE(*حالت)) {
+                        اكسر;
                     }
                 }
                 r = resB->fRes; /* switch to a new resource, possibly a new tree */
-                dataEntry = resB->fData;
-                containerResPath = resB->fResPath;
+                معلومات_ثبت = resB->f_معلومات;
+                container_Res_لار = resB->f_Res_لار;
             }
-            if (U_FAILURE(*status) || r != RES_BOGUS) {
-                break;
+            إذا (U_FAILURE(*حالت) || r != RES_BOGUS) {
+                اكسر;
             }
             // Fall back to the parent bundle, if there is one.
-            dataEntry = dataEntry->fParent;
-            if (dataEntry == nullptr) {
-                *status = U_MISSING_RESOURCE_ERROR;
-                break;
+            معلومات_ثبت = معلومات_ثبت->f_پلار;
+            إذا (معلومات_ثبت == تش_اشاره) {
+                *حالت = U_MISSING_RESOURCE_ERROR;
+                اكسر;
             }
             // Copy the same keyPath again.
-            myPath = pathBuf.data();
-            uprv_strcpy(myPath, keyPath);
+            my_لار = لار_Buf.معلومات();
+            uprv_strcpy(my_لار, کلی_لار);
         }
     }
-    if(mainRes.getAlias() == resB) {
+    إذا(mainRes.getAlias() == resB) {
         mainRes.orphan();
     }
     ResourceTracer(resB).maybeTrace("getalias");
-    return resB;
+    أرجع resB;
 }
 
 // Recursive function, should be called only by itself, by its simpler wrapper,
 // or by getAliasTargetAsResourceBundle().
-UResourceBundle* init_resb_result(UResourceDataEntry* dataEntry,
+UResourceBundle* init_resb_پایله(UResource_معلومات_ثبت* معلومات_ثبت,
                                   Resource r,
-                                  const char* key,
+                                  ثابت حرف* کلی,
                                   int32_t idx,
-                                  UResourceDataEntry* validLocaleDataEntry,
-                                  const char* containerResPath,
-                                  int32_t recursionDepth,
+                                  UResource_معلومات_ثبت* valid_Locale_معلومات_ثبت,
+                                  ثابت حرف* container_Res_لار,
+                                  int32_t recursion_ژوروالی,
                                   UResourceBundle* resB U_LIFETIME_BOUND,
-                                  UErrorCode* status) {
+                                  UError_کوډ* حالت) {
     // TODO: When an error occurs: Should we return nullptr vs. resB?
-    if(status == nullptr || U_FAILURE(*status)) {
-        return resB;
+    إذا(حالت == تش_اشاره || U_FAILURE(*حالت)) {
+        أرجع resB;
     }
-    if (validLocaleDataEntry == nullptr) {
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+    إذا (valid_Locale_معلومات_ثبت == تش_اشاره) {
+        *حالت = U_ILLEGAL_دلیل_ERROR;
+        أرجع تش_اشاره;
     }
-    if(RES_GET_TYPE(r) == URES_ALIAS) {
+    إذا(RES_GET_TYPE(r) == URES_ALIAS) {
         // This is an alias, need to exchange with real data.
-        if(recursionDepth >= URES_MAX_ALIAS_LEVEL) {
-            *status = U_TOO_MANY_ALIASES_ERROR;
-            return resB;
+        إذا(recursion_ژوروالی >= URES_MAX_ALIAS_LEVEL) {
+            *حالت = U_TOO_MANY_ALIASES_ERROR;
+            أرجع resB;
         }
-        return getAliasTargetAsResourceBundle(
-            dataEntry->fData, r, key, idx,
-            validLocaleDataEntry, containerResPath, recursionDepth, resB, status);
+        أرجع get_Alias_موخه_As_Resource_Bundle(
+            معلومات_ثبت->f_معلومات, r, کلی, idx,
+            valid_Locale_معلومات_ثبت, container_Res_لار, recursion_ژوروالی, resB, حالت);
     }
-    if(resB == nullptr) {
-        resB = static_cast<UResourceBundle*>(uprv_malloc(sizeof(UResourceBundle)));
-        if (resB == nullptr) {
-            *status = U_MEMORY_ALLOCATION_ERROR;
-            return nullptr;
+    إذا(resB == تش_اشاره) {
+        resB = static_cast<UResourceBundle*>(uprv_malloc(حجم(UResourceBundle)));
+        إذا (resB == تش_اشاره) {
+            *حالت = U_حافظه_ویش_ERROR;
+            أرجع تش_اشاره;
         }
-        ures_setIsStackObject(resB, false);
-        resB->fResPath = nullptr;
-        resB->fResPathLen = 0;
-    } else {
-        if(resB->fData != nullptr) {
-            entryClose(resB->fData);
+        ures_سېټ_Is_ډېری_Object(resB, خطأ);
+        resB->f_Res_لار = تش_اشاره;
+        resB->f_Res_لار_Len = 0;
+    } وإلا {
+        إذا(resB->f_معلومات != تش_اشاره) {
+            ثبت_Close(resB->f_معلومات);
         }
-        if(resB->fVersion != nullptr) {
-            uprv_free(resB->fVersion);
+        إذا(resB->f_نسخه != تش_اشاره) {
+            uprv_free(resB->f_نسخه);
         }
         /* 
         weiv: if stack object was passed in, it doesn't really need to be reinited,
@@ -1445,158 +1445,158 @@ UResourceBundle* init_resb_result(UResourceDataEntry* dataEntry,
         ures_initStackObject(resB);
         }
         */
-        if(containerResPath != resB->fResPath) {
-            ures_freeResPath(resB);
+        إذا(container_Res_لار != resB->f_Res_لار) {
+            ures_free_Res_لار(resB);
         }
     }
-    resB->fData = dataEntry;
-    entryIncrease(resB->fData);
-    resB->fHasFallback = false;
-    resB->fIsTopLevel = false;
-    resB->fIndex = -1;
-    resB->fKey = key; 
-    resB->fValidLocaleDataEntry = validLocaleDataEntry;
-    if(containerResPath != resB->fResPath) {
-        ures_appendResPath(
-            resB, containerResPath, static_cast<int32_t>(uprv_strlen(containerResPath)), status);
+    resB->f_معلومات = معلومات_ثبت;
+    ثبت_Increase(resB->f_معلومات);
+    resB->fHasFallback = خطأ;
+    resB->f_Is_سر_Level = خطأ;
+    resB->f_شاخص = -1;
+    resB->f_کلی = کلی; 
+    resB->f_Valid_Locale_معلومات_ثبت = valid_Locale_معلومات_ثبت;
+    إذا(container_Res_لار != resB->f_Res_لار) {
+        ures_append_Res_لار(
+            resB, container_Res_لار, static_cast<int32_t>(uprv_strlen(container_Res_لار)), حالت);
     }
-    if(key != nullptr) {
-        ures_appendResPath(resB, key, static_cast<int32_t>(uprv_strlen(key)), status);
-        if(resB->fResPathLen > 0 && resB->fResPath[resB->fResPathLen-1] != RES_PATH_SEPARATOR) {
-            ures_appendResPath(resB, RES_PATH_SEPARATOR_S, 1, status);
+    إذا(کلی != تش_اشاره) {
+        ures_append_Res_لار(resB, کلی, static_cast<int32_t>(uprv_strlen(کلی)), حالت);
+        إذا(resB->f_Res_لار_Len > 0 && resB->f_Res_لار[resB->f_Res_لار_Len-1] != RES_لار_SEPARATOR) {
+            ures_append_Res_لار(resB, RES_لار_SEPARATOR_S, 1, حالت);
         }
-    } else if(idx >= 0) {
-        char buf[256];
-        int32_t len = T_CString_integerToString(buf, idx, 10);
-        ures_appendResPath(resB, buf, len, status);
-        if(resB->fResPathLen > 0 && resB->fResPath[resB->fResPathLen-1] != RES_PATH_SEPARATOR) {
-            ures_appendResPath(resB, RES_PATH_SEPARATOR_S, 1, status);
+    } وإلا إذا(idx >= 0) {
+        حرف buf[256];
+        int32_t len = T_CString_integer_منزل_String(buf, idx, 10);
+        ures_append_Res_لار(resB, buf, len, حالت);
+        إذا(resB->f_Res_لار_Len > 0 && resB->f_Res_لار[resB->f_Res_لار_Len-1] != RES_لار_SEPARATOR) {
+            ures_append_Res_لار(resB, RES_لار_SEPARATOR_S, 1, حالت);
         }
     }
     /* Make sure that Purify doesn't complain about uninitialized memory copies. */
     {
-        int32_t usedLen = ((resB->fResBuf == resB->fResPath) ? resB->fResPathLen : 0);
-        uprv_memset(resB->fResBuf + usedLen, 0, sizeof(resB->fResBuf) - usedLen);
+        int32_t کارول_شوی_Len = ((resB->fResBuf == resB->f_Res_لار) ? resB->f_Res_لار_Len : 0);
+        uprv_memset(resB->fResBuf + کارول_شوی_Len, 0, حجم(resB->fResBuf) - کارول_شوی_Len);
     }
 
-    resB->fVersion = nullptr;
+    resB->f_نسخه = تش_اشاره;
     resB->fRes = r;
-    resB->fSize = res_countArrayItems(&resB->getResData(), resB->fRes);
+    resB->f_اندازه = res_شمېر_Array_توکي(&resB->get_Res_معلومات(), resB->fRes);
     ResourceTracer(resB).trace("get");
-    return resB;
+    أرجع resB;
 }
 
-UResourceBundle* init_resb_result(UResourceDataEntry* dataEntry,
+UResourceBundle* init_resb_پایله(UResource_معلومات_ثبت* معلومات_ثبت,
                                   Resource r,
-                                  const char* key,
+                                  ثابت حرف* کلی,
                                   int32_t idx,
                                   // validLocaleDataEntry + containerResPath
-                                  const UResourceBundle* container,
+                                  ثابت UResourceBundle* container,
                                   UResourceBundle* resB U_LIFETIME_BOUND,
-                                  UErrorCode* status) {
-    return init_resb_result(
-        dataEntry, r, key, idx,
-        container->fValidLocaleDataEntry, container->fResPath, 0, resB, status);
+                                  UError_کوډ* حالت) {
+    أرجع init_resb_پایله(
+        معلومات_ثبت, r, کلی, idx,
+        container->f_Valid_Locale_معلومات_ثبت, container->f_Res_لار, 0, resB, حالت);
 }
 
 }  // namespace
 
 UResourceBundle* ures_copyResb(UResourceBundle* r U_LIFETIME_BOUND,
-                               const UResourceBundle* original,
-                               UErrorCode* status) {
-    UBool isStackObject;
-    if(U_FAILURE(*status) || r == original) {
-        return r;
+                               ثابت UResourceBundle* original,
+                               UError_کوډ* حالت) {
+    UBool is_ډېری_Object;
+    إذا(U_FAILURE(*حالت) || r == original) {
+        أرجع r;
     }
-    if(original != nullptr) {
-        if(r == nullptr) {
-            isStackObject = false;
-            r = static_cast<UResourceBundle*>(uprv_malloc(sizeof(UResourceBundle)));
+    إذا(original != تش_اشاره) {
+        إذا(r == تش_اشاره) {
+            is_ډېری_Object = خطأ;
+            r = static_cast<UResourceBundle*>(uprv_malloc(حجم(UResourceBundle)));
             /* test for nullptr */
-            if (r == nullptr) {
-                *status = U_MEMORY_ALLOCATION_ERROR;
-                return nullptr;
+            إذا (r == تش_اشاره) {
+                *حالت = U_حافظه_ویش_ERROR;
+                أرجع تش_اشاره;
             }
-        } else {
-            isStackObject = ures_isStackObject(r);
-            ures_closeBundle(r, false);
+        } وإلا {
+            is_ډېری_Object = ures_is_ډېری_Object(r);
+            ures_closeBundle(r, خطأ);
         }
-        uprv_memcpy(r, original, sizeof(UResourceBundle));
-        r->fResPath = nullptr;
-        r->fResPathLen = 0;
-        if(original->fResPath) {
-            ures_appendResPath(r, original->fResPath, original->fResPathLen, status);
+        uprv_memcpy(r, original, حجم(UResourceBundle));
+        r->f_Res_لار = تش_اشاره;
+        r->f_Res_لار_Len = 0;
+        إذا(original->f_Res_لار) {
+            ures_append_Res_لار(r, original->f_Res_لار, original->f_Res_لار_Len, حالت);
         }
-        ures_setIsStackObject(r, isStackObject);
-        if(r->fData != nullptr) {
-            entryIncrease(r->fData);
+        ures_سېټ_Is_ډېری_Object(r, is_ډېری_Object);
+        إذا(r->f_معلومات != تش_اشاره) {
+            ثبت_Increase(r->f_معلومات);
         }
     }
-    return r;
+    أرجع r;
 }
 
 /**
  * Functions to retrieve data from resource bundles.
  */
 
-U_CAPI const char16_t* U_EXPORT2 ures_getString(const UResourceBundle* resB U_LIFETIME_BOUND,
+U_CAPI ثابت char16_t* U_EXPORT2 ures_getString(ثابت UResourceBundle* resB U_LIFETIME_BOUND,
                                                 int32_t* len,
-                                                UErrorCode* status) {
-    const char16_t *s;
-    if (status==nullptr || U_FAILURE(*status)) {
-        return nullptr;
+                                                UError_کوډ* حالت) {
+    ثابت char16_t *s;
+    إذا (حالت==تش_اشاره || U_FAILURE(*حالت)) {
+        أرجع تش_اشاره;
     }
-    if(resB == nullptr) {
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+    إذا(resB == تش_اشاره) {
+        *حالت = U_ILLEGAL_دلیل_ERROR;
+        أرجع تش_اشاره;
     }
-    s = res_getString({resB}, &resB->getResData(), resB->fRes, len);
-    if (s == nullptr) {
-        *status = U_RESOURCE_TYPE_MISMATCH;
+    s = res_getString({resB}, &resB->get_Res_معلومات(), resB->fRes, len);
+    إذا (s == تش_اشاره) {
+        *حالت = U_RESOURCE_TYPE_MISMATCH;
     }
-    return s;
+    أرجع s;
 }
 
-static const char*
-ures_toUTF8String(const char16_t* s16,
+ساكن ثابت حرف*
+ures_منزل_UTF8_String(ثابت char16_t* s16,
                   int32_t length16,
-                  char* dest U_LIFETIME_BOUND,
-                  int32_t* pLength,
+                  حرف* dest U_LIFETIME_BOUND,
+                  int32_t* p_اوږدتیا,
                   UBool forceCopy,
-                  UErrorCode* status) {
+                  UError_کوډ* حالت) {
     int32_t capacity;
 
-    if (U_FAILURE(*status)) {
-        return nullptr;
+    إذا (U_FAILURE(*حالت)) {
+        أرجع تش_اشاره;
     }
-    if (pLength != nullptr) {
-        capacity = *pLength;
-    } else {
+    إذا (p_اوږدتیا != تش_اشاره) {
+        capacity = *p_اوږدتیا;
+    } وإلا {
         capacity = 0;
     }
-    if (capacity < 0 || (capacity > 0 && dest == nullptr)) {
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+    إذا (capacity < 0 || (capacity > 0 && dest == تش_اشاره)) {
+        *حالت = U_ILLEGAL_دلیل_ERROR;
+        أرجع تش_اشاره;
     }
 
-    if (length16 == 0) {
+    إذا (length16 == 0) {
         /* empty string, return as read-only pointer */
-        if (pLength != nullptr) {
-            *pLength = 0;
+        إذا (p_اوږدتیا != تش_اشاره) {
+            *p_اوږدتیا = 0;
         }
-        if (forceCopy) {
-            u_terminateChars(dest, capacity, 0, status);
-            return dest;
-        } else {
-            return "";
+        إذا (forceCopy) {
+            u_terminateChars(dest, capacity, 0, حالت);
+            أرجع dest;
+        } وإلا {
+            أرجع "";
         }
-    } else {
+    } وإلا {
         /* We need to transform the string to the destination buffer. */
-        if (capacity < length16) {
+        إذا (capacity < length16) {
             /* No chance for the string to fit. Pure preflighting. */
-            return u_strToUTF8(nullptr, 0, pLength, s16, length16, status);
+            أرجع u_str_منزل_UTF8(تش_اشاره, 0, p_اوږدتیا, s16, length16, حالت);
         }
-        if (!forceCopy && (length16 <= 0x2aaaaaaa)) {
+        إذا (!forceCopy && (length16 <= 0x2aaaaaaa)) {
             /*
              * We know the string will fit into dest because each char16_t turns
              * into at most three UTF-8 bytes. Fill the latter part of dest
@@ -1611,102 +1611,102 @@ ures_toUTF8String(const char16_t* s16,
              * The test above for <= 0x2aaaaaaa prevents overflows.
              * The +1 is for the NUL terminator.
              */
-            int32_t maxLength = 3 * length16 + 1;
-            if (capacity > maxLength) {
-                dest += capacity - maxLength;
-                capacity = maxLength;
+            int32_t max_اوږدتیا_2 = 3 * length16 + 1;
+            إذا (capacity > max_اوږدتیا_2) {
+                dest += capacity - max_اوږدتیا_2;
+                capacity = max_اوږدتیا_2;
             }
         }
-        return u_strToUTF8(dest, capacity, pLength, s16, length16, status);
+        أرجع u_str_منزل_UTF8(dest, capacity, p_اوږدتیا, s16, length16, حالت);
     }
 }
 
-U_CAPI const char* U_EXPORT2
-ures_getUTF8String(const UResourceBundle* resB,
-                   char* dest U_LIFETIME_BOUND,
-                   int32_t* pLength,
+U_CAPI ثابت حرف* U_EXPORT2
+ures_getUTF8String(ثابت UResourceBundle* resB,
+                   حرف* dest U_LIFETIME_BOUND,
+                   int32_t* p_اوږدتیا,
                    UBool forceCopy,
-                   UErrorCode* status) {
+                   UError_کوډ* حالت) {
     int32_t length16;
-    const char16_t *s16 = ures_getString(resB, &length16, status);
-    return ures_toUTF8String(s16, length16, dest, pLength, forceCopy, status);
+    ثابت char16_t *s16 = ures_getString(resB, &length16, حالت);
+    أرجع ures_منزل_UTF8_String(s16, length16, dest, p_اوږدتیا, forceCopy, حالت);
 }
 
-U_CAPI const uint8_t* U_EXPORT2
-ures_getBinary(const UResourceBundle* resB U_LIFETIME_BOUND, int32_t* len, UErrorCode* status) {
-  const uint8_t *p;
-  if (status==nullptr || U_FAILURE(*status)) {
-    return nullptr;
+U_CAPI ثابت uint8_t* U_EXPORT2
+ures_get_دوګونی(ثابت UResourceBundle* resB U_LIFETIME_BOUND, int32_t* len, UError_کوډ* حالت) {
+  ثابت uint8_t *p;
+  إذا (حالت==تش_اشاره || U_FAILURE(*حالت)) {
+    أرجع تش_اشاره;
   }
-  if(resB == nullptr) {
-    *status = U_ILLEGAL_ARGUMENT_ERROR;
-    return nullptr;
+  إذا(resB == تش_اشاره) {
+    *حالت = U_ILLEGAL_دلیل_ERROR;
+    أرجع تش_اشاره;
   }
-  p = res_getBinary({resB}, &resB->getResData(), resB->fRes, len);
-  if (p == nullptr) {
-    *status = U_RESOURCE_TYPE_MISMATCH;
+  p = res_get_دوګونی({resB}, &resB->get_Res_معلومات(), resB->fRes, len);
+  إذا (p == تش_اشاره) {
+    *حالت = U_RESOURCE_TYPE_MISMATCH;
   }
-  return p;
+  أرجع p;
 }
 
-U_CAPI const int32_t* U_EXPORT2
-ures_getIntVector(const UResourceBundle* resB U_LIFETIME_BOUND, int32_t* len, UErrorCode* status) {
-  const int32_t *p;
-  if (status==nullptr || U_FAILURE(*status)) {
-    return nullptr;
+U_CAPI ثابت int32_t* U_EXPORT2
+ures_get_Int_ویکټور(ثابت UResourceBundle* resB U_LIFETIME_BOUND, int32_t* len, UError_کوډ* حالت) {
+  ثابت int32_t *p;
+  إذا (حالت==تش_اشاره || U_FAILURE(*حالت)) {
+    أرجع تش_اشاره;
   }
-  if(resB == nullptr) {
-    *status = U_ILLEGAL_ARGUMENT_ERROR;
-    return nullptr;
+  إذا(resB == تش_اشاره) {
+    *حالت = U_ILLEGAL_دلیل_ERROR;
+    أرجع تش_اشاره;
   }
-  p = res_getIntVector({resB}, &resB->getResData(), resB->fRes, len);
-  if (p == nullptr) {
-    *status = U_RESOURCE_TYPE_MISMATCH;
+  p = res_get_Int_ویکټور({resB}, &resB->get_Res_معلومات(), resB->fRes, len);
+  إذا (p == تش_اشاره) {
+    *حالت = U_RESOURCE_TYPE_MISMATCH;
   }
-  return p;
+  أرجع p;
 }
 
 /* this function returns a signed integer */ 
 /* it performs sign extension */
-U_CAPI int32_t U_EXPORT2 ures_getInt(const UResourceBundle* resB, UErrorCode *status) {
-  if (status==nullptr || U_FAILURE(*status)) {
-    return 0xffffffff;
+U_CAPI int32_t U_EXPORT2 ures_getInt(ثابت UResourceBundle* resB, UError_کوډ *حالت) {
+  إذا (حالت==تش_اشاره || U_FAILURE(*حالت)) {
+    أرجع 0xffffffff;
   }
-  if(resB == nullptr) {
-    *status = U_ILLEGAL_ARGUMENT_ERROR;
-    return 0xffffffff;
+  إذا(resB == تش_اشاره) {
+    *حالت = U_ILLEGAL_دلیل_ERROR;
+    أرجع 0xffffffff;
   }
-  if(RES_GET_TYPE(resB->fRes) != URES_INT) {
-    *status = U_RESOURCE_TYPE_MISMATCH;
-    return 0xffffffff;
+  إذا(RES_GET_TYPE(resB->fRes) != URES_INT) {
+    *حالت = U_RESOURCE_TYPE_MISMATCH;
+    أرجع 0xffffffff;
   }
-  return res_getInt({resB}, resB->fRes);
+  أرجع res_getInt({resB}, resB->fRes);
 }
 
-U_CAPI uint32_t U_EXPORT2 ures_getUInt(const UResourceBundle* resB, UErrorCode *status) {
-  if (status==nullptr || U_FAILURE(*status)) {
-    return 0xffffffff;
+U_CAPI uint32_t U_EXPORT2 ures_getUInt(ثابت UResourceBundle* resB, UError_کوډ *حالت) {
+  إذا (حالت==تش_اشاره || U_FAILURE(*حالت)) {
+    أرجع 0xffffffff;
   }
-  if(resB == nullptr) {
-    *status = U_ILLEGAL_ARGUMENT_ERROR;
-    return 0xffffffff;
+  إذا(resB == تش_اشاره) {
+    *حالت = U_ILLEGAL_دلیل_ERROR;
+    أرجع 0xffffffff;
   }
-  if(RES_GET_TYPE(resB->fRes) != URES_INT) {
-    *status = U_RESOURCE_TYPE_MISMATCH;
-    return 0xffffffff;
+  إذا(RES_GET_TYPE(resB->fRes) != URES_INT) {
+    *حالت = U_RESOURCE_TYPE_MISMATCH;
+    أرجع 0xffffffff;
   }
-  return res_getUInt({resB}, resB->fRes);
+  أرجع res_getUInt({resB}, resB->fRes);
 }
 
-U_CAPI UResType U_EXPORT2 ures_getType(const UResourceBundle *resB) {
-  if(resB == nullptr) {
-    return URES_NONE;
+U_CAPI UResType U_EXPORT2 ures_getType(ثابت UResourceBundle *resB) {
+  إذا(resB == تش_اشاره) {
+    أرجع URES_NONE;
   }
-  return res_getPublicType(resB->fRes);
+  أرجع res_get_عامه_Type(resB->fRes);
 }
 
-U_CAPI const char* U_EXPORT2
-ures_getKey(const UResourceBundle* resB U_LIFETIME_BOUND) {
+U_CAPI ثابت حرف* U_EXPORT2
+ures_get_کلی(ثابت UResourceBundle* resB U_LIFETIME_BOUND) {
   //
   // TODO: Trace ures_getKey? I guess not usually.
   //
@@ -1716,273 +1716,273 @@ ures_getKey(const UResourceBundle* resB U_LIFETIME_BOUND) {
   // However, I believe we have some data (e.g., in res_index) where the key
   // strings are the data. Tracing the enclosing table should suffice.
   //
-  if(resB == nullptr) {
-    return nullptr;
+  إذا(resB == تش_اشاره) {
+    أرجع تش_اشاره;
   }
-  return(resB->fKey);
+  أرجع(resB->f_کلی);
 }
 
-U_CAPI int32_t U_EXPORT2 ures_getSize(const UResourceBundle *resB) {
-  if(resB == nullptr) {
-    return 0;
+U_CAPI int32_t U_EXPORT2 ures_get_اندازه(ثابت UResourceBundle *resB) {
+  إذا(resB == تش_اشاره) {
+    أرجع 0;
   }
   
-  return resB->fSize;
+  أرجع resB->f_اندازه;
 }
 
-static const char16_t*
-ures_getStringWithAlias(const UResourceBundle* resB U_LIFETIME_BOUND,
+ساكن ثابت char16_t*
+ures_getStringWithAlias(ثابت UResourceBundle* resB U_LIFETIME_BOUND,
                         Resource r,
-                        int32_t sIndex,
+                        int32_t s_شاخص,
                         int32_t* len,
-                        UErrorCode* status) {
-  if(RES_GET_TYPE(r) == URES_ALIAS) {
-    const char16_t* result = nullptr;
-    UResourceBundle *tempRes = ures_getByIndex(resB, sIndex, nullptr, status);
-    result = ures_getString(tempRes, len, status);
-    ures_close(tempRes);
-    return result;
-  } else {
-    return res_getString({resB, sIndex}, &resB->getResData(), r, len); 
+                        UError_کوډ* حالت) {
+  إذا(RES_GET_TYPE(r) == URES_ALIAS) {
+    ثابت char16_t* پایله = تش_اشاره;
+    UResourceBundle *لنډمهاله_Res = ures_get_By_شاخص(resB, s_شاخص, تش_اشاره, حالت);
+    پایله = ures_getString(لنډمهاله_Res, len, حالت);
+    ures_close(لنډمهاله_Res);
+    أرجع پایله;
+  } وإلا {
+    أرجع res_getString({resB, s_شاخص}, &resB->get_Res_معلومات(), r, len); 
   }
 }
 
-U_CAPI void U_EXPORT2 ures_resetIterator(UResourceBundle *resB){
-  if(resB == nullptr) {
-    return;
+U_CAPI فراغ U_EXPORT2 ures_resetIterator(UResourceBundle *resB){
+  إذا(resB == تش_اشاره) {
+    أرجع;
   }
-  resB->fIndex = -1;
+  resB->f_شاخص = -1;
 }
 
-U_CAPI UBool U_EXPORT2 ures_hasNext(const UResourceBundle *resB) {
-  if(resB == nullptr) {
-    return false;
+U_CAPI UBool U_EXPORT2 ures_has_بل(ثابت UResourceBundle *resB) {
+  إذا(resB == تش_اشاره) {
+    أرجع خطأ;
   }
-  return resB->fIndex < resB->fSize-1;
+  أرجع resB->f_شاخص < resB->f_اندازه-1;
 }
 
-U_CAPI const char16_t* U_EXPORT2
-ures_getNextString(UResourceBundle* resB U_LIFETIME_BOUND,
+U_CAPI ثابت char16_t* U_EXPORT2
+ures_get_بل_String(UResourceBundle* resB U_LIFETIME_BOUND,
                    int32_t* len,
-                   const char** key,
-                   UErrorCode* status) {
+                   ثابت حرف** کلی,
+                   UError_کوډ* حالت) {
   Resource r = RES_BOGUS;
   
-  if (status==nullptr || U_FAILURE(*status)) {
-    return nullptr;
+  إذا (حالت==تش_اشاره || U_FAILURE(*حالت)) {
+    أرجع تش_اشاره;
   }
-  if(resB == nullptr) {
-    *status = U_ILLEGAL_ARGUMENT_ERROR;
-    return nullptr;
+  إذا(resB == تش_اشاره) {
+    *حالت = U_ILLEGAL_دلیل_ERROR;
+    أرجع تش_اشاره;
   }
   
-  if(resB->fIndex == resB->fSize-1) {
-    *status = U_INDEX_OUTOFBOUNDS_ERROR;
-  } else {
-    resB->fIndex++;
-    switch(RES_GET_TYPE(resB->fRes)) {
-    case URES_STRING:
-    case URES_STRING_V2:
-      return res_getString({resB}, &resB->getResData(), resB->fRes, len);
-    case URES_TABLE:
-    case URES_TABLE16:
-    case URES_TABLE32:
-      r = res_getTableItemByIndex(&resB->getResData(), resB->fRes, resB->fIndex, key);
-      if(r == RES_BOGUS && resB->fHasFallback) {
+  إذا(resB->f_شاخص == resB->f_اندازه-1) {
+    *حالت = U_شاخص_OUTOFBOUNDS_ERROR;
+  } وإلا {
+    resB->f_شاخص++;
+    بدل(RES_GET_TYPE(resB->fRes)) {
+    حالة URES_STRING:
+    حالة URES_STRING_V2:
+      أرجع res_getString({resB}, &resB->get_Res_معلومات(), resB->fRes, len);
+    حالة URES_جدول:
+    حالة URES_TABLE16:
+    حالة URES_TABLE32:
+      r = res_get_جدول_توکی_By_شاخص(&resB->get_Res_معلومات(), resB->fRes, resB->f_شاخص, کلی);
+      إذا(r == RES_BOGUS && resB->fHasFallback) {
         /* TODO: do the fallback */
       }
-      return ures_getStringWithAlias(resB, r, resB->fIndex, len, status);
-    case URES_ARRAY:
-    case URES_ARRAY16:
-      r = res_getArrayItem(&resB->getResData(), resB->fRes, resB->fIndex);
-      if(r == RES_BOGUS && resB->fHasFallback) {
+      أرجع ures_getStringWithAlias(resB, r, resB->f_شاخص, len, حالت);
+    حالة URES_ARRAY:
+    حالة URES_ARRAY16:
+      r = res_get_Array_توکی(&resB->get_Res_معلومات(), resB->fRes, resB->f_شاخص);
+      إذا(r == RES_BOGUS && resB->fHasFallback) {
         /* TODO: do the fallback */
       }
-      return ures_getStringWithAlias(resB, r, resB->fIndex, len, status);
-    case URES_ALIAS:
-      return ures_getStringWithAlias(resB, resB->fRes, resB->fIndex, len, status);
-    case URES_INT:
-    case URES_BINARY:
-    case URES_INT_VECTOR:
-        *status = U_RESOURCE_TYPE_MISMATCH;
+      أرجع ures_getStringWithAlias(resB, r, resB->f_شاخص, len, حالت);
+    حالة URES_ALIAS:
+      أرجع ures_getStringWithAlias(resB, resB->fRes, resB->f_شاخص, len, حالت);
+    حالة URES_INT:
+    حالة URES_دوګونی:
+    حالة URES_INT_ویکټور:
+        *حالت = U_RESOURCE_TYPE_MISMATCH;
         U_FALLTHROUGH;
-    default:
-      return nullptr;
+    افتراضي:
+      أرجع تش_اشاره;
     }
   }
 
-  return nullptr;
+  أرجع تش_اشاره;
 }
 
 U_CAPI UResourceBundle* U_EXPORT2
-ures_getNextResource(UResourceBundle* resB,
-                     UResourceBundle* fillIn U_LIFETIME_BOUND,
-                     UErrorCode* status) {
-    const char *key = nullptr;
+ures_get_بل_Resource(UResourceBundle* resB,
+                     UResourceBundle* fill_دننه U_LIFETIME_BOUND,
+                     UError_کوډ* حالت) {
+    ثابت حرف *کلی = تش_اشاره;
     Resource r = RES_BOGUS;
 
-    if (status==nullptr || U_FAILURE(*status)) {
+    إذا (حالت==تش_اشاره || U_FAILURE(*حالت)) {
             /*return nullptr;*/
-            return fillIn;
+            أرجع fill_دننه;
     }
-    if(resB == nullptr) {
-            *status = U_ILLEGAL_ARGUMENT_ERROR;
+    إذا(resB == تش_اشاره) {
+            *حالت = U_ILLEGAL_دلیل_ERROR;
             /*return nullptr;*/
-            return fillIn;
+            أرجع fill_دننه;
     }
 
-    if(resB->fIndex == resB->fSize-1) {
-      *status = U_INDEX_OUTOFBOUNDS_ERROR;
+    إذا(resB->f_شاخص == resB->f_اندازه-1) {
+      *حالت = U_شاخص_OUTOFBOUNDS_ERROR;
       /*return nullptr;*/
-    } else {
-        resB->fIndex++;
-        switch(RES_GET_TYPE(resB->fRes)) {
-        case URES_INT:
-        case URES_BINARY:
-        case URES_STRING:
-        case URES_STRING_V2:
-        case URES_INT_VECTOR:
-            return ures_copyResb(fillIn, resB, status);
-        case URES_TABLE:
-        case URES_TABLE16:
-        case URES_TABLE32:
-            r = res_getTableItemByIndex(&resB->getResData(), resB->fRes, resB->fIndex, &key);
-            if(r == RES_BOGUS && resB->fHasFallback) {
+    } وإلا {
+        resB->f_شاخص++;
+        بدل(RES_GET_TYPE(resB->fRes)) {
+        حالة URES_INT:
+        حالة URES_دوګونی:
+        حالة URES_STRING:
+        حالة URES_STRING_V2:
+        حالة URES_INT_ویکټور:
+            أرجع ures_copyResb(fill_دننه, resB, حالت);
+        حالة URES_جدول:
+        حالة URES_TABLE16:
+        حالة URES_TABLE32:
+            r = res_get_جدول_توکی_By_شاخص(&resB->get_Res_معلومات(), resB->fRes, resB->f_شاخص, &کلی);
+            إذا(r == RES_BOGUS && resB->fHasFallback) {
                 /* TODO: do the fallback */
             }
-            return init_resb_result(resB->fData, r, key, resB->fIndex, resB, fillIn, status);
-        case URES_ARRAY:
-        case URES_ARRAY16:
-            r = res_getArrayItem(&resB->getResData(), resB->fRes, resB->fIndex);
-            if(r == RES_BOGUS && resB->fHasFallback) {
+            أرجع init_resb_پایله(resB->f_معلومات, r, کلی, resB->f_شاخص, resB, fill_دننه, حالت);
+        حالة URES_ARRAY:
+        حالة URES_ARRAY16:
+            r = res_get_Array_توکی(&resB->get_Res_معلومات(), resB->fRes, resB->f_شاخص);
+            إذا(r == RES_BOGUS && resB->fHasFallback) {
                 /* TODO: do the fallback */
             }
-            return init_resb_result(resB->fData, r, key, resB->fIndex, resB, fillIn, status);
-        default:
+            أرجع init_resb_پایله(resB->f_معلومات, r, کلی, resB->f_شاخص, resB, fill_دننه, حالت);
+        افتراضي:
             /*return nullptr;*/
-            return fillIn;
+            أرجع fill_دننه;
         }
     }
     /*return nullptr;*/
-    return fillIn;
+    أرجع fill_دننه;
 }
 
 U_CAPI UResourceBundle* U_EXPORT2
-ures_getByIndex(const UResourceBundle* resB,
-                int32_t indexR,
-                UResourceBundle* fillIn U_LIFETIME_BOUND,
-                UErrorCode* status) {
-    const char* key = nullptr;
+ures_get_By_شاخص(ثابت UResourceBundle* resB,
+                int32_t شاخص_R,
+                UResourceBundle* fill_دننه U_LIFETIME_BOUND,
+                UError_کوډ* حالت) {
+    ثابت حرف* کلی = تش_اشاره;
     Resource r = RES_BOGUS;
 
-    if (status==nullptr || U_FAILURE(*status)) {
+    إذا (حالت==تش_اشاره || U_FAILURE(*حالت)) {
         /*return nullptr;*/
-        return fillIn;
+        أرجع fill_دننه;
     }
-    if(resB == nullptr) {
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
+    إذا(resB == تش_اشاره) {
+        *حالت = U_ILLEGAL_دلیل_ERROR;
         /*return nullptr;*/
-        return fillIn;
+        أرجع fill_دننه;
     }
 
-    if(indexR >= 0 && resB->fSize > indexR) {
-        switch(RES_GET_TYPE(resB->fRes)) {
-        case URES_INT:
-        case URES_BINARY:
-        case URES_STRING:
-        case URES_STRING_V2:
-        case URES_INT_VECTOR:
-            return ures_copyResb(fillIn, resB, status);
-        case URES_TABLE:
-        case URES_TABLE16:
-        case URES_TABLE32:
-            r = res_getTableItemByIndex(&resB->getResData(), resB->fRes, indexR, &key);
-            if(r == RES_BOGUS && resB->fHasFallback) {
+    إذا(شاخص_R >= 0 && resB->f_اندازه > شاخص_R) {
+        بدل(RES_GET_TYPE(resB->fRes)) {
+        حالة URES_INT:
+        حالة URES_دوګونی:
+        حالة URES_STRING:
+        حالة URES_STRING_V2:
+        حالة URES_INT_ویکټور:
+            أرجع ures_copyResb(fill_دننه, resB, حالت);
+        حالة URES_جدول:
+        حالة URES_TABLE16:
+        حالة URES_TABLE32:
+            r = res_get_جدول_توکی_By_شاخص(&resB->get_Res_معلومات(), resB->fRes, شاخص_R, &کلی);
+            إذا(r == RES_BOGUS && resB->fHasFallback) {
                 /* TODO: do the fallback */
             }
-            return init_resb_result(resB->fData, r, key, indexR, resB, fillIn, status);
-        case URES_ARRAY:
-        case URES_ARRAY16:
-            r = res_getArrayItem(&resB->getResData(), resB->fRes, indexR);
-            if(r == RES_BOGUS && resB->fHasFallback) {
+            أرجع init_resb_پایله(resB->f_معلومات, r, کلی, شاخص_R, resB, fill_دننه, حالت);
+        حالة URES_ARRAY:
+        حالة URES_ARRAY16:
+            r = res_get_Array_توکی(&resB->get_Res_معلومات(), resB->fRes, شاخص_R);
+            إذا(r == RES_BOGUS && resB->fHasFallback) {
                 /* TODO: do the fallback */
             }
-            return init_resb_result(resB->fData, r, key, indexR, resB, fillIn, status);
-        default:
+            أرجع init_resb_پایله(resB->f_معلومات, r, کلی, شاخص_R, resB, fill_دننه, حالت);
+        افتراضي:
             /*return nullptr;*/
-            return fillIn;
+            أرجع fill_دننه;
         }
-    } else {
-        *status = U_MISSING_RESOURCE_ERROR;
+    } وإلا {
+        *حالت = U_MISSING_RESOURCE_ERROR;
     }
     /*return nullptr;*/
-    return fillIn;
+    أرجع fill_دننه;
 }
 
-U_CAPI const char16_t* U_EXPORT2
-ures_getStringByIndex(const UResourceBundle* resB U_LIFETIME_BOUND,
-                      int32_t indexS,
+U_CAPI ثابت char16_t* U_EXPORT2
+ures_get_String_By_شاخص(ثابت UResourceBundle* resB U_LIFETIME_BOUND,
+                      int32_t شاخص_S,
                       int32_t* len,
-                      UErrorCode* status) {
-    const char* key = nullptr;
+                      UError_کوډ* حالت) {
+    ثابت حرف* کلی = تش_اشاره;
     Resource r = RES_BOGUS;
 
-    if (status==nullptr || U_FAILURE(*status)) {
-        return nullptr;
+    إذا (حالت==تش_اشاره || U_FAILURE(*حالت)) {
+        أرجع تش_اشاره;
     }
-    if(resB == nullptr) {
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+    إذا(resB == تش_اشاره) {
+        *حالت = U_ILLEGAL_دلیل_ERROR;
+        أرجع تش_اشاره;
     }
 
-    if(indexS >= 0 && resB->fSize > indexS) {
-        switch(RES_GET_TYPE(resB->fRes)) {
-        case URES_STRING:
-        case URES_STRING_V2:
-            return res_getString({resB}, &resB->getResData(), resB->fRes, len);
-        case URES_TABLE:
-        case URES_TABLE16:
-        case URES_TABLE32:
-            r = res_getTableItemByIndex(&resB->getResData(), resB->fRes, indexS, &key);
-            if(r == RES_BOGUS && resB->fHasFallback) {
+    إذا(شاخص_S >= 0 && resB->f_اندازه > شاخص_S) {
+        بدل(RES_GET_TYPE(resB->fRes)) {
+        حالة URES_STRING:
+        حالة URES_STRING_V2:
+            أرجع res_getString({resB}, &resB->get_Res_معلومات(), resB->fRes, len);
+        حالة URES_جدول:
+        حالة URES_TABLE16:
+        حالة URES_TABLE32:
+            r = res_get_جدول_توکی_By_شاخص(&resB->get_Res_معلومات(), resB->fRes, شاخص_S, &کلی);
+            إذا(r == RES_BOGUS && resB->fHasFallback) {
                 /* TODO: do the fallback */
             }
-            return ures_getStringWithAlias(resB, r, indexS, len, status);
-        case URES_ARRAY:
-        case URES_ARRAY16:
-            r = res_getArrayItem(&resB->getResData(), resB->fRes, indexS);
-            if(r == RES_BOGUS && resB->fHasFallback) {
+            أرجع ures_getStringWithAlias(resB, r, شاخص_S, len, حالت);
+        حالة URES_ARRAY:
+        حالة URES_ARRAY16:
+            r = res_get_Array_توکی(&resB->get_Res_معلومات(), resB->fRes, شاخص_S);
+            إذا(r == RES_BOGUS && resB->fHasFallback) {
                 /* TODO: do the fallback */
             }
-            return ures_getStringWithAlias(resB, r, indexS, len, status);
-        case URES_ALIAS:
-            return ures_getStringWithAlias(resB, resB->fRes, indexS, len, status);
-        case URES_INT:
-        case URES_BINARY:
-        case URES_INT_VECTOR:
-            *status = U_RESOURCE_TYPE_MISMATCH;
-            break;
-        default:
+            أرجع ures_getStringWithAlias(resB, r, شاخص_S, len, حالت);
+        حالة URES_ALIAS:
+            أرجع ures_getStringWithAlias(resB, resB->fRes, شاخص_S, len, حالت);
+        حالة URES_INT:
+        حالة URES_دوګونی:
+        حالة URES_INT_ویکټور:
+            *حالت = U_RESOURCE_TYPE_MISMATCH;
+            اكسر;
+        افتراضي:
           /* must not occur */
-          *status = U_INTERNAL_PROGRAM_ERROR;
-          break;
+          *حالت = U_دننی_پروګرام_ERROR;
+          اكسر;
         }
-    } else {
-        *status = U_MISSING_RESOURCE_ERROR;
+    } وإلا {
+        *حالت = U_MISSING_RESOURCE_ERROR;
     }
-    return nullptr;
+    أرجع تش_اشاره;
 }
 
-U_CAPI const char* U_EXPORT2
-ures_getUTF8StringByIndex(const UResourceBundle* resB,
+U_CAPI ثابت حرف* U_EXPORT2
+ures_get_UTF8_String_By_شاخص(ثابت UResourceBundle* resB,
                           int32_t idx,
-                          char* dest U_LIFETIME_BOUND,
-                          int32_t* pLength,
+                          حرف* dest U_LIFETIME_BOUND,
+                          int32_t* p_اوږدتیا,
                           UBool forceCopy,
-                          UErrorCode* status) {
+                          UError_کوډ* حالت) {
     int32_t length16;
-    const char16_t *s16 = ures_getStringByIndex(resB, idx, &length16, status);
-    return ures_toUTF8String(s16, length16, dest, pLength, forceCopy, status);
+    ثابت char16_t *s16 = ures_get_String_By_شاخص(resB, idx, &length16, حالت);
+    أرجع ures_منزل_UTF8_String(s16, length16, dest, p_اوږدتیا, forceCopy, حالت);
 }
 
 /*U_CAPI const char *ures_getResPath(UResourceBundle *resB) {
@@ -1990,155 +1990,155 @@ ures_getUTF8StringByIndex(const UResourceBundle* resB,
 }*/
 
 U_CAPI UResourceBundle* U_EXPORT2
-ures_findResource(const char* path, UResourceBundle* fillIn U_LIFETIME_BOUND, UErrorCode* status)
+ures_پیدا_کړه_Resource(ثابت حرف* لار, UResourceBundle* fill_دننه U_LIFETIME_BOUND, UError_کوډ* حالت)
 {
-  UResourceBundle *first = nullptr; 
-  UResourceBundle *result = fillIn;
-  char *packageName = nullptr;
-  char *pathToResource = nullptr, *save = nullptr;
-  char *locale = nullptr, *localeEnd = nullptr;
+  UResourceBundle *first = تش_اشاره; 
+  UResourceBundle *پایله = fill_دننه;
+  حرف *packageName = تش_اشاره;
+  حرف *لار_منزل_Resource = تش_اشاره, *save = تش_اشاره;
+  حرف *locale = تش_اشاره, *locale_پای_ټکی = تش_اشاره;
   int32_t length;
 
-  if(status == nullptr || U_FAILURE(*status)) {
-    return result;
+  إذا(حالت == تش_اشاره || U_FAILURE(*حالت)) {
+    أرجع پایله;
   }
 
-  length = (int32_t)(uprv_strlen(path)+1);
-  save = pathToResource = (char *)uprv_malloc(length*sizeof(char));
+  length = (int32_t)(uprv_strlen(لار)+1);
+  save = لار_منزل_Resource = (حرف *)uprv_malloc(length*حجم(حرف));
   /* test for nullptr */
-  if(pathToResource == nullptr) {
-    *status = U_MEMORY_ALLOCATION_ERROR;
-    return result;
+  إذا(لار_منزل_Resource == تش_اشاره) {
+    *حالت = U_حافظه_ویش_ERROR;
+    أرجع پایله;
   }
-  uprv_memcpy(pathToResource, path, length);
+  uprv_memcpy(لار_منزل_Resource, لار, length);
 
-  locale = pathToResource;
-  if(*pathToResource == RES_PATH_SEPARATOR) { /* there is a path specification */
-    pathToResource++;
-    packageName = pathToResource;
-    pathToResource = uprv_strchr(pathToResource, RES_PATH_SEPARATOR);
-    if(pathToResource == nullptr) {
-      *status = U_ILLEGAL_ARGUMENT_ERROR;
-    } else {
-      *pathToResource = 0;
-      locale = pathToResource+1;
+  locale = لار_منزل_Resource;
+  إذا(*لار_منزل_Resource == RES_لار_SEPARATOR) { /* there is a path specification */
+    لار_منزل_Resource++;
+    packageName = لار_منزل_Resource;
+    لار_منزل_Resource = uprv_strchr(لار_منزل_Resource, RES_لار_SEPARATOR);
+    إذا(لار_منزل_Resource == تش_اشاره) {
+      *حالت = U_ILLEGAL_دلیل_ERROR;
+    } وإلا {
+      *لار_منزل_Resource = 0;
+      locale = لار_منزل_Resource+1;
     }
   }
 
-  localeEnd = uprv_strchr(locale, RES_PATH_SEPARATOR);
-  if(localeEnd != nullptr) {
-    *localeEnd = 0;
+  locale_پای_ټکی = uprv_strchr(locale, RES_لار_SEPARATOR);
+  إذا(locale_پای_ټکی != تش_اشاره) {
+    *locale_پای_ټکی = 0;
   }
 
-  first = ures_open(packageName, locale, status);
+  first = ures_open(packageName, locale, حالت);
 
-  if(U_SUCCESS(*status)) {
-    if(localeEnd) {
-      result = ures_findSubResource(first, localeEnd+1, fillIn, status);
-    } else {
-      result = ures_copyResb(fillIn, first, status);
+  إذا(U_SUCCESS(*حالت)) {
+    إذا(locale_پای_ټکی) {
+      پایله = ures_پیدا_کړه_Sub_Resource(first, locale_پای_ټکی+1, fill_دننه, حالت);
+    } وإلا {
+      پایله = ures_copyResb(fill_دننه, first, حالت);
     }
     ures_close(first);
   }
   uprv_free(save);
-  return result;
+  أرجع پایله;
 }
 
 U_CAPI UResourceBundle* U_EXPORT2
-ures_findSubResource(const UResourceBundle* resB,
-                     char* path,
-                     UResourceBundle* fillIn U_LIFETIME_BOUND,
-                     UErrorCode* status)
+ures_پیدا_کړه_Sub_Resource(ثابت UResourceBundle* resB,
+                     حرف* لار,
+                     UResourceBundle* fill_دننه U_LIFETIME_BOUND,
+                     UError_کوډ* حالت)
 {
   Resource res = RES_BOGUS;
-  UResourceBundle *result = fillIn;
-  const char *key;
+  UResourceBundle *پایله = fill_دننه;
+  ثابت حرف *کلی;
 
-  if(status == nullptr || U_FAILURE(*status)) {
-    return result;
+  إذا(حالت == تش_اشاره || U_FAILURE(*حالت)) {
+    أرجع پایله;
   }
 
   /* here we do looping and circular alias checking */
   /* this loop is here because aliasing is resolved on this level, not on res level */
   /* so, when we encounter an alias, it is not an aggregate resource, so we return */
-  do {
-    res = res_findResource(&resB->getResData(), resB->fRes, &path, &key); 
-    if(res != RES_BOGUS) {
-        result = init_resb_result(resB->fData, res, key, -1, resB, fillIn, status);
-        resB = result;
-    } else {
-        *status = U_MISSING_RESOURCE_ERROR;
-        break;
+  افعل {
+    res = res_پیدا_کړه_Resource(&resB->get_Res_معلومات(), resB->fRes, &لار, &کلی); 
+    إذا(res != RES_BOGUS) {
+        پایله = init_resb_پایله(resB->f_معلومات, res, کلی, -1, resB, fill_دننه, حالت);
+        resB = پایله;
+    } وإلا {
+        *حالت = U_MISSING_RESOURCE_ERROR;
+        اكسر;
     }
-  } while(*path); /* there is more stuff in the path */
+  } طالما(*لار); /* there is more stuff in the path */
 
-  return result;
+  أرجع پایله;
 }
 
-U_CAPI const char16_t* U_EXPORT2
-ures_getStringByKeyWithFallback(const UResourceBundle* resB U_LIFETIME_BOUND,
-                                const char* inKey,
+U_CAPI ثابت char16_t* U_EXPORT2
+ures_get_String_By_کلی_With_Fallback(ثابت UResourceBundle* resB U_LIFETIME_BOUND,
+                                ثابت حرف* دننه_کلی,
                                 int32_t* len,
-                                UErrorCode* status) {
-    UResourceBundle stack;
-    const char16_t* retVal = nullptr;
-    ures_initStackObject(&stack);
-    ures_getByKeyWithFallback(resB, inKey, &stack, status);
+                                UError_کوډ* حالت) {
+    UResourceBundle ډېری_2;
+    ثابت char16_t* retVal = تش_اشاره;
+    ures_init_ډېری_Object(&ډېری_2);
+    ures_get_By_کلی_With_Fallback(resB, دننه_کلی, &ډېری_2, حالت);
     int32_t length;
-    retVal = ures_getString(&stack, &length, status);
-    ures_close(&stack);
-    if (U_FAILURE(*status)) {
-        return nullptr;
+    retVal = ures_getString(&ډېری_2, &length, حالت);
+    ures_close(&ډېری_2);
+    إذا (U_FAILURE(*حالت)) {
+        أرجع تش_اشاره;
     }
-    if (length == 3 && retVal[0] == EMPTY_SET && retVal[1] == EMPTY_SET && retVal[2] == EMPTY_SET ) {
-        retVal = nullptr;
+    إذا (length == 3 && retVal[0] == تشه_سېټ && retVal[1] == تشه_سېټ && retVal[2] == تشه_سېټ ) {
+        retVal = تش_اشاره;
         length = 0;
-        *status = U_MISSING_RESOURCE_ERROR;
+        *حالت = U_MISSING_RESOURCE_ERROR;
     }
-    if (len != nullptr) {
+    إذا (len != تش_اشاره) {
         *len = length;
     }
-    return retVal;
+    أرجع retVal;
 }
 
 /*
   Like res_getTableItemByKey but accepts full paths like "NumberElements/latn/patternsShort".
 */  
-static Resource getTableItemByKeyPath(const ResourceData *pResData, Resource table, const char *key) {
-  Resource resource = table;  /* The current resource */
-  icu::CharString path;
-  UErrorCode errorCode = U_ZERO_ERROR;
-  path.append(key, errorCode);
-  if (U_FAILURE(errorCode)) { return RES_BOGUS; }
-  char *pathPart = path.data();  /* Path from current resource to desired resource */
+ساكن Resource get_جدول_توکی_By_کلی_لار(ثابت Resource_معلومات *p_Res_معلومات, Resource جدول, ثابت حرف *کلی) {
+  Resource resource = جدول;  /* The current resource */
+  icu::CharString لار;
+  UError_کوډ error_کوډ = U_ZERO_ERROR;
+  لار.append(کلی, error_کوډ);
+  إذا (U_FAILURE(error_کوډ)) { أرجع RES_BOGUS; }
+  حرف *لار_Part = لار.معلومات();  /* Path from current resource to desired resource */
   UResType type = static_cast<UResType>(RES_GET_TYPE(resource)); /* the current resource type */
-  while (*pathPart && resource != RES_BOGUS && URES_IS_CONTAINER(type)) {
-    char *nextPathPart = uprv_strchr(pathPart, RES_PATH_SEPARATOR);
-    if (nextPathPart != nullptr) {
-      *nextPathPart = 0;  /* Terminating null for this part of path. */
-      nextPathPart++;
-    } else {
-      nextPathPart = uprv_strchr(pathPart, 0);
+  طالما (*لار_Part && resource != RES_BOGUS && URES_IS_CONTAINER(type)) {
+    حرف *بل_لار_Part = uprv_strchr(لار_Part, RES_لار_SEPARATOR);
+    إذا (بل_لار_Part != تش_اشاره) {
+      *بل_لار_Part = 0;  /* Terminating null for this part of path. */
+      بل_لار_Part++;
+    } وإلا {
+      بل_لار_Part = uprv_strchr(لار_Part, 0);
     }
     int32_t t;
-    const char *pathP = pathPart;
-    resource = res_getTableItemByKey(pResData, resource, &t, &pathP);
+    ثابت حرف *لار_P = لار_Part;
+    resource = res_get_جدول_توکی_By_کلی(p_Res_معلومات, resource, &t, &لار_P);
     type = static_cast<UResType>(RES_GET_TYPE(resource));
-    pathPart = nextPathPart; 
+    لار_Part = بل_لار_Part; 
   }
-  if (*pathPart) {
-    return RES_BOGUS;
+  إذا (*لار_Part) {
+    أرجع RES_BOGUS;
   }
-  return resource;
+  أرجع resource;
 }
 
-static void createPath(const char* origResPath,
-                       int32_t     origResPathLen,
-                       const char* resPath,
-                       int32_t     resPathLen,
-                       const char* inKey,
-                       CharString& path,
-                       UErrorCode* status) {
+ساكن فراغ create_لار(ثابت حرف* orig_Res_لار,
+                       int32_t     orig_Res_لار_Len,
+                       ثابت حرف* res_لار,
+                       int32_t     res_لار_Len,
+                       ثابت حرف* دننه_کلی,
+                       CharString& لار,
+                       UError_کوډ* حالت) {
     // This is a utility function used by ures_getByKeyWithFallback() below.  This function builds a path from
     // resPath and inKey, returning the result in `path`.  Originally, this function just cleared `path` and
     // appended resPath and inKey to it, but that caused problems for horizontal inheritance.
@@ -2151,47 +2151,47 @@ static void createPath(const char* origResPath,
     // deletes a path element from the beginning of inKey.  The remainder of inKey is then appended to
     // resPath to form the result.  (We're not using uprv_strchr() here because resPath and origResPath may
     // not be zero-terminated.)
-    path.clear();
-    const char* key = inKey;
-    if (resPathLen > 0) {
-        path.append(resPath, resPathLen, *status);
-        if (U_SUCCESS(*status)) {
-            const char* resPathLimit = resPath + resPathLen;
-            const char* origResPathLimit = origResPath + origResPathLen;
-            const char* resPathPtr = resPath;
-            const char* origResPathPtr = origResPath;
+    لار.clear();
+    ثابت حرف* کلی = دننه_کلی;
+    إذا (res_لار_Len > 0) {
+        لار.append(res_لار, res_لار_Len, *حالت);
+        إذا (U_SUCCESS(*حالت)) {
+            ثابت حرف* res_لار_حد = res_لار + res_لار_Len;
+            ثابت حرف* orig_Res_لار_حد = orig_Res_لار + orig_Res_لار_Len;
+            ثابت حرف* res_لار_Ptr = res_لار;
+            ثابت حرف* orig_Res_لار_Ptr = orig_Res_لار;
             
             // Remove from the beginning of resPath the number of segments that are contained in origResPath.
             // If origResPath has MORE segments than resPath, this will leave resPath as the empty string.
-            while (origResPathPtr < origResPathLimit && resPathPtr < resPathLimit) {
-                while (origResPathPtr < origResPathLimit && *origResPathPtr != RES_PATH_SEPARATOR) {
-                    ++origResPathPtr;
+            طالما (orig_Res_لار_Ptr < orig_Res_لار_حد && res_لار_Ptr < res_لار_حد) {
+                طالما (orig_Res_لار_Ptr < orig_Res_لار_حد && *orig_Res_لار_Ptr != RES_لار_SEPARATOR) {
+                    ++orig_Res_لار_Ptr;
                 }
-                if (origResPathPtr < origResPathLimit && *origResPathPtr == RES_PATH_SEPARATOR) {
-                    ++origResPathPtr;
+                إذا (orig_Res_لار_Ptr < orig_Res_لار_حد && *orig_Res_لار_Ptr == RES_لار_SEPARATOR) {
+                    ++orig_Res_لار_Ptr;
                 }
-                while (resPathPtr < resPathLimit && *resPathPtr != RES_PATH_SEPARATOR) {
-                    ++resPathPtr;
+                طالما (res_لار_Ptr < res_لار_حد && *res_لار_Ptr != RES_لار_SEPARATOR) {
+                    ++res_لار_Ptr;
                 }
-                if (resPathPtr < resPathLimit && *resPathPtr == RES_PATH_SEPARATOR) {
-                    ++resPathPtr;
+                إذا (res_لار_Ptr < res_لار_حد && *res_لار_Ptr == RES_لار_SEPARATOR) {
+                    ++res_لار_Ptr;
                 }
             }
             
             // New remove from the beginning of `key` the number of segments remaining in resPath.
             // If resPath has more segments than `key` does, `key` will end up empty.
-            while (resPathPtr < resPathLimit && *key != '\0') {
-                while (resPathPtr < resPathLimit && *resPathPtr != RES_PATH_SEPARATOR) {
-                    ++resPathPtr;
+            طالما (res_لار_Ptr < res_لار_حد && *کلی != '\0') {
+                طالما (res_لار_Ptr < res_لار_حد && *res_لار_Ptr != RES_لار_SEPARATOR) {
+                    ++res_لار_Ptr;
                 }
-                if (resPathPtr < resPathLimit && *resPathPtr == RES_PATH_SEPARATOR) {
-                    ++resPathPtr;
+                إذا (res_لار_Ptr < res_لار_حد && *res_لار_Ptr == RES_لار_SEPARATOR) {
+                    ++res_لار_Ptr;
                 }
-                while (*key != '\0' && *key != RES_PATH_SEPARATOR) {
-                    ++key;
+                طالما (*کلی != '\0' && *کلی != RES_لار_SEPARATOR) {
+                    ++کلی;
                 }
-                if (*key == RES_PATH_SEPARATOR) {
-                    ++key;
+                إذا (*کلی == RES_لار_SEPARATOR) {
+                    ++کلی;
                 }
             }
         }
@@ -2199,132 +2199,132 @@ static void createPath(const char* origResPath,
         // any pieces of `key` that aren't superseded by `resPath`.
         // Or, to put it another way, calculate <#-segments-in-key> - (<#-segments-in-resPath> - <#-segments-in-origResPath>),
         // and append that many segments from the end of `key` to `resPath` to produce the result.
-        path.append(key, *status);
-    } else {
-        path.append(inKey, *status);
+        لار.append(کلی, *حالت);
+    } وإلا {
+        لار.append(دننه_کلی, *حالت);
     }
 }
 
 U_CAPI UResourceBundle* U_EXPORT2
-ures_getByKeyWithFallback(const UResourceBundle* resB,
-                          const char* inKey,
-                          UResourceBundle* fillIn U_LIFETIME_BOUND,
-                          UErrorCode* status) {
-    Resource res = RES_BOGUS, rootRes = RES_BOGUS;
-    UResourceBundle *helper = nullptr;
+ures_get_By_کلی_With_Fallback(ثابت UResourceBundle* resB,
+                          ثابت حرف* دننه_کلی,
+                          UResourceBundle* fill_دننه U_LIFETIME_BOUND,
+                          UError_کوډ* حالت) {
+    Resource res = RES_BOGUS, ریښه_Res = RES_BOGUS;
+    UResourceBundle *helper = تش_اشاره;
 
-    if (status==nullptr || U_FAILURE(*status)) {
-        return fillIn;
+    إذا (حالت==تش_اشاره || U_FAILURE(*حالت)) {
+        أرجع fill_دننه;
     }
-    if(resB == nullptr) {
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return fillIn;
+    إذا(resB == تش_اشاره) {
+        *حالت = U_ILLEGAL_دلیل_ERROR;
+        أرجع fill_دننه;
     }
 
     int32_t type = RES_GET_TYPE(resB->fRes);
-    if(URES_IS_TABLE(type)) {
-        const char* origResPath = resB->fResPath;
-        int32_t origResPathLen = resB->fResPathLen;
-        res = getTableItemByKeyPath(&resB->getResData(), resB->fRes, inKey);
-        const char* key = inKey;
-        bool didRootOnce = false;
-        if(res == RES_BOGUS) {
-            UResourceDataEntry *dataEntry = resB->fData;
-            CharString path;
-            char *myPath = nullptr;
-            const char* resPath = resB->fResPath;
-            int32_t len = resB->fResPathLen;
-            while(res == RES_BOGUS && (dataEntry->fParent != nullptr || !didRootOnce)) { /* Otherwise, we'll look in parents */
-                if (dataEntry->fParent != nullptr) {
-                    dataEntry = dataEntry->fParent;
-                } else {
+    إذا(URES_IS_جدول(type)) {
+        ثابت حرف* orig_Res_لار = resB->f_Res_لار;
+        int32_t orig_Res_لار_Len = resB->f_Res_لار_Len;
+        res = get_جدول_توکی_By_کلی_لار(&resB->get_Res_معلومات(), resB->fRes, دننه_کلی);
+        ثابت حرف* کلی = دننه_کلی;
+        منطقي did_ریښه_Once = خطأ;
+        إذا(res == RES_BOGUS) {
+            UResource_معلومات_ثبت *معلومات_ثبت = resB->f_معلومات;
+            CharString لار;
+            حرف *my_لار = تش_اشاره;
+            ثابت حرف* res_لار = resB->f_Res_لار;
+            int32_t len = resB->f_Res_لار_Len;
+            طالما(res == RES_BOGUS && (معلومات_ثبت->f_پلار != تش_اشاره || !did_ریښه_Once)) { /* Otherwise, we'll look in parents */
+                إذا (معلومات_ثبت->f_پلار != تش_اشاره) {
+                    معلومات_ثبت = معلومات_ثبت->f_پلار;
+                } وإلا {
                     // We can't just stop when we get to a bundle whose fParent is nullptr.  That'll work most of the time,
                     // but if the bundle that the caller passed to us was "root" (which happens in getAllItemsWithFallback(),
                     // this function will drop right out without doing anything if "root" doesn't contain the exact key path
                     // specified.  In that case, we need one extra time through this loop to make sure we follow any
                     // applicable aliases at the root level.
-                    didRootOnce = true;
+                    did_ریښه_Once = ریښتیا;
                 }
-                rootRes = dataEntry->fData.rootRes;
+                ریښه_Res = معلومات_ثبت->f_معلومات.ریښه_Res;
 
-                if(dataEntry->fBogus == U_ZERO_ERROR) {
-                    createPath(origResPath, origResPathLen, resPath, len, inKey, path, status);
-                    if (U_FAILURE(*status)) {
+                إذا(معلومات_ثبت->fBogus == U_ZERO_ERROR) {
+                    create_لار(orig_Res_لار, orig_Res_لار_Len, res_لار, len, دننه_کلی, لار, حالت);
+                    إذا (U_FAILURE(*حالت)) {
                         ures_close(helper);
-                        return fillIn;
+                        أرجع fill_دننه;
                     }
-                    myPath = path.data();
-                    key = inKey;
-                    do {
-                        res = res_findResource(&(dataEntry->fData), rootRes, &myPath, &key);
-                        if (RES_GET_TYPE(res) == URES_ALIAS && *myPath) {
+                    my_لار = لار.معلومات();
+                    کلی = دننه_کلی;
+                    افعل {
+                        res = res_پیدا_کړه_Resource(&(معلومات_ثبت->f_معلومات), ریښه_Res, &my_لار, &کلی);
+                        إذا (RES_GET_TYPE(res) == URES_ALIAS && *my_لار) {
                             /* We hit an alias, but we didn't finish following the path. */
-                            helper = init_resb_result(dataEntry, res, nullptr, -1, resB, helper, status);
+                            helper = init_resb_پایله(معلومات_ثبت, res, تش_اشاره, -1, resB, helper, حالت);
                             /*helper = init_resb_result(dataEntry, res, inKey, -1, resB, helper, status);*/
-                            if(helper) {
-                              dataEntry = helper->fData;
-                              rootRes = helper->fRes;
-                              resPath = helper->fResPath;
-                              len = helper->fResPathLen;
+                            إذا(helper) {
+                              معلومات_ثبت = helper->f_معلومات;
+                              ریښه_Res = helper->fRes;
+                              res_لار = helper->f_Res_لار;
+                              len = helper->f_Res_لار_Len;
 
-                            } else {
-                              break;
+                            } وإلا {
+                              اكسر;
                             }
-                        } else if (res == RES_BOGUS) {
-                            break;
+                        } وإلا إذا (res == RES_BOGUS) {
+                            اكسر;
                         }
-                    } while(*myPath); /* Continue until the whole path is consumed */
+                    } طالما(*my_لار); /* Continue until the whole path is consumed */
                 }
             }
             /*dataEntry = getFallbackData(resB, &key, &res, status);*/
-            if(res != RES_BOGUS) {
+            إذا(res != RES_BOGUS) {
               /* check if resB->fResPath gives the right name here */
-                if(uprv_strcmp(dataEntry->fName, uloc_getDefault())==0 || uprv_strcmp(dataEntry->fName, kRootLocaleName)==0) {
-                    *status = U_USING_DEFAULT_WARNING;
-                } else {
-                    *status = U_USING_FALLBACK_WARNING;
+                إذا(uprv_strcmp(معلومات_ثبت->fName, uloc_getDefault())==0 || uprv_strcmp(معلومات_ثبت->fName, k_ریښه_Locale_Name)==0) {
+                    *حالت = U_USING_DEFAULT_WARNING;
+                } وإلا {
+                    *حالت = U_USING_FALLBACK_WARNING;
                 }
 
-                fillIn = init_resb_result(dataEntry, res, key, -1, resB, fillIn, status);
-                if (resPath != nullptr) {
-                    createPath(origResPath, origResPathLen, resPath, len, inKey, path, status);
-                } else {
-                    const char* separator = nullptr;
-                    if (fillIn->fResPath != nullptr) {
-                        separator = uprv_strchr(fillIn->fResPath, RES_PATH_SEPARATOR);
+                fill_دننه = init_resb_پایله(معلومات_ثبت, res, کلی, -1, resB, fill_دننه, حالت);
+                إذا (res_لار != تش_اشاره) {
+                    create_لار(orig_Res_لار, orig_Res_لار_Len, res_لار, len, دننه_کلی, لار, حالت);
+                } وإلا {
+                    ثابت حرف* separator = تش_اشاره;
+                    إذا (fill_دننه->f_Res_لار != تش_اشاره) {
+                        separator = uprv_strchr(fill_دننه->f_Res_لار, RES_لار_SEPARATOR);
                     }
-                    if (separator != nullptr && separator[1] != '\0') {
-                        createPath(origResPath, origResPathLen, fillIn->fResPath,
-                                   static_cast<int32_t>(uprv_strlen(fillIn->fResPath)), inKey, path, status);
-                    } else {
-                        createPath(origResPath, origResPathLen, "", 0, inKey, path, status);
+                    إذا (separator != تش_اشاره && separator[1] != '\0') {
+                        create_لار(orig_Res_لار, orig_Res_لار_Len, fill_دننه->f_Res_لار,
+                                   static_cast<int32_t>(uprv_strlen(fill_دننه->f_Res_لار)), دننه_کلی, لار, حالت);
+                    } وإلا {
+                        create_لار(orig_Res_لار, orig_Res_لار_Len, "", 0, دننه_کلی, لار, حالت);
                     }
                 }
-                ures_freeResPath(fillIn);
-                ures_appendResPath(fillIn, path.data(), path.length(), status);
-                if(fillIn->fResPath[fillIn->fResPathLen-1] != RES_PATH_SEPARATOR) {
-                    ures_appendResPath(fillIn, RES_PATH_SEPARATOR_S, 1, status);
+                ures_free_Res_لار(fill_دننه);
+                ures_append_Res_لار(fill_دننه, لار.معلومات(), لار.length(), حالت);
+                إذا(fill_دننه->f_Res_لار[fill_دننه->f_Res_لار_Len-1] != RES_لار_SEPARATOR) {
+                    ures_append_Res_لار(fill_دننه, RES_لار_SEPARATOR_S, 1, حالت);
                 }
-            } else {
-                *status = U_MISSING_RESOURCE_ERROR;
+            } وإلا {
+                *حالت = U_MISSING_RESOURCE_ERROR;
             }
-        } else {
-            fillIn = init_resb_result(resB->fData, res, key, -1, resB, fillIn, status);
+        } وإلا {
+            fill_دننه = init_resb_پایله(resB->f_معلومات, res, کلی, -1, resB, fill_دننه, حالت);
         }
     } 
-    else {
-        *status = U_RESOURCE_TYPE_MISMATCH;
+    وإلا {
+        *حالت = U_RESOURCE_TYPE_MISMATCH;
     }
     ures_close(helper);
-    return fillIn;
+    أرجع fill_دننه;
 }
 
-namespace {
+نطاق {
 
-void getAllItemsWithFallback(
-        const UResourceBundle *bundle, ResourceDataValue &value,
-        ResourceSink &sink, UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return; }
+فراغ get_All_توکي_With_Fallback(
+        ثابت UResourceBundle *bundle, Resource_معلومات_ارزښت &value,
+        ResourceSink &sink, UError_کوډ &error_کوډ) {
+    إذا (U_FAILURE(error_کوډ)) { أرجع; }
     // We recursively enumerate child-first,
     // only storing parent items in the absence of child items.
     // The sink needs to store a placeholder value for the no-fallback/no-inheritance marker
@@ -2335,13 +2335,13 @@ void getAllItemsWithFallback(
     // When the sink sees the no-fallback/no-inheritance marker,
     // then it would remove the parent's item.
     // We would deserialize parent values even though they are overridden in a child bundle.
-    value.setData(bundle->getResData());
-    value.setValidLocaleDataEntry(bundle->fValidLocaleDataEntry);
-    UResourceDataEntry *parentEntry = bundle->fData->fParent;
-    UBool hasParent = parentEntry != nullptr && U_SUCCESS(parentEntry->fBogus);
-    value.setResource(bundle->fRes, ResourceTracer(bundle));
-    sink.put(bundle->fKey, value, !hasParent, errorCode);
-    if (hasParent) {
+    value.سېټ_معلومات(bundle->get_Res_معلومات());
+    value.سېټ_Valid_Locale_معلومات_ثبت(bundle->f_Valid_Locale_معلومات_ثبت);
+    UResource_معلومات_ثبت *پلار_ثبت = bundle->f_معلومات->f_پلار;
+    UBool has_پلار = پلار_ثبت != تش_اشاره && U_SUCCESS(پلار_ثبت->fBogus);
+    value.سېټ_Resource(bundle->fRes, ResourceTracer(bundle));
+    sink.put(bundle->f_کلی, value, !has_پلار, error_کوډ);
+    إذا (has_پلار) {
         // We might try to query the sink whether
         // any fallback from the parent bundle is still possible.
 
@@ -2350,121 +2350,121 @@ void getAllItemsWithFallback(
         // TODO: See if we can refactor ures_getByKeyWithFallback()
         // and pull out an inner function that takes and returns a UResourceDataEntry
         // so that we need not create UResourceBundle objects.
-        StackUResourceBundle parentBundle;
-        UResourceBundle &parentRef = parentBundle.ref();
-        parentRef.fData = parentEntry;
-        parentRef.fValidLocaleDataEntry = bundle->fValidLocaleDataEntry;
-        parentRef.fHasFallback = !parentRef.getResData().noFallback;
-        parentRef.fIsTopLevel = true;
-        parentRef.fRes = parentRef.getResData().rootRes;
-        parentRef.fSize = res_countArrayItems(&parentRef.getResData(), parentRef.fRes);
-        parentRef.fIndex = -1;
-        entryIncrease(parentEntry);
+        ډېری_UResource_Bundle پلار_Bundle;
+        UResourceBundle &پلار_Ref = پلار_Bundle.ref();
+        پلار_Ref.f_معلومات = پلار_ثبت;
+        پلار_Ref.f_Valid_Locale_معلومات_ثبت = bundle->f_Valid_Locale_معلومات_ثبت;
+        پلار_Ref.fHasFallback = !پلار_Ref.get_Res_معلومات().noFallback;
+        پلار_Ref.f_Is_سر_Level = ریښتیا;
+        پلار_Ref.fRes = پلار_Ref.get_Res_معلومات().ریښه_Res;
+        پلار_Ref.f_اندازه = res_شمېر_Array_توکي(&پلار_Ref.get_Res_معلومات(), پلار_Ref.fRes);
+        پلار_Ref.f_شاخص = -1;
+        ثبت_Increase(پلار_ثبت);
 
         // Look up the container item in the parent bundle.
-        StackUResourceBundle containerBundle;
-        const UResourceBundle *rb;
-        UErrorCode pathErrorCode = U_ZERO_ERROR;  // Ignore if parents up to root do not have this path.
-        if (bundle->fResPath == nullptr || *bundle->fResPath == 0) {
-            rb = parentBundle.getAlias();
-        } else {
-            rb = ures_getByKeyWithFallback(parentBundle.getAlias(), bundle->fResPath,
-                                           containerBundle.getAlias(), &pathErrorCode);
+        ډېری_UResource_Bundle containerBundle;
+        ثابت UResourceBundle *rb;
+        UError_کوډ لار_Error_کوډ = U_ZERO_ERROR;  // Ignore if parents up to root do not have this path.
+        إذا (bundle->f_Res_لار == تش_اشاره || *bundle->f_Res_لار == 0) {
+            rb = پلار_Bundle.getAlias();
+        } وإلا {
+            rb = ures_get_By_کلی_With_Fallback(پلار_Bundle.getAlias(), bundle->f_Res_لار,
+                                           containerBundle.getAlias(), &لار_Error_کوډ);
         }
-        if (U_SUCCESS(pathErrorCode)) {
-            getAllItemsWithFallback(rb, value, sink, errorCode);
+        إذا (U_SUCCESS(لار_Error_کوډ)) {
+            get_All_توکي_With_Fallback(rb, value, sink, error_کوډ);
         }
     }
 }
 
-struct GetAllChildrenSink : public ResourceSink {
+بنية GetAllChildrenSink : عام ResourceSink {
     // Destination sink
     ResourceSink& dest;
 
     GetAllChildrenSink(ResourceSink& dest)
         : dest(dest) {}
-    virtual ~GetAllChildrenSink() override;
-    virtual void put(const char *key, ResourceValue &value, UBool isRoot,
-           UErrorCode &errorCode) override {
-        ResourceTable itemsTable = value.getTable(errorCode);
-        if (U_FAILURE(errorCode)) { return; }
-        for (int32_t i = 0; itemsTable.getKeyAndValue(i, key, value); ++i) {
-            if (value.getType() == URES_ALIAS) {
-                ResourceDataValue& rdv = static_cast<ResourceDataValue&>(value);
-                StackUResourceBundle stackTempBundle;
-                UResourceBundle* aliasRB = getAliasTargetAsResourceBundle(rdv.getData(), rdv.getResource(), nullptr, -1,
-                                                                          rdv.getValidLocaleDataEntry(), nullptr, 0,
-                                                                          stackTempBundle.getAlias(), &errorCode);
-                if (U_SUCCESS(errorCode)) {
-                    ResourceDataValue aliasedValue;
-                    aliasedValue.setData(aliasRB->getResData());
-                    aliasedValue.setValidLocaleDataEntry(aliasRB->fValidLocaleDataEntry);
-                    aliasedValue.setResource(aliasRB->fRes, ResourceTracer(aliasRB));
+    مجازي ~GetAllChildrenSink() override;
+    مجازي فراغ put(ثابت حرف *کلی, Resource_ارزښت &value, UBool is_ریښه,
+           UError_کوډ &error_کوډ) override {
+        Resource_جدول توکي_جدول = value.get_جدول(error_کوډ);
+        إذا (U_FAILURE(error_کوډ)) { أرجع; }
+        لكل (int32_t i = 0; توکي_جدول.get_کلی_And_ارزښت(i, کلی, value); ++i) {
+            إذا (value.getType() == URES_ALIAS) {
+                Resource_معلومات_ارزښت& rdv = static_cast<Resource_معلومات_ارزښت&>(value);
+                ډېری_UResource_Bundle ډېری_لنډمهاله_Bundle;
+                UResourceBundle* aliasRB = get_Alias_موخه_As_Resource_Bundle(rdv.get_معلومات(), rdv.getResource(), تش_اشاره, -1,
+                                                                          rdv.get_Valid_Locale_معلومات_ثبت(), تش_اشاره, 0,
+                                                                          ډېری_لنډمهاله_Bundle.getAlias(), &error_کوډ);
+                إذا (U_SUCCESS(error_کوډ)) {
+                    Resource_معلومات_ارزښت aliased_ارزښت;
+                    aliased_ارزښت.سېټ_معلومات(aliasRB->get_Res_معلومات());
+                    aliased_ارزښت.سېټ_Valid_Locale_معلومات_ثبت(aliasRB->f_Valid_Locale_معلومات_ثبت);
+                    aliased_ارزښت.سېټ_Resource(aliasRB->fRes, ResourceTracer(aliasRB));
                     
-                    if (aliasedValue.getType() != URES_TABLE) {
-                        dest.put(key, aliasedValue, isRoot, errorCode);
-                    } else {
+                    إذا (aliased_ارزښت.getType() != URES_جدول) {
+                        dest.put(کلی, aliased_ارزښت, is_ریښه, error_کوډ);
+                    } وإلا {
                         // if the resource we're aliasing over to is a table, the sink might iterate over its contents.
                         // If it does, it'll get only the things defined in the actual alias target, not the things
                         // the target inherits from its parent resources.  So we walk the parent chain for the *alias target*,
                         // calling dest.put() for each of the parent tables we could be inheriting from.  This means
                         // that dest.put() has to iterate over the children of multiple tables to get all of the inherited
                         // resource values, but it already has to do that to handle normal vertical inheritance.
-                        UResType aliasedValueType = URES_TABLE;
-                        CharString tablePath;
-                        tablePath.append(aliasRB->fResPath, errorCode);
-                        const char* parentKey = key; // dest.put() changes the key
-                        dest.put(parentKey, aliasedValue, isRoot, errorCode);
-                        UResourceDataEntry* entry = aliasRB->fData;
+                        UResType aliased_ارزښت_Type = URES_جدول;
+                        CharString جدول_لار;
+                        جدول_لار.append(aliasRB->f_Res_لار, error_کوډ);
+                        ثابت حرف* پلار_کلی = کلی; // dest.put() changes the key
+                        dest.put(پلار_کلی, aliased_ارزښت, is_ریښه, error_کوډ);
+                        UResource_معلومات_ثبت* ثبت = aliasRB->f_معلومات;
                         Resource res = aliasRB->fRes;
-                        while (aliasedValueType == URES_TABLE && entry->fParent != nullptr) {
-                            CharString localPath;
-                            localPath.copyFrom(tablePath, errorCode);
-                            char* localPathAsCharPtr = localPath.data();
-                            const char* childKey;
-                            entry = entry->fParent;
-                            res = entry->fData.rootRes;
-                            Resource newRes = res_findResource(&entry->fData, res, &localPathAsCharPtr, &childKey);
-                            if (newRes != RES_BOGUS) {
-                                aliasedValue.setData(entry->fData);
+                        طالما (aliased_ارزښت_Type == URES_جدول && ثبت->f_پلار != تش_اشاره) {
+                            CharString local_لار;
+                            local_لار.copyFrom(جدول_لار, error_کوډ);
+                            حرف* local_لار_As_Char_Ptr = local_لار.معلومات();
+                            ثابت حرف* ماشوم_کلی;
+                            ثبت = ثبت->f_پلار;
+                            res = ثبت->f_معلومات.ریښه_Res;
+                            Resource newRes = res_پیدا_کړه_Resource(&ثبت->f_معلومات, res, &local_لار_As_Char_Ptr, &ماشوم_کلی);
+                            إذا (newRes != RES_BOGUS) {
+                                aliased_ارزښت.سېټ_معلومات(ثبت->f_معلومات);
                                 // TODO: do I also need to call aliasedValue.setValueLocaleDataEntry() ?
-                                aliasedValue.setResource(newRes, ResourceTracer(aliasRB)); // probably wrong to use aliasRB here
-                                aliasedValueType = aliasedValue.getType();
-                                if (aliasedValueType == URES_ALIAS) {
+                                aliased_ارزښت.سېټ_Resource(newRes, ResourceTracer(aliasRB)); // probably wrong to use aliasRB here
+                                aliased_ارزښت_Type = aliased_ارزښت.getType();
+                                إذا (aliased_ارزښت_Type == URES_ALIAS) {
                                     // in a few rare cases, when we get to the root resource bundle, the resource in question
                                     // won't be an actual table, but will instead be an alias to a table.  That is, we have
                                     // two aliases in the inheritance path.  (For some locales, such as Zulu, we see this with
                                     // children of the "fields" resource: "day-narrow" aliases to "day-short", which aliases
                                     // to "day".)  When this happens, we need to make sure we follow all the aliases.
-                                    ResourceDataValue& rdv2 = static_cast<ResourceDataValue&>(aliasedValue);
-                                    aliasRB = getAliasTargetAsResourceBundle(rdv2.getData(), rdv2.getResource(), nullptr, -1,
-                                                                             rdv2.getValidLocaleDataEntry(), nullptr, 0,
-                                                                             stackTempBundle.getAlias(), &errorCode);
-                                    tablePath.clear();
-                                    tablePath.append(aliasRB->fResPath, errorCode);
-                                    entry = aliasRB->fData;
+                                    Resource_معلومات_ارزښت& rdv2 = static_cast<Resource_معلومات_ارزښت&>(aliased_ارزښت);
+                                    aliasRB = get_Alias_موخه_As_Resource_Bundle(rdv2.get_معلومات(), rdv2.getResource(), تش_اشاره, -1,
+                                                                             rdv2.get_Valid_Locale_معلومات_ثبت(), تش_اشاره, 0,
+                                                                             ډېری_لنډمهاله_Bundle.getAlias(), &error_کوډ);
+                                    جدول_لار.clear();
+                                    جدول_لار.append(aliasRB->f_Res_لار, error_کوډ);
+                                    ثبت = aliasRB->f_معلومات;
                                     res = aliasRB->fRes;
-                                    aliasedValue.setData(entry->fData);
+                                    aliased_ارزښت.سېټ_معلومات(ثبت->f_معلومات);
                                     // TODO: do I also need to call aliasedValue.setValueLocaleDataEntry() ?
-                                    aliasedValue.setResource(res, ResourceTracer(aliasRB)); // probably wrong to use aliasRB here
-                                    aliasedValueType = aliasedValue.getType();
+                                    aliased_ارزښت.سېټ_Resource(res, ResourceTracer(aliasRB)); // probably wrong to use aliasRB here
+                                    aliased_ارزښت_Type = aliased_ارزښت.getType();
                                 }
-                                if (aliasedValueType == URES_TABLE) {
-                                    dest.put(parentKey, aliasedValue, isRoot, errorCode);
-                                } else {
+                                إذا (aliased_ارزښت_Type == URES_جدول) {
+                                    dest.put(پلار_کلی, aliased_ارزښت, is_ریښه, error_کوډ);
+                                } وإلا {
                                     // once we've followed the alias, the resource we're looking at really should
                                     // be a table
-                                    errorCode = U_INTERNAL_PROGRAM_ERROR;
-                                    return;
+                                    error_کوډ = U_دننی_پروګرام_ERROR;
+                                    أرجع;
                                 }
                             }
                         }
                     }
                 }
-            } else {
-                dest.put(key, value, isRoot, errorCode);
+            } وإلا {
+                dest.put(کلی, value, is_ریښه, error_کوډ);
             }
-            if (U_FAILURE(errorCode)) { return; }
+            إذا (U_FAILURE(error_کوډ)) { أرجع; }
         }
     }
 };
@@ -2472,11 +2472,11 @@ struct GetAllChildrenSink : public ResourceSink {
 // Virtual destructors must be defined out of line.
 GetAllChildrenSink::~GetAllChildrenSink() {}
 
-U_CAPI void U_EXPORT2
-ures_getAllChildrenWithFallback(const UResourceBundle *bundle, const char *path,
-                                icu::ResourceSink &sink, UErrorCode &errorCode) {
+U_CAPI فراغ U_EXPORT2
+ures_getAllChildrenWithFallback(ثابت UResourceBundle *bundle, ثابت حرف *لار,
+                                icu::ResourceSink &sink, UError_کوډ &error_کوډ) {
     GetAllChildrenSink allChildrenSink(sink);
-    ures_getAllItemsWithFallback(bundle, path, allChildrenSink, errorCode);
+    ures_get_All_توکي_With_Fallback(bundle, لار, allChildrenSink, error_کوډ);
 }
 
 }  // namespace
@@ -2490,208 +2490,208 @@ ures_getAllChildrenWithFallback(const UResourceBundle *bundle, const char *path,
 // Also requires a UResourceBundle fill-in, so that the value's ResourceTracer
 // can point to a non-local bundle.
 // Without tracing, the child bundle could be a function-local object.
-U_CAPI void U_EXPORT2
-ures_getValueWithFallback(const UResourceBundle *bundle, const char *path,
-                          UResourceBundle *tempFillIn,
-                          ResourceDataValue &value, UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return; }
-    if (path == nullptr) {
-        errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+U_CAPI فراغ U_EXPORT2
+ures_get_ارزښت_With_Fallback(ثابت UResourceBundle *bundle, ثابت حرف *لار,
+                          UResourceBundle *لنډمهاله_Fill_دننه,
+                          Resource_معلومات_ارزښت &value, UError_کوډ &error_کوډ) {
+    إذا (U_FAILURE(error_کوډ)) { أرجع; }
+    إذا (لار == تش_اشاره) {
+        error_کوډ = U_ILLEGAL_دلیل_ERROR;
+        أرجع;
     }
-    const UResourceBundle *rb;
-    if (*path == 0) {
+    ثابت UResourceBundle *rb;
+    إذا (*لار == 0) {
         // empty path
         rb = bundle;
-    } else {
-        rb = ures_getByKeyWithFallback(bundle, path, tempFillIn, &errorCode);
-        if (U_FAILURE(errorCode)) {
-            return;
+    } وإلا {
+        rb = ures_get_By_کلی_With_Fallback(bundle, لار, لنډمهاله_Fill_دننه, &error_کوډ);
+        إذا (U_FAILURE(error_کوډ)) {
+            أرجع;
         }
     }
-    value.setData(rb->getResData());
-    value.setValidLocaleDataEntry(rb->fValidLocaleDataEntry);
-    value.setResource(rb->fRes, ResourceTracer(rb));
+    value.سېټ_معلومات(rb->get_Res_معلومات());
+    value.سېټ_Valid_Locale_معلومات_ثبت(rb->f_Valid_Locale_معلومات_ثبت);
+    value.سېټ_Resource(rb->fRes, ResourceTracer(rb));
 }
 
-U_CAPI void U_EXPORT2
-ures_getAllItemsWithFallback(const UResourceBundle *bundle, const char *path,
-                             icu::ResourceSink &sink, UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return; }
-    if (path == nullptr) {
-        errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+U_CAPI فراغ U_EXPORT2
+ures_get_All_توکي_With_Fallback(ثابت UResourceBundle *bundle, ثابت حرف *لار,
+                             icu::ResourceSink &sink, UError_کوډ &error_کوډ) {
+    إذا (U_FAILURE(error_کوډ)) { أرجع; }
+    إذا (لار == تش_اشاره) {
+        error_کوډ = U_ILLEGAL_دلیل_ERROR;
+        أرجع;
     }
-    StackUResourceBundle stackBundle;
-    const UResourceBundle *rb;
-    if (*path == 0) {
+    ډېری_UResource_Bundle ډېری_Bundle;
+    ثابت UResourceBundle *rb;
+    إذا (*لار == 0) {
         // empty path
         rb = bundle;
-    } else {
-        rb = ures_getByKeyWithFallback(bundle, path, stackBundle.getAlias(), &errorCode);
-        if (U_FAILURE(errorCode)) {
-            return;
+    } وإلا {
+        rb = ures_get_By_کلی_With_Fallback(bundle, لار, ډېری_Bundle.getAlias(), &error_کوډ);
+        إذا (U_FAILURE(error_کوډ)) {
+            أرجع;
         }
     }
     // Get all table items with fallback.
-    ResourceDataValue value;
-    getAllItemsWithFallback(rb, value, sink, errorCode);
+    Resource_معلومات_ارزښت value;
+    get_All_توکي_With_Fallback(rb, value, sink, error_کوډ);
 }
 
 U_CAPI UResourceBundle* U_EXPORT2
-ures_getByKey(const UResourceBundle* resB,
-              const char* inKey,
-              UResourceBundle* fillIn U_LIFETIME_BOUND,
-              UErrorCode* status) {
+ures_get_By_کلی(ثابت UResourceBundle* resB,
+              ثابت حرف* دننه_کلی,
+              UResourceBundle* fill_دننه U_LIFETIME_BOUND,
+              UError_کوډ* حالت) {
     Resource res = RES_BOGUS;
-    UResourceDataEntry *dataEntry = nullptr;
-    const char *key = inKey;
+    UResource_معلومات_ثبت *معلومات_ثبت = تش_اشاره;
+    ثابت حرف *کلی = دننه_کلی;
 
-    if (status==nullptr || U_FAILURE(*status)) {
-        return fillIn;
+    إذا (حالت==تش_اشاره || U_FAILURE(*حالت)) {
+        أرجع fill_دننه;
     }
-    if(resB == nullptr) {
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return fillIn;
+    إذا(resB == تش_اشاره) {
+        *حالت = U_ILLEGAL_دلیل_ERROR;
+        أرجع fill_دننه;
     }
 
     int32_t type = RES_GET_TYPE(resB->fRes);
-    if(URES_IS_TABLE(type)) {
+    إذا(URES_IS_جدول(type)) {
         int32_t t;
-        res = res_getTableItemByKey(&resB->getResData(), resB->fRes, &t, &key);
-        if(res == RES_BOGUS) {
-            key = inKey;
-            if(resB->fHasFallback) {
-                dataEntry = getFallbackData(resB, &key, &res, status);
-                if(U_SUCCESS(*status)) {
+        res = res_get_جدول_توکی_By_کلی(&resB->get_Res_معلومات(), resB->fRes, &t, &کلی);
+        إذا(res == RES_BOGUS) {
+            کلی = دننه_کلی;
+            إذا(resB->fHasFallback) {
+                معلومات_ثبت = get_Fallback_معلومات(resB, &کلی, &res, حالت);
+                إذا(U_SUCCESS(*حالت)) {
                     /* check if resB->fResPath gives the right name here */
-                    return init_resb_result(dataEntry, res, key, -1, resB, fillIn, status);
-                } else {
-                    *status = U_MISSING_RESOURCE_ERROR;
+                    أرجع init_resb_پایله(معلومات_ثبت, res, کلی, -1, resB, fill_دننه, حالت);
+                } وإلا {
+                    *حالت = U_MISSING_RESOURCE_ERROR;
                 }
-            } else {
-                *status = U_MISSING_RESOURCE_ERROR;
+            } وإلا {
+                *حالت = U_MISSING_RESOURCE_ERROR;
             }
-        } else {
-            return init_resb_result(resB->fData, res, key, -1, resB, fillIn, status);
+        } وإلا {
+            أرجع init_resb_پایله(resB->f_معلومات, res, کلی, -1, resB, fill_دننه, حالت);
         }
     } 
-#if 0
+#إذا 0
     /* this is a kind of TODO item. If we have an array with an index table, we could do this. */
     /* not currently */
-    else if(RES_GET_TYPE(resB->fRes) == URES_ARRAY && resB->fHasFallback == true) {
+    وإلا إذا(RES_GET_TYPE(resB->fRes) == URES_ARRAY && resB->fHasFallback == ریښتیا) {
         /* here should go a first attempt to locate the key using index table */
-        dataEntry = getFallbackData(resB, &key, &res, status);
-        if(U_SUCCESS(*status)) {
-            return init_resb_result(dataEntry, res, key, resB, fillIn, status);
-        } else {
-            *status = U_MISSING_RESOURCE_ERROR;
+        معلومات_ثبت = get_Fallback_معلومات(resB, &کلی, &res, حالت);
+        إذا(U_SUCCESS(*حالت)) {
+            أرجع init_resb_پایله(معلومات_ثبت, res, کلی, resB, fill_دننه, حالت);
+        } وإلا {
+            *حالت = U_MISSING_RESOURCE_ERROR;
         }
     }
-#endif    
-    else {
-        *status = U_RESOURCE_TYPE_MISMATCH;
+#د_که_پای    
+    وإلا {
+        *حالت = U_RESOURCE_TYPE_MISMATCH;
     }
-    return fillIn;
+    أرجع fill_دننه;
 }
 
-U_CAPI const char16_t* U_EXPORT2
-ures_getStringByKey(const UResourceBundle* resB U_LIFETIME_BOUND,
-                    const char* inKey,
+U_CAPI ثابت char16_t* U_EXPORT2
+ures_get_String_By_کلی(ثابت UResourceBundle* resB U_LIFETIME_BOUND,
+                    ثابت حرف* دننه_کلی,
                     int32_t* len,
-                    UErrorCode* status) {
+                    UError_کوډ* حالت) {
     Resource res = RES_BOGUS;
-    UResourceDataEntry *dataEntry = nullptr;
-    const char* key = inKey;
+    UResource_معلومات_ثبت *معلومات_ثبت = تش_اشاره;
+    ثابت حرف* کلی = دننه_کلی;
 
-    if (status==nullptr || U_FAILURE(*status)) {
-        return nullptr;
+    إذا (حالت==تش_اشاره || U_FAILURE(*حالت)) {
+        أرجع تش_اشاره;
     }
-    if(resB == nullptr) {
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+    إذا(resB == تش_اشاره) {
+        *حالت = U_ILLEGAL_دلیل_ERROR;
+        أرجع تش_اشاره;
     }
 
     int32_t type = RES_GET_TYPE(resB->fRes);
-    if(URES_IS_TABLE(type)) {
+    إذا(URES_IS_جدول(type)) {
         int32_t t=0;
 
-        res = res_getTableItemByKey(&resB->getResData(), resB->fRes, &t, &key);
+        res = res_get_جدول_توکی_By_کلی(&resB->get_Res_معلومات(), resB->fRes, &t, &کلی);
 
-        if(res == RES_BOGUS) {
-            key = inKey;
-            if(resB->fHasFallback) {
-                dataEntry = getFallbackData(resB, &key, &res, status);
-                if(U_SUCCESS(*status)) {
-                    switch (RES_GET_TYPE(res)) {
-                    case URES_STRING:
-                    case URES_STRING_V2:
-                        return res_getString({resB, key}, &dataEntry->fData, res, len);
-                    case URES_ALIAS:
+        إذا(res == RES_BOGUS) {
+            کلی = دننه_کلی;
+            إذا(resB->fHasFallback) {
+                معلومات_ثبت = get_Fallback_معلومات(resB, &کلی, &res, حالت);
+                إذا(U_SUCCESS(*حالت)) {
+                    بدل (RES_GET_TYPE(res)) {
+                    حالة URES_STRING:
+                    حالة URES_STRING_V2:
+                        أرجع res_getString({resB, کلی}, &معلومات_ثبت->f_معلومات, res, len);
+                    حالة URES_ALIAS:
                       {
-                        const char16_t* result = nullptr;
-                        UResourceBundle *tempRes = ures_getByKey(resB, inKey, nullptr, status);
-                        result = ures_getString(tempRes, len, status);
-                        ures_close(tempRes);
-                        return result;
+                        ثابت char16_t* پایله = تش_اشاره;
+                        UResourceBundle *لنډمهاله_Res = ures_get_By_کلی(resB, دننه_کلی, تش_اشاره, حالت);
+                        پایله = ures_getString(لنډمهاله_Res, len, حالت);
+                        ures_close(لنډمهاله_Res);
+                        أرجع پایله;
                       }
-                    default:
-                        *status = U_RESOURCE_TYPE_MISMATCH;
+                    افتراضي:
+                        *حالت = U_RESOURCE_TYPE_MISMATCH;
                     }
-                } else {
-                    *status = U_MISSING_RESOURCE_ERROR;
+                } وإلا {
+                    *حالت = U_MISSING_RESOURCE_ERROR;
                 }
-            } else {
-                *status = U_MISSING_RESOURCE_ERROR;
+            } وإلا {
+                *حالت = U_MISSING_RESOURCE_ERROR;
             }
-        } else {
-            switch (RES_GET_TYPE(res)) {
-            case URES_STRING:
-            case URES_STRING_V2:
-                return res_getString({resB, key}, &resB->getResData(), res, len);
-            case URES_ALIAS:
+        } وإلا {
+            بدل (RES_GET_TYPE(res)) {
+            حالة URES_STRING:
+            حالة URES_STRING_V2:
+                أرجع res_getString({resB, کلی}, &resB->get_Res_معلومات(), res, len);
+            حالة URES_ALIAS:
               {
-                const char16_t* result = nullptr;
-                UResourceBundle *tempRes = ures_getByKey(resB, inKey, nullptr, status);
-                result = ures_getString(tempRes, len, status);
-                ures_close(tempRes);
-                return result;
+                ثابت char16_t* پایله = تش_اشاره;
+                UResourceBundle *لنډمهاله_Res = ures_get_By_کلی(resB, دننه_کلی, تش_اشاره, حالت);
+                پایله = ures_getString(لنډمهاله_Res, len, حالت);
+                ures_close(لنډمهاله_Res);
+                أرجع پایله;
               }
-            default:
-                *status = U_RESOURCE_TYPE_MISMATCH;
+            افتراضي:
+                *حالت = U_RESOURCE_TYPE_MISMATCH;
             }
         }
     } 
-#if 0 
+#إذا 0 
     /* this is a kind of TODO item. If we have an array with an index table, we could do this. */
     /* not currently */   
-    else if(RES_GET_TYPE(resB->fRes) == URES_ARRAY && resB->fHasFallback == true) {
+    وإلا إذا(RES_GET_TYPE(resB->fRes) == URES_ARRAY && resB->fHasFallback == ریښتیا) {
         /* here should go a first attempt to locate the key using index table */
-        dataEntry = getFallbackData(resB, &key, &res, status);
-        if(U_SUCCESS(*status)) {
+        معلومات_ثبت = get_Fallback_معلومات(resB, &کلی, &res, حالت);
+        إذا(U_SUCCESS(*حالت)) {
             // TODO: Tracing
-            return res_getString(rd, res, len);
-        } else {
-            *status = U_MISSING_RESOURCE_ERROR;
+            أرجع res_getString(rd, res, len);
+        } وإلا {
+            *حالت = U_MISSING_RESOURCE_ERROR;
         }
     } 
-#endif    
-    else {
-        *status = U_RESOURCE_TYPE_MISMATCH;
+#د_که_پای    
+    وإلا {
+        *حالت = U_RESOURCE_TYPE_MISMATCH;
     }
-    return nullptr;
+    أرجع تش_اشاره;
 }
 
-U_CAPI const char* U_EXPORT2
-ures_getUTF8StringByKey(const UResourceBundle* resB,
-                        const char* key,
-                        char* dest U_LIFETIME_BOUND,
-                        int32_t* pLength,
+U_CAPI ثابت حرف* U_EXPORT2
+ures_get_UTF8_String_By_کلی(ثابت UResourceBundle* resB,
+                        ثابت حرف* کلی,
+                        حرف* dest U_LIFETIME_BOUND,
+                        int32_t* p_اوږدتیا,
                         UBool forceCopy,
-                        UErrorCode* status) {
+                        UError_کوډ* حالت) {
     int32_t length16;
-    const char16_t *s16 = ures_getStringByKey(resB, key, &length16, status);
-    return ures_toUTF8String(s16, length16, dest, pLength, forceCopy, status);
+    ثابت char16_t *s16 = ures_get_String_By_کلی(resB, کلی, &length16, حالت);
+    أرجع ures_منزل_UTF8_String(s16, length16, dest, p_اوږدتیا, forceCopy, حالت);
 }
 
 /* TODO: clean from here down */
@@ -2700,139 +2700,139 @@ ures_getUTF8StringByKey(const UResourceBundle* resB,
  *  INTERNAL: Get the name of the first real locale (not placeholder) 
  *  that has resource bundle data.
  */
-U_CAPI const char* U_EXPORT2
-ures_getLocaleInternal(const UResourceBundle* resourceBundle U_LIFETIME_BOUND, UErrorCode* status)
+U_CAPI ثابت حرف* U_EXPORT2
+ures_get_Locale_دننی(ثابت UResourceBundle* resourceBundle U_LIFETIME_BOUND, UError_کوډ* حالت)
 {
-    if (status==nullptr || U_FAILURE(*status)) {
-        return nullptr;
+    إذا (حالت==تش_اشاره || U_FAILURE(*حالت)) {
+        أرجع تش_اشاره;
     }
-    if (!resourceBundle) {
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
-    } else {
-      return resourceBundle->fData->fName;
+    إذا (!resourceBundle) {
+        *حالت = U_ILLEGAL_دلیل_ERROR;
+        أرجع تش_اشاره;
+    } وإلا {
+      أرجع resourceBundle->f_معلومات->fName;
     }
 }
 
-U_CAPI const char* U_EXPORT2
-ures_getLocale(const UResourceBundle* resourceBundle U_LIFETIME_BOUND, UErrorCode* status)
+U_CAPI ثابت حرف* U_EXPORT2
+ures_getLocale(ثابت UResourceBundle* resourceBundle U_LIFETIME_BOUND, UError_کوډ* حالت)
 {
-  return ures_getLocaleInternal(resourceBundle, status);
+  أرجع ures_get_Locale_دننی(resourceBundle, حالت);
 }
 
-U_CAPI const char* U_EXPORT2
-ures_getLocaleByType(const UResourceBundle* resourceBundle U_LIFETIME_BOUND,
-                     ULocDataLocaleType type,
-                     UErrorCode* status) {
-    if (status==nullptr || U_FAILURE(*status)) {
-        return nullptr;
+U_CAPI ثابت حرف* U_EXPORT2
+ures_getLocaleByType(ثابت UResourceBundle* resourceBundle U_LIFETIME_BOUND,
+                     ULoc_معلومات_Locale_Type type,
+                     UError_کوډ* حالت) {
+    إذا (حالت==تش_اشاره || U_FAILURE(*حالت)) {
+        أرجع تش_اشاره;
     }
-    if (!resourceBundle) {
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
-    } else {
-        switch(type) {
-        case ULOC_ACTUAL_LOCALE:
-            return resourceBundle->fData->fName;
-        case ULOC_VALID_LOCALE:
-            return resourceBundle->fValidLocaleDataEntry->fName;
-        case ULOC_REQUESTED_LOCALE:
-        default:
-            *status = U_ILLEGAL_ARGUMENT_ERROR;
-            return nullptr;
+    إذا (!resourceBundle) {
+        *حالت = U_ILLEGAL_دلیل_ERROR;
+        أرجع تش_اشاره;
+    } وإلا {
+        بدل(type) {
+        حالة ULOC_ACTUAL_LOCALE:
+            أرجع resourceBundle->f_معلومات->fName;
+        حالة ULOC_VALID_LOCALE:
+            أرجع resourceBundle->f_Valid_Locale_معلومات_ثبت->fName;
+        حالة ULOC_REQUESTED_LOCALE:
+        افتراضي:
+            *حالت = U_ILLEGAL_دلیل_ERROR;
+            أرجع تش_اشاره;
         }
     }
 }
 
-U_CFUNC const char*
-ures_getName(const UResourceBundle* resB U_LIFETIME_BOUND) {
-  if(resB == nullptr) {
-    return nullptr;
+U_CFUNC ثابت حرف*
+ures_getName(ثابت UResourceBundle* resB U_LIFETIME_BOUND) {
+  إذا(resB == تش_اشاره) {
+    أرجع تش_اشاره;
   }
 
-  return resB->fData->fName;
+  أرجع resB->f_معلومات->fName;
 }
 
-#ifdef URES_DEBUG
-U_CFUNC const char*
-ures_getPath(const UResourceBundle* resB U_LIFETIME_BOUND) {
-  if(resB == nullptr) {
-    return nullptr;
+#که_تعریف_شوی URES_DEBUG
+U_CFUNC ثابت حرف*
+ures_get_لار(ثابت UResourceBundle* resB U_LIFETIME_BOUND) {
+  إذا(resB == تش_اشاره) {
+    أرجع تش_اشاره;
   }
 
-  return resB->fData->fPath;
+  أرجع resB->f_معلومات->f_لار;
 }
-#endif
+#د_که_پای
 
-static UResourceBundle*
+ساكن UResourceBundle*
 ures_openWithType(UResourceBundle* r U_LIFETIME_BOUND,
-                  const char* path,
-                  const char* localeID,
+                  ثابت حرف* لار,
+                  ثابت حرف* localeID,
                   UResOpenType openType,
-                  UErrorCode* status) {
-    if(U_FAILURE(*status)) {
-        return nullptr;
+                  UError_کوډ* حالت) {
+    إذا(U_FAILURE(*حالت)) {
+        أرجع تش_اشاره;
     }
 
-    UResourceDataEntry *entry;
-    if(openType != URES_OPEN_DIRECT) {
-        if (localeID == nullptr) {
+    UResource_معلومات_ثبت *ثبت;
+    إذا(openType != URES_OPEN_مستقیم) {
+        إذا (localeID == تش_اشاره) {
             localeID = uloc_getDefault();
         }
         /* first "canonicalize" the locale ID */
-        CharString canonLocaleID = ulocimp_getBaseName(localeID, *status);
-        if(U_FAILURE(*status)) {
-            *status = U_ILLEGAL_ARGUMENT_ERROR;
-            return nullptr;
+        CharString canonLocaleID = ulocimp_get_بنسټ_Name(localeID, *حالت);
+        إذا(U_FAILURE(*حالت)) {
+            *حالت = U_ILLEGAL_دلیل_ERROR;
+            أرجع تش_اشاره;
         }
-        entry = entryOpen(path, canonLocaleID.data(), openType, status);
-    } else {
-        entry = entryOpenDirect(path, localeID, status);
+        ثبت = ثبت_Open(لار, canonLocaleID.معلومات(), openType, حالت);
+    } وإلا {
+        ثبت = ثبت_Open_مستقیم(لار, localeID, حالت);
     }
-    if(U_FAILURE(*status)) {
-        return nullptr;
+    إذا(U_FAILURE(*حالت)) {
+        أرجع تش_اشاره;
     }
-    if(entry == nullptr) {
-        *status = U_MISSING_RESOURCE_ERROR;
-        return nullptr;
+    إذا(ثبت == تش_اشاره) {
+        *حالت = U_MISSING_RESOURCE_ERROR;
+        أرجع تش_اشاره;
     }
 
-    UBool isStackObject;
-    if(r == nullptr) {
-        r = static_cast<UResourceBundle*>(uprv_malloc(sizeof(UResourceBundle)));
-        if(r == nullptr) {
-            entryClose(entry);
-            *status = U_MEMORY_ALLOCATION_ERROR;
-            return nullptr;
+    UBool is_ډېری_Object;
+    إذا(r == تش_اشاره) {
+        r = static_cast<UResourceBundle*>(uprv_malloc(حجم(UResourceBundle)));
+        إذا(r == تش_اشاره) {
+            ثبت_Close(ثبت);
+            *حالت = U_حافظه_ویش_ERROR;
+            أرجع تش_اشاره;
         }
-        isStackObject = false;
-    } else {  // fill-in
-        isStackObject = ures_isStackObject(r);
-        ures_closeBundle(r, false);
+        is_ډېری_Object = خطأ;
+    } وإلا {  // fill-in
+        is_ډېری_Object = ures_is_ډېری_Object(r);
+        ures_closeBundle(r, خطأ);
     }
-    uprv_memset(r, 0, sizeof(UResourceBundle));
-    ures_setIsStackObject(r, isStackObject);
+    uprv_memset(r, 0, حجم(UResourceBundle));
+    ures_سېټ_Is_ډېری_Object(r, is_ډېری_Object);
 
-    r->fValidLocaleDataEntry = r->fData = entry;
-    r->fHasFallback = openType != URES_OPEN_DIRECT && !r->getResData().noFallback;
-    r->fIsTopLevel = true;
-    r->fRes = r->getResData().rootRes;
-    r->fSize = res_countArrayItems(&r->getResData(), r->fRes);
-    r->fIndex = -1;
+    r->f_Valid_Locale_معلومات_ثبت = r->f_معلومات = ثبت;
+    r->fHasFallback = openType != URES_OPEN_مستقیم && !r->get_Res_معلومات().noFallback;
+    r->f_Is_سر_Level = ریښتیا;
+    r->fRes = r->get_Res_معلومات().ریښه_Res;
+    r->f_اندازه = res_شمېر_Array_توکي(&r->get_Res_معلومات(), r->fRes);
+    r->f_شاخص = -1;
 
     ResourceTracer(r).traceOpen();
 
-    return r;
+    أرجع r;
 }
 
 U_CAPI UResourceBundle* U_EXPORT2
-ures_open(const char* path, const char* localeID, UErrorCode* status) {
-    return ures_openWithType(nullptr, path, localeID, URES_OPEN_LOCALE_DEFAULT_ROOT, status);
+ures_open(ثابت حرف* لار, ثابت حرف* localeID, UError_کوډ* حالت) {
+    أرجع ures_openWithType(تش_اشاره, لار, localeID, URES_OPEN_LOCALE_DEFAULT_ریښه, حالت);
 }
 
 U_CAPI UResourceBundle* U_EXPORT2
-ures_openNoDefault(const char* path, const char* localeID, UErrorCode* status) {
-    return ures_openWithType(nullptr, path, localeID, URES_OPEN_LOCALE_ROOT, status);
+ures_openNoDefault(ثابت حرف* لار, ثابت حرف* localeID, UError_کوډ* حالت) {
+    أرجع ures_openWithType(تش_اشاره, لار, localeID, URES_OPEN_LOCALE_ریښه, حالت);
 }
 
 /**
@@ -2840,8 +2840,8 @@ ures_openNoDefault(const char* path, const char* localeID, UErrorCode* status) {
  *  or sought. However, alias substitution will happen!
  */
 U_CAPI UResourceBundle*  U_EXPORT2
-ures_openDirect(const char* path, const char* localeID, UErrorCode* status) {
-    return ures_openWithType(nullptr, path, localeID, URES_OPEN_DIRECT, status);
+ures_open_مستقیم(ثابت حرف* لار, ثابت حرف* localeID, UError_کوډ* حالت) {
+    أرجع ures_openWithType(تش_اشاره, لار, localeID, URES_OPEN_مستقیم, حالت);
 }
 
 /**
@@ -2851,26 +2851,26 @@ ures_openDirect(const char* path, const char* localeID, UErrorCode* status) {
  * 
  * Same as ures_open(), but uses the fill-in parameter and does not allocate a new bundle.
  */
-U_CAPI void U_EXPORT2
-ures_openFillIn(UResourceBundle *r, const char* path,
-                const char* localeID, UErrorCode* status) {
-    if(U_SUCCESS(*status) && r == nullptr) {
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+U_CAPI فراغ U_EXPORT2
+ures_open_Fill_دننه(UResourceBundle *r, ثابت حرف* لار,
+                ثابت حرف* localeID, UError_کوډ* حالت) {
+    إذا(U_SUCCESS(*حالت) && r == تش_اشاره) {
+        *حالت = U_ILLEGAL_دلیل_ERROR;
+        أرجع;
     }
-    ures_openWithType(r, path, localeID, URES_OPEN_LOCALE_DEFAULT_ROOT, status);
+    ures_openWithType(r, لار, localeID, URES_OPEN_LOCALE_DEFAULT_ریښه, حالت);
 }
 
 /**
  * Same as ures_openDirect(), but uses the fill-in parameter and does not allocate a new bundle.
  */
-U_CAPI void U_EXPORT2
-ures_openDirectFillIn(UResourceBundle *r, const char* path, const char* localeID, UErrorCode* status) {
-    if(U_SUCCESS(*status) && r == nullptr) {
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+U_CAPI فراغ U_EXPORT2
+ures_open_مستقیم_Fill_دننه(UResourceBundle *r, ثابت حرف* لار, ثابت حرف* localeID, UError_کوډ* حالت) {
+    إذا(U_SUCCESS(*حالت) && r == تش_اشاره) {
+        *حالت = U_ILLEGAL_دلیل_ERROR;
+        أرجع;
     }
-    ures_openWithType(r, path, localeID, URES_OPEN_DIRECT, status);
+    ures_openWithType(r, لار, localeID, URES_OPEN_مستقیم, حالت);
 }
 
 /**
@@ -2878,29 +2878,29 @@ ures_openDirectFillIn(UResourceBundle *r, const char* path, const char* localeID
  *  For strings, returns 1.
  */
 U_CAPI int32_t  U_EXPORT2
-ures_countArrayItems(const UResourceBundle* resourceBundle,
-                  const char* resourceKey,
-                  UErrorCode* status)
+ures_شمېر_Array_توکي(ثابت UResourceBundle* resourceBundle,
+                  ثابت حرف* resource_کلی,
+                  UError_کوډ* حالت)
 {
-    UResourceBundle resData;
-    ures_initStackObject(&resData);
-    if (status==nullptr || U_FAILURE(*status)) {
-        return 0;
+    UResourceBundle res_معلومات;
+    ures_init_ډېری_Object(&res_معلومات);
+    إذا (حالت==تش_اشاره || U_FAILURE(*حالت)) {
+        أرجع 0;
     }
-    if(resourceBundle == nullptr) {
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    إذا(resourceBundle == تش_اشاره) {
+        *حالت = U_ILLEGAL_دلیل_ERROR;
+        أرجع 0;
     }
-    ures_getByKey(resourceBundle, resourceKey, &resData, status);
+    ures_get_By_کلی(resourceBundle, resource_کلی, &res_معلومات, حالت);
     
-    if(resData.getResData().data != nullptr) {
-        int32_t result = res_countArrayItems(&resData.getResData(), resData.fRes);
-        ures_close(&resData);
-        return result;
-    } else {
-        *status = U_MISSING_RESOURCE_ERROR;
-        ures_close(&resData);
-        return 0;
+    إذا(res_معلومات.get_Res_معلومات().معلومات != تش_اشاره) {
+        int32_t پایله = res_شمېر_Array_توکي(&res_معلومات.get_Res_معلومات(), res_معلومات.fRes);
+        ures_close(&res_معلومات);
+        أرجع پایله;
+    } وإلا {
+        *حالت = U_MISSING_RESOURCE_ERROR;
+        ures_close(&res_معلومات);
+        أرجع 0;
     }
 }
 
@@ -2914,20 +2914,20 @@ ures_countArrayItems(const UResourceBundle* resourceBundle,
  * @see ures_getVersion
  * @internal
  */
-U_CAPI const char* U_EXPORT2
-ures_getVersionNumberInternal(const UResourceBundle* resourceBundle U_LIFETIME_BOUND)
+U_CAPI ثابت حرف* U_EXPORT2
+ures_get_نسخه_شمېره_دننی(ثابت UResourceBundle* resourceBundle U_LIFETIME_BOUND)
 {
-    if (!resourceBundle) return nullptr;
+    إذا (!resourceBundle) أرجع تش_اشاره;
 
-    if(resourceBundle->fVersion == nullptr) {
+    إذا(resourceBundle->f_نسخه == تش_اشاره) {
 
         /* If the version ID has not been built yet, then do so.  Retrieve */
         /* the minor version from the file. */
-        UErrorCode status = U_ZERO_ERROR;
+        UError_کوډ حالت = U_ZERO_ERROR;
         int32_t minor_len = 0;
         int32_t len;
 
-        const char16_t* minor_version = ures_getStringByKey(resourceBundle, kVersionTag, &minor_len, &status);
+        ثابت char16_t* minor_نسخه = ures_get_String_By_کلی(resourceBundle, k_نسخه_نښان, &minor_len, &حالت);
         
         /* Determine the length of of the final version string.  This is */
         /* the length of the major part + the length of the separator */
@@ -2940,51 +2940,51 @@ ures_getVersionNumberInternal(const UResourceBundle* resourceBundle U_LIFETIME_B
         /* + 1 for zero byte */
 
 
-        ((UResourceBundle *)resourceBundle)->fVersion = (char *)uprv_malloc(1 + len); 
+        ((UResourceBundle *)resourceBundle)->f_نسخه = (حرف *)uprv_malloc(1 + len); 
         /* Check for null pointer. */
-        if (((UResourceBundle *)resourceBundle)->fVersion == nullptr) {
-            return nullptr;
+        إذا (((UResourceBundle *)resourceBundle)->f_نسخه == تش_اشاره) {
+            أرجع تش_اشاره;
         }
        
-        if(minor_len > 0) {
-            u_UCharsToChars(minor_version, resourceBundle->fVersion , minor_len);
-            resourceBundle->fVersion[len] =  '\0';
+        إذا(minor_len > 0) {
+            u_UChars_منزل_Chars(minor_نسخه, resourceBundle->f_نسخه , minor_len);
+            resourceBundle->f_نسخه[len] =  '\0';
         }
-        else {
-            uprv_strcpy(resourceBundle->fVersion, kDefaultMinorVersion);
+        وإلا {
+            uprv_strcpy(resourceBundle->f_نسخه, k_Default_Minor_نسخه);
         }
     }
 
-    return resourceBundle->fVersion;
+    أرجع resourceBundle->f_نسخه;
 }
 
-U_CAPI const char* U_EXPORT2
-ures_getVersionNumber(const UResourceBundle* resourceBundle U_LIFETIME_BOUND)
+U_CAPI ثابت حرف* U_EXPORT2
+ures_get_نسخه_شمېره(ثابت UResourceBundle* resourceBundle U_LIFETIME_BOUND)
 {
-    return ures_getVersionNumberInternal(resourceBundle);
+    أرجع ures_get_نسخه_شمېره_دننی(resourceBundle);
 }
 
-U_CAPI void U_EXPORT2 ures_getVersion(const UResourceBundle* resB, UVersionInfo versionInfo) {
-    if (!resB) return;
+U_CAPI فراغ U_EXPORT2 ures_get_نسخه(ثابت UResourceBundle* resB, UVersionInfo نسخه_Info) {
+    إذا (!resB) أرجع;
 
-    u_versionFromString(versionInfo, ures_getVersionNumberInternal(resB));
+    u_نسخه_From_String(نسخه_Info, ures_get_نسخه_شمېره_دننی(resB));
 }
 
 /** Tree support functions *******************************/
-#define INDEX_LOCALE_NAME "res_index"
-#define INDEX_TAG         "InstalledLocales"
-#define DEFAULT_TAG       "default"
+#تعریف_کړه شاخص_LOCALE_NAME "res_index"
+#تعریف_کړه شاخص_نښان         "InstalledLocales"
+#تعریف_کړه DEFAULT_نښان       "default"
 
-#if defined(URES_TREE_DEBUG)
-#include <stdio.h>
-#endif
+#إذا defined(URES_ونه_DEBUG)
+#ضمن <stdio.h>
+#د_که_پای
 
-typedef struct ULocalesContext {
+تعريفنوع بنية ULocalesContext {
     UResourceBundle installed;
     UResourceBundle curr;
 } ULocalesContext;
 
-static void U_CALLCONV
+ساكن فراغ U_CALLCONV
 ures_loc_closeLocales(UEnumeration *enumerator) {
     ULocalesContext* ctx = static_cast<ULocalesContext*>(enumerator->context);
     ures_close(&ctx->curr);
@@ -2993,447 +2993,447 @@ ures_loc_closeLocales(UEnumeration *enumerator) {
     uprv_free(enumerator);
 }
 
-static int32_t U_CALLCONV
-ures_loc_countLocales(UEnumeration *en, UErrorCode * /*status*/) {
+ساكن int32_t U_CALLCONV
+ures_loc_شمېر_Locales(UEnumeration *en, UError_کوډ * /*حالت*/) {
     ULocalesContext* ctx = static_cast<ULocalesContext*>(en->context);
-    return ures_getSize(&ctx->installed);
+    أرجع ures_get_اندازه(&ctx->installed);
 }
 
 U_CDECL_BEGIN
 
 
-static const char * U_CALLCONV
-ures_loc_nextLocale(UEnumeration* en,
-                    int32_t* resultLength,
-                    UErrorCode* status) {
+ساكن ثابت حرف * U_CALLCONV
+ures_loc_بل_Locale(UEnumeration* en,
+                    int32_t* پایله_اوږدتیا,
+                    UError_کوډ* حالت) {
     ULocalesContext *ctx = (ULocalesContext *)en->context;
     UResourceBundle *res = &(ctx->installed);
-    UResourceBundle *k = nullptr;
-    const char *result = nullptr;
+    UResourceBundle *k = تش_اشاره;
+    ثابت حرف *پایله = تش_اشاره;
     int32_t len = 0;
-    if (ures_hasNext(res) && (k = ures_getNextResource(res, &ctx->curr, status)) != nullptr) {
-        result = ures_getKey(k);
-        len = (int32_t)uprv_strlen(result);
+    إذا (ures_has_بل(res) && (k = ures_get_بل_Resource(res, &ctx->curr, حالت)) != تش_اشاره) {
+        پایله = ures_get_کلی(k);
+        len = (int32_t)uprv_strlen(پایله);
     }
-    if (resultLength) {
-        *resultLength = len;
+    إذا (پایله_اوږدتیا) {
+        *پایله_اوږدتیا = len;
     }
-    return result;
+    أرجع پایله;
 }
 
-static void U_CALLCONV 
+ساكن فراغ U_CALLCONV 
 ures_loc_resetLocales(UEnumeration* en, 
-                      UErrorCode* /*status*/) {
+                      UError_کوډ* /*حالت*/) {
     UResourceBundle *res = &((ULocalesContext *)en->context)->installed;
     ures_resetIterator(res);
 }
 
-U_CDECL_END
+U_CDECL_پای_ټکی
 
-static const UEnumeration gLocalesEnum = {
-    nullptr,
-        nullptr,
+ساكن ثابت UEnumeration gLocalesEnum = {
+    تش_اشاره,
+        تش_اشاره,
         ures_loc_closeLocales,
-        ures_loc_countLocales,
+        ures_loc_شمېر_Locales,
         uenum_unextDefault,
-        ures_loc_nextLocale,
+        ures_loc_بل_Locale,
         ures_loc_resetLocales
 };
 
 
 U_CAPI UEnumeration* U_EXPORT2
-ures_openAvailableLocales(const char *path, UErrorCode *status)
+ures_open_شته_Locales(ثابت حرف *لار, UError_کوډ *حالت)
 {
-    UResourceBundle *idx = nullptr;
-    UEnumeration *en = nullptr;
-    ULocalesContext *myContext = nullptr;
+    UResourceBundle *idx = تش_اشاره;
+    UEnumeration *en = تش_اشاره;
+    ULocalesContext *myContext = تش_اشاره;
 
-    if(U_FAILURE(*status)) {
-        return nullptr;
+    إذا(U_FAILURE(*حالت)) {
+        أرجع تش_اشاره;
     }
-    myContext = static_cast<ULocalesContext *>(uprv_malloc(sizeof(ULocalesContext)));
-    en =  (UEnumeration *)uprv_malloc(sizeof(UEnumeration));
-    if(!en || !myContext) {
-        *status = U_MEMORY_ALLOCATION_ERROR;
+    myContext = static_cast<ULocalesContext *>(uprv_malloc(حجم(ULocalesContext)));
+    en =  (UEnumeration *)uprv_malloc(حجم(UEnumeration));
+    إذا(!en || !myContext) {
+        *حالت = U_حافظه_ویش_ERROR;
         uprv_free(en);
         uprv_free(myContext);
-        return nullptr;
+        أرجع تش_اشاره;
     }
-    uprv_memcpy(en, &gLocalesEnum, sizeof(UEnumeration));
+    uprv_memcpy(en, &gLocalesEnum, حجم(UEnumeration));
 
-    ures_initStackObject(&myContext->installed);
-    ures_initStackObject(&myContext->curr);
-    idx = ures_openDirect(path, INDEX_LOCALE_NAME, status);
-    ures_getByKey(idx, INDEX_TAG, &myContext->installed, status);
-    if(U_SUCCESS(*status)) {
-#if defined(URES_TREE_DEBUG)
+    ures_init_ډېری_Object(&myContext->installed);
+    ures_init_ډېری_Object(&myContext->curr);
+    idx = ures_open_مستقیم(لار, شاخص_LOCALE_NAME, حالت);
+    ures_get_By_کلی(idx, شاخص_نښان, &myContext->installed, حالت);
+    إذا(U_SUCCESS(*حالت)) {
+#إذا defined(URES_ونه_DEBUG)
         fprintf(stderr, "Got %s::%s::[%s] : %s\n", 
-            path, INDEX_LOCALE_NAME, INDEX_TAG, ures_getKey(&myContext->installed));
-#endif
+            لار, شاخص_LOCALE_NAME, شاخص_نښان, ures_get_کلی(&myContext->installed));
+#د_که_پای
         en->context = myContext;
-    } else {
-#if defined(URES_TREE_DEBUG)
-        fprintf(stderr, "%s open failed - %s\n", path, u_errorName(*status));
-#endif
+    } وإلا {
+#إذا defined(URES_ونه_DEBUG)
+        fprintf(stderr, "%s open failed - %s\n", لار, u_errorName(*حالت));
+#د_که_پای
         ures_close(&myContext->installed);
         uprv_free(myContext);
         uprv_free(en);
-        en = nullptr;
+        en = تش_اشاره;
     }
     
     ures_close(idx);
     
-    return en;
+    أرجع en;
 }
 
-static UBool isLocaleInList(UEnumeration *locEnum, const char *locToSearch, UErrorCode *status) {
-    const char *loc;
-    while ((loc = uenum_next(locEnum, nullptr, status)) != nullptr) {
-        if (uprv_strcmp(loc, locToSearch) == 0) {
-            return true;
+ساكن UBool is_Locale_دننه_List(UEnumeration *locEnum, ثابت حرف *loc_منزل_پلټنه, UError_کوډ *حالت) {
+    ثابت حرف *loc;
+    طالما ((loc = uenum_بل(locEnum, تش_اشاره, حالت)) != تش_اشاره) {
+        إذا (uprv_strcmp(loc, loc_منزل_پلټنه) == 0) {
+            أرجع ریښتیا;
         }
     }
-    return false;
+    أرجع خطأ;
 }
 
-static void getParentForFunctionalEquivalent(const char*      localeID,
+ساكن فراغ get_پلار_For_Functional_Equivalent(ثابت حرف*      localeID,
                                              UResourceBundle* res,
                                              UResourceBundle* bund1,
-                                             CharString&      parent) {
+                                             CharString&      پلار) {
     // Get parent.
     // First check for a parent from %%Parent resource (Note that in resource trees
     // such as collation, data may have different parents than in parentLocales).
-    UErrorCode subStatus = U_ZERO_ERROR;
-    parent.clear();
-    if (res != nullptr) {
-        ures_getByKey(res, "%%Parent", bund1, &subStatus);
-        if (U_SUCCESS(subStatus)) {
+    UError_کوډ sub_حالت = U_ZERO_ERROR;
+    پلار.clear();
+    إذا (res != تش_اشاره) {
+        ures_get_By_کلی(res, "%%Parent", bund1, &sub_حالت);
+        إذا (U_SUCCESS(sub_حالت)) {
             int32_t length16;
-            const char16_t* s16 = ures_getString(bund1, &length16, &subStatus);
-            parent.appendInvariantChars(s16, length16, subStatus);
+            ثابت char16_t* s16 = ures_getString(bund1, &length16, &sub_حالت);
+            پلار.appendInvariantChars(s16, length16, sub_حالت);
         }
     }
     
     // If none there, use normal truncation parent
-    if (U_FAILURE(subStatus) || parent.isEmpty()) {
-        subStatus = U_ZERO_ERROR;
-        parent = ulocimp_getParent(localeID, subStatus);
+    إذا (U_FAILURE(sub_حالت) || پلار.is_تشه()) {
+        sub_حالت = U_ZERO_ERROR;
+        پلار = ulocimp_get_پلار(localeID, sub_حالت);
     }
 }
 
 U_CAPI int32_t U_EXPORT2
-ures_getFunctionalEquivalent(char *result, int32_t resultCapacity,
-                             const char *path, const char *resName, const char *keyword, const char *locid,
-                             UBool *isAvailable, UBool omitDefault, UErrorCode *status)
+ures_getFunctionalEquivalent(حرف *پایله, int32_t پایله_ظرفیت,
+                             ثابت حرف *لار, ثابت حرف *resName, ثابت حرف *keyword, ثابت حرف *locid,
+                             UBool *is_شته, UBool omitDefault, UError_کوډ *حالت)
 {
     CharString defVal; /* default value for given locale */
     CharString defLoc; /* default value for given locale */
-    CharString found;
-    CharString parent;
-    CharString full;
+    CharString وموندل;
+    CharString پلار;
+    CharString ډک;
     UResourceBundle bund1, bund2;
-    UResourceBundle *res = nullptr;
-    UErrorCode subStatus = U_ZERO_ERROR;
+    UResourceBundle *res = تش_اشاره;
+    UError_کوډ sub_حالت = U_ZERO_ERROR;
     int32_t length = 0;
-    if(U_FAILURE(*status)) return 0;
+    إذا(U_FAILURE(*حالت)) أرجع 0;
     CharString kwVal;
-    if (keyword != nullptr && *keyword != '\0') {
-        kwVal = ulocimp_getKeywordValue(locid, keyword, subStatus);
-        if (kwVal == DEFAULT_TAG) {
+    إذا (keyword != تش_اشاره && *keyword != '\0') {
+        kwVal = ulocimp_get_Keyword_ارزښت(locid, keyword, sub_حالت);
+        إذا (kwVal == DEFAULT_نښان) {
             kwVal.clear();
         }
     }
-    if (locid == nullptr) {
+    إذا (locid == تش_اشاره) {
         locid = uloc_getDefault();
     }
-    CharString base = ulocimp_getBaseName(locid, subStatus);
-#if defined(URES_TREE_DEBUG)
+    CharString بنسټ = ulocimp_get_بنسټ_Name(locid, sub_حالت);
+#إذا defined(URES_ونه_DEBUG)
     fprintf(stderr, "getFunctionalEquivalent: \"%s\" [%s=%s] in %s - %s\n", 
-            locid, keyword, kwVal.data(), base.data(), u_errorName(subStatus));
-#endif
-    ures_initStackObject(&bund1);
-    ures_initStackObject(&bund2);
+            locid, keyword, kwVal.معلومات(), بنسټ.معلومات(), u_errorName(sub_حالت));
+#د_که_پای
+    ures_init_ډېری_Object(&bund1);
+    ures_init_ډېری_Object(&bund2);
 
-    parent.copyFrom(base, subStatus);
-    found.copyFrom(base, subStatus);
+    پلار.copyFrom(بنسټ, sub_حالت);
+    وموندل.copyFrom(بنسټ, sub_حالت);
 
-    if(isAvailable) {
-        UEnumeration *locEnum = ures_openAvailableLocales(path, &subStatus);
-        *isAvailable = true;
-        if (U_SUCCESS(subStatus)) {
-            *isAvailable = isLocaleInList(locEnum, parent.data(), &subStatus);
+    إذا(is_شته) {
+        UEnumeration *locEnum = ures_open_شته_Locales(لار, &sub_حالت);
+        *is_شته = ریښتیا;
+        إذا (U_SUCCESS(sub_حالت)) {
+            *is_شته = is_Locale_دننه_List(locEnum, پلار.معلومات(), &sub_حالت);
         }
         uenum_close(locEnum);
     }
 
-    if(U_FAILURE(subStatus)) {
-        *status = subStatus;
-        return 0;
+    إذا(U_FAILURE(sub_حالت)) {
+        *حالت = sub_حالت;
+        أرجع 0;
     }
     
-    do {
-        subStatus = U_ZERO_ERROR;
-        res = ures_open(path, parent.data(), &subStatus);
-        if(((subStatus == U_USING_FALLBACK_WARNING) ||
-            (subStatus == U_USING_DEFAULT_WARNING)) && isAvailable)
+    افعل {
+        sub_حالت = U_ZERO_ERROR;
+        res = ures_open(لار, پلار.معلومات(), &sub_حالت);
+        إذا(((sub_حالت == U_USING_FALLBACK_WARNING) ||
+            (sub_حالت == U_USING_DEFAULT_WARNING)) && is_شته)
         {
-            *isAvailable = false;
+            *is_شته = خطأ;
         }
-        isAvailable = nullptr; /* only want to set this the first time around */
+        is_شته = تش_اشاره; /* only want to set this the first time around */
         
-#if defined(URES_TREE_DEBUG)
-        fprintf(stderr, "%s;%s -> %s [%s]\n", path?path:"ICUDATA", parent.data(), u_errorName(subStatus), ures_getLocale(res, &subStatus));
-#endif
-        if(U_FAILURE(subStatus)) {
-            *status = subStatus;
-        } else if(subStatus == U_ZERO_ERROR) {
-            ures_getByKey(res,resName,&bund1, &subStatus);
-            if(subStatus == U_ZERO_ERROR) {
-                const char16_t *defUstr;
+#إذا defined(URES_ونه_DEBUG)
+        fprintf(stderr, "%s;%s -> %s [%s]\n", لار?لار:"ICUDATA", پلار.معلومات(), u_errorName(sub_حالت), ures_getLocale(res, &sub_حالت));
+#د_که_پای
+        إذا(U_FAILURE(sub_حالت)) {
+            *حالت = sub_حالت;
+        } وإلا إذا(sub_حالت == U_ZERO_ERROR) {
+            ures_get_By_کلی(res,resName,&bund1, &sub_حالت);
+            إذا(sub_حالت == U_ZERO_ERROR) {
+                ثابت char16_t *defUstr;
                 int32_t defLen;
                 /* look for default item */
-#if defined(URES_TREE_DEBUG)
+#إذا defined(URES_ونه_DEBUG)
                 fprintf(stderr, "%s;%s : loaded default -> %s\n",
-                    path?path:"ICUDATA", parent.data(), u_errorName(subStatus));
-#endif
-                defUstr = ures_getStringByKey(&bund1, DEFAULT_TAG, &defLen, &subStatus);
-                if(U_SUCCESS(subStatus) && defLen) {
-                    defVal.clear().appendInvariantChars(defUstr, defLen, subStatus);
-#if defined(URES_TREE_DEBUG)
+                    لار?لار:"ICUDATA", پلار.معلومات(), u_errorName(sub_حالت));
+#د_که_پای
+                defUstr = ures_get_String_By_کلی(&bund1, DEFAULT_نښان, &defLen, &sub_حالت);
+                إذا(U_SUCCESS(sub_حالت) && defLen) {
+                    defVal.clear().appendInvariantChars(defUstr, defLen, sub_حالت);
+#إذا defined(URES_ونه_DEBUG)
                     fprintf(stderr, "%s;%s -> default %s=%s,  %s\n", 
-                        path?path:"ICUDATA", parent.data(), keyword, defVal.data(), u_errorName(subStatus));
-#endif
-                    defLoc.copyFrom(parent, subStatus);
-                    if(kwVal.isEmpty()) {
-                        kwVal.append(defVal, subStatus);
-#if defined(URES_TREE_DEBUG)
+                        لار?لار:"ICUDATA", پلار.معلومات(), keyword, defVal.معلومات(), u_errorName(sub_حالت));
+#د_که_پای
+                    defLoc.copyFrom(پلار, sub_حالت);
+                    إذا(kwVal.is_تشه()) {
+                        kwVal.append(defVal, sub_حالت);
+#إذا defined(URES_ونه_DEBUG)
                         fprintf(stderr, "%s;%s -> kwVal =  %s\n", 
-                            path?path:"ICUDATA", parent.data(), keyword, kwVal.data());
-#endif
+                            لار?لار:"ICUDATA", پلار.معلومات(), keyword, kwVal.معلومات());
+#د_که_پای
                     }
                 }
             }
         }
         
-        subStatus = U_ZERO_ERROR;
+        sub_حالت = U_ZERO_ERROR;
 
-        if (res != nullptr) {
-            found.clear().append(ures_getLocaleByType(res, ULOC_VALID_LOCALE, &subStatus), subStatus);
+        إذا (res != تش_اشاره) {
+            وموندل.clear().append(ures_getLocaleByType(res, ULOC_VALID_LOCALE, &sub_حالت), sub_حالت);
         }
 
-        if (found != parent) {
-            parent.copyFrom(found, subStatus);
-        } else {
-            getParentForFunctionalEquivalent(found.data(),res,&bund1,parent);
+        إذا (وموندل != پلار) {
+            پلار.copyFrom(وموندل, sub_حالت);
+        } وإلا {
+            get_پلار_For_Functional_Equivalent(وموندل.معلومات(),res,&bund1,پلار);
         }
         ures_close(res);
-    } while(defVal.isEmpty() && !found.isEmpty() && found != "root" && U_SUCCESS(*status));
+    } طالما(defVal.is_تشه() && !وموندل.is_تشه() && وموندل != "root" && U_SUCCESS(*حالت));
     
     /* Now, see if we can find the kwVal collator.. start the search over.. */
-    parent.copyFrom(base, subStatus);
-    found.copyFrom(base, subStatus);
+    پلار.copyFrom(بنسټ, sub_حالت);
+    وموندل.copyFrom(بنسټ, sub_حالت);
 
-    do {
-        res = ures_open(path, parent.data(), &subStatus);
-        if((subStatus == U_USING_FALLBACK_WARNING) && isAvailable) {
-            *isAvailable = false;
+    افعل {
+        res = ures_open(لار, پلار.معلومات(), &sub_حالت);
+        إذا((sub_حالت == U_USING_FALLBACK_WARNING) && is_شته) {
+            *is_شته = خطأ;
         }
-        isAvailable = nullptr; /* only want to set this the first time around */
+        is_شته = تش_اشاره; /* only want to set this the first time around */
         
-#if defined(URES_TREE_DEBUG)
+#إذا defined(URES_ونه_DEBUG)
         fprintf(stderr, "%s;%s -> %s (looking for %s)\n", 
-            path?path:"ICUDATA", parent.data(), u_errorName(subStatus), kwVal.data());
-#endif
-        if(U_FAILURE(subStatus)) {
-            *status = subStatus;
-        } else if(subStatus == U_ZERO_ERROR) {
-            ures_getByKey(res,resName,&bund1, &subStatus);
-#if defined(URES_TREE_DEBUG)
-/**/ fprintf(stderr,"@%d [%s] %s\n", __LINE__, resName, u_errorName(subStatus));
-#endif
-            if(subStatus == U_ZERO_ERROR) {
-                ures_getByKey(&bund1, kwVal.data(), &bund2, &subStatus);
-#if defined(URES_TREE_DEBUG)
-/**/ fprintf(stderr,"@%d [%s] %s\n", __LINE__, kwVal.data(), u_errorName(subStatus));
-#endif
-                if(subStatus == U_ZERO_ERROR) {
-#if defined(URES_TREE_DEBUG)
+            لار?لار:"ICUDATA", پلار.معلومات(), u_errorName(sub_حالت), kwVal.معلومات());
+#د_که_پای
+        إذا(U_FAILURE(sub_حالت)) {
+            *حالت = sub_حالت;
+        } وإلا إذا(sub_حالت == U_ZERO_ERROR) {
+            ures_get_By_کلی(res,resName,&bund1, &sub_حالت);
+#إذا defined(URES_ونه_DEBUG)
+/**/ fprintf(stderr,"@%d [%s] %s\n", __LINE__, resName, u_errorName(sub_حالت));
+#د_که_پای
+            إذا(sub_حالت == U_ZERO_ERROR) {
+                ures_get_By_کلی(&bund1, kwVal.معلومات(), &bund2, &sub_حالت);
+#إذا defined(URES_ونه_DEBUG)
+/**/ fprintf(stderr,"@%d [%s] %s\n", __LINE__, kwVal.معلومات(), u_errorName(sub_حالت));
+#د_که_پای
+                إذا(sub_حالت == U_ZERO_ERROR) {
+#إذا defined(URES_ونه_DEBUG)
                     fprintf(stderr, "%s;%s -> full0 %s=%s,  %s\n", 
-                        path?path:"ICUDATA", parent.data(), keyword, kwVal.data(), u_errorName(subStatus));
-#endif
-                    if (parent.isEmpty()) {
-                        full.clear().append("root", subStatus);
-                    } else {
-                        full.copyFrom(parent, subStatus);
+                        لار?لار:"ICUDATA", پلار.معلومات(), keyword, kwVal.معلومات(), u_errorName(sub_حالت));
+#د_که_پای
+                    إذا (پلار.is_تشه()) {
+                        ډک.clear().append("root", sub_حالت);
+                    } وإلا {
+                        ډک.copyFrom(پلار, sub_حالت);
                     }
                         /* now, recalculate default kw if need be */
-                        if(defLoc.length() > full.length()) {
-                          const char16_t *defUstr;
+                        إذا(defLoc.length() > ډک.length()) {
+                          ثابت char16_t *defUstr;
                           int32_t defLen;
                           /* look for default item */
-#if defined(URES_TREE_DEBUG)
+#إذا defined(URES_ونه_DEBUG)
                             fprintf(stderr, "%s;%s -> recalculating Default0\n", 
-                                    path?path:"ICUDATA", full.data());
-#endif
-                          defUstr = ures_getStringByKey(&bund1, DEFAULT_TAG, &defLen, &subStatus);
-                          if(U_SUCCESS(subStatus) && defLen) {
-                            defVal.clear().appendInvariantChars(defUstr, defLen, subStatus);
-#if defined(URES_TREE_DEBUG)
+                                    لار?لار:"ICUDATA", ډک.معلومات());
+#د_که_پای
+                          defUstr = ures_get_String_By_کلی(&bund1, DEFAULT_نښان, &defLen, &sub_حالت);
+                          إذا(U_SUCCESS(sub_حالت) && defLen) {
+                            defVal.clear().appendInvariantChars(defUstr, defLen, sub_حالت);
+#إذا defined(URES_ونه_DEBUG)
                             fprintf(stderr, "%s;%s -> default0 %s=%s,  %s\n", 
-                                    path?path:"ICUDATA", full.data(), keyword, defVal.data(), u_errorName(subStatus));
-#endif
-                            defLoc.copyFrom(full, subStatus);
+                                    لار?لار:"ICUDATA", ډک.معلومات(), keyword, defVal.معلومات(), u_errorName(sub_حالت));
+#د_که_پای
+                            defLoc.copyFrom(ډک, sub_حالت);
                           }
                         } /* end of recalculate default KW */
-#if defined(URES_TREE_DEBUG)
-                        else {
-                          fprintf(stderr, "No trim0,  %s <= %s\n", defLoc.data(), full.data());
+#إذا defined(URES_ونه_DEBUG)
+                        وإلا {
+                          fprintf(stderr, "No trim0,  %s <= %s\n", defLoc.معلومات(), ډک.معلومات());
                         }
-#endif
-                } else {
-#if defined(URES_TREE_DEBUG)
+#د_که_پای
+                } وإلا {
+#إذا defined(URES_ونه_DEBUG)
                     fprintf(stderr, "err=%s in %s looking for %s\n", 
-                        u_errorName(subStatus), parent.data(), kwVal.data());
-#endif
+                        u_errorName(sub_حالت), پلار.معلومات(), kwVal.معلومات());
+#د_که_پای
                 }
             }
         }
         
-        subStatus = U_ZERO_ERROR;
-        UBool haveFound = false;
+        sub_حالت = U_ZERO_ERROR;
+        UBool have_وموندل = خطأ;
         // At least for collations which may be aliased, we need to use the VALID locale
         // as the parent instead of just truncating, as long as the VALID locale is not
         // root and has a different language than the parent. Use of the VALID locale
         // here is similar to the procedure used at the end of the previous do-while loop
         // for all resource types.
-        if (res != nullptr && uprv_strcmp(resName, "collations") == 0) {
-            const char *validLoc = ures_getLocaleByType(res, ULOC_VALID_LOCALE, &subStatus);
-            if (U_SUCCESS(subStatus) && validLoc != nullptr && validLoc[0] != 0 && uprv_strcmp(validLoc, "root") != 0) {
-                CharString validLang = ulocimp_getLanguage(validLoc, subStatus);
-                CharString parentLang = ulocimp_getLanguage(parent.toStringPiece(), subStatus);
-                if (U_SUCCESS(subStatus) && validLang != parentLang) {
+        إذا (res != تش_اشاره && uprv_strcmp(resName, "collations") == 0) {
+            ثابت حرف *validLoc = ures_getLocaleByType(res, ULOC_VALID_LOCALE, &sub_حالت);
+            إذا (U_SUCCESS(sub_حالت) && validLoc != تش_اشاره && validLoc[0] != 0 && uprv_strcmp(validLoc, "root") != 0) {
+                CharString validLang = ulocimp_getLanguage(validLoc, sub_حالت);
+                CharString پلار_Lang = ulocimp_getLanguage(پلار.منزل_String_Piece(), sub_حالت);
+                إذا (U_SUCCESS(sub_حالت) && validLang != پلار_Lang) {
                     // validLoc is not root and has a different language than parent, use it instead
-                    found.clear().append(validLoc, subStatus);
-                    haveFound = true;
+                    وموندل.clear().append(validLoc, sub_حالت);
+                    have_وموندل = ریښتیا;
                 }
             }
-            subStatus = U_ZERO_ERROR;
+            sub_حالت = U_ZERO_ERROR;
         }
-        if (!haveFound) {
-            found.copyFrom(parent, subStatus);
+        إذا (!have_وموندل) {
+            وموندل.copyFrom(پلار, sub_حالت);
         }
 
-        getParentForFunctionalEquivalent(found.data(),res,&bund1,parent);
+        get_پلار_For_Functional_Equivalent(وموندل.معلومات(),res,&bund1,پلار);
         ures_close(res);
-        subStatus = U_ZERO_ERROR;
-    } while(full.isEmpty() && !found.isEmpty() && U_SUCCESS(*status));
+        sub_حالت = U_ZERO_ERROR;
+    } طالما(ډک.is_تشه() && !وموندل.is_تشه() && U_SUCCESS(*حالت));
 
-    if(full.isEmpty() && kwVal != defVal) {
-#if defined(URES_TREE_DEBUG)
-        fprintf(stderr, "Failed to locate kw %s - try default %s\n", kwVal.data(), defVal.data());
-#endif
-        kwVal.clear().append(defVal, subStatus);
-        parent.copyFrom(base, subStatus);
-        found.copyFrom(base, subStatus);
+    إذا(ډک.is_تشه() && kwVal != defVal) {
+#إذا defined(URES_ونه_DEBUG)
+        fprintf(stderr, "Failed to locate kw %s - try default %s\n", kwVal.معلومات(), defVal.معلومات());
+#د_که_پای
+        kwVal.clear().append(defVal, sub_حالت);
+        پلار.copyFrom(بنسټ, sub_حالت);
+        وموندل.copyFrom(بنسټ, sub_حالت);
 
-        do { /* search for 'default' named item */
-            res = ures_open(path, parent.data(), &subStatus);
-            if((subStatus == U_USING_FALLBACK_WARNING) && isAvailable) {
-                *isAvailable = false;
+        افعل { /* search for 'default' named item */
+            res = ures_open(لار, پلار.معلومات(), &sub_حالت);
+            إذا((sub_حالت == U_USING_FALLBACK_WARNING) && is_شته) {
+                *is_شته = خطأ;
             }
-            isAvailable = nullptr; /* only want to set this the first time around */
+            is_شته = تش_اشاره; /* only want to set this the first time around */
             
-#if defined(URES_TREE_DEBUG)
+#إذا defined(URES_ونه_DEBUG)
             fprintf(stderr, "%s;%s -> %s (looking for default %s)\n",
-                path?path:"ICUDATA", parent.data(), u_errorName(subStatus), kwVal.data());
-#endif
-            if(U_FAILURE(subStatus)) {
-                *status = subStatus;
-            } else if(subStatus == U_ZERO_ERROR) {
-                ures_getByKey(res,resName,&bund1, &subStatus);
-                if(subStatus == U_ZERO_ERROR) {
-                    ures_getByKey(&bund1, kwVal.data(), &bund2, &subStatus);
-                    if(subStatus == U_ZERO_ERROR) {
-#if defined(URES_TREE_DEBUG)
-                        fprintf(stderr, "%s;%s -> full1 %s=%s,  %s\n", path?path:"ICUDATA",
-                            parent.data(), keyword, kwVal.data(), u_errorName(subStatus));
-#endif
-                        if (parent.isEmpty()) {
-                            full.clear().append("root", subStatus);
-                        } else {
-                            full.copyFrom(parent, subStatus);
+                لار?لار:"ICUDATA", پلار.معلومات(), u_errorName(sub_حالت), kwVal.معلومات());
+#د_که_پای
+            إذا(U_FAILURE(sub_حالت)) {
+                *حالت = sub_حالت;
+            } وإلا إذا(sub_حالت == U_ZERO_ERROR) {
+                ures_get_By_کلی(res,resName,&bund1, &sub_حالت);
+                إذا(sub_حالت == U_ZERO_ERROR) {
+                    ures_get_By_کلی(&bund1, kwVal.معلومات(), &bund2, &sub_حالت);
+                    إذا(sub_حالت == U_ZERO_ERROR) {
+#إذا defined(URES_ونه_DEBUG)
+                        fprintf(stderr, "%s;%s -> full1 %s=%s,  %s\n", لار?لار:"ICUDATA",
+                            پلار.معلومات(), keyword, kwVal.معلومات(), u_errorName(sub_حالت));
+#د_که_پای
+                        إذا (پلار.is_تشه()) {
+                            ډک.clear().append("root", sub_حالت);
+                        } وإلا {
+                            ډک.copyFrom(پلار, sub_حالت);
                         }
                         
                         /* now, recalculate default kw if need be */
-                        if(defLoc.length() > full.length()) {
-                          const char16_t *defUstr;
+                        إذا(defLoc.length() > ډک.length()) {
+                          ثابت char16_t *defUstr;
                           int32_t defLen;
                           /* look for default item */
-#if defined(URES_TREE_DEBUG)
+#إذا defined(URES_ونه_DEBUG)
                             fprintf(stderr, "%s;%s -> recalculating Default1\n", 
-                                    path?path:"ICUDATA", full.data());
-#endif
-                          defUstr = ures_getStringByKey(&bund1, DEFAULT_TAG, &defLen, &subStatus);
-                          if(U_SUCCESS(subStatus) && defLen) {
-                            defVal.clear().appendInvariantChars(defUstr, defLen, subStatus);
-#if defined(URES_TREE_DEBUG)
+                                    لار?لار:"ICUDATA", ډک.معلومات());
+#د_که_پای
+                          defUstr = ures_get_String_By_کلی(&bund1, DEFAULT_نښان, &defLen, &sub_حالت);
+                          إذا(U_SUCCESS(sub_حالت) && defLen) {
+                            defVal.clear().appendInvariantChars(defUstr, defLen, sub_حالت);
+#إذا defined(URES_ونه_DEBUG)
                             fprintf(stderr, "%s;%s -> default %s=%s,  %s\n", 
-                                    path?path:"ICUDATA", full.data(), keyword, defVal.data(), u_errorName(subStatus));
-#endif
-                            defLoc.copyFrom(full, subStatus);
+                                    لار?لار:"ICUDATA", ډک.معلومات(), keyword, defVal.معلومات(), u_errorName(sub_حالت));
+#د_که_پای
+                            defLoc.copyFrom(ډک, sub_حالت);
                           }
                         } /* end of recalculate default KW */
-#if defined(URES_TREE_DEBUG)
-                        else {
-                          fprintf(stderr, "No trim1,  %s <= %s\n", defLoc.data(), full.data());
+#إذا defined(URES_ونه_DEBUG)
+                        وإلا {
+                          fprintf(stderr, "No trim1,  %s <= %s\n", defLoc.معلومات(), ډک.معلومات());
                         }
-#endif
+#د_که_پای
                     }
                 }
             }
             
-            subStatus = U_ZERO_ERROR;
-            found.copyFrom(parent, subStatus);
-            getParentForFunctionalEquivalent(found.data(),res,&bund1,parent);
+            sub_حالت = U_ZERO_ERROR;
+            وموندل.copyFrom(پلار, sub_حالت);
+            get_پلار_For_Functional_Equivalent(وموندل.معلومات(),res,&bund1,پلار);
             ures_close(res);
-            subStatus = U_ZERO_ERROR;
-        } while(full.isEmpty() && !found.isEmpty() && U_SUCCESS(*status));
+            sub_حالت = U_ZERO_ERROR;
+        } طالما(ډک.is_تشه() && !وموندل.is_تشه() && U_SUCCESS(*حالت));
     }
     
-    if(U_SUCCESS(*status)) {
-        if(full.isEmpty()) {
-#if defined(URES_TREE_DEBUG)
-          fprintf(stderr, "Still could not load keyword %s=%s\n", keyword, kwVal.data());
-#endif
-          *status = U_MISSING_RESOURCE_ERROR;
-        } else if(omitDefault) {
-#if defined(URES_TREE_DEBUG)
-          fprintf(stderr,"Trim? full=%s, defLoc=%s, found=%s\n", full.data(), defLoc.data(), found.data());
-#endif        
-          if(defLoc.length() <= full.length()) {
+    إذا(U_SUCCESS(*حالت)) {
+        إذا(ډک.is_تشه()) {
+#إذا defined(URES_ونه_DEBUG)
+          fprintf(stderr, "Still could not load keyword %s=%s\n", keyword, kwVal.معلومات());
+#د_که_پای
+          *حالت = U_MISSING_RESOURCE_ERROR;
+        } وإلا إذا(omitDefault) {
+#إذا defined(URES_ونه_DEBUG)
+          fprintf(stderr,"Trim? full=%s, defLoc=%s, found=%s\n", ډک.معلومات(), defLoc.معلومات(), وموندل.معلومات());
+#د_که_پای        
+          إذا(defLoc.length() <= ډک.length()) {
             /* found the keyword in a *child* of where the default tag was present. */
-            if(kwVal == defVal) { /* if the requested kw is default, */
+            إذا(kwVal == defVal) { /* if the requested kw is default, */
               /* and the default is in or in an ancestor of the current locale */
-#if defined(URES_TREE_DEBUG)
-              fprintf(stderr, "Removing unneeded var %s=%s\n", keyword, kwVal.data());
-#endif
+#إذا defined(URES_ونه_DEBUG)
+              fprintf(stderr, "Removing unneeded var %s=%s\n", keyword, kwVal.معلومات());
+#د_که_پای
               kwVal.clear();
             }
           }
         }
-        found.copyFrom(full, subStatus);
-        if(!kwVal.isEmpty()) {
-            found
-                .append("@", subStatus)
-                .append(keyword, subStatus)
-                .append("=", subStatus)
-                .append(kwVal, subStatus);
-        } else if(!omitDefault) {
-            found
-                .append("@", subStatus)
-                .append(keyword, subStatus)
-                .append("=", subStatus)
-                .append(defVal, subStatus);
+        وموندل.copyFrom(ډک, sub_حالت);
+        إذا(!kwVal.is_تشه()) {
+            وموندل
+                .append("@", sub_حالت)
+                .append(keyword, sub_حالت)
+                .append("=", sub_حالت)
+                .append(kwVal, sub_حالت);
+        } وإلا إذا(!omitDefault) {
+            وموندل
+                .append("@", sub_حالت)
+                .append(keyword, sub_حالت)
+                .append("=", sub_حالت)
+                .append(defVal, sub_حالت);
         }
     }
     /* we found the default locale - no need to repeat it.*/
@@ -3441,200 +3441,200 @@ ures_getFunctionalEquivalent(char *result, int32_t resultCapacity,
     ures_close(&bund1);
     ures_close(&bund2);
     
-    length = found.length();
+    length = وموندل.length();
 
-    if(U_SUCCESS(*status)) {
-        int32_t copyLength = uprv_min(length, resultCapacity);
-        if(copyLength>0) {
-            found.extract(result, copyLength, subStatus);
+    إذا(U_SUCCESS(*حالت)) {
+        int32_t copy_اوږدتیا = uprv_min(length, پایله_ظرفیت);
+        إذا(copy_اوږدتیا>0) {
+            وموندل.extract(پایله, copy_اوږدتیا, sub_حالت);
         }
-        if(length == 0) {
-          *status = U_MISSING_RESOURCE_ERROR; 
+        إذا(length == 0) {
+          *حالت = U_MISSING_RESOURCE_ERROR; 
         }
-    } else {
+    } وإلا {
         length = 0;
-        result[0]=0;
+        پایله[0]=0;
     }
-    return u_terminateChars(result, resultCapacity, length, status);
+    أرجع u_terminateChars(پایله, پایله_ظرفیت, length, حالت);
 }
 
 U_CAPI UEnumeration* U_EXPORT2
-ures_getKeywordValues(const char *path, const char *keyword, UErrorCode *status)
+ures_get_Keyword_ارزښتونه(ثابت حرف *لار, ثابت حرف *keyword, UError_کوډ *حالت)
 {
-#define VALUES_BUF_SIZE 2048
-#define VALUES_LIST_SIZE 512
+#تعریف_کړه ارزښتونه_BUF_اندازه 2048
+#تعریف_کړه ارزښتونه_LIST_اندازه 512
     
-    char       valuesBuf[VALUES_BUF_SIZE];
-    int32_t    valuesIndex = 0;
-    const char *valuesList[VALUES_LIST_SIZE];
-    int32_t    valuesCount = 0;
+    حرف       ارزښتونه_Buf[ارزښتونه_BUF_اندازه];
+    int32_t    ارزښتونه_شاخص = 0;
+    ثابت حرف *ارزښتونه_List[ارزښتونه_LIST_اندازه];
+    int32_t    ارزښتونه_شمېر = 0;
     
-    const char *locale;
+    ثابت حرف *locale;
     int32_t     locLen;
     
-    UEnumeration *locs = nullptr;
+    UEnumeration *locs = تش_اشاره;
     
-    UResourceBundle    item;
-    UResourceBundle    subItem;
+    UResourceBundle    توکی;
+    UResourceBundle    sub_توکی;
     
-    ures_initStackObject(&item);
-    ures_initStackObject(&subItem);
-    locs = ures_openAvailableLocales(path, status);
+    ures_init_ډېری_Object(&توکی);
+    ures_init_ډېری_Object(&sub_توکی);
+    locs = ures_open_شته_Locales(لار, حالت);
     
-    if(U_FAILURE(*status)) {
-        ures_close(&item);
-        ures_close(&subItem);
-        return nullptr;
+    إذا(U_FAILURE(*حالت)) {
+        ures_close(&توکی);
+        ures_close(&sub_توکی);
+        أرجع تش_اشاره;
     }
     
-    valuesBuf[0]=0;
-    valuesBuf[1]=0;
+    ارزښتونه_Buf[0]=0;
+    ارزښتونه_Buf[1]=0;
 
-    while ((locale = uenum_next(locs, &locLen, status)) != nullptr) {
-        UResourceBundle   *bund = nullptr;
-        UResourceBundle   *subPtr = nullptr;
-        UErrorCode subStatus = U_ZERO_ERROR; /* don't fail if a bundle is unopenable */
-        bund = ures_open(path, locale, &subStatus);
+    طالما ((locale = uenum_بل(locs, &locLen, حالت)) != تش_اشاره) {
+        UResourceBundle   *bund = تش_اشاره;
+        UResourceBundle   *subPtr = تش_اشاره;
+        UError_کوډ sub_حالت = U_ZERO_ERROR; /* don't fail if a bundle is unopenable */
+        bund = ures_open(لار, locale, &sub_حالت);
         
-#if defined(URES_TREE_DEBUG)
-        if(!bund || U_FAILURE(subStatus)) {
+#إذا defined(URES_ونه_DEBUG)
+        إذا(!bund || U_FAILURE(sub_حالت)) {
             fprintf(stderr, "%s-%s values: Can't open %s locale - skipping. (%s)\n", 
-                path?path:"<ICUDATA>", keyword, locale, u_errorName(subStatus));
+                لار?لار:"<ICUDATA>", keyword, locale, u_errorName(sub_حالت));
         }
-#endif
+#د_که_پای
         
-        ures_getByKey(bund, keyword, &item, &subStatus);
+        ures_get_By_کلی(bund, keyword, &توکی, &sub_حالت);
         
-        if(!bund || U_FAILURE(subStatus)) {
-#if defined(URES_TREE_DEBUG)
+        إذا(!bund || U_FAILURE(sub_حالت)) {
+#إذا defined(URES_ونه_DEBUG)
             fprintf(stderr, "%s-%s values: Can't find in %s - skipping. (%s)\n", 
-                path?path:"<ICUDATA>", keyword, locale, u_errorName(subStatus));
-#endif
+                لار?لار:"<ICUDATA>", keyword, locale, u_errorName(sub_حالت));
+#د_که_پای
             ures_close(bund);
-            bund = nullptr;
-            continue;
+            bund = تش_اشاره;
+            استمر;
         }
 
-        while ((subPtr = ures_getNextResource(&item, &subItem, &subStatus)) != nullptr
-            && U_SUCCESS(subStatus)) {
-            const char *k;
+        طالما ((subPtr = ures_get_بل_Resource(&توکی, &sub_توکی, &sub_حالت)) != تش_اشاره
+            && U_SUCCESS(sub_حالت)) {
+            ثابت حرف *k;
             int32_t i;
-            k = ures_getKey(subPtr);
+            k = ures_get_کلی(subPtr);
 
-#if defined(URES_TREE_DEBUG)
+#إذا defined(URES_ونه_DEBUG)
             /* fprintf(stderr, "%s | %s | %s | %s\n", path?path:"<ICUDATA>", keyword, locale, k); */
-#endif
-            if(k == nullptr || *k == 0 ||
-                    uprv_strcmp(k, DEFAULT_TAG) == 0 || uprv_strncmp(k, "private-", 8) == 0) {
+#د_که_پای
+            إذا(k == تش_اشاره || *k == 0 ||
+                    uprv_strcmp(k, DEFAULT_نښان) == 0 || uprv_strncmp(k, "private-", 8) == 0) {
                 // empty or "default" or unlisted type
-                continue;
+                استمر;
             }
-            for(i=0; i<valuesCount; i++) {
-                if(!uprv_strcmp(valuesList[i],k)) {
-                    k = nullptr; /* found duplicate */
-                    break;
+            لكل(i=0; i<ارزښتونه_شمېر; i++) {
+                إذا(!uprv_strcmp(ارزښتونه_List[i],k)) {
+                    k = تش_اشاره; /* found duplicate */
+                    اكسر;
                 }
             }
-            if(k != nullptr) {
+            إذا(k != تش_اشاره) {
                 int32_t kLen = (int32_t)uprv_strlen(k);
-                if((valuesCount >= (VALUES_LIST_SIZE-1)) ||       /* no more space in list .. */
-                    ((valuesIndex+kLen+1+1) >= VALUES_BUF_SIZE)) { /* no more space in buffer (string + 2 nulls) */
-                    *status = U_ILLEGAL_ARGUMENT_ERROR; /* out of space.. */
-                } else {
-                    uprv_strcpy(valuesBuf+valuesIndex, k);
-                    valuesList[valuesCount++] = valuesBuf+valuesIndex;
-                    valuesIndex += kLen;
-#if defined(URES_TREE_DEBUG)
+                إذا((ارزښتونه_شمېر >= (ارزښتونه_LIST_اندازه-1)) ||       /* no more space in list .. */
+                    ((ارزښتونه_شاخص+kLen+1+1) >= ارزښتونه_BUF_اندازه)) { /* no more space in buffer (string + 2 nulls) */
+                    *حالت = U_ILLEGAL_دلیل_ERROR; /* out of space.. */
+                } وإلا {
+                    uprv_strcpy(ارزښتونه_Buf+ارزښتونه_شاخص, k);
+                    ارزښتونه_List[ارزښتونه_شمېر++] = ارزښتونه_Buf+ارزښتونه_شاخص;
+                    ارزښتونه_شاخص += kLen;
+#إذا defined(URES_ونه_DEBUG)
                     fprintf(stderr, "%s | %s | %s | [%s]   (UNIQUE)\n",
-                        path?path:"<ICUDATA>", keyword, locale, k);
-#endif
-                    valuesBuf[valuesIndex++] = 0; /* terminate */
+                        لار?لار:"<ICUDATA>", keyword, locale, k);
+#د_که_پای
+                    ارزښتونه_Buf[ارزښتونه_شاخص++] = 0; /* terminate */
                 }
             }
         }
         ures_close(bund);
     }
-    valuesBuf[valuesIndex++] = 0; /* terminate */
+    ارزښتونه_Buf[ارزښتونه_شاخص++] = 0; /* terminate */
     
-    ures_close(&item);
-    ures_close(&subItem);
+    ures_close(&توکی);
+    ures_close(&sub_توکی);
     uenum_close(locs);
-#if defined(URES_TREE_DEBUG)
-    fprintf(stderr, "%s:  size %d, #%d\n", u_errorName(*status), 
-        valuesIndex, valuesCount);
-#endif
-    return uloc_openKeywordList(valuesBuf, valuesIndex, status);
+#إذا defined(URES_ونه_DEBUG)
+    fprintf(stderr, "%s:  size %d, #%d\n", u_errorName(*حالت), 
+        ارزښتونه_شاخص, ارزښتونه_شمېر);
+#د_که_پای
+    أرجع uloc_openKeywordList(ارزښتونه_Buf, ارزښتونه_شاخص, حالت);
 }
-#if 0
+#إذا 0
 /* This code isn't needed, and given the documentation warnings the implementation is suspect */
 U_CAPI UBool U_EXPORT2
-ures_equal(const UResourceBundle* res1, const UResourceBundle* res2){
-    if(res1==nullptr || res2==nullptr){
-        return res1==res2; /* pointer comparison */
+ures_equal(ثابت UResourceBundle* res1, ثابت UResourceBundle* res2){
+    إذا(res1==تش_اشاره || res2==تش_اشاره){
+        أرجع res1==res2; /* pointer comparison */
     }
-    if(res1->fKey==nullptr||  res2->fKey==nullptr){
-        return (res1->fKey==res2->fKey);
-    }else{
-        if(uprv_strcmp(res1->fKey, res2->fKey)!=0){
-            return false;
+    إذا(res1->f_کلی==تش_اشاره||  res2->f_کلی==تش_اشاره){
+        أرجع (res1->f_کلی==res2->f_کلی);
+    }وإلا{
+        إذا(uprv_strcmp(res1->f_کلی, res2->f_کلی)!=0){
+            أرجع خطأ;
         }
     }
-    if(uprv_strcmp(res1->fData->fName, res2->fData->fName)!=0){
-        return false;
+    إذا(uprv_strcmp(res1->f_معلومات->fName, res2->f_معلومات->fName)!=0){
+        أرجع خطأ;
     }
-    if(res1->fData->fPath == nullptr||  res2->fData->fPath==nullptr){
-        return (res1->fData->fPath == res2->fData->fPath);
-    }else{
-        if(uprv_strcmp(res1->fData->fPath, res2->fData->fPath)!=0){
-            return false;
+    إذا(res1->f_معلومات->f_لار == تش_اشاره||  res2->f_معلومات->f_لار==تش_اشاره){
+        أرجع (res1->f_معلومات->f_لار == res2->f_معلومات->f_لار);
+    }وإلا{
+        إذا(uprv_strcmp(res1->f_معلومات->f_لار, res2->f_معلومات->f_لار)!=0){
+            أرجع خطأ;
         }
     }
-    if(uprv_strcmp(res1->fData->fParent->fName, res2->fData->fParent->fName)!=0){
-        return false;
+    إذا(uprv_strcmp(res1->f_معلومات->f_پلار->fName, res2->f_معلومات->f_پلار->fName)!=0){
+        أرجع خطأ;
     }
-    if(uprv_strcmp(res1->fData->fParent->fPath, res2->fData->fParent->fPath)!=0){
-        return false;
+    إذا(uprv_strcmp(res1->f_معلومات->f_پلار->f_لار, res2->f_معلومات->f_پلار->f_لار)!=0){
+        أرجع خطأ;
     }
-    if(uprv_strncmp(res1->fResPath, res2->fResPath, res1->fResPathLen)!=0){
-        return false;
+    إذا(uprv_strncmp(res1->f_Res_لار, res2->f_Res_لار, res1->f_Res_لار_Len)!=0){
+        أرجع خطأ;
     }
-    if(res1->fRes != res2->fRes){
-        return false;
+    إذا(res1->fRes != res2->fRes){
+        أرجع خطأ;
     }
-    return true;
+    أرجع ریښتیا;
 }
 U_CAPI UResourceBundle* U_EXPORT2
-ures_clone(const UResourceBundle* res, UErrorCode* status){
-    UResourceBundle* bundle = nullptr;
-    UResourceBundle* ret = nullptr;
-    if(U_FAILURE(*status) || res == nullptr){
-        return nullptr;
+ures_clone(ثابت UResourceBundle* res, UError_کوډ* حالت){
+    UResourceBundle* bundle = تش_اشاره;
+    UResourceBundle* ret = تش_اشاره;
+    إذا(U_FAILURE(*حالت) || res == تش_اشاره){
+        أرجع تش_اشاره;
     }
-    bundle = ures_open(res->fData->fPath, res->fData->fName, status);
-    if(res->fResPath!=nullptr){
-        ret = ures_findSubResource(bundle, res->fResPath, nullptr, status);
+    bundle = ures_open(res->f_معلومات->f_لار, res->f_معلومات->fName, حالت);
+    إذا(res->f_Res_لار!=تش_اشاره){
+        ret = ures_پیدا_کړه_Sub_Resource(bundle, res->f_Res_لار, تش_اشاره, حالت);
         ures_close(bundle);
-    }else{
+    }وإلا{
         ret = bundle;
     }
-    return ret;
+    أرجع ret;
 }
-U_CAPI const UResourceBundle* U_EXPORT2
-ures_getParentBundle(const UResourceBundle* res){
-    if(res==nullptr){
-        return nullptr;
+U_CAPI ثابت UResourceBundle* U_EXPORT2
+ures_get_پلار_Bundle(ثابت UResourceBundle* res){
+    إذا(res==تش_اشاره){
+        أرجع تش_اشاره;
     }
-    return res->fParentRes;
+    أرجع res->f_پلار_Res;
 }
-#endif
+#د_که_پای
 
-U_CAPI void U_EXPORT2
-ures_getVersionByKey(const UResourceBundle* res, const char *key, UVersionInfo ver, UErrorCode *status) {
-  const char16_t *str;
+U_CAPI فراغ U_EXPORT2
+ures_get_نسخه_By_کلی(ثابت UResourceBundle* res, ثابت حرف *کلی, UVersionInfo ver, UError_کوډ *حالت) {
+  ثابت char16_t *str;
   int32_t len;
-  str = ures_getStringByKey(res, key, &len, status);
-  if(U_SUCCESS(*status)) {
-    u_versionFromUString(ver, str);
+  str = ures_get_String_By_کلی(res, کلی, &len, حالت);
+  إذا(U_SUCCESS(*حالت)) {
+    u_نسخه_From_UString(ver, str);
   } 
 }
 

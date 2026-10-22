@@ -20,83 +20,83 @@
 ******************************************************************************
 */
 
-#include <string_view>
+#ضمن <string_view>
 
-#include "unicode/utypes.h"
-#include "unicode/appendable.h"
-#include "unicode/putil.h"
-#include "cstring.h"
-#include "cmemory.h"
-#include "unicode/ustring.h"
-#include "unicode/unistr.h"
-#include "unicode/utf.h"
-#include "unicode/utf16.h"
-#include "uelement.h"
-#include "ustr_imp.h"
-#include "umutex.h"
-#include "uassert.h"
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/appendable.h"
+#ضمن "unicode/putil.h"
+#ضمن "cstring.h"
+#ضمن "cmemory.h"
+#ضمن "unicode/ustring.h"
+#ضمن "unicode/unistr.h"
+#ضمن "unicode/utf.h"
+#ضمن "unicode/utf16.h"
+#ضمن "uelement.h"
+#ضمن "ustr_imp.h"
+#ضمن "umutex.h"
+#ضمن "uassert.h"
 
-#if 0
+#إذا 0
 
-#include <iostream>
-using namespace std;
+#ضمن <iostream>
+کارول نطاق std;
 
 //DEBUGGING
-void
-print(const UnicodeString& s,
-      const char *name)
+فراغ
+print(ثابت UnicodeString& s,
+      ثابت حرف *name)
 {
   char16_t c;
-  cout << name << ":|";
-  for(int i = 0; i < s.length(); ++i) {
+  وتنه << name << ":|";
+  لكل(صحيح i = 0; i < s.length(); ++i) {
     c = s[i];
-    if(c>= 0x007E || c < 0x0020)
-      cout << "[0x" << hex << s[i] << "]";
-    else
-      cout << (char) s[i];
+    إذا(c>= 0x007E || c < 0x0020)
+      وتنه << "[0x" << hex << s[i] << "]";
+    وإلا
+      وتنه << (حرف) s[i];
   }
-  cout << '|' << endl;
+  وتنه << '|' << کرښه_پای;
 }
 
-void
-print(const char16_t *s,
+فراغ
+print(ثابت char16_t *s,
       int32_t len,
-      const char *name)
+      ثابت حرف *name)
 {
   char16_t c;
-  cout << name << ":|";
-  for(int i = 0; i < len; ++i) {
+  وتنه << name << ":|";
+  لكل(صحيح i = 0; i < len; ++i) {
     c = s[i];
-    if(c>= 0x007E || c < 0x0020)
-      cout << "[0x" << hex << s[i] << "]";
-    else
-      cout << (char) s[i];
+    إذا(c>= 0x007E || c < 0x0020)
+      وتنه << "[0x" << hex << s[i] << "]";
+    وإلا
+      وتنه << (حرف) s[i];
   }
-  cout << '|' << endl;
+  وتنه << '|' << کرښه_پای;
 }
 // END DEBUGGING
-#endif
+#د_که_پای
 
 // Local function definitions for now
 
 // need to copy areas that may overlap
-static
-inline void
-us_arrayCopy(const char16_t *src, int32_t srcStart,
-         char16_t *dst, int32_t dstStart, int32_t count)
+ساكن
+مضمن فراغ
+us_arrayCopy(ثابت char16_t *src, int32_t src_پیل,
+         char16_t *dst, int32_t dst_پیل, int32_t count)
 {
-  if(count>0) {
-    uprv_memmove(dst+dstStart, src+srcStart, (size_t)count*sizeof(*src));
+  إذا(count>0) {
+    uprv_memmove(dst+dst_پیل, src+src_پیل, (size_t)count*حجم(*src));
   }
 }
 
 // u_unescapeAt() callback to get a char16_t from a UnicodeString
 U_CDECL_BEGIN
-static char16_t U_CALLCONV
-UnicodeString_charAt(int32_t offset, void *context) {
-    return ((icu::UnicodeString*) context)->charAt(offset);
+ساكن char16_t U_CALLCONV
+UnicodeString_charAt(int32_t دننه_واټن, فراغ *context) {
+    أرجع ((icu::UnicodeString*) context)->charAt(دننه_واټن);
 }
-U_CDECL_END
+U_CDECL_پای_ټکی
 
 U_NAMESPACE_BEGIN
 
@@ -108,32 +108,32 @@ Replaceable::~Replaceable() {}
 UOBJECT_DEFINE_RTTI_IMPLEMENTATION(UnicodeString)
 
 UnicodeString U_EXPORT2
-operator+ (const UnicodeString &s1, const UnicodeString &s2) {
-  int32_t sumLengths;
-  if (uprv_add32_overflow(s1.length(), s2.length(), &sumLengths)) {
+چلوونکی+ (ثابت UnicodeString &s1, ثابت UnicodeString &s2) {
+  int32_t مجموعه_Lengths;
+  إذا (uprv_add32_ډکېدنه(s1.length(), s2.length(), &مجموعه_Lengths)) {
     UnicodeString bogus;
-    bogus.setToBogus();
-    return bogus;
+    bogus.سېټ_منزل_Bogus();
+    أرجع bogus;
   }
-  if (sumLengths != INT32_MAX) {
-    ++sumLengths;  // space for a terminating NUL if we need one
+  إذا (مجموعه_Lengths != INT32_MAX) {
+    ++مجموعه_Lengths;  // space for a terminating NUL if we need one
   }
-  return UnicodeString(sumLengths, static_cast<UChar32>(0), 0).append(s1).append(s2);
+  أرجع UnicodeString(مجموعه_Lengths, static_cast<UChar32>(0), 0).append(s1).append(s2);
 }
 
 U_COMMON_API UnicodeString U_EXPORT2
-unistr_internalConcat(const UnicodeString &s1, std::u16string_view s2) {
-  int32_t sumLengths;
-  if (s2.length() > INT32_MAX ||
-      uprv_add32_overflow(s1.length(), static_cast<int32_t>(s2.length()), &sumLengths)) {
+unistr_دننی_Concat(ثابت UnicodeString &s1, std::u16string_view s2) {
+  int32_t مجموعه_Lengths;
+  إذا (s2.length() > INT32_MAX ||
+      uprv_add32_ډکېدنه(s1.length(), static_cast<int32_t>(s2.length()), &مجموعه_Lengths)) {
     UnicodeString bogus;
-    bogus.setToBogus();
-    return bogus;
+    bogus.سېټ_منزل_Bogus();
+    أرجع bogus;
   }
-  if (sumLengths != INT32_MAX) {
-    ++sumLengths;  // space for a terminating NUL if we need one
+  إذا (مجموعه_Lengths != INT32_MAX) {
+    ++مجموعه_Lengths;  // space for a terminating NUL if we need one
   }
-  return UnicodeString(sumLengths, static_cast<UChar32>(0), 0).append(s1).append(s2);
+  أرجع UnicodeString(مجموعه_Lengths, static_cast<UChar32>(0), 0).append(s1).append(s2);
 }
 
 
@@ -142,24 +142,24 @@ unistr_internalConcat(const UnicodeString &s1, std::u16string_view s2) {
 //                               have a chance to automatically inline.
 //========================================
 
-void
-UnicodeString::addRef() {
+فراغ
+UnicodeString::جمع_کړه_Ref() {
   umtx_atomic_inc(reinterpret_cast<u_atomic_int32_t*>(fUnion.fFields.fArray) - 1);
 }
 
 int32_t
 UnicodeString::removeRef() {
-  return umtx_atomic_dec(reinterpret_cast<u_atomic_int32_t*>(fUnion.fFields.fArray) - 1);
+  أرجع umtx_atomic_dec(reinterpret_cast<u_atomic_int32_t*>(fUnion.fFields.fArray) - 1);
 }
 
 int32_t
-UnicodeString::refCount() const {
-  return umtx_loadAcquire(*(reinterpret_cast<u_atomic_int32_t*>(fUnion.fFields.fArray) - 1));
+UnicodeString::ref_شمېر() ثابت {
+  أرجع umtx_بارول_Acquire(*(reinterpret_cast<u_atomic_int32_t*>(fUnion.fFields.fArray) - 1));
 }
 
-void
+فراغ
 UnicodeString::releaseArray() {
-  if((fUnion.fFields.fLengthAndFlags & kRefCounted) && removeRef() == 0) {
+  إذا((fUnion.fFields.f_اوږدتیا_And_Flags & kRefCounted) && removeRef() == 0) {
     uprv_free(reinterpret_cast<int32_t*>(fUnion.fFields.fArray) - 1);
   }
 }
@@ -173,219 +173,219 @@ UnicodeString::releaseArray() {
 // The default constructor is inline in unistr.h.
 
 UnicodeString::UnicodeString(int32_t capacity, UChar32 c, int32_t count) {
-  fUnion.fFields.fLengthAndFlags = 0;
-  if (count <= 0 || static_cast<uint32_t>(c) > 0x10ffff) {
+  fUnion.fFields.f_اوږدتیا_And_Flags = 0;
+  إذا (count <= 0 || static_cast<uint32_t>(c) > 0x10ffff) {
     // just allocate and do not do anything else
     allocate(capacity);
-  } else if(c <= 0xffff) {
+  } وإلا إذا(c <= 0xffff) {
     int32_t length = count;
-    if(capacity < length) {
+    إذا(capacity < length) {
       capacity = length;
     }
-    if(allocate(capacity)) {
-      char16_t *array = getArrayStart();
+    إذا(allocate(capacity)) {
+      char16_t *array = get_Array_پیل();
       char16_t unit = static_cast<char16_t>(c);
-      for(int32_t i = 0; i < length; ++i) {
+      لكل(int32_t i = 0; i < length; ++i) {
         array[i] = unit;
       }
-      setLength(length);
+      سېټ_اوږدتیا(length);
     }
-  } else {  // supplementary code point, write surrogate pairs
-    if(count > (INT32_MAX / 2)) {
+  } وإلا {  // supplementary code point, write surrogate pairs
+    إذا(count > (INT32_MAX / 2)) {
       // We would get more than 2G UChars.
       allocate(capacity);
-      return;
+      أرجع;
     }
     int32_t length = count * 2;
-    if(capacity < length) {
+    إذا(capacity < length) {
       capacity = length;
     }
-    if(allocate(capacity)) {
-      char16_t *array = getArrayStart();
+    إذا(allocate(capacity)) {
+      char16_t *array = get_Array_پیل();
       char16_t lead = U16_LEAD(c);
       char16_t trail = U16_TRAIL(c);
-      for(int32_t i = 0; i < length; i += 2) {
+      لكل(int32_t i = 0; i < length; i += 2) {
         array[i] = lead;
         array[i + 1] = trail;
       }
-      setLength(length);
+      سېټ_اوږدتیا(length);
     }
   }
 }
 
 UnicodeString::UnicodeString(char16_t ch) {
-  fUnion.fFields.fLengthAndFlags = kLength1 | kShortString;
-  fUnion.fStackFields.fBuffer[0] = ch;
+  fUnion.fFields.f_اوږدتیا_And_Flags = kLength1 | kShortString;
+  fUnion.f_ډېری_Fields.f_بفر[0] = ch;
 }
 
 UnicodeString::UnicodeString(UChar32 ch) {
-  fUnion.fFields.fLengthAndFlags = kShortString;
+  fUnion.fFields.f_اوږدتیا_And_Flags = kShortString;
   int32_t i = 0;
-  UBool isError = false;
-  U16_APPEND(fUnion.fStackFields.fBuffer, i, US_STACKBUF_SIZE, ch, isError);
+  UBool isError = خطأ;
+  U16_APPEND(fUnion.f_ډېری_Fields.f_بفر, i, US_STACKBUF_اندازه, ch, isError);
   // We test isError so that the compiler does not complain that we don't.
   // If isError then i==0 which is what we want anyway.
-  if(!isError) {
-    setShortLength(i);
+  إذا(!isError) {
+    سېټ_Short_اوږدتیا(i);
   }
 }
 
-UnicodeString::UnicodeString(const char16_t *text,
-                             int32_t textLength) {
-  fUnion.fFields.fLengthAndFlags = kShortString;
-  doAppend(text, 0, textLength);
+UnicodeString::UnicodeString(ثابت char16_t *متن,
+                             int32_t متن_اوږدتیا) {
+  fUnion.fFields.f_اوږدتیا_And_Flags = kShortString;
+  doAppend(متن, 0, متن_اوږدتیا);
 }
 
 UnicodeString::UnicodeString(UBool isTerminated,
-                             ConstChar16Ptr textPtr U_LIFETIME_BOUND,
-                             int32_t textLength) {
-  fUnion.fFields.fLengthAndFlags = kReadonlyAlias;
-  const char16_t *text = textPtr;
-  if(text == nullptr) {
+                             ConstChar16Ptr متن_Ptr U_LIFETIME_BOUND,
+                             int32_t متن_اوږدتیا) {
+  fUnion.fFields.f_اوږدتیا_And_Flags = kReadonlyAlias;
+  ثابت char16_t *متن = متن_Ptr;
+  إذا(متن == تش_اشاره) {
     // treat as an empty string, do not alias
-    setToEmpty();
-  } else if(textLength < -1 ||
-            (textLength == -1 && !isTerminated) ||
-            (textLength >= 0 && isTerminated && text[textLength] != 0)
+    سېټ_منزل_تشه();
+  } وإلا إذا(متن_اوږدتیا < -1 ||
+            (متن_اوږدتیا == -1 && !isTerminated) ||
+            (متن_اوږدتیا >= 0 && isTerminated && متن[متن_اوږدتیا] != 0)
   ) {
-    setToBogus();
-  } else {
-    if(textLength == -1) {
+    سېټ_منزل_Bogus();
+  } وإلا {
+    إذا(متن_اوږدتیا == -1) {
       // text is terminated, or else it would have failed the above test
-      textLength = u_strlen(text);
+      متن_اوږدتیا = u_strlen(متن);
     }
-    setArray(const_cast<char16_t *>(text), textLength,
-             isTerminated ? textLength + 1 : textLength);
+    سېټ_Array(const_cast<char16_t *>(متن), متن_اوږدتیا,
+             isTerminated ? متن_اوږدتیا + 1 : متن_اوږدتیا);
   }
 }
 
 UnicodeString::UnicodeString(char16_t* buff U_LIFETIME_BOUND,
-                             int32_t buffLength,
-                             int32_t buffCapacity) {
-  fUnion.fFields.fLengthAndFlags = kWritableAlias;
-  if(buff == nullptr) {
+                             int32_t buff_اوږدتیا,
+                             int32_t buff_ظرفیت) {
+  fUnion.fFields.f_اوږدتیا_And_Flags = kWritableAlias;
+  إذا(buff == تش_اشاره) {
     // treat as an empty string, do not alias
-    setToEmpty();
-  } else if(buffLength < -1 || buffCapacity < 0 || buffLength > buffCapacity) {
-    setToBogus();
-  } else {
-    if(buffLength == -1) {
+    سېټ_منزل_تشه();
+  } وإلا إذا(buff_اوږدتیا < -1 || buff_ظرفیت < 0 || buff_اوږدتیا > buff_ظرفیت) {
+    سېټ_منزل_Bogus();
+  } وإلا {
+    إذا(buff_اوږدتیا == -1) {
       // fLength = u_strlen(buff); but do not look beyond buffCapacity
-      const char16_t *p = buff, *limit = buff + buffCapacity;
-      while(p != limit && *p != 0) {
+      ثابت char16_t *p = buff, *حد = buff + buff_ظرفیت;
+      طالما(p != حد && *p != 0) {
         ++p;
       }
-      buffLength = static_cast<int32_t>(p - buff);
+      buff_اوږدتیا = static_cast<int32_t>(p - buff);
     }
-    setArray(buff, buffLength, buffCapacity);
+    سېټ_Array(buff, buff_اوږدتیا, buff_ظرفیت);
   }
 }
 
-UnicodeString::UnicodeString(const char *src, int32_t length, EInvariant) {
-  fUnion.fFields.fLengthAndFlags = kShortString;
-  if(src==nullptr) {
+UnicodeString::UnicodeString(ثابت حرف *src, int32_t length, EInvariant) {
+  fUnion.fFields.f_اوږدتیا_And_Flags = kShortString;
+  إذا(src==تش_اشاره) {
     // treat as an empty string
-  } else {
-    if(length<0) {
+  } وإلا {
+    إذا(length<0) {
       length = static_cast<int32_t>(uprv_strlen(src));
     }
-    if(cloneArrayIfNeeded(length, length, false)) {
-      u_charsToUChars(src, getArrayStart(), length);
-      setLength(length);
-    } else {
-      setToBogus();
+    إذا(cloneArrayIfNeeded(length, length, خطأ)) {
+      u_chars_منزل_UChars(src, get_Array_پیل(), length);
+      سېټ_اوږدتیا(length);
+    } وإلا {
+      سېټ_منزل_Bogus();
     }
   }
 }
 
 UnicodeString
-UnicodeString::readOnlyAliasFromU16StringView(std::u16string_view text U_LIFETIME_BOUND) {
-  UnicodeString result;
-  if (text.length() <= INT32_MAX) {
-    result.setTo(false, text.data(), static_cast<int32_t>(text.length()));
-  } else {
-    result.setToBogus();
+UnicodeString::readOnlyAliasFromU16StringView(std::u16string_view متن U_LIFETIME_BOUND) {
+  UnicodeString پایله;
+  إذا (متن.length() <= INT32_MAX) {
+    پایله.سېټ_منزل(خطأ, متن.معلومات(), static_cast<int32_t>(متن.length()));
+  } وإلا {
+    پایله.سېټ_منزل_Bogus();
   }
-  return result;
+  أرجع پایله;
 }
 
 UnicodeString
-UnicodeString::readOnlyAliasFromUnicodeString(const UnicodeString& text U_LIFETIME_BOUND) {
-  UnicodeString result;
-  if (text.isBogus()) {
-    result.setToBogus();
-  } else {
-    result.setTo(false, text.getBuffer(), text.length());
+UnicodeString::readOnlyAliasFromUnicodeString(ثابت UnicodeString& متن U_LIFETIME_BOUND) {
+  UnicodeString پایله;
+  إذا (متن.isBogus()) {
+    پایله.سېټ_منزل_Bogus();
+  } وإلا {
+    پایله.سېټ_منزل(خطأ, متن.get_بفر(), متن.length());
   }
-  return result;
+  أرجع پایله;
 }
 
-#if U_CHARSET_IS_UTF8
+#إذا U_CHARSET_IS_UTF8
 
-UnicodeString::UnicodeString(const char *codepageData) {
-  fUnion.fFields.fLengthAndFlags = kShortString;
-  if (codepageData != nullptr) {
-    setToUTF8(codepageData);
+UnicodeString::UnicodeString(ثابت حرف *codepage_معلومات) {
+  fUnion.fFields.f_اوږدتیا_And_Flags = kShortString;
+  إذا (codepage_معلومات != تش_اشاره) {
+    سېټ_منزل_UTF8(codepage_معلومات);
   }
 }
 
-UnicodeString::UnicodeString(const char *codepageData, int32_t dataLength) {
-  fUnion.fFields.fLengthAndFlags = kShortString;
+UnicodeString::UnicodeString(ثابت حرف *codepage_معلومات, int32_t معلومات_اوږدتیا) {
+  fUnion.fFields.f_اوږدتیا_And_Flags = kShortString;
   // if there's nothing to convert, do nothing
-  if (codepageData == nullptr || dataLength == 0 || dataLength < -1) {
-    return;
+  إذا (codepage_معلومات == تش_اشاره || معلومات_اوږدتیا == 0 || معلومات_اوږدتیا < -1) {
+    أرجع;
   }
-  if(dataLength == -1) {
-    dataLength = static_cast<int32_t>(uprv_strlen(codepageData));
+  إذا(معلومات_اوږدتیا == -1) {
+    معلومات_اوږدتیا = static_cast<int32_t>(uprv_strlen(codepage_معلومات));
   }
-  setToUTF8(StringPiece(codepageData, dataLength));
+  سېټ_منزل_UTF8(StringPiece(codepage_معلومات, معلومات_اوږدتیا));
 }
 
 // else see unistr_cnv.cpp
-#endif
+#د_که_پای
 
-UnicodeString::UnicodeString(const UnicodeString& that) {
-  fUnion.fFields.fLengthAndFlags = kShortString;
+UnicodeString::UnicodeString(ثابت UnicodeString& that) {
+  fUnion.fFields.f_اوږدتیا_And_Flags = kShortString;
   copyFrom(that);
 }
 
 UnicodeString::UnicodeString(UnicodeString &&src) noexcept {
-  copyFieldsFrom(src, true);
+  copyFieldsFrom(src, ریښتیا);
 }
 
-UnicodeString::UnicodeString(const UnicodeString& that,
-                             int32_t srcStart) {
-  fUnion.fFields.fLengthAndFlags = kShortString;
-  setTo(that, srcStart);
+UnicodeString::UnicodeString(ثابت UnicodeString& that,
+                             int32_t src_پیل) {
+  fUnion.fFields.f_اوږدتیا_And_Flags = kShortString;
+  سېټ_منزل(that, src_پیل);
 }
 
-UnicodeString::UnicodeString(const UnicodeString& that,
-                             int32_t srcStart,
-                             int32_t srcLength) {
-  fUnion.fFields.fLengthAndFlags = kShortString;
-  setTo(that, srcStart, srcLength);
+UnicodeString::UnicodeString(ثابت UnicodeString& that,
+                             int32_t src_پیل,
+                             int32_t src_اوږدتیا) {
+  fUnion.fFields.f_اوږدتیا_And_Flags = kShortString;
+  سېټ_منزل(that, src_پیل, src_اوږدتیا);
 }
 
 // Replaceable base class clone() default implementation, does not clone
 Replaceable *
-Replaceable::clone() const {
-  return nullptr;
+Replaceable::clone() ثابت {
+  أرجع تش_اشاره;
 }
 
 // UnicodeString overrides clone() with a real implementation
 UnicodeString *
-UnicodeString::clone() const {
-  LocalPointer<UnicodeString> clonedString(new UnicodeString(*this));
-  return clonedString.isValid() && !clonedString->isBogus() ? clonedString.orphan() : nullptr;
+UnicodeString::clone() ثابت {
+  Local_اشاره_ګر<UnicodeString> clonedString(جديد UnicodeString(*هذا));
+  أرجع clonedString.isValid() && !clonedString->isBogus() ? clonedString.orphan() : تش_اشاره;
 }
 
 //========================================
 // array allocation
 //========================================
 
-namespace {
+نطاق {
 
-const int32_t kGrowSize = 128;
+ثابت int32_t k_Grow_اندازه = 128;
 
 // The number of bytes for one int32_t reference counter and capacity UChars
 // must fit into a 32-bit size_t (at least when on a 32-bit platform).
@@ -394,14 +394,14 @@ const int32_t kGrowSize = 128;
 // This means that capacity must be at most (0xfffffff0 - 4) / 2 - 1 = 0x7ffffff5.
 // (With more complicated checks we could go up to 0x7ffffffd without rounding up,
 // but that does not seem worth it.)
-const int32_t kMaxCapacity = 0x7ffffff5;
+ثابت int32_t k_Max_ظرفیت = 0x7ffffff5;
 
-int32_t getGrowCapacity(int32_t newLength) {
-  int32_t growSize = (newLength >> 2) + kGrowSize;
-  if(growSize <= (kMaxCapacity - newLength)) {
-    return newLength + growSize;
-  } else {
-    return kMaxCapacity;
+int32_t get_Grow_ظرفیت(int32_t new_اوږدتیا) {
+  int32_t grow_اندازه = (new_اوږدتیا >> 2) + k_Grow_اندازه;
+  إذا(grow_اندازه <= (k_Max_ظرفیت - new_اوږدتیا)) {
+    أرجع new_اوږدتیا + grow_اندازه;
+  } وإلا {
+    أرجع k_Max_ظرفیت;
   }
 }
 
@@ -409,72 +409,72 @@ int32_t getGrowCapacity(int32_t newLength) {
 
 UBool
 UnicodeString::allocate(int32_t capacity) {
-  if(capacity <= US_STACKBUF_SIZE) {
-    fUnion.fFields.fLengthAndFlags = kShortString;
-    return true;
+  إذا(capacity <= US_STACKBUF_اندازه) {
+    fUnion.fFields.f_اوږدتیا_And_Flags = kShortString;
+    أرجع ریښتیا;
   }
-  if(capacity <= kMaxCapacity) {
+  إذا(capacity <= k_Max_ظرفیت) {
     ++capacity;  // for the NUL
     // Switch to size_t which is unsigned so that we can allocate up to 4GB.
     // Reference counter + UChars.
-    size_t numBytes = sizeof(int32_t) + static_cast<size_t>(capacity) * U_SIZEOF_UCHAR;
+    size_t عدد_بایټونه = حجم(int32_t) + static_cast<size_t>(capacity) * U_SIZEOF_UCHAR;
     // Round up to a multiple of 16.
-    numBytes = (numBytes + 15) & ~15;
-    int32_t* array = static_cast<int32_t*>(uprv_malloc(numBytes));
-    if(array != nullptr) {
+    عدد_بایټونه = (عدد_بایټونه + 15) & ~15;
+    int32_t* array = static_cast<int32_t*>(uprv_malloc(عدد_بایټونه));
+    إذا(array != تش_اشاره) {
       // set initial refCount and point behind the refCount
       *array++ = 1;
-      numBytes -= sizeof(int32_t);
+      عدد_بایټونه -= حجم(int32_t);
 
       // have fArray point to the first char16_t
       fUnion.fFields.fArray = reinterpret_cast<char16_t*>(array);
-      fUnion.fFields.fCapacity = static_cast<int32_t>(numBytes / U_SIZEOF_UCHAR);
-      fUnion.fFields.fLengthAndFlags = kLongString;
-      return true;
+      fUnion.fFields.f_ظرفیت = static_cast<int32_t>(عدد_بایټونه / U_SIZEOF_UCHAR);
+      fUnion.fFields.f_اوږدتیا_And_Flags = kLongString;
+      أرجع ریښتیا;
     }
   }
-  fUnion.fFields.fLengthAndFlags = kIsBogus;
-  fUnion.fFields.fArray = nullptr;
-  fUnion.fFields.fCapacity = 0;
-  return false;
+  fUnion.fFields.f_اوږدتیا_And_Flags = kIsBogus;
+  fUnion.fFields.fArray = تش_اشاره;
+  fUnion.fFields.f_ظرفیت = 0;
+  أرجع خطأ;
 }
 
 //========================================
 // Destructor
 //========================================
 
-#ifdef UNISTR_COUNT_FINAL_STRING_LENGTHS
-static u_atomic_int32_t finalLengthCounts[0x400];  // UnicodeString::kMaxShortLength+1
-static u_atomic_int32_t beyondCount(0);
+#که_تعریف_شوی UNISTR_شمېر_FINAL_STRING_LENGTHS
+ساكن u_atomic_int32_t final_اوږدتیا_Counts[0x400];  // UnicodeString::kMaxShortLength+1
+ساكن u_atomic_int32_t beyond_شمېر(0);
 
-U_CAPI void unistr_printLengths() {
+U_CAPI فراغ unistr_printLengths() {
   int32_t i;
-  for(i = 0; i <= 59; ++i) {
-    printf("%2d,  %9d\n", i, (int32_t)finalLengthCounts[i]);
+  لكل(i = 0; i <= 59; ++i) {
+    چاپ_کړه("%2d,  %9d\n", i, (int32_t)final_اوږدتیا_Counts[i]);
   }
-  int32_t beyond = beyondCount;
-  for(; i < UPRV_LENGTHOF(finalLengthCounts); ++i) {
-    beyond += finalLengthCounts[i];
+  int32_t beyond = beyond_شمېر;
+  لكل(; i < UPRV_LENGTHOF(final_اوږدتیا_Counts); ++i) {
+    beyond += final_اوږدتیا_Counts[i];
   }
-  printf(">59, %9d\n", beyond);
+  چاپ_کړه(">59, %9d\n", beyond);
 }
-#endif
+#د_که_پای
 
 UnicodeString::~UnicodeString()
 {
-#ifdef UNISTR_COUNT_FINAL_STRING_LENGTHS
+#که_تعریف_شوی UNISTR_شمېر_FINAL_STRING_LENGTHS
   // Count lengths of strings at the end of their lifetime.
   // Useful for discussion of a desirable stack buffer size.
   // Count the contents length, not the optional NUL terminator nor further capacity.
   // Ignore open-buffer strings and strings which alias external storage.
-  if((fUnion.fFields.fLengthAndFlags&(kOpenGetBuffer|kReadonlyAlias|kWritableAlias)) == 0) {
-    if(hasShortLength()) {
-      umtx_atomic_inc(finalLengthCounts + getShortLength());
-    } else {
-      umtx_atomic_inc(&beyondCount);
+  إذا((fUnion.fFields.f_اوږدتیا_And_Flags&(k_Open_Get_بفر|kReadonlyAlias|kWritableAlias)) == 0) {
+    إذا(has_Short_اوږدتیا()) {
+      umtx_atomic_inc(final_اوږدتیا_Counts + get_Short_اوږدتیا());
+    } وإلا {
+      umtx_atomic_inc(&beyond_شمېر);
     }
   }
-#endif
+#د_که_پای
 
   releaseArray();
 }
@@ -484,41 +484,41 @@ UnicodeString::~UnicodeString()
 //========================================
 
 UnicodeString UnicodeString::fromUTF8(StringPiece utf8) {
-  UnicodeString result;
-  result.setToUTF8(utf8);
-  return result;
+  UnicodeString پایله;
+  پایله.سېټ_منزل_UTF8(utf8);
+  أرجع پایله;
 }
 
-UnicodeString UnicodeString::fromUTF32(const UChar32 *utf32, int32_t length) {
-  UnicodeString result;
+UnicodeString UnicodeString::fromUTF32(ثابت UChar32 *utf32, int32_t length) {
+  UnicodeString پایله;
   int32_t capacity;
   // Most UTF-32 strings will be BMP-only and result in a same-length
   // UTF-16 string. We overestimate the capacity just slightly,
   // just in case there are a few supplementary characters.
-  if(length <= US_STACKBUF_SIZE) {
-    capacity = US_STACKBUF_SIZE;
-  } else {
+  إذا(length <= US_STACKBUF_اندازه) {
+    capacity = US_STACKBUF_اندازه;
+  } وإلا {
     capacity = length + (length >> 4) + 4;
   }
-  do {
-    char16_t *utf16 = result.getBuffer(capacity);
+  افعل {
+    char16_t *utf16 = پایله.get_بفر(capacity);
     int32_t length16;
-    UErrorCode errorCode = U_ZERO_ERROR;
-    u_strFromUTF32WithSub(utf16, result.getCapacity(), &length16,
+    UError_کوډ error_کوډ = U_ZERO_ERROR;
+    u_strFromUTF32WithSub(utf16, پایله.get_ظرفیت(), &length16,
         utf32, length,
         0xfffd,  // Substitution character.
-        nullptr,    // Don't care about number of substitutions.
-        &errorCode);
-    result.releaseBuffer(length16);
-    if(errorCode == U_BUFFER_OVERFLOW_ERROR) {
+        تش_اشاره,    // Don't care about number of substitutions.
+        &error_کوډ);
+    پایله.release_بفر(length16);
+    إذا(error_کوډ == U_بفر_ډکېدنه_ERROR) {
       capacity = length16 + 1;  // +1 for the terminating NUL.
-      continue;
-    } else if(U_FAILURE(errorCode)) {
-      result.setToBogus();
+      استمر;
+    } وإلا إذا(U_FAILURE(error_کوډ)) {
+      پایله.سېټ_منزل_Bogus();
     }
-    break;
-  } while(true);
-  return result;
+    اكسر;
+  } طالما(ریښتیا);
+  أرجع پایله;
 }
 
 //========================================
@@ -526,271 +526,271 @@ UnicodeString UnicodeString::fromUTF32(const UChar32 *utf32, int32_t length) {
 //========================================
 
 UnicodeString&
-UnicodeString::operator=(const UnicodeString& src) U_LIFETIME_BOUND {
-  return copyFrom(src);
+UnicodeString::چلوونکی=(ثابت UnicodeString& src) U_LIFETIME_BOUND {
+  أرجع copyFrom(src);
 }
 
 UnicodeString&
-UnicodeString::fastCopyFrom(const UnicodeString& src) U_LIFETIME_BOUND {
-  return copyFrom(src, true);
+UnicodeString::fastCopyFrom(ثابت UnicodeString& src) U_LIFETIME_BOUND {
+  أرجع copyFrom(src, ریښتیا);
 }
 
 UnicodeString&
-UnicodeString::copyFrom(const UnicodeString& src, UBool fastCopy) U_LIFETIME_BOUND {
+UnicodeString::copyFrom(ثابت UnicodeString& src, UBool fastCopy) U_LIFETIME_BOUND {
   // if assigning to ourselves, do nothing
-  if(this == &src) {
-    return *this;
+  إذا(هذا == &src) {
+    أرجع *هذا;
   }
 
   // is the right side bogus?
-  if(src.isBogus()) {
-    setToBogus();
-    return *this;
+  إذا(src.isBogus()) {
+    سېټ_منزل_Bogus();
+    أرجع *هذا;
   }
 
   // delete the current contents
   releaseArray();
 
-  if(src.isEmpty()) {
+  إذا(src.is_تشه()) {
     // empty string - use the stack buffer
-    setToEmpty();
-    return *this;
+    سېټ_منزل_تشه();
+    أرجع *هذا;
   }
 
   // fLength>0 and not an "open" src.getBuffer(minCapacity)
-  fUnion.fFields.fLengthAndFlags = src.fUnion.fFields.fLengthAndFlags;
-  switch(src.fUnion.fFields.fLengthAndFlags & kAllStorageFlags) {
-  case kShortString:
+  fUnion.fFields.f_اوږدتیا_And_Flags = src.fUnion.fFields.f_اوږدتیا_And_Flags;
+  بدل(src.fUnion.fFields.f_اوږدتیا_And_Flags & kAllStorageFlags) {
+  حالة kShortString:
     // short string using the stack buffer, do the same
-    uprv_memcpy(fUnion.fStackFields.fBuffer, src.fUnion.fStackFields.fBuffer,
-                getShortLength() * U_SIZEOF_UCHAR);
-    break;
-  case kLongString:
+    uprv_memcpy(fUnion.f_ډېری_Fields.f_بفر, src.fUnion.f_ډېری_Fields.f_بفر,
+                get_Short_اوږدتیا() * U_SIZEOF_UCHAR);
+    اكسر;
+  حالة kLongString:
     // src uses a refCounted string buffer, use that buffer with refCount
     // src is const, use a cast - we don't actually change it
-    const_cast<UnicodeString &>(src).addRef();
+    const_cast<UnicodeString &>(src).جمع_کړه_Ref();
     // copy all fields, share the reference-counted buffer
     fUnion.fFields.fArray = src.fUnion.fFields.fArray;
-    fUnion.fFields.fCapacity = src.fUnion.fFields.fCapacity;
-    if(!hasShortLength()) {
-      fUnion.fFields.fLength = src.fUnion.fFields.fLength;
+    fUnion.fFields.f_ظرفیت = src.fUnion.fFields.f_ظرفیت;
+    إذا(!has_Short_اوږدتیا()) {
+      fUnion.fFields.f_اوږدتیا = src.fUnion.fFields.f_اوږدتیا;
     }
-    break;
-  case kReadonlyAlias:
-    if(fastCopy) {
+    اكسر;
+  حالة kReadonlyAlias:
+    إذا(fastCopy) {
       // src is a readonly alias, do the same
       // -> maintain the readonly alias as such
       fUnion.fFields.fArray = src.fUnion.fFields.fArray;
-      fUnion.fFields.fCapacity = src.fUnion.fFields.fCapacity;
-      if(!hasShortLength()) {
-        fUnion.fFields.fLength = src.fUnion.fFields.fLength;
+      fUnion.fFields.f_ظرفیت = src.fUnion.fFields.f_ظرفیت;
+      إذا(!has_Short_اوږدتیا()) {
+        fUnion.fFields.f_اوږدتیا = src.fUnion.fFields.f_اوږدتیا;
       }
-      break;
+      اكسر;
     }
     // else if(!fastCopy) fall through to case kWritableAlias
     // -> allocate a new buffer and copy the contents
     U_FALLTHROUGH;
-  case kWritableAlias: {
+  حالة kWritableAlias: {
     // src is a writable alias; we make a copy of that instead
-    int32_t srcLength = src.length();
-    if(allocate(srcLength)) {
-      u_memcpy(getArrayStart(), src.getArrayStart(), srcLength);
-      setLength(srcLength);
-      break;
+    int32_t src_اوږدتیا = src.length();
+    إذا(allocate(src_اوږدتیا)) {
+      u_memcpy(get_Array_پیل(), src.get_Array_پیل(), src_اوږدتیا);
+      سېټ_اوږدتیا(src_اوږدتیا);
+      اكسر;
     }
     // if there is not enough memory, then fall through to setting to bogus
     U_FALLTHROUGH;
   }
-  default:
+  افتراضي:
     // if src is bogus, set ourselves to bogus
     // do not call setToBogus() here because fArray and flags are not consistent here
-    fUnion.fFields.fLengthAndFlags = kIsBogus;
-    fUnion.fFields.fArray = nullptr;
-    fUnion.fFields.fCapacity = 0;
-    break;
+    fUnion.fFields.f_اوږدتیا_And_Flags = kIsBogus;
+    fUnion.fFields.fArray = تش_اشاره;
+    fUnion.fFields.f_ظرفیت = 0;
+    اكسر;
   }
 
-  return *this;
+  أرجع *هذا;
 }
 
-UnicodeString& UnicodeString::operator=(UnicodeString&& src) noexcept U_LIFETIME_BOUND {
+UnicodeString& UnicodeString::چلوونکی=(UnicodeString&& src) noexcept U_LIFETIME_BOUND {
   // No explicit check for self move assignment, consistent with standard library.
   // Self move assignment causes no crash nor leak but might make the object bogus.
   releaseArray();
-  copyFieldsFrom(src, true);
-  return *this;
+  copyFieldsFrom(src, ریښتیا);
+  أرجع *هذا;
 }
 
 // Same as move assignment except without memory management.
-void UnicodeString::copyFieldsFrom(UnicodeString &src, UBool setSrcToBogus) noexcept {
-  int16_t lengthAndFlags = fUnion.fFields.fLengthAndFlags = src.fUnion.fFields.fLengthAndFlags;
-  if(lengthAndFlags & kUsingStackBuffer) {
+فراغ UnicodeString::copyFieldsFrom(UnicodeString &src, UBool سېټ_Src_منزل_Bogus) noexcept {
+  int16_t اوږدتیا_And_Flags = fUnion.fFields.f_اوږدتیا_And_Flags = src.fUnion.fFields.f_اوږدتیا_And_Flags;
+  إذا(اوږدتیا_And_Flags & k_Using_ډېری_بفر) {
     // Short string using the stack buffer, copy the contents.
     // Check for self assignment to prevent "overlap in memcpy" warnings,
     // although it should be harmless to copy a buffer to itself exactly.
-    if(this != &src) {
-      uprv_memcpy(fUnion.fStackFields.fBuffer, src.fUnion.fStackFields.fBuffer,
-                  getShortLength() * U_SIZEOF_UCHAR);
+    إذا(هذا != &src) {
+      uprv_memcpy(fUnion.f_ډېری_Fields.f_بفر, src.fUnion.f_ډېری_Fields.f_بفر,
+                  get_Short_اوږدتیا() * U_SIZEOF_UCHAR);
     }
-  } else {
+  } وإلا {
     // In all other cases, copy all fields.
     fUnion.fFields.fArray = src.fUnion.fFields.fArray;
-    fUnion.fFields.fCapacity = src.fUnion.fFields.fCapacity;
-    if(!hasShortLength()) {
-      fUnion.fFields.fLength = src.fUnion.fFields.fLength;
+    fUnion.fFields.f_ظرفیت = src.fUnion.fFields.f_ظرفیت;
+    إذا(!has_Short_اوږدتیا()) {
+      fUnion.fFields.f_اوږدتیا = src.fUnion.fFields.f_اوږدتیا;
     }
-    if(setSrcToBogus) {
+    إذا(سېټ_Src_منزل_Bogus) {
       // Set src to bogus without releasing any memory.
-      src.fUnion.fFields.fLengthAndFlags = kIsBogus;
-      src.fUnion.fFields.fArray = nullptr;
-      src.fUnion.fFields.fCapacity = 0;
+      src.fUnion.fFields.f_اوږدتیا_And_Flags = kIsBogus;
+      src.fUnion.fFields.fArray = تش_اشاره;
+      src.fUnion.fFields.f_ظرفیت = 0;
     }
   }
 }
 
-void UnicodeString::swap(UnicodeString &other) noexcept {
-  UnicodeString temp;  // Empty short string: Known not to need releaseArray().
+فراغ UnicodeString::swap(UnicodeString &other) noexcept {
+  UnicodeString لنډمهاله;  // Empty short string: Known not to need releaseArray().
   // Copy fields without resetting source values in between.
-  temp.copyFieldsFrom(*this, false);
-  this->copyFieldsFrom(other, false);
-  other.copyFieldsFrom(temp, false);
+  لنډمهاله.copyFieldsFrom(*هذا, خطأ);
+  هذا->copyFieldsFrom(other, خطأ);
+  other.copyFieldsFrom(لنډمهاله, خطأ);
   // Set temp to an empty string so that other's memory is not released twice.
-  temp.fUnion.fFields.fLengthAndFlags = kShortString;
+  لنډمهاله.fUnion.fFields.f_اوږدتیا_And_Flags = kShortString;
 }
 
 //========================================
 // Miscellaneous operations
 //========================================
 
-UnicodeString UnicodeString::unescape() const {
-    UnicodeString result(length(), static_cast<UChar32>(0), static_cast<int32_t>(0)); // construct with capacity
-    if (result.isBogus()) {
-        return result;
+UnicodeString UnicodeString::unescape() ثابت {
+    UnicodeString پایله(length(), static_cast<UChar32>(0), static_cast<int32_t>(0)); // construct with capacity
+    إذا (پایله.isBogus()) {
+        أرجع پایله;
     }
-    const char16_t *array = getBuffer();
+    ثابت char16_t *array = get_بفر();
     int32_t len = length();
     int32_t prev = 0;
-    for (int32_t i=0;;) {
-        if (i == len) {
-            result.append(array, prev, len - prev);
-            break;
+    لكل (int32_t i=0;;) {
+        إذا (i == len) {
+            پایله.append(array, prev, len - prev);
+            اكسر;
         }
-        if (array[i++] == 0x5C /*'\\'*/) {
-            result.append(array, prev, (i - 1) - prev);
+        إذا (array[i++] == 0x5C /*'\\'*/) {
+            پایله.append(array, prev, (i - 1) - prev);
             UChar32 c = unescapeAt(i); // advances i
-            if (c < 0) {
-                result.remove(); // return empty string
-                break; // invalid escape sequence
+            إذا (c < 0) {
+                پایله.remove(); // return empty string
+                اكسر; // invalid escape sequence
             }
-            result.append(c);
+            پایله.append(c);
             prev = i;
         }
     }
-    return result;
+    أرجع پایله;
 }
 
-UChar32 UnicodeString::unescapeAt(int32_t &offset) const {
-    return u_unescapeAt(UnicodeString_charAt, &offset, length(), (void*)this);
+UChar32 UnicodeString::unescapeAt(int32_t &دننه_واټن) ثابت {
+    أرجع u_unescapeAt(UnicodeString_charAt, &دننه_واټن, length(), (فراغ*)هذا);
 }
 
 //========================================
 // Read-only implementation
 //========================================
 UBool
-UnicodeString::doEquals(const char16_t *text, int32_t len) const {
+UnicodeString::doEquals(ثابت char16_t *متن, int32_t len) ثابت {
   // Requires: this not bogus and have same lengths.
   // Byte-wise comparison works for equality regardless of endianness.
-  return uprv_memcmp(getArrayStart(), text, len * U_SIZEOF_UCHAR) == 0;
+  أرجع uprv_memcmp(get_Array_پیل(), متن, len * U_SIZEOF_UCHAR) == 0;
 }
 
 UBool
-UnicodeString::doEqualsSubstring( int32_t start,
+UnicodeString::doEqualsSubstring( int32_t پیل,
               int32_t length,
-              const char16_t *srcChars,
-              int32_t srcStart,
-              int32_t srcLength) const
+              ثابت char16_t *srcChars,
+              int32_t src_پیل,
+              int32_t src_اوږدتیا) ثابت
 {
   // compare illegal string values
-  if(isBogus()) {
-    return false;
+  إذا(isBogus()) {
+    أرجع خطأ;
   }
   
   // pin indices to legal values
-  pinIndices(start, length);
+  pinIndices(پیل, length);
 
-  if(srcChars == nullptr) {
+  إذا(srcChars == تش_اشاره) {
     // treat const char16_t *srcChars==nullptr as an empty string
-    return length == 0 ? true : false;
+    أرجع length == 0 ? ریښتیا : خطأ;
   }
 
   // get the correct pointer
-  const char16_t *chars = getArrayStart();
+  ثابت char16_t *chars = get_Array_پیل();
 
-  chars += start;
-  srcChars += srcStart;
+  chars += پیل;
+  srcChars += src_پیل;
 
   // get the srcLength if necessary
-  if(srcLength < 0) {
-    srcLength = u_strlen(srcChars + srcStart);
+  إذا(src_اوږدتیا < 0) {
+    src_اوږدتیا = u_strlen(srcChars + src_پیل);
   }
 
-  if (length != srcLength) {
-    return false;
+  إذا (length != src_اوږدتیا) {
+    أرجع خطأ;
   }
 
-  if(length == 0 || chars == srcChars) {
-    return true;
+  إذا(length == 0 || chars == srcChars) {
+    أرجع ریښتیا;
   }
 
-  return u_memcmp(chars, srcChars, srcLength) == 0;
+  أرجع u_memcmp(chars, srcChars, src_اوږدتیا) == 0;
 }
 
 int8_t
-UnicodeString::doCompare( int32_t start,
+UnicodeString::doCompare( int32_t پیل,
               int32_t length,
-              const char16_t *srcChars,
-              int32_t srcStart,
-              int32_t srcLength) const
+              ثابت char16_t *srcChars,
+              int32_t src_پیل,
+              int32_t src_اوږدتیا) ثابت
 {
   // compare illegal string values
-  if(isBogus()) {
-    return -1;
+  إذا(isBogus()) {
+    أرجع -1;
   }
   
   // pin indices to legal values
-  pinIndices(start, length);
+  pinIndices(پیل, length);
 
-  if(srcChars == nullptr) {
+  إذا(srcChars == تش_اشاره) {
     // treat const char16_t *srcChars==nullptr as an empty string
-    return length == 0 ? 0 : 1;
+    أرجع length == 0 ? 0 : 1;
   }
 
   // get the correct pointer
-  const char16_t *chars = getArrayStart();
+  ثابت char16_t *chars = get_Array_پیل();
 
-  chars += start;
-  srcChars += srcStart;
+  chars += پیل;
+  srcChars += src_پیل;
 
-  int32_t minLength;
-  int8_t lengthResult;
+  int32_t min_اوږدتیا;
+  int8_t اوږدتیا_پایله;
 
   // get the srcLength if necessary
-  if(srcLength < 0) {
-    srcLength = u_strlen(srcChars + srcStart);
+  إذا(src_اوږدتیا < 0) {
+    src_اوږدتیا = u_strlen(srcChars + src_پیل);
   }
 
   // are we comparing different lengths?
-  if(length != srcLength) {
-    if(length < srcLength) {
-      minLength = length;
-      lengthResult = -1;
-    } else {
-      minLength = srcLength;
-      lengthResult = 1;
+  إذا(length != src_اوږدتیا) {
+    إذا(length < src_اوږدتیا) {
+      min_اوږدتیا = length;
+      اوږدتیا_پایله = -1;
+    } وإلا {
+      min_اوږدتیا = src_اوږدتیا;
+      اوږدتیا_پایله = 1;
     }
-  } else {
-    minLength = length;
-    lengthResult = 0;
+  } وإلا {
+    min_اوږدتیا = length;
+    اوږدتیا_پایله = 0;
   }
 
   /*
@@ -801,439 +801,439 @@ UnicodeString::doCompare( int32_t start,
    * does not become 0 itself
    */
 
-  if(minLength > 0 && chars != srcChars) {
-    int32_t result;
+  إذا(min_اوږدتیا > 0 && chars != srcChars) {
+    int32_t پایله;
 
-#   if U_IS_BIG_ENDIAN 
+#   إذا U_IS_BIG_ENDIAN 
       // big-endian: byte comparison works
-      result = uprv_memcmp(chars, srcChars, minLength * sizeof(char16_t));
-      if(result != 0) {
-        return (int8_t)(result >> 15 | 1);
+      پایله = uprv_memcmp(chars, srcChars, min_اوږدتیا * حجم(char16_t));
+      إذا(پایله != 0) {
+        أرجع (int8_t)(پایله >> 15 | 1);
       }
-#   else
+#   وإلا
       // little-endian: compare char16_t units
-      do {
-        result = static_cast<int32_t>(*(chars++)) - static_cast<int32_t>(*(srcChars++));
-        if(result != 0) {
-          return static_cast<int8_t>(result >> 15 | 1);
+      افعل {
+        پایله = static_cast<int32_t>(*(chars++)) - static_cast<int32_t>(*(srcChars++));
+        إذا(پایله != 0) {
+          أرجع static_cast<int8_t>(پایله >> 15 | 1);
         }
-      } while(--minLength > 0);
+      } طالما(--min_اوږدتیا > 0);
 #   endif
   }
-  return lengthResult;
+  أرجع اوږدتیا_پایله;
 }
 
 /* String compare in code point order - doCompare() compares in code unit order. */
 int8_t
-UnicodeString::doCompareCodePointOrder(int32_t start,
+UnicodeString::do_Compare_کوډ_ټکی_ترتیب(int32_t پیل,
                                        int32_t length,
-                                       const char16_t *srcChars,
-                                       int32_t srcStart,
-                                       int32_t srcLength) const
+                                       ثابت char16_t *srcChars,
+                                       int32_t src_پیل,
+                                       int32_t src_اوږدتیا) ثابت
 {
   // compare illegal string values
   // treat const char16_t *srcChars==nullptr as an empty string
-  if(isBogus()) {
-    return -1;
+  إذا(isBogus()) {
+    أرجع -1;
   }
 
   // pin indices to legal values
-  pinIndices(start, length);
+  pinIndices(پیل, length);
 
-  if(srcChars == nullptr) {
-    srcStart = srcLength = 0;
+  إذا(srcChars == تش_اشاره) {
+    src_پیل = src_اوږدتیا = 0;
   }
 
-  int32_t diff = uprv_strCompare(getArrayStart() + start, length, (srcChars!=nullptr)?(srcChars + srcStart):nullptr, srcLength, false, true);
+  int32_t diff = uprv_strCompare(get_Array_پیل() + پیل, length, (srcChars!=تش_اشاره)?(srcChars + src_پیل):تش_اشاره, src_اوږدتیا, خطأ, ریښتیا);
   /* translate the 32-bit result into an 8-bit one */
-  if(diff!=0) {
-    return static_cast<int8_t>(diff >> 15 | 1);
-  } else {
-    return 0;
+  إذا(diff!=0) {
+    أرجع static_cast<int8_t>(diff >> 15 | 1);
+  } وإلا {
+    أرجع 0;
   }
 }
 
 int32_t
-UnicodeString::getLength() const {
-    return length();
+UnicodeString::get_اوږدتیا() ثابت {
+    أرجع length();
 }
 
 char16_t
-UnicodeString::getCharAt(int32_t offset) const {
-  return charAt(offset);
+UnicodeString::getCharAt(int32_t دننه_واټن) ثابت {
+  أرجع charAt(دننه_واټن);
 }
 
 UChar32
-UnicodeString::getChar32At(int32_t offset) const {
-  return char32At(offset);
+UnicodeString::getChar32At(int32_t دننه_واټن) ثابت {
+  أرجع char32At(دننه_واټن);
 }
 
 UChar32
-UnicodeString::char32At(int32_t offset) const
+UnicodeString::char32At(int32_t دننه_واټن) ثابت
 {
   int32_t len = length();
-  if (static_cast<uint32_t>(offset) < static_cast<uint32_t>(len)) {
-    const char16_t *array = getArrayStart();
+  إذا (static_cast<uint32_t>(دننه_واټن) < static_cast<uint32_t>(len)) {
+    ثابت char16_t *array = get_Array_پیل();
     UChar32 c;
-    U16_GET(array, 0, offset, len, c);
-    return c;
-  } else {
-    return kInvalidUChar;
+    U16_GET(array, 0, دننه_واټن, len, c);
+    أرجع c;
+  } وإلا {
+    أرجع kInvalidUChar;
   }
 }
 
 int32_t
-UnicodeString::getChar32Start(int32_t offset) const {
-  if (static_cast<uint32_t>(offset) < static_cast<uint32_t>(length())) {
-    const char16_t *array = getArrayStart();
-    U16_SET_CP_START(array, 0, offset);
-    return offset;
-  } else {
-    return 0;
+UnicodeString::get_Char32_پیل(int32_t دننه_واټن) ثابت {
+  إذا (static_cast<uint32_t>(دننه_واټن) < static_cast<uint32_t>(length())) {
+    ثابت char16_t *array = get_Array_پیل();
+    U16_سېټ_CP_پیل(array, 0, دننه_واټن);
+    أرجع دننه_واټن;
+  } وإلا {
+    أرجع 0;
   }
 }
 
 int32_t
-UnicodeString::getChar32Limit(int32_t offset) const {
+UnicodeString::get_Char32_حد(int32_t دننه_واټن) ثابت {
   int32_t len = length();
-  if (static_cast<uint32_t>(offset) < static_cast<uint32_t>(len)) {
-    const char16_t *array = getArrayStart();
-    U16_SET_CP_LIMIT(array, 0, offset, len);
-    return offset;
-  } else {
-    return len;
+  إذا (static_cast<uint32_t>(دننه_واټن) < static_cast<uint32_t>(len)) {
+    ثابت char16_t *array = get_Array_پیل();
+    U16_سېټ_CP_حد(array, 0, دننه_واټن, len);
+    أرجع دننه_واټن;
+  } وإلا {
+    أرجع len;
   }
 }
 
 int32_t
-UnicodeString::countChar32(int32_t start, int32_t length) const {
-  pinIndices(start, length);
+UnicodeString::شمېر_Char32(int32_t پیل, int32_t length) ثابت {
+  pinIndices(پیل, length);
   // if(isBogus()) then fArray==0 and start==0 - u_countChar32() checks for nullptr
-  return u_countChar32(getArrayStart()+start, length);
+  أرجع u_شمېر_Char32(get_Array_پیل()+پیل, length);
 }
 
 UBool
-UnicodeString::hasMoreChar32Than(int32_t start, int32_t length, int32_t number) const {
-  pinIndices(start, length);
+UnicodeString::has_نور_Char32_Than(int32_t پیل, int32_t length, int32_t number) ثابت {
+  pinIndices(پیل, length);
   // if(isBogus()) then fArray==0 and start==0 - u_strHasMoreChar32Than() checks for nullptr
-  return u_strHasMoreChar32Than(getArrayStart()+start, length, number);
+  أرجع u_str_Has_نور_Char32_Than(get_Array_پیل()+پیل, length, number);
 }
 
 int32_t
-UnicodeString::moveIndex32(int32_t index, int32_t delta) const {
+UnicodeString::moveIndex32(int32_t شاخص, int32_t delta) ثابت {
   // pin index
   int32_t len = length();
-  if(index<0) {
-    index=0;
-  } else if(index>len) {
-    index=len;
+  إذا(شاخص<0) {
+    شاخص=0;
+  } وإلا إذا(شاخص>len) {
+    شاخص=len;
   }
 
-  const char16_t *array = getArrayStart();
-  if(delta>0) {
-    U16_FWD_N(array, index, len, delta);
-  } else {
-    U16_BACK_N(array, 0, index, -delta);
+  ثابت char16_t *array = get_Array_پیل();
+  إذا(delta>0) {
+    U16_FWD_N(array, شاخص, len, delta);
+  } وإلا {
+    U16_شا_N(array, 0, شاخص, -delta);
   }
 
-  return index;
+  أرجع شاخص;
 }
 
-void
-UnicodeString::doExtract(int32_t start,
+فراغ
+UnicodeString::do_ایستل(int32_t پیل,
              int32_t length,
              char16_t *dst,
-             int32_t dstStart) const
+             int32_t dst_پیل) ثابت
 {
   // pin indices to legal values
-  pinIndices(start, length);
+  pinIndices(پیل, length);
 
   // do not copy anything if we alias dst itself
-  const char16_t *array = getArrayStart();
-  if(array + start != dst + dstStart) {
-    us_arrayCopy(array, start, dst, dstStart, length);
+  ثابت char16_t *array = get_Array_پیل();
+  إذا(array + پیل != dst + dst_پیل) {
+    us_arrayCopy(array, پیل, dst, dst_پیل, length);
   }
 }
 
 int32_t
-UnicodeString::extract(Char16Ptr dest, int32_t destCapacity,
-                       UErrorCode &errorCode) const {
+UnicodeString::extract(Char16Ptr dest, int32_t dest_ظرفیت,
+                       UError_کوډ &error_کوډ) ثابت {
   int32_t len = length();
-  if(U_SUCCESS(errorCode)) {
-    if (isBogus() || destCapacity < 0 || (destCapacity > 0 && dest == nullptr)) {
-      errorCode=U_ILLEGAL_ARGUMENT_ERROR;
-    } else {
-      const char16_t *array = getArrayStart();
-      if(len>0 && len<=destCapacity && array!=dest) {
+  إذا(U_SUCCESS(error_کوډ)) {
+    إذا (isBogus() || dest_ظرفیت < 0 || (dest_ظرفیت > 0 && dest == تش_اشاره)) {
+      error_کوډ=U_ILLEGAL_دلیل_ERROR;
+    } وإلا {
+      ثابت char16_t *array = get_Array_پیل();
+      إذا(len>0 && len<=dest_ظرفیت && array!=dest) {
         u_memcpy(dest, array, len);
       }
-      return u_terminateUChars(dest, destCapacity, len, &errorCode);
+      أرجع u_terminateUChars(dest, dest_ظرفیت, len, &error_کوډ);
     }
   }
 
-  return len;
+  أرجع len;
 }
 
 int32_t
-UnicodeString::extract(int32_t start,
+UnicodeString::extract(int32_t پیل,
                        int32_t length,
-                       char *target,
-                       int32_t targetCapacity,
-                       enum EInvariant) const
+                       حرف *موخه,
+                       int32_t موخه_ظرفیت,
+                       تعداد EInvariant) ثابت
 {
   // if the arguments are illegal, then do nothing
-  if(targetCapacity < 0 || (targetCapacity > 0 && target == nullptr)) {
-    return 0;
+  إذا(موخه_ظرفیت < 0 || (موخه_ظرفیت > 0 && موخه == تش_اشاره)) {
+    أرجع 0;
   }
 
   // pin the indices to legal values
-  pinIndices(start, length);
+  pinIndices(پیل, length);
 
-  if(length <= targetCapacity) {
-    u_UCharsToChars(getArrayStart() + start, target, length);
+  إذا(length <= موخه_ظرفیت) {
+    u_UChars_منزل_Chars(get_Array_پیل() + پیل, موخه, length);
   }
-  UErrorCode status = U_ZERO_ERROR;
-  return u_terminateChars(target, targetCapacity, length, &status);
+  UError_کوډ حالت = U_ZERO_ERROR;
+  أرجع u_terminateChars(موخه, موخه_ظرفیت, length, &حالت);
 }
 
 UnicodeString
-UnicodeString::tempSubString(int32_t start, int32_t len) const U_LIFETIME_BOUND {
-  pinIndices(start, len);
-  const char16_t *array = getBuffer();  // not getArrayStart() to check kIsBogus & kOpenGetBuffer
-  if(array==nullptr) {
-    array=fUnion.fStackFields.fBuffer;  // anything not nullptr because that would make an empty string
+UnicodeString::لنډمهاله_Sub_String(int32_t پیل, int32_t len) ثابت U_LIFETIME_BOUND {
+  pinIndices(پیل, len);
+  ثابت char16_t *array = get_بفر();  // not getArrayStart() to check kIsBogus & kOpenGetBuffer
+  إذا(array==تش_اشاره) {
+    array=fUnion.f_ډېری_Fields.f_بفر;  // anything not nullptr because that would make an empty string
     len=-2;  // bogus result string
   }
-  return UnicodeString(false, array + start, len);
+  أرجع UnicodeString(خطأ, array + پیل, len);
 }
 
 int32_t
-UnicodeString::toUTF8(int32_t start, int32_t len,
-                      char *target, int32_t capacity) const {
-  pinIndices(start, len);
+UnicodeString::منزل_UTF8(int32_t پیل, int32_t len,
+                      حرف *موخه, int32_t capacity) ثابت {
+  pinIndices(پیل, len);
   int32_t length8;
-  UErrorCode errorCode = U_ZERO_ERROR;
-  u_strToUTF8WithSub(target, capacity, &length8,
-                     getBuffer() + start, len,
+  UError_کوډ error_کوډ = U_ZERO_ERROR;
+  u_str_منزل_UTF8_With_Sub(موخه, capacity, &length8,
+                     get_بفر() + پیل, len,
                      0xFFFD,  // Standard substitution character.
-                     nullptr,    // Don't care about number of substitutions.
-                     &errorCode);
-  return length8;
+                     تش_اشاره,    // Don't care about number of substitutions.
+                     &error_کوډ);
+  أرجع length8;
 }
 
-#if U_CHARSET_IS_UTF8
+#إذا U_CHARSET_IS_UTF8
 
 int32_t
-UnicodeString::extract(int32_t start, int32_t len,
-                       char *target, uint32_t dstSize) const {
+UnicodeString::extract(int32_t پیل, int32_t len,
+                       حرف *موخه, uint32_t dst_اندازه) ثابت {
   // if the arguments are illegal, then do nothing
-  if (/*dstSize < 0 || */(dstSize > 0 && target == nullptr)) {
-    return 0;
+  إذا (/*dstSize < 0 || */(dst_اندازه > 0 && موخه == تش_اشاره)) {
+    أرجع 0;
   }
-  return toUTF8(start, len, target, dstSize <= 0x7fffffff ? static_cast<int32_t>(dstSize) : 0x7fffffff);
+  أرجع منزل_UTF8(پیل, len, موخه, dst_اندازه <= 0x7fffffff ? static_cast<int32_t>(dst_اندازه) : 0x7fffffff);
 }
 
 // else see unistr_cnv.cpp
-#endif
+#د_که_پای
 
-void 
-UnicodeString::extractBetween(int32_t start,
-                  int32_t limit,
-                  UnicodeString& target) const {
-  pinIndex(start);
-  pinIndex(limit);
-  doExtract(start, limit - start, target);
+فراغ 
+UnicodeString::ایستل_Between(int32_t پیل,
+                  int32_t حد,
+                  UnicodeString& موخه) ثابت {
+  pin_شاخص(پیل);
+  pin_شاخص(حد);
+  do_ایستل(پیل, حد - پیل, موخه);
 }
 
 // When converting from UTF-16 to UTF-8, the result will have at most 3 times
 // as many bytes as the source has UChars.
 // The "worst cases" are writing systems like Indic, Thai and CJK with
 // 3:1 bytes:UChars.
-void
-UnicodeString::toUTF8(ByteSink &sink) const {
+فراغ
+UnicodeString::منزل_UTF8(ByteSink &sink) ثابت {
   int32_t length16 = length();
-  if(length16 != 0) {
-    char stackBuffer[1024];
-    int32_t capacity = static_cast<int32_t>(sizeof(stackBuffer));
-    UBool utf8IsOwned = false;
-    char *utf8 = sink.GetAppendBuffer(length16 < capacity ? length16 : capacity,
+  إذا(length16 != 0) {
+    حرف ډېری_بفر[1024];
+    int32_t capacity = static_cast<int32_t>(حجم(ډېری_بفر));
+    UBool utf8IsOwned = خطأ;
+    حرف *utf8 = sink.Get_Append_بفر(length16 < capacity ? length16 : capacity,
                                       3*length16,
-                                      stackBuffer, capacity,
+                                      ډېری_بفر, capacity,
                                       &capacity);
     int32_t length8 = 0;
-    UErrorCode errorCode = U_ZERO_ERROR;
-    u_strToUTF8WithSub(utf8, capacity, &length8,
-                       getBuffer(), length16,
+    UError_کوډ error_کوډ = U_ZERO_ERROR;
+    u_str_منزل_UTF8_With_Sub(utf8, capacity, &length8,
+                       get_بفر(), length16,
                        0xFFFD,  // Standard substitution character.
-                       nullptr,    // Don't care about number of substitutions.
-                       &errorCode);
-    if(errorCode == U_BUFFER_OVERFLOW_ERROR) {
-      utf8 = static_cast<char*>(uprv_malloc(length8));
-      if(utf8 != nullptr) {
-        utf8IsOwned = true;
-        errorCode = U_ZERO_ERROR;
-        u_strToUTF8WithSub(utf8, length8, &length8,
-                           getBuffer(), length16,
+                       تش_اشاره,    // Don't care about number of substitutions.
+                       &error_کوډ);
+    إذا(error_کوډ == U_بفر_ډکېدنه_ERROR) {
+      utf8 = static_cast<حرف*>(uprv_malloc(length8));
+      إذا(utf8 != تش_اشاره) {
+        utf8IsOwned = ریښتیا;
+        error_کوډ = U_ZERO_ERROR;
+        u_str_منزل_UTF8_With_Sub(utf8, length8, &length8,
+                           get_بفر(), length16,
                            0xFFFD,  // Standard substitution character.
-                           nullptr,    // Don't care about number of substitutions.
-                           &errorCode);
-      } else {
-        errorCode = U_MEMORY_ALLOCATION_ERROR;
+                           تش_اشاره,    // Don't care about number of substitutions.
+                           &error_کوډ);
+      } وإلا {
+        error_کوډ = U_حافظه_ویش_ERROR;
       }
     }
-    if(U_SUCCESS(errorCode)) {
+    إذا(U_SUCCESS(error_کوډ)) {
       sink.Append(utf8, length8);
       sink.Flush();
     }
-    if(utf8IsOwned) {
+    إذا(utf8IsOwned) {
       uprv_free(utf8);
     }
   }
 }
 
 int32_t
-UnicodeString::toUTF32(UChar32 *utf32, int32_t capacity, UErrorCode &errorCode) const {
+UnicodeString::منزل_UTF32(UChar32 *utf32, int32_t capacity, UError_کوډ &error_کوډ) ثابت {
   int32_t length32=0;
-  if(U_SUCCESS(errorCode)) {
+  إذا(U_SUCCESS(error_کوډ)) {
     // getBuffer() and u_strToUTF32WithSub() check for illegal arguments.
-    u_strToUTF32WithSub(utf32, capacity, &length32,
-        getBuffer(), length(),
+    u_str_منزل_UTF32_With_Sub(utf32, capacity, &length32,
+        get_بفر(), length(),
         0xfffd,  // Substitution character.
-        nullptr,    // Don't care about number of substitutions.
-        &errorCode);
+        تش_اشاره,    // Don't care about number of substitutions.
+        &error_کوډ);
   }
-  return length32;
+  أرجع length32;
 }
 
 int32_t 
-UnicodeString::indexOf(const char16_t *srcChars,
-               int32_t srcStart,
-               int32_t srcLength,
-               int32_t start,
-               int32_t length) const
+UnicodeString::شاخص_د(ثابت char16_t *srcChars,
+               int32_t src_پیل,
+               int32_t src_اوږدتیا,
+               int32_t پیل,
+               int32_t length) ثابت
 {
-  if (isBogus() || srcChars == nullptr || srcStart < 0 || srcLength == 0) {
-    return -1;
+  إذا (isBogus() || srcChars == تش_اشاره || src_پیل < 0 || src_اوږدتیا == 0) {
+    أرجع -1;
   }
 
   // UnicodeString does not find empty substrings
-  if(srcLength < 0 && srcChars[srcStart] == 0) {
-    return -1;
+  إذا(src_اوږدتیا < 0 && srcChars[src_پیل] == 0) {
+    أرجع -1;
   }
 
   // get the indices within bounds
-  pinIndices(start, length);
+  pinIndices(پیل, length);
 
   // find the first occurrence of the substring
-  const char16_t *array = getArrayStart();
-  const char16_t *match = u_strFindFirst(array + start, length, srcChars + srcStart, srcLength);
-  if(match == nullptr) {
-    return -1;
-  } else {
-    return static_cast<int32_t>(match - array);
+  ثابت char16_t *array = get_Array_پیل();
+  ثابت char16_t *سمون = u_str_پیدا_کړه_لومړی(array + پیل, length, srcChars + src_پیل, src_اوږدتیا);
+  إذا(سمون == تش_اشاره) {
+    أرجع -1;
+  } وإلا {
+    أرجع static_cast<int32_t>(سمون - array);
   }
 }
 
 int32_t
-UnicodeString::doIndexOf(char16_t c,
-             int32_t start,
-             int32_t length) const
+UnicodeString::do_شاخص_د(char16_t c,
+             int32_t پیل,
+             int32_t length) ثابت
 {
   // pin indices
-  pinIndices(start, length);
+  pinIndices(پیل, length);
 
   // find the first occurrence of c
-  const char16_t *array = getArrayStart();
-  const char16_t *match = u_memchr(array + start, c, length);
-  if(match == nullptr) {
-    return -1;
-  } else {
-    return static_cast<int32_t>(match - array);
+  ثابت char16_t *array = get_Array_پیل();
+  ثابت char16_t *سمون = u_memchr(array + پیل, c, length);
+  إذا(سمون == تش_اشاره) {
+    أرجع -1;
+  } وإلا {
+    أرجع static_cast<int32_t>(سمون - array);
   }
 }
 
 int32_t
-UnicodeString::doIndexOf(UChar32 c,
-                         int32_t start,
-                         int32_t length) const {
+UnicodeString::do_شاخص_د(UChar32 c,
+                         int32_t پیل,
+                         int32_t length) ثابت {
   // pin indices
-  pinIndices(start, length);
+  pinIndices(پیل, length);
 
   // find the first occurrence of c
-  const char16_t *array = getArrayStart();
-  const char16_t *match = u_memchr32(array + start, c, length);
-  if(match == nullptr) {
-    return -1;
-  } else {
-    return static_cast<int32_t>(match - array);
+  ثابت char16_t *array = get_Array_پیل();
+  ثابت char16_t *سمون = u_memchr32(array + پیل, c, length);
+  إذا(سمون == تش_اشاره) {
+    أرجع -1;
+  } وإلا {
+    أرجع static_cast<int32_t>(سمون - array);
   }
 }
 
 int32_t 
-UnicodeString::lastIndexOf(const char16_t *srcChars,
-               int32_t srcStart,
-               int32_t srcLength,
-               int32_t start,
-               int32_t length) const
+UnicodeString::وروستی_شاخص_د(ثابت char16_t *srcChars,
+               int32_t src_پیل,
+               int32_t src_اوږدتیا,
+               int32_t پیل,
+               int32_t length) ثابت
 {
-  if (isBogus() || srcChars == nullptr || srcStart < 0 || srcLength == 0) {
-    return -1;
+  إذا (isBogus() || srcChars == تش_اشاره || src_پیل < 0 || src_اوږدتیا == 0) {
+    أرجع -1;
   }
 
   // UnicodeString does not find empty substrings
-  if(srcLength < 0 && srcChars[srcStart] == 0) {
-    return -1;
+  إذا(src_اوږدتیا < 0 && srcChars[src_پیل] == 0) {
+    أرجع -1;
   }
 
   // get the indices within bounds
-  pinIndices(start, length);
+  pinIndices(پیل, length);
 
   // find the last occurrence of the substring
-  const char16_t *array = getArrayStart();
-  const char16_t *match = u_strFindLast(array + start, length, srcChars + srcStart, srcLength);
-  if(match == nullptr) {
-    return -1;
-  } else {
-    return static_cast<int32_t>(match - array);
+  ثابت char16_t *array = get_Array_پیل();
+  ثابت char16_t *سمون = u_str_پیدا_کړه_وروستی(array + پیل, length, srcChars + src_پیل, src_اوږدتیا);
+  إذا(سمون == تش_اشاره) {
+    أرجع -1;
+  } وإلا {
+    أرجع static_cast<int32_t>(سمون - array);
   }
 }
 
 int32_t
-UnicodeString::doLastIndexOf(char16_t c,
-                 int32_t start,
-                 int32_t length) const
+UnicodeString::do_وروستی_شاخص_د(char16_t c,
+                 int32_t پیل,
+                 int32_t length) ثابت
 {
-  if(isBogus()) {
-    return -1;
+  إذا(isBogus()) {
+    أرجع -1;
   }
 
   // pin indices
-  pinIndices(start, length);
+  pinIndices(پیل, length);
 
   // find the last occurrence of c
-  const char16_t *array = getArrayStart();
-  const char16_t *match = u_memrchr(array + start, c, length);
-  if(match == nullptr) {
-    return -1;
-  } else {
-    return static_cast<int32_t>(match - array);
+  ثابت char16_t *array = get_Array_پیل();
+  ثابت char16_t *سمون = u_memrchr(array + پیل, c, length);
+  إذا(سمون == تش_اشاره) {
+    أرجع -1;
+  } وإلا {
+    أرجع static_cast<int32_t>(سمون - array);
   }
 }
 
 int32_t
-UnicodeString::doLastIndexOf(UChar32 c,
-                             int32_t start,
-                             int32_t length) const {
+UnicodeString::do_وروستی_شاخص_د(UChar32 c,
+                             int32_t پیل,
+                             int32_t length) ثابت {
   // pin indices
-  pinIndices(start, length);
+  pinIndices(پیل, length);
 
   // find the last occurrence of c
-  const char16_t *array = getArrayStart();
-  const char16_t *match = u_memrchr32(array + start, c, length);
-  if(match == nullptr) {
-    return -1;
-  } else {
-    return static_cast<int32_t>(match - array);
+  ثابت char16_t *array = get_Array_پیل();
+  ثابت char16_t *سمون = u_memrchr32(array + پیل, c, length);
+  إذا(سمون == تش_اشاره) {
+    أرجع -1;
+  } وإلا {
+    أرجع static_cast<int32_t>(سمون - array);
   }
 }
 
@@ -1242,79 +1242,79 @@ UnicodeString::doLastIndexOf(UChar32 c,
 //========================================
 
 UnicodeString&
-UnicodeString::findAndReplace(int32_t start,
+UnicodeString::پیدا_کړه_And_Replace(int32_t پیل,
                               int32_t length,
-                              const UnicodeString& oldText,
-                              int32_t oldStart,
-                              int32_t oldLength,
-                              const UnicodeString& newText,
-                              int32_t newStart,
-                              int32_t newLength) U_LIFETIME_BOUND
+                              ثابت UnicodeString& old_متن,
+                              int32_t old_پیل,
+                              int32_t old_اوږدتیا,
+                              ثابت UnicodeString& new_متن,
+                              int32_t new_پیل,
+                              int32_t new_اوږدتیا) U_LIFETIME_BOUND
 {
-  if(isBogus() || oldText.isBogus() || newText.isBogus()) {
-    return *this;
+  إذا(isBogus() || old_متن.isBogus() || new_متن.isBogus()) {
+    أرجع *هذا;
   }
 
-  pinIndices(start, length);
-  oldText.pinIndices(oldStart, oldLength);
-  newText.pinIndices(newStart, newLength);
+  pinIndices(پیل, length);
+  old_متن.pinIndices(old_پیل, old_اوږدتیا);
+  new_متن.pinIndices(new_پیل, new_اوږدتیا);
 
-  if(oldLength == 0) {
-    return *this;
+  إذا(old_اوږدتیا == 0) {
+    أرجع *هذا;
   }
 
-  while(length > 0 && length >= oldLength) {
-    int32_t pos = indexOf(oldText, oldStart, oldLength, start, length);
-    if(pos < 0) {
+  طالما(length > 0 && length >= old_اوږدتیا) {
+    int32_t pos = شاخص_د(old_متن, old_پیل, old_اوږدتیا, پیل, length);
+    إذا(pos < 0) {
       // no more oldText's here: done
-      break;
-    } else {
+      اكسر;
+    } وإلا {
       // we found oldText, replace it by newText and go beyond it
-      replace(pos, oldLength, newText, newStart, newLength);
-      length -= pos + oldLength - start;
-      start = pos + newLength;
+      replace(pos, old_اوږدتیا, new_متن, new_پیل, new_اوږدتیا);
+      length -= pos + old_اوږدتیا - پیل;
+      پیل = pos + new_اوږدتیا;
     }
   }
 
-  return *this;
+  أرجع *هذا;
 }
 
 
-void
-UnicodeString::setToBogus()
+فراغ
+UnicodeString::سېټ_منزل_Bogus()
 {
   releaseArray();
 
-  fUnion.fFields.fLengthAndFlags = kIsBogus;
-  fUnion.fFields.fArray = nullptr;
-  fUnion.fFields.fCapacity = 0;
+  fUnion.fFields.f_اوږدتیا_And_Flags = kIsBogus;
+  fUnion.fFields.fArray = تش_اشاره;
+  fUnion.fFields.f_ظرفیت = 0;
 }
 
 // turn a bogus string into an empty one
-void
+فراغ
 UnicodeString::unBogus() {
-  if(fUnion.fFields.fLengthAndFlags & kIsBogus) {
-    setToEmpty();
+  إذا(fUnion.fFields.f_اوږدتیا_And_Flags & kIsBogus) {
+    سېټ_منزل_تشه();
   }
 }
 
-const char16_t*
-UnicodeString::getTerminatedBuffer() U_LIFETIME_BOUND {
-  if(!isWritable()) {
-    return nullptr;
+ثابت char16_t*
+UnicodeString::get_Terminated_بفر() U_LIFETIME_BOUND {
+  إذا(!isWritable()) {
+    أرجع تش_اشاره;
   }
-  char16_t *array = getArrayStart();
+  char16_t *array = get_Array_پیل();
   int32_t len = length();
-  if(len < getCapacity()) {
-    if(fUnion.fFields.fLengthAndFlags & kBufferIsReadonly) {
+  إذا(len < get_ظرفیت()) {
+    إذا(fUnion.fFields.f_اوږدتیا_And_Flags & k_بفر_Is_Readonly) {
       // If len<capacity on a read-only alias, then array[len] is
       // either the original NUL (if constructed with (true, s, length))
       // or one of the original string contents characters (if later truncated),
       // therefore we can assume that array[len] is initialized memory.
-      if(array[len] == 0) {
-        return array;
+      إذا(array[len] == 0) {
+        أرجع array;
       }
-    } else if(((fUnion.fFields.fLengthAndFlags & kRefCounted) == 0 || refCount() == 1)) {
+    } وإلا إذا(((fUnion.fFields.f_اوږدتیا_And_Flags & kRefCounted) == 0 || ref_شمېر() == 1)) {
       // kRefCounted: Do not write the NUL if the buffer is shared.
       // That is mostly safe, except when the length of one copy was modified
       // without copy-on-write, e.g., via truncate(newLength) or remove().
@@ -1324,385 +1324,385 @@ UnicodeString::getTerminatedBuffer() U_LIFETIME_BOUND {
       // Do not test if there is a NUL already because it might be uninitialized memory.
       // (That would be safe, but tools like valgrind & Purify would complain.)
       array[len] = 0;
-      return array;
+      أرجع array;
     }
   }
-  if(len<INT32_MAX && cloneArrayIfNeeded(len+1)) {
-    array = getArrayStart();
+  إذا(len<INT32_MAX && cloneArrayIfNeeded(len+1)) {
+    array = get_Array_پیل();
     array[len] = 0;
-    return array;
-  } else {
-    return nullptr;
+    أرجع array;
+  } وإلا {
+    أرجع تش_اشاره;
   }
 }
 
 // setTo() analogous to the readonly-aliasing constructor with the same signature
 UnicodeString&
-UnicodeString::setTo(UBool isTerminated,
-                     ConstChar16Ptr textPtr U_LIFETIME_BOUND,
-                     int32_t textLength) U_LIFETIME_BOUND
+UnicodeString::سېټ_منزل(UBool isTerminated,
+                     ConstChar16Ptr متن_Ptr U_LIFETIME_BOUND,
+                     int32_t متن_اوږدتیا) U_LIFETIME_BOUND
 {
-  if(fUnion.fFields.fLengthAndFlags & kOpenGetBuffer) {
+  إذا(fUnion.fFields.f_اوږدتیا_And_Flags & k_Open_Get_بفر) {
     // do not modify a string that has an "open" getBuffer(minCapacity)
-    return *this;
+    أرجع *هذا;
   }
 
-  const char16_t *text = textPtr;
-  if(text == nullptr) {
+  ثابت char16_t *متن = متن_Ptr;
+  إذا(متن == تش_اشاره) {
     // treat as an empty string, do not alias
     releaseArray();
-    setToEmpty();
-    return *this;
+    سېټ_منزل_تشه();
+    أرجع *هذا;
   }
 
-  if( textLength < -1 ||
-      (textLength == -1 && !isTerminated) ||
-      (textLength >= 0 && isTerminated && text[textLength] != 0)
+  إذا( متن_اوږدتیا < -1 ||
+      (متن_اوږدتیا == -1 && !isTerminated) ||
+      (متن_اوږدتیا >= 0 && isTerminated && متن[متن_اوږدتیا] != 0)
   ) {
-    setToBogus();
-    return *this;
+    سېټ_منزل_Bogus();
+    أرجع *هذا;
   }
 
   releaseArray();
 
-  if(textLength == -1) {
+  إذا(متن_اوږدتیا == -1) {
     // text is terminated, or else it would have failed the above test
-    textLength = u_strlen(text);
+    متن_اوږدتیا = u_strlen(متن);
   }
-  fUnion.fFields.fLengthAndFlags = kReadonlyAlias;
-  setArray(const_cast<char16_t*>(text), textLength, isTerminated ? textLength + 1 : textLength);
-  return *this;
+  fUnion.fFields.f_اوږدتیا_And_Flags = kReadonlyAlias;
+  سېټ_Array(const_cast<char16_t*>(متن), متن_اوږدتیا, isTerminated ? متن_اوږدتیا + 1 : متن_اوږدتیا);
+  أرجع *هذا;
 }
 
 // setTo() analogous to the writable-aliasing constructor with the same signature
 UnicodeString&
-UnicodeString::setTo(char16_t* buffer,
-                     int32_t buffLength U_LIFETIME_BOUND,
-                     int32_t buffCapacity) U_LIFETIME_BOUND {
-  if(fUnion.fFields.fLengthAndFlags & kOpenGetBuffer) {
+UnicodeString::سېټ_منزل(char16_t* بفر,
+                     int32_t buff_اوږدتیا U_LIFETIME_BOUND,
+                     int32_t buff_ظرفیت) U_LIFETIME_BOUND {
+  إذا(fUnion.fFields.f_اوږدتیا_And_Flags & k_Open_Get_بفر) {
     // do not modify a string that has an "open" getBuffer(minCapacity)
-    return *this;
+    أرجع *هذا;
   }
 
-  if(buffer == nullptr) {
+  إذا(بفر == تش_اشاره) {
     // treat as an empty string, do not alias
     releaseArray();
-    setToEmpty();
-    return *this;
+    سېټ_منزل_تشه();
+    أرجع *هذا;
   }
 
-  if(buffLength < -1 || buffCapacity < 0 || buffLength > buffCapacity) {
-    setToBogus();
-    return *this;
-  } else if(buffLength == -1) {
+  إذا(buff_اوږدتیا < -1 || buff_ظرفیت < 0 || buff_اوږدتیا > buff_ظرفیت) {
+    سېټ_منزل_Bogus();
+    أرجع *هذا;
+  } وإلا إذا(buff_اوږدتیا == -1) {
     // buffLength = u_strlen(buff); but do not look beyond buffCapacity
-    const char16_t *p = buffer, *limit = buffer + buffCapacity;
-    while(p != limit && *p != 0) {
+    ثابت char16_t *p = بفر, *حد = بفر + buff_ظرفیت;
+    طالما(p != حد && *p != 0) {
       ++p;
     }
-    buffLength = static_cast<int32_t>(p - buffer);
+    buff_اوږدتیا = static_cast<int32_t>(p - بفر);
   }
 
   releaseArray();
 
-  fUnion.fFields.fLengthAndFlags = kWritableAlias;
-  setArray(buffer, buffLength, buffCapacity);
-  return *this;
+  fUnion.fFields.f_اوږدتیا_And_Flags = kWritableAlias;
+  سېټ_Array(بفر, buff_اوږدتیا, buff_ظرفیت);
+  أرجع *هذا;
 }
 
-UnicodeString& UnicodeString::setToUTF8(StringPiece utf8) U_LIFETIME_BOUND {
+UnicodeString& UnicodeString::سېټ_منزل_UTF8(StringPiece utf8) U_LIFETIME_BOUND {
   unBogus();
   int32_t length = utf8.length();
   int32_t capacity;
   // The UTF-16 string will be at most as long as the UTF-8 string.
-  if(length <= US_STACKBUF_SIZE) {
-    capacity = US_STACKBUF_SIZE;
-  } else {
+  إذا(length <= US_STACKBUF_اندازه) {
+    capacity = US_STACKBUF_اندازه;
+  } وإلا {
     capacity = length + 1;  // +1 for the terminating NUL.
   }
-  char16_t *utf16 = getBuffer(capacity);
+  char16_t *utf16 = get_بفر(capacity);
   int32_t length16;
-  UErrorCode errorCode = U_ZERO_ERROR;
-  u_strFromUTF8WithSub(utf16, getCapacity(), &length16,
-      utf8.data(), length,
+  UError_کوډ error_کوډ = U_ZERO_ERROR;
+  u_strFromUTF8WithSub(utf16, get_ظرفیت(), &length16,
+      utf8.معلومات(), length,
       0xfffd,  // Substitution character.
-      nullptr,    // Don't care about number of substitutions.
-      &errorCode);
-  releaseBuffer(length16);
-  if(U_FAILURE(errorCode)) {
-    setToBogus();
+      تش_اشاره,    // Don't care about number of substitutions.
+      &error_کوډ);
+  release_بفر(length16);
+  إذا(U_FAILURE(error_کوډ)) {
+    سېټ_منزل_Bogus();
   }
-  return *this;
+  أرجع *هذا;
 }
 
 UnicodeString&
-UnicodeString::setCharAt(int32_t offset, char16_t c) U_LIFETIME_BOUND
+UnicodeString::سېټ_Char_At(int32_t دننه_واټن, char16_t c) U_LIFETIME_BOUND
 {
   int32_t len = length();
-  if(cloneArrayIfNeeded() && len > 0) {
-    if(offset < 0) {
-      offset = 0;
-    } else if(offset >= len) {
-      offset = len - 1;
+  إذا(cloneArrayIfNeeded() && len > 0) {
+    إذا(دننه_واټن < 0) {
+      دننه_واټن = 0;
+    } وإلا إذا(دننه_واټن >= len) {
+      دننه_واټن = len - 1;
     }
 
-    getArrayStart()[offset] = c;
+    get_Array_پیل()[دننه_واټن] = c;
   }
-  return *this;
+  أرجع *هذا;
 }
 
 UnicodeString&
-UnicodeString::replace(int32_t start,
-                       int32_t _length,
+UnicodeString::replace(int32_t پیل,
+                       int32_t اوږدتیا_4,
                        UChar32 srcChar) U_LIFETIME_BOUND {
-  char16_t buffer[U16_MAX_LENGTH];
+  char16_t بفر[U16_MAX_اوږدتیا];
   int32_t count = 0;
-  UBool isError = false;
-  U16_APPEND(buffer, count, U16_MAX_LENGTH, srcChar, isError);
+  UBool isError = خطأ;
+  U16_APPEND(بفر, count, U16_MAX_اوږدتیا, srcChar, isError);
   // We test isError so that the compiler does not complain that we don't.
   // If isError (srcChar is not a valid code point) then count==0 which means
   // we remove the source segment rather than replacing it with srcChar.
-  return doReplace(start, _length, buffer, 0, isError ? 0 : count);
+  أرجع doReplace(پیل, اوږدتیا_4, بفر, 0, isError ? 0 : count);
 }
 
 UnicodeString&
 UnicodeString::append(UChar32 srcChar) U_LIFETIME_BOUND {
-  char16_t buffer[U16_MAX_LENGTH];
-  int32_t _length = 0;
-  UBool isError = false;
-  U16_APPEND(buffer, _length, U16_MAX_LENGTH, srcChar, isError);
+  char16_t بفر[U16_MAX_اوږدتیا];
+  int32_t اوږدتیا_4 = 0;
+  UBool isError = خطأ;
+  U16_APPEND(بفر, اوږدتیا_4, U16_MAX_اوږدتیا, srcChar, isError);
   // We test isError so that the compiler does not complain that we don't.
   // If isError then _length==0 which turns the doAppend() into a no-op anyway.
-  return isError ? *this : doAppend(buffer, 0, _length);
+  أرجع isError ? *هذا : doAppend(بفر, 0, اوږدتیا_4);
 }
 
 UnicodeString&
-UnicodeString::doReplace(int32_t start,
+UnicodeString::doReplace(int32_t پیل,
                          int32_t length,
-                         const UnicodeString& src,
-                         int32_t srcStart,
-                         int32_t srcLength) U_LIFETIME_BOUND
+                         ثابت UnicodeString& src,
+                         int32_t src_پیل,
+                         int32_t src_اوږدتیا) U_LIFETIME_BOUND
 {
   // pin the indices to legal values
-  src.pinIndices(srcStart, srcLength);
+  src.pinIndices(src_پیل, src_اوږدتیا);
 
   // get the characters from src
   // and replace the range in ourselves with them
-  return doReplace(start, length, src.getArrayStart(), srcStart, srcLength);
+  أرجع doReplace(پیل, length, src.get_Array_پیل(), src_پیل, src_اوږدتیا);
 }
 
 UnicodeString&
-UnicodeString::doReplace(int32_t start,
+UnicodeString::doReplace(int32_t پیل,
                          int32_t length,
-                         const char16_t* srcChars,
-                         int32_t srcStart,
-                         int32_t srcLength) U_LIFETIME_BOUND
+                         ثابت char16_t* srcChars,
+                         int32_t src_پیل,
+                         int32_t src_اوږدتیا) U_LIFETIME_BOUND
 {
-  if(!isWritable()) {
-    return *this;
+  إذا(!isWritable()) {
+    أرجع *هذا;
   }
 
-  int32_t oldLength = this->length();
+  int32_t old_اوږدتیا = هذا->length();
 
   // optimize (read-only alias).remove(0, start) and .remove(start, end)
-  if((fUnion.fFields.fLengthAndFlags&kBufferIsReadonly) && srcLength == 0) {
-    if(start == 0) {
+  إذا((fUnion.fFields.f_اوږدتیا_And_Flags&k_بفر_Is_Readonly) && src_اوږدتیا == 0) {
+    إذا(پیل == 0) {
       // remove prefix by adjusting the array pointer
-      pinIndex(length);
+      pin_شاخص(length);
       fUnion.fFields.fArray += length;
-      fUnion.fFields.fCapacity -= length;
-      setLength(oldLength - length);
-      return *this;
-    } else {
-      pinIndex(start);
-      if(length >= (oldLength - start)) {
+      fUnion.fFields.f_ظرفیت -= length;
+      سېټ_اوږدتیا(old_اوږدتیا - length);
+      أرجع *هذا;
+    } وإلا {
+      pin_شاخص(پیل);
+      إذا(length >= (old_اوږدتیا - پیل)) {
         // remove suffix by reducing the length (like truncate())
-        setLength(start);
-        fUnion.fFields.fCapacity = start;  // not NUL-terminated any more
-        return *this;
+        سېټ_اوږدتیا(پیل);
+        fUnion.fFields.f_ظرفیت = پیل;  // not NUL-terminated any more
+        أرجع *هذا;
       }
     }
   }
 
-  if(start == oldLength) {
-    return doAppend(srcChars, srcStart, srcLength);
+  إذا(پیل == old_اوږدتیا) {
+    أرجع doAppend(srcChars, src_پیل, src_اوږدتیا);
   }
 
-  if (srcChars == nullptr) {
-    srcLength = 0;
-  } else {
+  إذا (srcChars == تش_اشاره) {
+    src_اوږدتیا = 0;
+  } وإلا {
     // Perform all remaining operations relative to srcChars + srcStart.
     // From this point forward, do not use srcStart.
-    srcChars += srcStart;
-    if (srcLength < 0) {
+    srcChars += src_پیل;
+    إذا (src_اوږدتیا < 0) {
       // get the srcLength if necessary
-      srcLength = u_strlen(srcChars);
+      src_اوږدتیا = u_strlen(srcChars);
     }
   }
 
   // pin the indices to legal values
-  pinIndices(start, length);
+  pinIndices(پیل, length);
 
   // Calculate the size of the string after the replace.
   // Avoid int32_t overflow.
-  int32_t newLength = oldLength - length;
-  if(srcLength > (INT32_MAX - newLength)) {
-    setToBogus();
-    return *this;
+  int32_t new_اوږدتیا = old_اوږدتیا - length;
+  إذا(src_اوږدتیا > (INT32_MAX - new_اوږدتیا)) {
+    سېټ_منزل_Bogus();
+    أرجع *هذا;
   }
-  newLength += srcLength;
+  new_اوږدتیا += src_اوږدتیا;
 
   // Check for insertion into ourself
-  const char16_t *oldArray = getArrayStart();
-  if (isBufferWritable() &&
-      oldArray < srcChars + srcLength &&
-      srcChars < oldArray + oldLength) {
+  ثابت char16_t *oldArray = get_Array_پیل();
+  إذا (is_بفر_Writable() &&
+      oldArray < srcChars + src_اوږدتیا &&
+      srcChars < oldArray + old_اوږدتیا) {
     // Copy into a new UnicodeString and start over
-    UnicodeString copy(srcChars, srcLength);
-    if (copy.isBogus()) {
-      setToBogus();
-      return *this;
+    UnicodeString copy(srcChars, src_اوږدتیا);
+    إذا (copy.isBogus()) {
+      سېټ_منزل_Bogus();
+      أرجع *هذا;
     }
-    return doReplace(start, length, copy.getArrayStart(), 0, srcLength);
+    أرجع doReplace(پیل, length, copy.get_Array_پیل(), 0, src_اوږدتیا);
   }
 
   // cloneArrayIfNeeded(doCopyArray=false) may change fArray but will not copy the current contents;
   // therefore we need to keep the current fArray
-  char16_t oldStackBuffer[US_STACKBUF_SIZE];
-  if((fUnion.fFields.fLengthAndFlags&kUsingStackBuffer) && (newLength > US_STACKBUF_SIZE)) {
+  char16_t old_ډېری_بفر[US_STACKBUF_اندازه];
+  إذا((fUnion.fFields.f_اوږدتیا_And_Flags&k_Using_ډېری_بفر) && (new_اوږدتیا > US_STACKBUF_اندازه)) {
     // copy the stack buffer contents because it will be overwritten with
     // fUnion.fFields values
-    u_memcpy(oldStackBuffer, oldArray, oldLength);
-    oldArray = oldStackBuffer;
+    u_memcpy(old_ډېری_بفر, oldArray, old_اوږدتیا);
+    oldArray = old_ډېری_بفر;
   }
 
   // clone our array and allocate a bigger array if needed
-  int32_t *bufferToDelete = nullptr;
-  if(!cloneArrayIfNeeded(newLength, getGrowCapacity(newLength),
-                         false, &bufferToDelete)
+  int32_t *بفر_منزل_Delete = تش_اشاره;
+  إذا(!cloneArrayIfNeeded(new_اوږدتیا, get_Grow_ظرفیت(new_اوږدتیا),
+                         خطأ, &بفر_منزل_Delete)
   ) {
-    return *this;
+    أرجع *هذا;
   }
 
   // now do the replace
 
-  char16_t *newArray = getArrayStart();
-  if(newArray != oldArray) {
+  char16_t *newArray = get_Array_پیل();
+  إذا(newArray != oldArray) {
     // if fArray changed, then we need to copy everything except what will change
-    us_arrayCopy(oldArray, 0, newArray, 0, start);
-    us_arrayCopy(oldArray, start + length,
-                 newArray, start + srcLength,
-                 oldLength - (start + length));
-  } else if(length != srcLength) {
+    us_arrayCopy(oldArray, 0, newArray, 0, پیل);
+    us_arrayCopy(oldArray, پیل + length,
+                 newArray, پیل + src_اوږدتیا,
+                 old_اوږدتیا - (پیل + length));
+  } وإلا إذا(length != src_اوږدتیا) {
     // fArray did not change; copy only the portion that isn't changing, leaving a hole
-    us_arrayCopy(oldArray, start + length,
-                 newArray, start + srcLength,
-                 oldLength - (start + length));
+    us_arrayCopy(oldArray, پیل + length,
+                 newArray, پیل + src_اوږدتیا,
+                 old_اوږدتیا - (پیل + length));
   }
 
   // now fill in the hole with the new string
-  us_arrayCopy(srcChars, 0, newArray, start, srcLength);
+  us_arrayCopy(srcChars, 0, newArray, پیل, src_اوږدتیا);
 
-  setLength(newLength);
+  سېټ_اوږدتیا(new_اوږدتیا);
 
   // delayed delete in case srcChars == fArray when we started, and
   // to keep oldArray alive for the above operations
-  if (bufferToDelete) {
-    uprv_free(bufferToDelete);
+  إذا (بفر_منزل_Delete) {
+    uprv_free(بفر_منزل_Delete);
   }
 
-  return *this;
+  أرجع *هذا;
 }
 
 UnicodeString&
-UnicodeString::doReplace(int32_t start, int32_t length, std::u16string_view src) U_LIFETIME_BOUND {
-  if (!isWritable()) {
-    return *this;
+UnicodeString::doReplace(int32_t پیل, int32_t length, std::u16string_view src) U_LIFETIME_BOUND {
+  إذا (!isWritable()) {
+    أرجع *هذا;
   }
-  if (src.length() > INT32_MAX) {
-    setToBogus();
-    return *this;
+  إذا (src.length() > INT32_MAX) {
+    سېټ_منزل_Bogus();
+    أرجع *هذا;
   }
-  return doReplace(start, length, src.data(), 0, static_cast<int32_t>(src.length()));
+  أرجع doReplace(پیل, length, src.معلومات(), 0, static_cast<int32_t>(src.length()));
 }
 
 // Versions of doReplace() only for append() variants.
 // doReplace() and doAppend() optimize for different cases.
 
 UnicodeString&
-UnicodeString::doAppend(const UnicodeString& src,
-                        int32_t srcStart,
-                        int32_t srcLength) U_LIFETIME_BOUND {
-  if(srcLength == 0) {
-    return *this;
+UnicodeString::doAppend(ثابت UnicodeString& src,
+                        int32_t src_پیل,
+                        int32_t src_اوږدتیا) U_LIFETIME_BOUND {
+  إذا(src_اوږدتیا == 0) {
+    أرجع *هذا;
   }
 
   // pin the indices to legal values
-  src.pinIndices(srcStart, srcLength);
-  return doAppend(src.getArrayStart(), srcStart, srcLength);
+  src.pinIndices(src_پیل, src_اوږدتیا);
+  أرجع doAppend(src.get_Array_پیل(), src_پیل, src_اوږدتیا);
 }
 
 UnicodeString&
-UnicodeString::doAppend(const char16_t* srcChars,
-                        int32_t srcStart,
-                        int32_t srcLength) U_LIFETIME_BOUND {
-  if(!isWritable() || srcLength == 0 || srcChars == nullptr) {
-    return *this;
+UnicodeString::doAppend(ثابت char16_t* srcChars,
+                        int32_t src_پیل,
+                        int32_t src_اوږدتیا) U_LIFETIME_BOUND {
+  إذا(!isWritable() || src_اوږدتیا == 0 || srcChars == تش_اشاره) {
+    أرجع *هذا;
   }
 
   // Perform all remaining operations relative to srcChars + srcStart.
   // From this point forward, do not use srcStart.
-  srcChars += srcStart;
+  srcChars += src_پیل;
 
-  if(srcLength < 0) {
+  إذا(src_اوږدتیا < 0) {
     // get the srcLength if necessary
-    if((srcLength = u_strlen(srcChars)) == 0) {
-      return *this;
+    إذا((src_اوږدتیا = u_strlen(srcChars)) == 0) {
+      أرجع *هذا;
     }
   }
 
-  int32_t oldLength = length();
-  int32_t newLength;
+  int32_t old_اوږدتیا = length();
+  int32_t new_اوږدتیا;
 
-  if (srcLength <= getCapacity() - oldLength && isBufferWritable()) {
-    newLength = oldLength + srcLength;
+  إذا (src_اوږدتیا <= get_ظرفیت() - old_اوږدتیا && is_بفر_Writable()) {
+    new_اوږدتیا = old_اوږدتیا + src_اوږدتیا;
     // Faster than a memmove
-    if (srcLength <= 4) {
-      char16_t *arr = getArrayStart();
-      arr[oldLength] = srcChars[0];
-      if (srcLength > 1) arr[oldLength+1] = srcChars[1];
-      if (srcLength > 2) arr[oldLength+2] = srcChars[2];
-      if (srcLength > 3) arr[oldLength+3] = srcChars[3];
-      setLength(newLength);
-      return *this;
+    إذا (src_اوږدتیا <= 4) {
+      char16_t *arr = get_Array_پیل();
+      arr[old_اوږدتیا] = srcChars[0];
+      إذا (src_اوږدتیا > 1) arr[old_اوږدتیا+1] = srcChars[1];
+      إذا (src_اوږدتیا > 2) arr[old_اوږدتیا+2] = srcChars[2];
+      إذا (src_اوږدتیا > 3) arr[old_اوږدتیا+3] = srcChars[3];
+      سېټ_اوږدتیا(new_اوږدتیا);
+      أرجع *هذا;
     }
-  } else {
-    if (uprv_add32_overflow(oldLength, srcLength, &newLength)) {
-      setToBogus();
-      return *this;
+  } وإلا {
+    إذا (uprv_add32_ډکېدنه(old_اوږدتیا, src_اوږدتیا, &new_اوږدتیا)) {
+      سېټ_منزل_Bogus();
+      أرجع *هذا;
     }
 
     // Check for append onto ourself
-    const char16_t* oldArray = getArrayStart();
-    if (isBufferWritable() &&
-        oldArray < srcChars + srcLength &&
-        srcChars < oldArray + oldLength) {
+    ثابت char16_t* oldArray = get_Array_پیل();
+    إذا (is_بفر_Writable() &&
+        oldArray < srcChars + src_اوږدتیا &&
+        srcChars < oldArray + old_اوږدتیا) {
       // Copy into a new UnicodeString and start over
-      UnicodeString copy(srcChars, srcLength);
-      if (copy.isBogus()) {
-        setToBogus();
-        return *this;
+      UnicodeString copy(srcChars, src_اوږدتیا);
+      إذا (copy.isBogus()) {
+        سېټ_منزل_Bogus();
+        أرجع *هذا;
       }
-      return doAppend(copy.getArrayStart(), 0, srcLength);
+      أرجع doAppend(copy.get_Array_پیل(), 0, src_اوږدتیا);
     }
 
     // optimize append() onto a large-enough, owned string
-    if (!cloneArrayIfNeeded(newLength, getGrowCapacity(newLength))) {
-      return *this;
+    إذا (!cloneArrayIfNeeded(new_اوږدتیا, get_Grow_ظرفیت(new_اوږدتیا))) {
+      أرجع *هذا;
     }
   }
 
-  char16_t *newArray = getArrayStart();
+  char16_t *newArray = get_Array_پیل();
   // Do not copy characters when
   //   char16_t *buffer=str.getAppendBuffer(...);
   // is followed by
@@ -1710,50 +1710,50 @@ UnicodeString::doAppend(const char16_t* srcChars,
   // or
   //   str.appendString(buffer, length)
   // or similar.
-  if(srcChars != newArray + oldLength) {
-    us_arrayCopy(srcChars, 0, newArray, oldLength, srcLength);
+  إذا(srcChars != newArray + old_اوږدتیا) {
+    us_arrayCopy(srcChars, 0, newArray, old_اوږدتیا, src_اوږدتیا);
   }
-  setLength(newLength);
+  سېټ_اوږدتیا(new_اوږدتیا);
 
-  return *this;
+  أرجع *هذا;
 }
 
 UnicodeString&
 UnicodeString::doAppend(std::u16string_view src) U_LIFETIME_BOUND {
-  if (!isWritable() || src.empty()) {
-    return *this;
+  إذا (!isWritable() || src.empty()) {
+    أرجع *هذا;
   }
-  if (src.length() > INT32_MAX) {
-    setToBogus();
-    return *this;
+  إذا (src.length() > INT32_MAX) {
+    سېټ_منزل_Bogus();
+    أرجع *هذا;
   }
-  return doAppend(src.data(), 0, static_cast<int32_t>(src.length()));
+  أرجع doAppend(src.معلومات(), 0, static_cast<int32_t>(src.length()));
 }
 
 /**
  * Replaceable API
  */
-void
-UnicodeString::handleReplaceBetween(int32_t start,
-                                    int32_t limit,
-                                    const UnicodeString& text) {
-    replaceBetween(start, limit, text);
+فراغ
+UnicodeString::handleReplaceBetween(int32_t پیل,
+                                    int32_t حد,
+                                    ثابت UnicodeString& متن) {
+    replaceBetween(پیل, حد, متن);
 }
 
 /**
  * Replaceable API
  */
-void 
-UnicodeString::copy(int32_t start, int32_t limit, int32_t dest) {
-    if (limit <= start) {
-        return; // Nothing to do; avoid bogus malloc call
+فراغ 
+UnicodeString::copy(int32_t پیل, int32_t حد, int32_t dest) {
+    إذا (حد <= پیل) {
+        أرجع; // Nothing to do; avoid bogus malloc call
     }
-    char16_t* text = static_cast<char16_t*>(uprv_malloc(sizeof(char16_t) * (limit - start)));
+    char16_t* متن = static_cast<char16_t*>(uprv_malloc(حجم(char16_t) * (حد - پیل)));
     // Check to make sure text is not null.
-    if (text != nullptr) {
-	    extractBetween(start, limit, text, 0);
-	    insert(dest, text, 0, limit - start);    
-	    uprv_free(text);
+    إذا (متن != تش_اشاره) {
+	    ایستل_Between(پیل, حد, متن, 0);
+	    insert(dest, متن, 0, حد - پیل);    
+	    uprv_free(متن);
     }
 }
 
@@ -1763,101 +1763,101 @@ UnicodeString::copy(int32_t start, int32_t limit, int32_t dest) {
  * NOTE: This is for the Replaceable class.  There is no rep.cpp,
  * so we implement this function here.
  */
-UBool Replaceable::hasMetaData() const {
-    return true;
+UBool Replaceable::has_Meta_معلومات() ثابت {
+    أرجع ریښتیا;
 }
 
 /**
  * Replaceable API
  */
-UBool UnicodeString::hasMetaData() const {
-    return false;
+UBool UnicodeString::has_Meta_معلومات() ثابت {
+    أرجع خطأ;
 }
 
 UnicodeString&
-UnicodeString::doReverse(int32_t start, int32_t length) U_LIFETIME_BOUND {
-  if(length <= 1 || !cloneArrayIfNeeded()) {
-    return *this;
+UnicodeString::do_سرچپه(int32_t پیل, int32_t length) U_LIFETIME_BOUND {
+  إذا(length <= 1 || !cloneArrayIfNeeded()) {
+    أرجع *هذا;
   }
 
   // pin the indices to legal values
-  pinIndices(start, length);
-  if(length <= 1) {  // pinIndices() might have shrunk the length
-    return *this;
+  pinIndices(پیل, length);
+  إذا(length <= 1) {  // pinIndices() might have shrunk the length
+    أرجع *هذا;
   }
 
-  char16_t *left = getArrayStart() + start;
-  char16_t *right = left + length - 1;  // -1 for inclusive boundary (length>=2)
+  char16_t *کیڼ = get_Array_پیل() + پیل;
+  char16_t *ښی = کیڼ + length - 1;  // -1 for inclusive boundary (length>=2)
   char16_t swap;
-  UBool hasSupplementary = false;
+  UBool hasSupplementary = خطأ;
 
   // Before the loop we know left<right because length>=2.
-  do {
-    hasSupplementary |= static_cast<UBool>(U16_IS_LEAD(swap = *left));
-    hasSupplementary |= static_cast<UBool>(U16_IS_LEAD(*left++ = *right));
-    *right-- = swap;
-  } while(left < right);
+  افعل {
+    hasSupplementary |= static_cast<UBool>(U16_IS_LEAD(swap = *کیڼ));
+    hasSupplementary |= static_cast<UBool>(U16_IS_LEAD(*کیڼ++ = *ښی));
+    *ښی-- = swap;
+  } طالما(کیڼ < ښی);
   // Make sure to test the middle code unit of an odd-length string.
   // Redundant if the length is even.
-  hasSupplementary |= static_cast<UBool>(U16_IS_LEAD(*left));
+  hasSupplementary |= static_cast<UBool>(U16_IS_LEAD(*کیڼ));
 
   /* if there are supplementary code points in the reversed range, then re-swap their surrogates */
-  if(hasSupplementary) {
+  إذا(hasSupplementary) {
     char16_t swap2;
 
-    left = getArrayStart() + start;
-    right = left + length - 1; // -1 so that we can look at *(left+1) if left<right
-    while(left < right) {
-      if(U16_IS_TRAIL(swap = *left) && U16_IS_LEAD(swap2 = *(left + 1))) {
-        *left++ = swap2;
-        *left++ = swap;
-      } else {
-        ++left;
+    کیڼ = get_Array_پیل() + پیل;
+    ښی = کیڼ + length - 1; // -1 so that we can look at *(left+1) if left<right
+    طالما(کیڼ < ښی) {
+      إذا(U16_IS_TRAIL(swap = *کیڼ) && U16_IS_LEAD(swap2 = *(کیڼ + 1))) {
+        *کیڼ++ = swap2;
+        *کیڼ++ = swap;
+      } وإلا {
+        ++کیڼ;
       }
     }
   }
 
-  return *this;
+  أرجع *هذا;
 }
 
 UBool 
-UnicodeString::padLeading(int32_t targetLength,
+UnicodeString::padLeading(int32_t موخه_اوږدتیا,
                           char16_t padChar)
 {
-  int32_t oldLength = length();
-  if(oldLength >= targetLength || !cloneArrayIfNeeded(targetLength)) {
-    return false;
-  } else {
+  int32_t old_اوږدتیا = length();
+  إذا(old_اوږدتیا >= موخه_اوږدتیا || !cloneArrayIfNeeded(موخه_اوږدتیا)) {
+    أرجع خطأ;
+  } وإلا {
     // move contents up by padding width
-    char16_t *array = getArrayStart();
-    int32_t start = targetLength - oldLength;
-    us_arrayCopy(array, 0, array, start, oldLength);
+    char16_t *array = get_Array_پیل();
+    int32_t پیل = موخه_اوږدتیا - old_اوږدتیا;
+    us_arrayCopy(array, 0, array, پیل, old_اوږدتیا);
 
     // fill in padding character
-    while(--start >= 0) {
-      array[start] = padChar;
+    طالما(--پیل >= 0) {
+      array[پیل] = padChar;
     }
-    setLength(targetLength);
-    return true;
+    سېټ_اوږدتیا(موخه_اوږدتیا);
+    أرجع ریښتیا;
   }
 }
 
 UBool 
-UnicodeString::padTrailing(int32_t targetLength,
+UnicodeString::padTrailing(int32_t موخه_اوږدتیا,
                            char16_t padChar)
 {
-  int32_t oldLength = length();
-  if(oldLength >= targetLength || !cloneArrayIfNeeded(targetLength)) {
-    return false;
-  } else {
+  int32_t old_اوږدتیا = length();
+  إذا(old_اوږدتیا >= موخه_اوږدتیا || !cloneArrayIfNeeded(موخه_اوږدتیا)) {
+    أرجع خطأ;
+  } وإلا {
     // fill in padding character
-    char16_t *array = getArrayStart();
-    int32_t length = targetLength;
-    while(--length >= oldLength) {
+    char16_t *array = get_Array_پیل();
+    int32_t length = موخه_اوږدتیا;
+    طالما(--length >= old_اوږدتیا) {
       array[length] = padChar;
     }
-    setLength(targetLength);
-    return true;
+    سېټ_اوږدتیا(موخه_اوږدتیا);
+    أرجع ریښتیا;
   }
 }
 
@@ -1865,15 +1865,15 @@ UnicodeString::padTrailing(int32_t targetLength,
 // Hashing
 //========================================
 int32_t
-UnicodeString::doHashCode() const
+UnicodeString::do_Hash_کوډ() ثابت
 {
     /* Delegate hash computation to uhash.  This makes UnicodeString
      * hashing consistent with char16_t* hashing.  */
-    int32_t hashCode = ustr_hashUCharsN(getArrayStart(), length());
-    if (hashCode == kInvalidHashCode) {
-        hashCode = kEmptyHashCode;
+    int32_t hash_کوډ = ustr_hashUCharsN(get_Array_پیل(), length());
+    إذا (hash_کوډ == k_Invalid_Hash_کوډ) {
+        hash_کوډ = k_تشه_Hash_کوډ;
     }
-    return hashCode;
+    أرجع hash_کوډ;
 }
 
 //========================================
@@ -1881,33 +1881,33 @@ UnicodeString::doHashCode() const
 //========================================
 
 char16_t*
-UnicodeString::getBuffer(int32_t minCapacity) U_LIFETIME_BOUND {
-  if(minCapacity>=-1 && cloneArrayIfNeeded(minCapacity)) {
-    fUnion.fFields.fLengthAndFlags|=kOpenGetBuffer;
-    setZeroLength();
-    return getArrayStart();
-  } else {
-    return nullptr;
+UnicodeString::get_بفر(int32_t min_ظرفیت) U_LIFETIME_BOUND {
+  إذا(min_ظرفیت>=-1 && cloneArrayIfNeeded(min_ظرفیت)) {
+    fUnion.fFields.f_اوږدتیا_And_Flags|=k_Open_Get_بفر;
+    سېټ_Zero_اوږدتیا();
+    أرجع get_Array_پیل();
+  } وإلا {
+    أرجع تش_اشاره;
   }
 }
 
-void
-UnicodeString::releaseBuffer(int32_t newLength) {
-  if(fUnion.fFields.fLengthAndFlags&kOpenGetBuffer && newLength>=-1) {
+فراغ
+UnicodeString::release_بفر(int32_t new_اوږدتیا) {
+  إذا(fUnion.fFields.f_اوږدتیا_And_Flags&k_Open_Get_بفر && new_اوږدتیا>=-1) {
     // set the new fLength
-    int32_t capacity=getCapacity();
-    if(newLength==-1) {
+    int32_t capacity=get_ظرفیت();
+    إذا(new_اوږدتیا==-1) {
       // the new length is the string length, capped by fCapacity
-      const char16_t *array=getArrayStart(), *p=array, *limit=array+capacity;
-      while(p<limit && *p!=0) {
+      ثابت char16_t *array=get_Array_پیل(), *p=array, *حد=array+capacity;
+      طالما(p<حد && *p!=0) {
         ++p;
       }
-      newLength = static_cast<int32_t>(p - array);
-    } else if(newLength>capacity) {
-      newLength=capacity;
+      new_اوږدتیا = static_cast<int32_t>(p - array);
+    } وإلا إذا(new_اوږدتیا>capacity) {
+      new_اوږدتیا=capacity;
     }
-    setLength(newLength);
-    fUnion.fFields.fLengthAndFlags&=~kOpenGetBuffer;
+    سېټ_اوږدتیا(new_اوږدتیا);
+    fUnion.fFields.f_اوږدتیا_And_Flags&=~k_Open_Get_بفر;
   }
 }
 
@@ -1915,22 +1915,22 @@ UnicodeString::releaseBuffer(int32_t newLength) {
 // Miscellaneous
 //========================================
 UBool
-UnicodeString::cloneArrayIfNeeded(int32_t newCapacity,
-                                  int32_t growCapacity,
+UnicodeString::cloneArrayIfNeeded(int32_t new_ظرفیت,
+                                  int32_t grow_ظرفیت,
                                   UBool doCopyArray,
-                                  int32_t **pBufferToDelete,
+                                  int32_t **p_بفر_منزل_Delete,
                                   UBool forceClone) {
   // default parameters need to be static, therefore
   // the defaults are -1 to have convenience defaults
-  if(newCapacity == -1) {
-    newCapacity = getCapacity();
+  إذا(new_ظرفیت == -1) {
+    new_ظرفیت = get_ظرفیت();
   }
 
   // while a getBuffer(minCapacity) is "open",
   // prevent any modifications of the string by returning false here
   // if the string is bogus, then only an assignment or similar can revive it
-  if(!isWritable()) {
-    return false;
+  إذا(!isWritable()) {
+    أرجع خطأ;
   }
 
   /*
@@ -1940,94 +1940,94 @@ UnicodeString::cloneArrayIfNeeded(int32_t newCapacity,
    * the buffer is too small.
    * Return false if memory could not be allocated.
    */
-  if(forceClone ||
-     fUnion.fFields.fLengthAndFlags & kBufferIsReadonly ||
-     (fUnion.fFields.fLengthAndFlags & kRefCounted && refCount() > 1) ||
-     newCapacity > getCapacity()
+  إذا(forceClone ||
+     fUnion.fFields.f_اوږدتیا_And_Flags & k_بفر_Is_Readonly ||
+     (fUnion.fFields.f_اوږدتیا_And_Flags & kRefCounted && ref_شمېر() > 1) ||
+     new_ظرفیت > get_ظرفیت()
   ) {
     // check growCapacity for default value and use of the stack buffer
-    if(growCapacity < 0) {
-      growCapacity = newCapacity;
-    } else if(newCapacity <= US_STACKBUF_SIZE && growCapacity > US_STACKBUF_SIZE) {
-      growCapacity = US_STACKBUF_SIZE;
-    } else if(newCapacity > growCapacity) {
-      setToBogus();
-      return false;  // bad inputs
+    إذا(grow_ظرفیت < 0) {
+      grow_ظرفیت = new_ظرفیت;
+    } وإلا إذا(new_ظرفیت <= US_STACKBUF_اندازه && grow_ظرفیت > US_STACKBUF_اندازه) {
+      grow_ظرفیت = US_STACKBUF_اندازه;
+    } وإلا إذا(new_ظرفیت > grow_ظرفیت) {
+      سېټ_منزل_Bogus();
+      أرجع خطأ;  // bad inputs
     }
-    if(growCapacity > kMaxCapacity) {
-      setToBogus();
-      return false;
+    إذا(grow_ظرفیت > k_Max_ظرفیت) {
+      سېټ_منزل_Bogus();
+      أرجع خطأ;
     }
 
     // save old values
-    char16_t oldStackBuffer[US_STACKBUF_SIZE];
+    char16_t old_ډېری_بفر[US_STACKBUF_اندازه];
     char16_t *oldArray;
-    int32_t oldLength = length();
-    int16_t flags = fUnion.fFields.fLengthAndFlags;
+    int32_t old_اوږدتیا = length();
+    int16_t flags = fUnion.fFields.f_اوږدتیا_And_Flags;
 
-    if(flags&kUsingStackBuffer) {
+    إذا(flags&k_Using_ډېری_بفر) {
       U_ASSERT(!(flags&kRefCounted)); /* kRefCounted and kUsingStackBuffer are mutally exclusive */
-      if(doCopyArray && growCapacity > US_STACKBUF_SIZE) {
+      إذا(doCopyArray && grow_ظرفیت > US_STACKBUF_اندازه) {
         // copy the stack buffer contents because it will be overwritten with
         // fUnion.fFields values
-        us_arrayCopy(fUnion.fStackFields.fBuffer, 0, oldStackBuffer, 0, oldLength);
-        oldArray = oldStackBuffer;
-      } else {
-        oldArray = nullptr; // no need to copy from the stack buffer to itself
+        us_arrayCopy(fUnion.f_ډېری_Fields.f_بفر, 0, old_ډېری_بفر, 0, old_اوږدتیا);
+        oldArray = old_ډېری_بفر;
+      } وإلا {
+        oldArray = تش_اشاره; // no need to copy from the stack buffer to itself
       }
-    } else {
+    } وإلا {
       oldArray = fUnion.fFields.fArray;
-      U_ASSERT(oldArray!=nullptr); /* when stack buffer is not used, oldArray must have a non-nullptr reference */
+      U_ASSERT(oldArray!=تش_اشاره); /* when stack buffer is not used, oldArray must have a non-nullptr reference */
     }
 
     // allocate a new array
-    if(allocate(growCapacity) ||
-       (newCapacity < growCapacity && allocate(newCapacity))
+    إذا(allocate(grow_ظرفیت) ||
+       (new_ظرفیت < grow_ظرفیت && allocate(new_ظرفیت))
     ) {
-      if(doCopyArray) {
+      إذا(doCopyArray) {
         // copy the contents
         // do not copy more than what fits - it may be smaller than before
-        int32_t minLength = oldLength;
-        newCapacity = getCapacity();
-        if(newCapacity < minLength) {
-          minLength = newCapacity;
+        int32_t min_اوږدتیا = old_اوږدتیا;
+        new_ظرفیت = get_ظرفیت();
+        إذا(new_ظرفیت < min_اوږدتیا) {
+          min_اوږدتیا = new_ظرفیت;
         }
-        if(oldArray != nullptr) {
-          us_arrayCopy(oldArray, 0, getArrayStart(), 0, minLength);
+        إذا(oldArray != تش_اشاره) {
+          us_arrayCopy(oldArray, 0, get_Array_پیل(), 0, min_اوږدتیا);
         }
-        setLength(minLength);
-      } else {
-        setZeroLength();
+        سېټ_اوږدتیا(min_اوږدتیا);
+      } وإلا {
+        سېټ_Zero_اوږدتیا();
       }
 
       // release the old array
-      if(flags & kRefCounted) {
+      إذا(flags & kRefCounted) {
         // the array is refCounted; decrement and release if 0
-        u_atomic_int32_t* pRefCount = reinterpret_cast<u_atomic_int32_t*>(oldArray) - 1;
-        if(umtx_atomic_dec(pRefCount) == 0) {
-          if (pBufferToDelete == nullptr) {
+        u_atomic_int32_t* p_Ref_شمېر = reinterpret_cast<u_atomic_int32_t*>(oldArray) - 1;
+        إذا(umtx_atomic_dec(p_Ref_شمېر) == 0) {
+          إذا (p_بفر_منزل_Delete == تش_اشاره) {
               // Note: cast to (void *) is needed with MSVC, where u_atomic_int32_t
               // is defined as volatile. (Volatile has useful non-standard behavior
               //   with this compiler.)
-            uprv_free((void *)pRefCount);
-          } else {
+            uprv_free((فراغ *)p_Ref_شمېر);
+          } وإلا {
             // the caller requested to delete it himself
-            *pBufferToDelete = reinterpret_cast<int32_t*>(pRefCount);
+            *p_بفر_منزل_Delete = reinterpret_cast<int32_t*>(p_Ref_شمېر);
           }
         }
       }
-    } else {
+    } وإلا {
       // not enough memory for growCapacity and not even for the smaller newCapacity
       // reset the old values for setToBogus() to release the array
-      if(!(flags&kUsingStackBuffer)) {
+      إذا(!(flags&k_Using_ډېری_بفر)) {
         fUnion.fFields.fArray = oldArray;
       }
-      fUnion.fFields.fLengthAndFlags = flags;
-      setToBogus();
-      return false;
+      fUnion.fFields.f_اوږدتیا_And_Flags = flags;
+      سېټ_منزل_Bogus();
+      أرجع خطأ;
     }
   }
-  return true;
+  أرجع ریښتیا;
 }
 
 // UnicodeStringAppendable ------------------------------------------------- ***
@@ -2035,75 +2035,75 @@ UnicodeString::cloneArrayIfNeeded(int32_t newCapacity,
 UnicodeStringAppendable::~UnicodeStringAppendable() {}
 
 UBool
-UnicodeStringAppendable::appendCodeUnit(char16_t c) {
-  return str.doAppend(&c, 0, 1).isWritable();
+UnicodeStringAppendable::append_کوډ_Unit(char16_t c) {
+  أرجع str.doAppend(&c, 0, 1).isWritable();
 }
 
 UBool
-UnicodeStringAppendable::appendCodePoint(UChar32 c) {
-  char16_t buffer[U16_MAX_LENGTH];
-  int32_t cLength = 0;
-  UBool isError = false;
-  U16_APPEND(buffer, cLength, U16_MAX_LENGTH, c, isError);
-  return !isError && str.doAppend(buffer, 0, cLength).isWritable();
+UnicodeStringAppendable::append_کوډ_ټکی(UChar32 c) {
+  char16_t بفر[U16_MAX_اوږدتیا];
+  int32_t c_اوږدتیا = 0;
+  UBool isError = خطأ;
+  U16_APPEND(بفر, c_اوږدتیا, U16_MAX_اوږدتیا, c, isError);
+  أرجع !isError && str.doAppend(بفر, 0, c_اوږدتیا).isWritable();
 }
 
 UBool
-UnicodeStringAppendable::appendString(const char16_t *s, int32_t length) {
-  return str.doAppend(s, 0, length).isWritable();
+UnicodeStringAppendable::appendString(ثابت char16_t *s, int32_t length) {
+  أرجع str.doAppend(s, 0, length).isWritable();
 }
 
 UBool
-UnicodeStringAppendable::reserveAppendCapacity(int32_t appendCapacity) {
-  return str.cloneArrayIfNeeded(str.length() + appendCapacity);
+UnicodeStringAppendable::reserve_Append_ظرفیت(int32_t append_ظرفیت) {
+  أرجع str.cloneArrayIfNeeded(str.length() + append_ظرفیت);
 }
 
-char16_t* UnicodeStringAppendable::getAppendBuffer(int32_t minCapacity,
-                                                   int32_t desiredCapacityHint,
+char16_t* UnicodeStringAppendable::get_Append_بفر(int32_t min_ظرفیت,
+                                                   int32_t desired_ظرفیت_Hint,
                                                    char16_t* scratch U_LIFETIME_BOUND,
-                                                   int32_t scratchCapacity,
-                                                   int32_t* resultCapacity) U_LIFETIME_BOUND {
-  if(minCapacity < 1 || scratchCapacity < minCapacity) {
-    *resultCapacity = 0;
-    return nullptr;
+                                                   int32_t scratch_ظرفیت,
+                                                   int32_t* پایله_ظرفیت) U_LIFETIME_BOUND {
+  إذا(min_ظرفیت < 1 || scratch_ظرفیت < min_ظرفیت) {
+    *پایله_ظرفیت = 0;
+    أرجع تش_اشاره;
   }
-  int32_t oldLength = str.length();
-  if(minCapacity <= (kMaxCapacity - oldLength) &&
-      desiredCapacityHint <= (kMaxCapacity - oldLength) &&
-      str.cloneArrayIfNeeded(oldLength + minCapacity, oldLength + desiredCapacityHint)) {
-    *resultCapacity = str.getCapacity() - oldLength;
-    return str.getArrayStart() + oldLength;
+  int32_t old_اوږدتیا = str.length();
+  إذا(min_ظرفیت <= (k_Max_ظرفیت - old_اوږدتیا) &&
+      desired_ظرفیت_Hint <= (k_Max_ظرفیت - old_اوږدتیا) &&
+      str.cloneArrayIfNeeded(old_اوږدتیا + min_ظرفیت, old_اوږدتیا + desired_ظرفیت_Hint)) {
+    *پایله_ظرفیت = str.get_ظرفیت() - old_اوږدتیا;
+    أرجع str.get_Array_پیل() + old_اوږدتیا;
   }
-  *resultCapacity = scratchCapacity;
-  return scratch;
+  *پایله_ظرفیت = scratch_ظرفیت;
+  أرجع scratch;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_پای_ټکی
 
 U_NAMESPACE_USE
 
 U_CAPI int32_t U_EXPORT2
-uhash_hashUnicodeString(const UElement key) {
-    const UnicodeString *str = (const UnicodeString*) key.pointer;
-    return (str == nullptr) ? 0 : str->hashCode();
+uhash_hashUnicodeString(ثابت UElement کلی) {
+    ثابت UnicodeString *str = (ثابت UnicodeString*) کلی.اشاره_ګر;
+    أرجع (str == تش_اشاره) ? 0 : str->hash_کوډ();
 }
 
 // Moved here from uhash_us.cpp so that using a UVector of UnicodeString*
 // does not depend on hashtable code.
 U_CAPI UBool U_EXPORT2
-uhash_compareUnicodeString(const UElement key1, const UElement key2) {
-    const UnicodeString *str1 = (const UnicodeString*) key1.pointer;
-    const UnicodeString *str2 = (const UnicodeString*) key2.pointer;
-    if (str1 == str2) {
-        return true;
+uhash_compareUnicodeString(ثابت UElement key1, ثابت UElement key2) {
+    ثابت UnicodeString *str1 = (ثابت UnicodeString*) key1.اشاره_ګر;
+    ثابت UnicodeString *str2 = (ثابت UnicodeString*) key2.اشاره_ګر;
+    إذا (str1 == str2) {
+        أرجع ریښتیا;
     }
-    if (str1 == nullptr || str2 == nullptr) {
-        return false;
+    إذا (str1 == تش_اشاره || str2 == تش_اشاره) {
+        أرجع خطأ;
     }
-    return *str1 == *str2;
+    أرجع *str1 == *str2;
 }
 
-#ifdef U_STATIC_IMPLEMENTATION
+#که_تعریف_شوی U_STATIC_IMPLEMENTATION
 /*
 This should never be called. It is defined here to make sure that the
 virtual vector deleting destructor is defined within unistr.cpp.
@@ -2111,12 +2111,12 @@ The vector deleting destructor is already a part of UObject,
 but defining it here makes sure that it is included with this object file.
 This makes sure that static library dependencies are kept to a minimum.
 */
-#if defined(__clang__) || U_GCC_MAJOR_MINOR >= 1100
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-function"
-static void uprv_UnicodeStringDummy() {
-    delete [] (new UnicodeString[2]);
+#إذا defined(__clang__) || U_GCC_MAJOR_MINOR >= 1100
+#لارښوونه GCC diagnostic push
+#لارښوونه GCC diagnostic ignored "-Wunused-function"
+ساكن فراغ uprv_UnicodeStringDummy() {
+    ړنګول [] (جديد UnicodeString[2]);
 }
-#pragma GCC diagnostic pop
-#endif
-#endif
+#لارښوونه GCC diagnostic pop
+#د_که_پای
+#د_که_پای

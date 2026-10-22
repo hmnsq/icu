@@ -19,112 +19,112 @@
 *   stored in uprops.icu.
 */
 
-#ifndef __UPROPS_H__
-#define __UPROPS_H__
+#که_نه_تعریف_شوی __UPROPS_H__
+#تعریف_کړه __UPROPS_H__
 
-#include "unicode/utypes.h"
-#include "unicode/uset.h"
-#include "uset_imp.h"
-#include "udataswp.h"
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/uset.h"
+#ضمن "uset_imp.h"
+#ضمن "udataswp.h"
 
 /* indexes[] entries */
-enum {
-    UPROPS_PROPS32_INDEX,
-    UPROPS_EXCEPTIONS_INDEX,
-    UPROPS_EXCEPTIONS_TOP_INDEX,
+تعداد {
+    UPROPS_PROPS32_شاخص,
+    UPROPS_EXCEPTIONS_شاخص,
+    UPROPS_EXCEPTIONS_سر_شاخص,
 
-    UPROPS_ADDITIONAL_TRIE_INDEX,
-    UPROPS_ADDITIONAL_VECTORS_INDEX,
-    UPROPS_ADDITIONAL_VECTORS_COLUMNS_INDEX,
+    UPROPS_ADDITIONAL_TRIE_شاخص,
+    UPROPS_ADDITIONAL_VECTORS_شاخص,
+    UPROPS_ADDITIONAL_VECTORS_COLUMNS_شاخص,
 
-    UPROPS_SCRIPT_EXTENSIONS_INDEX,
+    UPROPS_SCRIPT_EXTENSIONS_شاخص,
 
-    UPROPS_BLOCK_TRIE_INDEX,
-    UPROPS_RESERVED_INDEX_8,
+    UPROPS_بلاک_TRIE_شاخص,
+    UPROPS_RESERVED_شاخص_8,
 
     /** size of the data file (number of 32-bit units after the header) */
-    UPROPS_DATA_TOP_INDEX,
+    UPROPS_معلومات_سر_شاخص,
 
     /** maximum values for code values in vector word 0 */
-    UPROPS_MAX_VALUES_INDEX=10,
+    UPROPS_MAX_ارزښتونه_شاخص=10,
     /** maximum values for code values in vector word 2 */
-    UPROPS_MAX_VALUES_2_INDEX,
+    UPROPS_MAX_ارزښتونه_2_شاخص,
     /** maximum values for other code values */
-    UPROPS_MAX_VALUES_OTHER_INDEX,
+    UPROPS_MAX_ارزښتونه_OTHER_شاخص,
 
-    UPROPS_INDEX_COUNT=16
+    UPROPS_شاخص_شمېر=16
 };
 
 /* definitions for the main properties words */
-enum {
+تعداد {
     /* general category shift==0                                0 (5 bits) */
     /* reserved                                                 5 (1 bit) */
-    UPROPS_NUMERIC_TYPE_VALUE_SHIFT=6                       /*  6 (10 bits) */
+    UPROPS_NUMERIC_TYPE_ارزښت_ښويدنه=6                       /*  6 (10 bits) */
 };
 
-#define GET_CATEGORY(props) ((props)&0x1f)
-#define CAT_MASK(props) U_MASK(GET_CATEGORY(props))
+#تعریف_کړه GET_CATEGORY(props) ((props)&0x1f)
+#تعریف_کړه CAT_ماسک(props) U_ماسک(GET_CATEGORY(props))
 
-#define GET_NUMERIC_TYPE_VALUE(props) ((props)>>UPROPS_NUMERIC_TYPE_VALUE_SHIFT)
+#تعریف_کړه GET_NUMERIC_TYPE_ارزښت(props) ((props)>>UPROPS_NUMERIC_TYPE_ارزښت_ښويدنه)
 
 /* constants for the storage form of numeric types and values */
-enum {
+تعداد {
     /** No numeric value. */
     UPROPS_NTV_NONE=0,
     /** Decimal digits: nv=0..9 */
-    UPROPS_NTV_DECIMAL_START=1,
+    UPROPS_NTV_DECIMAL_پیل=1,
     /** Other digits: nv=0..9 */
-    UPROPS_NTV_DIGIT_START=11,
+    UPROPS_NTV_DIGIT_پیل=11,
     /** Small integers: nv=0..154 */
-    UPROPS_NTV_NUMERIC_START=21,
+    UPROPS_NTV_NUMERIC_پیل=21,
     /** Fractions: ((ntv>>4)-12) / ((ntv&0xf)+1) = -1..17 / 1..16 */
-    UPROPS_NTV_FRACTION_START=0xb0,
+    UPROPS_NTV_FRACTION_پیل=0xb0,
     /**
      * Large integers:
      * ((ntv>>5)-14) * 10^((ntv&0x1f)+2) = (1..9)*(10^2..10^33)
      * (only one significant decimal digit)
      */
-    UPROPS_NTV_LARGE_START=0x1e0,
+    UPROPS_NTV_LARGE_پیل=0x1e0,
     /**
      * Sexagesimal numbers:
      * ((ntv>>2)-0xbf) * 60^((ntv&3)+1) = (1..9)*(60^1..60^4)
      */
-    UPROPS_NTV_BASE60_START=0x300,
+    UPROPS_NTV_BASE60_پیل=0x300,
     /**
      * Fraction-20 values:
      * frac20 = ntv-0x324 = 0..0x17 -> 1|3|5|7 / 20|40|80|160|320|640
      * numerator: num = 2*(frac20&3)+1
      * denominator: den = 20<<(frac20>>2)
      */
-    UPROPS_NTV_FRACTION20_START=UPROPS_NTV_BASE60_START+36,  // 0x300+9*4=0x324
+    UPROPS_NTV_FRACTION20_پیل=UPROPS_NTV_BASE60_پیل+36,  // 0x300+9*4=0x324
     /**
      * Fraction-32 values:
      * frac32 = ntv-0x34c = 0..15 -> 1|3|5|7 / 32|64|128|256
      * numerator: num = 2*(frac32&3)+1
      * denominator: den = 32<<(frac32>>2)
      */
-    UPROPS_NTV_FRACTION32_START=UPROPS_NTV_FRACTION20_START+24,  // 0x324+6*4=0x34c
+    UPROPS_NTV_FRACTION32_پیل=UPROPS_NTV_FRACTION20_پیل+24,  // 0x324+6*4=0x34c
     /** No numeric value (yet). */
-    UPROPS_NTV_RESERVED_START=UPROPS_NTV_FRACTION32_START+16,  // 0x34c+4*4=0x35c
+    UPROPS_NTV_RESERVED_پیل=UPROPS_NTV_FRACTION32_پیل+16,  // 0x34c+4*4=0x35c
 
-    UPROPS_NTV_MAX_SMALL_INT=UPROPS_NTV_FRACTION_START-UPROPS_NTV_NUMERIC_START-1
+    UPROPS_NTV_MAX_SMALL_INT=UPROPS_NTV_FRACTION_پیل-UPROPS_NTV_NUMERIC_پیل-1
 };
 
-#define UPROPS_NTV_GET_TYPE(ntv) \
+#تعریف_کړه UPROPS_NTV_GET_TYPE(ntv) \
     ((ntv==UPROPS_NTV_NONE) ? U_NT_NONE : \
-    (ntv<UPROPS_NTV_DIGIT_START) ?  U_NT_DECIMAL : \
-    (ntv<UPROPS_NTV_NUMERIC_START) ? U_NT_DIGIT : \
+    (ntv<UPROPS_NTV_DIGIT_پیل) ?  U_NT_DECIMAL : \
+    (ntv<UPROPS_NTV_NUMERIC_پیل) ? U_NT_DIGIT : \
     U_NT_NUMERIC)
 
 /* number of properties vector words */
-#define UPROPS_VECTOR_WORDS     3
+#تعریف_کړه UPROPS_ویکټور_ټکي     3
 
-#ifdef __cplusplus
+#که_تعریف_شوی __cplusplus
 
 namespace {
 
 // Properties in vector word 0
-// Bits
+//بټونه
 // 31..26   Age major version (major=0..63)
 // 25..24   Age minor version (minor=0..3)
 // 23..17   reserved
@@ -150,26 +150,26 @@ namespace {
 // new characters are similar to old ones.)
 // See https://github.com/unicode-org/icu/pull/3025 for details.
 
-inline constexpr uint32_t UPROPS_AGE_MASK = 0xff000000;
-inline constexpr int32_t UPROPS_AGE_SHIFT = 24;
+مضمن constexpr uint32_t UPROPS_AGE_ماسک = 0xff000000;
+مضمن constexpr int32_t UPROPS_AGE_ښويدنه = 24;
 
-inline constexpr uint8_t UPROPS_AGE_MAJOR_MAX = 63;
-inline constexpr uint8_t UPROPS_AGE_MINOR_MAX = 3;
+مضمن constexpr uint8_t UPROPS_AGE_MAJOR_MAX = 63;
+مضمن constexpr uint8_t UPROPS_AGE_MINOR_MAX = 3;
 
-inline constexpr uint32_t UPROPS_EA_MASK = 0x00007000;
-inline constexpr int32_t UPROPS_EA_SHIFT = 12;
+مضمن constexpr uint32_t UPROPS_EA_ماسک = 0x00007000;
+مضمن constexpr int32_t UPROPS_EA_ښويدنه = 12;
 
-inline constexpr uint32_t UPROPS_INCB_MASK = 0x00018000;
-inline constexpr int32_t UPROPS_INCB_SHIFT = 15;
+مضمن constexpr uint32_t UPROPS_INCB_ماسک = 0x00018000;
+مضمن constexpr int32_t UPROPS_INCB_ښويدنه = 15;
 
 /** Script_Extensions: mask includes Script */
-inline constexpr uint32_t UPROPS_SCRIPT_X_MASK = 0x00000fff;
+مضمن constexpr uint32_t UPROPS_SCRIPT_X_ماسک = 0x00000fff;
 
 // UPROPS_SCRIPT_X_WITH_COMMON must be the lowest value that involves Script_Extensions.
-inline constexpr uint32_t UPROPS_SCRIPT_X_WITH_OTHER = 0xc00;
-inline constexpr uint32_t UPROPS_SCRIPT_X_WITH_INHERITED = 0x800;
-inline constexpr uint32_t UPROPS_SCRIPT_X_WITH_COMMON = 0x400;
-inline constexpr int32_t UPROPS_MAX_SCRIPT = 0x3ff;
+مضمن constexpr uint32_t UPROPS_SCRIPT_X_WITH_OTHER = 0xc00;
+مضمن constexpr uint32_t UPROPS_SCRIPT_X_WITH_INHERITED = 0x800;
+مضمن constexpr uint32_t UPROPS_SCRIPT_X_WITH_COMMON = 0x400;
+مضمن constexpr int32_t UPROPS_MAX_SCRIPT = 0x3ff;
 
 /*
  * Properties in vector word 1
@@ -182,7 +182,7 @@ inline constexpr int32_t UPROPS_MAX_SCRIPT = 0x3ff;
  *
  * ICU 2.6/uprops format version 3.2 stores full properties instead of "Other_".
  */
-enum {
+تعداد {
     UPROPS_WHITE_SPACE,
     UPROPS_DASH,
     UPROPS_HYPHEN,
@@ -195,27 +195,27 @@ enum {
     UPROPS_IDEOGRAPHIC,
     UPROPS_DIACRITIC,
     UPROPS_EXTENDER,
-    UPROPS_NONCHARACTER_CODE_POINT,
+    UPROPS_NONCHARACTER_کوډ_ټکی,
     UPROPS_GRAPHEME_EXTEND,
     UPROPS_GRAPHEME_LINK,
-    UPROPS_IDS_BINARY_OPERATOR,
+    UPROPS_IDS_دوګونی_OPERATOR,
     UPROPS_IDS_TRINARY_OPERATOR,
     UPROPS_RADICAL,
     UPROPS_UNIFIED_IDEOGRAPH,
-    UPROPS_DEFAULT_IGNORABLE_CODE_POINT,
+    UPROPS_DEFAULT_IGNORABLE_کوډ_ټکی,
     UPROPS_DEPRECATED,
-    UPROPS_LOGICAL_ORDER_EXCEPTION,
-    UPROPS_XID_START,
+    UPROPS_LOGICAL_ترتیب_EXCEPTION,
+    UPROPS_XID_پیل,
     UPROPS_XID_CONTINUE,
-    UPROPS_ID_START,                            /* ICU 2.6, uprops format version 3.2 */
+    UPROPS_ID_پیل,                            /* ICU 2.6, uprops format version 3.2 */
     UPROPS_ID_CONTINUE,
-    UPROPS_GRAPHEME_BASE,
-    UPROPS_S_TERM,                              /* new in ICU 3.0 and Unicode 4.0.1 */
+    UPROPS_GRAPHEME_بنسټ,
+    UPROPS_S_غړی,                              /* new in ICU 3.0 and Unicode 4.0.1 */
     UPROPS_VARIATION_SELECTOR,
-    UPROPS_PATTERN_SYNTAX,                      /* new in ICU 3.4 and Unicode 4.1 */
-    UPROPS_PATTERN_WHITE_SPACE,
+    UPROPS_نمونه_SYNTAX,                      /* new in ICU 3.4 and Unicode 4.1 */
+    UPROPS_نمونه_WHITE_SPACE,
     UPROPS_PREPENDED_CONCATENATION_MARK,        // new in ICU 60 and Unicode 10
-    UPROPS_BINARY_1_TOP                         /* ==32 - full! */
+    UPROPS_دوګونی_1_سر                         /* ==32 - full! */
 };
 
 /*
@@ -242,12 +242,12 @@ enum {
 // We do not store separate data for Identifier_Status:
 // We can derive that from the encoded Identifier_Type via a simple range check.
 
-inline constexpr uint32_t UPROPS_2_ID_TYPE_MASK = 0xfc000000;
-inline constexpr int32_t UPROPS_2_ID_TYPE_SHIFT = 26;
+مضمن constexpr uint32_t UPROPS_2_ID_TYPE_ماسک = 0xfc000000;
+مضمن constexpr int32_t UPROPS_2_ID_TYPE_ښويدنه = 26;
 
-enum {
+تعداد {
     // A high bit for use in idTypeToEncoded[] but not used in the data
-    UPROPS_ID_TYPE_BIT = 0x80,
+    UPROPS_ID_TYPE_بټ = 0x80,
 
     // Combinable bits
     UPROPS_ID_TYPE_EXCLUSION = 0x20,
@@ -276,49 +276,49 @@ enum {
  * When UPROPS_ID_TYPE_BIT is set, then use "&" to test whether the value bit is set.
  * When UPROPS_ID_TYPE_BIT is not set, then compare ("==") the array value with the data value.
  */
-inline constexpr uint8_t uprops_idTypeToEncoded[] = {
+مضمن constexpr uint8_t uprops_id_Type_منزل_Encoded[] = {
     UPROPS_ID_TYPE_NOT_CHARACTER,
     UPROPS_ID_TYPE_DEPRECATED,
     UPROPS_ID_TYPE_DEFAULT_IGNORABLE,
     UPROPS_ID_TYPE_NOT_NFKC,
-    UPROPS_ID_TYPE_BIT | UPROPS_ID_TYPE_NOT_XID,
-    UPROPS_ID_TYPE_BIT | UPROPS_ID_TYPE_EXCLUSION,
-    UPROPS_ID_TYPE_BIT | UPROPS_ID_TYPE_OBSOLETE,
-    UPROPS_ID_TYPE_BIT | UPROPS_ID_TYPE_TECHNICAL,
-    UPROPS_ID_TYPE_BIT | UPROPS_ID_TYPE_UNCOMMON_USE,
-    UPROPS_ID_TYPE_BIT | UPROPS_ID_TYPE_LIMITED_USE,
+    UPROPS_ID_TYPE_بټ | UPROPS_ID_TYPE_NOT_XID,
+    UPROPS_ID_TYPE_بټ | UPROPS_ID_TYPE_EXCLUSION,
+    UPROPS_ID_TYPE_بټ | UPROPS_ID_TYPE_OBSOLETE,
+    UPROPS_ID_TYPE_بټ | UPROPS_ID_TYPE_TECHNICAL,
+    UPROPS_ID_TYPE_بټ | UPROPS_ID_TYPE_UNCOMMON_USE,
+    UPROPS_ID_TYPE_بټ | UPROPS_ID_TYPE_LIMITED_USE,
     UPROPS_ID_TYPE_INCLUSION,
     UPROPS_ID_TYPE_RECOMMENDED
 };
 
 }  // namespace
 
-#endif  // __cplusplus
+#د_که_پای  // __cplusplus
 
-#define UPROPS_LB_MASK          0x03f00000
-#define UPROPS_LB_SHIFT         20
+#تعریف_کړه UPROPS_LB_ماسک          0x03f00000
+#تعریف_کړه UPROPS_LB_ښويدنه         20
 
-#define UPROPS_SB_MASK          0x000f8000
-#define UPROPS_SB_SHIFT         15
+#تعریف_کړه UPROPS_SB_ماسک          0x000f8000
+#تعریف_کړه UPROPS_SB_ښويدنه         15
 
-#define UPROPS_WB_MASK          0x00007c00
-#define UPROPS_WB_SHIFT         10
+#تعریف_کړه UPROPS_WB_ماسک          0x00007c00
+#تعریف_کړه UPROPS_WB_ښويدنه         10
 
-#define UPROPS_GCB_MASK         0x000003e0
-#define UPROPS_GCB_SHIFT        5
+#تعریف_کړه UPROPS_GCB_ماسک         0x000003e0
+#تعریف_کړه UPROPS_GCB_ښويدنه        5
 
-#define UPROPS_DT_MASK          0x0000001f
+#تعریف_کړه UPROPS_DT_ماسک          0x0000001f
 
-#ifdef __cplusplus
+#که_تعریف_شوی __cplusplus
 
 namespace {
 
 // Bits 9..0 in UPROPS_MAX_VALUES_OTHER_INDEX
-inline constexpr uint32_t UPROPS_MAX_BLOCK = 0x3ff;
+مضمن constexpr uint32_t UPROPS_MAX_بلاک = 0x3ff;
 
 }  // namespace
 
-#endif  // __cplusplus
+#د_که_پای  // __cplusplus
 
 /**
  * Gets the main properties value for a code point.
@@ -333,7 +333,7 @@ u_getMainProperties(UChar32 c);
  * @return 0 if no data or illegal argument
  */
 U_CFUNC uint32_t
-u_getUnicodeProperties(UChar32 c, int32_t column);
+u_getUnicodeProperties(UChar32 c, int32_t ستنه);
 
 /**
  * Get the maximum values for some enum/int properties.
@@ -349,7 +349,7 @@ u_getUnicodeProperties(UChar32 c, int32_t column);
  * @internal
  */
 U_CFUNC int32_t
-uprv_getMaxValues(int32_t column);
+uprv_get_Max_ارزښتونه(int32_t ستنه);
 
 /**
  * Checks if c is alphabetic, or a decimal digit; implements UCHAR_POSIX_ALNUM.
@@ -377,7 +377,7 @@ U_CFUNC UBool
 u_isprintPOSIX(UChar32 c);
 
 /** Some code points. @internal */
-enum {
+تعداد {
     TAB     =0x0009,
     LF      =0x000a,
     FF      =0x000c,
@@ -400,7 +400,7 @@ enum {
  * @return 0 if no character names available.
  */
 U_CAPI int32_t U_EXPORT2
-uprv_getMaxCharNameLength(void);
+uprv_get_Max_Char_Name_اوږدتیا(فراغ);
 
 /**
  * Fills set with characters that are used in Unicode character names.
@@ -408,15 +408,15 @@ uprv_getMaxCharNameLength(void);
  * Just empties the set if no character names are available.
  * @param sa USetAdder to receive characters.
  */
-U_CAPI void U_EXPORT2
-uprv_getCharNameCharacters(const USetAdder *sa);
+U_CAPI فراغ U_EXPORT2
+uprv_getCharNameCharacters(ثابت USetAdder *sa);
 
 /**
  * Constants for which data and implementation files provide which properties.
  * Used by UnicodeSet for service-specific property enumeration.
  * @internal
  */
-enum UPropertySource {
+تعداد UProperty_سرچینه {
     /** No source, not a supported property. */
     UPROPS_SRC_NONE,
     /** From uchar.c/uprops.icu main trie */
@@ -424,7 +424,7 @@ enum UPropertySource {
     /** From uchar.c/uprops.icu properties vectors trie */
     UPROPS_SRC_PROPSVEC,
     /** From unames.c/unames.icu */
-    UPROPS_SRC_NAMES,
+    UPROPS_SRC_نومونه,
     /** From ucase.c/ucase.icu */
     UPROPS_SRC_CASE,
     /** From ubidi_props.c/ubidi.icu */
@@ -448,45 +448,45 @@ enum UPropertySource {
     UPROPS_SRC_EMOJI,
     UPROPS_SRC_IDSU,
     UPROPS_SRC_ID_COMPAT_MATH,
-    UPROPS_SRC_BLOCK,
+    UPROPS_SRC_بلاک,
     UPROPS_SRC_MCM,
     /** One more than the highest UPropertySource (UPROPS_SRC_) constant. */
-    UPROPS_SRC_COUNT
+    UPROPS_SRC_شمېر
 };
-typedef enum UPropertySource UPropertySource;
+تعريفنوع تعداد UProperty_سرچینه UProperty_سرچینه;
 
 /**
  * @see UPropertySource
  * @internal
  */
-U_CFUNC UPropertySource U_EXPORT2
-uprops_getSource(UProperty which);
+U_CFUNC UProperty_سرچینه U_EXPORT2
+uprops_get_سرچینه(UProperty which);
 
 /**
  * Enumerate uprops.icu's main data trie and add the
  * start of each range of same properties to the set.
  * @internal
  */
-U_CFUNC void U_EXPORT2
-uchar_addPropertyStarts(const USetAdder *sa, UErrorCode *pErrorCode);
+U_CFUNC فراغ U_EXPORT2
+uchar_جمع_کړه_Property_Starts(ثابت USetAdder *sa, UError_کوډ *p_Error_کوډ);
 
 /**
  * Enumerate uprops.icu's properties vectors trie and add the
  * start of each range of same properties to the set.
  * @internal
  */
-U_CFUNC void U_EXPORT2
-upropsvec_addPropertyStarts(const USetAdder *sa, UErrorCode *pErrorCode);
+U_CFUNC فراغ U_EXPORT2
+upropsvec_جمع_کړه_Property_Starts(ثابت USetAdder *sa, UError_کوډ *p_Error_کوډ);
 
-U_CFUNC void U_EXPORT2
-uprops_addPropertyStarts(UPropertySource src, const USetAdder *sa, UErrorCode *pErrorCode);
+U_CFUNC فراغ U_EXPORT2
+uprops_جمع_کړه_Property_Starts(UProperty_سرچینه src, ثابت USetAdder *sa, UError_کوډ *p_Error_کوډ);
 
-#ifdef __cplusplus
+#که_تعریف_شوی __cplusplus
 
-U_CFUNC void U_EXPORT2
-ublock_addPropertyStarts(const USetAdder *sa, UErrorCode &errorCode);
+U_CFUNC فراغ U_EXPORT2
+ublock_جمع_کړه_Property_Starts(ثابت USetAdder *sa, UError_کوډ &error_کوډ);
 
-#endif  // __cplusplus
+#د_که_پای  // __cplusplus
 
 /**
  * Return a set of characters for property enumeration.
@@ -501,8 +501,8 @@ uprv_getInclusions(const USetAdder *sa, UErrorCode *pErrorCode);
 */
 
 /** @internal for icuexportdata */
-U_CAPI void U_EXPORT2
-uprv_addScriptExtensionsCodePoints(const USetAdder *sa, UErrorCode *pErrorCode);
+U_CAPI فراغ U_EXPORT2
+uprv_جمع_کړه_Script_Extensions_کوډ_Points(ثابت USetAdder *sa, UError_کوډ *p_Error_کوډ);
 
 // TODO: Move this into a different header file (udataswp.h? new unames.h?) so that uprops.h
 // need not be C-compatible any more.
@@ -511,29 +511,29 @@ uprv_addScriptExtensionsCodePoints(const USetAdder *sa, UErrorCode *pErrorCode);
  * @internal
  */
 U_CAPI int32_t U_EXPORT2
-uchar_swapNames(const UDataSwapper *ds,
-                const void *inData, int32_t length, void *outData,
-                UErrorCode *pErrorCode);
+uchar_بدلون_نومونه(ثابت UDataSwapper *ds,
+                ثابت فراغ *دننه_معلومات, int32_t اوږدتیا, فراغ *بهر_معلومات,
+                UError_کوډ *p_Error_کوډ);
 
-#ifdef __cplusplus
+#که_تعریف_شوی __cplusplus
 
 U_NAMESPACE_BEGIN
 
-class UnicodeSet;
+class Unicode_سېټ;
 
 class CharacterProperties {
-public:
+عام:
     CharacterProperties() = delete;
-    static const UnicodeSet *getInclusionsForProperty(UProperty prop, UErrorCode &errorCode);
-    static const UnicodeSet *getBinaryPropertySet(UProperty property, UErrorCode &errorCode);
+    ساكن ثابت Unicode_سېټ *getInclusionsForProperty(UProperty prop, UError_کوډ &error_کوډ);
+    ساكن ثابت Unicode_سېټ *get_دوګونی_Property_سېټ(UProperty property, UError_کوډ &error_کوډ);
 };
 
 // implemented in uniset_props.cpp
-U_CFUNC UnicodeSet *
-uniset_getUnicode32Instance(UErrorCode &errorCode);
+U_CFUNC Unicode_سېټ *
+uniset_getUnicode32Instance(UError_کوډ &error_کوډ);
 
-U_NAMESPACE_END
+U_NAMESPACE_پای_ټکی
 
-#endif
+#د_که_پای
 
-#endif
+#د_که_پای

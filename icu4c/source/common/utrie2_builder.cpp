@@ -25,22 +25,22 @@
 *   See utrie2.c for the runtime and enumeration code.
 */
 // #define UTRIE2_DEBUG
-#ifdef UTRIE2_DEBUG
+#که_تعریف_شوی UTRIE2_DEBUG
 #   include <stdio.h>
-#endif
+#د_که_پای
 // #define UCPTRIE_DEBUG
 
-#include "unicode/utypes.h"
-#ifdef UCPTRIE_DEBUG
-#include "unicode/ucptrie.h"
-#include "unicode/umutablecptrie.h"
-#include "ucptrie_impl.h"
-#endif
-#include "cmemory.h"
-#include "utrie2.h"
-#include "utrie2_impl.h"
+#ضمن "unicode/utypes.h"
+#که_تعریف_شوی UCPTRIE_DEBUG
+#ضمن "unicode/ucptrie.h"
+#ضمن "unicode/umutablecptrie.h"
+#ضمن "ucptrie_impl.h"
+#د_که_پای
+#ضمن "cmemory.h"
+#ضمن "utrie2.h"
+#ضمن "utrie2_impl.h"
 
-#include "utrie.h"  // for utrie2_fromUTrie()
+#ضمن "utrie.h"  // for utrie2_fromUTrie()
 
 /* Implementation notes ----------------------------------------------------- */
 
@@ -77,22 +77,22 @@
 
 /* Building a trie ----------------------------------------------------------*/
 
-enum {
+تعداد {
     /** The null index-2 block, following the gap in the index-2 table. */
-    UNEWTRIE2_INDEX_2_NULL_OFFSET=UNEWTRIE2_INDEX_GAP_OFFSET+UNEWTRIE2_INDEX_GAP_LENGTH,
+    UNEWTRIE2_شاخص_2_NULL_دننه_واټن=UNEWTRIE2_شاخص_GAP_دننه_واټن+UNEWTRIE2_شاخص_GAP_اوږدتیا,
 
     /** The start of allocated index-2 blocks. */
-    UNEWTRIE2_INDEX_2_START_OFFSET=UNEWTRIE2_INDEX_2_NULL_OFFSET+UTRIE2_INDEX_2_BLOCK_LENGTH,
+    UNEWTRIE2_شاخص_2_پیل_دننه_واټن=UNEWTRIE2_شاخص_2_NULL_دننه_واټن+UTRIE2_شاخص_2_بلاک_اوږدتیا,
 
     /**
      * The null data block.
      * Length 64=0x40 even if UTRIE2_DATA_BLOCK_LENGTH is smaller,
      * to work with 6-bit trail bytes from 2-byte UTF-8.
      */
-    UNEWTRIE2_DATA_NULL_OFFSET=UTRIE2_DATA_START_OFFSET,
+    UNEWTRIE2_معلومات_NULL_دننه_واټن=UTRIE2_معلومات_پیل_دننه_واټن,
 
     /** The start of allocated data blocks. */
-    UNEWTRIE2_DATA_START_OFFSET=UNEWTRIE2_DATA_NULL_OFFSET+0x40,
+    UNEWTRIE2_معلومات_پیل_دننه_واټن=UNEWTRIE2_معلومات_NULL_دننه_واټن+0x40,
 
     /**
      * The start of data blocks for U+0800 and above.
@@ -100,59 +100,59 @@ enum {
      * From here on, compaction uses UTRIE2_DATA_BLOCK_LENGTH.
      * Data values for 0x780 code points beyond ASCII.
      */
-    UNEWTRIE2_DATA_0800_OFFSET=UNEWTRIE2_DATA_START_OFFSET+0x780
+    UNEWTRIE2_معلومات_0800_دننه_واټن=UNEWTRIE2_معلومات_پیل_دننه_واټن+0x780
 };
 
 /* Start with allocation of 16k data entries. */
-#define UNEWTRIE2_INITIAL_DATA_LENGTH ((int32_t)1<<14)
+#تعریف_کړه UNEWTRIE2_INITIAL_معلومات_اوږدتیا ((int32_t)1<<14)
 
 /* Grow about 8x each time. */
-#define UNEWTRIE2_MEDIUM_DATA_LENGTH ((int32_t)1<<17)
+#تعریف_کړه UNEWTRIE2_MEDIUM_معلومات_اوږدتیا ((int32_t)1<<17)
 
-static int32_t
-allocIndex2Block(UNewTrie2 *trie);
+ساكن int32_t
+alloc_Index2_بلاک(UNewTrie2 *trie);
 
 U_CAPI UTrie2 * U_EXPORT2
-utrie2_open(uint32_t initialValue, uint32_t errorValue, UErrorCode *pErrorCode) {
+utrie2_open(uint32_t initial_ارزښت, uint32_t error_ارزښت, UError_کوډ *p_Error_کوډ) {
     UTrie2 *trie;
     UNewTrie2 *newTrie;
-    uint32_t *data;
+    uint32_t *معلومات;
     int32_t i, j;
 
-    if(U_FAILURE(*pErrorCode)) {
-        return nullptr;
+    إذا(U_FAILURE(*p_Error_کوډ)) {
+        أرجع تش_اشاره;
     }
 
-    trie=(UTrie2 *)uprv_malloc(sizeof(UTrie2));
-    newTrie=(UNewTrie2 *)uprv_malloc(sizeof(UNewTrie2));
-    data=(uint32_t *)uprv_malloc(UNEWTRIE2_INITIAL_DATA_LENGTH*4);
-    if(trie==nullptr || newTrie==nullptr || data==nullptr) {
+    trie=(UTrie2 *)uprv_malloc(حجم(UTrie2));
+    newTrie=(UNewTrie2 *)uprv_malloc(حجم(UNewTrie2));
+    معلومات=(uint32_t *)uprv_malloc(UNEWTRIE2_INITIAL_معلومات_اوږدتیا*4);
+    إذا(trie==تش_اشاره || newTrie==تش_اشاره || معلومات==تش_اشاره) {
         uprv_free(trie);
         uprv_free(newTrie);
-        uprv_free(data);
-        *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        uprv_free(معلومات);
+        *p_Error_کوډ=U_حافظه_ویش_ERROR;
+        أرجع تش_اشاره;
     }
 
-    uprv_memset(trie, 0, sizeof(UTrie2));
-    trie->initialValue=initialValue;
-    trie->errorValue=errorValue;
-    trie->highStart=0x110000;
+    uprv_memset(trie, 0, حجم(UTrie2));
+    trie->initial_ارزښت=initial_ارزښت;
+    trie->error_ارزښت=error_ارزښت;
+    trie->لوړ_پیل=0x110000;
     trie->newTrie=newTrie;
-#ifdef UTRIE2_DEBUG
+#که_تعریف_شوی UTRIE2_DEBUG
     trie->name="open";
-#endif
+#د_که_پای
 
-    newTrie->data=data;
-#ifdef UCPTRIE_DEBUG
-    newTrie->t3=umutablecptrie_open(initialValue, errorValue, pErrorCode);
-#endif
-    newTrie->dataCapacity=UNEWTRIE2_INITIAL_DATA_LENGTH;
-    newTrie->initialValue=initialValue;
-    newTrie->errorValue=errorValue;
-    newTrie->highStart=0x110000;
-    newTrie->firstFreeBlock=0;  /* no free block in the list */
-    newTrie->isCompacted=false;
+    newTrie->معلومات=معلومات;
+#که_تعریف_شوی UCPTRIE_DEBUG
+    newTrie->t3=umutablecptrie_open(initial_ارزښت, error_ارزښت, p_Error_کوډ);
+#د_که_پای
+    newTrie->معلومات_ظرفیت=UNEWTRIE2_INITIAL_معلومات_اوږدتیا;
+    newTrie->initial_ارزښت=initial_ارزښت;
+    newTrie->error_ارزښت=error_ارزښت;
+    newTrie->لوړ_پیل=0x110000;
+    newTrie->لومړی_Free_بلاک=0;  /* no free block in the list */
+    newTrie->isCompacted=خطأ;
 
     /*
      * preallocate and reset
@@ -160,25 +160,25 @@ utrie2_open(uint32_t initialValue, uint32_t errorValue, UErrorCode *pErrorCode) 
      * - the bad-UTF-8-data block
      * - the null data block
      */
-    for(i=0; i<0x80; ++i) {
-        newTrie->data[i]=initialValue;
+    لكل(i=0; i<0x80; ++i) {
+        newTrie->معلومات[i]=initial_ارزښت;
     }
-    for(; i<0xc0; ++i) {
-        newTrie->data[i]=errorValue;
+    لكل(; i<0xc0; ++i) {
+        newTrie->معلومات[i]=error_ارزښت;
     }
-    for(i=UNEWTRIE2_DATA_NULL_OFFSET; i<UNEWTRIE2_DATA_START_OFFSET; ++i) {
-        newTrie->data[i]=initialValue;
+    لكل(i=UNEWTRIE2_معلومات_NULL_دننه_واټن; i<UNEWTRIE2_معلومات_پیل_دننه_واټن; ++i) {
+        newTrie->معلومات[i]=initial_ارزښت;
     }
-    newTrie->dataNullOffset=UNEWTRIE2_DATA_NULL_OFFSET;
-    newTrie->dataLength=UNEWTRIE2_DATA_START_OFFSET;
+    newTrie->معلومات_Null_دننه_واټن=UNEWTRIE2_معلومات_NULL_دننه_واټن;
+    newTrie->معلومات_اوږدتیا=UNEWTRIE2_معلومات_پیل_دننه_واټن;
 
     /* set the index-2 indexes for the 2=0x80>>UTRIE2_SHIFT_2 ASCII data blocks */
-    for(i=0, j=0; j<0x80; ++i, j+=UTRIE2_DATA_BLOCK_LENGTH) {
+    لكل(i=0, j=0; j<0x80; ++i, j+=UTRIE2_معلومات_بلاک_اوږدتیا) {
         newTrie->index2[i]=j;
         newTrie->map[i]=1;
     }
     /* reference counts for the bad-UTF-8-data block */
-    for(; j<0xc0; ++i, j+=UTRIE2_DATA_BLOCK_LENGTH) {
+    لكل(; j<0xc0; ++i, j+=UTRIE2_معلومات_بلاک_اوږدتیا) {
         newTrie->map[i]=0;
     }
     /*
@@ -188,12 +188,12 @@ utrie2_open(uint32_t initialValue, uint32_t errorValue, UErrorCode *pErrorCode) 
      */
     /* i==newTrie->dataNullOffset */
     newTrie->map[i++]=
-        (0x110000>>UTRIE2_SHIFT_2)-
-        (0x80>>UTRIE2_SHIFT_2)+
+        (0x110000>>UTRIE2_ښويدنه_2)-
+        (0x80>>UTRIE2_ښويدنه_2)+
         1+
-        UTRIE2_LSCP_INDEX_2_LENGTH;
-    j+=UTRIE2_DATA_BLOCK_LENGTH;
-    for(; j<UNEWTRIE2_DATA_START_OFFSET; ++i, j+=UTRIE2_DATA_BLOCK_LENGTH) {
+        UTRIE2_LSCP_شاخص_2_اوږدتیا;
+    j+=UTRIE2_معلومات_بلاک_اوږدتیا;
+    لكل(; j<UNEWTRIE2_معلومات_پیل_دننه_واټن; ++i, j+=UTRIE2_معلومات_بلاک_اوږدتیا) {
         newTrie->map[i]=0;
     }
 
@@ -201,36 +201,36 @@ utrie2_open(uint32_t initialValue, uint32_t errorValue, UErrorCode *pErrorCode) 
      * set the remaining indexes in the BMP index-2 block
      * to the null data block
      */
-    for(i=0x80>>UTRIE2_SHIFT_2; i<UTRIE2_INDEX_2_BMP_LENGTH; ++i) {
-        newTrie->index2[i]=UNEWTRIE2_DATA_NULL_OFFSET;
+    لكل(i=0x80>>UTRIE2_ښويدنه_2; i<UTRIE2_شاخص_2_BMP_اوږدتیا; ++i) {
+        newTrie->index2[i]=UNEWTRIE2_معلومات_NULL_دننه_واټن;
     }
 
     /*
      * Fill the index gap with impossible values so that compaction
      * does not overlap other index-2 blocks with the gap.
      */
-    for(i=0; i<UNEWTRIE2_INDEX_GAP_LENGTH; ++i) {
-        newTrie->index2[UNEWTRIE2_INDEX_GAP_OFFSET+i]=-1;
+    لكل(i=0; i<UNEWTRIE2_شاخص_GAP_اوږدتیا; ++i) {
+        newTrie->index2[UNEWTRIE2_شاخص_GAP_دننه_واټن+i]=-1;
     }
 
     /* set the indexes in the null index-2 block */
-    for(i=0; i<UTRIE2_INDEX_2_BLOCK_LENGTH; ++i) {
-        newTrie->index2[UNEWTRIE2_INDEX_2_NULL_OFFSET+i]=UNEWTRIE2_DATA_NULL_OFFSET;
+    لكل(i=0; i<UTRIE2_شاخص_2_بلاک_اوږدتیا; ++i) {
+        newTrie->index2[UNEWTRIE2_شاخص_2_NULL_دننه_واټن+i]=UNEWTRIE2_معلومات_NULL_دننه_واټن;
     }
-    newTrie->index2NullOffset=UNEWTRIE2_INDEX_2_NULL_OFFSET;
-    newTrie->index2Length=UNEWTRIE2_INDEX_2_START_OFFSET;
+    newTrie->index2_Null_دننه_واټن=UNEWTRIE2_شاخص_2_NULL_دننه_واټن;
+    newTrie->index2_اوږدتیا=UNEWTRIE2_شاخص_2_پیل_دننه_واټن;
 
     /* set the index-1 indexes for the linear index-2 block */
-    for(i=0, j=0;
-        i<UTRIE2_OMITTED_BMP_INDEX_1_LENGTH;
-        ++i, j+=UTRIE2_INDEX_2_BLOCK_LENGTH
+    لكل(i=0, j=0;
+        i<UTRIE2_OMITTED_BMP_شاخص_1_اوږدتیا;
+        ++i, j+=UTRIE2_شاخص_2_بلاک_اوږدتیا
     ) {
         newTrie->index1[i]=j;
     }
 
     /* set the remaining index-1 indexes to the null index-2 block */
-    for(; i<UNEWTRIE2_INDEX_1_LENGTH; ++i) {
-        newTrie->index1[i]=UNEWTRIE2_INDEX_2_NULL_OFFSET;
+    لكل(; i<UNEWTRIE2_شاخص_1_اوږدتیا; ++i) {
+        newTrie->index1[i]=UNEWTRIE2_شاخص_2_NULL_دننه_واټن;
     }
 
     /*
@@ -238,383 +238,383 @@ utrie2_open(uint32_t initialValue, uint32_t errorValue, UErrorCode *pErrorCode) 
      * for 2-byte UTF-8 which will be compacted in 64-blocks
      * even if UTRIE2_DATA_BLOCK_LENGTH is smaller.
      */
-    for(i=0x80; i<0x800; i+=UTRIE2_DATA_BLOCK_LENGTH) {
-        utrie2_set32(trie, i, initialValue, pErrorCode);
+    لكل(i=0x80; i<0x800; i+=UTRIE2_معلومات_بلاک_اوږدتیا) {
+        utrie2_set32(trie, i, initial_ارزښت, p_Error_کوډ);
     }
 
-    return trie;
+    أرجع trie;
 }
 
-static UNewTrie2 *
-cloneBuilder(const UNewTrie2 *other) {
+ساكن UNewTrie2 *
+cloneBuilder(ثابت UNewTrie2 *other) {
     UNewTrie2 *trie;
 
-    trie = static_cast<UNewTrie2*>(uprv_malloc(sizeof(UNewTrie2)));
-    if(trie==nullptr) {
-        return nullptr;
+    trie = static_cast<UNewTrie2*>(uprv_malloc(حجم(UNewTrie2)));
+    إذا(trie==تش_اشاره) {
+        أرجع تش_اشاره;
     }
 
-    trie->data = static_cast<uint32_t*>(uprv_malloc(other->dataCapacity * 4));
-    if(trie->data==nullptr) {
+    trie->معلومات = static_cast<uint32_t*>(uprv_malloc(other->معلومات_ظرفیت * 4));
+    إذا(trie->معلومات==تش_اشاره) {
         uprv_free(trie);
-        return nullptr;
+        أرجع تش_اشاره;
     }
-#ifdef UCPTRIE_DEBUG
-    if(other->t3==nullptr) {
-        trie->t3=nullptr;
-    } else {
-        UErrorCode errorCode=U_ZERO_ERROR;
-        trie->t3=umutablecptrie_clone(other->t3, &errorCode);
+#که_تعریف_شوی UCPTRIE_DEBUG
+    إذا(other->t3==تش_اشاره) {
+        trie->t3=تش_اشاره;
+    } وإلا {
+        UError_کوډ error_کوډ=U_ZERO_ERROR;
+        trie->t3=umutablecptrie_clone(other->t3, &error_کوډ);
     }
-#endif
-    trie->dataCapacity=other->dataCapacity;
+#د_که_پای
+    trie->معلومات_ظرفیت=other->معلومات_ظرفیت;
 
     /* clone data */
-    uprv_memcpy(trie->index1, other->index1, sizeof(trie->index1));
-    uprv_memcpy(trie->index2, other->index2, (size_t)other->index2Length*4);
-    trie->index2NullOffset=other->index2NullOffset;
-    trie->index2Length=other->index2Length;
+    uprv_memcpy(trie->index1, other->index1, حجم(trie->index1));
+    uprv_memcpy(trie->index2, other->index2, (size_t)other->index2_اوږدتیا*4);
+    trie->index2_Null_دننه_واټن=other->index2_Null_دننه_واټن;
+    trie->index2_اوږدتیا=other->index2_اوږدتیا;
 
-    uprv_memcpy(trie->data, other->data, (size_t)other->dataLength*4);
-    trie->dataNullOffset=other->dataNullOffset;
-    trie->dataLength=other->dataLength;
+    uprv_memcpy(trie->معلومات, other->معلومات, (size_t)other->معلومات_اوږدتیا*4);
+    trie->معلومات_Null_دننه_واټن=other->معلومات_Null_دننه_واټن;
+    trie->معلومات_اوږدتیا=other->معلومات_اوږدتیا;
 
     /* reference counters */
-    if(other->isCompacted) {
-        trie->firstFreeBlock=0;
-    } else {
-        uprv_memcpy(trie->map, other->map, ((size_t)other->dataLength>>UTRIE2_SHIFT_2)*4);
-        trie->firstFreeBlock=other->firstFreeBlock;
+    إذا(other->isCompacted) {
+        trie->لومړی_Free_بلاک=0;
+    } وإلا {
+        uprv_memcpy(trie->map, other->map, ((size_t)other->معلومات_اوږدتیا>>UTRIE2_ښويدنه_2)*4);
+        trie->لومړی_Free_بلاک=other->لومړی_Free_بلاک;
     }
 
-    trie->initialValue=other->initialValue;
-    trie->errorValue=other->errorValue;
-    trie->highStart=other->highStart;
+    trie->initial_ارزښت=other->initial_ارزښت;
+    trie->error_ارزښت=other->error_ارزښت;
+    trie->لوړ_پیل=other->لوړ_پیل;
     trie->isCompacted=other->isCompacted;
 
-    return trie;
+    أرجع trie;
 }
 
 U_CAPI UTrie2 * U_EXPORT2
-utrie2_clone(const UTrie2 *other, UErrorCode *pErrorCode) {
+utrie2_clone(ثابت UTrie2 *other, UError_کوډ *p_Error_کوډ) {
     UTrie2 *trie;
 
-    if(U_FAILURE(*pErrorCode)) {
-        return nullptr;
+    إذا(U_FAILURE(*p_Error_کوډ)) {
+        أرجع تش_اشاره;
     }
-    if(other==nullptr || (other->memory==nullptr && other->newTrie==nullptr)) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+    إذا(other==تش_اشاره || (other->حافظه==تش_اشاره && other->newTrie==تش_اشاره)) {
+        *p_Error_کوډ=U_ILLEGAL_دلیل_ERROR;
+        أرجع تش_اشاره;
     }
 
-    trie=(UTrie2 *)uprv_malloc(sizeof(UTrie2));
-    if(trie==nullptr) {
-        *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+    trie=(UTrie2 *)uprv_malloc(حجم(UTrie2));
+    إذا(trie==تش_اشاره) {
+        *p_Error_کوډ=U_حافظه_ویش_ERROR;
+        أرجع تش_اشاره;
     }
-    uprv_memcpy(trie, other, sizeof(UTrie2));
+    uprv_memcpy(trie, other, حجم(UTrie2));
 
-    if(other->memory!=nullptr) {
-        trie->memory=uprv_malloc(other->length);
-        if(trie->memory!=nullptr) {
-            trie->isMemoryOwned=true;
-            uprv_memcpy(trie->memory, other->memory, other->length);
+    إذا(other->حافظه!=تش_اشاره) {
+        trie->حافظه=uprv_malloc(other->length);
+        إذا(trie->حافظه!=تش_اشاره) {
+            trie->is_حافظه_Owned=ریښتیا;
+            uprv_memcpy(trie->حافظه, other->حافظه, other->length);
 
             /* make the clone's pointers point to its own memory */
-            trie->index=(uint16_t *)trie->memory+(other->index-(uint16_t *)other->memory);
-            if(other->data16!=nullptr) {
-                trie->data16=(uint16_t *)trie->memory+(other->data16-(uint16_t *)other->memory);
+            trie->شاخص=(uint16_t *)trie->حافظه+(other->شاخص-(uint16_t *)other->حافظه);
+            إذا(other->data16!=تش_اشاره) {
+                trie->data16=(uint16_t *)trie->حافظه+(other->data16-(uint16_t *)other->حافظه);
             }
-            if(other->data32!=nullptr) {
-                trie->data32=(uint32_t *)trie->memory+(other->data32-(uint32_t *)other->memory);
+            إذا(other->data32!=تش_اشاره) {
+                trie->data32=(uint32_t *)trie->حافظه+(other->data32-(uint32_t *)other->حافظه);
             }
         }
-    } else /* other->newTrie!=nullptr */ {
+    } وإلا /* other->newTrie!=nullptr */ {
         trie->newTrie=cloneBuilder(other->newTrie);
     }
 
-    if(trie->memory==nullptr && trie->newTrie==nullptr) {
-        *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
+    إذا(trie->حافظه==تش_اشاره && trie->newTrie==تش_اشاره) {
+        *p_Error_کوډ=U_حافظه_ویش_ERROR;
         uprv_free(trie);
-        trie=nullptr;
+        trie=تش_اشاره;
     }
-    return trie;
+    أرجع trie;
 }
 
-typedef struct NewTrieAndStatus {
+تعريفنوع بنية New_Trie_And_حالت {
     UTrie2 *trie;
-    UErrorCode errorCode;
-    UBool exclusiveLimit;  /* rather than inclusive range end */
-} NewTrieAndStatus;
+    UError_کوډ error_کوډ;
+    UBool exclusive_حد;  /* rather than inclusive range end */
+} New_Trie_And_حالت;
 
-static UBool U_CALLCONV
-copyEnumRange(const void *context, UChar32 start, UChar32 end, uint32_t value) {
-    NewTrieAndStatus *nt=(NewTrieAndStatus *)context;
-    if(value!=nt->trie->initialValue) {
-        if(nt->exclusiveLimit) {
-            --end;
+ساكن UBool U_CALLCONV
+copyEnumRange(ثابت فراغ *context, UChar32 پیل, UChar32 پای_ټکی, uint32_t value) {
+    New_Trie_And_حالت *nt=(New_Trie_And_حالت *)context;
+    إذا(value!=nt->trie->initial_ارزښت) {
+        إذا(nt->exclusive_حد) {
+            --پای_ټکی;
         }
-        if(start==end) {
-            utrie2_set32(nt->trie, start, value, &nt->errorCode);
-        } else {
-            utrie2_setRange32(nt->trie, start, end, value, true, &nt->errorCode);
+        إذا(پیل==پای_ټکی) {
+            utrie2_set32(nt->trie, پیل, value, &nt->error_کوډ);
+        } وإلا {
+            utrie2_سېټ_Range32(nt->trie, پیل, پای_ټکی, value, ریښتیا, &nt->error_کوډ);
         }
-        return U_SUCCESS(nt->errorCode);
-    } else {
-        return true;
+        أرجع U_SUCCESS(nt->error_کوډ);
+    } وإلا {
+        أرجع ریښتیا;
     }
 }
 
-#ifdef UTRIE2_DEBUG
-static long countInitial(const UTrie2 *trie) {
-    uint32_t initialValue=trie->initialValue;
-    int32_t length=trie->dataLength;
-    long count=0;
-    if(trie->data16!=nullptr) {
-        for(int32_t i=0; i<length; ++i) {
-            if(trie->data16[i]==initialValue) { ++count; }
+#که_تعریف_شوی UTRIE2_DEBUG
+ساكن اوږد شمېر_Initial(ثابت UTrie2 *trie) {
+    uint32_t initial_ارزښت=trie->initial_ارزښت;
+    int32_t length=trie->معلومات_اوږدتیا;
+    اوږد count=0;
+    إذا(trie->data16!=تش_اشاره) {
+        لكل(int32_t i=0; i<length; ++i) {
+            إذا(trie->data16[i]==initial_ارزښت) { ++count; }
         }
-    } else {
-        for(int32_t i=0; i<length; ++i) {
-            if(trie->data32[i]==initialValue) { ++count; }
+    } وإلا {
+        لكل(int32_t i=0; i<length; ++i) {
+            إذا(trie->data32[i]==initial_ارزښت) { ++count; }
         }
     }
-    return count;
+    أرجع count;
 }
 
-static void
-utrie_printLengths(const UTrie *trie) {
-    long indexLength=trie->indexLength;
-    long dataLength=(long)trie->dataLength;
-    long totalLength=(long)sizeof(UTrieHeader)+indexLength*2+dataLength*(trie->data32!=nullptr ? 4 : 2);
-    printf("**UTrieLengths** index:%6ld  data:%6ld  serialized:%6ld\n",
-           indexLength, dataLength, totalLength);
+ساكن فراغ
+utrie_printLengths(ثابت UTrie *trie) {
+    اوږد شاخص_اوږدتیا=trie->شاخص_اوږدتیا;
+    اوږد معلومات_اوږدتیا=(اوږد)trie->معلومات_اوږدتیا;
+    اوږد ټول_اوږدتیا=(اوږد)حجم(UTrie_سرلیک)+شاخص_اوږدتیا*2+معلومات_اوږدتیا*(trie->data32!=تش_اشاره ? 4 : 2);
+    چاپ_کړه("**UTrieLengths** index:%6ld  data:%6ld  serialized:%6ld\n",
+           شاخص_اوږدتیا, معلومات_اوږدتیا, ټول_اوږدتیا);
 }
 
-static void
-utrie2_printLengths(const UTrie2 *trie, const char *which) {
-    long indexLength=trie->indexLength;
-    long dataLength=(long)trie->dataLength;
-    long totalLength=(long)sizeof(UTrie2Header)+indexLength*2+dataLength*(trie->data32!=nullptr ? 4 : 2);
-    printf("**UTrie2Lengths(%s %s)** index:%6ld  data:%6ld  countInitial:%6ld  serialized:%6ld\n",
-           which, trie->name, indexLength, dataLength, countInitial(trie), totalLength);
+ساكن فراغ
+utrie2_printLengths(ثابت UTrie2 *trie, ثابت حرف *which) {
+    اوږد شاخص_اوږدتیا=trie->شاخص_اوږدتیا;
+    اوږد معلومات_اوږدتیا=(اوږد)trie->معلومات_اوږدتیا;
+    اوږد ټول_اوږدتیا=(اوږد)حجم(UTrie2_سرلیک)+شاخص_اوږدتیا*2+معلومات_اوږدتیا*(trie->data32!=تش_اشاره ? 4 : 2);
+    چاپ_کړه("**UTrie2Lengths(%s %s)** index:%6ld  data:%6ld  countInitial:%6ld  serialized:%6ld\n",
+           which, trie->name, شاخص_اوږدتیا, معلومات_اوږدتیا, شمېر_Initial(trie), ټول_اوږدتیا);
 }
-#endif
+#د_که_پای
 
 U_CAPI UTrie2 * U_EXPORT2
-utrie2_cloneAsThawed(const UTrie2 *other, UErrorCode *pErrorCode) {
-    NewTrieAndStatus context;
+utrie2_cloneAsThawed(ثابت UTrie2 *other, UError_کوډ *p_Error_کوډ) {
+    New_Trie_And_حالت context;
     char16_t lead;
 
-    if(U_FAILURE(*pErrorCode)) {
-        return nullptr;
+    إذا(U_FAILURE(*p_Error_کوډ)) {
+        أرجع تش_اشاره;
     }
-    if(other==nullptr || (other->memory==nullptr && other->newTrie==nullptr)) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+    إذا(other==تش_اشاره || (other->حافظه==تش_اشاره && other->newTrie==تش_اشاره)) {
+        *p_Error_کوډ=U_ILLEGAL_دلیل_ERROR;
+        أرجع تش_اشاره;
     }
-    if(other->newTrie!=nullptr && !other->newTrie->isCompacted) {
-        return utrie2_clone(other, pErrorCode);  /* clone an unfrozen trie */
+    إذا(other->newTrie!=تش_اشاره && !other->newTrie->isCompacted) {
+        أرجع utrie2_clone(other, p_Error_کوډ);  /* clone an unfrozen trie */
     }
 
     /* Clone the frozen trie by enumerating it and building a new one. */
-    context.trie=utrie2_open(other->initialValue, other->errorValue, pErrorCode);
-    if(U_FAILURE(*pErrorCode)) {
-        return nullptr;
+    context.trie=utrie2_open(other->initial_ارزښت, other->error_ارزښت, p_Error_کوډ);
+    إذا(U_FAILURE(*p_Error_کوډ)) {
+        أرجع تش_اشاره;
     }
-    context.exclusiveLimit=false;
-    context.errorCode=*pErrorCode;
-    utrie2_enum(other, nullptr, copyEnumRange, &context);
-    *pErrorCode=context.errorCode;
-    for(lead=0xd800; lead<0xdc00; ++lead) {
+    context.exclusive_حد=خطأ;
+    context.error_کوډ=*p_Error_کوډ;
+    utrie2_enum(other, تش_اشاره, copyEnumRange, &context);
+    *p_Error_کوډ=context.error_کوډ;
+    لكل(lead=0xd800; lead<0xdc00; ++lead) {
         uint32_t value;
-        if(other->data32==nullptr) {
+        إذا(other->data32==تش_اشاره) {
             value=UTRIE2_GET16_FROM_U16_SINGLE_LEAD(other, lead);
-        } else {
+        } وإلا {
             value=UTRIE2_GET32_FROM_U16_SINGLE_LEAD(other, lead);
         }
-        if(value!=other->initialValue) {
-            utrie2_set32ForLeadSurrogateCodeUnit(context.trie, lead, value, pErrorCode);
+        إذا(value!=other->initial_ارزښت) {
+            utrie2_set32_For_Lead_Surrogate_کوډ_Unit(context.trie, lead, value, p_Error_کوډ);
         }
     }
-    if(U_FAILURE(*pErrorCode)) {
+    إذا(U_FAILURE(*p_Error_کوډ)) {
         utrie2_close(context.trie);
-        context.trie=nullptr;
+        context.trie=تش_اشاره;
     }
-    return context.trie;
+    أرجع context.trie;
 }
 
 /* Almost the same as utrie2_cloneAsThawed() but copies a UTrie and freezes the clone. */
 U_CAPI UTrie2 * U_EXPORT2
-utrie2_fromUTrie(const UTrie *trie1, uint32_t errorValue, UErrorCode *pErrorCode) {
-    NewTrieAndStatus context;
+utrie2_fromUTrie(ثابت UTrie *trie1, uint32_t error_ارزښت, UError_کوډ *p_Error_کوډ) {
+    New_Trie_And_حالت context;
     char16_t lead;
 
-    if(U_FAILURE(*pErrorCode)) {
-        return nullptr;
+    إذا(U_FAILURE(*p_Error_کوډ)) {
+        أرجع تش_اشاره;
     }
-    if(trie1==nullptr) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+    إذا(trie1==تش_اشاره) {
+        *p_Error_کوډ=U_ILLEGAL_دلیل_ERROR;
+        أرجع تش_اشاره;
     }
-    context.trie=utrie2_open(trie1->initialValue, errorValue, pErrorCode);
-    if(U_FAILURE(*pErrorCode)) {
-        return nullptr;
+    context.trie=utrie2_open(trie1->initial_ارزښت, error_ارزښت, p_Error_کوډ);
+    إذا(U_FAILURE(*p_Error_کوډ)) {
+        أرجع تش_اشاره;
     }
-    context.exclusiveLimit=true;
-    context.errorCode=*pErrorCode;
-    utrie_enum(trie1, nullptr, copyEnumRange, &context);
-    *pErrorCode=context.errorCode;
-    for(lead=0xd800; lead<0xdc00; ++lead) {
+    context.exclusive_حد=ریښتیا;
+    context.error_کوډ=*p_Error_کوډ;
+    utrie_enum(trie1, تش_اشاره, copyEnumRange, &context);
+    *p_Error_کوډ=context.error_کوډ;
+    لكل(lead=0xd800; lead<0xdc00; ++lead) {
         uint32_t value;
-        if(trie1->data32==nullptr) {
+        إذا(trie1->data32==تش_اشاره) {
             value=UTRIE_GET16_FROM_LEAD(trie1, lead);
-        } else {
+        } وإلا {
             value=UTRIE_GET32_FROM_LEAD(trie1, lead);
         }
-        if(value!=trie1->initialValue) {
-            utrie2_set32ForLeadSurrogateCodeUnit(context.trie, lead, value, pErrorCode);
+        إذا(value!=trie1->initial_ارزښت) {
+            utrie2_set32_For_Lead_Surrogate_کوډ_Unit(context.trie, lead, value, p_Error_کوډ);
         }
     }
-    if(U_SUCCESS(*pErrorCode)) {
+    إذا(U_SUCCESS(*p_Error_کوډ)) {
         utrie2_freeze(context.trie,
-                      trie1->data32!=nullptr ? UTRIE2_32_VALUE_BITS : UTRIE2_16_VALUE_BITS,
-                      pErrorCode);
+                      trie1->data32!=تش_اشاره ? UTRIE2_32_ارزښت_بټونه : UTRIE2_16_ارزښت_بټونه,
+                      p_Error_کوډ);
     }
-#ifdef UTRIE2_DEBUG
-    if(U_SUCCESS(*pErrorCode)) {
+#که_تعریف_شوی UTRIE2_DEBUG
+    إذا(U_SUCCESS(*p_Error_کوډ)) {
         utrie_printLengths(trie1);
         utrie2_printLengths(context.trie, "fromUTrie");
     }
-#endif
-    if(U_FAILURE(*pErrorCode)) {
+#د_که_پای
+    إذا(U_FAILURE(*p_Error_کوډ)) {
         utrie2_close(context.trie);
-        context.trie=nullptr;
+        context.trie=تش_اشاره;
     }
-    return context.trie;
+    أرجع context.trie;
 }
 
-static inline UBool
-isInNullBlock(UNewTrie2 *trie, UChar32 c, UBool forLSCP) {
-    int32_t i2, block;
+ساكن مضمن UBool
+is_دننه_Null_بلاک(UNewTrie2 *trie, UChar32 c, UBool forLSCP) {
+    int32_t i2, بلاک;
 
-    if(U_IS_LEAD(c) && forLSCP) {
-        i2=(UTRIE2_LSCP_INDEX_2_OFFSET-(0xd800>>UTRIE2_SHIFT_2))+
-            (c>>UTRIE2_SHIFT_2);
-    } else {
-        i2=trie->index1[c>>UTRIE2_SHIFT_1]+
-            ((c>>UTRIE2_SHIFT_2)&UTRIE2_INDEX_2_MASK);
+    إذا(U_IS_LEAD(c) && forLSCP) {
+        i2=(UTRIE2_LSCP_شاخص_2_دننه_واټن-(0xd800>>UTRIE2_ښويدنه_2))+
+            (c>>UTRIE2_ښويدنه_2);
+    } وإلا {
+        i2=trie->index1[c>>UTRIE2_ښويدنه_1]+
+            ((c>>UTRIE2_ښويدنه_2)&UTRIE2_شاخص_2_ماسک);
     }
-    block=trie->index2[i2];
-    return block == trie->dataNullOffset;
+    بلاک=trie->index2[i2];
+    أرجع بلاک == trie->معلومات_Null_دننه_واټن;
 }
 
-static int32_t
-allocIndex2Block(UNewTrie2 *trie) {
-    int32_t newBlock, newTop;
+ساكن int32_t
+alloc_Index2_بلاک(UNewTrie2 *trie) {
+    int32_t new_بلاک, new_سر;
 
-    newBlock=trie->index2Length;
-    newTop=newBlock+UTRIE2_INDEX_2_BLOCK_LENGTH;
-    if(newTop>UPRV_LENGTHOF(trie->index2)) {
+    new_بلاک=trie->index2_اوږدتیا;
+    new_سر=new_بلاک+UTRIE2_شاخص_2_بلاک_اوږدتیا;
+    إذا(new_سر>UPRV_LENGTHOF(trie->index2)) {
         /*
          * Should never occur.
          * Either UTRIE2_MAX_BUILD_TIME_INDEX_LENGTH is incorrect,
          * or the code writes more values than should be possible.
          */
-        return -1;
+        أرجع -1;
     }
-    trie->index2Length=newTop;
-    uprv_memcpy(trie->index2+newBlock, trie->index2+trie->index2NullOffset, UTRIE2_INDEX_2_BLOCK_LENGTH*4);
-    return newBlock;
+    trie->index2_اوږدتیا=new_سر;
+    uprv_memcpy(trie->index2+new_بلاک, trie->index2+trie->index2_Null_دننه_واټن, UTRIE2_شاخص_2_بلاک_اوږدتیا*4);
+    أرجع new_بلاک;
 }
 
-static int32_t
-getIndex2Block(UNewTrie2 *trie, UChar32 c, UBool forLSCP) {
+ساكن int32_t
+get_Index2_بلاک(UNewTrie2 *trie, UChar32 c, UBool forLSCP) {
     int32_t i1, i2;
 
-    if(U_IS_LEAD(c) && forLSCP) {
-        return UTRIE2_LSCP_INDEX_2_OFFSET;
+    إذا(U_IS_LEAD(c) && forLSCP) {
+        أرجع UTRIE2_LSCP_شاخص_2_دننه_واټن;
     }
 
-    i1=c>>UTRIE2_SHIFT_1;
+    i1=c>>UTRIE2_ښويدنه_1;
     i2=trie->index1[i1];
-    if(i2==trie->index2NullOffset) {
-        i2=allocIndex2Block(trie);
-        if(i2<0) {
-            return -1;  /* program error */
+    إذا(i2==trie->index2_Null_دننه_واټن) {
+        i2=alloc_Index2_بلاک(trie);
+        إذا(i2<0) {
+            أرجع -1;  /* program error */
         }
         trie->index1[i1]=i2;
     }
-    return i2;
+    أرجع i2;
 }
 
-static int32_t
-allocDataBlock(UNewTrie2 *trie, int32_t copyBlock) {
-    int32_t newBlock, newTop;
+ساكن int32_t
+alloc_معلومات_بلاک(UNewTrie2 *trie, int32_t copy_بلاک) {
+    int32_t new_بلاک, new_سر;
 
-    if(trie->firstFreeBlock!=0) {
+    إذا(trie->لومړی_Free_بلاک!=0) {
         /* get the first free block */
-        newBlock=trie->firstFreeBlock;
-        trie->firstFreeBlock=-trie->map[newBlock>>UTRIE2_SHIFT_2];
-    } else {
+        new_بلاک=trie->لومړی_Free_بلاک;
+        trie->لومړی_Free_بلاک=-trie->map[new_بلاک>>UTRIE2_ښويدنه_2];
+    } وإلا {
         /* get a new block from the high end */
-        newBlock=trie->dataLength;
-        newTop=newBlock+UTRIE2_DATA_BLOCK_LENGTH;
-        if(newTop>trie->dataCapacity) {
+        new_بلاک=trie->معلومات_اوږدتیا;
+        new_سر=new_بلاک+UTRIE2_معلومات_بلاک_اوږدتیا;
+        إذا(new_سر>trie->معلومات_ظرفیت) {
             /* out of memory in the data array */
             int32_t capacity;
-            uint32_t *data;
+            uint32_t *معلومات;
 
-            if(trie->dataCapacity<UNEWTRIE2_MEDIUM_DATA_LENGTH) {
-                capacity=UNEWTRIE2_MEDIUM_DATA_LENGTH;
-            } else if(trie->dataCapacity<UNEWTRIE2_MAX_DATA_LENGTH) {
-                capacity=UNEWTRIE2_MAX_DATA_LENGTH;
-            } else {
+            إذا(trie->معلومات_ظرفیت<UNEWTRIE2_MEDIUM_معلومات_اوږدتیا) {
+                capacity=UNEWTRIE2_MEDIUM_معلومات_اوږدتیا;
+            } وإلا إذا(trie->معلومات_ظرفیت<UNEWTRIE2_MAX_معلومات_اوږدتیا) {
+                capacity=UNEWTRIE2_MAX_معلومات_اوږدتیا;
+            } وإلا {
                 /*
                  * Should never occur.
                  * Either UNEWTRIE2_MAX_DATA_LENGTH is incorrect,
                  * or the code writes more values than should be possible.
                  */
-                return -1;
+                أرجع -1;
             }
-            data = static_cast<uint32_t*>(uprv_malloc(capacity * 4));
-            if(data==nullptr) {
-                return -1;
+            معلومات = static_cast<uint32_t*>(uprv_malloc(capacity * 4));
+            إذا(معلومات==تش_اشاره) {
+                أرجع -1;
             }
-            uprv_memcpy(data, trie->data, (size_t)trie->dataLength*4);
-            uprv_free(trie->data);
-            trie->data=data;
-            trie->dataCapacity=capacity;
+            uprv_memcpy(معلومات, trie->معلومات, (size_t)trie->معلومات_اوږدتیا*4);
+            uprv_free(trie->معلومات);
+            trie->معلومات=معلومات;
+            trie->معلومات_ظرفیت=capacity;
         }
-        trie->dataLength=newTop;
+        trie->معلومات_اوږدتیا=new_سر;
     }
-    uprv_memcpy(trie->data+newBlock, trie->data+copyBlock, UTRIE2_DATA_BLOCK_LENGTH*4);
-    trie->map[newBlock>>UTRIE2_SHIFT_2]=0;
-    return newBlock;
+    uprv_memcpy(trie->معلومات+new_بلاک, trie->معلومات+copy_بلاک, UTRIE2_معلومات_بلاک_اوږدتیا*4);
+    trie->map[new_بلاک>>UTRIE2_ښويدنه_2]=0;
+    أرجع new_بلاک;
 }
 
 /* call when the block's reference counter reaches 0 */
-static void
-releaseDataBlock(UNewTrie2 *trie, int32_t block) {
+ساكن فراغ
+release_معلومات_بلاک(UNewTrie2 *trie, int32_t بلاک) {
     /* put this block at the front of the free-block chain */
-    trie->map[block>>UTRIE2_SHIFT_2]=-trie->firstFreeBlock;
-    trie->firstFreeBlock=block;
+    trie->map[بلاک>>UTRIE2_ښويدنه_2]=-trie->لومړی_Free_بلاک;
+    trie->لومړی_Free_بلاک=بلاک;
 }
 
-static inline UBool
-isWritableBlock(UNewTrie2 *trie, int32_t block) {
-    return block != trie->dataNullOffset && 1 == trie->map[block >> UTRIE2_SHIFT_2];
+ساكن مضمن UBool
+is_Writable_بلاک(UNewTrie2 *trie, int32_t بلاک) {
+    أرجع بلاک != trie->معلومات_Null_دننه_واټن && 1 == trie->map[بلاک >> UTRIE2_ښويدنه_2];
 }
 
-static inline void
-setIndex2Entry(UNewTrie2 *trie, int32_t i2, int32_t block) {
-    int32_t oldBlock;
-    ++trie->map[block>>UTRIE2_SHIFT_2];  /* increment first, in case block==oldBlock! */
-    oldBlock=trie->index2[i2];
-    if(0 == --trie->map[oldBlock>>UTRIE2_SHIFT_2]) {
-        releaseDataBlock(trie, oldBlock);
+ساكن مضمن فراغ
+سېټ_Index2_ثبت(UNewTrie2 *trie, int32_t i2, int32_t بلاک) {
+    int32_t old_بلاک;
+    ++trie->map[بلاک>>UTRIE2_ښويدنه_2];  /* increment first, in case block==oldBlock! */
+    old_بلاک=trie->index2[i2];
+    إذا(0 == --trie->map[old_بلاک>>UTRIE2_ښويدنه_2]) {
+        release_معلومات_بلاک(trie, old_بلاک);
     }
-    trie->index2[i2]=block;
+    trie->index2[i2]=بلاک;
 }
 
 /**
@@ -623,88 +623,88 @@ setIndex2Entry(UNewTrie2 *trie, int32_t i2, int32_t block) {
  * @return -1 if no new data block available (out of memory in data array)
  * @internal
  */
-static int32_t
-getDataBlock(UNewTrie2 *trie, UChar32 c, UBool forLSCP) {
-    int32_t i2, oldBlock, newBlock;
+ساكن int32_t
+get_معلومات_بلاک(UNewTrie2 *trie, UChar32 c, UBool forLSCP) {
+    int32_t i2, old_بلاک, new_بلاک;
 
-    i2=getIndex2Block(trie, c, forLSCP);
-    if(i2<0) {
-        return -1;  /* program error */
+    i2=get_Index2_بلاک(trie, c, forLSCP);
+    إذا(i2<0) {
+        أرجع -1;  /* program error */
     }
 
-    i2+=(c>>UTRIE2_SHIFT_2)&UTRIE2_INDEX_2_MASK;
-    oldBlock=trie->index2[i2];
-    if(isWritableBlock(trie, oldBlock)) {
-        return oldBlock;
+    i2+=(c>>UTRIE2_ښويدنه_2)&UTRIE2_شاخص_2_ماسک;
+    old_بلاک=trie->index2[i2];
+    إذا(is_Writable_بلاک(trie, old_بلاک)) {
+        أرجع old_بلاک;
     }
 
     /* allocate a new data block */
-    newBlock=allocDataBlock(trie, oldBlock);
-    if(newBlock<0) {
+    new_بلاک=alloc_معلومات_بلاک(trie, old_بلاک);
+    إذا(new_بلاک<0) {
         /* out of memory in the data array */
-        return -1;
+        أرجع -1;
     }
-    setIndex2Entry(trie, i2, newBlock);
-    return newBlock;
+    سېټ_Index2_ثبت(trie, i2, new_بلاک);
+    أرجع new_بلاک;
 }
 
 /**
  * @return true if the value was successfully set
  */
-static void
+ساكن فراغ
 set32(UNewTrie2 *trie,
       UChar32 c, UBool forLSCP, uint32_t value,
-      UErrorCode *pErrorCode) {
-    int32_t block;
+      UError_کوډ *p_Error_کوډ) {
+    int32_t بلاک;
 
-    if(trie==nullptr || trie->isCompacted) {
-        *pErrorCode=U_NO_WRITE_PERMISSION;
-        return;
+    إذا(trie==تش_اشاره || trie->isCompacted) {
+        *p_Error_کوډ=U_NO_WRITE_PERMISSION;
+        أرجع;
     }
-#ifdef UCPTRIE_DEBUG
-    umutablecptrie_set(trie->t3, c, value, pErrorCode);
-#endif
+#که_تعریف_شوی UCPTRIE_DEBUG
+    umutablecptrie_سېټ(trie->t3, c, value, p_Error_کوډ);
+#د_که_پای
 
-    block=getDataBlock(trie, c, forLSCP);
-    if(block<0) {
-        *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-        return;
+    بلاک=get_معلومات_بلاک(trie, c, forLSCP);
+    إذا(بلاک<0) {
+        *p_Error_کوډ=U_حافظه_ویش_ERROR;
+        أرجع;
     }
 
-    trie->data[block+(c&UTRIE2_DATA_MASK)]=value;
+    trie->معلومات[بلاک+(c&UTRIE2_معلومات_ماسک)]=value;
 }
 
-U_CAPI void U_EXPORT2
-utrie2_set32(UTrie2 *trie, UChar32 c, uint32_t value, UErrorCode *pErrorCode) {
-    if(U_FAILURE(*pErrorCode)) {
-        return;
+U_CAPI فراغ U_EXPORT2
+utrie2_set32(UTrie2 *trie, UChar32 c, uint32_t value, UError_کوډ *p_Error_کوډ) {
+    إذا(U_FAILURE(*p_Error_کوډ)) {
+        أرجع;
     }
-    if((uint32_t)c>0x10ffff) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+    إذا((uint32_t)c>0x10ffff) {
+        *p_Error_کوډ=U_ILLEGAL_دلیل_ERROR;
+        أرجع;
     }
-    set32(trie->newTrie, c, true, value, pErrorCode);
+    set32(trie->newTrie, c, ریښتیا, value, p_Error_کوډ);
 }
 
-U_CAPI void U_EXPORT2
-utrie2_set32ForLeadSurrogateCodeUnit(UTrie2 *trie,
+U_CAPI فراغ U_EXPORT2
+utrie2_set32_For_Lead_Surrogate_کوډ_Unit(UTrie2 *trie,
                                      UChar32 c, uint32_t value,
-                                     UErrorCode *pErrorCode) {
-    if(U_FAILURE(*pErrorCode)) {
-        return;
+                                     UError_کوډ *p_Error_کوډ) {
+    إذا(U_FAILURE(*p_Error_کوډ)) {
+        أرجع;
     }
-    if(!U_IS_LEAD(c)) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+    إذا(!U_IS_LEAD(c)) {
+        *p_Error_کوډ=U_ILLEGAL_دلیل_ERROR;
+        أرجع;
     }
-    set32(trie->newTrie, c, false, value, pErrorCode);
+    set32(trie->newTrie, c, خطأ, value, p_Error_کوډ);
 }
 
-static void
-writeBlock(uint32_t *block, uint32_t value) {
-    uint32_t *limit=block+UTRIE2_DATA_BLOCK_LENGTH;
-    while(block<limit) {
-        *block++=value;
+ساكن فراغ
+write_بلاک(uint32_t *بلاک, uint32_t value) {
+    uint32_t *حد=بلاک+UTRIE2_معلومات_بلاک_اوږدتیا;
+    طالما(بلاک<حد) {
+        *بلاک++=value;
     }
 }
 
@@ -712,129 +712,129 @@ writeBlock(uint32_t *block, uint32_t value) {
  * initialValue is ignored if overwrite=true
  * @internal
  */
-static void
-fillBlock(uint32_t *block, UChar32 start, UChar32 limit,
-          uint32_t value, uint32_t initialValue, UBool overwrite) {
-    uint32_t *pLimit;
+ساكن فراغ
+fill_بلاک(uint32_t *بلاک, UChar32 پیل, UChar32 حد,
+          uint32_t value, uint32_t initial_ارزښت, UBool overwrite) {
+    uint32_t *p_حد;
 
-    pLimit=block+limit;
-    block+=start;
-    if(overwrite) {
-        while(block<pLimit) {
-            *block++=value;
+    p_حد=بلاک+حد;
+    بلاک+=پیل;
+    إذا(overwrite) {
+        طالما(بلاک<p_حد) {
+            *بلاک++=value;
         }
-    } else {
-        while(block<pLimit) {
-            if(*block==initialValue) {
-                *block=value;
+    } وإلا {
+        طالما(بلاک<p_حد) {
+            إذا(*بلاک==initial_ارزښت) {
+                *بلاک=value;
             }
-            ++block;
+            ++بلاک;
         }
     }
 }
 
-U_CAPI void U_EXPORT2
-utrie2_setRange32(UTrie2 *trie,
-                  UChar32 start, UChar32 end,
+U_CAPI فراغ U_EXPORT2
+utrie2_سېټ_Range32(UTrie2 *trie,
+                  UChar32 پیل, UChar32 پای_ټکی,
                   uint32_t value, UBool overwrite,
-                  UErrorCode *pErrorCode) {
+                  UError_کوډ *p_Error_کوډ) {
     /*
      * repeat value in [start..end]
      * mark index values for repeat-data blocks by setting bit 31 of the index values
      * fill around existing values if any, if(overwrite)
      */
     UNewTrie2 *newTrie;
-    int32_t block, rest, repeatBlock;
-    UChar32 limit;
+    int32_t بلاک, rest, repeat_بلاک;
+    UChar32 حد;
 
-    if(U_FAILURE(*pErrorCode)) {
-        return;
+    إذا(U_FAILURE(*p_Error_کوډ)) {
+        أرجع;
     }
-    if((uint32_t)start>0x10ffff || (uint32_t)end>0x10ffff || start>end) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+    إذا((uint32_t)پیل>0x10ffff || (uint32_t)پای_ټکی>0x10ffff || پیل>پای_ټکی) {
+        *p_Error_کوډ=U_ILLEGAL_دلیل_ERROR;
+        أرجع;
     }
     newTrie=trie->newTrie;
-    if(newTrie==nullptr || newTrie->isCompacted) {
-        *pErrorCode=U_NO_WRITE_PERMISSION;
-        return;
+    إذا(newTrie==تش_اشاره || newTrie->isCompacted) {
+        *p_Error_کوډ=U_NO_WRITE_PERMISSION;
+        أرجع;
     }
-#ifdef UCPTRIE_DEBUG
-    umutablecptrie_setRange(newTrie->t3, start, end, value, pErrorCode);
-#endif
-    if(!overwrite && value==newTrie->initialValue) {
-        return; /* nothing to do */
+#که_تعریف_شوی UCPTRIE_DEBUG
+    umutablecptrie_سېټ_Range(newTrie->t3, پیل, پای_ټکی, value, p_Error_کوډ);
+#د_که_پای
+    إذا(!overwrite && value==newTrie->initial_ارزښت) {
+        أرجع; /* nothing to do */
     }
 
-    limit=end+1;
-    if(start&UTRIE2_DATA_MASK) {
-        UChar32 nextStart;
+    حد=پای_ټکی+1;
+    إذا(پیل&UTRIE2_معلومات_ماسک) {
+        UChar32 بل_پیل;
 
         /* set partial block at [start..following block boundary[ */
-        block=getDataBlock(newTrie, start, true);
-        if(block<0) {
-            *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-            return;
+        بلاک=get_معلومات_بلاک(newTrie, پیل, ریښتیا);
+        إذا(بلاک<0) {
+            *p_Error_کوډ=U_حافظه_ویش_ERROR;
+            أرجع;
         }
 
-        nextStart=(start+UTRIE2_DATA_MASK)&~UTRIE2_DATA_MASK;
-        if(nextStart<=limit) {
-            fillBlock(newTrie->data+block, start&UTRIE2_DATA_MASK, UTRIE2_DATA_BLOCK_LENGTH,
-                      value, newTrie->initialValue, overwrite);
-            start=nextStart;
-        } else {
-            fillBlock(newTrie->data+block, start&UTRIE2_DATA_MASK, limit&UTRIE2_DATA_MASK,
-                      value, newTrie->initialValue, overwrite);
-            return;
+        بل_پیل=(پیل+UTRIE2_معلومات_ماسک)&~UTRIE2_معلومات_ماسک;
+        إذا(بل_پیل<=حد) {
+            fill_بلاک(newTrie->معلومات+بلاک, پیل&UTRIE2_معلومات_ماسک, UTRIE2_معلومات_بلاک_اوږدتیا,
+                      value, newTrie->initial_ارزښت, overwrite);
+            پیل=بل_پیل;
+        } وإلا {
+            fill_بلاک(newTrie->معلومات+بلاک, پیل&UTRIE2_معلومات_ماسک, حد&UTRIE2_معلومات_ماسک,
+                      value, newTrie->initial_ارزښت, overwrite);
+            أرجع;
         }
     }
 
     /* number of positions in the last, partial block */
-    rest=limit&UTRIE2_DATA_MASK;
+    rest=حد&UTRIE2_معلومات_ماسک;
 
     /* round down limit to a block boundary */
-    limit&=~UTRIE2_DATA_MASK;
+    حد&=~UTRIE2_معلومات_ماسک;
 
     /* iterate over all-value blocks */
-    if(value==newTrie->initialValue) {
-        repeatBlock=newTrie->dataNullOffset;
-    } else {
-        repeatBlock=-1;
+    إذا(value==newTrie->initial_ارزښت) {
+        repeat_بلاک=newTrie->معلومات_Null_دننه_واټن;
+    } وإلا {
+        repeat_بلاک=-1;
     }
 
-    while(start<limit) {
+    طالما(پیل<حد) {
         int32_t i2;
-        UBool setRepeatBlock=false;
+        UBool سېټ_Repeat_بلاک=خطأ;
 
-        if(value==newTrie->initialValue && isInNullBlock(newTrie, start, true)) {
-            start+=UTRIE2_DATA_BLOCK_LENGTH; /* nothing to do */
-            continue;
+        إذا(value==newTrie->initial_ارزښت && is_دننه_Null_بلاک(newTrie, پیل, ریښتیا)) {
+            پیل+=UTRIE2_معلومات_بلاک_اوږدتیا; /* nothing to do */
+            استمر;
         }
 
         /* get index value */
-        i2=getIndex2Block(newTrie, start, true);
-        if(i2<0) {
-            *pErrorCode=U_INTERNAL_PROGRAM_ERROR;
-            return;
+        i2=get_Index2_بلاک(newTrie, پیل, ریښتیا);
+        إذا(i2<0) {
+            *p_Error_کوډ=U_دننی_پروګرام_ERROR;
+            أرجع;
         }
-        i2+=(start>>UTRIE2_SHIFT_2)&UTRIE2_INDEX_2_MASK;
-        block=newTrie->index2[i2];
-        if(isWritableBlock(newTrie, block)) {
+        i2+=(پیل>>UTRIE2_ښويدنه_2)&UTRIE2_شاخص_2_ماسک;
+        بلاک=newTrie->index2[i2];
+        إذا(is_Writable_بلاک(newTrie, بلاک)) {
             /* already allocated */
-            if(overwrite && block>=UNEWTRIE2_DATA_0800_OFFSET) {
+            إذا(overwrite && بلاک>=UNEWTRIE2_معلومات_0800_دننه_واټن) {
                 /*
                  * We overwrite all values, and it's not a
                  * protected (ASCII-linear or 2-byte UTF-8) block:
                  * replace with the repeatBlock.
                  */
-                setRepeatBlock=true;
-            } else {
+                سېټ_Repeat_بلاک=ریښتیا;
+            } وإلا {
                 /* !overwrite, or protected block: just write the values into this block */
-                fillBlock(newTrie->data+block,
-                          0, UTRIE2_DATA_BLOCK_LENGTH,
-                          value, newTrie->initialValue, overwrite);
+                fill_بلاک(newTrie->معلومات+بلاک,
+                          0, UTRIE2_معلومات_بلاک_اوږدتیا,
+                          value, newTrie->initial_ارزښت, overwrite);
             }
-        } else if(newTrie->data[block]!=value && (overwrite || block==newTrie->dataNullOffset)) {
+        } وإلا إذا(newTrie->معلومات[بلاک]!=value && (overwrite || بلاک==newTrie->معلومات_Null_دننه_واټن)) {
             /*
              * Set the repeatBlock instead of the null block or previous repeat block:
              *
@@ -851,155 +851,155 @@ utrie2_setRange32(UTrie2 *trie,
              * and if we overwrite any data or if the data is all initial values
              * (which is the same as the block being the null block, see above).
              */
-            setRepeatBlock=true;
+            سېټ_Repeat_بلاک=ریښتیا;
         }
-        if(setRepeatBlock) {
-            if(repeatBlock>=0) {
-                setIndex2Entry(newTrie, i2, repeatBlock);
-            } else {
+        إذا(سېټ_Repeat_بلاک) {
+            إذا(repeat_بلاک>=0) {
+                سېټ_Index2_ثبت(newTrie, i2, repeat_بلاک);
+            } وإلا {
                 /* create and set and fill the repeatBlock */
-                repeatBlock=getDataBlock(newTrie, start, true);
-                if(repeatBlock<0) {
-                    *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-                    return;
+                repeat_بلاک=get_معلومات_بلاک(newTrie, پیل, ریښتیا);
+                إذا(repeat_بلاک<0) {
+                    *p_Error_کوډ=U_حافظه_ویش_ERROR;
+                    أرجع;
                 }
-                writeBlock(newTrie->data+repeatBlock, value);
+                write_بلاک(newTrie->معلومات+repeat_بلاک, value);
             }
         }
 
-        start+=UTRIE2_DATA_BLOCK_LENGTH;
+        پیل+=UTRIE2_معلومات_بلاک_اوږدتیا;
     }
 
-    if(rest>0) {
+    إذا(rest>0) {
         /* set partial block at [last block boundary..limit[ */
-        block=getDataBlock(newTrie, start, true);
-        if(block<0) {
-            *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-            return;
+        بلاک=get_معلومات_بلاک(newTrie, پیل, ریښتیا);
+        إذا(بلاک<0) {
+            *p_Error_کوډ=U_حافظه_ویش_ERROR;
+            أرجع;
         }
 
-        fillBlock(newTrie->data+block, 0, rest, value, newTrie->initialValue, overwrite);
+        fill_بلاک(newTrie->معلومات+بلاک, 0, rest, value, newTrie->initial_ارزښت, overwrite);
     }
 }
 
 /* compaction --------------------------------------------------------------- */
 
-static inline UBool
-equal_int32(const int32_t *s, const int32_t *t, int32_t length) {
-    while(length>0 && *s==*t) {
+ساكن مضمن UBool
+equal_int32(ثابت int32_t *s, ثابت int32_t *t, int32_t length) {
+    طالما(length>0 && *s==*t) {
         ++s;
         ++t;
         --length;
     }
-    return length == 0;
+    أرجع length == 0;
 }
 
-static inline UBool
-equal_uint32(const uint32_t *s, const uint32_t *t, int32_t length) {
-    while(length>0 && *s==*t) {
+ساكن مضمن UBool
+equal_uint32(ثابت uint32_t *s, ثابت uint32_t *t, int32_t length) {
+    طالما(length>0 && *s==*t) {
         ++s;
         ++t;
         --length;
     }
-    return length == 0;
+    أرجع length == 0;
 }
 
-static int32_t
-findSameIndex2Block(const int32_t *idx, int32_t index2Length, int32_t otherBlock) {
-    int32_t block;
+ساكن int32_t
+پیدا_کړه_Same_Index2_بلاک(ثابت int32_t *idx, int32_t index2_اوږدتیا, int32_t other_بلاک) {
+    int32_t بلاک;
 
     /* ensure that we do not even partially get past index2Length */
-    index2Length-=UTRIE2_INDEX_2_BLOCK_LENGTH;
+    index2_اوږدتیا-=UTRIE2_شاخص_2_بلاک_اوږدتیا;
 
-    for(block=0; block<=index2Length; ++block) {
-        if(equal_int32(idx+block, idx+otherBlock, UTRIE2_INDEX_2_BLOCK_LENGTH)) {
-            return block;
+    لكل(بلاک=0; بلاک<=index2_اوږدتیا; ++بلاک) {
+        إذا(equal_int32(idx+بلاک, idx+other_بلاک, UTRIE2_شاخص_2_بلاک_اوږدتیا)) {
+            أرجع بلاک;
         }
     }
-    return -1;
+    أرجع -1;
 }
 
-static int32_t
-findSameDataBlock(const uint32_t *data, int32_t dataLength, int32_t otherBlock, int32_t blockLength) {
-    int32_t block;
+ساكن int32_t
+پیدا_کړه_Same_معلومات_بلاک_2(ثابت uint32_t *معلومات, int32_t معلومات_اوږدتیا, int32_t other_بلاک, int32_t بلاک_اوږدتیا) {
+    int32_t بلاک;
 
     /* ensure that we do not even partially get past dataLength */
-    dataLength-=blockLength;
+    معلومات_اوږدتیا-=بلاک_اوږدتیا;
 
-    for(block=0; block<=dataLength; block+=UTRIE2_DATA_GRANULARITY) {
-        if(equal_uint32(data+block, data+otherBlock, blockLength)) {
-            return block;
+    لكل(بلاک=0; بلاک<=معلومات_اوږدتیا; بلاک+=UTRIE2_معلومات_GRANULARITY) {
+        إذا(equal_uint32(معلومات+بلاک, معلومات+other_بلاک, بلاک_اوږدتیا)) {
+            أرجع بلاک;
         }
     }
-    return -1;
+    أرجع -1;
 }
 
 /*
  * Find the start of the last range in the trie by enumerating backward.
  * Indexes for supplementary code points higher than this will be omitted.
  */
-static UChar32
-findHighStart(UNewTrie2 *trie, uint32_t highValue) {
-    const uint32_t *data32;
+ساكن UChar32
+پیدا_کړه_لوړ_پیل(UNewTrie2 *trie, uint32_t لوړ_ارزښت) {
+    ثابت uint32_t *data32;
 
-    uint32_t value, initialValue;
+    uint32_t value, initial_ارزښت;
     UChar32 c, prev;
-    int32_t i1, i2, j, i2Block, prevI2Block, index2NullOffset, block, prevBlock, nullBlock;
+    int32_t i1, i2, j, i2_بلاک, prev_I2_بلاک, index2_Null_دننه_واټن, بلاک, prev_بلاک, null_بلاک;
 
-    data32=trie->data;
-    initialValue=trie->initialValue;
+    data32=trie->معلومات;
+    initial_ارزښت=trie->initial_ارزښت;
 
-    index2NullOffset=trie->index2NullOffset;
-    nullBlock=trie->dataNullOffset;
+    index2_Null_دننه_واټن=trie->index2_Null_دننه_واټن;
+    null_بلاک=trie->معلومات_Null_دننه_واټن;
 
     /* set variables for previous range */
-    if(highValue==initialValue) {
-        prevI2Block=index2NullOffset;
-        prevBlock=nullBlock;
-    } else {
-        prevI2Block=-1;
-        prevBlock=-1;
+    إذا(لوړ_ارزښت==initial_ارزښت) {
+        prev_I2_بلاک=index2_Null_دننه_واټن;
+        prev_بلاک=null_بلاک;
+    } وإلا {
+        prev_I2_بلاک=-1;
+        prev_بلاک=-1;
     }
     prev=0x110000;
 
     /* enumerate index-2 blocks */
-    i1=UNEWTRIE2_INDEX_1_LENGTH;
+    i1=UNEWTRIE2_شاخص_1_اوږدتیا;
     c=prev;
-    while(c>0) {
-        i2Block=trie->index1[--i1];
-        if(i2Block==prevI2Block) {
+    طالما(c>0) {
+        i2_بلاک=trie->index1[--i1];
+        إذا(i2_بلاک==prev_I2_بلاک) {
             /* the index-2 block is the same as the previous one, and filled with highValue */
-            c-=UTRIE2_CP_PER_INDEX_1_ENTRY;
-            continue;
+            c-=UTRIE2_CP_فی_شاخص_1_ثبت;
+            استمر;
         }
-        prevI2Block=i2Block;
-        if(i2Block==index2NullOffset) {
+        prev_I2_بلاک=i2_بلاک;
+        إذا(i2_بلاک==index2_Null_دننه_واټن) {
             /* this is the null index-2 block */
-            if(highValue!=initialValue) {
-                return c;
+            إذا(لوړ_ارزښت!=initial_ارزښت) {
+                أرجع c;
             }
-            c-=UTRIE2_CP_PER_INDEX_1_ENTRY;
-        } else {
+            c-=UTRIE2_CP_فی_شاخص_1_ثبت;
+        } وإلا {
             /* enumerate data blocks for one index-2 block */
-            for(i2=UTRIE2_INDEX_2_BLOCK_LENGTH; i2>0;) {
-                block=trie->index2[i2Block+ --i2];
-                if(block==prevBlock) {
+            لكل(i2=UTRIE2_شاخص_2_بلاک_اوږدتیا; i2>0;) {
+                بلاک=trie->index2[i2_بلاک+ --i2];
+                إذا(بلاک==prev_بلاک) {
                     /* the block is the same as the previous one, and filled with highValue */
-                    c-=UTRIE2_DATA_BLOCK_LENGTH;
-                    continue;
+                    c-=UTRIE2_معلومات_بلاک_اوږدتیا;
+                    استمر;
                 }
-                prevBlock=block;
-                if(block==nullBlock) {
+                prev_بلاک=بلاک;
+                إذا(بلاک==null_بلاک) {
                     /* this is the null data block */
-                    if(highValue!=initialValue) {
-                        return c;
+                    إذا(لوړ_ارزښت!=initial_ارزښت) {
+                        أرجع c;
                     }
-                    c-=UTRIE2_DATA_BLOCK_LENGTH;
-                } else {
-                    for(j=UTRIE2_DATA_BLOCK_LENGTH; j>0;) {
-                        value=data32[block+ --j];
-                        if(value!=highValue) {
-                            return c;
+                    c-=UTRIE2_معلومات_بلاک_اوږدتیا;
+                } وإلا {
+                    لكل(j=UTRIE2_معلومات_بلاک_اوږدتیا; j>0;) {
+                        value=data32[بلاک+ --j];
+                        إذا(value!=لوړ_ارزښت) {
+                            أرجع c;
                         }
                         --c;
                     }
@@ -1009,7 +1009,7 @@ findHighStart(UNewTrie2 *trie, uint32_t highValue) {
     }
 
     /* deliver last range */
-    return 0;
+    أرجع 0;
 }
 
 /*
@@ -1024,137 +1024,137 @@ findHighStart(UNewTrie2 *trie, uint32_t highValue) {
  * It does not
  * - try to move and overlap blocks that are not already adjacent
  */
-static void
-compactData(UNewTrie2 *trie) {
-#ifdef UTRIE2_DEBUG
-    int32_t countSame=0, sumOverlaps=0;
-#endif
+ساكن فراغ
+compact_معلومات(UNewTrie2 *trie) {
+#که_تعریف_شوی UTRIE2_DEBUG
+    int32_t شمېر_Same=0, مجموعه_Overlaps=0;
+#د_که_پای
 
-    int32_t start, newStart, movedStart;
-    int32_t blockLength, overlap;
-    int32_t i, mapIndex, blockCount;
+    int32_t پیل, new_پیل, moved_پیل;
+    int32_t بلاک_اوږدتیا, overlap;
+    int32_t i, map_شاخص, بلاک_شمېر;
 
     /* do not compact linear-ASCII data */
-    newStart=UTRIE2_DATA_START_OFFSET;
-    for(start=0, i=0; start<newStart; start+=UTRIE2_DATA_BLOCK_LENGTH, ++i) {
-        trie->map[i]=start;
+    new_پیل=UTRIE2_معلومات_پیل_دننه_واټن;
+    لكل(پیل=0, i=0; پیل<new_پیل; پیل+=UTRIE2_معلومات_بلاک_اوږدتیا, ++i) {
+        trie->map[i]=پیل;
     }
 
     /*
      * Start with a block length of 64 for 2-byte UTF-8,
      * then switch to UTRIE2_DATA_BLOCK_LENGTH.
      */
-    blockLength=64;
-    blockCount=blockLength>>UTRIE2_SHIFT_2;
-    for(start=newStart; start<trie->dataLength;) {
+    بلاک_اوږدتیا=64;
+    بلاک_شمېر=بلاک_اوږدتیا>>UTRIE2_ښويدنه_2;
+    لكل(پیل=new_پیل; پیل<trie->معلومات_اوږدتیا;) {
         /*
          * start: index of first entry of current block
          * newStart: index where the current block is to be moved
          *           (right after current end of already-compacted data)
          */
-        if(start==UNEWTRIE2_DATA_0800_OFFSET) {
-            blockLength=UTRIE2_DATA_BLOCK_LENGTH;
-            blockCount=1;
+        إذا(پیل==UNEWTRIE2_معلومات_0800_دننه_واټن) {
+            بلاک_اوږدتیا=UTRIE2_معلومات_بلاک_اوږدتیا;
+            بلاک_شمېر=1;
         }
 
         /* skip blocks that are not used */
-        if(trie->map[start>>UTRIE2_SHIFT_2]<=0) {
+        إذا(trie->map[پیل>>UTRIE2_ښويدنه_2]<=0) {
             /* advance start to the next block */
-            start+=blockLength;
+            پیل+=بلاک_اوږدتیا;
 
             /* leave newStart with the previous block! */
-            continue;
+            استمر;
         }
 
         /* search for an identical block */
-        if( (movedStart=findSameDataBlock(trie->data, newStart, start, blockLength))
+        إذا( (moved_پیل=پیدا_کړه_Same_معلومات_بلاک_2(trie->معلومات, new_پیل, پیل, بلاک_اوږدتیا))
              >=0
         ) {
-#ifdef UTRIE2_DEBUG
-            ++countSame;
-#endif
+#که_تعریف_شوی UTRIE2_DEBUG
+            ++شمېر_Same;
+#د_که_پای
             /* found an identical block, set the other block's index value for the current block */
-            for(i=blockCount, mapIndex=start>>UTRIE2_SHIFT_2; i>0; --i) {
-                trie->map[mapIndex++]=movedStart;
-                movedStart+=UTRIE2_DATA_BLOCK_LENGTH;
+            لكل(i=بلاک_شمېر, map_شاخص=پیل>>UTRIE2_ښويدنه_2; i>0; --i) {
+                trie->map[map_شاخص++]=moved_پیل;
+                moved_پیل+=UTRIE2_معلومات_بلاک_اوږدتیا;
             }
 
             /* advance start to the next block */
-            start+=blockLength;
+            پیل+=بلاک_اوږدتیا;
 
             /* leave newStart with the previous block! */
-            continue;
+            استمر;
         }
 
         /* see if the beginning of this block can be overlapped with the end of the previous block */
         /* look for maximum overlap (modulo granularity) with the previous, adjacent block */
-        for(overlap=blockLength-UTRIE2_DATA_GRANULARITY;
-            overlap>0 && !equal_uint32(trie->data+(newStart-overlap), trie->data+start, overlap);
-            overlap-=UTRIE2_DATA_GRANULARITY) {}
+        لكل(overlap=بلاک_اوږدتیا-UTRIE2_معلومات_GRANULARITY;
+            overlap>0 && !equal_uint32(trie->معلومات+(new_پیل-overlap), trie->معلومات+پیل, overlap);
+            overlap-=UTRIE2_معلومات_GRANULARITY) {}
 
-#ifdef UTRIE2_DEBUG
-            sumOverlaps+=overlap;
-#endif
-        if(overlap>0 || newStart<start) {
+#که_تعریف_شوی UTRIE2_DEBUG
+            مجموعه_Overlaps+=overlap;
+#د_که_پای
+        إذا(overlap>0 || new_پیل<پیل) {
             /* some overlap, or just move the whole block */
-            movedStart=newStart-overlap;
-            for(i=blockCount, mapIndex=start>>UTRIE2_SHIFT_2; i>0; --i) {
-                trie->map[mapIndex++]=movedStart;
-                movedStart+=UTRIE2_DATA_BLOCK_LENGTH;
+            moved_پیل=new_پیل-overlap;
+            لكل(i=بلاک_شمېر, map_شاخص=پیل>>UTRIE2_ښويدنه_2; i>0; --i) {
+                trie->map[map_شاخص++]=moved_پیل;
+                moved_پیل+=UTRIE2_معلومات_بلاک_اوږدتیا;
             }
 
             /* move the non-overlapping indexes to their new positions */
-            start+=overlap;
-            for(i=blockLength-overlap; i>0; --i) {
-                trie->data[newStart++]=trie->data[start++];
+            پیل+=overlap;
+            لكل(i=بلاک_اوږدتیا-overlap; i>0; --i) {
+                trie->معلومات[new_پیل++]=trie->معلومات[پیل++];
             }
-        } else /* no overlap && newStart==start */ {
-            for(i=blockCount, mapIndex=start>>UTRIE2_SHIFT_2; i>0; --i) {
-                trie->map[mapIndex++]=start;
-                start+=UTRIE2_DATA_BLOCK_LENGTH;
+        } وإلا /* no overlap && newStart==start */ {
+            لكل(i=بلاک_شمېر, map_شاخص=پیل>>UTRIE2_ښويدنه_2; i>0; --i) {
+                trie->map[map_شاخص++]=پیل;
+                پیل+=UTRIE2_معلومات_بلاک_اوږدتیا;
             }
-            newStart=start;
+            new_پیل=پیل;
         }
     }
 
     /* now adjust the index-2 table */
-    for(i=0; i<trie->index2Length; ++i) {
-        if(i==UNEWTRIE2_INDEX_GAP_OFFSET) {
+    لكل(i=0; i<trie->index2_اوږدتیا; ++i) {
+        إذا(i==UNEWTRIE2_شاخص_GAP_دننه_واټن) {
             /* Gap indexes are invalid (-1). Skip over the gap. */
-            i+=UNEWTRIE2_INDEX_GAP_LENGTH;
+            i+=UNEWTRIE2_شاخص_GAP_اوږدتیا;
         }
-        trie->index2[i]=trie->map[trie->index2[i]>>UTRIE2_SHIFT_2];
+        trie->index2[i]=trie->map[trie->index2[i]>>UTRIE2_ښويدنه_2];
     }
-    trie->dataNullOffset=trie->map[trie->dataNullOffset>>UTRIE2_SHIFT_2];
+    trie->معلومات_Null_دننه_واټن=trie->map[trie->معلومات_Null_دننه_واټن>>UTRIE2_ښويدنه_2];
 
     /* ensure dataLength alignment */
-    while((newStart&(UTRIE2_DATA_GRANULARITY-1))!=0) {
-        trie->data[newStart++]=trie->initialValue;
+    طالما((new_پیل&(UTRIE2_معلومات_GRANULARITY-1))!=0) {
+        trie->معلومات[new_پیل++]=trie->initial_ارزښت;
     }
 
-#ifdef UTRIE2_DEBUG
+#که_تعریف_شوی UTRIE2_DEBUG
     /* we saved some space */
-    printf("compacting UTrie2: count of 32-bit data words %lu->%lu  countSame=%ld  sumOverlaps=%ld\n",
-            (long)trie->dataLength, (long)newStart, (long)countSame, (long)sumOverlaps);
-#endif
+    چاپ_کړه("compacting UTrie2: count of 32-bit data words %lu->%lu  countSame=%ld  sumOverlaps=%ld\n",
+            (اوږد)trie->معلومات_اوږدتیا, (اوږد)new_پیل, (اوږد)شمېر_Same, (اوږد)مجموعه_Overlaps);
+#د_که_پای
 
-    trie->dataLength=newStart;
+    trie->معلومات_اوږدتیا=new_پیل;
 }
 
-static void
+ساكن فراغ
 compactIndex2(UNewTrie2 *trie) {
-    int32_t i, start, newStart, movedStart, overlap;
+    int32_t i, پیل, new_پیل, moved_پیل, overlap;
 
     /* do not compact linear-BMP index-2 blocks */
-    newStart=UTRIE2_INDEX_2_BMP_LENGTH;
-    for(start=0, i=0; start<newStart; start+=UTRIE2_INDEX_2_BLOCK_LENGTH, ++i) {
-        trie->map[i]=start;
+    new_پیل=UTRIE2_شاخص_2_BMP_اوږدتیا;
+    لكل(پیل=0, i=0; پیل<new_پیل; پیل+=UTRIE2_شاخص_2_بلاک_اوږدتیا, ++i) {
+        trie->map[i]=پیل;
     }
 
     /* Reduce the index table gap to what will be needed at runtime. */
-    newStart+=UTRIE2_UTF8_2B_INDEX_2_LENGTH+((trie->highStart-0x10000)>>UTRIE2_SHIFT_1);
+    new_پیل+=UTRIE2_UTF8_2_B_شاخص_2_اوږدتیا+((trie->لوړ_پیل-0x10000)>>UTRIE2_ښويدنه_1);
 
-    for(start=UNEWTRIE2_INDEX_2_NULL_OFFSET; start<trie->index2Length;) {
+    لكل(پیل=UNEWTRIE2_شاخص_2_NULL_دننه_واټن; پیل<trie->index2_اوږدتیا;) {
         /*
          * start: index of first entry of current block
          * newStart: index where the current block is to be moved
@@ -1162,46 +1162,46 @@ compactIndex2(UNewTrie2 *trie) {
          */
 
         /* search for an identical block */
-        if( (movedStart=findSameIndex2Block(trie->index2, newStart, start))
+        إذا( (moved_پیل=پیدا_کړه_Same_Index2_بلاک(trie->index2, new_پیل, پیل))
              >=0
         ) {
             /* found an identical block, set the other block's index value for the current block */
-            trie->map[start>>UTRIE2_SHIFT_1_2]=movedStart;
+            trie->map[پیل>>UTRIE2_ښويدنه_1_2]=moved_پیل;
 
             /* advance start to the next block */
-            start+=UTRIE2_INDEX_2_BLOCK_LENGTH;
+            پیل+=UTRIE2_شاخص_2_بلاک_اوږدتیا;
 
             /* leave newStart with the previous block! */
-            continue;
+            استمر;
         }
 
         /* see if the beginning of this block can be overlapped with the end of the previous block */
         /* look for maximum overlap with the previous, adjacent block */
-        for(overlap=UTRIE2_INDEX_2_BLOCK_LENGTH-1;
-            overlap>0 && !equal_int32(trie->index2+(newStart-overlap), trie->index2+start, overlap);
+        لكل(overlap=UTRIE2_شاخص_2_بلاک_اوږدتیا-1;
+            overlap>0 && !equal_int32(trie->index2+(new_پیل-overlap), trie->index2+پیل, overlap);
             --overlap) {}
 
-        if(overlap>0 || newStart<start) {
+        إذا(overlap>0 || new_پیل<پیل) {
             /* some overlap, or just move the whole block */
-            trie->map[start>>UTRIE2_SHIFT_1_2]=newStart-overlap;
+            trie->map[پیل>>UTRIE2_ښويدنه_1_2]=new_پیل-overlap;
 
             /* move the non-overlapping indexes to their new positions */
-            start+=overlap;
-            for(i=UTRIE2_INDEX_2_BLOCK_LENGTH-overlap; i>0; --i) {
-                trie->index2[newStart++]=trie->index2[start++];
+            پیل+=overlap;
+            لكل(i=UTRIE2_شاخص_2_بلاک_اوږدتیا-overlap; i>0; --i) {
+                trie->index2[new_پیل++]=trie->index2[پیل++];
             }
-        } else /* no overlap && newStart==start */ {
-            trie->map[start>>UTRIE2_SHIFT_1_2]=start;
-            start+=UTRIE2_INDEX_2_BLOCK_LENGTH;
-            newStart=start;
+        } وإلا /* no overlap && newStart==start */ {
+            trie->map[پیل>>UTRIE2_ښويدنه_1_2]=پیل;
+            پیل+=UTRIE2_شاخص_2_بلاک_اوږدتیا;
+            new_پیل=پیل;
         }
     }
 
     /* now adjust the index-1 table */
-    for(i=0; i<UNEWTRIE2_INDEX_1_LENGTH; ++i) {
-        trie->index1[i]=trie->map[trie->index1[i]>>UTRIE2_SHIFT_1_2];
+    لكل(i=0; i<UNEWTRIE2_شاخص_1_اوږدتیا; ++i) {
+        trie->index1[i]=trie->map[trie->index1[i]>>UTRIE2_ښويدنه_1_2];
     }
-    trie->index2NullOffset=trie->map[trie->index2NullOffset>>UTRIE2_SHIFT_1_2];
+    trie->index2_Null_دننه_واټن=trie->map[trie->index2_Null_دننه_واټن>>UTRIE2_ښويدنه_1_2];
 
     /*
      * Ensure data table alignment:
@@ -1209,64 +1209,64 @@ compactIndex2(UNewTrie2 *trie) {
      * (so that dataMove will be down-shiftable),
      * and 2-aligned for uint32_t data.
      */
-    while((newStart&((UTRIE2_DATA_GRANULARITY-1)|1))!=0) {
+    طالما((new_پیل&((UTRIE2_معلومات_GRANULARITY-1)|1))!=0) {
         /* Arbitrary value: 0x3fffc not possible for real data. */
-        trie->index2[newStart++] = static_cast<int32_t>(0xffff) << UTRIE2_INDEX_SHIFT;
+        trie->index2[new_پیل++] = static_cast<int32_t>(0xffff) << UTRIE2_شاخص_ښويدنه;
     }
 
-#ifdef UTRIE2_DEBUG
+#که_تعریف_شوی UTRIE2_DEBUG
     /* we saved some space */
-    printf("compacting UTrie2: count of 16-bit index words %lu->%lu\n",
-            (long)trie->index2Length, (long)newStart);
-#endif
+    چاپ_کړه("compacting UTrie2: count of 16-bit index words %lu->%lu\n",
+            (اوږد)trie->index2_اوږدتیا, (اوږد)new_پیل);
+#د_که_پای
 
-    trie->index2Length=newStart;
+    trie->index2_اوږدتیا=new_پیل;
 }
 
-static void
-compactTrie(UTrie2 *trie, UErrorCode *pErrorCode) {
+ساكن فراغ
+compactTrie(UTrie2 *trie, UError_کوډ *p_Error_کوډ) {
     UNewTrie2 *newTrie;
-    UChar32 highStart, suppHighStart;
-    uint32_t highValue;
+    UChar32 لوړ_پیل, supp_لوړ_پیل;
+    uint32_t لوړ_ارزښت;
 
     newTrie=trie->newTrie;
 
     /* find highStart and round it up */
-    highValue=utrie2_get32(trie, 0x10ffff);
-    highStart=findHighStart(newTrie, highValue);
-    highStart=(highStart+(UTRIE2_CP_PER_INDEX_1_ENTRY-1))&~(UTRIE2_CP_PER_INDEX_1_ENTRY-1);
-    if(highStart==0x110000) {
-        highValue=trie->errorValue;
+    لوړ_ارزښت=utrie2_get32(trie, 0x10ffff);
+    لوړ_پیل=پیدا_کړه_لوړ_پیل(newTrie, لوړ_ارزښت);
+    لوړ_پیل=(لوړ_پیل+(UTRIE2_CP_فی_شاخص_1_ثبت-1))&~(UTRIE2_CP_فی_شاخص_1_ثبت-1);
+    إذا(لوړ_پیل==0x110000) {
+        لوړ_ارزښت=trie->error_ارزښت;
     }
 
     /*
      * Set trie->highStart only after utrie2_get32(trie, highStart).
      * Otherwise utrie2_get32(trie, highStart) would try to read the highValue.
      */
-    trie->highStart=newTrie->highStart=highStart;
+    trie->لوړ_پیل=newTrie->لوړ_پیل=لوړ_پیل;
 
-#ifdef UTRIE2_DEBUG
-    printf("UTrie2: highStart U+%06lx  highValue 0x%lx  initialValue 0x%lx\n",
-            (long)highStart, (long)highValue, (long)trie->initialValue);
-#endif
+#که_تعریف_شوی UTRIE2_DEBUG
+    چاپ_کړه("UTrie2: highStart U+%06lx  highValue 0x%lx  initialValue 0x%lx\n",
+            (اوږد)لوړ_پیل, (اوږد)لوړ_ارزښت, (اوږد)trie->initial_ارزښت);
+#د_که_پای
 
-    if(highStart<0x110000) {
+    إذا(لوړ_پیل<0x110000) {
         /* Blank out [highStart..10ffff] to release associated data blocks. */
-        suppHighStart= highStart<=0x10000 ? 0x10000 : highStart;
-        utrie2_setRange32(trie, suppHighStart, 0x10ffff, trie->initialValue, true, pErrorCode);
-        if(U_FAILURE(*pErrorCode)) {
-            return;
+        supp_لوړ_پیل= لوړ_پیل<=0x10000 ? 0x10000 : لوړ_پیل;
+        utrie2_سېټ_Range32(trie, supp_لوړ_پیل, 0x10ffff, trie->initial_ارزښت, ریښتیا, p_Error_کوډ);
+        إذا(U_FAILURE(*p_Error_کوډ)) {
+            أرجع;
         }
     }
 
-    compactData(newTrie);
-    if(highStart>0x10000) {
+    compact_معلومات(newTrie);
+    إذا(لوړ_پیل>0x10000) {
         compactIndex2(newTrie);
-#ifdef UTRIE2_DEBUG
-    } else {
-        printf("UTrie2: highStart U+%04lx  count of 16-bit index words %lu->%lu\n",
-                (long)highStart, (long)trie->newTrie->index2Length, (long)UTRIE2_INDEX_1_OFFSET);
-#endif
+#که_تعریف_شوی UTRIE2_DEBUG
+    } وإلا {
+        چاپ_کړه("UTrie2: highStart U+%04lx  count of 16-bit index words %lu->%lu\n",
+                (اوږد)لوړ_پیل, (اوږد)trie->newTrie->index2_اوږدتیا, (اوږد)UTRIE2_شاخص_1_دننه_واټن);
+#د_که_پای
     }
 
     /*
@@ -1274,12 +1274,12 @@ compactTrie(UTrie2 *trie, UErrorCode *pErrorCode) {
      * Must be done after compactData() because that assumes that dataLength
      * is a multiple of UTRIE2_DATA_BLOCK_LENGTH.
      */
-    newTrie->data[newTrie->dataLength++]=highValue;
-    while((newTrie->dataLength&(UTRIE2_DATA_GRANULARITY-1))!=0) {
-        newTrie->data[newTrie->dataLength++]=trie->initialValue;
+    newTrie->معلومات[newTrie->معلومات_اوږدتیا++]=لوړ_ارزښت;
+    طالما((newTrie->معلومات_اوږدتیا&(UTRIE2_معلومات_GRANULARITY-1))!=0) {
+        newTrie->معلومات[newTrie->معلومات_اوږدتیا++]=trie->initial_ارزښت;
     }
 
-    newTrie->isCompacted=true;
+    newTrie->isCompacted=ریښتیا;
 }
 
 /* serialization ------------------------------------------------------------ */
@@ -1290,192 +1290,192 @@ compactTrie(UTrie2 *trie, UErrorCode *pErrorCode) {
  * (The actual maximum length is lower,
  * (0x110000>>UTRIE2_SHIFT_2)+UTRIE2_UTF8_2B_INDEX_2_LENGTH+UTRIE2_MAX_INDEX_1_LENGTH.)
  */
-#define UTRIE2_MAX_INDEX_LENGTH 0xffff
+#تعریف_کړه UTRIE2_MAX_شاخص_اوږدتیا 0xffff
 
 /**
  * Maximum length of the runtime data array.
  * Limited by 16-bit index values that are left-shifted by UTRIE2_INDEX_SHIFT,
  * and by uint16_t UTrie2Header.shiftedDataLength.
  */
-#define UTRIE2_MAX_DATA_LENGTH (0xffff<<UTRIE2_INDEX_SHIFT)
+#تعریف_کړه UTRIE2_MAX_معلومات_اوږدتیا (0xffff<<UTRIE2_شاخص_ښويدنه)
 
 /* Compact and internally serialize the trie. */
-U_CAPI void U_EXPORT2
-utrie2_freeze(UTrie2 *trie, UTrie2ValueBits valueBits, UErrorCode *pErrorCode) {
+U_CAPI فراغ U_EXPORT2
+utrie2_freeze(UTrie2 *trie, UTrie2_ارزښت_بټونه ارزښت_بټونه, UError_کوډ *p_Error_کوډ) {
     UNewTrie2 *newTrie;
-    UTrie2Header *header;
+    UTrie2_سرلیک *سرلیک;
     uint32_t *p;
     uint16_t *dest16;
     int32_t i, length;
-    int32_t allIndexesLength;
-    int32_t dataMove;  /* >0 if the data is moved to the end of the index array */
-    UChar32 highStart;
+    int32_t all_Indexes_اوږدتیا;
+    int32_t معلومات_Move;  /* >0 if the data is moved to the end of the index array */
+    UChar32 لوړ_پیل;
 
     /* argument check */
-    if(U_FAILURE(*pErrorCode)) {
-        return;
+    إذا(U_FAILURE(*p_Error_کوډ)) {
+        أرجع;
     }
-    if( trie==nullptr ||
-        valueBits<0 || UTRIE2_COUNT_VALUE_BITS<=valueBits
+    إذا( trie==تش_اشاره ||
+        ارزښت_بټونه<0 || UTRIE2_شمېر_ارزښت_بټونه<=ارزښت_بټونه
     ) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        *p_Error_کوډ=U_ILLEGAL_دلیل_ERROR;
+        أرجع;
     }
     newTrie=trie->newTrie;
-    if(newTrie==nullptr) {
+    إذا(newTrie==تش_اشاره) {
         /* already frozen */
-        UTrie2ValueBits frozenValueBits=
-            trie->data16!=nullptr ? UTRIE2_16_VALUE_BITS : UTRIE2_32_VALUE_BITS;
-        if(valueBits!=frozenValueBits) {
-            *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
+        UTrie2_ارزښت_بټونه frozen_ارزښت_بټونه=
+            trie->data16!=تش_اشاره ? UTRIE2_16_ارزښت_بټونه : UTRIE2_32_ارزښت_بټونه;
+        إذا(ارزښت_بټونه!=frozen_ارزښت_بټونه) {
+            *p_Error_کوډ=U_ILLEGAL_دلیل_ERROR;
         }
-        return;
+        أرجع;
     }
 
     /* compact if necessary */
-    if(!newTrie->isCompacted) {
-        compactTrie(trie, pErrorCode);
-        if(U_FAILURE(*pErrorCode)) {
-            return;
+    إذا(!newTrie->isCompacted) {
+        compactTrie(trie, p_Error_کوډ);
+        إذا(U_FAILURE(*p_Error_کوډ)) {
+            أرجع;
         }
     }
-    highStart=trie->highStart;
+    لوړ_پیل=trie->لوړ_پیل;
 
-    if(highStart<=0x10000) {
-        allIndexesLength=UTRIE2_INDEX_1_OFFSET;
-    } else {
-        allIndexesLength=newTrie->index2Length;
+    إذا(لوړ_پیل<=0x10000) {
+        all_Indexes_اوږدتیا=UTRIE2_شاخص_1_دننه_واټن;
+    } وإلا {
+        all_Indexes_اوږدتیا=newTrie->index2_اوږدتیا;
     }
-    if(valueBits==UTRIE2_16_VALUE_BITS) {
-        dataMove=allIndexesLength;
-    } else {
-        dataMove=0;
+    إذا(ارزښت_بټونه==UTRIE2_16_ارزښت_بټونه) {
+        معلومات_Move=all_Indexes_اوږدتیا;
+    } وإلا {
+        معلومات_Move=0;
     }
 
     /* are indexLength and dataLength within limits? */
-    if( /* for unshifted indexLength */
-        allIndexesLength>UTRIE2_MAX_INDEX_LENGTH ||
+    إذا( /* for unshifted indexLength */
+        all_Indexes_اوږدتیا>UTRIE2_MAX_شاخص_اوږدتیا ||
         /* for unshifted dataNullOffset */
-        (dataMove+newTrie->dataNullOffset)>0xffff ||
+        (معلومات_Move+newTrie->معلومات_Null_دننه_واټن)>0xffff ||
         /* for unshifted 2-byte UTF-8 index-2 values */
-        (dataMove+UNEWTRIE2_DATA_0800_OFFSET)>0xffff ||
+        (معلومات_Move+UNEWTRIE2_معلومات_0800_دننه_واټن)>0xffff ||
         /* for shiftedDataLength */
-        (dataMove+newTrie->dataLength)>UTRIE2_MAX_DATA_LENGTH
+        (معلومات_Move+newTrie->معلومات_اوږدتیا)>UTRIE2_MAX_معلومات_اوږدتیا
     ) {
-        *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-        return;
+        *p_Error_کوډ=U_شاخص_OUTOFBOUNDS_ERROR;
+        أرجع;
     }
 
     /* calculate the total serialized length */
-    length=sizeof(UTrie2Header)+allIndexesLength*2;
-    if(valueBits==UTRIE2_16_VALUE_BITS) {
-        length+=newTrie->dataLength*2;
-    } else {
-        length+=newTrie->dataLength*4;
+    length=حجم(UTrie2_سرلیک)+all_Indexes_اوږدتیا*2;
+    إذا(ارزښت_بټونه==UTRIE2_16_ارزښت_بټونه) {
+        length+=newTrie->معلومات_اوږدتیا*2;
+    } وإلا {
+        length+=newTrie->معلومات_اوږدتیا*4;
     }
 
-    trie->memory=uprv_malloc(length);
-    if(trie->memory==nullptr) {
-        *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-        return;
+    trie->حافظه=uprv_malloc(length);
+    إذا(trie->حافظه==تش_اشاره) {
+        *p_Error_کوډ=U_حافظه_ویش_ERROR;
+        أرجع;
     }
     trie->length=length;
-    trie->isMemoryOwned=true;
+    trie->is_حافظه_Owned=ریښتیا;
 
-    trie->indexLength=allIndexesLength;
-    trie->dataLength=newTrie->dataLength;
-    if(highStart<=0x10000) {
-        trie->index2NullOffset=0xffff;
-    } else {
-        trie->index2NullOffset=static_cast<uint16_t>(UTRIE2_INDEX_2_OFFSET+newTrie->index2NullOffset);
+    trie->شاخص_اوږدتیا=all_Indexes_اوږدتیا;
+    trie->معلومات_اوږدتیا=newTrie->معلومات_اوږدتیا;
+    إذا(لوړ_پیل<=0x10000) {
+        trie->index2_Null_دننه_واټن=0xffff;
+    } وإلا {
+        trie->index2_Null_دننه_واټن=static_cast<uint16_t>(UTRIE2_شاخص_2_دننه_واټن+newTrie->index2_Null_دننه_واټن);
     }
-    trie->dataNullOffset=(uint16_t)(dataMove+newTrie->dataNullOffset);
-    trie->highValueIndex=dataMove+trie->dataLength-UTRIE2_DATA_GRANULARITY;
+    trie->معلومات_Null_دننه_واټن=(uint16_t)(معلومات_Move+newTrie->معلومات_Null_دننه_واټن);
+    trie->لوړ_ارزښت_شاخص=معلومات_Move+trie->معلومات_اوږدتیا-UTRIE2_معلومات_GRANULARITY;
 
     /* set the header fields */
-    header=(UTrie2Header *)trie->memory;
+    سرلیک=(UTrie2_سرلیک *)trie->حافظه;
 
-    header->signature=UTRIE2_SIG; /* "Tri2" */
-    header->options=(uint16_t)valueBits;
+    سرلیک->signature=UTRIE2_SIG; /* "Tri2" */
+    سرلیک->options=(uint16_t)ارزښت_بټونه;
 
-    header->indexLength=(uint16_t)trie->indexLength;
-    header->shiftedDataLength=(uint16_t)(trie->dataLength>>UTRIE2_INDEX_SHIFT);
-    header->index2NullOffset=trie->index2NullOffset;
-    header->dataNullOffset=trie->dataNullOffset;
-    header->shiftedHighStart=(uint16_t)(highStart>>UTRIE2_SHIFT_1);
+    سرلیک->شاخص_اوږدتیا=(uint16_t)trie->شاخص_اوږدتیا;
+    سرلیک->shifted_معلومات_اوږدتیا=(uint16_t)(trie->معلومات_اوږدتیا>>UTRIE2_شاخص_ښويدنه);
+    سرلیک->index2_Null_دننه_واټن=trie->index2_Null_دننه_واټن;
+    سرلیک->معلومات_Null_دننه_واټن=trie->معلومات_Null_دننه_واټن;
+    سرلیک->shifted_لوړ_پیل=(uint16_t)(لوړ_پیل>>UTRIE2_ښويدنه_1);
 
     /* fill the index and data arrays */
-    dest16=(uint16_t *)(header+1);
-    trie->index=dest16;
+    dest16=(uint16_t *)(سرلیک+1);
+    trie->شاخص=dest16;
 
     /* write the index-2 array values shifted right by UTRIE2_INDEX_SHIFT, after adding dataMove */
     p=(uint32_t *)newTrie->index2;
-    for(i=UTRIE2_INDEX_2_BMP_LENGTH; i>0; --i) {
-        *dest16++=(uint16_t)((dataMove + *p++)>>UTRIE2_INDEX_SHIFT);
+    لكل(i=UTRIE2_شاخص_2_BMP_اوږدتیا; i>0; --i) {
+        *dest16++=(uint16_t)((معلومات_Move + *p++)>>UTRIE2_شاخص_ښويدنه);
     }
 
     /* write UTF-8 2-byte index-2 values, not right-shifted */
-    for(i=0; i<(0xc2-0xc0); ++i) {                                  /* C0..C1 */
-        *dest16++=(uint16_t)(dataMove+UTRIE2_BAD_UTF8_DATA_OFFSET);
+    لكل(i=0; i<(0xc2-0xc0); ++i) {                                  /* C0..C1 */
+        *dest16++=(uint16_t)(معلومات_Move+UTRIE2_BAD_UTF8_معلومات_دننه_واټن);
     }
-    for(; i<(0xe0-0xc0); ++i) {                                     /* C2..DF */
-        *dest16++=(uint16_t)(dataMove+newTrie->index2[i<<(6-UTRIE2_SHIFT_2)]);
+    لكل(; i<(0xe0-0xc0); ++i) {                                     /* C2..DF */
+        *dest16++=(uint16_t)(معلومات_Move+newTrie->index2[i<<(6-UTRIE2_ښويدنه_2)]);
     }
 
-    if(highStart>0x10000) {
-        int32_t index1Length=(highStart-0x10000)>>UTRIE2_SHIFT_1;
-        int32_t index2Offset=UTRIE2_INDEX_2_BMP_LENGTH+UTRIE2_UTF8_2B_INDEX_2_LENGTH+index1Length;
+    إذا(لوړ_پیل>0x10000) {
+        int32_t index1_اوږدتیا=(لوړ_پیل-0x10000)>>UTRIE2_ښويدنه_1;
+        int32_t index2_دننه_واټن=UTRIE2_شاخص_2_BMP_اوږدتیا+UTRIE2_UTF8_2_B_شاخص_2_اوږدتیا+index1_اوږدتیا;
 
         /* write 16-bit index-1 values for supplementary code points */
-        p=(uint32_t *)newTrie->index1+UTRIE2_OMITTED_BMP_INDEX_1_LENGTH;
-        for(i=index1Length; i>0; --i) {
-            *dest16++=(uint16_t)(UTRIE2_INDEX_2_OFFSET + *p++);
+        p=(uint32_t *)newTrie->index1+UTRIE2_OMITTED_BMP_شاخص_1_اوږدتیا;
+        لكل(i=index1_اوږدتیا; i>0; --i) {
+            *dest16++=(uint16_t)(UTRIE2_شاخص_2_دننه_واټن + *p++);
         }
 
         /*
          * write the index-2 array values for supplementary code points,
          * shifted right by UTRIE2_INDEX_SHIFT, after adding dataMove
          */
-        p=(uint32_t *)newTrie->index2+index2Offset;
-        for(i=newTrie->index2Length-index2Offset; i>0; --i) {
-            *dest16++=(uint16_t)((dataMove + *p++)>>UTRIE2_INDEX_SHIFT);
+        p=(uint32_t *)newTrie->index2+index2_دننه_واټن;
+        لكل(i=newTrie->index2_اوږدتیا-index2_دننه_واټن; i>0; --i) {
+            *dest16++=(uint16_t)((معلومات_Move + *p++)>>UTRIE2_شاخص_ښويدنه);
         }
     }
 
     /* write the 16/32-bit data array */
-    switch(valueBits) {
-    case UTRIE2_16_VALUE_BITS:
+    بدل(ارزښت_بټونه) {
+    حالة UTRIE2_16_ارزښت_بټونه:
         /* write 16-bit data values */
         trie->data16=dest16;
-        trie->data32=nullptr;
-        p=newTrie->data;
-        for(i=newTrie->dataLength; i>0; --i) {
+        trie->data32=تش_اشاره;
+        p=newTrie->معلومات;
+        لكل(i=newTrie->معلومات_اوږدتیا; i>0; --i) {
             *dest16++=(uint16_t)*p++;
         }
-        break;
-    case UTRIE2_32_VALUE_BITS:
+        اكسر;
+    حالة UTRIE2_32_ارزښت_بټونه:
         /* write 32-bit data values */
-        trie->data16=nullptr;
+        trie->data16=تش_اشاره;
         trie->data32=(uint32_t *)dest16;
-        uprv_memcpy(dest16, newTrie->data, (size_t)newTrie->dataLength*4);
-        break;
-    default:
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        uprv_memcpy(dest16, newTrie->معلومات, (size_t)newTrie->معلومات_اوږدتیا*4);
+        اكسر;
+    افتراضي:
+        *p_Error_کوډ=U_ILLEGAL_دلیل_ERROR;
+        أرجع;
     }
 
-#ifdef UTRIE2_DEBUG
+#که_تعریف_شوی UTRIE2_DEBUG
     utrie2_printLengths(trie, "");
-#endif
+#د_که_پای
 
-#ifdef UCPTRIE_DEBUG
-    umutablecptrie_setName(newTrie->t3, trie->name);
+#که_تعریف_شوی UCPTRIE_DEBUG
+    umutablecptrie_سېټ_Name(newTrie->t3, trie->name);
     ucptrie_close(
         umutablecptrie_buildImmutable(
-            newTrie->t3, UCPTRIE_TYPE_FAST, (UCPTrieValueWidth)valueBits, pErrorCode));
-#endif
+            newTrie->t3, UCPTRIE_TYPE_FAST, (UCPTrie_ارزښت_پلنوالی)ارزښت_بټونه, p_Error_کوډ));
+#د_که_پای
     /* Delete the UNewTrie2. */
-    uprv_free(newTrie->data);
+    uprv_free(newTrie->معلومات);
     uprv_free(newTrie);
-    trie->newTrie=nullptr;
+    trie->newTrie=تش_اشاره;
 }

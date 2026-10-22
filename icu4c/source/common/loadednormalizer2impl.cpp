@@ -11,437 +11,437 @@
 * created by: Markus W. Scherer
 */
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if !UCONFIG_NO_NORMALIZATION
+#إذا !UCONFIG_NO_NORMALIZATION
 
-#include "unicode/udata.h"
-#include "unicode/localpointer.h"
-#include "unicode/normalizer2.h"
-#include "unicode/ucptrie.h"
-#include "unicode/unistr.h"
-#include "unicode/unorm.h"
-#include "cstring.h"
-#include "mutex.h"
-#include "norm2allmodes.h"
-#include "normalizer2impl.h"
-#include "uassert.h"
-#include "ucln_cmn.h"
-#include "uhash.h"
+#ضمن "unicode/udata.h"
+#ضمن "unicode/localpointer.h"
+#ضمن "unicode/normalizer2.h"
+#ضمن "unicode/ucptrie.h"
+#ضمن "unicode/unistr.h"
+#ضمن "unicode/unorm.h"
+#ضمن "cstring.h"
+#ضمن "mutex.h"
+#ضمن "norm2allmodes.h"
+#ضمن "normalizer2impl.h"
+#ضمن "uassert.h"
+#ضمن "ucln_cmn.h"
+#ضمن "uhash.h"
 
 U_NAMESPACE_BEGIN
 
-class LoadedNormalizer2Impl : public Normalizer2Impl {
-public:
-    LoadedNormalizer2Impl() : memory(nullptr), ownedTrie(nullptr) {}
-    virtual ~LoadedNormalizer2Impl();
+صنف LoadedNormalizer2Impl : عام Normalizer2Impl {
+عام:
+    LoadedNormalizer2Impl() : حافظه(تش_اشاره), ownedTrie(تش_اشاره) {}
+    مجازي ~LoadedNormalizer2Impl();
 
-    void load(const char *packageName, const char *name, UErrorCode &errorCode);
+    فراغ load(ثابت حرف *packageName, ثابت حرف *name, UError_کوډ &error_کوډ);
 
-private:
-    static UBool U_CALLCONV
-    isAcceptable(void *context, const char *type, const char *name, const UDataInfo *pInfo);
+خاص:
+    ساكن UBool U_CALLCONV
+    isAcceptable(فراغ *context, ثابت حرف *type, ثابت حرف *name, ثابت UDataInfo *pInfo);
 
-    UDataMemory *memory;
+    UData_حافظه *حافظه;
     UCPTrie *ownedTrie;
 };
 
 LoadedNormalizer2Impl::~LoadedNormalizer2Impl() {
-    udata_close(memory);
+    udata_close(حافظه);
     ucptrie_close(ownedTrie);
 }
 
 UBool U_CALLCONV
-LoadedNormalizer2Impl::isAcceptable(void * /*context*/,
-                                    const char * /* type */, const char * /*name*/,
-                                    const UDataInfo *pInfo) {
-    if(
+LoadedNormalizer2Impl::isAcceptable(فراغ * /*context*/,
+                                    ثابت حرف * /* type */, ثابت حرف * /*name*/,
+                                    ثابت UDataInfo *pInfo) {
+    إذا(
         pInfo->size>=20 &&
         pInfo->isBigEndian==U_IS_BIG_ENDIAN &&
         pInfo->charsetFamily==U_CHARSET_FAMILY &&
-        pInfo->dataFormat[0]==0x4e &&    /* dataFormat="Nrm2" */
-        pInfo->dataFormat[1]==0x72 &&
-        pInfo->dataFormat[2]==0x6d &&
-        pInfo->dataFormat[3]==0x32 &&
-        pInfo->formatVersion[0]==5
+        pInfo->معلومات_Format[0]==0x4e &&    /* dataFormat="Nrm2" */
+        pInfo->معلومات_Format[1]==0x72 &&
+        pInfo->معلومات_Format[2]==0x6d &&
+        pInfo->معلومات_Format[3]==0x32 &&
+        pInfo->format_نسخه[0]==5
     ) {
         // Normalizer2Impl *me=(Normalizer2Impl *)context;
         // uprv_memcpy(me->dataVersion, pInfo->dataVersion, 4);
-        return true;
-    } else {
-        return false;
+        أرجع ریښتیا;
+    } وإلا {
+        أرجع خطأ;
     }
 }
 
-void
-LoadedNormalizer2Impl::load(const char *packageName, const char *name, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return;
+فراغ
+LoadedNormalizer2Impl::load(ثابت حرف *packageName, ثابت حرف *name, UError_کوډ &error_کوډ) {
+    إذا(U_FAILURE(error_کوډ)) {
+        أرجع;
     }
-    memory=udata_openChoice(packageName, "nrm", name, isAcceptable, this, &errorCode);
-    if(U_FAILURE(errorCode)) {
-        return;
+    حافظه=udata_openChoice(packageName, "nrm", name, isAcceptable, هذا, &error_کوډ);
+    إذا(U_FAILURE(error_کوډ)) {
+        أرجع;
     }
-    const uint8_t* inBytes = static_cast<const uint8_t*>(udata_getMemory(memory));
-    const int32_t* inIndexes = reinterpret_cast<const int32_t*>(inBytes);
-    int32_t indexesLength=inIndexes[IX_NORM_TRIE_OFFSET]/4;
-    if(indexesLength<=IX_MIN_LCCC_CP) {
-        errorCode=U_INVALID_FORMAT_ERROR;  // Not enough indexes.
-        return;
-    }
-
-    int32_t offset=inIndexes[IX_NORM_TRIE_OFFSET];
-    int32_t nextOffset=inIndexes[IX_EXTRA_DATA_OFFSET];
-    ownedTrie=ucptrie_openFromBinary(UCPTRIE_TYPE_FAST, UCPTRIE_VALUE_BITS_16,
-                                     inBytes+offset, nextOffset-offset, nullptr,
-                                     &errorCode);
-    if(U_FAILURE(errorCode)) {
-        return;
+    ثابت uint8_t* دننه_بایټونه = static_cast<ثابت uint8_t*>(udata_get_حافظه(حافظه));
+    ثابت int32_t* دننه_Indexes = reinterpret_cast<ثابت int32_t*>(دننه_بایټونه);
+    int32_t indexes_اوږدتیا=دننه_Indexes[IX_NORM_TRIE_دننه_واټن]/4;
+    إذا(indexes_اوږدتیا<=IX_MIN_LCCC_CP) {
+        error_کوډ=U_INVALID_FORMAT_ERROR;  // Not enough indexes.
+        أرجع;
     }
 
-    offset=nextOffset;
-    nextOffset=inIndexes[IX_SMALL_FCD_OFFSET];
-    const uint16_t* inExtraData = reinterpret_cast<const uint16_t*>(inBytes + offset);
+    int32_t دننه_واټن=دننه_Indexes[IX_NORM_TRIE_دننه_واټن];
+    int32_t بل_دننه_واټن=دننه_Indexes[IX_EXTRA_معلومات_دننه_واټن];
+    ownedTrie=ucptrie_open_From_دوګونی(UCPTRIE_TYPE_FAST, UCPTRIE_ارزښت_بټونه_16,
+                                     دننه_بایټونه+دننه_واټن, بل_دننه_واټن-دننه_واټن, تش_اشاره,
+                                     &error_کوډ);
+    إذا(U_FAILURE(error_کوډ)) {
+        أرجع;
+    }
+
+    دننه_واټن=بل_دننه_واټن;
+    بل_دننه_واټن=دننه_Indexes[IX_SMALL_FCD_دننه_واټن];
+    ثابت uint16_t* دننه_Extra_معلومات = reinterpret_cast<ثابت uint16_t*>(دننه_بایټونه + دننه_واټن);
 
     // smallFCD: new in formatVersion 2
-    offset=nextOffset;
-    const uint8_t *inSmallFCD=inBytes+offset;
+    دننه_واټن=بل_دننه_واټن;
+    ثابت uint8_t *دننه_Small_FCD=دننه_بایټونه+دننه_واټن;
 
-    init(inIndexes, ownedTrie, inExtraData, inSmallFCD);
+    init(دننه_Indexes, ownedTrie, دننه_Extra_معلومات, دننه_Small_FCD);
 }
 
 // instance cache ---------------------------------------------------------- ***
 
 Norm2AllModes *
-Norm2AllModes::createInstance(const char *packageName,
-                              const char *name,
-                              UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return nullptr;
+Norm2AllModes::createInstance(ثابت حرف *packageName,
+                              ثابت حرف *name,
+                              UError_کوډ &error_کوډ) {
+    إذا(U_FAILURE(error_کوډ)) {
+        أرجع تش_اشاره;
     }
-    LoadedNormalizer2Impl *impl=new LoadedNormalizer2Impl;
-    if(impl==nullptr) {
-        errorCode=U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+    LoadedNormalizer2Impl *impl=جديد LoadedNormalizer2Impl;
+    إذا(impl==تش_اشاره) {
+        error_کوډ=U_حافظه_ویش_ERROR;
+        أرجع تش_اشاره;
     }
-    impl->load(packageName, name, errorCode);
-    return createInstance(impl, errorCode);
+    impl->load(packageName, name, error_کوډ);
+    أرجع createInstance(impl, error_کوډ);
 }
 
 U_CDECL_BEGIN
-static UBool U_CALLCONV uprv_loaded_normalizer2_cleanup();
-U_CDECL_END
+ساكن UBool U_CALLCONV uprv_loaded_normalizer2_cleanup();
+U_CDECL_پای_ټکی
 
-#if !NORM2_HARDCODE_NFC_DATA
-static Norm2AllModes *nfcSingleton;
-static icu::UInitOnce nfcInitOnce {};
-#endif
+#إذا !NORM2_HARDCODE_NFC_معلومات
+ساكن Norm2AllModes *nfcSingleton;
+ساكن icu::UInitOnce nfcInitOnce {};
+#د_که_پای
 
-static Norm2AllModes *nfkcSingleton;
-static icu::UInitOnce nfkcInitOnce {};
+ساكن Norm2AllModes *nfkcSingleton;
+ساكن icu::UInitOnce nfkcInitOnce {};
 
-static Norm2AllModes *nfkc_cfSingleton;
-static icu::UInitOnce nfkc_cfInitOnce {};
+ساكن Norm2AllModes *nfkc_cfSingleton;
+ساكن icu::UInitOnce nfkc_cfInitOnce {};
 
-static Norm2AllModes *nfkc_scfSingleton;
-static icu::UInitOnce nfkc_scfInitOnce {};
+ساكن Norm2AllModes *nfkc_scfSingleton;
+ساكن icu::UInitOnce nfkc_scfInitOnce {};
 
-static UHashtable    *cache=nullptr;
+ساكن UHashtable    *cache=تش_اشاره;
 
 // UInitOnce singleton initialization function
-static void U_CALLCONV initSingletons(const char *what, UErrorCode &errorCode) {
-#if !NORM2_HARDCODE_NFC_DATA
-    if (uprv_strcmp(what, "nfc") == 0) {
-        nfcSingleton    = Norm2AllModes::createInstance(nullptr, "nfc", errorCode);
-    } else
-#endif
-    if (uprv_strcmp(what, "nfkc") == 0) {
-        nfkcSingleton    = Norm2AllModes::createInstance(nullptr, "nfkc", errorCode);
-    } else if (uprv_strcmp(what, "nfkc_cf") == 0) {
-        nfkc_cfSingleton = Norm2AllModes::createInstance(nullptr, "nfkc_cf", errorCode);
-    } else if (uprv_strcmp(what, "nfkc_scf") == 0) {
-        nfkc_scfSingleton = Norm2AllModes::createInstance(nullptr, "nfkc_scf", errorCode);
-    } else {
+ساكن فراغ U_CALLCONV initSingletons(ثابت حرف *what, UError_کوډ &error_کوډ) {
+#إذا !NORM2_HARDCODE_NFC_معلومات
+    إذا (uprv_strcmp(what, "nfc") == 0) {
+        nfcSingleton    = Norm2AllModes::createInstance(تش_اشاره, "nfc", error_کوډ);
+    } وإلا
+#د_که_پای
+    إذا (uprv_strcmp(what, "nfkc") == 0) {
+        nfkcSingleton    = Norm2AllModes::createInstance(تش_اشاره, "nfkc", error_کوډ);
+    } وإلا إذا (uprv_strcmp(what, "nfkc_cf") == 0) {
+        nfkc_cfSingleton = Norm2AllModes::createInstance(تش_اشاره, "nfkc_cf", error_کوډ);
+    } وإلا إذا (uprv_strcmp(what, "nfkc_scf") == 0) {
+        nfkc_scfSingleton = Norm2AllModes::createInstance(تش_اشاره, "nfkc_scf", error_کوډ);
+    } وإلا {
         UPRV_UNREACHABLE_EXIT;   // Unknown singleton
     }
-    ucln_common_registerCleanup(UCLN_COMMON_LOADED_NORMALIZER2, uprv_loaded_normalizer2_cleanup);
+    ucln_common_ثبتوونکی_Cleanup(UCLN_COMMON_LOADED_NORMALIZER2, uprv_loaded_normalizer2_cleanup);
 }
 
 U_CDECL_BEGIN
 
-static void U_CALLCONV deleteNorm2AllModes(void *allModes) {
-    delete (Norm2AllModes *)allModes;
+ساكن فراغ U_CALLCONV deleteNorm2AllModes(فراغ *allModes) {
+    ړنګول (Norm2AllModes *)allModes;
 }
 
-static UBool U_CALLCONV uprv_loaded_normalizer2_cleanup() {
-#if !NORM2_HARDCODE_NFC_DATA
-    delete nfcSingleton;
-    nfcSingleton = nullptr;
+ساكن UBool U_CALLCONV uprv_loaded_normalizer2_cleanup() {
+#إذا !NORM2_HARDCODE_NFC_معلومات
+    ړنګول nfcSingleton;
+    nfcSingleton = تش_اشاره;
     nfcInitOnce.reset();
-#endif
+#د_که_پای
 
-    delete nfkcSingleton;
-    nfkcSingleton = nullptr;
+    ړنګول nfkcSingleton;
+    nfkcSingleton = تش_اشاره;
     nfkcInitOnce.reset();
 
-    delete nfkc_cfSingleton;
-    nfkc_cfSingleton = nullptr;
+    ړنګول nfkc_cfSingleton;
+    nfkc_cfSingleton = تش_اشاره;
     nfkc_cfInitOnce.reset();
 
-    delete nfkc_scfSingleton;
-    nfkc_scfSingleton = nullptr;
+    ړنګول nfkc_scfSingleton;
+    nfkc_scfSingleton = تش_اشاره;
     nfkc_scfInitOnce.reset();
 
     uhash_close(cache);
-    cache=nullptr;
-    return true;
+    cache=تش_اشاره;
+    أرجع ریښتیا;
 }
 
-U_CDECL_END
+U_CDECL_پای_ټکی
 
-#if !NORM2_HARDCODE_NFC_DATA
-const Norm2AllModes *
-Norm2AllModes::getNFCInstance(UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) { return nullptr; }
-    umtx_initOnce(nfcInitOnce, &initSingletons, "nfc", errorCode);
-    return nfcSingleton;
+#إذا !NORM2_HARDCODE_NFC_معلومات
+ثابت Norm2AllModes *
+Norm2AllModes::getNFCInstance(UError_کوډ &error_کوډ) {
+    إذا(U_FAILURE(error_کوډ)) { أرجع تش_اشاره; }
+    umtx_initOnce(nfcInitOnce, &initSingletons, "nfc", error_کوډ);
+    أرجع nfcSingleton;
 }
-#endif
+#د_که_پای
 
-const Norm2AllModes *
-Norm2AllModes::getNFKCInstance(UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) { return nullptr; }
-    umtx_initOnce(nfkcInitOnce, &initSingletons, "nfkc", errorCode);
-    return nfkcSingleton;
-}
-
-const Norm2AllModes *
-Norm2AllModes::getNFKC_CFInstance(UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) { return nullptr; }
-    umtx_initOnce(nfkc_cfInitOnce, &initSingletons, "nfkc_cf", errorCode);
-    return nfkc_cfSingleton;
+ثابت Norm2AllModes *
+Norm2AllModes::getNFKCInstance(UError_کوډ &error_کوډ) {
+    إذا(U_FAILURE(error_کوډ)) { أرجع تش_اشاره; }
+    umtx_initOnce(nfkcInitOnce, &initSingletons, "nfkc", error_کوډ);
+    أرجع nfkcSingleton;
 }
 
-const Norm2AllModes *
-Norm2AllModes::getNFKC_SCFInstance(UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) { return nullptr; }
-    umtx_initOnce(nfkc_scfInitOnce, &initSingletons, "nfkc_scf", errorCode);
-    return nfkc_scfSingleton;
+ثابت Norm2AllModes *
+Norm2AllModes::getNFKC_CFInstance(UError_کوډ &error_کوډ) {
+    إذا(U_FAILURE(error_کوډ)) { أرجع تش_اشاره; }
+    umtx_initOnce(nfkc_cfInitOnce, &initSingletons, "nfkc_cf", error_کوډ);
+    أرجع nfkc_cfSingleton;
 }
 
-#if !NORM2_HARDCODE_NFC_DATA
-const Normalizer2 *
-Normalizer2::getNFCInstance(UErrorCode &errorCode) {
-    const Norm2AllModes *allModes=Norm2AllModes::getNFCInstance(errorCode);
-    return allModes!=nullptr ? &allModes->comp : nullptr;
+ثابت Norm2AllModes *
+Norm2AllModes::getNFKC_SCFInstance(UError_کوډ &error_کوډ) {
+    إذا(U_FAILURE(error_کوډ)) { أرجع تش_اشاره; }
+    umtx_initOnce(nfkc_scfInitOnce, &initSingletons, "nfkc_scf", error_کوډ);
+    أرجع nfkc_scfSingleton;
 }
 
-const Normalizer2 *
-Normalizer2::getNFDInstance(UErrorCode &errorCode) {
-    const Norm2AllModes *allModes=Norm2AllModes::getNFCInstance(errorCode);
-    return allModes!=nullptr ? &allModes->decomp : nullptr;
+#إذا !NORM2_HARDCODE_NFC_معلومات
+ثابت Normalizer2 *
+Normalizer2::getNFCInstance(UError_کوډ &error_کوډ) {
+    ثابت Norm2AllModes *allModes=Norm2AllModes::getNFCInstance(error_کوډ);
+    أرجع allModes!=تش_اشاره ? &allModes->comp : تش_اشاره;
 }
 
-const Normalizer2 *Normalizer2Factory::getFCDInstance(UErrorCode &errorCode) {
-    const Norm2AllModes *allModes=Norm2AllModes::getNFCInstance(errorCode);
-    return allModes!=nullptr ? &allModes->fcd : nullptr;
+ثابت Normalizer2 *
+Normalizer2::getNFDInstance(UError_کوډ &error_کوډ) {
+    ثابت Norm2AllModes *allModes=Norm2AllModes::getNFCInstance(error_کوډ);
+    أرجع allModes!=تش_اشاره ? &allModes->decomp : تش_اشاره;
 }
 
-const Normalizer2 *Normalizer2Factory::getFCCInstance(UErrorCode &errorCode) {
-    const Norm2AllModes *allModes=Norm2AllModes::getNFCInstance(errorCode);
-    return allModes!=nullptr ? &allModes->fcc : nullptr;
+ثابت Normalizer2 *Normalizer2Factory::getFCDInstance(UError_کوډ &error_کوډ) {
+    ثابت Norm2AllModes *allModes=Norm2AllModes::getNFCInstance(error_کوډ);
+    أرجع allModes!=تش_اشاره ? &allModes->fcd : تش_اشاره;
 }
 
-const Normalizer2Impl *
-Normalizer2Factory::getNFCImpl(UErrorCode &errorCode) {
-    const Norm2AllModes *allModes=Norm2AllModes::getNFCInstance(errorCode);
-    return allModes!=nullptr ? allModes->impl : nullptr;
-}
-#endif
-
-const Normalizer2 *
-Normalizer2::getNFKCInstance(UErrorCode &errorCode) {
-    const Norm2AllModes *allModes=Norm2AllModes::getNFKCInstance(errorCode);
-    return allModes!=nullptr ? &allModes->comp : nullptr;
+ثابت Normalizer2 *Normalizer2Factory::getFCCInstance(UError_کوډ &error_کوډ) {
+    ثابت Norm2AllModes *allModes=Norm2AllModes::getNFCInstance(error_کوډ);
+    أرجع allModes!=تش_اشاره ? &allModes->fcc : تش_اشاره;
 }
 
-const Normalizer2 *
-Normalizer2::getNFKDInstance(UErrorCode &errorCode) {
-    const Norm2AllModes *allModes=Norm2AllModes::getNFKCInstance(errorCode);
-    return allModes!=nullptr ? &allModes->decomp : nullptr;
+ثابت Normalizer2Impl *
+Normalizer2Factory::getNFCImpl(UError_کوډ &error_کوډ) {
+    ثابت Norm2AllModes *allModes=Norm2AllModes::getNFCInstance(error_کوډ);
+    أرجع allModes!=تش_اشاره ? allModes->impl : تش_اشاره;
+}
+#د_که_پای
+
+ثابت Normalizer2 *
+Normalizer2::getNFKCInstance(UError_کوډ &error_کوډ) {
+    ثابت Norm2AllModes *allModes=Norm2AllModes::getNFKCInstance(error_کوډ);
+    أرجع allModes!=تش_اشاره ? &allModes->comp : تش_اشاره;
 }
 
-const Normalizer2 *
-Normalizer2::getNFKCCasefoldInstance(UErrorCode &errorCode) {
-    const Norm2AllModes *allModes=Norm2AllModes::getNFKC_CFInstance(errorCode);
-    return allModes!=nullptr ? &allModes->comp : nullptr;
+ثابت Normalizer2 *
+Normalizer2::getNFKDInstance(UError_کوډ &error_کوډ) {
+    ثابت Norm2AllModes *allModes=Norm2AllModes::getNFKCInstance(error_کوډ);
+    أرجع allModes!=تش_اشاره ? &allModes->decomp : تش_اشاره;
 }
 
-const Normalizer2 *
-Normalizer2::getNFKCSimpleCasefoldInstance(UErrorCode &errorCode) {
-    const Norm2AllModes *allModes=Norm2AllModes::getNFKC_SCFInstance(errorCode);
-    return allModes!=nullptr ? &allModes->comp : nullptr;
+ثابت Normalizer2 *
+Normalizer2::getNFKCCasefoldInstance(UError_کوډ &error_کوډ) {
+    ثابت Norm2AllModes *allModes=Norm2AllModes::getNFKC_CFInstance(error_کوډ);
+    أرجع allModes!=تش_اشاره ? &allModes->comp : تش_اشاره;
 }
 
-const Normalizer2 *
-Normalizer2::getInstance(const char *packageName,
-                         const char *name,
-                         UNormalization2Mode mode,
-                         UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return nullptr;
+ثابت Normalizer2 *
+Normalizer2::getNFKCSimpleCasefoldInstance(UError_کوډ &error_کوډ) {
+    ثابت Norm2AllModes *allModes=Norm2AllModes::getNFKC_SCFInstance(error_کوډ);
+    أرجع allModes!=تش_اشاره ? &allModes->comp : تش_اشاره;
+}
+
+ثابت Normalizer2 *
+Normalizer2::getInstance(ثابت حرف *packageName,
+                         ثابت حرف *name,
+                         UNormalization2_ډېرپېښ ډېرپېښ,
+                         UError_کوډ &error_کوډ) {
+    إذا(U_FAILURE(error_کوډ)) {
+        أرجع تش_اشاره;
     }
-    if(name==nullptr || *name==0) {
-        errorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+    إذا(name==تش_اشاره || *name==0) {
+        error_کوډ=U_ILLEGAL_دلیل_ERROR;
+        أرجع تش_اشاره;
     }
-    const Norm2AllModes *allModes=nullptr;
-    if(packageName==nullptr) {
-        if(0==uprv_strcmp(name, "nfc")) {
-            allModes=Norm2AllModes::getNFCInstance(errorCode);
-        } else if(0==uprv_strcmp(name, "nfkc")) {
-            allModes=Norm2AllModes::getNFKCInstance(errorCode);
-        } else if(0==uprv_strcmp(name, "nfkc_cf")) {
-            allModes=Norm2AllModes::getNFKC_CFInstance(errorCode);
-        } else if(0==uprv_strcmp(name, "nfkc_scf")) {
-            allModes=Norm2AllModes::getNFKC_SCFInstance(errorCode);
+    ثابت Norm2AllModes *allModes=تش_اشاره;
+    إذا(packageName==تش_اشاره) {
+        إذا(0==uprv_strcmp(name, "nfc")) {
+            allModes=Norm2AllModes::getNFCInstance(error_کوډ);
+        } وإلا إذا(0==uprv_strcmp(name, "nfkc")) {
+            allModes=Norm2AllModes::getNFKCInstance(error_کوډ);
+        } وإلا إذا(0==uprv_strcmp(name, "nfkc_cf")) {
+            allModes=Norm2AllModes::getNFKC_CFInstance(error_کوډ);
+        } وإلا إذا(0==uprv_strcmp(name, "nfkc_scf")) {
+            allModes=Norm2AllModes::getNFKC_SCFInstance(error_کوډ);
         }
     }
-    if(allModes==nullptr && U_SUCCESS(errorCode)) {
+    إذا(allModes==تش_اشاره && U_SUCCESS(error_کوډ)) {
         {
-            Mutex lock;
-            if(cache!=nullptr) {
+            Mutex قلف;
+            إذا(cache!=تش_اشاره) {
                 allModes = static_cast<Norm2AllModes*>(uhash_get(cache, name));
             }
         }
-        if(allModes==nullptr) {
-            ucln_common_registerCleanup(UCLN_COMMON_LOADED_NORMALIZER2, uprv_loaded_normalizer2_cleanup);
-            LocalPointer<Norm2AllModes> localAllModes(
-                Norm2AllModes::createInstance(packageName, name, errorCode));
-            if(U_SUCCESS(errorCode)) {
-                Mutex lock;
-                if(cache==nullptr) {
-                    cache=uhash_open(uhash_hashChars, uhash_compareChars, nullptr, &errorCode);
-                    if(U_FAILURE(errorCode)) {
-                        return nullptr;
+        إذا(allModes==تش_اشاره) {
+            ucln_common_ثبتوونکی_Cleanup(UCLN_COMMON_LOADED_NORMALIZER2, uprv_loaded_normalizer2_cleanup);
+            Local_اشاره_ګر<Norm2AllModes> localAllModes(
+                Norm2AllModes::createInstance(packageName, name, error_کوډ));
+            إذا(U_SUCCESS(error_کوډ)) {
+                Mutex قلف;
+                إذا(cache==تش_اشاره) {
+                    cache=uhash_open(uhash_hashChars, uhash_compareChars, تش_اشاره, &error_کوډ);
+                    إذا(U_FAILURE(error_کوډ)) {
+                        أرجع تش_اشاره;
                     }
-                    uhash_setKeyDeleter(cache, uprv_free);
-                    uhash_setValueDeleter(cache, deleteNorm2AllModes);
+                    uhash_سېټ_کلی_Deleter(cache, uprv_free);
+                    uhash_سېټ_ارزښت_Deleter(cache, deleteNorm2AllModes);
                 }
-                void *temp=uhash_get(cache, name);
-                if(temp==nullptr) {
-                    int32_t keyLength= static_cast<int32_t>(uprv_strlen(name)+1);
-                    char* nameCopy = static_cast<char*>(uprv_malloc(keyLength));
-                    if(nameCopy==nullptr) {
-                        errorCode=U_MEMORY_ALLOCATION_ERROR;
-                        return nullptr;
+                فراغ *لنډمهاله=uhash_get(cache, name);
+                إذا(لنډمهاله==تش_اشاره) {
+                    int32_t کلی_اوږدتیا= static_cast<int32_t>(uprv_strlen(name)+1);
+                    حرف* nameCopy = static_cast<حرف*>(uprv_malloc(کلی_اوږدتیا));
+                    إذا(nameCopy==تش_اشاره) {
+                        error_کوډ=U_حافظه_ویش_ERROR;
+                        أرجع تش_اشاره;
                     }
-                    uprv_memcpy(nameCopy, name, keyLength);
+                    uprv_memcpy(nameCopy, name, کلی_اوږدتیا);
                     allModes=localAllModes.getAlias();
-                    uhash_put(cache, nameCopy, localAllModes.orphan(), &errorCode);
-                } else {
+                    uhash_put(cache, nameCopy, localAllModes.orphan(), &error_کوډ);
+                } وإلا {
                     // race condition
-                    allModes = static_cast<Norm2AllModes*>(temp);
+                    allModes = static_cast<Norm2AllModes*>(لنډمهاله);
                 }
             }
         }
     }
-    if(allModes!=nullptr && U_SUCCESS(errorCode)) {
-        switch(mode) {
-        case UNORM2_COMPOSE:
-            return &allModes->comp;
-        case UNORM2_DECOMPOSE:
-            return &allModes->decomp;
-        case UNORM2_FCD:
-            return &allModes->fcd;
-        case UNORM2_COMPOSE_CONTIGUOUS:
-            return &allModes->fcc;
-        default:
-            break;  // do nothing
+    إذا(allModes!=تش_اشاره && U_SUCCESS(error_کوډ)) {
+        بدل(ډېرپېښ) {
+        حالة UNORM2_COMPOSE:
+            أرجع &allModes->comp;
+        حالة UNORM2_DECOMPOSE:
+            أرجع &allModes->decomp;
+        حالة UNORM2_FCD:
+            أرجع &allModes->fcd;
+        حالة UNORM2_COMPOSE_CONTIGUOUS:
+            أرجع &allModes->fcc;
+        افتراضي:
+            اكسر;  // do nothing
         }
     }
-    return nullptr;
+    أرجع تش_اشاره;
 }
 
-const Normalizer2 *
-Normalizer2Factory::getInstance(UNormalizationMode mode, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return nullptr;
+ثابت Normalizer2 *
+Normalizer2Factory::getInstance(UNormalization_ډېرپېښ ډېرپېښ, UError_کوډ &error_کوډ) {
+    إذا(U_FAILURE(error_کوډ)) {
+        أرجع تش_اشاره;
     }
-    switch(mode) {
-    case UNORM_NFD:
-        return Normalizer2::getNFDInstance(errorCode);
-    case UNORM_NFKD:
-        return Normalizer2::getNFKDInstance(errorCode);
-    case UNORM_NFC:
-        return Normalizer2::getNFCInstance(errorCode);
-    case UNORM_NFKC:
-        return Normalizer2::getNFKCInstance(errorCode);
-    case UNORM_FCD:
-        return getFCDInstance(errorCode);
-    default:  // UNORM_NONE
-        return getNoopInstance(errorCode);
+    بدل(ډېرپېښ) {
+    حالة UNORM_NFD:
+        أرجع Normalizer2::getNFDInstance(error_کوډ);
+    حالة UNORM_NFKD:
+        أرجع Normalizer2::getNFKDInstance(error_کوډ);
+    حالة UNORM_NFC:
+        أرجع Normalizer2::getNFCInstance(error_کوډ);
+    حالة UNORM_NFKC:
+        أرجع Normalizer2::getNFKCInstance(error_کوډ);
+    حالة UNORM_FCD:
+        أرجع getFCDInstance(error_کوډ);
+    افتراضي:  // UNORM_NONE
+        أرجع getNoopInstance(error_کوډ);
     }
 }
 
-const Normalizer2Impl *
-Normalizer2Factory::getNFKCImpl(UErrorCode &errorCode) {
-    const Norm2AllModes *allModes=Norm2AllModes::getNFKCInstance(errorCode);
-    return allModes!=nullptr ? allModes->impl : nullptr;
+ثابت Normalizer2Impl *
+Normalizer2Factory::getNFKCImpl(UError_کوډ &error_کوډ) {
+    ثابت Norm2AllModes *allModes=Norm2AllModes::getNFKCInstance(error_کوډ);
+    أرجع allModes!=تش_اشاره ? allModes->impl : تش_اشاره;
 }
 
-const Normalizer2Impl *
-Normalizer2Factory::getNFKC_CFImpl(UErrorCode &errorCode) {
-    const Norm2AllModes *allModes=Norm2AllModes::getNFKC_CFInstance(errorCode);
-    return allModes!=nullptr ? allModes->impl : nullptr;
+ثابت Normalizer2Impl *
+Normalizer2Factory::getNFKC_CFImpl(UError_کوډ &error_کوډ) {
+    ثابت Norm2AllModes *allModes=Norm2AllModes::getNFKC_CFInstance(error_کوډ);
+    أرجع allModes!=تش_اشاره ? allModes->impl : تش_اشاره;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_پای_ټکی
 
 // C API ------------------------------------------------------------------- ***
 
 U_NAMESPACE_USE
 
-U_CAPI const UNormalizer2 * U_EXPORT2
-unorm2_getNFKCInstance(UErrorCode *pErrorCode) {
-    return (const UNormalizer2 *)Normalizer2::getNFKCInstance(*pErrorCode);
+U_CAPI ثابت UNormalizer2 * U_EXPORT2
+unorm2_getNFKCInstance(UError_کوډ *p_Error_کوډ) {
+    أرجع (ثابت UNormalizer2 *)Normalizer2::getNFKCInstance(*p_Error_کوډ);
 }
 
-U_CAPI const UNormalizer2 * U_EXPORT2
-unorm2_getNFKDInstance(UErrorCode *pErrorCode) {
-    return (const UNormalizer2 *)Normalizer2::getNFKDInstance(*pErrorCode);
+U_CAPI ثابت UNormalizer2 * U_EXPORT2
+unorm2_getNFKDInstance(UError_کوډ *p_Error_کوډ) {
+    أرجع (ثابت UNormalizer2 *)Normalizer2::getNFKDInstance(*p_Error_کوډ);
 }
 
-U_CAPI const UNormalizer2 * U_EXPORT2
-unorm2_getNFKCCasefoldInstance(UErrorCode *pErrorCode) {
-    return (const UNormalizer2 *)Normalizer2::getNFKCCasefoldInstance(*pErrorCode);
+U_CAPI ثابت UNormalizer2 * U_EXPORT2
+unorm2_getNFKCCasefoldInstance(UError_کوډ *p_Error_کوډ) {
+    أرجع (ثابت UNormalizer2 *)Normalizer2::getNFKCCasefoldInstance(*p_Error_کوډ);
 }
 
-U_CAPI const UNormalizer2 * U_EXPORT2
-unorm2_getNFKCSimpleCasefoldInstance(UErrorCode *pErrorCode) {
-    return (const UNormalizer2 *)Normalizer2::getNFKCSimpleCasefoldInstance(*pErrorCode);
+U_CAPI ثابت UNormalizer2 * U_EXPORT2
+unorm2_getNFKCSimpleCasefoldInstance(UError_کوډ *p_Error_کوډ) {
+    أرجع (ثابت UNormalizer2 *)Normalizer2::getNFKCSimpleCasefoldInstance(*p_Error_کوډ);
 }
 
-U_CAPI const UNormalizer2 * U_EXPORT2
-unorm2_getInstance(const char *packageName,
-                   const char *name,
-                   UNormalization2Mode mode,
-                   UErrorCode *pErrorCode) {
-    return (const UNormalizer2 *)Normalizer2::getInstance(packageName, name, mode, *pErrorCode);
+U_CAPI ثابت UNormalizer2 * U_EXPORT2
+unorm2_getInstance(ثابت حرف *packageName,
+                   ثابت حرف *name,
+                   UNormalization2_ډېرپېښ ډېرپېښ,
+                   UError_کوډ *p_Error_کوډ) {
+    أرجع (ثابت UNormalizer2 *)Normalizer2::getInstance(packageName, name, ډېرپېښ, *p_Error_کوډ);
 }
 
-U_CFUNC UNormalizationCheckResult
-unorm_getQuickCheck(UChar32 c, UNormalizationMode mode) {
-    if(mode<=UNORM_NONE || UNORM_FCD<=mode) {
-        return UNORM_YES;
+U_CFUNC UNormalization_Check_پایله
+unorm_get_چټک_Check(UChar32 c, UNormalization_ډېرپېښ ډېرپېښ) {
+    إذا(ډېرپېښ<=UNORM_NONE || UNORM_FCD<=ډېرپېښ) {
+        أرجع UNORM_YES;
     }
-    UErrorCode errorCode=U_ZERO_ERROR;
-    const Normalizer2 *norm2=Normalizer2Factory::getInstance(mode, errorCode);
-    if(U_SUCCESS(errorCode)) {
-        return ((const Normalizer2WithImpl *)norm2)->getQuickCheck(c);
-    } else {
-        return UNORM_MAYBE;
+    UError_کوډ error_کوډ=U_ZERO_ERROR;
+    ثابت Normalizer2 *norm2=Normalizer2Factory::getInstance(ډېرپېښ, error_کوډ);
+    إذا(U_SUCCESS(error_کوډ)) {
+        أرجع ((ثابت Normalizer2WithImpl *)norm2)->get_چټک_Check(c);
+    } وإلا {
+        أرجع UNORM_MAYBE;
     }
 }
 
-#endif  // !UCONFIG_NO_NORMALIZATION
+#د_که_پای  // !UCONFIG_NO_NORMALIZATION

@@ -11,12 +11,12 @@
 ********************************************************************************
 */
 
-#ifndef __WINTZ
-#define __WINTZ
+#که_نه_تعریف_شوی __WINTZ
+#تعریف_کړه __WINTZ
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if U_PLATFORM_USES_ONLY_WIN32_API
+#إذا U_PLATFORM_کاروي_ONLY_WIN32_API
 
 /**
  * \file 
@@ -25,12 +25,12 @@
 
 U_CDECL_BEGIN
 /* Forward declarations for Windows types... */
-typedef struct _TIME_ZONE_INFORMATION TIME_ZONE_INFORMATION;
-U_CDECL_END
+تعريفنوع بنية وخت_ZONE_INFORMATION وخت_ZONE_INFORMATION_2;
+U_CDECL_پای_ټکی
 
-U_CAPI const char* U_EXPORT2
-uprv_detectWindowsTimeZone();
+U_CAPI ثابت حرف* U_EXPORT2
+uprv_detect_Windows_وخت_Zone();
 
-#endif /* U_PLATFORM_USES_ONLY_WIN32_API  */
+#د_که_پای /* U_PLATFORM_USES_ONLY_WIN32_API  */
 
-#endif /* __WINTZ */
+#د_که_پای /* __WINTZ */

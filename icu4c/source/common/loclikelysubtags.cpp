@@ -4,357 +4,357 @@
 // loclikelysubtags.cpp
 // created: 2019may08 Markus W. Scherer
 
-#include <utility>
-#include "unicode/utypes.h"
-#include "unicode/bytestrie.h"
-#include "unicode/localpointer.h"
-#include "unicode/locid.h"
-#include "unicode/uobject.h"
-#include "unicode/ures.h"
-#include "unicode/uscript.h"
-#include "charstr.h"
-#include "cstring.h"
-#include "loclikelysubtags.h"
-#include "lsr.h"
-#include "uassert.h"
-#include "ucln_cmn.h"
-#include "uhash.h"
-#include "uinvchar.h"
-#include "umutex.h"
-#include "uniquecharstr.h"
-#include "uresdata.h"
-#include "uresimp.h"
-#include "uvector.h"
+#ضمن <utility>
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/bytestrie.h"
+#ضمن "unicode/localpointer.h"
+#ضمن "unicode/locid.h"
+#ضمن "unicode/uobject.h"
+#ضمن "unicode/ures.h"
+#ضمن "unicode/uscript.h"
+#ضمن "charstr.h"
+#ضمن "cstring.h"
+#ضمن "loclikelysubtags.h"
+#ضمن "lsr.h"
+#ضمن "uassert.h"
+#ضمن "ucln_cmn.h"
+#ضمن "uhash.h"
+#ضمن "uinvchar.h"
+#ضمن "umutex.h"
+#ضمن "uniquecharstr.h"
+#ضمن "uresdata.h"
+#ضمن "uresimp.h"
+#ضمن "uvector.h"
 
 U_NAMESPACE_BEGIN
 
-namespace {
+نطاق {
 
-constexpr char PSEUDO_ACCENTS_PREFIX = '\'';  // -XA, -PSACCENT
-constexpr char PSEUDO_BIDI_PREFIX = '+';  // -XB, -PSBIDI
-constexpr char PSEUDO_CRACKED_PREFIX = ',';  // -XC, -PSCRACK
+constexpr حرف PSEUDO_ACCENTS_مختاړی = '\'';  // -XA, -PSACCENT
+constexpr حرف PSEUDO_BIDI_مختاړی = '+';  // -XB, -PSBIDI
+constexpr حرف PSEUDO_CRACKED_مختاړی = ',';  // -XC, -PSCRACK
 
 }  // namespace
 
-LocaleDistanceData::LocaleDistanceData(LocaleDistanceData &&data) :
-        distanceTrieBytes(data.distanceTrieBytes),
-        regionToPartitions(data.regionToPartitions),
-        partitions(data.partitions),
-        paradigms(data.paradigms), paradigmsLength(data.paradigmsLength),
-        distances(data.distances) {
-    data.partitions = nullptr;
-    data.paradigms = nullptr;
+Locale_واټن_معلومات::Locale_واټن_معلومات(Locale_واټن_معلومات &&معلومات) :
+        واټن_Trie_بایټونه(معلومات.واټن_Trie_بایټونه),
+        region_منزل_Partitions(معلومات.region_منزل_Partitions),
+        partitions(معلومات.partitions),
+        paradigms(معلومات.paradigms), paradigms_اوږدتیا(معلومات.paradigms_اوږدتیا),
+        distances(معلومات.distances) {
+    معلومات.partitions = تش_اشاره;
+    معلومات.paradigms = تش_اشاره;
 }
 
-LocaleDistanceData::~LocaleDistanceData() {
+Locale_واټن_معلومات::~Locale_واټن_معلومات() {
     uprv_free(partitions);
-    delete[] paradigms;
+    ړنګول[] paradigms;
 }
 
-struct LikelySubtagsData {
-    UResourceBundle *langInfoBundle = nullptr;
-    UniqueCharStrings strings;
+بنية Likely_Subtags_معلومات {
+    UResourceBundle *langInfoBundle = تش_اشاره;
+    Unique_Char_مزي_ګانې مزي_ګانې;
     CharStringMap languageAliases;
     CharStringMap regionAliases;
-    const uint8_t *trieBytes = nullptr;
-    LSR *lsrs = nullptr;
-    int32_t lsrsLength = 0;
+    ثابت uint8_t *trie_بایټونه = تش_اشاره;
+    LSR *lsrs = تش_اشاره;
+    int32_t lsrs_اوږدتیا = 0;
 
-    LocaleDistanceData distanceData;
+    Locale_واټن_معلومات واټن_معلومات;
 
-    LikelySubtagsData(UErrorCode &errorCode) : strings(errorCode) {}
+    Likely_Subtags_معلومات(UError_کوډ &error_کوډ) : مزي_ګانې(error_کوډ) {}
 
-    ~LikelySubtagsData() {
+    ~Likely_Subtags_معلومات() {
         ures_close(langInfoBundle);
-        delete[] lsrs;
+        ړنګول[] lsrs;
     }
 
-    void load(UErrorCode &errorCode) {
-        if (U_FAILURE(errorCode)) { return; }
-        langInfoBundle = ures_openDirect(nullptr, "langInfo", &errorCode);
-        if (U_FAILURE(errorCode)) { return; }
-        StackUResourceBundle stackTempBundle;
-        ResourceDataValue value;
-        ures_getValueWithFallback(langInfoBundle, "likely", stackTempBundle.getAlias(),
-                                  value, errorCode);
-        ResourceTable likelyTable = value.getTable(errorCode);
-        if (U_FAILURE(errorCode)) { return; }
+    فراغ load(UError_کوډ &error_کوډ) {
+        إذا (U_FAILURE(error_کوډ)) { أرجع; }
+        langInfoBundle = ures_open_مستقیم(تش_اشاره, "langInfo", &error_کوډ);
+        إذا (U_FAILURE(error_کوډ)) { أرجع; }
+        ډېری_UResource_Bundle ډېری_لنډمهاله_Bundle;
+        Resource_معلومات_ارزښت value;
+        ures_get_ارزښت_With_Fallback(langInfoBundle, "likely", ډېری_لنډمهاله_Bundle.getAlias(),
+                                  value, error_کوډ);
+        Resource_جدول likely_جدول = value.get_جدول(error_کوډ);
+        إذا (U_FAILURE(error_کوډ)) { أرجع; }
 
         // Read all strings in the resource bundle and convert them to invariant char *.
-        LocalMemory<int32_t> languageIndexes, regionIndexes, lsrSubtagIndexes;
-        int32_t languagesLength = 0, regionsLength = 0, lsrSubtagsLength = 0;
+        Local_حافظه<int32_t> languageIndexes, regionIndexes, lsrSubtagIndexes;
+        int32_t languages_اوږدتیا = 0, regions_اوږدتیا = 0, lsr_Subtags_اوږدتیا = 0;
         ResourceArray m49Array;
-        if (likelyTable.findValue("m49", value)) {
-            m49Array = value.getArray(errorCode);
-        } else {
-            errorCode = U_MISSING_RESOURCE_ERROR;
-            return;
+        إذا (likely_جدول.پیدا_کړه_ارزښت("m49", value)) {
+            m49Array = value.getArray(error_کوډ);
+        } وإلا {
+            error_کوډ = U_MISSING_RESOURCE_ERROR;
+            أرجع;
         }
-        if (!readStrings(likelyTable, "languageAliases", value,
-                         languageIndexes, languagesLength, errorCode) ||
-                !readStrings(likelyTable, "regionAliases", value,
-                             regionIndexes, regionsLength, errorCode) ||
-                !readLSREncodedStrings(likelyTable, "lsrnum", value, m49Array,
-                             lsrSubtagIndexes,lsrSubtagsLength, errorCode)) {
-            return;
+        إذا (!read_مزي_ګانې(likely_جدول, "languageAliases", value,
+                         languageIndexes, languages_اوږدتیا, error_کوډ) ||
+                !read_مزي_ګانې(likely_جدول, "regionAliases", value,
+                             regionIndexes, regions_اوږدتیا, error_کوډ) ||
+                !read_LSREncoded_مزي_ګانې(likely_جدول, "lsrnum", value, m49Array,
+                             lsrSubtagIndexes,lsr_Subtags_اوږدتیا, error_کوډ)) {
+            أرجع;
         }
-        if ((languagesLength & 1) != 0 ||
-                (regionsLength & 1) != 0 ||
-                (lsrSubtagsLength % 3) != 0) {
-            errorCode = U_INVALID_FORMAT_ERROR;
-            return;
+        إذا ((languages_اوږدتیا & 1) != 0 ||
+                (regions_اوږدتیا & 1) != 0 ||
+                (lsr_Subtags_اوږدتیا % 3) != 0) {
+            error_کوډ = U_INVALID_FORMAT_ERROR;
+            أرجع;
         }
-        if (lsrSubtagsLength == 0) {
-            errorCode = U_MISSING_RESOURCE_ERROR;
-            return;
+        إذا (lsr_Subtags_اوږدتیا == 0) {
+            error_کوډ = U_MISSING_RESOURCE_ERROR;
+            أرجع;
         }
 
-        if (!likelyTable.findValue("trie", value)) {
-            errorCode = U_MISSING_RESOURCE_ERROR;
-            return;
+        إذا (!likely_جدول.پیدا_کړه_ارزښت("trie", value)) {
+            error_کوډ = U_MISSING_RESOURCE_ERROR;
+            أرجع;
         }
         int32_t length;
-        trieBytes = value.getBinary(length, errorCode);
-        if (U_FAILURE(errorCode)) { return; }
+        trie_بایټونه = value.get_دوګونی(length, error_کوډ);
+        إذا (U_FAILURE(error_کوډ)) { أرجع; }
 
         // Also read distance/matcher data if available,
         // to open & keep only one resource bundle pointer
         // and to use one single UniqueCharStrings.
-        UErrorCode matchErrorCode = U_ZERO_ERROR;
-        ures_getValueWithFallback(langInfoBundle, "match", stackTempBundle.getAlias(),
-                                  value, matchErrorCode);
-        LocalMemory<int32_t> partitionIndexes, paradigmSubtagIndexes;
-        int32_t partitionsLength = 0, paradigmSubtagsLength = 0;
-        if (U_SUCCESS(matchErrorCode)) {
-            ResourceTable matchTable = value.getTable(errorCode);
-            if (U_FAILURE(errorCode)) { return; }
+        UError_کوډ سمون_Error_کوډ = U_ZERO_ERROR;
+        ures_get_ارزښت_With_Fallback(langInfoBundle, "match", ډېری_لنډمهاله_Bundle.getAlias(),
+                                  value, سمون_Error_کوډ);
+        Local_حافظه<int32_t> برخه_کول_Indexes, paradigmSubtagIndexes;
+        int32_t partitions_اوږدتیا = 0, paradigm_Subtags_اوږدتیا = 0;
+        إذا (U_SUCCESS(سمون_Error_کوډ)) {
+            Resource_جدول سمون_جدول = value.get_جدول(error_کوډ);
+            إذا (U_FAILURE(error_کوډ)) { أرجع; }
 
-            if (matchTable.findValue("trie", value)) {
-                distanceData.distanceTrieBytes = value.getBinary(length, errorCode);
-                if (U_FAILURE(errorCode)) { return; }
+            إذا (سمون_جدول.پیدا_کړه_ارزښت("trie", value)) {
+                واټن_معلومات.واټن_Trie_بایټونه = value.get_دوګونی(length, error_کوډ);
+                إذا (U_FAILURE(error_کوډ)) { أرجع; }
             }
 
-            if (matchTable.findValue("regionToPartitions", value)) {
-                distanceData.regionToPartitions = value.getBinary(length, errorCode);
-                if (U_FAILURE(errorCode)) { return; }
-                if (length < LSR::REGION_INDEX_LIMIT) {
-                    errorCode = U_INVALID_FORMAT_ERROR;
-                    return;
+            إذا (سمون_جدول.پیدا_کړه_ارزښت("regionToPartitions", value)) {
+                واټن_معلومات.region_منزل_Partitions = value.get_دوګونی(length, error_کوډ);
+                إذا (U_FAILURE(error_کوډ)) { أرجع; }
+                إذا (length < LSR::REGION_شاخص_حد) {
+                    error_کوډ = U_INVALID_FORMAT_ERROR;
+                    أرجع;
                 }
             }
 
-            if (!readStrings(matchTable, "partitions", value,
-                             partitionIndexes, partitionsLength, errorCode) ||
-                    !readLSREncodedStrings(matchTable, "paradigmnum", value, m49Array,
-                                 paradigmSubtagIndexes, paradigmSubtagsLength, errorCode)) {
-                return;
+            إذا (!read_مزي_ګانې(سمون_جدول, "partitions", value,
+                             برخه_کول_Indexes, partitions_اوږدتیا, error_کوډ) ||
+                    !read_LSREncoded_مزي_ګانې(سمون_جدول, "paradigmnum", value, m49Array,
+                                 paradigmSubtagIndexes, paradigm_Subtags_اوږدتیا, error_کوډ)) {
+                أرجع;
             }
-            if ((paradigmSubtagsLength % 3) != 0) {
-                errorCode = U_INVALID_FORMAT_ERROR;
-                return;
+            إذا ((paradigm_Subtags_اوږدتیا % 3) != 0) {
+                error_کوډ = U_INVALID_FORMAT_ERROR;
+                أرجع;
             }
 
-            if (matchTable.findValue("distances", value)) {
-                distanceData.distances = value.getIntVector(length, errorCode);
-                if (U_FAILURE(errorCode)) { return; }
-                if (length < 4) {  // LocaleDistance IX_LIMIT
-                    errorCode = U_INVALID_FORMAT_ERROR;
-                    return;
+            إذا (سمون_جدول.پیدا_کړه_ارزښت("distances", value)) {
+                واټن_معلومات.distances = value.get_Int_ویکټور(length, error_کوډ);
+                إذا (U_FAILURE(error_کوډ)) { أرجع; }
+                إذا (length < 4) {  // LocaleDistance IX_LIMIT
+                    error_کوډ = U_INVALID_FORMAT_ERROR;
+                    أرجع;
                 }
             }
-        } else if (matchErrorCode == U_MISSING_RESOURCE_ERROR) {
+        } وإلا إذا (سمون_Error_کوډ == U_MISSING_RESOURCE_ERROR) {
             // ok for likely subtags
-        } else {  // error other than missing resource
-            errorCode = matchErrorCode;
-            return;
+        } وإلا {  // error other than missing resource
+            error_کوډ = سمون_Error_کوډ;
+            أرجع;
         }
 
         // Fetch & store invariant-character versions of strings
         // only after we have collected and de-duplicated all of them.
-        strings.freeze();
+        مزي_ګانې.freeze();
 
-        languageAliases = CharStringMap(languagesLength / 2, errorCode);
-        for (int32_t i = 0; i < languagesLength; i += 2) {
-            languageAliases.put(strings.get(languageIndexes[i]),
-                                strings.get(languageIndexes[i + 1]), errorCode);
+        languageAliases = CharStringMap(languages_اوږدتیا / 2, error_کوډ);
+        لكل (int32_t i = 0; i < languages_اوږدتیا; i += 2) {
+            languageAliases.put(مزي_ګانې.get(languageIndexes[i]),
+                                مزي_ګانې.get(languageIndexes[i + 1]), error_کوډ);
         }
 
-        regionAliases = CharStringMap(regionsLength / 2, errorCode);
-        for (int32_t i = 0; i < regionsLength; i += 2) {
-            regionAliases.put(strings.get(regionIndexes[i]),
-                              strings.get(regionIndexes[i + 1]), errorCode);
+        regionAliases = CharStringMap(regions_اوږدتیا / 2, error_کوډ);
+        لكل (int32_t i = 0; i < regions_اوږدتیا; i += 2) {
+            regionAliases.put(مزي_ګانې.get(regionIndexes[i]),
+                              مزي_ګانې.get(regionIndexes[i + 1]), error_کوډ);
         }
-        if (U_FAILURE(errorCode)) { return; }
+        إذا (U_FAILURE(error_کوډ)) { أرجع; }
 
-        lsrsLength = lsrSubtagsLength / 3;
-        lsrs = new LSR[lsrsLength];
-        if (lsrs == nullptr) {
-            errorCode = U_MEMORY_ALLOCATION_ERROR;
-            return;
+        lsrs_اوږدتیا = lsr_Subtags_اوږدتیا / 3;
+        lsrs = جديد LSR[lsrs_اوږدتیا];
+        إذا (lsrs == تش_اشاره) {
+            error_کوډ = U_حافظه_ویش_ERROR;
+            أرجع;
         }
-        for (int32_t i = 0, j = 0; i < lsrSubtagsLength; i += 3, ++j) {
-            lsrs[j] = LSR(strings.get(lsrSubtagIndexes[i]),
-                          strings.get(lsrSubtagIndexes[i + 1]),
-                          strings.get(lsrSubtagIndexes[i + 2]),
+        لكل (int32_t i = 0, j = 0; i < lsr_Subtags_اوږدتیا; i += 3, ++j) {
+            lsrs[j] = LSR(مزي_ګانې.get(lsrSubtagIndexes[i]),
+                          مزي_ګانې.get(lsrSubtagIndexes[i + 1]),
+                          مزي_ګانې.get(lsrSubtagIndexes[i + 2]),
                           LSR::IMPLICIT_LSR);
         }
 
-        if (partitionsLength > 0) {
-            distanceData.partitions = static_cast<const char **>(
-                uprv_malloc(partitionsLength * sizeof(const char *)));
-            if (distanceData.partitions == nullptr) {
-                errorCode = U_MEMORY_ALLOCATION_ERROR;
-                return;
+        إذا (partitions_اوږدتیا > 0) {
+            واټن_معلومات.partitions = static_cast<ثابت حرف **>(
+                uprv_malloc(partitions_اوږدتیا * حجم(ثابت حرف *)));
+            إذا (واټن_معلومات.partitions == تش_اشاره) {
+                error_کوډ = U_حافظه_ویش_ERROR;
+                أرجع;
             }
-            for (int32_t i = 0; i < partitionsLength; ++i) {
-                distanceData.partitions[i] = strings.get(partitionIndexes[i]);
+            لكل (int32_t i = 0; i < partitions_اوږدتیا; ++i) {
+                واټن_معلومات.partitions[i] = مزي_ګانې.get(برخه_کول_Indexes[i]);
             }
         }
 
-        if (paradigmSubtagsLength > 0) {
-            distanceData.paradigmsLength = paradigmSubtagsLength / 3;
-            LSR *paradigms = new LSR[distanceData.paradigmsLength];
-            if (paradigms == nullptr) {
-                errorCode = U_MEMORY_ALLOCATION_ERROR;
-                return;
+        إذا (paradigm_Subtags_اوږدتیا > 0) {
+            واټن_معلومات.paradigms_اوږدتیا = paradigm_Subtags_اوږدتیا / 3;
+            LSR *paradigms = جديد LSR[واټن_معلومات.paradigms_اوږدتیا];
+            إذا (paradigms == تش_اشاره) {
+                error_کوډ = U_حافظه_ویش_ERROR;
+                أرجع;
             }
-            for (int32_t i = 0, j = 0; i < paradigmSubtagsLength; i += 3, ++j) {
-                paradigms[j] = LSR(strings.get(paradigmSubtagIndexes[i]),
-                                   strings.get(paradigmSubtagIndexes[i + 1]),
-                                   strings.get(paradigmSubtagIndexes[i + 2]),
+            لكل (int32_t i = 0, j = 0; i < paradigm_Subtags_اوږدتیا; i += 3, ++j) {
+                paradigms[j] = LSR(مزي_ګانې.get(paradigmSubtagIndexes[i]),
+                                   مزي_ګانې.get(paradigmSubtagIndexes[i + 1]),
+                                   مزي_ګانې.get(paradigmSubtagIndexes[i + 2]),
                                    LSR::DONT_CARE_FLAGS);
             }
-            distanceData.paradigms = paradigms;
+            واټن_معلومات.paradigms = paradigms;
         }
     }
 
-private:
-    bool readStrings(const ResourceTable &table, const char *key, ResourceValue &value,
-                     LocalMemory<int32_t> &indexes, int32_t &length, UErrorCode &errorCode) {
-        if (U_FAILURE(errorCode)) { return false; }
-        if (table.findValue(key, value)) {
-            ResourceArray stringArray = value.getArray(errorCode);
-            if (U_FAILURE(errorCode)) { return false; }
-            length = stringArray.getSize();
-            if (length == 0) { return true; }
+خاص:
+    منطقي read_مزي_ګانې(ثابت Resource_جدول &جدول, ثابت حرف *کلی, Resource_ارزښت &value,
+                     Local_حافظه<int32_t> &indexes, int32_t &length, UError_کوډ &error_کوډ) {
+        إذا (U_FAILURE(error_کوډ)) { أرجع خطأ; }
+        إذا (جدول.پیدا_کړه_ارزښت(کلی, value)) {
+            ResourceArray stringArray = value.getArray(error_کوډ);
+            إذا (U_FAILURE(error_کوډ)) { أرجع خطأ; }
+            length = stringArray.get_اندازه();
+            إذا (length == 0) { أرجع ریښتیا; }
             int32_t *rawIndexes = indexes.allocateInsteadAndCopy(length);
-            if (rawIndexes == nullptr) {
-                errorCode = U_MEMORY_ALLOCATION_ERROR;
-                return false;
+            إذا (rawIndexes == تش_اشاره) {
+                error_کوډ = U_حافظه_ویش_ERROR;
+                أرجع خطأ;
             }
-            for (int i = 0; i < length; ++i) {
-                if (stringArray.getValue(i, value)) {  // returns true because i < length
-                    int32_t strLength = 0;
-                    rawIndexes[i] = strings.add(value.getString(strLength, errorCode), errorCode);
-                    if (U_FAILURE(errorCode)) { return false; }
+            لكل (صحيح i = 0; i < length; ++i) {
+                إذا (stringArray.get_ارزښت(i, value)) {  // returns true because i < length
+                    int32_t str_اوږدتیا = 0;
+                    rawIndexes[i] = مزي_ګانې.جمع_کړه(value.getString(str_اوږدتیا, error_کوډ), error_کوډ);
+                    إذا (U_FAILURE(error_کوډ)) { أرجع خطأ; }
                 }
             }
         }
-        return true;
+        أرجع ریښتیا;
     }
-    UnicodeString toLanguage(int encoded) {
-        if (encoded == 0) {
-            return UNICODE_STRING_SIMPLE("");
+    UnicodeString منزل_Language(صحيح encoded) {
+        إذا (encoded == 0) {
+            أرجع UNICODE_STRING_SIMPLE("");
         }
-        if (encoded == 1) {
-            return UNICODE_STRING_SIMPLE("skip");
+        إذا (encoded == 1) {
+            أرجع UNICODE_STRING_SIMPLE("skip");
         }
         encoded &= 0x00ffffff;
         encoded %= 27*27*27;
-        char lang[3];
+        حرف lang[3];
         lang[0] = 'a' + ((encoded % 27) - 1);
         lang[1] = 'a' + (((encoded / 27 ) % 27) - 1);
-        if (encoded / (27 * 27) == 0) {
-            return UnicodeString(lang, 2, US_INV);
+        إذا (encoded / (27 * 27) == 0) {
+            أرجع UnicodeString(lang, 2, US_INV);
         }
         lang[2] = 'a' + ((encoded / (27 * 27)) - 1);
-        return UnicodeString(lang, 3, US_INV);
+        أرجع UnicodeString(lang, 3, US_INV);
     }
-    UnicodeString toScript(int encoded) {
-        if (encoded == 0) {
-            return UNICODE_STRING_SIMPLE("");
+    UnicodeString منزل_Script(صحيح encoded) {
+        إذا (encoded == 0) {
+            أرجع UNICODE_STRING_SIMPLE("");
         }
-        if (encoded == 1) {
-            return UNICODE_STRING_SIMPLE("script");
+        إذا (encoded == 1) {
+            أرجع UNICODE_STRING_SIMPLE("script");
         }
         encoded = (encoded >> 24) & 0x000000ff;
-        const char* script = uscript_getShortName(static_cast<UScriptCode>(encoded));
-        if (script == nullptr) {
-            return UNICODE_STRING_SIMPLE("");
+        ثابت حرف* script = uscript_getShortName(static_cast<UScript_کوډ>(encoded));
+        إذا (script == تش_اشاره) {
+            أرجع UNICODE_STRING_SIMPLE("");
         }
         U_ASSERT(uprv_strlen(script) == 4);
-        return UnicodeString(script, 4, US_INV);
+        أرجع UnicodeString(script, 4, US_INV);
     }
-    UnicodeString m49IndexToCode(const ResourceArray &m49Array, ResourceValue &value, int index, UErrorCode &errorCode) {
-        if (U_FAILURE(errorCode)) {
-            return UNICODE_STRING_SIMPLE("");
+    UnicodeString m49_شاخص_منزل_کوډ(ثابت ResourceArray &m49Array, Resource_ارزښت &value, صحيح شاخص, UError_کوډ &error_کوډ) {
+        إذا (U_FAILURE(error_کوډ)) {
+            أرجع UNICODE_STRING_SIMPLE("");
         }
-        if (m49Array.getValue(index, value)) {
-            return value.getUnicodeString(errorCode);
+        إذا (m49Array.get_ارزښت(شاخص, value)) {
+            أرجع value.getUnicodeString(error_کوډ);
         }
         // "m49" does not include the index.
-        errorCode = U_MISSING_RESOURCE_ERROR;
-        return UNICODE_STRING_SIMPLE("");
+        error_کوډ = U_MISSING_RESOURCE_ERROR;
+        أرجع UNICODE_STRING_SIMPLE("");
     }
 
-    UnicodeString toRegion(const ResourceArray& m49Array, ResourceValue &value, int encoded, UErrorCode &errorCode) {
-        if (U_FAILURE(errorCode) || encoded == 0 || encoded == 1) {
-            return UNICODE_STRING_SIMPLE("");
+    UnicodeString منزل_Region(ثابت ResourceArray& m49Array, Resource_ارزښت &value, صحيح encoded, UError_کوډ &error_کوډ) {
+        إذا (U_FAILURE(error_کوډ) || encoded == 0 || encoded == 1) {
+            أرجع UNICODE_STRING_SIMPLE("");
         }
         encoded &= 0x00ffffff;
         encoded /= 27 * 27 * 27;
         encoded %= 27 * 27;
-        if (encoded < 27) {
+        إذا (encoded < 27) {
             // Selected M49 code index, find the code from "m49" resource.
-            return  m49IndexToCode(m49Array, value, encoded, errorCode);
+            أرجع  m49_شاخص_منزل_کوډ(m49Array, value, encoded, error_کوډ);
         }
-        char region[2];
+        حرف region[2];
         region[0] = 'A' + ((encoded % 27) - 1);
         region[1] = 'A' + (((encoded / 27) % 27) - 1);
-        return UnicodeString(region, 2, US_INV);
+        أرجع UnicodeString(region, 2, US_INV);
     }
 
-    bool readLSREncodedStrings(const ResourceTable &table, const char* key, ResourceValue &value, const ResourceArray& m49Array,
-                     LocalMemory<int32_t> &indexes, int32_t &length, UErrorCode &errorCode) {
-        if (U_FAILURE(errorCode)) { return false; }
-        if (table.findValue(key, value)) {
-            const int32_t* vectors = value.getIntVector(length, errorCode);
-            if (U_FAILURE(errorCode)) { return false; }
-            if (length == 0) { return true; }
+    منطقي read_LSREncoded_مزي_ګانې(ثابت Resource_جدول &جدول, ثابت حرف* کلی, Resource_ارزښت &value, ثابت ResourceArray& m49Array,
+                     Local_حافظه<int32_t> &indexes, int32_t &length, UError_کوډ &error_کوډ) {
+        إذا (U_FAILURE(error_کوډ)) { أرجع خطأ; }
+        إذا (جدول.پیدا_کړه_ارزښت(کلی, value)) {
+            ثابت int32_t* vectors = value.get_Int_ویکټور(length, error_کوډ);
+            إذا (U_FAILURE(error_کوډ)) { أرجع خطأ; }
+            إذا (length == 0) { أرجع ریښتیا; }
             int32_t *rawIndexes = indexes.allocateInsteadAndCopy(length * 3);
-            if (rawIndexes == nullptr) {
-                errorCode = U_MEMORY_ALLOCATION_ERROR;
-                return false;
+            إذا (rawIndexes == تش_اشاره) {
+                error_کوډ = U_حافظه_ویش_ERROR;
+                أرجع خطأ;
             }
-            for (int i = 0; i < length; ++i) {
-                rawIndexes[i*3] = strings.addByValue(toLanguage(vectors[i]), errorCode);
-                rawIndexes[i*3+1] = strings.addByValue(toScript(vectors[i]), errorCode);
-                rawIndexes[i*3+2] = strings.addByValue(
-                    toRegion(m49Array, value, vectors[i], errorCode), errorCode);
-                if (U_FAILURE(errorCode)) { return false; }
+            لكل (صحيح i = 0; i < length; ++i) {
+                rawIndexes[i*3] = مزي_ګانې.جمع_کړه_By_ارزښت(منزل_Language(vectors[i]), error_کوډ);
+                rawIndexes[i*3+1] = مزي_ګانې.جمع_کړه_By_ارزښت(منزل_Script(vectors[i]), error_کوډ);
+                rawIndexes[i*3+2] = مزي_ګانې.جمع_کړه_By_ارزښت(
+                    منزل_Region(m49Array, value, vectors[i], error_کوډ), error_کوډ);
+                إذا (U_FAILURE(error_کوډ)) { أرجع خطأ; }
             }
             length *= 3;
         }
-        return true;
+        أرجع ریښتیا;
     }
 };
 
-namespace {
+نطاق {
 
-LikelySubtags *gLikelySubtags = nullptr;
-UVector *gMacroregions = nullptr;
+LikelySubtags *gLikelySubtags = تش_اشاره;
+UVector *gMacroregions = تش_اشاره;
 UInitOnce gInitOnce {};
 
 UBool U_CALLCONV cleanup() {
-    delete gLikelySubtags;
-    gLikelySubtags = nullptr;
-    delete gMacroregions;
-    gMacroregions = nullptr;
+    ړنګول gLikelySubtags;
+    gLikelySubtags = تش_اشاره;
+    ړنګول gMacroregions;
+    gMacroregions = تش_اشاره;
     gInitOnce.reset();
-    return true;
+    أرجع ریښتیا;
 }
 
-constexpr const char16_t* MACROREGION_HARDCODE[] = {
+constexpr ثابت char16_t* MACROREGION_HARDCODE[] = {
     u"001~3",
     u"005",
     u"009",
@@ -382,131 +382,131 @@ constexpr const char16_t* MACROREGION_HARDCODE[] = {
 };
 
 constexpr char16_t RANGE_MARKER = 0x7E; /* '~' */
-void processMacroregionRange(const UnicodeString& regionName, UVector* newMacroRegions, UErrorCode& status) {
-    if (U_FAILURE(status)) { return; }
-    int32_t rangeMarkerLocation = regionName.indexOf(RANGE_MARKER);
+فراغ processMacroregionRange(ثابت UnicodeString& regionName, UVector* newMacroRegions, UError_کوډ& حالت) {
+    إذا (U_FAILURE(حالت)) { أرجع; }
+    int32_t rangeMarkerLocation = regionName.شاخص_د(RANGE_MARKER);
     char16_t buf[6];
-    regionName.extract(buf,6,status);
-    if ( rangeMarkerLocation > 0 ) {
-        char16_t endRange = regionName.charAt(rangeMarkerLocation+1);
+    regionName.extract(buf,6,حالت);
+    إذا ( rangeMarkerLocation > 0 ) {
+        char16_t پای_ټکی_Range = regionName.charAt(rangeMarkerLocation+1);
         buf[rangeMarkerLocation] = 0;
-        while ( buf[rangeMarkerLocation-1] <= endRange && U_SUCCESS(status)) {
-            LocalPointer<UnicodeString> newRegion(new UnicodeString(buf), status);
-            newMacroRegions->adoptElement(newRegion.orphan(),status);
+        طالما ( buf[rangeMarkerLocation-1] <= پای_ټکی_Range && U_SUCCESS(حالت)) {
+            Local_اشاره_ګر<UnicodeString> newRegion(جديد UnicodeString(buf), حالت);
+            newMacroRegions->adoptElement(newRegion.orphan(),حالت);
             buf[rangeMarkerLocation-1]++;
         }
-    } else {
-        LocalPointer<UnicodeString> newRegion(new UnicodeString(regionName), status);
-        newMacroRegions->adoptElement(newRegion.orphan(),status);
+    } وإلا {
+        Local_اشاره_ګر<UnicodeString> newRegion(جديد UnicodeString(regionName), حالت);
+        newMacroRegions->adoptElement(newRegion.orphan(),حالت);
     }
 }
 
-#if U_DEBUG
-UVector* loadMacroregions(UErrorCode &status) {
-    if (U_FAILURE(status)) { return nullptr; }
-    LocalPointer<UVector> newMacroRegions(new UVector(uprv_deleteUObject, uhash_compareUnicodeString, status), status);
+#إذا U_DEBUG
+UVector* بارول_Macroregions(UError_کوډ &حالت) {
+    إذا (U_FAILURE(حالت)) { أرجع تش_اشاره; }
+    Local_اشاره_ګر<UVector> newMacroRegions(جديد UVector(uprv_deleteUObject, uhash_compareUnicodeString, حالت), حالت);
 
-    LocalUResourceBundlePointer supplementalData(ures_openDirect(nullptr,"supplementalData",&status));
-    LocalUResourceBundlePointer idValidity(ures_getByKey(supplementalData.getAlias(),"idValidity",nullptr,&status));
-    LocalUResourceBundlePointer regionList(ures_getByKey(idValidity.getAlias(),"region",nullptr,&status));
-    LocalUResourceBundlePointer regionMacro(ures_getByKey(regionList.getAlias(),"macroregion",nullptr,&status));
+    Local_UResource_Bundle_اشاره_ګر supplemental_معلومات(ures_open_مستقیم(تش_اشاره,"supplementalData",&حالت));
+    Local_UResource_Bundle_اشاره_ګر idValidity(ures_get_By_کلی(supplemental_معلومات.getAlias(),"idValidity",تش_اشاره,&حالت));
+    Local_UResource_Bundle_اشاره_ګر regionList(ures_get_By_کلی(idValidity.getAlias(),"region",تش_اشاره,&حالت));
+    Local_UResource_Bundle_اشاره_ګر regionMacro(ures_get_By_کلی(regionList.getAlias(),"macroregion",تش_اشاره,&حالت));
 
-    if (U_FAILURE(status)) {
-        return nullptr;
+    إذا (U_FAILURE(حالت)) {
+        أرجع تش_اشاره;
     }
 
-    while (ures_hasNext(regionMacro.getAlias())) {
-        UnicodeString regionName = ures_getNextUnicodeString(regionMacro.getAlias(),nullptr,&status);
-        processMacroregionRange(regionName, newMacroRegions.getAlias(), status);
-        if (U_FAILURE(status)) {
-            return nullptr;
+    طالما (ures_has_بل(regionMacro.getAlias())) {
+        UnicodeString regionName = ures_get_بل_Unicode_String(regionMacro.getAlias(),تش_اشاره,&حالت);
+        processMacroregionRange(regionName, newMacroRegions.getAlias(), حالت);
+        إذا (U_FAILURE(حالت)) {
+            أرجع تش_اشاره;
         }
     }
 
-    return newMacroRegions.orphan();
+    أرجع newMacroRegions.orphan();
 }
-#endif // U_DEBUG
+#د_که_پای // U_DEBUG
 
-UVector* getStaticMacroregions(UErrorCode &status) {
-    if (U_FAILURE(status)) { return nullptr; }
-    LocalPointer<UVector> newMacroRegions(new UVector(uprv_deleteUObject, uhash_compareUnicodeString, status), status);
+UVector* getStaticMacroregions(UError_کوډ &حالت) {
+    إذا (U_FAILURE(حالت)) { أرجع تش_اشاره; }
+    Local_اشاره_ګر<UVector> newMacroRegions(جديد UVector(uprv_deleteUObject, uhash_compareUnicodeString, حالت), حالت);
 
-    if (U_FAILURE(status)) {
-        return nullptr;
+    إذا (U_FAILURE(حالت)) {
+        أرجع تش_اشاره;
     }
 
-    for (const auto *region : MACROREGION_HARDCODE) {
+    لكل (ثابت خپلکاری *region : MACROREGION_HARDCODE) {
         UnicodeString regionName(region);
-        processMacroregionRange(regionName, newMacroRegions.getAlias(), status);
-        if (U_FAILURE(status)) {
-            return nullptr;
+        processMacroregionRange(regionName, newMacroRegions.getAlias(), حالت);
+        إذا (U_FAILURE(حالت)) {
+            أرجع تش_اشاره;
         }
     }
 
-    return newMacroRegions.orphan();
+    أرجع newMacroRegions.orphan();
 }
 
 }  // namespace
 
-void U_CALLCONV LikelySubtags::initLikelySubtags(UErrorCode &errorCode) {
+فراغ U_CALLCONV LikelySubtags::initLikelySubtags(UError_کوډ &error_کوډ) {
     // This function is invoked only via umtx_initOnce().
-    U_ASSERT(gLikelySubtags == nullptr);
-    LikelySubtagsData data(errorCode);
-    data.load(errorCode);
-    if (U_FAILURE(errorCode)) { return; }
-    gLikelySubtags = new LikelySubtags(data);
-    gMacroregions = getStaticMacroregions(errorCode);
-#if U_DEBUG
-    auto macroregionsFromData = loadMacroregions(errorCode);
-    U_ASSERT((*gMacroregions) == (*macroregionsFromData));
-    delete macroregionsFromData;
-#endif
-    if (U_FAILURE(errorCode) || gLikelySubtags == nullptr || gMacroregions == nullptr) {
-        delete gLikelySubtags;
-        delete gMacroregions;
-        errorCode = U_MEMORY_ALLOCATION_ERROR;
-        return;
+    U_ASSERT(gLikelySubtags == تش_اشاره);
+    Likely_Subtags_معلومات معلومات(error_کوډ);
+    معلومات.load(error_کوډ);
+    إذا (U_FAILURE(error_کوډ)) { أرجع; }
+    gLikelySubtags = جديد LikelySubtags(معلومات);
+    gMacroregions = getStaticMacroregions(error_کوډ);
+#إذا U_DEBUG
+    خپلکاری macroregions_From_معلومات = بارول_Macroregions(error_کوډ);
+    U_ASSERT((*gMacroregions) == (*macroregions_From_معلومات));
+    ړنګول macroregions_From_معلومات;
+#د_که_پای
+    إذا (U_FAILURE(error_کوډ) || gLikelySubtags == تش_اشاره || gMacroregions == تش_اشاره) {
+        ړنګول gLikelySubtags;
+        ړنګول gMacroregions;
+        error_کوډ = U_حافظه_ویش_ERROR;
+        أرجع;
     }
 
-    ucln_common_registerCleanup(UCLN_COMMON_LIKELY_SUBTAGS, cleanup);
+    ucln_common_ثبتوونکی_Cleanup(UCLN_COMMON_LIKELY_SUBTAGS, cleanup);
 }
 
-const LikelySubtags *LikelySubtags::getSingleton(UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return nullptr; }
-    umtx_initOnce(gInitOnce, &LikelySubtags::initLikelySubtags, errorCode);
-    return gLikelySubtags;
+ثابت LikelySubtags *LikelySubtags::getSingleton(UError_کوډ &error_کوډ) {
+    إذا (U_FAILURE(error_کوډ)) { أرجع تش_اشاره; }
+    umtx_initOnce(gInitOnce, &LikelySubtags::initLikelySubtags, error_کوډ);
+    أرجع gLikelySubtags;
 }
 
-LikelySubtags::LikelySubtags(LikelySubtagsData &data) :
-        langInfoBundle(data.langInfoBundle),
-        strings(data.strings.orphanCharStrings()),
-        languageAliases(std::move(data.languageAliases)),
-        regionAliases(std::move(data.regionAliases)),
-        trie(data.trieBytes),
-        lsrs(data.lsrs),
-#if U_DEBUG
-        lsrsLength(data.lsrsLength),
-#endif // U_DEBUG
-        distanceData(std::move(data.distanceData)) {
-    data.langInfoBundle = nullptr;
-    data.lsrs = nullptr;
+LikelySubtags::LikelySubtags(Likely_Subtags_معلومات &معلومات) :
+        langInfoBundle(معلومات.langInfoBundle),
+        مزي_ګانې(معلومات.مزي_ګانې.orphan_Char_مزي_ګانې()),
+        languageAliases(std::move(معلومات.languageAliases)),
+        regionAliases(std::move(معلومات.regionAliases)),
+        trie(معلومات.trie_بایټونه),
+        lsrs(معلومات.lsrs),
+#إذا U_DEBUG
+        lsrs_اوږدتیا(معلومات.lsrs_اوږدتیا),
+#د_که_پای // U_DEBUG
+        واټن_معلومات(std::move(معلومات.واټن_معلومات)) {
+    معلومات.langInfoBundle = تش_اشاره;
+    معلومات.lsrs = تش_اشاره;
 
     // Cache the result of looking up language="und" encoded as "*", and "und-Zzzz" ("**").
-    UStringTrieResult result = trie.next(u'*');
-    U_ASSERT(USTRINGTRIE_HAS_NEXT(result));
+    UString_Trie_پایله پایله = trie.next(u'*');
+    U_ASSERT(USTRINGTRIE_HAS_بل(پایله));
     trieUndState = trie.getState64();
-    result = trie.next(u'*');
-    U_ASSERT(USTRINGTRIE_HAS_NEXT(result));
+    پایله = trie.next(u'*');
+    U_ASSERT(USTRINGTRIE_HAS_بل(پایله));
     trieUndZzzzState = trie.getState64();
-    result = trie.next(u'*');
-    U_ASSERT(USTRINGTRIE_HAS_VALUE(result));
-    defaultLsrIndex = trie.getValue();
+    پایله = trie.next(u'*');
+    U_ASSERT(USTRINGTRIE_HAS_ارزښت(پایله));
+    default_Lsr_شاخص = trie.get_ارزښت();
     trie.reset();
 
-    for (char16_t c = u'a'; c <= u'z'; ++c) {
-        result = trie.next(c);
-        if (result == USTRINGTRIE_NO_VALUE) {
-            trieFirstLetterStates[c - u'a'] = trie.getState64();
+    لكل (char16_t c = u'a'; c <= u'z'; ++c) {
+        پایله = trie.next(c);
+        إذا (پایله == USTRINGTRIE_NO_ارزښت) {
+            trie_لومړی_Letter_حالتونه[c - u'a'] = trie.getState64();
         }
         trie.reset();
     }
@@ -514,86 +514,86 @@ LikelySubtags::LikelySubtags(LikelySubtagsData &data) :
 
 LikelySubtags::~LikelySubtags() {
     ures_close(langInfoBundle);
-    delete strings;
-    delete[] lsrs;
+    ړنګول مزي_ګانې;
+    ړنګول[] lsrs;
 }
 
-LSR LikelySubtags::makeMaximizedLsrFrom(const Locale &locale,
-                                         bool returnInputIfUnmatch,
-                                         UErrorCode &errorCode) const {
-    if (U_FAILURE(errorCode)) { return {}; }
-    if (locale.isBogus()) {
-        errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return {};
+LSR LikelySubtags::makeMaximizedLsrFrom(ثابت Locale &locale,
+                                         منطقي return_ننوت_If_Unmatch,
+                                         UError_کوډ &error_کوډ) ثابت {
+    إذا (U_FAILURE(error_کوډ)) { أرجع {}; }
+    إذا (locale.isBogus()) {
+        error_کوډ = U_ILLEGAL_دلیل_ERROR;
+        أرجع {};
     }
-    const char *name = locale.getName();
-    if (!returnInputIfUnmatch && uprv_isAtSign(name[0]) && name[1] == 'x' && name[2] == '=') {  // name.startsWith("@x=")
+    ثابت حرف *name = locale.getName();
+    إذا (!return_ننوت_If_Unmatch && uprv_isAtSign(name[0]) && name[1] == 'x' && name[2] == '=') {  // name.startsWith("@x=")
         // Private use language tag x-subtag-subtag... which CLDR changes to
         // und-x-subtag-subtag...
-        return LSR(name, "", "", LSR::EXPLICIT_LSR);
+        أرجع LSR(name, "", "", LSR::EXPLICIT_LSR);
     }
     LSR max = makeMaximizedLsr(locale.getLanguage(), locale.getScript(), locale.getCountry(),
-                            locale.getVariant(), returnInputIfUnmatch, errorCode);
+                            locale.getVariant(), return_ننوت_If_Unmatch, error_کوډ);
 
-    if (uprv_strlen(max.language) == 0 &&
+    إذا (uprv_strlen(max.language) == 0 &&
         uprv_strlen(max.script) == 0 &&
         uprv_strlen(max.region) == 0) {
         // No match. ICU API mandate us to
         // If the provided ULocale instance is already in the maximal form, or
         // there is no data available available for maximization, it will be
         // returned.
-        return LSR(locale.getLanguage(), locale.getScript(), locale.getCountry(), LSR::EXPLICIT_LSR, errorCode);
+        أرجع LSR(locale.getLanguage(), locale.getScript(), locale.getCountry(), LSR::EXPLICIT_LSR, error_کوډ);
     }
-    return max;
+    أرجع max;
 }
 
-namespace {
+نطاق {
 
-const char *getCanonical(const CharStringMap &aliases, const char *alias) {
-    const char *canonical = aliases.get(alias);
-    return canonical == nullptr ? alias : canonical;
+ثابت حرف *getCanonical(ثابت CharStringMap &aliases, ثابت حرف *alias) {
+    ثابت حرف *canonical = aliases.get(alias);
+    أرجع canonical == تش_اشاره ? alias : canonical;
 }
 
 }  // namespace
 
-LSR LikelySubtags::makeMaximizedLsr(const char *language, const char *script, const char *region,
-                                     const char *variant,
-                                     bool returnInputIfUnmatch,
-                                     UErrorCode &errorCode) const {
-    if (U_FAILURE(errorCode)) { return {}; }
+LSR LikelySubtags::makeMaximizedLsr(ثابت حرف *language, ثابت حرف *script, ثابت حرف *region,
+                                     ثابت حرف *variant,
+                                     منطقي return_ننوت_If_Unmatch,
+                                     UError_کوډ &error_کوډ) ثابت {
+    إذا (U_FAILURE(error_کوډ)) { أرجع {}; }
     // Handle pseudolocales like en-XA, ar-XB, fr-PSCRACK.
     // They should match only themselves,
     // not other locales with what looks like the same language and script subtags.
-    if (!returnInputIfUnmatch) {
-        char c1;
-        if (region[0] == 'X' && (c1 = region[1]) != 0 && region[2] == 0) {
-            switch (c1) {
-            case 'A':
-                return LSR(PSEUDO_ACCENTS_PREFIX, language, script, region,
-                           LSR::EXPLICIT_LSR, errorCode);
-            case 'B':
-                return LSR(PSEUDO_BIDI_PREFIX, language, script, region,
-                           LSR::EXPLICIT_LSR, errorCode);
-            case 'C':
-                return LSR(PSEUDO_CRACKED_PREFIX, language, script, region,
-                           LSR::EXPLICIT_LSR, errorCode);
-            default:  // normal locale
-                break;
+    إذا (!return_ننوت_If_Unmatch) {
+        حرف c1;
+        إذا (region[0] == 'X' && (c1 = region[1]) != 0 && region[2] == 0) {
+            بدل (c1) {
+            حالة 'A':
+                أرجع LSR(PSEUDO_ACCENTS_مختاړی, language, script, region,
+                           LSR::EXPLICIT_LSR, error_کوډ);
+            حالة 'B':
+                أرجع LSR(PSEUDO_BIDI_مختاړی, language, script, region,
+                           LSR::EXPLICIT_LSR, error_کوډ);
+            حالة 'C':
+                أرجع LSR(PSEUDO_CRACKED_مختاړی, language, script, region,
+                           LSR::EXPLICIT_LSR, error_کوډ);
+            افتراضي:  // normal locale
+                اكسر;
             }
         }
 
-        if (variant[0] == 'P' && variant[1] == 'S') {
+        إذا (variant[0] == 'P' && variant[1] == 'S') {
             int32_t lsrFlags = *region == 0 ?
                 LSR::EXPLICIT_LANGUAGE | LSR::EXPLICIT_SCRIPT : LSR::EXPLICIT_LSR;
-            if (uprv_strcmp(variant, "PSACCENT") == 0) {
-                return LSR(PSEUDO_ACCENTS_PREFIX, language, script,
-                           *region == 0 ? "XA" : region, lsrFlags, errorCode);
-            } else if (uprv_strcmp(variant, "PSBIDI") == 0) {
-                return LSR(PSEUDO_BIDI_PREFIX, language, script,
-                           *region == 0 ? "XB" : region, lsrFlags, errorCode);
-            } else if (uprv_strcmp(variant, "PSCRACK") == 0) {
-                return LSR(PSEUDO_CRACKED_PREFIX, language, script,
-                           *region == 0 ? "XC" : region, lsrFlags, errorCode);
+            إذا (uprv_strcmp(variant, "PSACCENT") == 0) {
+                أرجع LSR(PSEUDO_ACCENTS_مختاړی, language, script,
+                           *region == 0 ? "XA" : region, lsrFlags, error_کوډ);
+            } وإلا إذا (uprv_strcmp(variant, "PSBIDI") == 0) {
+                أرجع LSR(PSEUDO_BIDI_مختاړی, language, script,
+                           *region == 0 ? "XB" : region, lsrFlags, error_کوډ);
+            } وإلا إذا (uprv_strcmp(variant, "PSCRACK") == 0) {
+                أرجع LSR(PSEUDO_CRACKED_مختاړی, language, script,
+                           *region == 0 ? "XC" : region, lsrFlags, error_کوډ);
             }
             // else normal locale
         }
@@ -602,389 +602,389 @@ LSR LikelySubtags::makeMaximizedLsr(const char *language, const char *script, co
     language = getCanonical(languageAliases, language);
     // (We have no script mappings.)
     region = getCanonical(regionAliases, region);
-    return maximize(language, script, region, returnInputIfUnmatch, errorCode);
+    أرجع maximize(language, script, region, return_ننوت_If_Unmatch, error_کوډ);
 }
 
-LSR LikelySubtags::maximize(const char *language, const char *script, const char *region,
-                             bool returnInputIfUnmatch,
-                             UErrorCode &errorCode) const {
-    if (U_FAILURE(errorCode)) { return {}; }
-    return maximize({language, static_cast<int32_t>(uprv_strlen(language))},
+LSR LikelySubtags::maximize(ثابت حرف *language, ثابت حرف *script, ثابت حرف *region,
+                             منطقي return_ننوت_If_Unmatch,
+                             UError_کوډ &error_کوډ) ثابت {
+    إذا (U_FAILURE(error_کوډ)) { أرجع {}; }
+    أرجع maximize({language, static_cast<int32_t>(uprv_strlen(language))},
                     {script, static_cast<int32_t>(uprv_strlen(script))},
                     {region, static_cast<int32_t>(uprv_strlen(region))},
-                    returnInputIfUnmatch,
-                    errorCode);
+                    return_ننوت_If_Unmatch,
+                    error_کوډ);
 }
 
-bool LikelySubtags::isMacroregion(StringPiece& region, UErrorCode& errorCode) const {
-    if (U_FAILURE(errorCode)) { return false; }
+منطقي LikelySubtags::isMacroregion(StringPiece& region, UError_کوډ& error_کوډ) ثابت {
+    إذا (U_FAILURE(error_کوډ)) { أرجع خطأ; }
     // In Java, we use Region class. In C++, since Region is under i18n,
     // we read the same data used by Region into gMacroregions avoid dependency
     // from common to i18n/region.cpp
-    umtx_initOnce(gInitOnce, &LikelySubtags::initLikelySubtags, errorCode);
-    if (U_FAILURE(errorCode)) { return false; }
+    umtx_initOnce(gInitOnce, &LikelySubtags::initLikelySubtags, error_کوډ);
+    إذا (U_FAILURE(error_کوډ)) { أرجع خطأ; }
     UnicodeString str(UnicodeString::fromUTF8(region));
-    return gMacroregions->contains((void *)&str);
+    أرجع gMacroregions->لري((فراغ *)&str);
 }
 
 LSR LikelySubtags::maximize(StringPiece language, StringPiece script, StringPiece region,
-                             bool returnInputIfUnmatch,
-                             UErrorCode &errorCode) const {
-    if (U_FAILURE(errorCode)) { return {}; }
-    if (language.compare("und") == 0) {
+                             منطقي return_ننوت_If_Unmatch,
+                             UError_کوډ &error_کوډ) ثابت {
+    إذا (U_FAILURE(error_کوډ)) { أرجع {}; }
+    إذا (language.compare("und") == 0) {
         language = "";
     }
-    if (script.compare("Zzzz") == 0) {
+    إذا (script.compare("Zzzz") == 0) {
         script = "";
     }
-    if (region.compare("ZZ") == 0) {
+    إذا (region.compare("ZZ") == 0) {
         region = "";
     }
-    if (!script.empty() && !region.empty() && !language.empty()) {
-        return LSR(language, script, region, LSR::EXPLICIT_LSR, errorCode);  // already maximized
+    إذا (!script.empty() && !region.empty() && !language.empty()) {
+        أرجع LSR(language, script, region, LSR::EXPLICIT_LSR, error_کوډ);  // already maximized
     }
-    bool retainLanguage = false;
-    bool retainScript = false;
-    bool retainRegion = false;
+    منطقي retainLanguage = خطأ;
+    منطقي retainScript = خطأ;
+    منطقي retainRegion = خطأ;
 
-    BytesTrie iter(trie);
+    بایټونه_Trie iter(trie);
     uint64_t state;
     int32_t value;
     // Small optimization: Array lookup for first language letter.
     int32_t c0;
-    if (0 <= (c0 = uprv_lowerOrdinal(language.data()[0])) && c0 <= 25 &&
+    إذا (0 <= (c0 = uprv_ښکتنی_Ordinal(language.معلومات()[0])) && c0 <= 25 &&
             language.length() >= 2 &&
-            (state = trieFirstLetterStates[c0]) != 0) {
-        value = trieNext(iter.resetToState64(state), language, 1);
-    } else {
-        value = trieNext(iter, language, 0);
+            (state = trie_لومړی_Letter_حالتونه[c0]) != 0) {
+        value = trie_بل(iter.reset_منزل_State64(state), language, 1);
+    } وإلا {
+        value = trie_بل(iter, language, 0);
     }
-    bool matchLanguage = (value >= 0);
-    bool matchScript = false;
-    if (value >= 0) {
+    منطقي سمون_Language = (value >= 0);
+    منطقي سمون_Script = خطأ;
+    إذا (value >= 0) {
         retainLanguage = !language.empty();
         state = iter.getState64();
-    } else {
-        retainLanguage = true;
-        iter.resetToState64(trieUndState);  // "und" ("*")
+    } وإلا {
+        retainLanguage = ریښتیا;
+        iter.reset_منزل_State64(trieUndState);  // "und" ("*")
         state = 0;
     }
 
-    if (value >= 0 && !script.empty()) {
-        matchScript = true;
+    إذا (value >= 0 && !script.empty()) {
+        سمون_Script = ریښتیا;
     }
-    if (value > 0) {
+    إذا (value > 0) {
         // Intermediate or final value from just language.
-        if (value == SKIP_SCRIPT) {
+        إذا (value == SKIP_SCRIPT) {
             value = 0;
         }
         retainScript = !script.empty();
-    } else {
-        value = trieNext(iter, script, 0);
-        if (value >= 0) {
+    } وإلا {
+        value = trie_بل(iter, script, 0);
+        إذا (value >= 0) {
             retainScript = !script.empty();
             state = iter.getState64();
-        } else {
-            retainScript = true;
-            if (state == 0) {
-                iter.resetToState64(trieUndZzzzState);  // "und-Zzzz" ("**")
-            } else {
-                iter.resetToState64(state);
-                value = trieNext(iter, "", 0);
+        } وإلا {
+            retainScript = ریښتیا;
+            إذا (state == 0) {
+                iter.reset_منزل_State64(trieUndZzzzState);  // "und-Zzzz" ("**")
+            } وإلا {
+                iter.reset_منزل_State64(state);
+                value = trie_بل(iter, "", 0);
                 U_ASSERT(value >= 0);
                 state = iter.getState64();
             }
         }
     }
 
-    bool matchRegion = false;
-    if (value > 0) {
+    منطقي سمون_Region = خطأ;
+    إذا (value > 0) {
         // Final value from just language or language+script.
         retainRegion = !region.empty();
-    } else {
-        value = trieNext(iter, region, 0);
-        if (value >= 0) {
-            if (!region.empty() && !isMacroregion(region, errorCode)) {
-                retainRegion = true;
-                matchRegion = true;
+    } وإلا {
+        value = trie_بل(iter, region, 0);
+        إذا (value >= 0) {
+            إذا (!region.empty() && !isMacroregion(region, error_کوډ)) {
+                retainRegion = ریښتیا;
+                سمون_Region = ریښتیا;
             }
-        } else {
-            retainRegion = true;
-            if (state == 0) {
-                value = defaultLsrIndex;
-            } else {
-                iter.resetToState64(state);
-                value = trieNext(iter, "", 0);
+        } وإلا {
+            retainRegion = ریښتیا;
+            إذا (state == 0) {
+                value = default_Lsr_شاخص;
+            } وإلا {
+                iter.reset_منزل_State64(state);
+                value = trie_بل(iter, "", 0);
                 U_ASSERT(value != 0);
                 // For the case of und_Latn
-                if (value < 0) {
+                إذا (value < 0) {
                     retainLanguage = !language.empty();
                     retainScript = !script.empty();
                     retainRegion = !region.empty();
                     // Fallback to und_$region =>
-                    iter.resetToState64(trieUndState);  // "und" ("*")
-                    value = trieNext(iter, "", 0);
+                    iter.reset_منزل_State64(trieUndState);  // "und" ("*")
+                    value = trie_بل(iter, "", 0);
                     U_ASSERT(value == 0);
-                    int64_t trieUndEmptyState = iter.getState64();
-                    value = trieNext(iter, region, 0);
+                    int64_t trie_Und_تشه_State = iter.getState64();
+                    value = trie_بل(iter, region, 0);
                     // Fallback to und =>
-                    if (value < 0) {
-                        iter.resetToState64(trieUndEmptyState);
-                        value = trieNext(iter, "", 0);
+                    إذا (value < 0) {
+                        iter.reset_منزل_State64(trie_Und_تشه_State);
+                        value = trie_بل(iter, "", 0);
                         U_ASSERT(value > 0);
                     }
                 }
             }
         }
     }
-    U_ASSERT(value < lsrsLength);
-    if (returnInputIfUnmatch &&
-        (!(matchLanguage || matchScript || (matchRegion && language.empty())))) {
-      return LSR("", "", "", LSR::EXPLICIT_LSR, errorCode);  // no matching.
+    U_ASSERT(value < lsrs_اوږدتیا);
+    إذا (return_ننوت_If_Unmatch &&
+        (!(سمون_Language || سمون_Script || (سمون_Region && language.empty())))) {
+      أرجع LSR("", "", "", LSR::EXPLICIT_LSR, error_کوډ);  // no matching.
     }
-    if (language.empty()) {
+    إذا (language.empty()) {
         language = StringPiece("und");
     }
 
-    if (!(retainLanguage || retainScript || retainRegion)) {
+    إذا (!(retainLanguage || retainScript || retainRegion)) {
         U_ASSERT(value >= 0);
         // Quickly return a copy of the lookup-result LSR
         // without new allocation of the subtags.
-        const LSR &matched = lsrs[value];
-        return LSR(matched.language, matched.script, matched.region, matched.flags);
+        ثابت LSR &matched = lsrs[value];
+        أرجع LSR(matched.language, matched.script, matched.region, matched.flags);
     }
-    if (!retainLanguage) {
+    إذا (!retainLanguage) {
         U_ASSERT(value >= 0);
         language = lsrs[value].language;
     }
-    if (!retainScript) {
+    إذا (!retainScript) {
         U_ASSERT(value >= 0);
         script = lsrs[value].script;
     }
-    if (!retainRegion) {
+    إذا (!retainRegion) {
         U_ASSERT(value >= 0);
         region = lsrs[value].region;
     }
-    int32_t retainMask = (retainLanguage ? 4 : 0) + (retainScript ? 2 : 0) + (retainRegion ? 1 : 0);
+    int32_t retain_ماسک = (retainLanguage ? 4 : 0) + (retainScript ? 2 : 0) + (retainRegion ? 1 : 0);
     // retainOldMask flags = LSR explicit-subtag flags
-    return LSR(language, script, region, retainMask, errorCode);
+    أرجع LSR(language, script, region, retain_ماسک, error_کوډ);
 }
 
-int32_t LikelySubtags::compareLikely(const LSR &lsr, const LSR &other, int32_t likelyInfo) const {
+int32_t LikelySubtags::compareLikely(ثابت LSR &lsr, ثابت LSR &other, int32_t likelyInfo) ثابت {
     // If likelyInfo >= 0:
     // likelyInfo bit 1 is set if the previous comparison with lsr
     // was for equal language and script.
     // Otherwise the scripts differed.
-    if (uprv_strcmp(lsr.language, other.language) != 0) {
-        return 0xfffffffc;  // negative, lsr not better than other
+    إذا (uprv_strcmp(lsr.language, other.language) != 0) {
+        أرجع 0xfffffffc;  // negative, lsr not better than other
     }
-    if (uprv_strcmp(lsr.script, other.script) != 0) {
-        int32_t index;
-        if (likelyInfo >= 0 && (likelyInfo & 2) == 0) {
-            index = likelyInfo >> 2;
-        } else {
-            index = getLikelyIndex(lsr.language, "");
-            likelyInfo = index << 2;
+    إذا (uprv_strcmp(lsr.script, other.script) != 0) {
+        int32_t شاخص;
+        إذا (likelyInfo >= 0 && (likelyInfo & 2) == 0) {
+            شاخص = likelyInfo >> 2;
+        } وإلا {
+            شاخص = get_Likely_شاخص(lsr.language, "");
+            likelyInfo = شاخص << 2;
         }
-        const LSR &likely = lsrs[index];
-        if (uprv_strcmp(lsr.script, likely.script) == 0) {
-            return likelyInfo | 1;
-        } else {
-            return likelyInfo & ~1;
-        }
-    }
-    if (uprv_strcmp(lsr.region, other.region) != 0) {
-        int32_t index;
-        if (likelyInfo >= 0 && (likelyInfo & 2) != 0) {
-            index = likelyInfo >> 2;
-        } else {
-            index = getLikelyIndex(lsr.language, lsr.region);
-            likelyInfo = (index << 2) | 2;
-        }
-        const LSR &likely = lsrs[index];
-        if (uprv_strcmp(lsr.region, likely.region) == 0) {
-            return likelyInfo | 1;
-        } else {
-            return likelyInfo & ~1;
+        ثابت LSR &likely = lsrs[شاخص];
+        إذا (uprv_strcmp(lsr.script, likely.script) == 0) {
+            أرجع likelyInfo | 1;
+        } وإلا {
+            أرجع likelyInfo & ~1;
         }
     }
-    return likelyInfo & ~1;  // lsr not better than other
+    إذا (uprv_strcmp(lsr.region, other.region) != 0) {
+        int32_t شاخص;
+        إذا (likelyInfo >= 0 && (likelyInfo & 2) != 0) {
+            شاخص = likelyInfo >> 2;
+        } وإلا {
+            شاخص = get_Likely_شاخص(lsr.language, lsr.region);
+            likelyInfo = (شاخص << 2) | 2;
+        }
+        ثابت LSR &likely = lsrs[شاخص];
+        إذا (uprv_strcmp(lsr.region, likely.region) == 0) {
+            أرجع likelyInfo | 1;
+        } وإلا {
+            أرجع likelyInfo & ~1;
+        }
+    }
+    أرجع likelyInfo & ~1;  // lsr not better than other
 }
 
 // Subset of maximize().
-int32_t LikelySubtags::getLikelyIndex(const char *language, const char *script) const {
-    if (uprv_strcmp(language, "und") == 0) {
+int32_t LikelySubtags::get_Likely_شاخص(ثابت حرف *language, ثابت حرف *script) ثابت {
+    إذا (uprv_strcmp(language, "und") == 0) {
         language = "";
     }
-    if (uprv_strcmp(script, "Zzzz") == 0) {
+    إذا (uprv_strcmp(script, "Zzzz") == 0) {
         script = "";
     }
 
-    BytesTrie iter(trie);
+    بایټونه_Trie iter(trie);
     uint64_t state;
     int32_t value;
     // Small optimization: Array lookup for first language letter.
     int32_t c0;
-    if (0 <= (c0 = uprv_lowerOrdinal(language[0])) && c0 <= 25 &&
+    إذا (0 <= (c0 = uprv_ښکتنی_Ordinal(language[0])) && c0 <= 25 &&
             language[1] != 0 &&  // language.length() >= 2
-            (state = trieFirstLetterStates[c0]) != 0) {
-        value = trieNext(iter.resetToState64(state), language, 1);
-    } else {
-        value = trieNext(iter, language, 0);
+            (state = trie_لومړی_Letter_حالتونه[c0]) != 0) {
+        value = trie_بل(iter.reset_منزل_State64(state), language, 1);
+    } وإلا {
+        value = trie_بل(iter, language, 0);
     }
-    if (value >= 0) {
+    إذا (value >= 0) {
         state = iter.getState64();
-    } else {
-        iter.resetToState64(trieUndState);  // "und" ("*")
+    } وإلا {
+        iter.reset_منزل_State64(trieUndState);  // "und" ("*")
         state = 0;
     }
 
-    if (value > 0) {
+    إذا (value > 0) {
         // Intermediate or final value from just language.
-        if (value == SKIP_SCRIPT) {
+        إذا (value == SKIP_SCRIPT) {
             value = 0;
         }
-    } else {
-        value = trieNext(iter, script, 0);
-        if (value >= 0) {
+    } وإلا {
+        value = trie_بل(iter, script, 0);
+        إذا (value >= 0) {
             state = iter.getState64();
-        } else {
-            if (state == 0) {
-                iter.resetToState64(trieUndZzzzState);  // "und-Zzzz" ("**")
-            } else {
-                iter.resetToState64(state);
-                value = trieNext(iter, "", 0);
+        } وإلا {
+            إذا (state == 0) {
+                iter.reset_منزل_State64(trieUndZzzzState);  // "und-Zzzz" ("**")
+            } وإلا {
+                iter.reset_منزل_State64(state);
+                value = trie_بل(iter, "", 0);
                 U_ASSERT(value >= 0);
                 state = iter.getState64();
             }
         }
     }
 
-    if (value > 0) {
+    إذا (value > 0) {
         // Final value from just language or language+script.
-    } else {
-        value = trieNext(iter, "", 0);
+    } وإلا {
+        value = trie_بل(iter, "", 0);
         U_ASSERT(value > 0);
     }
-    U_ASSERT(value < lsrsLength);
-    return value;
+    U_ASSERT(value < lsrs_اوږدتیا);
+    أرجع value;
 }
 
-int32_t LikelySubtags::trieNext(BytesTrie &iter, const char *s, int32_t i) {
-    UStringTrieResult result;
+int32_t LikelySubtags::trie_بل(بایټونه_Trie &iter, ثابت حرف *s, int32_t i) {
+    UString_Trie_پایله پایله;
     uint8_t c;
-    if ((c = s[i]) == 0) {
-        result = iter.next(u'*');
-    } else {
-        for (;;) {
-            c = uprv_invCharToAscii(c);
+    إذا ((c = s[i]) == 0) {
+        پایله = iter.next(u'*');
+    } وإلا {
+        لكل (;;) {
+            c = uprv_inv_Char_منزل_Ascii(c);
             // EBCDIC: If s[i] is not an invariant character,
             // then c is now 0 and will simply not match anything, which is harmless.
             uint8_t next = s[++i];
-            if (next != 0) {
-                if (!USTRINGTRIE_HAS_NEXT(iter.next(c))) {
-                    return -1;
+            إذا (next != 0) {
+                إذا (!USTRINGTRIE_HAS_بل(iter.next(c))) {
+                    أرجع -1;
                 }
-            } else {
+            } وإلا {
                 // last character of this subtag
-                result = iter.next(c | 0x80);
-                break;
+                پایله = iter.next(c | 0x80);
+                اكسر;
             }
             c = next;
         }
     }
-    switch (result) {
-    case USTRINGTRIE_NO_MATCH: return -1;
-    case USTRINGTRIE_NO_VALUE: return 0;
-    case USTRINGTRIE_INTERMEDIATE_VALUE:
-        U_ASSERT(iter.getValue() == SKIP_SCRIPT);
-        return SKIP_SCRIPT;
-    case USTRINGTRIE_FINAL_VALUE: return iter.getValue();
-    default: return -1;
+    بدل (پایله) {
+    حالة USTRINGTRIE_NO_سمون: أرجع -1;
+    حالة USTRINGTRIE_NO_ارزښت: أرجع 0;
+    حالة USTRINGTRIE_INTERMEDIATE_ارزښت:
+        U_ASSERT(iter.get_ارزښت() == SKIP_SCRIPT);
+        أرجع SKIP_SCRIPT;
+    حالة USTRINGTRIE_FINAL_ارزښت: أرجع iter.get_ارزښت();
+    افتراضي: أرجع -1;
     }
 }
-int32_t LikelySubtags::trieNext(BytesTrie &iter, StringPiece s, int32_t i) {
-    UStringTrieResult result;
+int32_t LikelySubtags::trie_بل(بایټونه_Trie &iter, StringPiece s, int32_t i) {
+    UString_Trie_پایله پایله;
     uint8_t c;
-    if (s.length() == i) {
-        result = iter.next(u'*');
-    } else {
-        c = s.data()[i];
-        for (;;) {
-            c = uprv_invCharToAscii(c);
+    إذا (s.length() == i) {
+        پایله = iter.next(u'*');
+    } وإلا {
+        c = s.معلومات()[i];
+        لكل (;;) {
+            c = uprv_inv_Char_منزل_Ascii(c);
             // EBCDIC: If s[i] is not an invariant character,
             // then c is now 0 and will simply not match anything, which is harmless.
-            if (i+1 != s.length()) {
-                if (!USTRINGTRIE_HAS_NEXT(iter.next(c))) {
-                    return -1;
+            إذا (i+1 != s.length()) {
+                إذا (!USTRINGTRIE_HAS_بل(iter.next(c))) {
+                    أرجع -1;
                 }
-                c = s.data()[++i];
-            } else {
+                c = s.معلومات()[++i];
+            } وإلا {
                 // last character of this subtag
-                result = iter.next(c | 0x80);
-                break;
+                پایله = iter.next(c | 0x80);
+                اكسر;
             }
         }
     }
-    switch (result) {
-    case USTRINGTRIE_NO_MATCH: return -1;
-    case USTRINGTRIE_NO_VALUE: return 0;
-    case USTRINGTRIE_INTERMEDIATE_VALUE:
-        U_ASSERT(iter.getValue() == SKIP_SCRIPT);
-        return SKIP_SCRIPT;
-    case USTRINGTRIE_FINAL_VALUE: return iter.getValue();
-    default: return -1;
+    بدل (پایله) {
+    حالة USTRINGTRIE_NO_سمون: أرجع -1;
+    حالة USTRINGTRIE_NO_ارزښت: أرجع 0;
+    حالة USTRINGTRIE_INTERMEDIATE_ارزښت:
+        U_ASSERT(iter.get_ارزښت() == SKIP_SCRIPT);
+        أرجع SKIP_SCRIPT;
+    حالة USTRINGTRIE_FINAL_ارزښت: أرجع iter.get_ارزښت();
+    افتراضي: أرجع -1;
     }
 }
 
 LSR LikelySubtags::minimizeSubtags(StringPiece language, StringPiece script,
                                     StringPiece region,
-                                    bool favorScript,
-                                    UErrorCode &errorCode) const {
-    if (U_FAILURE(errorCode)) { return {}; }
-    LSR max = maximize(language, script, region, true, errorCode);
-    if (U_FAILURE(errorCode)) { return {}; }
+                                    منطقي favorScript,
+                                    UError_کوډ &error_کوډ) ثابت {
+    إذا (U_FAILURE(error_کوډ)) { أرجع {}; }
+    LSR max = maximize(language, script, region, ریښتیا, error_کوډ);
+    إذا (U_FAILURE(error_کوډ)) { أرجع {}; }
     // If no match, return it.
-    if (uprv_strlen(max.language) == 0 &&
+    إذا (uprv_strlen(max.language) == 0 &&
         uprv_strlen(max.script) == 0 &&
         uprv_strlen(max.region) == 0) {
         // No match. ICU API mandate us to
         // "If this Locale is already in the minimal form, or not valid, or
         // there is no data available for minimization, the Locale will be
         // unchanged."
-        return LSR(language, script, region, LSR::EXPLICIT_LSR, errorCode);
+        أرجع LSR(language, script, region, LSR::EXPLICIT_LSR, error_کوډ);
     }
     // try language
-    LSR test = maximize(max.language, "", "", true, errorCode);
-    if (U_FAILURE(errorCode)) { return {}; }
-    if (test.isEquivalentTo(max)) {
-        return LSR(max.language, "", "", LSR::DONT_CARE_FLAGS, errorCode);
+    LSR test = maximize(max.language, "", "", ریښتیا, error_کوډ);
+    إذا (U_FAILURE(error_کوډ)) { أرجع {}; }
+    إذا (test.is_Equivalent_منزل(max)) {
+        أرجع LSR(max.language, "", "", LSR::DONT_CARE_FLAGS, error_کوډ);
     }
 
-    if (!favorScript) {
+    إذا (!favorScript) {
         // favor Region
         // try language and region
-        test = maximize(max.language, "", max.region, true, errorCode);
-        if (U_FAILURE(errorCode)) { return {}; }
-        if (test.isEquivalentTo(max)) {
-            return LSR(max.language, "", max.region, LSR::DONT_CARE_FLAGS, errorCode);
+        test = maximize(max.language, "", max.region, ریښتیا, error_کوډ);
+        إذا (U_FAILURE(error_کوډ)) { أرجع {}; }
+        إذا (test.is_Equivalent_منزل(max)) {
+            أرجع LSR(max.language, "", max.region, LSR::DONT_CARE_FLAGS, error_کوډ);
         }
     }
     // try language and script
-    test = maximize(max.language, max.script, "", true, errorCode);
-    if (U_FAILURE(errorCode)) { return {}; }
-    if (test.isEquivalentTo(max)) {
-        return LSR(max.language, max.script, "", LSR::DONT_CARE_FLAGS, errorCode);
+    test = maximize(max.language, max.script, "", ریښتیا, error_کوډ);
+    إذا (U_FAILURE(error_کوډ)) { أرجع {}; }
+    إذا (test.is_Equivalent_منزل(max)) {
+        أرجع LSR(max.language, max.script, "", LSR::DONT_CARE_FLAGS, error_کوډ);
     }
-    if (favorScript) {
+    إذا (favorScript) {
         // try language and region
-        test = maximize(max.language, "", max.region, true, errorCode);
-        if (U_FAILURE(errorCode)) { return {}; }
-        if (test.isEquivalentTo(max)) {
-            return LSR(max.language, "", max.region, LSR::DONT_CARE_FLAGS, errorCode);
+        test = maximize(max.language, "", max.region, ریښتیا, error_کوډ);
+        إذا (U_FAILURE(error_کوډ)) { أرجع {}; }
+        إذا (test.is_Equivalent_منزل(max)) {
+            أرجع LSR(max.language, "", max.region, LSR::DONT_CARE_FLAGS, error_کوډ);
         }
     }
-    return LSR(max.language, max.script, max.region, LSR::DONT_CARE_FLAGS, errorCode);
+    أرجع LSR(max.language, max.script, max.region, LSR::DONT_CARE_FLAGS, error_کوډ);
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_پای_ټکی

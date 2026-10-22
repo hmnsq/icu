@@ -4,131 +4,131 @@
 // lsr.cpp
 // created: 2019may08 Markus W. Scherer
 
-#include "unicode/utypes.h"
-#include "charstr.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "lsr.h"
-#include "uinvchar.h"
-#include "ustr_imp.h"
+#ضمن "unicode/utypes.h"
+#ضمن "charstr.h"
+#ضمن "cmemory.h"
+#ضمن "cstring.h"
+#ضمن "lsr.h"
+#ضمن "uinvchar.h"
+#ضمن "ustr_imp.h"
 
 U_NAMESPACE_BEGIN
 
-LSR::LSR(char prefix, const char *lang, const char *scr, const char *r, int32_t f,
-         UErrorCode &errorCode) :
-        language(nullptr), script(nullptr), region(r),
-        regionIndex(indexForRegion(region)), flags(f) {
-    if (U_SUCCESS(errorCode)) {
+LSR::LSR(حرف مختاړی, ثابت حرف *lang, ثابت حرف *scr, ثابت حرف *r, int32_t f,
+         UError_کوډ &error_کوډ) :
+        language(تش_اشاره), script(تش_اشاره), region(r),
+        region_شاخص(شاخص_For_Region(region)), flags(f) {
+    إذا (U_SUCCESS(error_کوډ)) {
         CharString langScript;
-        langScript.append(prefix, errorCode).append(lang, errorCode).append('\0', errorCode);
-        int32_t scriptOffset = langScript.length();
-        langScript.append(prefix, errorCode).append(scr, errorCode);
-        owned = langScript.cloneData(errorCode);
-        if (U_SUCCESS(errorCode)) {
+        langScript.append(مختاړی, error_کوډ).append(lang, error_کوډ).append('\0', error_کوډ);
+        int32_t script_دننه_واټن = langScript.length();
+        langScript.append(مختاړی, error_کوډ).append(scr, error_کوډ);
+        owned = langScript.clone_معلومات(error_کوډ);
+        إذا (U_SUCCESS(error_کوډ)) {
             language = owned;
-            script = owned + scriptOffset;
+            script = owned + script_دننه_واټن;
         }
     }
 }
 
 LSR::LSR(StringPiece lang, StringPiece scr, StringPiece r, int32_t f,
-         UErrorCode &errorCode) :
-        language(nullptr), script(nullptr), region(nullptr),
-        regionIndex(indexForRegion(r.data())), flags(f) {
-    if (U_SUCCESS(errorCode)) {
-        CharString data;
-        data.append(lang, errorCode).append('\0', errorCode);
-        int32_t scriptOffset = data.length();
-        data.append(scr, errorCode).append('\0', errorCode);
-        int32_t regionOffset = data.length();
-        data.append(r, errorCode);
-        owned = data.cloneData(errorCode);
-        if (U_SUCCESS(errorCode)) {
+         UError_کوډ &error_کوډ) :
+        language(تش_اشاره), script(تش_اشاره), region(تش_اشاره),
+        region_شاخص(شاخص_For_Region(r.معلومات())), flags(f) {
+    إذا (U_SUCCESS(error_کوډ)) {
+        CharString معلومات;
+        معلومات.append(lang, error_کوډ).append('\0', error_کوډ);
+        int32_t script_دننه_واټن = معلومات.length();
+        معلومات.append(scr, error_کوډ).append('\0', error_کوډ);
+        int32_t region_دننه_واټن = معلومات.length();
+        معلومات.append(r, error_کوډ);
+        owned = معلومات.clone_معلومات(error_کوډ);
+        إذا (U_SUCCESS(error_کوډ)) {
             language = owned;
-            script = owned + scriptOffset;
-            region = owned + regionOffset;
+            script = owned + script_دننه_واټن;
+            region = owned + region_دننه_واټن;
         }
     }
 }
 
 LSR::LSR(LSR &&other) noexcept :
         language(other.language), script(other.script), region(other.region), owned(other.owned),
-        regionIndex(other.regionIndex), flags(other.flags),
-        hashCode(other.hashCode) {
-    if (owned != nullptr) {
+        region_شاخص(other.region_شاخص), flags(other.flags),
+        hash_کوډ(other.hash_کوډ) {
+    إذا (owned != تش_اشاره) {
         other.language = other.script = "";
-        other.owned = nullptr;
-        other.hashCode = 0;
+        other.owned = تش_اشاره;
+        other.hash_کوډ = 0;
     }
 }
 
-void LSR::deleteOwned() {
+فراغ LSR::deleteOwned() {
     uprv_free(owned);
 }
 
-LSR &LSR::operator=(LSR &&other) noexcept {
-    this->~LSR();
+LSR &LSR::چلوونکی=(LSR &&other) noexcept {
+    هذا->~LSR();
     language = other.language;
     script = other.script;
     region = other.region;
-    regionIndex = other.regionIndex;
+    region_شاخص = other.region_شاخص;
     flags = other.flags;
     owned = other.owned;
-    hashCode = other.hashCode;
-    if (owned != nullptr) {
+    hash_کوډ = other.hash_کوډ;
+    إذا (owned != تش_اشاره) {
         other.language = other.script = "";
-        other.owned = nullptr;
-        other.hashCode = 0;
+        other.owned = تش_اشاره;
+        other.hash_کوډ = 0;
     }
-    return *this;
+    أرجع *هذا;
 }
 
-UBool LSR::isEquivalentTo(const LSR &other) const {
-    return
+UBool LSR::is_Equivalent_منزل(ثابت LSR &other) ثابت {
+    أرجع
         uprv_strcmp(language, other.language) == 0 &&
         uprv_strcmp(script, other.script) == 0 &&
-        regionIndex == other.regionIndex &&
+        region_شاخص == other.region_شاخص &&
         // Compare regions if both are ill-formed (and their indexes are 0).
-        (regionIndex > 0 || uprv_strcmp(region, other.region) == 0);
+        (region_شاخص > 0 || uprv_strcmp(region, other.region) == 0);
 }
 
-bool LSR::operator==(const LSR &other) const {
-    return
+منطقي LSR::چلوونکی==(ثابت LSR &other) ثابت {
+    أرجع
         uprv_strcmp(language, other.language) == 0 &&
         uprv_strcmp(script, other.script) == 0 &&
-        regionIndex == other.regionIndex &&
+        region_شاخص == other.region_شاخص &&
         // Compare regions if both are ill-formed (and their indexes are 0).
-        (regionIndex > 0 || uprv_strcmp(region, other.region) == 0) &&
+        (region_شاخص > 0 || uprv_strcmp(region, other.region) == 0) &&
         flags == other.flags;
 }
 
-int32_t LSR::indexForRegion(const char *region) {
+int32_t LSR::شاخص_For_Region(ثابت حرف *region) {
     int32_t c = region[0];
     int32_t a = c - '0';
-    if (0 <= a && a <= 9) {  // digits: "419"
+    إذا (0 <= a && a <= 9) {  // digits: "419"
         int32_t b = region[1] - '0';
-        if (b < 0 || 9 < b) { return 0; }
+        إذا (b < 0 || 9 < b) { أرجع 0; }
         c = region[2] - '0';
-        if (c < 0 || 9 < c || region[3] != 0) { return 0; }
-        return (10 * a + b) * 10 + c + 1;
-    } else {  // letters: "DE"
-        a = uprv_upperOrdinal(c);
-        if (a < 0 || 25 < a) { return 0; }
-        int32_t b = uprv_upperOrdinal(region[1]);
-        if (b < 0 || 25 < b || region[2] != 0) { return 0; }
-        return 26 * a + b + 1001;
+        إذا (c < 0 || 9 < c || region[3] != 0) { أرجع 0; }
+        أرجع (10 * a + b) * 10 + c + 1;
+    } وإلا {  // letters: "DE"
+        a = uprv_پاسنی_Ordinal(c);
+        إذا (a < 0 || 25 < a) { أرجع 0; }
+        int32_t b = uprv_پاسنی_Ordinal(region[1]);
+        إذا (b < 0 || 25 < b || region[2] != 0) { أرجع 0; }
+        أرجع 26 * a + b + 1001;
     }
-    return 0;
+    أرجع 0;
 }
 
-LSR &LSR::setHashCode() {
-    if (hashCode == 0) {
+LSR &LSR::سېټ_Hash_کوډ() {
+    إذا (hash_کوډ == 0) {
         uint32_t h = ustr_hashCharsN(language, static_cast<int32_t>(uprv_strlen(language)));
         h = h * 37 + ustr_hashCharsN(script, static_cast<int32_t>(uprv_strlen(script)));
-        h = h * 37 + regionIndex;
-        hashCode = h * 37 + flags;
+        h = h * 37 + region_شاخص;
+        hash_کوډ = h * 37 + flags;
     }
-    return *this;
+    أرجع *هذا;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_پای_ټکی

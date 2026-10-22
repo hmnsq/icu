@@ -7,7 +7,7 @@
 **********************************************************************
 */
 
-#include "unicode/chariter.h"
+#ضمن "unicode/chariter.h"
 
 U_NAMESPACE_BEGIN
 
@@ -15,86 +15,86 @@ ForwardCharacterIterator::~ForwardCharacterIterator() {}
 ForwardCharacterIterator::ForwardCharacterIterator()
 : UObject()
 {}
-ForwardCharacterIterator::ForwardCharacterIterator(const ForwardCharacterIterator &other)
+ForwardCharacterIterator::ForwardCharacterIterator(ثابت ForwardCharacterIterator &other)
 : UObject(other)
 {}
 
 
 CharacterIterator::CharacterIterator()
-: textLength(0), pos(0), begin(0), end(0) {
+: متن_اوږدتیا(0), pos(0), begin(0), پای_ټکی(0) {
 }
 
 CharacterIterator::CharacterIterator(int32_t length)
-: textLength(length), pos(0), begin(0), end(length) {
-    if(textLength < 0) {
-        textLength = end = 0;
+: متن_اوږدتیا(length), pos(0), begin(0), پای_ټکی(length) {
+    إذا(متن_اوږدتیا < 0) {
+        متن_اوږدتیا = پای_ټکی = 0;
     }
 }
 
 CharacterIterator::CharacterIterator(int32_t length, int32_t position)
-: textLength(length), pos(position), begin(0), end(length) {
-    if(textLength < 0) {
-        textLength = end = 0;
+: متن_اوږدتیا(length), pos(position), begin(0), پای_ټکی(length) {
+    إذا(متن_اوږدتیا < 0) {
+        متن_اوږدتیا = پای_ټکی = 0;
     }
-    if(pos < 0) {
+    إذا(pos < 0) {
         pos = 0;
-    } else if(pos > end) {
-        pos = end;
+    } وإلا إذا(pos > پای_ټکی) {
+        pos = پای_ټکی;
     }
 }
 
-CharacterIterator::CharacterIterator(int32_t length, int32_t textBegin, int32_t textEnd, int32_t position)
-: textLength(length), pos(position), begin(textBegin), end(textEnd) {
-    if(textLength < 0) {
-        textLength = 0;
+CharacterIterator::CharacterIterator(int32_t length, int32_t متن_Begin, int32_t متن_پای_ټکی, int32_t position)
+: متن_اوږدتیا(length), pos(position), begin(متن_Begin), پای_ټکی(متن_پای_ټکی) {
+    إذا(متن_اوږدتیا < 0) {
+        متن_اوږدتیا = 0;
     }
-    if(begin < 0) {
+    إذا(begin < 0) {
         begin = 0;
-    } else if(begin > textLength) {
-        begin = textLength;
+    } وإلا إذا(begin > متن_اوږدتیا) {
+        begin = متن_اوږدتیا;
     }
-    if(end < begin) {
-        end = begin;
-    } else if(end > textLength) {
-        end = textLength;
+    إذا(پای_ټکی < begin) {
+        پای_ټکی = begin;
+    } وإلا إذا(پای_ټکی > متن_اوږدتیا) {
+        پای_ټکی = متن_اوږدتیا;
     }
-    if(pos < begin) {
+    إذا(pos < begin) {
         pos = begin;
-    } else if(pos > end) {
-        pos = end;
+    } وإلا إذا(pos > پای_ټکی) {
+        pos = پای_ټکی;
     }
 }
 
 CharacterIterator::~CharacterIterator() {}
 
-CharacterIterator::CharacterIterator(const CharacterIterator &that) :
+CharacterIterator::CharacterIterator(ثابت CharacterIterator &that) :
 ForwardCharacterIterator(that),
-textLength(that.textLength), pos(that.pos), begin(that.begin), end(that.end)
+متن_اوږدتیا(that.متن_اوږدتیا), pos(that.pos), begin(that.begin), پای_ټکی(that.پای_ټکی)
 {
 }
 
 CharacterIterator&
-CharacterIterator::operator=(const CharacterIterator& that) U_LIFETIME_BOUND {
-    ForwardCharacterIterator::operator=(that);
-    textLength = that.textLength;
+CharacterIterator::چلوونکی=(ثابت CharacterIterator& that) U_LIFETIME_BOUND {
+    ForwardCharacterIterator::چلوونکی=(that);
+    متن_اوږدتیا = that.متن_اوږدتیا;
     pos = that.pos;
     begin = that.begin;
-    end = that.end;
-    return *this;
+    پای_ټکی = that.پای_ټکی;
+    أرجع *هذا;
 }
 
 // implementing first[32]PostInc() directly in a subclass should be faster
 // but these implementations make subclassing a little easier
 char16_t
-CharacterIterator::firstPostInc() {
-    setToStart();
-    return nextPostInc();
+CharacterIterator::لومړی_Post_Inc() {
+    سېټ_منزل_پیل();
+    أرجع بل_Post_Inc();
 }
 
 UChar32
 CharacterIterator::first32PostInc() {
-    setToStart();
-    return next32PostInc();
+    سېټ_منزل_پیل();
+    أرجع next32PostInc();
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_پای_ټکی

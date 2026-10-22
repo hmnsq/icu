@@ -19,71 +19,71 @@
 *   that then do not depend on resource bundle code and res_index bundles.
 */
 
-#include "unicode/errorcode.h"
-#include "unicode/utypes.h"
-#include "unicode/locid.h"
-#include "unicode/uloc.h"
-#include "unicode/ures.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "ucln_cmn.h"
-#include "uassert.h"
-#include "umutex.h"
-#include "uresimp.h"
+#ضمن "unicode/errorcode.h"
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/locid.h"
+#ضمن "unicode/uloc.h"
+#ضمن "unicode/ures.h"
+#ضمن "cmemory.h"
+#ضمن "cstring.h"
+#ضمن "ucln_cmn.h"
+#ضمن "uassert.h"
+#ضمن "umutex.h"
+#ضمن "uresimp.h"
 
 // C++ API ----------------------------------------------------------------- ***
 
 U_NAMESPACE_BEGIN
 
-static icu::Locale*  availableLocaleList = nullptr;
-static int32_t  availableLocaleListCount;
-static icu::UInitOnce gInitOnceLocale {};
+ساكن icu::Locale*  شته_Locale_List = تش_اشاره;
+ساكن int32_t  شته_Locale_List_شمېر;
+ساكن icu::UInitOnce gInitOnceLocale {};
 
-namespace {
+نطاق {
 
-UBool U_CALLCONV locale_available_cleanup()
+UBool U_CALLCONV locale_شته_cleanup()
 {
-    if (availableLocaleList) {
-        delete []availableLocaleList;
-        availableLocaleList = nullptr;
+    إذا (شته_Locale_List) {
+        ړنګول []شته_Locale_List;
+        شته_Locale_List = تش_اشاره;
     }
-    availableLocaleListCount = 0;
+    شته_Locale_List_شمېر = 0;
     gInitOnceLocale.reset();
 
-    return true;
+    أرجع ریښتیا;
 }
 
 }  // namespace
 
-void U_CALLCONV locale_available_init() {
+فراغ U_CALLCONV locale_شته_init() {
     // This function is a friend of class Locale.
     // This function is only invoked via umtx_initOnce().
     
     // for now, there is a hardcoded list, so just walk through that list and set it up.
     //  Note: this function is a friend of class Locale.
-    availableLocaleListCount = uloc_countAvailable();
-    if(availableLocaleListCount) {
-       availableLocaleList = new Locale[availableLocaleListCount];
+    شته_Locale_List_شمېر = uloc_شمېر_شته();
+    إذا(شته_Locale_List_شمېر) {
+       شته_Locale_List = جديد Locale[شته_Locale_List_شمېر];
     }
-    if (availableLocaleList == nullptr) {
-        availableLocaleListCount= 0;
+    إذا (شته_Locale_List == تش_اشاره) {
+        شته_Locale_List_شمېر= 0;
     }
-    for (int32_t locCount=availableLocaleListCount-1; locCount>=0; --locCount) {
-        availableLocaleList[locCount].setFromPOSIXID(uloc_getAvailable(locCount));
+    لكل (int32_t loc_شمېر=شته_Locale_List_شمېر-1; loc_شمېر>=0; --loc_شمېر) {
+        شته_Locale_List[loc_شمېر].سېټ_From_POSIXID(uloc_get_شته(loc_شمېر));
     }
-    ucln_common_registerCleanup(UCLN_COMMON_LOCALE_AVAILABLE, locale_available_cleanup);
+    ucln_common_ثبتوونکی_Cleanup(UCLN_COMMON_LOCALE_شته, locale_شته_cleanup);
 }
 
-const Locale* U_EXPORT2
-Locale::getAvailableLocales(int32_t& count)
+ثابت Locale* U_EXPORT2
+Locale::get_شته_Locales(int32_t& count)
 {
-    umtx_initOnce(gInitOnceLocale, &locale_available_init);
-    count = availableLocaleListCount;
-    return availableLocaleList;
+    umtx_initOnce(gInitOnceLocale, &locale_شته_init);
+    count = شته_Locale_List_شمېر;
+    أرجع شته_Locale_List;
 }
 
 
-U_NAMESPACE_END
+U_NAMESPACE_پای_ټکی
 
 // C API ------------------------------------------------------------------- ***
 
@@ -91,175 +91,175 @@ U_NAMESPACE_USE
 
 /* ### Constants **************************************************/
 
-namespace {
+نطاق {
 
 // Enough capacity for the two lists in the res_index.res file
-const char** gAvailableLocaleNames[2] = {};
-int32_t gAvailableLocaleCounts[2] = {};
+ثابت حرف** g_شته_Locale_نومونه[2] = {};
+int32_t g_شته_Locale_Counts[2] = {};
 icu::UInitOnce ginstalledLocalesInitOnce {};
 
-class AvailableLocalesSink : public ResourceSink {
-  public:
-    void put(const char *key, ResourceValue &value, UBool /*noFallback*/, UErrorCode &status) override {
-        if (U_FAILURE(status)) { return; }
-        ResourceTable resIndexTable = value.getTable(status);
-        if (U_FAILURE(status)) { return; }
-        for (int32_t i = 0; resIndexTable.getKeyAndValue(i, key, value); ++i) {
-            ULocAvailableType type;
-            if (uprv_strcmp(key, "InstalledLocales") == 0) {
-                type = ULOC_AVAILABLE_DEFAULT;
-            } else if (uprv_strcmp(key, "AliasLocales") == 0) {
-                type = ULOC_AVAILABLE_ONLY_LEGACY_ALIASES;
-            } else {
+صنف شته_Locales_Sink : عام ResourceSink {
+  عام:
+    فراغ put(ثابت حرف *کلی, Resource_ارزښت &value, UBool /*noFallback*/, UError_کوډ &حالت) override {
+        إذا (U_FAILURE(حالت)) { أرجع; }
+        Resource_جدول res_شاخص_جدول = value.get_جدول(حالت);
+        إذا (U_FAILURE(حالت)) { أرجع; }
+        لكل (int32_t i = 0; res_شاخص_جدول.get_کلی_And_ارزښت(i, کلی, value); ++i) {
+            ULoc_شته_Type type;
+            إذا (uprv_strcmp(کلی, "InstalledLocales") == 0) {
+                type = ULOC_شته_DEFAULT;
+            } وإلا إذا (uprv_strcmp(کلی, "AliasLocales") == 0) {
+                type = ULOC_شته_ONLY_LEGACY_ALIASES;
+            } وإلا {
                 // CLDRVersion, etc.
-                continue;
+                استمر;
             }
-            ResourceTable availableLocalesTable = value.getTable(status);
-            if (U_FAILURE(status)) {
-                return;
+            Resource_جدول شته_Locales_جدول = value.get_جدول(حالت);
+            إذا (U_FAILURE(حالت)) {
+                أرجع;
             }
-            gAvailableLocaleCounts[type] = availableLocalesTable.getSize();
-            gAvailableLocaleNames[type] = static_cast<const char**>(
-                uprv_malloc(gAvailableLocaleCounts[type] * sizeof(const char*)));
-            if (gAvailableLocaleNames[type] == nullptr) {
-                status = U_MEMORY_ALLOCATION_ERROR;
-                return;
+            g_شته_Locale_Counts[type] = شته_Locales_جدول.get_اندازه();
+            g_شته_Locale_نومونه[type] = static_cast<ثابت حرف**>(
+                uprv_malloc(g_شته_Locale_Counts[type] * حجم(ثابت حرف*)));
+            إذا (g_شته_Locale_نومونه[type] == تش_اشاره) {
+                حالت = U_حافظه_ویش_ERROR;
+                أرجع;
             }
-            for (int32_t j = 0; availableLocalesTable.getKeyAndValue(j, key, value); ++j) {
-                gAvailableLocaleNames[type][j] = key;
+            لكل (int32_t j = 0; شته_Locales_جدول.get_کلی_And_ارزښت(j, کلی, value); ++j) {
+                g_شته_Locale_نومونه[type][j] = کلی;
             }
         }
     }
 };
 
-class AvailableLocalesStringEnumeration : public StringEnumeration {
-  public:
-    AvailableLocalesStringEnumeration(ULocAvailableType type) : fType(type) {
+صنف شته_Locales_String_Enumeration : عام StringEnumeration {
+  عام:
+    شته_Locales_String_Enumeration(ULoc_شته_Type type) : fType(type) {
     }
 
-    const char* next(int32_t* resultLength, UErrorCode& status) U_LIFETIME_BOUND override {
-        if (U_FAILURE(status)) { return nullptr; }
-        ULocAvailableType actualType = fType;
-        int32_t actualIndex = fIndex++;
+    ثابت حرف* next(int32_t* پایله_اوږدتیا, UError_کوډ& حالت) U_LIFETIME_BOUND override {
+        إذا (U_FAILURE(حالت)) { أرجع تش_اشاره; }
+        ULoc_شته_Type actualType = fType;
+        int32_t actual_شاخص = f_شاخص++;
 
         // If the "combined" list was requested, resolve that now
-        if (fType == ULOC_AVAILABLE_WITH_LEGACY_ALIASES) {
-            int32_t defaultLocalesCount = gAvailableLocaleCounts[ULOC_AVAILABLE_DEFAULT];
-            if (actualIndex < defaultLocalesCount) {
-                actualType = ULOC_AVAILABLE_DEFAULT;
-            } else {
-                actualIndex -= defaultLocalesCount;
-                actualType = ULOC_AVAILABLE_ONLY_LEGACY_ALIASES;
+        إذا (fType == ULOC_شته_WITH_LEGACY_ALIASES) {
+            int32_t default_Locales_شمېر = g_شته_Locale_Counts[ULOC_شته_DEFAULT];
+            إذا (actual_شاخص < default_Locales_شمېر) {
+                actualType = ULOC_شته_DEFAULT;
+            } وإلا {
+                actual_شاخص -= default_Locales_شمېر;
+                actualType = ULOC_شته_ONLY_LEGACY_ALIASES;
             }
         }
 
         // Return the requested string
-        int32_t count = gAvailableLocaleCounts[actualType];
-        const char* result;
-        if (actualIndex < count) {
-            result = gAvailableLocaleNames[actualType][actualIndex];
-            if (resultLength != nullptr) {
-                *resultLength = static_cast<int32_t>(uprv_strlen(result));
+        int32_t count = g_شته_Locale_Counts[actualType];
+        ثابت حرف* پایله;
+        إذا (actual_شاخص < count) {
+            پایله = g_شته_Locale_نومونه[actualType][actual_شاخص];
+            إذا (پایله_اوږدتیا != تش_اشاره) {
+                *پایله_اوږدتیا = static_cast<int32_t>(uprv_strlen(پایله));
             }
-        } else {
-            result = nullptr;
-            if (resultLength != nullptr) {
-                *resultLength = 0;
+        } وإلا {
+            پایله = تش_اشاره;
+            إذا (پایله_اوږدتیا != تش_اشاره) {
+                *پایله_اوږدتیا = 0;
             }
         }
-        return result;
+        أرجع پایله;
     }
 
-    void reset(UErrorCode &status) override {
-        if (U_FAILURE(status)) { return; }
-        fIndex = 0;
+    فراغ reset(UError_کوډ &حالت) override {
+        إذا (U_FAILURE(حالت)) { أرجع; }
+        f_شاخص = 0;
     }
 
-    int32_t count(UErrorCode &status) const override {
-        if (U_FAILURE(status)) { return 0; }
-        if (fType == ULOC_AVAILABLE_WITH_LEGACY_ALIASES) {
-            return gAvailableLocaleCounts[ULOC_AVAILABLE_DEFAULT]
-                + gAvailableLocaleCounts[ULOC_AVAILABLE_ONLY_LEGACY_ALIASES];
-        } else {
-            return gAvailableLocaleCounts[fType];
+    int32_t count(UError_کوډ &حالت) ثابت override {
+        إذا (U_FAILURE(حالت)) { أرجع 0; }
+        إذا (fType == ULOC_شته_WITH_LEGACY_ALIASES) {
+            أرجع g_شته_Locale_Counts[ULOC_شته_DEFAULT]
+                + g_شته_Locale_Counts[ULOC_شته_ONLY_LEGACY_ALIASES];
+        } وإلا {
+            أرجع g_شته_Locale_Counts[fType];
         }
     }
 
-  private:
-    ULocAvailableType fType;
-    int32_t fIndex = 0;
+  خاص:
+    ULoc_شته_Type fType;
+    int32_t f_شاخص = 0;
 };
 
 /* ### Get available **************************************************/
 
 UBool U_CALLCONV uloc_cleanup() {
-    for (int32_t i = 0; i < UPRV_LENGTHOF(gAvailableLocaleNames); i++) {
-        uprv_free(gAvailableLocaleNames[i]);
-        gAvailableLocaleNames[i] = nullptr;
-        gAvailableLocaleCounts[i] = 0;
+    لكل (int32_t i = 0; i < UPRV_LENGTHOF(g_شته_Locale_نومونه); i++) {
+        uprv_free(g_شته_Locale_نومونه[i]);
+        g_شته_Locale_نومونه[i] = تش_اشاره;
+        g_شته_Locale_Counts[i] = 0;
     }
     ginstalledLocalesInitOnce.reset();
-    return true;
+    أرجع ریښتیا;
 }
 
 // Load Installed Locales. This function will be called exactly once
 //   via the initOnce mechanism.
 
-void U_CALLCONV loadInstalledLocales(UErrorCode& status) {
-    ucln_common_registerCleanup(UCLN_COMMON_ULOC, uloc_cleanup);
+فراغ U_CALLCONV بارول_Installed_Locales(UError_کوډ& حالت) {
+    ucln_common_ثبتوونکی_Cleanup(UCLN_COMMON_ULOC, uloc_cleanup);
 
-    icu::LocalUResourceBundlePointer rb(ures_openDirect(nullptr, "res_index", &status));
-    AvailableLocalesSink sink;
-    ures_getAllItemsWithFallback(rb.getAlias(), "", sink, status);
+    icu::Local_UResource_Bundle_اشاره_ګر rb(ures_open_مستقیم(تش_اشاره, "res_index", &حالت));
+    شته_Locales_Sink sink;
+    ures_get_All_توکي_With_Fallback(rb.getAlias(), "", sink, حالت);
 }
 
-void _load_installedLocales(UErrorCode& status) {
-    umtx_initOnce(ginstalledLocalesInitOnce, &loadInstalledLocales, status);
+فراغ بارول_installed_Locales(UError_کوډ& حالت) {
+    umtx_initOnce(ginstalledLocalesInitOnce, &بارول_Installed_Locales, حالت);
 }
 
 } // namespace
 
-U_CAPI const char* U_EXPORT2
-uloc_getAvailable(int32_t offset) {
-    icu::ErrorCode status;
-    _load_installedLocales(status);
-    if (status.isFailure()) {
-        return nullptr;
+U_CAPI ثابت حرف* U_EXPORT2
+uloc_get_شته(int32_t دننه_واټن) {
+    icu::Error_کوډ حالت;
+    بارول_installed_Locales(حالت);
+    إذا (حالت.isFailure()) {
+        أرجع تش_اشاره;
     }
-    if (offset > gAvailableLocaleCounts[0]) {
+    إذا (دننه_واټن > g_شته_Locale_Counts[0]) {
         // *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        أرجع تش_اشاره;
     }
-    return gAvailableLocaleNames[0][offset];
+    أرجع g_شته_Locale_نومونه[0][دننه_واټن];
 }
 
 U_CAPI int32_t  U_EXPORT2
-uloc_countAvailable() {
-    icu::ErrorCode status;
-    _load_installedLocales(status);
-    if (status.isFailure()) {
-        return 0;
+uloc_شمېر_شته() {
+    icu::Error_کوډ حالت;
+    بارول_installed_Locales(حالت);
+    إذا (حالت.isFailure()) {
+        أرجع 0;
     }
-    return gAvailableLocaleCounts[0];
+    أرجع g_شته_Locale_Counts[0];
 }
 
 U_CAPI UEnumeration* U_EXPORT2
-uloc_openAvailableByType(ULocAvailableType type, UErrorCode* status) {
-    if (U_FAILURE(*status)) {
-        return nullptr;
+uloc_open_شته_By_Type(ULoc_شته_Type type, UError_کوډ* حالت) {
+    إذا (U_FAILURE(*حالت)) {
+        أرجع تش_اشاره;
     }
-    if (type < 0 || type >= ULOC_AVAILABLE_COUNT) {
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+    إذا (type < 0 || type >= ULOC_شته_شمېر) {
+        *حالت = U_ILLEGAL_دلیل_ERROR;
+        أرجع تش_اشاره;
     }
-    _load_installedLocales(*status);
-    if (U_FAILURE(*status)) {
-        return nullptr;
+    بارول_installed_Locales(*حالت);
+    إذا (U_FAILURE(*حالت)) {
+        أرجع تش_اشاره;
     }
-    LocalPointer<AvailableLocalesStringEnumeration> result(
-        new AvailableLocalesStringEnumeration(type), *status);
-    if (U_FAILURE(*status)) {
-        return nullptr;
+    Local_اشاره_ګر<شته_Locales_String_Enumeration> پایله(
+        جديد شته_Locales_String_Enumeration(type), *حالت);
+    إذا (U_FAILURE(*حالت)) {
+        أرجع تش_اشاره;
     }
-    return uenum_openFromStringEnumeration(result.orphan(), status);
+    أرجع uenum_openFromStringEnumeration(پایله.orphan(), حالت);
 }

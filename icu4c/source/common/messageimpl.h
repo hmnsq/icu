@@ -14,14 +14,14 @@
 *   created by: Markus W. Scherer
 */
 
-#ifndef __MESSAGEIMPL_H__
-#define __MESSAGEIMPL_H__
+#که_نه_تعریف_شوی __MESSAGEIMPL_H__
+#تعریف_کړه __MESSAGEIMPL_H__
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if !UCONFIG_NO_FORMATTING
+#إذا !UCONFIG_NO_FORMATTING
 
-#include "unicode/messagepattern.h"
+#ضمن "unicode/messagepattern.h"
 
 U_NAMESPACE_BEGIN
 
@@ -30,36 +30,36 @@ U_NAMESPACE_BEGIN
  * In Java, these are package-private methods in MessagePattern itself.
  * In C++, they are declared here and implemented in messagepattern.cpp.
  */
-class U_COMMON_API MessageImpl {
-public:
+class U_COMMON_API پیغام_Impl {
+عام:
     /**
      * @return true if getApostropheMode()==UMSGPAT_APOS_DOUBLE_REQUIRED
      */
-    static UBool jdkAposMode(const MessagePattern &msgPattern) {
-        return msgPattern.getApostropheMode()==UMSGPAT_APOS_DOUBLE_REQUIRED;
+    ساكن UBool jdk_Apos_ډېرپېښ(ثابت پیغام_نمونه &پیغام_نمونه_2) {
+        أرجع پیغام_نمونه_2.get_Apostrophe_ډېرپېښ()==UMSGPAT_APOS_DOUBLE_REQUIRED;
     }
 
     /**
      * Appends the s[start, limit[ substring to sb, but with only half of the apostrophes
      * according to JDK pattern behavior.
      */
-    static void appendReducedApostrophes(const UnicodeString &s, int32_t start, int32_t limit,
+    ساكن فراغ appendReducedApostrophes(ثابت UnicodeString &s, int32_t پیل, int32_t حد,
                                          UnicodeString &sb);
 
     /**
      * Appends the sub-message to the result string.
      * Omits SKIP_SYNTAX and appends whole arguments using appendReducedApostrophes().
      */
-    static UnicodeString& appendSubMessageWithoutSkipSyntax(const MessagePattern& msgPattern,
-                                                            int32_t msgStart,
-                                                            UnicodeString& result U_LIFETIME_BOUND);
+    ساكن UnicodeString& append_Sub_پیغام_Without_Skip_Syntax(ثابت پیغام_نمونه& پیغام_نمونه_2,
+                                                            int32_t پیغام_پیل,
+                                                            UnicodeString& پایله U_LIFETIME_BOUND);
 
-private:
-    MessageImpl() = delete;  // no constructor: all static methods
+خاص:
+    پیغام_Impl() = delete;  // no constructor: all static methods
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_پای_ټکی
 
-#endif  // !UCONFIG_NO_FORMATTING
+#د_که_پای  // !UCONFIG_NO_FORMATTING
 
-#endif  // __MESSAGEIMPL_H__
+#د_که_پای  // __MESSAGEIMPL_H__

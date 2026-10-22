@@ -44,46 +44,46 @@ Disclaimer and license
  * - UTF-16 handling
  */
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if !UCONFIG_NO_IDNA
+#إذا !UCONFIG_NO_IDNA
 
-#include "unicode/ustring.h"
-#include "unicode/utf.h"
-#include "unicode/utf16.h"
-#include "ustr_imp.h"
-#include "cstring.h"
-#include "cmemory.h"
-#include "punycode.h"
-#include "uassert.h"
+#ضمن "unicode/ustring.h"
+#ضمن "unicode/utf.h"
+#ضمن "unicode/utf16.h"
+#ضمن "ustr_imp.h"
+#ضمن "cstring.h"
+#ضمن "cmemory.h"
+#ضمن "punycode.h"
+#ضمن "uassert.h"
 
 
 /* Punycode ----------------------------------------------------------------- */
 
 /* Punycode parameters for Bootstring */
-#define BASE            36
-#define TMIN            1
-#define TMAX            26
-#define SKEW            38
-#define DAMP            700
-#define INITIAL_BIAS    72
-#define INITIAL_N       0x80
+#تعریف_کړه بنسټ_2            36
+#تعریف_کړه TMIN            1
+#تعریف_کړه TMAX            26
+#تعریف_کړه SKEW            38
+#تعریف_کړه DAMP            700
+#تعریف_کړه INITIAL_BIAS    72
+#تعریف_کړه INITIAL_N       0x80
 
 /* "Basic" Unicode/ASCII code points */
-#define _HYPHEN         0X2d
-#define DELIMITER       _HYPHEN
+#تعریف_کړه _HYPHEN         0X2d
+#تعریف_کړه DELIMITER       _HYPHEN
 
-#define _ZERO_          0X30
-#define _NINE           0x39
+#تعریف_کړه _ZERO_          0X30
+#تعریف_کړه _NINE           0x39
 
-#define _SMALL_A        0X61
-#define _SMALL_Z        0X7a
+#تعریف_کړه _SMALL_A        0X61
+#تعریف_کړه _SMALL_Z        0X7a
 
-#define _CAPITAL_A      0X41
-#define _CAPITAL_Z      0X5a
+#تعریف_کړه _CAPITAL_A      0X41
+#تعریف_کړه _CAPITAL_Z      0X5a
 
-#define IS_BASIC(c) ((c)<0x80)
-#define IS_BASIC_UPPERCASE(c) (_CAPITAL_A<=(c) && (c)<=_CAPITAL_Z)
+#تعریف_کړه IS_BASIC(c) ((c)<0x80)
+#تعریف_کړه IS_BASIC_UPPERCASE(c) (_CAPITAL_A<=(c) && (c)<=_CAPITAL_Z)
 
 /**
  * digitToBasic() returns the basic code point whose value
@@ -91,18 +91,18 @@ Disclaimer and license
  * range 0 to BASE-1. The lowercase form is used unless the uppercase flag is
  * nonzero, in which case the uppercase form is used.
  */
-static inline char
-digitToBasic(int32_t digit, UBool uppercase) {
+ساكن مضمن حرف
+digit_منزل_Basic(int32_t digit, UBool uppercase) {
     /*  0..25 map to ASCII a..z or A..Z */
     /* 26..35 map to ASCII 0..9         */
-    if(digit<26) {
-        if(uppercase) {
-            return static_cast<char>(_CAPITAL_A + digit);
-        } else {
-            return static_cast<char>(_SMALL_A + digit);
+    إذا(digit<26) {
+        إذا(uppercase) {
+            أرجع static_cast<حرف>(_CAPITAL_A + digit);
+        } وإلا {
+            أرجع static_cast<حرف>(_SMALL_A + digit);
         }
-    } else {
-        return static_cast<char>((_ZERO_ - 26) + digit);
+    } وإلا {
+        أرجع static_cast<حرف>((_ZERO_ - 26) + digit);
     }
 }
 
@@ -110,36 +110,36 @@ digitToBasic(int32_t digit, UBool uppercase) {
  * @return the numeric value of a basic code point (for use in representing integers)
  *         in the range 0 to BASE-1, or a negative value if cp is invalid.
  */
-static int32_t decodeDigit(int32_t cp) {
-    if(cp<=u'Z') {
-        if(cp<=u'9') {
-            if(cp<u'0') {
-                return -1;
-            } else {
-                return cp-u'0'+26;  // 0..9 -> 26..35
+ساكن int32_t decodeDigit(int32_t cp) {
+    إذا(cp<=u'Z') {
+        إذا(cp<=u'9') {
+            إذا(cp<u'0') {
+                أرجع -1;
+            } وإلا {
+                أرجع cp-u'0'+26;  // 0..9 -> 26..35
             }
-        } else {
-            return cp-u'A';  // A-Z -> 0..25
+        } وإلا {
+            أرجع cp-u'A';  // A-Z -> 0..25
         }
-    } else if(cp<=u'z') {
-        return cp-'a';  // a..z -> 0..25
-    } else {
-        return -1;
+    } وإلا إذا(cp<=u'z') {
+        أرجع cp-'a';  // a..z -> 0..25
+    } وإلا {
+        أرجع -1;
     }
 }
 
-static inline char
-asciiCaseMap(char b, UBool uppercase) {
-    if(uppercase) {
-        if(_SMALL_A<=b && b<=_SMALL_Z) {
+ساكن مضمن حرف
+asciiCaseMap(حرف b, UBool uppercase) {
+    إذا(uppercase) {
+        إذا(_SMALL_A<=b && b<=_SMALL_Z) {
             b-=(_SMALL_A-_CAPITAL_A);
         }
-    } else {
-        if(_CAPITAL_A<=b && b<=_CAPITAL_Z) {
+    } وإلا {
+        إذا(_CAPITAL_A<=b && b<=_CAPITAL_Z) {
             b+=(_SMALL_A-_CAPITAL_A);
         }
     }
-    return b;
+    أرجع b;
 }
 
 /* Punycode-specific Bootstring code ---------------------------------------- */
@@ -150,134 +150,134 @@ asciiCaseMap(char b, UBool uppercase) {
  */
 
 /* Bias adaptation function. */
-static int32_t
-adaptBias(int32_t delta, int32_t length, UBool firstTime) {
+ساكن int32_t
+adaptBias(int32_t delta, int32_t length, UBool لومړی_وخت) {
     int32_t count;
 
-    if(firstTime) {
+    إذا(لومړی_وخت) {
         delta/=DAMP;
-    } else {
+    } وإلا {
         delta/=2;
     }
 
     delta+=delta/length;
-    for(count=0; delta>((BASE-TMIN)*TMAX)/2; count+=BASE) {
-        delta/=(BASE-TMIN);
+    لكل(count=0; delta>((بنسټ_2-TMIN)*TMAX)/2; count+=بنسټ_2) {
+        delta/=(بنسټ_2-TMIN);
     }
 
-    return count+(((BASE-TMIN+1)*delta)/(delta+SKEW));
+    أرجع count+(((بنسټ_2-TMIN+1)*delta)/(delta+SKEW));
 }
 
-namespace {
+نطاق {
 
 // ICU-13727: Limit input length for n^2 algorithm
 // where well-formed strings are at most 59 characters long.
-constexpr int32_t ENCODE_MAX_CODE_UNITS=1000;
+constexpr int32_t ENCODE_MAX_کوډ_UNITS=1000;
 constexpr int32_t DECODE_MAX_CHARS=2000;
 
 }  // namespace
 
 // encode
 U_CAPI int32_t
-u_strToPunycode(const char16_t *src, int32_t srcLength,
-                char16_t *dest, int32_t destCapacity,
-                const UBool *caseFlags,
-                UErrorCode *pErrorCode) {
+u_str_منزل_Punycode(ثابت char16_t *src, int32_t src_اوږدتیا,
+                char16_t *dest, int32_t dest_ظرفیت,
+                ثابت UBool *caseFlags,
+                UError_کوډ *p_Error_کوډ) {
 
-    int32_t cpBuffer[ENCODE_MAX_CODE_UNITS];
-    int32_t n, delta, handledCPCount, basicLength, destLength, bias, j, m, q, k, t, srcCPCount;
+    int32_t cp_بفر[ENCODE_MAX_کوډ_UNITS];
+    int32_t n, delta, handledCPCount, basic_اوږدتیا, dest_اوږدتیا, bias, j, m, q, k, t, srcCPCount;
     char16_t c, c2;
 
     /* argument checking */
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    إذا(p_Error_کوډ==تش_اشاره || U_FAILURE(*p_Error_کوډ)) {
+        أرجع 0;
     }
 
-    if(src==nullptr || srcLength<-1 || destCapacity<0 || (dest==nullptr && destCapacity!=0)) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    إذا(src==تش_اشاره || src_اوږدتیا<-1 || dest_ظرفیت<0 || (dest==تش_اشاره && dest_ظرفیت!=0)) {
+        *p_Error_کوډ=U_ILLEGAL_دلیل_ERROR;
+        أرجع 0;
     }
-    if (srcLength>ENCODE_MAX_CODE_UNITS) {
-        *pErrorCode=U_INPUT_TOO_LONG_ERROR;
-        return 0;
+    إذا (src_اوږدتیا>ENCODE_MAX_کوډ_UNITS) {
+        *p_Error_کوډ=U_ننوت_TOO_LONG_ERROR;
+        أرجع 0;
     }
 
     /*
      * Handle the basic code points and
      * convert extended ones to UTF-32 in cpBuffer (caseFlag in sign bit):
      */
-    srcCPCount=destLength=0;
-    if(srcLength==-1) {
+    srcCPCount=dest_اوږدتیا=0;
+    إذا(src_اوږدتیا==-1) {
         /* NUL-terminated input */
-        for(j=0; /* no condition */; ++j) {
-            if((c=src[j])==0) {
-                break;
+        لكل(j=0; /* no condition */; ++j) {
+            إذا((c=src[j])==0) {
+                اكسر;
             }
-            if(j>=ENCODE_MAX_CODE_UNITS) {
-                *pErrorCode=U_INPUT_TOO_LONG_ERROR;
-                return 0;
+            إذا(j>=ENCODE_MAX_کوډ_UNITS) {
+                *p_Error_کوډ=U_ننوت_TOO_LONG_ERROR;
+                أرجع 0;
             }
-            if(IS_BASIC(c)) {
-                cpBuffer[srcCPCount++]=0;
-                if(destLength<destCapacity) {
-                    dest[destLength]=
-                        caseFlags!=nullptr ?
-                            asciiCaseMap((char)c, caseFlags[j]) :
-                            (char)c;
+            إذا(IS_BASIC(c)) {
+                cp_بفر[srcCPCount++]=0;
+                إذا(dest_اوږدتیا<dest_ظرفیت) {
+                    dest[dest_اوږدتیا]=
+                        caseFlags!=تش_اشاره ?
+                            asciiCaseMap((حرف)c, caseFlags[j]) :
+                            (حرف)c;
                 }
-                ++destLength;
-            } else {
-                n=(caseFlags!=nullptr && caseFlags[j])<<31L;
-                if(U16_IS_SINGLE(c)) {
+                ++dest_اوږدتیا;
+            } وإلا {
+                n=(caseFlags!=تش_اشاره && caseFlags[j])<<31L;
+                إذا(U16_IS_SINGLE(c)) {
                     n|=c;
-                } else if(U16_IS_LEAD(c) && U16_IS_TRAIL(c2=src[j+1])) {
+                } وإلا إذا(U16_IS_LEAD(c) && U16_IS_TRAIL(c2=src[j+1])) {
                     ++j;
                     n|=(int32_t)U16_GET_SUPPLEMENTARY(c, c2);
-                } else {
+                } وإلا {
                     /* error: unmatched surrogate */
-                    *pErrorCode=U_INVALID_CHAR_FOUND;
-                    return 0;
+                    *p_Error_کوډ=U_INVALID_CHAR_وموندل;
+                    أرجع 0;
                 }
-                cpBuffer[srcCPCount++]=n;
+                cp_بفر[srcCPCount++]=n;
             }
         }
-    } else {
+    } وإلا {
         /* length-specified input */
-        for(j=0; j<srcLength; ++j) {
+        لكل(j=0; j<src_اوږدتیا; ++j) {
             c=src[j];
-            if(IS_BASIC(c)) {
-                cpBuffer[srcCPCount++]=0;
-                if(destLength<destCapacity) {
-                    dest[destLength]=
-                        caseFlags!=nullptr ?
-                            asciiCaseMap((char)c, caseFlags[j]) :
-                            (char)c;
+            إذا(IS_BASIC(c)) {
+                cp_بفر[srcCPCount++]=0;
+                إذا(dest_اوږدتیا<dest_ظرفیت) {
+                    dest[dest_اوږدتیا]=
+                        caseFlags!=تش_اشاره ?
+                            asciiCaseMap((حرف)c, caseFlags[j]) :
+                            (حرف)c;
                 }
-                ++destLength;
-            } else {
-                n=(caseFlags!=nullptr && caseFlags[j])<<31L;
-                if(U16_IS_SINGLE(c)) {
+                ++dest_اوږدتیا;
+            } وإلا {
+                n=(caseFlags!=تش_اشاره && caseFlags[j])<<31L;
+                إذا(U16_IS_SINGLE(c)) {
                     n|=c;
-                } else if(U16_IS_LEAD(c) && (j+1)<srcLength && U16_IS_TRAIL(c2=src[j+1])) {
+                } وإلا إذا(U16_IS_LEAD(c) && (j+1)<src_اوږدتیا && U16_IS_TRAIL(c2=src[j+1])) {
                     ++j;
                     n|=(int32_t)U16_GET_SUPPLEMENTARY(c, c2);
-                } else {
+                } وإلا {
                     /* error: unmatched surrogate */
-                    *pErrorCode=U_INVALID_CHAR_FOUND;
-                    return 0;
+                    *p_Error_کوډ=U_INVALID_CHAR_وموندل;
+                    أرجع 0;
                 }
-                cpBuffer[srcCPCount++]=n;
+                cp_بفر[srcCPCount++]=n;
             }
         }
     }
 
     /* Finish the basic string - if it is not empty - with a delimiter. */
-    basicLength=destLength;
-    if(basicLength>0) {
-        if(destLength<destCapacity) {
-            dest[destLength]=DELIMITER;
+    basic_اوږدتیا=dest_اوږدتیا;
+    إذا(basic_اوږدتیا>0) {
+        إذا(dest_اوږدتیا<dest_ظرفیت) {
+            dest[dest_اوږدتیا]=DELIMITER;
         }
-        ++destLength;
+        ++dest_اوږدتیا;
     }
 
     /*
@@ -292,14 +292,14 @@ u_strToPunycode(const char16_t *src, int32_t srcLength,
     bias=INITIAL_BIAS;
 
     /* Main encoding loop: */
-    for(handledCPCount=basicLength; handledCPCount<srcCPCount; /* no op */) {
+    لكل(handledCPCount=basic_اوږدتیا; handledCPCount<srcCPCount; /* no op */) {
         /*
          * All non-basic code points < n have been handled already.
          * Find the next larger one:
          */
-        for(m=0x7fffffff, j=0; j<srcCPCount; ++j) {
-            q=cpBuffer[j]&0x7fffffff; /* remove case flag from the sign bit */
-            if(n<=q && q<m) {
+        لكل(m=0x7fffffff, j=0; j<srcCPCount; ++j) {
+            q=cp_بفر[j]&0x7fffffff; /* remove case flag from the sign bit */
+            إذا(n<=q && q<m) {
                 m=q;
             }
         }
@@ -308,21 +308,21 @@ u_strToPunycode(const char16_t *src, int32_t srcLength,
          * Increase delta enough to advance the decoder's
          * <n,i> state to <m,0>, but guard against overflow:
          */
-        if(m-n>(0x7fffffff-handledCPCount-delta)/(handledCPCount+1)) {
-            *pErrorCode=U_INTERNAL_PROGRAM_ERROR;
-            return 0;
+        إذا(m-n>(0x7fffffff-handledCPCount-delta)/(handledCPCount+1)) {
+            *p_Error_کوډ=U_دننی_پروګرام_ERROR;
+            أرجع 0;
         }
         delta+=(m-n)*(handledCPCount+1);
         n=m;
 
         /* Encode a sequence of same code points n */
-        for(j=0; j<srcCPCount; ++j) {
-            q=cpBuffer[j]&0x7fffffff; /* remove case flag from the sign bit */
-            if(q<n) {
+        لكل(j=0; j<srcCPCount; ++j) {
+            q=cp_بفر[j]&0x7fffffff; /* remove case flag from the sign bit */
+            إذا(q<n) {
                 ++delta;
-            } else if(q==n) {
+            } وإلا إذا(q==n) {
                 /* Represent delta as a generalized variable-length integer: */
-                for(q=delta, k=BASE; /* no condition */; k+=BASE) {
+                لكل(q=delta, k=بنسټ_2; /* no condition */; k+=بنسټ_2) {
 
                     /** RAM: comment out the old code for conformance with draft-ietf-idn-punycode-03.txt
 
@@ -335,28 +335,28 @@ u_strToPunycode(const char16_t *src, int32_t srcLength,
                     */
 
                     t=k-bias;
-                    if(t<TMIN) {
+                    إذا(t<TMIN) {
                         t=TMIN;
-                    } else if(k>=(bias+TMAX)) {
+                    } وإلا إذا(k>=(bias+TMAX)) {
                         t=TMAX;
                     }
 
-                    if(q<t) {
-                        break;
+                    إذا(q<t) {
+                        اكسر;
                     }
 
-                    if(destLength<destCapacity) {
-                        dest[destLength]=digitToBasic(t+(q-t)%(BASE-t), 0);
+                    إذا(dest_اوږدتیا<dest_ظرفیت) {
+                        dest[dest_اوږدتیا]=digit_منزل_Basic(t+(q-t)%(بنسټ_2-t), 0);
                     }
-                    ++destLength;
-                    q=(q-t)/(BASE-t);
+                    ++dest_اوږدتیا;
+                    q=(q-t)/(بنسټ_2-t);
                 }
 
-                if(destLength<destCapacity) {
-                    dest[destLength] = digitToBasic(q, cpBuffer[j] < 0);
+                إذا(dest_اوږدتیا<dest_ظرفیت) {
+                    dest[dest_اوږدتیا] = digit_منزل_Basic(q, cp_بفر[j] < 0);
                 }
-                ++destLength;
-                bias = adaptBias(delta, handledCPCount + 1, handledCPCount == basicLength);
+                ++dest_اوږدتیا;
+                bias = adaptBias(delta, handledCPCount + 1, handledCPCount == basic_اوږدتیا);
                 delta=0;
                 ++handledCPCount;
             }
@@ -366,35 +366,35 @@ u_strToPunycode(const char16_t *src, int32_t srcLength,
         ++n;
     }
 
-    return u_terminateUChars(dest, destCapacity, destLength, pErrorCode);
+    أرجع u_terminateUChars(dest, dest_ظرفیت, dest_اوږدتیا, p_Error_کوډ);
 }
 
 // decode
 U_CAPI int32_t
-u_strFromPunycode(const char16_t *src, int32_t srcLength,
-                  char16_t *dest, int32_t destCapacity,
+u_strFromPunycode(ثابت char16_t *src, int32_t src_اوږدتیا,
+                  char16_t *dest, int32_t dest_ظرفیت,
                   UBool *caseFlags,
-                  UErrorCode *pErrorCode) {
-    int32_t n, destLength, i, bias, basicLength, j, in, oldi, w, k, digit, t,
-            destCPCount, firstSupplementaryIndex, cpLength;
+                  UError_کوډ *p_Error_کوډ) {
+    int32_t n, dest_اوږدتیا, i, bias, basic_اوږدتیا, j, in, oldi, w, k, digit, t,
+            destCPCount, لومړی_Supplementary_شاخص, cp_اوږدتیا;
     char16_t b;
 
     /* argument checking */
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    إذا(p_Error_کوډ==تش_اشاره || U_FAILURE(*p_Error_کوډ)) {
+        أرجع 0;
     }
 
-    if(src==nullptr || srcLength<-1 || (dest==nullptr && destCapacity!=0)) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    إذا(src==تش_اشاره || src_اوږدتیا<-1 || (dest==تش_اشاره && dest_ظرفیت!=0)) {
+        *p_Error_کوډ=U_ILLEGAL_دلیل_ERROR;
+        أرجع 0;
     }
 
-    if(srcLength==-1) {
-        srcLength=u_strlen(src);
+    إذا(src_اوږدتیا==-1) {
+        src_اوږدتیا=u_strlen(src);
     }
-    if (srcLength>DECODE_MAX_CHARS) {
-        *pErrorCode=U_INPUT_TOO_LONG_ERROR;
-        return 0;
+    إذا (src_اوږدتیا>DECODE_MAX_CHARS) {
+        *p_Error_کوډ=U_ننوت_TOO_LONG_ERROR;
+        أرجع 0;
     }
 
     /*
@@ -405,25 +405,25 @@ u_strFromPunycode(const char16_t *src, int32_t srcLength,
      *
      * The two following loops iterate backward.
      */
-    for(j=srcLength; j>0;) {
-        if(src[--j]==DELIMITER) {
-            break;
+    لكل(j=src_اوږدتیا; j>0;) {
+        إذا(src[--j]==DELIMITER) {
+            اكسر;
         }
     }
-    destLength=basicLength=destCPCount=j;
-    U_ASSERT(destLength>=0);
+    dest_اوږدتیا=basic_اوږدتیا=destCPCount=j;
+    U_ASSERT(dest_اوږدتیا>=0);
 
-    while(j>0) {
+    طالما(j>0) {
         b=src[--j];
-        if(!IS_BASIC(b)) {
-            *pErrorCode=U_INVALID_CHAR_FOUND;
-            return 0;
+        إذا(!IS_BASIC(b)) {
+            *p_Error_کوډ=U_INVALID_CHAR_وموندل;
+            أرجع 0;
         }
 
-        if(j<destCapacity) {
+        إذا(j<dest_ظرفیت) {
             dest[j] = b;
 
-            if(caseFlags!=nullptr) {
+            إذا(caseFlags!=تش_اشاره) {
                 caseFlags[j]=IS_BASIC_UPPERCASE(b);
             }
         }
@@ -433,14 +433,14 @@ u_strFromPunycode(const char16_t *src, int32_t srcLength,
     n=INITIAL_N;
     i=0;
     bias=INITIAL_BIAS;
-    firstSupplementaryIndex=1000000000;
+    لومړی_Supplementary_شاخص=1000000000;
 
     /*
      * Main decoding loop:
      * Start just after the last delimiter if any
      * basic code points were copied; start at the beginning otherwise.
      */
-    for(in=basicLength>0 ? basicLength+1 : 0; in<srcLength; /* no op */) {
+    لكل(in=basic_اوږدتیا>0 ? basic_اوږدتیا+1 : 0; in<src_اوږدتیا; /* no op */) {
         /*
          * in is the index of the next character to be consumed, and
          * destCPCount is the number of code points in the output array.
@@ -450,21 +450,21 @@ u_strFromPunycode(const char16_t *src, int32_t srcLength,
          * if we increase i as we go, then subtract off its starting
          * value at the end to obtain delta.
          */
-        for(oldi=i, w=1, k=BASE; /* no condition */; k+=BASE) {
-            if(in>=srcLength) {
-                *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                return 0;
+        لكل(oldi=i, w=1, k=بنسټ_2; /* no condition */; k+=بنسټ_2) {
+            إذا(in>=src_اوږدتیا) {
+                *p_Error_کوډ=U_ILLEGAL_CHAR_وموندل;
+                أرجع 0;
             }
 
             digit=decodeDigit(src[in++]);
-            if(digit<0) {
-                *pErrorCode=U_INVALID_CHAR_FOUND;
-                return 0;
+            إذا(digit<0) {
+                *p_Error_کوډ=U_INVALID_CHAR_وموندل;
+                أرجع 0;
             }
-            if(digit>(0x7fffffff-i)/w) {
+            إذا(digit>(0x7fffffff-i)/w) {
                 /* integer overflow */
-                *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                return 0;
+                *p_Error_کوډ=U_ILLEGAL_CHAR_وموندل;
+                أرجع 0;
             }
 
             i+=digit*w;
@@ -477,21 +477,21 @@ u_strFromPunycode(const char16_t *src, int32_t srcLength,
             }
             */
             t=k-bias;
-            if(t<TMIN) {
+            إذا(t<TMIN) {
                 t=TMIN;
-            } else if(k>=(bias+TMAX)) {
+            } وإلا إذا(k>=(bias+TMAX)) {
                 t=TMAX;
             }
-            if(digit<t) {
-                break;
+            إذا(digit<t) {
+                اكسر;
             }
 
-            if(w>0x7fffffff/(BASE-t)) {
+            إذا(w>0x7fffffff/(بنسټ_2-t)) {
                 /* integer overflow */
-                *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                return 0;
+                *p_Error_کوډ=U_ILLEGAL_CHAR_وموندل;
+                أرجع 0;
             }
-            w*=BASE-t;
+            w*=بنسټ_2-t;
         }
 
         /*
@@ -506,10 +506,10 @@ u_strFromPunycode(const char16_t *src, int32_t srcLength,
          * i was supposed to wrap around from (incremented) destCPCount to 0,
          * incrementing n each time, so we'll fix that now:
          */
-        if(i/destCPCount>(0x7fffffff-n)) {
+        إذا(i/destCPCount>(0x7fffffff-n)) {
             /* integer overflow */
-            *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-            return 0;
+            *p_Error_کوډ=U_ILLEGAL_CHAR_وموندل;
+            أرجع 0;
         }
 
         n+=i/destCPCount;
@@ -517,16 +517,16 @@ u_strFromPunycode(const char16_t *src, int32_t srcLength,
         /* not needed for Punycode: */
         /* if (decode_digit(n) <= BASE) return punycode_invalid_input; */
 
-        if(n>0x10ffff || U_IS_SURROGATE(n)) {
+        إذا(n>0x10ffff || U_IS_SURROGATE(n)) {
             /* Unicode code point overflow */
-            *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-            return 0;
+            *p_Error_کوډ=U_ILLEGAL_CHAR_وموندل;
+            أرجع 0;
         }
 
         /* Insert n at position i of the output: */
-        cpLength=U16_LENGTH(n);
-        if(dest!=nullptr && ((destLength+cpLength)<=destCapacity)) {
-            int32_t codeUnitIndex;
+        cp_اوږدتیا=U16_اوږدتیا(n);
+        إذا(dest!=تش_اشاره && ((dest_اوږدتیا+cp_اوږدتیا)<=dest_ظرفیت)) {
+            int32_t کوډ_Unit_شاخص;
 
             /*
              * Handle indexes when supplementary code points are present.
@@ -538,53 +538,53 @@ u_strFromPunycode(const char16_t *src, int32_t srcLength,
              * Only the rare cases with supplementary code points are handled
              * more slowly - but not too bad since this is an insertion anyway.
              */
-            if(i<=firstSupplementaryIndex) {
-                codeUnitIndex=i;
-                if(cpLength>1) {
-                    firstSupplementaryIndex=codeUnitIndex;
-                } else {
-                    ++firstSupplementaryIndex;
+            إذا(i<=لومړی_Supplementary_شاخص) {
+                کوډ_Unit_شاخص=i;
+                إذا(cp_اوږدتیا>1) {
+                    لومړی_Supplementary_شاخص=کوډ_Unit_شاخص;
+                } وإلا {
+                    ++لومړی_Supplementary_شاخص;
                 }
-            } else {
-                codeUnitIndex=firstSupplementaryIndex;
-                U16_FWD_N(dest, codeUnitIndex, destLength, i-codeUnitIndex);
+            } وإلا {
+                کوډ_Unit_شاخص=لومړی_Supplementary_شاخص;
+                U16_FWD_N(dest, کوډ_Unit_شاخص, dest_اوږدتیا, i-کوډ_Unit_شاخص);
             }
 
             /* use the char16_t index codeUnitIndex instead of the code point index i */
-            if(codeUnitIndex<destLength) {
-                uprv_memmove(dest+codeUnitIndex+cpLength,
-                             dest+codeUnitIndex,
-                             (destLength-codeUnitIndex)*U_SIZEOF_UCHAR);
-                if(caseFlags!=nullptr) {
-                    uprv_memmove(caseFlags+codeUnitIndex+cpLength,
-                                 caseFlags+codeUnitIndex,
-                                 destLength-codeUnitIndex);
+            إذا(کوډ_Unit_شاخص<dest_اوږدتیا) {
+                uprv_memmove(dest+کوډ_Unit_شاخص+cp_اوږدتیا,
+                             dest+کوډ_Unit_شاخص,
+                             (dest_اوږدتیا-کوډ_Unit_شاخص)*U_SIZEOF_UCHAR);
+                إذا(caseFlags!=تش_اشاره) {
+                    uprv_memmove(caseFlags+کوډ_Unit_شاخص+cp_اوږدتیا,
+                                 caseFlags+کوډ_Unit_شاخص,
+                                 dest_اوږدتیا-کوډ_Unit_شاخص);
                 }
             }
-            if(cpLength==1) {
+            إذا(cp_اوږدتیا==1) {
                 /* BMP, insert one code unit */
-                dest[codeUnitIndex]=(char16_t)n;
-            } else {
+                dest[کوډ_Unit_شاخص]=(char16_t)n;
+            } وإلا {
                 /* supplementary character, insert two code units */
-                dest[codeUnitIndex]=U16_LEAD(n);
-                dest[codeUnitIndex+1]=U16_TRAIL(n);
+                dest[کوډ_Unit_شاخص]=U16_LEAD(n);
+                dest[کوډ_Unit_شاخص+1]=U16_TRAIL(n);
             }
-            if(caseFlags!=nullptr) {
+            إذا(caseFlags!=تش_اشاره) {
                 /* Case of last character determines uppercase flag: */
-                caseFlags[codeUnitIndex]=IS_BASIC_UPPERCASE(src[in-1]);
-                if(cpLength==2) {
-                    caseFlags[codeUnitIndex+1]=false;
+                caseFlags[کوډ_Unit_شاخص]=IS_BASIC_UPPERCASE(src[in-1]);
+                إذا(cp_اوږدتیا==2) {
+                    caseFlags[کوډ_Unit_شاخص+1]=خطأ;
                 }
             }
         }
-        destLength+=cpLength;
-        U_ASSERT(destLength>=0);
+        dest_اوږدتیا+=cp_اوږدتیا;
+        U_ASSERT(dest_اوږدتیا>=0);
         ++i;
     }
 
-    return u_terminateUChars(dest, destCapacity, destLength, pErrorCode);
+    أرجع u_terminateUChars(dest, dest_ظرفیت, dest_اوږدتیا, p_Error_کوډ);
 }
 
 /* ### check notes on overflow handling - only necessary if not IDNA? are these Punycode functions to be public? */
 
-#endif /* #if !UCONFIG_NO_IDNA */
+#د_که_پای /* #if !UCONFIG_NO_IDNA */

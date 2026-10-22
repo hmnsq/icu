@@ -11,14 +11,14 @@
 * 2010nov19 Markus Scherer  Rewrite for formatVersion 2.
 **********************************************************************
 */
-#ifndef PROPNAME_H
-#define PROPNAME_H
+#که_نه_تعریف_شوی PROPNAME_H
+#تعریف_کړه PROPNAME_H
 
-#include "unicode/utypes.h"
-#include "unicode/bytestrie.h"
-#include "unicode/uchar.h"
-#include "udataswp.h"
-#include "uprops.h"
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/bytestrie.h"
+#ضمن "unicode/uchar.h"
+#ضمن "udataswp.h"
+#ضمن "uprops.h"
 
 /*
  * This header defines the in-memory layout of the property names data
@@ -51,71 +51,71 @@ U_CDECL_BEGIN
  */
 
 U_CAPI int32_t U_EXPORT2
-uprv_compareASCIIPropertyNames(const char *name1, const char *name2);
+uprv_compare_ASCIIProperty_نومونه(ثابت حرف *name1, ثابت حرف *name2);
 
 U_CAPI int32_t U_EXPORT2
-uprv_compareEBCDICPropertyNames(const char *name1, const char *name2);
+uprv_compare_EBCDICProperty_نومونه(ثابت حرف *name1, ثابت حرف *name2);
 
-#if U_CHARSET_FAMILY==U_ASCII_FAMILY
-#   define uprv_comparePropertyNames uprv_compareASCIIPropertyNames
-#elif U_CHARSET_FAMILY==U_EBCDIC_FAMILY
-#   define uprv_comparePropertyNames uprv_compareEBCDICPropertyNames
-#else
+#إذا U_CHARSET_FAMILY==U_ASCII_FAMILY
+#   define uprv_compare_Property_نومونه uprv_compare_ASCIIProperty_نومونه
+#وإلاإذا U_CHARSET_FAMILY==U_EBCDIC_FAMILY
+#   define uprv_compare_Property_نومونه uprv_compare_EBCDICProperty_نومونه
+#وإلا
 #   error U_CHARSET_FAMILY is not valid
-#endif
+#د_که_پای
 
-U_CDECL_END
+U_CDECL_پای_ټکی
 
 /* UDataMemory structure and signatures ------------------------------------- */
 
-#define PNAME_DATA_NAME "pnames"
-#define PNAME_DATA_TYPE "icu"
+#تعریف_کړه PNAME_معلومات_NAME "pnames"
+#تعریف_کړه PNAME_معلومات_TYPE "icu"
 
 /* Fields in UDataInfo: */
 
 /* PNAME_SIG[] is encoded as numeric literals for compatibility with the HP compiler */
-#define PNAME_SIG_0 ((uint8_t)0x70) /* p */
-#define PNAME_SIG_1 ((uint8_t)0x6E) /* n */
-#define PNAME_SIG_2 ((uint8_t)0x61) /* a */
-#define PNAME_SIG_3 ((uint8_t)0x6D) /* m */
+#تعریف_کړه PNAME_SIG_0 ((uint8_t)0x70) /* p */
+#تعریف_کړه PNAME_SIG_1 ((uint8_t)0x6E) /* n */
+#تعریف_کړه PNAME_SIG_2 ((uint8_t)0x61) /* a */
+#تعریف_کړه PNAME_SIG_3 ((uint8_t)0x6D) /* m */
 
 U_NAMESPACE_BEGIN
 
-class PropNameData {
-public:
-    enum {
+class Prop_Name_معلومات {
+عام:
+    تعداد {
         // Byte offsets from the start of the data, after the generic header.
-        IX_VALUE_MAPS_OFFSET,
-        IX_BYTE_TRIES_OFFSET,
-        IX_NAME_GROUPS_OFFSET,
-        IX_RESERVED3_OFFSET,
-        IX_RESERVED4_OFFSET,
-        IX_TOTAL_SIZE,
+        IX_ارزښت_MAPS_دننه_واټن,
+        IX_BYTE_TRIES_دننه_واټن,
+        IX_NAME_GROUPS_دننه_واټن,
+        IX_RESERVED3_دننه_واټن,
+        IX_RESERVED4_دننه_واټن,
+        IX_ټول_اندازه,
 
         // Other values.
-        IX_MAX_NAME_LENGTH,
+        IX_MAX_NAME_اوږدتیا,
         IX_RESERVED7,
-        IX_COUNT
+        IX_شمېر
     };
 
-    static const char *getPropertyName(int32_t property, int32_t nameChoice);
-    static const char *getPropertyValueName(int32_t property, int32_t value, int32_t nameChoice);
+    ساكن ثابت حرف *getPropertyName(int32_t property, int32_t nameChoice);
+    ساكن ثابت حرف *get_Property_ارزښت_Name(int32_t property, int32_t ارزښت_2, int32_t nameChoice);
 
-    static int32_t getPropertyEnum(const char *alias);
-    static int32_t getPropertyValueEnum(int32_t property, const char *alias);
+    ساكن int32_t getPropertyEnum(ثابت حرف *alias);
+    ساكن int32_t get_Property_ارزښت_Enum(int32_t property, ثابت حرف *alias);
 
-private:
-    static int32_t findProperty(int32_t property);
-    static int32_t findPropertyValueNameGroup(int32_t valueMapIndex, int32_t value);
-    static const char *getName(const char *nameGroup, int32_t nameIndex);
-    static UBool containsName(BytesTrie &trie, const char *name);
+خاص:
+    ساكن int32_t پیدا_کړه_Property(int32_t property);
+    ساكن int32_t پیدا_کړه_Property_ارزښت_Name_ډله(int32_t ارزښت_Map_شاخص, int32_t ارزښت_2);
+    ساكن ثابت حرف *getName(ثابت حرف *name_ډله, int32_t name_شاخص);
+    ساكن UBool لري_Name(بایټونه_Trie &trie, ثابت حرف *name);
 
-    static int32_t getPropertyOrValueEnum(int32_t bytesTrieOffset, const char *alias);
+    ساكن int32_t get_Property_Or_ارزښت_Enum(int32_t بایټونه_Trie_دننه_واټن, ثابت حرف *alias);
 
-    static const int32_t indexes[];
-    static const int32_t valueMaps[];
-    static const uint8_t bytesTries[];
-    static const char nameGroups[];
+    ساكن ثابت int32_t indexes[];
+    ساكن ثابت int32_t ارزښت_Maps[];
+    ساكن ثابت uint8_t بایټونه_Tries[];
+    ساكن ثابت حرف nameGroups[];
 };
 
 /*
@@ -207,6 +207,6 @@ private:
  *      in a property's sparse value ranges.
  */
 
-U_NAMESPACE_END
+U_NAMESPACE_پای_ټکی
 
-#endif
+#د_که_پای

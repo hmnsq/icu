@@ -4,94 +4,94 @@
 // locdistance.cpp
 // created: 2019may08 Markus W. Scherer
 
-#include "unicode/utypes.h"
-#include "unicode/bytestrie.h"
-#include "unicode/localematcher.h"
-#include "unicode/locid.h"
-#include "unicode/uobject.h"
-#include "unicode/ures.h"
-#include "cstring.h"
-#include "locdistance.h"
-#include "loclikelysubtags.h"
-#include "uassert.h"
-#include "ucln_cmn.h"
-#include "uinvchar.h"
-#include "umutex.h"
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/bytestrie.h"
+#ضمن "unicode/localematcher.h"
+#ضمن "unicode/locid.h"
+#ضمن "unicode/uobject.h"
+#ضمن "unicode/ures.h"
+#ضمن "cstring.h"
+#ضمن "locdistance.h"
+#ضمن "loclikelysubtags.h"
+#ضمن "uassert.h"
+#ضمن "ucln_cmn.h"
+#ضمن "uinvchar.h"
+#ضمن "umutex.h"
 
 U_NAMESPACE_BEGIN
 
-namespace {
+نطاق {
 
 /**
  * Bit flag used on the last character of a subtag in the trie.
  * Must be set consistently by the builder and the lookup code.
  */
-constexpr int32_t END_OF_SUBTAG = 0x80;
+constexpr int32_t پای_ټکی_د_SUBTAG = 0x80;
 /** Distance value bit flag, set by the builder. */
-constexpr int32_t DISTANCE_SKIP_SCRIPT = 0x80;
+constexpr int32_t واټن_SKIP_SCRIPT = 0x80;
 /** Distance value bit flag, set by trieNext(). */
-constexpr int32_t DISTANCE_IS_FINAL = 0x100;
-constexpr int32_t DISTANCE_IS_FINAL_OR_SKIP_SCRIPT = DISTANCE_IS_FINAL | DISTANCE_SKIP_SCRIPT;
+constexpr int32_t واټن_IS_FINAL = 0x100;
+constexpr int32_t واټن_IS_FINAL_OR_SKIP_SCRIPT = واټن_IS_FINAL | واټن_SKIP_SCRIPT;
 
-constexpr int32_t ABOVE_THRESHOLD = 100;
+constexpr int32_t ABOVE_پوله = 100;
 
 // Indexes into array of distances.
-enum {
-    IX_DEF_LANG_DISTANCE,
-    IX_DEF_SCRIPT_DISTANCE,
-    IX_DEF_REGION_DISTANCE,
-    IX_MIN_REGION_DISTANCE,
-    IX_LIMIT
+تعداد {
+    IX_DEF_LANG_واټن,
+    IX_DEF_SCRIPT_واټن,
+    IX_DEF_REGION_واټن,
+    IX_MIN_REGION_واټن,
+    IX_حد
 };
 
-LocaleDistance *gLocaleDistance = nullptr;
+Locale_واټن *g_Locale_واټن = تش_اشاره;
 UInitOnce gInitOnce {};
 
 UBool U_CALLCONV cleanup() {
-    delete gLocaleDistance;
-    gLocaleDistance = nullptr;
+    ړنګول g_Locale_واټن;
+    g_Locale_واټن = تش_اشاره;
     gInitOnce.reset();
-    return true;
+    أرجع ریښتیا;
 }
 
 }  // namespace
 
-void U_CALLCONV LocaleDistance::initLocaleDistance(UErrorCode &errorCode) {
+فراغ U_CALLCONV Locale_واټن::init_Locale_واټن(UError_کوډ &error_کوډ) {
     // This function is invoked only via umtx_initOnce().
-    U_ASSERT(gLocaleDistance == nullptr);
-    const LikelySubtags &likely = *LikelySubtags::getSingleton(errorCode);
-    if (U_FAILURE(errorCode)) { return; }
-    const LocaleDistanceData &data = likely.getDistanceData();
-    if (data.distanceTrieBytes == nullptr ||
-            data.regionToPartitions == nullptr || data.partitions == nullptr ||
+    U_ASSERT(g_Locale_واټن == تش_اشاره);
+    ثابت LikelySubtags &likely = *LikelySubtags::getSingleton(error_کوډ);
+    إذا (U_FAILURE(error_کوډ)) { أرجع; }
+    ثابت Locale_واټن_معلومات &معلومات = likely.get_واټن_معلومات();
+    إذا (معلومات.واټن_Trie_بایټونه == تش_اشاره ||
+            معلومات.region_منزل_Partitions == تش_اشاره || معلومات.partitions == تش_اشاره ||
             // ok if no paradigms
-            data.distances == nullptr) {
-        errorCode = U_MISSING_RESOURCE_ERROR;
-        return;
+            معلومات.distances == تش_اشاره) {
+        error_کوډ = U_MISSING_RESOURCE_ERROR;
+        أرجع;
     }
-    gLocaleDistance = new LocaleDistance(data, likely);
-    if (gLocaleDistance == nullptr) {
-        errorCode = U_MEMORY_ALLOCATION_ERROR;
-        return;
+    g_Locale_واټن = جديد Locale_واټن(معلومات, likely);
+    إذا (g_Locale_واټن == تش_اشاره) {
+        error_کوډ = U_حافظه_ویش_ERROR;
+        أرجع;
     }
-    ucln_common_registerCleanup(UCLN_COMMON_LOCALE_DISTANCE, cleanup);
+    ucln_common_ثبتوونکی_Cleanup(UCLN_COMMON_LOCALE_واټن, cleanup);
 }
 
-const LocaleDistance *LocaleDistance::getSingleton(UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return nullptr; }
-    umtx_initOnce(gInitOnce, &LocaleDistance::initLocaleDistance, errorCode);
-    return gLocaleDistance;
+ثابت Locale_واټن *Locale_واټن::getSingleton(UError_کوډ &error_کوډ) {
+    إذا (U_FAILURE(error_کوډ)) { أرجع تش_اشاره; }
+    umtx_initOnce(gInitOnce, &Locale_واټن::init_Locale_واټن, error_کوډ);
+    أرجع g_Locale_واټن;
 }
 
-LocaleDistance::LocaleDistance(const LocaleDistanceData &data, const LikelySubtags &likely) :
+Locale_واټن::Locale_واټن(ثابت Locale_واټن_معلومات &معلومات, ثابت LikelySubtags &likely) :
         likelySubtags(likely),
-        trie(data.distanceTrieBytes),
-        regionToPartitionsIndex(data.regionToPartitions), partitionArrays(data.partitions),
-        paradigmLSRs(data.paradigms), paradigmLSRsLength(data.paradigmsLength),
-        defaultLanguageDistance(data.distances[IX_DEF_LANG_DISTANCE]),
-        defaultScriptDistance(data.distances[IX_DEF_SCRIPT_DISTANCE]),
-        defaultRegionDistance(data.distances[IX_DEF_REGION_DISTANCE]),
-        minRegionDistance(data.distances[IX_MIN_REGION_DISTANCE]) {
+        trie(معلومات.واټن_Trie_بایټونه),
+        region_منزل_Partitions_شاخص(معلومات.region_منزل_Partitions), برخه_کول_Arrays(معلومات.partitions),
+        paradigmLSRs(معلومات.paradigms), paradigm_LSRs_اوږدتیا(معلومات.paradigms_اوږدتیا),
+        default_Language_واټن(معلومات.distances[IX_DEF_LANG_واټن]),
+        default_Script_واټن(معلومات.distances[IX_DEF_SCRIPT_واټن]),
+        default_Region_واټن(معلومات.distances[IX_DEF_REGION_واټن]),
+        min_Region_واټن(معلومات.distances[IX_MIN_REGION_واټن]) {
     // For the default demotion value, use the
     // default region distance between unrelated Englishes.
     // Thus, unless demotion is turned off,
@@ -100,101 +100,101 @@ LocaleDistance::LocaleDistance(const LocaleDistanceData &data, const LikelySubta
     // As of CLDR 36, we have <languageMatch desired="en_*_*" supported="en_*_*" distance="5"/>.
     LSR en("en", "Latn", "US", LSR::EXPLICIT_LSR);
     LSR enGB("en", "Latn", "GB", LSR::EXPLICIT_LSR);
-    const LSR *p_enGB = &enGB;
-    int32_t indexAndDistance = getBestIndexAndDistance(en, &p_enGB, 1,
-            shiftDistance(50), ULOCMATCH_FAVOR_LANGUAGE, ULOCMATCH_DIRECTION_WITH_ONE_WAY);
-    defaultDemotionPerDesiredLocale  = getDistanceFloor(indexAndDistance);
+    ثابت LSR *p_enGB = &enGB;
+    int32_t شاخص_And_واټن = get_غوره_شاخص_And_واټن(en, &p_enGB, 1,
+            ښويدنه_واټن(50), ULOCMATCH_FAVOR_LANGUAGE, ULOCMATCH_DIRECTION_WITH_ONE_WAY);
+    default_Demotion_فی_Desired_Locale  = get_واټن_Floor(شاخص_And_واټن);
 }
 
-int32_t LocaleDistance::getBestIndexAndDistance(
-        const LSR &desired,
-        const LSR **supportedLSRs, int32_t supportedLSRsLength,
-        int32_t shiftedThreshold,
-        ULocMatchFavorSubtag favorSubtag, ULocMatchDirection direction) const {
-    BytesTrie iter(trie);
+int32_t Locale_واټن::get_غوره_شاخص_And_واټن(
+        ثابت LSR &desired,
+        ثابت LSR **supportedLSRs, int32_t supported_LSRs_اوږدتیا,
+        int32_t shifted_پوله,
+        ULoc_سمون_Favor_Subtag favorSubtag, ULoc_سمون_Direction direction) ثابت {
+    بایټونه_Trie iter(trie);
     // Look up the desired language only once for all supported LSRs.
     // Its "distance" is either a match point value of 0, or a non-match negative value.
     // Note: The data builder verifies that there are no <*, supported> or <desired, *> rules.
-    int32_t desLangDistance = trieNext(iter, desired.language, false);
-    uint64_t desLangState = desLangDistance >= 0 && supportedLSRsLength > 1 ? iter.getState64() : 0;
+    int32_t des_Lang_واټن = trie_بل(iter, desired.language, خطأ);
+    uint64_t desLangState = des_Lang_واټن >= 0 && supported_LSRs_اوږدتیا > 1 ? iter.getState64() : 0;
     // Index of the supported LSR with the lowest distance.
-    int32_t bestIndex = -1;
+    int32_t غوره_شاخص = -1;
     // Cached lookup info from LikelySubtags.compareLikely().
-    int32_t bestLikelyInfo = -1;
-    for (int32_t slIndex = 0; slIndex < supportedLSRsLength; ++slIndex) {
-        const LSR &supported = *supportedLSRs[slIndex];
-        bool star = false;
-        int32_t distance = desLangDistance;
-        if (distance >= 0) {
-            U_ASSERT((distance & DISTANCE_IS_FINAL) == 0);
-            if (slIndex != 0) {
-                iter.resetToState64(desLangState);
+    int32_t غوره_Likely_Info = -1;
+    لكل (int32_t sl_شاخص = 0; sl_شاخص < supported_LSRs_اوږدتیا; ++sl_شاخص) {
+        ثابت LSR &supported = *supportedLSRs[sl_شاخص];
+        منطقي ستوری = خطأ;
+        int32_t واټن = des_Lang_واټن;
+        إذا (واټن >= 0) {
+            U_ASSERT((واټن & واټن_IS_FINAL) == 0);
+            إذا (sl_شاخص != 0) {
+                iter.reset_منزل_State64(desLangState);
             }
-            distance = trieNext(iter, supported.language, true);
+            واټن = trie_بل(iter, supported.language, ریښتیا);
         }
         // Note: The data builder verifies that there are no rules with "any" (*) language and
         // real (non *) script or region subtags.
         // This means that if the lookup for either language fails we can use
         // the default distances without further lookups.
         int32_t flags;
-        if (distance >= 0) {
-            flags = distance & DISTANCE_IS_FINAL_OR_SKIP_SCRIPT;
-            distance &= ~DISTANCE_IS_FINAL_OR_SKIP_SCRIPT;
-        } else {  // <*, *>
-            if (uprv_strcmp(desired.language, supported.language) == 0) {
-                distance = 0;
-            } else {
-                distance = defaultLanguageDistance;
+        إذا (واټن >= 0) {
+            flags = واټن & واټن_IS_FINAL_OR_SKIP_SCRIPT;
+            واټن &= ~واټن_IS_FINAL_OR_SKIP_SCRIPT;
+        } وإلا {  // <*, *>
+            إذا (uprv_strcmp(desired.language, supported.language) == 0) {
+                واټن = 0;
+            } وإلا {
+                واټن = default_Language_واټن;
             }
             flags = 0;
-            star = true;
+            ستوری = ریښتیا;
         }
-        U_ASSERT(0 <= distance && distance <= 100);
+        U_ASSERT(0 <= واټن && واټن <= 100);
         // Round up the shifted threshold (if fraction bits are not 0)
         // for comparison with un-shifted distances until we need fraction bits.
         // (If we simply shifted non-zero fraction bits away, then we might ignore a language
         // when it's really still a micro distance below the threshold.)
-        int32_t roundedThreshold = (shiftedThreshold + DISTANCE_FRACTION_MASK) >> DISTANCE_SHIFT;
+        int32_t rounded_پوله = (shifted_پوله + واټن_FRACTION_ماسک) >> واټن_ښويدنه;
         // We implement "favor subtag" by reducing the language subtag distance
         // (unscientifically reducing it to a quarter of the normal value),
         // so that the script distance is relatively more important.
         // For example, given a default language distance of 80, we reduce it to 20,
         // which is below the default threshold of 50, which is the default script distance.
-        if (favorSubtag == ULOCMATCH_FAVOR_SCRIPT) {
-            distance >>= 2;
+        إذا (favorSubtag == ULOCMATCH_FAVOR_SCRIPT) {
+            واټن >>= 2;
         }
         // Let distance == roundedThreshold pass until the tie-breaker logic
         // at the end of the loop.
-        if (distance > roundedThreshold) {
-            continue;
+        إذا (واټن > rounded_پوله) {
+            استمر;
         }
 
-        int32_t scriptDistance;
-        if (star || flags != 0) {
-            if (uprv_strcmp(desired.script, supported.script) == 0) {
-                scriptDistance = 0;
-            } else {
-                scriptDistance = defaultScriptDistance;
+        int32_t script_واټن;
+        إذا (ستوری || flags != 0) {
+            إذا (uprv_strcmp(desired.script, supported.script) == 0) {
+                script_واټن = 0;
+            } وإلا {
+                script_واټن = default_Script_واټن;
             }
-        } else {
-            scriptDistance = getDesSuppScriptDistance(iter, iter.getState64(),
+        } وإلا {
+            script_واټن = get_Des_Supp_Script_واټن(iter, iter.getState64(),
                     desired.script, supported.script);
-            flags = scriptDistance & DISTANCE_IS_FINAL;
-            scriptDistance &= ~DISTANCE_IS_FINAL;
+            flags = script_واټن & واټن_IS_FINAL;
+            script_واټن &= ~واټن_IS_FINAL;
         }
-        distance += scriptDistance;
-        if (distance > roundedThreshold) {
-            continue;
+        واټن += script_واټن;
+        إذا (واټن > rounded_پوله) {
+            استمر;
         }
 
-        if (uprv_strcmp(desired.region, supported.region) == 0) {
+        إذا (uprv_strcmp(desired.region, supported.region) == 0) {
             // regionDistance = 0
-        } else if (star || (flags & DISTANCE_IS_FINAL) != 0) {
-            distance += defaultRegionDistance;
-        } else {
-            int32_t remainingThreshold = roundedThreshold - distance;
-            if (minRegionDistance > remainingThreshold) {
-                continue;
+        } وإلا إذا (ستوری || (flags & واټن_IS_FINAL) != 0) {
+            واټن += default_Region_واټن;
+        } وإلا {
+            int32_t پاتې_شوی_پوله = rounded_پوله - واټن;
+            إذا (min_Region_واټن > پاتې_شوی_پوله) {
+                استمر;
             }
 
             // From here on we know the regions are not equal.
@@ -202,214 +202,214 @@ int32_t LocaleDistance::getBestIndexAndDistance(
             // (Each array of single-character partition strings is encoded as one string.)
             // If either side has more than one, then we find the maximum distance.
             // This could be optimized by adding some more structure, but probably not worth it.
-            distance += getRegionPartitionsDistance(
+            واټن += get_Region_Partitions_واټن(
                     iter, iter.getState64(),
                     partitionsForRegion(desired),
                     partitionsForRegion(supported),
-                    remainingThreshold);
+                    پاتې_شوی_پوله);
         }
-        int32_t shiftedDistance = shiftDistance(distance);
-        if (shiftedDistance == 0) {
+        int32_t shifted_واټن = ښويدنه_واټن(واټن);
+        إذا (shifted_واټن == 0) {
             // Distinguish between equivalent but originally unequal locales via an
             // additional micro distance.
-            shiftedDistance |= (desired.flags ^ supported.flags);
-            if (shiftedDistance < shiftedThreshold) {
-                if (direction != ULOCMATCH_DIRECTION_ONLY_TWO_WAY ||
+            shifted_واټن |= (desired.flags ^ supported.flags);
+            إذا (shifted_واټن < shifted_پوله) {
+                إذا (direction != ULOCMATCH_DIRECTION_ONLY_TWO_WAY ||
                         // Is there also a match when we swap desired/supported?
-                        isMatch(supported, desired, shiftedThreshold, favorSubtag)) {
-                    if (shiftedDistance == 0) {
-                        return slIndex << INDEX_SHIFT;
+                        is_سمون(supported, desired, shifted_پوله, favorSubtag)) {
+                    إذا (shifted_واټن == 0) {
+                        أرجع sl_شاخص << شاخص_ښويدنه;
                     }
-                    bestIndex = slIndex;
-                    shiftedThreshold = shiftedDistance;
-                    bestLikelyInfo = -1;
+                    غوره_شاخص = sl_شاخص;
+                    shifted_پوله = shifted_واټن;
+                    غوره_Likely_Info = -1;
                 }
             }
-        } else {
-            if (shiftedDistance < shiftedThreshold) {
-                if (direction != ULOCMATCH_DIRECTION_ONLY_TWO_WAY ||
+        } وإلا {
+            إذا (shifted_واټن < shifted_پوله) {
+                إذا (direction != ULOCMATCH_DIRECTION_ONLY_TWO_WAY ||
                         // Is there also a match when we swap desired/supported?
-                        isMatch(supported, desired, shiftedThreshold, favorSubtag)) {
-                    bestIndex = slIndex;
-                    shiftedThreshold = shiftedDistance;
-                    bestLikelyInfo = -1;
+                        is_سمون(supported, desired, shifted_پوله, favorSubtag)) {
+                    غوره_شاخص = sl_شاخص;
+                    shifted_پوله = shifted_واټن;
+                    غوره_Likely_Info = -1;
                 }
-            } else if (shiftedDistance == shiftedThreshold && bestIndex >= 0) {
-                if (direction != ULOCMATCH_DIRECTION_ONLY_TWO_WAY ||
+            } وإلا إذا (shifted_واټن == shifted_پوله && غوره_شاخص >= 0) {
+                إذا (direction != ULOCMATCH_DIRECTION_ONLY_TWO_WAY ||
                         // Is there also a match when we swap desired/supported?
-                        isMatch(supported, desired, shiftedThreshold, favorSubtag)) {
-                    bestLikelyInfo = likelySubtags.compareLikely(
-                            supported, *supportedLSRs[bestIndex], bestLikelyInfo);
-                    if ((bestLikelyInfo & 1) != 0) {
+                        is_سمون(supported, desired, shifted_پوله, favorSubtag)) {
+                    غوره_Likely_Info = likelySubtags.compareLikely(
+                            supported, *supportedLSRs[غوره_شاخص], غوره_Likely_Info);
+                    إذا ((غوره_Likely_Info & 1) != 0) {
                         // This supported locale matches as well as the previous best match,
                         // and neither matches perfectly,
                         // but this one is "more likely" (has more-default subtags).
-                        bestIndex = slIndex;
+                        غوره_شاخص = sl_شاخص;
                     }
                 }
             }
         }
     }
-    return bestIndex >= 0 ?
-            (bestIndex << INDEX_SHIFT) | shiftedThreshold :
-            INDEX_NEG_1 | shiftDistance(ABOVE_THRESHOLD);
+    أرجع غوره_شاخص >= 0 ?
+            (غوره_شاخص << شاخص_ښويدنه) | shifted_پوله :
+            شاخص_NEG_1 | ښويدنه_واټن(ABOVE_پوله);
 }
 
-int32_t LocaleDistance::getDesSuppScriptDistance(
-        BytesTrie &iter, uint64_t startState, const char *desired, const char *supported) {
+int32_t Locale_واټن::get_Des_Supp_Script_واټن(
+        بایټونه_Trie &iter, uint64_t پیل_State, ثابت حرف *desired, ثابت حرف *supported) {
     // Note: The data builder verifies that there are no <*, supported> or <desired, *> rules.
-    int32_t distance = trieNext(iter, desired, false);
-    if (distance >= 0) {
-        distance = trieNext(iter, supported, true);
+    int32_t واټن = trie_بل(iter, desired, خطأ);
+    إذا (واټن >= 0) {
+        واټن = trie_بل(iter, supported, ریښتیا);
     }
-    if (distance < 0) {
-        UStringTrieResult result = iter.resetToState64(startState).next(u'*');  // <*, *>
-        U_ASSERT(USTRINGTRIE_HAS_VALUE(result));
-        if (uprv_strcmp(desired, supported) == 0) {
-            distance = 0;  // same script
-        } else {
-            distance = iter.getValue();
-            U_ASSERT(distance >= 0);
+    إذا (واټن < 0) {
+        UString_Trie_پایله پایله = iter.reset_منزل_State64(پیل_State).next(u'*');  // <*, *>
+        U_ASSERT(USTRINGTRIE_HAS_ارزښت(پایله));
+        إذا (uprv_strcmp(desired, supported) == 0) {
+            واټن = 0;  // same script
+        } وإلا {
+            واټن = iter.get_ارزښت();
+            U_ASSERT(واټن >= 0);
         }
-        if (result == USTRINGTRIE_FINAL_VALUE) {
-            distance |= DISTANCE_IS_FINAL;
+        إذا (پایله == USTRINGTRIE_FINAL_ارزښت) {
+            واټن |= واټن_IS_FINAL;
         }
     }
-    return distance;
+    أرجع واټن;
 }
 
-int32_t LocaleDistance::getRegionPartitionsDistance(
-        BytesTrie &iter, uint64_t startState,
-        const char *desiredPartitions, const char *supportedPartitions, int32_t threshold) {
-    char desired = *desiredPartitions++;
-    char supported = *supportedPartitions++;
+int32_t Locale_واټن::get_Region_Partitions_واټن(
+        بایټونه_Trie &iter, uint64_t پیل_State,
+        ثابت حرف *desiredPartitions, ثابت حرف *supportedPartitions, int32_t پوله) {
+    حرف desired = *desiredPartitions++;
+    حرف supported = *supportedPartitions++;
     U_ASSERT(desired != 0 && supported != 0);
     // See if we have single desired/supported partitions, from NUL-terminated
     // partition strings without explicit length.
-    bool suppLengthGt1 = *supportedPartitions != 0;  // gt1: more than 1 character
+    منطقي supp_اوږدتیا_Gt1 = *supportedPartitions != 0;  // gt1: more than 1 character
     // equivalent to: if (desLength == 1 && suppLength == 1)
-    if (*desiredPartitions == 0 && !suppLengthGt1) {
+    إذا (*desiredPartitions == 0 && !supp_اوږدتیا_Gt1) {
         // Fastpath for single desired/supported partitions.
-        UStringTrieResult result = iter.next(uprv_invCharToAscii(desired) | END_OF_SUBTAG);
-        if (USTRINGTRIE_HAS_NEXT(result)) {
-            result = iter.next(uprv_invCharToAscii(supported) | END_OF_SUBTAG);
-            if (USTRINGTRIE_HAS_VALUE(result)) {
-                return iter.getValue();
+        UString_Trie_پایله پایله = iter.next(uprv_inv_Char_منزل_Ascii(desired) | پای_ټکی_د_SUBTAG);
+        إذا (USTRINGTRIE_HAS_بل(پایله)) {
+            پایله = iter.next(uprv_inv_Char_منزل_Ascii(supported) | پای_ټکی_د_SUBTAG);
+            إذا (USTRINGTRIE_HAS_ارزښت(پایله)) {
+                أرجع iter.get_ارزښت();
             }
         }
-        return getFallbackRegionDistance(iter, startState);
+        أرجع get_Fallback_Region_واټن(iter, پیل_State);
     }
 
-    const char *supportedStart = supportedPartitions - 1;  // for restart of inner loop
-    int32_t regionDistance = 0;
+    ثابت حرف *supported_پیل = supportedPartitions - 1;  // for restart of inner loop
+    int32_t region_واټن = 0;
     // Fall back to * only once, not for each pair of partition strings.
-    bool star = false;
-    for (;;) {
+    منطقي ستوری = خطأ;
+    لكل (;;) {
         // Look up each desired-partition string only once,
         // not for each (desired, supported) pair.
-        UStringTrieResult result = iter.next(uprv_invCharToAscii(desired) | END_OF_SUBTAG);
-        if (USTRINGTRIE_HAS_NEXT(result)) {
-            uint64_t desState = suppLengthGt1 ? iter.getState64() : 0;
-            for (;;) {
-                result = iter.next(uprv_invCharToAscii(supported) | END_OF_SUBTAG);
+        UString_Trie_پایله پایله = iter.next(uprv_inv_Char_منزل_Ascii(desired) | پای_ټکی_د_SUBTAG);
+        إذا (USTRINGTRIE_HAS_بل(پایله)) {
+            uint64_t desState = supp_اوږدتیا_Gt1 ? iter.getState64() : 0;
+            لكل (;;) {
+                پایله = iter.next(uprv_inv_Char_منزل_Ascii(supported) | پای_ټکی_د_SUBTAG);
                 int32_t d;
-                if (USTRINGTRIE_HAS_VALUE(result)) {
-                    d = iter.getValue();
-                } else if (star) {
+                إذا (USTRINGTRIE_HAS_ارزښت(پایله)) {
+                    d = iter.get_ارزښت();
+                } وإلا إذا (ستوری) {
                     d = 0;
-                } else {
-                    d = getFallbackRegionDistance(iter, startState);
-                    star = true;
+                } وإلا {
+                    d = get_Fallback_Region_واټن(iter, پیل_State);
+                    ستوری = ریښتیا;
                 }
-                if (d > threshold) {
-                    return d;
-                } else if (regionDistance < d) {
-                    regionDistance = d;
+                إذا (d > پوله) {
+                    أرجع d;
+                } وإلا إذا (region_واټن < d) {
+                    region_واټن = d;
                 }
-                if ((supported = *supportedPartitions++) != 0) {
-                    iter.resetToState64(desState);
-                } else {
-                    break;
+                إذا ((supported = *supportedPartitions++) != 0) {
+                    iter.reset_منزل_State64(desState);
+                } وإلا {
+                    اكسر;
                 }
             }
-        } else if (!star) {
-            int32_t d = getFallbackRegionDistance(iter, startState);
-            if (d > threshold) {
-                return d;
-            } else if (regionDistance < d) {
-                regionDistance = d;
+        } وإلا إذا (!ستوری) {
+            int32_t d = get_Fallback_Region_واټن(iter, پیل_State);
+            إذا (d > پوله) {
+                أرجع d;
+            } وإلا إذا (region_واټن < d) {
+                region_واټن = d;
             }
-            star = true;
+            ستوری = ریښتیا;
         }
-        if ((desired = *desiredPartitions++) != 0) {
-            iter.resetToState64(startState);
-            supportedPartitions = supportedStart;
+        إذا ((desired = *desiredPartitions++) != 0) {
+            iter.reset_منزل_State64(پیل_State);
+            supportedPartitions = supported_پیل;
             supported = *supportedPartitions++;
-        } else {
-            break;
+        } وإلا {
+            اكسر;
         }
     }
-    return regionDistance;
+    أرجع region_واټن;
 }
 
-int32_t LocaleDistance::getFallbackRegionDistance(BytesTrie &iter, uint64_t startState) {
-#if U_DEBUG
-    UStringTrieResult result =
-#endif
-    iter.resetToState64(startState).next(u'*');  // <*, *>
-    U_ASSERT(USTRINGTRIE_HAS_VALUE(result));
-    int32_t distance = iter.getValue();
-    U_ASSERT(distance >= 0);
-    return distance;
+int32_t Locale_واټن::get_Fallback_Region_واټن(بایټونه_Trie &iter, uint64_t پیل_State) {
+#إذا U_DEBUG
+    UString_Trie_پایله پایله =
+#د_که_پای
+    iter.reset_منزل_State64(پیل_State).next(u'*');  // <*, *>
+    U_ASSERT(USTRINGTRIE_HAS_ارزښت(پایله));
+    int32_t واټن = iter.get_ارزښت();
+    U_ASSERT(واټن >= 0);
+    أرجع واټن;
 }
 
-int32_t LocaleDistance::trieNext(BytesTrie &iter, const char *s, bool wantValue) {
+int32_t Locale_واټن::trie_بل(بایټونه_Trie &iter, ثابت حرف *s, منطقي want_ارزښت) {
     uint8_t c;
-    if ((c = *s) == 0) {
-        return -1;  // no empty subtags in the distance data
+    إذا ((c = *s) == 0) {
+        أرجع -1;  // no empty subtags in the distance data
     }
-    for (;;) {
-        c = uprv_invCharToAscii(c);
+    لكل (;;) {
+        c = uprv_inv_Char_منزل_Ascii(c);
         // EBCDIC: If *s is not an invariant character,
         // then c is now 0 and will simply not match anything, which is harmless.
         uint8_t next = *++s;
-        if (next != 0) {
-            if (!USTRINGTRIE_HAS_NEXT(iter.next(c))) {
-                return -1;
+        إذا (next != 0) {
+            إذا (!USTRINGTRIE_HAS_بل(iter.next(c))) {
+                أرجع -1;
             }
-        } else {
+        } وإلا {
             // last character of this subtag
-            UStringTrieResult result = iter.next(c | END_OF_SUBTAG);
-            if (wantValue) {
-                if (USTRINGTRIE_HAS_VALUE(result)) {
-                    int32_t value = iter.getValue();
-                    if (result == USTRINGTRIE_FINAL_VALUE) {
-                        value |= DISTANCE_IS_FINAL;
+            UString_Trie_پایله پایله = iter.next(c | پای_ټکی_د_SUBTAG);
+            إذا (want_ارزښت) {
+                إذا (USTRINGTRIE_HAS_ارزښت(پایله)) {
+                    int32_t value = iter.get_ارزښت();
+                    إذا (پایله == USTRINGTRIE_FINAL_ارزښت) {
+                        value |= واټن_IS_FINAL;
                     }
-                    return value;
+                    أرجع value;
                 }
-            } else {
-                if (USTRINGTRIE_HAS_NEXT(result)) {
-                    return 0;
+            } وإلا {
+                إذا (USTRINGTRIE_HAS_بل(پایله)) {
+                    أرجع 0;
                 }
             }
-            return -1;
+            أرجع -1;
         }
         c = next;
     }
 }
 
-bool LocaleDistance::isParadigmLSR(const LSR &lsr) const {
+منطقي Locale_واټن::isParadigmLSR(ثابت LSR &lsr) ثابت {
     // Linear search for a very short list (length 6 as of 2019),
     // because we look for equivalence not equality, and
     // because it's easy.
     // If there are many paradigm LSRs we should use a hash set
     // with custom comparator and hasher.
-    U_ASSERT(paradigmLSRsLength <= 15);
-    for (int32_t i = 0; i < paradigmLSRsLength; ++i) {
-        if (lsr.isEquivalentTo(paradigmLSRs[i])) { return true; }
+    U_ASSERT(paradigm_LSRs_اوږدتیا <= 15);
+    لكل (int32_t i = 0; i < paradigm_LSRs_اوږدتیا; ++i) {
+        إذا (lsr.is_Equivalent_منزل(paradigmLSRs[i])) { أرجع ریښتیا; }
     }
-    return false;
+    أرجع خطأ;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_پای_ټکی

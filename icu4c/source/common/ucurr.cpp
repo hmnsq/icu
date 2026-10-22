@@ -7,54 +7,54 @@
 **********************************************************************
 */
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if !UCONFIG_NO_FORMATTING
+#إذا !UCONFIG_NO_FORMATTING
 
-#include <utility>
+#ضمن <utility>
 
-#include "unicode/ucurr.h"
-#include "unicode/locid.h"
-#include "unicode/ures.h"
-#include "unicode/ustring.h"
-#include "unicode/parsepos.h"
-#include "unicode/uniset.h"
-#include "unicode/usetiter.h"
-#include "unicode/utf16.h"
-#include "ustr_imp.h"
-#include "charstr.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "static_unicode_sets.h"
-#include "uassert.h"
-#include "umutex.h"
-#include "ucln_cmn.h"
-#include "uenumimp.h"
-#include "uhash.h"
-#include "hash.h"
-#include "uinvchar.h"
-#include "uresimp.h"
-#include "ulist.h"
-#include "uresimp.h"
-#include "ureslocs.h"
-#include "ulocimp.h"
+#ضمن "unicode/ucurr.h"
+#ضمن "unicode/locid.h"
+#ضمن "unicode/ures.h"
+#ضمن "unicode/ustring.h"
+#ضمن "unicode/parsepos.h"
+#ضمن "unicode/uniset.h"
+#ضمن "unicode/usetiter.h"
+#ضمن "unicode/utf16.h"
+#ضمن "ustr_imp.h"
+#ضمن "charstr.h"
+#ضمن "cmemory.h"
+#ضمن "cstring.h"
+#ضمن "static_unicode_sets.h"
+#ضمن "uassert.h"
+#ضمن "umutex.h"
+#ضمن "ucln_cmn.h"
+#ضمن "uenumimp.h"
+#ضمن "uhash.h"
+#ضمن "hash.h"
+#ضمن "uinvchar.h"
+#ضمن "uresimp.h"
+#ضمن "ulist.h"
+#ضمن "uresimp.h"
+#ضمن "ureslocs.h"
+#ضمن "ulocimp.h"
 
-using namespace icu;
+کارول نطاق icu;
 
 //#define UCURR_DEBUG_EQUIV 1
-#ifdef UCURR_DEBUG_EQUIV
-#include "stdio.h"
-#endif
+#که_تعریف_شوی UCURR_DEBUG_EQUIV
+#ضمن "stdio.h"
+#د_که_پای
 //#define UCURR_DEBUG 1
-#ifdef UCURR_DEBUG
-#include "stdio.h"
-#endif
+#که_تعریف_شوی UCURR_DEBUG
+#ضمن "stdio.h"
+#د_که_پای
 
-typedef struct IsoCodeEntry {
-    const char16_t *isoCode; /* const because it's a reference to a resource bundle string. */
+تعريفنوع بنية Iso_کوډ_ثبت {
+    ثابت char16_t *iso_کوډ; /* const because it's a reference to a resource bundle string. */
     UDate from;
-    UDate to;
-} IsoCodeEntry;
+    UDate منزل;
+} Iso_کوډ_ثبت;
 
 //------------------------------------------------------------
 // Constants
@@ -63,225 +63,225 @@ typedef struct IsoCodeEntry {
 // defaults encoded in the meta data resource bundle.  If there is a
 // configuration/build error and these are not available, we use these
 // hard-coded defaults (which should be identical).
-static const int32_t LAST_RESORT_DATA[] = { 2, 0, 2, 0 };
+ساكن ثابت int32_t وروستی_RESORT_معلومات[] = { 2, 0, 2, 0 };
 
 // POW10[i] = 10^i, i=0..MAX_POW10
-static const int32_t POW10[] = { 1, 10, 100, 1000, 10000, 100000,
+ساكن ثابت int32_t POW10[] = { 1, 10, 100, 1000, 10000, 100000,
                                  1000000, 10000000, 100000000, 1000000000 };
 
-static const int32_t MAX_POW10 = UPRV_LENGTHOF(POW10) - 1;
+ساكن ثابت int32_t MAX_POW10 = UPRV_LENGTHOF(POW10) - 1;
 
-#define ISO_CURRENCY_CODE_LENGTH 3
+#تعریف_کړه ISO_CURRENCY_کوډ_اوږدتیا 3
 
 //------------------------------------------------------------
 // Resource tags
 //
 
-static const char CURRENCY_DATA[] = "supplementalData";
+ساكن ثابت حرف CURRENCY_معلومات[] = "supplementalData";
 // Tag for meta-data, in root.
-static const char CURRENCY_META[] = "CurrencyMeta";
+ساكن ثابت حرف CURRENCY_META[] = "CurrencyMeta";
 
 // Tag for map from countries to currencies, in root.
-static const char CURRENCY_MAP[] = "CurrencyMap";
+ساكن ثابت حرف CURRENCY_MAP[] = "CurrencyMap";
 
 // Tag for default meta-data, in CURRENCY_META
-static const char DEFAULT_META[] = "DEFAULT";
+ساكن ثابت حرف DEFAULT_META[] = "DEFAULT";
 
 // Variant delimiter
-static const char VAR_DELIM = '_';
+ساكن ثابت حرف VAR_DELIM = '_';
 
 // Tag for localized display names (symbols) of currencies
-static const char CURRENCIES[] = "Currencies";
-static const char CURRENCIES_NARROW[] = "Currencies%narrow";
-static const char CURRENCIES_FORMAL[] = "Currencies%formal";
-static const char CURRENCIES_VARIANT[] = "Currencies%variant";
-static const char CURRENCYPLURALS[] = "CurrencyPlurals";
+ساكن ثابت حرف CURRENCIES[] = "Currencies";
+ساكن ثابت حرف CURRENCIES_NARROW[] = "Currencies%narrow";
+ساكن ثابت حرف CURRENCIES_FORMAL[] = "Currencies%formal";
+ساكن ثابت حرف CURRENCIES_VARIANT[] = "Currencies%variant";
+ساكن ثابت حرف CURRENCYPLURALS[] = "CurrencyPlurals";
 
 // ISO codes mapping table
-static const UHashtable* gIsoCodes = nullptr;
-static icu::UInitOnce gIsoCodesInitOnce {};
+ساكن ثابت UHashtable* gIsoCodes = تش_اشاره;
+ساكن icu::UInitOnce gIsoCodesInitOnce {};
 
 // Currency symbol equivalances
-static const icu::Hashtable* gCurrSymbolsEquiv = nullptr;
-static icu::UInitOnce gCurrSymbolsEquivInitOnce {};
+ساكن ثابت icu::Hashtable* gCurrSymbolsEquiv = تش_اشاره;
+ساكن icu::UInitOnce gCurrSymbolsEquivInitOnce {};
 
 U_NAMESPACE_BEGIN
 
 // EquivIterator iterates over all strings that are equivalent to a given
 // string, s. Note that EquivIterator will never yield s itself.
-class EquivIterator : public icu::UMemory {
-public:
+صنف EquivIterator : عام icu::UMemory {
+عام:
     // Constructor. hash stores the equivalence relationships; s is the string
     // for which we find equivalent strings.
-    inline EquivIterator(const icu::Hashtable& hash, const icu::UnicodeString& s)
+    مضمن EquivIterator(ثابت icu::Hashtable& hash, ثابت icu::UnicodeString& s)
         : _hash(hash) { 
-        _start = _current = &s;
+        پیل_2 = _current = &s;
     }
-    inline ~EquivIterator() { }
+    مضمن ~EquivIterator() { }
 
     // next returns the next equivalent string or nullptr if there are no more.
     // If s has no equivalent strings, next returns nullptr on the first call.
-    const icu::UnicodeString *next();
-private:
-    const icu::Hashtable& _hash;
-    const icu::UnicodeString* _start;
-    const icu::UnicodeString* _current;
+    ثابت icu::UnicodeString *next();
+خاص:
+    ثابت icu::Hashtable& _hash;
+    ثابت icu::UnicodeString* پیل_2;
+    ثابت icu::UnicodeString* _current;
 };
 
-const icu::UnicodeString *
+ثابت icu::UnicodeString *
 EquivIterator::next() {
-    const icu::UnicodeString* _next = static_cast<const icu::UnicodeString*>(_hash.get(*_current));
-    if (_next == nullptr) {
-        U_ASSERT(_current == _start);
-        return nullptr;
+    ثابت icu::UnicodeString* بل_2 = static_cast<ثابت icu::UnicodeString*>(_hash.get(*_current));
+    إذا (بل_2 == تش_اشاره) {
+        U_ASSERT(_current == پیل_2);
+        أرجع تش_اشاره;
     }
-    if (*_next == *_start) {
-        return nullptr;
+    إذا (*بل_2 == *پیل_2) {
+        أرجع تش_اشاره;
     }
-    _current = _next;
-    return _next;
+    _current = بل_2;
+    أرجع بل_2;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_پای_ټکی
 
 // makeEquivalent makes lhs and rhs equivalent by updating the equivalence
 // relations in hash accordingly.
-static void makeEquivalent(
-    const icu::UnicodeString &lhs,
-    const icu::UnicodeString &rhs,
-    icu::Hashtable* hash, UErrorCode &status) {
-    if (U_FAILURE(status)) {
-        return;
+ساكن فراغ makeEquivalent(
+    ثابت icu::UnicodeString &lhs,
+    ثابت icu::UnicodeString &rhs,
+    icu::Hashtable* hash, UError_کوډ &حالت) {
+    إذا (U_FAILURE(حالت)) {
+        أرجع;
     }
-    if (lhs == rhs) {
+    إذا (lhs == rhs) {
         // already equivalent
-        return;
+        أرجع;
     }
-    icu::EquivIterator leftIter(*hash, lhs);
-    icu::EquivIterator rightIter(*hash, rhs);
-    const icu::UnicodeString *firstLeft = leftIter.next();
-    const icu::UnicodeString *firstRight = rightIter.next();
-    const icu::UnicodeString *nextLeft = firstLeft;
-    const icu::UnicodeString *nextRight = firstRight;
-    while (nextLeft != nullptr && nextRight != nullptr) {
-        if (*nextLeft == rhs || *nextRight == lhs) {
+    icu::EquivIterator کیڼ_Iter(*hash, lhs);
+    icu::EquivIterator ښی_Iter(*hash, rhs);
+    ثابت icu::UnicodeString *لومړی_کیڼ = کیڼ_Iter.next();
+    ثابت icu::UnicodeString *لومړی_ښی = ښی_Iter.next();
+    ثابت icu::UnicodeString *بل_کیڼ = لومړی_کیڼ;
+    ثابت icu::UnicodeString *بل_ښی = لومړی_ښی;
+    طالما (بل_کیڼ != تش_اشاره && بل_ښی != تش_اشاره) {
+        إذا (*بل_کیڼ == rhs || *بل_ښی == lhs) {
             // Already equivalent
-            return;
+            أرجع;
         }
-        nextLeft = leftIter.next();
-        nextRight = rightIter.next();
+        بل_کیڼ = کیڼ_Iter.next();
+        بل_ښی = ښی_Iter.next();
     }
     // Not equivalent. Must join.
-    icu::UnicodeString *newFirstLeft;
-    icu::UnicodeString *newFirstRight;
-    if (firstRight == nullptr && firstLeft == nullptr) {
+    icu::UnicodeString *new_لومړی_کیڼ;
+    icu::UnicodeString *new_لومړی_ښی;
+    إذا (لومړی_ښی == تش_اشاره && لومړی_کیڼ == تش_اشاره) {
         // Neither lhs or rhs belong to an equivalence circle, so we form
         // a new equivalnce circle of just lhs and rhs.
-        newFirstLeft = new icu::UnicodeString(rhs);
-        newFirstRight = new icu::UnicodeString(lhs);
-    } else if (firstRight == nullptr) {
+        new_لومړی_کیڼ = جديد icu::UnicodeString(rhs);
+        new_لومړی_ښی = جديد icu::UnicodeString(lhs);
+    } وإلا إذا (لومړی_ښی == تش_اشاره) {
         // lhs belongs to an equivalence circle, but rhs does not, so we link
         // rhs into lhs' circle.
-        newFirstLeft = new icu::UnicodeString(rhs);
-        newFirstRight = new icu::UnicodeString(*firstLeft);
-    } else if (firstLeft == nullptr) {
+        new_لومړی_کیڼ = جديد icu::UnicodeString(rhs);
+        new_لومړی_ښی = جديد icu::UnicodeString(*لومړی_کیڼ);
+    } وإلا إذا (لومړی_کیڼ == تش_اشاره) {
         // rhs belongs to an equivlance circle, but lhs does not, so we link
         // lhs into rhs' circle.
-        newFirstLeft = new icu::UnicodeString(*firstRight);
-        newFirstRight = new icu::UnicodeString(lhs);
-    } else {
+        new_لومړی_کیڼ = جديد icu::UnicodeString(*لومړی_ښی);
+        new_لومړی_ښی = جديد icu::UnicodeString(lhs);
+    } وإلا {
         // Both lhs and rhs belong to different equivalnce circles. We link
         // them together to form one single, larger equivalnce circle.
-        newFirstLeft = new icu::UnicodeString(*firstRight);
-        newFirstRight = new icu::UnicodeString(*firstLeft);
+        new_لومړی_کیڼ = جديد icu::UnicodeString(*لومړی_ښی);
+        new_لومړی_ښی = جديد icu::UnicodeString(*لومړی_کیڼ);
     }
-    if (newFirstLeft == nullptr || newFirstRight == nullptr) {
-        delete newFirstLeft;
-        delete newFirstRight;
-        status = U_MEMORY_ALLOCATION_ERROR;
-        return;
+    إذا (new_لومړی_کیڼ == تش_اشاره || new_لومړی_ښی == تش_اشاره) {
+        ړنګول new_لومړی_کیڼ;
+        ړنګول new_لومړی_ښی;
+        حالت = U_حافظه_ویش_ERROR;
+        أرجع;
     }
-    hash->put(lhs, (void *) newFirstLeft, status);
-    hash->put(rhs, (void *) newFirstRight, status);
+    hash->put(lhs, (فراغ *) new_لومړی_کیڼ, حالت);
+    hash->put(rhs, (فراغ *) new_لومړی_ښی, حالت);
 }
 
 // countEquivalent counts how many strings are equivalent to s.
 // hash stores all the equivalnce relations.
 // countEquivalent does not include s itself in the count.
-static int32_t countEquivalent(const icu::Hashtable &hash, const icu::UnicodeString &s) {
-    int32_t result = 0;
+ساكن int32_t شمېر_Equivalent(ثابت icu::Hashtable &hash, ثابت icu::UnicodeString &s) {
+    int32_t پایله = 0;
     icu::EquivIterator iter(hash, s);
-    while (iter.next() != nullptr) {
-        ++result;
+    طالما (iter.next() != تش_اشاره) {
+        ++پایله;
     }
-#ifdef UCURR_DEBUG_EQUIV
+#که_تعریف_شوی UCURR_DEBUG_EQUIV
  {
-   char tmp[200];
+   حرف tmp[200];
    s.extract(0,s.length(),tmp, "UTF-8");
-   printf("CountEquivalent('%s') = %d\n", tmp, result);
+   چاپ_کړه("CountEquivalent('%s') = %d\n", tmp, پایله);
  }
-#endif
-    return result;
+#د_که_پای
+    أرجع پایله;
 }
 
-static const icu::Hashtable* getCurrSymbolsEquiv();
+ساكن ثابت icu::Hashtable* getCurrSymbolsEquiv();
 
 //------------------------------------------------------------
-// Code
+//کوډ
 
 /**
  * Cleanup callback func
  */
-static UBool U_CALLCONV 
+ساكن UBool U_CALLCONV 
 isoCodes_cleanup()
 {
-    if (gIsoCodes != nullptr) {
+    إذا (gIsoCodes != تش_اشاره) {
         uhash_close(const_cast<UHashtable *>(gIsoCodes));
-        gIsoCodes = nullptr;
+        gIsoCodes = تش_اشاره;
     }
     gIsoCodesInitOnce.reset();
-    return true;
+    أرجع ریښتیا;
 }
 
 /**
  * Cleanup callback func
  */
-static UBool U_CALLCONV 
+ساكن UBool U_CALLCONV 
 currSymbolsEquiv_cleanup()
 {
-    delete const_cast<icu::Hashtable *>(gCurrSymbolsEquiv);
-    gCurrSymbolsEquiv = nullptr;
+    ړنګول const_cast<icu::Hashtable *>(gCurrSymbolsEquiv);
+    gCurrSymbolsEquiv = تش_اشاره;
     gCurrSymbolsEquivInitOnce.reset();
-    return true;
+    أرجع ریښتیا;
 }
 
 /**
  * Deleter for IsoCodeEntry
  */
-static void U_CALLCONV
-deleteIsoCodeEntry(void *obj) {
-    IsoCodeEntry* entry = static_cast<IsoCodeEntry*>(obj);
-    uprv_free(entry);
+ساكن فراغ U_CALLCONV
+delete_Iso_کوډ_ثبت(فراغ *obj) {
+    Iso_کوډ_ثبت* ثبت = static_cast<Iso_کوډ_ثبت*>(obj);
+    uprv_free(ثبت);
 }
 
 /**
  * Deleter for gCurrSymbolsEquiv.
  */
-static void U_CALLCONV
-deleteUnicode(void *obj) {
-    icu::UnicodeString* entry = static_cast<icu::UnicodeString*>(obj);
-    delete entry;
+ساكن فراغ U_CALLCONV
+deleteUnicode(فراغ *obj) {
+    icu::UnicodeString* ثبت = static_cast<icu::UnicodeString*>(obj);
+    ړنګول ثبت;
 }
 
 /**
  * Unfortunately, we have to convert the char16_t* currency code to char*
  * to use it as a resource key.
  */
-static inline char*
-myUCharsToChars(char* resultOfLen4, const char16_t* currency) {
-    u_UCharsToChars(currency, resultOfLen4, ISO_CURRENCY_CODE_LENGTH);
-    resultOfLen4[ISO_CURRENCY_CODE_LENGTH] = 0;
-    return resultOfLen4;
+ساكن مضمن حرف*
+my_UChars_منزل_Chars(حرف* پایله_د_Len4, ثابت char16_t* currency) {
+    u_UChars_منزل_Chars(currency, پایله_د_Len4, ISO_CURRENCY_کوډ_اوږدتیا);
+    پایله_د_Len4[ISO_CURRENCY_کوډ_اوږدتیا] = 0;
+    أرجع پایله_د_Len4;
 }
 
 /**
@@ -292,58 +292,58 @@ myUCharsToChars(char* resultOfLen4, const char16_t* currency) {
  * except that they are those used in cash transactions ( cashDigits
  * and cashRounding ).
  */
-static const int32_t*
-_findMetaData(const char16_t* currency, UErrorCode& ec) {
+ساكن ثابت int32_t*
+پیدا_کړه_Meta_معلومات(ثابت char16_t* currency, UError_کوډ& ec) {
 
-    if (currency == nullptr || *currency == 0) {
-        if (U_SUCCESS(ec)) {
-            ec = U_ILLEGAL_ARGUMENT_ERROR;
+    إذا (currency == تش_اشاره || *currency == 0) {
+        إذا (U_SUCCESS(ec)) {
+            ec = U_ILLEGAL_دلیل_ERROR;
         }
-        return LAST_RESORT_DATA;
+        أرجع وروستی_RESORT_معلومات;
     }
 
     // Get CurrencyMeta resource out of root locale file.  [This may
     // move out of the root locale file later; if it does, update this
     // code.]
-    UResourceBundle* currencyData = ures_openDirect(U_ICUDATA_CURR, CURRENCY_DATA, &ec);
-    LocalUResourceBundlePointer currencyMeta(ures_getByKey(currencyData, CURRENCY_META, currencyData, &ec));
+    UResourceBundle* currency_معلومات = ures_open_مستقیم(U_ICUDATA_CURR, CURRENCY_معلومات, &ec);
+    Local_UResource_Bundle_اشاره_ګر currencyMeta(ures_get_By_کلی(currency_معلومات, CURRENCY_META, currency_معلومات, &ec));
 
-    if (U_FAILURE(ec)) {
+    إذا (U_FAILURE(ec)) {
         // Config/build error; return hard-coded defaults
-        return LAST_RESORT_DATA;
+        أرجع وروستی_RESORT_معلومات;
     }
 
     // Look up our currency, or if that's not available, then DEFAULT
-    char buf[ISO_CURRENCY_CODE_LENGTH+1];
-    UErrorCode ec2 = U_ZERO_ERROR; // local error code: soft failure
-    LocalUResourceBundlePointer rb(ures_getByKey(currencyMeta.getAlias(), myUCharsToChars(buf, currency), nullptr, &ec2));
-      if (U_FAILURE(ec2)) {
-        rb.adoptInstead(ures_getByKey(currencyMeta.getAlias(),DEFAULT_META, nullptr, &ec));
-        if (U_FAILURE(ec)) {
+    حرف buf[ISO_CURRENCY_کوډ_اوږدتیا+1];
+    UError_کوډ ec2 = U_ZERO_ERROR; // local error code: soft failure
+    Local_UResource_Bundle_اشاره_ګر rb(ures_get_By_کلی(currencyMeta.getAlias(), my_UChars_منزل_Chars(buf, currency), تش_اشاره, &ec2));
+      إذا (U_FAILURE(ec2)) {
+        rb.adoptInstead(ures_get_By_کلی(currencyMeta.getAlias(),DEFAULT_META, تش_اشاره, &ec));
+        إذا (U_FAILURE(ec)) {
             // Config/build error; return hard-coded defaults
-            return LAST_RESORT_DATA;
+            أرجع وروستی_RESORT_معلومات;
         }
     }
 
     int32_t len;
-    const int32_t *data = ures_getIntVector(rb.getAlias(), &len, &ec);
-    if (U_FAILURE(ec) || len != 4) {
+    ثابت int32_t *معلومات = ures_get_Int_ویکټور(rb.getAlias(), &len, &ec);
+    إذا (U_FAILURE(ec) || len != 4) {
         // Config/build error; return hard-coded defaults
-        if (U_SUCCESS(ec)) {
+        إذا (U_SUCCESS(ec)) {
             ec = U_INVALID_FORMAT_ERROR;
         }
-        return LAST_RESORT_DATA;
+        أرجع وروستی_RESORT_معلومات;
     }
 
-    return data;
+    أرجع معلومات;
 }
 
 // -------------------------------------
 
-static CharString
-idForLocale(const char* locale, UErrorCode* ec)
+ساكن CharString
+idForLocale(ثابت حرف* locale, UError_کوډ* ec)
 {
-    return ulocimp_getRegionForSupplementalData(locale, false, *ec);
+    أرجع ulocimp_get_Region_For_Supplemental_معلومات(locale, خطأ, *ec);
 }
 
 // ------------------------------------------
@@ -355,119 +355,119 @@ idForLocale(const char* locale, UErrorCode* ec)
 // don't use ICUService since we don't need fallback
 
 U_CDECL_BEGIN
-static UBool U_CALLCONV currency_cleanup();
-U_CDECL_END
+ساكن UBool U_CALLCONV currency_cleanup();
+U_CDECL_پای_ټکی
 
-#if !UCONFIG_NO_SERVICE
-struct CReg;
+#إذا !UCONFIG_NO_SERVICE
+بنية CReg;
 
-static UMutex gCRegLock;
-static CReg* gCRegHead = nullptr;
+ساكن UMutex g_CReg_قلف;
+ساكن CReg* g_CReg_سر = تش_اشاره;
 
-struct CReg : public icu::UMemory {
+بنية CReg : عام icu::UMemory {
     CReg *next;
-    char16_t iso[ISO_CURRENCY_CODE_LENGTH+1];
-    char  id[ULOC_FULLNAME_CAPACITY];
+    char16_t iso[ISO_CURRENCY_کوډ_اوږدتیا+1];
+    حرف  id[ULOC_FULLNAME_ظرفیت];
 
-    CReg(const char16_t* _iso, const char* _id)
-        : next(nullptr)
+    CReg(ثابت char16_t* _iso, ثابت حرف* _id)
+        : next(تش_اشاره)
     {
-        uprv_strncpy(id, _id, sizeof(id)-1);
-        id[sizeof(id)-1] = 0;
-        u_memcpy(iso, _iso, ISO_CURRENCY_CODE_LENGTH);
-        iso[ISO_CURRENCY_CODE_LENGTH] = 0;
+        uprv_strncpy(id, _id, حجم(id)-1);
+        id[حجم(id)-1] = 0;
+        u_memcpy(iso, _iso, ISO_CURRENCY_کوډ_اوږدتیا);
+        iso[ISO_CURRENCY_کوډ_اوږدتیا] = 0;
     }
 
-    static UCurrRegistryKey reg(const char16_t* _iso, const char* _id, UErrorCode* status)
+    ساكن UCurr_Registry_کلی reg(ثابت char16_t* _iso, ثابت حرف* _id, UError_کوډ* حالت)
     {
-        if (status && U_SUCCESS(*status) && _iso && _id) {
-            CReg* n = new CReg(_iso, _id);
-            if (n) {
-                umtx_lock(&gCRegLock);
-                if (!gCRegHead) {
+        إذا (حالت && U_SUCCESS(*حالت) && _iso && _id) {
+            CReg* n = جديد CReg(_iso, _id);
+            إذا (n) {
+                umtx_قلف(&g_CReg_قلف);
+                إذا (!g_CReg_سر) {
                     /* register for the first time */
-                    ucln_common_registerCleanup(UCLN_COMMON_CURRENCY, currency_cleanup);
+                    ucln_common_ثبتوونکی_Cleanup(UCLN_COMMON_CURRENCY, currency_cleanup);
                 }
-                n->next = gCRegHead;
-                gCRegHead = n;
-                umtx_unlock(&gCRegLock);
-                return n;
+                n->next = g_CReg_سر;
+                g_CReg_سر = n;
+                umtx_unlock(&g_CReg_قلف);
+                أرجع n;
             }
-            *status = U_MEMORY_ALLOCATION_ERROR;
+            *حالت = U_حافظه_ویش_ERROR;
         }
-        return nullptr;
+        أرجع تش_اشاره;
     }
 
-    static UBool unreg(UCurrRegistryKey key) {
-        UBool found = false;
-        umtx_lock(&gCRegLock);
+    ساكن UBool unreg(UCurr_Registry_کلی کلی) {
+        UBool وموندل = خطأ;
+        umtx_قلف(&g_CReg_قلف);
 
-        CReg** p = &gCRegHead;
-        while (*p) {
-            if (*p == key) {
-                *p = ((CReg*)key)->next;
-                delete (CReg*)key;
-                found = true;
-                break;
+        CReg** p = &g_CReg_سر;
+        طالما (*p) {
+            إذا (*p == کلی) {
+                *p = ((CReg*)کلی)->next;
+                ړنګول (CReg*)کلی;
+                وموندل = ریښتیا;
+                اكسر;
             }
             p = &((*p)->next);
         }
 
-        umtx_unlock(&gCRegLock);
-        return found;
+        umtx_unlock(&g_CReg_قلف);
+        أرجع وموندل;
     }
 
-    static const char16_t* get(const char* id) {
-        const char16_t* result = nullptr;
-        umtx_lock(&gCRegLock);
-        CReg* p = gCRegHead;
+    ساكن ثابت char16_t* get(ثابت حرف* id) {
+        ثابت char16_t* پایله = تش_اشاره;
+        umtx_قلف(&g_CReg_قلف);
+        CReg* p = g_CReg_سر;
 
         /* register cleanup of the mutex */
-        ucln_common_registerCleanup(UCLN_COMMON_CURRENCY, currency_cleanup);
-        while (p) {
-            if (uprv_strcmp(id, p->id) == 0) {
-                result = p->iso;
-                break;
+        ucln_common_ثبتوونکی_Cleanup(UCLN_COMMON_CURRENCY, currency_cleanup);
+        طالما (p) {
+            إذا (uprv_strcmp(id, p->id) == 0) {
+                پایله = p->iso;
+                اكسر;
             }
             p = p->next;
         }
-        umtx_unlock(&gCRegLock);
-        return result;
+        umtx_unlock(&g_CReg_قلف);
+        أرجع پایله;
     }
 
     /* This doesn't need to be thread safe. It's for u_cleanup only. */
-    static void cleanup() {
-        while (gCRegHead) {
-            CReg* n = gCRegHead;
-            gCRegHead = gCRegHead->next;
-            delete n;
+    ساكن فراغ cleanup() {
+        طالما (g_CReg_سر) {
+            CReg* n = g_CReg_سر;
+            g_CReg_سر = g_CReg_سر->next;
+            ړنګول n;
         }
     }
 };
 
 // -------------------------------------
 
-U_CAPI UCurrRegistryKey U_EXPORT2
-ucurr_register(const char16_t* isoCode, const char* locale, UErrorCode *status)
+U_CAPI UCurr_Registry_کلی U_EXPORT2
+ucurr_ثبتوونکی(ثابت char16_t* iso_کوډ, ثابت حرف* locale, UError_کوډ *حالت)
 {
-    if (status && U_SUCCESS(*status)) {
-        CharString id = idForLocale(locale, status);
-        return CReg::reg(isoCode, id.data(), status);
+    إذا (حالت && U_SUCCESS(*حالت)) {
+        CharString id = idForLocale(locale, حالت);
+        أرجع CReg::reg(iso_کوډ, id.معلومات(), حالت);
     }
-    return nullptr;
+    أرجع تش_اشاره;
 }
 
 // -------------------------------------
 
 U_CAPI UBool U_EXPORT2
-ucurr_unregister(UCurrRegistryKey key, UErrorCode* status)
+ucurr_unregister(UCurr_Registry_کلی کلی, UError_کوډ* حالت)
 {
-    if (status && U_SUCCESS(*status)) {
-        return CReg::unreg(key);
+    إذا (حالت && U_SUCCESS(*حالت)) {
+        أرجع CReg::unreg(کلی);
     }
-    return false;
+    أرجع خطأ;
 }
-#endif /* UCONFIG_NO_SERVICE */
+#د_که_پای /* UCONFIG_NO_SERVICE */
 
 // -------------------------------------
 
@@ -477,14 +477,14 @@ ucurr_unregister(UCurrRegistryKey key, UErrorCode* status)
 /*The declaration here is needed so currency_cleanup()
  * can call this function.
  */
-static UBool U_CALLCONV
+ساكن UBool U_CALLCONV
 currency_cache_cleanup();
 
 U_CDECL_BEGIN
-static UBool U_CALLCONV currency_cleanup() {
-#if !UCONFIG_NO_SERVICE
+ساكن UBool U_CALLCONV currency_cleanup() {
+#إذا !UCONFIG_NO_SERVICE
     CReg::cleanup();
-#endif
+#د_که_پای
     /*
      * There might be some cached currency data or isoCodes data.
      */
@@ -492,114 +492,114 @@ static UBool U_CALLCONV currency_cleanup() {
     isoCodes_cleanup();
     currSymbolsEquiv_cleanup();
 
-    return true;
+    أرجع ریښتیا;
 }
-U_CDECL_END
+U_CDECL_پای_ټکی
 
 // -------------------------------------
 
 U_CAPI int32_t U_EXPORT2
-ucurr_forLocale(const char* locale,
+ucurr_forLocale(ثابت حرف* locale,
                 char16_t* buff,
-                int32_t buffCapacity,
-                UErrorCode* ec) {
-    if (U_FAILURE(*ec)) { return 0; }
-    if (buffCapacity < 0 || (buff == nullptr && buffCapacity > 0)) {
-        *ec = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+                int32_t buff_ظرفیت,
+                UError_کوډ* ec) {
+    إذا (U_FAILURE(*ec)) { أرجع 0; }
+    إذا (buff_ظرفیت < 0 || (buff == تش_اشاره && buff_ظرفیت > 0)) {
+        *ec = U_ILLEGAL_دلیل_ERROR;
+        أرجع 0;
     }
 
-    UErrorCode localStatus = U_ZERO_ERROR;
-    CharString currency = ulocimp_getKeywordValue(locale, "currency", localStatus);
+    UError_کوډ local_حالت = U_ZERO_ERROR;
+    CharString currency = ulocimp_get_Keyword_ارزښت(locale, "currency", local_حالت);
     int32_t resLen = currency.length();
 
-    if (U_SUCCESS(localStatus) && resLen == 3 && uprv_isInvariantString(currency.data(), resLen)) {
-        if (resLen < buffCapacity) {
-            T_CString_toUpperCase(currency.data());
-            u_charsToUChars(currency.data(), buff, resLen);
+    إذا (U_SUCCESS(local_حالت) && resLen == 3 && uprv_isInvariantString(currency.معلومات(), resLen)) {
+        إذا (resLen < buff_ظرفیت) {
+            T_CString_منزل_پاسنی_Case(currency.معلومات());
+            u_chars_منزل_UChars(currency.معلومات(), buff, resLen);
         }
-        return u_terminateUChars(buff, buffCapacity, resLen, ec);
+        أرجع u_terminateUChars(buff, buff_ظرفیت, resLen, ec);
     }
 
     // get country or country_variant in `id'
     CharString id = idForLocale(locale, ec);
-    if (U_FAILURE(*ec)) {
-        return 0;
+    إذا (U_FAILURE(*ec)) {
+        أرجع 0;
     }
 
-#if !UCONFIG_NO_SERVICE
-    const char16_t* result = CReg::get(id.data());
-    if (result) {
-        if(buffCapacity > u_strlen(result)) {
-            u_strcpy(buff, result);
+#إذا !UCONFIG_NO_SERVICE
+    ثابت char16_t* پایله = CReg::get(id.معلومات());
+    إذا (پایله) {
+        إذا(buff_ظرفیت > u_strlen(پایله)) {
+            u_strcpy(buff, پایله);
         }
-        resLen = u_strlen(result);
-        return u_terminateUChars(buff, buffCapacity, resLen, ec);
+        resLen = u_strlen(پایله);
+        أرجع u_terminateUChars(buff, buff_ظرفیت, resLen, ec);
     }
-#endif
+#د_که_پای
     // Remove variants, which is only needed for registration.
-    char *idDelim = uprv_strchr(id.data(), VAR_DELIM);
-    if (idDelim) {
-        id.truncate(idDelim - id.data());
+    حرف *idDelim = uprv_strchr(id.معلومات(), VAR_DELIM);
+    إذا (idDelim) {
+        id.truncate(idDelim - id.معلومات());
     }
 
-    const char16_t* s = nullptr;  // Currency code from data file.
-    if (id.isEmpty()) {
+    ثابت char16_t* s = تش_اشاره;  // Currency code from data file.
+    إذا (id.is_تشه()) {
         // No point looking in the data for an empty string.
         // This is what we would get.
-        localStatus = U_MISSING_RESOURCE_ERROR;
-    } else {
+        local_حالت = U_MISSING_RESOURCE_ERROR;
+    } وإلا {
         // Look up the CurrencyMap element in the root bundle.
-        localStatus = U_ZERO_ERROR;
-        UResourceBundle *rb = ures_openDirect(U_ICUDATA_CURR, CURRENCY_DATA, &localStatus);
-        UResourceBundle *cm = ures_getByKey(rb, CURRENCY_MAP, rb, &localStatus);
-        LocalUResourceBundlePointer countryArray(ures_getByKey(rb, id.data(), cm, &localStatus));
+        local_حالت = U_ZERO_ERROR;
+        UResourceBundle *rb = ures_open_مستقیم(U_ICUDATA_CURR, CURRENCY_معلومات, &local_حالت);
+        UResourceBundle *cm = ures_get_By_کلی(rb, CURRENCY_MAP, rb, &local_حالت);
+        Local_UResource_Bundle_اشاره_ګر countryArray(ures_get_By_کلی(rb, id.معلومات(), cm, &local_حالت));
         // https://unicode-org.atlassian.net/browse/ICU-21997
         // Prefer to use currencies that are legal tender.
-        if (U_SUCCESS(localStatus)) {
-            int32_t arrayLength = ures_getSize(countryArray.getAlias());
-            for (int32_t i = 0; i < arrayLength; ++i) {
-                LocalUResourceBundlePointer currencyReq(
-                    ures_getByIndex(countryArray.getAlias(), i, nullptr, &localStatus));
+        إذا (U_SUCCESS(local_حالت)) {
+            int32_t array_اوږدتیا = ures_get_اندازه(countryArray.getAlias());
+            لكل (int32_t i = 0; i < array_اوږدتیا; ++i) {
+                Local_UResource_Bundle_اشاره_ګر currencyReq(
+                    ures_get_By_شاخص(countryArray.getAlias(), i, تش_اشاره, &local_حالت));
                 // The currency is legal tender if it is *not* marked with tender{"false"}.
-                UErrorCode tenderStatus = localStatus;
-                const char16_t *tender =
-                    ures_getStringByKey(currencyReq.getAlias(), "tender", nullptr, &tenderStatus);
-                bool isTender = U_FAILURE(tenderStatus) || u_strcmp(tender, u"false") != 0;
-                if (!isTender && s != nullptr) {
+                UError_کوډ tender_حالت = local_حالت;
+                ثابت char16_t *tender =
+                    ures_get_String_By_کلی(currencyReq.getAlias(), "tender", تش_اشاره, &tender_حالت);
+                منطقي isTender = U_FAILURE(tender_حالت) || u_strcmp(tender, u"false") != 0;
+                إذا (!isTender && s != تش_اشاره) {
                     // We already have a non-tender currency. Ignore all following non-tender ones.
-                    continue;
+                    استمر;
                 }
                 // Fetch the currency code.
-                s = ures_getStringByKey(currencyReq.getAlias(), "id", &resLen, &localStatus);
-                if (isTender) {
-                    break;
+                s = ures_get_String_By_کلی(currencyReq.getAlias(), "id", &resLen, &local_حالت);
+                إذا (isTender) {
+                    اكسر;
                 }
             }
-            if (U_SUCCESS(localStatus) && s == nullptr) {
-                localStatus = U_MISSING_RESOURCE_ERROR;
+            إذا (U_SUCCESS(local_حالت) && s == تش_اشاره) {
+                local_حالت = U_MISSING_RESOURCE_ERROR;
             }
         }
     }
 
-    if ((U_FAILURE(localStatus)) && strchr(id.data(), '_') != nullptr) {
+    إذا ((U_FAILURE(local_حالت)) && strchr(id.معلومات(), '_') != تش_اشاره) {
         // We don't know about it.  Check to see if we support the variant.
-        CharString parent = ulocimp_getParent(locale, *ec);
+        CharString پلار = ulocimp_get_پلار(locale, *ec);
         *ec = U_USING_FALLBACK_WARNING;
         // TODO: Loop over the parent rather than recursing and
         // looking again for a currency keyword.
-        return ucurr_forLocale(parent.data(), buff, buffCapacity, ec);
+        أرجع ucurr_forLocale(پلار.معلومات(), buff, buff_ظرفیت, ec);
     }
-    if (*ec == U_ZERO_ERROR || localStatus != U_ZERO_ERROR) {
+    إذا (*ec == U_ZERO_ERROR || local_حالت != U_ZERO_ERROR) {
         // There is nothing to fallback to. Report the failure/warning if possible.
-        *ec = localStatus;
+        *ec = local_حالت;
     }
-    if (U_SUCCESS(*ec)) {
-        if(buffCapacity > resLen) {
+    إذا (U_SUCCESS(*ec)) {
+        إذا(buff_ظرفیت > resLen) {
             u_strcpy(buff, s);
         }
     }
-    return u_terminateUChars(buff, buffCapacity, resLen, ec);
+    أرجع u_terminateUChars(buff, buff_ظرفیت, resLen, ec);
 }
 
 // end registration
@@ -611,19 +611,19 @@ ucurr_forLocale(const char* locale,
  * @return true if the fallback happened; false if locale is already
  * root ("").
  */
-static UBool fallback(CharString& loc) {
-    if (loc.isEmpty()) {
-        return false;
+ساكن UBool fallback(CharString& loc) {
+    إذا (loc.is_تشه()) {
+        أرجع خطأ;
     }
-    UErrorCode status = U_ZERO_ERROR;
-    if (loc == "en_GB") {
+    UError_کوډ حالت = U_ZERO_ERROR;
+    إذا (loc == "en_GB") {
         // HACK: See #13368.  We need "en_GB" to fall back to "en_001" instead of "en"
         // in order to consume the correct data strings.  This hack will be removed
         // when proper data sink loading is implemented here.
         loc.truncate(3);
-        loc.append("001", status);
-    } else {
-        loc = ulocimp_getParent(loc.data(), status);
+        loc.append("001", حالت);
+    } وإلا {
+        loc = ulocimp_get_پلار(loc.معلومات(), حالت);
     }
  /*
     char *i = uprv_strrchr(loc, '_');
@@ -632,17 +632,17 @@ static UBool fallback(CharString& loc) {
     }
     *i = 0;
  */
-    return true;
+    أرجع ریښتیا;
 }
 
 
-U_CAPI const char16_t* U_EXPORT2
-ucurr_getName(const char16_t* currency U_LIFETIME_BOUND,
-              const char* locale,
+U_CAPI ثابت char16_t* U_EXPORT2
+ucurr_getName(ثابت char16_t* currency U_LIFETIME_BOUND,
+              ثابت حرف* locale,
               UCurrNameStyle nameStyle,
               UBool* isChoiceFormat, // fillin
               int32_t* len, // fillin
-              UErrorCode* ec) {
+              UError_کوډ* ec) {
 
     // Look up the Currencies resource for the given locale.  The
     // Currencies locale data looks like this:
@@ -655,14 +655,14 @@ ucurr_getName(const char16_t* currency U_LIFETIME_BOUND,
     //|  }
     //|}
 
-    if (U_FAILURE(*ec)) {
-        return nullptr;
+    إذا (U_FAILURE(*ec)) {
+        أرجع تش_اشاره;
     }
 
     int32_t choice = (int32_t) nameStyle;
-    if (choice < 0 || choice > 4) {
-        *ec = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+    إذا (choice < 0 || choice > 4) {
+        *ec = U_ILLEGAL_دلیل_ERROR;
+        أرجع تش_اشاره;
     }
 
     // In the future, resource bundles may implement multi-level
@@ -676,62 +676,62 @@ ucurr_getName(const char16_t* currency U_LIFETIME_BOUND,
 
     // Use a separate UErrorCode here that does not propagate out of
     // this function.
-    UErrorCode ec2 = U_ZERO_ERROR;
+    UError_کوډ ec2 = U_ZERO_ERROR;
 
-    if (locale == nullptr) {
+    إذا (locale == تش_اشاره) {
         locale = uloc_getDefault();
     }
     CharString loc = ulocimp_getName(locale, ec2);
-    if (U_FAILURE(ec2)) {
-        *ec = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+    إذا (U_FAILURE(ec2)) {
+        *ec = U_ILLEGAL_دلیل_ERROR;
+        أرجع تش_اشاره;
     }
 
-    char buf[ISO_CURRENCY_CODE_LENGTH+1];
-    myUCharsToChars(buf, currency);
+    حرف buf[ISO_CURRENCY_کوډ_اوږدتیا+1];
+    my_UChars_منزل_Chars(buf, currency);
     
     /* Normalize the keyword value to uppercase */
-    T_CString_toUpperCase(buf);
+    T_CString_منزل_پاسنی_Case(buf);
     
-    const char16_t* s = nullptr;
+    ثابت char16_t* s = تش_اشاره;
     ec2 = U_ZERO_ERROR;
-    LocalUResourceBundlePointer rb(ures_open(U_ICUDATA_CURR, loc.data(), &ec2));
+    Local_UResource_Bundle_اشاره_ګر rb(ures_open(U_ICUDATA_CURR, loc.معلومات(), &ec2));
 
-    if (nameStyle == UCURR_NARROW_SYMBOL_NAME || nameStyle == UCURR_FORMAL_SYMBOL_NAME || nameStyle == UCURR_VARIANT_SYMBOL_NAME) {
-        CharString key;
-        switch (nameStyle) {
-        case UCURR_NARROW_SYMBOL_NAME:
-            key.append(CURRENCIES_NARROW, ec2);
-            break;
-        case UCURR_FORMAL_SYMBOL_NAME:
-            key.append(CURRENCIES_FORMAL, ec2);
-            break;
-        case UCURR_VARIANT_SYMBOL_NAME:
-            key.append(CURRENCIES_VARIANT, ec2);
-            break;
-        default:
+    إذا (nameStyle == UCURR_NARROW_نښه_NAME || nameStyle == UCURR_FORMAL_نښه_NAME || nameStyle == UCURR_VARIANT_نښه_NAME) {
+        CharString کلی;
+        بدل (nameStyle) {
+        حالة UCURR_NARROW_نښه_NAME:
+            کلی.append(CURRENCIES_NARROW, ec2);
+            اكسر;
+        حالة UCURR_FORMAL_نښه_NAME:
+            کلی.append(CURRENCIES_FORMAL, ec2);
+            اكسر;
+        حالة UCURR_VARIANT_نښه_NAME:
+            کلی.append(CURRENCIES_VARIANT, ec2);
+            اكسر;
+        افتراضي:
             *ec = U_UNSUPPORTED_ERROR;
-            return nullptr;
+            أرجع تش_اشاره;
         }
-        key.append("/", ec2);
-        key.append(buf, ec2);
-        s = ures_getStringByKeyWithFallback(rb.getAlias(), key.data(), len, &ec2);
-        if (ec2 == U_MISSING_RESOURCE_ERROR) {
+        کلی.append("/", ec2);
+        کلی.append(buf, ec2);
+        s = ures_get_String_By_کلی_With_Fallback(rb.getAlias(), کلی.معلومات(), len, &ec2);
+        إذا (ec2 == U_MISSING_RESOURCE_ERROR) {
             *ec = U_USING_FALLBACK_WARNING;
             ec2 = U_ZERO_ERROR;
-            choice = UCURR_SYMBOL_NAME;
+            choice = UCURR_نښه_NAME;
         }
     }
-    if (s == nullptr) {
-        ures_getByKey(rb.getAlias(), CURRENCIES, rb.getAlias(), &ec2);
-        ures_getByKeyWithFallback(rb.getAlias(), buf, rb.getAlias(), &ec2);
-        s = ures_getStringByIndex(rb.getAlias(), choice, len, &ec2);
+    إذا (s == تش_اشاره) {
+        ures_get_By_کلی(rb.getAlias(), CURRENCIES, rb.getAlias(), &ec2);
+        ures_get_By_کلی_With_Fallback(rb.getAlias(), buf, rb.getAlias(), &ec2);
+        s = ures_get_String_By_شاخص(rb.getAlias(), choice, len, &ec2);
     }
 
     // If we've succeeded we're done.  Otherwise, try to fallback.
     // If that fails (because we are already at root) then exit.
-    if (U_SUCCESS(ec2)) {
-        if (ec2 == U_USING_DEFAULT_WARNING
+    إذا (U_SUCCESS(ec2)) {
+        إذا (ec2 == U_USING_DEFAULT_WARNING
             || (ec2 == U_USING_FALLBACK_WARNING && *ec != U_USING_DEFAULT_WARNING)) {
             *ec = ec2;
         }
@@ -739,27 +739,27 @@ ucurr_getName(const char16_t* currency U_LIFETIME_BOUND,
 
     // We no longer support choice format data in names.  Data should not contain
     // choice patterns.
-    if (isChoiceFormat != nullptr) {
-        *isChoiceFormat = false;
+    إذا (isChoiceFormat != تش_اشاره) {
+        *isChoiceFormat = خطأ;
     }
-    if (U_SUCCESS(ec2)) {
-        U_ASSERT(s != nullptr);
-        return s;
+    إذا (U_SUCCESS(ec2)) {
+        U_ASSERT(s != تش_اشاره);
+        أرجع s;
     }
 
     // If we fail to find a match, use the ISO 4217 code
     *len = u_strlen(currency); // Should == ISO_CURRENCY_CODE_LENGTH, but maybe not...?
     *ec = U_USING_DEFAULT_WARNING;
-    return currency;
+    أرجع currency;
 }
 
-U_CAPI const char16_t* U_EXPORT2
-ucurr_getPluralName(const char16_t* currency U_LIFETIME_BOUND,
-                    const char* locale,
+U_CAPI ثابت char16_t* U_EXPORT2
+ucurr_getPluralName(ثابت char16_t* currency U_LIFETIME_BOUND,
+                    ثابت حرف* locale,
                     UBool* isChoiceFormat,
-                    const char* pluralCount,
+                    ثابت حرف* plural_شمېر,
                     int32_t* len, // fillin
-                    UErrorCode* ec) {
+                    UError_کوډ* ec) {
     // Look up the Currencies resource for the given locale.  The
     // Currencies locale data looks like this:
     //|en {
@@ -771,110 +771,110 @@ ucurr_getPluralName(const char16_t* currency U_LIFETIME_BOUND,
     //|  }
     //|}
 
-    if (U_FAILURE(*ec)) {
-        return nullptr;
+    إذا (U_FAILURE(*ec)) {
+        أرجع تش_اشاره;
     }
 
     // Use a separate UErrorCode here that does not propagate out of
     // this function.
-    UErrorCode ec2 = U_ZERO_ERROR;
+    UError_کوډ ec2 = U_ZERO_ERROR;
 
-    if (locale == nullptr) {
+    إذا (locale == تش_اشاره) {
         locale = uloc_getDefault();
     }
     CharString loc = ulocimp_getName(locale, ec2);
-    if (U_FAILURE(ec2)) {
-        *ec = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+    إذا (U_FAILURE(ec2)) {
+        *ec = U_ILLEGAL_دلیل_ERROR;
+        أرجع تش_اشاره;
     }
 
-    char buf[ISO_CURRENCY_CODE_LENGTH+1];
-    myUCharsToChars(buf, currency);
+    حرف buf[ISO_CURRENCY_کوډ_اوږدتیا+1];
+    my_UChars_منزل_Chars(buf, currency);
 
-    const char16_t* s = nullptr;
+    ثابت char16_t* s = تش_اشاره;
     ec2 = U_ZERO_ERROR;
-    UResourceBundle* rb = ures_open(U_ICUDATA_CURR, loc.data(), &ec2);
+    UResourceBundle* rb = ures_open(U_ICUDATA_CURR, loc.معلومات(), &ec2);
 
-    rb = ures_getByKey(rb, CURRENCYPLURALS, rb, &ec2);
+    rb = ures_get_By_کلی(rb, CURRENCYPLURALS, rb, &ec2);
 
     // Fetch resource with multi-level resource inheritance fallback
-    LocalUResourceBundlePointer curr(ures_getByKeyWithFallback(rb, buf, rb, &ec2));
+    Local_UResource_Bundle_اشاره_ګر curr(ures_get_By_کلی_With_Fallback(rb, buf, rb, &ec2));
 
-    s = ures_getStringByKeyWithFallback(curr.getAlias(), pluralCount, len, &ec2);
-    if (U_FAILURE(ec2)) {
+    s = ures_get_String_By_کلی_With_Fallback(curr.getAlias(), plural_شمېر, len, &ec2);
+    إذا (U_FAILURE(ec2)) {
         //  fall back to "other"
         ec2 = U_ZERO_ERROR;
-        s = ures_getStringByKeyWithFallback(curr.getAlias(), "other", len, &ec2);     
-        if (U_FAILURE(ec2)) {
+        s = ures_get_String_By_کلی_With_Fallback(curr.getAlias(), "other", len, &ec2);     
+        إذا (U_FAILURE(ec2)) {
             // fall back to long name in Currencies
-            return ucurr_getName(currency, locale, UCURR_LONG_NAME, 
+            أرجع ucurr_getName(currency, locale, UCURR_LONG_NAME, 
                                  isChoiceFormat, len, ec);
         }
     }
 
     // If we've succeeded we're done.  Otherwise, try to fallback.
     // If that fails (because we are already at root) then exit.
-    if (U_SUCCESS(ec2)) {
-        if (ec2 == U_USING_DEFAULT_WARNING
+    إذا (U_SUCCESS(ec2)) {
+        إذا (ec2 == U_USING_DEFAULT_WARNING
             || (ec2 == U_USING_FALLBACK_WARNING && *ec != U_USING_DEFAULT_WARNING)) {
             *ec = ec2;
         }
-        U_ASSERT(s != nullptr);
-        return s;
+        U_ASSERT(s != تش_اشاره);
+        أرجع s;
     }
 
     // If we fail to find a match, use the ISO 4217 code
     *len = u_strlen(currency); // Should == ISO_CURRENCY_CODE_LENGTH, but maybe not...?
     *ec = U_USING_DEFAULT_WARNING;
-    return currency;
+    أرجع currency;
 }
 
 
 //========================================================================
 // Following are structure and function for parsing currency names
 
-#define NEED_TO_BE_DELETED 0x1
+#تعریف_کړه NEED_منزل_BE_DELETED 0x1
 
 // TODO: a better way to define this?
-#define MAX_CURRENCY_NAME_LEN 100
+#تعریف_کړه MAX_CURRENCY_NAME_LEN 100
 
-typedef struct {
-    const char* IsoCode;  // key
-    char16_t* currencyName;  // value
+تعريفنوع بنية {
+    ثابت حرف* Iso_کوډ;  //کلی
+    char16_t* currencyName;  //ارزښت
     int32_t currencyNameLen;  // value length
     int32_t flag;  // flags
 } CurrencyNameStruct;
 
 
-#ifndef MIN
-#define MIN(a,b) (((a)<(b)) ? (a) : (b))
-#endif
+#که_نه_تعریف_شوی MIN
+#تعریف_کړه MIN(a,b) (((a)<(b)) ? (a) : (b))
+#د_که_پای
 
-#ifndef MAX
-#define MAX(a,b) (((a)<(b)) ? (b) : (a))
-#endif
+#که_نه_تعریف_شوی MAX
+#تعریف_کړه MAX(a,b) (((a)<(b)) ? (b) : (a))
+#د_که_پای
 
 
 // Comparison function used in quick sort.
-static int U_CALLCONV currencyNameComparator(const void* a, const void* b) {
-    const CurrencyNameStruct* currName_1 = static_cast<const CurrencyNameStruct*>(a);
-    const CurrencyNameStruct* currName_2 = static_cast<const CurrencyNameStruct*>(b);
-    for (int32_t i = 0; 
+ساكن صحيح U_CALLCONV currencyNameComparator(ثابت فراغ* a, ثابت فراغ* b) {
+    ثابت CurrencyNameStruct* currName_1 = static_cast<ثابت CurrencyNameStruct*>(a);
+    ثابت CurrencyNameStruct* currName_2 = static_cast<ثابت CurrencyNameStruct*>(b);
+    لكل (int32_t i = 0; 
          i < MIN(currName_1->currencyNameLen, currName_2->currencyNameLen);
          ++i) {
-        if (currName_1->currencyName[i] < currName_2->currencyName[i]) {
-            return -1;
+        إذا (currName_1->currencyName[i] < currName_2->currencyName[i]) {
+            أرجع -1;
         }
-        if (currName_1->currencyName[i] > currName_2->currencyName[i]) {
-            return 1;
+        إذا (currName_1->currencyName[i] > currName_2->currencyName[i]) {
+            أرجع 1;
         }
     }
-    if (currName_1->currencyNameLen < currName_2->currencyNameLen) {
-        return -1;
-    } else if (currName_1->currencyNameLen > currName_2->currencyNameLen) {
-        return 1;
+    إذا (currName_1->currencyNameLen < currName_2->currencyNameLen) {
+        أرجع -1;
+    } وإلا إذا (currName_1->currencyNameLen > currName_2->currencyNameLen) {
+        أرجع 1;
     }
-    return 0;
+    أرجع 0;
 }
 
 
@@ -886,265 +886,265 @@ static int U_CALLCONV currencyNameComparator(const void* a, const void* b) {
 // For example, given locale as "en_US", the currency names get from resource
 // bundle in "en_US" and "en" are duplicated. The fallback mechanism will count
 // all currency names in "en_US" and "en".
-static void
-getCurrencyNameCount(const char* loc, int32_t* total_currency_name_count, int32_t* total_currency_symbol_count) {
+ساكن فراغ
+get_Currency_Name_شمېر(ثابت حرف* loc, int32_t* ټول_currency_name_شمېر, int32_t* ټول_currency_نښه_شمېر) {
     U_NAMESPACE_USE
-    *total_currency_name_count = 0;
-    *total_currency_symbol_count = 0;
-    const char16_t* s = nullptr;
+    *ټول_currency_name_شمېر = 0;
+    *ټول_currency_نښه_شمېر = 0;
+    ثابت char16_t* s = تش_اشاره;
     CharString locale;
     {
-        UErrorCode status = U_ZERO_ERROR;
-        locale.append(loc, status);
-        if (U_FAILURE(status)) { return; }
+        UError_کوډ حالت = U_ZERO_ERROR;
+        locale.append(loc, حالت);
+        إذا (U_FAILURE(حالت)) { أرجع; }
     }
-    const icu::Hashtable *currencySymbolsEquiv = getCurrSymbolsEquiv();
-    for (;;) {
-        UErrorCode ec2 = U_ZERO_ERROR;
+    ثابت icu::Hashtable *currencySymbolsEquiv = getCurrSymbolsEquiv();
+    لكل (;;) {
+        UError_کوډ ec2 = U_ZERO_ERROR;
         // TODO: ures_openDirect?
-        LocalUResourceBundlePointer rb(ures_open(U_ICUDATA_CURR, locale.data(), &ec2));
-        LocalUResourceBundlePointer curr(ures_getByKey(rb.getAlias(), CURRENCIES, nullptr, &ec2));
-        int32_t n = ures_getSize(curr.getAlias());
-        for (int32_t i=0; i<n; ++i) {
-            LocalUResourceBundlePointer names(ures_getByIndex(curr.getAlias(), i, nullptr, &ec2));
+        Local_UResource_Bundle_اشاره_ګر rb(ures_open(U_ICUDATA_CURR, locale.معلومات(), &ec2));
+        Local_UResource_Bundle_اشاره_ګر curr(ures_get_By_کلی(rb.getAlias(), CURRENCIES, تش_اشاره, &ec2));
+        int32_t n = ures_get_اندازه(curr.getAlias());
+        لكل (int32_t i=0; i<n; ++i) {
+            Local_UResource_Bundle_اشاره_ګر نومونه(ures_get_By_شاخص(curr.getAlias(), i, تش_اشاره, &ec2));
             int32_t len;
-            s = ures_getStringByIndex(names.getAlias(), UCURR_SYMBOL_NAME, &len, &ec2);
-            ++(*total_currency_symbol_count);  // currency symbol
-            if (currencySymbolsEquiv != nullptr) {
-                *total_currency_symbol_count += countEquivalent(*currencySymbolsEquiv, UnicodeString(true, s, len));
+            s = ures_get_String_By_شاخص(نومونه.getAlias(), UCURR_نښه_NAME, &len, &ec2);
+            ++(*ټول_currency_نښه_شمېر);  // currency symbol
+            إذا (currencySymbolsEquiv != تش_اشاره) {
+                *ټول_currency_نښه_شمېر += شمېر_Equivalent(*currencySymbolsEquiv, UnicodeString(ریښتیا, s, len));
             }
-            ++(*total_currency_symbol_count); // iso code
-            ++(*total_currency_name_count); // long name
+            ++(*ټول_currency_نښه_شمېر); // iso code
+            ++(*ټول_currency_name_شمېر); // long name
         }
 
         // currency plurals
-        UErrorCode ec3 = U_ZERO_ERROR;
-        LocalUResourceBundlePointer curr_p(ures_getByKey(rb.getAlias(), CURRENCYPLURALS, nullptr, &ec3));
-        n = ures_getSize(curr_p.getAlias());
-        for (int32_t i=0; i<n; ++i) {
-            LocalUResourceBundlePointer names(ures_getByIndex(curr_p.getAlias(), i, nullptr, &ec3));
-            *total_currency_name_count += ures_getSize(names.getAlias());
+        UError_کوډ ec3 = U_ZERO_ERROR;
+        Local_UResource_Bundle_اشاره_ګر curr_p(ures_get_By_کلی(rb.getAlias(), CURRENCYPLURALS, تش_اشاره, &ec3));
+        n = ures_get_اندازه(curr_p.getAlias());
+        لكل (int32_t i=0; i<n; ++i) {
+            Local_UResource_Bundle_اشاره_ګر نومونه(ures_get_By_شاخص(curr_p.getAlias(), i, تش_اشاره, &ec3));
+            *ټول_currency_name_شمېر += ures_get_اندازه(نومونه.getAlias());
         }
 
-        if (!fallback(locale)) {
-            break;
+        إذا (!fallback(locale)) {
+            اكسر;
         }
     }
 }
 
-static char16_t*
-toUpperCase(const char16_t* source, int32_t len, const char* locale) {
-    char16_t* dest = nullptr;
-    UErrorCode ec = U_ZERO_ERROR;
-    int32_t destLen = u_strToUpper(dest, 0, source, len, locale, &ec);
+ساكن char16_t*
+منزل_پاسنی_Case(ثابت char16_t* سرچینه, int32_t len, ثابت حرف* locale) {
+    char16_t* dest = تش_اشاره;
+    UError_کوډ ec = U_ZERO_ERROR;
+    int32_t destLen = u_str_منزل_پاسنی(dest, 0, سرچینه, len, locale, &ec);
 
     ec = U_ZERO_ERROR;
-    dest = static_cast<char16_t*>(uprv_malloc(sizeof(char16_t) * MAX(destLen, len)));
-    if (dest == nullptr) {
-        return nullptr;
+    dest = static_cast<char16_t*>(uprv_malloc(حجم(char16_t) * MAX(destLen, len)));
+    إذا (dest == تش_اشاره) {
+        أرجع تش_اشاره;
     }
-    u_strToUpper(dest, destLen, source, len, locale, &ec);
-    if (U_FAILURE(ec)) {
-        u_memcpy(dest, source, len);
+    u_str_منزل_پاسنی(dest, destLen, سرچینه, len, locale, &ec);
+    إذا (U_FAILURE(ec)) {
+        u_memcpy(dest, سرچینه, len);
     } 
-    return dest;
+    أرجع dest;
 }
 
 
-static void deleteCurrencyNames(CurrencyNameStruct* currencyNames, int32_t count);
+ساكن فراغ delete_Currency_نومونه(CurrencyNameStruct* currency_نومونه, int32_t count);
 // Collect all available currency names associated with the given locale
 // (enable fallback chain).
 // Read currenc names defined in resource bundle "Currencies" and
 // "CurrencyPlural", enable fallback chain.
 // return the malloc-ed currency name arrays and the total number of currency
 // names in the array.
-static void
-collectCurrencyNames(const char* locale, 
-                     CurrencyNameStruct** currencyNames, 
-                     int32_t* total_currency_name_count, 
+ساكن فراغ
+collect_Currency_نومونه(ثابت حرف* locale, 
+                     CurrencyNameStruct** currency_نومونه, 
+                     int32_t* ټول_currency_name_شمېر, 
                      CurrencyNameStruct** currencySymbols, 
-                     int32_t* total_currency_symbol_count, 
-                     UErrorCode& ec) {
-    if (U_FAILURE(ec)) {
-        *currencyNames = *currencySymbols = nullptr;
-        *total_currency_name_count = *total_currency_symbol_count = 0;
-        return;
+                     int32_t* ټول_currency_نښه_شمېر, 
+                     UError_کوډ& ec) {
+    إذا (U_FAILURE(ec)) {
+        *currency_نومونه = *currencySymbols = تش_اشاره;
+        *ټول_currency_name_شمېر = *ټول_currency_نښه_شمېر = 0;
+        أرجع;
     }
     U_NAMESPACE_USE
-    const icu::Hashtable *currencySymbolsEquiv = getCurrSymbolsEquiv();
+    ثابت icu::Hashtable *currencySymbolsEquiv = getCurrSymbolsEquiv();
     // Look up the Currencies resource for the given locale.
-    UErrorCode ec2 = U_ZERO_ERROR;
+    UError_کوډ ec2 = U_ZERO_ERROR;
 
-    if (locale == nullptr) {
+    إذا (locale == تش_اشاره) {
         locale = uloc_getDefault();
     }
     CharString loc = ulocimp_getName(locale, ec2);
-    if (U_FAILURE(ec2)) {
-        ec = U_ILLEGAL_ARGUMENT_ERROR;
-        *currencyNames = *currencySymbols = nullptr;
-        *total_currency_name_count = *total_currency_symbol_count = 0;
-        return;
+    إذا (U_FAILURE(ec2)) {
+        ec = U_ILLEGAL_دلیل_ERROR;
+        *currency_نومونه = *currencySymbols = تش_اشاره;
+        *ټول_currency_name_شمېر = *ټول_currency_نښه_شمېر = 0;
+        أرجع;
     }
 
     // Get maximum currency name count first.
-    getCurrencyNameCount(loc.data(), total_currency_name_count, total_currency_symbol_count);
+    get_Currency_Name_شمېر(loc.معلومات(), ټول_currency_name_شمېر, ټول_currency_نښه_شمېر);
 
-    *currencyNames = static_cast<CurrencyNameStruct*>(
-        uprv_malloc(sizeof(CurrencyNameStruct) * (*total_currency_name_count)));
-    if(*currencyNames == nullptr) {
-        *currencySymbols = nullptr;
-        *total_currency_name_count = *total_currency_symbol_count = 0;
-        ec = U_MEMORY_ALLOCATION_ERROR;
-        return;
+    *currency_نومونه = static_cast<CurrencyNameStruct*>(
+        uprv_malloc(حجم(CurrencyNameStruct) * (*ټول_currency_name_شمېر)));
+    إذا(*currency_نومونه == تش_اشاره) {
+        *currencySymbols = تش_اشاره;
+        *ټول_currency_name_شمېر = *ټول_currency_نښه_شمېر = 0;
+        ec = U_حافظه_ویش_ERROR;
+        أرجع;
     }
     *currencySymbols = static_cast<CurrencyNameStruct*>(
-        uprv_malloc(sizeof(CurrencyNameStruct) * (*total_currency_symbol_count)));
+        uprv_malloc(حجم(CurrencyNameStruct) * (*ټول_currency_نښه_شمېر)));
 
-    if(*currencySymbols == nullptr) {
-        uprv_free(*currencyNames);
-        *currencyNames = nullptr;
-        *total_currency_name_count = *total_currency_symbol_count = 0;
-        ec = U_MEMORY_ALLOCATION_ERROR;
-        return;
+    إذا(*currencySymbols == تش_اشاره) {
+        uprv_free(*currency_نومونه);
+        *currency_نومونه = تش_اشاره;
+        *ټول_currency_name_شمېر = *ټول_currency_نښه_شمېر = 0;
+        ec = U_حافظه_ویش_ERROR;
+        أرجع;
     }
 
-    const char16_t* s = nullptr;  // currency name
-    char* iso = nullptr;  // currency ISO code
+    ثابت char16_t* s = تش_اشاره;  // currency name
+    حرف* iso = تش_اشاره;  // currency ISO code
 
-    *total_currency_name_count = 0;
-    *total_currency_symbol_count = 0;
+    *ټول_currency_name_شمېر = 0;
+    *ټول_currency_نښه_شمېر = 0;
 
-    UErrorCode ec3 = U_ZERO_ERROR;
-    UErrorCode ec4 = U_ZERO_ERROR;
+    UError_کوډ ec3 = U_ZERO_ERROR;
+    UError_کوډ ec4 = U_ZERO_ERROR;
 
     // Using hash to remove duplicates caused by locale fallback
-    LocalUHashtablePointer currencyIsoCodes(uhash_open(uhash_hashChars, uhash_compareChars, nullptr, &ec3));
-    LocalUHashtablePointer currencyPluralIsoCodes(uhash_open(uhash_hashChars, uhash_compareChars, nullptr, &ec4));
-    for (int32_t localeLevel = 0; ; ++localeLevel) {
+    Local_UHashtable_اشاره_ګر currencyIsoCodes(uhash_open(uhash_hashChars, uhash_compareChars, تش_اشاره, &ec3));
+    Local_UHashtable_اشاره_ګر currencyPluralIsoCodes(uhash_open(uhash_hashChars, uhash_compareChars, تش_اشاره, &ec4));
+    لكل (int32_t localeLevel = 0; ; ++localeLevel) {
         ec2 = U_ZERO_ERROR;
         // TODO: ures_openDirect
-        LocalUResourceBundlePointer rb(ures_open(U_ICUDATA_CURR, loc.data(), &ec2));
-        LocalUResourceBundlePointer curr(ures_getByKey(rb.getAlias(), CURRENCIES, nullptr, &ec2));
-        int32_t n = ures_getSize(curr.getAlias());
-        for (int32_t i=0; i<n; ++i) {
-            LocalUResourceBundlePointer names(ures_getByIndex(curr.getAlias(), i, nullptr, &ec2));
+        Local_UResource_Bundle_اشاره_ګر rb(ures_open(U_ICUDATA_CURR, loc.معلومات(), &ec2));
+        Local_UResource_Bundle_اشاره_ګر curr(ures_get_By_کلی(rb.getAlias(), CURRENCIES, تش_اشاره, &ec2));
+        int32_t n = ures_get_اندازه(curr.getAlias());
+        لكل (int32_t i=0; i<n; ++i) {
+            Local_UResource_Bundle_اشاره_ګر نومونه(ures_get_By_شاخص(curr.getAlias(), i, تش_اشاره, &ec2));
             int32_t len;
-            s = ures_getStringByIndex(names.getAlias(), UCURR_SYMBOL_NAME, &len, &ec2);
+            s = ures_get_String_By_شاخص(نومونه.getAlias(), UCURR_نښه_NAME, &len, &ec2);
             // TODO: uhash_put wont change key/value?
-            iso = const_cast<char*>(ures_getKey(names.getAlias()));
-            if (localeLevel != 0 && uhash_get(currencyIsoCodes.getAlias(), iso) != nullptr) {
-                continue;
+            iso = const_cast<حرف*>(ures_get_کلی(نومونه.getAlias()));
+            إذا (localeLevel != 0 && uhash_get(currencyIsoCodes.getAlias(), iso) != تش_اشاره) {
+                استمر;
             }
             uhash_put(currencyIsoCodes.getAlias(), iso, iso, &ec3); 
             // Add currency symbol.
-            (*currencySymbols)[(*total_currency_symbol_count)++] = {iso, const_cast<char16_t*>(s), len, 0};
+            (*currencySymbols)[(*ټول_currency_نښه_شمېر)++] = {iso, const_cast<char16_t*>(s), len, 0};
 
             // Add equivalent symbols
-            if (currencySymbolsEquiv != nullptr) {
-                UnicodeString str(true, s, len);
+            إذا (currencySymbolsEquiv != تش_اشاره) {
+                UnicodeString str(ریښتیا, s, len);
                 icu::EquivIterator iter(*currencySymbolsEquiv, str);
-                const UnicodeString *symbol;
-                while ((symbol = iter.next()) != nullptr) {
-                    (*currencySymbols)[(*total_currency_symbol_count)++]
-                        = {iso, const_cast<char16_t*>(symbol->getBuffer()), symbol->length(), 0};
+                ثابت UnicodeString *نښه;
+                طالما ((نښه = iter.next()) != تش_اشاره) {
+                    (*currencySymbols)[(*ټول_currency_نښه_شمېر)++]
+                        = {iso, const_cast<char16_t*>(نښه->get_بفر()), نښه->length(), 0};
                 }
             }
 
             // Add currency long name.
-            s = ures_getStringByIndex(names.getAlias(), UCURR_LONG_NAME, &len, &ec2);
-            char16_t* upperName = toUpperCase(s, len, locale);
-            if (upperName == nullptr) {
-                ec = U_MEMORY_ALLOCATION_ERROR;
-                goto error;
+            s = ures_get_String_By_شاخص(نومونه.getAlias(), UCURR_LONG_NAME, &len, &ec2);
+            char16_t* پاسنی_Name = منزل_پاسنی_Case(s, len, locale);
+            إذا (پاسنی_Name == تش_اشاره) {
+                ec = U_حافظه_ویش_ERROR;
+                اذهب error;
             }
-            (*currencyNames)[(*total_currency_name_count)++] = {iso, upperName, len, NEED_TO_BE_DELETED};
+            (*currency_نومونه)[(*ټول_currency_name_شمېر)++] = {iso, پاسنی_Name, len, NEED_منزل_BE_DELETED};
 
             // put (iso, 3, and iso) in to array
             // Add currency ISO code.
-            char16_t* isoCode = static_cast<char16_t*>(uprv_malloc(sizeof(char16_t) * 3));
-            if (isoCode == nullptr) {
-                ec = U_MEMORY_ALLOCATION_ERROR;
-                goto error;
+            char16_t* iso_کوډ = static_cast<char16_t*>(uprv_malloc(حجم(char16_t) * 3));
+            إذا (iso_کوډ == تش_اشاره) {
+                ec = U_حافظه_ویش_ERROR;
+                اذهب error;
             }
             // Must convert iso[] into Unicode
-            u_charsToUChars(iso, isoCode, 3);
-            (*currencySymbols)[(*total_currency_symbol_count)++] = {iso, isoCode, 3, NEED_TO_BE_DELETED};
+            u_chars_منزل_UChars(iso, iso_کوډ, 3);
+            (*currencySymbols)[(*ټول_currency_نښه_شمېر)++] = {iso, iso_کوډ, 3, NEED_منزل_BE_DELETED};
         }
 
         // currency plurals
-        UErrorCode ec5 = U_ZERO_ERROR;
-        LocalUResourceBundlePointer curr_p(ures_getByKey(rb.getAlias(), CURRENCYPLURALS, nullptr, &ec5));
-        n = ures_getSize(curr_p.getAlias());
-        for (int32_t i=0; i<n; ++i) {
-            LocalUResourceBundlePointer names(ures_getByIndex(curr_p.getAlias(), i, nullptr, &ec5));
-            iso = const_cast<char*>(ures_getKey(names.getAlias()));
+        UError_کوډ ec5 = U_ZERO_ERROR;
+        Local_UResource_Bundle_اشاره_ګر curr_p(ures_get_By_کلی(rb.getAlias(), CURRENCYPLURALS, تش_اشاره, &ec5));
+        n = ures_get_اندازه(curr_p.getAlias());
+        لكل (int32_t i=0; i<n; ++i) {
+            Local_UResource_Bundle_اشاره_ګر نومونه(ures_get_By_شاخص(curr_p.getAlias(), i, تش_اشاره, &ec5));
+            iso = const_cast<حرف*>(ures_get_کلی(نومونه.getAlias()));
             // Using hash to remove duplicated ISO codes in fallback chain.
-            if (localeLevel != 0 && uhash_get(currencyPluralIsoCodes.getAlias(), iso) != nullptr) {
-                continue;
+            إذا (localeLevel != 0 && uhash_get(currencyPluralIsoCodes.getAlias(), iso) != تش_اشاره) {
+                استمر;
             }
             uhash_put(currencyPluralIsoCodes.getAlias(), iso, iso, &ec4);
-            int32_t num = ures_getSize(names.getAlias());
+            int32_t num = ures_get_اندازه(نومونه.getAlias());
             int32_t len;
-            for (int32_t j = 0; j < num; ++j) {
+            لكل (int32_t j = 0; j < num; ++j) {
                 // TODO: remove duplicates between singular name and 
                 // currency long name?
-                s = ures_getStringByIndex(names.getAlias(), j, &len, &ec5);
-                char16_t* upperName = toUpperCase(s, len, locale);
-                if (upperName == nullptr) {
-                    ec = U_MEMORY_ALLOCATION_ERROR;
-                    goto error;
+                s = ures_get_String_By_شاخص(نومونه.getAlias(), j, &len, &ec5);
+                char16_t* پاسنی_Name = منزل_پاسنی_Case(s, len, locale);
+                إذا (پاسنی_Name == تش_اشاره) {
+                    ec = U_حافظه_ویش_ERROR;
+                    اذهب error;
                 }
-                (*currencyNames)[(*total_currency_name_count)++] = {iso, upperName, len, NEED_TO_BE_DELETED};
+                (*currency_نومونه)[(*ټول_currency_name_شمېر)++] = {iso, پاسنی_Name, len, NEED_منزل_BE_DELETED};
             }
         }
 
-        if (!fallback(loc)) {
-            break;
+        إذا (!fallback(loc)) {
+            اكسر;
         }
     }
 
     // quick sort the struct
-    qsort(*currencyNames, *total_currency_name_count, 
-          sizeof(CurrencyNameStruct), currencyNameComparator);
-    qsort(*currencySymbols, *total_currency_symbol_count, 
-          sizeof(CurrencyNameStruct), currencyNameComparator);
+    qsort(*currency_نومونه, *ټول_currency_name_شمېر, 
+          حجم(CurrencyNameStruct), currencyNameComparator);
+    qsort(*currencySymbols, *ټول_currency_نښه_شمېر, 
+          حجم(CurrencyNameStruct), currencyNameComparator);
 
-#ifdef UCURR_DEBUG
-    printf("currency name count: %d\n", *total_currency_name_count);
-    for (int32_t index = 0; index < *total_currency_name_count; ++index) {
-        printf("index: %d\n", index);
-        printf("iso: %s\n", (*currencyNames)[index].IsoCode);
-        char curNameBuf[1024];
+#که_تعریف_شوی UCURR_DEBUG
+    چاپ_کړه("currency name count: %d\n", *ټول_currency_name_شمېر);
+    لكل (int32_t شاخص = 0; شاخص < *ټول_currency_name_شمېر; ++شاخص) {
+        چاپ_کړه("index: %d\n", شاخص);
+        چاپ_کړه("iso: %s\n", (*currency_نومونه)[شاخص].Iso_کوډ);
+        حرف curNameBuf[1024];
         memset(curNameBuf, 0, 1024);
-        u_austrncpy(curNameBuf, (*currencyNames)[index].currencyName, (*currencyNames)[index].currencyNameLen);
-        printf("currencyName: %s\n", curNameBuf);
-        printf("len: %d\n", (*currencyNames)[index].currencyNameLen);
+        u_austrncpy(curNameBuf, (*currency_نومونه)[شاخص].currencyName, (*currency_نومونه)[شاخص].currencyNameLen);
+        چاپ_کړه("currencyName: %s\n", curNameBuf);
+        چاپ_کړه("len: %d\n", (*currency_نومونه)[شاخص].currencyNameLen);
     }
-    printf("currency symbol count: %d\n", *total_currency_symbol_count);
-    for (int32_t index = 0; index < *total_currency_symbol_count; ++index) {
-        printf("index: %d\n", index);
-        printf("iso: %s\n", (*currencySymbols)[index].IsoCode);
-        char curNameBuf[1024];
+    چاپ_کړه("currency symbol count: %d\n", *ټول_currency_نښه_شمېر);
+    لكل (int32_t شاخص = 0; شاخص < *ټول_currency_نښه_شمېر; ++شاخص) {
+        چاپ_کړه("index: %d\n", شاخص);
+        چاپ_کړه("iso: %s\n", (*currencySymbols)[شاخص].Iso_کوډ);
+        حرف curNameBuf[1024];
         memset(curNameBuf, 0, 1024);
-        u_austrncpy(curNameBuf, (*currencySymbols)[index].currencyName, (*currencySymbols)[index].currencyNameLen);
-        printf("currencySymbol: %s\n", curNameBuf);
-        printf("len: %d\n", (*currencySymbols)[index].currencyNameLen);
+        u_austrncpy(curNameBuf, (*currencySymbols)[شاخص].currencyName, (*currencySymbols)[شاخص].currencyNameLen);
+        چاپ_کړه("currencySymbol: %s\n", curNameBuf);
+        چاپ_کړه("len: %d\n", (*currencySymbols)[شاخص].currencyNameLen);
     }
-#endif
+#د_که_پای
     // fail on hashtable errors
-    if (U_FAILURE(ec3)) {
+    إذا (U_FAILURE(ec3)) {
       ec = ec3;
-    } else if (U_FAILURE(ec4)) {
+    } وإلا إذا (U_FAILURE(ec4)) {
       ec = ec4;
     }
 
   error:
     // clean up if we got error
-    if (U_FAILURE(ec)) {
-        deleteCurrencyNames(*currencyNames, *total_currency_name_count);
-        deleteCurrencyNames(*currencySymbols, *total_currency_symbol_count);
-        *currencyNames = *currencySymbols = nullptr;
-        *total_currency_name_count = *total_currency_symbol_count = 0;
+    إذا (U_FAILURE(ec)) {
+        delete_Currency_نومونه(*currency_نومونه, *ټول_currency_name_شمېر);
+        delete_Currency_نومونه(*currencySymbols, *ټول_currency_نښه_شمېر);
+        *currency_نومونه = *currencySymbols = تش_اشاره;
+        *ټول_currency_name_شمېر = *ټول_currency_نښه_شمېر = 0;
     }
 }
 
@@ -1154,109 +1154,109 @@ collectCurrencyNames(const char* locale,
 // @param  key: input text char to compare against
 // @param  begin(IN/OUT): the begin index of matching range in currency names array
 // @param  end(IN/OUT): the end index of matching range in currency names array.
-static int32_t
-binarySearch(const CurrencyNameStruct* currencyNames, 
-             int32_t indexInCurrencyNames,
-             const char16_t key,
-             int32_t* begin, int32_t* end) {
-#ifdef UCURR_DEBUG
-    printf("key = %x\n", key);
-#endif
+ساكن int32_t
+دوګونې_پلټنه(ثابت CurrencyNameStruct* currency_نومونه, 
+             int32_t شاخص_دننه_Currency_نومونه,
+             ثابت char16_t کلی,
+             int32_t* begin, int32_t* پای_ټکی) {
+#که_تعریف_شوی UCURR_DEBUG
+    چاپ_کړه("key = %x\n", کلی);
+#د_که_پای
    int32_t first = *begin;
-   int32_t last = *end;
-   while (first <= last) {
-       int32_t mid = (first + last) / 2;  // compute mid point.
-       if (indexInCurrencyNames >= currencyNames[mid].currencyNameLen) {
+   int32_t وروستی = *پای_ټکی;
+   طالما (first <= وروستی) {
+       int32_t mid = (first + وروستی) / 2;  // compute mid point.
+       إذا (شاخص_دننه_Currency_نومونه >= currency_نومونه[mid].currencyNameLen) {
            first = mid + 1;
-       } else {
-           if (key > currencyNames[mid].currencyName[indexInCurrencyNames]) {
+       } وإلا {
+           إذا (کلی > currency_نومونه[mid].currencyName[شاخص_دننه_Currency_نومونه]) {
                first = mid + 1;
            }
-           else if (key < currencyNames[mid].currencyName[indexInCurrencyNames]) {
-               last = mid - 1;
+           وإلا إذا (کلی < currency_نومونه[mid].currencyName[شاخص_دننه_Currency_نومونه]) {
+               وروستی = mid - 1;
            }
-           else {
+           وإلا {
                 // Find a match, and looking for ranges
                 // Now do two more binary searches. First, on the left side for
                 // the greatest L such that CurrencyNameStruct[L] < key.
                 int32_t L = *begin;
                 int32_t R = mid;
 
-#ifdef UCURR_DEBUG
-                printf("mid = %d\n", mid);
-#endif
-                while (L < R) {
+#که_تعریف_شوی UCURR_DEBUG
+                چاپ_کړه("mid = %d\n", mid);
+#د_که_پای
+                طالما (L < R) {
                     int32_t M = (L + R) / 2;
-#ifdef UCURR_DEBUG
-                    printf("L = %d, R = %d, M = %d\n", L, R, M);
-#endif
-                    if (indexInCurrencyNames >= currencyNames[M].currencyNameLen) {
+#که_تعریف_شوی UCURR_DEBUG
+                    چاپ_کړه("L = %d, R = %d, M = %d\n", L, R, M);
+#د_که_پای
+                    إذا (شاخص_دننه_Currency_نومونه >= currency_نومونه[M].currencyNameLen) {
                         L = M + 1;
-                    } else {
-                        if (currencyNames[M].currencyName[indexInCurrencyNames] < key) {
+                    } وإلا {
+                        إذا (currency_نومونه[M].currencyName[شاخص_دننه_Currency_نومونه] < کلی) {
                             L = M + 1;
-                        } else {
-#ifdef UCURR_DEBUG
-                            U_ASSERT(currencyNames[M].currencyName[indexInCurrencyNames] == key);
-#endif
+                        } وإلا {
+#که_تعریف_شوی UCURR_DEBUG
+                            U_ASSERT(currency_نومونه[M].currencyName[شاخص_دننه_Currency_نومونه] == کلی);
+#د_که_پای
                             R = M;
                         }
                     }
                 }
-#ifdef UCURR_DEBUG
+#که_تعریف_شوی UCURR_DEBUG
                 U_ASSERT(L == R);
-#endif
+#د_که_پای
                 *begin = L;
-#ifdef UCURR_DEBUG
-                printf("begin = %d\n", *begin);
-                U_ASSERT(currencyNames[*begin].currencyName[indexInCurrencyNames] == key);
-#endif
+#که_تعریف_شوی UCURR_DEBUG
+                چاپ_کړه("begin = %d\n", *begin);
+                U_ASSERT(currency_نومونه[*begin].currencyName[شاخص_دننه_Currency_نومونه] == کلی);
+#د_که_پای
 
                 // Now for the second search, finding the least R such that
                 // key < CurrencyNameStruct[R].
                 L = mid;
-                R = *end;
-                while (L < R) {
+                R = *پای_ټکی;
+                طالما (L < R) {
                     int32_t M = (L + R) / 2;
-#ifdef UCURR_DEBUG
-                    printf("L = %d, R = %d, M = %d\n", L, R, M);
-#endif
-                    if (currencyNames[M].currencyNameLen < indexInCurrencyNames) {
+#که_تعریف_شوی UCURR_DEBUG
+                    چاپ_کړه("L = %d, R = %d, M = %d\n", L, R, M);
+#د_که_پای
+                    إذا (currency_نومونه[M].currencyNameLen < شاخص_دننه_Currency_نومونه) {
                         L = M + 1;
-                    } else {
-                        if (currencyNames[M].currencyName[indexInCurrencyNames] > key) {
+                    } وإلا {
+                        إذا (currency_نومونه[M].currencyName[شاخص_دننه_Currency_نومونه] > کلی) {
                             R = M;
-                        } else {
-#ifdef UCURR_DEBUG
-                            U_ASSERT(currencyNames[M].currencyName[indexInCurrencyNames] == key);
-#endif
+                        } وإلا {
+#که_تعریف_شوی UCURR_DEBUG
+                            U_ASSERT(currency_نومونه[M].currencyName[شاخص_دننه_Currency_نومونه] == کلی);
+#د_که_پای
                             L = M + 1;
                         }
                     }
                 }
-#ifdef UCURR_DEBUG
+#که_تعریف_شوی UCURR_DEBUG
                 U_ASSERT(L == R);
-#endif
-                if (currencyNames[R].currencyName[indexInCurrencyNames] > key) {
-                    *end = R - 1;
-                } else {
-                    *end = R;
+#د_که_پای
+                إذا (currency_نومونه[R].currencyName[شاخص_دننه_Currency_نومونه] > کلی) {
+                    *پای_ټکی = R - 1;
+                } وإلا {
+                    *پای_ټکی = R;
                 }
-#ifdef UCURR_DEBUG
-                printf("end = %d\n", *end);
-#endif
+#که_تعریف_شوی UCURR_DEBUG
+                چاپ_کړه("end = %d\n", *پای_ټکی);
+#د_که_پای
 
                 // now, found the range. check whether there is exact match
-                if (currencyNames[*begin].currencyNameLen == indexInCurrencyNames + 1) {
-                    return *begin;  // find range and exact match.
+                إذا (currency_نومونه[*begin].currencyNameLen == شاخص_دننه_Currency_نومونه + 1) {
+                    أرجع *begin;  // find range and exact match.
                 }
-                return -1;  // find range, but no exact match.
+                أرجع -1;  // find range, but no exact match.
            }
        }
    }
    *begin = -1;
-   *end = -1;
-   return -1;    // failed to find range.
+   *پای_ټکی = -1;
+   أرجع -1;    // failed to find range.
 }
 
 
@@ -1268,37 +1268,37 @@ binarySearch(const CurrencyNameStruct* currencyNames,
 //                              pass out the new max  matching length
 // @param  maxMatchIndex: the index in currencyName which has the longest
 //                        match with input text.
-static void
-linearSearch(const CurrencyNameStruct* currencyNames, 
-             int32_t begin, int32_t end,
-             const char16_t* text, int32_t textLen,
-             int32_t *partialMatchLen,
-             int32_t *maxMatchLen, int32_t* maxMatchIndex) {
-    int32_t initialPartialMatchLen = *partialMatchLen;
-    for (int32_t index = begin; index <= end; ++index) {
-        int32_t len = currencyNames[index].currencyNameLen;
-        if (len > *maxMatchLen && len <= textLen &&
-            uprv_memcmp(currencyNames[index].currencyName, text, len * sizeof(char16_t)) == 0) {
-            *partialMatchLen = MAX(*partialMatchLen, len);
-            *maxMatchIndex = index;
-            *maxMatchLen = len;
-#ifdef UCURR_DEBUG
-            printf("maxMatchIndex = %d, maxMatchLen = %d\n",
-                   *maxMatchIndex, *maxMatchLen);
-#endif
-        } else {
+ساكن فراغ
+خطي_پلټنه(ثابت CurrencyNameStruct* currency_نومونه, 
+             int32_t begin, int32_t پای_ټکی,
+             ثابت char16_t* متن, int32_t متن_Len,
+             int32_t *partial_سمون_Len,
+             int32_t *max_سمون_Len, int32_t* max_سمون_شاخص) {
+    int32_t initial_Partial_سمون_Len = *partial_سمون_Len;
+    لكل (int32_t شاخص = begin; شاخص <= پای_ټکی; ++شاخص) {
+        int32_t len = currency_نومونه[شاخص].currencyNameLen;
+        إذا (len > *max_سمون_Len && len <= متن_Len &&
+            uprv_memcmp(currency_نومونه[شاخص].currencyName, متن, len * حجم(char16_t)) == 0) {
+            *partial_سمون_Len = MAX(*partial_سمون_Len, len);
+            *max_سمون_شاخص = شاخص;
+            *max_سمون_Len = len;
+#که_تعریف_شوی UCURR_DEBUG
+            چاپ_کړه("maxMatchIndex = %d, maxMatchLen = %d\n",
+                   *max_سمون_شاخص, *max_سمون_Len);
+#د_که_پای
+        } وإلا {
             // Check for partial matches.
-            for (int32_t i=initialPartialMatchLen; i<MIN(len, textLen); i++) {
-                if (currencyNames[index].currencyName[i] != text[i]) {
-                    break;
+            لكل (int32_t i=initial_Partial_سمون_Len; i<MIN(len, متن_Len); i++) {
+                إذا (currency_نومونه[شاخص].currencyName[i] != متن[i]) {
+                    اكسر;
                 }
-                *partialMatchLen = MAX(*partialMatchLen, i + 1);
+                *partial_سمون_Len = MAX(*partial_سمون_Len, i + 1);
             }
         }
     }
 }
 
-#define LINEAR_SEARCH_THRESHOLD 10
+#تعریف_کړه خطي_پلټنه_پوله 10
 
 // Find longest match between "text" and currency names in "currencyNames".
 // @param  total_currency_count: total number of currency names in CurrencyNames.
@@ -1307,17 +1307,17 @@ linearSearch(const CurrencyNameStruct* currencyNames,
 //                              pass out the new max  matching length
 // @param  maxMatchIndex: the index in currencyName which has the longest
 //                        match with input text.
-static void
-searchCurrencyName(const CurrencyNameStruct* currencyNames, 
-                   int32_t total_currency_count,
-                   const char16_t* text, int32_t textLen,
-                   int32_t *partialMatchLen,
-                   int32_t* maxMatchLen, int32_t* maxMatchIndex) {
-    *maxMatchIndex = -1;
-    *maxMatchLen = 0;
-    int32_t matchIndex = -1;
-    int32_t binarySearchBegin = 0;
-    int32_t binarySearchEnd = total_currency_count - 1;
+ساكن فراغ
+پلټنه_Currency_Name(ثابت CurrencyNameStruct* currency_نومونه, 
+                   int32_t ټول_currency_شمېر,
+                   ثابت char16_t* متن, int32_t متن_Len,
+                   int32_t *partial_سمون_Len,
+                   int32_t* max_سمون_Len, int32_t* max_سمون_شاخص) {
+    *max_سمون_شاخص = -1;
+    *max_سمون_Len = 0;
+    int32_t سمون_شاخص = -1;
+    int32_t دوګونی_پلټنه_Begin = 0;
+    int32_t دوګونی_پلټنه_پای_ټکی = ټول_currency_شمېر - 1;
     // It is a variant of binary search.
     // For example, given the currency names in currencyNames array are:
     // A AB ABC AD AZ B BB BBEX BBEXYZ BS C D E....
@@ -1332,91 +1332,91 @@ searchCurrencyName(const CurrencyNameStruct* currencyNames,
     // maximum matching).
     // The 4th round returns the same range (the maximum matching is "BBEX").
     // The 5th round returns no matching range.
-    for (int32_t index = 0; index < textLen; ++index) {
+    لكل (int32_t شاخص = 0; شاخص < متن_Len; ++شاخص) {
         // matchIndex saves the one with exact match till the current point.
         // [binarySearchBegin, binarySearchEnd] saves the matching range.
-        matchIndex = binarySearch(currencyNames, index,
-                                  text[index],
-                                  &binarySearchBegin, &binarySearchEnd);
-        if (binarySearchBegin == -1) { // did not find the range
-            break;
+        سمون_شاخص = دوګونې_پلټنه(currency_نومونه, شاخص,
+                                  متن[شاخص],
+                                  &دوګونی_پلټنه_Begin, &دوګونی_پلټنه_پای_ټکی);
+        إذا (دوګونی_پلټنه_Begin == -1) { // did not find the range
+            اكسر;
         }
-        *partialMatchLen = MAX(*partialMatchLen, index + 1);
-        if (matchIndex != -1) { 
+        *partial_سمون_Len = MAX(*partial_سمون_Len, شاخص + 1);
+        إذا (سمون_شاخص != -1) { 
             // find an exact match for text from text[0] to text[index] 
             // in currencyNames array.
-            *maxMatchLen = index + 1;
-            *maxMatchIndex = matchIndex;
+            *max_سمون_Len = شاخص + 1;
+            *max_سمون_شاخص = سمون_شاخص;
         }
-        if (binarySearchEnd - binarySearchBegin < LINEAR_SEARCH_THRESHOLD) {
+        إذا (دوګونی_پلټنه_پای_ټکی - دوګونی_پلټنه_Begin < خطي_پلټنه_پوله) {
             // linear search if within threshold.
-            linearSearch(currencyNames, binarySearchBegin, binarySearchEnd,
-                         text, textLen,
-                         partialMatchLen,
-                         maxMatchLen, maxMatchIndex);
-            break;
+            خطي_پلټنه(currency_نومونه, دوګونی_پلټنه_Begin, دوګونی_پلټنه_پای_ټکی,
+                         متن, متن_Len,
+                         partial_سمون_Len,
+                         max_سمون_Len, max_سمون_شاخص);
+            اكسر;
         }
     }
 }
 
 //========================= currency name cache =====================
-typedef struct {
-    char locale[ULOC_FULLNAME_CAPACITY];  //key
+تعريفنوع بنية {
+    حرف locale[ULOC_FULLNAME_ظرفیت];  //key
     // currency names, case insensitive
-    CurrencyNameStruct* currencyNames;  // value
-    int32_t totalCurrencyNameCount;  // currency name count
+    CurrencyNameStruct* currency_نومونه;  //ارزښت
+    int32_t ټول_Currency_Name_شمېر;  // currency name count
     // currency symbols and ISO code, case sensitive
-    CurrencyNameStruct* currencySymbols; // value
-    int32_t totalCurrencySymbolCount;  // count
+    CurrencyNameStruct* currencySymbols; //ارزښت
+    int32_t ټول_Currency_نښه_شمېر;  //شمېر
     // reference count.
     // reference count is set to 1 when an entry is put to cache.
     // it increases by 1 before accessing, and decreased by 1 after accessing.
     // The entry is deleted when ref count is zero, which means 
     // the entry is replaced out of cache and no process is accessing it.
-    int32_t refCount;
-} CurrencyNameCacheEntry;
+    int32_t ref_شمېر;
+} Currency_Name_Cache_ثبت;
 
 
-#define CURRENCY_NAME_CACHE_NUM 10
+#تعریف_کړه CURRENCY_NAME_CACHE_عدد 10
 
 // Reserve 10 cache entries.
-static CurrencyNameCacheEntry* currCache[CURRENCY_NAME_CACHE_NUM] = {nullptr};
+ساكن Currency_Name_Cache_ثبت* currCache[CURRENCY_NAME_CACHE_عدد] = {تش_اشاره};
 // Using an index to indicate which entry to be replaced when cache is full.
 // It is a simple round-robin replacement strategy.
-static int8_t currentCacheEntryIndex = 0;
+ساكن int8_t current_Cache_ثبت_شاخص = 0;
 
-static UMutex gCurrencyCacheMutex;
+ساكن UMutex gCurrencyCacheMutex;
 
 // Cache deletion
-static void
-deleteCurrencyNames(CurrencyNameStruct* currencyNames, int32_t count) {
-    for (int32_t index = 0; index < count; ++index) {
-        if ( (currencyNames[index].flag & NEED_TO_BE_DELETED) ) {
-            uprv_free(currencyNames[index].currencyName);
+ساكن فراغ
+delete_Currency_نومونه(CurrencyNameStruct* currency_نومونه, int32_t count) {
+    لكل (int32_t شاخص = 0; شاخص < count; ++شاخص) {
+        إذا ( (currency_نومونه[شاخص].flag & NEED_منزل_BE_DELETED) ) {
+            uprv_free(currency_نومونه[شاخص].currencyName);
         }
     }
-    uprv_free(currencyNames);
+    uprv_free(currency_نومونه);
 }
 
 
-static void
-deleteCacheEntry(CurrencyNameCacheEntry* entry) {
-    deleteCurrencyNames(entry->currencyNames, entry->totalCurrencyNameCount);
-    deleteCurrencyNames(entry->currencySymbols, entry->totalCurrencySymbolCount);
-    uprv_free(entry);
+ساكن فراغ
+delete_Cache_ثبت(Currency_Name_Cache_ثبت* ثبت) {
+    delete_Currency_نومونه(ثبت->currency_نومونه, ثبت->ټول_Currency_Name_شمېر);
+    delete_Currency_نومونه(ثبت->currencySymbols, ثبت->ټول_Currency_نښه_شمېر);
+    uprv_free(ثبت);
 }
 
 
 // Cache clean up
-static UBool U_CALLCONV
+ساكن UBool U_CALLCONV
 currency_cache_cleanup() {
-    for (int32_t i = 0; i < CURRENCY_NAME_CACHE_NUM; ++i) {
-        if (currCache[i]) {
-            deleteCacheEntry(currCache[i]);
-            currCache[i] = nullptr;
+    لكل (int32_t i = 0; i < CURRENCY_NAME_CACHE_عدد; ++i) {
+        إذا (currCache[i]) {
+            delete_Cache_ثبت(currCache[i]);
+            currCache[i] = تش_اشاره;
         }
     }
-    return true;
+    أرجع ریښتیا;
 }
 
 
@@ -1425,195 +1425,195 @@ currency_cache_cleanup() {
  * The refCount is automatically incremented.  It is the caller's responsibility
  * to decrement it when done!
  */
-static CurrencyNameCacheEntry*
-getCacheEntry(const char* locale, UErrorCode& ec) {
+ساكن Currency_Name_Cache_ثبت*
+get_Cache_ثبت(ثابت حرف* locale, UError_کوډ& ec) {
 
-    int32_t total_currency_name_count = 0;
-    CurrencyNameStruct* currencyNames = nullptr;
-    int32_t total_currency_symbol_count = 0;
-    CurrencyNameStruct* currencySymbols = nullptr;
-    CurrencyNameCacheEntry* cacheEntry = nullptr;
+    int32_t ټول_currency_name_شمېر = 0;
+    CurrencyNameStruct* currency_نومونه = تش_اشاره;
+    int32_t ټول_currency_نښه_شمېر = 0;
+    CurrencyNameStruct* currencySymbols = تش_اشاره;
+    Currency_Name_Cache_ثبت* cache_ثبت = تش_اشاره;
 
-    umtx_lock(&gCurrencyCacheMutex);
+    umtx_قلف(&gCurrencyCacheMutex);
     // in order to handle racing correctly,
     // not putting 'search' in a separate function.
-    int8_t found = -1;
-    for (int8_t i = 0; i < CURRENCY_NAME_CACHE_NUM; ++i) {
-        if (currCache[i]!= nullptr &&
+    int8_t وموندل = -1;
+    لكل (int8_t i = 0; i < CURRENCY_NAME_CACHE_عدد; ++i) {
+        إذا (currCache[i]!= تش_اشاره &&
             uprv_strcmp(locale, currCache[i]->locale) == 0) {
-            found = i;
-            break;
+            وموندل = i;
+            اكسر;
         }
     }
-    if (found != -1) {
-        cacheEntry = currCache[found];
-        ++(cacheEntry->refCount);
+    إذا (وموندل != -1) {
+        cache_ثبت = currCache[وموندل];
+        ++(cache_ثبت->ref_شمېر);
     }
     umtx_unlock(&gCurrencyCacheMutex);
-    if (found == -1) {
-        collectCurrencyNames(locale, &currencyNames, &total_currency_name_count, &currencySymbols, &total_currency_symbol_count, ec);
-        if (U_FAILURE(ec)) {
-            return nullptr;
+    إذا (وموندل == -1) {
+        collect_Currency_نومونه(locale, &currency_نومونه, &ټول_currency_name_شمېر, &currencySymbols, &ټول_currency_نښه_شمېر, ec);
+        إذا (U_FAILURE(ec)) {
+            أرجع تش_اشاره;
         }
-        umtx_lock(&gCurrencyCacheMutex);
+        umtx_قلف(&gCurrencyCacheMutex);
         // check again.
-        for (int8_t i = 0; i < CURRENCY_NAME_CACHE_NUM; ++i) {
-            if (currCache[i]!= nullptr &&
+        لكل (int8_t i = 0; i < CURRENCY_NAME_CACHE_عدد; ++i) {
+            إذا (currCache[i]!= تش_اشاره &&
                 uprv_strcmp(locale, currCache[i]->locale) == 0) {
-                found = i;
-                break;
+                وموندل = i;
+                اكسر;
             }
         }
-        if (found == -1) {
+        إذا (وموندل == -1) {
             // insert new entry to 
             // currentCacheEntryIndex % CURRENCY_NAME_CACHE_NUM
             // and remove the existing entry 
             // currentCacheEntryIndex % CURRENCY_NAME_CACHE_NUM
             // from cache.
-            cacheEntry = currCache[currentCacheEntryIndex];
-            if (cacheEntry) {
-                --(cacheEntry->refCount);
+            cache_ثبت = currCache[current_Cache_ثبت_شاخص];
+            إذا (cache_ثبت) {
+                --(cache_ثبت->ref_شمېر);
                 // delete if the ref count is zero
-                if (cacheEntry->refCount == 0) {
-                    deleteCacheEntry(cacheEntry);
+                إذا (cache_ثبت->ref_شمېر == 0) {
+                    delete_Cache_ثبت(cache_ثبت);
                 }
             }
-            cacheEntry = static_cast<CurrencyNameCacheEntry*>(uprv_malloc(sizeof(CurrencyNameCacheEntry)));
-            if (cacheEntry == nullptr) {
-                deleteCurrencyNames(currencyNames, total_currency_name_count);
-                deleteCurrencyNames(currencySymbols, total_currency_symbol_count);
-                ec = U_MEMORY_ALLOCATION_ERROR;
-                return nullptr;
+            cache_ثبت = static_cast<Currency_Name_Cache_ثبت*>(uprv_malloc(حجم(Currency_Name_Cache_ثبت)));
+            إذا (cache_ثبت == تش_اشاره) {
+                delete_Currency_نومونه(currency_نومونه, ټول_currency_name_شمېر);
+                delete_Currency_نومونه(currencySymbols, ټول_currency_نښه_شمېر);
+                ec = U_حافظه_ویش_ERROR;
+                أرجع تش_اشاره;
             }
-            currCache[currentCacheEntryIndex] = cacheEntry;
-            uprv_strcpy(cacheEntry->locale, locale);
-            cacheEntry->currencyNames = currencyNames;
-            cacheEntry->totalCurrencyNameCount = total_currency_name_count;
-            cacheEntry->currencySymbols = currencySymbols;
-            cacheEntry->totalCurrencySymbolCount = total_currency_symbol_count;
-            cacheEntry->refCount = 2; // one for cache, one for reference
-            currentCacheEntryIndex = (currentCacheEntryIndex + 1) % CURRENCY_NAME_CACHE_NUM;
-            ucln_common_registerCleanup(UCLN_COMMON_CURRENCY, currency_cleanup);
-        } else {
-            deleteCurrencyNames(currencyNames, total_currency_name_count);
-            deleteCurrencyNames(currencySymbols, total_currency_symbol_count);
-            cacheEntry = currCache[found];
-            ++(cacheEntry->refCount);
+            currCache[current_Cache_ثبت_شاخص] = cache_ثبت;
+            uprv_strcpy(cache_ثبت->locale, locale);
+            cache_ثبت->currency_نومونه = currency_نومونه;
+            cache_ثبت->ټول_Currency_Name_شمېر = ټول_currency_name_شمېر;
+            cache_ثبت->currencySymbols = currencySymbols;
+            cache_ثبت->ټول_Currency_نښه_شمېر = ټول_currency_نښه_شمېر;
+            cache_ثبت->ref_شمېر = 2; // one for cache, one for reference
+            current_Cache_ثبت_شاخص = (current_Cache_ثبت_شاخص + 1) % CURRENCY_NAME_CACHE_عدد;
+            ucln_common_ثبتوونکی_Cleanup(UCLN_COMMON_CURRENCY, currency_cleanup);
+        } وإلا {
+            delete_Currency_نومونه(currency_نومونه, ټول_currency_name_شمېر);
+            delete_Currency_نومونه(currencySymbols, ټول_currency_نښه_شمېر);
+            cache_ثبت = currCache[وموندل];
+            ++(cache_ثبت->ref_شمېر);
         }
         umtx_unlock(&gCurrencyCacheMutex);
     }
 
-    return cacheEntry;
+    أرجع cache_ثبت;
 }
 
-static void releaseCacheEntry(CurrencyNameCacheEntry* cacheEntry) {
-    umtx_lock(&gCurrencyCacheMutex);
-    --(cacheEntry->refCount);
-    if (cacheEntry->refCount == 0) {  // remove
-        deleteCacheEntry(cacheEntry);
+ساكن فراغ release_Cache_ثبت(Currency_Name_Cache_ثبت* cache_ثبت) {
+    umtx_قلف(&gCurrencyCacheMutex);
+    --(cache_ثبت->ref_شمېر);
+    إذا (cache_ثبت->ref_شمېر == 0) {  // remove
+        delete_Cache_ثبت(cache_ثبت);
     }
     umtx_unlock(&gCurrencyCacheMutex);
 }
 
-U_CAPI void
-uprv_parseCurrency(const char* locale,
-                   const icu::UnicodeString& text,
+U_CAPI فراغ
+uprv_parseCurrency(ثابت حرف* locale,
+                   ثابت icu::UnicodeString& متن,
                    icu::ParsePosition& pos,
                    int8_t type,
-                   int32_t* partialMatchLen,
-                   char16_t* result,
-                   UErrorCode& ec) {
+                   int32_t* partial_سمون_Len,
+                   char16_t* پایله,
+                   UError_کوډ& ec) {
     U_NAMESPACE_USE
-    if (U_FAILURE(ec)) {
-        return;
+    إذا (U_FAILURE(ec)) {
+        أرجع;
     }
-    CurrencyNameCacheEntry* cacheEntry = getCacheEntry(locale, ec);
-    if (U_FAILURE(ec)) {
-        return;
+    Currency_Name_Cache_ثبت* cache_ثبت = get_Cache_ثبت(locale, ec);
+    إذا (U_FAILURE(ec)) {
+        أرجع;
     }
 
-    int32_t total_currency_name_count = cacheEntry->totalCurrencyNameCount;
-    CurrencyNameStruct* currencyNames = cacheEntry->currencyNames;
-    int32_t total_currency_symbol_count = cacheEntry->totalCurrencySymbolCount;
-    CurrencyNameStruct* currencySymbols = cacheEntry->currencySymbols;
+    int32_t ټول_currency_name_شمېر = cache_ثبت->ټول_Currency_Name_شمېر;
+    CurrencyNameStruct* currency_نومونه = cache_ثبت->currency_نومونه;
+    int32_t ټول_currency_نښه_شمېر = cache_ثبت->ټول_Currency_نښه_شمېر;
+    CurrencyNameStruct* currencySymbols = cache_ثبت->currencySymbols;
 
-    int32_t start = pos.getIndex();
+    int32_t پیل = pos.get_شاخص();
 
-    char16_t inputText[MAX_CURRENCY_NAME_LEN];
-    char16_t upperText[MAX_CURRENCY_NAME_LEN];
-    int32_t textLen = MIN(MAX_CURRENCY_NAME_LEN, text.length() - start);
-    text.extract(start, textLen, inputText);
-    UErrorCode ec1 = U_ZERO_ERROR;
-    textLen = u_strToUpper(upperText, MAX_CURRENCY_NAME_LEN, inputText, textLen, locale, &ec1);
+    char16_t ننوت_متن[MAX_CURRENCY_NAME_LEN];
+    char16_t پاسنی_متن[MAX_CURRENCY_NAME_LEN];
+    int32_t متن_Len = MIN(MAX_CURRENCY_NAME_LEN, متن.length() - پیل);
+    متن.extract(پیل, متن_Len, ننوت_متن);
+    UError_کوډ ec1 = U_ZERO_ERROR;
+    متن_Len = u_str_منزل_پاسنی(پاسنی_متن, MAX_CURRENCY_NAME_LEN, ننوت_متن, متن_Len, locale, &ec1);
 
     // Make sure partialMatchLen is initialized
-    *partialMatchLen = 0;
+    *partial_سمون_Len = 0;
 
     int32_t max = 0;
-    int32_t matchIndex = -1;
+    int32_t سمون_شاخص = -1;
     // case in-sensitive comparison against currency names
-    searchCurrencyName(currencyNames, total_currency_name_count, 
-                       upperText, textLen, partialMatchLen, &max, &matchIndex);
+    پلټنه_Currency_Name(currency_نومونه, ټول_currency_name_شمېر, 
+                       پاسنی_متن, متن_Len, partial_سمون_Len, &max, &سمون_شاخص);
 
-#ifdef UCURR_DEBUG
-    printf("search in names, max = %d, matchIndex = %d\n", max, matchIndex);
-#endif
+#که_تعریف_شوی UCURR_DEBUG
+    چاپ_کړه("search in names, max = %d, matchIndex = %d\n", max, سمون_شاخص);
+#د_که_پای
 
-    int32_t maxInSymbol = 0;
-    int32_t matchIndexInSymbol = -1;
-    if (type != UCURR_LONG_NAME) {  // not name only
+    int32_t max_دننه_نښه = 0;
+    int32_t سمون_شاخص_دننه_نښه = -1;
+    إذا (type != UCURR_LONG_NAME) {  // not name only
         // case sensitive comparison against currency symbols and ISO code.
-        searchCurrencyName(currencySymbols, total_currency_symbol_count, 
-                           inputText, textLen,
-                           partialMatchLen,
-                           &maxInSymbol, &matchIndexInSymbol);
+        پلټنه_Currency_Name(currencySymbols, ټول_currency_نښه_شمېر, 
+                           ننوت_متن, متن_Len,
+                           partial_سمون_Len,
+                           &max_دننه_نښه, &سمون_شاخص_دننه_نښه);
     }
 
-#ifdef UCURR_DEBUG
-    printf("search in symbols, maxInSymbol = %d, matchIndexInSymbol = %d\n", maxInSymbol, matchIndexInSymbol);
-    if(matchIndexInSymbol != -1) {
-      printf("== ISO=%s\n", currencySymbols[matchIndexInSymbol].IsoCode);
+#که_تعریف_شوی UCURR_DEBUG
+    چاپ_کړه("search in symbols, maxInSymbol = %d, matchIndexInSymbol = %d\n", max_دننه_نښه, سمون_شاخص_دننه_نښه);
+    إذا(سمون_شاخص_دننه_نښه != -1) {
+      چاپ_کړه("== ISO=%s\n", currencySymbols[سمون_شاخص_دننه_نښه].Iso_کوډ);
     }
-#endif
+#د_که_پای
 
-    if (max >= maxInSymbol && matchIndex != -1) {
-        u_charsToUChars(currencyNames[matchIndex].IsoCode, result, 4);
-        pos.setIndex(start + max);
-    } else if (maxInSymbol >= max && matchIndexInSymbol != -1) {
-        u_charsToUChars(currencySymbols[matchIndexInSymbol].IsoCode, result, 4);
-        pos.setIndex(start + maxInSymbol);
+    إذا (max >= max_دننه_نښه && سمون_شاخص != -1) {
+        u_chars_منزل_UChars(currency_نومونه[سمون_شاخص].Iso_کوډ, پایله, 4);
+        pos.سېټ_شاخص(پیل + max);
+    } وإلا إذا (max_دننه_نښه >= max && سمون_شاخص_دننه_نښه != -1) {
+        u_chars_منزل_UChars(currencySymbols[سمون_شاخص_دننه_نښه].Iso_کوډ, پایله, 4);
+        pos.سېټ_شاخص(پیل + max_دننه_نښه);
     }
 
     // decrease reference count
-    releaseCacheEntry(cacheEntry);
+    release_Cache_ثبت(cache_ثبت);
 }
 
-void uprv_currencyLeads(const char* locale, icu::UnicodeSet& result, UErrorCode& ec) {
+فراغ uprv_currencyLeads(ثابت حرف* locale, icu::Unicode_سېټ& پایله, UError_کوډ& ec) {
     U_NAMESPACE_USE
-    if (U_FAILURE(ec)) {
-        return;
+    إذا (U_FAILURE(ec)) {
+        أرجع;
     }
-    CurrencyNameCacheEntry* cacheEntry = getCacheEntry(locale, ec);
-    if (U_FAILURE(ec)) {
-        return;
-    }
-
-    for (int32_t i=0; i<cacheEntry->totalCurrencySymbolCount; i++) {
-        const CurrencyNameStruct& info = cacheEntry->currencySymbols[i];
-        UChar32 cp;
-        U16_GET(info.currencyName, 0, 0, info.currencyNameLen, cp);
-        result.add(cp);
+    Currency_Name_Cache_ثبت* cache_ثبت = get_Cache_ثبت(locale, ec);
+    إذا (U_FAILURE(ec)) {
+        أرجع;
     }
 
-    for (int32_t i=0; i<cacheEntry->totalCurrencyNameCount; i++) {
-        const CurrencyNameStruct& info = cacheEntry->currencyNames[i];
+    لكل (int32_t i=0; i<cache_ثبت->ټول_Currency_نښه_شمېر; i++) {
+        ثابت CurrencyNameStruct& info = cache_ثبت->currencySymbols[i];
         UChar32 cp;
         U16_GET(info.currencyName, 0, 0, info.currencyNameLen, cp);
-        result.add(cp);
+        پایله.جمع_کړه(cp);
+    }
+
+    لكل (int32_t i=0; i<cache_ثبت->ټول_Currency_Name_شمېر; i++) {
+        ثابت CurrencyNameStruct& info = cache_ثبت->currency_نومونه[i];
+        UChar32 cp;
+        U16_GET(info.currencyName, 0, 0, info.currencyNameLen, cp);
+        پایله.جمع_کړه(cp);
     }
 
     // decrease reference count
-    releaseCacheEntry(cacheEntry);
+    release_Cache_ثبت(cache_ثبت);
 }
 
 
@@ -1627,89 +1627,89 @@ void uprv_currencyLeads(const char* locale, icu::UnicodeSet& result, UErrorCode&
  * This is used for backward compatibility with old currency logic in
  * DecimalFormat and DecimalFormatSymbols.
  */
-U_CAPI void
-uprv_getStaticCurrencyName(const char16_t* iso, const char* loc,
-                           icu::UnicodeString& result, UErrorCode& ec)
+U_CAPI فراغ
+uprv_getStaticCurrencyName(ثابت char16_t* iso, ثابت حرف* loc,
+                           icu::UnicodeString& پایله, UError_کوډ& ec)
 {
     U_NAMESPACE_USE
 
     int32_t len;
-    const char16_t* currname = ucurr_getName(iso, loc, UCURR_SYMBOL_NAME,
-                                          nullptr /* isChoiceFormat */, &len, &ec);
-    if (U_SUCCESS(ec)) {
-        result.setTo(currname, len);
+    ثابت char16_t* currname = ucurr_getName(iso, loc, UCURR_نښه_NAME,
+                                          تش_اشاره /* isChoiceFormat */, &len, &ec);
+    إذا (U_SUCCESS(ec)) {
+        پایله.سېټ_منزل(currname, len);
     }
 }
 
 U_CAPI int32_t U_EXPORT2
-ucurr_getDefaultFractionDigits(const char16_t* currency, UErrorCode* ec) {
-    return ucurr_getDefaultFractionDigitsForUsage(currency,UCURR_USAGE_STANDARD,ec);
+ucurr_getDefaultFractionDigits(ثابت char16_t* currency, UError_کوډ* ec) {
+    أرجع ucurr_getDefaultFractionDigitsForUsage(currency,UCURR_USAGE_STANDARD,ec);
 }
 
 U_CAPI int32_t U_EXPORT2
-ucurr_getDefaultFractionDigitsForUsage(const char16_t* currency, const UCurrencyUsage usage, UErrorCode* ec) {
+ucurr_getDefaultFractionDigitsForUsage(ثابت char16_t* currency, ثابت UCurrencyUsage usage, UError_کوډ* ec) {
     int32_t fracDigits = 0;
-    if (U_SUCCESS(*ec)) {
-        switch (usage) {
-            case UCURR_USAGE_STANDARD:
-                fracDigits = (_findMetaData(currency, *ec))[0];
-                break;
-            case UCURR_USAGE_CASH:
-                fracDigits = (_findMetaData(currency, *ec))[2];
-                break;
-            default:
+    إذا (U_SUCCESS(*ec)) {
+        بدل (usage) {
+            حالة UCURR_USAGE_STANDARD:
+                fracDigits = (پیدا_کړه_Meta_معلومات(currency, *ec))[0];
+                اكسر;
+            حالة UCURR_USAGE_CASH:
+                fracDigits = (پیدا_کړه_Meta_معلومات(currency, *ec))[2];
+                اكسر;
+            افتراضي:
                 *ec = U_UNSUPPORTED_ERROR;
         }
     }
-    return fracDigits;
+    أرجع fracDigits;
 }
 
-U_CAPI double U_EXPORT2
-ucurr_getRoundingIncrement(const char16_t* currency, UErrorCode* ec) {
-    return ucurr_getRoundingIncrementForUsage(currency, UCURR_USAGE_STANDARD, ec);
+U_CAPI مزدوج U_EXPORT2
+ucurr_getRoundingIncrement(ثابت char16_t* currency, UError_کوډ* ec) {
+    أرجع ucurr_getRoundingIncrementForUsage(currency, UCURR_USAGE_STANDARD, ec);
 }
 
-U_CAPI double U_EXPORT2
-ucurr_getRoundingIncrementForUsage(const char16_t* currency, const UCurrencyUsage usage, UErrorCode* ec) {
-    double result = 0.0;
+U_CAPI مزدوج U_EXPORT2
+ucurr_getRoundingIncrementForUsage(ثابت char16_t* currency, ثابت UCurrencyUsage usage, UError_کوډ* ec) {
+    مزدوج پایله = 0.0;
 
-    const int32_t *data = _findMetaData(currency, *ec);
-    if (U_SUCCESS(*ec)) {
+    ثابت int32_t *معلومات = پیدا_کړه_Meta_معلومات(currency, *ec);
+    إذا (U_SUCCESS(*ec)) {
         int32_t fracDigits;
         int32_t increment;
-        switch (usage) {
-            case UCURR_USAGE_STANDARD:
-                fracDigits = data[0];
-                increment = data[1];
-                break;
-            case UCURR_USAGE_CASH:
-                fracDigits = data[2];
-                increment = data[3];
-                break;
-            default:
+        بدل (usage) {
+            حالة UCURR_USAGE_STANDARD:
+                fracDigits = معلومات[0];
+                increment = معلومات[1];
+                اكسر;
+            حالة UCURR_USAGE_CASH:
+                fracDigits = معلومات[2];
+                increment = معلومات[3];
+                اكسر;
+            افتراضي:
                 *ec = U_UNSUPPORTED_ERROR;
-                return result;
+                أرجع پایله;
         }
 
         // If the meta data is invalid, return 0.0
-        if (fracDigits < 0 || fracDigits > MAX_POW10) {
+        إذا (fracDigits < 0 || fracDigits > MAX_POW10) {
             *ec = U_INVALID_FORMAT_ERROR;
-        } else {
+        } وإلا {
             // A rounding value of 0 or 1 indicates no rounding.
-            if (increment >= 2) {
+            إذا (increment >= 2) {
                 // Return (increment) / 10^(fracDigits).  The only actual rounding data,
                 // as of this writing, is CHF { 2, 5 }.
-                result = double(increment) / POW10[fracDigits];
+                پایله = مزدوج(increment) / POW10[fracDigits];
             }
         }
     }
 
-    return result;
+    أرجع پایله;
 }
 
 U_CDECL_BEGIN
 
-typedef struct UCurrencyContext {
+تعريفنوع بنية UCurrencyContext {
     uint32_t currType; /* UCurrCurrencyType */
     uint32_t listIdx;
 } UCurrencyContext;
@@ -1720,8 +1720,8 @@ You can look at the CLDR supplemental data or ISO-4217 for the meaning of some
 of these items.
 ISO-4217: http://www.iso.org/iso/en/prods-services/popstds/currencycodeslist.html
 */
-static const struct CurrencyList {
-    const char *currency;
+ساكن ثابت بنية CurrencyList {
+    ثابت حرف *currency;
     uint32_t currType;
 } gCurrencyList[] = {
     {"ADP", UCURR_COMMON|UCURR_DEPRECATED},
@@ -2032,655 +2032,655 @@ static const struct CurrencyList {
     {"ZWG", UCURR_COMMON|UCURR_NON_DEPRECATED},
     {"ZWL", UCURR_COMMON|UCURR_DEPRECATED},
     {"ZWR", UCURR_COMMON|UCURR_DEPRECATED},
-    { nullptr, 0 } // Leave here to denote the end of the list.
+    { تش_اشاره, 0 } // Leave here to denote the end of the list.
 };
 
-#define UCURR_MATCHES_BITMASK(variable, typeToMatch) \
-    ((typeToMatch) == UCURR_ALL || ((variable) & (typeToMatch)) == (typeToMatch))
+#تعریف_کړه UCURR_MATCHES_BITMASK(variable, type_منزل_سمون) \
+    ((type_منزل_سمون) == UCURR_ALL || ((variable) & (type_منزل_سمون)) == (type_منزل_سمون))
 
-static int32_t U_CALLCONV
-ucurr_countCurrencyList(UEnumeration *enumerator, UErrorCode * /*pErrorCode*/) {
+ساكن int32_t U_CALLCONV
+ucurr_شمېر_Currency_List(UEnumeration *enumerator, UError_کوډ * /*pErrorCode*/) {
     UCurrencyContext *myContext = (UCurrencyContext *)(enumerator->context);
     uint32_t currType = myContext->currType;
     int32_t count = 0;
 
     /* Count the number of items matching the type we are looking for. */
-    for (int32_t idx = 0; gCurrencyList[idx].currency != nullptr; idx++) {
-        if (UCURR_MATCHES_BITMASK(gCurrencyList[idx].currType, currType)) {
+    لكل (int32_t idx = 0; gCurrencyList[idx].currency != تش_اشاره; idx++) {
+        إذا (UCURR_MATCHES_BITMASK(gCurrencyList[idx].currType, currType)) {
             count++;
         }
     }
-    return count;
+    أرجع count;
 }
 
-static const char* U_CALLCONV
-ucurr_nextCurrencyList(UEnumeration *enumerator,
-                        int32_t* resultLength,
-                        UErrorCode * /*pErrorCode*/)
+ساكن ثابت حرف* U_CALLCONV
+ucurr_بل_Currency_List(UEnumeration *enumerator,
+                        int32_t* پایله_اوږدتیا,
+                        UError_کوډ * /*pErrorCode*/)
 {
     UCurrencyContext *myContext = (UCurrencyContext *)(enumerator->context);
 
     /* Find the next in the list that matches the type we are looking for. */
-    while (myContext->listIdx < UPRV_LENGTHOF(gCurrencyList)-1) {
-        const struct CurrencyList *currItem = &gCurrencyList[myContext->listIdx++];
-        if (UCURR_MATCHES_BITMASK(currItem->currType, myContext->currType))
+    طالما (myContext->listIdx < UPRV_LENGTHOF(gCurrencyList)-1) {
+        ثابت بنية CurrencyList *curr_توکی = &gCurrencyList[myContext->listIdx++];
+        إذا (UCURR_MATCHES_BITMASK(curr_توکی->currType, myContext->currType))
         {
-            if (resultLength) {
-                *resultLength = 3; /* Currency codes are only 3 chars long */
+            إذا (پایله_اوږدتیا) {
+                *پایله_اوږدتیا = 3; /* Currency codes are only 3 chars long */
             }
-            return currItem->currency;
+            أرجع curr_توکی->currency;
         }
     }
     /* We enumerated too far. */
-    if (resultLength) {
-        *resultLength = 0;
+    إذا (پایله_اوږدتیا) {
+        *پایله_اوږدتیا = 0;
     }
-    return nullptr;
+    أرجع تش_اشاره;
 }
 
-static void U_CALLCONV
-ucurr_resetCurrencyList(UEnumeration *enumerator, UErrorCode * /*pErrorCode*/) {
+ساكن فراغ U_CALLCONV
+ucurr_resetCurrencyList(UEnumeration *enumerator, UError_کوډ * /*pErrorCode*/) {
     ((UCurrencyContext *)(enumerator->context))->listIdx = 0;
 }
 
-static void U_CALLCONV
+ساكن فراغ U_CALLCONV
 ucurr_closeCurrencyList(UEnumeration *enumerator) {
     uprv_free(enumerator->context);
     uprv_free(enumerator);
 }
 
-static void U_CALLCONV
-ucurr_createCurrencyList(UHashtable *isoCodes, UErrorCode* status){
-    UErrorCode localStatus = U_ZERO_ERROR;
+ساكن فراغ U_CALLCONV
+ucurr_createCurrencyList(UHashtable *isoCodes, UError_کوډ* حالت){
+    UError_کوډ local_حالت = U_ZERO_ERROR;
 
     // Look up the CurrencyMap element in the root bundle.
-    UResourceBundle *rb = ures_openDirect(U_ICUDATA_CURR, CURRENCY_DATA, &localStatus);
-    LocalUResourceBundlePointer currencyMapArray(ures_getByKey(rb, CURRENCY_MAP, rb, &localStatus));
+    UResourceBundle *rb = ures_open_مستقیم(U_ICUDATA_CURR, CURRENCY_معلومات, &local_حالت);
+    Local_UResource_Bundle_اشاره_ګر currencyMapArray(ures_get_By_کلی(rb, CURRENCY_MAP, rb, &local_حالت));
 
-    if (U_SUCCESS(localStatus)) {
+    إذا (U_SUCCESS(local_حالت)) {
         // process each entry in currency map
-        for (int32_t i=0; i<ures_getSize(currencyMapArray.getAlias()); i++) {
+        لكل (int32_t i=0; i<ures_get_اندازه(currencyMapArray.getAlias()); i++) {
             // get the currency resource
-            LocalUResourceBundlePointer currencyArray(ures_getByIndex(currencyMapArray.getAlias(), i, nullptr, &localStatus));
+            Local_UResource_Bundle_اشاره_ګر currencyArray(ures_get_By_شاخص(currencyMapArray.getAlias(), i, تش_اشاره, &local_حالت));
             // process each currency
-            if (U_SUCCESS(localStatus)) {
-                for (int32_t j=0; j<ures_getSize(currencyArray.getAlias()); j++) {
+            إذا (U_SUCCESS(local_حالت)) {
+                لكل (int32_t j=0; j<ures_get_اندازه(currencyArray.getAlias()); j++) {
                     // get the currency resource
-                    LocalUResourceBundlePointer currencyRes(ures_getByIndex(currencyArray.getAlias(), j, nullptr, &localStatus));
-                    IsoCodeEntry *entry = (IsoCodeEntry*)uprv_malloc(sizeof(IsoCodeEntry));
-                    if (entry == nullptr) {
-                        *status = U_MEMORY_ALLOCATION_ERROR;
-                        return;
+                    Local_UResource_Bundle_اشاره_ګر currencyRes(ures_get_By_شاخص(currencyArray.getAlias(), j, تش_اشاره, &local_حالت));
+                    Iso_کوډ_ثبت *ثبت = (Iso_کوډ_ثبت*)uprv_malloc(حجم(Iso_کوډ_ثبت));
+                    إذا (ثبت == تش_اشاره) {
+                        *حالت = U_حافظه_ویش_ERROR;
+                        أرجع;
                     }
 
                     // get the ISO code
-                    int32_t isoLength = 0;
-                    LocalUResourceBundlePointer idRes(ures_getByKey(currencyRes.getAlias(), "id", nullptr, &localStatus));
-                    if (idRes.isNull()) {
-                        continue;
+                    int32_t iso_اوږدتیا = 0;
+                    Local_UResource_Bundle_اشاره_ګر idRes(ures_get_By_کلی(currencyRes.getAlias(), "id", تش_اشاره, &local_حالت));
+                    إذا (idRes.isNull()) {
+                        استمر;
                     }
-                    const char16_t *isoCode = ures_getString(idRes.getAlias(), &isoLength, &localStatus);
+                    ثابت char16_t *iso_کوډ = ures_getString(idRes.getAlias(), &iso_اوږدتیا, &local_حالت);
 
                     // get from date
                     UDate fromDate = U_DATE_MIN;
-                    LocalUResourceBundlePointer fromRes(ures_getByKey(currencyRes.getAlias(), "from", nullptr, &localStatus));
+                    Local_UResource_Bundle_اشاره_ګر fromRes(ures_get_By_کلی(currencyRes.getAlias(), "from", تش_اشاره, &local_حالت));
 
-                    if (U_SUCCESS(localStatus)) {
-                        int32_t fromLength = 0;
-                        const int32_t *fromArray = ures_getIntVector(fromRes.getAlias(), &fromLength, &localStatus);
+                    إذا (U_SUCCESS(local_حالت)) {
+                        int32_t from_اوږدتیا = 0;
+                        ثابت int32_t *fromArray = ures_get_Int_ویکټور(fromRes.getAlias(), &from_اوږدتیا, &local_حالت);
                         int64_t currDate64 = ((uint64_t)fromArray[0]) << 32;
                         currDate64 |= ((int64_t)fromArray[1] & (int64_t)INT64_C(0x00000000FFFFFFFF));
                         fromDate = (UDate)currDate64;
                     }
 
                     // get to date
-                    UDate toDate = U_DATE_MAX;
-                    localStatus = U_ZERO_ERROR;
-                    LocalUResourceBundlePointer toRes(ures_getByKey(currencyRes.getAlias(), "to", nullptr, &localStatus));
+                    UDate منزل_Date = U_DATE_MAX;
+                    local_حالت = U_ZERO_ERROR;
+                    Local_UResource_Bundle_اشاره_ګر منزل_Res(ures_get_By_کلی(currencyRes.getAlias(), "to", تش_اشاره, &local_حالت));
 
-                    if (U_SUCCESS(localStatus)) {
-                        int32_t toLength = 0;
-                        const int32_t *toArray = ures_getIntVector(toRes.getAlias(), &toLength, &localStatus);
-                        int64_t currDate64 = (uint64_t)toArray[0] << 32;
-                        currDate64 |= ((int64_t)toArray[1] & (int64_t)INT64_C(0x00000000FFFFFFFF));
-                        toDate = (UDate)currDate64;
+                    إذا (U_SUCCESS(local_حالت)) {
+                        int32_t منزل_اوږدتیا = 0;
+                        ثابت int32_t *منزل_Array = ures_get_Int_ویکټور(منزل_Res.getAlias(), &منزل_اوږدتیا, &local_حالت);
+                        int64_t currDate64 = (uint64_t)منزل_Array[0] << 32;
+                        currDate64 |= ((int64_t)منزل_Array[1] & (int64_t)INT64_C(0x00000000FFFFFFFF));
+                        منزل_Date = (UDate)currDate64;
                     }
 
-                    entry->isoCode = isoCode;
-                    entry->from = fromDate;
-                    entry->to = toDate;
+                    ثبت->iso_کوډ = iso_کوډ;
+                    ثبت->from = fromDate;
+                    ثبت->منزل = منزل_Date;
 
-                    localStatus = U_ZERO_ERROR;
-                    uhash_put(isoCodes, (char16_t *)isoCode, entry, &localStatus);
+                    local_حالت = U_ZERO_ERROR;
+                    uhash_put(isoCodes, (char16_t *)iso_کوډ, ثبت, &local_حالت);
                 }
-            } else {
-                *status = localStatus;
+            } وإلا {
+                *حالت = local_حالت;
             }
         }
-    } else {
-        *status = localStatus;
+    } وإلا {
+        *حالت = local_حالت;
     }
 }
 
-static const UEnumeration gEnumCurrencyList = {
-    nullptr,
-    nullptr,
+ساكن ثابت UEnumeration gEnumCurrencyList = {
+    تش_اشاره,
+    تش_اشاره,
     ucurr_closeCurrencyList,
-    ucurr_countCurrencyList,
+    ucurr_شمېر_Currency_List,
     uenum_unextDefault,
-    ucurr_nextCurrencyList,
+    ucurr_بل_Currency_List,
     ucurr_resetCurrencyList
 };
-U_CDECL_END
+U_CDECL_پای_ټکی
 
 
-static void U_CALLCONV initIsoCodes(UErrorCode &status) {
-    U_ASSERT(gIsoCodes == nullptr);
-    ucln_common_registerCleanup(UCLN_COMMON_CURRENCY, currency_cleanup);
+ساكن فراغ U_CALLCONV initIsoCodes(UError_کوډ &حالت) {
+    U_ASSERT(gIsoCodes == تش_اشاره);
+    ucln_common_ثبتوونکی_Cleanup(UCLN_COMMON_CURRENCY, currency_cleanup);
 
-    LocalUHashtablePointer isoCodes(uhash_open(uhash_hashUChars, uhash_compareUChars, nullptr, &status));
-    if (U_FAILURE(status)) {
-        return;
+    Local_UHashtable_اشاره_ګر isoCodes(uhash_open(uhash_hashUChars, uhash_compareUChars, تش_اشاره, &حالت));
+    إذا (U_FAILURE(حالت)) {
+        أرجع;
     }
-    uhash_setValueDeleter(isoCodes.getAlias(), deleteIsoCodeEntry);
+    uhash_سېټ_ارزښت_Deleter(isoCodes.getAlias(), delete_Iso_کوډ_ثبت);
 
-    ucurr_createCurrencyList(isoCodes.getAlias(), &status);
-    if (U_FAILURE(status)) {
-        return;
+    ucurr_createCurrencyList(isoCodes.getAlias(), &حالت);
+    إذا (U_FAILURE(حالت)) {
+        أرجع;
     }
     gIsoCodes = isoCodes.orphan();  // Note: gIsoCodes is const. Once set up here it is never altered,
                                     //       and read only access is safe without synchronization.
 }
 
-static void populateCurrSymbolsEquiv(icu::Hashtable *hash, UErrorCode &status) {
-    if (U_FAILURE(status)) { return; }
-    for (const auto& entry : unisets::kCurrencyEntries) {
-        UnicodeString exemplar(entry.exemplar);
-        const UnicodeSet* set = unisets::get(entry.key);
-        if (set == nullptr) { return; }
-        UnicodeSetIterator it(*set);
-        while (it.next()) {
+ساكن فراغ populateCurrSymbolsEquiv(icu::Hashtable *hash, UError_کوډ &حالت) {
+    إذا (U_FAILURE(حالت)) { أرجع; }
+    لكل (ثابت خپلکاری& ثبت : unisets::kCurrencyEntries) {
+        UnicodeString exemplar(ثبت.exemplar);
+        ثابت Unicode_سېټ* سېټ = unisets::get(ثبت.کلی);
+        إذا (سېټ == تش_اشاره) { أرجع; }
+        Unicode_سېټ_Iterator it(*سېټ);
+        طالما (it.next()) {
             UnicodeString value = it.getString();
-            if (value == exemplar) {
+            إذا (value == exemplar) {
                 // No need to mark the exemplar character as an equivalent
-                continue;
+                استمر;
             }
-            makeEquivalent(exemplar, value, hash, status);
-            if (U_FAILURE(status)) { return; }
+            makeEquivalent(exemplar, value, hash, حالت);
+            إذا (U_FAILURE(حالت)) { أرجع; }
         }
     }
 }
 
-static void U_CALLCONV initCurrSymbolsEquiv() {
-    U_ASSERT(gCurrSymbolsEquiv == nullptr);
-    UErrorCode status = U_ZERO_ERROR;
-    ucln_common_registerCleanup(UCLN_COMMON_CURRENCY, currency_cleanup);
-    icu::Hashtable *temp = new icu::Hashtable(status);
-    if (temp == nullptr) {
-        return;
+ساكن فراغ U_CALLCONV initCurrSymbolsEquiv() {
+    U_ASSERT(gCurrSymbolsEquiv == تش_اشاره);
+    UError_کوډ حالت = U_ZERO_ERROR;
+    ucln_common_ثبتوونکی_Cleanup(UCLN_COMMON_CURRENCY, currency_cleanup);
+    icu::Hashtable *لنډمهاله = جديد icu::Hashtable(حالت);
+    إذا (لنډمهاله == تش_اشاره) {
+        أرجع;
     }
-    if (U_FAILURE(status)) {
-        delete temp;
-        return;
+    إذا (U_FAILURE(حالت)) {
+        ړنګول لنډمهاله;
+        أرجع;
     }
-    temp->setValueDeleter(deleteUnicode);
-    populateCurrSymbolsEquiv(temp, status);
-    if (U_FAILURE(status)) {
-        delete temp;
-        return;
+    لنډمهاله->سېټ_ارزښت_Deleter(deleteUnicode);
+    populateCurrSymbolsEquiv(لنډمهاله, حالت);
+    إذا (U_FAILURE(حالت)) {
+        ړنګول لنډمهاله;
+        أرجع;
     }
-    gCurrSymbolsEquiv = temp;
+    gCurrSymbolsEquiv = لنډمهاله;
 }
 
 U_CAPI UBool U_EXPORT2
-ucurr_isAvailable(const char16_t* isoCode, UDate from, UDate to, UErrorCode* eErrorCode) {
-    umtx_initOnce(gIsoCodesInitOnce, &initIsoCodes, *eErrorCode);
-    if (U_FAILURE(*eErrorCode)) {
-        return false;
+ucurr_is_شته(ثابت char16_t* iso_کوډ, UDate from, UDate منزل, UError_کوډ* e_Error_کوډ) {
+    umtx_initOnce(gIsoCodesInitOnce, &initIsoCodes, *e_Error_کوډ);
+    إذا (U_FAILURE(*e_Error_کوډ)) {
+        أرجع خطأ;
     }
 
-    IsoCodeEntry* result = (IsoCodeEntry *) uhash_get(gIsoCodes, isoCode);
-    if (result == nullptr) {
-        return false;
-    } else if (from > to) {
-        *eErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return false;
-    } else if  ((from > result->to) || (to < result->from)) {
-        return false;
+    Iso_کوډ_ثبت* پایله = (Iso_کوډ_ثبت *) uhash_get(gIsoCodes, iso_کوډ);
+    إذا (پایله == تش_اشاره) {
+        أرجع خطأ;
+    } وإلا إذا (from > منزل) {
+        *e_Error_کوډ = U_ILLEGAL_دلیل_ERROR;
+        أرجع خطأ;
+    } وإلا إذا  ((from > پایله->منزل) || (منزل < پایله->from)) {
+        أرجع خطأ;
     }
-    return true;
+    أرجع ریښتیا;
 }
 
-static const icu::Hashtable* getCurrSymbolsEquiv() {
+ساكن ثابت icu::Hashtable* getCurrSymbolsEquiv() {
     umtx_initOnce(gCurrSymbolsEquivInitOnce, &initCurrSymbolsEquiv);
-    return gCurrSymbolsEquiv;
+    أرجع gCurrSymbolsEquiv;
 }
 
 U_CAPI UEnumeration * U_EXPORT2
-ucurr_openISOCurrencies(uint32_t currType, UErrorCode *pErrorCode) {
-    UEnumeration *myEnum = nullptr;
+ucurr_openISOCurrencies(uint32_t currType, UError_کوډ *p_Error_کوډ) {
+    UEnumeration *myEnum = تش_اشاره;
     UCurrencyContext *myContext;
 
-    myEnum = (UEnumeration*)uprv_malloc(sizeof(UEnumeration));
-    if (myEnum == nullptr) {
-        *pErrorCode = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+    myEnum = (UEnumeration*)uprv_malloc(حجم(UEnumeration));
+    إذا (myEnum == تش_اشاره) {
+        *p_Error_کوډ = U_حافظه_ویش_ERROR;
+        أرجع تش_اشاره;
     }
-    uprv_memcpy(myEnum, &gEnumCurrencyList, sizeof(UEnumeration));
-    myContext = (UCurrencyContext*)uprv_malloc(sizeof(UCurrencyContext));
-    if (myContext == nullptr) {
-        *pErrorCode = U_MEMORY_ALLOCATION_ERROR;
+    uprv_memcpy(myEnum, &gEnumCurrencyList, حجم(UEnumeration));
+    myContext = (UCurrencyContext*)uprv_malloc(حجم(UCurrencyContext));
+    إذا (myContext == تش_اشاره) {
+        *p_Error_کوډ = U_حافظه_ویش_ERROR;
         uprv_free(myEnum);
-        return nullptr;
+        أرجع تش_اشاره;
     }
     myContext->currType = currType;
     myContext->listIdx = 0;
     myEnum->context = myContext;
-    return myEnum;
+    أرجع myEnum;
 }
 
 U_CAPI int32_t U_EXPORT2
-ucurr_countCurrencies(const char* locale, 
+ucurr_شمېر_Currencies(ثابت حرف* locale, 
                  UDate date, 
-                 UErrorCode* ec)
+                 UError_کوډ* ec)
 {
-    int32_t currCount = 0;
+    int32_t curr_شمېر = 0;
 
-    if (ec != nullptr && U_SUCCESS(*ec)) 
+    إذا (ec != تش_اشاره && U_SUCCESS(*ec)) 
     {
         // local variables
-        UErrorCode localStatus = U_ZERO_ERROR;
+        UError_کوډ local_حالت = U_ZERO_ERROR;
 
         // get country or country_variant in `id'
         CharString id = idForLocale(locale, ec);
 
-        if (U_FAILURE(*ec))
+        إذا (U_FAILURE(*ec))
         {
-            return 0;
+            أرجع 0;
         }
 
         // Remove variants, which is only needed for registration.
-        char *idDelim = strchr(id.data(), VAR_DELIM);
-        if (idDelim)
+        حرف *idDelim = strchr(id.معلومات(), VAR_DELIM);
+        إذا (idDelim)
         {
-            id.truncate(idDelim - id.data());
+            id.truncate(idDelim - id.معلومات());
         }
 
         // Look up the CurrencyMap element in the root bundle.
-        UResourceBundle *rb = ures_openDirect(U_ICUDATA_CURR, CURRENCY_DATA, &localStatus);
-        UResourceBundle *cm = ures_getByKey(rb, CURRENCY_MAP, rb, &localStatus);
+        UResourceBundle *rb = ures_open_مستقیم(U_ICUDATA_CURR, CURRENCY_معلومات, &local_حالت);
+        UResourceBundle *cm = ures_get_By_کلی(rb, CURRENCY_MAP, rb, &local_حالت);
 
         // Using the id derived from the local, get the currency data
-        LocalUResourceBundlePointer countryArray(ures_getByKey(rb, id.data(), cm, &localStatus));
+        Local_UResource_Bundle_اشاره_ګر countryArray(ures_get_By_کلی(rb, id.معلومات(), cm, &local_حالت));
 
         // process each currency to see which one is valid for the given date
-        if (U_SUCCESS(localStatus))
+        إذا (U_SUCCESS(local_حالت))
         {
-            for (int32_t i=0; i<ures_getSize(countryArray.getAlias()); i++)
+            لكل (int32_t i=0; i<ures_get_اندازه(countryArray.getAlias()); i++)
             {
                 // get the currency resource
-                LocalUResourceBundlePointer currencyRes(ures_getByIndex(countryArray.getAlias(), i, nullptr, &localStatus));
+                Local_UResource_Bundle_اشاره_ګر currencyRes(ures_get_By_شاخص(countryArray.getAlias(), i, تش_اشاره, &local_حالت));
 
                 // get the from date
-                int32_t fromLength = 0;
-                LocalUResourceBundlePointer fromRes(ures_getByKey(currencyRes.getAlias(), "from", nullptr, &localStatus));
-                const int32_t *fromArray = ures_getIntVector(fromRes.getAlias(), &fromLength, &localStatus);
+                int32_t from_اوږدتیا = 0;
+                Local_UResource_Bundle_اشاره_ګر fromRes(ures_get_By_کلی(currencyRes.getAlias(), "from", تش_اشاره, &local_حالت));
+                ثابت int32_t *fromArray = ures_get_Int_ویکټور(fromRes.getAlias(), &from_اوږدتیا, &local_حالت);
 
                 int64_t currDate64 = (int64_t)((uint64_t)(fromArray[0]) << 32);
                 currDate64 |= ((int64_t)fromArray[1] & (int64_t)INT64_C(0x00000000FFFFFFFF));
                 UDate fromDate = (UDate)currDate64;
 
-                if (ures_getSize(currencyRes.getAlias())> 2)
+                إذا (ures_get_اندازه(currencyRes.getAlias())> 2)
                 {
-                    int32_t toLength = 0;
-                    LocalUResourceBundlePointer toRes(ures_getByKey(currencyRes.getAlias(), "to", nullptr, &localStatus));
-                    const int32_t *toArray = ures_getIntVector(toRes.getAlias(), &toLength, &localStatus);
+                    int32_t منزل_اوږدتیا = 0;
+                    Local_UResource_Bundle_اشاره_ګر منزل_Res(ures_get_By_کلی(currencyRes.getAlias(), "to", تش_اشاره, &local_حالت));
+                    ثابت int32_t *منزل_Array = ures_get_Int_ویکټور(منزل_Res.getAlias(), &منزل_اوږدتیا, &local_حالت);
 
-                    currDate64 = (int64_t)toArray[0] << 32;
-                    currDate64 |= ((int64_t)toArray[1] & (int64_t)INT64_C(0x00000000FFFFFFFF));
-                    UDate toDate = (UDate)currDate64;
+                    currDate64 = (int64_t)منزل_Array[0] << 32;
+                    currDate64 |= ((int64_t)منزل_Array[1] & (int64_t)INT64_C(0x00000000FFFFFFFF));
+                    UDate منزل_Date = (UDate)currDate64;
 
-                    if ((fromDate <= date) && (date < toDate))
+                    إذا ((fromDate <= date) && (date < منزل_Date))
                     {
-                        currCount++;
+                        curr_شمېر++;
                     }
                 }
-                else
+                وإلا
                 {
-                    if (fromDate <= date)
+                    إذا (fromDate <= date)
                     {
-                        currCount++;
+                        curr_شمېر++;
                     }
                 }
             } // end For loop
         } // end if (U_SUCCESS(localStatus))
 
         // Check for errors
-        if (*ec == U_ZERO_ERROR || localStatus != U_ZERO_ERROR)
+        إذا (*ec == U_ZERO_ERROR || local_حالت != U_ZERO_ERROR)
         {
             // There is nothing to fallback to. 
             // Report the failure/warning if possible.
-            *ec = localStatus;
+            *ec = local_حالت;
         }
 
-        if (U_SUCCESS(*ec))
+        إذا (U_SUCCESS(*ec))
         {
             // no errors
-            return currCount;
+            أرجع curr_شمېر;
         }
     }
 
     // If we got here, either error code is invalid or
     // some argument passed is no good.
-    return 0;
+    أرجع 0;
 }
 
 U_CAPI int32_t U_EXPORT2 
-ucurr_forLocaleAndDate(const char* locale, 
+ucurr_forLocaleAndDate(ثابت حرف* locale, 
                 UDate date, 
-                int32_t index,
+                int32_t شاخص,
                 char16_t* buff,
-                int32_t buffCapacity, 
-                UErrorCode* ec)
+                int32_t buff_ظرفیت, 
+                UError_کوډ* ec)
 {
     int32_t resLen = 0;
-	int32_t currIndex = 0;
-    const char16_t* s = nullptr;
+	int32_t curr_شاخص = 0;
+    ثابت char16_t* s = تش_اشاره;
 
-    if (ec != nullptr && U_SUCCESS(*ec))
+    إذا (ec != تش_اشاره && U_SUCCESS(*ec))
     {
         // check the arguments passed
-        if ((buff && buffCapacity) || !buffCapacity )
+        إذا ((buff && buff_ظرفیت) || !buff_ظرفیت )
         {
             // local variables
-            UErrorCode localStatus = U_ZERO_ERROR;
+            UError_کوډ local_حالت = U_ZERO_ERROR;
 
             // get country or country_variant in `id'
             CharString id = idForLocale(locale, ec);
-            if (U_FAILURE(*ec))
+            إذا (U_FAILURE(*ec))
             {
-                return 0;
+                أرجع 0;
             }
 
             // Remove variants, which is only needed for registration.
-            char *idDelim = strchr(id.data(), VAR_DELIM);
-            if (idDelim)
+            حرف *idDelim = strchr(id.معلومات(), VAR_DELIM);
+            إذا (idDelim)
             {
-                id.truncate(idDelim - id.data());
+                id.truncate(idDelim - id.معلومات());
             }
 
             // Look up the CurrencyMap element in the root bundle.
-            UResourceBundle *rb = ures_openDirect(U_ICUDATA_CURR, CURRENCY_DATA, &localStatus);
-            UResourceBundle *cm = ures_getByKey(rb, CURRENCY_MAP, rb, &localStatus);
+            UResourceBundle *rb = ures_open_مستقیم(U_ICUDATA_CURR, CURRENCY_معلومات, &local_حالت);
+            UResourceBundle *cm = ures_get_By_کلی(rb, CURRENCY_MAP, rb, &local_حالت);
 
             // Using the id derived from the local, get the currency data
-            LocalUResourceBundlePointer countryArray(ures_getByKey(rb, id.data(), cm, &localStatus));
+            Local_UResource_Bundle_اشاره_ګر countryArray(ures_get_By_کلی(rb, id.معلومات(), cm, &local_حالت));
 
             // process each currency to see which one is valid for the given date
-            bool matchFound = false;
-            if (U_SUCCESS(localStatus))
+            منطقي سمون_وموندل = خطأ;
+            إذا (U_SUCCESS(local_حالت))
             {
-                if ((index <= 0) || (index> ures_getSize(countryArray.getAlias())))
+                إذا ((شاخص <= 0) || (شاخص> ures_get_اندازه(countryArray.getAlias())))
                 {
                     // requested index is out of bounds
-                    return 0;
+                    أرجع 0;
                 }
 
-                for (int32_t i=0; i<ures_getSize(countryArray.getAlias()); i++)
+                لكل (int32_t i=0; i<ures_get_اندازه(countryArray.getAlias()); i++)
                 {
                     // get the currency resource
-                    LocalUResourceBundlePointer currencyRes(ures_getByIndex(countryArray.getAlias(), i, nullptr, &localStatus));
-                    s = ures_getStringByKey(currencyRes.getAlias(), "id", &resLen, &localStatus);
+                    Local_UResource_Bundle_اشاره_ګر currencyRes(ures_get_By_شاخص(countryArray.getAlias(), i, تش_اشاره, &local_حالت));
+                    s = ures_get_String_By_کلی(currencyRes.getAlias(), "id", &resLen, &local_حالت);
 
                     // get the from date
-                    int32_t fromLength = 0;
-                    LocalUResourceBundlePointer fromRes(ures_getByKey(currencyRes.getAlias(), "from", nullptr, &localStatus));
-                    const int32_t *fromArray = ures_getIntVector(fromRes.getAlias(), &fromLength, &localStatus);
+                    int32_t from_اوږدتیا = 0;
+                    Local_UResource_Bundle_اشاره_ګر fromRes(ures_get_By_کلی(currencyRes.getAlias(), "from", تش_اشاره, &local_حالت));
+                    ثابت int32_t *fromArray = ures_get_Int_ویکټور(fromRes.getAlias(), &from_اوږدتیا, &local_حالت);
 
                     int64_t currDate64 = (int64_t)((uint64_t)fromArray[0] << 32);
                     currDate64 |= ((int64_t)fromArray[1] & (int64_t)INT64_C(0x00000000FFFFFFFF));
                     UDate fromDate = (UDate)currDate64;
 
-                    if (ures_getSize(currencyRes.getAlias()) > 2)
+                    إذا (ures_get_اندازه(currencyRes.getAlias()) > 2)
                     {
-                        int32_t toLength = 0;
-                        LocalUResourceBundlePointer toRes(ures_getByKey(currencyRes.getAlias(), "to", nullptr, &localStatus));
-                        const int32_t *toArray = ures_getIntVector(toRes.getAlias(), &toLength, &localStatus);
+                        int32_t منزل_اوږدتیا = 0;
+                        Local_UResource_Bundle_اشاره_ګر منزل_Res(ures_get_By_کلی(currencyRes.getAlias(), "to", تش_اشاره, &local_حالت));
+                        ثابت int32_t *منزل_Array = ures_get_Int_ویکټور(منزل_Res.getAlias(), &منزل_اوږدتیا, &local_حالت);
 
-                        currDate64 = (int64_t)toArray[0] << 32;
-                        currDate64 |= ((int64_t)toArray[1] & (int64_t)INT64_C(0x00000000FFFFFFFF));
-                        UDate toDate = (UDate)currDate64;
+                        currDate64 = (int64_t)منزل_Array[0] << 32;
+                        currDate64 |= ((int64_t)منزل_Array[1] & (int64_t)INT64_C(0x00000000FFFFFFFF));
+                        UDate منزل_Date = (UDate)currDate64;
 
-                        if ((fromDate <= date) && (date < toDate))
+                        إذا ((fromDate <= date) && (date < منزل_Date))
                         {
-                            currIndex++;
-                            if (currIndex == index)
+                            curr_شاخص++;
+                            إذا (curr_شاخص == شاخص)
                             {
-                                matchFound = true;
+                                سمون_وموندل = ریښتیا;
                             }
                         }
                     }
-                    else
+                    وإلا
                     {
-                        if (fromDate <= date)
+                        إذا (fromDate <= date)
                         {
-                            currIndex++;
-                            if (currIndex == index)
+                            curr_شاخص++;
+                            إذا (curr_شاخص == شاخص)
                             {
-                                matchFound = true;
+                                سمون_وموندل = ریښتیا;
                             }
                         }
                     }
                     // check for loop exit
-                    if (matchFound)
+                    إذا (سمون_وموندل)
                     {
-                        break;
+                        اكسر;
                     }
 
                 } // end For loop
             }
 
             // Check for errors
-            if (*ec == U_ZERO_ERROR || localStatus != U_ZERO_ERROR)
+            إذا (*ec == U_ZERO_ERROR || local_حالت != U_ZERO_ERROR)
             {
                 // There is nothing to fallback to. 
                 // Report the failure/warning if possible.
-                *ec = localStatus;
+                *ec = local_حالت;
             }
 
-            if (U_SUCCESS(*ec))
+            إذا (U_SUCCESS(*ec))
             {
                 // no errors
-                if((buffCapacity> resLen) && matchFound)
+                إذا((buff_ظرفیت> resLen) && سمون_وموندل)
                 {
                     // write out the currency value
                     u_strcpy(buff, s);
                 }
-                else
+                وإلا
                 {
-                    return 0;
+                    أرجع 0;
                 }
             }
 
             // return null terminated currency string
-            return u_terminateUChars(buff, buffCapacity, resLen, ec);
+            أرجع u_terminateUChars(buff, buff_ظرفیت, resLen, ec);
         }
-        else
+        وإلا
         {
             // illegal argument encountered
-            *ec = U_ILLEGAL_ARGUMENT_ERROR;
+            *ec = U_ILLEGAL_دلیل_ERROR;
         }
 
     }
 
     // If we got here, either error code is invalid or
     // some argument passed is no good.
-    return resLen;
+    أرجع resLen;
 }
 
-static const UEnumeration defaultKeywordValues = {
-    nullptr,
-    nullptr,
-    ulist_close_keyword_values_iterator,
-    ulist_count_keyword_values,
+ساكن ثابت UEnumeration default_Keyword_ارزښتونه = {
+    تش_اشاره,
+    تش_اشاره,
+    ulist_close_keyword_ارزښتونه_iterator,
+    ulist_شمېر_keyword_ارزښتونه,
     uenum_unextDefault,
-    ulist_next_keyword_value, 
-    ulist_reset_keyword_values_iterator
+    ulist_بل_keyword_ارزښت, 
+    ulist_reset_keyword_ارزښتونه_iterator
 };
 
-U_CAPI UEnumeration *U_EXPORT2 ucurr_getKeywordValuesForLocale(const char *key, const char *locale, UBool commonlyUsed, UErrorCode* status) {
+U_CAPI UEnumeration *U_EXPORT2 ucurr_get_Keyword_ارزښتونه_For_Locale(ثابت حرف *کلی, ثابت حرف *locale, UBool commonly_کارول_شوی, UError_کوډ* حالت) {
     // Resolve region
-    CharString prefRegion = ulocimp_getRegionForSupplementalData(locale, true, *status);
+    CharString prefRegion = ulocimp_get_Region_For_Supplemental_معلومات(locale, ریښتیا, *حالت);
 
     // Read value from supplementalData
-    UList *values = ulist_createEmptyList(status);
-    UList *otherValues = ulist_createEmptyList(status);
-    UEnumeration *en = (UEnumeration *)uprv_malloc(sizeof(UEnumeration));
-    if (U_FAILURE(*status) || en == nullptr) {
-        if (en == nullptr) {
-            *status = U_MEMORY_ALLOCATION_ERROR;
-        } else {
+    UList *ارزښتونه = ulist_create_تشه_List(حالت);
+    UList *other_ارزښتونه = ulist_create_تشه_List(حالت);
+    UEnumeration *en = (UEnumeration *)uprv_malloc(حجم(UEnumeration));
+    إذا (U_FAILURE(*حالت) || en == تش_اشاره) {
+        إذا (en == تش_اشاره) {
+            *حالت = U_حافظه_ویش_ERROR;
+        } وإلا {
             uprv_free(en);
         }
-        ulist_deleteList(values);
-        ulist_deleteList(otherValues);
-        return nullptr;
+        ulist_deleteList(ارزښتونه);
+        ulist_deleteList(other_ارزښتونه);
+        أرجع تش_اشاره;
     }
-    memcpy(en, &defaultKeywordValues, sizeof(UEnumeration));
-    en->context = values;
+    حافظه_نقل(en, &default_Keyword_ارزښتونه, حجم(UEnumeration));
+    en->context = ارزښتونه;
     
-    UResourceBundle* rb = ures_openDirect(U_ICUDATA_CURR, "supplementalData", status);
-    LocalUResourceBundlePointer bundle(ures_getByKey(rb, "CurrencyMap", rb, status));
-    StackUResourceBundle bundlekey, regbndl, curbndl, to;
+    UResourceBundle* rb = ures_open_مستقیم(U_ICUDATA_CURR, "supplementalData", حالت);
+    Local_UResource_Bundle_اشاره_ګر bundle(ures_get_By_کلی(rb, "CurrencyMap", rb, حالت));
+    ډېری_UResource_Bundle bundlekey, regbndl, curbndl, منزل;
     
-    while (U_SUCCESS(*status) && ures_hasNext(bundle.getAlias())) {
-        ures_getNextResource(bundle.getAlias(), bundlekey.getAlias(), status);
-        if (U_FAILURE(*status)) {
-            break;
+    طالما (U_SUCCESS(*حالت) && ures_has_بل(bundle.getAlias())) {
+        ures_get_بل_Resource(bundle.getAlias(), bundlekey.getAlias(), حالت);
+        إذا (U_FAILURE(*حالت)) {
+            اكسر;
         }
-        const char *region = ures_getKey(bundlekey.getAlias());
+        ثابت حرف *region = ures_get_کلی(bundlekey.getAlias());
         UBool isPrefRegion = prefRegion == region;
-        if (!isPrefRegion && commonlyUsed) {
+        إذا (!isPrefRegion && commonly_کارول_شوی) {
             // With commonlyUsed=true, we do not put
             // currencies for other regions in the
             // result list.
-            continue;
+            استمر;
         }
-        ures_getByKey(bundle.getAlias(), region, regbndl.getAlias(), status);
-        if (U_FAILURE(*status)) {
-            break;
+        ures_get_By_کلی(bundle.getAlias(), region, regbndl.getAlias(), حالت);
+        إذا (U_FAILURE(*حالت)) {
+            اكسر;
         }
-        while (U_SUCCESS(*status) && ures_hasNext(regbndl.getAlias())) {
-            ures_getNextResource(regbndl.getAlias(), curbndl.getAlias(), status);
-            if (ures_getType(curbndl.getAlias()) != URES_TABLE) {
+        طالما (U_SUCCESS(*حالت) && ures_has_بل(regbndl.getAlias())) {
+            ures_get_بل_Resource(regbndl.getAlias(), curbndl.getAlias(), حالت);
+            إذا (ures_getType(curbndl.getAlias()) != URES_جدول) {
                 // Currently, an empty ARRAY is mixed in.
-                continue;
+                استمر;
             }
-            char *curID = (char *)uprv_malloc(sizeof(char) * ULOC_KEYWORDS_CAPACITY);
-            if (curID == nullptr) {
-                *status = U_MEMORY_ALLOCATION_ERROR;
-                break;
+            حرف *curID = (حرف *)uprv_malloc(حجم(حرف) * ULOC_KEYWORDS_ظرفیت);
+            إذا (curID == تش_اشاره) {
+                *حالت = U_حافظه_ویش_ERROR;
+                اكسر;
             }
-            int32_t curIDLength = ULOC_KEYWORDS_CAPACITY;
+            int32_t curIDLength = ULOC_KEYWORDS_ظرفیت;
 
-#if U_CHARSET_FAMILY==U_ASCII_FAMILY
-            ures_getUTF8StringByKey(curbndl.getAlias(), "id", curID, &curIDLength, true, status);
+#إذا U_CHARSET_FAMILY==U_ASCII_FAMILY
+            ures_get_UTF8_String_By_کلی(curbndl.getAlias(), "id", curID, &curIDLength, ریښتیا, حالت);
             /* optimize - use the utf-8 string */
-#else
+#وإلا
             {
-                       const char16_t* defString = ures_getStringByKey(curbndl.getAlias(), "id", &curIDLength, status);
-                       if(U_SUCCESS(*status)) {
-			   if(curIDLength+1 > ULOC_KEYWORDS_CAPACITY) {
-				*status = U_BUFFER_OVERFLOW_ERROR;
-			   } else {
-                           	u_UCharsToChars(defString, curID, curIDLength+1);
+                       ثابت char16_t* defString = ures_get_String_By_کلی(curbndl.getAlias(), "id", &curIDLength, حالت);
+                       إذا(U_SUCCESS(*حالت)) {
+			   إذا(curIDLength+1 > ULOC_KEYWORDS_ظرفیت) {
+				*حالت = U_بفر_ډکېدنه_ERROR;
+			   } وإلا {
+                           	u_UChars_منزل_Chars(defString, curID, curIDLength+1);
 			   }
                        }
             }
-#endif	
+#د_که_پای	
 
-            if (U_FAILURE(*status)) {
-                break;
+            إذا (U_FAILURE(*حالت)) {
+                اكسر;
             }
-            UBool hasTo = false;
-            ures_getByKey(curbndl.getAlias(), "to", to.getAlias(), status);
-            if (U_FAILURE(*status)) {
+            UBool has_منزل = خطأ;
+            ures_get_By_کلی(curbndl.getAlias(), "to", منزل.getAlias(), حالت);
+            إذا (U_FAILURE(*حالت)) {
                 // Do nothing here...
-                *status = U_ZERO_ERROR;
-            } else {
-                hasTo = true;
+                *حالت = U_ZERO_ERROR;
+            } وإلا {
+                has_منزل = ریښتیا;
             }
-            if (isPrefRegion && !hasTo && !ulist_containsString(values, curID, (int32_t)uprv_strlen(curID))) {
+            إذا (isPrefRegion && !has_منزل && !ulist_لري_String(ارزښتونه, curID, (int32_t)uprv_strlen(curID))) {
                 // Currently active currency for the target country
-                ulist_addItemEndList(values, curID, true, status);
-            } else if (!ulist_containsString(otherValues, curID, (int32_t)uprv_strlen(curID)) && !commonlyUsed) {
-                ulist_addItemEndList(otherValues, curID, true, status);
-            } else {
+                ulist_جمع_کړه_توکی_پای_ټکی_List(ارزښتونه, curID, ریښتیا, حالت);
+            } وإلا إذا (!ulist_لري_String(other_ارزښتونه, curID, (int32_t)uprv_strlen(curID)) && !commonly_کارول_شوی) {
+                ulist_جمع_کړه_توکی_پای_ټکی_List(other_ارزښتونه, curID, ریښتیا, حالت);
+            } وإلا {
                 uprv_free(curID);
             }
         }
         
     }
-    if (U_SUCCESS(*status)) {
-        if (commonlyUsed) {
-            if (ulist_getListSize(values) == 0) {
+    إذا (U_SUCCESS(*حالت)) {
+        إذا (commonly_کارول_شوی) {
+            إذا (ulist_get_List_اندازه(ارزښتونه) == 0) {
                 // This could happen if no valid region is supplied in the input
                 // locale. In this case, we use the CLDR's default.
                 uenum_close(en);
-                en = ucurr_getKeywordValuesForLocale(key, "und", true, status);
+                en = ucurr_get_Keyword_ارزښتونه_For_Locale(کلی, "und", ریښتیا, حالت);
             }
-        } else {
+        } وإلا {
             // Consolidate the list
-            char *value = nullptr;
-            ulist_resetList(otherValues);
-            while ((value = (char *)ulist_getNext(otherValues)) != nullptr) {
-                if (!ulist_containsString(values, value, (int32_t)uprv_strlen(value))) {
-                    char *tmpValue = (char *)uprv_malloc(sizeof(char) * ULOC_KEYWORDS_CAPACITY);
-                    if (tmpValue == nullptr) {
-                        *status = U_MEMORY_ALLOCATION_ERROR;
-                        break;
+            حرف *value = تش_اشاره;
+            ulist_resetList(other_ارزښتونه);
+            طالما ((value = (حرف *)ulist_get_بل(other_ارزښتونه)) != تش_اشاره) {
+                إذا (!ulist_لري_String(ارزښتونه, value, (int32_t)uprv_strlen(value))) {
+                    حرف *tmp_ارزښت = (حرف *)uprv_malloc(حجم(حرف) * ULOC_KEYWORDS_ظرفیت);
+                    إذا (tmp_ارزښت == تش_اشاره) {
+                        *حالت = U_حافظه_ویش_ERROR;
+                        اكسر;
                     }
-                    uprv_memcpy(tmpValue, value, uprv_strlen(value) + 1);
-                    ulist_addItemEndList(values, tmpValue, true, status);
-                    if (U_FAILURE(*status)) {
-                        break;
+                    uprv_memcpy(tmp_ارزښت, value, uprv_strlen(value) + 1);
+                    ulist_جمع_کړه_توکی_پای_ټکی_List(ارزښتونه, tmp_ارزښت, ریښتیا, حالت);
+                    إذا (U_FAILURE(*حالت)) {
+                        اكسر;
                     }
                 }
             }
         }
         ulist_resetList((UList *)(en->context));
-    } else {
-        ulist_deleteList(values);
+    } وإلا {
+        ulist_deleteList(ارزښتونه);
         uprv_free(en);
-        values = nullptr;
-        en = nullptr;
+        ارزښتونه = تش_اشاره;
+        en = تش_اشاره;
     }
-    ulist_deleteList(otherValues);
-    return en;
+    ulist_deleteList(other_ارزښتونه);
+    أرجع en;
 }
 
 
 U_CAPI int32_t U_EXPORT2
-ucurr_getNumericCode(const char16_t* currency) {
-    int32_t code = 0;
-    if (currency && u_strlen(currency) == ISO_CURRENCY_CODE_LENGTH) {
-        UErrorCode status = U_ZERO_ERROR;
+ucurr_get_Numeric_کوډ(ثابت char16_t* currency) {
+    int32_t کوډ = 0;
+    إذا (currency && u_strlen(currency) == ISO_CURRENCY_کوډ_اوږدتیا) {
+        UError_کوډ حالت = U_ZERO_ERROR;
 
-        UResourceBundle* bundle = ures_openDirect(nullptr, "currencyNumericCodes", &status);
-        LocalUResourceBundlePointer codeMap(ures_getByKey(bundle, "codeMap", bundle, &status));
-        if (U_SUCCESS(status)) {
-            char alphaCode[ISO_CURRENCY_CODE_LENGTH+1];
-            myUCharsToChars(alphaCode, currency);
-            T_CString_toUpperCase(alphaCode);
-            ures_getByKey(codeMap.getAlias(), alphaCode, codeMap.getAlias(), &status);
-            int tmpCode = ures_getInt(codeMap.getAlias(), &status);
-            if (U_SUCCESS(status)) {
-                code = tmpCode;
+        UResourceBundle* bundle = ures_open_مستقیم(تش_اشاره, "currencyNumericCodes", &حالت);
+        Local_UResource_Bundle_اشاره_ګر کوډ_Map(ures_get_By_کلی(bundle, "codeMap", bundle, &حالت));
+        إذا (U_SUCCESS(حالت)) {
+            حرف alpha_کوډ[ISO_CURRENCY_کوډ_اوږدتیا+1];
+            my_UChars_منزل_Chars(alpha_کوډ, currency);
+            T_CString_منزل_پاسنی_Case(alpha_کوډ);
+            ures_get_By_کلی(کوډ_Map.getAlias(), alpha_کوډ, کوډ_Map.getAlias(), &حالت);
+            صحيح tmp_کوډ = ures_getInt(کوډ_Map.getAlias(), &حالت);
+            إذا (U_SUCCESS(حالت)) {
+                کوډ = tmp_کوډ;
             }
         }
     }
-    return code;
+    أرجع کوډ;
 }
-#endif /* #if !UCONFIG_NO_FORMATTING */
+#د_که_پای /* #if !UCONFIG_NO_FORMATTING */
 
 //eof

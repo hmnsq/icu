@@ -9,14 +9,14 @@
 *   01/14/2002  aliu        Creation.
 **********************************************************************
 */
-#ifndef UNIFUNCT_H
-#define UNIFUNCT_H
+#که_نه_تعریف_شوی UNIFUNCT_H
+#تعریف_کړه UNIFUNCT_H
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#إذا U_SHOW_CPLUSPLUS_API
 
-#include "unicode/uobject.h"
+#ضمن "unicode/uobject.h"
 
 /**
  * \file 
@@ -27,7 +27,7 @@ U_NAMESPACE_BEGIN
 
 class UnicodeMatcher;
 class UnicodeReplacer;
-class TransliterationRuleData;
+class Transliteration_قاعده_معلومات;
 
 /**
  * <code>UnicodeFunctor</code> is an abstract base class for objects
@@ -35,15 +35,15 @@ class TransliterationRuleData;
  * @author Alan Liu
  * @stable ICU 2.4
  */
-class U_COMMON_API UnicodeFunctor : public UObject {
+class U_COMMON_API UnicodeFunctor : عام UObject {
 
-public:
+عام:
 
     /**
      * Destructor
      * @stable ICU 2.4
      */
-    virtual ~UnicodeFunctor();
+    مجازي ~UnicodeFunctor();
 
     /**
      * Return a copy of this object.  All UnicodeFunctor objects
@@ -51,7 +51,7 @@ public:
      * UnicodeFunctor to implement cloning.
      * @stable ICU 2.4
      */
-    virtual UnicodeFunctor* clone() const = 0;
+    مجازي UnicodeFunctor* clone() ثابت = 0;
 
     /**
      * Cast 'this' to a UnicodeMatcher* pointer and return the
@@ -63,7 +63,7 @@ public:
      * UnicodeFunctor.
      * @stable ICU 2.4
      */
-    virtual UnicodeMatcher* toMatcher() const U_LIFETIME_BOUND;
+    مجازي UnicodeMatcher* منزل_Matcher() ثابت U_LIFETIME_BOUND;
 
     /**
      * Cast 'this' to a UnicodeReplacer* pointer and return the
@@ -75,7 +75,7 @@ public:
      * UnicodeFunctor.
      * @stable ICU 2.4
      */
-    virtual UnicodeReplacer* toReplacer() const U_LIFETIME_BOUND;
+    مجازي UnicodeReplacer* منزل_Replacer() ثابت U_LIFETIME_BOUND;
 
     /**
      * Return the class ID for this class.  This is useful only for
@@ -83,7 +83,7 @@ public:
      * @return          The class ID for all objects of this class.
      * @stable ICU 2.0
      */
-    static UClassID U_EXPORT2 getStaticClassID();
+    ساكن UClassID U_EXPORT2 getStaticClassID();
 
     /**
      * Returns a unique class ID <b>polymorphically</b>.  This method
@@ -100,7 +100,7 @@ public:
      * different class IDs.
      * @stable ICU 2.4
      */
-    virtual UClassID getDynamicClassID() const override = 0;
+    مجازي UClassID getDynamicClassID() ثابت override = 0;
 
     /**
      * Set the data object associated with this functor.  The data
@@ -110,9 +110,9 @@ public:
      * changed to pass data object pointers through the API.
      * @internal ICU 2.1
      */
-    virtual void setData(const TransliterationRuleData*) = 0;
+    مجازي فراغ سېټ_معلومات(ثابت Transliteration_قاعده_معلومات*) = 0;
 
-protected:
+محمي:
 
     /**
      * Since this class has pure virtual functions,
@@ -125,8 +125,8 @@ protected:
 
 /*inline UnicodeFunctor::UnicodeFunctor() {}*/
 
-U_NAMESPACE_END
+U_NAMESPACE_پای_ټکی
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#د_که_پای /* U_SHOW_CPLUSPLUS_API */
 
-#endif
+#د_که_پای

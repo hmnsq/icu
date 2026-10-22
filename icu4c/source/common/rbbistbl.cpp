@@ -10,19 +10,19 @@
 ***************************************************************************
 */
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#إذا !UCONFIG_NO_BREAK_ITERATION
 
-#include "unicode/unistr.h"
-#include "unicode/uniset.h"
-#include "unicode/uchar.h"
-#include "unicode/parsepos.h"
+#ضمن "unicode/unistr.h"
+#ضمن "unicode/uniset.h"
+#ضمن "unicode/uchar.h"
+#ضمن "unicode/parsepos.h"
 
-#include "cstr.h"
-#include "rbbinode.h"
-#include "rbbirb.h"
-#include "umutex.h"
+#ضمن "cstr.h"
+#ضمن "rbbinode.h"
+#ضمن "rbbirb.h"
+#ضمن "umutex.h"
 
 
 //
@@ -30,34 +30,34 @@
 //                                  when the hash table is deleted.
 //
 U_CDECL_BEGIN
-static void U_CALLCONV RBBISymbolTableEntry_deleter(void *p) {
-    icu::RBBISymbolTableEntry *px = (icu::RBBISymbolTableEntry *)p;
-    delete px;
+ساكن فراغ U_CALLCONV RBBISymbol_جدول_ثبت_deleter(فراغ *p) {
+    icu::RBBISymbol_جدول_ثبت *px = (icu::RBBISymbol_جدول_ثبت *)p;
+    ړنګول px;
 }
-U_CDECL_END
+U_CDECL_پای_ټکی
 
 
 
 U_NAMESPACE_BEGIN
 
-RBBISymbolTable::RBBISymbolTable(RBBIRuleScanner *rs, const UnicodeString &rules, UErrorCode &status)
-    : fRules(rules), fRuleScanner(rs)
+RBBISymbol_جدول::RBBISymbol_جدول(RBBIRuleScanner *rs, ثابت UnicodeString &قواعد, UError_کوډ &حالت)
+    : f_قواعد(قواعد), f_قاعده_Scanner(rs)
 {
-    fHashTable       = nullptr;
+    f_Hash_جدول       = تش_اشاره;
 
-    fHashTable = uhash_open(uhash_hashUnicodeString, uhash_compareUnicodeString, nullptr, &status);
+    f_Hash_جدول = uhash_open(uhash_hashUnicodeString, uhash_compareUnicodeString, تش_اشاره, &حالت);
     // uhash_open checks status
-    if (U_FAILURE(status)) {
-        return;
+    إذا (U_FAILURE(حالت)) {
+        أرجع;
     }
-    uhash_setValueDeleter(fHashTable, RBBISymbolTableEntry_deleter);
+    uhash_سېټ_ارزښت_Deleter(f_Hash_جدول, RBBISymbol_جدول_ثبت_deleter);
 }
 
 
 
-RBBISymbolTable::~RBBISymbolTable()
+RBBISymbol_جدول::~RBBISymbol_جدول()
 {
-    uhash_close(fHashTable);
+    uhash_close(f_Hash_جدول);
 }
 
 
@@ -68,14 +68,14 @@ RBBISymbolTable::~RBBISymbolTable()
 //
 //                                The variable name does NOT include the leading $.
 //
-const UnicodeString  *RBBISymbolTable::lookup(const UnicodeString& s) const
+ثابت UnicodeString  *RBBISymbol_جدول::lookup(ثابت UnicodeString& s) ثابت
 {
-    const RBBISymbolTableEntry* const el =
-        static_cast<const RBBISymbolTableEntry*>(uhash_get(fHashTable, &s));
-    if (el == nullptr) {
-        return nullptr;
+    ثابت RBBISymbol_جدول_ثبت* ثابت el =
+        static_cast<ثابت RBBISymbol_جدول_ثبت*>(uhash_get(f_Hash_جدول, &s));
+    إذا (el == تش_اشاره) {
+        أرجع تش_اشاره;
     }
-    const RBBINode& exprNode = *el->val->fLeftChild; // Root node of expression for variable
+    ثابت RBBINode& بیان_غوټه = *el->val->f_کیڼ_ماشوم; // Root node of expression for variable
     // Return the original source string for the expression.
     // Note that for set-valued variables used in UnicodeSet expressions, this would be rejected by
     // the UnicodeSet parser if the source itself contains variable references.  For instance, with
@@ -90,27 +90,27 @@ const UnicodeString  *RBBISymbolTable::lookup(const UnicodeString& s) const
     // to lookup() never happens; instead, lookupSet("CaseIgnorable") is called when computing
     // $Cased and returns the non-null value of $CaseIgnorable, and then when computing $NotCased,
     // lookupSet("Cased") returns the value computed for $Cased.
-    return &exprNode.fText;
+    أرجع &بیان_غوټه.f_متن;
 }
 
-const UnicodeSet* RBBISymbolTable::lookupSet(const UnicodeString& s) const {
-    const RBBISymbolTableEntry* const el = static_cast<const RBBISymbolTableEntry*>(uhash_get(fHashTable, &s));
-    if (el == nullptr) {
-        return nullptr;
+ثابت Unicode_سېټ* RBBISymbol_جدول::lookup_سېټ(ثابت UnicodeString& s) ثابت {
+    ثابت RBBISymbol_جدول_ثبت* ثابت el = static_cast<ثابت RBBISymbol_جدول_ثبت*>(uhash_get(f_Hash_جدول, &s));
+    إذا (el == تش_اشاره) {
+        أرجع تش_اشاره;
     }
-    const RBBINode& exprNode = *el->val->fLeftChild;
-    if (exprNode.fType == RBBINode::setRef) {
-        return exprNode.fLeftChild->fInputSet;
-    } else {
-        return nullptr;
+    ثابت RBBINode& بیان_غوټه = *el->val->f_کیڼ_ماشوم;
+    إذا (بیان_غوټه.fType == RBBINode::سېټ_Ref) {
+        أرجع بیان_غوټه.f_کیڼ_ماشوم->f_ننوت_سېټ;
+    } وإلا {
+        أرجع تش_اشاره;
     }
 }
 
 
 
 //  No longer used, see ICU-23297.
-const UnicodeFunctor* RBBISymbolTable::lookupMatcher(UChar32 /*ch*/) const {
-    return nullptr;
+ثابت UnicodeFunctor* RBBISymbol_جدول::lookupMatcher(UChar32 /*ch*/) ثابت {
+    أرجع تش_اشاره;
 }
 
 //
@@ -123,25 +123,25 @@ const UnicodeFunctor* RBBISymbolTable::lookupMatcher(UChar32 /*ch*/) const {
 //                                   from the rules based transliterator implementation.
 //                                   I didn't see an obvious way of sharing it.
 //
-UnicodeString   RBBISymbolTable::parseReference(const UnicodeString& text,
-                                                ParsePosition& pos, int32_t limit) const
+UnicodeString   RBBISymbol_جدول::parseReference(ثابت UnicodeString& متن,
+                                                ParsePosition& pos, int32_t حد) ثابت
 {
-    int32_t start = pos.getIndex();
-    int32_t i = start;
-    UnicodeString result;
-    while (i < limit) {
-        char16_t c = text.charAt(i);
-        if ((i==start && !u_isIDStart(c)) || !u_isIDPart(c)) {
-            break;
+    int32_t پیل = pos.get_شاخص();
+    int32_t i = پیل;
+    UnicodeString پایله;
+    طالما (i < حد) {
+        char16_t c = متن.charAt(i);
+        إذا ((i==پیل && !u_isIDStart(c)) || !u_isIDPart(c)) {
+            اكسر;
         }
         ++i;
     }
-    if (i == start) { // No valid name chars
-        return result; // Indicate failure with empty string
+    إذا (i == پیل) { // No valid name chars
+        أرجع پایله; // Indicate failure with empty string
     }
-    pos.setIndex(i);
-    text.extractBetween(start, i, result);
-    return result;
+    pos.سېټ_شاخص(i);
+    متن.ایستل_Between(پیل, i, پایله);
+    أرجع پایله;
 }
 
 
@@ -151,16 +151,16 @@ UnicodeString   RBBISymbolTable::parseReference(const UnicodeString& text,
 //                                  corresponding RBBI Node.  If there is no entry
 //                                  in the table for this name, return nullptr.
 //
-RBBINode       *RBBISymbolTable::lookupNode(const UnicodeString &key) const{
+RBBINode       *RBBISymbol_جدول::lookup_غوټه(ثابت UnicodeString &کلی) ثابت{
 
-    RBBINode             *retNode = nullptr;
-    RBBISymbolTableEntry *el;
+    RBBINode             *ret_غوټه = تش_اشاره;
+    RBBISymbol_جدول_ثبت *el;
 
-    el = static_cast<RBBISymbolTableEntry*>(uhash_get(fHashTable, &key));
-    if (el != nullptr) {
-        retNode = el->val;
+    el = static_cast<RBBISymbol_جدول_ثبت*>(uhash_get(f_Hash_جدول, &کلی));
+    إذا (el != تش_اشاره) {
+        ret_غوټه = el->val;
     }
-    return retNode;
+    أرجع ret_غوټه;
 }
 
 
@@ -170,40 +170,40 @@ RBBINode       *RBBISymbolTable::lookupNode(const UnicodeString &key) const{
 //                                    this will only occur in the case of duplicate
 //                                    variable assignments.
 //
-void            RBBISymbolTable::addEntry  (const UnicodeString &key, RBBINode *val, UErrorCode &err) {
-    RBBISymbolTableEntry *e;
+فراغ            RBBISymbol_جدول::جمع_کړه_ثبت  (ثابت UnicodeString &کلی, RBBINode *val, UError_کوډ &err) {
+    RBBISymbol_جدول_ثبت *e;
     /* test for buffer overflows */
-    if (U_FAILURE(err)) {
-        return;
+    إذا (U_FAILURE(err)) {
+        أرجع;
     }
-    e = static_cast<RBBISymbolTableEntry*>(uhash_get(fHashTable, &key));
-    if (e != nullptr) {
+    e = static_cast<RBBISymbol_جدول_ثبت*>(uhash_get(f_Hash_جدول, &کلی));
+    إذا (e != تش_اشاره) {
         err = U_BRK_VARIABLE_REDFINITION;
-        return;
+        أرجع;
     }
 
-    e = new RBBISymbolTableEntry;
-    if (e == nullptr) {
-        err = U_MEMORY_ALLOCATION_ERROR;
-        return;
+    e = جديد RBBISymbol_جدول_ثبت;
+    إذا (e == تش_اشاره) {
+        err = U_حافظه_ویش_ERROR;
+        أرجع;
     }
-    e->key = key;
+    e->کلی = کلی;
     e->val = val;
-    uhash_put( fHashTable, &e->key, e, &err);
+    uhash_put( f_Hash_جدول, &e->کلی, e, &err);
 }
 
 
-RBBISymbolTableEntry::RBBISymbolTableEntry() : UMemory(), key(), val(nullptr) {}
+RBBISymbol_جدول_ثبت::RBBISymbol_جدول_ثبت() : UMemory(), کلی(), val(تش_اشاره) {}
 
-RBBISymbolTableEntry::~RBBISymbolTableEntry() {
+RBBISymbol_جدول_ثبت::~RBBISymbol_جدول_ثبت() {
     // The "val" of a symbol table entry is a variable reference node.
     // The l. child of the val is the rhs expression from the assignment.
     // Unlike other node types, children of variable reference nodes are not
     //    automatically recursively deleted.  We do it manually here.
-    delete val->fLeftChild;
-    val->fLeftChild = nullptr;
+    ړنګول val->f_کیڼ_ماشوم;
+    val->f_کیڼ_ماشوم = تش_اشاره;
 
-    delete  val;
+    ړنګول  val;
 
     // Note: the key UnicodeString is destructed by virtue of being in the object by value.
 }
@@ -212,45 +212,45 @@ RBBISymbolTableEntry::~RBBISymbolTableEntry() {
 //
 //  RBBISymbolTable::print    Debugging function, dump out the symbol table contents.
 //
-#ifdef RBBI_DEBUG
-void RBBISymbolTable::rbbiSymtablePrint() const {
+#که_تعریف_شوی RBBI_DEBUG
+فراغ RBBISymbol_جدول::rbbiSymtablePrint() ثابت {
     RBBIDebugPrintf("Variable Definitions Symbol Table\n"
            "Name                  Node         serial  String Val\n"
            "-------------------------------------------------------------------\n");
 
-    int32_t pos = UHASH_FIRST;
-    const UHashElement  *e   = nullptr;
-    for (;;) {
-        e = uhash_nextElement(fHashTable,  &pos);
-        if (e == nullptr ) {
-            break;
+    int32_t pos = UHASH_لومړی;
+    ثابت UHashElement  *e   = تش_اشاره;
+    لكل (;;) {
+        e = uhash_بل_Element(f_Hash_جدول,  &pos);
+        إذا (e == تش_اشاره ) {
+            اكسر;
         }
-        RBBISymbolTableEntry  *s   = (RBBISymbolTableEntry *)e->value.pointer;
+        RBBISymbol_جدول_ثبت  *s   = (RBBISymbol_جدول_ثبت *)e->value.اشاره_ګر;
 
-        RBBIDebugPrintf("%-19s   %8p %7d ", CStr(s->key)(), (void *)s->val, s->val->fSerialNum);
-        RBBIDebugPrintf(" %s\n", CStr(s->val->fLeftChild->fText)());
+        RBBIDebugPrintf("%-19s   %8p %7d ", CStr(s->کلی)(), (فراغ *)s->val, s->val->f_Serial_عدد);
+        RBBIDebugPrintf(" %s\n", CStr(s->val->f_کیڼ_ماشوم->f_متن)());
     }
 
     RBBIDebugPrintf("\nParsed Variable Definitions\n");
     pos = -1;
-    for (;;) {
-        e = uhash_nextElement(fHashTable,  &pos);
-        if (e == nullptr ) {
-            break;
+    لكل (;;) {
+        e = uhash_بل_Element(f_Hash_جدول,  &pos);
+        إذا (e == تش_اشاره ) {
+            اكسر;
         }
-        RBBISymbolTableEntry  *s   = (RBBISymbolTableEntry *)e->value.pointer;
-        RBBIDebugPrintf("%s\n", CStr(s->key)());
-        RBBINode::printTree(s->val, true);
-        RBBINode::printTree(s->val->fLeftChild, false);
+        RBBISymbol_جدول_ثبت  *s   = (RBBISymbol_جدول_ثبت *)e->value.اشاره_ګر;
+        RBBIDebugPrintf("%s\n", CStr(s->کلی)());
+        RBBINode::print_ونه(s->val, ریښتیا);
+        RBBINode::print_ونه(s->val->f_کیڼ_ماشوم, خطأ);
         RBBIDebugPrintf("\n");
     }
 }
-#endif
+#د_که_پای
 
 
 
 
 
-U_NAMESPACE_END
+U_NAMESPACE_پای_ټکی
 
-#endif /* #if !UCONFIG_NO_BREAK_ITERATION */
+#د_که_پای /* #if !UCONFIG_NO_BREAK_ITERATION */

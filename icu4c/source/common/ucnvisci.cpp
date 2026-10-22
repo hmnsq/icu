@@ -17,56 +17,56 @@
 *   24/7/2001   Ram         Added support for EXT character handling
 */
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION && !UCONFIG_NO_LEGACY_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
+#إذا !UCONFIG_NO_CONVERSION && !UCONFIG_NO_LEGACY_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
 
-#include "unicode/ucnv.h"
-#include "unicode/ucnv_cb.h"
-#include "unicode/utf16.h"
-#include "cmemory.h"
-#include "ucnv_bld.h"
-#include "ucnv_cnv.h"
-#include "cstring.h"
-#include "uassert.h"
+#ضمن "unicode/ucnv.h"
+#ضمن "unicode/ucnv_cb.h"
+#ضمن "unicode/utf16.h"
+#ضمن "cmemory.h"
+#ضمن "ucnv_bld.h"
+#ضمن "ucnv_cnv.h"
+#ضمن "cstring.h"
+#ضمن "uassert.h"
 
-#define UCNV_OPTIONS_VERSION_MASK 0xf
-#define NUKTA               0x093c
-#define HALANT              0x094d
-#define ZWNJ                0x200c /* Zero Width Non Joiner */
-#define ZWJ                 0x200d /* Zero width Joiner */
-#define INVALID_CHAR        0xffff
-#define ATR                 0xEF   /* Attribute code */
-#define EXT                 0xF0   /* Extension code */
-#define DANDA               0x0964
-#define DOUBLE_DANDA        0x0965
-#define ISCII_NUKTA         0xE9
-#define ISCII_HALANT        0xE8
-#define ISCII_DANDA         0xEA
-#define ISCII_INV           0xD9
-#define ISCII_VOWEL_SIGN_E  0xE0
-#define INDIC_BLOCK_BEGIN   0x0900
-#define INDIC_BLOCK_END     0x0D7F
-#define INDIC_RANGE         (INDIC_BLOCK_END - INDIC_BLOCK_BEGIN)
-#define VOCALLIC_RR         0x0931
-#define LF                  0x0A
-#define ASCII_END           0xA0
-#define NO_CHAR_MARKER      0xFFFE
-#define TELUGU_DELTA        DELTA * TELUGU
-#define DEV_ABBR_SIGN       0x0970
-#define DEV_ANUDATTA        0x0952
-#define EXT_RANGE_BEGIN     0xA1
-#define EXT_RANGE_END       0xEE
+#تعریف_کړه UCNV_OPTIONS_نسخه_ماسک 0xf
+#تعریف_کړه NUKTA               0x093c
+#تعریف_کړه HALANT              0x094d
+#تعریف_کړه ZWNJ                0x200c /* Zero Width Non Joiner */
+#تعریف_کړه ZWJ                 0x200d /* Zero width Joiner */
+#تعریف_کړه INVALID_CHAR        0xffff
+#تعریف_کړه ATR                 0xEF   /* Attribute code */
+#تعریف_کړه EXT                 0xF0   /* Extension code */
+#تعریف_کړه DANDA               0x0964
+#تعریف_کړه DOUBLE_DANDA        0x0965
+#تعریف_کړه ISCII_NUKTA         0xE9
+#تعریف_کړه ISCII_HALANT        0xE8
+#تعریف_کړه ISCII_DANDA         0xEA
+#تعریف_کړه ISCII_INV           0xD9
+#تعریف_کړه ISCII_VOWEL_SIGN_E  0xE0
+#تعریف_کړه INDIC_بلاک_BEGIN   0x0900
+#تعریف_کړه INDIC_بلاک_پای_ټکی     0x0D7F
+#تعریف_کړه INDIC_RANGE         (INDIC_بلاک_پای_ټکی - INDIC_بلاک_BEGIN)
+#تعریف_کړه VOCALLIC_RR         0x0931
+#تعریف_کړه LF                  0x0A
+#تعریف_کړه ASCII_پای_ټکی           0xA0
+#تعریف_کړه NO_CHAR_MARKER      0xFFFE
+#تعریف_کړه TELUGU_DELTA        DELTA * TELUGU
+#تعریف_کړه DEV_ABBR_SIGN       0x0970
+#تعریف_کړه DEV_ANUDATTA        0x0952
+#تعریف_کړه EXT_RANGE_BEGIN     0xA1
+#تعریف_کړه EXT_RANGE_پای_ټکی       0xEE
 
-#define PNJ_DELTA           0x0100
-#define PNJ_BINDI           0x0A02
-#define PNJ_TIPPI           0x0A70
-#define PNJ_SIGN_VIRAMA     0x0A4D
-#define PNJ_ADHAK           0x0A71
-#define PNJ_HA              0x0A39
-#define PNJ_RRA             0x0A5C
+#تعریف_کړه PNJ_DELTA           0x0100
+#تعریف_کړه PNJ_BINDI           0x0A02
+#تعریف_کړه PNJ_TIPPI           0x0A70
+#تعریف_کړه PNJ_SIGN_VIRAMA     0x0A4D
+#تعریف_کړه PNJ_ADHAK           0x0A71
+#تعریف_کړه PNJ_HA              0x0A39
+#تعریف_کړه PNJ_RRA             0x0A5C
 
-typedef enum {
+تعريفنوع تعداد {
     DEVANAGARI =0,
     BENGALI,
     GURMUKHI,
@@ -83,7 +83,7 @@ typedef enum {
  * Enumeration for switching code pages if <ATR>+<one of below values>
  * is encountered
  */
-typedef enum {
+تعريفنوع تعداد {
     DEF = 0x40,
     RMN = 0x41,
     DEV = 0x42,
@@ -104,51 +104,51 @@ typedef enum {
     PST = 0x76
 }ISCIILang;
 
-typedef enum {
-    DEV_MASK =0x80,
-    PNJ_MASK =0x40,
-    GJR_MASK =0x20,
-    ORI_MASK =0x10,
-    BNG_MASK =0x08,
-    KND_MASK =0x04,
-    MLM_MASK =0x02,
-    TML_MASK =0x01,
+تعريفنوع تعداد {
+    DEV_ماسک =0x80,
+    PNJ_ماسک =0x40,
+    GJR_ماسک =0x20,
+    ORI_ماسک =0x10,
+    BNG_ماسک =0x08,
+    KND_ماسک =0x04,
+    MLM_ماسک =0x02,
+    TML_ماسک =0x01,
     ZERO =0x00
-}MaskEnum;
+}ماسک_Enum;
 
-#define ISCII_CNV_PREFIX "ISCII,version="
+#تعریف_کړه ISCII_CNV_مختاړی "ISCII,version="
 
-typedef struct {
-    char16_t contextCharToUnicode;         /* previous Unicode codepoint for contextual analysis */
+تعريفنوع بنية {
+    char16_t context_Char_منزل_Unicode;         /* previous Unicode codepoint for contextual analysis */
     char16_t contextCharFromUnicode;       /* previous Unicode codepoint for contextual analysis */
-    uint16_t defDeltaToUnicode;         /* delta for switching to default state when DEF is encountered  */
+    uint16_t def_Delta_منزل_Unicode;         /* delta for switching to default state when DEF is encountered  */
     uint16_t currentDeltaFromUnicode;   /* current delta in Indic block */
-    uint16_t currentDeltaToUnicode;     /* current delta in Indic block */
-    MaskEnum currentMaskFromUnicode;    /* mask for current state in toUnicode */
-    MaskEnum currentMaskToUnicode;      /* mask for current state in toUnicode */
-    MaskEnum defMaskToUnicode;          /* mask for default state in toUnicode */
-    UBool isFirstBuffer;                /* boolean for fromUnicode to see if we need to announce the first script */
-    UBool resetToDefaultToUnicode;      /* boolean for resetting to default delta and mask when a newline is encountered*/
-    char name[sizeof(ISCII_CNV_PREFIX) + 1];
-    UChar32 prevToUnicodeStatus;        /* Hold the previous toUnicodeStatus. This is necessary because we may need to know the last two code points. */
-} UConverterDataISCII;
+    uint16_t current_Delta_منزل_Unicode;     /* current delta in Indic block */
+    ماسک_Enum current_ماسک_From_Unicode;    /* mask for current state in toUnicode */
+    ماسک_Enum current_ماسک_منزل_Unicode;      /* mask for current state in toUnicode */
+    ماسک_Enum def_ماسک_منزل_Unicode;          /* mask for default state in toUnicode */
+    UBool is_لومړی_بفر;                /* boolean for fromUnicode to see if we need to announce the first script */
+    UBool reset_منزل_Default_منزل_Unicode;      /* boolean for resetting to default delta and mask when a newline is encountered*/
+    حرف name[حجم(ISCII_CNV_مختاړی) + 1];
+    UChar32 prev_منزل_Unicode_حالت;        /* Hold the previous toUnicodeStatus. This is necessary because we may need to know the last two code points. */
+} UConverter_معلومات_ISCII;
 
-typedef struct LookupDataStruct {
+تعريفنوع بنية Lookup_معلومات_Struct {
     UniLang uniLang;
-    MaskEnum maskEnum;
+    ماسک_Enum ماسک_Enum_2;
     ISCIILang isciiLang;
-} LookupDataStruct;
+} Lookup_معلومات_Struct;
 
-static const LookupDataStruct lookupInitialData[]={
-    { DEVANAGARI, DEV_MASK,  DEV },
-    { BENGALI,    BNG_MASK,  BNG },
-    { GURMUKHI,   PNJ_MASK,  PNJ },
-    { GUJARATI,   GJR_MASK,  GJR },
-    { ORIYA,      ORI_MASK,  ORI },
-    { TAMIL,      TML_MASK,  TML },
-    { TELUGU,     KND_MASK,  TLG },
-    { KANNADA,    KND_MASK,  KND },
-    { MALAYALAM,  MLM_MASK,  MLM }
+ساكن ثابت Lookup_معلومات_Struct lookup_Initial_معلومات[]={
+    { DEVANAGARI, DEV_ماسک,  DEV },
+    { BENGALI,    BNG_ماسک,  BNG },
+    { GURMUKHI,   PNJ_ماسک,  PNJ },
+    { GUJARATI,   GJR_ماسک,  GJR },
+    { ORIYA,      ORI_ماسک,  ORI },
+    { TAMIL,      TML_ماسک,  TML },
+    { TELUGU,     KND_ماسک,  TLG },
+    { KANNADA,    KND_ماسک,  KND },
+    { MALAYALAM,  MLM_ماسک,  MLM }
 };
 
 /*
@@ -156,7 +156,7 @@ static const LookupDataStruct lookupInitialData[]={
  * Bit 0 (value 1): PNJ consonant
  * Bit 1 (value 2): PNJ Bindi Tippi
  */
-static const uint8_t pnjMap[80] = {
+ساكن ثابت uint8_t pnjMap[80] = {
     /* 0A00..0A0F */
     0, 0, 0, 0, 0, 2, 0, 2,  0, 0, 0, 0, 0, 0, 0, 0,
     /* 0A10..0A1F */
@@ -169,106 +169,106 @@ static const uint8_t pnjMap[80] = {
     0, 2, 2, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0, 0, 0
 };
 
-static UBool
+ساكن UBool
 isPNJConsonant(UChar32 c) {
-    if (c < 0xa00 || 0xa50 <= c) {
-        return false;
-    } else {
-        return pnjMap[c - 0xa00] & 1;
+    إذا (c < 0xa00 || 0xa50 <= c) {
+        أرجع خطأ;
+    } وإلا {
+        أرجع pnjMap[c - 0xa00] & 1;
     }
 }
 
-static UBool
+ساكن UBool
 isPNJBindiTippi(UChar32 c) {
-    if (c < 0xa00 || 0xa50 <= c) {
-        return false;
-    } else {
-        return pnjMap[c - 0xa00] >> 1;
+    إذا (c < 0xa00 || 0xa50 <= c) {
+        أرجع خطأ;
+    } وإلا {
+        أرجع pnjMap[c - 0xa00] >> 1;
     }
 }
 U_CDECL_BEGIN
-static void  U_CALLCONV
-_ISCIIOpen(UConverter *cnv, UConverterLoadArgs *pArgs, UErrorCode *errorCode) {
-    if(pArgs->onlyTestIsLoadable) {
-        return;
+ساكن فراغ  U_CALLCONV
+_ISCIIOpen(UConverter *cnv, UConverter_بارول_دلیلونه *p_دلیلونه, UError_کوډ *error_کوډ) {
+    إذا(p_دلیلونه->onlyTestIsLoadable) {
+        أرجع;
     }
 
-    cnv->extraInfo = uprv_malloc(sizeof(UConverterDataISCII));
+    cnv->extraInfo = uprv_malloc(حجم(UConverter_معلومات_ISCII));
 
-    if (cnv->extraInfo != nullptr) {
+    إذا (cnv->extraInfo != تش_اشاره) {
         int32_t len=0;
-        UConverterDataISCII *converterData=
-                (UConverterDataISCII *) cnv->extraInfo;
-        converterData->contextCharToUnicode=NO_CHAR_MARKER;
-        cnv->toUnicodeStatus = missingCharMarker;
-        converterData->contextCharFromUnicode=0x0000;
-        converterData->resetToDefaultToUnicode=false;
+        UConverter_معلومات_ISCII *converter_معلومات=
+                (UConverter_معلومات_ISCII *) cnv->extraInfo;
+        converter_معلومات->context_Char_منزل_Unicode=NO_CHAR_MARKER;
+        cnv->منزل_Unicode_حالت = missingCharMarker;
+        converter_معلومات->contextCharFromUnicode=0x0000;
+        converter_معلومات->reset_منزل_Default_منزل_Unicode=خطأ;
         /* check if the version requested is supported */
-        if ((pArgs->options & UCNV_OPTIONS_VERSION_MASK) < 9) {
+        إذا ((p_دلیلونه->options & UCNV_OPTIONS_نسخه_ماسک) < 9) {
             /* initialize state variables */
-            converterData->currentDeltaFromUnicode
-                    = converterData->currentDeltaToUnicode
-                            = converterData->defDeltaToUnicode = (uint16_t)(lookupInitialData[pArgs->options & UCNV_OPTIONS_VERSION_MASK].uniLang * DELTA);
+            converter_معلومات->currentDeltaFromUnicode
+                    = converter_معلومات->current_Delta_منزل_Unicode
+                            = converter_معلومات->def_Delta_منزل_Unicode = (uint16_t)(lookup_Initial_معلومات[p_دلیلونه->options & UCNV_OPTIONS_نسخه_ماسک].uniLang * DELTA);
 
-            converterData->currentMaskFromUnicode
-                    = converterData->currentMaskToUnicode
-                            = converterData->defMaskToUnicode = lookupInitialData[pArgs->options & UCNV_OPTIONS_VERSION_MASK].maskEnum;
+            converter_معلومات->current_ماسک_From_Unicode
+                    = converter_معلومات->current_ماسک_منزل_Unicode
+                            = converter_معلومات->def_ماسک_منزل_Unicode = lookup_Initial_معلومات[p_دلیلونه->options & UCNV_OPTIONS_نسخه_ماسک].ماسک_Enum_2;
             
-            converterData->isFirstBuffer=true;
-            (void)uprv_strcpy(converterData->name, ISCII_CNV_PREFIX);
-            len = (int32_t)uprv_strlen(converterData->name);
-            converterData->name[len]= (char)((pArgs->options & UCNV_OPTIONS_VERSION_MASK) + '0');
-            converterData->name[len+1]=0;
+            converter_معلومات->is_لومړی_بفر=ریښتیا;
+            (فراغ)uprv_strcpy(converter_معلومات->name, ISCII_CNV_مختاړی);
+            len = (int32_t)uprv_strlen(converter_معلومات->name);
+            converter_معلومات->name[len]= (حرف)((p_دلیلونه->options & UCNV_OPTIONS_نسخه_ماسک) + '0');
+            converter_معلومات->name[len+1]=0;
             
-            converterData->prevToUnicodeStatus = 0x0000;
-        } else {
+            converter_معلومات->prev_منزل_Unicode_حالت = 0x0000;
+        } وإلا {
             uprv_free(cnv->extraInfo);
-            cnv->extraInfo = nullptr;
-            *errorCode = U_ILLEGAL_ARGUMENT_ERROR;
+            cnv->extraInfo = تش_اشاره;
+            *error_کوډ = U_ILLEGAL_دلیل_ERROR;
         }
 
-    } else {
-        *errorCode =U_MEMORY_ALLOCATION_ERROR;
+    } وإلا {
+        *error_کوډ =U_حافظه_ویش_ERROR;
     }
 }
 
-static void U_CALLCONV
+ساكن فراغ U_CALLCONV
 _ISCIIClose(UConverter *cnv) {
-    if (cnv->extraInfo!=nullptr) {
-        if (!cnv->isExtraLocal) {
+    إذا (cnv->extraInfo!=تش_اشاره) {
+        إذا (!cnv->isExtraLocal) {
             uprv_free(cnv->extraInfo);
         }
-        cnv->extraInfo=nullptr;
+        cnv->extraInfo=تش_اشاره;
     }
 }
 
-static const char*  U_CALLCONV
-_ISCIIgetName(const UConverter* cnv) {
-    if (cnv->extraInfo) {
-        UConverterDataISCII* myData= (UConverterDataISCII*)cnv->extraInfo;
-        return myData->name;
+ساكن ثابت حرف*  U_CALLCONV
+_ISCIIgetName(ثابت UConverter* cnv) {
+    إذا (cnv->extraInfo) {
+        UConverter_معلومات_ISCII* my_معلومات= (UConverter_معلومات_ISCII*)cnv->extraInfo;
+        أرجع my_معلومات->name;
     }
-    return nullptr;
+    أرجع تش_اشاره;
 }
 
-static void U_CALLCONV
+ساكن فراغ U_CALLCONV
 _ISCIIReset(UConverter *cnv, UConverterResetChoice choice) {
-    UConverterDataISCII* data =(UConverterDataISCII *) (cnv->extraInfo);
-    if (choice<=UCNV_RESET_TO_UNICODE) {
-        cnv->toUnicodeStatus = missingCharMarker;
-        cnv->mode=0;
-        data->currentDeltaToUnicode=data->defDeltaToUnicode;
-        data->currentMaskToUnicode = data->defMaskToUnicode;
-        data->contextCharToUnicode=NO_CHAR_MARKER;
-        data->prevToUnicodeStatus = 0x0000;
+    UConverter_معلومات_ISCII* معلومات =(UConverter_معلومات_ISCII *) (cnv->extraInfo);
+    إذا (choice<=UCNV_RESET_منزل_UNICODE) {
+        cnv->منزل_Unicode_حالت = missingCharMarker;
+        cnv->ډېرپېښ=0;
+        معلومات->current_Delta_منزل_Unicode=معلومات->def_Delta_منزل_Unicode;
+        معلومات->current_ماسک_منزل_Unicode = معلومات->def_ماسک_منزل_Unicode;
+        معلومات->context_Char_منزل_Unicode=NO_CHAR_MARKER;
+        معلومات->prev_منزل_Unicode_حالت = 0x0000;
     }
-    if (choice!=UCNV_RESET_TO_UNICODE) {
+    إذا (choice!=UCNV_RESET_منزل_UNICODE) {
         cnv->fromUChar32=0x0000;
-        data->contextCharFromUnicode=0x00;
-        data->currentMaskFromUnicode=data->defMaskToUnicode;
-        data->currentDeltaFromUnicode=data->defDeltaToUnicode;
-        data->isFirstBuffer=true;
-        data->resetToDefaultToUnicode=false;
+        معلومات->contextCharFromUnicode=0x00;
+        معلومات->current_ماسک_From_Unicode=معلومات->def_ماسک_منزل_Unicode;
+        معلومات->currentDeltaFromUnicode=معلومات->def_Delta_منزل_Unicode;
+        معلومات->is_لومړی_بفر=ریښتیا;
+        معلومات->reset_منزل_Default_منزل_Unicode=خطأ;
     }
 }
 
@@ -292,123 +292,123 @@ _ISCIIReset(UConverter *cnv, UConverterResetChoice choice) {
  * to use uint16_t and give each of the 9 Unicode/script blocks its own bit.
  */
 
-static const uint8_t validityTable[128] = {
+ساكن ثابت uint8_t validity_جدول[128] = {
 /* This state table is tool generated please do not edit unless you know exactly what you are doing */
 /* Note: This table was edited to mirror the Windows XP implementation */
 /*ISCII:Valid:Unicode */
 /*0xa0 : 0x00: 0x900  */ ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
-/*0xa1 : 0xb8: 0x901  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + ZERO     + ZERO     + ZERO     ,
-/*0xa2 : 0xfe: 0x902  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xa3 : 0xbf: 0x903  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0x00 : 0x00: 0x904  */ DEV_MASK + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
-/*0xa4 : 0xff: 0x905  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xa5 : 0xff: 0x906  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xa6 : 0xff: 0x907  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xa7 : 0xff: 0x908  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xa8 : 0xff: 0x909  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xa9 : 0xff: 0x90a  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xaa : 0xfe: 0x90b  */ DEV_MASK + ZERO     + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + ZERO     ,
-/*0x00 : 0x00: 0x90c  */ DEV_MASK + ZERO     + ZERO     + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + ZERO     ,
-/*0xae : 0x80: 0x90d  */ DEV_MASK + ZERO     + GJR_MASK + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
-/*0xab : 0x87: 0x90e  */ DEV_MASK + ZERO     + ZERO     + ZERO     + ZERO     + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xac : 0xff: 0x90f  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xad : 0xff: 0x910  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xb2 : 0x80: 0x911  */ DEV_MASK + ZERO     + GJR_MASK + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
-/*0xaf : 0x87: 0x912  */ DEV_MASK + ZERO     + ZERO     + ZERO     + ZERO     + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xb0 : 0xff: 0x913  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xb1 : 0xff: 0x914  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xb3 : 0xff: 0x915  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xb4 : 0xfe: 0x916  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + ZERO     ,
-/*0xb5 : 0xfe: 0x917  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + ZERO     ,
-/*0xb6 : 0xfe: 0x918  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + ZERO     ,
-/*0xb7 : 0xff: 0x919  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xb8 : 0xff: 0x91a  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xb9 : 0xfe: 0x91b  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + ZERO     ,
-/*0xba : 0xff: 0x91c  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xbb : 0xfe: 0x91d  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + ZERO     ,
-/*0xbc : 0xff: 0x91e  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xbd : 0xff: 0x91f  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xbe : 0xfe: 0x920  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + ZERO     ,
-/*0xbf : 0xfe: 0x921  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + ZERO     ,
-/*0xc0 : 0xfe: 0x922  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + ZERO     ,
-/*0xc1 : 0xff: 0x923  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xc2 : 0xff: 0x924  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xc3 : 0xfe: 0x925  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + ZERO     ,
-/*0xc4 : 0xfe: 0x926  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + ZERO     ,
-/*0xc5 : 0xfe: 0x927  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + ZERO     ,
-/*0xc6 : 0xff: 0x928  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xc7 : 0x81: 0x929  */ DEV_MASK + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + TML_MASK ,
-/*0xc8 : 0xff: 0x92a  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xc9 : 0xfe: 0x92b  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + ZERO     ,
-/*0xca : 0xfe: 0x92c  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + ZERO     ,
-/*0xcb : 0xfe: 0x92d  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + ZERO     ,
-/*0xcc : 0xfe: 0x92e  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xcd : 0xff: 0x92f  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xcf : 0xff: 0x930  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xd0 : 0x87: 0x931  */ DEV_MASK + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + MLM_MASK + TML_MASK ,
-/*0xd1 : 0xff: 0x932  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xd2 : 0xb7: 0x933  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + ZERO     + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xd3 : 0x83: 0x934  */ DEV_MASK + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + MLM_MASK + TML_MASK ,
-/*0xd4 : 0xff: 0x935  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + ZERO     + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xd5 : 0xfe: 0x936  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + ZERO     ,
-/*0xd6 : 0xbf: 0x937  */ DEV_MASK + ZERO     + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xd7 : 0xff: 0x938  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xd8 : 0xff: 0x939  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
+/*0xa1 : 0xb8: 0x901  */ DEV_ماسک + PNJ_ماسک + GJR_ماسک + ORI_ماسک + BNG_ماسک + ZERO     + ZERO     + ZERO     ,
+/*0xa2 : 0xfe: 0x902  */ DEV_ماسک + PNJ_ماسک + GJR_ماسک + ORI_ماسک + BNG_ماسک + KND_ماسک + MLM_ماسک + TML_ماسک ,
+/*0xa3 : 0xbf: 0x903  */ DEV_ماسک + PNJ_ماسک + GJR_ماسک + ORI_ماسک + BNG_ماسک + KND_ماسک + MLM_ماسک + TML_ماسک ,
+/*0x00 : 0x00: 0x904  */ DEV_ماسک + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
+/*0xa4 : 0xff: 0x905  */ DEV_ماسک + PNJ_ماسک + GJR_ماسک + ORI_ماسک + BNG_ماسک + KND_ماسک + MLM_ماسک + TML_ماسک ,
+/*0xa5 : 0xff: 0x906  */ DEV_ماسک + PNJ_ماسک + GJR_ماسک + ORI_ماسک + BNG_ماسک + KND_ماسک + MLM_ماسک + TML_ماسک ,
+/*0xa6 : 0xff: 0x907  */ DEV_ماسک + PNJ_ماسک + GJR_ماسک + ORI_ماسک + BNG_ماسک + KND_ماسک + MLM_ماسک + TML_ماسک ,
+/*0xa7 : 0xff: 0x908  */ DEV_ماسک + PNJ_ماسک + GJR_ماسک + ORI_ماسک + BNG_ماسک + KND_ماسک + MLM_ماسک + TML_ماسک ,
+/*0xa8 : 0xff: 0x909  */ DEV_ماسک + PNJ_ماسک + GJR_ماسک + ORI_ماسک + BNG_ماسک + KND_ماسک + MLM_ماسک + TML_ماسک ,
+/*0xa9 : 0xff: 0x90a  */ DEV_ماسک + PNJ_ماسک + GJR_ماسک + ORI_ماسک + BNG_ماسک + KND_ماسک + MLM_ماسک + TML_ماسک ,
+/*0xaa : 0xfe: 0x90b  */ DEV_ماسک + ZERO     + GJR_ماسک + ORI_ماسک + BNG_ماسک + KND_ماسک + MLM_ماسک + ZERO     ,
+/*0x00 : 0x00: 0x90c  */ DEV_ماسک + ZERO     + ZERO     + ORI_ماسک + BNG_ماسک + KND_ماسک + MLM_ماسک + ZERO     ,
+/*0xae : 0x80: 0x90d  */ DEV_ماسک + ZERO     + GJR_ماسک + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
+/*0xab : 0x87: 0x90e  */ DEV_ماسک + ZERO     + ZERO     + ZERO     + ZERO     + KND_ماسک + MLM_ماسک + TML_ماسک ,
+/*0xac : 0xff: 0x90f  */ DEV_ماسک + PNJ_ماسک + GJR_ماسک + ORI_ماسک + BNG_ماسک + KND_ماسک + MLM_ماسک + TML_ماسک ,
+/*0xad : 0xff: 0x910  */ DEV_ماسک + PNJ_ماسک + GJR_ماسک + ORI_ماسک + BNG_ماسک + KND_ماسک + MLM_ماسک + TML_ماسک ,
+/*0xb2 : 0x80: 0x911  */ DEV_ماسک + ZERO     + GJR_ماسک + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
+/*0xaf : 0x87: 0x912  */ DEV_ماسک + ZERO     + ZERO     + ZERO     + ZERO     + KND_ماسک + MLM_ماسک + TML_ماسک ,
+/*0xb0 : 0xff: 0x913  */ DEV_ماسک + PNJ_ماسک + GJR_ماسک + ORI_ماسک + BNG_ماسک + KND_ماسک + MLM_ماسک + TML_ماسک ,
+/*0xb1 : 0xff: 0x914  */ DEV_ماسک + PNJ_ماسک + GJR_ماسک + ORI_ماسک + BNG_ماسک + KND_ماسک + MLM_ماسک + TML_ماسک ,
+/*0xb3 : 0xff: 0x915  */ DEV_ماسک + PNJ_ماسک + GJR_ماسک + ORI_ماسک + BNG_ماسک + KND_ماسک + MLM_ماسک + TML_ماسک ,
+/*0xb4 : 0xfe: 0x916  */ DEV_ماسک + PNJ_ماسک + GJR_ماسک + ORI_ماسک + BNG_ماسک + KND_ماسک + MLM_ماسک + ZERO     ,
+/*0xb5 : 0xfe: 0x917  */ DEV_ماسک + PNJ_ماسک + GJR_ماسک + ORI_ماسک + BNG_ماسک + KND_ماسک + MLM_ماسک + ZERO     ,
+/*0xb6 : 0xfe: 0x918  */ DEV_ماسک + PNJ_ماسک + GJR_ماسک + ORI_ماسک + BNG_ماسک + KND_ماسک + MLM_ماسک + ZERO     ,
+/*0xb7 : 0xff: 0x919  */ DEV_ماسک + PNJ_ماسک + GJR_ماسک + ORI_ماسک + BNG_ماسک + KND_ماسک + MLM_ماسک + TML_ماسک ,
+/*0xb8 : 0xff: 0x91a  */ DEV_ماسک + PNJ_ماسک + GJR_ماسک + ORI_ماسک + BNG_ماسک + KND_ماسک + MLM_ماسک + TML_ماسک ,
+/*0xb9 : 0xfe: 0x91b  */ DEV_ماسک + PNJ_ماسک + GJR_ماسک + ORI_ماسک + BNG_ماسک + KND_ماسک + MLM_ماسک + ZERO     ,
+/*0xba : 0xff: 0x91c  */ DEV_ماسک + PNJ_ماسک + GJR_ماسک + ORI_ماسک + BNG_ماسک + KND_ماسک + MLM_ماسک + TML_ماسک ,
+/*0xbb : 0xfe: 0x91d  */ DEV_ماسک + PNJ_ماسک + GJR_ماسک + ORI_ماسک + BNG_ماسک + KND_ماسک + MLM_ماسک + ZERO     ,
+/*0xbc : 0xff: 0x91e  */ DEV_ماسک + PNJ_ماسک + GJR_ماسک + ORI_ماسک + BNG_ماسک + KND_ماسک + MLM_ماسک + TML_ماسک ,
+/*0xbd : 0xff: 0x91f  */ DEV_ماسک + PNJ_ماسک + GJR_ماسک + ORI_ماسک + BNG_ماسک + KND_ماسک + MLM_ماسک + TML_ماسک ,
+/*0xbe : 0xfe: 0x920  */ DEV_ماسک + PNJ_ماسک + GJR_ماسک + ORI_ماسک + BNG_ماسک + KND_ماسک + MLM_ماسک + ZERO     ,
+/*0xbf : 0xfe: 0x921  */ DEV_ماسک + PNJ_ماسک + GJR_ماسک + ORI_ماسک + BNG_ماسک + KND_ماسک + MLM_ماسک + ZERO     ,
+/*0xc0 : 0xfe: 0x922  */ DEV_ماسک + PNJ_ماسک + GJR_ماسک + ORI_ماسک + BNG_ماسک + KND_ماسک + MLM_ماسک + ZERO     ,
+/*0xc1 : 0xff: 0x923  */ DEV_ماسک + PNJ_ماسک + GJR_ماسک + ORI_ماسک + BNG_ماسک + KND_ماسک + MLM_ماسک + TML_ماسک ,
+/*0xc2 : 0xff: 0x924  */ DEV_ماسک + PNJ_ماسک + GJR_ماسک + ORI_ماسک + BNG_ماسک + KND_ماسک + MLM_ماسک + TML_ماسک ,
+/*0xc3 : 0xfe: 0x925  */ DEV_ماسک + PNJ_ماسک + GJR_ماسک + ORI_ماسک + BNG_ماسک + KND_ماسک + MLM_ماسک + ZERO     ,
+/*0xc4 : 0xfe: 0x926  */ DEV_ماسک + PNJ_ماسک + GJR_ماسک + ORI_ماسک + BNG_ماسک + KND_ماسک + MLM_ماسک + ZERO     ,
+/*0xc5 : 0xfe: 0x927  */ DEV_ماسک + PNJ_ماسک + GJR_ماسک + ORI_ماسک + BNG_ماسک + KND_ماسک + MLM_ماسک + ZERO     ,
+/*0xc6 : 0xff: 0x928  */ DEV_ماسک + PNJ_ماسک + GJR_ماسک + ORI_ماسک + BNG_ماسک + KND_ماسک + MLM_ماسک + TML_ماسک ,
+/*0xc7 : 0x81: 0x929  */ DEV_ماسک + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + TML_ماسک ,
+/*0xc8 : 0xff: 0x92a  */ DEV_ماسک + PNJ_ماسک + GJR_ماسک + ORI_ماسک + BNG_ماسک + KND_ماسک + MLM_ماسک + TML_ماسک ,
+/*0xc9 : 0xfe: 0x92b  */ DEV_ماسک + PNJ_ماسک + GJR_ماسک + ORI_ماسک + BNG_ماسک + KND_ماسک + MLM_ماسک + ZERO     ,
+/*0xca : 0xfe: 0x92c  */ DEV_ماسک + PNJ_ماسک + GJR_ماسک + ORI_ماسک + BNG_ماسک + KND_ماسک + MLM_ماسک + ZERO     ,
+/*0xcb : 0xfe: 0x92d  */ DEV_ماسک + PNJ_ماسک + GJR_ماسک + ORI_ماسک + BNG_ماسک + KND_ماسک + MLM_ماسک + ZERO     ,
+/*0xcc : 0xfe: 0x92e  */ DEV_ماسک + PNJ_ماسک + GJR_ماسک + ORI_ماسک + BNG_ماسک + KND_ماسک + MLM_ماسک + TML_ماسک ,
+/*0xcd : 0xff: 0x92f  */ DEV_ماسک + PNJ_ماسک + GJR_ماسک + ORI_ماسک + BNG_ماسک + KND_ماسک + MLM_ماسک + TML_ماسک ,
+/*0xcf : 0xff: 0x930  */ DEV_ماسک + PNJ_ماسک + GJR_ماسک + ORI_ماسک + BNG_ماسک + KND_ماسک + MLM_ماسک + TML_ماسک ,
+/*0xd0 : 0x87: 0x931  */ DEV_ماسک + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + MLM_ماسک + TML_ماسک ,
+/*0xd1 : 0xff: 0x932  */ DEV_ماسک + PNJ_ماسک + GJR_ماسک + ORI_ماسک + BNG_ماسک + KND_ماسک + MLM_ماسک + TML_ماسک ,
+/*0xd2 : 0xb7: 0x933  */ DEV_ماسک + PNJ_ماسک + GJR_ماسک + ORI_ماسک + ZERO     + KND_ماسک + MLM_ماسک + TML_ماسک ,
+/*0xd3 : 0x83: 0x934  */ DEV_ماسک + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + MLM_ماسک + TML_ماسک ,
+/*0xd4 : 0xff: 0x935  */ DEV_ماسک + PNJ_ماسک + GJR_ماسک + ORI_ماسک + ZERO     + KND_ماسک + MLM_ماسک + TML_ماسک ,
+/*0xd5 : 0xfe: 0x936  */ DEV_ماسک + PNJ_ماسک + GJR_ماسک + ORI_ماسک + BNG_ماسک + KND_ماسک + MLM_ماسک + ZERO     ,
+/*0xd6 : 0xbf: 0x937  */ DEV_ماسک + ZERO     + GJR_ماسک + ORI_ماسک + BNG_ماسک + KND_ماسک + MLM_ماسک + TML_ماسک ,
+/*0xd7 : 0xff: 0x938  */ DEV_ماسک + PNJ_ماسک + GJR_ماسک + ORI_ماسک + BNG_ماسک + KND_ماسک + MLM_ماسک + TML_ماسک ,
+/*0xd8 : 0xff: 0x939  */ DEV_ماسک + PNJ_ماسک + GJR_ماسک + ORI_ماسک + BNG_ماسک + KND_ماسک + MLM_ماسک + TML_ماسک ,
 /*0x00 : 0x00: 0x93A  */ ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
 /*0x00 : 0x00: 0x93B  */ ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
-/*0xe9 : 0xda: 0x93c  */ DEV_MASK + PNJ_MASK + ZERO     + ORI_MASK + BNG_MASK + ZERO     + ZERO     + ZERO     ,
-/*0x00 : 0x00: 0x93d  */ DEV_MASK + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
-/*0xda : 0xff: 0x93e  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xdb : 0xff: 0x93f  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xdc : 0xff: 0x940  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xdd : 0xff: 0x941  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xde : 0xff: 0x942  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xdf : 0xbe: 0x943  */ DEV_MASK + ZERO     + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + ZERO     ,
-/*0x00 : 0x00: 0x944  */ DEV_MASK + ZERO     + GJR_MASK + ZERO     + BNG_MASK + KND_MASK + ZERO     + ZERO     ,
-/*0xe3 : 0x80: 0x945  */ DEV_MASK + ZERO     + GJR_MASK + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
-/*0xe0 : 0x87: 0x946  */ DEV_MASK + ZERO     + ZERO     + ZERO     + ZERO     + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xe1 : 0xff: 0x947  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xe2 : 0xff: 0x948  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xe7 : 0x80: 0x949  */ DEV_MASK + ZERO     + GJR_MASK + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
-/*0xe4 : 0x87: 0x94a  */ DEV_MASK + ZERO     + ZERO     + ZERO     + ZERO     + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xe5 : 0xff: 0x94b  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xe6 : 0xff: 0x94c  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xe8 : 0xff: 0x94d  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
+/*0xe9 : 0xda: 0x93c  */ DEV_ماسک + PNJ_ماسک + ZERO     + ORI_ماسک + BNG_ماسک + ZERO     + ZERO     + ZERO     ,
+/*0x00 : 0x00: 0x93d  */ DEV_ماسک + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
+/*0xda : 0xff: 0x93e  */ DEV_ماسک + PNJ_ماسک + GJR_ماسک + ORI_ماسک + BNG_ماسک + KND_ماسک + MLM_ماسک + TML_ماسک ,
+/*0xdb : 0xff: 0x93f  */ DEV_ماسک + PNJ_ماسک + GJR_ماسک + ORI_ماسک + BNG_ماسک + KND_ماسک + MLM_ماسک + TML_ماسک ,
+/*0xdc : 0xff: 0x940  */ DEV_ماسک + PNJ_ماسک + GJR_ماسک + ORI_ماسک + BNG_ماسک + KND_ماسک + MLM_ماسک + TML_ماسک ,
+/*0xdd : 0xff: 0x941  */ DEV_ماسک + PNJ_ماسک + GJR_ماسک + ORI_ماسک + BNG_ماسک + KND_ماسک + MLM_ماسک + TML_ماسک ,
+/*0xde : 0xff: 0x942  */ DEV_ماسک + PNJ_ماسک + GJR_ماسک + ORI_ماسک + BNG_ماسک + KND_ماسک + MLM_ماسک + TML_ماسک ,
+/*0xdf : 0xbe: 0x943  */ DEV_ماسک + ZERO     + GJR_ماسک + ORI_ماسک + BNG_ماسک + KND_ماسک + MLM_ماسک + ZERO     ,
+/*0x00 : 0x00: 0x944  */ DEV_ماسک + ZERO     + GJR_ماسک + ZERO     + BNG_ماسک + KND_ماسک + ZERO     + ZERO     ,
+/*0xe3 : 0x80: 0x945  */ DEV_ماسک + ZERO     + GJR_ماسک + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
+/*0xe0 : 0x87: 0x946  */ DEV_ماسک + ZERO     + ZERO     + ZERO     + ZERO     + KND_ماسک + MLM_ماسک + TML_ماسک ,
+/*0xe1 : 0xff: 0x947  */ DEV_ماسک + PNJ_ماسک + GJR_ماسک + ORI_ماسک + BNG_ماسک + KND_ماسک + MLM_ماسک + TML_ماسک ,
+/*0xe2 : 0xff: 0x948  */ DEV_ماسک + PNJ_ماسک + GJR_ماسک + ORI_ماسک + BNG_ماسک + KND_ماسک + MLM_ماسک + TML_ماسک ,
+/*0xe7 : 0x80: 0x949  */ DEV_ماسک + ZERO     + GJR_ماسک + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
+/*0xe4 : 0x87: 0x94a  */ DEV_ماسک + ZERO     + ZERO     + ZERO     + ZERO     + KND_ماسک + MLM_ماسک + TML_ماسک ,
+/*0xe5 : 0xff: 0x94b  */ DEV_ماسک + PNJ_ماسک + GJR_ماسک + ORI_ماسک + BNG_ماسک + KND_ماسک + MLM_ماسک + TML_ماسک ,
+/*0xe6 : 0xff: 0x94c  */ DEV_ماسک + PNJ_ماسک + GJR_ماسک + ORI_ماسک + BNG_ماسک + KND_ماسک + MLM_ماسک + TML_ماسک ,
+/*0xe8 : 0xff: 0x94d  */ DEV_ماسک + PNJ_ماسک + GJR_ماسک + ORI_ماسک + BNG_ماسک + KND_ماسک + MLM_ماسک + TML_ماسک ,
 /*0xec : 0x00: 0x94e  */ ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
 /*0xed : 0x00: 0x94f  */ ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
-/*0x00 : 0x00: 0x950  */ DEV_MASK + ZERO     + GJR_MASK + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
-/*0x00 : 0x00: 0x951  */ DEV_MASK + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
-/*0x00 : 0x00: 0x952  */ DEV_MASK + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
-/*0x00 : 0x00: 0x953  */ DEV_MASK + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
-/*0x00 : 0x00: 0x954  */ DEV_MASK + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
-/*0x00 : 0x00: 0x955  */ ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + KND_MASK + ZERO     + ZERO     ,
-/*0x00 : 0x00: 0x956  */ ZERO     + ZERO     + ZERO     + ORI_MASK + ZERO     + KND_MASK + ZERO     + ZERO     ,
-/*0x00 : 0x00: 0x957  */ ZERO     + ZERO     + ZERO     + ORI_MASK + BNG_MASK + ZERO     + MLM_MASK + ZERO     ,
-/*0x00 : 0x00: 0x958  */ DEV_MASK + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
-/*0x00 : 0x00: 0x959  */ DEV_MASK + PNJ_MASK + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
-/*0x00 : 0x00: 0x95a  */ DEV_MASK + PNJ_MASK + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
-/*0x00 : 0x00: 0x95b  */ DEV_MASK + PNJ_MASK + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
-/*0x00 : 0x00: 0x95c  */ DEV_MASK + PNJ_MASK + ZERO     + ZERO     + BNG_MASK + ZERO     + ZERO     + ZERO     ,
-/*0x00 : 0x00: 0x95d  */ DEV_MASK + ZERO     + ZERO     + ORI_MASK + BNG_MASK + ZERO     + ZERO     + ZERO     ,
-/*0x00 : 0x00: 0x95e  */ DEV_MASK + PNJ_MASK + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
-/*0xce : 0x98: 0x95f  */ DEV_MASK + ZERO     + ZERO     + ORI_MASK + BNG_MASK + ZERO     + ZERO     + ZERO     ,
-/*0x00 : 0x00: 0x960  */ DEV_MASK + ZERO     + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + ZERO     ,
-/*0x00 : 0x00: 0x961  */ DEV_MASK + ZERO     + ZERO     + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + ZERO     ,
-/*0x00 : 0x00: 0x962  */ DEV_MASK + ZERO     + ZERO     + ZERO     + BNG_MASK + ZERO     + ZERO     + ZERO     ,
-/*0x00 : 0x00: 0x963  */ DEV_MASK + ZERO     + ZERO     + ZERO     + BNG_MASK + ZERO     + ZERO     + ZERO     ,
-/*0xea : 0xf8: 0x964  */ DEV_MASK + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
-/*0xeaea : 0x00: 0x965*/ DEV_MASK + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
-/*0xf1 : 0xff: 0x966  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xf2 : 0xff: 0x967  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xf3 : 0xff: 0x968  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xf4 : 0xff: 0x969  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xf5 : 0xff: 0x96a  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xf6 : 0xff: 0x96b  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xf7 : 0xff: 0x96c  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xf8 : 0xff: 0x96d  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xf9 : 0xff: 0x96e  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0xfa : 0xff: 0x96f  */ DEV_MASK + PNJ_MASK + GJR_MASK + ORI_MASK + BNG_MASK + KND_MASK + MLM_MASK + TML_MASK ,
-/*0x00 : 0x80: 0x970  */ DEV_MASK + PNJ_MASK + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
+/*0x00 : 0x00: 0x950  */ DEV_ماسک + ZERO     + GJR_ماسک + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
+/*0x00 : 0x00: 0x951  */ DEV_ماسک + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
+/*0x00 : 0x00: 0x952  */ DEV_ماسک + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
+/*0x00 : 0x00: 0x953  */ DEV_ماسک + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
+/*0x00 : 0x00: 0x954  */ DEV_ماسک + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
+/*0x00 : 0x00: 0x955  */ ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + KND_ماسک + ZERO     + ZERO     ,
+/*0x00 : 0x00: 0x956  */ ZERO     + ZERO     + ZERO     + ORI_ماسک + ZERO     + KND_ماسک + ZERO     + ZERO     ,
+/*0x00 : 0x00: 0x957  */ ZERO     + ZERO     + ZERO     + ORI_ماسک + BNG_ماسک + ZERO     + MLM_ماسک + ZERO     ,
+/*0x00 : 0x00: 0x958  */ DEV_ماسک + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
+/*0x00 : 0x00: 0x959  */ DEV_ماسک + PNJ_ماسک + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
+/*0x00 : 0x00: 0x95a  */ DEV_ماسک + PNJ_ماسک + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
+/*0x00 : 0x00: 0x95b  */ DEV_ماسک + PNJ_ماسک + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
+/*0x00 : 0x00: 0x95c  */ DEV_ماسک + PNJ_ماسک + ZERO     + ZERO     + BNG_ماسک + ZERO     + ZERO     + ZERO     ,
+/*0x00 : 0x00: 0x95d  */ DEV_ماسک + ZERO     + ZERO     + ORI_ماسک + BNG_ماسک + ZERO     + ZERO     + ZERO     ,
+/*0x00 : 0x00: 0x95e  */ DEV_ماسک + PNJ_ماسک + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
+/*0xce : 0x98: 0x95f  */ DEV_ماسک + ZERO     + ZERO     + ORI_ماسک + BNG_ماسک + ZERO     + ZERO     + ZERO     ,
+/*0x00 : 0x00: 0x960  */ DEV_ماسک + ZERO     + GJR_ماسک + ORI_ماسک + BNG_ماسک + KND_ماسک + MLM_ماسک + ZERO     ,
+/*0x00 : 0x00: 0x961  */ DEV_ماسک + ZERO     + ZERO     + ORI_ماسک + BNG_ماسک + KND_ماسک + MLM_ماسک + ZERO     ,
+/*0x00 : 0x00: 0x962  */ DEV_ماسک + ZERO     + ZERO     + ZERO     + BNG_ماسک + ZERO     + ZERO     + ZERO     ,
+/*0x00 : 0x00: 0x963  */ DEV_ماسک + ZERO     + ZERO     + ZERO     + BNG_ماسک + ZERO     + ZERO     + ZERO     ,
+/*0xea : 0xf8: 0x964  */ DEV_ماسک + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
+/*0xeaea : 0x00: 0x965*/ DEV_ماسک + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
+/*0xf1 : 0xff: 0x966  */ DEV_ماسک + PNJ_ماسک + GJR_ماسک + ORI_ماسک + BNG_ماسک + KND_ماسک + MLM_ماسک + TML_ماسک ,
+/*0xf2 : 0xff: 0x967  */ DEV_ماسک + PNJ_ماسک + GJR_ماسک + ORI_ماسک + BNG_ماسک + KND_ماسک + MLM_ماسک + TML_ماسک ,
+/*0xf3 : 0xff: 0x968  */ DEV_ماسک + PNJ_ماسک + GJR_ماسک + ORI_ماسک + BNG_ماسک + KND_ماسک + MLM_ماسک + TML_ماسک ,
+/*0xf4 : 0xff: 0x969  */ DEV_ماسک + PNJ_ماسک + GJR_ماسک + ORI_ماسک + BNG_ماسک + KND_ماسک + MLM_ماسک + TML_ماسک ,
+/*0xf5 : 0xff: 0x96a  */ DEV_ماسک + PNJ_ماسک + GJR_ماسک + ORI_ماسک + BNG_ماسک + KND_ماسک + MLM_ماسک + TML_ماسک ,
+/*0xf6 : 0xff: 0x96b  */ DEV_ماسک + PNJ_ماسک + GJR_ماسک + ORI_ماسک + BNG_ماسک + KND_ماسک + MLM_ماسک + TML_ماسک ,
+/*0xf7 : 0xff: 0x96c  */ DEV_ماسک + PNJ_ماسک + GJR_ماسک + ORI_ماسک + BNG_ماسک + KND_ماسک + MLM_ماسک + TML_ماسک ,
+/*0xf8 : 0xff: 0x96d  */ DEV_ماسک + PNJ_ماسک + GJR_ماسک + ORI_ماسک + BNG_ماسک + KND_ماسک + MLM_ماسک + TML_ماسک ,
+/*0xf9 : 0xff: 0x96e  */ DEV_ماسک + PNJ_ماسک + GJR_ماسک + ORI_ماسک + BNG_ماسک + KND_ماسک + MLM_ماسک + TML_ماسک ,
+/*0xfa : 0xff: 0x96f  */ DEV_ماسک + PNJ_ماسک + GJR_ماسک + ORI_ماسک + BNG_ماسک + KND_ماسک + MLM_ماسک + TML_ماسک ,
+/*0x00 : 0x80: 0x970  */ DEV_ماسک + PNJ_ماسک + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     ,
 /*
  * The length of the array is 128 to provide values for 0x900..0x97f.
  * The last 15 entries for 0x971..0x97f of the validity table are all zero
@@ -417,7 +417,7 @@ static const uint8_t validityTable[128] = {
 /*0x00 : 0x00: 0x9yz  */ ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO
 };
 
-static const uint16_t fromUnicodeTable[128]={
+ساكن ثابت uint16_t from_Unicode_جدول[128]={
     0x00a0 ,/* 0x0900 */
     0x00a1 ,/* 0x0901 */
     0x00a2 ,/* 0x0902 */
@@ -547,7 +547,7 @@ static const uint16_t fromUnicodeTable[128]={
     0xFFFF ,/* 0x097e */
     0xFFFF ,/* 0x097f */
 };
-static const uint16_t toUnicodeTable[256]={
+ساكن ثابت uint16_t منزل_Unicode_جدول[256]={
     0x0000,/* 0x00 */
     0x0001,/* 0x01 */
     0x0002,/* 0x02 */
@@ -806,12 +806,12 @@ static const uint16_t toUnicodeTable[256]={
     0xFFFF /* 0xff */
 };
 
-static const uint16_t vowelSignESpecialCases[][2]={
+ساكن ثابت uint16_t vowelSignESpecialCases[][2]={
 	{ 2 /*length of array*/    , 0      },
 	{ 0xA4 , 0x0904 },
 };
 
-static const uint16_t nuktaSpecialCases[][2]={
+ساكن ثابت uint16_t nuktaSpecialCases[][2]={
     { 16 /*length of array*/   , 0      },
     { 0xA6 , 0x090c },
     { 0xEA , 0x093D },
@@ -831,60 +831,60 @@ static const uint16_t nuktaSpecialCases[][2]={
 };
 
 
-#define WRITE_TO_TARGET_FROM_U(args,offsets,source,target,targetLimit,targetByteUnit,err) UPRV_BLOCK_MACRO_BEGIN { \
-    int32_t offset = (int32_t)(source - args->source-1);                                        \
+#تعریف_کړه WRITE_منزل_موخه_FROM_U(دلیلونه_2,offsets,سرچینه,موخه,موخه_حد,موخه_Byte_Unit,err) UPRV_بلاک_MACRO_BEGIN { \
+    int32_t دننه_واټن = (int32_t)(سرچینه - دلیلونه_2->سرچینه-1);                                        \
       /* write the targetUniChar  to target */                                                  \
-    if(target < targetLimit){                                                                   \
-        if(targetByteUnit <= 0xFF){                                                             \
-            *(target)++ = (uint8_t)(targetByteUnit);                                            \
-            if(offsets){                                                                        \
-                *(offsets++) = offset;                                                          \
+    إذا(موخه < موخه_حد){                                                                   \
+        إذا(موخه_Byte_Unit <= 0xFF){                                                             \
+            *(موخه)++ = (uint8_t)(موخه_Byte_Unit);                                            \
+            إذا(offsets){                                                                        \
+                *(offsets++) = دننه_واټن;                                                          \
             }                                                                                   \
-        }else{                                                                                  \
-            if (targetByteUnit > 0xFFFF) {                                                      \
-                *(target)++ = (uint8_t)(targetByteUnit>>16);                                    \
-                if (offsets) {                                                                  \
-                    --offset;                                                                   \
-                    *(offsets++) = offset;                                                      \
+        }وإلا{                                                                                  \
+            إذا (موخه_Byte_Unit > 0xFFFF) {                                                      \
+                *(موخه)++ = (uint8_t)(موخه_Byte_Unit>>16);                                    \
+                إذا (offsets) {                                                                  \
+                    --دننه_واټن;                                                                   \
+                    *(offsets++) = دننه_واټن;                                                      \
                 }                                                                               \
             }                                                                                   \
-            if (!(target < targetLimit)) {                                                      \
-                args->converter->charErrorBuffer[args->converter->charErrorBufferLength++] =    \
-                                (uint8_t)(targetByteUnit >> 8);                                 \
-                args->converter->charErrorBuffer[args->converter->charErrorBufferLength++] =    \
-                                (uint8_t)targetByteUnit;                                        \
-                *err = U_BUFFER_OVERFLOW_ERROR;                                                 \
-            } else {                                                                            \
-                *(target)++ = (uint8_t)(targetByteUnit>>8);                                     \
-                if(offsets){                                                                    \
-                    *(offsets++) = offset;                                                      \
+            إذا (!(موخه < موخه_حد)) {                                                      \
+                دلیلونه_2->converter->char_Error_بفر[دلیلونه_2->converter->char_Error_بفر_اوږدتیا++] =    \
+                                (uint8_t)(موخه_Byte_Unit >> 8);                                 \
+                دلیلونه_2->converter->char_Error_بفر[دلیلونه_2->converter->char_Error_بفر_اوږدتیا++] =    \
+                                (uint8_t)موخه_Byte_Unit;                                        \
+                *err = U_بفر_ډکېدنه_ERROR;                                                 \
+            } وإلا {                                                                            \
+                *(موخه)++ = (uint8_t)(موخه_Byte_Unit>>8);                                     \
+                إذا(offsets){                                                                    \
+                    *(offsets++) = دننه_واټن;                                                      \
                 }                                                                               \
-                if(target < targetLimit){                                                       \
-                    *(target)++ = (uint8_t)  targetByteUnit;                                    \
-                    if(offsets){                                                                \
-                        *(offsets++) = offset                            ;                      \
+                إذا(موخه < موخه_حد){                                                       \
+                    *(موخه)++ = (uint8_t)  موخه_Byte_Unit;                                    \
+                    إذا(offsets){                                                                \
+                        *(offsets++) = دننه_واټن                            ;                      \
                     }                                                                           \
-                }else{                                                                          \
-                    args->converter->charErrorBuffer[args->converter->charErrorBufferLength++] =\
-                                (uint8_t) (targetByteUnit);                                     \
-                    *err = U_BUFFER_OVERFLOW_ERROR;                                             \
+                }وإلا{                                                                          \
+                    دلیلونه_2->converter->char_Error_بفر[دلیلونه_2->converter->char_Error_بفر_اوږدتیا++] =\
+                                (uint8_t) (موخه_Byte_Unit);                                     \
+                    *err = U_بفر_ډکېدنه_ERROR;                                             \
                 }                                                                               \
             }                                                                                   \
         }                                                                                       \
-    }else{                                                                                      \
-        if (targetByteUnit & 0xFF0000) {                                                        \
-            args->converter->charErrorBuffer[args->converter->charErrorBufferLength++] =        \
-                        (uint8_t) (targetByteUnit >>16);                                        \
+    }وإلا{                                                                                      \
+        إذا (موخه_Byte_Unit & 0xFF0000) {                                                        \
+            دلیلونه_2->converter->char_Error_بفر[دلیلونه_2->converter->char_Error_بفر_اوږدتیا++] =        \
+                        (uint8_t) (موخه_Byte_Unit >>16);                                        \
         }                                                                                       \
-        if(targetByteUnit & 0xFF00){                                                            \
-            args->converter->charErrorBuffer[args->converter->charErrorBufferLength++] =        \
-                        (uint8_t) (targetByteUnit >>8);                                         \
+        إذا(موخه_Byte_Unit & 0xFF00){                                                            \
+            دلیلونه_2->converter->char_Error_بفر[دلیلونه_2->converter->char_Error_بفر_اوږدتیا++] =        \
+                        (uint8_t) (موخه_Byte_Unit >>8);                                         \
         }                                                                                       \
-        args->converter->charErrorBuffer[args->converter->charErrorBufferLength++] =            \
-                        (uint8_t) (targetByteUnit);                                             \
-        *err = U_BUFFER_OVERFLOW_ERROR;                                                         \
+        دلیلونه_2->converter->char_Error_بفر[دلیلونه_2->converter->char_Error_بفر_اوږدتیا++] =            \
+                        (uint8_t) (موخه_Byte_Unit);                                             \
+        *err = U_بفر_ډکېدنه_ERROR;                                                         \
     }                                                                                           \
-} UPRV_BLOCK_MACRO_END
+} UPRV_بلاک_MACRO_پای_ټکی
 
 /* Rules:
  *    Explicit Halant :
@@ -892,268 +892,268 @@ static const uint16_t nuktaSpecialCases[][2]={
  *    Soft Halant :
  *                      <HALANT> + <ZWJ>
  */
-static void U_CALLCONV
+ساكن فراغ U_CALLCONV
 UConverter_fromUnicode_ISCII_OFFSETS_LOGIC(
-        UConverterFromUnicodeArgs * args, UErrorCode * err) {
-    const char16_t *source = args->source;
-    const char16_t *sourceLimit = args->sourceLimit;
-    unsigned char *target = (unsigned char *) args->target;
-    unsigned char *targetLimit = (unsigned char *) args->targetLimit;
-    int32_t* offsets = args->offsets;
-    uint32_t targetByteUnit = 0x0000;
-    UChar32 sourceChar = 0x0000;
-    UChar32 tempContextFromUnicode = 0x0000;    /* For special handling of the Gurmukhi script. */
-    UConverterDataISCII *converterData;
+        UConverter_From_Unicode_دلیلونه * دلیلونه_2, UError_کوډ * err) {
+    ثابت char16_t *سرچینه = دلیلونه_2->سرچینه;
+    ثابت char16_t *سرچینه_حد = دلیلونه_2->سرچینه_حد;
+    بینښه حرف *موخه = (بینښه حرف *) دلیلونه_2->موخه;
+    بینښه حرف *موخه_حد = (بینښه حرف *) دلیلونه_2->موخه_حد;
+    int32_t* offsets = دلیلونه_2->offsets;
+    uint32_t موخه_Byte_Unit = 0x0000;
+    UChar32 سرچینه_Char = 0x0000;
+    UChar32 لنډمهاله_Context_From_Unicode = 0x0000;    /* For special handling of the Gurmukhi script. */
+    UConverter_معلومات_ISCII *converter_معلومات;
     uint16_t newDelta=0;
     uint16_t range = 0;
-    UBool deltaChanged = false;
+    UBool delta_بدل_شوی = خطأ;
 
-    if ((args->converter == nullptr) || (args->targetLimit < args->target) || (args->sourceLimit < args->source)) {
-        *err = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+    إذا ((دلیلونه_2->converter == تش_اشاره) || (دلیلونه_2->موخه_حد < دلیلونه_2->موخه) || (دلیلونه_2->سرچینه_حد < دلیلونه_2->سرچینه)) {
+        *err = U_ILLEGAL_دلیل_ERROR;
+        أرجع;
     }
     /* initialize data */
-    converterData=(UConverterDataISCII*)args->converter->extraInfo;
-    newDelta=converterData->currentDeltaFromUnicode;
+    converter_معلومات=(UConverter_معلومات_ISCII*)دلیلونه_2->converter->extraInfo;
+    newDelta=converter_معلومات->currentDeltaFromUnicode;
     range = (uint16_t)(newDelta/DELTA);
 
-    if ((sourceChar = args->converter->fromUChar32)!=0) {
-        goto getTrail;
+    إذا ((سرچینه_Char = دلیلونه_2->converter->fromUChar32)!=0) {
+        اذهب getTrail;
     }
 
     /*writing the char to the output stream */
-    while (source < sourceLimit) {
+    طالما (سرچینه < سرچینه_حد) {
         /* Write the language code following LF only if LF is not the last character. */
-        if (args->converter->fromUnicodeStatus == LF) {
-            targetByteUnit = ATR<<8;
-            targetByteUnit += (uint8_t) lookupInitialData[range].isciiLang;
-            args->converter->fromUnicodeStatus = 0x0000;
+        إذا (دلیلونه_2->converter->from_Unicode_حالت == LF) {
+            موخه_Byte_Unit = ATR<<8;
+            موخه_Byte_Unit += (uint8_t) lookup_Initial_معلومات[range].isciiLang;
+            دلیلونه_2->converter->from_Unicode_حالت = 0x0000;
             /* now append ATR and language code */
-            WRITE_TO_TARGET_FROM_U(args,offsets,source,target,targetLimit,targetByteUnit,err);
-            if (U_FAILURE(*err)) {
-                break;
+            WRITE_منزل_موخه_FROM_U(دلیلونه_2,offsets,سرچینه,موخه,موخه_حد,موخه_Byte_Unit,err);
+            إذا (U_FAILURE(*err)) {
+                اكسر;
             }
         }
         
-        sourceChar = *source++;
-        tempContextFromUnicode = converterData->contextCharFromUnicode;
+        سرچینه_Char = *سرچینه++;
+        لنډمهاله_Context_From_Unicode = converter_معلومات->contextCharFromUnicode;
         
-        targetByteUnit = missingCharMarker;
+        موخه_Byte_Unit = missingCharMarker;
         
         /*check if input is in ASCII and C0 control codes range*/
-        if (sourceChar <= ASCII_END) {
-            args->converter->fromUnicodeStatus = sourceChar;
-            WRITE_TO_TARGET_FROM_U(args,offsets,source,target,targetLimit,sourceChar,err);
-            if (U_FAILURE(*err)) {
-                break;
+        إذا (سرچینه_Char <= ASCII_پای_ټکی) {
+            دلیلونه_2->converter->from_Unicode_حالت = سرچینه_Char;
+            WRITE_منزل_موخه_FROM_U(دلیلونه_2,offsets,سرچینه,موخه,موخه_حد,سرچینه_Char,err);
+            إذا (U_FAILURE(*err)) {
+                اكسر;
             }
-            continue;
+            استمر;
         }
-        switch (sourceChar) {
-        case ZWNJ:
+        بدل (سرچینه_Char) {
+        حالة ZWNJ:
             /* contextChar has HALANT */
-            if (converterData->contextCharFromUnicode) {
-                converterData->contextCharFromUnicode = 0x00;
-                targetByteUnit = ISCII_HALANT;
-            } else {
+            إذا (converter_معلومات->contextCharFromUnicode) {
+                converter_معلومات->contextCharFromUnicode = 0x00;
+                موخه_Byte_Unit = ISCII_HALANT;
+            } وإلا {
                 /* consume ZWNJ and continue */
-                converterData->contextCharFromUnicode = 0x00;
-                continue;
+                converter_معلومات->contextCharFromUnicode = 0x00;
+                استمر;
             }
-            break;
-        case ZWJ:
+            اكسر;
+        حالة ZWJ:
             /* contextChar has HALANT */
-            if (converterData->contextCharFromUnicode) {
-                targetByteUnit = ISCII_NUKTA;
-            } else {
-                targetByteUnit =ISCII_INV;
+            إذا (converter_معلومات->contextCharFromUnicode) {
+                موخه_Byte_Unit = ISCII_NUKTA;
+            } وإلا {
+                موخه_Byte_Unit =ISCII_INV;
             }
-            converterData->contextCharFromUnicode = 0x00;
-            break;
-        default:
+            converter_معلومات->contextCharFromUnicode = 0x00;
+            اكسر;
+        افتراضي:
             /* is the sourceChar in the INDIC_RANGE? */
-            if ((uint16_t)(INDIC_BLOCK_END-sourceChar) <= INDIC_RANGE) {
+            إذا ((uint16_t)(INDIC_بلاک_پای_ټکی-سرچینه_Char) <= INDIC_RANGE) {
                 /* Danda and Double Danda are valid in Northern scripts.. since Unicode
                  * does not include these codepoints in all Northern scrips we need to
                  * filter them out
                  */
-                if (sourceChar!= DANDA && sourceChar != DOUBLE_DANDA) {
+                إذا (سرچینه_Char!= DANDA && سرچینه_Char != DOUBLE_DANDA) {
                     /* find out to which block the souceChar belongs*/
-                    range =(uint16_t)((sourceChar-INDIC_BLOCK_BEGIN)/DELTA);
+                    range =(uint16_t)((سرچینه_Char-INDIC_بلاک_BEGIN)/DELTA);
                     newDelta =(uint16_t)(range*DELTA);
 
                     /* Now are we in the same block as the previous? */
-                    if (newDelta!= converterData->currentDeltaFromUnicode || converterData->isFirstBuffer) {
-                        converterData->currentDeltaFromUnicode = newDelta;
-                        converterData->currentMaskFromUnicode = lookupInitialData[range].maskEnum;
-                        deltaChanged =true;
-                        converterData->isFirstBuffer=false;
+                    إذا (newDelta!= converter_معلومات->currentDeltaFromUnicode || converter_معلومات->is_لومړی_بفر) {
+                        converter_معلومات->currentDeltaFromUnicode = newDelta;
+                        converter_معلومات->current_ماسک_From_Unicode = lookup_Initial_معلومات[range].ماسک_Enum_2;
+                        delta_بدل_شوی =ریښتیا;
+                        converter_معلومات->is_لومړی_بفر=خطأ;
                     }
                     
-                    if (converterData->currentDeltaFromUnicode == PNJ_DELTA) { 
-                        if (sourceChar == PNJ_TIPPI) {
+                    إذا (converter_معلومات->currentDeltaFromUnicode == PNJ_DELTA) { 
+                        إذا (سرچینه_Char == PNJ_TIPPI) {
                             /* Make sure Tippi is converted to Bindi. */
-                            sourceChar = PNJ_BINDI;
-                        } else if (sourceChar == PNJ_ADHAK) {
+                            سرچینه_Char = PNJ_BINDI;
+                        } وإلا إذا (سرچینه_Char == PNJ_ADHAK) {
                             /* This is for consonant cluster handling. */
-                            converterData->contextCharFromUnicode = PNJ_ADHAK;
+                            converter_معلومات->contextCharFromUnicode = PNJ_ADHAK;
                         }
                         
                     }
                     /* Normalize all Indic codepoints to Devanagari and map them to ISCII */
                     /* now subtract the new delta from sourceChar*/
-                    sourceChar -= converterData->currentDeltaFromUnicode;
+                    سرچینه_Char -= converter_معلومات->currentDeltaFromUnicode;
                 }
 
                 /* get the target byte unit */
-                targetByteUnit=fromUnicodeTable[(uint8_t)sourceChar];
+                موخه_Byte_Unit=from_Unicode_جدول[(uint8_t)سرچینه_Char];
 
                 /* is the code point valid in current script? */
-                if ((validityTable[(uint8_t)sourceChar] & converterData->currentMaskFromUnicode)==0) {
+                إذا ((validity_جدول[(uint8_t)سرچینه_Char] & converter_معلومات->current_ماسک_From_Unicode)==0) {
                     /* Vocallic RR is assigned in ISCII Telugu and Unicode */
-                    if (converterData->currentDeltaFromUnicode!=(TELUGU_DELTA) || sourceChar!=VOCALLIC_RR) {
-                        targetByteUnit=missingCharMarker;
+                    إذا (converter_معلومات->currentDeltaFromUnicode!=(TELUGU_DELTA) || سرچینه_Char!=VOCALLIC_RR) {
+                        موخه_Byte_Unit=missingCharMarker;
                     }
                 }
 
-                if (deltaChanged) {
+                إذا (delta_بدل_شوی) {
                     /* we are in a script block which is different than
                      * previous sourceChar's script block write ATR and language codes
                      */
-                    uint32_t temp=0;
-                    temp =(uint16_t)(ATR<<8);
-                    temp += (uint16_t)((uint8_t) lookupInitialData[range].isciiLang);
+                    uint32_t لنډمهاله=0;
+                    لنډمهاله =(uint16_t)(ATR<<8);
+                    لنډمهاله += (uint16_t)((uint8_t) lookup_Initial_معلومات[range].isciiLang);
                     /* reset */
-                    deltaChanged=false;
+                    delta_بدل_شوی=خطأ;
                     /* now append ATR and language code */
-                    WRITE_TO_TARGET_FROM_U(args,offsets,source,target,targetLimit,temp,err);
-                    if (U_FAILURE(*err)) {
-                        break;
+                    WRITE_منزل_موخه_FROM_U(دلیلونه_2,offsets,سرچینه,موخه,موخه_حد,لنډمهاله,err);
+                    إذا (U_FAILURE(*err)) {
+                        اكسر;
                     }
                 }
                 
-                if (converterData->currentDeltaFromUnicode == PNJ_DELTA && (sourceChar + PNJ_DELTA) == PNJ_ADHAK) {
-                    continue;
+                إذا (converter_معلومات->currentDeltaFromUnicode == PNJ_DELTA && (سرچینه_Char + PNJ_DELTA) == PNJ_ADHAK) {
+                    استمر;
                 }
             }
             /* reset context char */
-            converterData->contextCharFromUnicode = 0x00;
-            break;
+            converter_معلومات->contextCharFromUnicode = 0x00;
+            اكسر;
         }
-        if (converterData->currentDeltaFromUnicode == PNJ_DELTA && tempContextFromUnicode == PNJ_ADHAK && isPNJConsonant((sourceChar + PNJ_DELTA))) {
+        إذا (converter_معلومات->currentDeltaFromUnicode == PNJ_DELTA && لنډمهاله_Context_From_Unicode == PNJ_ADHAK && isPNJConsonant((سرچینه_Char + PNJ_DELTA))) {
             /* If the previous codepoint is Adhak and the current codepoint is a consonant, the targetByteUnit should be C + Halant + C. */
             /* reset context char */
-            converterData->contextCharFromUnicode = 0x0000;
-            targetByteUnit = targetByteUnit << 16 | ISCII_HALANT << 8 | targetByteUnit;
+            converter_معلومات->contextCharFromUnicode = 0x0000;
+            موخه_Byte_Unit = موخه_Byte_Unit << 16 | ISCII_HALANT << 8 | موخه_Byte_Unit;
             /* write targetByteUnit to target */
-            WRITE_TO_TARGET_FROM_U(args, offsets, source, target, targetLimit, targetByteUnit,err);
-            if (U_FAILURE(*err)) {
-                break;
+            WRITE_منزل_موخه_FROM_U(دلیلونه_2, offsets, سرچینه, موخه, موخه_حد, موخه_Byte_Unit,err);
+            إذا (U_FAILURE(*err)) {
+                اكسر;
             }
-        } else if (targetByteUnit != missingCharMarker) {
-            if (targetByteUnit==ISCII_HALANT) {
-                converterData->contextCharFromUnicode = (char16_t)targetByteUnit;
+        } وإلا إذا (موخه_Byte_Unit != missingCharMarker) {
+            إذا (موخه_Byte_Unit==ISCII_HALANT) {
+                converter_معلومات->contextCharFromUnicode = (char16_t)موخه_Byte_Unit;
             }
             /* write targetByteUnit to target*/
-            WRITE_TO_TARGET_FROM_U(args,offsets,source,target,targetLimit,targetByteUnit,err);
-            if (U_FAILURE(*err)) {
-                break;
+            WRITE_منزل_موخه_FROM_U(دلیلونه_2,offsets,سرچینه,موخه,موخه_حد,موخه_Byte_Unit,err);
+            إذا (U_FAILURE(*err)) {
+                اكسر;
             }
-        } else {
+        } وإلا {
             /* oops.. the code point is unassigned */
             /*check if the char is a First surrogate*/
-            if (U16_IS_SURROGATE(sourceChar)) {
-                if (U16_IS_SURROGATE_LEAD(sourceChar)) {
+            إذا (U16_IS_SURROGATE(سرچینه_Char)) {
+                إذا (U16_IS_SURROGATE_LEAD(سرچینه_Char)) {
 getTrail:
                     /*look ahead to find the trail surrogate*/
-                    if (source < sourceLimit) {
+                    إذا (سرچینه < سرچینه_حد) {
                         /* test the following code unit */
-                        char16_t trail= (*source);
-                        if (U16_IS_TRAIL(trail)) {
-                            source++;
-                            sourceChar=U16_GET_SUPPLEMENTARY(sourceChar, trail);
-                            *err =U_INVALID_CHAR_FOUND;
+                        char16_t trail= (*سرچینه);
+                        إذا (U16_IS_TRAIL(trail)) {
+                            سرچینه++;
+                            سرچینه_Char=U16_GET_SUPPLEMENTARY(سرچینه_Char, trail);
+                            *err =U_INVALID_CHAR_وموندل;
                             /* convert this surrogate code point */
                             /* exit this condition tree */
-                        } else {
+                        } وإلا {
                             /* this is an unmatched lead code unit (1st surrogate) */
                             /* callback(illegal) */
-                            *err=U_ILLEGAL_CHAR_FOUND;
+                            *err=U_ILLEGAL_CHAR_وموندل;
                         }
-                    } else {
+                    } وإلا {
                         /* no more input */
                         *err = U_ZERO_ERROR;
                     }
-                } else {
+                } وإلا {
                     /* this is an unmatched trail code unit (2nd surrogate) */
                     /* callback(illegal) */
-                    *err=U_ILLEGAL_CHAR_FOUND;
+                    *err=U_ILLEGAL_CHAR_وموندل;
                 }
-            } else {
+            } وإلا {
                 /* callback(unassigned) for a BMP code point */
-                *err = U_INVALID_CHAR_FOUND;
+                *err = U_INVALID_CHAR_وموندل;
             }
 
-            args->converter->fromUChar32=sourceChar;
-            break;
+            دلیلونه_2->converter->fromUChar32=سرچینه_Char;
+            اكسر;
         }
     }/* end while(mySourceIndex<mySourceLength) */
 
     /*save the state and return */
-    args->source = source;
-    args->target = (char*)target;
+    دلیلونه_2->سرچینه = سرچینه;
+    دلیلونه_2->موخه = (حرف*)موخه;
 }
 
-static const uint16_t lookupTable[][2]={
+ساكن ثابت uint16_t lookup_جدول[][2]={
     { ZERO,       ZERO     },     /*DEFAULT*/
     { ZERO,       ZERO     },     /*ROMAN*/
-    { DEVANAGARI, DEV_MASK },
-    { BENGALI,    BNG_MASK },
-    { TAMIL,      TML_MASK },
-    { TELUGU,     KND_MASK },
-    { BENGALI,    BNG_MASK },
-    { ORIYA,      ORI_MASK },
-    { KANNADA,    KND_MASK },
-    { MALAYALAM,  MLM_MASK },
-    { GUJARATI,   GJR_MASK },
-    { GURMUKHI,   PNJ_MASK }
+    { DEVANAGARI, DEV_ماسک },
+    { BENGALI,    BNG_ماسک },
+    { TAMIL,      TML_ماسک },
+    { TELUGU,     KND_ماسک },
+    { BENGALI,    BNG_ماسک },
+    { ORIYA,      ORI_ماسک },
+    { KANNADA,    KND_ماسک },
+    { MALAYALAM,  MLM_ماسک },
+    { GUJARATI,   GJR_ماسک },
+    { GURMUKHI,   PNJ_ماسک }
 };
 
-#define WRITE_TO_TARGET_TO_U(args,source,target,offsets,offset,targetUniChar,delta, err) UPRV_BLOCK_MACRO_BEGIN { \
+#تعریف_کړه WRITE_منزل_موخه_منزل_U(دلیلونه_2,سرچینه,موخه,offsets,دننه_واټن,موخه_Uni_Char,delta, err) UPRV_بلاک_MACRO_BEGIN { \
     /* add offset to current Indic Block */                                              \
-    if(targetUniChar>ASCII_END &&                                                        \
-           targetUniChar != ZWJ &&                                                       \
-           targetUniChar != ZWNJ &&                                                      \
-           targetUniChar != DANDA &&                                                     \
-           targetUniChar != DOUBLE_DANDA){                                               \
+    إذا(موخه_Uni_Char>ASCII_پای_ټکی &&                                                        \
+           موخه_Uni_Char != ZWJ &&                                                       \
+           موخه_Uni_Char != ZWNJ &&                                                      \
+           موخه_Uni_Char != DANDA &&                                                     \
+           موخه_Uni_Char != DOUBLE_DANDA){                                               \
                                                                                          \
-           targetUniChar+=(uint16_t)(delta);                                             \
+           موخه_Uni_Char+=(uint16_t)(delta);                                             \
     }                                                                                    \
     /* now write the targetUniChar */                                                    \
-    if(target<args->targetLimit){                                                        \
-        *(target)++ = (char16_t)targetUniChar;                                              \
-        if(offsets){                                                                     \
-            *(offsets)++ = (int32_t)(offset);                                            \
+    إذا(موخه<دلیلونه_2->موخه_حد){                                                        \
+        *(موخه)++ = (char16_t)موخه_Uni_Char;                                              \
+        إذا(offsets){                                                                     \
+            *(offsets)++ = (int32_t)(دننه_واټن);                                            \
         }                                                                                \
-    }else{                                                                               \
-        args->converter->UCharErrorBuffer[args->converter->UCharErrorBufferLength++] =   \
-            (char16_t)targetUniChar;                                                        \
-        *err = U_BUFFER_OVERFLOW_ERROR;                                                  \
+    }وإلا{                                                                               \
+        دلیلونه_2->converter->UChar_Error_بفر[دلیلونه_2->converter->UChar_Error_بفر_اوږدتیا++] =   \
+            (char16_t)موخه_Uni_Char;                                                        \
+        *err = U_بفر_ډکېدنه_ERROR;                                                  \
     }                                                                                    \
-} UPRV_BLOCK_MACRO_END
+} UPRV_بلاک_MACRO_پای_ټکی
 
-#define GET_MAPPING(sourceChar,targetUniChar,data) UPRV_BLOCK_MACRO_BEGIN {              \
-    targetUniChar = toUnicodeTable[(sourceChar)] ;                                       \
+#تعریف_کړه GET_MAPPING(سرچینه_Char,موخه_Uni_Char,معلومات) UPRV_بلاک_MACRO_BEGIN {              \
+    موخه_Uni_Char = منزل_Unicode_جدول[(سرچینه_Char)] ;                                       \
     /* is the code point valid in current script? */                                     \
-    if(sourceChar> ASCII_END &&                                                          \
-            (validityTable[(targetUniChar & 0x7F)] & data->currentMaskToUnicode)==0){    \
+    إذا(سرچینه_Char> ASCII_پای_ټکی &&                                                          \
+            (validity_جدول[(موخه_Uni_Char & 0x7F)] & معلومات->current_ماسک_منزل_Unicode)==0){    \
         /* Vocallic RR is assigned in ISCII Telugu and Unicode */                         \
-        if(data->currentDeltaToUnicode!=(TELUGU_DELTA) ||                                \
-                    targetUniChar!=VOCALLIC_RR){                                         \
-            targetUniChar=missingCharMarker;                                             \
+        إذا(معلومات->current_Delta_منزل_Unicode!=(TELUGU_DELTA) ||                                \
+                    موخه_Uni_Char!=VOCALLIC_RR){                                         \
+            موخه_Uni_Char=missingCharMarker;                                             \
         }                                                                                \
     }                                                                                    \
-} UPRV_BLOCK_MACRO_END
+} UPRV_بلاک_MACRO_پای_ټکی
 
 /***********
  *  Rules for ISCII to Unicode converter
@@ -1176,443 +1176,443 @@ static const uint16_t lookupTable[][2]={
  *
  */
 
-static void U_CALLCONV
-UConverter_toUnicode_ISCII_OFFSETS_LOGIC(UConverterToUnicodeArgs *args, UErrorCode* err) {
-    const char *source = ( char *) args->source;
-    char16_t *target = args->target;
-    const char *sourceLimit = args->sourceLimit;
-    const char16_t* targetLimit = args->targetLimit;
-    uint32_t targetUniChar = 0x0000;
-    uint8_t sourceChar = 0x0000;
-    UConverterDataISCII* data;
-    UChar32* toUnicodeStatus=nullptr;
-    UChar32 tempTargetUniChar = 0x0000;
-    char16_t* contextCharToUnicode= nullptr;
-    UBool found;
-    int i; 
-    int offset = 0;
+ساكن فراغ U_CALLCONV
+UConverter_منزل_Unicode_ISCII_OFFSETS_LOGIC(UConverter_منزل_Unicode_دلیلونه *دلیلونه_2, UError_کوډ* err) {
+    ثابت حرف *سرچینه = ( حرف *) دلیلونه_2->سرچینه;
+    char16_t *موخه = دلیلونه_2->موخه;
+    ثابت حرف *سرچینه_حد = دلیلونه_2->سرچینه_حد;
+    ثابت char16_t* موخه_حد = دلیلونه_2->موخه_حد;
+    uint32_t موخه_Uni_Char = 0x0000;
+    uint8_t سرچینه_Char = 0x0000;
+    UConverter_معلومات_ISCII* معلومات;
+    UChar32* منزل_Unicode_حالت=تش_اشاره;
+    UChar32 لنډمهاله_موخه_Uni_Char = 0x0000;
+    char16_t* context_Char_منزل_Unicode= تش_اشاره;
+    UBool وموندل;
+    صحيح i; 
+    صحيح دننه_واټن = 0;
 
-    if ((args->converter == nullptr) || (target < args->target) || (source < args->source)) {
-        *err = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+    إذا ((دلیلونه_2->converter == تش_اشاره) || (موخه < دلیلونه_2->موخه) || (سرچینه < دلیلونه_2->سرچینه)) {
+        *err = U_ILLEGAL_دلیل_ERROR;
+        أرجع;
     }
 
-    data = (UConverterDataISCII*)(args->converter->extraInfo);
-    contextCharToUnicode = &data->contextCharToUnicode; /* contains previous ISCII codepoint visited */
-    toUnicodeStatus = (UChar32*)&args->converter->toUnicodeStatus;/* contains the mapping to Unicode of the above codepoint*/
+    معلومات = (UConverter_معلومات_ISCII*)(دلیلونه_2->converter->extraInfo);
+    context_Char_منزل_Unicode = &معلومات->context_Char_منزل_Unicode; /* contains previous ISCII codepoint visited */
+    منزل_Unicode_حالت = (UChar32*)&دلیلونه_2->converter->منزل_Unicode_حالت;/* contains the mapping to Unicode of the above codepoint*/
 
-    while (U_SUCCESS(*err) && source<sourceLimit) {
+    طالما (U_SUCCESS(*err) && سرچینه<سرچینه_حد) {
 
-        targetUniChar = missingCharMarker;
+        موخه_Uni_Char = missingCharMarker;
 
-        if (target < targetLimit) {
-            sourceChar = (unsigned char)*(source)++;
+        إذا (موخه < موخه_حد) {
+            سرچینه_Char = (بینښه حرف)*(سرچینه)++;
 
             /* look at the post-context perform special processing */
-            if (*contextCharToUnicode==ATR) {
+            إذا (*context_Char_منزل_Unicode==ATR) {
 
                 /* If we have ATR in *contextCharToUnicode then we need to change our
                  * state to the Indic Script specified by sourceChar
                  */
 
                 /* check if the sourceChar is supported script range*/
-                if ((uint8_t)(PNJ-sourceChar)<=PNJ-DEV) {
-                    data->currentDeltaToUnicode = (uint16_t)(lookupTable[sourceChar & 0x0F][0] * DELTA);
-                    data->currentMaskToUnicode = (MaskEnum)lookupTable[sourceChar & 0x0F][1];
-                } else if (sourceChar==DEF) {
+                إذا ((uint8_t)(PNJ-سرچینه_Char)<=PNJ-DEV) {
+                    معلومات->current_Delta_منزل_Unicode = (uint16_t)(lookup_جدول[سرچینه_Char & 0x0F][0] * DELTA);
+                    معلومات->current_ماسک_منزل_Unicode = (ماسک_Enum)lookup_جدول[سرچینه_Char & 0x0F][1];
+                } وإلا إذا (سرچینه_Char==DEF) {
                     /* switch back to default */
-                    data->currentDeltaToUnicode = data->defDeltaToUnicode;
-                    data->currentMaskToUnicode = data->defMaskToUnicode;
-                } else {
-                    if ((sourceChar >= 0x21 && sourceChar <= 0x3F)) {
+                    معلومات->current_Delta_منزل_Unicode = معلومات->def_Delta_منزل_Unicode;
+                    معلومات->current_ماسک_منزل_Unicode = معلومات->def_ماسک_منزل_Unicode;
+                } وإلا {
+                    إذا ((سرچینه_Char >= 0x21 && سرچینه_Char <= 0x3F)) {
                         /* these are display codes consume and continue */
-                    } else {
-                        *err =U_ILLEGAL_CHAR_FOUND;
+                    } وإلا {
+                        *err =U_ILLEGAL_CHAR_وموندل;
                         /* reset */
-                        *contextCharToUnicode=NO_CHAR_MARKER;
-                        goto CALLBACK;
+                        *context_Char_منزل_Unicode=NO_CHAR_MARKER;
+                        اذهب CALLBACK;
                     }
                 }
 
                 /* reset */
-                *contextCharToUnicode=NO_CHAR_MARKER;
+                *context_Char_منزل_Unicode=NO_CHAR_MARKER;
 
-                continue;
+                استمر;
 
-            } else if (*contextCharToUnicode==EXT) {
+            } وإلا إذا (*context_Char_منزل_Unicode==EXT) {
                 /* check if sourceChar is in 0xA1-0xEE range */
-                if ((uint8_t) (EXT_RANGE_END - sourceChar) <= (EXT_RANGE_END - EXT_RANGE_BEGIN)) {
+                إذا ((uint8_t) (EXT_RANGE_پای_ټکی - سرچینه_Char) <= (EXT_RANGE_پای_ټکی - EXT_RANGE_BEGIN)) {
                     /* We currently support only Anudatta and Devanagari abbreviation sign */
-                    if (sourceChar==0xBF || sourceChar == 0xB8) {
-                        targetUniChar = (sourceChar==0xBF) ? DEV_ABBR_SIGN : DEV_ANUDATTA;
+                    إذا (سرچینه_Char==0xBF || سرچینه_Char == 0xB8) {
+                        موخه_Uni_Char = (سرچینه_Char==0xBF) ? DEV_ABBR_SIGN : DEV_ANUDATTA;
                         
                         /* find out if the mapping is valid in this state */
-                        if (validityTable[(uint8_t)targetUniChar] & data->currentMaskToUnicode) {
-                            *contextCharToUnicode= NO_CHAR_MARKER;
+                        إذا (validity_جدول[(uint8_t)موخه_Uni_Char] & معلومات->current_ماسک_منزل_Unicode) {
+                            *context_Char_منزل_Unicode= NO_CHAR_MARKER;
 
                             /* Write the previous toUnicodeStatus, this was delayed to handle consonant clustering for Gurmukhi script. */
-                            if (data->prevToUnicodeStatus) {
-                                WRITE_TO_TARGET_TO_U(args,source,target,args->offsets,(source-args->source -1),data->prevToUnicodeStatus,0,err);
-                                data->prevToUnicodeStatus = 0x0000;
+                            إذا (معلومات->prev_منزل_Unicode_حالت) {
+                                WRITE_منزل_موخه_منزل_U(دلیلونه_2,سرچینه,موخه,دلیلونه_2->offsets,(سرچینه-دلیلونه_2->سرچینه -1),معلومات->prev_منزل_Unicode_حالت,0,err);
+                                معلومات->prev_منزل_Unicode_حالت = 0x0000;
                             }
                             /* write to target */
-                            WRITE_TO_TARGET_TO_U(args,source,target,args->offsets,(source-args->source -2),targetUniChar,data->currentDeltaToUnicode,err);
+                            WRITE_منزل_موخه_منزل_U(دلیلونه_2,سرچینه,موخه,دلیلونه_2->offsets,(سرچینه-دلیلونه_2->سرچینه -2),موخه_Uni_Char,معلومات->current_Delta_منزل_Unicode,err);
 
-                            continue;
+                            استمر;
                         }
                     }
                     /* byte unit is unassigned */
-                    targetUniChar = missingCharMarker;
-                    *err= U_INVALID_CHAR_FOUND;
-                } else {
+                    موخه_Uni_Char = missingCharMarker;
+                    *err= U_INVALID_CHAR_وموندل;
+                } وإلا {
                     /* only 0xA1 - 0xEE are legal after EXT char */
-                    *contextCharToUnicode= NO_CHAR_MARKER;
-                    *err = U_ILLEGAL_CHAR_FOUND;
+                    *context_Char_منزل_Unicode= NO_CHAR_MARKER;
+                    *err = U_ILLEGAL_CHAR_وموندل;
                 }
-                goto CALLBACK;
-            } else if (*contextCharToUnicode==ISCII_INV) {
-                if (sourceChar==ISCII_HALANT) {
-                    targetUniChar = 0x0020; /* replace with space according to Indic FAQ */
-                } else {
-                    targetUniChar = ZWJ;
+                اذهب CALLBACK;
+            } وإلا إذا (*context_Char_منزل_Unicode==ISCII_INV) {
+                إذا (سرچینه_Char==ISCII_HALANT) {
+                    موخه_Uni_Char = 0x0020; /* replace with space according to Indic FAQ */
+                } وإلا {
+                    موخه_Uni_Char = ZWJ;
                 }
 
                 /* Write the previous toUnicodeStatus, this was delayed to handle consonant clustering for Gurmukhi script. */
-                if (data->prevToUnicodeStatus) {
-                    WRITE_TO_TARGET_TO_U(args,source,target,args->offsets,(source-args->source -1),data->prevToUnicodeStatus,0,err);
-                    data->prevToUnicodeStatus = 0x0000;
+                إذا (معلومات->prev_منزل_Unicode_حالت) {
+                    WRITE_منزل_موخه_منزل_U(دلیلونه_2,سرچینه,موخه,دلیلونه_2->offsets,(سرچینه-دلیلونه_2->سرچینه -1),معلومات->prev_منزل_Unicode_حالت,0,err);
+                    معلومات->prev_منزل_Unicode_حالت = 0x0000;
                 }
                 /* write to target */
-                WRITE_TO_TARGET_TO_U(args,source,target,args->offsets,(source-args->source -2),targetUniChar,data->currentDeltaToUnicode,err);
+                WRITE_منزل_موخه_منزل_U(دلیلونه_2,سرچینه,موخه,دلیلونه_2->offsets,(سرچینه-دلیلونه_2->سرچینه -2),موخه_Uni_Char,معلومات->current_Delta_منزل_Unicode,err);
                 /* reset */
-                *contextCharToUnicode=NO_CHAR_MARKER;
+                *context_Char_منزل_Unicode=NO_CHAR_MARKER;
             }
 
             /* look at the pre-context and perform special processing */
-            switch (sourceChar) {
-            case ISCII_INV:
-            case EXT:
-            case ATR:
-                *contextCharToUnicode = (char16_t)sourceChar;
+            بدل (سرچینه_Char) {
+            حالة ISCII_INV:
+            حالة EXT:
+            حالة ATR:
+                *context_Char_منزل_Unicode = (char16_t)سرچینه_Char;
 
-                if (*toUnicodeStatus != missingCharMarker) {
+                إذا (*منزل_Unicode_حالت != missingCharMarker) {
                     /* Write the previous toUnicodeStatus, this was delayed to handle consonant clustering for Gurmukhi script. */
-                    if (data->prevToUnicodeStatus) {
-                        WRITE_TO_TARGET_TO_U(args,source,target,args->offsets,(source-args->source -1),data->prevToUnicodeStatus,0,err);
-                        data->prevToUnicodeStatus = 0x0000;
+                    إذا (معلومات->prev_منزل_Unicode_حالت) {
+                        WRITE_منزل_موخه_منزل_U(دلیلونه_2,سرچینه,موخه,دلیلونه_2->offsets,(سرچینه-دلیلونه_2->سرچینه -1),معلومات->prev_منزل_Unicode_حالت,0,err);
+                        معلومات->prev_منزل_Unicode_حالت = 0x0000;
                     }
-                    WRITE_TO_TARGET_TO_U(args,source,target,args->offsets,(source-args->source -2),*toUnicodeStatus,data->currentDeltaToUnicode,err);
-                    *toUnicodeStatus = missingCharMarker;
+                    WRITE_منزل_موخه_منزل_U(دلیلونه_2,سرچینه,موخه,دلیلونه_2->offsets,(سرچینه-دلیلونه_2->سرچینه -2),*منزل_Unicode_حالت,معلومات->current_Delta_منزل_Unicode,err);
+                    *منزل_Unicode_حالت = missingCharMarker;
                 }
-                continue;
-            case ISCII_DANDA:
+                استمر;
+            حالة ISCII_DANDA:
                 /* handle double danda*/
-                if (*contextCharToUnicode== ISCII_DANDA) {
-                    targetUniChar = DOUBLE_DANDA;
+                إذا (*context_Char_منزل_Unicode== ISCII_DANDA) {
+                    موخه_Uni_Char = DOUBLE_DANDA;
                     /* clear the context */
-                    *contextCharToUnicode = NO_CHAR_MARKER;
-                    *toUnicodeStatus = missingCharMarker;
-                } else {
-                    GET_MAPPING(sourceChar,targetUniChar,data);
-                    *contextCharToUnicode = sourceChar;
+                    *context_Char_منزل_Unicode = NO_CHAR_MARKER;
+                    *منزل_Unicode_حالت = missingCharMarker;
+                } وإلا {
+                    GET_MAPPING(سرچینه_Char,موخه_Uni_Char,معلومات);
+                    *context_Char_منزل_Unicode = سرچینه_Char;
                 }
-                break;
-            case ISCII_HALANT:
+                اكسر;
+            حالة ISCII_HALANT:
                 /* handle explicit halant */
-                if (*contextCharToUnicode == ISCII_HALANT) {
-                    targetUniChar = ZWNJ;
+                إذا (*context_Char_منزل_Unicode == ISCII_HALANT) {
+                    موخه_Uni_Char = ZWNJ;
                     /* clear the context */
-                    *contextCharToUnicode = NO_CHAR_MARKER;
-                } else {
-                    GET_MAPPING(sourceChar,targetUniChar,data);
-                    *contextCharToUnicode = sourceChar;
+                    *context_Char_منزل_Unicode = NO_CHAR_MARKER;
+                } وإلا {
+                    GET_MAPPING(سرچینه_Char,موخه_Uni_Char,معلومات);
+                    *context_Char_منزل_Unicode = سرچینه_Char;
                 }
-                break;
-            case 0x0A:
-            case 0x0D:
-                data->resetToDefaultToUnicode = true;
-                GET_MAPPING(sourceChar,targetUniChar,data)
+                اكسر;
+            حالة 0x0A:
+            حالة 0x0D:
+                معلومات->reset_منزل_Default_منزل_Unicode = ریښتیا;
+                GET_MAPPING(سرچینه_Char,موخه_Uni_Char,معلومات)
                 ;
-                *contextCharToUnicode = sourceChar;
-                break;
+                *context_Char_منزل_Unicode = سرچینه_Char;
+                اكسر;
 
-            case ISCII_VOWEL_SIGN_E:
+            حالة ISCII_VOWEL_SIGN_E:
                 i=1;
-                found=false;
-                for (; i<vowelSignESpecialCases[0][0]; i++) {
+                وموندل=خطأ;
+                لكل (; i<vowelSignESpecialCases[0][0]; i++) {
                     U_ASSERT(i<UPRV_LENGTHOF(vowelSignESpecialCases));
-                    if (vowelSignESpecialCases[i][0]==(uint8_t)*contextCharToUnicode) {
-                        targetUniChar=vowelSignESpecialCases[i][1];
-                        found=true;
-                        break;
+                    إذا (vowelSignESpecialCases[i][0]==(uint8_t)*context_Char_منزل_Unicode) {
+                        موخه_Uni_Char=vowelSignESpecialCases[i][1];
+                        وموندل=ریښتیا;
+                        اكسر;
                     }
                 }
-                if (found) {
+                إذا (وموندل) {
                     /* find out if the mapping is valid in this state */
-                    if (validityTable[(uint8_t)targetUniChar] & data->currentMaskToUnicode) {
+                    إذا (validity_جدول[(uint8_t)موخه_Uni_Char] & معلومات->current_ماسک_منزل_Unicode) {
                         /*targetUniChar += data->currentDeltaToUnicode ;*/
-                        *contextCharToUnicode= NO_CHAR_MARKER;
-                        *toUnicodeStatus = missingCharMarker;
-                        break;
+                        *context_Char_منزل_Unicode= NO_CHAR_MARKER;
+                        *منزل_Unicode_حالت = missingCharMarker;
+                        اكسر;
                     }
                 }
-                GET_MAPPING(sourceChar,targetUniChar,data);
-                *contextCharToUnicode = sourceChar;
-                break;
+                GET_MAPPING(سرچینه_Char,موخه_Uni_Char,معلومات);
+                *context_Char_منزل_Unicode = سرچینه_Char;
+                اكسر;
 
-            case ISCII_NUKTA:
+            حالة ISCII_NUKTA:
                 /* handle soft halant */
-                if (*contextCharToUnicode == ISCII_HALANT) {
-                    targetUniChar = ZWJ;
+                إذا (*context_Char_منزل_Unicode == ISCII_HALANT) {
+                    موخه_Uni_Char = ZWJ;
                     /* clear the context */
-                    *contextCharToUnicode = NO_CHAR_MARKER;
-                    break;
-                } else if (data->currentDeltaToUnicode == PNJ_DELTA && data->contextCharToUnicode == 0xc0) {
+                    *context_Char_منزل_Unicode = NO_CHAR_MARKER;
+                    اكسر;
+                } وإلا إذا (معلومات->current_Delta_منزل_Unicode == PNJ_DELTA && معلومات->context_Char_منزل_Unicode == 0xc0) {
                     /* Write the previous toUnicodeStatus, this was delayed to handle consonant clustering for Gurmukhi script. */
-                    if (data->prevToUnicodeStatus) {
-                        WRITE_TO_TARGET_TO_U(args,source,target,args->offsets,(source-args->source -1),data->prevToUnicodeStatus,0,err);
-                        data->prevToUnicodeStatus = 0x0000;
+                    إذا (معلومات->prev_منزل_Unicode_حالت) {
+                        WRITE_منزل_موخه_منزل_U(دلیلونه_2,سرچینه,موخه,دلیلونه_2->offsets,(سرچینه-دلیلونه_2->سرچینه -1),معلومات->prev_منزل_Unicode_حالت,0,err);
+                        معلومات->prev_منزل_Unicode_حالت = 0x0000;
                     }
                     /* We got here because ISCII_NUKTA was preceded by 0xc0 and we are converting Gurmukhi.
                      * In that case we must convert (0xc0 0xe9) to (\u0a5c\u0a4d\u0a39).
                      */
-                    targetUniChar = PNJ_RRA;
-                    WRITE_TO_TARGET_TO_U(args, source, target, args->offsets, (source-args->source)-2, targetUniChar, 0, err);
-                    if (U_SUCCESS(*err)) {
-                        targetUniChar = PNJ_SIGN_VIRAMA;
-                        WRITE_TO_TARGET_TO_U(args, source, target, args->offsets, (source-args->source)-2, targetUniChar, 0, err);
-                        if (U_SUCCESS(*err)) {
-                            targetUniChar = PNJ_HA;
-                            WRITE_TO_TARGET_TO_U(args, source, target, args->offsets, (source-args->source)-2, targetUniChar, 0, err);
-                        } else {
-                            args->converter->UCharErrorBuffer[args->converter->UCharErrorBufferLength++]= PNJ_HA;
+                    موخه_Uni_Char = PNJ_RRA;
+                    WRITE_منزل_موخه_منزل_U(دلیلونه_2, سرچینه, موخه, دلیلونه_2->offsets, (سرچینه-دلیلونه_2->سرچینه)-2, موخه_Uni_Char, 0, err);
+                    إذا (U_SUCCESS(*err)) {
+                        موخه_Uni_Char = PNJ_SIGN_VIRAMA;
+                        WRITE_منزل_موخه_منزل_U(دلیلونه_2, سرچینه, موخه, دلیلونه_2->offsets, (سرچینه-دلیلونه_2->سرچینه)-2, موخه_Uni_Char, 0, err);
+                        إذا (U_SUCCESS(*err)) {
+                            موخه_Uni_Char = PNJ_HA;
+                            WRITE_منزل_موخه_منزل_U(دلیلونه_2, سرچینه, موخه, دلیلونه_2->offsets, (سرچینه-دلیلونه_2->سرچینه)-2, موخه_Uni_Char, 0, err);
+                        } وإلا {
+                            دلیلونه_2->converter->UChar_Error_بفر[دلیلونه_2->converter->UChar_Error_بفر_اوږدتیا++]= PNJ_HA;
                         }
-                    } else {
-                        args->converter->UCharErrorBuffer[args->converter->UCharErrorBufferLength++]= PNJ_SIGN_VIRAMA;
-                        args->converter->UCharErrorBuffer[args->converter->UCharErrorBufferLength++]= PNJ_HA;
+                    } وإلا {
+                        دلیلونه_2->converter->UChar_Error_بفر[دلیلونه_2->converter->UChar_Error_بفر_اوږدتیا++]= PNJ_SIGN_VIRAMA;
+                        دلیلونه_2->converter->UChar_Error_بفر[دلیلونه_2->converter->UChar_Error_بفر_اوږدتیا++]= PNJ_HA;
                     }
-                    *toUnicodeStatus = missingCharMarker;
-                    data->contextCharToUnicode = NO_CHAR_MARKER;
-                    continue;
-                } else {
+                    *منزل_Unicode_حالت = missingCharMarker;
+                    معلومات->context_Char_منزل_Unicode = NO_CHAR_MARKER;
+                    استمر;
+                } وإلا {
                     /* try to handle <CHAR> + ISCII_NUKTA special mappings */
                     i=1;
-                    found =false;
-                    for (; i<nuktaSpecialCases[0][0]; i++) {
-                        if (nuktaSpecialCases[i][0]==(uint8_t)
-                                *contextCharToUnicode) {
-                            targetUniChar=nuktaSpecialCases[i][1];
-                            found =true;
-                            break;
+                    وموندل =خطأ;
+                    لكل (; i<nuktaSpecialCases[0][0]; i++) {
+                        إذا (nuktaSpecialCases[i][0]==(uint8_t)
+                                *context_Char_منزل_Unicode) {
+                            موخه_Uni_Char=nuktaSpecialCases[i][1];
+                            وموندل =ریښتیا;
+                            اكسر;
                         }
                     }
-                    if (found) {
+                    إذا (وموندل) {
                         /* find out if the mapping is valid in this state */
-                        if (validityTable[(uint8_t)targetUniChar] & data->currentMaskToUnicode) {
+                        إذا (validity_جدول[(uint8_t)موخه_Uni_Char] & معلومات->current_ماسک_منزل_Unicode) {
                             /*targetUniChar += data->currentDeltaToUnicode ;*/
-                            *contextCharToUnicode= NO_CHAR_MARKER;
-                            *toUnicodeStatus = missingCharMarker;
-                            if (data->currentDeltaToUnicode == PNJ_DELTA) {
+                            *context_Char_منزل_Unicode= NO_CHAR_MARKER;
+                            *منزل_Unicode_حالت = missingCharMarker;
+                            إذا (معلومات->current_Delta_منزل_Unicode == PNJ_DELTA) {
                                 /* Write the previous toUnicodeStatus, this was delayed to handle consonant clustering for Gurmukhi script. */
-                                if (data->prevToUnicodeStatus) {
-                                    WRITE_TO_TARGET_TO_U(args,source,target,args->offsets,(source-args->source -1),data->prevToUnicodeStatus,0,err);
-                                    data->prevToUnicodeStatus = 0x0000;
+                                إذا (معلومات->prev_منزل_Unicode_حالت) {
+                                    WRITE_منزل_موخه_منزل_U(دلیلونه_2,سرچینه,موخه,دلیلونه_2->offsets,(سرچینه-دلیلونه_2->سرچینه -1),معلومات->prev_منزل_Unicode_حالت,0,err);
+                                    معلومات->prev_منزل_Unicode_حالت = 0x0000;
                                 }
-                                WRITE_TO_TARGET_TO_U(args,source,target,args->offsets,(source-args->source -2),targetUniChar,data->currentDeltaToUnicode,err);
-                                continue;
+                                WRITE_منزل_موخه_منزل_U(دلیلونه_2,سرچینه,موخه,دلیلونه_2->offsets,(سرچینه-دلیلونه_2->سرچینه -2),موخه_Uni_Char,معلومات->current_Delta_منزل_Unicode,err);
+                                استمر;
                             }
-                            break;
+                            اكسر;
                         }
                         /* else fall through to default */
                     }
                     /* else fall through to default */
                     U_FALLTHROUGH;
                 }
-            default:GET_MAPPING(sourceChar,targetUniChar,data)
+            افتراضي:GET_MAPPING(سرچینه_Char,موخه_Uni_Char,معلومات)
                 ;
-                *contextCharToUnicode = sourceChar;
-                break;
+                *context_Char_منزل_Unicode = سرچینه_Char;
+                اكسر;
             }
 
-            if (*toUnicodeStatus != missingCharMarker) {
+            إذا (*منزل_Unicode_حالت != missingCharMarker) {
                 /* Check to make sure that consonant clusters are handled correct for Gurmukhi script. */
-                if (data->currentDeltaToUnicode == PNJ_DELTA && data->prevToUnicodeStatus != 0 && isPNJConsonant(data->prevToUnicodeStatus) &&
-                        (*toUnicodeStatus + PNJ_DELTA) == PNJ_SIGN_VIRAMA && ((UChar32)(targetUniChar + PNJ_DELTA) == data->prevToUnicodeStatus)) {
+                إذا (معلومات->current_Delta_منزل_Unicode == PNJ_DELTA && معلومات->prev_منزل_Unicode_حالت != 0 && isPNJConsonant(معلومات->prev_منزل_Unicode_حالت) &&
+                        (*منزل_Unicode_حالت + PNJ_DELTA) == PNJ_SIGN_VIRAMA && ((UChar32)(موخه_Uni_Char + PNJ_DELTA) == معلومات->prev_منزل_Unicode_حالت)) {
                     /* Consonant clusters C + HALANT + C should be encoded as ADHAK + C */
-                    offset = (int)(source-args->source - 3);
-                    tempTargetUniChar = PNJ_ADHAK; /* This is necessary to avoid some compiler warnings. */
-                    WRITE_TO_TARGET_TO_U(args,source,target,args->offsets,offset,tempTargetUniChar,0,err);
-                    WRITE_TO_TARGET_TO_U(args,source,target,args->offsets,offset,data->prevToUnicodeStatus,0,err);
-                    data->prevToUnicodeStatus = 0x0000; /* reset the previous unicode code point */
-                    *toUnicodeStatus = missingCharMarker;
-                    continue;
-                } else {
+                    دننه_واټن = (صحيح)(سرچینه-دلیلونه_2->سرچینه - 3);
+                    لنډمهاله_موخه_Uni_Char = PNJ_ADHAK; /* This is necessary to avoid some compiler warnings. */
+                    WRITE_منزل_موخه_منزل_U(دلیلونه_2,سرچینه,موخه,دلیلونه_2->offsets,دننه_واټن,لنډمهاله_موخه_Uni_Char,0,err);
+                    WRITE_منزل_موخه_منزل_U(دلیلونه_2,سرچینه,موخه,دلیلونه_2->offsets,دننه_واټن,معلومات->prev_منزل_Unicode_حالت,0,err);
+                    معلومات->prev_منزل_Unicode_حالت = 0x0000; /* reset the previous unicode code point */
+                    *منزل_Unicode_حالت = missingCharMarker;
+                    استمر;
+                } وإلا {
                     /* Write the previous toUnicodeStatus, this was delayed to handle consonant clustering for Gurmukhi script. */
-                    if (data->prevToUnicodeStatus) {
-                        WRITE_TO_TARGET_TO_U(args,source,target,args->offsets,(source-args->source -1),data->prevToUnicodeStatus,0,err);
-                        data->prevToUnicodeStatus = 0x0000;
+                    إذا (معلومات->prev_منزل_Unicode_حالت) {
+                        WRITE_منزل_موخه_منزل_U(دلیلونه_2,سرچینه,موخه,دلیلونه_2->offsets,(سرچینه-دلیلونه_2->سرچینه -1),معلومات->prev_منزل_Unicode_حالت,0,err);
+                        معلومات->prev_منزل_Unicode_حالت = 0x0000;
                     }
                     /* Check to make sure that Bindi and Tippi are handled correctly for Gurmukhi script. 
                      * If 0xA2 is preceded by a codepoint in the PNJ_BINDI_TIPPI_SET then the target codepoint should be Tippi instead of Bindi.
                      */
-                    if (data->currentDeltaToUnicode == PNJ_DELTA && (targetUniChar + PNJ_DELTA) == PNJ_BINDI && isPNJBindiTippi((*toUnicodeStatus + PNJ_DELTA))) {
-                        targetUniChar = PNJ_TIPPI - PNJ_DELTA;
-                        WRITE_TO_TARGET_TO_U(args,source,target,args->offsets,(source-args->source -2),*toUnicodeStatus,PNJ_DELTA,err);
-                    } else if (data->currentDeltaToUnicode == PNJ_DELTA && (targetUniChar + PNJ_DELTA) == PNJ_SIGN_VIRAMA && isPNJConsonant((*toUnicodeStatus + PNJ_DELTA))) {
+                    إذا (معلومات->current_Delta_منزل_Unicode == PNJ_DELTA && (موخه_Uni_Char + PNJ_DELTA) == PNJ_BINDI && isPNJBindiTippi((*منزل_Unicode_حالت + PNJ_DELTA))) {
+                        موخه_Uni_Char = PNJ_TIPPI - PNJ_DELTA;
+                        WRITE_منزل_موخه_منزل_U(دلیلونه_2,سرچینه,موخه,دلیلونه_2->offsets,(سرچینه-دلیلونه_2->سرچینه -2),*منزل_Unicode_حالت,PNJ_DELTA,err);
+                    } وإلا إذا (معلومات->current_Delta_منزل_Unicode == PNJ_DELTA && (موخه_Uni_Char + PNJ_DELTA) == PNJ_SIGN_VIRAMA && isPNJConsonant((*منزل_Unicode_حالت + PNJ_DELTA))) {
                         /* Store the current toUnicodeStatus code point for later handling of consonant cluster in Gurmukhi. */
-                        data->prevToUnicodeStatus = *toUnicodeStatus + PNJ_DELTA;
-                    } else {
+                        معلومات->prev_منزل_Unicode_حالت = *منزل_Unicode_حالت + PNJ_DELTA;
+                    } وإلا {
                         /* write the previously mapped codepoint */
-                        WRITE_TO_TARGET_TO_U(args,source,target,args->offsets,(source-args->source -2),*toUnicodeStatus,data->currentDeltaToUnicode,err);
+                        WRITE_منزل_موخه_منزل_U(دلیلونه_2,سرچینه,موخه,دلیلونه_2->offsets,(سرچینه-دلیلونه_2->سرچینه -2),*منزل_Unicode_حالت,معلومات->current_Delta_منزل_Unicode,err);
                     }
                 }
-                *toUnicodeStatus = missingCharMarker;
+                *منزل_Unicode_حالت = missingCharMarker;
             }
 
-            if (targetUniChar != missingCharMarker) {
+            إذا (موخه_Uni_Char != missingCharMarker) {
                 /* now save the targetUniChar for delayed write */
-                *toUnicodeStatus = (char16_t) targetUniChar;
-                if (data->resetToDefaultToUnicode) {
-                    data->currentDeltaToUnicode = data->defDeltaToUnicode;
-                    data->currentMaskToUnicode = data->defMaskToUnicode;
-                    data->resetToDefaultToUnicode=false;
+                *منزل_Unicode_حالت = (char16_t) موخه_Uni_Char;
+                إذا (معلومات->reset_منزل_Default_منزل_Unicode) {
+                    معلومات->current_Delta_منزل_Unicode = معلومات->def_Delta_منزل_Unicode;
+                    معلومات->current_ماسک_منزل_Unicode = معلومات->def_ماسک_منزل_Unicode;
+                    معلومات->reset_منزل_Default_منزل_Unicode=خطأ;
                 }
-            } else {
+            } وإلا {
 
                 /* we reach here only if targetUniChar == missingCharMarker
                  * so assign codes to reason and err
                  */
-                *err = U_INVALID_CHAR_FOUND;
+                *err = U_INVALID_CHAR_وموندل;
 CALLBACK:
-                args->converter->toUBytes[0] = sourceChar;
-                args->converter->toULength = 1;
-                break;
+                دلیلونه_2->converter->منزل_UBytes[0] = سرچینه_Char;
+                دلیلونه_2->converter->منزل_ULength = 1;
+                اكسر;
             }
 
-        } else {
-            *err =U_BUFFER_OVERFLOW_ERROR;
-            break;
+        } وإلا {
+            *err =U_بفر_ډکېدنه_ERROR;
+            اكسر;
         }
     }
 
-    if (U_SUCCESS(*err) && args->flush && source == sourceLimit) {
+    إذا (U_SUCCESS(*err) && دلیلونه_2->flush && سرچینه == سرچینه_حد) {
         /* end of the input stream */
-        UConverter *cnv = args->converter;
+        UConverter *cnv = دلیلونه_2->converter;
 
-        if (*contextCharToUnicode==ATR || *contextCharToUnicode==EXT || *contextCharToUnicode==ISCII_INV) {
+        إذا (*context_Char_منزل_Unicode==ATR || *context_Char_منزل_Unicode==EXT || *context_Char_منزل_Unicode==ISCII_INV) {
             /* set toUBytes[] */
-            cnv->toUBytes[0] = (uint8_t)*contextCharToUnicode;
-            cnv->toULength = 1;
+            cnv->منزل_UBytes[0] = (uint8_t)*context_Char_منزل_Unicode;
+            cnv->منزل_ULength = 1;
 
             /* avoid looping on truncated sequences */
-            *contextCharToUnicode = NO_CHAR_MARKER;
-        } else {
-            cnv->toULength = 0;
+            *context_Char_منزل_Unicode = NO_CHAR_MARKER;
+        } وإلا {
+            cnv->منزل_ULength = 0;
         }
 
-        if (*toUnicodeStatus != missingCharMarker) {
+        إذا (*منزل_Unicode_حالت != missingCharMarker) {
             /* output a remaining target character */
-            WRITE_TO_TARGET_TO_U(args,source,target,args->offsets,(source - args->source -1),*toUnicodeStatus,data->currentDeltaToUnicode,err);
-            *toUnicodeStatus = missingCharMarker;
+            WRITE_منزل_موخه_منزل_U(دلیلونه_2,سرچینه,موخه,دلیلونه_2->offsets,(سرچینه - دلیلونه_2->سرچینه -1),*منزل_Unicode_حالت,معلومات->current_Delta_منزل_Unicode,err);
+            *منزل_Unicode_حالت = missingCharMarker;
         }
     }
 
-    args->target = target;
-    args->source = source;
+    دلیلونه_2->موخه = موخه;
+    دلیلونه_2->سرچینه = سرچینه;
 }
 
 /* structure for SafeClone calculations */
-struct cloneISCIIStruct {
+بنية cloneISCIIStruct {
     UConverter cnv;
-    UConverterDataISCII mydata;
+    UConverter_معلومات_ISCII mydata;
 };
 
-static UConverter * U_CALLCONV
-_ISCII_SafeClone(const UConverter *cnv,
-              void *stackBuffer,
-              int32_t *pBufferSize,
-              UErrorCode *status)
+ساكن UConverter * U_CALLCONV
+ISCII_خوندي_Clone(ثابت UConverter *cnv,
+              فراغ *ډېری_بفر,
+              int32_t *p_بفر_اندازه,
+              UError_کوډ *حالت)
 {
-    struct cloneISCIIStruct * localClone;
-    int32_t bufferSizeNeeded = sizeof(struct cloneISCIIStruct);
+    بنية cloneISCIIStruct * localClone;
+    int32_t بفر_اندازه_Needed = حجم(بنية cloneISCIIStruct);
 
-    if (U_FAILURE(*status)) {
-        return nullptr;
+    إذا (U_FAILURE(*حالت)) {
+        أرجع تش_اشاره;
     }
 
-    if (*pBufferSize == 0) { /* 'preflighting' request - set needed size into *pBufferSize */
-        *pBufferSize = bufferSizeNeeded;
-        return nullptr;
+    إذا (*p_بفر_اندازه == 0) { /* 'preflighting' request - set needed size into *pBufferSize */
+        *p_بفر_اندازه = بفر_اندازه_Needed;
+        أرجع تش_اشاره;
     }
 
-    localClone = (struct cloneISCIIStruct *)stackBuffer;
+    localClone = (بنية cloneISCIIStruct *)ډېری_بفر;
     /* ucnv.c/ucnv_safeClone() copied the main UConverter already */
 
-    uprv_memcpy(&localClone->mydata, cnv->extraInfo, sizeof(UConverterDataISCII));
+    uprv_memcpy(&localClone->mydata, cnv->extraInfo, حجم(UConverter_معلومات_ISCII));
     localClone->cnv.extraInfo = &localClone->mydata;
-    localClone->cnv.isExtraLocal = true;
+    localClone->cnv.isExtraLocal = ریښتیا;
 
-    return &localClone->cnv;
+    أرجع &localClone->cnv;
 }
 
-static void U_CALLCONV
-_ISCIIGetUnicodeSet(const UConverter *cnv,
-                    const USetAdder *sa,
-                    UConverterUnicodeSet which,
-                    UErrorCode *pErrorCode)
+ساكن فراغ U_CALLCONV
+ISCIIGet_Unicode_سېټ(ثابت UConverter *cnv,
+                    ثابت USetAdder *sa,
+                    UConverter_Unicode_سېټ which,
+                    UError_کوډ *p_Error_کوډ)
 {
-    (void)cnv;
-    (void)which;
-    (void)pErrorCode;
+    (فراغ)cnv;
+    (فراغ)which;
+    (فراغ)p_Error_کوډ;
     int32_t idx, script;
     uint8_t mask;
 
     /* Since all ISCII versions allow switching to other ISCII
     scripts, we add all roundtrippable characters to this set. */
-    sa->addRange(sa->set, 0, ASCII_END);
-    for (script = DEVANAGARI; script <= MALAYALAM; script++) {
-        mask = (uint8_t)(lookupInitialData[script].maskEnum);
-        for (idx = 0; idx < DELTA; idx++) {
+    sa->جمع_کړه_Range(sa->سېټ, 0, ASCII_پای_ټکی);
+    لكل (script = DEVANAGARI; script <= MALAYALAM; script++) {
+        mask = (uint8_t)(lookup_Initial_معلومات[script].ماسک_Enum_2);
+        لكل (idx = 0; idx < DELTA; idx++) {
             /* added check for TELUGU character */
-            if ((validityTable[idx] & mask) || (script==TELUGU && idx==0x31)) {
-                sa->add(sa->set, idx + (script * DELTA) + INDIC_BLOCK_BEGIN);
+            إذا ((validity_جدول[idx] & mask) || (script==TELUGU && idx==0x31)) {
+                sa->جمع_کړه(sa->سېټ, idx + (script * DELTA) + INDIC_بلاک_BEGIN);
             }
         }
     }
-    sa->add(sa->set, DANDA);
-    sa->add(sa->set, DOUBLE_DANDA);
-    sa->add(sa->set, ZWNJ);
-    sa->add(sa->set, ZWJ);
+    sa->جمع_کړه(sa->سېټ, DANDA);
+    sa->جمع_کړه(sa->سېټ, DOUBLE_DANDA);
+    sa->جمع_کړه(sa->سېټ, ZWNJ);
+    sa->جمع_کړه(sa->سېټ, ZWJ);
 }
-U_CDECL_END
-static const UConverterImpl _ISCIIImpl={
+U_CDECL_پای_ټکی
+ساكن ثابت UConverterImpl _ISCIIImpl={
 
     UCNV_ISCII,
 
-    nullptr,
-    nullptr,
+    تش_اشاره,
+    تش_اشاره,
 
     _ISCIIOpen,
     _ISCIIClose,
     _ISCIIReset,
 
-    UConverter_toUnicode_ISCII_OFFSETS_LOGIC,
-    UConverter_toUnicode_ISCII_OFFSETS_LOGIC,
+    UConverter_منزل_Unicode_ISCII_OFFSETS_LOGIC,
+    UConverter_منزل_Unicode_ISCII_OFFSETS_LOGIC,
     UConverter_fromUnicode_ISCII_OFFSETS_LOGIC,
     UConverter_fromUnicode_ISCII_OFFSETS_LOGIC,
-    nullptr,
+    تش_اشاره,
 
-    nullptr,
+    تش_اشاره,
     _ISCIIgetName,
-    nullptr,
-    _ISCII_SafeClone,
-    _ISCIIGetUnicodeSet,
-    nullptr,
-    nullptr
+    تش_اشاره,
+    ISCII_خوندي_Clone,
+    ISCIIGet_Unicode_سېټ,
+    تش_اشاره,
+    تش_اشاره
 };
 
-static const UConverterStaticData _ISCIIStaticData={
-    sizeof(UConverterStaticData),
+ساكن ثابت UConverter_Static_معلومات ISCIIStatic_معلومات={
+    حجم(UConverter_Static_معلومات),
         "ISCII",
          0,
          UCNV_IBM,
@@ -1621,15 +1621,15 @@ static const UConverterStaticData _ISCIIStaticData={
          4,
         { 0x1a, 0, 0, 0 },
         0x1,
-        false,
-        false,
+        خطأ,
+        خطأ,
         0x0,
         0x0,
         { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 }, /* reserved */
 
 };
 
-const UConverterSharedData _ISCIIData=
-        UCNV_IMMUTABLE_SHARED_DATA_INITIALIZER(&_ISCIIStaticData, &_ISCIIImpl);
+ثابت UConverter_Shared_معلومات _ISCIIData=
+        UCNV_IMMUTABLE_SHARED_معلومات_INITIALIZER(&ISCIIStatic_معلومات, &_ISCIIImpl);
 
-#endif /* #if !UCONFIG_NO_LEGACY_CONVERSION */
+#د_که_پای /* #if !UCONFIG_NO_LEGACY_CONVERSION */

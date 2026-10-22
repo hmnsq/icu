@@ -6,12 +6,12 @@
  * others. All Rights Reserved.
  ********************************************************************/
 
-#ifndef RBBINODE_H
-#define RBBINODE_H
+#که_نه_تعریف_شوی RBBINODE_H
+#تعریف_کړه RBBINODE_H
 
-#include "unicode/utypes.h"
-#include "unicode/unistr.h"
-#include "unicode/uobject.h"
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/unistr.h"
+#ضمن "unicode/uobject.h"
 
 //
 //  class RBBINode
@@ -22,53 +22,53 @@
 
 U_NAMESPACE_BEGIN
 
-class    UnicodeSet;
+class    Unicode_سېټ;
 class    UVector;
 
-class RBBINode : public UMemory {
-    public:
-        enum NodeType {
-            setRef,
+class RBBINode : عام UMemory {
+    عام:
+        تعداد غوټه_Type {
+            سېټ_Ref,
             uset,
             varRef,
-            leafChar,
+            ونې_پاڼه_Char,
             lookAhead,
-            tag,
-            endMark,
-            opStart,
+            نښان,
+            پای_ټکی_Mark,
+            op_پیل,
             opCat,
             opOr,
-            opStar,
+            op_ستوری,
             opPlus,
             opQuestion,
             opBreak,
-            opReverse,
+            op_سرچپه,
             opLParen
         };
 
-        enum OpPrecedence {      
+        تعداد OpPrecedence {      
             precZero,
-            precStart,
+            prec_پیل,
             precLParen,
             precOpOr,
             precOpCat
         };
             
-        NodeType      fType;
-        RBBINode      *fParent;
-        RBBINode      *fLeftChild;
-        RBBINode      *fRightChild;
-        UnicodeSet    *fInputSet;           // For uset nodes only.
+        غوټه_Type      fType;
+        RBBINode      *f_پلار;
+        RBBINode      *f_کیڼ_ماشوم;
+        RBBINode      *f_ښی_ماشوم;
+        Unicode_سېټ    *f_ننوت_سېټ;           // For uset nodes only.
         OpPrecedence  fPrecedence;          // For binary ops only.
         
-        UnicodeString fText;                // Text corresponding to this node.
+        UnicodeString f_متن;                // Text corresponding to this node.
                                             //   May be lazily evaluated when (if) needed
                                             //   for some node types.
-        int           fFirstPos;            // Position in the rule source string of the
+        صحيح           f_لومړی_Pos;            // Position in the rule source string of the
                                             //   first text associated with the node.
                                             //   If there's a left child, this will be the same
                                             //   as that child's left pos.
-        int           fLastPos;             //  Last position in the rule source string
+        صحيح           f_وروستی_Pos;             //  Last position in the rule source string
                                             //    of any text associated with this node.
                                             //    If there's a right child, this will be the same
                                             //    as that child's last position.
@@ -79,50 +79,50 @@ class RBBINode : public UMemory {
                                             //   corresponds to columns in the final
                                             //   state transition table.
 
-        UBool         fLookAheadEnd;        // For endMark nodes, set true if
+        UBool         f_Look_Ahead_پای_ټکی;        // For endMark nodes, set true if
                                             //   marking the end of a look-ahead rule.
 
-        UBool         fRuleRoot;            // True if this node is the root of a rule.
-        UBool         fChainIn;             // True if chaining into this rule is allowed
+        UBool         f_قاعده_ریښه;            // True if this node is the root of a rule.
+        UBool         f_Chain_دننه;             // True if chaining into this rule is allowed
                                             //     (no '^' present).
 
-        UVector       *fFirstPosSet;
-        UVector       *fLastPosSet;         // TODO: rename fFirstPos & fLastPos to avoid confusion.
+        UVector       *f_لومړی_Pos_سېټ;
+        UVector       *f_وروستی_Pos_سېټ;         // TODO: rename fFirstPos & fLastPos to avoid confusion.
         UVector       *fFollowPos;
 
 
-        RBBINode(NodeType t, UErrorCode& status);
-        RBBINode(const RBBINode &other, UErrorCode& status);
+        RBBINode(غوټه_Type t, UError_کوډ& حالت);
+        RBBINode(ثابت RBBINode &other, UError_کوډ& حالت);
         ~RBBINode();
-        static void  NRDeleteNode(RBBINode *node);
+        ساكن فراغ  NRDelete_غوټه(RBBINode *غوټه);
         
-        RBBINode    *cloneTree(UErrorCode &status, int depth=0);
-        RBBINode    *flattenVariables(UErrorCode &status, int depth=0);
-        void         flattenSets(UErrorCode &status, int depth=0);
-        void         findNodes(UVector *dest, RBBINode::NodeType kind, UErrorCode &status);
+        RBBINode    *clone_ونه(UError_کوډ &حالت, صحيح ژوروالی=0);
+        RBBINode    *flattenVariables(UError_کوډ &حالت, صحيح ژوروالی=0);
+        فراغ         flattenSets(UError_کوډ &حالت, صحيح ژوروالی=0);
+        فراغ         پیدا_کړه_Nodes(UVector *dest, RBBINode::غوټه_Type ډول, UError_کوډ &حالت);
 
-#ifdef RBBI_DEBUG
-        static void printNodeHeader();
-        static void printNode(const RBBINode *n);
-        static void printTree(const RBBINode *n, UBool withHeading);
-#endif
+#که_تعریف_شوی RBBI_DEBUG
+        ساكن فراغ print_غوټه_سرلیک();
+        ساكن فراغ print_غوټه(ثابت RBBINode *n);
+        ساكن فراغ print_ونه(ثابت RBBINode *n, UBool withHeading);
+#د_که_پای
 
-    private:
-        RBBINode &operator = (const RBBINode &other); // No defs.
-        bool operator == (const RBBINode &other);     // Private, so these functions won't accidentally be used.
+    خاص:
+        RBBINode &چلوونکی = (ثابت RBBINode &other); // No defs.
+        bool چلوونکی == (ثابت RBBINode &other);     // Private, so these functions won't accidentally be used.
 
-#ifdef RBBI_DEBUG
-    public:
-        int           fSerialNum;           //  Debugging aids.
-#endif
+#که_تعریف_شوی RBBI_DEBUG
+    عام:
+        صحيح           f_Serial_عدد;           //  Debugging aids.
+#د_که_پای
 };
 
-#ifdef RBBI_DEBUG
-U_CFUNC void 
-RBBI_DEBUG_printUnicodeString(const UnicodeString &s, int minWidth=0);
-#endif
+#که_تعریف_شوی RBBI_DEBUG
+U_CFUNC فراغ 
+RBBI_DEBUG_printUnicodeString(ثابت UnicodeString &s, صحيح min_پلنوالی=0);
+#د_که_پای
 
-U_NAMESPACE_END
+U_NAMESPACE_پای_ټکی
 
-#endif
+#د_که_پای
 

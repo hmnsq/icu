@@ -4,18 +4,18 @@
 // char16ptr.h
 // created: 2017feb28 Markus W. Scherer
 
-#ifndef __CHAR16PTR_H__
-#define __CHAR16PTR_H__
+#که_نه_تعریف_شوی __CHAR16PTR_H__
+#تعریف_کړه __CHAR16PTR_H__
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API || U_SHOW_CPLUSPLUS_HEADER_API
+#إذا U_SHOW_CPLUSPLUS_API || U_SHOW_CPLUSPLUS_سرلیک_API
 
-#include <cstddef>
-#include <string_view>
-#include <type_traits>
+#ضمن <cstddef>
+#ضمن <string_view>
+#ضمن <type_traits>
 
-#endif
+#د_که_پای
 
 /**
  * \file
@@ -29,16 +29,16 @@
  * Barrier for pointer anti-aliasing optimizations even across function boundaries.
  * @internal
  */
-#ifdef U_ALIASING_BARRIER
+#که_تعریف_شوی U_ALIASING_BARRIER
     // Use the predefined value.
-#elif (defined(__clang__) || defined(__GNUC__)) && U_PLATFORM != U_PF_BROWSER_NATIVE_CLIENT
-#   define U_ALIASING_BARRIER(ptr) asm volatile("" : : "rm"(ptr) : "memory")
-#elif defined(U_IN_DOXYGEN)
+#وإلاإذا (defined(__clang__) || defined(__GNUC__)) && U_PLATFORM != U_PF_BROWSER_NATIVE_CLIENT
+#   define U_ALIASING_BARRIER(ptr) asm متطاير("" : : "rm"(ptr) : "memory")
+#وإلاإذا defined(U_دننه_DOXYGEN)
 #   define U_ALIASING_BARRIER(ptr)
-#endif
+#د_که_پای
 
 // ICU DLL-exported
-#if U_SHOW_CPLUSPLUS_API
+#إذا U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -47,106 +47,106 @@ U_NAMESPACE_BEGIN
  * @stable ICU 59
  */
 class U_COMMON_API Char16Ptr final {
-public:
+عام:
     /**
      * Copies the pointer.
      * @param p pointer
      * @stable ICU 59
      */
-    inline Char16Ptr(char16_t *p);
-#if !U_CHAR16_IS_TYPEDEF
+    مضمن Char16Ptr(char16_t *p);
+#إذا !U_CHAR16_IS_TYPEDEF
     /**
      * Converts the pointer to char16_t *.
      * @param p pointer to be converted
      * @stable ICU 59
      */
-    inline Char16Ptr(uint16_t *p);
-#endif
-#if U_SIZEOF_WCHAR_T==2 || defined(U_IN_DOXYGEN)
+    مضمن Char16Ptr(uint16_t *p);
+#د_که_پای
+#إذا U_SIZEOF_WCHAR_T==2 || defined(U_دننه_DOXYGEN)
     /**
      * Converts the pointer to char16_t *.
      * (Only defined if U_SIZEOF_WCHAR_T==2.)
      * @param p pointer to be converted
      * @stable ICU 59
      */
-    inline Char16Ptr(wchar_t *p);
-#endif
+    مضمن Char16Ptr(wchar_t *p);
+#د_که_پای
     /**
      * nullptr constructor.
      * @param p nullptr
      * @stable ICU 59
      */
-    inline Char16Ptr(std::nullptr_t p);
+    مضمن Char16Ptr(std::nullptr_t p);
     /**
      * Destructor.
      * @stable ICU 59
      */
-    inline ~Char16Ptr();
+    مضمن ~Char16Ptr();
 
     /**
      * Pointer access.
      * @return the wrapped pointer
      * @stable ICU 59
      */
-    inline char16_t *get() const;
+    مضمن char16_t *get() ثابت;
     /**
      * char16_t pointer access via type conversion (e.g., static_cast).
      * @return the wrapped pointer
      * @stable ICU 59
      */
-    inline operator char16_t *() const { return get(); }
+    مضمن چلوونکی char16_t *() ثابت { أرجع get(); }
 
-private:
+خاص:
     Char16Ptr() = delete;
 
-#ifdef U_ALIASING_BARRIER
-    template<typename T> static char16_t *cast(T *t) {
+#که_تعریف_شوی U_ALIASING_BARRIER
+    کينډۍ<typename T> ساكن char16_t *cast(T *t) {
         U_ALIASING_BARRIER(t);
-        return reinterpret_cast<char16_t *>(t);
+        أرجع reinterpret_cast<char16_t *>(t);
     }
 
     char16_t *p_;
-#else
-    union {
+#وإلا
+    اتحاد {
         char16_t *cp;
-        uint16_t *up;
+        uint16_t *پورته;
         wchar_t *wp;
     } u_;
-#endif
+#د_که_پای
 };
 
 /// \cond
-#ifdef U_ALIASING_BARRIER
+#که_تعریف_شوی U_ALIASING_BARRIER
 
 Char16Ptr::Char16Ptr(char16_t *p) : p_(p) {}
-#if !U_CHAR16_IS_TYPEDEF
+#إذا !U_CHAR16_IS_TYPEDEF
 Char16Ptr::Char16Ptr(uint16_t *p) : p_(cast(p)) {}
-#endif
-#if U_SIZEOF_WCHAR_T==2
+#د_که_پای
+#إذا U_SIZEOF_WCHAR_T==2
 Char16Ptr::Char16Ptr(wchar_t *p) : p_(cast(p)) {}
-#endif
+#د_که_پای
 Char16Ptr::Char16Ptr(std::nullptr_t p) : p_(p) {}
 Char16Ptr::~Char16Ptr() {
     U_ALIASING_BARRIER(p_);
 }
 
-char16_t *Char16Ptr::get() const { return p_; }
+char16_t *Char16Ptr::get() ثابت { أرجع p_; }
 
-#else
+#وإلا
 
 Char16Ptr::Char16Ptr(char16_t *p) { u_.cp = p; }
-#if !U_CHAR16_IS_TYPEDEF
-Char16Ptr::Char16Ptr(uint16_t *p) { u_.up = p; }
-#endif
-#if U_SIZEOF_WCHAR_T==2
+#إذا !U_CHAR16_IS_TYPEDEF
+Char16Ptr::Char16Ptr(uint16_t *p) { u_.پورته = p; }
+#د_که_پای
+#إذا U_SIZEOF_WCHAR_T==2
 Char16Ptr::Char16Ptr(wchar_t *p) { u_.wp = p; }
-#endif
+#د_که_پای
 Char16Ptr::Char16Ptr(std::nullptr_t p) { u_.cp = p; }
 Char16Ptr::~Char16Ptr() {}
 
-char16_t *Char16Ptr::get() const { return u_.cp; }
+char16_t *Char16Ptr::get() ثابت { أرجع u_.cp; }
 
-#endif
+#د_که_پای
 /// \endcond
 
 /**
@@ -154,162 +154,162 @@ char16_t *Char16Ptr::get() const { return u_.cp; }
  * @stable ICU 59
  */
 class U_COMMON_API ConstChar16Ptr final {
-public:
+عام:
     /**
      * Copies the pointer.
      * @param p pointer
      * @stable ICU 59
      */
-    inline ConstChar16Ptr(const char16_t *p);
-#if !U_CHAR16_IS_TYPEDEF
+    مضمن ConstChar16Ptr(ثابت char16_t *p);
+#إذا !U_CHAR16_IS_TYPEDEF
     /**
      * Converts the pointer to char16_t *.
      * @param p pointer to be converted
      * @stable ICU 59
      */
-    inline ConstChar16Ptr(const uint16_t *p);
-#endif
-#if U_SIZEOF_WCHAR_T==2 || defined(U_IN_DOXYGEN)
+    مضمن ConstChar16Ptr(ثابت uint16_t *p);
+#د_که_پای
+#إذا U_SIZEOF_WCHAR_T==2 || defined(U_دننه_DOXYGEN)
     /**
      * Converts the pointer to char16_t *.
      * (Only defined if U_SIZEOF_WCHAR_T==2.)
      * @param p pointer to be converted
      * @stable ICU 59
      */
-    inline ConstChar16Ptr(const wchar_t *p);
-#endif
+    مضمن ConstChar16Ptr(ثابت wchar_t *p);
+#د_که_پای
     /**
      * nullptr constructor.
      * @param p nullptr
      * @stable ICU 59
      */
-    inline ConstChar16Ptr(const std::nullptr_t p);
+    مضمن ConstChar16Ptr(ثابت std::nullptr_t p);
 
     /**
      * Destructor.
      * @stable ICU 59
      */
-    inline ~ConstChar16Ptr();
+    مضمن ~ConstChar16Ptr();
 
     /**
      * Pointer access.
      * @return the wrapped pointer
      * @stable ICU 59
      */
-    inline const char16_t *get() const;
+    مضمن ثابت char16_t *get() ثابت;
     /**
      * char16_t pointer access via type conversion (e.g., static_cast).
      * @return the wrapped pointer
      * @stable ICU 59
      */
-    inline operator const char16_t *() const { return get(); }
+    مضمن چلوونکی ثابت char16_t *() ثابت { أرجع get(); }
 
-private:
+خاص:
     ConstChar16Ptr() = delete;
 
-#ifdef U_ALIASING_BARRIER
-    template<typename T> static const char16_t *cast(const T *t) {
+#که_تعریف_شوی U_ALIASING_BARRIER
+    کينډۍ<typename T> ساكن ثابت char16_t *cast(ثابت T *t) {
         U_ALIASING_BARRIER(t);
-        return reinterpret_cast<const char16_t *>(t);
+        أرجع reinterpret_cast<ثابت char16_t *>(t);
     }
 
-    const char16_t *p_;
-#else
-    union {
-        const char16_t *cp;
-        const uint16_t *up;
-        const wchar_t *wp;
+    ثابت char16_t *p_;
+#وإلا
+    اتحاد {
+        ثابت char16_t *cp;
+        ثابت uint16_t *پورته;
+        ثابت wchar_t *wp;
     } u_;
-#endif
+#د_که_پای
 };
 
 /// \cond
-#ifdef U_ALIASING_BARRIER
+#که_تعریف_شوی U_ALIASING_BARRIER
 
-ConstChar16Ptr::ConstChar16Ptr(const char16_t *p) : p_(p) {}
-#if !U_CHAR16_IS_TYPEDEF
-ConstChar16Ptr::ConstChar16Ptr(const uint16_t *p) : p_(cast(p)) {}
-#endif
-#if U_SIZEOF_WCHAR_T==2
-ConstChar16Ptr::ConstChar16Ptr(const wchar_t *p) : p_(cast(p)) {}
-#endif
-ConstChar16Ptr::ConstChar16Ptr(const std::nullptr_t p) : p_(p) {}
+ConstChar16Ptr::ConstChar16Ptr(ثابت char16_t *p) : p_(p) {}
+#إذا !U_CHAR16_IS_TYPEDEF
+ConstChar16Ptr::ConstChar16Ptr(ثابت uint16_t *p) : p_(cast(p)) {}
+#د_که_پای
+#إذا U_SIZEOF_WCHAR_T==2
+ConstChar16Ptr::ConstChar16Ptr(ثابت wchar_t *p) : p_(cast(p)) {}
+#د_که_پای
+ConstChar16Ptr::ConstChar16Ptr(ثابت std::nullptr_t p) : p_(p) {}
 ConstChar16Ptr::~ConstChar16Ptr() {
     U_ALIASING_BARRIER(p_);
 }
 
-const char16_t *ConstChar16Ptr::get() const { return p_; }
+ثابت char16_t *ConstChar16Ptr::get() ثابت { أرجع p_; }
 
-#else
+#وإلا
 
-ConstChar16Ptr::ConstChar16Ptr(const char16_t *p) { u_.cp = p; }
-#if !U_CHAR16_IS_TYPEDEF
-ConstChar16Ptr::ConstChar16Ptr(const uint16_t *p) { u_.up = p; }
-#endif
-#if U_SIZEOF_WCHAR_T==2
-ConstChar16Ptr::ConstChar16Ptr(const wchar_t *p) { u_.wp = p; }
-#endif
-ConstChar16Ptr::ConstChar16Ptr(const std::nullptr_t p) { u_.cp = p; }
+ConstChar16Ptr::ConstChar16Ptr(ثابت char16_t *p) { u_.cp = p; }
+#إذا !U_CHAR16_IS_TYPEDEF
+ConstChar16Ptr::ConstChar16Ptr(ثابت uint16_t *p) { u_.پورته = p; }
+#د_که_پای
+#إذا U_SIZEOF_WCHAR_T==2
+ConstChar16Ptr::ConstChar16Ptr(ثابت wchar_t *p) { u_.wp = p; }
+#د_که_پای
+ConstChar16Ptr::ConstChar16Ptr(ثابت std::nullptr_t p) { u_.cp = p; }
 ConstChar16Ptr::~ConstChar16Ptr() {}
 
-const char16_t *ConstChar16Ptr::get() const { return u_.cp; }
+ثابت char16_t *ConstChar16Ptr::get() ثابت { أرجع u_.cp; }
 
-#endif
+#د_که_پای
 /// \endcond
 
-U_NAMESPACE_END
+U_NAMESPACE_پای_ټکی
 
-#endif  // U_SHOW_CPLUSPLUS_API
+#د_که_پای  // U_SHOW_CPLUSPLUS_API
 
 // Usable in header-only definitions
-#if U_SHOW_CPLUSPLUS_API || U_SHOW_CPLUSPLUS_HEADER_API
+#إذا U_SHOW_CPLUSPLUS_API || U_SHOW_CPLUSPLUS_سرلیک_API
 
-namespace U_ICU_NAMESPACE_OR_INTERNAL {
+namespace U_ICU_NAMESPACE_OR_دننی {
 
-#ifndef U_FORCE_HIDE_INTERNAL_API
+#که_نه_تعریف_شوی U_FORCE_HIDE_دننی_API
 /** @internal */
-template <typename T, typename = std::enable_if_t<std::is_same_v<T, UChar>>>
-inline const char16_t* uprv_char16PtrFromUChar(const T* p U_LIFETIME_BOUND) {
-    if constexpr (std::is_same_v<UChar, char16_t>) {
-        return p;
-    } else {
-#if U_SHOW_CPLUSPLUS_API
-        return ConstChar16Ptr(p).get();
-#else
-#ifdef U_ALIASING_BARRIER
+کينډۍ <typename T, typename = std::enable_if_t<std::is_same_v<T, UChar>>>
+مضمن ثابت char16_t* uprv_char16PtrFromUChar(ثابت T* p U_LIFETIME_BOUND) {
+    إذا constexpr (std::is_same_v<UChar, char16_t>) {
+        أرجع p;
+    } وإلا {
+#إذا U_SHOW_CPLUSPLUS_API
+        أرجع ConstChar16Ptr(p).get();
+#وإلا
+#که_تعریف_شوی U_ALIASING_BARRIER
         U_ALIASING_BARRIER(p);
-#endif
-        return reinterpret_cast<const char16_t *>(p);
-#endif
+#د_که_پای
+        أرجع reinterpret_cast<ثابت char16_t *>(p);
+#د_که_پای
     }
 }
-#if !U_CHAR16_IS_TYPEDEF && (!defined(_LIBCPP_VERSION) || _LIBCPP_VERSION < 180000)
+#إذا !U_CHAR16_IS_TYPEDEF && (!defined(LIBCPP_نسخه) || LIBCPP_نسخه < 180000)
 /** @internal */
-inline const char16_t* uprv_char16PtrFromUint16(const uint16_t* p U_LIFETIME_BOUND) {
-#if U_SHOW_CPLUSPLUS_API
-    return ConstChar16Ptr(p).get();
-#else
-#ifdef U_ALIASING_BARRIER
+مضمن ثابت char16_t* uprv_char16PtrFromUint16(ثابت uint16_t* p U_LIFETIME_BOUND) {
+#إذا U_SHOW_CPLUSPLUS_API
+    أرجع ConstChar16Ptr(p).get();
+#وإلا
+#که_تعریف_شوی U_ALIASING_BARRIER
     U_ALIASING_BARRIER(p);
-#endif
-    return reinterpret_cast<const char16_t *>(p);
-#endif
+#د_که_پای
+    أرجع reinterpret_cast<ثابت char16_t *>(p);
+#د_که_پای
 }
-#endif
-#if U_SIZEOF_WCHAR_T==2
+#د_که_پای
+#إذا U_SIZEOF_WCHAR_T==2
 /** @internal */
-inline const char16_t* uprv_char16PtrFromWchar(const wchar_t* p U_LIFETIME_BOUND) {
-#if U_SHOW_CPLUSPLUS_API
-    return ConstChar16Ptr(p).get();
-#else
-#ifdef U_ALIASING_BARRIER
+مضمن ثابت char16_t* uprv_char16PtrFromWchar(ثابت wchar_t* p U_LIFETIME_BOUND) {
+#إذا U_SHOW_CPLUSPLUS_API
+    أرجع ConstChar16Ptr(p).get();
+#وإلا
+#که_تعریف_شوی U_ALIASING_BARRIER
     U_ALIASING_BARRIER(p);
-#endif
-    return reinterpret_cast<const char16_t *>(p);
-#endif
+#د_که_پای
+    أرجع reinterpret_cast<ثابت char16_t *>(p);
+#د_که_پای
 }
-#endif
-#endif
+#د_که_پای
+#د_که_پای
 
 /**
  * Converts from const char16_t * to const UChar *.
@@ -318,11 +318,11 @@ inline const char16_t* uprv_char16PtrFromWchar(const wchar_t* p U_LIFETIME_BOUND
  * @return p as const UChar *
  * @stable ICU 59
  */
-inline const UChar* toUCharPtr(const char16_t* p U_LIFETIME_BOUND) {
-#ifdef U_ALIASING_BARRIER
+مضمن ثابت UChar* منزل_UChar_Ptr(ثابت char16_t* p U_LIFETIME_BOUND) {
+#که_تعریف_شوی U_ALIASING_BARRIER
     U_ALIASING_BARRIER(p);
-#endif
-    return reinterpret_cast<const UChar *>(p);
+#د_که_پای
+    أرجع reinterpret_cast<ثابت UChar *>(p);
 }
 
 /**
@@ -332,11 +332,11 @@ inline const UChar* toUCharPtr(const char16_t* p U_LIFETIME_BOUND) {
  * @return p as UChar *
  * @stable ICU 59
  */
-inline UChar* toUCharPtr(char16_t* p U_LIFETIME_BOUND) {
-#ifdef U_ALIASING_BARRIER
+مضمن UChar* منزل_UChar_Ptr(char16_t* p U_LIFETIME_BOUND) {
+#که_تعریف_شوی U_ALIASING_BARRIER
     U_ALIASING_BARRIER(p);
-#endif
-    return reinterpret_cast<UChar *>(p);
+#د_که_پای
+    أرجع reinterpret_cast<UChar *>(p);
 }
 
 /**
@@ -346,11 +346,11 @@ inline UChar* toUCharPtr(char16_t* p U_LIFETIME_BOUND) {
  * @return p as const OldUChar *
  * @stable ICU 59
  */
-inline const OldUChar* toOldUCharPtr(const char16_t* p U_LIFETIME_BOUND) {
-#ifdef U_ALIASING_BARRIER
+مضمن ثابت OldUChar* منزل_Old_UChar_Ptr(ثابت char16_t* p U_LIFETIME_BOUND) {
+#که_تعریف_شوی U_ALIASING_BARRIER
     U_ALIASING_BARRIER(p);
-#endif
-    return reinterpret_cast<const OldUChar *>(p);
+#د_که_پای
+    أرجع reinterpret_cast<ثابت OldUChar *>(p);
 }
 
 /**
@@ -360,94 +360,94 @@ inline const OldUChar* toOldUCharPtr(const char16_t* p U_LIFETIME_BOUND) {
  * @return p as OldUChar *
  * @stable ICU 59
  */
-inline OldUChar* toOldUCharPtr(char16_t* p U_LIFETIME_BOUND) {
-#ifdef U_ALIASING_BARRIER
+مضمن OldUChar* منزل_Old_UChar_Ptr(char16_t* p U_LIFETIME_BOUND) {
+#که_تعریف_شوی U_ALIASING_BARRIER
     U_ALIASING_BARRIER(p);
-#endif
-    return reinterpret_cast<OldUChar *>(p);
+#د_که_پای
+    أرجع reinterpret_cast<OldUChar *>(p);
 }
 
 }  // U_ICU_NAMESPACE_OR_INTERNAL
 
-#endif  // U_SHOW_CPLUSPLUS_API || U_SHOW_CPLUSPLUS_HEADER_API
+#د_که_پای  // U_SHOW_CPLUSPLUS_API || U_SHOW_CPLUSPLUS_HEADER_API
 
 // ICU DLL-exported
-#if U_SHOW_CPLUSPLUS_API
+#إذا U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
-#ifndef U_FORCE_HIDE_INTERNAL_API
+#که_نه_تعریف_شوی U_FORCE_HIDE_دننی_API
 /**
  * Is T convertible to a std::u16string_view or some other 16-bit string view?
  * @internal
  */
-template<typename T>
-constexpr bool ConvertibleToU16StringView =
+کينډۍ<typename T>
+constexpr bool Convertible_منزل_U16_String_View =
     std::is_convertible_v<T, std::u16string_view>
-#if !U_CHAR16_IS_TYPEDEF && (!defined(_LIBCPP_VERSION) || _LIBCPP_VERSION < 180000)
+#إذا !U_CHAR16_IS_TYPEDEF && (!defined(LIBCPP_نسخه) || LIBCPP_نسخه < 180000)
     || std::is_convertible_v<T, std::basic_string_view<uint16_t>>
-#endif
-#if U_SIZEOF_WCHAR_T==2
+#د_که_پای
+#إذا U_SIZEOF_WCHAR_T==2
     || std::is_convertible_v<T, std::wstring_view>
-#endif
+#د_که_پای
     ;
 
-namespace internal {
+namespace دننی_2 {
 /**
  * Pass-through overload.
  * @internal
  */
-inline std::u16string_view toU16StringView(std::u16string_view sv U_LIFETIME_BOUND) { return sv; }
+مضمن std::u16string_view منزل_U16_String_View(std::u16string_view sv U_LIFETIME_BOUND) { أرجع sv; }
 
-#if !U_CHAR16_IS_TYPEDEF && (!defined(_LIBCPP_VERSION) || _LIBCPP_VERSION < 180000)
+#إذا !U_CHAR16_IS_TYPEDEF && (!defined(LIBCPP_نسخه) || LIBCPP_نسخه < 180000)
 /**
  * Basically undefined behavior but sometimes necessary conversion
  * from std::basic_string_view<uint16_t> to std::u16string_view.
  * @internal
  */
-inline std::u16string_view toU16StringView(std::basic_string_view<uint16_t> sv U_LIFETIME_BOUND) {
-    return { ConstChar16Ptr(sv.data()), sv.length() };
+مضمن std::u16string_view منزل_U16_String_View(std::basic_string_view<uint16_t> sv U_LIFETIME_BOUND) {
+    أرجع { ConstChar16Ptr(sv.معلومات()), sv.اوږدتیا() };
 }
-#endif
+#د_که_پای
 
-#if U_SIZEOF_WCHAR_T==2
+#إذا U_SIZEOF_WCHAR_T==2
 /**
  * Basically undefined behavior but sometimes necessary conversion
  * from std::wstring_view to std::u16string_view.
  * @internal
  */
-inline std::u16string_view toU16StringView(std::wstring_view sv U_LIFETIME_BOUND) {
-    return { ConstChar16Ptr(sv.data()), sv.length() };
+مضمن std::u16string_view منزل_U16_String_View(std::wstring_view sv U_LIFETIME_BOUND) {
+    أرجع { ConstChar16Ptr(sv.معلومات()), sv.اوږدتیا() };
 }
-#endif
+#د_که_پای
 
 /**
  * Pass-through overload.
  * @internal
  */
-template <typename T,
-          typename = typename std::enable_if_t<!std::is_pointer_v<std::remove_reference_t<T>>>>
-inline std::u16string_view toU16StringViewNullable(const T& text U_LIFETIME_BOUND) {
-    return toU16StringView(text);
+کينډۍ <typename T,
+          typename = typename std::enable_if_t<!std::is_اشاره_ګر_v<std::remove_reference_t<T>>>>
+مضمن std::u16string_view منزل_U16_String_View_Nullable(ثابت T& متن U_LIFETIME_BOUND) {
+    أرجع منزل_U16_String_View(متن);
 }
 
 /**
  * In case of nullptr, return an empty view.
  * @internal
  */
-template <typename T,
-          typename = typename std::enable_if_t<std::is_pointer_v<std::remove_reference_t<T>>>,
-          typename = void>
-inline std::u16string_view toU16StringViewNullable(const T& text U_LIFETIME_BOUND) {
-    if (text == nullptr) return {};  // For backward compatibility.
-    return toU16StringView(text);
+کينډۍ <typename T,
+          typename = typename std::enable_if_t<std::is_اشاره_ګر_v<std::remove_reference_t<T>>>,
+          typename = فراغ>
+مضمن std::u16string_view منزل_U16_String_View_Nullable(ثابت T& متن U_LIFETIME_BOUND) {
+    إذا (متن == nullptr) أرجع {};  // For backward compatibility.
+    أرجع منزل_U16_String_View(متن);
 }
 
-}  // internal
-#endif  // U_FORCE_HIDE_INTERNAL_API
+}  //دننی
+#د_که_پای  // U_FORCE_HIDE_INTERNAL_API
 
-U_NAMESPACE_END
+U_NAMESPACE_پای_ټکی
 
-#endif  // U_SHOW_CPLUSPLUS_API
+#د_که_پای  // U_SHOW_CPLUSPLUS_API
 
-#endif  // __CHAR16PTR_H__
+#د_که_پای  // __CHAR16PTR_H__

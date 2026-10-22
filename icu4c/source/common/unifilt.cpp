@@ -10,9 +10,9 @@
 **********************************************************************
 */
 
-#include "unicode/unifilt.h"
-#include "unicode/rep.h"
-#include "unicode/utf16.h"
+#ضمن "unicode/unifilt.h"
+#ضمن "unicode/rep.h"
+#ضمن "unicode/utf16.h"
 
 U_NAMESPACE_BEGIN
 UOBJECT_DEFINE_ABSTRACT_RTTI_IMPLEMENTATION(UnicodeFilter)
@@ -28,44 +28,44 @@ UnicodeFilter::~UnicodeFilter() {}
  * UnicodeFunctor API.
  *   Note that UnicodeMatcher is a base class of UnicodeFilter.
  */
-UnicodeMatcher* UnicodeFilter::toMatcher() const U_LIFETIME_BOUND {
-  return const_cast<UnicodeFilter *>(this);
+UnicodeMatcher* UnicodeFilter::منزل_Matcher() ثابت U_LIFETIME_BOUND {
+  أرجع const_cast<UnicodeFilter *>(هذا);
 }
 
-void UnicodeFilter::setData(const TransliterationRuleData*) {}
+فراغ UnicodeFilter::سېټ_معلومات(ثابت Transliteration_قاعده_معلومات*) {}
 
 /**
  * Default implementation of UnicodeMatcher::matches() for Unicode
  * filters.  Matches a single code point at offset (either one or
  * two 16-bit code units).
  */
-UMatchDegree UnicodeFilter::matches(const Replaceable& text,
-                                    int32_t& offset,
-                                    int32_t limit,
+UMatchDegree UnicodeFilter::matches(ثابت Replaceable& متن,
+                                    int32_t& دننه_واټن,
+                                    int32_t حد,
                                     UBool incremental) {
     UChar32 c;
-    if (offset < limit &&
-        contains(c = text.char32At(offset))) {
-        offset += U16_LENGTH(c);
-        return U_MATCH;
+    إذا (دننه_واټن < حد &&
+        لري(c = متن.char32At(دننه_واټن))) {
+        دننه_واټن += U16_اوږدتیا(c);
+        أرجع U_سمون;
     }
-    if (offset > limit &&
-        contains(c = text.char32At(offset))) {
+    إذا (دننه_واټن > حد &&
+        لري(c = متن.char32At(دننه_واټن))) {
         // Backup offset by 1, unless the preceding character is a
         // surrogate pair -- then backup by 2 (keep offset pointing at
         // the lead surrogate).
-        --offset;
-        if (offset >= 0) {
-            offset -= U16_LENGTH(text.char32At(offset)) - 1;
+        --دننه_واټن;
+        إذا (دننه_واټن >= 0) {
+            دننه_واټن -= U16_اوږدتیا(متن.char32At(دننه_واټن)) - 1;
         }
-        return U_MATCH;
+        أرجع U_سمون;
     }
-    if (incremental && offset == limit) {
-        return U_PARTIAL_MATCH;
+    إذا (incremental && دننه_واټن == حد) {
+        أرجع U_PARTIAL_سمون;
     }
-    return U_MISMATCH;
+    أرجع U_MISMATCH;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_پای_ټکی
 
 //eof

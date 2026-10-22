@@ -16,988 +16,988 @@
 *   UTF-32 converter implementation. Used to be in ucnv_utf.c.
 */
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
+#إذا !UCONFIG_NO_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
 
-#include "unicode/ucnv.h"
-#include "unicode/utf.h"
-#include "ucnv_bld.h"
-#include "ucnv_cnv.h"
-#include "cmemory.h"
+#ضمن "unicode/ucnv.h"
+#ضمن "unicode/utf.h"
+#ضمن "ucnv_bld.h"
+#ضمن "ucnv_cnv.h"
+#ضمن "cmemory.h"
 
-#define MAXIMUM_UCS2            0x0000FFFF
-#define MAXIMUM_UTF             0x0010FFFF
-#define HALF_SHIFT              10
-#define HALF_BASE               0x0010000
-#define HALF_MASK               0x3FF
-#define SURROGATE_HIGH_START    0xD800
-#define SURROGATE_LOW_START     0xDC00
+#تعریف_کړه اعظمي_UCS2            0x0000FFFF
+#تعریف_کړه اعظمي_UTF             0x0010FFFF
+#تعریف_کړه HALF_ښويدنه              10
+#تعریف_کړه HALF_بنسټ               0x0010000
+#تعریف_کړه HALF_ماسک               0x3FF
+#تعریف_کړه SURROGATE_لوړ_پیل    0xD800
+#تعریف_کړه SURROGATE_ټیټ_پیل     0xDC00
 
 /* -SURROGATE_LOW_START + HALF_BASE */
-#define SURROGATE_LOW_BASE      9216
+#تعریف_کړه SURROGATE_ټیټ_بنسټ      9216
 
-enum {
-    UCNV_NEED_TO_WRITE_BOM=1
+تعداد {
+    UCNV_NEED_منزل_WRITE_BOM=1
 };
 
 /* UTF-32BE ----------------------------------------------------------------- */
 U_CDECL_BEGIN
-static void U_CALLCONV
-T_UConverter_toUnicode_UTF32_BE(UConverterToUnicodeArgs * args,
-                                UErrorCode * err)
+ساكن فراغ U_CALLCONV
+T_UConverter_منزل_Unicode_UTF32_BE(UConverter_منزل_Unicode_دلیلونه * دلیلونه_2,
+                                UError_کوډ * err)
 {
-    const unsigned char *mySource = (unsigned char *) args->source;
-    char16_t *myTarget = args->target;
-    const unsigned char *sourceLimit = (unsigned char *) args->sourceLimit;
-    const char16_t *targetLimit = args->targetLimit;
-    unsigned char *toUBytes = args->converter->toUBytes;
+    ثابت بینښه حرف *my_سرچینه = (بینښه حرف *) دلیلونه_2->سرچینه;
+    char16_t *my_موخه = دلیلونه_2->موخه;
+    ثابت بینښه حرف *سرچینه_حد = (بینښه حرف *) دلیلونه_2->سرچینه_حد;
+    ثابت char16_t *موخه_حد = دلیلونه_2->موخه_حد;
+    بینښه حرف *منزل_UBytes = دلیلونه_2->converter->منزل_UBytes;
     uint32_t ch, i;
 
     /* Restore state of current sequence */
-    if (args->converter->toULength > 0 && myTarget < targetLimit) {
-        i = args->converter->toULength;       /* restore # of bytes consumed */
-        args->converter->toULength = 0;
+    إذا (دلیلونه_2->converter->منزل_ULength > 0 && my_موخه < موخه_حد) {
+        i = دلیلونه_2->converter->منزل_ULength;       /* restore # of bytes consumed */
+        دلیلونه_2->converter->منزل_ULength = 0;
 
-        ch = args->converter->toUnicodeStatus - 1;/*Stores the previously calculated ch from a previous call*/
-        args->converter->toUnicodeStatus = 0;
-        goto morebytes;
+        ch = دلیلونه_2->converter->منزل_Unicode_حالت - 1;/*Stores the previously calculated ch from a previous call*/
+        دلیلونه_2->converter->منزل_Unicode_حالت = 0;
+        اذهب morebytes;
     }
 
-    while (mySource < sourceLimit && myTarget < targetLimit) {
+    طالما (my_سرچینه < سرچینه_حد && my_موخه < موخه_حد) {
         i = 0;
         ch = 0;
 morebytes:
-        while (i < sizeof(uint32_t)) {
-            if (mySource < sourceLimit) {
-                ch = (ch << 8) | (uint8_t)(*mySource);
-                toUBytes[i++] = (char) *(mySource++);
+        طالما (i < حجم(uint32_t)) {
+            إذا (my_سرچینه < سرچینه_حد) {
+                ch = (ch << 8) | (uint8_t)(*my_سرچینه);
+                منزل_UBytes[i++] = (حرف) *(my_سرچینه++);
             }
-            else {
+            وإلا {
                 /* stores a partially calculated target*/
                 /* + 1 to make 0 a valid character */
-                args->converter->toUnicodeStatus = ch + 1;
-                args->converter->toULength = (int8_t) i;
-                goto donefornow;
+                دلیلونه_2->converter->منزل_Unicode_حالت = ch + 1;
+                دلیلونه_2->converter->منزل_ULength = (int8_t) i;
+                اذهب donefornow;
             }
         }
 
-        if (ch <= MAXIMUM_UTF && !U_IS_SURROGATE(ch)) {
+        إذا (ch <= اعظمي_UTF && !U_IS_SURROGATE(ch)) {
             /* Normal valid byte when the loop has not prematurely terminated (i < inBytes) */
-            if (ch <= MAXIMUM_UCS2) 
+            إذا (ch <= اعظمي_UCS2) 
             {
                 /* fits in 16 bits */
-                *(myTarget++) = (char16_t) ch;
+                *(my_موخه++) = (char16_t) ch;
             }
-            else {
+            وإلا {
                 /* write out the surrogates */
-                *(myTarget++) = U16_LEAD(ch);
+                *(my_موخه++) = U16_LEAD(ch);
                 ch = U16_TRAIL(ch);
-                if (myTarget < targetLimit) {
-                    *(myTarget++) = (char16_t)ch;
+                إذا (my_موخه < موخه_حد) {
+                    *(my_موخه++) = (char16_t)ch;
                 }
-                else {
+                وإلا {
                     /* Put in overflow buffer (not handled here) */
-                    args->converter->UCharErrorBuffer[0] = (char16_t) ch;
-                    args->converter->UCharErrorBufferLength = 1;
-                    *err = U_BUFFER_OVERFLOW_ERROR;
-                    break;
+                    دلیلونه_2->converter->UChar_Error_بفر[0] = (char16_t) ch;
+                    دلیلونه_2->converter->UChar_Error_بفر_اوږدتیا = 1;
+                    *err = U_بفر_ډکېدنه_ERROR;
+                    اكسر;
                 }
             }
         }
-        else {
-            args->converter->toULength = (int8_t)i;
-            *err = U_ILLEGAL_CHAR_FOUND;
-            break;
+        وإلا {
+            دلیلونه_2->converter->منزل_ULength = (int8_t)i;
+            *err = U_ILLEGAL_CHAR_وموندل;
+            اكسر;
         }
     }
 
 donefornow:
-    if (mySource < sourceLimit && myTarget >= targetLimit && U_SUCCESS(*err)) {
+    إذا (my_سرچینه < سرچینه_حد && my_موخه >= موخه_حد && U_SUCCESS(*err)) {
         /* End of target buffer */
-        *err = U_BUFFER_OVERFLOW_ERROR;
+        *err = U_بفر_ډکېدنه_ERROR;
     }
 
-    args->target = myTarget;
-    args->source = (const char *) mySource;
+    دلیلونه_2->موخه = my_موخه;
+    دلیلونه_2->سرچینه = (ثابت حرف *) my_سرچینه;
 }
 
-static void U_CALLCONV
-T_UConverter_toUnicode_UTF32_BE_OFFSET_LOGIC(UConverterToUnicodeArgs * args,
-                                             UErrorCode * err)
+ساكن فراغ U_CALLCONV
+T_UConverter_منزل_Unicode_UTF32_BE_دننه_واټن_LOGIC(UConverter_منزل_Unicode_دلیلونه * دلیلونه_2,
+                                             UError_کوډ * err)
 {
-    const unsigned char *mySource = (unsigned char *) args->source;
-    char16_t *myTarget = args->target;
-    int32_t *myOffsets = args->offsets;
-    const unsigned char *sourceLimit = (unsigned char *) args->sourceLimit;
-    const char16_t *targetLimit = args->targetLimit;
-    unsigned char *toUBytes = args->converter->toUBytes;
+    ثابت بینښه حرف *my_سرچینه = (بینښه حرف *) دلیلونه_2->سرچینه;
+    char16_t *my_موخه = دلیلونه_2->موخه;
+    int32_t *myOffsets = دلیلونه_2->offsets;
+    ثابت بینښه حرف *سرچینه_حد = (بینښه حرف *) دلیلونه_2->سرچینه_حد;
+    ثابت char16_t *موخه_حد = دلیلونه_2->موخه_حد;
+    بینښه حرف *منزل_UBytes = دلیلونه_2->converter->منزل_UBytes;
     uint32_t ch, i;
-    int32_t offsetNum = 0;
+    int32_t دننه_واټن_عدد = 0;
 
     /* Restore state of current sequence */
-    if (args->converter->toULength > 0 && myTarget < targetLimit) {
-        i = args->converter->toULength;       /* restore # of bytes consumed */
-        args->converter->toULength = 0;
+    إذا (دلیلونه_2->converter->منزل_ULength > 0 && my_موخه < موخه_حد) {
+        i = دلیلونه_2->converter->منزل_ULength;       /* restore # of bytes consumed */
+        دلیلونه_2->converter->منزل_ULength = 0;
 
-        ch = args->converter->toUnicodeStatus - 1;/*Stores the previously calculated ch from a previous call*/
-        args->converter->toUnicodeStatus = 0;
-        goto morebytes;
+        ch = دلیلونه_2->converter->منزل_Unicode_حالت - 1;/*Stores the previously calculated ch from a previous call*/
+        دلیلونه_2->converter->منزل_Unicode_حالت = 0;
+        اذهب morebytes;
     }
 
-    while (mySource < sourceLimit && myTarget < targetLimit) {
+    طالما (my_سرچینه < سرچینه_حد && my_موخه < موخه_حد) {
         i = 0;
         ch = 0;
 morebytes:
-        while (i < sizeof(uint32_t)) {
-            if (mySource < sourceLimit) {
-                ch = (ch << 8) | (uint8_t)(*mySource);
-                toUBytes[i++] = (char) *(mySource++);
+        طالما (i < حجم(uint32_t)) {
+            إذا (my_سرچینه < سرچینه_حد) {
+                ch = (ch << 8) | (uint8_t)(*my_سرچینه);
+                منزل_UBytes[i++] = (حرف) *(my_سرچینه++);
             }
-            else {
+            وإلا {
                 /* stores a partially calculated target*/
                 /* + 1 to make 0 a valid character */
-                args->converter->toUnicodeStatus = ch + 1;
-                args->converter->toULength = (int8_t) i;
-                goto donefornow;
+                دلیلونه_2->converter->منزل_Unicode_حالت = ch + 1;
+                دلیلونه_2->converter->منزل_ULength = (int8_t) i;
+                اذهب donefornow;
             }
         }
 
-        if (ch <= MAXIMUM_UTF && !U_IS_SURROGATE(ch)) {
+        إذا (ch <= اعظمي_UTF && !U_IS_SURROGATE(ch)) {
             /* Normal valid byte when the loop has not prematurely terminated (i < inBytes) */
-            if (ch <= MAXIMUM_UCS2) {
+            إذا (ch <= اعظمي_UCS2) {
                 /* fits in 16 bits */
-                *(myTarget++) = (char16_t) ch;
-                *(myOffsets++) = offsetNum;
+                *(my_موخه++) = (char16_t) ch;
+                *(myOffsets++) = دننه_واټن_عدد;
             }
-            else {
+            وإلا {
                 /* write out the surrogates */
-                *(myTarget++) = U16_LEAD(ch);
-                *myOffsets++ = offsetNum;
+                *(my_موخه++) = U16_LEAD(ch);
+                *myOffsets++ = دننه_واټن_عدد;
                 ch = U16_TRAIL(ch);
-                if (myTarget < targetLimit)
+                إذا (my_موخه < موخه_حد)
                 {
-                    *(myTarget++) = (char16_t)ch;
-                    *(myOffsets++) = offsetNum;
+                    *(my_موخه++) = (char16_t)ch;
+                    *(myOffsets++) = دننه_واټن_عدد;
                 }
-                else {
+                وإلا {
                     /* Put in overflow buffer (not handled here) */
-                    args->converter->UCharErrorBuffer[0] = (char16_t) ch;
-                    args->converter->UCharErrorBufferLength = 1;
-                    *err = U_BUFFER_OVERFLOW_ERROR;
-                    break;
+                    دلیلونه_2->converter->UChar_Error_بفر[0] = (char16_t) ch;
+                    دلیلونه_2->converter->UChar_Error_بفر_اوږدتیا = 1;
+                    *err = U_بفر_ډکېدنه_ERROR;
+                    اكسر;
                 }
             }
         }
-        else {
-            args->converter->toULength = (int8_t)i;
-            *err = U_ILLEGAL_CHAR_FOUND;
-            break;
+        وإلا {
+            دلیلونه_2->converter->منزل_ULength = (int8_t)i;
+            *err = U_ILLEGAL_CHAR_وموندل;
+            اكسر;
         }
-        offsetNum += i;
+        دننه_واټن_عدد += i;
     }
 
 donefornow:
-    if (mySource < sourceLimit && myTarget >= targetLimit && U_SUCCESS(*err))
+    إذا (my_سرچینه < سرچینه_حد && my_موخه >= موخه_حد && U_SUCCESS(*err))
     {
         /* End of target buffer */
-        *err = U_BUFFER_OVERFLOW_ERROR;
+        *err = U_بفر_ډکېدنه_ERROR;
     }
 
-    args->target = myTarget;
-    args->source = (const char *) mySource;
-    args->offsets = myOffsets;
+    دلیلونه_2->موخه = my_موخه;
+    دلیلونه_2->سرچینه = (ثابت حرف *) my_سرچینه;
+    دلیلونه_2->offsets = myOffsets;
 }
 
-static void U_CALLCONV
-T_UConverter_fromUnicode_UTF32_BE(UConverterFromUnicodeArgs * args,
-                                  UErrorCode * err)
+ساكن فراغ U_CALLCONV
+T_UConverter_fromUnicode_UTF32_BE(UConverter_From_Unicode_دلیلونه * دلیلونه_2,
+                                  UError_کوډ * err)
 {
-    const char16_t *mySource = args->source;
-    unsigned char *myTarget;
-    const char16_t *sourceLimit = args->sourceLimit;
-    const unsigned char *targetLimit = (unsigned char *) args->targetLimit;
+    ثابت char16_t *my_سرچینه = دلیلونه_2->سرچینه;
+    بینښه حرف *my_موخه;
+    ثابت char16_t *سرچینه_حد = دلیلونه_2->سرچینه_حد;
+    ثابت بینښه حرف *موخه_حد = (بینښه حرف *) دلیلونه_2->موخه_حد;
     UChar32 ch, ch2;
-    unsigned int indexToWrite;
-    unsigned char temp[sizeof(uint32_t)];
+    بینښه صحيح شاخص_منزل_Write;
+    بینښه حرف لنډمهاله[حجم(uint32_t)];
 
-    if(mySource >= sourceLimit) {
+    إذا(my_سرچینه >= سرچینه_حد) {
         /* no input, nothing to do */
-        return;
+        أرجع;
     }
 
     /* write the BOM if necessary */
-    if(args->converter->fromUnicodeStatus==UCNV_NEED_TO_WRITE_BOM) {
-        static const char bom[]={ 0, 0, (char)0xfeu, (char)0xffu };
-        ucnv_fromUWriteBytes(args->converter,
+    إذا(دلیلونه_2->converter->from_Unicode_حالت==UCNV_NEED_منزل_WRITE_BOM) {
+        ساكن ثابت حرف bom[]={ 0, 0, (حرف)0xfeu, (حرف)0xffu };
+        ucnv_from_UWrite_بایټونه(دلیلونه_2->converter,
                              bom, 4,
-                             &args->target, args->targetLimit,
-                             &args->offsets, -1,
+                             &دلیلونه_2->موخه, دلیلونه_2->موخه_حد,
+                             &دلیلونه_2->offsets, -1,
                              err);
-        args->converter->fromUnicodeStatus=0;
+        دلیلونه_2->converter->from_Unicode_حالت=0;
     }
 
-    myTarget = (unsigned char *) args->target;
-    temp[0] = 0;
+    my_موخه = (بینښه حرف *) دلیلونه_2->موخه;
+    لنډمهاله[0] = 0;
 
-    if (args->converter->fromUChar32) {
-        ch = args->converter->fromUChar32;
-        args->converter->fromUChar32 = 0;
-        goto lowsurogate;
+    إذا (دلیلونه_2->converter->fromUChar32) {
+        ch = دلیلونه_2->converter->fromUChar32;
+        دلیلونه_2->converter->fromUChar32 = 0;
+        اذهب lowsurogate;
     }
 
-    while (mySource < sourceLimit && myTarget < targetLimit) {
-        ch = *(mySource++);
+    طالما (my_سرچینه < سرچینه_حد && my_موخه < موخه_حد) {
+        ch = *(my_سرچینه++);
 
-        if (U_IS_SURROGATE(ch)) {
-            if (U_IS_LEAD(ch)) {
+        إذا (U_IS_SURROGATE(ch)) {
+            إذا (U_IS_LEAD(ch)) {
 lowsurogate:
-                if (mySource < sourceLimit) {
-                    ch2 = *mySource;
-                    if (U_IS_TRAIL(ch2)) {
-                        ch = ((ch - SURROGATE_HIGH_START) << HALF_SHIFT) + ch2 + SURROGATE_LOW_BASE;
-                        mySource++;
+                إذا (my_سرچینه < سرچینه_حد) {
+                    ch2 = *my_سرچینه;
+                    إذا (U_IS_TRAIL(ch2)) {
+                        ch = ((ch - SURROGATE_لوړ_پیل) << HALF_ښويدنه) + ch2 + SURROGATE_ټیټ_بنسټ;
+                        my_سرچینه++;
                     }
-                    else {
+                    وإلا {
                         /* this is an unmatched trail code unit (2nd surrogate) */
                         /* callback(illegal) */
-                        args->converter->fromUChar32 = ch;
-                        *err = U_ILLEGAL_CHAR_FOUND;
-                        break;
+                        دلیلونه_2->converter->fromUChar32 = ch;
+                        *err = U_ILLEGAL_CHAR_وموندل;
+                        اكسر;
                     }
                 }
-                else {
+                وإلا {
                     /* ran out of source */
-                    args->converter->fromUChar32 = ch;
-                    if (args->flush) {
+                    دلیلونه_2->converter->fromUChar32 = ch;
+                    إذا (دلیلونه_2->flush) {
                         /* this is an unmatched trail code unit (2nd surrogate) */
                         /* callback(illegal) */
-                        *err = U_ILLEGAL_CHAR_FOUND;
+                        *err = U_ILLEGAL_CHAR_وموندل;
                     }
-                    break;
+                    اكسر;
                 }
             }
-            else {
+            وإلا {
                 /* this is an unmatched trail code unit (2nd surrogate) */
                 /* callback(illegal) */
-                args->converter->fromUChar32 = ch;
-                *err = U_ILLEGAL_CHAR_FOUND;
-                break;
+                دلیلونه_2->converter->fromUChar32 = ch;
+                *err = U_ILLEGAL_CHAR_وموندل;
+                اكسر;
             }
         }
 
         /* We cannot get any larger than 10FFFF because we are coming from UTF-16 */
-        temp[1] = (uint8_t) (ch >> 16 & 0x1F);
-        temp[2] = (uint8_t) (ch >> 8);  /* unsigned cast implicitly does (ch & FF) */
-        temp[3] = (uint8_t) (ch);       /* unsigned cast implicitly does (ch & FF) */
+        لنډمهاله[1] = (uint8_t) (ch >> 16 & 0x1F);
+        لنډمهاله[2] = (uint8_t) (ch >> 8);  /* unsigned cast implicitly does (ch & FF) */
+        لنډمهاله[3] = (uint8_t) (ch);       /* unsigned cast implicitly does (ch & FF) */
 
-        for (indexToWrite = 0; indexToWrite <= sizeof(uint32_t) - 1; indexToWrite++) {
-            if (myTarget < targetLimit) {
-                *(myTarget++) = temp[indexToWrite];
+        لكل (شاخص_منزل_Write = 0; شاخص_منزل_Write <= حجم(uint32_t) - 1; شاخص_منزل_Write++) {
+            إذا (my_موخه < موخه_حد) {
+                *(my_موخه++) = لنډمهاله[شاخص_منزل_Write];
             }
-            else {
-                args->converter->charErrorBuffer[args->converter->charErrorBufferLength++] = temp[indexToWrite];
-                *err = U_BUFFER_OVERFLOW_ERROR;
+            وإلا {
+                دلیلونه_2->converter->char_Error_بفر[دلیلونه_2->converter->char_Error_بفر_اوږدتیا++] = لنډمهاله[شاخص_منزل_Write];
+                *err = U_بفر_ډکېدنه_ERROR;
             }
         }
     }
 
-    if (mySource < sourceLimit && myTarget >= targetLimit && U_SUCCESS(*err)) {
-        *err = U_BUFFER_OVERFLOW_ERROR;
+    إذا (my_سرچینه < سرچینه_حد && my_موخه >= موخه_حد && U_SUCCESS(*err)) {
+        *err = U_بفر_ډکېدنه_ERROR;
     }
 
-    args->target = (char *) myTarget;
-    args->source = mySource;
+    دلیلونه_2->موخه = (حرف *) my_موخه;
+    دلیلونه_2->سرچینه = my_سرچینه;
 }
 
-static void U_CALLCONV
-T_UConverter_fromUnicode_UTF32_BE_OFFSET_LOGIC(UConverterFromUnicodeArgs * args,
-                                               UErrorCode * err)
+ساكن فراغ U_CALLCONV
+T_UConverter_from_Unicode_UTF32_BE_دننه_واټن_LOGIC(UConverter_From_Unicode_دلیلونه * دلیلونه_2,
+                                               UError_کوډ * err)
 {
-    const char16_t *mySource = args->source;
-    unsigned char *myTarget;
+    ثابت char16_t *my_سرچینه = دلیلونه_2->سرچینه;
+    بینښه حرف *my_موخه;
     int32_t *myOffsets;
-    const char16_t *sourceLimit = args->sourceLimit;
-    const unsigned char *targetLimit = (unsigned char *) args->targetLimit;
+    ثابت char16_t *سرچینه_حد = دلیلونه_2->سرچینه_حد;
+    ثابت بینښه حرف *موخه_حد = (بینښه حرف *) دلیلونه_2->موخه_حد;
     UChar32 ch, ch2;
-    int32_t offsetNum = 0;
-    unsigned int indexToWrite;
-    unsigned char temp[sizeof(uint32_t)];
+    int32_t دننه_واټن_عدد = 0;
+    بینښه صحيح شاخص_منزل_Write;
+    بینښه حرف لنډمهاله[حجم(uint32_t)];
 
-    if(mySource >= sourceLimit) {
+    إذا(my_سرچینه >= سرچینه_حد) {
         /* no input, nothing to do */
-        return;
+        أرجع;
     }
 
     /* write the BOM if necessary */
-    if(args->converter->fromUnicodeStatus==UCNV_NEED_TO_WRITE_BOM) {
-        static const char bom[]={ 0, 0, (char)0xfeu, (char)0xffu };
-        ucnv_fromUWriteBytes(args->converter,
+    إذا(دلیلونه_2->converter->from_Unicode_حالت==UCNV_NEED_منزل_WRITE_BOM) {
+        ساكن ثابت حرف bom[]={ 0, 0, (حرف)0xfeu, (حرف)0xffu };
+        ucnv_from_UWrite_بایټونه(دلیلونه_2->converter,
                              bom, 4,
-                             &args->target, args->targetLimit,
-                             &args->offsets, -1,
+                             &دلیلونه_2->موخه, دلیلونه_2->موخه_حد,
+                             &دلیلونه_2->offsets, -1,
                              err);
-        args->converter->fromUnicodeStatus=0;
+        دلیلونه_2->converter->from_Unicode_حالت=0;
     }
 
-    myTarget = (unsigned char *) args->target;
-    myOffsets = args->offsets;
-    temp[0] = 0;
+    my_موخه = (بینښه حرف *) دلیلونه_2->موخه;
+    myOffsets = دلیلونه_2->offsets;
+    لنډمهاله[0] = 0;
 
-    if (args->converter->fromUChar32) {
-        ch = args->converter->fromUChar32;
-        args->converter->fromUChar32 = 0;
-        goto lowsurogate;
+    إذا (دلیلونه_2->converter->fromUChar32) {
+        ch = دلیلونه_2->converter->fromUChar32;
+        دلیلونه_2->converter->fromUChar32 = 0;
+        اذهب lowsurogate;
     }
 
-    while (mySource < sourceLimit && myTarget < targetLimit) {
-        ch = *(mySource++);
+    طالما (my_سرچینه < سرچینه_حد && my_موخه < موخه_حد) {
+        ch = *(my_سرچینه++);
 
-        if (U_IS_SURROGATE(ch)) {
-            if (U_IS_LEAD(ch)) {
+        إذا (U_IS_SURROGATE(ch)) {
+            إذا (U_IS_LEAD(ch)) {
 lowsurogate:
-                if (mySource < sourceLimit) {
-                    ch2 = *mySource;
-                    if (U_IS_TRAIL(ch2)) {
-                        ch = ((ch - SURROGATE_HIGH_START) << HALF_SHIFT) + ch2 + SURROGATE_LOW_BASE;
-                        mySource++;
+                إذا (my_سرچینه < سرچینه_حد) {
+                    ch2 = *my_سرچینه;
+                    إذا (U_IS_TRAIL(ch2)) {
+                        ch = ((ch - SURROGATE_لوړ_پیل) << HALF_ښويدنه) + ch2 + SURROGATE_ټیټ_بنسټ;
+                        my_سرچینه++;
                     }
-                    else {
+                    وإلا {
                         /* this is an unmatched trail code unit (2nd surrogate) */
                         /* callback(illegal) */
-                        args->converter->fromUChar32 = ch;
-                        *err = U_ILLEGAL_CHAR_FOUND;
-                        break;
+                        دلیلونه_2->converter->fromUChar32 = ch;
+                        *err = U_ILLEGAL_CHAR_وموندل;
+                        اكسر;
                     }
                 }
-                else {
+                وإلا {
                     /* ran out of source */
-                    args->converter->fromUChar32 = ch;
-                    if (args->flush) {
+                    دلیلونه_2->converter->fromUChar32 = ch;
+                    إذا (دلیلونه_2->flush) {
                         /* this is an unmatched trail code unit (2nd surrogate) */
                         /* callback(illegal) */
-                        *err = U_ILLEGAL_CHAR_FOUND;
+                        *err = U_ILLEGAL_CHAR_وموندل;
                     }
-                    break;
+                    اكسر;
                 }
             }
-            else {
+            وإلا {
                 /* this is an unmatched trail code unit (2nd surrogate) */
                 /* callback(illegal) */
-                args->converter->fromUChar32 = ch;
-                *err = U_ILLEGAL_CHAR_FOUND;
-                break;
+                دلیلونه_2->converter->fromUChar32 = ch;
+                *err = U_ILLEGAL_CHAR_وموندل;
+                اكسر;
             }
         }
 
         /* We cannot get any larger than 10FFFF because we are coming from UTF-16 */
-        temp[1] = (uint8_t) (ch >> 16 & 0x1F);
-        temp[2] = (uint8_t) (ch >> 8);  /* unsigned cast implicitly does (ch & FF) */
-        temp[3] = (uint8_t) (ch);       /* unsigned cast implicitly does (ch & FF) */
+        لنډمهاله[1] = (uint8_t) (ch >> 16 & 0x1F);
+        لنډمهاله[2] = (uint8_t) (ch >> 8);  /* unsigned cast implicitly does (ch & FF) */
+        لنډمهاله[3] = (uint8_t) (ch);       /* unsigned cast implicitly does (ch & FF) */
 
-        for (indexToWrite = 0; indexToWrite <= sizeof(uint32_t) - 1; indexToWrite++) {
-            if (myTarget < targetLimit) {
-                *(myTarget++) = temp[indexToWrite];
-                *(myOffsets++) = offsetNum;
+        لكل (شاخص_منزل_Write = 0; شاخص_منزل_Write <= حجم(uint32_t) - 1; شاخص_منزل_Write++) {
+            إذا (my_موخه < موخه_حد) {
+                *(my_موخه++) = لنډمهاله[شاخص_منزل_Write];
+                *(myOffsets++) = دننه_واټن_عدد;
             }
-            else {
-                args->converter->charErrorBuffer[args->converter->charErrorBufferLength++] = temp[indexToWrite];
-                *err = U_BUFFER_OVERFLOW_ERROR;
+            وإلا {
+                دلیلونه_2->converter->char_Error_بفر[دلیلونه_2->converter->char_Error_بفر_اوږدتیا++] = لنډمهاله[شاخص_منزل_Write];
+                *err = U_بفر_ډکېدنه_ERROR;
             }
         }
-        offsetNum = offsetNum + 1 + (temp[1] != 0);
+        دننه_واټن_عدد = دننه_واټن_عدد + 1 + (لنډمهاله[1] != 0);
     }
 
-    if (mySource < sourceLimit && myTarget >= targetLimit && U_SUCCESS(*err)) {
-        *err = U_BUFFER_OVERFLOW_ERROR;
+    إذا (my_سرچینه < سرچینه_حد && my_موخه >= موخه_حد && U_SUCCESS(*err)) {
+        *err = U_بفر_ډکېدنه_ERROR;
     }
 
-    args->target = (char *) myTarget;
-    args->source = mySource;
-    args->offsets = myOffsets;
+    دلیلونه_2->موخه = (حرف *) my_موخه;
+    دلیلونه_2->سرچینه = my_سرچینه;
+    دلیلونه_2->offsets = myOffsets;
 }
 
-static UChar32 U_CALLCONV
-T_UConverter_getNextUChar_UTF32_BE(UConverterToUnicodeArgs* args,
-                                   UErrorCode* err)
+ساكن UChar32 U_CALLCONV
+T_UConverter_get_بل_UChar_UTF32_BE(UConverter_منزل_Unicode_دلیلونه* دلیلونه_2,
+                                   UError_کوډ* err)
 {
-    const uint8_t *mySource;
+    ثابت uint8_t *my_سرچینه;
     UChar32 myUChar;
     int32_t length;
 
-    mySource = (const uint8_t *)args->source;
-    if (mySource >= (const uint8_t *)args->sourceLimit)
+    my_سرچینه = (ثابت uint8_t *)دلیلونه_2->سرچینه;
+    إذا (my_سرچینه >= (ثابت uint8_t *)دلیلونه_2->سرچینه_حد)
     {
         /* no input */
-        *err = U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0xffff;
+        *err = U_شاخص_OUTOFBOUNDS_ERROR;
+        أرجع 0xffff;
     }
 
-    length = (int32_t)((const uint8_t *)args->sourceLimit - mySource);
-    if (length < 4) 
+    length = (int32_t)((ثابت uint8_t *)دلیلونه_2->سرچینه_حد - my_سرچینه);
+    إذا (length < 4) 
     {
         /* got a partial character */
-        uprv_memcpy(args->converter->toUBytes, mySource, length);
-        args->converter->toULength = (int8_t)length;
-        args->source = (const char *)(mySource + length);
-        *err = U_TRUNCATED_CHAR_FOUND;
-        return 0xffff;
+        uprv_memcpy(دلیلونه_2->converter->منزل_UBytes, my_سرچینه, length);
+        دلیلونه_2->converter->منزل_ULength = (int8_t)length;
+        دلیلونه_2->سرچینه = (ثابت حرف *)(my_سرچینه + length);
+        *err = U_TRUNCATED_CHAR_وموندل;
+        أرجع 0xffff;
     }
 
     /* Don't even try to do a direct cast because the value may be on an odd address. */
-    myUChar = ((UChar32)mySource[0] << 24)
-            | ((UChar32)mySource[1] << 16)
-            | ((UChar32)mySource[2] << 8)
-            | ((UChar32)mySource[3]);
+    myUChar = ((UChar32)my_سرچینه[0] << 24)
+            | ((UChar32)my_سرچینه[1] << 16)
+            | ((UChar32)my_سرچینه[2] << 8)
+            | ((UChar32)my_سرچینه[3]);
 
-    args->source = (const char *)(mySource + 4);
-    if ((uint32_t)myUChar <= MAXIMUM_UTF && !U_IS_SURROGATE(myUChar)) {
-        return myUChar;
+    دلیلونه_2->سرچینه = (ثابت حرف *)(my_سرچینه + 4);
+    إذا ((uint32_t)myUChar <= اعظمي_UTF && !U_IS_SURROGATE(myUChar)) {
+        أرجع myUChar;
     }
 
-    uprv_memcpy(args->converter->toUBytes, mySource, 4);
-    args->converter->toULength = 4;
+    uprv_memcpy(دلیلونه_2->converter->منزل_UBytes, my_سرچینه, 4);
+    دلیلونه_2->converter->منزل_ULength = 4;
 
-    *err = U_ILLEGAL_CHAR_FOUND;
-    return 0xffff;
+    *err = U_ILLEGAL_CHAR_وموندل;
+    أرجع 0xffff;
 }
-U_CDECL_END
-static const UConverterImpl _UTF32BEImpl = {
+U_CDECL_پای_ټکی
+ساكن ثابت UConverterImpl _UTF32BEImpl = {
     UCNV_UTF32_BigEndian,
 
-    nullptr,
-    nullptr,
+    تش_اشاره,
+    تش_اشاره,
 
-    nullptr,
-    nullptr,
-    nullptr,
+    تش_اشاره,
+    تش_اشاره,
+    تش_اشاره,
 
-    T_UConverter_toUnicode_UTF32_BE,
-    T_UConverter_toUnicode_UTF32_BE_OFFSET_LOGIC,
+    T_UConverter_منزل_Unicode_UTF32_BE,
+    T_UConverter_منزل_Unicode_UTF32_BE_دننه_واټن_LOGIC,
     T_UConverter_fromUnicode_UTF32_BE,
-    T_UConverter_fromUnicode_UTF32_BE_OFFSET_LOGIC,
-    T_UConverter_getNextUChar_UTF32_BE,
+    T_UConverter_from_Unicode_UTF32_BE_دننه_واټن_LOGIC,
+    T_UConverter_get_بل_UChar_UTF32_BE,
 
-    nullptr,
-    nullptr,
-    nullptr,
-    nullptr,
-    ucnv_getNonSurrogateUnicodeSet,
+    تش_اشاره,
+    تش_اشاره,
+    تش_اشاره,
+    تش_اشاره,
+    ucnv_get_Non_Surrogate_Unicode_سېټ,
 
-    nullptr,
-    nullptr
+    تش_اشاره,
+    تش_اشاره
 };
 
 /* The 1232 CCSID refers to any version of Unicode with any endianness of UTF-32 */
-static const UConverterStaticData _UTF32BEStaticData = {
-    sizeof(UConverterStaticData),
+ساكن ثابت UConverter_Static_معلومات UTF32_BEStatic_معلومات = {
+    حجم(UConverter_Static_معلومات),
     "UTF-32BE",
     1232,
     UCNV_IBM, UCNV_UTF32_BigEndian, 4, 4,
-    { 0, 0, 0xff, 0xfd }, 4, false, false,
+    { 0, 0, 0xff, 0xfd }, 4, خطأ, خطأ,
     0,
     0,
     { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 } /* reserved */
 };
 
-const UConverterSharedData _UTF32BEData =
-        UCNV_IMMUTABLE_SHARED_DATA_INITIALIZER(&_UTF32BEStaticData, &_UTF32BEImpl);
+ثابت UConverter_Shared_معلومات _UTF32BEData =
+        UCNV_IMMUTABLE_SHARED_معلومات_INITIALIZER(&UTF32_BEStatic_معلومات, &_UTF32BEImpl);
 
 /* UTF-32LE ---------------------------------------------------------- */
 U_CDECL_BEGIN
-static void U_CALLCONV
-T_UConverter_toUnicode_UTF32_LE(UConverterToUnicodeArgs * args,
-                                UErrorCode * err)
+ساكن فراغ U_CALLCONV
+T_UConverter_منزل_Unicode_UTF32_LE(UConverter_منزل_Unicode_دلیلونه * دلیلونه_2,
+                                UError_کوډ * err)
 {
-    const unsigned char *mySource = (unsigned char *) args->source;
-    char16_t *myTarget = args->target;
-    const unsigned char *sourceLimit = (unsigned char *) args->sourceLimit;
-    const char16_t *targetLimit = args->targetLimit;
-    unsigned char *toUBytes = args->converter->toUBytes;
+    ثابت بینښه حرف *my_سرچینه = (بینښه حرف *) دلیلونه_2->سرچینه;
+    char16_t *my_موخه = دلیلونه_2->موخه;
+    ثابت بینښه حرف *سرچینه_حد = (بینښه حرف *) دلیلونه_2->سرچینه_حد;
+    ثابت char16_t *موخه_حد = دلیلونه_2->موخه_حد;
+    بینښه حرف *منزل_UBytes = دلیلونه_2->converter->منزل_UBytes;
     uint32_t ch, i;
 
     /* Restore state of current sequence */
-    if (args->converter->toULength > 0 && myTarget < targetLimit)
+    إذا (دلیلونه_2->converter->منزل_ULength > 0 && my_موخه < موخه_حد)
     {
-        i = args->converter->toULength;       /* restore # of bytes consumed */
-        args->converter->toULength = 0;
+        i = دلیلونه_2->converter->منزل_ULength;       /* restore # of bytes consumed */
+        دلیلونه_2->converter->منزل_ULength = 0;
 
         /* Stores the previously calculated ch from a previous call*/
-        ch = args->converter->toUnicodeStatus - 1;
-        args->converter->toUnicodeStatus = 0;
-        goto morebytes;
+        ch = دلیلونه_2->converter->منزل_Unicode_حالت - 1;
+        دلیلونه_2->converter->منزل_Unicode_حالت = 0;
+        اذهب morebytes;
     }
 
-    while (mySource < sourceLimit && myTarget < targetLimit)
+    طالما (my_سرچینه < سرچینه_حد && my_موخه < موخه_حد)
     {
         i = 0;
         ch = 0;
 morebytes:
-        while (i < sizeof(uint32_t))
+        طالما (i < حجم(uint32_t))
         {
-            if (mySource < sourceLimit)
+            إذا (my_سرچینه < سرچینه_حد)
             {
-                ch |= ((uint8_t)(*mySource)) << (i * 8);
-                toUBytes[i++] = (char) *(mySource++);
+                ch |= ((uint8_t)(*my_سرچینه)) << (i * 8);
+                منزل_UBytes[i++] = (حرف) *(my_سرچینه++);
             }
-            else
+            وإلا
             {
                 /* stores a partially calculated target*/
                 /* + 1 to make 0 a valid character */
-                args->converter->toUnicodeStatus = ch + 1;
-                args->converter->toULength = (int8_t) i;
-                goto donefornow;
+                دلیلونه_2->converter->منزل_Unicode_حالت = ch + 1;
+                دلیلونه_2->converter->منزل_ULength = (int8_t) i;
+                اذهب donefornow;
             }
         }
 
-        if (ch <= MAXIMUM_UTF && !U_IS_SURROGATE(ch)) {
+        إذا (ch <= اعظمي_UTF && !U_IS_SURROGATE(ch)) {
             /* Normal valid byte when the loop has not prematurely terminated (i < inBytes) */
-            if (ch <= MAXIMUM_UCS2) {
+            إذا (ch <= اعظمي_UCS2) {
                 /* fits in 16 bits */
-                *(myTarget++) = (char16_t) ch;
+                *(my_موخه++) = (char16_t) ch;
             }
-            else {
+            وإلا {
                 /* write out the surrogates */
-                *(myTarget++) = U16_LEAD(ch);
+                *(my_موخه++) = U16_LEAD(ch);
                 ch = U16_TRAIL(ch);
-                if (myTarget < targetLimit) {
-                    *(myTarget++) = (char16_t)ch;
+                إذا (my_موخه < موخه_حد) {
+                    *(my_موخه++) = (char16_t)ch;
                 }
-                else {
+                وإلا {
                     /* Put in overflow buffer (not handled here) */
-                    args->converter->UCharErrorBuffer[0] = (char16_t) ch;
-                    args->converter->UCharErrorBufferLength = 1;
-                    *err = U_BUFFER_OVERFLOW_ERROR;
-                    break;
+                    دلیلونه_2->converter->UChar_Error_بفر[0] = (char16_t) ch;
+                    دلیلونه_2->converter->UChar_Error_بفر_اوږدتیا = 1;
+                    *err = U_بفر_ډکېدنه_ERROR;
+                    اكسر;
                 }
             }
         }
-        else {
-            args->converter->toULength = (int8_t)i;
-            *err = U_ILLEGAL_CHAR_FOUND;
-            break;
+        وإلا {
+            دلیلونه_2->converter->منزل_ULength = (int8_t)i;
+            *err = U_ILLEGAL_CHAR_وموندل;
+            اكسر;
         }
     }
 
 donefornow:
-    if (mySource < sourceLimit && myTarget >= targetLimit && U_SUCCESS(*err))
+    إذا (my_سرچینه < سرچینه_حد && my_موخه >= موخه_حد && U_SUCCESS(*err))
     {
         /* End of target buffer */
-        *err = U_BUFFER_OVERFLOW_ERROR;
+        *err = U_بفر_ډکېدنه_ERROR;
     }
 
-    args->target = myTarget;
-    args->source = (const char *) mySource;
+    دلیلونه_2->موخه = my_موخه;
+    دلیلونه_2->سرچینه = (ثابت حرف *) my_سرچینه;
 }
 
-static void U_CALLCONV
-T_UConverter_toUnicode_UTF32_LE_OFFSET_LOGIC(UConverterToUnicodeArgs * args,
-                                             UErrorCode * err)
+ساكن فراغ U_CALLCONV
+T_UConverter_منزل_Unicode_UTF32_LE_دننه_واټن_LOGIC(UConverter_منزل_Unicode_دلیلونه * دلیلونه_2,
+                                             UError_کوډ * err)
 {
-    const unsigned char *mySource = (unsigned char *) args->source;
-    char16_t *myTarget = args->target;
-    int32_t *myOffsets = args->offsets;
-    const unsigned char *sourceLimit = (unsigned char *) args->sourceLimit;
-    const char16_t *targetLimit = args->targetLimit;
-    unsigned char *toUBytes = args->converter->toUBytes;
+    ثابت بینښه حرف *my_سرچینه = (بینښه حرف *) دلیلونه_2->سرچینه;
+    char16_t *my_موخه = دلیلونه_2->موخه;
+    int32_t *myOffsets = دلیلونه_2->offsets;
+    ثابت بینښه حرف *سرچینه_حد = (بینښه حرف *) دلیلونه_2->سرچینه_حد;
+    ثابت char16_t *موخه_حد = دلیلونه_2->موخه_حد;
+    بینښه حرف *منزل_UBytes = دلیلونه_2->converter->منزل_UBytes;
     uint32_t ch, i;
-    int32_t offsetNum = 0;
+    int32_t دننه_واټن_عدد = 0;
 
     /* Restore state of current sequence */
-    if (args->converter->toULength > 0 && myTarget < targetLimit)
+    إذا (دلیلونه_2->converter->منزل_ULength > 0 && my_موخه < موخه_حد)
     {
-        i = args->converter->toULength;       /* restore # of bytes consumed */
-        args->converter->toULength = 0;
+        i = دلیلونه_2->converter->منزل_ULength;       /* restore # of bytes consumed */
+        دلیلونه_2->converter->منزل_ULength = 0;
 
         /* Stores the previously calculated ch from a previous call*/
-        ch = args->converter->toUnicodeStatus - 1;
-        args->converter->toUnicodeStatus = 0;
-        goto morebytes;
+        ch = دلیلونه_2->converter->منزل_Unicode_حالت - 1;
+        دلیلونه_2->converter->منزل_Unicode_حالت = 0;
+        اذهب morebytes;
     }
 
-    while (mySource < sourceLimit && myTarget < targetLimit)
+    طالما (my_سرچینه < سرچینه_حد && my_موخه < موخه_حد)
     {
         i = 0;
         ch = 0;
 morebytes:
-        while (i < sizeof(uint32_t))
+        طالما (i < حجم(uint32_t))
         {
-            if (mySource < sourceLimit)
+            إذا (my_سرچینه < سرچینه_حد)
             {
-                ch |= ((uint8_t)(*mySource)) << (i * 8);
-                toUBytes[i++] = (char) *(mySource++);
+                ch |= ((uint8_t)(*my_سرچینه)) << (i * 8);
+                منزل_UBytes[i++] = (حرف) *(my_سرچینه++);
             }
-            else
+            وإلا
             {
                 /* stores a partially calculated target*/
                 /* + 1 to make 0 a valid character */
-                args->converter->toUnicodeStatus = ch + 1;
-                args->converter->toULength = (int8_t) i;
-                goto donefornow;
+                دلیلونه_2->converter->منزل_Unicode_حالت = ch + 1;
+                دلیلونه_2->converter->منزل_ULength = (int8_t) i;
+                اذهب donefornow;
             }
         }
 
-        if (ch <= MAXIMUM_UTF && !U_IS_SURROGATE(ch))
+        إذا (ch <= اعظمي_UTF && !U_IS_SURROGATE(ch))
         {
             /* Normal valid byte when the loop has not prematurely terminated (i < inBytes) */
-            if (ch <= MAXIMUM_UCS2) 
+            إذا (ch <= اعظمي_UCS2) 
             {
                 /* fits in 16 bits */
-                *(myTarget++) = (char16_t) ch;
-                *(myOffsets++) = offsetNum;
+                *(my_موخه++) = (char16_t) ch;
+                *(myOffsets++) = دننه_واټن_عدد;
             }
-            else {
+            وإلا {
                 /* write out the surrogates */
-                *(myTarget++) = U16_LEAD(ch);
-                *(myOffsets++) = offsetNum;
+                *(my_موخه++) = U16_LEAD(ch);
+                *(myOffsets++) = دننه_واټن_عدد;
                 ch = U16_TRAIL(ch);
-                if (myTarget < targetLimit)
+                إذا (my_موخه < موخه_حد)
                 {
-                    *(myTarget++) = (char16_t)ch;
-                    *(myOffsets++) = offsetNum;
+                    *(my_موخه++) = (char16_t)ch;
+                    *(myOffsets++) = دننه_واټن_عدد;
                 }
-                else
+                وإلا
                 {
                     /* Put in overflow buffer (not handled here) */
-                    args->converter->UCharErrorBuffer[0] = (char16_t) ch;
-                    args->converter->UCharErrorBufferLength = 1;
-                    *err = U_BUFFER_OVERFLOW_ERROR;
-                    break;
+                    دلیلونه_2->converter->UChar_Error_بفر[0] = (char16_t) ch;
+                    دلیلونه_2->converter->UChar_Error_بفر_اوږدتیا = 1;
+                    *err = U_بفر_ډکېدنه_ERROR;
+                    اكسر;
                 }
             }
         }
-        else
+        وإلا
         {
-            args->converter->toULength = (int8_t)i;
-            *err = U_ILLEGAL_CHAR_FOUND;
-            break;
+            دلیلونه_2->converter->منزل_ULength = (int8_t)i;
+            *err = U_ILLEGAL_CHAR_وموندل;
+            اكسر;
         }
-        offsetNum += i;
+        دننه_واټن_عدد += i;
     }
 
 donefornow:
-    if (mySource < sourceLimit && myTarget >= targetLimit && U_SUCCESS(*err))
+    إذا (my_سرچینه < سرچینه_حد && my_موخه >= موخه_حد && U_SUCCESS(*err))
     {
         /* End of target buffer */
-        *err = U_BUFFER_OVERFLOW_ERROR;
+        *err = U_بفر_ډکېدنه_ERROR;
     }
 
-    args->target = myTarget;
-    args->source = (const char *) mySource;
-    args->offsets = myOffsets;
+    دلیلونه_2->موخه = my_موخه;
+    دلیلونه_2->سرچینه = (ثابت حرف *) my_سرچینه;
+    دلیلونه_2->offsets = myOffsets;
 }
 
-static void U_CALLCONV
-T_UConverter_fromUnicode_UTF32_LE(UConverterFromUnicodeArgs * args,
-                                  UErrorCode * err)
+ساكن فراغ U_CALLCONV
+T_UConverter_fromUnicode_UTF32_LE(UConverter_From_Unicode_دلیلونه * دلیلونه_2,
+                                  UError_کوډ * err)
 {
-    const char16_t *mySource = args->source;
-    unsigned char *myTarget;
-    const char16_t *sourceLimit = args->sourceLimit;
-    const unsigned char *targetLimit = (unsigned char *) args->targetLimit;
+    ثابت char16_t *my_سرچینه = دلیلونه_2->سرچینه;
+    بینښه حرف *my_موخه;
+    ثابت char16_t *سرچینه_حد = دلیلونه_2->سرچینه_حد;
+    ثابت بینښه حرف *موخه_حد = (بینښه حرف *) دلیلونه_2->موخه_حد;
     UChar32 ch, ch2;
-    unsigned int indexToWrite;
-    unsigned char temp[sizeof(uint32_t)];
+    بینښه صحيح شاخص_منزل_Write;
+    بینښه حرف لنډمهاله[حجم(uint32_t)];
 
-    if(mySource >= sourceLimit) {
+    إذا(my_سرچینه >= سرچینه_حد) {
         /* no input, nothing to do */
-        return;
+        أرجع;
     }
 
     /* write the BOM if necessary */
-    if(args->converter->fromUnicodeStatus==UCNV_NEED_TO_WRITE_BOM) {
-        static const char bom[]={ (char)0xffu, (char)0xfeu, 0, 0 };
-        ucnv_fromUWriteBytes(args->converter,
+    إذا(دلیلونه_2->converter->from_Unicode_حالت==UCNV_NEED_منزل_WRITE_BOM) {
+        ساكن ثابت حرف bom[]={ (حرف)0xffu, (حرف)0xfeu, 0, 0 };
+        ucnv_from_UWrite_بایټونه(دلیلونه_2->converter,
                              bom, 4,
-                             &args->target, args->targetLimit,
-                             &args->offsets, -1,
+                             &دلیلونه_2->موخه, دلیلونه_2->موخه_حد,
+                             &دلیلونه_2->offsets, -1,
                              err);
-        args->converter->fromUnicodeStatus=0;
+        دلیلونه_2->converter->from_Unicode_حالت=0;
     }
 
-    myTarget = (unsigned char *) args->target;
-    temp[3] = 0;
+    my_موخه = (بینښه حرف *) دلیلونه_2->موخه;
+    لنډمهاله[3] = 0;
 
-    if (args->converter->fromUChar32)
+    إذا (دلیلونه_2->converter->fromUChar32)
     {
-        ch = args->converter->fromUChar32;
-        args->converter->fromUChar32 = 0;
-        goto lowsurogate;
+        ch = دلیلونه_2->converter->fromUChar32;
+        دلیلونه_2->converter->fromUChar32 = 0;
+        اذهب lowsurogate;
     }
 
-    while (mySource < sourceLimit && myTarget < targetLimit)
+    طالما (my_سرچینه < سرچینه_حد && my_موخه < موخه_حد)
     {
-        ch = *(mySource++);
+        ch = *(my_سرچینه++);
 
-        if (U16_IS_SURROGATE(ch)) {
-            if (U16_IS_LEAD(ch))
+        إذا (U16_IS_SURROGATE(ch)) {
+            إذا (U16_IS_LEAD(ch))
             {
 lowsurogate:
-                if (mySource < sourceLimit)
+                إذا (my_سرچینه < سرچینه_حد)
                 {
-                    ch2 = *mySource;
-                    if (U16_IS_TRAIL(ch2)) {
-                        ch = ((ch - SURROGATE_HIGH_START) << HALF_SHIFT) + ch2 + SURROGATE_LOW_BASE;
-                        mySource++;
+                    ch2 = *my_سرچینه;
+                    إذا (U16_IS_TRAIL(ch2)) {
+                        ch = ((ch - SURROGATE_لوړ_پیل) << HALF_ښويدنه) + ch2 + SURROGATE_ټیټ_بنسټ;
+                        my_سرچینه++;
                     }
-                    else {
+                    وإلا {
                         /* this is an unmatched trail code unit (2nd surrogate) */
                         /* callback(illegal) */
-                        args->converter->fromUChar32 = ch;
-                        *err = U_ILLEGAL_CHAR_FOUND;
-                        break;
+                        دلیلونه_2->converter->fromUChar32 = ch;
+                        *err = U_ILLEGAL_CHAR_وموندل;
+                        اكسر;
                     }
                 }
-                else {
+                وإلا {
                     /* ran out of source */
-                    args->converter->fromUChar32 = ch;
-                    if (args->flush) {
+                    دلیلونه_2->converter->fromUChar32 = ch;
+                    إذا (دلیلونه_2->flush) {
                         /* this is an unmatched trail code unit (2nd surrogate) */
                         /* callback(illegal) */
-                        *err = U_ILLEGAL_CHAR_FOUND;
+                        *err = U_ILLEGAL_CHAR_وموندل;
                     }
-                    break;
+                    اكسر;
                 }
             }
-            else {
+            وإلا {
                 /* this is an unmatched trail code unit (2nd surrogate) */
                 /* callback(illegal) */
-                args->converter->fromUChar32 = ch;
-                *err = U_ILLEGAL_CHAR_FOUND;
-                break;
+                دلیلونه_2->converter->fromUChar32 = ch;
+                *err = U_ILLEGAL_CHAR_وموندل;
+                اكسر;
             }
         }
 
         /* We cannot get any larger than 10FFFF because we are coming from UTF-16 */
-        temp[2] = (uint8_t) (ch >> 16 & 0x1F);
-        temp[1] = (uint8_t) (ch >> 8);  /* unsigned cast implicitly does (ch & FF) */
-        temp[0] = (uint8_t) (ch);       /* unsigned cast implicitly does (ch & FF) */
+        لنډمهاله[2] = (uint8_t) (ch >> 16 & 0x1F);
+        لنډمهاله[1] = (uint8_t) (ch >> 8);  /* unsigned cast implicitly does (ch & FF) */
+        لنډمهاله[0] = (uint8_t) (ch);       /* unsigned cast implicitly does (ch & FF) */
 
-        for (indexToWrite = 0; indexToWrite <= sizeof(uint32_t) - 1; indexToWrite++)
+        لكل (شاخص_منزل_Write = 0; شاخص_منزل_Write <= حجم(uint32_t) - 1; شاخص_منزل_Write++)
         {
-            if (myTarget < targetLimit)
+            إذا (my_موخه < موخه_حد)
             {
-                *(myTarget++) = temp[indexToWrite];
+                *(my_موخه++) = لنډمهاله[شاخص_منزل_Write];
             }
-            else
+            وإلا
             {
-                args->converter->charErrorBuffer[args->converter->charErrorBufferLength++] = temp[indexToWrite];
-                *err = U_BUFFER_OVERFLOW_ERROR;
+                دلیلونه_2->converter->char_Error_بفر[دلیلونه_2->converter->char_Error_بفر_اوږدتیا++] = لنډمهاله[شاخص_منزل_Write];
+                *err = U_بفر_ډکېدنه_ERROR;
             }
         }
     }
 
-    if (mySource < sourceLimit && myTarget >= targetLimit && U_SUCCESS(*err))
+    إذا (my_سرچینه < سرچینه_حد && my_موخه >= موخه_حد && U_SUCCESS(*err))
     {
-        *err = U_BUFFER_OVERFLOW_ERROR;
+        *err = U_بفر_ډکېدنه_ERROR;
     }
 
-    args->target = (char *) myTarget;
-    args->source = mySource;
+    دلیلونه_2->موخه = (حرف *) my_موخه;
+    دلیلونه_2->سرچینه = my_سرچینه;
 }
 
-static void U_CALLCONV
-T_UConverter_fromUnicode_UTF32_LE_OFFSET_LOGIC(UConverterFromUnicodeArgs * args,
-                                               UErrorCode * err)
+ساكن فراغ U_CALLCONV
+T_UConverter_from_Unicode_UTF32_LE_دننه_واټن_LOGIC(UConverter_From_Unicode_دلیلونه * دلیلونه_2,
+                                               UError_کوډ * err)
 {
-    const char16_t *mySource = args->source;
-    unsigned char *myTarget;
+    ثابت char16_t *my_سرچینه = دلیلونه_2->سرچینه;
+    بینښه حرف *my_موخه;
     int32_t *myOffsets;
-    const char16_t *sourceLimit = args->sourceLimit;
-    const unsigned char *targetLimit = (unsigned char *) args->targetLimit;
+    ثابت char16_t *سرچینه_حد = دلیلونه_2->سرچینه_حد;
+    ثابت بینښه حرف *موخه_حد = (بینښه حرف *) دلیلونه_2->موخه_حد;
     UChar32 ch, ch2;
-    unsigned int indexToWrite;
-    unsigned char temp[sizeof(uint32_t)];
-    int32_t offsetNum = 0;
+    بینښه صحيح شاخص_منزل_Write;
+    بینښه حرف لنډمهاله[حجم(uint32_t)];
+    int32_t دننه_واټن_عدد = 0;
 
-    if(mySource >= sourceLimit) {
+    إذا(my_سرچینه >= سرچینه_حد) {
         /* no input, nothing to do */
-        return;
+        أرجع;
     }
 
     /* write the BOM if necessary */
-    if(args->converter->fromUnicodeStatus==UCNV_NEED_TO_WRITE_BOM) {
-        static const char bom[]={ (char)0xffu, (char)0xfeu, 0, 0 };
-        ucnv_fromUWriteBytes(args->converter,
+    إذا(دلیلونه_2->converter->from_Unicode_حالت==UCNV_NEED_منزل_WRITE_BOM) {
+        ساكن ثابت حرف bom[]={ (حرف)0xffu, (حرف)0xfeu, 0, 0 };
+        ucnv_from_UWrite_بایټونه(دلیلونه_2->converter,
                              bom, 4,
-                             &args->target, args->targetLimit,
-                             &args->offsets, -1,
+                             &دلیلونه_2->موخه, دلیلونه_2->موخه_حد,
+                             &دلیلونه_2->offsets, -1,
                              err);
-        args->converter->fromUnicodeStatus=0;
+        دلیلونه_2->converter->from_Unicode_حالت=0;
     }
 
-    myTarget = (unsigned char *) args->target;
-    myOffsets = args->offsets;
-    temp[3] = 0;
+    my_موخه = (بینښه حرف *) دلیلونه_2->موخه;
+    myOffsets = دلیلونه_2->offsets;
+    لنډمهاله[3] = 0;
 
-    if (args->converter->fromUChar32)
+    إذا (دلیلونه_2->converter->fromUChar32)
     {
-        ch = args->converter->fromUChar32;
-        args->converter->fromUChar32 = 0;
-        goto lowsurogate;
+        ch = دلیلونه_2->converter->fromUChar32;
+        دلیلونه_2->converter->fromUChar32 = 0;
+        اذهب lowsurogate;
     }
 
-    while (mySource < sourceLimit && myTarget < targetLimit)
+    طالما (my_سرچینه < سرچینه_حد && my_موخه < موخه_حد)
     {
-        ch = *(mySource++);
+        ch = *(my_سرچینه++);
 
-        if (U16_IS_SURROGATE(ch)) {
-            if (U16_IS_LEAD(ch))
+        إذا (U16_IS_SURROGATE(ch)) {
+            إذا (U16_IS_LEAD(ch))
             {
 lowsurogate:
-                if (mySource < sourceLimit)
+                إذا (my_سرچینه < سرچینه_حد)
                 {
-                    ch2 = *mySource;
-                    if (U16_IS_TRAIL(ch2))
+                    ch2 = *my_سرچینه;
+                    إذا (U16_IS_TRAIL(ch2))
                     {
-                        ch = ((ch - SURROGATE_HIGH_START) << HALF_SHIFT) + ch2 + SURROGATE_LOW_BASE;
-                        mySource++;
+                        ch = ((ch - SURROGATE_لوړ_پیل) << HALF_ښويدنه) + ch2 + SURROGATE_ټیټ_بنسټ;
+                        my_سرچینه++;
                     }
-                    else {
+                    وإلا {
                         /* this is an unmatched trail code unit (2nd surrogate) */
                         /* callback(illegal) */
-                        args->converter->fromUChar32 = ch;
-                        *err = U_ILLEGAL_CHAR_FOUND;
-                        break;
+                        دلیلونه_2->converter->fromUChar32 = ch;
+                        *err = U_ILLEGAL_CHAR_وموندل;
+                        اكسر;
                     }
                 }
-                else {
+                وإلا {
                     /* ran out of source */
-                    args->converter->fromUChar32 = ch;
-                    if (args->flush) {
+                    دلیلونه_2->converter->fromUChar32 = ch;
+                    إذا (دلیلونه_2->flush) {
                         /* this is an unmatched trail code unit (2nd surrogate) */
                         /* callback(illegal) */
-                        *err = U_ILLEGAL_CHAR_FOUND;
+                        *err = U_ILLEGAL_CHAR_وموندل;
                     }
-                    break;
+                    اكسر;
                 }
             }
-            else {
+            وإلا {
                 /* this is an unmatched trail code unit (2nd surrogate) */
                 /* callback(illegal) */
-                args->converter->fromUChar32 = ch;
-                *err = U_ILLEGAL_CHAR_FOUND;
-                break;
+                دلیلونه_2->converter->fromUChar32 = ch;
+                *err = U_ILLEGAL_CHAR_وموندل;
+                اكسر;
             }
         }
 
         /* We cannot get any larger than 10FFFF because we are coming from UTF-16 */
-        temp[2] = (uint8_t) (ch >> 16 & 0x1F);
-        temp[1] = (uint8_t) (ch >> 8);  /* unsigned cast implicitly does (ch & FF) */
-        temp[0] = (uint8_t) (ch);       /* unsigned cast implicitly does (ch & FF) */
+        لنډمهاله[2] = (uint8_t) (ch >> 16 & 0x1F);
+        لنډمهاله[1] = (uint8_t) (ch >> 8);  /* unsigned cast implicitly does (ch & FF) */
+        لنډمهاله[0] = (uint8_t) (ch);       /* unsigned cast implicitly does (ch & FF) */
 
-        for (indexToWrite = 0; indexToWrite <= sizeof(uint32_t) - 1; indexToWrite++)
+        لكل (شاخص_منزل_Write = 0; شاخص_منزل_Write <= حجم(uint32_t) - 1; شاخص_منزل_Write++)
         {
-            if (myTarget < targetLimit)
+            إذا (my_موخه < موخه_حد)
             {
-                *(myTarget++) = temp[indexToWrite];
-                *(myOffsets++) = offsetNum;
+                *(my_موخه++) = لنډمهاله[شاخص_منزل_Write];
+                *(myOffsets++) = دننه_واټن_عدد;
             }
-            else
+            وإلا
             {
-                args->converter->charErrorBuffer[args->converter->charErrorBufferLength++] = temp[indexToWrite];
-                *err = U_BUFFER_OVERFLOW_ERROR;
+                دلیلونه_2->converter->char_Error_بفر[دلیلونه_2->converter->char_Error_بفر_اوږدتیا++] = لنډمهاله[شاخص_منزل_Write];
+                *err = U_بفر_ډکېدنه_ERROR;
             }
         }
-        offsetNum = offsetNum + 1 + (temp[2] != 0);
+        دننه_واټن_عدد = دننه_واټن_عدد + 1 + (لنډمهاله[2] != 0);
     }
 
-    if (mySource < sourceLimit && myTarget >= targetLimit && U_SUCCESS(*err))
+    إذا (my_سرچینه < سرچینه_حد && my_موخه >= موخه_حد && U_SUCCESS(*err))
     {
-        *err = U_BUFFER_OVERFLOW_ERROR;
+        *err = U_بفر_ډکېدنه_ERROR;
     }
 
-    args->target = (char *) myTarget;
-    args->source = mySource;
-    args->offsets = myOffsets;
+    دلیلونه_2->موخه = (حرف *) my_موخه;
+    دلیلونه_2->سرچینه = my_سرچینه;
+    دلیلونه_2->offsets = myOffsets;
 }
 
-static UChar32 U_CALLCONV
-T_UConverter_getNextUChar_UTF32_LE(UConverterToUnicodeArgs* args,
-                                   UErrorCode* err)
+ساكن UChar32 U_CALLCONV
+T_UConverter_get_بل_UChar_UTF32_LE(UConverter_منزل_Unicode_دلیلونه* دلیلونه_2,
+                                   UError_کوډ* err)
 {
-    const uint8_t *mySource;
+    ثابت uint8_t *my_سرچینه;
     UChar32 myUChar;
     int32_t length;
 
-    mySource = (const uint8_t *)args->source;
-    if (mySource >= (const uint8_t *)args->sourceLimit)
+    my_سرچینه = (ثابت uint8_t *)دلیلونه_2->سرچینه;
+    إذا (my_سرچینه >= (ثابت uint8_t *)دلیلونه_2->سرچینه_حد)
     {
         /* no input */
-        *err = U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0xffff;
+        *err = U_شاخص_OUTOFBOUNDS_ERROR;
+        أرجع 0xffff;
     }
 
-    length = (int32_t)((const uint8_t *)args->sourceLimit - mySource);
-    if (length < 4) 
+    length = (int32_t)((ثابت uint8_t *)دلیلونه_2->سرچینه_حد - my_سرچینه);
+    إذا (length < 4) 
     {
         /* got a partial character */
-        uprv_memcpy(args->converter->toUBytes, mySource, length);
-        args->converter->toULength = (int8_t)length;
-        args->source = (const char *)(mySource + length);
-        *err = U_TRUNCATED_CHAR_FOUND;
-        return 0xffff;
+        uprv_memcpy(دلیلونه_2->converter->منزل_UBytes, my_سرچینه, length);
+        دلیلونه_2->converter->منزل_ULength = (int8_t)length;
+        دلیلونه_2->سرچینه = (ثابت حرف *)(my_سرچینه + length);
+        *err = U_TRUNCATED_CHAR_وموندل;
+        أرجع 0xffff;
     }
 
     /* Don't even try to do a direct cast because the value may be on an odd address. */
-    myUChar = ((UChar32)mySource[3] << 24)
-            | ((UChar32)mySource[2] << 16)
-            | ((UChar32)mySource[1] << 8)
-            | ((UChar32)mySource[0]);
+    myUChar = ((UChar32)my_سرچینه[3] << 24)
+            | ((UChar32)my_سرچینه[2] << 16)
+            | ((UChar32)my_سرچینه[1] << 8)
+            | ((UChar32)my_سرچینه[0]);
 
-    args->source = (const char *)(mySource + 4);
-    if ((uint32_t)myUChar <= MAXIMUM_UTF && !U_IS_SURROGATE(myUChar)) {
-        return myUChar;
+    دلیلونه_2->سرچینه = (ثابت حرف *)(my_سرچینه + 4);
+    إذا ((uint32_t)myUChar <= اعظمي_UTF && !U_IS_SURROGATE(myUChar)) {
+        أرجع myUChar;
     }
 
-    uprv_memcpy(args->converter->toUBytes, mySource, 4);
-    args->converter->toULength = 4;
+    uprv_memcpy(دلیلونه_2->converter->منزل_UBytes, my_سرچینه, 4);
+    دلیلونه_2->converter->منزل_ULength = 4;
 
-    *err = U_ILLEGAL_CHAR_FOUND;
-    return 0xffff;
+    *err = U_ILLEGAL_CHAR_وموندل;
+    أرجع 0xffff;
 }
-U_CDECL_END
-static const UConverterImpl _UTF32LEImpl = {
+U_CDECL_پای_ټکی
+ساكن ثابت UConverterImpl _UTF32LEImpl = {
     UCNV_UTF32_LittleEndian,
 
-    nullptr,
-    nullptr,
+    تش_اشاره,
+    تش_اشاره,
 
-    nullptr,
-    nullptr,
-    nullptr,
+    تش_اشاره,
+    تش_اشاره,
+    تش_اشاره,
 
-    T_UConverter_toUnicode_UTF32_LE,
-    T_UConverter_toUnicode_UTF32_LE_OFFSET_LOGIC,
+    T_UConverter_منزل_Unicode_UTF32_LE,
+    T_UConverter_منزل_Unicode_UTF32_LE_دننه_واټن_LOGIC,
     T_UConverter_fromUnicode_UTF32_LE,
-    T_UConverter_fromUnicode_UTF32_LE_OFFSET_LOGIC,
-    T_UConverter_getNextUChar_UTF32_LE,
+    T_UConverter_from_Unicode_UTF32_LE_دننه_واټن_LOGIC,
+    T_UConverter_get_بل_UChar_UTF32_LE,
 
-    nullptr,
-    nullptr,
-    nullptr,
-    nullptr,
-    ucnv_getNonSurrogateUnicodeSet,
+    تش_اشاره,
+    تش_اشاره,
+    تش_اشاره,
+    تش_اشاره,
+    ucnv_get_Non_Surrogate_Unicode_سېټ,
 
-    nullptr,
-    nullptr
+    تش_اشاره,
+    تش_اشاره
 };
 
 /* The 1232 CCSID refers to any version of Unicode with any endianness of UTF-32 */
-static const UConverterStaticData _UTF32LEStaticData = {
-    sizeof(UConverterStaticData),
+ساكن ثابت UConverter_Static_معلومات UTF32_LEStatic_معلومات = {
+    حجم(UConverter_Static_معلومات),
     "UTF-32LE",
     1234,
     UCNV_IBM, UCNV_UTF32_LittleEndian, 4, 4,
-    { 0xfd, 0xff, 0, 0 }, 4, false, false,
+    { 0xfd, 0xff, 0, 0 }, 4, خطأ, خطأ,
     0,
     0,
     { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 } /* reserved */
 };
 
 
-const UConverterSharedData _UTF32LEData =
-        UCNV_IMMUTABLE_SHARED_DATA_INITIALIZER(&_UTF32LEStaticData, &_UTF32LEImpl);
+ثابت UConverter_Shared_معلومات _UTF32LEData =
+        UCNV_IMMUTABLE_SHARED_معلومات_INITIALIZER(&UTF32_LEStatic_معلومات, &_UTF32LEImpl);
 
 /* UTF-32 (Detect BOM) ------------------------------------------------------ */
 
@@ -1022,232 +1022,232 @@ const UConverterSharedData _UTF32LEData =
  * On output, emit U+FEFF as the first code point.
  */
 U_CDECL_BEGIN
-static void U_CALLCONV
+ساكن فراغ U_CALLCONV
 _UTF32Reset(UConverter *cnv, UConverterResetChoice choice) {
-    if(choice<=UCNV_RESET_TO_UNICODE) {
+    إذا(choice<=UCNV_RESET_منزل_UNICODE) {
         /* reset toUnicode: state=0 */
-        cnv->mode=0;
+        cnv->ډېرپېښ=0;
     }
-    if(choice!=UCNV_RESET_TO_UNICODE) {
+    إذا(choice!=UCNV_RESET_منزل_UNICODE) {
         /* reset fromUnicode: prepare to output the UTF-32PE BOM */
-        cnv->fromUnicodeStatus=UCNV_NEED_TO_WRITE_BOM;
+        cnv->from_Unicode_حالت=UCNV_NEED_منزل_WRITE_BOM;
     }
 }
 
-static void U_CALLCONV
+ساكن فراغ U_CALLCONV
 _UTF32Open(UConverter *cnv,
-           UConverterLoadArgs *pArgs,
-           UErrorCode *pErrorCode) {
-    (void)pArgs;
-    (void)pErrorCode;
+           UConverter_بارول_دلیلونه *p_دلیلونه,
+           UError_کوډ *p_Error_کوډ) {
+    (فراغ)p_دلیلونه;
+    (فراغ)p_Error_کوډ;
     _UTF32Reset(cnv, UCNV_RESET_BOTH);
 }
 
-static const char utf32BOM[8]={ 0, 0, (char)0xfeu, (char)0xffu, (char)0xffu, (char)0xfeu, 0, 0 };
+ساكن ثابت حرف utf32BOM[8]={ 0, 0, (حرف)0xfeu, (حرف)0xffu, (حرف)0xffu, (حرف)0xfeu, 0, 0 };
 
-static void U_CALLCONV
-_UTF32ToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
-                           UErrorCode *pErrorCode) {
-    UConverter *cnv=pArgs->converter;
-    const char *source=pArgs->source;
-    const char *sourceLimit=pArgs->sourceLimit;
-    int32_t *offsets=pArgs->offsets;
+ساكن فراغ U_CALLCONV
+UTF32_منزل_Unicode_With_Offsets(UConverter_منزل_Unicode_دلیلونه *p_دلیلونه,
+                           UError_کوډ *p_Error_کوډ) {
+    UConverter *cnv=p_دلیلونه->converter;
+    ثابت حرف *سرچینه=p_دلیلونه->سرچینه;
+    ثابت حرف *سرچینه_حد=p_دلیلونه->سرچینه_حد;
+    int32_t *offsets=p_دلیلونه->offsets;
 
-    int32_t state, offsetDelta;
-    char b;
+    int32_t state, دننه_واټن_Delta;
+    حرف b;
 
-    state=cnv->mode;
+    state=cnv->ډېرپېښ;
 
     /*
      * If we detect a BOM in this buffer, then we must add the BOM size to the
      * offsets because the actual converter function will not see and count the BOM.
      * offsetDelta will have the number of the BOM bytes that are in the current buffer.
      */
-    offsetDelta=0;
+    دننه_واټن_Delta=0;
 
-    while(source<sourceLimit && U_SUCCESS(*pErrorCode)) {
-        switch(state) {
-        case 0:
-            b=*source;
-            if(b==0) {
+    طالما(سرچینه<سرچینه_حد && U_SUCCESS(*p_Error_کوډ)) {
+        بدل(state) {
+        حالة 0:
+            b=*سرچینه;
+            إذا(b==0) {
                 state=1; /* could be 00 00 FE FF */
-            } else if(b==(char)0xffu) {
+            } وإلا إذا(b==(حرف)0xffu) {
                 state=5; /* could be FF FE 00 00 */
-            } else {
+            } وإلا {
                 state=8; /* default to UTF-32BE */
-                continue;
+                استمر;
             }
-            ++source;
-            break;
-        case 1:
-        case 2:
-        case 3:
-        case 5:
-        case 6:
-        case 7:
-            if(*source==utf32BOM[state]) {
+            ++سرچینه;
+            اكسر;
+        حالة 1:
+        حالة 2:
+        حالة 3:
+        حالة 5:
+        حالة 6:
+        حالة 7:
+            إذا(*سرچینه==utf32BOM[state]) {
                 ++state;
-                ++source;
-                if(state==4) {
+                ++سرچینه;
+                إذا(state==4) {
                     state=8; /* detect UTF-32BE */
-                    offsetDelta=(int32_t)(source-pArgs->source);
-                } else if(state==8) {
+                    دننه_واټن_Delta=(int32_t)(سرچینه-p_دلیلونه->سرچینه);
+                } وإلا إذا(state==8) {
                     state=9; /* detect UTF-32LE */
-                    offsetDelta=(int32_t)(source-pArgs->source);
+                    دننه_واټن_Delta=(int32_t)(سرچینه-p_دلیلونه->سرچینه);
                 }
-            } else {
+            } وإلا {
                 /* switch to UTF-32BE and pass the previous bytes */
-                int32_t count=(int32_t)(source-pArgs->source); /* number of bytes from this buffer */
+                int32_t count=(int32_t)(سرچینه-p_دلیلونه->سرچینه); /* number of bytes from this buffer */
 
                 /* reset the source */
-                source=pArgs->source;
+                سرچینه=p_دلیلونه->سرچینه;
 
-                if(count==(state&3)) {
+                إذا(count==(state&3)) {
                     /* simple: all in the same buffer, just reset source */
-                } else {
-                    UBool oldFlush=pArgs->flush;
+                } وإلا {
+                    UBool oldFlush=p_دلیلونه->flush;
 
                     /* some of the bytes are from a previous buffer, replay those first */
-                    pArgs->source=utf32BOM+(state&4); /* select the correct BOM */
-                    pArgs->sourceLimit=pArgs->source+((state&3)-count); /* replay previous bytes */
-                    pArgs->flush=false; /* this sourceLimit is not the real source stream limit */
+                    p_دلیلونه->سرچینه=utf32BOM+(state&4); /* select the correct BOM */
+                    p_دلیلونه->سرچینه_حد=p_دلیلونه->سرچینه+((state&3)-count); /* replay previous bytes */
+                    p_دلیلونه->flush=خطأ; /* this sourceLimit is not the real source stream limit */
 
                     /* no offsets: bytes from previous buffer, and not enough for output */
-                    T_UConverter_toUnicode_UTF32_BE(pArgs, pErrorCode);
+                    T_UConverter_منزل_Unicode_UTF32_BE(p_دلیلونه, p_Error_کوډ);
 
                     /* restore real pointers; pArgs->source will be set in case 8/9 */
-                    pArgs->sourceLimit=sourceLimit;
-                    pArgs->flush=oldFlush;
+                    p_دلیلونه->سرچینه_حد=سرچینه_حد;
+                    p_دلیلونه->flush=oldFlush;
                 }
                 state=8;
-                continue;
+                استمر;
             }
-            break;
-        case 8:
+            اكسر;
+        حالة 8:
             /* call UTF-32BE */
-            pArgs->source=source;
-            if(offsets==nullptr) {
-                T_UConverter_toUnicode_UTF32_BE(pArgs, pErrorCode);
-            } else {
-                T_UConverter_toUnicode_UTF32_BE_OFFSET_LOGIC(pArgs, pErrorCode);
+            p_دلیلونه->سرچینه=سرچینه;
+            إذا(offsets==تش_اشاره) {
+                T_UConverter_منزل_Unicode_UTF32_BE(p_دلیلونه, p_Error_کوډ);
+            } وإلا {
+                T_UConverter_منزل_Unicode_UTF32_BE_دننه_واټن_LOGIC(p_دلیلونه, p_Error_کوډ);
             }
-            source=pArgs->source;
-            break;
-        case 9:
+            سرچینه=p_دلیلونه->سرچینه;
+            اكسر;
+        حالة 9:
             /* call UTF-32LE */
-            pArgs->source=source;
-            if(offsets==nullptr) {
-                T_UConverter_toUnicode_UTF32_LE(pArgs, pErrorCode);
-            } else {
-                T_UConverter_toUnicode_UTF32_LE_OFFSET_LOGIC(pArgs, pErrorCode);
+            p_دلیلونه->سرچینه=سرچینه;
+            إذا(offsets==تش_اشاره) {
+                T_UConverter_منزل_Unicode_UTF32_LE(p_دلیلونه, p_Error_کوډ);
+            } وإلا {
+                T_UConverter_منزل_Unicode_UTF32_LE_دننه_واټن_LOGIC(p_دلیلونه, p_Error_کوډ);
             }
-            source=pArgs->source;
-            break;
-        default:
-            break; /* does not occur */
+            سرچینه=p_دلیلونه->سرچینه;
+            اكسر;
+        افتراضي:
+            اكسر; /* does not occur */
         }
     }
 
     /* add BOM size to offsets - see comment at offsetDelta declaration */
-    if(offsets!=nullptr && offsetDelta!=0) {
-        int32_t *offsetsLimit=pArgs->offsets;
-        while(offsets<offsetsLimit) {
-            *offsets++ += offsetDelta;
+    إذا(offsets!=تش_اشاره && دننه_واټن_Delta!=0) {
+        int32_t *offsets_حد=p_دلیلونه->offsets;
+        طالما(offsets<offsets_حد) {
+            *offsets++ += دننه_واټن_Delta;
         }
     }
 
-    pArgs->source=source;
+    p_دلیلونه->سرچینه=سرچینه;
 
-    if(source==sourceLimit && pArgs->flush) {
+    إذا(سرچینه==سرچینه_حد && p_دلیلونه->flush) {
         /* handle truncated input */
-        switch(state) {
-        case 0:
-            break; /* no input at all, nothing to do */
-        case 8:
-            T_UConverter_toUnicode_UTF32_BE(pArgs, pErrorCode);
-            break;
-        case 9:
-            T_UConverter_toUnicode_UTF32_LE(pArgs, pErrorCode);
-            break;
-        default:
+        بدل(state) {
+        حالة 0:
+            اكسر; /* no input at all, nothing to do */
+        حالة 8:
+            T_UConverter_منزل_Unicode_UTF32_BE(p_دلیلونه, p_Error_کوډ);
+            اكسر;
+        حالة 9:
+            T_UConverter_منزل_Unicode_UTF32_LE(p_دلیلونه, p_Error_کوډ);
+            اكسر;
+        افتراضي:
             /* handle 0<state<8: call UTF-32BE with too-short input */
-            pArgs->source=utf32BOM+(state&4); /* select the correct BOM */
-            pArgs->sourceLimit=pArgs->source+(state&3); /* replay bytes */
+            p_دلیلونه->سرچینه=utf32BOM+(state&4); /* select the correct BOM */
+            p_دلیلونه->سرچینه_حد=p_دلیلونه->سرچینه+(state&3); /* replay bytes */
 
             /* no offsets: not enough for output */
-            T_UConverter_toUnicode_UTF32_BE(pArgs, pErrorCode);
-            pArgs->source=source;
-            pArgs->sourceLimit=sourceLimit;
+            T_UConverter_منزل_Unicode_UTF32_BE(p_دلیلونه, p_Error_کوډ);
+            p_دلیلونه->سرچینه=سرچینه;
+            p_دلیلونه->سرچینه_حد=سرچینه_حد;
             state=8;
-            break;
+            اكسر;
         }
     }
 
-    cnv->mode=state;
+    cnv->ډېرپېښ=state;
 }
 
-static UChar32 U_CALLCONV
-_UTF32GetNextUChar(UConverterToUnicodeArgs *pArgs,
-                   UErrorCode *pErrorCode) {
-    switch(pArgs->converter->mode) {
-    case 8:
-        return T_UConverter_getNextUChar_UTF32_BE(pArgs, pErrorCode);
-    case 9:
-        return T_UConverter_getNextUChar_UTF32_LE(pArgs, pErrorCode);
-    default:
-        return UCNV_GET_NEXT_UCHAR_USE_TO_U;
+ساكن UChar32 U_CALLCONV
+UTF32_Get_بل_UChar(UConverter_منزل_Unicode_دلیلونه *p_دلیلونه,
+                   UError_کوډ *p_Error_کوډ) {
+    بدل(p_دلیلونه->converter->ډېرپېښ) {
+    حالة 8:
+        أرجع T_UConverter_get_بل_UChar_UTF32_BE(p_دلیلونه, p_Error_کوډ);
+    حالة 9:
+        أرجع T_UConverter_get_بل_UChar_UTF32_LE(p_دلیلونه, p_Error_کوډ);
+    افتراضي:
+        أرجع UCNV_GET_بل_UCHAR_USE_منزل_U;
     }
 }
-U_CDECL_END
-static const UConverterImpl _UTF32Impl = {
+U_CDECL_پای_ټکی
+ساكن ثابت UConverterImpl _UTF32Impl = {
     UCNV_UTF32,
 
-    nullptr,
-    nullptr,
+    تش_اشاره,
+    تش_اشاره,
 
     _UTF32Open,
-    nullptr,
+    تش_اشاره,
     _UTF32Reset,
 
-    _UTF32ToUnicodeWithOffsets,
-    _UTF32ToUnicodeWithOffsets,
-#if U_IS_BIG_ENDIAN
+    UTF32_منزل_Unicode_With_Offsets,
+    UTF32_منزل_Unicode_With_Offsets,
+#إذا U_IS_BIG_ENDIAN
     T_UConverter_fromUnicode_UTF32_BE,
-    T_UConverter_fromUnicode_UTF32_BE_OFFSET_LOGIC,
-#else
+    T_UConverter_from_Unicode_UTF32_BE_دننه_واټن_LOGIC,
+#وإلا
     T_UConverter_fromUnicode_UTF32_LE,
-    T_UConverter_fromUnicode_UTF32_LE_OFFSET_LOGIC,
-#endif
-    _UTF32GetNextUChar,
+    T_UConverter_from_Unicode_UTF32_LE_دننه_واټن_LOGIC,
+#د_که_پای
+    UTF32_Get_بل_UChar,
 
-    nullptr, /* ### TODO implement getStarters for all Unicode encodings?! */
-    nullptr,
-    nullptr,
-    nullptr,
-    ucnv_getNonSurrogateUnicodeSet,
+    تش_اشاره, /* ### TODO implement getStarters for all Unicode encodings?! */
+    تش_اشاره,
+    تش_اشاره,
+    تش_اشاره,
+    ucnv_get_Non_Surrogate_Unicode_سېټ,
 
-    nullptr,
-    nullptr
+    تش_اشاره,
+    تش_اشاره
 };
 
 /* The 1236 CCSID refers to any version of Unicode with a BOM sensitive endianness of UTF-32 */
-static const UConverterStaticData _UTF32StaticData = {
-    sizeof(UConverterStaticData),
+ساكن ثابت UConverter_Static_معلومات UTF32_Static_معلومات = {
+    حجم(UConverter_Static_معلومات),
     "UTF-32",
     1236,
     UCNV_IBM, UCNV_UTF32, 4, 4,
-#if U_IS_BIG_ENDIAN
+#إذا U_IS_BIG_ENDIAN
     { 0, 0, 0xff, 0xfd }, 4,
-#else
+#وإلا
     { 0xfd, 0xff, 0, 0 }, 4,
-#endif
-    false, false,
+#د_که_پای
+    خطأ, خطأ,
     0,
     0,
     { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 } /* reserved */
 };
 
-const UConverterSharedData _UTF32Data = 
-        UCNV_IMMUTABLE_SHARED_DATA_INITIALIZER(&_UTF32StaticData, &_UTF32Impl);
+ثابت UConverter_Shared_معلومات UTF32_معلومات = 
+        UCNV_IMMUTABLE_SHARED_معلومات_INITIALIZER(&UTF32_Static_معلومات, &_UTF32Impl);
 
-#endif
+#د_که_پای

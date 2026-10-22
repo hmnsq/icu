@@ -7,18 +7,18 @@
  ************************************************************************************
  */
 
-#ifndef BRKENG_H
-#define BRKENG_H
+#که_نه_تعریف_شوی BRKENG_H
+#تعریف_کړه BRKENG_H
 
-#include "unicode/umisc.h"
-#include "unicode/utypes.h"
-#include "unicode/uobject.h"
-#include "unicode/utext.h"
-#include "unicode/uscript.h"
+#ضمن "unicode/umisc.h"
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/uobject.h"
+#ضمن "unicode/utext.h"
+#ضمن "unicode/uscript.h"
 
 U_NAMESPACE_BEGIN
 
-class UnicodeSet;
+class Unicode_سېټ;
 class UStack;
 class UVector32;
 class DictionaryMatcher;
@@ -37,8 +37,8 @@ class ExternalBreakEngine;
  * <p>LanguageBreakEngines should normally be implemented so as to
  * be shared between threads without locking.</p>
  */
-class LanguageBreakEngine : public UObject {
- public:
+class LanguageBreakEngine : عام UObject {
+ عام:
 
   /**
    * <p>Default constructor.</p>
@@ -49,7 +49,7 @@ class LanguageBreakEngine : public UObject {
   /**
    * <p>Virtual destructor.</p>
    */
-  virtual ~LanguageBreakEngine();
+  مجازي ~LanguageBreakEngine();
 
  /**
   * <p>Indicate whether this engine handles a particular character for
@@ -60,7 +60,7 @@ class LanguageBreakEngine : public UObject {
   * @return true if this engine handles the particular character and break
   * type.
   */
-  virtual UBool handles(UChar32 c, const char* locale) const = 0;
+  مجازي UBool handles(UChar32 c, ثابت حرف* locale) ثابت = 0;
 
  /**
   * <p>Find any breaks within a run in the supplied text.</p>
@@ -74,12 +74,12 @@ class LanguageBreakEngine : public UObject {
   * @param status Information on any errors encountered.
   * @return The number of breaks found.
   */
-  virtual int32_t findBreaks( UText *text,
-                              int32_t startPos,
-                              int32_t endPos,
-                              UVector32 &foundBreaks,
+  مجازي int32_t پیدا_کړه_Breaks( UText *متن,
+                              int32_t پیل_Pos,
+                              int32_t پای_ټکی_Pos,
+                              UVector32 &وموندل_Breaks,
                               UBool isPhraseBreaking,
-                              UErrorCode &status) const = 0;
+                              UError_کوډ &حالت) ثابت = 0;
 
 };
 
@@ -92,24 +92,24 @@ class LanguageBreakEngine : public UObject {
  * a thin wrapper that delegate the task to ExternalBreakEngine
  * </p>
  */
-class BreakEngineWrapper : public  LanguageBreakEngine {
- public:
+class BreakEngineWrapper : عام  LanguageBreakEngine {
+ عام:
 
-  BreakEngineWrapper(ExternalBreakEngine* engine, UErrorCode &status);
+  BreakEngineWrapper(ExternalBreakEngine* engine, UError_کوډ &حالت);
 
-  virtual ~BreakEngineWrapper();
+  مجازي ~BreakEngineWrapper();
 
-  virtual UBool handles(UChar32 c, const char* locale) const override;
+  مجازي UBool handles(UChar32 c, ثابت حرف* locale) ثابت override;
 
-  virtual int32_t findBreaks( UText *text,
-                              int32_t startPos,
-                              int32_t endPos,
-                              UVector32 &foundBreaks,
+  مجازي int32_t پیدا_کړه_Breaks( UText *متن,
+                              int32_t پیل_Pos,
+                              int32_t پای_ټکی_Pos,
+                              UVector32 &وموندل_Breaks,
                               UBool isPhraseBreaking,
-                              UErrorCode &status) const override;
+                              UError_کوډ &حالت) ثابت override;
 
- private:
-  LocalPointer<ExternalBreakEngine> delegate;
+ خاص:
+  Local_اشاره_ګر<ExternalBreakEngine> delegate;
 };
 
 /*******************************************************************
@@ -135,8 +135,8 @@ class BreakEngineWrapper : public  LanguageBreakEngine {
  * not be deleted until the LanguageBreakEngines it has returned are no
  * longer needed.</p>
  */
-class LanguageBreakFactory : public UMemory {
- public:
+class LanguageBreakFactory : عام UMemory {
+ عام:
 
   /**
    * <p>Default constructor.</p>
@@ -147,7 +147,7 @@ class LanguageBreakFactory : public UMemory {
   /**
    * <p>Virtual destructor.</p>
    */
-  virtual ~LanguageBreakFactory();
+  مجازي ~LanguageBreakFactory();
 
  /**
   * <p>Find and return a LanguageBreakEngine that can find the desired
@@ -160,7 +160,7 @@ class LanguageBreakFactory : public UMemory {
   * @param locale The locale.
   * @return A LanguageBreakEngine with the desired characteristics, or 0.
   */
-  virtual const LanguageBreakEngine *getEngineFor(UChar32 c, const char* locale) = 0;
+  مجازي ثابت LanguageBreakEngine *getEngineFor(UChar32 c, ثابت حرف* locale) = 0;
 
 };
 
@@ -179,28 +179,28 @@ class LanguageBreakFactory : public UMemory {
  * external synchronization.</p>
  */
 
-class UnhandledEngine : public LanguageBreakEngine {
- private:
+class UnhandledEngine : عام LanguageBreakEngine {
+ خاص:
 
     /**
      * The sets of characters handled.
      * @internal
      */
 
-  UnicodeSet    *fHandled;
+  Unicode_سېټ    *fHandled;
 
- public:
+ عام:
 
   /**
    * <p>Default constructor.</p>
    *
    */
-  UnhandledEngine(UErrorCode &status);
+  UnhandledEngine(UError_کوډ &حالت);
 
   /**
    * <p>Virtual destructor.</p>
    */
-  virtual ~UnhandledEngine();
+  مجازي ~UnhandledEngine();
 
  /**
   * <p>Indicate whether this engine handles a particular character for
@@ -211,7 +211,7 @@ class UnhandledEngine : public LanguageBreakEngine {
   * @return true if this engine handles the particular character and break
   * type.
   */
-  virtual UBool handles(UChar32 c, const char* locale) const override;
+  مجازي UBool handles(UChar32 c, ثابت حرف* locale) ثابت override;
 
  /**
   * <p>Find any breaks within a run in the supplied text.</p>
@@ -225,19 +225,19 @@ class UnhandledEngine : public LanguageBreakEngine {
   * @param status Information on any errors encountered.
   * @return The number of breaks found.
   */
-  virtual int32_t findBreaks( UText *text,
-                              int32_t startPos,
-                              int32_t endPos,
-                              UVector32 &foundBreaks,
+  مجازي int32_t پیدا_کړه_Breaks( UText *متن,
+                              int32_t پیل_Pos,
+                              int32_t پای_ټکی_Pos,
+                              UVector32 &وموندل_Breaks,
                               UBool isPhraseBreaking,
-                              UErrorCode &status) const override;
+                              UError_کوډ &حالت) ثابت override;
 
  /**
   * <p>Tell the engine to handle a particular character and break type.</p>
   *
   * @param c A character which the engine should handle
   */
-  virtual void handleCharacter(UChar32 c);
+  مجازي فراغ handleCharacter(UChar32 c);
 
 };
 
@@ -250,8 +250,8 @@ class UnhandledEngine : public LanguageBreakEngine {
  * ICU. It creates dictionary-based LanguageBreakEngines from dictionary
  * data in the ICU data file.</p>
  */
-class ICULanguageBreakFactory : public LanguageBreakFactory {
- private:
+class ICULanguageBreakFactory : عام LanguageBreakFactory {
+ خاص:
 
     /**
      * The stack of break engines created by this factory
@@ -260,18 +260,18 @@ class ICULanguageBreakFactory : public LanguageBreakFactory {
 
   UStack    *fEngines;
 
- public:
+ عام:
 
   /**
    * <p>Standard constructor.</p>
    *
    */
-  ICULanguageBreakFactory(UErrorCode &status);
+  ICULanguageBreakFactory(UError_کوډ &حالت);
 
   /**
    * <p>Virtual destructor.</p>
    */
-  virtual ~ICULanguageBreakFactory();
+  مجازي ~ICULanguageBreakFactory();
 
  /**
   * <p>Find and return a LanguageBreakEngine that can find the desired
@@ -284,7 +284,7 @@ class ICULanguageBreakFactory : public LanguageBreakFactory {
   * @param locale The locale.
   * @return A LanguageBreakEngine with the desired characteristics, or 0.
   */
-  virtual const LanguageBreakEngine *getEngineFor(UChar32 c, const char* locale) override;
+  مجازي ثابت LanguageBreakEngine *getEngineFor(UChar32 c, ثابت حرف* locale) override;
 
   /**
    * Add and adopt the engine and return an URegistryKey.
@@ -292,9 +292,9 @@ class ICULanguageBreakFactory : public LanguageBreakFactory {
    *     pass the ownership and should not release the memory after this.
    * @param status the error code.
    */
-  virtual void addExternalEngine(ExternalBreakEngine* engine, UErrorCode& status);
+  مجازي فراغ جمع_کړه_External_Engine(ExternalBreakEngine* engine, UError_کوډ& حالت);
 
-protected:
+محمي:
  /**
   * <p>Create a LanguageBreakEngine for the set of characters to which
   * the supplied character belongs, for the specified break type.</p>
@@ -304,7 +304,7 @@ protected:
   * @param locale The locale.
   * @return A LanguageBreakEngine with the desired characteristics, or 0.
   */
-  virtual const LanguageBreakEngine *loadEngineFor(UChar32 c, const char* locale);
+  مجازي ثابت LanguageBreakEngine *بارول_Engine_For(UChar32 c, ثابت حرف* locale);
 
   /**
    * <p>Create a DictionaryMatcher for the specified script and break type.</p>
@@ -312,13 +312,13 @@ protected:
    * created.
    * @return A DictionaryMatcher with the desired characteristics, or nullptr.
    */
-  virtual DictionaryMatcher *loadDictionaryMatcherFor(UScriptCode script);
+  مجازي DictionaryMatcher *بارول_Dictionary_Matcher_For(UScript_کوډ script);
 
- private:
-  void ensureEngines(UErrorCode& status);
+ خاص:
+  فراغ ensureEngines(UError_کوډ& حالت);
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_پای_ټکی
 
     /* BRKENG_H */
-#endif
+#د_که_پای

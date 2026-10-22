@@ -18,29 +18,29 @@
 *   Case mapping service object and functions using it.
 */
 
-#include "unicode/utypes.h"
-#include "unicode/brkiter.h"
-#include "unicode/bytestream.h"
-#include "unicode/casemap.h"
-#include "unicode/edits.h"
-#include "unicode/stringoptions.h"
-#include "unicode/stringpiece.h"
-#include "unicode/ubrk.h"
-#include "unicode/uloc.h"
-#include "unicode/ustring.h"
-#include "unicode/ucasemap.h"
-#if !UCONFIG_NO_BREAK_ITERATION
-#include "unicode/utext.h"
-#endif
-#include "unicode/utf.h"
-#include "unicode/utf8.h"
-#include "unicode/utf16.h"
-#include "bytesinkutil.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "uassert.h"
-#include "ucase.h"
-#include "ucasemap_imp.h"
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/brkiter.h"
+#ضمن "unicode/bytestream.h"
+#ضمن "unicode/casemap.h"
+#ضمن "unicode/edits.h"
+#ضمن "unicode/stringoptions.h"
+#ضمن "unicode/stringpiece.h"
+#ضمن "unicode/ubrk.h"
+#ضمن "unicode/uloc.h"
+#ضمن "unicode/ustring.h"
+#ضمن "unicode/ucasemap.h"
+#إذا !UCONFIG_NO_BREAK_ITERATION
+#ضمن "unicode/utext.h"
+#د_که_پای
+#ضمن "unicode/utf.h"
+#ضمن "unicode/utf8.h"
+#ضمن "unicode/utf16.h"
+#ضمن "bytesinkutil.h"
+#ضمن "cmemory.h"
+#ضمن "cstring.h"
+#ضمن "uassert.h"
+#ضمن "ucase.h"
+#ضمن "ucasemap_imp.h"
 
 U_NAMESPACE_USE
 
@@ -51,89 +51,89 @@ U_NAMESPACE_USE
 
 U_NAMESPACE_BEGIN
 
-UCaseMapImpl::UCaseMapImpl(const char *localeID, uint32_t opts, UErrorCode *pErrorCode) :
-#if !UCONFIG_NO_BREAK_ITERATION
-        iter(nullptr),
-#endif
+UCaseMapImpl::UCaseMapImpl(ثابت حرف *localeID, uint32_t opts, UError_کوډ *p_Error_کوډ) :
+#إذا !UCONFIG_NO_BREAK_ITERATION
+        iter(تش_اشاره),
+#د_که_پای
         caseLocale(UCASE_LOC_UNKNOWN), options(opts) {
-    ucasemap_setLocale(reinterpret_cast<UCaseMap *>(this), localeID, pErrorCode);
+    ucasemap_سېټ_Locale(reinterpret_cast<UCaseMap *>(هذا), localeID, p_Error_کوډ);
 }
 
 UCaseMapImpl::~UCaseMapImpl() {
-#if !UCONFIG_NO_BREAK_ITERATION
-    delete iter;
-#endif
+#إذا !UCONFIG_NO_BREAK_ITERATION
+    ړنګول iter;
+#د_که_پای
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_پای_ټکی
 
 U_CAPI UCaseMap * U_EXPORT2
-ucasemap_open(const char *locale, uint32_t options, UErrorCode *pErrorCode) {
-    if(U_FAILURE(*pErrorCode)) {
-        return nullptr;
+ucasemap_open(ثابت حرف *locale, uint32_t options, UError_کوډ *p_Error_کوډ) {
+    إذا(U_FAILURE(*p_Error_کوډ)) {
+        أرجع تش_اشاره;
     }
-    UCaseMapImpl *csm = new UCaseMapImpl(locale, options, pErrorCode);
-    if(csm==nullptr) {
-        *pErrorCode = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
-    } else if (U_FAILURE(*pErrorCode)) {
-        delete csm;
-        return nullptr;
+    UCaseMapImpl *csm = جديد UCaseMapImpl(locale, options, p_Error_کوډ);
+    إذا(csm==تش_اشاره) {
+        *p_Error_کوډ = U_حافظه_ویش_ERROR;
+        أرجع تش_اشاره;
+    } وإلا إذا (U_FAILURE(*p_Error_کوډ)) {
+        ړنګول csm;
+        أرجع تش_اشاره;
     }
-    return reinterpret_cast<UCaseMap *>(csm);
+    أرجع reinterpret_cast<UCaseMap *>(csm);
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI فراغ U_EXPORT2
 ucasemap_close(UCaseMap *csm) {
-    delete reinterpret_cast<UCaseMapImpl *>(csm);
+    ړنګول reinterpret_cast<UCaseMapImpl *>(csm);
 }
 
-U_CAPI const char* U_EXPORT2
-ucasemap_getLocale(const UCaseMap* csm U_LIFETIME_BOUND) {
-    return reinterpret_cast<const UCaseMapImpl *>(csm)->locale;
+U_CAPI ثابت حرف* U_EXPORT2
+ucasemap_getLocale(ثابت UCaseMap* csm U_LIFETIME_BOUND) {
+    أرجع reinterpret_cast<ثابت UCaseMapImpl *>(csm)->locale;
 }
 
 U_CAPI uint32_t U_EXPORT2
-ucasemap_getOptions(const UCaseMap *csm) {
-    return reinterpret_cast<const UCaseMapImpl *>(csm)->options;
+ucasemap_getOptions(ثابت UCaseMap *csm) {
+    أرجع reinterpret_cast<ثابت UCaseMapImpl *>(csm)->options;
 }
 
-U_CAPI void U_EXPORT2
-ucasemap_setLocale(UCaseMap *csm, const char *locale, UErrorCode *pErrorCode) {
-    if(U_FAILURE(*pErrorCode)) {
-        return;
+U_CAPI فراغ U_EXPORT2
+ucasemap_سېټ_Locale(UCaseMap *csm, ثابت حرف *locale, UError_کوډ *p_Error_کوډ) {
+    إذا(U_FAILURE(*p_Error_کوډ)) {
+        أرجع;
     }
-    auto *impl = reinterpret_cast<UCaseMapImpl *>(csm);
-    if (locale != nullptr && *locale == 0) {
+    خپلکاری *impl = reinterpret_cast<UCaseMapImpl *>(csm);
+    إذا (locale != تش_اشاره && *locale == 0) {
         impl->locale[0] = 0;
-        impl->caseLocale = UCASE_LOC_ROOT;
-        return;
+        impl->caseLocale = UCASE_LOC_ریښه;
+        أرجع;
     }
 
-    UErrorCode bufferStatus = U_ZERO_ERROR;
-    int32_t length=uloc_getName(locale, impl->locale, (int32_t)sizeof(impl->locale), &bufferStatus);
-    if(bufferStatus==U_BUFFER_OVERFLOW_ERROR || (U_SUCCESS(bufferStatus) && length==sizeof(impl->locale))) {
-        bufferStatus = U_ZERO_ERROR;
+    UError_کوډ بفر_حالت = U_ZERO_ERROR;
+    int32_t length=uloc_getName(locale, impl->locale, (int32_t)حجم(impl->locale), &بفر_حالت);
+    إذا(بفر_حالت==U_بفر_ډکېدنه_ERROR || (U_SUCCESS(بفر_حالت) && length==حجم(impl->locale))) {
+        بفر_حالت = U_ZERO_ERROR;
         /* we only really need the language code for case mappings */
-        length=uloc_getLanguage(locale, impl->locale, (int32_t)sizeof(impl->locale), &bufferStatus);
+        length=uloc_getLanguage(locale, impl->locale, (int32_t)حجم(impl->locale), &بفر_حالت);
     }
-    if(U_FAILURE(bufferStatus)) {
-        *pErrorCode=bufferStatus;
-    } else if(length==sizeof(impl->locale)) {
-        *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+    إذا(U_FAILURE(بفر_حالت)) {
+        *p_Error_کوډ=بفر_حالت;
+    } وإلا إذا(length==حجم(impl->locale)) {
+        *p_Error_کوډ=U_بفر_ډکېدنه_ERROR;
     }
-    if(U_SUCCESS(*pErrorCode)) {     
+    إذا(U_SUCCESS(*p_Error_کوډ)) {     
         impl->caseLocale = ucase_getCaseLocale(impl->locale);
-    } else {
+    } وإلا {
         impl->locale[0]=0;
-        impl->caseLocale = UCASE_LOC_ROOT;
+        impl->caseLocale = UCASE_LOC_ریښه;
     }
 }
 
-U_CAPI void U_EXPORT2
-ucasemap_setOptions(UCaseMap *csm, uint32_t options, UErrorCode *pErrorCode) {
-    if(U_FAILURE(*pErrorCode)) {
-        return;
+U_CAPI فراغ U_EXPORT2
+ucasemap_سېټ_Options(UCaseMap *csm, uint32_t options, UError_کوډ *p_Error_کوډ) {
+    إذا(U_FAILURE(*p_Error_کوډ)) {
+        أرجع;
     }
     reinterpret_cast<UCaseMapImpl *>(csm)->options=options;
 }
@@ -142,294 +142,294 @@ ucasemap_setOptions(UCaseMap *csm, uint32_t options, UErrorCode *pErrorCode) {
 
 /* TODO(markus): Move to a new, separate utf8case.cpp file. */
 
-namespace {
+نطاق {
 
 /* append a full case mapping result, see UCASE_MAX_STRING_LENGTH */
-inline UBool
-appendResult(int32_t cpLength, int32_t result, const char16_t *s,
-             ByteSink &sink, uint32_t options, icu::Edits *edits, UErrorCode &errorCode) {
-    U_ASSERT(U_SUCCESS(errorCode));
+مضمن UBool
+append_پایله(int32_t cp_اوږدتیا, int32_t پایله, ثابت char16_t *s,
+             ByteSink &sink, uint32_t options, icu::Edits *edits, UError_کوډ &error_کوډ) {
+    U_ASSERT(U_SUCCESS(error_کوډ));
 
     /* decode the result */
-    if(result<0) {
+    إذا(پایله<0) {
         /* (not) original code point */
-        if(edits!=nullptr) {
-            edits->addUnchanged(cpLength);
+        إذا(edits!=تش_اشاره) {
+            edits->جمع_کړه_Unchanged(cp_اوږدتیا);
         }
-        if((options & U_OMIT_UNCHANGED_TEXT) == 0) {
-            ByteSinkUtil::appendCodePoint(cpLength, ~result, sink);
+        إذا((options & U_OMIT_UNCHANGED_متن) == 0) {
+            ByteSinkUtil::append_کوډ_ټکی(cp_اوږدتیا, ~پایله, sink);
         }
-    } else {
-        if(result<=UCASE_MAX_STRING_LENGTH) {
+    } وإلا {
+        إذا(پایله<=UCASE_MAX_STRING_اوږدتیا) {
             // string: "result" is the UTF-16 length
-            return ByteSinkUtil::appendChange(cpLength, s, result, sink, edits, errorCode);
-        } else {
-            ByteSinkUtil::appendCodePoint(cpLength, result, sink, edits);
+            أرجع ByteSinkUtil::appendChange(cp_اوږدتیا, s, پایله, sink, edits, error_کوډ);
+        } وإلا {
+            ByteSinkUtil::append_کوډ_ټکی(cp_اوږدتیا, پایله, sink, edits);
         }
     }
-    return true;
+    أرجع ریښتیا;
 }
 
 // See unicode/utf8.h U8_APPEND_UNSAFE().
-inline uint8_t getTwoByteLead(UChar32 c) { return static_cast<uint8_t>((c >> 6) | 0xc0); }
-inline uint8_t getTwoByteTrail(UChar32 c) { return static_cast<uint8_t>((c & 0x3f) | 0x80); }
+مضمن uint8_t getTwoByteLead(UChar32 c) { أرجع static_cast<uint8_t>((c >> 6) | 0xc0); }
+مضمن uint8_t getTwoByteTrail(UChar32 c) { أرجع static_cast<uint8_t>((c & 0x3f) | 0x80); }
 
 UChar32 U_CALLCONV
-utf8_caseContextIterator(void *context, int8_t dir) {
+utf8_caseContextIterator(فراغ *context, int8_t dir) {
     UCaseContext* csc = static_cast<UCaseContext*>(context);
     UChar32 c;
 
-    if(dir<0) {
+    إذا(dir<0) {
         /* reset for backward iteration */
-        csc->index=csc->cpStart;
+        csc->شاخص=csc->cp_پیل;
         csc->dir=dir;
-    } else if(dir>0) {
+    } وإلا إذا(dir>0) {
         /* reset for forward iteration */
-        csc->index=csc->cpLimit;
+        csc->شاخص=csc->cp_حد;
         csc->dir=dir;
-    } else {
+    } وإلا {
         /* continue current iteration direction */
         dir=csc->dir;
     }
 
-    if(dir<0) {
-        if(csc->start<csc->index) {
-            U8_PREV((const uint8_t *)csc->p, csc->start, csc->index, c);
-            return c;
+    إذا(dir<0) {
+        إذا(csc->پیل<csc->شاخص) {
+            U8_PREV((ثابت uint8_t *)csc->p, csc->پیل, csc->شاخص, c);
+            أرجع c;
         }
-    } else {
-        if(csc->index<csc->limit) {
-            U8_NEXT((const uint8_t *)csc->p, csc->index, csc->limit, c);
-            return c;
+    } وإلا {
+        إذا(csc->شاخص<csc->حد) {
+            U8_بل((ثابت uint8_t *)csc->p, csc->شاخص, csc->حد, c);
+            أرجع c;
         }
     }
-    return U_SENTINEL;
+    أرجع U_SENTINEL;
 }
 
 /**
  * caseLocale >= 0: Lowercases [srcStart..srcLimit[ but takes context [0..srcLength[ into account.
  * caseLocale < 0: Case-folds [srcStart..srcLimit[.
  */
-void toLower(int32_t caseLocale, uint32_t options,
-             const uint8_t *src, UCaseContext *csc, int32_t srcStart, int32_t srcLimit,
-             icu::ByteSink &sink, icu::Edits *edits, UErrorCode &errorCode) {
-    const int8_t *latinToLower;
-    if (caseLocale == UCASE_LOC_ROOT ||
+فراغ منزل_ښکتنی(int32_t caseLocale, uint32_t options,
+             ثابت uint8_t *src, UCaseContext *csc, int32_t src_پیل, int32_t src_حد,
+             icu::ByteSink &sink, icu::Edits *edits, UError_کوډ &error_کوډ) {
+    ثابت int8_t *latin_منزل_ښکتنی;
+    إذا (caseLocale == UCASE_LOC_ریښه ||
             (caseLocale >= 0 ?
                 !(caseLocale == UCASE_LOC_TURKISH || caseLocale == UCASE_LOC_LITHUANIAN) :
-                (options & _FOLD_CASE_OPTIONS_MASK) == U_FOLD_CASE_DEFAULT)) {
-        latinToLower = LatinCase::TO_LOWER_NORMAL;
-    } else {
-        latinToLower = LatinCase::TO_LOWER_TR_LT;
+                (options & FOLD_CASE_OPTIONS_ماسک) == U_FOLD_CASE_DEFAULT)) {
+        latin_منزل_ښکتنی = LatinCase::منزل_ښکتنی_نورمال;
+    } وإلا {
+        latin_منزل_ښکتنی = LatinCase::منزل_ښکتنی_TR_LT;
     }
-    const UTrie2 *trie = ucase_getTrie();
-    int32_t prev = srcStart;
-    int32_t srcIndex = srcStart;
-    for (;;) {
+    ثابت UTrie2 *trie = ucase_getTrie();
+    int32_t prev = src_پیل;
+    int32_t src_شاخص = src_پیل;
+    لكل (;;) {
         // fast path for simple cases
-        int32_t cpStart;
+        int32_t cp_پیل;
         UChar32 c;
-        for (;;) {
-            if (U_FAILURE(errorCode) || srcIndex >= srcLimit) {
+        لكل (;;) {
+            إذا (U_FAILURE(error_کوډ) || src_شاخص >= src_حد) {
                 c = U_SENTINEL;
-                break;
+                اكسر;
             }
-            uint8_t lead = src[srcIndex++];
-            if (lead <= 0x7f) {
-                int8_t d = latinToLower[lead];
-                if (d == LatinCase::EXC) {
-                    cpStart = srcIndex - 1;
+            uint8_t lead = src[src_شاخص++];
+            إذا (lead <= 0x7f) {
+                int8_t d = latin_منزل_ښکتنی[lead];
+                إذا (d == LatinCase::EXC) {
+                    cp_پیل = src_شاخص - 1;
                     c = lead;
-                    break;
+                    اكسر;
                 }
-                if (d == 0) { continue; }
-                ByteSinkUtil::appendUnchanged(src + prev, srcIndex - 1 - prev,
-                                              sink, options, edits, errorCode);
-                char ascii = static_cast<char>(lead + d);
+                إذا (d == 0) { استمر; }
+                ByteSinkUtil::appendUnchanged(src + prev, src_شاخص - 1 - prev,
+                                              sink, options, edits, error_کوډ);
+                حرف ascii = static_cast<حرف>(lead + d);
                 sink.Append(&ascii, 1);
-                if (edits != nullptr) {
-                    edits->addReplace(1, 1);
+                إذا (edits != تش_اشاره) {
+                    edits->جمع_کړه_Replace(1, 1);
                 }
-                prev = srcIndex;
-                continue;
-            } else if (lead < 0xe3) {
+                prev = src_شاخص;
+                استمر;
+            } وإلا إذا (lead < 0xe3) {
                 uint8_t t;
-                if (0xc2 <= lead && lead <= 0xc5 && srcIndex < srcLimit &&
-                        (t = src[srcIndex] - 0x80) <= 0x3f) {
+                إذا (0xc2 <= lead && lead <= 0xc5 && src_شاخص < src_حد &&
+                        (t = src[src_شاخص] - 0x80) <= 0x3f) {
                     // U+0080..U+017F
-                    ++srcIndex;
+                    ++src_شاخص;
                     c = ((lead - 0xc0) << 6) | t;
-                    int8_t d = latinToLower[c];
-                    if (d == LatinCase::EXC) {
-                        cpStart = srcIndex - 2;
-                        break;
+                    int8_t d = latin_منزل_ښکتنی[c];
+                    إذا (d == LatinCase::EXC) {
+                        cp_پیل = src_شاخص - 2;
+                        اكسر;
                     }
-                    if (d == 0) { continue; }
-                    ByteSinkUtil::appendUnchanged(src + prev, srcIndex - 2 - prev,
-                                                  sink, options, edits, errorCode);
-                    ByteSinkUtil::appendTwoBytes(c + d, sink);
-                    if (edits != nullptr) {
-                        edits->addReplace(2, 2);
+                    إذا (d == 0) { استمر; }
+                    ByteSinkUtil::appendUnchanged(src + prev, src_شاخص - 2 - prev,
+                                                  sink, options, edits, error_کوډ);
+                    ByteSinkUtil::append_Two_بایټونه(c + d, sink);
+                    إذا (edits != تش_اشاره) {
+                        edits->جمع_کړه_Replace(2, 2);
                     }
-                    prev = srcIndex;
-                    continue;
+                    prev = src_شاخص;
+                    استمر;
                 }
-            } else if ((lead <= 0xe9 || lead == 0xeb || lead == 0xec) &&
-                    (srcIndex + 2) <= srcLimit &&
-                    U8_IS_TRAIL(src[srcIndex]) && U8_IS_TRAIL(src[srcIndex + 1])) {
+            } وإلا إذا ((lead <= 0xe9 || lead == 0xeb || lead == 0xec) &&
+                    (src_شاخص + 2) <= src_حد &&
+                    U8_IS_TRAIL(src[src_شاخص]) && U8_IS_TRAIL(src[src_شاخص + 1])) {
                 // most of CJK: no case mappings
-                srcIndex += 2;
-                continue;
+                src_شاخص += 2;
+                استمر;
             }
-            cpStart = --srcIndex;
-            U8_NEXT(src, srcIndex, srcLimit, c);
-            if (c < 0) {
+            cp_پیل = --src_شاخص;
+            U8_بل(src, src_شاخص, src_حد, c);
+            إذا (c < 0) {
                 // ill-formed UTF-8
-                continue;
+                استمر;
             }
             uint16_t props = UTRIE2_GET16(trie, c);
-            if (UCASE_HAS_EXCEPTION(props)) { break; }
+            إذا (UCASE_HAS_EXCEPTION(props)) { اكسر; }
             int32_t delta;
-            if (!UCASE_IS_UPPER_OR_TITLE(props) || (delta = UCASE_GET_DELTA(props)) == 0) {
-                continue;
+            إذا (!UCASE_IS_پاسنی_OR_TITLE(props) || (delta = UCASE_GET_DELTA(props)) == 0) {
+                استمر;
             }
-            ByteSinkUtil::appendUnchanged(src + prev, cpStart - prev,
-                                          sink, options, edits, errorCode);
-            ByteSinkUtil::appendCodePoint(srcIndex - cpStart, c + delta, sink, edits);
-            prev = srcIndex;
+            ByteSinkUtil::appendUnchanged(src + prev, cp_پیل - prev,
+                                          sink, options, edits, error_کوډ);
+            ByteSinkUtil::append_کوډ_ټکی(src_شاخص - cp_پیل, c + delta, sink, edits);
+            prev = src_شاخص;
         }
-        if (c < 0) {
-            break;
+        إذا (c < 0) {
+            اكسر;
         }
         // slow path
-        const char16_t *s;
-        if (caseLocale >= 0) {
-            csc->cpStart = cpStart;
-            csc->cpLimit = srcIndex;
-            c = ucase_toFullLower(c, utf8_caseContextIterator, csc, &s, caseLocale);
-        } else {
-            c = ucase_toFullFolding(c, &s, options);
+        ثابت char16_t *s;
+        إذا (caseLocale >= 0) {
+            csc->cp_پیل = cp_پیل;
+            csc->cp_حد = src_شاخص;
+            c = ucase_منزل_ډک_ښکتنی(c, utf8_caseContextIterator, csc, &s, caseLocale);
+        } وإلا {
+            c = ucase_منزل_ډک_Folding(c, &s, options);
         }
-        if (c >= 0) {
-            ByteSinkUtil::appendUnchanged(src + prev, cpStart - prev,
-                                          sink, options, edits, errorCode);
-            appendResult(srcIndex - cpStart, c, s, sink, options, edits, errorCode);
-            prev = srcIndex;
+        إذا (c >= 0) {
+            ByteSinkUtil::appendUnchanged(src + prev, cp_پیل - prev,
+                                          sink, options, edits, error_کوډ);
+            append_پایله(src_شاخص - cp_پیل, c, s, sink, options, edits, error_کوډ);
+            prev = src_شاخص;
         }
     }
-    ByteSinkUtil::appendUnchanged(src + prev, srcIndex - prev,
-                                  sink, options, edits, errorCode);
+    ByteSinkUtil::appendUnchanged(src + prev, src_شاخص - prev,
+                                  sink, options, edits, error_کوډ);
 }
 
-void toUpper(int32_t caseLocale, uint32_t options,
-             const uint8_t *src, UCaseContext *csc, int32_t srcLength,
-             icu::ByteSink &sink, icu::Edits *edits, UErrorCode &errorCode) {
-    const int8_t *latinToUpper;
-    if (caseLocale == UCASE_LOC_TURKISH) {
-        latinToUpper = LatinCase::TO_UPPER_TR;
-    } else {
-        latinToUpper = LatinCase::TO_UPPER_NORMAL;
+فراغ منزل_پاسنی(int32_t caseLocale, uint32_t options,
+             ثابت uint8_t *src, UCaseContext *csc, int32_t src_اوږدتیا,
+             icu::ByteSink &sink, icu::Edits *edits, UError_کوډ &error_کوډ) {
+    ثابت int8_t *latin_منزل_پاسنی;
+    إذا (caseLocale == UCASE_LOC_TURKISH) {
+        latin_منزل_پاسنی = LatinCase::منزل_پاسنی_TR;
+    } وإلا {
+        latin_منزل_پاسنی = LatinCase::منزل_پاسنی_نورمال;
     }
-    const UTrie2 *trie = ucase_getTrie();
+    ثابت UTrie2 *trie = ucase_getTrie();
     int32_t prev = 0;
-    int32_t srcIndex = 0;
-    for (;;) {
+    int32_t src_شاخص = 0;
+    لكل (;;) {
         // fast path for simple cases
-        int32_t cpStart;
+        int32_t cp_پیل;
         UChar32 c;
-        for (;;) {
-            if (U_FAILURE(errorCode) || srcIndex >= srcLength) {
+        لكل (;;) {
+            إذا (U_FAILURE(error_کوډ) || src_شاخص >= src_اوږدتیا) {
                 c = U_SENTINEL;
-                break;
+                اكسر;
             }
-            uint8_t lead = src[srcIndex++];
-            if (lead <= 0x7f) {
-                int8_t d = latinToUpper[lead];
-                if (d == LatinCase::EXC) {
-                    cpStart = srcIndex - 1;
+            uint8_t lead = src[src_شاخص++];
+            إذا (lead <= 0x7f) {
+                int8_t d = latin_منزل_پاسنی[lead];
+                إذا (d == LatinCase::EXC) {
+                    cp_پیل = src_شاخص - 1;
                     c = lead;
-                    break;
+                    اكسر;
                 }
-                if (d == 0) { continue; }
-                ByteSinkUtil::appendUnchanged(src + prev, srcIndex - 1 - prev,
-                                              sink, options, edits, errorCode);
-                char ascii = static_cast<char>(lead + d);
+                إذا (d == 0) { استمر; }
+                ByteSinkUtil::appendUnchanged(src + prev, src_شاخص - 1 - prev,
+                                              sink, options, edits, error_کوډ);
+                حرف ascii = static_cast<حرف>(lead + d);
                 sink.Append(&ascii, 1);
-                if (edits != nullptr) {
-                    edits->addReplace(1, 1);
+                إذا (edits != تش_اشاره) {
+                    edits->جمع_کړه_Replace(1, 1);
                 }
-                prev = srcIndex;
-                continue;
-            } else if (lead < 0xe3) {
+                prev = src_شاخص;
+                استمر;
+            } وإلا إذا (lead < 0xe3) {
                 uint8_t t;
-                if (0xc2 <= lead && lead <= 0xc5 && srcIndex < srcLength &&
-                        (t = src[srcIndex] - 0x80) <= 0x3f) {
+                إذا (0xc2 <= lead && lead <= 0xc5 && src_شاخص < src_اوږدتیا &&
+                        (t = src[src_شاخص] - 0x80) <= 0x3f) {
                     // U+0080..U+017F
-                    ++srcIndex;
+                    ++src_شاخص;
                     c = ((lead - 0xc0) << 6) | t;
-                    int8_t d = latinToUpper[c];
-                    if (d == LatinCase::EXC) {
-                        cpStart = srcIndex - 2;
-                        break;
+                    int8_t d = latin_منزل_پاسنی[c];
+                    إذا (d == LatinCase::EXC) {
+                        cp_پیل = src_شاخص - 2;
+                        اكسر;
                     }
-                    if (d == 0) { continue; }
-                    ByteSinkUtil::appendUnchanged(src + prev, srcIndex - 2 - prev,
-                                                  sink, options, edits, errorCode);
-                    ByteSinkUtil::appendTwoBytes(c + d, sink);
-                    if (edits != nullptr) {
-                        edits->addReplace(2, 2);
+                    إذا (d == 0) { استمر; }
+                    ByteSinkUtil::appendUnchanged(src + prev, src_شاخص - 2 - prev,
+                                                  sink, options, edits, error_کوډ);
+                    ByteSinkUtil::append_Two_بایټونه(c + d, sink);
+                    إذا (edits != تش_اشاره) {
+                        edits->جمع_کړه_Replace(2, 2);
                     }
-                    prev = srcIndex;
-                    continue;
+                    prev = src_شاخص;
+                    استمر;
                 }
-            } else if ((lead <= 0xe9 || lead == 0xeb || lead == 0xec) &&
-                    (srcIndex + 2) <= srcLength &&
-                    U8_IS_TRAIL(src[srcIndex]) && U8_IS_TRAIL(src[srcIndex + 1])) {
+            } وإلا إذا ((lead <= 0xe9 || lead == 0xeb || lead == 0xec) &&
+                    (src_شاخص + 2) <= src_اوږدتیا &&
+                    U8_IS_TRAIL(src[src_شاخص]) && U8_IS_TRAIL(src[src_شاخص + 1])) {
                 // most of CJK: no case mappings
-                srcIndex += 2;
-                continue;
+                src_شاخص += 2;
+                استمر;
             }
-            cpStart = --srcIndex;
-            U8_NEXT(src, srcIndex, srcLength, c);
-            if (c < 0) {
+            cp_پیل = --src_شاخص;
+            U8_بل(src, src_شاخص, src_اوږدتیا, c);
+            إذا (c < 0) {
                 // ill-formed UTF-8
-                continue;
+                استمر;
             }
             uint16_t props = UTRIE2_GET16(trie, c);
-            if (UCASE_HAS_EXCEPTION(props)) { break; }
+            إذا (UCASE_HAS_EXCEPTION(props)) { اكسر; }
             int32_t delta;
-            if (UCASE_GET_TYPE(props) != UCASE_LOWER || (delta = UCASE_GET_DELTA(props)) == 0) {
-                continue;
+            إذا (UCASE_GET_TYPE(props) != UCASE_ښکتنی || (delta = UCASE_GET_DELTA(props)) == 0) {
+                استمر;
             }
-            ByteSinkUtil::appendUnchanged(src + prev, cpStart - prev,
-                                          sink, options, edits, errorCode);
-            ByteSinkUtil::appendCodePoint(srcIndex - cpStart, c + delta, sink, edits);
-            prev = srcIndex;
+            ByteSinkUtil::appendUnchanged(src + prev, cp_پیل - prev,
+                                          sink, options, edits, error_کوډ);
+            ByteSinkUtil::append_کوډ_ټکی(src_شاخص - cp_پیل, c + delta, sink, edits);
+            prev = src_شاخص;
         }
-        if (c < 0) {
-            break;
+        إذا (c < 0) {
+            اكسر;
         }
         // slow path
-        csc->cpStart = cpStart;
-        csc->cpLimit = srcIndex;
-        const char16_t *s;
-        c = ucase_toFullUpper(c, utf8_caseContextIterator, csc, &s, caseLocale);
-        if (c >= 0) {
-            ByteSinkUtil::appendUnchanged(src + prev, cpStart - prev,
-                                          sink, options, edits, errorCode);
-            appendResult(srcIndex - cpStart, c, s, sink, options, edits, errorCode);
-            prev = srcIndex;
+        csc->cp_پیل = cp_پیل;
+        csc->cp_حد = src_شاخص;
+        ثابت char16_t *s;
+        c = ucase_منزل_ډک_پاسنی(c, utf8_caseContextIterator, csc, &s, caseLocale);
+        إذا (c >= 0) {
+            ByteSinkUtil::appendUnchanged(src + prev, cp_پیل - prev,
+                                          sink, options, edits, error_کوډ);
+            append_پایله(src_شاخص - cp_پیل, c, s, sink, options, edits, error_کوډ);
+            prev = src_شاخص;
         }
     }
-    ByteSinkUtil::appendUnchanged(src + prev, srcIndex - prev,
-                                  sink, options, edits, errorCode);
+    ByteSinkUtil::appendUnchanged(src + prev, src_شاخص - prev,
+                                  sink, options, edits, error_کوډ);
 }
 
 }  // namespace
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#إذا !UCONFIG_NO_BREAK_ITERATION
 
-namespace {
+نطاق {
 
 constexpr uint8_t ACUTE_BYTE0 = u8"\u0301"[0];
 
@@ -444,111 +444,111 @@ constexpr uint8_t ACUTE_BYTE1 = u8"\u0301"[1];
  *
  * @return the src index after the titlecased sequence, or the start index if no Dutch IJ
  */
-int32_t maybeTitleDutchIJ(const uint8_t *src, UChar32 c, int32_t start, int32_t segmentLimit,
-                          ByteSink &sink, uint32_t options, icu::Edits *edits, UErrorCode &errorCode) {
-    U_ASSERT(start < segmentLimit);
+int32_t maybeTitleDutchIJ(ثابت uint8_t *src, UChar32 c, int32_t پیل, int32_t segment_حد,
+                          ByteSink &sink, uint32_t options, icu::Edits *edits, UError_کوډ &error_کوډ) {
+    U_ASSERT(پیل < segment_حد);
 
-    int32_t index = start;
-    bool withAcute = false;
+    int32_t شاخص = پیل;
+    منطقي withAcute = خطأ;
 
     // If the conditions are met, then the following variables tell us what to output.
     int32_t unchanged1 = 0;  // code units before the j, or the whole sequence (0..3)
-    bool doTitleJ = false;  // true if the j needs to be titlecased
+    منطقي doTitleJ = خطأ;  // true if the j needs to be titlecased
     int32_t unchanged2 = 0;  // after the j (0 or 1)
 
     // next character after the first letter
     UChar32 c2;
-    c2 = src[index++];
+    c2 = src[شاخص++];
 
     // Is the first letter an i/I with accent?
-    if (c == u'I') {
-        if (c2 == ACUTE_BYTE0 && index < segmentLimit && src[index++] == ACUTE_BYTE1) {
-            withAcute = true;
+    إذا (c == u'I') {
+        إذا (c2 == ACUTE_BYTE0 && شاخص < segment_حد && src[شاخص++] == ACUTE_BYTE1) {
+            withAcute = ریښتیا;
             unchanged1 = 2;  // ACUTE is 2 code units in UTF-8
-            if (index == segmentLimit) { return start; }
-            c2 = src[index++];
+            إذا (شاخص == segment_حد) { أرجع پیل; }
+            c2 = src[شاخص++];
         }
-    } else {  // Í
-        withAcute = true;
+    } وإلا {  // Í
+        withAcute = ریښتیا;
     }
 
     // Is the next character a j/J?
-    if (c2 == u'j') {
-        doTitleJ = true;
-    } else if (c2 == u'J') {
+    إذا (c2 == u'j') {
+        doTitleJ = ریښتیا;
+    } وإلا إذا (c2 == u'J') {
         ++unchanged1;
-    } else {
-        return start;
+    } وإلا {
+        أرجع پیل;
     }
 
     // A plain i/I must be followed by a plain j/J.
     // An i/I with acute must be followed by a j/J with acute.
-    if (withAcute) {
-        if ((index + 1) >= segmentLimit || src[index++] != ACUTE_BYTE0 || src[index++] != ACUTE_BYTE1) {
-            return start;
+    إذا (withAcute) {
+        إذا ((شاخص + 1) >= segment_حد || src[شاخص++] != ACUTE_BYTE0 || src[شاخص++] != ACUTE_BYTE1) {
+            أرجع پیل;
         }
-        if (doTitleJ) {
+        إذا (doTitleJ) {
             unchanged2 = 2;  // ACUTE is 2 code units in UTF-8
-        } else {
+        } وإلا {
             unchanged1 = unchanged1 + 2;    // ACUTE is 2 code units in UTF-8
         }
     }
 
     // There must not be another combining mark.
-    if (index < segmentLimit) {
+    إذا (شاخص < segment_حد) {
         int32_t cp;
-        int32_t i = index;
-        U8_NEXT(src, i, segmentLimit, cp);
-        uint32_t typeMask = U_GET_GC_MASK(cp);
-        if ((typeMask & U_GC_M_MASK) != 0) {
-            return start;
+        int32_t i = شاخص;
+        U8_بل(src, i, segment_حد, cp);
+        uint32_t type_ماسک = U_GET_GC_ماسک(cp);
+        إذا ((type_ماسک & U_GC_M_ماسک) != 0) {
+            أرجع پیل;
         }
     }
 
     // Output the rest of the Dutch IJ.
-    ByteSinkUtil::appendUnchanged(src + start, unchanged1, sink, options, edits, errorCode);
-    start += unchanged1;
-    if (doTitleJ) {
-        ByteSinkUtil::appendCodePoint(1, u'J', sink, edits);
-        ++start;
+    ByteSinkUtil::appendUnchanged(src + پیل, unchanged1, sink, options, edits, error_کوډ);
+    پیل += unchanged1;
+    إذا (doTitleJ) {
+        ByteSinkUtil::append_کوډ_ټکی(1, u'J', sink, edits);
+        ++پیل;
     }
-    ByteSinkUtil::appendUnchanged(src + start, unchanged2, sink, options, edits, errorCode);
+    ByteSinkUtil::appendUnchanged(src + پیل, unchanged2, sink, options, edits, error_کوډ);
 
-    U_ASSERT(start + unchanged2 == index);
-    return index;
+    U_ASSERT(پیل + unchanged2 == شاخص);
+    أرجع شاخص;
 }
 
 }  // namespace
 
-U_CFUNC void U_CALLCONV
-ucasemap_internalUTF8ToTitle(
+U_CFUNC فراغ U_CALLCONV
+ucasemap_دننی_UTF8_منزل_Title(
         int32_t caseLocale, uint32_t options, BreakIterator *iter,
-        const uint8_t *src, int32_t srcLength,
+        ثابت uint8_t *src, int32_t src_اوږدتیا,
         ByteSink &sink, icu::Edits *edits,
-        UErrorCode &errorCode) {
-    if (!ustrcase_checkTitleAdjustmentOptions(options, errorCode)) {
-        return;
+        UError_کوډ &error_کوډ) {
+    إذا (!ustrcase_checkTitleAdjustmentOptions(options, error_کوډ)) {
+        أرجع;
     }
 
     /* set up local variables */
     UCaseContext csc=UCASECONTEXT_INITIALIZER;
-    csc.p=(void *)src;
-    csc.limit=srcLength;
+    csc.p=(فراغ *)src;
+    csc.حد=src_اوږدتیا;
     int32_t prev=0;
-    UBool isFirstIndex=true;
+    UBool is_لومړی_شاخص=ریښتیا;
 
     /* titlecasing loop */
-    while(prev<srcLength) {
+    طالما(prev<src_اوږدتیا) {
         /* find next index where to titlecase */
-        int32_t index;
-        if(isFirstIndex) {
-            isFirstIndex=false;
-            index=iter->first();
-        } else {
-            index=iter->next();
+        int32_t شاخص;
+        إذا(is_لومړی_شاخص) {
+            is_لومړی_شاخص=خطأ;
+            شاخص=iter->first();
+        } وإلا {
+            شاخص=iter->next();
         }
-        if(index==UBRK_DONE || index>srcLength) {
-            index=srcLength;
+        إذا(شاخص==UBRK_بشپړ || شاخص>src_اوږدتیا) {
+            شاخص=src_اوږدتیا;
         }
 
         /*
@@ -557,499 +557,499 @@ ucasemap_internalUTF8ToTitle(
          * b) first letter (titlecase)              [titleStart..titleLimit[
          * c) subsequent characters (lowercase)                 [titleLimit..index[
          */
-        if(prev<index) {
+        إذا(prev<شاخص) {
             /* find and copy skipped characters [prev..titleStart[ */
-            int32_t titleStart=prev;
-            int32_t titleLimit=prev;
+            int32_t title_پیل=prev;
+            int32_t title_حد=prev;
             UChar32 c;
-            U8_NEXT(src, titleLimit, index, c);
-            if ((options&U_TITLECASE_NO_BREAK_ADJUSTMENT)==0) {
+            U8_بل(src, title_حد, شاخص, c);
+            إذا ((options&U_TITLECASE_NO_BREAK_ADJUSTMENT)==0) {
                 // Adjust the titlecasing index to the next cased character,
                 // or to the next letter/number/symbol/private use.
                 // Stop with titleStart<titleLimit<=index
                 // if there is a character to be titlecased,
                 // or else stop with titleStart==titleLimit==index.
-                UBool toCased = (options&U_TITLECASE_ADJUST_TO_CASED) != 0;
-                while (toCased ? UCASE_NONE==ucase_getType(c) : !ustrcase_isLNS(c)) {
-                    titleStart=titleLimit;
-                    if(titleLimit==index) {
-                        break;
+                UBool منزل_Cased = (options&U_TITLECASE_ADJUST_منزل_CASED) != 0;
+                طالما (منزل_Cased ? UCASE_NONE==ucase_getType(c) : !ustrcase_isLNS(c)) {
+                    title_پیل=title_حد;
+                    إذا(title_حد==شاخص) {
+                        اكسر;
                     }
-                    U8_NEXT(src, titleLimit, index, c);
+                    U8_بل(src, title_حد, شاخص, c);
                 }
-                if (prev < titleStart) {
-                    if (!ByteSinkUtil::appendUnchanged(src+prev, titleStart-prev,
-                                                       sink, options, edits, errorCode)) {
-                        return;
+                إذا (prev < title_پیل) {
+                    إذا (!ByteSinkUtil::appendUnchanged(src+prev, title_پیل-prev,
+                                                       sink, options, edits, error_کوډ)) {
+                        أرجع;
                     }
                 }
             }
 
-            if(titleStart<titleLimit) {
+            إذا(title_پیل<title_حد) {
                 /* titlecase c which is from [titleStart..titleLimit[ */
-                if(c>=0) {
-                    csc.cpStart=titleStart;
-                    csc.cpLimit=titleLimit;
-                    const char16_t *s;
-                    c=ucase_toFullTitle(c, utf8_caseContextIterator, &csc, &s, caseLocale);
-                    if (!appendResult(titleLimit-titleStart, c, s, sink, options, edits, errorCode)) {
-                        return;
+                إذا(c>=0) {
+                    csc.cp_پیل=title_پیل;
+                    csc.cp_حد=title_حد;
+                    ثابت char16_t *s;
+                    c=ucase_منزل_ډک_Title(c, utf8_caseContextIterator, &csc, &s, caseLocale);
+                    إذا (!append_پایله(title_حد-title_پیل, c, s, sink, options, edits, error_کوډ)) {
+                        أرجع;
                     }
-                } else {
+                } وإلا {
                     // Malformed UTF-8.
-                    if (!ByteSinkUtil::appendUnchanged(src+titleStart, titleLimit-titleStart,
-                                                       sink, options, edits, errorCode)) {
-                        return;
+                    إذا (!ByteSinkUtil::appendUnchanged(src+title_پیل, title_حد-title_پیل,
+                                                       sink, options, edits, error_کوډ)) {
+                        أرجع;
                     }
                 }
 
                 /* Special case Dutch IJ titlecasing */
-                if (titleLimit < index &&
+                إذا (title_حد < شاخص &&
                     caseLocale == UCASE_LOC_DUTCH) {
-                    if (c < 0) {
+                    إذا (c < 0) {
                         c = ~c;
                     }
 
-                    if (c == u'I' || c == u'Í') {
-                        titleLimit = maybeTitleDutchIJ(src, c, titleLimit, index, sink, options, edits, errorCode);
+                    إذا (c == u'I' || c == u'Í') {
+                        title_حد = maybeTitleDutchIJ(src, c, title_حد, شاخص, sink, options, edits, error_کوډ);
                     }
                 }
 
                 /* lowercase [titleLimit..index[ */
-                if(titleLimit<index) {
-                    if((options&U_TITLECASE_NO_LOWERCASE)==0) {
+                إذا(title_حد<شاخص) {
+                    إذا((options&U_TITLECASE_NO_LOWERCASE)==0) {
                         /* Normal operation: Lowercase the rest of the word. */
-                        toLower(caseLocale, options,
-                                src, &csc, titleLimit, index,
-                                sink, edits, errorCode);
-                        if(U_FAILURE(errorCode)) {
-                            return;
+                        منزل_ښکتنی(caseLocale, options,
+                                src, &csc, title_حد, شاخص,
+                                sink, edits, error_کوډ);
+                        إذا(U_FAILURE(error_کوډ)) {
+                            أرجع;
                         }
-                    } else {
+                    } وإلا {
                         /* Optionally just copy the rest of the word unchanged. */
-                        if (!ByteSinkUtil::appendUnchanged(src+titleLimit, index-titleLimit,
-                                                           sink, options, edits, errorCode)) {
-                            return;
+                        إذا (!ByteSinkUtil::appendUnchanged(src+title_حد, شاخص-title_حد,
+                                                           sink, options, edits, error_کوډ)) {
+                            أرجع;
                         }
                     }
                 }
             }
         }
 
-        prev=index;
+        prev=شاخص;
     }
 }
 
-#endif
+#د_که_پای
 
 U_NAMESPACE_BEGIN
-namespace GreekUpper {
+نطاق Greek_پاسنی {
 
-UBool isFollowedByCasedLetter(const uint8_t *s, int32_t i, int32_t length) {
-    while (i < length) {
+UBool isFollowedByCasedLetter(ثابت uint8_t *s, int32_t i, int32_t length) {
+    طالما (i < length) {
         UChar32 c;
-        U8_NEXT(s, i, length, c);
+        U8_بل(s, i, length, c);
         int32_t type = ucase_getTypeOrIgnorable(c);
-        if ((type & UCASE_IGNORABLE) != 0) {
+        إذا ((type & UCASE_IGNORABLE) != 0) {
             // Case-ignorable, continue with the loop.
-        } else if (type != UCASE_NONE) {
-            return true;  // Followed by cased letter.
-        } else {
-            return false;  // Uncased and not case-ignorable.
+        } وإلا إذا (type != UCASE_NONE) {
+            أرجع ریښتیا;  // Followed by cased letter.
+        } وإلا {
+            أرجع خطأ;  // Uncased and not case-ignorable.
         }
     }
-    return false;  // Not followed by cased letter.
+    أرجع خطأ;  // Not followed by cased letter.
 }
 
 // Keep this consistent with the UTF-16 version in ustrcase.cpp and the Java version in CaseMap.java.
-void toUpper(uint32_t options,
-             const uint8_t *src, int32_t srcLength,
+فراغ منزل_پاسنی(uint32_t options,
+             ثابت uint8_t *src, int32_t src_اوږدتیا,
              ByteSink &sink, Edits *edits,
-             UErrorCode &errorCode) {
+             UError_کوډ &error_کوډ) {
     uint32_t state = 0;
-    for (int32_t i = 0; i < srcLength;) {
-        int32_t nextIndex = i;
+    لكل (int32_t i = 0; i < src_اوږدتیا;) {
+        int32_t بل_شاخص = i;
         UChar32 c;
-        U8_NEXT(src, nextIndex, srcLength, c);
-        uint32_t nextState = 0;
+        U8_بل(src, بل_شاخص, src_اوږدتیا, c);
+        uint32_t بل_State = 0;
         int32_t type = ucase_getTypeOrIgnorable(c);
-        if ((type & UCASE_IGNORABLE) != 0) {
+        إذا ((type & UCASE_IGNORABLE) != 0) {
             // c is case-ignorable
-            nextState |= (state & AFTER_CASED);
-        } else if (type != UCASE_NONE) {
+            بل_State |= (state & AFTER_CASED);
+        } وإلا إذا (type != UCASE_NONE) {
             // c is cased
-            nextState |= AFTER_CASED;
+            بل_State |= AFTER_CASED;
         }
-        uint32_t data = getLetterData(c);
-        if (data > 0) {
-            uint32_t upper = data & UPPER_MASK;
+        uint32_t معلومات = get_Letter_معلومات(c);
+        إذا (معلومات > 0) {
+            uint32_t upper = معلومات & پاسنی_ماسک;
             // Add a dialytika to this iota or ypsilon vowel
             // if we removed a tonos from the previous vowel,
             // and that previous vowel did not also have (or gain) a dialytika.
             // Adding one only to the final vowel in a longer sequence
             // (which does not occur in normal writing) would require lookahead.
             // Set the same flag as for preserving an existing dialytika.
-            if ((data & HAS_VOWEL) != 0 &&
+            إذا ((معلومات & HAS_VOWEL) != 0 &&
                 (state & (AFTER_VOWEL_WITH_PRECOMPOSED_ACCENT | AFTER_VOWEL_WITH_COMBINING_ACCENT)) !=
                     0 &&
                 (upper == 0x399 || upper == 0x3A5)) {
-                data |= (state & AFTER_VOWEL_WITH_PRECOMPOSED_ACCENT) != 0 ? HAS_DIALYTIKA
+                معلومات |= (state & AFTER_VOWEL_WITH_PRECOMPOSED_ACCENT) != 0 ? HAS_DIALYTIKA
                                                                            : HAS_COMBINING_DIALYTIKA;
             }
-            int32_t numYpogegrammeni = 0;  // Map each one to a trailing, spacing, capital iota.
-            if ((data & HAS_YPOGEGRAMMENI) != 0) {
-                numYpogegrammeni = 1;
+            int32_t عدد_Ypogegrammeni = 0;  // Map each one to a trailing, spacing, capital iota.
+            إذا ((معلومات & HAS_YPOGEGRAMMENI) != 0) {
+                عدد_Ypogegrammeni = 1;
             }
-            const UBool hasPrecomposedAccent = (data & HAS_ACCENT) != 0;
+            ثابت UBool hasPrecomposedAccent = (معلومات & HAS_ACCENT) != 0;
             // Skip combining diacritics after this Greek letter.
-            int32_t nextNextIndex = nextIndex;
-            while (nextIndex < srcLength) {
+            int32_t بل_بل_شاخص = بل_شاخص;
+            طالما (بل_شاخص < src_اوږدتیا) {
                 UChar32 c2;
-                U8_NEXT(src, nextNextIndex, srcLength, c2);
-                uint32_t diacriticData = getDiacriticData(c2);
-                if (diacriticData != 0) {
-                    data |= diacriticData;
-                    if ((diacriticData & HAS_YPOGEGRAMMENI) != 0) {
-                        ++numYpogegrammeni;
+                U8_بل(src, بل_بل_شاخص, src_اوږدتیا, c2);
+                uint32_t diacritic_معلومات = get_Diacritic_معلومات(c2);
+                إذا (diacritic_معلومات != 0) {
+                    معلومات |= diacritic_معلومات;
+                    إذا ((diacritic_معلومات & HAS_YPOGEGRAMMENI) != 0) {
+                        ++عدد_Ypogegrammeni;
                     }
-                    nextIndex = nextNextIndex;
-                } else {
-                    break;  // not a Greek diacritic
+                    بل_شاخص = بل_بل_شاخص;
+                } وإلا {
+                    اكسر;  // not a Greek diacritic
                 }
             }
-            if ((data & HAS_VOWEL_AND_ACCENT_AND_DIALYTIKA) == HAS_VOWEL_AND_ACCENT) {
-                nextState |= hasPrecomposedAccent ? AFTER_VOWEL_WITH_PRECOMPOSED_ACCENT
+            إذا ((معلومات & HAS_VOWEL_AND_ACCENT_AND_DIALYTIKA) == HAS_VOWEL_AND_ACCENT) {
+                بل_State |= hasPrecomposedAccent ? AFTER_VOWEL_WITH_PRECOMPOSED_ACCENT
                                                   : AFTER_VOWEL_WITH_COMBINING_ACCENT;
             }
             // Map according to Greek rules.
-            UBool addTonos = false;
-            if (upper == 0x397 &&
-                    (data & HAS_ACCENT) != 0 &&
-                    numYpogegrammeni == 0 &&
+            UBool جمع_کړه_Tonos = خطأ;
+            إذا (upper == 0x397 &&
+                    (معلومات & HAS_ACCENT) != 0 &&
+                    عدد_Ypogegrammeni == 0 &&
                     (state & AFTER_CASED) == 0 &&
-                    !isFollowedByCasedLetter(src, nextIndex, srcLength)) {
+                    !isFollowedByCasedLetter(src, بل_شاخص, src_اوږدتیا)) {
                 // Keep disjunctive "or" with (only) a tonos.
                 // We use the same "word boundary" conditions as for the Final_Sigma test.
-                if (hasPrecomposedAccent) {
+                إذا (hasPrecomposedAccent) {
                     upper = 0x389;  // Preserve the precomposed form.
-                } else {
-                    addTonos = true;
+                } وإلا {
+                    جمع_کړه_Tonos = ریښتیا;
                 }
-            } else if ((data & HAS_DIALYTIKA) != 0) {
+            } وإلا إذا ((معلومات & HAS_DIALYTIKA) != 0) {
                 // Preserve a vowel with dialytika in precomposed form if it exists.
-                if (upper == 0x399) {
+                إذا (upper == 0x399) {
                     upper = 0x3AA;
-                    data &= ~HAS_EITHER_DIALYTIKA;
-                } else if (upper == 0x3A5) {
+                    معلومات &= ~HAS_EITHER_DIALYTIKA;
+                } وإلا إذا (upper == 0x3A5) {
                     upper = 0x3AB;
-                    data &= ~HAS_EITHER_DIALYTIKA;
+                    معلومات &= ~HAS_EITHER_DIALYTIKA;
                 }
             }
 
             UBool change;
-            if (edits == nullptr && (options & U_OMIT_UNCHANGED_TEXT) == 0) {
-                change = true;  // common, simple usage
-            } else {
+            إذا (edits == تش_اشاره && (options & U_OMIT_UNCHANGED_متن) == 0) {
+                change = ریښتیا;  // common, simple usage
+            } وإلا {
                 // Find out first whether we are changing the text.
                 U_ASSERT(0x370 <= upper && upper <= 0x3ff);  // 2-byte UTF-8, main Greek block
-                change = (i + 2) > nextIndex ||
+                change = (i + 2) > بل_شاخص ||
                         src[i] != getTwoByteLead(upper) || src[i + 1] != getTwoByteTrail(upper) ||
-                        numYpogegrammeni > 0;
+                        عدد_Ypogegrammeni > 0;
                 int32_t i2 = i + 2;
-                if ((data & HAS_EITHER_DIALYTIKA) != 0) {
-                    change |= (i2 + 2) > nextIndex ||
+                إذا ((معلومات & HAS_EITHER_DIALYTIKA) != 0) {
+                    change |= (i2 + 2) > بل_شاخص ||
                             src[i2] != static_cast<uint8_t>(u8"\u0308"[0]) ||
                             src[i2 + 1] != static_cast<uint8_t>(u8"\u0308"[1]);
                     i2 += 2;
                 }
-                if (addTonos) {
-                    change |= (i2 + 2) > nextIndex ||
+                إذا (جمع_کړه_Tonos) {
+                    change |= (i2 + 2) > بل_شاخص ||
                             src[i2] != static_cast<uint8_t>(u8"\u0301"[0]) ||
                             src[i2 + 1] != static_cast<uint8_t>(u8"\u0301"[1]);
                     i2 += 2;
                 }
-                int32_t oldLength = nextIndex - i;
-                int32_t newLength = (i2 - i) + numYpogegrammeni * 2;  // 2 bytes per U+0399
-                change |= oldLength != newLength;
-                if (change) {
-                    if (edits != nullptr) {
-                        edits->addReplace(oldLength, newLength);
+                int32_t old_اوږدتیا = بل_شاخص - i;
+                int32_t new_اوږدتیا = (i2 - i) + عدد_Ypogegrammeni * 2;  // 2 bytes per U+0399
+                change |= old_اوږدتیا != new_اوږدتیا;
+                إذا (change) {
+                    إذا (edits != تش_اشاره) {
+                        edits->جمع_کړه_Replace(old_اوږدتیا, new_اوږدتیا);
                     }
-                } else {
-                    if (edits != nullptr) {
-                        edits->addUnchanged(oldLength);
+                } وإلا {
+                    إذا (edits != تش_اشاره) {
+                        edits->جمع_کړه_Unchanged(old_اوږدتیا);
                     }
                     // Write unchanged text?
-                    change = (options & U_OMIT_UNCHANGED_TEXT) == 0;
+                    change = (options & U_OMIT_UNCHANGED_متن) == 0;
                 }
             }
 
-            if (change) {
-                ByteSinkUtil::appendTwoBytes(upper, sink);
-                if ((data & HAS_EITHER_DIALYTIKA) != 0) {
+            إذا (change) {
+                ByteSinkUtil::append_Two_بایټونه(upper, sink);
+                إذا ((معلومات & HAS_EITHER_DIALYTIKA) != 0) {
                     sink.AppendU8(u8"\u0308", 2);  // restore or add a dialytika
                 }
-                if (addTonos) {
+                إذا (جمع_کړه_Tonos) {
                     sink.AppendU8(u8"\u0301", 2);
                 }
-                while (numYpogegrammeni > 0) {
+                طالما (عدد_Ypogegrammeni > 0) {
                     sink.AppendU8(u8"\u0399", 2);
-                    --numYpogegrammeni;
+                    --عدد_Ypogegrammeni;
                 }
             }
-        } else if(c>=0) {
-            const char16_t *s;
-            c=ucase_toFullUpper(c, nullptr, nullptr, &s, UCASE_LOC_GREEK);
-            if (!appendResult(nextIndex - i, c, s, sink, options, edits, errorCode)) {
-                return;
+        } وإلا إذا(c>=0) {
+            ثابت char16_t *s;
+            c=ucase_منزل_ډک_پاسنی(c, تش_اشاره, تش_اشاره, &s, UCASE_LOC_GREEK);
+            إذا (!append_پایله(بل_شاخص - i, c, s, sink, options, edits, error_کوډ)) {
+                أرجع;
             }
-        } else {
+        } وإلا {
             // Malformed UTF-8.
-            if (!ByteSinkUtil::appendUnchanged(src+i, nextIndex-i,
-                                               sink, options, edits, errorCode)) {
-                return;
+            إذا (!ByteSinkUtil::appendUnchanged(src+i, بل_شاخص-i,
+                                               sink, options, edits, error_کوډ)) {
+                أرجع;
             }
         }
-        i = nextIndex;
-        state = nextState;
+        i = بل_شاخص;
+        state = بل_State;
     }
 }
 
 }  // namespace GreekUpper
-U_NAMESPACE_END
+U_NAMESPACE_پای_ټکی
 
-static void U_CALLCONV
-ucasemap_internalUTF8ToLower(int32_t caseLocale, uint32_t options, UCASEMAP_BREAK_ITERATOR_UNUSED
-                             const uint8_t *src, int32_t srcLength,
+ساكن فراغ U_CALLCONV
+ucasemap_دننی_UTF8_منزل_ښکتنی(int32_t caseLocale, uint32_t options, UCASEMAP_BREAK_ITERATOR_ناکارول_شوی
+                             ثابت uint8_t *src, int32_t src_اوږدتیا,
                              icu::ByteSink &sink, icu::Edits *edits,
-                             UErrorCode &errorCode) {
+                             UError_کوډ &error_کوډ) {
     UCaseContext csc=UCASECONTEXT_INITIALIZER;
-    csc.p=(void *)src;
-    csc.limit=srcLength;
-    toLower(
+    csc.p=(فراغ *)src;
+    csc.حد=src_اوږدتیا;
+    منزل_ښکتنی(
         caseLocale, options,
-        src, &csc, 0, srcLength,
-        sink, edits, errorCode);
+        src, &csc, 0, src_اوږدتیا,
+        sink, edits, error_کوډ);
 }
 
-static void U_CALLCONV
-ucasemap_internalUTF8ToUpper(int32_t caseLocale, uint32_t options, UCASEMAP_BREAK_ITERATOR_UNUSED
-                             const uint8_t *src, int32_t srcLength,
+ساكن فراغ U_CALLCONV
+ucasemap_دننی_UTF8_منزل_پاسنی(int32_t caseLocale, uint32_t options, UCASEMAP_BREAK_ITERATOR_ناکارول_شوی
+                             ثابت uint8_t *src, int32_t src_اوږدتیا,
                              icu::ByteSink &sink, icu::Edits *edits,
-                             UErrorCode &errorCode) {
-    if (caseLocale == UCASE_LOC_GREEK) {
-        GreekUpper::toUpper(options, src, srcLength, sink, edits, errorCode);
-    } else {
+                             UError_کوډ &error_کوډ) {
+    إذا (caseLocale == UCASE_LOC_GREEK) {
+        Greek_پاسنی::منزل_پاسنی(options, src, src_اوږدتیا, sink, edits, error_کوډ);
+    } وإلا {
         UCaseContext csc=UCASECONTEXT_INITIALIZER;
-        csc.p=(void *)src;
-        csc.limit=srcLength;
-        toUpper(
+        csc.p=(فراغ *)src;
+        csc.حد=src_اوږدتیا;
+        منزل_پاسنی(
             caseLocale, options,
-            src, &csc, srcLength,
-            sink, edits, errorCode);
+            src, &csc, src_اوږدتیا,
+            sink, edits, error_کوډ);
     }
 }
 
-static void U_CALLCONV
-ucasemap_internalUTF8Fold(int32_t /* caseLocale */, uint32_t options, UCASEMAP_BREAK_ITERATOR_UNUSED
-                          const uint8_t *src, int32_t srcLength,
+ساكن فراغ U_CALLCONV
+ucasemap_دننی_UTF8_Fold(int32_t /* caseLocale */, uint32_t options, UCASEMAP_BREAK_ITERATOR_ناکارول_شوی
+                          ثابت uint8_t *src, int32_t src_اوږدتیا,
                           icu::ByteSink &sink, icu::Edits *edits,
-                          UErrorCode &errorCode) {
-    toLower(
+                          UError_کوډ &error_کوډ) {
+    منزل_ښکتنی(
         -1, options,
-        src, nullptr, 0, srcLength,
-        sink, edits, errorCode);
+        src, تش_اشاره, 0, src_اوږدتیا,
+        sink, edits, error_کوډ);
 }
 
-void
+فراغ
 ucasemap_mapUTF8(int32_t caseLocale, uint32_t options, UCASEMAP_BREAK_ITERATOR_PARAM
-                 const char *src, int32_t srcLength,
+                 ثابت حرف *src, int32_t src_اوږدتیا,
                  UTF8CaseMapper *stringCaseMapper,
                  icu::ByteSink &sink, icu::Edits *edits,
-                 UErrorCode &errorCode) {
+                 UError_کوډ &error_کوډ) {
     /* check argument values */
-    if (U_FAILURE(errorCode)) {
-        return;
+    إذا (U_FAILURE(error_کوډ)) {
+        أرجع;
     }
-    if ((src == nullptr && srcLength != 0) || srcLength < -1) {
-        errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+    إذا ((src == تش_اشاره && src_اوږدتیا != 0) || src_اوږدتیا < -1) {
+        error_کوډ = U_ILLEGAL_دلیل_ERROR;
+        أرجع;
     }
 
     // Get the string length.
-    if (srcLength == -1) {
-        srcLength = static_cast<int32_t>(uprv_strlen(src));
+    إذا (src_اوږدتیا == -1) {
+        src_اوږدتیا = static_cast<int32_t>(uprv_strlen(src));
     }
 
-    if (edits != nullptr && (options & U_EDITS_NO_RESET) == 0) {
+    إذا (edits != تش_اشاره && (options & U_EDITS_NO_RESET) == 0) {
         edits->reset();
     }
     stringCaseMapper(caseLocale, options, UCASEMAP_BREAK_ITERATOR
-                     reinterpret_cast<const uint8_t*>(src), srcLength, sink, edits, errorCode);
+                     reinterpret_cast<ثابت uint8_t*>(src), src_اوږدتیا, sink, edits, error_کوډ);
     sink.Flush();
-    if (U_SUCCESS(errorCode)) {
-        if (edits != nullptr) {
-            edits->copyErrorTo(errorCode);
+    إذا (U_SUCCESS(error_کوډ)) {
+        إذا (edits != تش_اشاره) {
+            edits->copy_Error_منزل(error_کوډ);
         }
     }
 }
 
 int32_t
 ucasemap_mapUTF8(int32_t caseLocale, uint32_t options, UCASEMAP_BREAK_ITERATOR_PARAM
-                 char *dest, int32_t destCapacity,
-                 const char *src, int32_t srcLength,
+                 حرف *dest, int32_t dest_ظرفیت,
+                 ثابت حرف *src, int32_t src_اوږدتیا,
                  UTF8CaseMapper *stringCaseMapper,
                  icu::Edits *edits,
-                 UErrorCode &errorCode) {
+                 UError_کوډ &error_کوډ) {
     /* check argument values */
-    if(U_FAILURE(errorCode)) {
-        return 0;
+    إذا(U_FAILURE(error_کوډ)) {
+        أرجع 0;
     }
-    if( destCapacity<0 ||
-        (dest==nullptr && destCapacity>0) ||
-        (src==nullptr && srcLength!=0) || srcLength<-1
+    إذا( dest_ظرفیت<0 ||
+        (dest==تش_اشاره && dest_ظرفیت>0) ||
+        (src==تش_اشاره && src_اوږدتیا!=0) || src_اوږدتیا<-1
     ) {
-        errorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        error_کوډ=U_ILLEGAL_دلیل_ERROR;
+        أرجع 0;
     }
 
     /* get the string length */
-    if(srcLength==-1) {
-        srcLength = static_cast<int32_t>(uprv_strlen(src));
+    إذا(src_اوږدتیا==-1) {
+        src_اوږدتیا = static_cast<int32_t>(uprv_strlen(src));
     }
 
     /* check for overlapping source and destination */
-    if( dest!=nullptr &&
-        ((src>=dest && src<(dest+destCapacity)) ||
-         (dest>=src && dest<(src+srcLength)))
+    إذا( dest!=تش_اشاره &&
+        ((src>=dest && src<(dest+dest_ظرفیت)) ||
+         (dest>=src && dest<(src+src_اوږدتیا)))
     ) {
-        errorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        error_کوډ=U_ILLEGAL_دلیل_ERROR;
+        أرجع 0;
     }
 
-    if (edits != nullptr && (options & U_EDITS_NO_RESET) == 0) {
+    إذا (edits != تش_اشاره && (options & U_EDITS_NO_RESET) == 0) {
         edits->reset();
     }
-    int32_t reslen = ByteSinkUtil::viaByteSinkToTerminatedChars(
-        dest, destCapacity,
-        [&](ByteSink& sink, UErrorCode& status) {
+    int32_t reslen = ByteSinkUtil::له_لارې_Byte_Sink_منزل_Terminated_Chars(
+        dest, dest_ظرفیت,
+        [&](ByteSink& sink, UError_کوډ& حالت) {
             stringCaseMapper(caseLocale, options, UCASEMAP_BREAK_ITERATOR
-                             reinterpret_cast<const uint8_t*>(src), srcLength, sink, edits, status);
+                             reinterpret_cast<ثابت uint8_t*>(src), src_اوږدتیا, sink, edits, حالت);
         },
-        errorCode);
-    if (U_SUCCESS(errorCode) && edits != nullptr) {
-        edits->copyErrorTo(errorCode);
+        error_کوډ);
+    إذا (U_SUCCESS(error_کوډ) && edits != تش_اشاره) {
+        edits->copy_Error_منزل(error_کوډ);
     }
-    return reslen;
+    أرجع reslen;
 }
 
 /* public API functions */
 
 U_CAPI int32_t U_EXPORT2
-ucasemap_utf8ToLower(const UCaseMap *csm,
-                     char *dest, int32_t destCapacity,
-                     const char *src, int32_t srcLength,
-                     UErrorCode *pErrorCode) {
-    auto *impl = reinterpret_cast<const UCaseMapImpl *>(csm);
-    return ucasemap_mapUTF8(
+ucasemap_utf8_منزل_ښکتنی(ثابت UCaseMap *csm,
+                     حرف *dest, int32_t dest_ظرفیت,
+                     ثابت حرف *src, int32_t src_اوږدتیا,
+                     UError_کوډ *p_Error_کوډ) {
+    خپلکاری *impl = reinterpret_cast<ثابت UCaseMapImpl *>(csm);
+    أرجع ucasemap_mapUTF8(
         impl->caseLocale, impl->options, UCASEMAP_BREAK_ITERATOR_NULL
-        dest, destCapacity,
-        src, srcLength,
-        ucasemap_internalUTF8ToLower, nullptr, *pErrorCode);
+        dest, dest_ظرفیت,
+        src, src_اوږدتیا,
+        ucasemap_دننی_UTF8_منزل_ښکتنی, تش_اشاره, *p_Error_کوډ);
 }
 
 U_CAPI int32_t U_EXPORT2
-ucasemap_utf8ToUpper(const UCaseMap *csm,
-                     char *dest, int32_t destCapacity,
-                     const char *src, int32_t srcLength,
-                     UErrorCode *pErrorCode) {
-    auto *impl = reinterpret_cast<const UCaseMapImpl *>(csm);
-    return ucasemap_mapUTF8(
+ucasemap_utf8_منزل_پاسنی(ثابت UCaseMap *csm,
+                     حرف *dest, int32_t dest_ظرفیت,
+                     ثابت حرف *src, int32_t src_اوږدتیا,
+                     UError_کوډ *p_Error_کوډ) {
+    خپلکاری *impl = reinterpret_cast<ثابت UCaseMapImpl *>(csm);
+    أرجع ucasemap_mapUTF8(
         impl->caseLocale, impl->options, UCASEMAP_BREAK_ITERATOR_NULL
-        dest, destCapacity,
-        src, srcLength,
-        ucasemap_internalUTF8ToUpper, nullptr, *pErrorCode);
+        dest, dest_ظرفیت,
+        src, src_اوږدتیا,
+        ucasemap_دننی_UTF8_منزل_پاسنی, تش_اشاره, *p_Error_کوډ);
 }
 
 U_CAPI int32_t U_EXPORT2
-ucasemap_utf8FoldCase(const UCaseMap *csm,
-                      char *dest, int32_t destCapacity,
-                      const char *src, int32_t srcLength,
-                      UErrorCode *pErrorCode) {
-    auto *impl = reinterpret_cast<const UCaseMapImpl *>(csm);
-    return ucasemap_mapUTF8(
-        UCASE_LOC_ROOT, impl->options, UCASEMAP_BREAK_ITERATOR_NULL
-        dest, destCapacity,
-        src, srcLength,
-        ucasemap_internalUTF8Fold, nullptr, *pErrorCode);
+ucasemap_utf8FoldCase(ثابت UCaseMap *csm,
+                      حرف *dest, int32_t dest_ظرفیت,
+                      ثابت حرف *src, int32_t src_اوږدتیا,
+                      UError_کوډ *p_Error_کوډ) {
+    خپلکاری *impl = reinterpret_cast<ثابت UCaseMapImpl *>(csm);
+    أرجع ucasemap_mapUTF8(
+        UCASE_LOC_ریښه, impl->options, UCASEMAP_BREAK_ITERATOR_NULL
+        dest, dest_ظرفیت,
+        src, src_اوږدتیا,
+        ucasemap_دننی_UTF8_Fold, تش_اشاره, *p_Error_کوډ);
 }
 
 U_NAMESPACE_BEGIN
 
-void CaseMap::utf8ToLower(
-        const char *locale, uint32_t options,
+فراغ CaseMap::utf8_منزل_ښکتنی(
+        ثابت حرف *locale, uint32_t options,
         StringPiece src, ByteSink &sink, Edits *edits,
-        UErrorCode &errorCode) {
+        UError_کوډ &error_کوډ) {
     ucasemap_mapUTF8(
         ustrcase_getCaseLocale(locale), options, UCASEMAP_BREAK_ITERATOR_NULL
-        src.data(), src.length(),
-        ucasemap_internalUTF8ToLower, sink, edits, errorCode);
+        src.معلومات(), src.length(),
+        ucasemap_دننی_UTF8_منزل_ښکتنی, sink, edits, error_کوډ);
 }
 
-void CaseMap::utf8ToUpper(
-        const char *locale, uint32_t options,
+فراغ CaseMap::utf8_منزل_پاسنی(
+        ثابت حرف *locale, uint32_t options,
         StringPiece src, ByteSink &sink, Edits *edits,
-        UErrorCode &errorCode) {
+        UError_کوډ &error_کوډ) {
     ucasemap_mapUTF8(
         ustrcase_getCaseLocale(locale), options, UCASEMAP_BREAK_ITERATOR_NULL
-        src.data(), src.length(),
-        ucasemap_internalUTF8ToUpper, sink, edits, errorCode);
+        src.معلومات(), src.length(),
+        ucasemap_دننی_UTF8_منزل_پاسنی, sink, edits, error_کوډ);
 }
 
-void CaseMap::utf8Fold(
+فراغ CaseMap::utf8Fold(
         uint32_t options,
         StringPiece src, ByteSink &sink, Edits *edits,
-        UErrorCode &errorCode) {
+        UError_کوډ &error_کوډ) {
     ucasemap_mapUTF8(
-        UCASE_LOC_ROOT, options, UCASEMAP_BREAK_ITERATOR_NULL
-        src.data(), src.length(),
-        ucasemap_internalUTF8Fold, sink, edits, errorCode);
+        UCASE_LOC_ریښه, options, UCASEMAP_BREAK_ITERATOR_NULL
+        src.معلومات(), src.length(),
+        ucasemap_دننی_UTF8_Fold, sink, edits, error_کوډ);
 }
 
-int32_t CaseMap::utf8ToLower(
-        const char *locale, uint32_t options,
-        const char *src, int32_t srcLength,
-        char *dest, int32_t destCapacity, Edits *edits,
-        UErrorCode &errorCode) {
-    return ucasemap_mapUTF8(
+int32_t CaseMap::utf8_منزل_ښکتنی(
+        ثابت حرف *locale, uint32_t options,
+        ثابت حرف *src, int32_t src_اوږدتیا,
+        حرف *dest, int32_t dest_ظرفیت, Edits *edits,
+        UError_کوډ &error_کوډ) {
+    أرجع ucasemap_mapUTF8(
         ustrcase_getCaseLocale(locale), options, UCASEMAP_BREAK_ITERATOR_NULL
-        dest, destCapacity,
-        src, srcLength,
-        ucasemap_internalUTF8ToLower, edits, errorCode);
+        dest, dest_ظرفیت,
+        src, src_اوږدتیا,
+        ucasemap_دننی_UTF8_منزل_ښکتنی, edits, error_کوډ);
 }
 
-int32_t CaseMap::utf8ToUpper(
-        const char *locale, uint32_t options,
-        const char *src, int32_t srcLength,
-        char *dest, int32_t destCapacity, Edits *edits,
-        UErrorCode &errorCode) {
-    return ucasemap_mapUTF8(
+int32_t CaseMap::utf8_منزل_پاسنی(
+        ثابت حرف *locale, uint32_t options,
+        ثابت حرف *src, int32_t src_اوږدتیا,
+        حرف *dest, int32_t dest_ظرفیت, Edits *edits,
+        UError_کوډ &error_کوډ) {
+    أرجع ucasemap_mapUTF8(
         ustrcase_getCaseLocale(locale), options, UCASEMAP_BREAK_ITERATOR_NULL
-        dest, destCapacity,
-        src, srcLength,
-        ucasemap_internalUTF8ToUpper, edits, errorCode);
+        dest, dest_ظرفیت,
+        src, src_اوږدتیا,
+        ucasemap_دننی_UTF8_منزل_پاسنی, edits, error_کوډ);
 }
 
 int32_t CaseMap::utf8Fold(
         uint32_t options,
-        const char *src, int32_t srcLength,
-        char *dest, int32_t destCapacity, Edits *edits,
-        UErrorCode &errorCode) {
-    return ucasemap_mapUTF8(
-        UCASE_LOC_ROOT, options, UCASEMAP_BREAK_ITERATOR_NULL
-        dest, destCapacity,
-        src, srcLength,
-        ucasemap_internalUTF8Fold, edits, errorCode);
+        ثابت حرف *src, int32_t src_اوږدتیا,
+        حرف *dest, int32_t dest_ظرفیت, Edits *edits,
+        UError_کوډ &error_کوډ) {
+    أرجع ucasemap_mapUTF8(
+        UCASE_LOC_ریښه, options, UCASEMAP_BREAK_ITERATOR_NULL
+        dest, dest_ظرفیت,
+        src, src_اوږدتیا,
+        ucasemap_دننی_UTF8_Fold, edits, error_کوډ);
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_پای_ټکی

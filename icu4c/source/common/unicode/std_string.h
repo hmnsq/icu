@@ -16,8 +16,8 @@
 *   created by: Markus W. Scherer
 */
 
-#ifndef __STD_STRING_H__
-#define __STD_STRING_H__
+#که_نه_تعریف_شوی __STD_STRING_H__
+#تعریف_کړه __STD_STRING_H__
 
 /**
  * \file
@@ -25,17 +25,17 @@
  *                 header and for related definitions.
  */
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#إذا U_SHOW_CPLUSPLUS_API
 
 // Workaround for a libstdc++ bug before libstdc++4.6 (2011).
 // https://bugs.llvm.org/show_bug.cgi?id=13364
-#if defined(__GLIBCXX__)
+#إذا defined(__GLIBCXX__)
 namespace std { class type_info; }
-#endif
-#include <string>
+#د_که_پای
+#ضمن <string>
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#د_که_پای /* U_SHOW_CPLUSPLUS_API */
 
-#endif  // __STD_STRING_H__
+#د_که_پای  // __STD_STRING_H__

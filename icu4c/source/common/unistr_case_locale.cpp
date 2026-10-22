@@ -17,11 +17,11 @@
 *   were moved here to break dependency cycles among parts of the common library.
 */
 
-#include "unicode/utypes.h"
-#include "unicode/locid.h"
-#include "unicode/ucasemap.h"
-#include "unicode/unistr.h"
-#include "ucasemap_imp.h"
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/locid.h"
+#ضمن "unicode/ucasemap.h"
+#ضمن "unicode/unistr.h"
+#ضمن "ucasemap_imp.h"
 
 U_NAMESPACE_BEGIN
 
@@ -30,27 +30,27 @@ U_NAMESPACE_BEGIN
 //========================================
 
 UnicodeString&
-UnicodeString::toLower() U_LIFETIME_BOUND {
-  return caseMap(ustrcase_getCaseLocale(nullptr), 0,
-                 UCASEMAP_BREAK_ITERATOR_NULL ustrcase_internalToLower);
+UnicodeString::منزل_ښکتنی() U_LIFETIME_BOUND {
+  أرجع caseMap(ustrcase_getCaseLocale(تش_اشاره), 0,
+                 UCASEMAP_BREAK_ITERATOR_NULL ustrcase_دننی_منزل_ښکتنی);
 }
 
 UnicodeString&
-UnicodeString::toLower(const Locale& locale) U_LIFETIME_BOUND {
-  return caseMap(ustrcase_getCaseLocale(locale.getBaseName()), 0,
-                 UCASEMAP_BREAK_ITERATOR_NULL ustrcase_internalToLower);
+UnicodeString::منزل_ښکتنی(ثابت Locale& locale) U_LIFETIME_BOUND {
+  أرجع caseMap(ustrcase_getCaseLocale(locale.get_بنسټ_Name()), 0,
+                 UCASEMAP_BREAK_ITERATOR_NULL ustrcase_دننی_منزل_ښکتنی);
 }
 
 UnicodeString&
-UnicodeString::toUpper() U_LIFETIME_BOUND {
-  return caseMap(ustrcase_getCaseLocale(nullptr), 0,
-                 UCASEMAP_BREAK_ITERATOR_NULL ustrcase_internalToUpper);
+UnicodeString::منزل_پاسنی() U_LIFETIME_BOUND {
+  أرجع caseMap(ustrcase_getCaseLocale(تش_اشاره), 0,
+                 UCASEMAP_BREAK_ITERATOR_NULL ustrcase_دننی_منزل_پاسنی);
 }
 
 UnicodeString&
-UnicodeString::toUpper(const Locale& locale) U_LIFETIME_BOUND {
-  return caseMap(ustrcase_getCaseLocale(locale.getBaseName()), 0,
-                 UCASEMAP_BREAK_ITERATOR_NULL ustrcase_internalToUpper);
+UnicodeString::منزل_پاسنی(ثابت Locale& locale) U_LIFETIME_BOUND {
+  أرجع caseMap(ustrcase_getCaseLocale(locale.get_بنسټ_Name()), 0,
+                 UCASEMAP_BREAK_ITERATOR_NULL ustrcase_دننی_منزل_پاسنی);
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_پای_ټکی

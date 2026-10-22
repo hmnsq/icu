@@ -23,10 +23,10 @@
 ******************************************************************************
 */
 
-#ifndef PUTIL_H
-#define PUTIL_H
+#که_نه_تعریف_شوی PUTIL_H
+#تعریف_کړه PUTIL_H
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
  /**
   * \file
   * \brief C API: Platform Utilities
@@ -66,7 +66,7 @@
  *   
  * @stable ICU 2.0
  */
-U_CAPI const char* U_EXPORT2 u_getDataDirectory(void);
+U_CAPI ثابت حرف* U_EXPORT2 u_get_معلومات_Directory(فراغ);
 
 
 /** 
@@ -88,9 +88,9 @@ U_CAPI const char* U_EXPORT2 u_getDataDirectory(void);
  * @see u_init
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2 u_setDataDirectory(const char *directory);
+U_CAPI فراغ U_EXPORT2 u_سېټ_معلومات_Directory(ثابت حرف *directory);
 
-#ifndef U_HIDE_INTERNAL_API
+#که_نه_تعریف_شوی U_HIDE_دننی_API
 /**
   * Return the time zone files override directory, or an empty string if
   * no directory was specified. Certain time zone resources will be preferentially
@@ -99,7 +99,7 @@ U_CAPI void U_EXPORT2 u_setDataDirectory(const char *directory);
   * @return the time zone data override directory.
   * @internal
   */ 
-U_CAPI const char * U_EXPORT2 u_getTimeZoneFilesDirectory(UErrorCode *status);
+U_CAPI ثابت حرف * U_EXPORT2 u_get_وخت_Zone_Files_Directory(UError_کوډ *حالت);
 
 /**
   * Set the time zone files override directory.
@@ -109,8 +109,8 @@ U_CAPI const char * U_EXPORT2 u_getTimeZoneFilesDirectory(UErrorCode *status);
   *   will access the time zone data.
   * @internal
   */
-U_CAPI void U_EXPORT2 u_setTimeZoneFilesDirectory(const char *path, UErrorCode *status);
-#endif  /* U_HIDE_INTERNAL_API */
+U_CAPI فراغ U_EXPORT2 u_سېټ_وخت_Zone_Files_Directory(ثابت حرف *لار, UError_کوډ *حالت);
+#د_که_پای  /* U_HIDE_INTERNAL_API */
 
 
 /**
@@ -119,21 +119,21 @@ U_CAPI void U_EXPORT2 u_setTimeZoneFilesDirectory(const char *path, UErrorCode *
  * Example: '/' and ':' on Unix, '\\' and ';' on Windows.
  * @stable ICU 2.0
  */
-#if U_PLATFORM_USES_ONLY_WIN32_API
+#إذا U_PLATFORM_کاروي_ONLY_WIN32_API
 #   define U_FILE_SEP_CHAR '\\'
 #   define U_FILE_ALT_SEP_CHAR '/'
-#   define U_PATH_SEP_CHAR ';'
+#   define U_لار_SEP_CHAR ';'
 #   define U_FILE_SEP_STRING "\\"
 #   define U_FILE_ALT_SEP_STRING "/"
-#   define U_PATH_SEP_STRING ";"
-#else
+#   define U_لار_SEP_STRING ";"
+#وإلا
 #   define U_FILE_SEP_CHAR '/'
 #   define U_FILE_ALT_SEP_CHAR '/'
-#   define U_PATH_SEP_CHAR ':'
+#   define U_لار_SEP_CHAR ':'
 #   define U_FILE_SEP_STRING "/"
 #   define U_FILE_ALT_SEP_STRING "/"
-#   define U_PATH_SEP_STRING ":"
-#endif
+#   define U_لار_SEP_STRING ":"
+#د_که_پای
 
 /** @} */
 
@@ -155,8 +155,8 @@ U_CAPI void U_EXPORT2 u_setTimeZoneFilesDirectory(const char *path, UErrorCode *
  * @see U_CHARSET_FAMILY
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
-u_charsToUChars(const char *cs, UChar *us, int32_t length);
+U_CAPI فراغ U_EXPORT2
+u_chars_منزل_UChars(ثابت حرف *cs, UChar *us, int32_t اوږدتیا);
 
 /**
  * Convert UChar characters to char characters.
@@ -177,7 +177,7 @@ u_charsToUChars(const char *cs, UChar *us, int32_t length);
  * @see U_CHARSET_FAMILY
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
-u_UCharsToChars(const UChar *us, char *cs, int32_t length);
+U_CAPI فراغ U_EXPORT2
+u_UChars_منزل_Chars(ثابت UChar *us, حرف *cs, int32_t اوږدتیا);
 
-#endif
+#د_که_پای

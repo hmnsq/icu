@@ -17,78 +17,78 @@
 *   were moved here to break dependency cycles among parts of the common library.
 */
 
-#include "unicode/utypes.h"
-#include "uassert.h"
-#include "unicode/brkiter.h"
-#include "unicode/casemap.h"
-#include "unicode/ucasemap.h"
-#include "unicode/uloc.h"
-#include "unicode/ustring.h"
-#include "ucase.h"
-#include "ucasemap_imp.h"
+#ضمن "unicode/utypes.h"
+#ضمن "uassert.h"
+#ضمن "unicode/brkiter.h"
+#ضمن "unicode/casemap.h"
+#ضمن "unicode/ucasemap.h"
+#ضمن "unicode/uloc.h"
+#ضمن "unicode/ustring.h"
+#ضمن "ucase.h"
+#ضمن "ucasemap_imp.h"
 
 U_CFUNC int32_t
-ustrcase_getCaseLocale(const char *locale) {
-    if (locale == nullptr) {
+ustrcase_getCaseLocale(ثابت حرف *locale) {
+    إذا (locale == تش_اشاره) {
         locale = uloc_getDefault();
     }
-    if (*locale == 0) {
-        return UCASE_LOC_ROOT;
-    } else {
-        return ucase_getCaseLocale(locale);
+    إذا (*locale == 0) {
+        أرجع UCASE_LOC_ریښه;
+    } وإلا {
+        أرجع ucase_getCaseLocale(locale);
     }
 }
 
 /* public API functions */
 
 U_CAPI int32_t U_EXPORT2
-u_strToLower(char16_t *dest, int32_t destCapacity,
-             const char16_t *src, int32_t srcLength,
-             const char *locale,
-             UErrorCode *pErrorCode) {
-    return ustrcase_mapWithOverlap(
+u_str_منزل_ښکتنی(char16_t *dest, int32_t dest_ظرفیت,
+             ثابت char16_t *src, int32_t src_اوږدتیا,
+             ثابت حرف *locale,
+             UError_کوډ *p_Error_کوډ) {
+    أرجع ustrcase_mapWithOverlap(
         ustrcase_getCaseLocale(locale), 0, UCASEMAP_BREAK_ITERATOR_NULL
-        dest, destCapacity,
-        src, srcLength,
-        ustrcase_internalToLower, *pErrorCode);
+        dest, dest_ظرفیت,
+        src, src_اوږدتیا,
+        ustrcase_دننی_منزل_ښکتنی, *p_Error_کوډ);
 }
 
 U_CAPI int32_t U_EXPORT2
-u_strToUpper(char16_t *dest, int32_t destCapacity,
-             const char16_t *src, int32_t srcLength,
-             const char *locale,
-             UErrorCode *pErrorCode) {
-    return ustrcase_mapWithOverlap(
+u_str_منزل_پاسنی(char16_t *dest, int32_t dest_ظرفیت,
+             ثابت char16_t *src, int32_t src_اوږدتیا,
+             ثابت حرف *locale,
+             UError_کوډ *p_Error_کوډ) {
+    أرجع ustrcase_mapWithOverlap(
         ustrcase_getCaseLocale(locale), 0, UCASEMAP_BREAK_ITERATOR_NULL
-        dest, destCapacity,
-        src, srcLength,
-        ustrcase_internalToUpper, *pErrorCode);
+        dest, dest_ظرفیت,
+        src, src_اوږدتیا,
+        ustrcase_دننی_منزل_پاسنی, *p_Error_کوډ);
 }
 
 U_NAMESPACE_BEGIN
 
-int32_t CaseMap::toLower(
-        const char *locale, uint32_t options,
-        const char16_t *src, int32_t srcLength,
-        char16_t *dest, int32_t destCapacity, Edits *edits,
-        UErrorCode &errorCode) {
-    return ustrcase_map(
+int32_t CaseMap::منزل_ښکتنی(
+        ثابت حرف *locale, uint32_t options,
+        ثابت char16_t *src, int32_t src_اوږدتیا,
+        char16_t *dest, int32_t dest_ظرفیت, Edits *edits,
+        UError_کوډ &error_کوډ) {
+    أرجع ustrcase_map(
         ustrcase_getCaseLocale(locale), options, UCASEMAP_BREAK_ITERATOR_NULL
-        dest, destCapacity,
-        src, srcLength,
-        ustrcase_internalToLower, edits, errorCode);
+        dest, dest_ظرفیت,
+        src, src_اوږدتیا,
+        ustrcase_دننی_منزل_ښکتنی, edits, error_کوډ);
 }
 
-int32_t CaseMap::toUpper(
-        const char *locale, uint32_t options,
-        const char16_t *src, int32_t srcLength,
-        char16_t *dest, int32_t destCapacity, Edits *edits,
-        UErrorCode &errorCode) {
-    return ustrcase_map(
+int32_t CaseMap::منزل_پاسنی(
+        ثابت حرف *locale, uint32_t options,
+        ثابت char16_t *src, int32_t src_اوږدتیا,
+        char16_t *dest, int32_t dest_ظرفیت, Edits *edits,
+        UError_کوډ &error_کوډ) {
+    أرجع ustrcase_map(
         ustrcase_getCaseLocale(locale), options, UCASEMAP_BREAK_ITERATOR_NULL
-        dest, destCapacity,
-        src, srcLength,
-        ustrcase_internalToUpper, edits, errorCode);
+        dest, dest_ظرفیت,
+        src, src_اوږدتیا,
+        ustrcase_دننی_منزل_پاسنی, edits, error_کوډ);
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_پای_ټکی

@@ -7,13 +7,13 @@
 **********************************************************************
 */
 
-#ifndef _UCURR_IMP_H_
-#define _UCURR_IMP_H_
+#که_نه_تعریف_شوی _UCURR_IMP_H_
+#تعریف_کړه _UCURR_IMP_H_
 
-#include "unicode/utypes.h"
-#include "unicode/unistr.h"
-#include "unicode/parsepos.h"
-#include "unicode/uniset.h"
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/unistr.h"
+#ضمن "unicode/parsepos.h"
+#ضمن "unicode/uniset.h"
 
 /**
  * Internal method.  Given a currency ISO code and a locale, return
@@ -25,9 +25,9 @@
  * This is used for backward compatibility with old currency logic in
  * DecimalFormat and DecimalFormatSymbols.
  */
-U_CAPI void
-uprv_getStaticCurrencyName(const UChar* iso, const char* loc,
-                           icu::UnicodeString& result, UErrorCode& ec);
+U_CAPI فراغ
+uprv_getStaticCurrencyName(ثابت UChar* iso, ثابت حرف* loc,
+                           icu::UnicodeString& پایله, UError_کوډ& ec);
 
 /**
  * Attempt to parse the given string as a currency, either as a
@@ -53,14 +53,14 @@ uprv_getStaticCurrencyName(const UChar* iso, const char* loc,
  *
  * @internal
  */
-U_CAPI void
-uprv_parseCurrency(const char* locale,
-                   const icu::UnicodeString& text,
+U_CAPI فراغ
+uprv_parseCurrency(ثابت حرف* locale,
+                   ثابت icu::UnicodeString& متن,
                    icu::ParsePosition& pos,
                    int8_t type,
-                   int32_t* partialMatchLen,
-                   UChar* result,
-                   UErrorCode& ec);
+                   int32_t* partial_سمون_Len,
+                   UChar* پایله,
+                   UError_کوډ& ec);
 
 /**
  * Puts all possible first-characters of a currency into the
@@ -69,10 +69,10 @@ uprv_parseCurrency(const char* locale,
  * @param locale the locale of the display names of interest
  * @param result the UnicodeSet to which to add the starting characters
  */
-void uprv_currencyLeads(const char* locale, icu::UnicodeSet& result, UErrorCode& ec);
+فراغ uprv_currencyLeads(ثابت حرف* locale, icu::Unicode_سېټ& پایله, UError_کوډ& ec);
 
 
 
-#endif /* #ifndef _UCURR_IMP_H_ */
+#د_که_پای /* #ifndef _UCURR_IMP_H_ */
 
 //eof

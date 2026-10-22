@@ -6,253 +6,253 @@
 *   Corporation and others.  All Rights Reserved.
 **********************************************************************
 */
-#include <algorithm>
-#include <optional>
-#include <string_view>
+#ضمن <algorithm>
+#ضمن <optional>
+#ضمن <string_view>
 
-#include "unicode/utypes.h"
-#include "unicode/unistr.h"
-#include "unicode/uobject.h"
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/unistr.h"
+#ضمن "unicode/uobject.h"
 
-#include "cmemory.h"
-#include "cstring.h"
-#include "fixedstring.h"
-#include "uassert.h"
-#include "ucln_cmn.h"
-#include "uhash.h"
-#include "ulocimp.h"
-#include "umutex.h"
-#include "uresimp.h"
-#include "uvector.h"
-#include "udataswp.h" /* for InvChar functions */
+#ضمن "cmemory.h"
+#ضمن "cstring.h"
+#ضمن "fixedstring.h"
+#ضمن "uassert.h"
+#ضمن "ucln_cmn.h"
+#ضمن "uhash.h"
+#ضمن "ulocimp.h"
+#ضمن "umutex.h"
+#ضمن "uresimp.h"
+#ضمن "uvector.h"
+#ضمن "udataswp.h" /* for InvChar functions */
 
-static UHashtable* gLocExtKeyMap = nullptr;
-static icu::UInitOnce gLocExtKeyMapInitOnce {};
+ساكن UHashtable* g_Loc_Ext_کلی_Map = تش_اشاره;
+ساكن icu::UInitOnce g_Loc_Ext_کلی_Map_Init_Once {};
 
 // bit flags for special types
-typedef enum {
+تعريفنوع تعداد {
     SPECIALTYPE_NONE = 0,
     SPECIALTYPE_CODEPOINTS = 1,
-    SPECIALTYPE_REORDER_CODE = 2,
-    SPECIALTYPE_RG_KEY_VALUE = 4
+    SPECIALTYPE_REORDER_کوډ = 2,
+    SPECIALTYPE_RG_کلی_ارزښت = 4
 } SpecialType;
 
-struct LocExtKeyData : public icu::UMemory {
+بنية Loc_Ext_کلی_معلومات : عام icu::UMemory {
     std::string_view legacyId;
     std::string_view bcpId;
-    icu::LocalUHashtablePointer typeMap;
+    icu::Local_UHashtable_اشاره_ګر typeMap;
     uint32_t        specialTypes;
 };
 
-struct LocExtType : public icu::UMemory {
+بنية LocExtType : عام icu::UMemory {
     std::string_view legacyId;
     std::string_view bcpId;
 };
 
-struct TypeAlias : public icu::UMemory {
+بنية TypeAlias : عام icu::UMemory {
     std::string_view from;
 };
 
-static icu::MemoryPool<icu::FixedString>* gKeyTypeStringPool = nullptr;
-static icu::MemoryPool<LocExtKeyData>* gLocExtKeyDataEntries = nullptr;
-static icu::MemoryPool<LocExtType>* gLocExtTypeEntries = nullptr;
-static icu::MemoryPool<TypeAlias>* gTypeAliasEntries = nullptr;
+ساكن icu::حافظه_Pool<icu::FixedString>* g_کلی_Type_String_Pool = تش_اشاره;
+ساكن icu::حافظه_Pool<Loc_Ext_کلی_معلومات>* g_Loc_Ext_کلی_معلومات_Entries = تش_اشاره;
+ساكن icu::حافظه_Pool<LocExtType>* gLocExtTypeEntries = تش_اشاره;
+ساكن icu::حافظه_Pool<TypeAlias>* gTypeAliasEntries = تش_اشاره;
 
 U_CDECL_BEGIN
 
-static UBool U_CALLCONV
-uloc_key_type_cleanup() {
-    if (gLocExtKeyMap != nullptr) {
-        uhash_close(gLocExtKeyMap);
-        gLocExtKeyMap = nullptr;
+ساكن UBool U_CALLCONV
+uloc_کلی_type_cleanup() {
+    إذا (g_Loc_Ext_کلی_Map != تش_اشاره) {
+        uhash_close(g_Loc_Ext_کلی_Map);
+        g_Loc_Ext_کلی_Map = تش_اشاره;
     }
 
-    delete gLocExtKeyDataEntries;
-    gLocExtKeyDataEntries = nullptr;
+    ړنګول g_Loc_Ext_کلی_معلومات_Entries;
+    g_Loc_Ext_کلی_معلومات_Entries = تش_اشاره;
 
-    delete gLocExtTypeEntries;
-    gLocExtTypeEntries = nullptr;
+    ړنګول gLocExtTypeEntries;
+    gLocExtTypeEntries = تش_اشاره;
 
-    delete gTypeAliasEntries;
-    gTypeAliasEntries = nullptr;
+    ړنګول gTypeAliasEntries;
+    gTypeAliasEntries = تش_اشاره;
 
-    delete gKeyTypeStringPool;
-    gKeyTypeStringPool = nullptr;
+    ړنګول g_کلی_Type_String_Pool;
+    g_کلی_Type_String_Pool = تش_اشاره;
 
-    gLocExtKeyMapInitOnce.reset();
-    return true;
+    g_Loc_Ext_کلی_Map_Init_Once.reset();
+    أرجع ریښتیا;
 }
 
-U_CDECL_END
+U_CDECL_پای_ټکی
 
-namespace {
+نطاق {
 
-void U_CALLCONV
-initFromResourceBundle(UErrorCode& sts) {
+فراغ U_CALLCONV
+initFromResourceBundle(UError_کوډ& sts) {
     U_NAMESPACE_USE
-    ucln_common_registerCleanup(UCLN_COMMON_LOCALE_KEY_TYPE, uloc_key_type_cleanup);
+    ucln_common_ثبتوونکی_Cleanup(UCLN_COMMON_LOCALE_کلی_TYPE, uloc_کلی_type_cleanup);
 
-    gLocExtKeyMap = uhash_open(uhash_hashIStringView, uhash_compareIStringView, nullptr, &sts);
+    g_Loc_Ext_کلی_Map = uhash_open(uhash_hashIStringView, uhash_compareIStringView, تش_اشاره, &sts);
 
-    LocalUResourceBundlePointer keyTypeDataRes(ures_openDirect(nullptr, "keyTypeData", &sts));
-    LocalUResourceBundlePointer keyMapRes(ures_getByKey(keyTypeDataRes.getAlias(), "keyMap", nullptr, &sts));
-    LocalUResourceBundlePointer typeMapRes(ures_getByKey(keyTypeDataRes.getAlias(), "typeMap", nullptr, &sts));
+    Local_UResource_Bundle_اشاره_ګر کلی_Type_معلومات_Res(ures_open_مستقیم(تش_اشاره, "keyTypeData", &sts));
+    Local_UResource_Bundle_اشاره_ګر کلی_Map_Res(ures_get_By_کلی(کلی_Type_معلومات_Res.getAlias(), "keyMap", تش_اشاره, &sts));
+    Local_UResource_Bundle_اشاره_ګر typeMapRes(ures_get_By_کلی(کلی_Type_معلومات_Res.getAlias(), "typeMap", تش_اشاره, &sts));
 
-    if (U_FAILURE(sts)) {
-        return;
+    إذا (U_FAILURE(sts)) {
+        أرجع;
     }
 
-    UErrorCode tmpSts = U_ZERO_ERROR;
-    LocalUResourceBundlePointer typeAliasRes(ures_getByKey(keyTypeDataRes.getAlias(), "typeAlias", nullptr, &tmpSts));
+    UError_کوډ tmpSts = U_ZERO_ERROR;
+    Local_UResource_Bundle_اشاره_ګر typeAliasRes(ures_get_By_کلی(کلی_Type_معلومات_Res.getAlias(), "typeAlias", تش_اشاره, &tmpSts));
     tmpSts = U_ZERO_ERROR;
-    LocalUResourceBundlePointer bcpTypeAliasRes(ures_getByKey(keyTypeDataRes.getAlias(), "bcpTypeAlias", nullptr, &tmpSts));
+    Local_UResource_Bundle_اشاره_ګر bcpTypeAliasRes(ures_get_By_کلی(کلی_Type_معلومات_Res.getAlias(), "bcpTypeAlias", تش_اشاره, &tmpSts));
 
     // initialize pools storing dynamically allocated objects
-    gKeyTypeStringPool = new icu::MemoryPool<icu::FixedString>;
-    if (gKeyTypeStringPool == nullptr) {
-        sts = U_MEMORY_ALLOCATION_ERROR;
-        return;
+    g_کلی_Type_String_Pool = جديد icu::حافظه_Pool<icu::FixedString>;
+    إذا (g_کلی_Type_String_Pool == تش_اشاره) {
+        sts = U_حافظه_ویش_ERROR;
+        أرجع;
     }
-    gLocExtKeyDataEntries = new icu::MemoryPool<LocExtKeyData>;
-    if (gLocExtKeyDataEntries == nullptr) {
-        sts = U_MEMORY_ALLOCATION_ERROR;
-        return;
+    g_Loc_Ext_کلی_معلومات_Entries = جديد icu::حافظه_Pool<Loc_Ext_کلی_معلومات>;
+    إذا (g_Loc_Ext_کلی_معلومات_Entries == تش_اشاره) {
+        sts = U_حافظه_ویش_ERROR;
+        أرجع;
     }
-    gLocExtTypeEntries = new icu::MemoryPool<LocExtType>;
-    if (gLocExtTypeEntries == nullptr) {
-        sts = U_MEMORY_ALLOCATION_ERROR;
-        return;
+    gLocExtTypeEntries = جديد icu::حافظه_Pool<LocExtType>;
+    إذا (gLocExtTypeEntries == تش_اشاره) {
+        sts = U_حافظه_ویش_ERROR;
+        أرجع;
     }
-    gTypeAliasEntries = new icu::MemoryPool<TypeAlias>;
-    if (gTypeAliasEntries == nullptr) {
-        sts = U_MEMORY_ALLOCATION_ERROR;
-        return;
+    gTypeAliasEntries = جديد icu::حافظه_Pool<TypeAlias>;
+    إذا (gTypeAliasEntries == تش_اشاره) {
+        sts = U_حافظه_ویش_ERROR;
+        أرجع;
     }
 
     // iterate through keyMap resource
-    LocalUResourceBundlePointer keyMapEntry;
+    Local_UResource_Bundle_اشاره_ګر کلی_Map_ثبت;
 
-    while (ures_hasNext(keyMapRes.getAlias())) {
-        keyMapEntry.adoptInstead(ures_getNextResource(keyMapRes.getAlias(), keyMapEntry.orphan(), &sts));
-        if (U_FAILURE(sts)) {
-            break;
+    طالما (ures_has_بل(کلی_Map_Res.getAlias())) {
+        کلی_Map_ثبت.adoptInstead(ures_get_بل_Resource(کلی_Map_Res.getAlias(), کلی_Map_ثبت.orphan(), &sts));
+        إذا (U_FAILURE(sts)) {
+            اكسر;
         }
-        const char* legacyKeyId = ures_getKey(keyMapEntry.getAlias());
-        UnicodeString uBcpKeyId = ures_getUnicodeString(keyMapEntry.getAlias(), &sts);
-        if (U_FAILURE(sts)) {
-            break;
+        ثابت حرف* legacy_کلی_Id = ures_get_کلی(کلی_Map_ثبت.getAlias());
+        UnicodeString u_Bcp_کلی_Id = ures_getUnicodeString(کلی_Map_ثبت.getAlias(), &sts);
+        إذا (U_FAILURE(sts)) {
+            اكسر;
         }
 
         // empty value indicates that BCP key is same with the legacy key.
-        const char* bcpKeyId = legacyKeyId;
-        if (!uBcpKeyId.isEmpty()) {
-            icu::FixedString* bcpKeyIdBuf = gKeyTypeStringPool->create();
-            if (bcpKeyIdBuf == nullptr) {
-                sts = U_MEMORY_ALLOCATION_ERROR;
-                break;
+        ثابت حرف* bcp_کلی_Id = legacy_کلی_Id;
+        إذا (!u_Bcp_کلی_Id.is_تشه()) {
+            icu::FixedString* bcp_کلی_Id_Buf = g_کلی_Type_String_Pool->create();
+            إذا (bcp_کلی_Id_Buf == تش_اشاره) {
+                sts = U_حافظه_ویش_ERROR;
+                اكسر;
             }
-            copyInvariantChars(uBcpKeyId, *bcpKeyIdBuf, sts);
-            if (U_FAILURE(sts)) {
-                break;
+            copyInvariantChars(u_Bcp_کلی_Id, *bcp_کلی_Id_Buf, sts);
+            إذا (U_FAILURE(sts)) {
+                اكسر;
             }
-            bcpKeyId = bcpKeyIdBuf->data();
+            bcp_کلی_Id = bcp_کلی_Id_Buf->معلومات();
         }
 
-        bool isTZ = uprv_strcmp(legacyKeyId, "timezone") == 0;
+        منطقي isTZ = uprv_strcmp(legacy_کلی_Id, "timezone") == 0;
 
-        UHashtable* typeDataMap = uhash_open(uhash_hashIStringView, uhash_compareIStringView, nullptr, &sts);
-        if (U_FAILURE(sts)) {
-            break;
+        UHashtable* type_معلومات_Map = uhash_open(uhash_hashIStringView, uhash_compareIStringView, تش_اشاره, &sts);
+        إذا (U_FAILURE(sts)) {
+            اكسر;
         }
         uint32_t specialTypes = SPECIALTYPE_NONE;
 
-        LocalUResourceBundlePointer typeAliasResByKey;
-        LocalUResourceBundlePointer bcpTypeAliasResByKey;
+        Local_UResource_Bundle_اشاره_ګر type_Alias_Res_By_کلی;
+        Local_UResource_Bundle_اشاره_ګر bcp_Type_Alias_Res_By_کلی;
 
-        if (typeAliasRes.isValid()) {
+        إذا (typeAliasRes.isValid()) {
             tmpSts = U_ZERO_ERROR;
-            typeAliasResByKey.adoptInstead(ures_getByKey(typeAliasRes.getAlias(), legacyKeyId, nullptr, &tmpSts));
-            if (U_FAILURE(tmpSts)) {
-                typeAliasResByKey.orphan();
+            type_Alias_Res_By_کلی.adoptInstead(ures_get_By_کلی(typeAliasRes.getAlias(), legacy_کلی_Id, تش_اشاره, &tmpSts));
+            إذا (U_FAILURE(tmpSts)) {
+                type_Alias_Res_By_کلی.orphan();
             }
         }
-        if (bcpTypeAliasRes.isValid()) {
+        إذا (bcpTypeAliasRes.isValid()) {
             tmpSts = U_ZERO_ERROR;
-            bcpTypeAliasResByKey.adoptInstead(ures_getByKey(bcpTypeAliasRes.getAlias(), bcpKeyId, nullptr, &tmpSts));
-            if (U_FAILURE(tmpSts)) {
-                bcpTypeAliasResByKey.orphan();
+            bcp_Type_Alias_Res_By_کلی.adoptInstead(ures_get_By_کلی(bcpTypeAliasRes.getAlias(), bcp_کلی_Id, تش_اشاره, &tmpSts));
+            إذا (U_FAILURE(tmpSts)) {
+                bcp_Type_Alias_Res_By_کلی.orphan();
             }
         }
 
         // look up type map for the key, and walk through the mapping data
-        LocalUResourceBundlePointer typeMapResByKey(ures_getByKey(typeMapRes.getAlias(), legacyKeyId, nullptr, &sts));
-        if (U_FAILURE(sts)) {
+        Local_UResource_Bundle_اشاره_ګر type_Map_Res_By_کلی(ures_get_By_کلی(typeMapRes.getAlias(), legacy_کلی_Id, تش_اشاره, &sts));
+        إذا (U_FAILURE(sts)) {
             // We fail here if typeMap does not have an entry corresponding to every entry in keyMap (should
             // not happen for valid keyTypeData), or if ures_getByKeyfails fails for some other reason
             // (e.g. data file cannot be loaded, using stubdata, over-aggressive data filtering has removed
             // something like timezoneTypes.res, etc.). Error code is already set. See ICU-21669.
             UPRV_UNREACHABLE_ASSERT;
-        } else {
-            LocalUResourceBundlePointer typeMapEntry;
+        } وإلا {
+            Local_UResource_Bundle_اشاره_ګر type_Map_ثبت;
 
-            while (ures_hasNext(typeMapResByKey.getAlias())) {
-                typeMapEntry.adoptInstead(ures_getNextResource(typeMapResByKey.getAlias(), typeMapEntry.orphan(), &sts));
-                if (U_FAILURE(sts)) {
-                    break;
+            طالما (ures_has_بل(type_Map_Res_By_کلی.getAlias())) {
+                type_Map_ثبت.adoptInstead(ures_get_بل_Resource(type_Map_Res_By_کلی.getAlias(), type_Map_ثبت.orphan(), &sts));
+                إذا (U_FAILURE(sts)) {
+                    اكسر;
                 }
-                const char* legacyTypeId = ures_getKey(typeMapEntry.getAlias());
+                ثابت حرف* legacyTypeId = ures_get_کلی(type_Map_ثبت.getAlias());
 
                 // special types
-                if (uprv_strcmp(legacyTypeId, "CODEPOINTS") == 0) {
+                إذا (uprv_strcmp(legacyTypeId, "CODEPOINTS") == 0) {
                     specialTypes |= SPECIALTYPE_CODEPOINTS;
-                    continue;
+                    استمر;
                 }
-                if (uprv_strcmp(legacyTypeId, "REORDER_CODE") == 0) {
-                    specialTypes |= SPECIALTYPE_REORDER_CODE;
-                    continue;
+                إذا (uprv_strcmp(legacyTypeId, "REORDER_CODE") == 0) {
+                    specialTypes |= SPECIALTYPE_REORDER_کوډ;
+                    استمر;
                 }
-                if (uprv_strcmp(legacyTypeId, "RG_KEY_VALUE") == 0) {
-                    specialTypes |= SPECIALTYPE_RG_KEY_VALUE;
-                    continue;
+                إذا (uprv_strcmp(legacyTypeId, "RG_KEY_VALUE") == 0) {
+                    specialTypes |= SPECIALTYPE_RG_کلی_ارزښت;
+                    استمر;
                 }
 
-                if (isTZ) {
+                إذا (isTZ) {
                     // a timezone key uses a colon instead of a slash in the resource.
                     // e.g. America:Los_Angeles
-                    if (uprv_strchr(legacyTypeId, ':') != nullptr) {
-                        U_ASSERT(legacyTypeId != nullptr && *legacyTypeId != '\0');
+                    إذا (uprv_strchr(legacyTypeId, ':') != تش_اشاره) {
+                        U_ASSERT(legacyTypeId != تش_اشاره && *legacyTypeId != '\0');
                         std::string_view legacyTypeIdView = legacyTypeId;
-                        icu::FixedString* legacyTypeIdBuf = gKeyTypeStringPool->create(legacyTypeIdView);
-                        if (legacyTypeIdBuf == nullptr || legacyTypeIdBuf->isEmpty()) {
-                            sts = U_MEMORY_ALLOCATION_ERROR;
-                            break;
+                        icu::FixedString* legacyTypeIdBuf = g_کلی_Type_String_Pool->create(legacyTypeIdView);
+                        إذا (legacyTypeIdBuf == تش_اشاره || legacyTypeIdBuf->is_تشه()) {
+                            sts = U_حافظه_ویش_ERROR;
+                            اكسر;
                         }
                         std::replace(
                                 legacyTypeIdBuf->getAlias(),
                                 legacyTypeIdBuf->getAlias() + legacyTypeIdView.length(),
                                 ':', '/');
-                        legacyTypeId = legacyTypeIdBuf->data();
+                        legacyTypeId = legacyTypeIdBuf->معلومات();
                     }
                 }
 
-                UnicodeString uBcpTypeId = ures_getUnicodeString(typeMapEntry.getAlias(), &sts);
-                if (U_FAILURE(sts)) {
-                    break;
+                UnicodeString uBcpTypeId = ures_getUnicodeString(type_Map_ثبت.getAlias(), &sts);
+                إذا (U_FAILURE(sts)) {
+                    اكسر;
                 }
 
                 // empty value indicates that BCP type is same with the legacy type.
-                const char* bcpTypeId = legacyTypeId;
-                if (!uBcpTypeId.isEmpty()) {
-                    icu::FixedString* bcpTypeIdBuf = gKeyTypeStringPool->create();
-                    if (bcpTypeIdBuf == nullptr) {
-                        sts = U_MEMORY_ALLOCATION_ERROR;
-                        break;
+                ثابت حرف* bcpTypeId = legacyTypeId;
+                إذا (!uBcpTypeId.is_تشه()) {
+                    icu::FixedString* bcpTypeIdBuf = g_کلی_Type_String_Pool->create();
+                    إذا (bcpTypeIdBuf == تش_اشاره) {
+                        sts = U_حافظه_ویش_ERROR;
+                        اكسر;
                     }
                     copyInvariantChars(uBcpTypeId, *bcpTypeIdBuf, sts);
-                    if (U_FAILURE(sts)) {
-                        break;
+                    إذا (U_FAILURE(sts)) {
+                        اكسر;
                     }
-                    bcpTypeId = bcpTypeIdBuf->data();
+                    bcpTypeId = bcpTypeIdBuf->معلومات();
                 }
 
                 // Note: legacy type value should never be
@@ -260,275 +260,275 @@ initFromResourceBundle(UErrorCode& sts) {
                 // type under the same key. So we use a single
                 // map for lookup.
                 LocExtType* t = gLocExtTypeEntries->create();
-                if (t == nullptr) {
-                    sts = U_MEMORY_ALLOCATION_ERROR;
-                    break;
+                إذا (t == تش_اشاره) {
+                    sts = U_حافظه_ویش_ERROR;
+                    اكسر;
                 }
                 t->bcpId = bcpTypeId;
                 t->legacyId = legacyTypeId;
 
-                uhash_put(typeDataMap, &t->legacyId, t, &sts);
-                if (bcpTypeId != legacyTypeId) {
+                uhash_put(type_معلومات_Map, &t->legacyId, t, &sts);
+                إذا (bcpTypeId != legacyTypeId) {
                     // different type value
-                    uhash_put(typeDataMap, &t->bcpId, t, &sts);
+                    uhash_put(type_معلومات_Map, &t->bcpId, t, &sts);
                 }
-                if (U_FAILURE(sts)) {
-                    break;
+                إذا (U_FAILURE(sts)) {
+                    اكسر;
                 }
 
                 // also put aliases in the map
-                if (typeAliasResByKey.isValid()) {
-                    LocalUResourceBundlePointer typeAliasDataEntry;
+                إذا (type_Alias_Res_By_کلی.isValid()) {
+                    Local_UResource_Bundle_اشاره_ګر type_Alias_معلومات_ثبت;
 
-                    ures_resetIterator(typeAliasResByKey.getAlias());
-                    while (ures_hasNext(typeAliasResByKey.getAlias()) && U_SUCCESS(sts)) {
-                        int32_t toLen;
-                        typeAliasDataEntry.adoptInstead(ures_getNextResource(typeAliasResByKey.getAlias(), typeAliasDataEntry.orphan(), &sts));
-                        const char16_t* to = ures_getString(typeAliasDataEntry.getAlias(), &toLen, &sts);
-                        if (U_FAILURE(sts)) {
-                            break;
+                    ures_resetIterator(type_Alias_Res_By_کلی.getAlias());
+                    طالما (ures_has_بل(type_Alias_Res_By_کلی.getAlias()) && U_SUCCESS(sts)) {
+                        int32_t منزل_Len;
+                        type_Alias_معلومات_ثبت.adoptInstead(ures_get_بل_Resource(type_Alias_Res_By_کلی.getAlias(), type_Alias_معلومات_ثبت.orphan(), &sts));
+                        ثابت char16_t* منزل = ures_getString(type_Alias_معلومات_ثبت.getAlias(), &منزل_Len, &sts);
+                        إذا (U_FAILURE(sts)) {
+                            اكسر;
                         }
                         // check if this is an alias of canonical legacy type
-                        if (uprv_compareInvWithUChar(
-                                nullptr,
-                                t->legacyId.data(),
+                        إذا (uprv_compareInvWithUChar(
+                                تش_اشاره,
+                                t->legacyId.معلومات(),
                                 static_cast<int32_t>(t->legacyId.size()),
-                                to,
-                                toLen) == 0) {
-                            const char* from = ures_getKey(typeAliasDataEntry.getAlias());
+                                منزل,
+                                منزل_Len) == 0) {
+                            ثابت حرف* from = ures_get_کلی(type_Alias_معلومات_ثبت.getAlias());
                             TypeAlias* alias = gTypeAliasEntries->create(TypeAlias{{}, from});
-                            if (isTZ) {
+                            إذا (isTZ) {
                                 // replace colon with slash if necessary
-                                if (uprv_strchr(from, ':') != nullptr) {
-                                    U_ASSERT(from != nullptr && *from != '\0');
+                                إذا (uprv_strchr(from, ':') != تش_اشاره) {
+                                    U_ASSERT(from != تش_اشاره && *from != '\0');
                                     std::string_view fromView = from;
-                                    icu::FixedString* fromBuf = gKeyTypeStringPool->create(fromView);
-                                    if (fromBuf == nullptr || fromBuf->isEmpty()) {
-                                        sts = U_MEMORY_ALLOCATION_ERROR;
-                                        break;
+                                    icu::FixedString* fromBuf = g_کلی_Type_String_Pool->create(fromView);
+                                    إذا (fromBuf == تش_اشاره || fromBuf->is_تشه()) {
+                                        sts = U_حافظه_ویش_ERROR;
+                                        اكسر;
                                     }
                                     std::replace(
                                             fromBuf->getAlias(),
                                             fromBuf->getAlias() + fromView.length(),
                                             ':', '/');
-                                    alias->from = {fromBuf->data(), fromView.length()};
+                                    alias->from = {fromBuf->معلومات(), fromView.length()};
                                 }
                             }
-                            uhash_put(typeDataMap, &alias->from, t, &sts);
+                            uhash_put(type_معلومات_Map, &alias->from, t, &sts);
                         }
                     }
-                    if (U_FAILURE(sts)) {
-                        break;
+                    إذا (U_FAILURE(sts)) {
+                        اكسر;
                     }
                 }
 
-                if (bcpTypeAliasResByKey.isValid()) {
-                    LocalUResourceBundlePointer bcpTypeAliasDataEntry;
+                إذا (bcp_Type_Alias_Res_By_کلی.isValid()) {
+                    Local_UResource_Bundle_اشاره_ګر bcp_Type_Alias_معلومات_ثبت;
 
-                    ures_resetIterator(bcpTypeAliasResByKey.getAlias());
-                    while (ures_hasNext(bcpTypeAliasResByKey.getAlias()) && U_SUCCESS(sts)) {
-                        int32_t toLen;
-                        bcpTypeAliasDataEntry.adoptInstead(ures_getNextResource(bcpTypeAliasResByKey.getAlias(), bcpTypeAliasDataEntry.orphan(), &sts));
-                        const char16_t* to = ures_getString(bcpTypeAliasDataEntry.getAlias(), &toLen, &sts);
-                        if (U_FAILURE(sts)) {
-                            break;
+                    ures_resetIterator(bcp_Type_Alias_Res_By_کلی.getAlias());
+                    طالما (ures_has_بل(bcp_Type_Alias_Res_By_کلی.getAlias()) && U_SUCCESS(sts)) {
+                        int32_t منزل_Len;
+                        bcp_Type_Alias_معلومات_ثبت.adoptInstead(ures_get_بل_Resource(bcp_Type_Alias_Res_By_کلی.getAlias(), bcp_Type_Alias_معلومات_ثبت.orphan(), &sts));
+                        ثابت char16_t* منزل = ures_getString(bcp_Type_Alias_معلومات_ثبت.getAlias(), &منزل_Len, &sts);
+                        إذا (U_FAILURE(sts)) {
+                            اكسر;
                         }
                         // check if this is an alias of bcp type
-                        if (uprv_compareInvWithUChar(
-                                nullptr,
-                                t->bcpId.data(),
+                        إذا (uprv_compareInvWithUChar(
+                                تش_اشاره,
+                                t->bcpId.معلومات(),
                                 static_cast<int32_t>(t->bcpId.size()),
-                                to,
-                                toLen) == 0) {
-                            const char* from = ures_getKey(bcpTypeAliasDataEntry.getAlias());
+                                منزل,
+                                منزل_Len) == 0) {
+                            ثابت حرف* from = ures_get_کلی(bcp_Type_Alias_معلومات_ثبت.getAlias());
                             TypeAlias* alias = gTypeAliasEntries->create(TypeAlias{{}, from});
-                            uhash_put(typeDataMap, &alias->from, t, &sts);
+                            uhash_put(type_معلومات_Map, &alias->from, t, &sts);
                         }
                     }
-                    if (U_FAILURE(sts)) {
-                        break;
+                    إذا (U_FAILURE(sts)) {
+                        اكسر;
                     }
                 }
             }
         }
-        if (U_FAILURE(sts)) {
-            break;
+        إذا (U_FAILURE(sts)) {
+            اكسر;
         }
 
-        LocExtKeyData* keyData = gLocExtKeyDataEntries->create();
-        if (keyData == nullptr) {
-            sts = U_MEMORY_ALLOCATION_ERROR;
-            break;
+        Loc_Ext_کلی_معلومات* کلی_معلومات = g_Loc_Ext_کلی_معلومات_Entries->create();
+        إذا (کلی_معلومات == تش_اشاره) {
+            sts = U_حافظه_ویش_ERROR;
+            اكسر;
         }
-        keyData->bcpId = bcpKeyId;
-        keyData->legacyId = legacyKeyId;
-        keyData->specialTypes = specialTypes;
-        keyData->typeMap.adoptInstead(typeDataMap);
+        کلی_معلومات->bcpId = bcp_کلی_Id;
+        کلی_معلومات->legacyId = legacy_کلی_Id;
+        کلی_معلومات->specialTypes = specialTypes;
+        کلی_معلومات->typeMap.adoptInstead(type_معلومات_Map);
 
-        uhash_put(gLocExtKeyMap, &keyData->legacyId, keyData, &sts);
-        if (legacyKeyId != bcpKeyId) {
+        uhash_put(g_Loc_Ext_کلی_Map, &کلی_معلومات->legacyId, کلی_معلومات, &sts);
+        إذا (legacy_کلی_Id != bcp_کلی_Id) {
             // different key value
-            uhash_put(gLocExtKeyMap, &keyData->bcpId, keyData, &sts);
+            uhash_put(g_Loc_Ext_کلی_Map, &کلی_معلومات->bcpId, کلی_معلومات, &sts);
         }
-        if (U_FAILURE(sts)) {
-            break;
+        إذا (U_FAILURE(sts)) {
+            اكسر;
         }
     }
 }
 
-bool
+منطقي
 init() {
-    UErrorCode sts = U_ZERO_ERROR;
-    umtx_initOnce(gLocExtKeyMapInitOnce, &initFromResourceBundle, sts);
-    if (U_FAILURE(sts)) {
-        return false;
+    UError_کوډ sts = U_ZERO_ERROR;
+    umtx_initOnce(g_Loc_Ext_کلی_Map_Init_Once, &initFromResourceBundle, sts);
+    إذا (U_FAILURE(sts)) {
+        أرجع خطأ;
     }
-    return true;
+    أرجع ریښتیا;
 }
 
-bool
+منطقي
 isSpecialTypeCodepoints(std::string_view val) {
     int32_t subtagLen = 0;
-    for (char c : val) {
-        if (c == '-') {
-            if (subtagLen < 4 || subtagLen > 6) {
-                return false;
+    لكل (حرف c : val) {
+        إذا (c == '-') {
+            إذا (subtagLen < 4 || subtagLen > 6) {
+                أرجع خطأ;
             }
             subtagLen = 0;
-        } else if ((c >= '0' && c <= '9') ||
+        } وإلا إذا ((c >= '0' && c <= '9') ||
                     (c >= 'A' && c <= 'F') || // A-F/a-f are contiguous
                     (c >= 'a' && c <= 'f')) { // also in EBCDIC
             subtagLen++;
-        } else {
-            return false;
+        } وإلا {
+            أرجع خطأ;
         }
     }
-    return subtagLen >= 4 && subtagLen <= 6;
+    أرجع subtagLen >= 4 && subtagLen <= 6;
 }
 
-bool
-isSpecialTypeReorderCode(std::string_view val) {
+منطقي
+is_Special_Type_Reorder_کوډ(std::string_view val) {
     int32_t subtagLen = 0;
-    for (char c : val) {
-        if (c == '-') {
-            if (subtagLen < 3 || subtagLen > 8) {
-                return false;
+    لكل (حرف c : val) {
+        إذا (c == '-') {
+            إذا (subtagLen < 3 || subtagLen > 8) {
+                أرجع خطأ;
             }
             subtagLen = 0;
-        } else if (uprv_isASCIILetter(c)) {
+        } وإلا إذا (uprv_isASCIILetter(c)) {
             subtagLen++;
-        } else {
-            return false;
+        } وإلا {
+            أرجع خطأ;
         }
     }
-    return subtagLen >= 3 && subtagLen <= 8;
+    أرجع subtagLen >= 3 && subtagLen <= 8;
 }
 
-bool
-isSpecialTypeRgKeyValue(std::string_view val) {
+منطقي
+is_Special_Type_Rg_کلی_ارزښت(std::string_view val) {
     int32_t subtagLen = 0;
-    for (char c : val) {
-        if ((subtagLen < 2 && uprv_isASCIILetter(c)) ||
+    لكل (حرف c : val) {
+        إذا ((subtagLen < 2 && uprv_isASCIILetter(c)) ||
             (subtagLen >= 2 && (c == 'Z' || c == 'z'))) {
             subtagLen++;
-        } else {
-            return false;
+        } وإلا {
+            أرجع خطأ;
         }
     }
-    return subtagLen == 6;
+    أرجع subtagLen == 6;
 }
 
 }  // namespace
 
 U_EXPORT std::optional<std::string_view>
-ulocimp_toBcpKey(std::string_view key) {
-    if (!init()) {
-        return std::nullopt;
+ulocimp_منزل_Bcp_کلی(std::string_view کلی) {
+    إذا (!init()) {
+        أرجع std::nullopt;
     }
 
-    LocExtKeyData* keyData = static_cast<LocExtKeyData*>(uhash_get(gLocExtKeyMap, &key));
-    if (keyData != nullptr) {
-        return keyData->bcpId;
+    Loc_Ext_کلی_معلومات* کلی_معلومات = static_cast<Loc_Ext_کلی_معلومات*>(uhash_get(g_Loc_Ext_کلی_Map, &کلی));
+    إذا (کلی_معلومات != تش_اشاره) {
+        أرجع کلی_معلومات->bcpId;
     }
 
-    return std::nullopt;
+    أرجع std::nullopt;
 }
 
 U_EXPORT std::optional<std::string_view>
-ulocimp_toLegacyKey(std::string_view key) {
-    if (!init()) {
-        return std::nullopt;
+ulocimp_منزل_Legacy_کلی(std::string_view کلی) {
+    إذا (!init()) {
+        أرجع std::nullopt;
     }
 
-    LocExtKeyData* keyData = static_cast<LocExtKeyData*>(uhash_get(gLocExtKeyMap, &key));
-    if (keyData != nullptr) {
-        return keyData->legacyId;
+    Loc_Ext_کلی_معلومات* کلی_معلومات = static_cast<Loc_Ext_کلی_معلومات*>(uhash_get(g_Loc_Ext_کلی_Map, &کلی));
+    إذا (کلی_معلومات != تش_اشاره) {
+        أرجع کلی_معلومات->legacyId;
     }
 
-    return std::nullopt;
+    أرجع std::nullopt;
 }
 
 U_EXPORT std::optional<std::string_view>
-ulocimp_toBcpType(std::string_view key, std::string_view type U_LIFETIME_BOUND) {
-    if (!init()) {
-        return std::nullopt;
+ulocimp_منزل_Bcp_Type(std::string_view کلی, std::string_view type U_LIFETIME_BOUND) {
+    إذا (!init()) {
+        أرجع std::nullopt;
     }
 
-    LocExtKeyData* keyData = static_cast<LocExtKeyData*>(uhash_get(gLocExtKeyMap, &key));
-    if (keyData != nullptr) {
-        LocExtType* t = static_cast<LocExtType*>(uhash_get(keyData->typeMap.getAlias(), &type));
-        if (t != nullptr) {
-            return t->bcpId;
+    Loc_Ext_کلی_معلومات* کلی_معلومات = static_cast<Loc_Ext_کلی_معلومات*>(uhash_get(g_Loc_Ext_کلی_Map, &کلی));
+    إذا (کلی_معلومات != تش_اشاره) {
+        LocExtType* t = static_cast<LocExtType*>(uhash_get(کلی_معلومات->typeMap.getAlias(), &type));
+        إذا (t != تش_اشاره) {
+            أرجع t->bcpId;
         }
-        if (keyData->specialTypes != SPECIALTYPE_NONE) {
-            bool matched = false;
-            if (keyData->specialTypes & SPECIALTYPE_CODEPOINTS) {
+        إذا (کلی_معلومات->specialTypes != SPECIALTYPE_NONE) {
+            منطقي matched = خطأ;
+            إذا (کلی_معلومات->specialTypes & SPECIALTYPE_CODEPOINTS) {
                 matched = isSpecialTypeCodepoints(type);
             }
-            if (!matched && keyData->specialTypes & SPECIALTYPE_REORDER_CODE) {
-                matched = isSpecialTypeReorderCode(type);
+            إذا (!matched && کلی_معلومات->specialTypes & SPECIALTYPE_REORDER_کوډ) {
+                matched = is_Special_Type_Reorder_کوډ(type);
             }
-            if (!matched && keyData->specialTypes & SPECIALTYPE_RG_KEY_VALUE) {
-                matched = isSpecialTypeRgKeyValue(type);
+            إذا (!matched && کلی_معلومات->specialTypes & SPECIALTYPE_RG_کلی_ارزښت) {
+                matched = is_Special_Type_Rg_کلی_ارزښت(type);
             }
-            if (matched) {
-                return type;
+            إذا (matched) {
+                أرجع type;
             }
         }
     }
 
-    return std::nullopt;
+    أرجع std::nullopt;
 }
 
 
 U_EXPORT std::optional<std::string_view>
-ulocimp_toLegacyType(std::string_view key, std::string_view type U_LIFETIME_BOUND) {
-    if (!init()) {
-        return std::nullopt;
+ulocimp_منزل_Legacy_Type(std::string_view کلی, std::string_view type U_LIFETIME_BOUND) {
+    إذا (!init()) {
+        أرجع std::nullopt;
     }
 
-    LocExtKeyData* keyData = static_cast<LocExtKeyData*>(uhash_get(gLocExtKeyMap, &key));
-    if (keyData != nullptr) {
-        LocExtType* t = static_cast<LocExtType*>(uhash_get(keyData->typeMap.getAlias(), &type));
-        if (t != nullptr) {
-            return t->legacyId;
+    Loc_Ext_کلی_معلومات* کلی_معلومات = static_cast<Loc_Ext_کلی_معلومات*>(uhash_get(g_Loc_Ext_کلی_Map, &کلی));
+    إذا (کلی_معلومات != تش_اشاره) {
+        LocExtType* t = static_cast<LocExtType*>(uhash_get(کلی_معلومات->typeMap.getAlias(), &type));
+        إذا (t != تش_اشاره) {
+            أرجع t->legacyId;
         }
-        if (keyData->specialTypes != SPECIALTYPE_NONE) {
-            bool matched = false;
-            if (keyData->specialTypes & SPECIALTYPE_CODEPOINTS) {
+        إذا (کلی_معلومات->specialTypes != SPECIALTYPE_NONE) {
+            منطقي matched = خطأ;
+            إذا (کلی_معلومات->specialTypes & SPECIALTYPE_CODEPOINTS) {
                 matched = isSpecialTypeCodepoints(type);
             }
-            if (!matched && keyData->specialTypes & SPECIALTYPE_REORDER_CODE) {
-                matched = isSpecialTypeReorderCode(type);
+            إذا (!matched && کلی_معلومات->specialTypes & SPECIALTYPE_REORDER_کوډ) {
+                matched = is_Special_Type_Reorder_کوډ(type);
             }
-            if (!matched && keyData->specialTypes & SPECIALTYPE_RG_KEY_VALUE) {
-                matched = isSpecialTypeRgKeyValue(type);
+            إذا (!matched && کلی_معلومات->specialTypes & SPECIALTYPE_RG_کلی_ارزښت) {
+                matched = is_Special_Type_Rg_کلی_ارزښت(type);
             }
-            if (matched) {
-                return type;
+            إذا (matched) {
+                أرجع type;
             }
         }
     }
 
-    return std::nullopt;
+    أرجع std::nullopt;
 }

@@ -13,14 +13,14 @@
 **************************************************************************
 */
 
-#ifndef REP_H
-#define REP_H
+#که_نه_تعریف_شوی REP_H
+#تعریف_کړه REP_H
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#إذا U_SHOW_CPLUSPLUS_API
 
-#include "unicode/uobject.h"
+#ضمن "unicode/uobject.h"
 
 /**
  * \file 
@@ -74,21 +74,21 @@ class UnicodeString;
  * @author Alan Liu
  * @stable ICU 2.0
  */
-class U_COMMON_API Replaceable : public UObject {
+class U_COMMON_API Replaceable : عام UObject {
 
-public:
+عام:
     /**
      * Destructor.
      * @stable ICU 2.0
      */
-    virtual ~Replaceable();
+    مجازي ~Replaceable();
 
     /**
      * Returns the number of 16-bit code units in the text.
      * @return number of 16-bit code units in text
      * @stable ICU 1.8
      */ 
-    inline int32_t length() const;
+    مضمن int32_t اوږدتیا() ثابت;
 
     /**
      * Returns the 16-bit code unit at the given offset into the text.
@@ -97,7 +97,7 @@ public:
      * @return 16-bit code unit of text at given offset
      * @stable ICU 1.8
      */
-    inline char16_t charAt(int32_t offset) const;
+    مضمن char16_t charAt(int32_t دننه_واټن) ثابت;
 
     /**
      * Returns the 32-bit code point at the given 16-bit offset into
@@ -111,7 +111,7 @@ public:
      * @return 32-bit code point of text at given offset
      * @stable ICU 1.8
      */
-    inline UChar32 char32At(int32_t offset) const;
+    مضمن UChar32 char32At(int32_t دننه_واټن) ثابت;
 
     /**
      * Copies characters in the range [<tt>start</tt>, <tt>limit</tt>) 
@@ -122,9 +122,9 @@ public:
      * @param target UnicodeString into which to copy characters.
      * @stable ICU 2.1
      */
-    virtual void extractBetween(int32_t start,
-                                int32_t limit,
-                                UnicodeString& target) const = 0;
+    مجازي فراغ ایستل_Between(int32_t پیل,
+                                int32_t حد,
+                                UnicodeString& موخه) ثابت = 0;
 
     /**
      * Replaces a substring of this object with the given text.  If the
@@ -146,9 +146,9 @@ public:
      * to <code>limit - 1</code> 
      * @stable ICU 2.0
      */
-    virtual void handleReplaceBetween(int32_t start,
-                                      int32_t limit,
-                                      const UnicodeString& text) = 0;
+    مجازي فراغ handleReplaceBetween(int32_t پیل,
+                                      int32_t حد,
+                                      ثابت UnicodeString& متن) = 0;
     // Note: All other methods in this class take the names of
     // existing UnicodeString methods.  This method is the exception.
     // It is named differently because all replace methods of
@@ -174,7 +174,7 @@ public:
      * dest >= limit</code>.
      * @stable ICU 2.0
      */
-    virtual void copy(int32_t start, int32_t limit, int32_t dest) = 0;
+    مجازي فراغ copy(int32_t پیل, int32_t حد, int32_t dest) = 0;
 
     /**
      * Returns true if this object contains metadata.  If a
@@ -185,7 +185,7 @@ public:
      * @return true if this object contains metadata
      * @stable ICU 2.2
      */
-    virtual UBool hasMetaData() const;
+    مجازي UBool has_Meta_معلومات() ثابت;
 
     /**
      * Clone this object, an instance of a subclass of Replaceable.
@@ -199,15 +199,15 @@ public:
      * @see getDynamicClassID
      * @stable ICU 2.6
      */
-    virtual Replaceable *clone() const;
+    مجازي Replaceable *clone() ثابت;
 
-protected:
+محمي:
 
     /**
      * Default constructor.
      * @stable ICU 2.4
      */
-    inline Replaceable();
+    مضمن Replaceable();
 
     /*
      * Assignment operator not declared. The compiler will provide one
@@ -224,42 +224,42 @@ protected:
      * Virtual version of length().
      * @stable ICU 2.4
      */ 
-    virtual int32_t getLength() const = 0;
+    مجازي int32_t get_اوږدتیا() ثابت = 0;
 
     /**
      * Virtual version of charAt().
      * @stable ICU 2.4
      */
-    virtual char16_t getCharAt(int32_t offset) const = 0;
+    مجازي char16_t getCharAt(int32_t دننه_واټن) ثابت = 0;
 
     /**
      * Virtual version of char32At().
      * @stable ICU 2.4
      */
-    virtual UChar32 getChar32At(int32_t offset) const = 0;
+    مجازي UChar32 getChar32At(int32_t دننه_واټن) ثابت = 0;
 };
 
-inline Replaceable::Replaceable() {}
+مضمن Replaceable::Replaceable() {}
 
-inline int32_t
-Replaceable::length() const {
-    return getLength();
+مضمن int32_t
+Replaceable::اوږدتیا() ثابت {
+    أرجع get_اوږدتیا();
 }
 
-inline char16_t
-Replaceable::charAt(int32_t offset) const {
-    return getCharAt(offset);
+مضمن char16_t
+Replaceable::charAt(int32_t دننه_واټن) ثابت {
+    أرجع getCharAt(دننه_واټن);
 }
 
-inline UChar32
-Replaceable::char32At(int32_t offset) const {
-    return getChar32At(offset);
+مضمن UChar32
+Replaceable::char32At(int32_t دننه_واټن) ثابت {
+    أرجع getChar32At(دننه_واټن);
 }
 
 // There is no rep.cpp, see unistr.cpp for Replaceable function implementations.
 
-U_NAMESPACE_END
+U_NAMESPACE_پای_ټکی
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#د_که_پای /* U_SHOW_CPLUSPLUS_API */
 
-#endif
+#د_که_پای

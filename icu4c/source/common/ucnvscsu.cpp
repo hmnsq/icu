@@ -21,21 +21,21 @@
 *   will result in callback calls.
 */
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
+#إذا !UCONFIG_NO_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
 
-#include "unicode/ucnv.h"
-#include "unicode/ucnv_cb.h"
-#include "unicode/utf16.h"
-#include "ucnv_bld.h"
-#include "ucnv_cnv.h"
-#include "cmemory.h"
+#ضمن "unicode/ucnv.h"
+#ضمن "unicode/ucnv_cb.h"
+#ضمن "unicode/utf16.h"
+#ضمن "ucnv_bld.h"
+#ضمن "ucnv_cnv.h"
+#ضمن "cmemory.h"
 
 /* SCSU definitions --------------------------------------------------------- */
 
 /* SCSU command byte values */
-enum {
+تعداد {
     SQ0=0x01, /* Quote from window pair 0 */
     SQ7=0x08, /* Quote from window pair 7 */
     SDX=0x0B, /* Define a window as extended */
@@ -56,24 +56,24 @@ enum {
     Urs=0xF2  /* reserved */
 };
 
-enum {
+تعداد {
     /*
      * Unicode code points from 3400 to E000 are not adressible by
      * dynamic window, since in these areas no short run alphabets are
      * found. Therefore add gapOffset to all values from gapThreshold.
      */
-    gapThreshold=0x68,
-    gapOffset=0xAC00,
+    gap_پوله=0x68,
+    gap_دننه_واټن=0xAC00,
 
     /* values between reservedStart and fixedThreshold are reserved */
-    reservedStart=0xA8,
+    reserved_پیل=0xA8,
 
     /* use table of predefined fixed offsets for values from fixedThreshold */
-    fixedThreshold=0xF9
+    fixed_پوله=0xF9
 };
 
 /* constant offsets for the 8 static windows */
-static const uint32_t staticOffsets[8]={
+ساكن ثابت uint32_t staticOffsets[8]={
     0x0000, /* ASCII for quoted tags */
     0x0080, /* Latin - 1 Supplement (for access to punctuation) */
     0x0100, /* Latin Extended-A */
@@ -85,7 +85,7 @@ static const uint32_t staticOffsets[8]={
 };
 
 /* initial offsets for the 8 dynamic (sliding) windows */
-static const uint32_t initialDynamicOffsets[8]={
+ساكن ثابت uint32_t initialDynamicOffsets[8]={
     0x0080, /* Latin-1 */
     0x00C0, /* Latin Extended A */
     0x0400, /* Cyrillic */
@@ -97,7 +97,7 @@ static const uint32_t initialDynamicOffsets[8]={
 };
 
 /* Table of fixed predefined Offsets */
-static const uint32_t fixedOffsets[]={
+ساكن ثابت uint32_t fixedOffsets[]={
     /* 0xF9 */ 0x00C0, /* Latin-1 Letters + half of Latin Extended A */
     /* 0xFA */ 0x0250, /* IPA extensions */
     /* 0xFB */ 0x0370, /* Greek */
@@ -108,7 +108,7 @@ static const uint32_t fixedOffsets[]={
 };
 
 /* state values */
-enum {
+تعداد {
     readCommand,
     quotePairOne,
     quotePairTwo,
@@ -118,21 +118,21 @@ enum {
     defineOne
 };
 
-typedef struct SCSUData {
+تعريفنوع بنية SCSUData {
     /* dynamic window offsets, initialize to default values from initialDynamicOffsets */
-    uint32_t toUDynamicOffsets[8];
+    uint32_t منزل_UDynamic_Offsets[8];
     uint32_t fromUDynamicOffsets[8];
 
     /* state machine state - toUnicode */
-    UBool toUIsSingleByteMode;
-    uint8_t toUState;
-    int8_t toUQuoteWindow, toUDynamicWindow;
-    uint8_t toUByteOne;
-    uint8_t toUPadding[3];
+    UBool منزل_UIs_Single_Byte_ډېرپېښ;
+    uint8_t منزل_UState;
+    int8_t منزل_UQuote_کړکۍ, منزل_UDynamic_کړکۍ;
+    uint8_t منزل_UByte_One;
+    uint8_t منزل_UPadding[3];
 
     /* state machine state - fromUnicode */
-    UBool fromUIsSingleByteMode;
-    int8_t fromUDynamicWindow;
+    UBool from_UIs_Single_Byte_ډېرپېښ;
+    int8_t from_UDynamic_کړکۍ;
 
     /*
      * windowUse[] keeps track of the use of the dynamic windows:
@@ -142,73 +142,73 @@ typedef struct SCSUData {
      * At nextWindowUseIndex-1 there is the most recently used window.
      */
     uint8_t locale;
-    int8_t nextWindowUseIndex;
-    int8_t windowUse[8];
+    int8_t بل_کړکۍ_Use_شاخص;
+    int8_t کړکۍ_Use[8];
 } SCSUData;
 
-static const int8_t initialWindowUse[8]={ 7, 0, 3, 2, 4, 5, 6, 1 };
-static const int8_t initialWindowUse_ja[8]={ 3, 2, 4, 1, 0, 7, 5, 6 };
+ساكن ثابت int8_t initial_کړکۍ_Use[8]={ 7, 0, 3, 2, 4, 5, 6, 1 };
+ساكن ثابت int8_t initial_کړکۍ_Use_ja[8]={ 3, 2, 4, 1, 0, 7, 5, 6 };
 
-enum {
+تعداد {
     lGeneric, l_ja
 };
 
 /* SCSU setup functions ----------------------------------------------------- */
 U_CDECL_BEGIN
-static void U_CALLCONV
+ساكن فراغ U_CALLCONV
 _SCSUReset(UConverter *cnv, UConverterResetChoice choice) {
     SCSUData *scsu=(SCSUData *)cnv->extraInfo;
 
-    if(choice<=UCNV_RESET_TO_UNICODE) {
+    إذا(choice<=UCNV_RESET_منزل_UNICODE) {
         /* reset toUnicode */
-        uprv_memcpy(scsu->toUDynamicOffsets, initialDynamicOffsets, 32);
+        uprv_memcpy(scsu->منزل_UDynamic_Offsets, initialDynamicOffsets, 32);
 
-        scsu->toUIsSingleByteMode=true;
-        scsu->toUState=readCommand;
-        scsu->toUQuoteWindow=scsu->toUDynamicWindow=0;
-        scsu->toUByteOne=0;
+        scsu->منزل_UIs_Single_Byte_ډېرپېښ=ریښتیا;
+        scsu->منزل_UState=readCommand;
+        scsu->منزل_UQuote_کړکۍ=scsu->منزل_UDynamic_کړکۍ=0;
+        scsu->منزل_UByte_One=0;
 
-        cnv->toULength=0;
+        cnv->منزل_ULength=0;
     }
-    if(choice!=UCNV_RESET_TO_UNICODE) {
+    إذا(choice!=UCNV_RESET_منزل_UNICODE) {
         /* reset fromUnicode */
         uprv_memcpy(scsu->fromUDynamicOffsets, initialDynamicOffsets, 32);
 
-        scsu->fromUIsSingleByteMode=true;
-        scsu->fromUDynamicWindow=0;
+        scsu->from_UIs_Single_Byte_ډېرپېښ=ریښتیا;
+        scsu->from_UDynamic_کړکۍ=0;
 
-        scsu->nextWindowUseIndex=0;
-        switch(scsu->locale) {
-        case l_ja:
-            uprv_memcpy(scsu->windowUse, initialWindowUse_ja, 8);
-            break;
-        default:
-            uprv_memcpy(scsu->windowUse, initialWindowUse, 8);
-            break;
+        scsu->بل_کړکۍ_Use_شاخص=0;
+        بدل(scsu->locale) {
+        حالة l_ja:
+            uprv_memcpy(scsu->کړکۍ_Use, initial_کړکۍ_Use_ja, 8);
+            اكسر;
+        افتراضي:
+            uprv_memcpy(scsu->کړکۍ_Use, initial_کړکۍ_Use, 8);
+            اكسر;
         }
 
         cnv->fromUChar32=0;
     }
 }
 
-static void U_CALLCONV
+ساكن فراغ U_CALLCONV
 _SCSUOpen(UConverter *cnv,
-          UConverterLoadArgs *pArgs,
-          UErrorCode *pErrorCode) {
-    const char *locale=pArgs->locale;
-    if(pArgs->onlyTestIsLoadable) {
-        return;
+          UConverter_بارول_دلیلونه *p_دلیلونه,
+          UError_کوډ *p_Error_کوډ) {
+    ثابت حرف *locale=p_دلیلونه->locale;
+    إذا(p_دلیلونه->onlyTestIsLoadable) {
+        أرجع;
     }
-    cnv->extraInfo=uprv_malloc(sizeof(SCSUData));
-    if(cnv->extraInfo!=nullptr) {
-        if(locale!=nullptr && locale[0]=='j' && locale[1]=='a' && (locale[2]==0 || locale[2]=='_')) {
+    cnv->extraInfo=uprv_malloc(حجم(SCSUData));
+    إذا(cnv->extraInfo!=تش_اشاره) {
+        إذا(locale!=تش_اشاره && locale[0]=='j' && locale[1]=='a' && (locale[2]==0 || locale[2]=='_')) {
             ((SCSUData *)cnv->extraInfo)->locale=l_ja;
-        } else {
+        } وإلا {
             ((SCSUData *)cnv->extraInfo)->locale=lGeneric;
         }
         _SCSUReset(cnv, UCNV_RESET_BOTH);
-    } else {
-        *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
+    } وإلا {
+        *p_Error_کوډ=U_حافظه_ویش_ERROR;
     }
 
     /* Set the substitution character U+fffd as a Unicode string. */
@@ -216,55 +216,55 @@ _SCSUOpen(UConverter *cnv,
     cnv->subCharLen=-1;
 }
 
-static void U_CALLCONV
+ساكن فراغ U_CALLCONV
 _SCSUClose(UConverter *cnv) {
-    if(cnv->extraInfo!=nullptr) {
-        if(!cnv->isExtraLocal) {
+    إذا(cnv->extraInfo!=تش_اشاره) {
+        إذا(!cnv->isExtraLocal) {
             uprv_free(cnv->extraInfo);
         }
-        cnv->extraInfo=nullptr;
+        cnv->extraInfo=تش_اشاره;
     }
 }
 
 /* SCSU-to-Unicode conversion functions ------------------------------------- */
 
-static void U_CALLCONV
-_SCSUToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
-                          UErrorCode *pErrorCode) {
+ساكن فراغ U_CALLCONV
+_SCSUToUnicodeWithOffsets(UConverter_منزل_Unicode_دلیلونه *p_دلیلونه,
+                          UError_کوډ *p_Error_کوډ) {
     UConverter *cnv;
     SCSUData *scsu;
-    const uint8_t *source, *sourceLimit;
-    char16_t *target;
-    const char16_t *targetLimit;
+    ثابت uint8_t *سرچینه, *سرچینه_حد;
+    char16_t *موخه;
+    ثابت char16_t *موخه_حد;
     int32_t *offsets;
-    UBool isSingleByteMode;
+    UBool is_Single_Byte_ډېرپېښ;
     uint8_t state, byteOne;
-    int8_t quoteWindow, dynamicWindow;
+    int8_t quote_کړکۍ, dynamic_کړکۍ;
 
-    int32_t sourceIndex, nextSourceIndex;
+    int32_t سرچینه_شاخص, بل_سرچینه_شاخص;
 
     uint8_t b;
 
     /* set up the local pointers */
-    cnv=pArgs->converter;
+    cnv=p_دلیلونه->converter;
     scsu=(SCSUData *)cnv->extraInfo;
 
-    source=(const uint8_t *)pArgs->source;
-    sourceLimit=(const uint8_t *)pArgs->sourceLimit;
-    target=pArgs->target;
-    targetLimit=pArgs->targetLimit;
-    offsets=pArgs->offsets;
+    سرچینه=(ثابت uint8_t *)p_دلیلونه->سرچینه;
+    سرچینه_حد=(ثابت uint8_t *)p_دلیلونه->سرچینه_حد;
+    موخه=p_دلیلونه->موخه;
+    موخه_حد=p_دلیلونه->موخه_حد;
+    offsets=p_دلیلونه->offsets;
 
     /* get the state machine state */
-    isSingleByteMode=scsu->toUIsSingleByteMode;
-    state=scsu->toUState;
-    quoteWindow=scsu->toUQuoteWindow;
-    dynamicWindow=scsu->toUDynamicWindow;
-    byteOne=scsu->toUByteOne;
+    is_Single_Byte_ډېرپېښ=scsu->منزل_UIs_Single_Byte_ډېرپېښ;
+    state=scsu->منزل_UState;
+    quote_کړکۍ=scsu->منزل_UQuote_کړکۍ;
+    dynamic_کړکۍ=scsu->منزل_UDynamic_کړکۍ;
+    byteOne=scsu->منزل_UByte_One;
 
     /* sourceIndex=-1 if the current character began in the previous buffer */
-    sourceIndex=state==readCommand ? 0 : -1;
-    nextSourceIndex=0;
+    سرچینه_شاخص=state==readCommand ? 0 : -1;
+    بل_سرچینه_شاخص=0;
 
     /*
      * conversion "loop"
@@ -285,293 +285,293 @@ _SCSUToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
      * The callback handling is done by returning with an error code.
      * The conversion framework actually calls the callback function.
      */
-    if(isSingleByteMode) {
+    إذا(is_Single_Byte_ډېرپېښ) {
         /* fast path for single-byte mode */
-        if(state==readCommand) {
+        إذا(state==readCommand) {
 fastSingle:
-            while(source<sourceLimit && target<targetLimit && (b=*source)>=0x20) {
-                ++source;
-                ++nextSourceIndex;
-                if(b<=0x7f) {
+            طالما(سرچینه<سرچینه_حد && موخه<موخه_حد && (b=*سرچینه)>=0x20) {
+                ++سرچینه;
+                ++بل_سرچینه_شاخص;
+                إذا(b<=0x7f) {
                     /* write US-ASCII graphic character or DEL */
-                    *target++=(char16_t)b;
-                    if(offsets!=nullptr) {
-                        *offsets++=sourceIndex;
+                    *موخه++=(char16_t)b;
+                    إذا(offsets!=تش_اشاره) {
+                        *offsets++=سرچینه_شاخص;
                     }
-                } else {
+                } وإلا {
                     /* write from dynamic window */
-                    uint32_t c=scsu->toUDynamicOffsets[dynamicWindow]+(b&0x7f);
-                    if(c<=0xffff) {
-                        *target++=(char16_t)c;
-                        if(offsets!=nullptr) {
-                            *offsets++=sourceIndex;
+                    uint32_t c=scsu->منزل_UDynamic_Offsets[dynamic_کړکۍ]+(b&0x7f);
+                    إذا(c<=0xffff) {
+                        *موخه++=(char16_t)c;
+                        إذا(offsets!=تش_اشاره) {
+                            *offsets++=سرچینه_شاخص;
                         }
-                    } else {
+                    } وإلا {
                         /* output surrogate pair */
-                        *target++=(char16_t)(0xd7c0+(c>>10));
-                        if(target<targetLimit) {
-                            *target++=(char16_t)(0xdc00|(c&0x3ff));
-                            if(offsets!=nullptr) {
-                                *offsets++=sourceIndex;
-                                *offsets++=sourceIndex;
+                        *موخه++=(char16_t)(0xd7c0+(c>>10));
+                        إذا(موخه<موخه_حد) {
+                            *موخه++=(char16_t)(0xdc00|(c&0x3ff));
+                            إذا(offsets!=تش_اشاره) {
+                                *offsets++=سرچینه_شاخص;
+                                *offsets++=سرچینه_شاخص;
                             }
-                        } else {
+                        } وإلا {
                             /* target overflow */
-                            if(offsets!=nullptr) {
-                                *offsets++=sourceIndex;
+                            إذا(offsets!=تش_اشاره) {
+                                *offsets++=سرچینه_شاخص;
                             }
-                            cnv->UCharErrorBuffer[0]=(char16_t)(0xdc00|(c&0x3ff));
-                            cnv->UCharErrorBufferLength=1;
-                            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                            goto endloop;
+                            cnv->UChar_Error_بفر[0]=(char16_t)(0xdc00|(c&0x3ff));
+                            cnv->UChar_Error_بفر_اوږدتیا=1;
+                            *p_Error_کوډ=U_بفر_ډکېدنه_ERROR;
+                            اذهب endloop;
                         }
                     }
                 }
-                sourceIndex=nextSourceIndex;
+                سرچینه_شاخص=بل_سرچینه_شاخص;
             }
         }
 
         /* normal state machine for single-byte mode, minus handling for what fastSingle covers */
-singleByteMode:
-        while(source<sourceLimit) {
-            if(target>=targetLimit) {
+single_Byte_ډېرپېښ:
+        طالما(سرچینه<سرچینه_حد) {
+            إذا(موخه>=موخه_حد) {
                 /* target is full */
-                *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                break;
+                *p_Error_کوډ=U_بفر_ډکېدنه_ERROR;
+                اكسر;
             }
-            b=*source++;
-            ++nextSourceIndex;
-            switch(state) {
-            case readCommand:
+            b=*سرچینه++;
+            ++بل_سرچینه_شاخص;
+            بدل(state) {
+            حالة readCommand:
                 /* redundant conditions are commented out */
                 /* here: b<0x20 because otherwise we would be in fastSingle */
-                if((1UL<<b)&0x2601 /* binary 0010 0110 0000 0001, check for b==0xd || b==0xa || b==9 || b==0 */) {
+                إذا((1UL<<b)&0x2601 /* binary 0010 0110 0000 0001, check for b==0xd || b==0xa || b==9 || b==0 */) {
                     /* CR/LF/TAB/NUL */
-                    *target++=(char16_t)b;
-                    if(offsets!=nullptr) {
-                        *offsets++=sourceIndex;
+                    *موخه++=(char16_t)b;
+                    إذا(offsets!=تش_اشاره) {
+                        *offsets++=سرچینه_شاخص;
                     }
-                    sourceIndex=nextSourceIndex;
-                    goto fastSingle;
-                } else if(SC0<=b) {
-                    if(b<=SC7) {
-                        dynamicWindow=(int8_t)(b-SC0);
-                        sourceIndex=nextSourceIndex;
-                        goto fastSingle;
-                    } else /* if(SD0<=b && b<=SD7) */ {
-                        dynamicWindow=(int8_t)(b-SD0);
+                    سرچینه_شاخص=بل_سرچینه_شاخص;
+                    اذهب fastSingle;
+                } وإلا إذا(SC0<=b) {
+                    إذا(b<=SC7) {
+                        dynamic_کړکۍ=(int8_t)(b-SC0);
+                        سرچینه_شاخص=بل_سرچینه_شاخص;
+                        اذهب fastSingle;
+                    } وإلا /* if(SD0<=b && b<=SD7) */ {
+                        dynamic_کړکۍ=(int8_t)(b-SD0);
                         state=defineOne;
                     }
-                } else if(/* SQ0<=b && */ b<=SQ7) {
-                    quoteWindow=(int8_t)(b-SQ0);
+                } وإلا إذا(/* SQ0<=b && */ b<=SQ7) {
+                    quote_کړکۍ=(int8_t)(b-SQ0);
                     state=quoteOne;
-                } else if(b==SDX) {
+                } وإلا إذا(b==SDX) {
                     state=definePairOne;
-                } else if(b==SQU) {
+                } وإلا إذا(b==SQU) {
                     state=quotePairOne;
-                } else if(b==SCU) {
-                    sourceIndex=nextSourceIndex;
-                    isSingleByteMode=false;
-                    goto fastUnicode;
-                } else /* Srs */ {
+                } وإلا إذا(b==SCU) {
+                    سرچینه_شاخص=بل_سرچینه_شاخص;
+                    is_Single_Byte_ډېرپېښ=خطأ;
+                    اذهب fastUnicode;
+                } وإلا /* Srs */ {
                     /* callback(illegal) */
-                    *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                    cnv->toUBytes[0]=b;
-                    cnv->toULength=1;
-                    goto endloop;
+                    *p_Error_کوډ=U_ILLEGAL_CHAR_وموندل;
+                    cnv->منزل_UBytes[0]=b;
+                    cnv->منزل_ULength=1;
+                    اذهب endloop;
                 }
 
                 /* store the first byte of a multibyte sequence in toUBytes[] */
-                cnv->toUBytes[0]=b;
-                cnv->toULength=1;
-                break;
-            case quotePairOne:
+                cnv->منزل_UBytes[0]=b;
+                cnv->منزل_ULength=1;
+                اكسر;
+            حالة quotePairOne:
                 byteOne=b;
-                cnv->toUBytes[1]=b;
-                cnv->toULength=2;
+                cnv->منزل_UBytes[1]=b;
+                cnv->منزل_ULength=2;
                 state=quotePairTwo;
-                break;
-            case quotePairTwo:
-                *target++=(char16_t)((byteOne<<8)|b);
-                if(offsets!=nullptr) {
-                    *offsets++=sourceIndex;
+                اكسر;
+            حالة quotePairTwo:
+                *موخه++=(char16_t)((byteOne<<8)|b);
+                إذا(offsets!=تش_اشاره) {
+                    *offsets++=سرچینه_شاخص;
                 }
-                sourceIndex=nextSourceIndex;
+                سرچینه_شاخص=بل_سرچینه_شاخص;
                 state=readCommand;
-                goto fastSingle;
-            case quoteOne:
-                if(b<0x80) {
+                اذهب fastSingle;
+            حالة quoteOne:
+                إذا(b<0x80) {
                     /* all static offsets are in the BMP */
-                    *target++=(char16_t)(staticOffsets[quoteWindow]+b);
-                    if(offsets!=nullptr) {
-                        *offsets++=sourceIndex;
+                    *موخه++=(char16_t)(staticOffsets[quote_کړکۍ]+b);
+                    إذا(offsets!=تش_اشاره) {
+                        *offsets++=سرچینه_شاخص;
                     }
-                } else {
+                } وإلا {
                     /* write from dynamic window */
-                    uint32_t c=scsu->toUDynamicOffsets[quoteWindow]+(b&0x7f);
-                    if(c<=0xffff) {
-                        *target++=(char16_t)c;
-                        if(offsets!=nullptr) {
-                            *offsets++=sourceIndex;
+                    uint32_t c=scsu->منزل_UDynamic_Offsets[quote_کړکۍ]+(b&0x7f);
+                    إذا(c<=0xffff) {
+                        *موخه++=(char16_t)c;
+                        إذا(offsets!=تش_اشاره) {
+                            *offsets++=سرچینه_شاخص;
                         }
-                    } else {
+                    } وإلا {
                         /* output surrogate pair */
-                        *target++=(char16_t)(0xd7c0+(c>>10));
-                        if(target<targetLimit) {
-                            *target++=(char16_t)(0xdc00|(c&0x3ff));
-                            if(offsets!=nullptr) {
-                                *offsets++=sourceIndex;
-                                *offsets++=sourceIndex;
+                        *موخه++=(char16_t)(0xd7c0+(c>>10));
+                        إذا(موخه<موخه_حد) {
+                            *موخه++=(char16_t)(0xdc00|(c&0x3ff));
+                            إذا(offsets!=تش_اشاره) {
+                                *offsets++=سرچینه_شاخص;
+                                *offsets++=سرچینه_شاخص;
                             }
-                        } else {
+                        } وإلا {
                             /* target overflow */
-                            if(offsets!=nullptr) {
-                                *offsets++=sourceIndex;
+                            إذا(offsets!=تش_اشاره) {
+                                *offsets++=سرچینه_شاخص;
                             }
-                            cnv->UCharErrorBuffer[0]=(char16_t)(0xdc00|(c&0x3ff));
-                            cnv->UCharErrorBufferLength=1;
-                            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                            goto endloop;
+                            cnv->UChar_Error_بفر[0]=(char16_t)(0xdc00|(c&0x3ff));
+                            cnv->UChar_Error_بفر_اوږدتیا=1;
+                            *p_Error_کوډ=U_بفر_ډکېدنه_ERROR;
+                            اذهب endloop;
                         }
                     }
                 }
-                sourceIndex=nextSourceIndex;
+                سرچینه_شاخص=بل_سرچینه_شاخص;
                 state=readCommand;
-                goto fastSingle;
-            case definePairOne:
-                dynamicWindow=(int8_t)((b>>5)&7);
+                اذهب fastSingle;
+            حالة definePairOne:
+                dynamic_کړکۍ=(int8_t)((b>>5)&7);
                 byteOne=(uint8_t)(b&0x1f);
-                cnv->toUBytes[1]=b;
-                cnv->toULength=2;
+                cnv->منزل_UBytes[1]=b;
+                cnv->منزل_ULength=2;
                 state=definePairTwo;
-                break;
-            case definePairTwo:
-                scsu->toUDynamicOffsets[dynamicWindow]=0x10000+(byteOne<<15UL | b<<7UL);
-                sourceIndex=nextSourceIndex;
+                اكسر;
+            حالة definePairTwo:
+                scsu->منزل_UDynamic_Offsets[dynamic_کړکۍ]=0x10000+(byteOne<<15UL | b<<7UL);
+                سرچینه_شاخص=بل_سرچینه_شاخص;
                 state=readCommand;
-                goto fastSingle;
-            case defineOne:
-                if(b==0) {
+                اذهب fastSingle;
+            حالة defineOne:
+                إذا(b==0) {
                     /* callback(illegal): Reserved window offset value 0 */
-                    cnv->toUBytes[1]=b;
-                    cnv->toULength=2;
-                    goto endloop;
-                } else if(b<gapThreshold) {
-                    scsu->toUDynamicOffsets[dynamicWindow]=b<<7UL;
-                } else if((uint8_t)(b-gapThreshold)<(reservedStart-gapThreshold)) {
-                    scsu->toUDynamicOffsets[dynamicWindow]=(b<<7UL)+gapOffset;
-                } else if(b>=fixedThreshold) {
-                    scsu->toUDynamicOffsets[dynamicWindow]=fixedOffsets[b-fixedThreshold];
-                } else {
+                    cnv->منزل_UBytes[1]=b;
+                    cnv->منزل_ULength=2;
+                    اذهب endloop;
+                } وإلا إذا(b<gap_پوله) {
+                    scsu->منزل_UDynamic_Offsets[dynamic_کړکۍ]=b<<7UL;
+                } وإلا إذا((uint8_t)(b-gap_پوله)<(reserved_پیل-gap_پوله)) {
+                    scsu->منزل_UDynamic_Offsets[dynamic_کړکۍ]=(b<<7UL)+gap_دننه_واټن;
+                } وإلا إذا(b>=fixed_پوله) {
+                    scsu->منزل_UDynamic_Offsets[dynamic_کړکۍ]=fixedOffsets[b-fixed_پوله];
+                } وإلا {
                     /* callback(illegal): Reserved window offset value 0xa8..0xf8 */
-                    cnv->toUBytes[1]=b;
-                    cnv->toULength=2;
-                    goto endloop;
+                    cnv->منزل_UBytes[1]=b;
+                    cnv->منزل_ULength=2;
+                    اذهب endloop;
                 }
-                sourceIndex=nextSourceIndex;
+                سرچینه_شاخص=بل_سرچینه_شاخص;
                 state=readCommand;
-                goto fastSingle;
+                اذهب fastSingle;
             }
         }
-    } else {
+    } وإلا {
         /* fast path for Unicode mode */
-        if(state==readCommand) {
+        إذا(state==readCommand) {
 fastUnicode:
-            while(source+1<sourceLimit && target<targetLimit && (uint8_t)((b=*source)-UC0)>(Urs-UC0)) {
-                *target++=(char16_t)((b<<8)|source[1]);
-                if(offsets!=nullptr) {
-                    *offsets++=sourceIndex;
+            طالما(سرچینه+1<سرچینه_حد && موخه<موخه_حد && (uint8_t)((b=*سرچینه)-UC0)>(Urs-UC0)) {
+                *موخه++=(char16_t)((b<<8)|سرچینه[1]);
+                إذا(offsets!=تش_اشاره) {
+                    *offsets++=سرچینه_شاخص;
                 }
-                sourceIndex=nextSourceIndex;
-                nextSourceIndex+=2;
-                source+=2;
+                سرچینه_شاخص=بل_سرچینه_شاخص;
+                بل_سرچینه_شاخص+=2;
+                سرچینه+=2;
             }
         }
 
         /* normal state machine for Unicode mode */
 /* unicodeByteMode: */
-        while(source<sourceLimit) {
-            if(target>=targetLimit) {
+        طالما(سرچینه<سرچینه_حد) {
+            إذا(موخه>=موخه_حد) {
                 /* target is full */
-                *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                break;
+                *p_Error_کوډ=U_بفر_ډکېدنه_ERROR;
+                اكسر;
             }
-            b=*source++;
-            ++nextSourceIndex;
-            switch(state) {
-            case readCommand:
-                if((uint8_t)(b-UC0)>(Urs-UC0)) {
+            b=*سرچینه++;
+            ++بل_سرچینه_شاخص;
+            بدل(state) {
+            حالة readCommand:
+                إذا((uint8_t)(b-UC0)>(Urs-UC0)) {
                     byteOne=b;
-                    cnv->toUBytes[0]=b;
-                    cnv->toULength=1;
+                    cnv->منزل_UBytes[0]=b;
+                    cnv->منزل_ULength=1;
                     state=quotePairTwo;
-                } else if(/* UC0<=b && */ b<=UC7) {
-                    dynamicWindow=(int8_t)(b-UC0);
-                    sourceIndex=nextSourceIndex;
-                    isSingleByteMode=true;
-                    goto fastSingle;
-                } else if(/* UD0<=b && */ b<=UD7) {
-                    dynamicWindow=(int8_t)(b-UD0);
-                    isSingleByteMode=true;
-                    cnv->toUBytes[0]=b;
-                    cnv->toULength=1;
+                } وإلا إذا(/* UC0<=b && */ b<=UC7) {
+                    dynamic_کړکۍ=(int8_t)(b-UC0);
+                    سرچینه_شاخص=بل_سرچینه_شاخص;
+                    is_Single_Byte_ډېرپېښ=ریښتیا;
+                    اذهب fastSingle;
+                } وإلا إذا(/* UD0<=b && */ b<=UD7) {
+                    dynamic_کړکۍ=(int8_t)(b-UD0);
+                    is_Single_Byte_ډېرپېښ=ریښتیا;
+                    cnv->منزل_UBytes[0]=b;
+                    cnv->منزل_ULength=1;
                     state=defineOne;
-                    goto singleByteMode;
-                } else if(b==UDX) {
-                    isSingleByteMode=true;
-                    cnv->toUBytes[0]=b;
-                    cnv->toULength=1;
+                    اذهب single_Byte_ډېرپېښ;
+                } وإلا إذا(b==UDX) {
+                    is_Single_Byte_ډېرپېښ=ریښتیا;
+                    cnv->منزل_UBytes[0]=b;
+                    cnv->منزل_ULength=1;
                     state=definePairOne;
-                    goto singleByteMode;
-                } else if(b==UQU) {
-                    cnv->toUBytes[0]=b;
-                    cnv->toULength=1;
+                    اذهب single_Byte_ډېرپېښ;
+                } وإلا إذا(b==UQU) {
+                    cnv->منزل_UBytes[0]=b;
+                    cnv->منزل_ULength=1;
                     state=quotePairOne;
-                } else /* Urs */ {
+                } وإلا /* Urs */ {
                     /* callback(illegal) */
-                    *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                    cnv->toUBytes[0]=b;
-                    cnv->toULength=1;
-                    goto endloop;
+                    *p_Error_کوډ=U_ILLEGAL_CHAR_وموندل;
+                    cnv->منزل_UBytes[0]=b;
+                    cnv->منزل_ULength=1;
+                    اذهب endloop;
                 }
-                break;
-            case quotePairOne:
+                اكسر;
+            حالة quotePairOne:
                 byteOne=b;
-                cnv->toUBytes[1]=b;
-                cnv->toULength=2;
+                cnv->منزل_UBytes[1]=b;
+                cnv->منزل_ULength=2;
                 state=quotePairTwo;
-                break;
-            case quotePairTwo:
-                *target++=(char16_t)((byteOne<<8)|b);
-                if(offsets!=nullptr) {
-                    *offsets++=sourceIndex;
+                اكسر;
+            حالة quotePairTwo:
+                *موخه++=(char16_t)((byteOne<<8)|b);
+                إذا(offsets!=تش_اشاره) {
+                    *offsets++=سرچینه_شاخص;
                 }
-                sourceIndex=nextSourceIndex;
+                سرچینه_شاخص=بل_سرچینه_شاخص;
                 state=readCommand;
-                goto fastUnicode;
+                اذهب fastUnicode;
             }
         }
     }
 endloop:
 
     /* set the converter state back into UConverter */
-    if(U_FAILURE(*pErrorCode) && *pErrorCode!=U_BUFFER_OVERFLOW_ERROR) {
+    إذا(U_FAILURE(*p_Error_کوډ) && *p_Error_کوډ!=U_بفر_ډکېدنه_ERROR) {
         /* reset to deal with the next character */
         state=readCommand;
-    } else if(state==readCommand) {
+    } وإلا إذا(state==readCommand) {
         /* not in a multi-byte sequence, reset toULength */
-        cnv->toULength=0;
+        cnv->منزل_ULength=0;
     }
-    scsu->toUIsSingleByteMode=isSingleByteMode;
-    scsu->toUState=state;
-    scsu->toUQuoteWindow=quoteWindow;
-    scsu->toUDynamicWindow=dynamicWindow;
-    scsu->toUByteOne=byteOne;
+    scsu->منزل_UIs_Single_Byte_ډېرپېښ=is_Single_Byte_ډېرپېښ;
+    scsu->منزل_UState=state;
+    scsu->منزل_UQuote_کړکۍ=quote_کړکۍ;
+    scsu->منزل_UDynamic_کړکۍ=dynamic_کړکۍ;
+    scsu->منزل_UByte_One=byteOne;
 
     /* write back the updated pointers */
-    pArgs->source=(const char *)source;
-    pArgs->target=target;
-    pArgs->offsets=offsets;
+    p_دلیلونه->سرچینه=(ثابت حرف *)سرچینه;
+    p_دلیلونه->موخه=موخه;
+    p_دلیلونه->offsets=offsets;
 }
 
 /*
@@ -581,35 +581,35 @@ endloop:
  * re-copy the original function and remove the variables
  * offsets, sourceIndex, and nextSourceIndex.
  */
-static void U_CALLCONV
-_SCSUToUnicode(UConverterToUnicodeArgs *pArgs,
-               UErrorCode *pErrorCode) {
+ساكن فراغ U_CALLCONV
+_SCSUToUnicode(UConverter_منزل_Unicode_دلیلونه *p_دلیلونه,
+               UError_کوډ *p_Error_کوډ) {
     UConverter *cnv;
     SCSUData *scsu;
-    const uint8_t *source, *sourceLimit;
-    char16_t *target;
-    const char16_t *targetLimit;
-    UBool isSingleByteMode;
+    ثابت uint8_t *سرچینه, *سرچینه_حد;
+    char16_t *موخه;
+    ثابت char16_t *موخه_حد;
+    UBool is_Single_Byte_ډېرپېښ;
     uint8_t state, byteOne;
-    int8_t quoteWindow, dynamicWindow;
+    int8_t quote_کړکۍ, dynamic_کړکۍ;
 
     uint8_t b;
 
     /* set up the local pointers */
-    cnv=pArgs->converter;
+    cnv=p_دلیلونه->converter;
     scsu=(SCSUData *)cnv->extraInfo;
 
-    source=(const uint8_t *)pArgs->source;
-    sourceLimit=(const uint8_t *)pArgs->sourceLimit;
-    target=pArgs->target;
-    targetLimit=pArgs->targetLimit;
+    سرچینه=(ثابت uint8_t *)p_دلیلونه->سرچینه;
+    سرچینه_حد=(ثابت uint8_t *)p_دلیلونه->سرچینه_حد;
+    موخه=p_دلیلونه->موخه;
+    موخه_حد=p_دلیلونه->موخه_حد;
 
     /* get the state machine state */
-    isSingleByteMode=scsu->toUIsSingleByteMode;
-    state=scsu->toUState;
-    quoteWindow=scsu->toUQuoteWindow;
-    dynamicWindow=scsu->toUDynamicWindow;
-    byteOne=scsu->toUByteOne;
+    is_Single_Byte_ډېرپېښ=scsu->منزل_UIs_Single_Byte_ډېرپېښ;
+    state=scsu->منزل_UState;
+    quote_کړکۍ=scsu->منزل_UQuote_کړکۍ;
+    dynamic_کړکۍ=scsu->منزل_UDynamic_کړکۍ;
+    byteOne=scsu->منزل_UByte_One;
 
     /*
      * conversion "loop"
@@ -630,31 +630,31 @@ _SCSUToUnicode(UConverterToUnicodeArgs *pArgs,
      * The callback handling is done by returning with an error code.
      * The conversion framework actually calls the callback function.
      */
-    if(isSingleByteMode) {
+    إذا(is_Single_Byte_ډېرپېښ) {
         /* fast path for single-byte mode */
-        if(state==readCommand) {
+        إذا(state==readCommand) {
 fastSingle:
-            while(source<sourceLimit && target<targetLimit && (b=*source)>=0x20) {
-                ++source;
-                if(b<=0x7f) {
+            طالما(سرچینه<سرچینه_حد && موخه<موخه_حد && (b=*سرچینه)>=0x20) {
+                ++سرچینه;
+                إذا(b<=0x7f) {
                     /* write US-ASCII graphic character or DEL */
-                    *target++=(char16_t)b;
-                } else {
+                    *موخه++=(char16_t)b;
+                } وإلا {
                     /* write from dynamic window */
-                    uint32_t c=scsu->toUDynamicOffsets[dynamicWindow]+(b&0x7f);
-                    if(c<=0xffff) {
-                        *target++=(char16_t)c;
-                    } else {
+                    uint32_t c=scsu->منزل_UDynamic_Offsets[dynamic_کړکۍ]+(b&0x7f);
+                    إذا(c<=0xffff) {
+                        *موخه++=(char16_t)c;
+                    } وإلا {
                         /* output surrogate pair */
-                        *target++=(char16_t)(0xd7c0+(c>>10));
-                        if(target<targetLimit) {
-                            *target++=(char16_t)(0xdc00|(c&0x3ff));
-                        } else {
+                        *موخه++=(char16_t)(0xd7c0+(c>>10));
+                        إذا(موخه<موخه_حد) {
+                            *موخه++=(char16_t)(0xdc00|(c&0x3ff));
+                        } وإلا {
                             /* target overflow */
-                            cnv->UCharErrorBuffer[0]=(char16_t)(0xdc00|(c&0x3ff));
-                            cnv->UCharErrorBufferLength=1;
-                            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                            goto endloop;
+                            cnv->UChar_Error_بفر[0]=(char16_t)(0xdc00|(c&0x3ff));
+                            cnv->UChar_Error_بفر_اوږدتیا=1;
+                            *p_Error_کوډ=U_بفر_ډکېدنه_ERROR;
+                            اذهب endloop;
                         }
                     }
                 }
@@ -662,209 +662,209 @@ fastSingle:
         }
 
         /* normal state machine for single-byte mode, minus handling for what fastSingle covers */
-singleByteMode:
-        while(source<sourceLimit) {
-            if(target>=targetLimit) {
+single_Byte_ډېرپېښ:
+        طالما(سرچینه<سرچینه_حد) {
+            إذا(موخه>=موخه_حد) {
                 /* target is full */
-                *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                break;
+                *p_Error_کوډ=U_بفر_ډکېدنه_ERROR;
+                اكسر;
             }
-            b=*source++;
-            switch(state) {
-            case readCommand:
+            b=*سرچینه++;
+            بدل(state) {
+            حالة readCommand:
                 /* redundant conditions are commented out */
                 /* here: b<0x20 because otherwise we would be in fastSingle */
-                if((1UL<<b)&0x2601 /* binary 0010 0110 0000 0001, check for b==0xd || b==0xa || b==9 || b==0 */) {
+                إذا((1UL<<b)&0x2601 /* binary 0010 0110 0000 0001, check for b==0xd || b==0xa || b==9 || b==0 */) {
                     /* CR/LF/TAB/NUL */
-                    *target++=(char16_t)b;
-                    goto fastSingle;
-                } else if(SC0<=b) {
-                    if(b<=SC7) {
-                        dynamicWindow=(int8_t)(b-SC0);
-                        goto fastSingle;
-                    } else /* if(SD0<=b && b<=SD7) */ {
-                        dynamicWindow=(int8_t)(b-SD0);
+                    *موخه++=(char16_t)b;
+                    اذهب fastSingle;
+                } وإلا إذا(SC0<=b) {
+                    إذا(b<=SC7) {
+                        dynamic_کړکۍ=(int8_t)(b-SC0);
+                        اذهب fastSingle;
+                    } وإلا /* if(SD0<=b && b<=SD7) */ {
+                        dynamic_کړکۍ=(int8_t)(b-SD0);
                         state=defineOne;
                     }
-                } else if(/* SQ0<=b && */ b<=SQ7) {
-                    quoteWindow=(int8_t)(b-SQ0);
+                } وإلا إذا(/* SQ0<=b && */ b<=SQ7) {
+                    quote_کړکۍ=(int8_t)(b-SQ0);
                     state=quoteOne;
-                } else if(b==SDX) {
+                } وإلا إذا(b==SDX) {
                     state=definePairOne;
-                } else if(b==SQU) {
+                } وإلا إذا(b==SQU) {
                     state=quotePairOne;
-                } else if(b==SCU) {
-                    isSingleByteMode=false;
-                    goto fastUnicode;
-                } else /* Srs */ {
+                } وإلا إذا(b==SCU) {
+                    is_Single_Byte_ډېرپېښ=خطأ;
+                    اذهب fastUnicode;
+                } وإلا /* Srs */ {
                     /* callback(illegal) */
-                    *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                    cnv->toUBytes[0]=b;
-                    cnv->toULength=1;
-                    goto endloop;
+                    *p_Error_کوډ=U_ILLEGAL_CHAR_وموندل;
+                    cnv->منزل_UBytes[0]=b;
+                    cnv->منزل_ULength=1;
+                    اذهب endloop;
                 }
 
                 /* store the first byte of a multibyte sequence in toUBytes[] */
-                cnv->toUBytes[0]=b;
-                cnv->toULength=1;
-                break;
-            case quotePairOne:
+                cnv->منزل_UBytes[0]=b;
+                cnv->منزل_ULength=1;
+                اكسر;
+            حالة quotePairOne:
                 byteOne=b;
-                cnv->toUBytes[1]=b;
-                cnv->toULength=2;
+                cnv->منزل_UBytes[1]=b;
+                cnv->منزل_ULength=2;
                 state=quotePairTwo;
-                break;
-            case quotePairTwo:
-                *target++=(char16_t)((byteOne<<8)|b);
+                اكسر;
+            حالة quotePairTwo:
+                *موخه++=(char16_t)((byteOne<<8)|b);
                 state=readCommand;
-                goto fastSingle;
-            case quoteOne:
-                if(b<0x80) {
+                اذهب fastSingle;
+            حالة quoteOne:
+                إذا(b<0x80) {
                     /* all static offsets are in the BMP */
-                    *target++=(char16_t)(staticOffsets[quoteWindow]+b);
-                } else {
+                    *موخه++=(char16_t)(staticOffsets[quote_کړکۍ]+b);
+                } وإلا {
                     /* write from dynamic window */
-                    uint32_t c=scsu->toUDynamicOffsets[quoteWindow]+(b&0x7f);
-                    if(c<=0xffff) {
-                        *target++=(char16_t)c;
-                    } else {
+                    uint32_t c=scsu->منزل_UDynamic_Offsets[quote_کړکۍ]+(b&0x7f);
+                    إذا(c<=0xffff) {
+                        *موخه++=(char16_t)c;
+                    } وإلا {
                         /* output surrogate pair */
-                        *target++=(char16_t)(0xd7c0+(c>>10));
-                        if(target<targetLimit) {
-                            *target++=(char16_t)(0xdc00|(c&0x3ff));
-                        } else {
+                        *موخه++=(char16_t)(0xd7c0+(c>>10));
+                        إذا(موخه<موخه_حد) {
+                            *موخه++=(char16_t)(0xdc00|(c&0x3ff));
+                        } وإلا {
                             /* target overflow */
-                            cnv->UCharErrorBuffer[0]=(char16_t)(0xdc00|(c&0x3ff));
-                            cnv->UCharErrorBufferLength=1;
-                            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                            goto endloop;
+                            cnv->UChar_Error_بفر[0]=(char16_t)(0xdc00|(c&0x3ff));
+                            cnv->UChar_Error_بفر_اوږدتیا=1;
+                            *p_Error_کوډ=U_بفر_ډکېدنه_ERROR;
+                            اذهب endloop;
                         }
                     }
                 }
                 state=readCommand;
-                goto fastSingle;
-            case definePairOne:
-                dynamicWindow=(int8_t)((b>>5)&7);
+                اذهب fastSingle;
+            حالة definePairOne:
+                dynamic_کړکۍ=(int8_t)((b>>5)&7);
                 byteOne=(uint8_t)(b&0x1f);
-                cnv->toUBytes[1]=b;
-                cnv->toULength=2;
+                cnv->منزل_UBytes[1]=b;
+                cnv->منزل_ULength=2;
                 state=definePairTwo;
-                break;
-            case definePairTwo:
-                scsu->toUDynamicOffsets[dynamicWindow]=0x10000+(byteOne<<15UL | b<<7UL);
+                اكسر;
+            حالة definePairTwo:
+                scsu->منزل_UDynamic_Offsets[dynamic_کړکۍ]=0x10000+(byteOne<<15UL | b<<7UL);
                 state=readCommand;
-                goto fastSingle;
-            case defineOne:
-                if(b==0) {
+                اذهب fastSingle;
+            حالة defineOne:
+                إذا(b==0) {
                     /* callback(illegal): Reserved window offset value 0 */
-                    cnv->toUBytes[1]=b;
-                    cnv->toULength=2;
-                    goto endloop;
-                } else if(b<gapThreshold) {
-                    scsu->toUDynamicOffsets[dynamicWindow]=b<<7UL;
-                } else if((uint8_t)(b-gapThreshold)<(reservedStart-gapThreshold)) {
-                    scsu->toUDynamicOffsets[dynamicWindow]=(b<<7UL)+gapOffset;
-                } else if(b>=fixedThreshold) {
-                    scsu->toUDynamicOffsets[dynamicWindow]=fixedOffsets[b-fixedThreshold];
-                } else {
+                    cnv->منزل_UBytes[1]=b;
+                    cnv->منزل_ULength=2;
+                    اذهب endloop;
+                } وإلا إذا(b<gap_پوله) {
+                    scsu->منزل_UDynamic_Offsets[dynamic_کړکۍ]=b<<7UL;
+                } وإلا إذا((uint8_t)(b-gap_پوله)<(reserved_پیل-gap_پوله)) {
+                    scsu->منزل_UDynamic_Offsets[dynamic_کړکۍ]=(b<<7UL)+gap_دننه_واټن;
+                } وإلا إذا(b>=fixed_پوله) {
+                    scsu->منزل_UDynamic_Offsets[dynamic_کړکۍ]=fixedOffsets[b-fixed_پوله];
+                } وإلا {
                     /* callback(illegal): Reserved window offset value 0xa8..0xf8 */
-                    cnv->toUBytes[1]=b;
-                    cnv->toULength=2;
-                    goto endloop;
+                    cnv->منزل_UBytes[1]=b;
+                    cnv->منزل_ULength=2;
+                    اذهب endloop;
                 }
                 state=readCommand;
-                goto fastSingle;
+                اذهب fastSingle;
             }
         }
-    } else {
+    } وإلا {
         /* fast path for Unicode mode */
-        if(state==readCommand) {
+        إذا(state==readCommand) {
 fastUnicode:
-            while(source+1<sourceLimit && target<targetLimit && (uint8_t)((b=*source)-UC0)>(Urs-UC0)) {
-                *target++=(char16_t)((b<<8)|source[1]);
-                source+=2;
+            طالما(سرچینه+1<سرچینه_حد && موخه<موخه_حد && (uint8_t)((b=*سرچینه)-UC0)>(Urs-UC0)) {
+                *موخه++=(char16_t)((b<<8)|سرچینه[1]);
+                سرچینه+=2;
             }
         }
 
         /* normal state machine for Unicode mode */
 /* unicodeByteMode: */
-        while(source<sourceLimit) {
-            if(target>=targetLimit) {
+        طالما(سرچینه<سرچینه_حد) {
+            إذا(موخه>=موخه_حد) {
                 /* target is full */
-                *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                break;
+                *p_Error_کوډ=U_بفر_ډکېدنه_ERROR;
+                اكسر;
             }
-            b=*source++;
-            switch(state) {
-            case readCommand:
-                if((uint8_t)(b-UC0)>(Urs-UC0)) {
+            b=*سرچینه++;
+            بدل(state) {
+            حالة readCommand:
+                إذا((uint8_t)(b-UC0)>(Urs-UC0)) {
                     byteOne=b;
-                    cnv->toUBytes[0]=b;
-                    cnv->toULength=1;
+                    cnv->منزل_UBytes[0]=b;
+                    cnv->منزل_ULength=1;
                     state=quotePairTwo;
-                } else if(/* UC0<=b && */ b<=UC7) {
-                    dynamicWindow=(int8_t)(b-UC0);
-                    isSingleByteMode=true;
-                    goto fastSingle;
-                } else if(/* UD0<=b && */ b<=UD7) {
-                    dynamicWindow=(int8_t)(b-UD0);
-                    isSingleByteMode=true;
-                    cnv->toUBytes[0]=b;
-                    cnv->toULength=1;
+                } وإلا إذا(/* UC0<=b && */ b<=UC7) {
+                    dynamic_کړکۍ=(int8_t)(b-UC0);
+                    is_Single_Byte_ډېرپېښ=ریښتیا;
+                    اذهب fastSingle;
+                } وإلا إذا(/* UD0<=b && */ b<=UD7) {
+                    dynamic_کړکۍ=(int8_t)(b-UD0);
+                    is_Single_Byte_ډېرپېښ=ریښتیا;
+                    cnv->منزل_UBytes[0]=b;
+                    cnv->منزل_ULength=1;
                     state=defineOne;
-                    goto singleByteMode;
-                } else if(b==UDX) {
-                    isSingleByteMode=true;
-                    cnv->toUBytes[0]=b;
-                    cnv->toULength=1;
+                    اذهب single_Byte_ډېرپېښ;
+                } وإلا إذا(b==UDX) {
+                    is_Single_Byte_ډېرپېښ=ریښتیا;
+                    cnv->منزل_UBytes[0]=b;
+                    cnv->منزل_ULength=1;
                     state=definePairOne;
-                    goto singleByteMode;
-                } else if(b==UQU) {
-                    cnv->toUBytes[0]=b;
-                    cnv->toULength=1;
+                    اذهب single_Byte_ډېرپېښ;
+                } وإلا إذا(b==UQU) {
+                    cnv->منزل_UBytes[0]=b;
+                    cnv->منزل_ULength=1;
                     state=quotePairOne;
-                } else /* Urs */ {
+                } وإلا /* Urs */ {
                     /* callback(illegal) */
-                    *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                    cnv->toUBytes[0]=b;
-                    cnv->toULength=1;
-                    goto endloop;
+                    *p_Error_کوډ=U_ILLEGAL_CHAR_وموندل;
+                    cnv->منزل_UBytes[0]=b;
+                    cnv->منزل_ULength=1;
+                    اذهب endloop;
                 }
-                break;
-            case quotePairOne:
+                اكسر;
+            حالة quotePairOne:
                 byteOne=b;
-                cnv->toUBytes[1]=b;
-                cnv->toULength=2;
+                cnv->منزل_UBytes[1]=b;
+                cnv->منزل_ULength=2;
                 state=quotePairTwo;
-                break;
-            case quotePairTwo:
-                *target++=(char16_t)((byteOne<<8)|b);
+                اكسر;
+            حالة quotePairTwo:
+                *موخه++=(char16_t)((byteOne<<8)|b);
                 state=readCommand;
-                goto fastUnicode;
+                اذهب fastUnicode;
             }
         }
     }
 endloop:
 
     /* set the converter state back into UConverter */
-    if(U_FAILURE(*pErrorCode) && *pErrorCode!=U_BUFFER_OVERFLOW_ERROR) {
+    إذا(U_FAILURE(*p_Error_کوډ) && *p_Error_کوډ!=U_بفر_ډکېدنه_ERROR) {
         /* reset to deal with the next character */
         state=readCommand;
-    } else if(state==readCommand) {
+    } وإلا إذا(state==readCommand) {
         /* not in a multi-byte sequence, reset toULength */
-        cnv->toULength=0;
+        cnv->منزل_ULength=0;
     }
-    scsu->toUIsSingleByteMode=isSingleByteMode;
-    scsu->toUState=state;
-    scsu->toUQuoteWindow=quoteWindow;
-    scsu->toUDynamicWindow=dynamicWindow;
-    scsu->toUByteOne=byteOne;
+    scsu->منزل_UIs_Single_Byte_ډېرپېښ=is_Single_Byte_ډېرپېښ;
+    scsu->منزل_UState=state;
+    scsu->منزل_UQuote_کړکۍ=quote_کړکۍ;
+    scsu->منزل_UDynamic_کړکۍ=dynamic_کړکۍ;
+    scsu->منزل_UByte_One=byteOne;
 
     /* write back the updated pointers */
-    pArgs->source=(const char *)source;
-    pArgs->target=target;
+    p_دلیلونه->سرچینه=(ثابت حرف *)سرچینه;
+    p_دلیلونه->موخه=موخه;
 }
-U_CDECL_END
+U_CDECL_پای_ټکی
 /* SCSU-from-Unicode conversion functions ----------------------------------- */
 
 /*
@@ -879,22 +879,22 @@ U_CDECL_END
  */
 
 /* get the number of the window that this character is in, or -1 */
-static int8_t
-getWindow(const uint32_t offsets[8], uint32_t c) {
-    int i;
-    for(i=0; i<8; ++i) {
-        if (c - offsets[i] <= 0x7f) {
-            return static_cast<int8_t>(i);
+ساكن int8_t
+get_کړکۍ(ثابت uint32_t offsets[8], uint32_t c) {
+    صحيح i;
+    لكل(i=0; i<8; ++i) {
+        إذا (c - offsets[i] <= 0x7f) {
+            أرجع static_cast<int8_t>(i);
         }
     }
-    return -1;
+    أرجع -1;
 }
 
 /* is the character in the dynamic window starting at the offset, or in the direct-encoded range? */
-static UBool
-isInOffsetWindowOrDirect(uint32_t offset, uint32_t c) {
-    return c<=offset+0x7f &&
-          (c>=offset || (c<=0x7f &&
+ساكن UBool
+is_دننه_دننه_واټن_کړکۍ_Or_مستقیم(uint32_t دننه_واټن, uint32_t c) {
+    أرجع c<=دننه_واټن+0x7f &&
+          (c>=دننه_واټن || (c<=0x7f &&
                         (c>=0x20 || (1UL<<c)&0x2601)));
                                 /* binary 0010 0110 0000 0001,
                                    check for b==0xd || b==0xa || b==9 || b==0 */
@@ -903,13 +903,13 @@ isInOffsetWindowOrDirect(uint32_t offset, uint32_t c) {
 /*
  * getNextDynamicWindow returns the next dynamic window to be redefined
  */
-static int8_t
-getNextDynamicWindow(SCSUData *scsu) {
-    int8_t window=scsu->windowUse[scsu->nextWindowUseIndex];
-    if(++scsu->nextWindowUseIndex==8) {
-        scsu->nextWindowUseIndex=0;
+ساكن int8_t
+get_بل_Dynamic_کړکۍ(SCSUData *scsu) {
+    int8_t کړکۍ=scsu->کړکۍ_Use[scsu->بل_کړکۍ_Use_شاخص];
+    إذا(++scsu->بل_کړکۍ_Use_شاخص==8) {
+        scsu->بل_کړکۍ_Use_شاخص=0;
     }
-    return window;
+    أرجع کړکۍ;
 }
 
 /*
@@ -918,36 +918,36 @@ getNextDynamicWindow(SCSUData *scsu) {
  * the next dynamic window to be defined;
  * a subclass may override it and provide its own algorithm.
  */
-static void
-useDynamicWindow(SCSUData *scsu, int8_t window) {
+ساكن فراغ
+use_Dynamic_کړکۍ(SCSUData *scsu, int8_t کړکۍ) {
     /*
      * move the existing window, which just became the most recently used one,
      * up in windowUse[] to nextWindowUseIndex-1
      */
 
     /* first, find the index of the window - backwards to favor the more recently used windows */
-    int i, j;
+    صحيح i, j;
 
-    i=scsu->nextWindowUseIndex;
-    do {
-        if(--i<0) {
+    i=scsu->بل_کړکۍ_Use_شاخص;
+    افعل {
+        إذا(--i<0) {
             i=7;
         }
-    } while(scsu->windowUse[i]!=window);
+    } طالما(scsu->کړکۍ_Use[i]!=کړکۍ);
 
     /* now copy each windowUse[i+1] to [i] */
     j=i+1;
-    if(j==8) {
+    إذا(j==8) {
         j=0;
     }
-    while(j!=scsu->nextWindowUseIndex) {
-        scsu->windowUse[i]=scsu->windowUse[j];
+    طالما(j!=scsu->بل_کړکۍ_Use_شاخص) {
+        scsu->کړکۍ_Use[i]=scsu->کړکۍ_Use[j];
         i=j;
-        if(++j==8) { j=0; }
+        إذا(++j==8) { j=0; }
     }
 
     /* finally, set the window into the most recently used index */
-    scsu->windowUse[i]=window;
+    scsu->کړکۍ_Use[i]=کړکۍ;
 }
 
 /*
@@ -958,33 +958,33 @@ useDynamicWindow(SCSUData *scsu, int8_t window) {
  *
  * return offset code: -1 none  <=0xff code for SDn/UDn  else code for SDX/UDX, subtract 0x200 to get the true code
  */
-static int
-getDynamicOffset(uint32_t c, uint32_t *pOffset) {
-    int i;
+ساكن صحيح
+get_Dynamic_دننه_واټن(uint32_t c, uint32_t *p_دننه_واټن) {
+    صحيح i;
 
-    for(i=0; i<7; ++i) {
-        if (c - fixedOffsets[i] <= 0x7f) {
-            *pOffset=fixedOffsets[i];
-            return 0xf9+i;
+    لكل(i=0; i<7; ++i) {
+        إذا (c - fixedOffsets[i] <= 0x7f) {
+            *p_دننه_واټن=fixedOffsets[i];
+            أرجع 0xf9+i;
         }
     }
 
-    if(c<0x80) {
+    إذا(c<0x80) {
         /* No dynamic window for US-ASCII. */
-        return -1;
-    } else if(c<0x3400 ||
+        أرجع -1;
+    } وإلا إذا(c<0x3400 ||
               c - 0x10000 < 0x14000 - 0x10000 ||
               c - 0x1d000 <= 0x1ffff - 0x1d000
     ) {
         /* This character is in a code range for a "small", i.e., reasonably windowable, script. */
-        *pOffset=c&0x7fffff80;
-        return static_cast<int>(c >> 7);
-    } else if(0xe000<=c && c!=0xfeff && c<0xfff0) {
+        *p_دننه_واټن=c&0x7fffff80;
+        أرجع static_cast<صحيح>(c >> 7);
+    } وإلا إذا(0xe000<=c && c!=0xfeff && c<0xfff0) {
         /* For these characters we need to take the gapOffset into account. */
-        *pOffset=c&0x7fffff80;
-        return static_cast<int>((c - gapOffset) >> 7);
-    } else {
-        return -1;
+        *p_دننه_واټن=c&0x7fffff80;
+        أرجع static_cast<صحيح>((c - gap_دننه_واټن) >> 7);
+    } وإلا {
+        أرجع -1;
     }
 }
 U_CDECL_BEGIN
@@ -1005,441 +1005,441 @@ U_CDECL_BEGIN
  *  - Only replace the result after an SDX or SCU?
  */
 
-static void U_CALLCONV
-_SCSUFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
-                            UErrorCode *pErrorCode) {
+ساكن فراغ U_CALLCONV
+_SCSUFromUnicodeWithOffsets(UConverter_From_Unicode_دلیلونه *p_دلیلونه,
+                            UError_کوډ *p_Error_کوډ) {
     UConverter *cnv;
     SCSUData *scsu;
-    const char16_t *source, *sourceLimit;
-    uint8_t *target;
-    int32_t targetCapacity;
+    ثابت char16_t *سرچینه, *سرچینه_حد;
+    uint8_t *موخه;
+    int32_t موخه_ظرفیت;
     int32_t *offsets;
 
-    UBool isSingleByteMode;
-    uint8_t dynamicWindow;
-    uint32_t currentOffset;
+    UBool is_Single_Byte_ډېرپېښ;
+    uint8_t dynamic_کړکۍ;
+    uint32_t current_دننه_واټن;
 
     uint32_t c, delta;
 
-    int32_t sourceIndex, nextSourceIndex;
+    int32_t سرچینه_شاخص, بل_سرچینه_شاخص;
 
     int32_t length;
 
     /* variables for compression heuristics */
-    uint32_t offset;
+    uint32_t دننه_واټن;
     char16_t lead, trail;
-    int code;
-    int8_t window;
+    صحيح کوډ;
+    int8_t کړکۍ;
 
     /* set up the local pointers */
-    cnv=pArgs->converter;
+    cnv=p_دلیلونه->converter;
     scsu=(SCSUData *)cnv->extraInfo;
 
     /* set up the local pointers */
-    source=pArgs->source;
-    sourceLimit=pArgs->sourceLimit;
-    target=(uint8_t *)pArgs->target;
-    targetCapacity=(int32_t)(pArgs->targetLimit-pArgs->target);
-    offsets=pArgs->offsets;
+    سرچینه=p_دلیلونه->سرچینه;
+    سرچینه_حد=p_دلیلونه->سرچینه_حد;
+    موخه=(uint8_t *)p_دلیلونه->موخه;
+    موخه_ظرفیت=(int32_t)(p_دلیلونه->موخه_حد-p_دلیلونه->موخه);
+    offsets=p_دلیلونه->offsets;
 
     /* get the state machine state */
-    isSingleByteMode=scsu->fromUIsSingleByteMode;
-    dynamicWindow=scsu->fromUDynamicWindow;
-    currentOffset=scsu->fromUDynamicOffsets[dynamicWindow];
+    is_Single_Byte_ډېرپېښ=scsu->from_UIs_Single_Byte_ډېرپېښ;
+    dynamic_کړکۍ=scsu->from_UDynamic_کړکۍ;
+    current_دننه_واټن=scsu->fromUDynamicOffsets[dynamic_کړکۍ];
 
     c=cnv->fromUChar32;
 
     /* sourceIndex=-1 if the current character began in the previous buffer */
-    sourceIndex= c==0 ? 0 : -1;
-    nextSourceIndex=0;
+    سرچینه_شاخص= c==0 ? 0 : -1;
+    بل_سرچینه_شاخص=0;
 
     /* similar conversion "loop" as in toUnicode */
 loop:
-    if(isSingleByteMode) {
-        if(c!=0 && targetCapacity>0) {
-            goto getTrailSingle;
+    إذا(is_Single_Byte_ډېرپېښ) {
+        إذا(c!=0 && موخه_ظرفیت>0) {
+            اذهب getTrailSingle;
         }
 
         /* state machine for single-byte mode */
 /* singleByteMode: */
-        while(source<sourceLimit) {
-            if(targetCapacity<=0) {
+        طالما(سرچینه<سرچینه_حد) {
+            إذا(موخه_ظرفیت<=0) {
                 /* target is full */
-                *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                break;
+                *p_Error_کوډ=U_بفر_ډکېدنه_ERROR;
+                اكسر;
             }
-            c=*source++;
-            ++nextSourceIndex;
+            c=*سرچینه++;
+            ++بل_سرچینه_شاخص;
 
-            if((c-0x20)<=0x5f) {
+            إذا((c-0x20)<=0x5f) {
                 /* pass US-ASCII graphic character through */
-                *target++=(uint8_t)c;
-                if(offsets!=nullptr) {
-                    *offsets++=sourceIndex;
+                *موخه++=(uint8_t)c;
+                إذا(offsets!=تش_اشاره) {
+                    *offsets++=سرچینه_شاخص;
                 }
-                --targetCapacity;
-            } else if(c<0x20) {
-                if((1UL<<c)&0x2601 /* binary 0010 0110 0000 0001, check for b==0xd || b==0xa || b==9 || b==0 */) {
+                --موخه_ظرفیت;
+            } وإلا إذا(c<0x20) {
+                إذا((1UL<<c)&0x2601 /* binary 0010 0110 0000 0001, check for b==0xd || b==0xa || b==9 || b==0 */) {
                     /* CR/LF/TAB/NUL */
-                    *target++=(uint8_t)c;
-                    if(offsets!=nullptr) {
-                        *offsets++=sourceIndex;
+                    *موخه++=(uint8_t)c;
+                    إذا(offsets!=تش_اشاره) {
+                        *offsets++=سرچینه_شاخص;
                     }
-                    --targetCapacity;
-                } else {
+                    --موخه_ظرفیت;
+                } وإلا {
                     /* quote C0 control character */
                     c|=SQ0<<8;
                     length=2;
-                    goto outputBytes;
+                    اذهب output_بایټونه;
                 }
-            } else if((delta=c-currentOffset)<=0x7f) {
+            } وإلا إذا((delta=c-current_دننه_واټن)<=0x7f) {
                 /* use the current dynamic window */
-                *target++=(uint8_t)(delta|0x80);
-                if(offsets!=nullptr) {
-                    *offsets++=sourceIndex;
+                *موخه++=(uint8_t)(delta|0x80);
+                إذا(offsets!=تش_اشاره) {
+                    *offsets++=سرچینه_شاخص;
                 }
-                --targetCapacity;
-            } else if(U16_IS_SURROGATE(c)) {
-                if(U16_IS_SURROGATE_LEAD(c)) {
+                --موخه_ظرفیت;
+            } وإلا إذا(U16_IS_SURROGATE(c)) {
+                إذا(U16_IS_SURROGATE_LEAD(c)) {
 getTrailSingle:
                     lead=(char16_t)c;
-                    if(source<sourceLimit) {
+                    إذا(سرچینه<سرچینه_حد) {
                         /* test the following code unit */
-                        trail=*source;
-                        if(U16_IS_TRAIL(trail)) {
-                            ++source;
-                            ++nextSourceIndex;
+                        trail=*سرچینه;
+                        إذا(U16_IS_TRAIL(trail)) {
+                            ++سرچینه;
+                            ++بل_سرچینه_شاخص;
                             c=U16_GET_SUPPLEMENTARY(c, trail);
                             /* convert this surrogate code point */
                             /* exit this condition tree */
-                        } else {
+                        } وإلا {
                             /* this is an unmatched lead code unit (1st surrogate) */
                             /* callback(illegal) */
-                            *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                            goto endloop;
+                            *p_Error_کوډ=U_ILLEGAL_CHAR_وموندل;
+                            اذهب endloop;
                         }
-                    } else {
+                    } وإلا {
                         /* no more input */
-                        break;
+                        اكسر;
                     }
-                } else {
+                } وإلا {
                     /* this is an unmatched trail code unit (2nd surrogate) */
                     /* callback(illegal) */
-                    *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                    goto endloop;
+                    *p_Error_کوډ=U_ILLEGAL_CHAR_وموندل;
+                    اذهب endloop;
                 }
 
                 /* compress supplementary character U+10000..U+10ffff */
-                if((delta=c-currentOffset)<=0x7f) {
+                إذا((delta=c-current_دننه_واټن)<=0x7f) {
                     /* use the current dynamic window */
-                    *target++=(uint8_t)(delta|0x80);
-                    if(offsets!=nullptr) {
-                        *offsets++=sourceIndex;
+                    *موخه++=(uint8_t)(delta|0x80);
+                    إذا(offsets!=تش_اشاره) {
+                        *offsets++=سرچینه_شاخص;
                     }
-                    --targetCapacity;
-                } else if((window=getWindow(scsu->fromUDynamicOffsets, c))>=0) {
+                    --موخه_ظرفیت;
+                } وإلا إذا((کړکۍ=get_کړکۍ(scsu->fromUDynamicOffsets, c))>=0) {
                     /* there is a dynamic window that contains this character, change to it */
-                    dynamicWindow=window;
-                    currentOffset=scsu->fromUDynamicOffsets[dynamicWindow];
-                    useDynamicWindow(scsu, dynamicWindow);
-                    c=((uint32_t)(SC0+dynamicWindow)<<8)|(c-currentOffset)|0x80;
+                    dynamic_کړکۍ=کړکۍ;
+                    current_دننه_واټن=scsu->fromUDynamicOffsets[dynamic_کړکۍ];
+                    use_Dynamic_کړکۍ(scsu, dynamic_کړکۍ);
+                    c=((uint32_t)(SC0+dynamic_کړکۍ)<<8)|(c-current_دننه_واټن)|0x80;
                     length=2;
-                    goto outputBytes;
-                } else if((code=getDynamicOffset(c, &offset))>=0) {
+                    اذهب output_بایټونه;
+                } وإلا إذا((کوډ=get_Dynamic_دننه_واټن(c, &دننه_واټن))>=0) {
                     /* might check if there are more characters in this window to come */
                     /* define an extended window with this character */
-                    code-=0x200;
-                    dynamicWindow=getNextDynamicWindow(scsu);
-                    currentOffset=scsu->fromUDynamicOffsets[dynamicWindow]=offset;
-                    useDynamicWindow(scsu, dynamicWindow);
-                    c=((uint32_t)SDX<<24)|((uint32_t)dynamicWindow<<21)|((uint32_t)code<<8)|(c-currentOffset)|0x80;
+                    کوډ-=0x200;
+                    dynamic_کړکۍ=get_بل_Dynamic_کړکۍ(scsu);
+                    current_دننه_واټن=scsu->fromUDynamicOffsets[dynamic_کړکۍ]=دننه_واټن;
+                    use_Dynamic_کړکۍ(scsu, dynamic_کړکۍ);
+                    c=((uint32_t)SDX<<24)|((uint32_t)dynamic_کړکۍ<<21)|((uint32_t)کوډ<<8)|(c-current_دننه_واټن)|0x80;
                     length=4;
-                    goto outputBytes;
-                } else {
+                    اذهب output_بایټونه;
+                } وإلا {
                     /* change to Unicode mode and output this (lead, trail) pair */
-                    isSingleByteMode=false;
-                    *target++=(uint8_t)SCU;
-                    if(offsets!=nullptr) {
-                        *offsets++=sourceIndex;
+                    is_Single_Byte_ډېرپېښ=خطأ;
+                    *موخه++=(uint8_t)SCU;
+                    إذا(offsets!=تش_اشاره) {
+                        *offsets++=سرچینه_شاخص;
                     }
-                    --targetCapacity;
+                    --موخه_ظرفیت;
                     c=((uint32_t)lead<<16)|trail;
                     length=4;
-                    goto outputBytes;
+                    اذهب output_بایټونه;
                 }
-            } else if(c<0xa0) {
+            } وإلا إذا(c<0xa0) {
                 /* quote C1 control character */
                 c=(c&0x7f)|(SQ0+1)<<8; /* SQ0+1==SQ1 */
                 length=2;
-                goto outputBytes;
-            } else if(c==0xfeff || c>=0xfff0) {
+                اذهب output_بایټونه;
+            } وإلا إذا(c==0xfeff || c>=0xfff0) {
                 /* quote signature character=byte order mark and specials */
                 c|=SQU<<16;
                 length=3;
-                goto outputBytes;
-            } else {
+                اذهب output_بایټونه;
+            } وإلا {
                 /* compress all other BMP characters */
-                if((window=getWindow(scsu->fromUDynamicOffsets, c))>=0) {
+                إذا((کړکۍ=get_کړکۍ(scsu->fromUDynamicOffsets, c))>=0) {
                     /* there is a window defined that contains this character - switch to it or quote from it? */
-                    if(source>=sourceLimit || isInOffsetWindowOrDirect(scsu->fromUDynamicOffsets[window], *source)) {
+                    إذا(سرچینه>=سرچینه_حد || is_دننه_دننه_واټن_کړکۍ_Or_مستقیم(scsu->fromUDynamicOffsets[کړکۍ], *سرچینه)) {
                         /* change to dynamic window */
-                        dynamicWindow=window;
-                        currentOffset=scsu->fromUDynamicOffsets[dynamicWindow];
-                        useDynamicWindow(scsu, dynamicWindow);
-                        c=((uint32_t)(SC0+dynamicWindow)<<8)|(c-currentOffset)|0x80;
+                        dynamic_کړکۍ=کړکۍ;
+                        current_دننه_واټن=scsu->fromUDynamicOffsets[dynamic_کړکۍ];
+                        use_Dynamic_کړکۍ(scsu, dynamic_کړکۍ);
+                        c=((uint32_t)(SC0+dynamic_کړکۍ)<<8)|(c-current_دننه_واټن)|0x80;
                         length=2;
-                        goto outputBytes;
-                    } else {
+                        اذهب output_بایټونه;
+                    } وإلا {
                         /* quote from dynamic window */
-                        c=((uint32_t)(SQ0+window)<<8)|(c-scsu->fromUDynamicOffsets[window])|0x80;
+                        c=((uint32_t)(SQ0+کړکۍ)<<8)|(c-scsu->fromUDynamicOffsets[کړکۍ])|0x80;
                         length=2;
-                        goto outputBytes;
+                        اذهب output_بایټونه;
                     }
-                } else if((window=getWindow(staticOffsets, c))>=0) {
+                } وإلا إذا((کړکۍ=get_کړکۍ(staticOffsets, c))>=0) {
                     /* quote from static window */
-                    c=((uint32_t)(SQ0+window)<<8)|(c-staticOffsets[window]);
+                    c=((uint32_t)(SQ0+کړکۍ)<<8)|(c-staticOffsets[کړکۍ]);
                     length=2;
-                    goto outputBytes;
-                } else if((code=getDynamicOffset(c, &offset))>=0) {
+                    اذهب output_بایټونه;
+                } وإلا إذا((کوډ=get_Dynamic_دننه_واټن(c, &دننه_واټن))>=0) {
                     /* define a dynamic window with this character */
-                    dynamicWindow=getNextDynamicWindow(scsu);
-                    currentOffset=scsu->fromUDynamicOffsets[dynamicWindow]=offset;
-                    useDynamicWindow(scsu, dynamicWindow);
-                    c=((uint32_t)(SD0+dynamicWindow)<<16)|((uint32_t)code<<8)|(c-currentOffset)|0x80;
+                    dynamic_کړکۍ=get_بل_Dynamic_کړکۍ(scsu);
+                    current_دننه_واټن=scsu->fromUDynamicOffsets[dynamic_کړکۍ]=دننه_واټن;
+                    use_Dynamic_کړکۍ(scsu, dynamic_کړکۍ);
+                    c=((uint32_t)(SD0+dynamic_کړکۍ)<<16)|((uint32_t)کوډ<<8)|(c-current_دننه_واټن)|0x80;
                     length=3;
-                    goto outputBytes;
-                } else if ((c - 0x3400) < (0xd800 - 0x3400) &&
-                           (source >= sourceLimit || (uint32_t)(*source - 0x3400) < (0xd800 - 0x3400))
+                    اذهب output_بایټونه;
+                } وإلا إذا ((c - 0x3400) < (0xd800 - 0x3400) &&
+                           (سرچینه >= سرچینه_حد || (uint32_t)(*سرچینه - 0x3400) < (0xd800 - 0x3400))
                 ) {
                     /*
                      * this character is not compressible (a BMP ideograph or similar);
                      * switch to Unicode mode if this is the last character in the block
                      * or there is at least one more ideograph following immediately
                      */
-                    isSingleByteMode=false;
+                    is_Single_Byte_ډېرپېښ=خطأ;
                     c|=SCU<<16;
                     length=3;
-                    goto outputBytes;
-                } else {
+                    اذهب output_بایټونه;
+                } وإلا {
                     /* quote Unicode */
                     c|=SQU<<16;
                     length=3;
-                    goto outputBytes;
+                    اذهب output_بایټونه;
                 }
             }
 
             /* normal end of conversion: prepare for a new character */
             c=0;
-            sourceIndex=nextSourceIndex;
+            سرچینه_شاخص=بل_سرچینه_شاخص;
         }
-    } else {
-        if(c!=0 && targetCapacity>0) {
-            goto getTrailUnicode;
+    } وإلا {
+        إذا(c!=0 && موخه_ظرفیت>0) {
+            اذهب getTrailUnicode;
         }
 
         /* state machine for Unicode mode */
 /* unicodeByteMode: */
-        while(source<sourceLimit) {
-            if(targetCapacity<=0) {
+        طالما(سرچینه<سرچینه_حد) {
+            إذا(موخه_ظرفیت<=0) {
                 /* target is full */
-                *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                break;
+                *p_Error_کوډ=U_بفر_ډکېدنه_ERROR;
+                اكسر;
             }
-            c=*source++;
-            ++nextSourceIndex;
+            c=*سرچینه++;
+            ++بل_سرچینه_شاخص;
 
-            if ((c - 0x3400) < (0xd800 - 0x3400)) {
+            إذا ((c - 0x3400) < (0xd800 - 0x3400)) {
                 /* not compressible, write character directly */
-                if(targetCapacity>=2) {
-                    *target++=(uint8_t)(c>>8);
-                    *target++=(uint8_t)c;
-                    if(offsets!=nullptr) {
-                        *offsets++=sourceIndex;
-                        *offsets++=sourceIndex;
+                إذا(موخه_ظرفیت>=2) {
+                    *موخه++=(uint8_t)(c>>8);
+                    *موخه++=(uint8_t)c;
+                    إذا(offsets!=تش_اشاره) {
+                        *offsets++=سرچینه_شاخص;
+                        *offsets++=سرچینه_شاخص;
                     }
-                    targetCapacity-=2;
-                } else {
+                    موخه_ظرفیت-=2;
+                } وإلا {
                     length=2;
-                    goto outputBytes;
+                    اذهب output_بایټونه;
                 }
-            } else if (c - 0x3400 >= 0xf300 - 0x3400 /* c<0x3400 || c>=0xf300 */) {
+            } وإلا إذا (c - 0x3400 >= 0xf300 - 0x3400 /* c<0x3400 || c>=0xf300 */) {
                 /* compress BMP character if the following one is not an uncompressible ideograph */
-                if(!(source<sourceLimit && (uint32_t)(*source-0x3400)<(0xd800-0x3400))) {
-                    if (c - 0x30 < 10 || c - 0x61 < 26 || c - 0x41 < 26) {
+                إذا(!(سرچینه<سرچینه_حد && (uint32_t)(*سرچینه-0x3400)<(0xd800-0x3400))) {
+                    إذا (c - 0x30 < 10 || c - 0x61 < 26 || c - 0x41 < 26) {
                         /* ASCII digit or letter */
-                        isSingleByteMode=true;
-                        c|=((uint32_t)(UC0+dynamicWindow)<<8)|c;
+                        is_Single_Byte_ډېرپېښ=ریښتیا;
+                        c|=((uint32_t)(UC0+dynamic_کړکۍ)<<8)|c;
                         length=2;
-                        goto outputBytes;
-                    } else if((window=getWindow(scsu->fromUDynamicOffsets, c))>=0) {
+                        اذهب output_بایټونه;
+                    } وإلا إذا((کړکۍ=get_کړکۍ(scsu->fromUDynamicOffsets, c))>=0) {
                         /* there is a dynamic window that contains this character, change to it */
-                        isSingleByteMode=true;
-                        dynamicWindow=window;
-                        currentOffset=scsu->fromUDynamicOffsets[dynamicWindow];
-                        useDynamicWindow(scsu, dynamicWindow);
-                        c=((uint32_t)(UC0+dynamicWindow)<<8)|(c-currentOffset)|0x80;
+                        is_Single_Byte_ډېرپېښ=ریښتیا;
+                        dynamic_کړکۍ=کړکۍ;
+                        current_دننه_واټن=scsu->fromUDynamicOffsets[dynamic_کړکۍ];
+                        use_Dynamic_کړکۍ(scsu, dynamic_کړکۍ);
+                        c=((uint32_t)(UC0+dynamic_کړکۍ)<<8)|(c-current_دننه_واټن)|0x80;
                         length=2;
-                        goto outputBytes;
-                    } else if((code=getDynamicOffset(c, &offset))>=0) {
+                        اذهب output_بایټونه;
+                    } وإلا إذا((کوډ=get_Dynamic_دننه_واټن(c, &دننه_واټن))>=0) {
                         /* define a dynamic window with this character */
-                        isSingleByteMode=true;
-                        dynamicWindow=getNextDynamicWindow(scsu);
-                        currentOffset=scsu->fromUDynamicOffsets[dynamicWindow]=offset;
-                        useDynamicWindow(scsu, dynamicWindow);
-                        c=((uint32_t)(UD0+dynamicWindow)<<16)|((uint32_t)code<<8)|(c-currentOffset)|0x80;
+                        is_Single_Byte_ډېرپېښ=ریښتیا;
+                        dynamic_کړکۍ=get_بل_Dynamic_کړکۍ(scsu);
+                        current_دننه_واټن=scsu->fromUDynamicOffsets[dynamic_کړکۍ]=دننه_واټن;
+                        use_Dynamic_کړکۍ(scsu, dynamic_کړکۍ);
+                        c=((uint32_t)(UD0+dynamic_کړکۍ)<<16)|((uint32_t)کوډ<<8)|(c-current_دننه_واټن)|0x80;
                         length=3;
-                        goto outputBytes;
+                        اذهب output_بایټونه;
                     }
                 }
 
                 /* don't know how to compress this character, just write it directly */
                 length=2;
-                goto outputBytes;
-            } else if(c<0xe000) {
+                اذهب output_بایټونه;
+            } وإلا إذا(c<0xe000) {
                 /* c is a surrogate */
-                if(U16_IS_SURROGATE_LEAD(c)) {
+                إذا(U16_IS_SURROGATE_LEAD(c)) {
 getTrailUnicode:
                     lead=(char16_t)c;
-                    if(source<sourceLimit) {
+                    إذا(سرچینه<سرچینه_حد) {
                         /* test the following code unit */
-                        trail=*source;
-                        if(U16_IS_TRAIL(trail)) {
-                            ++source;
-                            ++nextSourceIndex;
+                        trail=*سرچینه;
+                        إذا(U16_IS_TRAIL(trail)) {
+                            ++سرچینه;
+                            ++بل_سرچینه_شاخص;
                             c=U16_GET_SUPPLEMENTARY(c, trail);
                             /* convert this surrogate code point */
                             /* exit this condition tree */
-                        } else {
+                        } وإلا {
                             /* this is an unmatched lead code unit (1st surrogate) */
                             /* callback(illegal) */
-                            *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                            goto endloop;
+                            *p_Error_کوډ=U_ILLEGAL_CHAR_وموندل;
+                            اذهب endloop;
                         }
-                    } else {
+                    } وإلا {
                         /* no more input */
-                        break;
+                        اكسر;
                     }
-                } else {
+                } وإلا {
                     /* this is an unmatched trail code unit (2nd surrogate) */
                     /* callback(illegal) */
-                    *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                    goto endloop;
+                    *p_Error_کوډ=U_ILLEGAL_CHAR_وموندل;
+                    اذهب endloop;
                 }
 
                 /* compress supplementary character */
-                if( (window=getWindow(scsu->fromUDynamicOffsets, c))>=0 &&
-                    !(source<sourceLimit && (uint32_t)(*source-0x3400)<(0xd800-0x3400))
+                إذا( (کړکۍ=get_کړکۍ(scsu->fromUDynamicOffsets, c))>=0 &&
+                    !(سرچینه<سرچینه_حد && (uint32_t)(*سرچینه-0x3400)<(0xd800-0x3400))
                 ) {
                     /*
                      * there is a dynamic window that contains this character and
                      * the following character is not uncompressible,
                      * change to the window
                      */
-                    isSingleByteMode=true;
-                    dynamicWindow=window;
-                    currentOffset=scsu->fromUDynamicOffsets[dynamicWindow];
-                    useDynamicWindow(scsu, dynamicWindow);
-                    c=((uint32_t)(UC0+dynamicWindow)<<8)|(c-currentOffset)|0x80;
+                    is_Single_Byte_ډېرپېښ=ریښتیا;
+                    dynamic_کړکۍ=کړکۍ;
+                    current_دننه_واټن=scsu->fromUDynamicOffsets[dynamic_کړکۍ];
+                    use_Dynamic_کړکۍ(scsu, dynamic_کړکۍ);
+                    c=((uint32_t)(UC0+dynamic_کړکۍ)<<8)|(c-current_دننه_واټن)|0x80;
                     length=2;
-                    goto outputBytes;
-                } else if(source<sourceLimit && lead==*source && /* too lazy to check trail in same window as source[1] */
-                          (code=getDynamicOffset(c, &offset))>=0
+                    اذهب output_بایټونه;
+                } وإلا إذا(سرچینه<سرچینه_حد && lead==*سرچینه && /* too lazy to check trail in same window as source[1] */
+                          (کوډ=get_Dynamic_دننه_واټن(c, &دننه_واټن))>=0
                 ) {
                     /* two supplementary characters in (probably) the same window - define an extended one */
-                    isSingleByteMode=true;
-                    code-=0x200;
-                    dynamicWindow=getNextDynamicWindow(scsu);
-                    currentOffset=scsu->fromUDynamicOffsets[dynamicWindow]=offset;
-                    useDynamicWindow(scsu, dynamicWindow);
-                    c=((uint32_t)UDX<<24)|((uint32_t)dynamicWindow<<21)|((uint32_t)code<<8)|(c-currentOffset)|0x80;
+                    is_Single_Byte_ډېرپېښ=ریښتیا;
+                    کوډ-=0x200;
+                    dynamic_کړکۍ=get_بل_Dynamic_کړکۍ(scsu);
+                    current_دننه_واټن=scsu->fromUDynamicOffsets[dynamic_کړکۍ]=دننه_واټن;
+                    use_Dynamic_کړکۍ(scsu, dynamic_کړکۍ);
+                    c=((uint32_t)UDX<<24)|((uint32_t)dynamic_کړکۍ<<21)|((uint32_t)کوډ<<8)|(c-current_دننه_واټن)|0x80;
                     length=4;
-                    goto outputBytes;
-                } else {
+                    اذهب output_بایټونه;
+                } وإلا {
                     /* don't know how to compress this character, just write it directly */
                     c=((uint32_t)lead<<16)|trail;
                     length=4;
-                    goto outputBytes;
+                    اذهب output_بایټونه;
                 }
-            } else /* 0xe000<=c<0xf300 */ {
+            } وإلا /* 0xe000<=c<0xf300 */ {
                 /* quote to avoid SCSU tags */
                 c|=UQU<<16;
                 length=3;
-                goto outputBytes;
+                اذهب output_بایټونه;
             }
 
             /* normal end of conversion: prepare for a new character */
             c=0;
-            sourceIndex=nextSourceIndex;
+            سرچینه_شاخص=بل_سرچینه_شاخص;
         }
     }
 endloop:
 
     /* set the converter state back into UConverter */
-    scsu->fromUIsSingleByteMode=isSingleByteMode;
-    scsu->fromUDynamicWindow=dynamicWindow;
+    scsu->from_UIs_Single_Byte_ډېرپېښ=is_Single_Byte_ډېرپېښ;
+    scsu->from_UDynamic_کړکۍ=dynamic_کړکۍ;
 
     cnv->fromUChar32=c;
 
     /* write back the updated pointers */
-    pArgs->source=source;
-    pArgs->target=(char *)target;
-    pArgs->offsets=offsets;
-    return;
+    p_دلیلونه->سرچینه=سرچینه;
+    p_دلیلونه->موخه=(حرف *)موخه;
+    p_دلیلونه->offsets=offsets;
+    أرجع;
 
-outputBytes:
+output_بایټونه:
     /* write the output character bytes from c and length [code copied from ucnvmbcs.c] */
     /* from the first if in the loop we know that targetCapacity>0 */
-    if(length<=targetCapacity) {
-        if(offsets==nullptr) {
-            switch(length) {
+    إذا(length<=موخه_ظرفیت) {
+        إذا(offsets==تش_اشاره) {
+            بدل(length) {
                 /* each branch falls through to the next one */
-            case 4:
-                *target++=(uint8_t)(c>>24);
+            حالة 4:
+                *موخه++=(uint8_t)(c>>24);
                 U_FALLTHROUGH;
-            case 3:
-                *target++=(uint8_t)(c>>16);
+            حالة 3:
+                *موخه++=(uint8_t)(c>>16);
                 U_FALLTHROUGH;
-            case 2:
-                *target++=(uint8_t)(c>>8);
+            حالة 2:
+                *موخه++=(uint8_t)(c>>8);
                 U_FALLTHROUGH;
-            case 1:
-                *target++=(uint8_t)c;
+            حالة 1:
+                *موخه++=(uint8_t)c;
                 U_FALLTHROUGH;
-            default:
+            افتراضي:
                 /* will never occur */
-                break;
+                اكسر;
             }
-        } else {
-            switch(length) {
+        } وإلا {
+            بدل(length) {
                 /* each branch falls through to the next one */
-            case 4:
-                *target++=(uint8_t)(c>>24);
-                *offsets++=sourceIndex;
+            حالة 4:
+                *موخه++=(uint8_t)(c>>24);
+                *offsets++=سرچینه_شاخص;
                 U_FALLTHROUGH;
-            case 3:
-                *target++=(uint8_t)(c>>16);
-                *offsets++=sourceIndex;
+            حالة 3:
+                *موخه++=(uint8_t)(c>>16);
+                *offsets++=سرچینه_شاخص;
                 U_FALLTHROUGH;
-            case 2:
-                *target++=(uint8_t)(c>>8);
-                *offsets++=sourceIndex;
+            حالة 2:
+                *موخه++=(uint8_t)(c>>8);
+                *offsets++=سرچینه_شاخص;
                 U_FALLTHROUGH;
-            case 1:
-                *target++=(uint8_t)c;
-                *offsets++=sourceIndex;
+            حالة 1:
+                *موخه++=(uint8_t)c;
+                *offsets++=سرچینه_شاخص;
                 U_FALLTHROUGH;
-            default:
+            افتراضي:
                 /* will never occur */
-                break;
+                اكسر;
             }
         }
-        targetCapacity-=length;
+        موخه_ظرفیت-=length;
 
         /* normal end of conversion: prepare for a new character */
         c=0;
-        sourceIndex=nextSourceIndex;
-        goto loop;
-    } else {
+        سرچینه_شاخص=بل_سرچینه_شاخص;
+        اذهب loop;
+    } وإلا {
         uint8_t *p;
 
         /*
@@ -1450,59 +1450,59 @@ outputBytes:
          */
         /* we know that 0<=targetCapacity<length<=4 */
         /* targetCapacity==0 when SCU+supplementary where SCU used up targetCapacity==1 */
-        length-=targetCapacity;
-        p=(uint8_t *)cnv->charErrorBuffer;
-        switch(length) {
+        length-=موخه_ظرفیت;
+        p=(uint8_t *)cnv->char_Error_بفر;
+        بدل(length) {
             /* each branch falls through to the next one */
-        case 4:
+        حالة 4:
             *p++=(uint8_t)(c>>24);
             U_FALLTHROUGH;
-        case 3:
+        حالة 3:
             *p++=(uint8_t)(c>>16);
             U_FALLTHROUGH;
-        case 2:
+        حالة 2:
             *p++=(uint8_t)(c>>8);
             U_FALLTHROUGH;
-        case 1:
+        حالة 1:
             *p=(uint8_t)c;
             U_FALLTHROUGH;
-        default:
+        افتراضي:
             /* will never occur */
-            break;
+            اكسر;
         }
-        cnv->charErrorBufferLength=(int8_t)length;
+        cnv->char_Error_بفر_اوږدتیا=(int8_t)length;
 
         /* now output what fits into the regular target */
         c>>=8*length; /* length was reduced by targetCapacity */
-        switch(targetCapacity) {
+        بدل(موخه_ظرفیت) {
             /* each branch falls through to the next one */
-        case 3:
-            *target++=(uint8_t)(c>>16);
-            if(offsets!=nullptr) {
-                *offsets++=sourceIndex;
+        حالة 3:
+            *موخه++=(uint8_t)(c>>16);
+            إذا(offsets!=تش_اشاره) {
+                *offsets++=سرچینه_شاخص;
             }
             U_FALLTHROUGH;
-        case 2:
-            *target++=(uint8_t)(c>>8);
-            if(offsets!=nullptr) {
-                *offsets++=sourceIndex;
+        حالة 2:
+            *موخه++=(uint8_t)(c>>8);
+            إذا(offsets!=تش_اشاره) {
+                *offsets++=سرچینه_شاخص;
             }
             U_FALLTHROUGH;
-        case 1:
-            *target++=(uint8_t)c;
-            if(offsets!=nullptr) {
-                *offsets++=sourceIndex;
+        حالة 1:
+            *موخه++=(uint8_t)c;
+            إذا(offsets!=تش_اشاره) {
+                *offsets++=سرچینه_شاخص;
             }
             U_FALLTHROUGH;
-        default:
-            break;
+        افتراضي:
+            اكسر;
         }
 
         /* target overflow */
-        targetCapacity=0;
-        *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+        موخه_ظرفیت=0;
+        *p_Error_کوډ=U_بفر_ډکېدنه_ERROR;
         c=0;
-        goto endloop;
+        اذهب endloop;
     }
 }
 
@@ -1513,334 +1513,334 @@ outputBytes:
  * re-copy the original function and remove the variables
  * offsets, sourceIndex, and nextSourceIndex.
  */
-static void U_CALLCONV
-_SCSUFromUnicode(UConverterFromUnicodeArgs *pArgs,
-                 UErrorCode *pErrorCode) {
+ساكن فراغ U_CALLCONV
+_SCSUFromUnicode(UConverter_From_Unicode_دلیلونه *p_دلیلونه,
+                 UError_کوډ *p_Error_کوډ) {
     UConverter *cnv;
     SCSUData *scsu;
-    const char16_t *source, *sourceLimit;
-    uint8_t *target;
-    int32_t targetCapacity;
+    ثابت char16_t *سرچینه, *سرچینه_حد;
+    uint8_t *موخه;
+    int32_t موخه_ظرفیت;
 
-    UBool isSingleByteMode;
-    uint8_t dynamicWindow;
-    uint32_t currentOffset;
+    UBool is_Single_Byte_ډېرپېښ;
+    uint8_t dynamic_کړکۍ;
+    uint32_t current_دننه_واټن;
 
     uint32_t c, delta;
 
     int32_t length;
 
     /* variables for compression heuristics */
-    uint32_t offset;
+    uint32_t دننه_واټن;
     char16_t lead, trail;
-    int code;
-    int8_t window;
+    صحيح کوډ;
+    int8_t کړکۍ;
 
     /* set up the local pointers */
-    cnv=pArgs->converter;
+    cnv=p_دلیلونه->converter;
     scsu=(SCSUData *)cnv->extraInfo;
 
     /* set up the local pointers */
-    source=pArgs->source;
-    sourceLimit=pArgs->sourceLimit;
-    target=(uint8_t *)pArgs->target;
-    targetCapacity=(int32_t)(pArgs->targetLimit-pArgs->target);
+    سرچینه=p_دلیلونه->سرچینه;
+    سرچینه_حد=p_دلیلونه->سرچینه_حد;
+    موخه=(uint8_t *)p_دلیلونه->موخه;
+    موخه_ظرفیت=(int32_t)(p_دلیلونه->موخه_حد-p_دلیلونه->موخه);
 
     /* get the state machine state */
-    isSingleByteMode=scsu->fromUIsSingleByteMode;
-    dynamicWindow=scsu->fromUDynamicWindow;
-    currentOffset=scsu->fromUDynamicOffsets[dynamicWindow];
+    is_Single_Byte_ډېرپېښ=scsu->from_UIs_Single_Byte_ډېرپېښ;
+    dynamic_کړکۍ=scsu->from_UDynamic_کړکۍ;
+    current_دننه_واټن=scsu->fromUDynamicOffsets[dynamic_کړکۍ];
 
     c=cnv->fromUChar32;
 
     /* similar conversion "loop" as in toUnicode */
 loop:
-    if(isSingleByteMode) {
-        if(c!=0 && targetCapacity>0) {
-            goto getTrailSingle;
+    إذا(is_Single_Byte_ډېرپېښ) {
+        إذا(c!=0 && موخه_ظرفیت>0) {
+            اذهب getTrailSingle;
         }
 
         /* state machine for single-byte mode */
 /* singleByteMode: */
-        while(source<sourceLimit) {
-            if(targetCapacity<=0) {
+        طالما(سرچینه<سرچینه_حد) {
+            إذا(موخه_ظرفیت<=0) {
                 /* target is full */
-                *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                break;
+                *p_Error_کوډ=U_بفر_ډکېدنه_ERROR;
+                اكسر;
             }
-            c=*source++;
+            c=*سرچینه++;
 
-            if((c-0x20)<=0x5f) {
+            إذا((c-0x20)<=0x5f) {
                 /* pass US-ASCII graphic character through */
-                *target++=(uint8_t)c;
-                --targetCapacity;
-            } else if(c<0x20) {
-                if((1UL<<c)&0x2601 /* binary 0010 0110 0000 0001, check for b==0xd || b==0xa || b==9 || b==0 */) {
+                *موخه++=(uint8_t)c;
+                --موخه_ظرفیت;
+            } وإلا إذا(c<0x20) {
+                إذا((1UL<<c)&0x2601 /* binary 0010 0110 0000 0001, check for b==0xd || b==0xa || b==9 || b==0 */) {
                     /* CR/LF/TAB/NUL */
-                    *target++=(uint8_t)c;
-                    --targetCapacity;
-                } else {
+                    *موخه++=(uint8_t)c;
+                    --موخه_ظرفیت;
+                } وإلا {
                     /* quote C0 control character */
                     c|=SQ0<<8;
                     length=2;
-                    goto outputBytes;
+                    اذهب output_بایټونه;
                 }
-            } else if((delta=c-currentOffset)<=0x7f) {
+            } وإلا إذا((delta=c-current_دننه_واټن)<=0x7f) {
                 /* use the current dynamic window */
-                *target++=(uint8_t)(delta|0x80);
-                --targetCapacity;
-            } else if(U16_IS_SURROGATE(c)) {
-                if(U16_IS_SURROGATE_LEAD(c)) {
+                *موخه++=(uint8_t)(delta|0x80);
+                --موخه_ظرفیت;
+            } وإلا إذا(U16_IS_SURROGATE(c)) {
+                إذا(U16_IS_SURROGATE_LEAD(c)) {
 getTrailSingle:
                     lead=(char16_t)c;
-                    if(source<sourceLimit) {
+                    إذا(سرچینه<سرچینه_حد) {
                         /* test the following code unit */
-                        trail=*source;
-                        if(U16_IS_TRAIL(trail)) {
-                            ++source;
+                        trail=*سرچینه;
+                        إذا(U16_IS_TRAIL(trail)) {
+                            ++سرچینه;
                             c=U16_GET_SUPPLEMENTARY(c, trail);
                             /* convert this surrogate code point */
                             /* exit this condition tree */
-                        } else {
+                        } وإلا {
                             /* this is an unmatched lead code unit (1st surrogate) */
                             /* callback(illegal) */
-                            *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                            goto endloop;
+                            *p_Error_کوډ=U_ILLEGAL_CHAR_وموندل;
+                            اذهب endloop;
                         }
-                    } else {
+                    } وإلا {
                         /* no more input */
-                        break;
+                        اكسر;
                     }
-                } else {
+                } وإلا {
                     /* this is an unmatched trail code unit (2nd surrogate) */
                     /* callback(illegal) */
-                    *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                    goto endloop;
+                    *p_Error_کوډ=U_ILLEGAL_CHAR_وموندل;
+                    اذهب endloop;
                 }
 
                 /* compress supplementary character U+10000..U+10ffff */
-                if((delta=c-currentOffset)<=0x7f) {
+                إذا((delta=c-current_دننه_واټن)<=0x7f) {
                     /* use the current dynamic window */
-                    *target++=(uint8_t)(delta|0x80);
-                    --targetCapacity;
-                } else if((window=getWindow(scsu->fromUDynamicOffsets, c))>=0) {
+                    *موخه++=(uint8_t)(delta|0x80);
+                    --موخه_ظرفیت;
+                } وإلا إذا((کړکۍ=get_کړکۍ(scsu->fromUDynamicOffsets, c))>=0) {
                     /* there is a dynamic window that contains this character, change to it */
-                    dynamicWindow=window;
-                    currentOffset=scsu->fromUDynamicOffsets[dynamicWindow];
-                    useDynamicWindow(scsu, dynamicWindow);
-                    c=((uint32_t)(SC0+dynamicWindow)<<8)|(c-currentOffset)|0x80;
+                    dynamic_کړکۍ=کړکۍ;
+                    current_دننه_واټن=scsu->fromUDynamicOffsets[dynamic_کړکۍ];
+                    use_Dynamic_کړکۍ(scsu, dynamic_کړکۍ);
+                    c=((uint32_t)(SC0+dynamic_کړکۍ)<<8)|(c-current_دننه_واټن)|0x80;
                     length=2;
-                    goto outputBytes;
-                } else if((code=getDynamicOffset(c, &offset))>=0) {
+                    اذهب output_بایټونه;
+                } وإلا إذا((کوډ=get_Dynamic_دننه_واټن(c, &دننه_واټن))>=0) {
                     /* might check if there are more characters in this window to come */
                     /* define an extended window with this character */
-                    code-=0x200;
-                    dynamicWindow=getNextDynamicWindow(scsu);
-                    currentOffset=scsu->fromUDynamicOffsets[dynamicWindow]=offset;
-                    useDynamicWindow(scsu, dynamicWindow);
-                    c=((uint32_t)SDX<<24)|((uint32_t)dynamicWindow<<21)|((uint32_t)code<<8)|(c-currentOffset)|0x80;
+                    کوډ-=0x200;
+                    dynamic_کړکۍ=get_بل_Dynamic_کړکۍ(scsu);
+                    current_دننه_واټن=scsu->fromUDynamicOffsets[dynamic_کړکۍ]=دننه_واټن;
+                    use_Dynamic_کړکۍ(scsu, dynamic_کړکۍ);
+                    c=((uint32_t)SDX<<24)|((uint32_t)dynamic_کړکۍ<<21)|((uint32_t)کوډ<<8)|(c-current_دننه_واټن)|0x80;
                     length=4;
-                    goto outputBytes;
-                } else {
+                    اذهب output_بایټونه;
+                } وإلا {
                     /* change to Unicode mode and output this (lead, trail) pair */
-                    isSingleByteMode=false;
-                    *target++=(uint8_t)SCU;
-                    --targetCapacity;
+                    is_Single_Byte_ډېرپېښ=خطأ;
+                    *موخه++=(uint8_t)SCU;
+                    --موخه_ظرفیت;
                     c=((uint32_t)lead<<16)|trail;
                     length=4;
-                    goto outputBytes;
+                    اذهب output_بایټونه;
                 }
-            } else if(c<0xa0) {
+            } وإلا إذا(c<0xa0) {
                 /* quote C1 control character */
                 c=(c&0x7f)|(SQ0+1)<<8; /* SQ0+1==SQ1 */
                 length=2;
-                goto outputBytes;
-            } else if(c==0xfeff || c>=0xfff0) {
+                اذهب output_بایټونه;
+            } وإلا إذا(c==0xfeff || c>=0xfff0) {
                 /* quote signature character=byte order mark and specials */
                 c|=SQU<<16;
                 length=3;
-                goto outputBytes;
-            } else {
+                اذهب output_بایټونه;
+            } وإلا {
                 /* compress all other BMP characters */
-                if((window=getWindow(scsu->fromUDynamicOffsets, c))>=0) {
+                إذا((کړکۍ=get_کړکۍ(scsu->fromUDynamicOffsets, c))>=0) {
                     /* there is a window defined that contains this character - switch to it or quote from it? */
-                    if(source>=sourceLimit || isInOffsetWindowOrDirect(scsu->fromUDynamicOffsets[window], *source)) {
+                    إذا(سرچینه>=سرچینه_حد || is_دننه_دننه_واټن_کړکۍ_Or_مستقیم(scsu->fromUDynamicOffsets[کړکۍ], *سرچینه)) {
                         /* change to dynamic window */
-                        dynamicWindow=window;
-                        currentOffset=scsu->fromUDynamicOffsets[dynamicWindow];
-                        useDynamicWindow(scsu, dynamicWindow);
-                        c=((uint32_t)(SC0+dynamicWindow)<<8)|(c-currentOffset)|0x80;
+                        dynamic_کړکۍ=کړکۍ;
+                        current_دننه_واټن=scsu->fromUDynamicOffsets[dynamic_کړکۍ];
+                        use_Dynamic_کړکۍ(scsu, dynamic_کړکۍ);
+                        c=((uint32_t)(SC0+dynamic_کړکۍ)<<8)|(c-current_دننه_واټن)|0x80;
                         length=2;
-                        goto outputBytes;
-                    } else {
+                        اذهب output_بایټونه;
+                    } وإلا {
                         /* quote from dynamic window */
-                        c=((uint32_t)(SQ0+window)<<8)|(c-scsu->fromUDynamicOffsets[window])|0x80;
+                        c=((uint32_t)(SQ0+کړکۍ)<<8)|(c-scsu->fromUDynamicOffsets[کړکۍ])|0x80;
                         length=2;
-                        goto outputBytes;
+                        اذهب output_بایټونه;
                     }
-                } else if((window=getWindow(staticOffsets, c))>=0) {
+                } وإلا إذا((کړکۍ=get_کړکۍ(staticOffsets, c))>=0) {
                     /* quote from static window */
-                    c=((uint32_t)(SQ0+window)<<8)|(c-staticOffsets[window]);
+                    c=((uint32_t)(SQ0+کړکۍ)<<8)|(c-staticOffsets[کړکۍ]);
                     length=2;
-                    goto outputBytes;
-                } else if((code=getDynamicOffset(c, &offset))>=0) {
+                    اذهب output_بایټونه;
+                } وإلا إذا((کوډ=get_Dynamic_دننه_واټن(c, &دننه_واټن))>=0) {
                     /* define a dynamic window with this character */
-                    dynamicWindow=getNextDynamicWindow(scsu);
-                    currentOffset=scsu->fromUDynamicOffsets[dynamicWindow]=offset;
-                    useDynamicWindow(scsu, dynamicWindow);
-                    c=((uint32_t)(SD0+dynamicWindow)<<16)|((uint32_t)code<<8)|(c-currentOffset)|0x80;
+                    dynamic_کړکۍ=get_بل_Dynamic_کړکۍ(scsu);
+                    current_دننه_واټن=scsu->fromUDynamicOffsets[dynamic_کړکۍ]=دننه_واټن;
+                    use_Dynamic_کړکۍ(scsu, dynamic_کړکۍ);
+                    c=((uint32_t)(SD0+dynamic_کړکۍ)<<16)|((uint32_t)کوډ<<8)|(c-current_دننه_واټن)|0x80;
                     length=3;
-                    goto outputBytes;
-                } else if (c - 0x3400 < 0xd800 - 0x3400 &&
-                           (source >= sourceLimit || static_cast<uint32_t>(*source - 0x3400) < 0xd800 - 0x3400)
+                    اذهب output_بایټونه;
+                } وإلا إذا (c - 0x3400 < 0xd800 - 0x3400 &&
+                           (سرچینه >= سرچینه_حد || static_cast<uint32_t>(*سرچینه - 0x3400) < 0xd800 - 0x3400)
                 ) {
                     /*
                      * this character is not compressible (a BMP ideograph or similar);
                      * switch to Unicode mode if this is the last character in the block
                      * or there is at least one more ideograph following immediately
                      */
-                    isSingleByteMode=false;
+                    is_Single_Byte_ډېرپېښ=خطأ;
                     c|=SCU<<16;
                     length=3;
-                    goto outputBytes;
-                } else {
+                    اذهب output_بایټونه;
+                } وإلا {
                     /* quote Unicode */
                     c|=SQU<<16;
                     length=3;
-                    goto outputBytes;
+                    اذهب output_بایټونه;
                 }
             }
 
             /* normal end of conversion: prepare for a new character */
             c=0;
         }
-    } else {
-        if(c!=0 && targetCapacity>0) {
-            goto getTrailUnicode;
+    } وإلا {
+        إذا(c!=0 && موخه_ظرفیت>0) {
+            اذهب getTrailUnicode;
         }
 
         /* state machine for Unicode mode */
 /* unicodeByteMode: */
-        while(source<sourceLimit) {
-            if(targetCapacity<=0) {
+        طالما(سرچینه<سرچینه_حد) {
+            إذا(موخه_ظرفیت<=0) {
                 /* target is full */
-                *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                break;
+                *p_Error_کوډ=U_بفر_ډکېدنه_ERROR;
+                اكسر;
             }
-            c=*source++;
+            c=*سرچینه++;
 
-            if (c - 0x3400 < 0xd800 - 0x3400) {
+            إذا (c - 0x3400 < 0xd800 - 0x3400) {
                 /* not compressible, write character directly */
-                if(targetCapacity>=2) {
-                    *target++=(uint8_t)(c>>8);
-                    *target++=(uint8_t)c;
-                    targetCapacity-=2;
-                } else {
+                إذا(موخه_ظرفیت>=2) {
+                    *موخه++=(uint8_t)(c>>8);
+                    *موخه++=(uint8_t)c;
+                    موخه_ظرفیت-=2;
+                } وإلا {
                     length=2;
-                    goto outputBytes;
+                    اذهب output_بایټونه;
                 }
-            } else if (c - 0x3400 >= 0xf300 - 0x3400 /* c<0x3400 || c>=0xf300 */) {
+            } وإلا إذا (c - 0x3400 >= 0xf300 - 0x3400 /* c<0x3400 || c>=0xf300 */) {
                 /* compress BMP character if the following one is not an uncompressible ideograph */
-                if(!(source<sourceLimit && (uint32_t)(*source-0x3400)<(0xd800-0x3400))) {
-                    if (c - 0x30 < 10 || c - 0x61 < 26 || c - 0x41 < 26) {
+                إذا(!(سرچینه<سرچینه_حد && (uint32_t)(*سرچینه-0x3400)<(0xd800-0x3400))) {
+                    إذا (c - 0x30 < 10 || c - 0x61 < 26 || c - 0x41 < 26) {
                         /* ASCII digit or letter */
-                        isSingleByteMode=true;
-                        c|=((uint32_t)(UC0+dynamicWindow)<<8)|c;
+                        is_Single_Byte_ډېرپېښ=ریښتیا;
+                        c|=((uint32_t)(UC0+dynamic_کړکۍ)<<8)|c;
                         length=2;
-                        goto outputBytes;
-                    } else if((window=getWindow(scsu->fromUDynamicOffsets, c))>=0) {
+                        اذهب output_بایټونه;
+                    } وإلا إذا((کړکۍ=get_کړکۍ(scsu->fromUDynamicOffsets, c))>=0) {
                         /* there is a dynamic window that contains this character, change to it */
-                        isSingleByteMode=true;
-                        dynamicWindow=window;
-                        currentOffset=scsu->fromUDynamicOffsets[dynamicWindow];
-                        useDynamicWindow(scsu, dynamicWindow);
-                        c=((uint32_t)(UC0+dynamicWindow)<<8)|(c-currentOffset)|0x80;
+                        is_Single_Byte_ډېرپېښ=ریښتیا;
+                        dynamic_کړکۍ=کړکۍ;
+                        current_دننه_واټن=scsu->fromUDynamicOffsets[dynamic_کړکۍ];
+                        use_Dynamic_کړکۍ(scsu, dynamic_کړکۍ);
+                        c=((uint32_t)(UC0+dynamic_کړکۍ)<<8)|(c-current_دننه_واټن)|0x80;
                         length=2;
-                        goto outputBytes;
-                    } else if((code=getDynamicOffset(c, &offset))>=0) {
+                        اذهب output_بایټونه;
+                    } وإلا إذا((کوډ=get_Dynamic_دننه_واټن(c, &دننه_واټن))>=0) {
                         /* define a dynamic window with this character */
-                        isSingleByteMode=true;
-                        dynamicWindow=getNextDynamicWindow(scsu);
-                        currentOffset=scsu->fromUDynamicOffsets[dynamicWindow]=offset;
-                        useDynamicWindow(scsu, dynamicWindow);
-                        c=((uint32_t)(UD0+dynamicWindow)<<16)|((uint32_t)code<<8)|(c-currentOffset)|0x80;
+                        is_Single_Byte_ډېرپېښ=ریښتیا;
+                        dynamic_کړکۍ=get_بل_Dynamic_کړکۍ(scsu);
+                        current_دننه_واټن=scsu->fromUDynamicOffsets[dynamic_کړکۍ]=دننه_واټن;
+                        use_Dynamic_کړکۍ(scsu, dynamic_کړکۍ);
+                        c=((uint32_t)(UD0+dynamic_کړکۍ)<<16)|((uint32_t)کوډ<<8)|(c-current_دننه_واټن)|0x80;
                         length=3;
-                        goto outputBytes;
+                        اذهب output_بایټونه;
                     }
                 }
 
                 /* don't know how to compress this character, just write it directly */
                 length=2;
-                goto outputBytes;
-            } else if(c<0xe000) {
+                اذهب output_بایټونه;
+            } وإلا إذا(c<0xe000) {
                 /* c is a surrogate */
-                if(U16_IS_SURROGATE_LEAD(c)) {
+                إذا(U16_IS_SURROGATE_LEAD(c)) {
 getTrailUnicode:
                     lead=(char16_t)c;
-                    if(source<sourceLimit) {
+                    إذا(سرچینه<سرچینه_حد) {
                         /* test the following code unit */
-                        trail=*source;
-                        if(U16_IS_TRAIL(trail)) {
-                            ++source;
+                        trail=*سرچینه;
+                        إذا(U16_IS_TRAIL(trail)) {
+                            ++سرچینه;
                             c=U16_GET_SUPPLEMENTARY(c, trail);
                             /* convert this surrogate code point */
                             /* exit this condition tree */
-                        } else {
+                        } وإلا {
                             /* this is an unmatched lead code unit (1st surrogate) */
                             /* callback(illegal) */
-                            *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                            goto endloop;
+                            *p_Error_کوډ=U_ILLEGAL_CHAR_وموندل;
+                            اذهب endloop;
                         }
-                    } else {
+                    } وإلا {
                         /* no more input */
-                        break;
+                        اكسر;
                     }
-                } else {
+                } وإلا {
                     /* this is an unmatched trail code unit (2nd surrogate) */
                     /* callback(illegal) */
-                    *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                    goto endloop;
+                    *p_Error_کوډ=U_ILLEGAL_CHAR_وموندل;
+                    اذهب endloop;
                 }
 
                 /* compress supplementary character */
-                if( (window=getWindow(scsu->fromUDynamicOffsets, c))>=0 &&
-                    !(source<sourceLimit && (uint32_t)(*source-0x3400)<(0xd800-0x3400))
+                إذا( (کړکۍ=get_کړکۍ(scsu->fromUDynamicOffsets, c))>=0 &&
+                    !(سرچینه<سرچینه_حد && (uint32_t)(*سرچینه-0x3400)<(0xd800-0x3400))
                 ) {
                     /*
                      * there is a dynamic window that contains this character and
                      * the following character is not uncompressible,
                      * change to the window
                      */
-                    isSingleByteMode=true;
-                    dynamicWindow=window;
-                    currentOffset=scsu->fromUDynamicOffsets[dynamicWindow];
-                    useDynamicWindow(scsu, dynamicWindow);
-                    c=((uint32_t)(UC0+dynamicWindow)<<8)|(c-currentOffset)|0x80;
+                    is_Single_Byte_ډېرپېښ=ریښتیا;
+                    dynamic_کړکۍ=کړکۍ;
+                    current_دننه_واټن=scsu->fromUDynamicOffsets[dynamic_کړکۍ];
+                    use_Dynamic_کړکۍ(scsu, dynamic_کړکۍ);
+                    c=((uint32_t)(UC0+dynamic_کړکۍ)<<8)|(c-current_دننه_واټن)|0x80;
                     length=2;
-                    goto outputBytes;
-                } else if(source<sourceLimit && lead==*source && /* too lazy to check trail in same window as source[1] */
-                          (code=getDynamicOffset(c, &offset))>=0
+                    اذهب output_بایټونه;
+                } وإلا إذا(سرچینه<سرچینه_حد && lead==*سرچینه && /* too lazy to check trail in same window as source[1] */
+                          (کوډ=get_Dynamic_دننه_واټن(c, &دننه_واټن))>=0
                 ) {
                     /* two supplementary characters in (probably) the same window - define an extended one */
-                    isSingleByteMode=true;
-                    code-=0x200;
-                    dynamicWindow=getNextDynamicWindow(scsu);
-                    currentOffset=scsu->fromUDynamicOffsets[dynamicWindow]=offset;
-                    useDynamicWindow(scsu, dynamicWindow);
-                    c=((uint32_t)UDX<<24)|((uint32_t)dynamicWindow<<21)|((uint32_t)code<<8)|(c-currentOffset)|0x80;
+                    is_Single_Byte_ډېرپېښ=ریښتیا;
+                    کوډ-=0x200;
+                    dynamic_کړکۍ=get_بل_Dynamic_کړکۍ(scsu);
+                    current_دننه_واټن=scsu->fromUDynamicOffsets[dynamic_کړکۍ]=دننه_واټن;
+                    use_Dynamic_کړکۍ(scsu, dynamic_کړکۍ);
+                    c=((uint32_t)UDX<<24)|((uint32_t)dynamic_کړکۍ<<21)|((uint32_t)کوډ<<8)|(c-current_دننه_واټن)|0x80;
                     length=4;
-                    goto outputBytes;
-                } else {
+                    اذهب output_بایټونه;
+                } وإلا {
                     /* don't know how to compress this character, just write it directly */
                     c=((uint32_t)lead<<16)|trail;
                     length=4;
-                    goto outputBytes;
+                    اذهب output_بایټونه;
                 }
-            } else /* 0xe000<=c<0xf300 */ {
+            } وإلا /* 0xe000<=c<0xf300 */ {
                 /* quote to avoid SCSU tags */
                 c|=UQU<<16;
                 length=3;
-                goto outputBytes;
+                اذهب output_بایټونه;
             }
 
             /* normal end of conversion: prepare for a new character */
@@ -1850,44 +1850,44 @@ getTrailUnicode:
 endloop:
 
     /* set the converter state back into UConverter */
-    scsu->fromUIsSingleByteMode=isSingleByteMode;
-    scsu->fromUDynamicWindow=dynamicWindow;
+    scsu->from_UIs_Single_Byte_ډېرپېښ=is_Single_Byte_ډېرپېښ;
+    scsu->from_UDynamic_کړکۍ=dynamic_کړکۍ;
 
     cnv->fromUChar32=c;
 
     /* write back the updated pointers */
-    pArgs->source=source;
-    pArgs->target=(char *)target;
-    return;
+    p_دلیلونه->سرچینه=سرچینه;
+    p_دلیلونه->موخه=(حرف *)موخه;
+    أرجع;
 
-outputBytes:
+output_بایټونه:
     /* write the output character bytes from c and length [code copied from ucnvmbcs.c] */
     /* from the first if in the loop we know that targetCapacity>0 */
-    if(length<=targetCapacity) {
-        switch(length) {
+    إذا(length<=موخه_ظرفیت) {
+        بدل(length) {
             /* each branch falls through to the next one */
-        case 4:
-            *target++=(uint8_t)(c>>24);
+        حالة 4:
+            *موخه++=(uint8_t)(c>>24);
             U_FALLTHROUGH;
-        case 3:
-            *target++=(uint8_t)(c>>16);
+        حالة 3:
+            *موخه++=(uint8_t)(c>>16);
             U_FALLTHROUGH;
-        case 2:
-            *target++=(uint8_t)(c>>8);
+        حالة 2:
+            *موخه++=(uint8_t)(c>>8);
             U_FALLTHROUGH;
-        case 1:
-            *target++=(uint8_t)c;
+        حالة 1:
+            *موخه++=(uint8_t)c;
             U_FALLTHROUGH;
-        default:
+        افتراضي:
             /* will never occur */
-            break;
+            اكسر;
         }
-        targetCapacity-=length;
+        موخه_ظرفیت-=length;
 
         /* normal end of conversion: prepare for a new character */
         c=0;
-        goto loop;
-    } else {
+        اذهب loop;
+    } وإلا {
         uint8_t *p;
 
         /*
@@ -1898,108 +1898,108 @@ outputBytes:
          */
         /* we know that 0<=targetCapacity<length<=4 */
         /* targetCapacity==0 when SCU+supplementary where SCU used up targetCapacity==1 */
-        length-=targetCapacity;
-        p=(uint8_t *)cnv->charErrorBuffer;
-        switch(length) {
+        length-=موخه_ظرفیت;
+        p=(uint8_t *)cnv->char_Error_بفر;
+        بدل(length) {
             /* each branch falls through to the next one */
-        case 4:
+        حالة 4:
             *p++=(uint8_t)(c>>24);
             U_FALLTHROUGH;
-        case 3:
+        حالة 3:
             *p++=(uint8_t)(c>>16);
             U_FALLTHROUGH;
-        case 2:
+        حالة 2:
             *p++=(uint8_t)(c>>8);
             U_FALLTHROUGH;
-        case 1:
+        حالة 1:
             *p=(uint8_t)c;
             U_FALLTHROUGH;
-        default:
+        افتراضي:
             /* will never occur */
-            break;
+            اكسر;
         }
-        cnv->charErrorBufferLength=(int8_t)length;
+        cnv->char_Error_بفر_اوږدتیا=(int8_t)length;
 
         /* now output what fits into the regular target */
         c = (length == 4) ? 0 : c >> 8*length; /* length was reduced by targetCapacity */
-        switch(targetCapacity) {
+        بدل(موخه_ظرفیت) {
             /* each branch falls through to the next one */
-        case 3:
-            *target++=(uint8_t)(c>>16);
+        حالة 3:
+            *موخه++=(uint8_t)(c>>16);
             U_FALLTHROUGH;
-        case 2:
-            *target++=(uint8_t)(c>>8);
+        حالة 2:
+            *موخه++=(uint8_t)(c>>8);
             U_FALLTHROUGH;
-        case 1:
-            *target++=(uint8_t)c;
+        حالة 1:
+            *موخه++=(uint8_t)c;
             U_FALLTHROUGH;
-        default:
-            break;
+        افتراضي:
+            اكسر;
         }
 
         /* target overflow */
-        targetCapacity=0;
-        *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+        موخه_ظرفیت=0;
+        *p_Error_کوډ=U_بفر_ډکېدنه_ERROR;
         c=0;
-        goto endloop;
+        اذهب endloop;
     }
 }
 
 /* miscellaneous ------------------------------------------------------------ */
 
-static const char *  U_CALLCONV
-_SCSUGetName(const UConverter *cnv) {
+ساكن ثابت حرف *  U_CALLCONV
+_SCSUGetName(ثابت UConverter *cnv) {
     SCSUData *scsu=(SCSUData *)cnv->extraInfo;
 
-    switch(scsu->locale) {
-    case l_ja:
-        return "SCSU,locale=ja";
-    default:
-        return "SCSU";
+    بدل(scsu->locale) {
+    حالة l_ja:
+        أرجع "SCSU,locale=ja";
+    افتراضي:
+        أرجع "SCSU";
     }
 }
 
 /* structure for SafeClone calculations */
-struct cloneSCSUStruct
+بنية cloneSCSUStruct
 {
     UConverter cnv;
     SCSUData mydata;
 };
 
-static UConverter *  U_CALLCONV
-_SCSUSafeClone(const UConverter *cnv, 
-               void *stackBuffer, 
-               int32_t *pBufferSize, 
-               UErrorCode *status)
+ساكن UConverter *  U_CALLCONV
+_SCSUSafeClone(ثابت UConverter *cnv, 
+               فراغ *ډېری_بفر, 
+               int32_t *p_بفر_اندازه, 
+               UError_کوډ *حالت)
 {
-    struct cloneSCSUStruct * localClone;
-    int32_t bufferSizeNeeded = sizeof(struct cloneSCSUStruct);
+    بنية cloneSCSUStruct * localClone;
+    int32_t بفر_اندازه_Needed = حجم(بنية cloneSCSUStruct);
 
-    if (U_FAILURE(*status)){
-        return nullptr;
+    إذا (U_FAILURE(*حالت)){
+        أرجع تش_اشاره;
     }
 
-    if (*pBufferSize == 0){ /* 'preflighting' request - set needed size into *pBufferSize */
-        *pBufferSize = bufferSizeNeeded;
-        return nullptr;
+    إذا (*p_بفر_اندازه == 0){ /* 'preflighting' request - set needed size into *pBufferSize */
+        *p_بفر_اندازه = بفر_اندازه_Needed;
+        أرجع تش_اشاره;
     }
 
-    localClone = (struct cloneSCSUStruct *)stackBuffer;
+    localClone = (بنية cloneSCSUStruct *)ډېری_بفر;
     /* ucnv.c/ucnv_safeClone() copied the main UConverter already */
 
-    uprv_memcpy(&localClone->mydata, cnv->extraInfo, sizeof(SCSUData));
+    uprv_memcpy(&localClone->mydata, cnv->extraInfo, حجم(SCSUData));
     localClone->cnv.extraInfo = &localClone->mydata;
-    localClone->cnv.isExtraLocal = true;
+    localClone->cnv.isExtraLocal = ریښتیا;
 
-    return &localClone->cnv;
+    أرجع &localClone->cnv;
 }
-U_CDECL_END
+U_CDECL_پای_ټکی
 
-static const UConverterImpl _SCSUImpl={
+ساكن ثابت UConverterImpl _SCSUImpl={
     UCNV_SCSU,
 
-    nullptr,
-    nullptr,
+    تش_اشاره,
+    تش_اشاره,
 
     _SCSUOpen,
     _SCSUClose,
@@ -2009,19 +2009,19 @@ static const UConverterImpl _SCSUImpl={
     _SCSUToUnicodeWithOffsets,
     _SCSUFromUnicode,
     _SCSUFromUnicodeWithOffsets,
-    nullptr,
+    تش_اشاره,
 
-    nullptr,
+    تش_اشاره,
     _SCSUGetName,
-    nullptr,
+    تش_اشاره,
     _SCSUSafeClone,
-    ucnv_getCompleteUnicodeSet,
-    nullptr,
-    nullptr
+    ucnv_get_Complete_Unicode_سېټ,
+    تش_اشاره,
+    تش_اشاره
 };
 
-static const UConverterStaticData _SCSUStaticData={
-    sizeof(UConverterStaticData),
+ساكن ثابت UConverter_Static_معلومات SCSUStatic_معلومات={
+    حجم(UConverter_Static_معلومات),
     "SCSU",
     1212, /* CCSID for SCSU */
     UCNV_IBM, UCNV_SCSU,
@@ -2031,13 +2031,13 @@ static const UConverterStaticData _SCSUStaticData={
      * substitution string.
      */
     { 0x0e, 0xff, 0xfd, 0 }, 3,
-    false, false,
+    خطأ, خطأ,
     0,
     0,
     { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 } /* reserved */
 };
 
-const UConverterSharedData _SCSUData=
-        UCNV_IMMUTABLE_SHARED_DATA_INITIALIZER(&_SCSUStaticData, &_SCSUImpl);
+ثابت UConverter_Shared_معلومات _SCSUData=
+        UCNV_IMMUTABLE_SHARED_معلومات_INITIALIZER(&SCSUStatic_معلومات, &_SCSUImpl);
 
-#endif
+#د_که_پای

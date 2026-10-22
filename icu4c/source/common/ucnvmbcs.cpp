@@ -42,28 +42,28 @@
 *                             macros to ucnvmbcs.h file
 */
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION && !UCONFIG_NO_LEGACY_CONVERSION
+#إذا !UCONFIG_NO_CONVERSION && !UCONFIG_NO_LEGACY_CONVERSION
 
-#include "unicode/ucnv.h"
-#include "unicode/ucnv_cb.h"
-#include "unicode/udata.h"
-#include "unicode/uset.h"
-#include "unicode/utf8.h"
-#include "unicode/utf16.h"
-#include "ucnv_bld.h"
-#include "ucnvmbcs.h"
-#include "ucnv_ext.h"
-#include "ucnv_cnv.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "umutex.h"
-#include "ustr_imp.h"
+#ضمن "unicode/ucnv.h"
+#ضمن "unicode/ucnv_cb.h"
+#ضمن "unicode/udata.h"
+#ضمن "unicode/uset.h"
+#ضمن "unicode/utf8.h"
+#ضمن "unicode/utf16.h"
+#ضمن "ucnv_bld.h"
+#ضمن "ucnvmbcs.h"
+#ضمن "ucnv_ext.h"
+#ضمن "ucnv_cnv.h"
+#ضمن "cmemory.h"
+#ضمن "cstring.h"
+#ضمن "umutex.h"
+#ضمن "ustr_imp.h"
 
 /* control optimizations according to the platform */
-#define MBCS_UNROLL_SINGLE_TO_BMP 1
-#define MBCS_UNROLL_SINGLE_FROM_BMP 0
+#تعریف_کړه MBCS_UNROLL_SINGLE_منزل_BMP 1
+#تعریف_کړه MBCS_UNROLL_SINGLE_FROM_BMP 0
 
 /*
  * _MBCSHeader versions 5.3 & 4.3
@@ -375,158 +375,158 @@
  *        not map to anything
  * @return true to continue enumeration, false to stop
  */
-typedef UBool U_CALLCONV
-UConverterEnumToUCallback(const void *context, uint32_t value, UChar32 codePoints[32]);
+تعريفنوع UBool U_CALLCONV
+UConverter_Enum_منزل_UCallback(ثابت فراغ *context, uint32_t value, UChar32 کوډ_Points[32]);
 
-static void U_CALLCONV
-ucnv_MBCSLoad(UConverterSharedData *sharedData,
-          UConverterLoadArgs *pArgs,
-          const uint8_t *raw,
-          UErrorCode *pErrorCode);
+ساكن فراغ U_CALLCONV
+ucnv_MBCSLoad(UConverter_Shared_معلومات *shared_معلومات,
+          UConverter_بارول_دلیلونه *p_دلیلونه,
+          ثابت uint8_t *raw,
+          UError_کوډ *p_Error_کوډ);
 
-static void U_CALLCONV
-ucnv_MBCSUnload(UConverterSharedData *sharedData);
+ساكن فراغ U_CALLCONV
+ucnv_MBCSUnload(UConverter_Shared_معلومات *shared_معلومات);
 
-static void U_CALLCONV
+ساكن فراغ U_CALLCONV
 ucnv_MBCSOpen(UConverter *cnv,
-              UConverterLoadArgs *pArgs,
-              UErrorCode *pErrorCode);
+              UConverter_بارول_دلیلونه *p_دلیلونه,
+              UError_کوډ *p_Error_کوډ);
 
-static UChar32 U_CALLCONV
-ucnv_MBCSGetNextUChar(UConverterToUnicodeArgs *pArgs,
-                  UErrorCode *pErrorCode);
+ساكن UChar32 U_CALLCONV
+ucnv_MBCSGet_بل_UChar(UConverter_منزل_Unicode_دلیلونه *p_دلیلونه,
+                  UError_کوډ *p_Error_کوډ);
 
-static void U_CALLCONV
-ucnv_MBCSGetStarters(const UConverter* cnv,
+ساكن فراغ U_CALLCONV
+ucnv_MBCSGetStarters(ثابت UConverter* cnv,
                  UBool starters[256],
-                 UErrorCode *pErrorCode);
+                 UError_کوډ *p_Error_کوډ);
 
 U_CDECL_BEGIN
-static const char* U_CALLCONV
-ucnv_MBCSGetName(const UConverter *cnv);
-U_CDECL_END
+ساكن ثابت حرف* U_CALLCONV
+ucnv_MBCSGetName(ثابت UConverter *cnv);
+U_CDECL_پای_ټکی
 
-static void U_CALLCONV
-ucnv_MBCSWriteSub(UConverterFromUnicodeArgs *pArgs,
-              int32_t offsetIndex,
-              UErrorCode *pErrorCode);
+ساكن فراغ U_CALLCONV
+ucnv_MBCSWriteSub(UConverter_From_Unicode_دلیلونه *p_دلیلونه,
+              int32_t دننه_واټن_شاخص,
+              UError_کوډ *p_Error_کوډ);
 
-static UChar32 U_CALLCONV
-ucnv_MBCSGetNextUChar(UConverterToUnicodeArgs *pArgs,
-                  UErrorCode *pErrorCode);
+ساكن UChar32 U_CALLCONV
+ucnv_MBCSGet_بل_UChar(UConverter_منزل_Unicode_دلیلونه *p_دلیلونه,
+                  UError_کوډ *p_Error_کوډ);
 
-static void U_CALLCONV
-ucnv_SBCSFromUTF8(UConverterFromUnicodeArgs *pFromUArgs,
-                  UConverterToUnicodeArgs *pToUArgs,
-                  UErrorCode *pErrorCode);
+ساكن فراغ U_CALLCONV
+ucnv_SBCSFromUTF8(UConverter_From_Unicode_دلیلونه *pFromUArgs,
+                  UConverter_منزل_Unicode_دلیلونه *p_منزل_UArgs,
+                  UError_کوډ *p_Error_کوډ);
 
-static void U_CALLCONV
-ucnv_MBCSGetUnicodeSet(const UConverter *cnv,
-                   const USetAdder *sa,
-                   UConverterUnicodeSet which,
-                   UErrorCode *pErrorCode);
+ساكن فراغ U_CALLCONV
+ucnv_MBCSGet_Unicode_سېټ(ثابت UConverter *cnv,
+                   ثابت USetAdder *sa,
+                   UConverter_Unicode_سېټ which,
+                   UError_کوډ *p_Error_کوډ);
 
-static void U_CALLCONV
-ucnv_DBCSFromUTF8(UConverterFromUnicodeArgs *pFromUArgs,
-                  UConverterToUnicodeArgs *pToUArgs,
-                  UErrorCode *pErrorCode);
+ساكن فراغ U_CALLCONV
+ucnv_DBCSFromUTF8(UConverter_From_Unicode_دلیلونه *pFromUArgs,
+                  UConverter_منزل_Unicode_دلیلونه *p_منزل_UArgs,
+                  UError_کوډ *p_Error_کوډ);
 
-static const UConverterImpl _SBCSUTF8Impl={
+ساكن ثابت UConverterImpl _SBCSUTF8Impl={
     UCNV_MBCS,
 
     ucnv_MBCSLoad,
     ucnv_MBCSUnload,
 
     ucnv_MBCSOpen,
-    nullptr,
-    nullptr,
+    تش_اشاره,
+    تش_اشاره,
 
     ucnv_MBCSToUnicodeWithOffsets,
     ucnv_MBCSToUnicodeWithOffsets,
     ucnv_MBCSFromUnicodeWithOffsets,
     ucnv_MBCSFromUnicodeWithOffsets,
-    ucnv_MBCSGetNextUChar,
+    ucnv_MBCSGet_بل_UChar,
 
     ucnv_MBCSGetStarters,
     ucnv_MBCSGetName,
     ucnv_MBCSWriteSub,
-    nullptr,
-    ucnv_MBCSGetUnicodeSet,
+    تش_اشاره,
+    ucnv_MBCSGet_Unicode_سېټ,
 
-    nullptr,
+    تش_اشاره,
     ucnv_SBCSFromUTF8
 };
 
-static const UConverterImpl _DBCSUTF8Impl={
+ساكن ثابت UConverterImpl _DBCSUTF8Impl={
     UCNV_MBCS,
 
     ucnv_MBCSLoad,
     ucnv_MBCSUnload,
 
     ucnv_MBCSOpen,
-    nullptr,
-    nullptr,
+    تش_اشاره,
+    تش_اشاره,
 
     ucnv_MBCSToUnicodeWithOffsets,
     ucnv_MBCSToUnicodeWithOffsets,
     ucnv_MBCSFromUnicodeWithOffsets,
     ucnv_MBCSFromUnicodeWithOffsets,
-    ucnv_MBCSGetNextUChar,
+    ucnv_MBCSGet_بل_UChar,
 
     ucnv_MBCSGetStarters,
     ucnv_MBCSGetName,
     ucnv_MBCSWriteSub,
-    nullptr,
-    ucnv_MBCSGetUnicodeSet,
+    تش_اشاره,
+    ucnv_MBCSGet_Unicode_سېټ,
 
-    nullptr,
+    تش_اشاره,
     ucnv_DBCSFromUTF8
 };
 
-static const UConverterImpl _MBCSImpl={
+ساكن ثابت UConverterImpl _MBCSImpl={
     UCNV_MBCS,
 
     ucnv_MBCSLoad,
     ucnv_MBCSUnload,
 
     ucnv_MBCSOpen,
-    nullptr,
-    nullptr,
+    تش_اشاره,
+    تش_اشاره,
 
     ucnv_MBCSToUnicodeWithOffsets,
     ucnv_MBCSToUnicodeWithOffsets,
     ucnv_MBCSFromUnicodeWithOffsets,
     ucnv_MBCSFromUnicodeWithOffsets,
-    ucnv_MBCSGetNextUChar,
+    ucnv_MBCSGet_بل_UChar,
 
     ucnv_MBCSGetStarters,
     ucnv_MBCSGetName,
     ucnv_MBCSWriteSub,
-    nullptr,
-    ucnv_MBCSGetUnicodeSet,
-    nullptr,
-    nullptr
+    تش_اشاره,
+    ucnv_MBCSGet_Unicode_سېټ,
+    تش_اشاره,
+    تش_اشاره
 };
 
 /* Static data is in tools/makeconv/ucnvstat.c for data-based
  * converters. Be sure to update it as well.
  */
 
-const UConverterSharedData _MBCSData={
-    sizeof(UConverterSharedData), 1,
-    nullptr, nullptr, false, true, &_MBCSImpl,
-    0, UCNV_MBCS_TABLE_INITIALIZER
+ثابت UConverter_Shared_معلومات _MBCSData={
+    حجم(UConverter_Shared_معلومات), 1,
+    تش_اشاره, تش_اشاره, خطأ, ریښتیا, &_MBCSImpl,
+    0, UCNV_MBCS_جدول_INITIALIZER
 };
 
 
 /* GB 18030 data ------------------------------------------------------------ */
 
 /* helper macros for linear values for GB 18030 four-byte sequences */
-#define LINEAR_18030(a, b, c, d) ((((a)*10+(b))*126L+(c))*10L+(d))
+#تعریف_کړه خطي_18030(a, b, c, d) ((((a)*10+(b))*126L+(c))*10L+(d))
 
-#define LINEAR_18030_BASE LINEAR_18030(0x81, 0x30, 0x81, 0x30)
+#تعریف_کړه خطي_18030_بنسټ خطي_18030(0x81, 0x30, 0x81, 0x30)
 
-#define LINEAR(x) LINEAR_18030(x>>24, (x>>16)&0xff, (x>>8)&0xff, x&0xff)
+#تعریف_کړه خطي(x) خطي_18030(x>>24, (x>>16)&0xff, (x>>8)&0xff, x&0xff)
 
 /*
  * Some ranges of GB 18030 where both the Unicode code points and the
@@ -537,142 +537,142 @@ const UConverterSharedData _MBCSData={
  * Note that single surrogates are not mapped by GB 18030
  * as of the re-released mapping tables from 2000-nov-30.
  */
-static const uint32_t
+ساكن ثابت uint32_t
 gb18030Ranges[14][4]={
-    {0x10000, 0x10FFFF, LINEAR(0x90308130), LINEAR(0xE3329A35)},
-    {0x9FA6, 0xD7FF, LINEAR(0x82358F33), LINEAR(0x8336C738)},
-    {0x0452, 0x1E3E, LINEAR(0x8130D330), LINEAR(0x8135F436)},
-    {0x1E40, 0x200F, LINEAR(0x8135F438), LINEAR(0x8136A531)},
-    {0xE865, 0xF92B, LINEAR(0x8336D030), LINEAR(0x84308534)},
-    {0x2643, 0x2E80, LINEAR(0x8137A839), LINEAR(0x8138FD38)},
-    {0xFA2A, 0xFE2F, LINEAR(0x84309C38), LINEAR(0x84318537)},
-    {0x3CE1, 0x4055, LINEAR(0x8231D438), LINEAR(0x8232AF32)},
-    {0x361B, 0x3917, LINEAR(0x8230A633), LINEAR(0x8230F237)},
-    {0x49B8, 0x4C76, LINEAR(0x8234A131), LINEAR(0x8234E733)},
-    {0x4160, 0x4336, LINEAR(0x8232C937), LINEAR(0x8232F837)},
-    {0x478E, 0x4946, LINEAR(0x8233E838), LINEAR(0x82349638)},
-    {0x44D7, 0x464B, LINEAR(0x8233A339), LINEAR(0x8233C931)},
-    {0xFFE6, 0xFFFF, LINEAR(0x8431A234), LINEAR(0x8431A439)}
+    {0x10000, 0x10FFFF, خطي(0x90308130), خطي(0xE3329A35)},
+    {0x9FA6, 0xD7FF, خطي(0x82358F33), خطي(0x8336C738)},
+    {0x0452, 0x1E3E, خطي(0x8130D330), خطي(0x8135F436)},
+    {0x1E40, 0x200F, خطي(0x8135F438), خطي(0x8136A531)},
+    {0xE865, 0xF92B, خطي(0x8336D030), خطي(0x84308534)},
+    {0x2643, 0x2E80, خطي(0x8137A839), خطي(0x8138FD38)},
+    {0xFA2A, 0xFE2F, خطي(0x84309C38), خطي(0x84318537)},
+    {0x3CE1, 0x4055, خطي(0x8231D438), خطي(0x8232AF32)},
+    {0x361B, 0x3917, خطي(0x8230A633), خطي(0x8230F237)},
+    {0x49B8, 0x4C76, خطي(0x8234A131), خطي(0x8234E733)},
+    {0x4160, 0x4336, خطي(0x8232C937), خطي(0x8232F837)},
+    {0x478E, 0x4946, خطي(0x8233E838), خطي(0x82349638)},
+    {0x44D7, 0x464B, خطي(0x8233A339), خطي(0x8233C931)},
+    {0xFFE6, 0xFFFF, خطي(0x8431A234), خطي(0x8431A439)}
 };
 
 /* bit flag for UConverter.options indicating GB 18030 special handling */
-#define _MBCS_OPTION_GB18030 0x8000
+#تعریف_کړه _MBCS_OPTION_GB18030 0x8000
 
 /* bit flag for UConverter.options indicating KEIS,JEF,JIF special handling */
-#define _MBCS_OPTION_KEIS 0x01000
-#define _MBCS_OPTION_JEF  0x02000
-#define _MBCS_OPTION_JIPS 0x04000
+#تعریف_کړه _MBCS_OPTION_KEIS 0x01000
+#تعریف_کړه _MBCS_OPTION_JEF  0x02000
+#تعریف_کړه _MBCS_OPTION_JIPS 0x04000
 
-#define KEIS_SO_CHAR_1 0x0A
-#define KEIS_SO_CHAR_2 0x42
-#define KEIS_SI_CHAR_1 0x0A
-#define KEIS_SI_CHAR_2 0x41
+#تعریف_کړه KEIS_SO_CHAR_1 0x0A
+#تعریف_کړه KEIS_SO_CHAR_2 0x42
+#تعریف_کړه KEIS_SI_CHAR_1 0x0A
+#تعریف_کړه KEIS_SI_CHAR_2 0x41
 
-#define JEF_SO_CHAR 0x28
-#define JEF_SI_CHAR 0x29
+#تعریف_کړه JEF_SO_CHAR 0x28
+#تعریف_کړه JEF_SI_CHAR 0x29
 
-#define JIPS_SO_CHAR_1 0x1A
-#define JIPS_SO_CHAR_2 0x70
-#define JIPS_SI_CHAR_1 0x1A
-#define JIPS_SI_CHAR_2 0x71
+#تعریف_کړه JIPS_SO_CHAR_1 0x1A
+#تعریف_کړه JIPS_SO_CHAR_2 0x70
+#تعریف_کړه JIPS_SI_CHAR_1 0x1A
+#تعریف_کړه JIPS_SI_CHAR_2 0x71
 
-enum SISO_Option {
+تعداد SISO_Option {
     SI,
     SO
 };
-typedef enum SISO_Option SISO_Option;
+تعريفنوع تعداد SISO_Option SISO_Option;
 
-static int32_t getSISOBytes(SISO_Option option, uint32_t cnvOption, uint8_t *value) {
+ساكن int32_t getSISOBytes(SISO_Option option, uint32_t cnvOption, uint8_t *value) {
     int32_t SISOLength = 0;
 
-    switch (option) {
-        case SI:
-            if ((cnvOption&_MBCS_OPTION_KEIS)!=0) {
+    بدل (option) {
+        حالة SI:
+            إذا ((cnvOption&_MBCS_OPTION_KEIS)!=0) {
                 value[0] = KEIS_SI_CHAR_1;
                 value[1] = KEIS_SI_CHAR_2;
                 SISOLength = 2;
-            } else if ((cnvOption&_MBCS_OPTION_JEF)!=0) {
+            } وإلا إذا ((cnvOption&_MBCS_OPTION_JEF)!=0) {
                 value[0] = JEF_SI_CHAR;
                 SISOLength = 1;
-            } else if ((cnvOption&_MBCS_OPTION_JIPS)!=0) {
+            } وإلا إذا ((cnvOption&_MBCS_OPTION_JIPS)!=0) {
                 value[0] = JIPS_SI_CHAR_1;
                 value[1] = JIPS_SI_CHAR_2;
                 SISOLength = 2;
-            } else {
+            } وإلا {
                 value[0] = UCNV_SI;
                 SISOLength = 1;
             }
-            break;
-        case SO:
-            if ((cnvOption&_MBCS_OPTION_KEIS)!=0) {
+            اكسر;
+        حالة SO:
+            إذا ((cnvOption&_MBCS_OPTION_KEIS)!=0) {
                 value[0] = KEIS_SO_CHAR_1;
                 value[1] = KEIS_SO_CHAR_2;
                 SISOLength = 2;
-            } else if ((cnvOption&_MBCS_OPTION_JEF)!=0) {
+            } وإلا إذا ((cnvOption&_MBCS_OPTION_JEF)!=0) {
                 value[0] = JEF_SO_CHAR;
                 SISOLength = 1;
-            } else if ((cnvOption&_MBCS_OPTION_JIPS)!=0) {
+            } وإلا إذا ((cnvOption&_MBCS_OPTION_JIPS)!=0) {
                 value[0] = JIPS_SO_CHAR_1;
                 value[1] = JIPS_SO_CHAR_2;
                 SISOLength = 2;
-            } else {
+            } وإلا {
                 value[0] = UCNV_SO;
                 SISOLength = 1;
             }
-            break;
-        default:
+            اكسر;
+        افتراضي:
             /* Should never happen. */
-            break;
+            اكسر;
     }
 
-    return SISOLength;
+    أرجع SISOLength;
 }
 
 /* Miscellaneous ------------------------------------------------------------ */
 
 /* similar to ucnv_MBCSGetNextUChar() but recursive */
-static UBool
-enumToU(UConverterMBCSTable *mbcsTable, int8_t stateProps[],
-        int32_t state, uint32_t offset,
+ساكن UBool
+enum_منزل_U(UConverterMBCSTable *mbcs_جدول, int8_t stateProps[],
+        int32_t state, uint32_t دننه_واټن,
         uint32_t value,
-        UConverterEnumToUCallback *callback, const void *context,
-        UErrorCode *pErrorCode) {
-    UChar32 codePoints[32];
-    const int32_t *row;
-    const uint16_t *unicodeCodeUnits;
-    UChar32 anyCodePoints;
-    int32_t b, limit;
+        UConverter_Enum_منزل_UCallback *callback, ثابت فراغ *context,
+        UError_کوډ *p_Error_کوډ) {
+    UChar32 کوډ_Points[32];
+    ثابت int32_t *لیکه;
+    ثابت uint16_t *unicode_کوډ_Units;
+    UChar32 any_کوډ_Points;
+    int32_t b, حد;
 
-    row=mbcsTable->stateTable[state];
-    unicodeCodeUnits=mbcsTable->unicodeCodeUnits;
+    لیکه=mbcs_جدول->state_جدول[state];
+    unicode_کوډ_Units=mbcs_جدول->unicode_کوډ_Units;
 
     value<<=8;
-    anyCodePoints=-1;  /* becomes non-negative if there is a mapping */
+    any_کوډ_Points=-1;  /* becomes non-negative if there is a mapping */
 
     b=(stateProps[state]&0x38)<<2;
-    if(b==0 && stateProps[state]>=0x40) {
+    إذا(b==0 && stateProps[state]>=0x40) {
         /* skip byte sequences with leading zeros because they are not stored in the fromUnicode table */
-        codePoints[0]=U_SENTINEL;
+        کوډ_Points[0]=U_SENTINEL;
         b=1;
     }
-    limit=((stateProps[state]&7)+1)<<5;
-    while(b<limit) {
-        int32_t entry=row[b];
-        if(MBCS_ENTRY_IS_TRANSITION(entry)) {
-            int32_t nextState=MBCS_ENTRY_TRANSITION_STATE(entry);
-            if(stateProps[nextState]>=0) {
+    حد=((stateProps[state]&7)+1)<<5;
+    طالما(b<حد) {
+        int32_t ثبت=لیکه[b];
+        إذا(MBCS_ثبت_IS_TRANSITION(ثبت)) {
+            int32_t بل_State=MBCS_ثبت_TRANSITION_STATE(ثبت);
+            إذا(stateProps[بل_State]>=0) {
                 /* recurse to a state with non-ignorable actions */
-                if(!enumToU(
-                        mbcsTable, stateProps, nextState,
-                        offset+MBCS_ENTRY_TRANSITION_OFFSET(entry),
+                إذا(!enum_منزل_U(
+                        mbcs_جدول, stateProps, بل_State,
+                        دننه_واټن+MBCS_ثبت_TRANSITION_دننه_واټن(ثبت),
                         value | static_cast<uint32_t>(b),
                         callback, context,
-                        pErrorCode)) {
-                    return false;
+                        p_Error_کوډ)) {
+                    أرجع خطأ;
                 }
             }
-            codePoints[b&0x1f]=U_SENTINEL;
-        } else {
+            کوډ_Points[b&0x1f]=U_SENTINEL;
+        } وإلا {
             UChar32 c;
             int32_t action;
 
@@ -680,52 +680,52 @@ enumToU(UConverterMBCSTable *mbcsTable, int8_t stateProps[],
              * An if-else-if chain provides more reliable performance for
              * the most common cases compared to a switch.
              */
-            action=MBCS_ENTRY_FINAL_ACTION(entry);
-            if(action==MBCS_STATE_VALID_DIRECT_16) {
+            action=MBCS_ثبت_FINAL_ACTION(ثبت);
+            إذا(action==MBCS_STATE_VALID_مستقیم_16) {
                 /* output BMP code point */
-                c = static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
-            } else if(action==MBCS_STATE_VALID_16) {
-                int32_t finalOffset=offset+MBCS_ENTRY_FINAL_VALUE_16(entry);
-                c=unicodeCodeUnits[finalOffset];
-                if(c<0xfffe) {
+                c = static_cast<char16_t>(MBCS_ثبت_FINAL_ارزښت_16(ثبت));
+            } وإلا إذا(action==MBCS_STATE_VALID_16) {
+                int32_t final_دننه_واټن=دننه_واټن+MBCS_ثبت_FINAL_ارزښت_16(ثبت);
+                c=unicode_کوډ_Units[final_دننه_واټن];
+                إذا(c<0xfffe) {
                     /* output BMP code point */
-                } else {
+                } وإلا {
                     c=U_SENTINEL;
                 }
-            } else if(action==MBCS_STATE_VALID_16_PAIR) {
-                int32_t finalOffset=offset+MBCS_ENTRY_FINAL_VALUE_16(entry);
-                c=unicodeCodeUnits[finalOffset++];
-                if(c<0xd800) {
+            } وإلا إذا(action==MBCS_STATE_VALID_16_PAIR) {
+                int32_t final_دننه_واټن=دننه_واټن+MBCS_ثبت_FINAL_ارزښت_16(ثبت);
+                c=unicode_کوډ_Units[final_دننه_واټن++];
+                إذا(c<0xd800) {
                     /* output BMP code point below 0xd800 */
-                } else if(c<=0xdbff) {
+                } وإلا إذا(c<=0xdbff) {
                     /* output roundtrip or fallback supplementary code point */
-                    c=((c&0x3ff)<<10)+unicodeCodeUnits[finalOffset]+(0x10000-0xdc00);
-                } else if(c==0xe000) {
+                    c=((c&0x3ff)<<10)+unicode_کوډ_Units[final_دننه_واټن]+(0x10000-0xdc00);
+                } وإلا إذا(c==0xe000) {
                     /* output roundtrip BMP code point above 0xd800 or fallback BMP code point */
-                    c=unicodeCodeUnits[finalOffset];
-                } else {
+                    c=unicode_کوډ_Units[final_دننه_واټن];
+                } وإلا {
                     c=U_SENTINEL;
                 }
-            } else if(action==MBCS_STATE_VALID_DIRECT_20) {
+            } وإلا إذا(action==MBCS_STATE_VALID_مستقیم_20) {
                 /* output supplementary code point */
-                c = static_cast<UChar32>(MBCS_ENTRY_FINAL_VALUE(entry) + 0x10000);
-            } else {
+                c = static_cast<UChar32>(MBCS_ثبت_FINAL_ارزښت(ثبت) + 0x10000);
+            } وإلا {
                 c=U_SENTINEL;
             }
 
-            codePoints[b&0x1f]=c;
-            anyCodePoints&=c;
+            کوډ_Points[b&0x1f]=c;
+            any_کوډ_Points&=c;
         }
-        if(((++b)&0x1f)==0) {
-            if(anyCodePoints>=0) {
-                if (!callback(context, value | static_cast<uint32_t>(b - 0x20), codePoints)) {
-                    return false;
+        إذا(((++b)&0x1f)==0) {
+            إذا(any_کوډ_Points>=0) {
+                إذا (!callback(context, value | static_cast<uint32_t>(b - 0x20), کوډ_Points)) {
+                    أرجع خطأ;
                 }
-                anyCodePoints=-1;
+                any_کوډ_Points=-1;
             }
         }
     }
-    return true;
+    أرجع ریښتیا;
 }
 
 /*
@@ -733,68 +733,68 @@ enumToU(UConverterMBCSTable *mbcsTable, int8_t stateProps[],
  * A recursive call may do stateProps[state]|=0x40 if this state is the target of an
  * MBCS_STATE_CHANGE_ONLY.
  */
-static int8_t
-getStateProp(const int32_t (*stateTable)[256], int8_t stateProps[], int state) {
-    const int32_t *row;
-    int32_t min, max, entry, nextState;
+ساكن int8_t
+getStateProp(ثابت int32_t (*state_جدول)[256], int8_t stateProps[], صحيح state) {
+    ثابت int32_t *لیکه;
+    int32_t min, max, ثبت, بل_State;
 
-    row=stateTable[state];
+    لیکه=state_جدول[state];
     stateProps[state]=0;
 
     /* find first non-ignorable state */
-    for(min=0;; ++min) {
-        entry=row[min];
-        nextState=MBCS_ENTRY_STATE(entry);
-        if(stateProps[nextState]==-1) {
-            getStateProp(stateTable, stateProps, nextState);
+    لكل(min=0;; ++min) {
+        ثبت=لیکه[min];
+        بل_State=MBCS_ثبت_STATE(ثبت);
+        إذا(stateProps[بل_State]==-1) {
+            getStateProp(state_جدول, stateProps, بل_State);
         }
-        if(MBCS_ENTRY_IS_TRANSITION(entry)) {
-            if(stateProps[nextState]>=0) {
-                break;
+        إذا(MBCS_ثبت_IS_TRANSITION(ثبت)) {
+            إذا(stateProps[بل_State]>=0) {
+                اكسر;
             }
-        } else if(MBCS_ENTRY_FINAL_ACTION(entry)<MBCS_STATE_UNASSIGNED) {
-            break;
+        } وإلا إذا(MBCS_ثبت_FINAL_ACTION(ثبت)<MBCS_STATE_UNASSIGNED) {
+            اكسر;
         }
-        if(min==0xff) {
+        إذا(min==0xff) {
             stateProps[state]=-0x40;  /* (int8_t)0xc0 */
-            return stateProps[state];
+            أرجع stateProps[state];
         }
     }
     stateProps[state] |= static_cast<int8_t>((min >> 5) << 3);
 
     /* find last non-ignorable state */
-    for(max=0xff; min<max; --max) {
-        entry=row[max];
-        nextState=MBCS_ENTRY_STATE(entry);
-        if(stateProps[nextState]==-1) {
-            getStateProp(stateTable, stateProps, nextState);
+    لكل(max=0xff; min<max; --max) {
+        ثبت=لیکه[max];
+        بل_State=MBCS_ثبت_STATE(ثبت);
+        إذا(stateProps[بل_State]==-1) {
+            getStateProp(state_جدول, stateProps, بل_State);
         }
-        if(MBCS_ENTRY_IS_TRANSITION(entry)) {
-            if(stateProps[nextState]>=0) {
-                break;
+        إذا(MBCS_ثبت_IS_TRANSITION(ثبت)) {
+            إذا(stateProps[بل_State]>=0) {
+                اكسر;
             }
-        } else if(MBCS_ENTRY_FINAL_ACTION(entry)<MBCS_STATE_UNASSIGNED) {
-            break;
+        } وإلا إذا(MBCS_ثبت_FINAL_ACTION(ثبت)<MBCS_STATE_UNASSIGNED) {
+            اكسر;
         }
     }
     stateProps[state] |= static_cast<int8_t>(max >> 5);
 
     /* recurse further and collect direct-state information */
-    while(min<=max) {
-        entry=row[min];
-        nextState=MBCS_ENTRY_STATE(entry);
-        if(stateProps[nextState]==-1) {
-            getStateProp(stateTable, stateProps, nextState);
+    طالما(min<=max) {
+        ثبت=لیکه[min];
+        بل_State=MBCS_ثبت_STATE(ثبت);
+        إذا(stateProps[بل_State]==-1) {
+            getStateProp(state_جدول, stateProps, بل_State);
         }
-        if(MBCS_ENTRY_IS_FINAL(entry)) {
-            stateProps[nextState]|=0x40;
-            if(MBCS_ENTRY_FINAL_ACTION(entry)<=MBCS_STATE_FALLBACK_DIRECT_20) {
+        إذا(MBCS_ثبت_IS_FINAL(ثبت)) {
+            stateProps[بل_State]|=0x40;
+            إذا(MBCS_ثبت_FINAL_ACTION(ثبت)<=MBCS_STATE_FALLBACK_مستقیم_20) {
                 stateProps[state]|=0x40;
             }
         }
         ++min;
     }
-    return stateProps[state];
+    أرجع stateProps[state];
 }
 
 /*
@@ -805,10 +805,10 @@ getStateProp(const int32_t (*stateTable)[256], int8_t stateProps[], int state) {
  * Currently only handles roundtrip mappings.
  * Does not currently handle extensions.
  */
-static void
-ucnv_MBCSEnumToUnicode(UConverterMBCSTable *mbcsTable,
-                       UConverterEnumToUCallback *callback, const void *context,
-                       UErrorCode *pErrorCode) {
+ساكن فراغ
+ucnv_MBCSEnum_منزل_Unicode(UConverterMBCSTable *mbcs_جدول,
+                       UConverter_Enum_منزل_UCallback *callback, ثابت فراغ *context,
+                       UError_کوډ *p_Error_کوډ) {
     /*
      * Properties for each state, to speed up the enumeration.
      * Ignorable actions are unassigned/illegal/state-change-only:
@@ -827,36 +827,36 @@ ucnv_MBCSEnumToUnicode(UConverterMBCSTable *mbcsTable,
      * The highest byte value with non-ignorable actions is
      * (value<<5)&0x1f (rounded up).
      */
-    int8_t stateProps[MBCS_MAX_STATE_COUNT];
+    int8_t stateProps[MBCS_MAX_STATE_شمېر];
     int32_t state;
 
-    uprv_memset(stateProps, -1, sizeof(stateProps));
+    uprv_memset(stateProps, -1, حجم(stateProps));
 
     /* recurse from state 0 and set all stateProps */
-    getStateProp(mbcsTable->stateTable, stateProps, 0);
+    getStateProp(mbcs_جدول->state_جدول, stateProps, 0);
 
-    for(state=0; state<mbcsTable->countStates; ++state) {
+    لكل(state=0; state<mbcs_جدول->شمېر_حالتونه; ++state) {
         /*if(stateProps[state]==-1) {
             printf("unused/unreachable <icu:state> %d\n", state);
         }*/
-        if(stateProps[state]>=0x40) {
+        إذا(stateProps[state]>=0x40) {
             /* start from each direct state */
-            enumToU(
-                mbcsTable, stateProps, state, 0, 0,
+            enum_منزل_U(
+                mbcs_جدول, stateProps, state, 0, 0,
                 callback, context,
-                pErrorCode);
+                p_Error_کوډ);
         }
     }
 }
 
-U_CFUNC void 
-ucnv_MBCSGetFilteredUnicodeSetForUnicode(const UConverterSharedData *sharedData,
-                                         const USetAdder *sa,
-                                         UConverterUnicodeSet which,
-                                         UConverterSetFilter filter,
-                                         UErrorCode *pErrorCode) {
-    const UConverterMBCSTable *mbcsTable;
-    const uint16_t *table;
+U_CFUNC فراغ 
+ucnv_MBCSGet_Filtered_Unicode_سېټ_For_Unicode(ثابت UConverter_Shared_معلومات *shared_معلومات,
+                                         ثابت USetAdder *sa,
+                                         UConverter_Unicode_سېټ which,
+                                         UConverter_سېټ_Filter filter,
+                                         UError_کوډ *p_Error_کوډ) {
+    ثابت UConverterMBCSTable *mbcs_جدول;
+    ثابت uint16_t *جدول;
 
     uint32_t st3;
     uint16_t st1, maxStage1, st2;
@@ -864,89 +864,89 @@ ucnv_MBCSGetFilteredUnicodeSetForUnicode(const UConverterSharedData *sharedData,
     UChar32 c;
 
     /* enumerate the from-Unicode trie table */
-    mbcsTable=&sharedData->mbcs;
-    table=mbcsTable->fromUnicodeTable;
-    if(mbcsTable->unicodeMask&UCNV_HAS_SUPPLEMENTARY) {
+    mbcs_جدول=&shared_معلومات->mbcs;
+    جدول=mbcs_جدول->from_Unicode_جدول;
+    إذا(mbcs_جدول->unicode_ماسک&UCNV_HAS_SUPPLEMENTARY) {
         maxStage1=0x440;
-    } else {
+    } وإلا {
         maxStage1=0x40;
     }
 
     c=0; /* keep track of the current code point while enumerating */
 
-    if(mbcsTable->outputType==MBCS_OUTPUT_1) {
-        const uint16_t *stage2, *stage3, *results;
-        uint16_t minValue;
+    إذا(mbcs_جدول->outputType==MBCS_OUTPUT_1) {
+        ثابت uint16_t *stage2, *stage3, *results;
+        uint16_t min_ارزښت;
 
-        results=(const uint16_t *)mbcsTable->fromUnicodeBytes;
+        results=(ثابت uint16_t *)mbcs_جدول->from_Unicode_بایټونه;
 
         /*
          * Set a threshold variable for selecting which mappings to use.
          * See ucnv_MBCSSingleFromBMPWithOffsets() and
          * MBCS_SINGLE_RESULT_FROM_U() for details.
          */
-        if(which==UCNV_ROUNDTRIP_SET) {
+        إذا(which==UCNV_ROUNDTRIP_سېټ) {
             /* use only roundtrips */
-            minValue=0xf00;
-        } else /* UCNV_ROUNDTRIP_AND_FALLBACK_SET */ {
+            min_ارزښت=0xf00;
+        } وإلا /* UCNV_ROUNDTRIP_AND_FALLBACK_SET */ {
             /* use all roundtrip and fallback results */
-            minValue=0x800;
+            min_ارزښت=0x800;
         }
 
-        for(st1=0; st1<maxStage1; ++st1) {
-            st2=table[st1];
-            if(st2>maxStage1) {
-                stage2=table+st2;
-                for(st2=0; st2<64; ++st2) {
-                    if((st3=stage2[st2])!=0) {
+        لكل(st1=0; st1<maxStage1; ++st1) {
+            st2=جدول[st1];
+            إذا(st2>maxStage1) {
+                stage2=جدول+st2;
+                لكل(st2=0; st2<64; ++st2) {
+                    إذا((st3=stage2[st2])!=0) {
                         /* read the stage 3 block */
                         stage3=results+st3;
 
-                        do {
-                            if(*stage3++>=minValue) {
-                                sa->add(sa->set, c);
+                        افعل {
+                            إذا(*stage3++>=min_ارزښت) {
+                                sa->جمع_کړه(sa->سېټ, c);
                             }
-                        } while((++c&0xf)!=0);
-                    } else {
+                        } طالما((++c&0xf)!=0);
+                    } وإلا {
                         c+=16; /* empty stage 3 block */
                     }
                 }
-            } else {
+            } وإلا {
                 c+=1024; /* empty stage 2 block */
             }
         }
-    } else {
-        const uint32_t *stage2;
-        const uint8_t *stage3, *bytes;
+    } وإلا {
+        ثابت uint32_t *stage2;
+        ثابت uint8_t *stage3, *بایټونه;
         uint32_t st3Multiplier;
         uint32_t value;
         UBool useFallback;
 
-        bytes=mbcsTable->fromUnicodeBytes;
+        بایټونه=mbcs_جدول->from_Unicode_بایټونه;
 
-        useFallback = which == UCNV_ROUNDTRIP_AND_FALLBACK_SET;
+        useFallback = which == UCNV_ROUNDTRIP_AND_FALLBACK_سېټ;
 
-        switch(mbcsTable->outputType) {
-        case MBCS_OUTPUT_3:
-        case MBCS_OUTPUT_4_EUC:
+        بدل(mbcs_جدول->outputType) {
+        حالة MBCS_OUTPUT_3:
+        حالة MBCS_OUTPUT_4_EUC:
             st3Multiplier=3;
-            break;
-        case MBCS_OUTPUT_4:
+            اكسر;
+        حالة MBCS_OUTPUT_4:
             st3Multiplier=4;
-            break;
-        default:
+            اكسر;
+        افتراضي:
             st3Multiplier=2;
-            break;
+            اكسر;
         }
 
-        for(st1=0; st1<maxStage1; ++st1) {
-            st2=table[st1];
-            if(st2>(maxStage1>>1)) {
-                stage2=(const uint32_t *)table+st2;
-                for(st2=0; st2<64; ++st2) {
-                    if((st3=stage2[st2])!=0) {
+        لكل(st1=0; st1<maxStage1; ++st1) {
+            st2=جدول[st1];
+            إذا(st2>(maxStage1>>1)) {
+                stage2=(ثابت uint32_t *)جدول+st2;
+                لكل(st2=0; st2<64; ++st2) {
+                    إذا((st3=stage2[st2])!=0) {
                         /* read the stage 3 block */
-                        stage3=bytes+st3Multiplier*16*(uint32_t)(uint16_t)st3;
+                        stage3=بایټونه+st3Multiplier*16*(uint32_t)(uint16_t)st3;
 
                         /* get the roundtrip flags for the stage 3 block */
                         st3>>=16;
@@ -956,131 +956,131 @@ ucnv_MBCSGetFilteredUnicodeSetForUnicode(const UConverterSharedData *sharedData,
                          * or which map to non-zero bytes if we use fallbacks.
                          * See ucnv_MBCSFromUnicodeWithOffsets() for details.
                          */
-                        switch(filter) {
-                        case UCNV_SET_FILTER_NONE:
-                            do {
-                                if(st3&1) {
-                                    sa->add(sa->set, c);
+                        بدل(filter) {
+                        حالة UCNV_سېټ_FILTER_NONE:
+                            افعل {
+                                إذا(st3&1) {
+                                    sa->جمع_کړه(sa->سېټ, c);
                                     stage3+=st3Multiplier;
-                                } else if(useFallback) {
+                                } وإلا إذا(useFallback) {
                                     uint8_t b=0;
-                                    switch(st3Multiplier) {
-                                    case 4:
+                                    بدل(st3Multiplier) {
+                                    حالة 4:
                                         b|=*stage3++;
                                         U_FALLTHROUGH;
-                                    case 3:
+                                    حالة 3:
                                         b|=*stage3++;
                                         U_FALLTHROUGH;
-                                    case 2:
+                                    حالة 2:
                                         b|=stage3[0]|stage3[1];
                                         stage3+=2;
                                         U_FALLTHROUGH;
-                                    default:
-                                        break;
+                                    افتراضي:
+                                        اكسر;
                                     }
-                                    if(b!=0) {
-                                        sa->add(sa->set, c);
+                                    إذا(b!=0) {
+                                        sa->جمع_کړه(sa->سېټ, c);
                                     }
                                 }
                                 st3>>=1;
-                            } while((++c&0xf)!=0);
-                            break;
-                        case UCNV_SET_FILTER_DBCS_ONLY:
+                            } طالما((++c&0xf)!=0);
+                            اكسر;
+                        حالة UCNV_سېټ_FILTER_DBCS_ONLY:
                              /* Ignore single-byte results (<0x100). */
-                            do {
-                                if(((st3&1)!=0 || useFallback) && *((const uint16_t *)stage3)>=0x100) {
-                                    sa->add(sa->set, c);
+                            افعل {
+                                إذا(((st3&1)!=0 || useFallback) && *((ثابت uint16_t *)stage3)>=0x100) {
+                                    sa->جمع_کړه(sa->سېټ, c);
                                 }
                                 st3>>=1;
                                 stage3+=2;  /* +=st3Multiplier */
-                            } while((++c&0xf)!=0);
-                            break;
-                        case UCNV_SET_FILTER_2022_CN:
+                            } طالما((++c&0xf)!=0);
+                            اكسر;
+                        حالة UCNV_سېټ_FILTER_2022_CN:
                              /* Only add code points that map to CNS 11643 planes 1 & 2 for non-EXT ISO-2022-CN. */
-                            do {
-                                if(((st3&1)!=0 || useFallback) && ((value=*stage3)==0x81 || value==0x82)) {
-                                    sa->add(sa->set, c);
+                            افعل {
+                                إذا(((st3&1)!=0 || useFallback) && ((value=*stage3)==0x81 || value==0x82)) {
+                                    sa->جمع_کړه(sa->سېټ, c);
                                 }
                                 st3>>=1;
                                 stage3+=3;  /* +=st3Multiplier */
-                            } while((++c&0xf)!=0);
-                            break;
-                        case UCNV_SET_FILTER_SJIS:
+                            } طالما((++c&0xf)!=0);
+                            اكسر;
+                        حالة UCNV_سېټ_FILTER_SJIS:
                              /* Only add code points that map to Shift-JIS codes corresponding to JIS X 0208. */
-                            do {
-                                if(((st3&1)!=0 || useFallback) && (value=*((const uint16_t *)stage3))>=0x8140 && value<=0xeffc) {
-                                    sa->add(sa->set, c);
+                            افعل {
+                                إذا(((st3&1)!=0 || useFallback) && (value=*((ثابت uint16_t *)stage3))>=0x8140 && value<=0xeffc) {
+                                    sa->جمع_کړه(sa->سېټ, c);
                                 }
                                 st3>>=1;
                                 stage3+=2;  /* +=st3Multiplier */
-                            } while((++c&0xf)!=0);
-                            break;
-                        case UCNV_SET_FILTER_GR94DBCS:
+                            } طالما((++c&0xf)!=0);
+                            اكسر;
+                        حالة UCNV_سېټ_FILTER_GR94_DBCS:
                             /* Only add code points that map to ISO 2022 GR 94 DBCS codes (each byte A1..FE). */
-                            do {
-                                if( ((st3&1)!=0 || useFallback) &&
-                                    (uint16_t)((value=*((const uint16_t *)stage3)) - 0xa1a1)<=(0xfefe - 0xa1a1) &&
+                            افعل {
+                                إذا( ((st3&1)!=0 || useFallback) &&
+                                    (uint16_t)((value=*((ثابت uint16_t *)stage3)) - 0xa1a1)<=(0xfefe - 0xa1a1) &&
                                     (uint8_t)(value-0xa1)<=(0xfe - 0xa1)
                                 ) {
-                                    sa->add(sa->set, c);
+                                    sa->جمع_کړه(sa->سېټ, c);
                                 }
                                 st3>>=1;
                                 stage3+=2;  /* +=st3Multiplier */
-                            } while((++c&0xf)!=0);
-                            break;
-                        case UCNV_SET_FILTER_HZ:
+                            } طالما((++c&0xf)!=0);
+                            اكسر;
+                        حالة UCNV_سېټ_FILTER_HZ:
                             /* Only add code points that are suitable for HZ DBCS (lead byte A1..FD). */
-                            do {
-                                if( ((st3&1)!=0 || useFallback) &&
-                                    (uint16_t)((value=*((const uint16_t *)stage3))-0xa1a1)<=(0xfdfe - 0xa1a1) &&
+                            افعل {
+                                إذا( ((st3&1)!=0 || useFallback) &&
+                                    (uint16_t)((value=*((ثابت uint16_t *)stage3))-0xa1a1)<=(0xfdfe - 0xa1a1) &&
                                     (uint8_t)(value-0xa1)<=(0xfe - 0xa1)
                                 ) {
-                                    sa->add(sa->set, c);
+                                    sa->جمع_کړه(sa->سېټ, c);
                                 }
                                 st3>>=1;
                                 stage3+=2;  /* +=st3Multiplier */
-                            } while((++c&0xf)!=0);
-                            break;
-                        default:
-                            *pErrorCode=U_INTERNAL_PROGRAM_ERROR;
-                            return;
+                            } طالما((++c&0xf)!=0);
+                            اكسر;
+                        افتراضي:
+                            *p_Error_کوډ=U_دننی_پروګرام_ERROR;
+                            أرجع;
                         }
-                    } else {
+                    } وإلا {
                         c+=16; /* empty stage 3 block */
                     }
                 }
-            } else {
+            } وإلا {
                 c+=1024; /* empty stage 2 block */
             }
         }
     }
 
-    ucnv_extGetUnicodeSet(sharedData, sa, which, filter, pErrorCode);
+    ucnv_ext_Get_Unicode_سېټ(shared_معلومات, sa, which, filter, p_Error_کوډ);
 }
 
-U_CFUNC void
-ucnv_MBCSGetUnicodeSetForUnicode(const UConverterSharedData *sharedData,
-                                 const USetAdder *sa,
-                                 UConverterUnicodeSet which,
-                                 UErrorCode *pErrorCode) {
-    ucnv_MBCSGetFilteredUnicodeSetForUnicode(
-        sharedData, sa, which,
-        sharedData->mbcs.outputType==MBCS_OUTPUT_DBCS_ONLY ?
-            UCNV_SET_FILTER_DBCS_ONLY :
-            UCNV_SET_FILTER_NONE,
-        pErrorCode);
+U_CFUNC فراغ
+ucnv_MBCSGet_Unicode_سېټ_For_Unicode(ثابت UConverter_Shared_معلومات *shared_معلومات,
+                                 ثابت USetAdder *sa,
+                                 UConverter_Unicode_سېټ which,
+                                 UError_کوډ *p_Error_کوډ) {
+    ucnv_MBCSGet_Filtered_Unicode_سېټ_For_Unicode(
+        shared_معلومات, sa, which,
+        shared_معلومات->mbcs.outputType==MBCS_OUTPUT_DBCS_ONLY ?
+            UCNV_سېټ_FILTER_DBCS_ONLY :
+            UCNV_سېټ_FILTER_NONE,
+        p_Error_کوډ);
 }
 
-static void U_CALLCONV
-ucnv_MBCSGetUnicodeSet(const UConverter *cnv,
-                   const USetAdder *sa,
-                   UConverterUnicodeSet which,
-                   UErrorCode *pErrorCode) {
-    if(cnv->options&_MBCS_OPTION_GB18030) {
-        sa->addRange(sa->set, 0, 0xd7ff);
-        sa->addRange(sa->set, 0xe000, 0x10ffff);
-    } else {
-        ucnv_MBCSGetUnicodeSetForUnicode(cnv->sharedData, sa, which, pErrorCode);
+ساكن فراغ U_CALLCONV
+ucnv_MBCSGet_Unicode_سېټ(ثابت UConverter *cnv,
+                   ثابت USetAdder *sa,
+                   UConverter_Unicode_سېټ which,
+                   UError_کوډ *p_Error_کوډ) {
+    إذا(cnv->options&_MBCS_OPTION_GB18030) {
+        sa->جمع_کړه_Range(sa->سېټ, 0, 0xd7ff);
+        sa->جمع_کړه_Range(sa->سېټ, 0xe000, 0x10ffff);
+    } وإلا {
+        ucnv_MBCSGet_Unicode_سېټ_For_Unicode(cnv->shared_معلومات, sa, which, p_Error_کوډ);
     }
 }
 
@@ -1101,66 +1101,66 @@ ucnv_MBCSGetUnicodeSet(const UConverter *cnv,
  * @return if(U_FAILURE) return the code point for cnv->fromUChar32
  *         else return 0 after output has been written to the target
  */
-static UChar32
-_extFromU(UConverter *cnv, const UConverterSharedData *sharedData,
+ساكن UChar32
+_extFromU(UConverter *cnv, ثابت UConverter_Shared_معلومات *shared_معلومات,
           UChar32 cp,
-          const char16_t **source, const char16_t *sourceLimit,
-          uint8_t **target, const uint8_t *targetLimit,
-          int32_t **offsets, int32_t sourceIndex,
+          ثابت char16_t **سرچینه, ثابت char16_t *سرچینه_حد,
+          uint8_t **موخه, ثابت uint8_t *موخه_حد,
+          int32_t **offsets, int32_t سرچینه_شاخص,
           UBool flush,
-          UErrorCode *pErrorCode) {
-    const int32_t *cx;
+          UError_کوډ *p_Error_کوډ) {
+    ثابت int32_t *cx;
 
-    cnv->useSubChar1=false;
+    cnv->useSubChar1=خطأ;
 
-    if( (cx=sharedData->mbcs.extIndexes)!=nullptr &&
-        ucnv_extInitialMatchFromU(
+    إذا( (cx=shared_معلومات->mbcs.extIndexes)!=تش_اشاره &&
+        ucnv_ext_Initial_سمون_From_U(
             cnv, cx,
-            cp, source, sourceLimit,
-            reinterpret_cast<char**>(target), reinterpret_cast<const char*>(targetLimit),
-            offsets, sourceIndex,
+            cp, سرچینه, سرچینه_حد,
+            reinterpret_cast<حرف**>(موخه), reinterpret_cast<ثابت حرف*>(موخه_حد),
+            offsets, سرچینه_شاخص,
             flush,
-            pErrorCode)
+            p_Error_کوډ)
     ) {
-        return 0; /* an extension mapping handled the input */
+        أرجع 0; /* an extension mapping handled the input */
     }
 
     /* GB 18030 */
-    if((cnv->options&_MBCS_OPTION_GB18030)!=0) {
-        const uint32_t *range;
+    إذا((cnv->options&_MBCS_OPTION_GB18030)!=0) {
+        ثابت uint32_t *range;
         int32_t i;
 
         range=gb18030Ranges[0];
-        for(i=0; i<UPRV_LENGTHOF(gb18030Ranges); range+=4, ++i) {
-            if (range[0] <= static_cast<uint32_t>(cp) && static_cast<uint32_t>(cp) <= range[1]) {
+        لكل(i=0; i<UPRV_LENGTHOF(gb18030Ranges); range+=4, ++i) {
+            إذا (range[0] <= static_cast<uint32_t>(cp) && static_cast<uint32_t>(cp) <= range[1]) {
                 /* found the Unicode code point, output the four-byte sequence for it */
-                uint32_t linear;
-                char bytes[4];
+                uint32_t خطي_2;
+                حرف بایټونه[4];
 
                 /* get the linear value of the first GB 18030 code in this range */
-                linear=range[2]-LINEAR_18030_BASE;
+                خطي_2=range[2]-خطي_18030_بنسټ;
 
                 /* add the offset from the beginning of the range */
-                linear += (static_cast<uint32_t>(cp) - range[0]);
+                خطي_2 += (static_cast<uint32_t>(cp) - range[0]);
 
                 /* turn this into a four-byte sequence */
-                bytes[3] = static_cast<char>(0x30 + linear % 10); linear /= 10;
-                bytes[2] = static_cast<char>(0x81 + linear % 126); linear /= 126;
-                bytes[1] = static_cast<char>(0x30 + linear % 10); linear /= 10;
-                bytes[0] = static_cast<char>(0x81 + linear);
+                بایټونه[3] = static_cast<حرف>(0x30 + خطي_2 % 10); خطي_2 /= 10;
+                بایټونه[2] = static_cast<حرف>(0x81 + خطي_2 % 126); خطي_2 /= 126;
+                بایټونه[1] = static_cast<حرف>(0x30 + خطي_2 % 10); خطي_2 /= 10;
+                بایټونه[0] = static_cast<حرف>(0x81 + خطي_2);
 
                 /* output this sequence */
-                ucnv_fromUWriteBytes(cnv,
-                                     bytes, 4, reinterpret_cast<char**>(target), reinterpret_cast<const char*>(targetLimit),
-                                     offsets, sourceIndex, pErrorCode);
-                return 0;
+                ucnv_from_UWrite_بایټونه(cnv,
+                                     بایټونه, 4, reinterpret_cast<حرف**>(موخه), reinterpret_cast<ثابت حرف*>(موخه_حد),
+                                     offsets, سرچینه_شاخص, p_Error_کوډ);
+                أرجع 0;
             }
         }
     }
 
     /* no mapping */
-    *pErrorCode=U_INVALID_CHAR_FOUND;
-    return cp;
+    *p_Error_کوډ=U_INVALID_CHAR_وموندل;
+    أرجع cp;
 }
 
 /*
@@ -1168,55 +1168,55 @@ _extFromU(UConverter *cnv, const UConverterSharedData *sharedData,
  * @return if(U_FAILURE) return the length (toULength, byteIndex) for the input
  *         else return 0 after output has been written to the target
  */
-static int8_t
-_extToU(UConverter *cnv, const UConverterSharedData *sharedData,
+ساكن int8_t
+ext_منزل_U(UConverter *cnv, ثابت UConverter_Shared_معلومات *shared_معلومات,
         int8_t length,
-        const uint8_t **source, const uint8_t *sourceLimit,
-        char16_t **target, const char16_t *targetLimit,
-        int32_t **offsets, int32_t sourceIndex,
+        ثابت uint8_t **سرچینه, ثابت uint8_t *سرچینه_حد,
+        char16_t **موخه, ثابت char16_t *موخه_حد,
+        int32_t **offsets, int32_t سرچینه_شاخص,
         UBool flush,
-        UErrorCode *pErrorCode) {
-    const int32_t *cx;
+        UError_کوډ *p_Error_کوډ) {
+    ثابت int32_t *cx;
 
-    if( (cx=sharedData->mbcs.extIndexes)!=nullptr &&
-        ucnv_extInitialMatchToU(
+    إذا( (cx=shared_معلومات->mbcs.extIndexes)!=تش_اشاره &&
+        ucnv_ext_Initial_سمون_منزل_U(
             cnv, cx,
-            length, reinterpret_cast<const char**>(source), reinterpret_cast<const char*>(sourceLimit),
-            target, targetLimit,
-            offsets, sourceIndex,
+            length, reinterpret_cast<ثابت حرف**>(سرچینه), reinterpret_cast<ثابت حرف*>(سرچینه_حد),
+            موخه, موخه_حد,
+            offsets, سرچینه_شاخص,
             flush,
-            pErrorCode)
+            p_Error_کوډ)
     ) {
-        return 0; /* an extension mapping handled the input */
+        أرجع 0; /* an extension mapping handled the input */
     }
 
     /* GB 18030 */
-    if(length==4 && (cnv->options&_MBCS_OPTION_GB18030)!=0) {
-        const uint32_t *range;
-        uint32_t linear;
+    إذا(length==4 && (cnv->options&_MBCS_OPTION_GB18030)!=0) {
+        ثابت uint32_t *range;
+        uint32_t خطي_2;
         int32_t i;
 
-        linear=LINEAR_18030(cnv->toUBytes[0], cnv->toUBytes[1], cnv->toUBytes[2], cnv->toUBytes[3]);
+        خطي_2=خطي_18030(cnv->منزل_UBytes[0], cnv->منزل_UBytes[1], cnv->منزل_UBytes[2], cnv->منزل_UBytes[3]);
         range=gb18030Ranges[0];
-        for(i=0; i<UPRV_LENGTHOF(gb18030Ranges); range+=4, ++i) {
-            if(range[2]<=linear && linear<=range[3]) {
+        لكل(i=0; i<UPRV_LENGTHOF(gb18030Ranges); range+=4, ++i) {
+            إذا(range[2]<=خطي_2 && خطي_2<=range[3]) {
                 /* found the sequence, output the Unicode code point for it */
-                *pErrorCode=U_ZERO_ERROR;
+                *p_Error_کوډ=U_ZERO_ERROR;
 
                 /* add the linear difference between the input and start sequences to the start code point */
-                linear=range[0]+(linear-range[2]);
+                خطي_2=range[0]+(خطي_2-range[2]);
 
                 /* output this code point */
-                ucnv_toUWriteCodePoint(cnv, linear, target, targetLimit, offsets, sourceIndex, pErrorCode);
+                ucnv_منزل_UWrite_کوډ_ټکی(cnv, خطي_2, موخه, موخه_حد, offsets, سرچینه_شاخص, p_Error_کوډ);
 
-                return 0;
+                أرجع 0;
             }
         }
     }
 
     /* no mapping */
-    *pErrorCode=U_INVALID_CHAR_FOUND;
-    return length;
+    *p_Error_کوډ=U_INVALID_CHAR_وموندل;
+    أرجع length;
 }
 
 /* EBCDIC swap LF<->NL ------------------------------------------------------ */
@@ -1243,37 +1243,37 @@ _extToU(UConverter *cnv, const UConverterSharedData *sharedData,
  */
 
 /* standard EBCDIC codes */
-#define EBCDIC_LF 0x25
-#define EBCDIC_NL 0x15
+#تعریف_کړه EBCDIC_LF 0x25
+#تعریف_کړه EBCDIC_NL 0x15
 
 /* standard EBCDIC codes with roundtrip flag as stored in Unicode-to-single-byte tables */
-#define EBCDIC_RT_LF 0xf25
-#define EBCDIC_RT_NL 0xf15
+#تعریف_کړه EBCDIC_RT_LF 0xf25
+#تعریف_کړه EBCDIC_RT_NL 0xf15
 
 /* Unicode code points */
-#define U_LF 0x0a
-#define U_NL 0x85
+#تعریف_کړه U_LF 0x0a
+#تعریف_کړه U_NL 0x85
 
-static UBool
-_EBCDICSwapLFNL(UConverterSharedData *sharedData, UErrorCode *pErrorCode) {
-    UConverterMBCSTable *mbcsTable;
+ساكن UBool
+_EBCDICSwapLFNL(UConverter_Shared_معلومات *shared_معلومات, UError_کوډ *p_Error_کوډ) {
+    UConverterMBCSTable *mbcs_جدول;
 
-    const uint16_t *table, *results;
-    const uint8_t *bytes;
+    ثابت uint16_t *جدول, *results;
+    ثابت uint8_t *بایټونه;
 
-    int32_t (*newStateTable)[256];
+    int32_t (*new_State_جدول)[256];
     uint16_t *newResults;
     uint8_t *p;
-    char *name;
+    حرف *name;
 
-    uint32_t stage2Entry;
+    uint32_t stage2_ثبت;
     uint32_t size, sizeofFromUBytes;
 
-    mbcsTable=&sharedData->mbcs;
+    mbcs_جدول=&shared_معلومات->mbcs;
 
-    table=mbcsTable->fromUnicodeTable;
-    bytes=mbcsTable->fromUnicodeBytes;
-    results = reinterpret_cast<const uint16_t*>(bytes);
+    جدول=mbcs_جدول->from_Unicode_جدول;
+    بایټونه=mbcs_جدول->from_Unicode_بایټونه;
+    results = reinterpret_cast<ثابت uint16_t*>(بایټونه);
 
     /*
      * Check that this is an EBCDIC table with SBCS portion -
@@ -1281,46 +1281,46 @@ _EBCDICSwapLFNL(UConverterSharedData *sharedData, UErrorCode *pErrorCode) {
      *
      * If not, ignore the option. Options are always ignored if they do not apply.
      */
-    if(!(
-         (mbcsTable->outputType==MBCS_OUTPUT_1 || mbcsTable->outputType==MBCS_OUTPUT_2_SISO) &&
-         mbcsTable->stateTable[0][EBCDIC_LF]==MBCS_ENTRY_FINAL(0, MBCS_STATE_VALID_DIRECT_16, U_LF) &&
-         mbcsTable->stateTable[0][EBCDIC_NL]==MBCS_ENTRY_FINAL(0, MBCS_STATE_VALID_DIRECT_16, U_NL)
+    إذا(!(
+         (mbcs_جدول->outputType==MBCS_OUTPUT_1 || mbcs_جدول->outputType==MBCS_OUTPUT_2_SISO) &&
+         mbcs_جدول->state_جدول[0][EBCDIC_LF]==MBCS_ثبت_FINAL(0, MBCS_STATE_VALID_مستقیم_16, U_LF) &&
+         mbcs_جدول->state_جدول[0][EBCDIC_NL]==MBCS_ثبت_FINAL(0, MBCS_STATE_VALID_مستقیم_16, U_NL)
     )) {
-        return false;
+        أرجع خطأ;
     }
 
-    if(mbcsTable->outputType==MBCS_OUTPUT_1) {
-        if(!(
-             EBCDIC_RT_LF==MBCS_SINGLE_RESULT_FROM_U(table, results, U_LF) &&
-             EBCDIC_RT_NL==MBCS_SINGLE_RESULT_FROM_U(table, results, U_NL)
+    إذا(mbcs_جدول->outputType==MBCS_OUTPUT_1) {
+        إذا(!(
+             EBCDIC_RT_LF==MBCS_SINGLE_پایله_FROM_U(جدول, results, U_LF) &&
+             EBCDIC_RT_NL==MBCS_SINGLE_پایله_FROM_U(جدول, results, U_NL)
         )) {
-            return false;
+            أرجع خطأ;
         }
-    } else /* MBCS_OUTPUT_2_SISO */ {
-        stage2Entry=MBCS_STAGE_2_FROM_U(table, U_LF);
-        if(!(
-             MBCS_FROM_U_IS_ROUNDTRIP(stage2Entry, U_LF)!=0 &&
-             EBCDIC_LF==MBCS_VALUE_2_FROM_STAGE_2(bytes, stage2Entry, U_LF)
+    } وإلا /* MBCS_OUTPUT_2_SISO */ {
+        stage2_ثبت=MBCS_STAGE_2_FROM_U(جدول, U_LF);
+        إذا(!(
+             MBCS_FROM_U_IS_ROUNDTRIP(stage2_ثبت, U_LF)!=0 &&
+             EBCDIC_LF==MBCS_ارزښت_2_FROM_STAGE_2(بایټونه, stage2_ثبت, U_LF)
         )) {
-            return false;
+            أرجع خطأ;
         }
 
-        stage2Entry=MBCS_STAGE_2_FROM_U(table, U_NL);
-        if(!(
-             MBCS_FROM_U_IS_ROUNDTRIP(stage2Entry, U_NL)!=0 &&
-             EBCDIC_NL==MBCS_VALUE_2_FROM_STAGE_2(bytes, stage2Entry, U_NL)
+        stage2_ثبت=MBCS_STAGE_2_FROM_U(جدول, U_NL);
+        إذا(!(
+             MBCS_FROM_U_IS_ROUNDTRIP(stage2_ثبت, U_NL)!=0 &&
+             EBCDIC_NL==MBCS_ارزښت_2_FROM_STAGE_2(بایټونه, stage2_ثبت, U_NL)
         )) {
-            return false;
+            أرجع خطأ;
         }
     }
 
-    if(mbcsTable->fromUBytesLength>0) {
+    إذا(mbcs_جدول->from_UBytes_اوږدتیا>0) {
         /*
          * We _know_ the number of bytes in the fromUnicodeBytes array
          * starting with header.version 4.1.
          */
-        sizeofFromUBytes=mbcsTable->fromUBytesLength;
-    } else {
+        sizeofFromUBytes=mbcs_جدول->from_UBytes_اوږدتیا;
+    } وإلا {
         /*
          * Otherwise:
          * There used to be code to enumerate the fromUnicode
@@ -1333,8 +1333,8 @@ _EBCDICSwapLFNL(UConverterSharedData *sharedData, UErrorCode *pErrorCode) {
          * ucnvmbcs.c revision 1.99 is the last one with the
          * ucnv_MBCSSizeofFromUBytes() function.
          */
-        *pErrorCode=U_INVALID_FORMAT_ERROR;
-        return false;
+        *p_Error_کوډ=U_INVALID_FORMAT_ERROR;
+        أرجع خطأ;
     }
 
     /*
@@ -1345,184 +1345,184 @@ _EBCDICSwapLFNL(UConverterSharedData *sharedData, UErrorCode *pErrorCode) {
      * - a converter name string with the swap option appended
      */
     size=
-        mbcsTable->countStates*1024+
+        mbcs_جدول->شمېر_حالتونه*1024+
         sizeofFromUBytes+
-        UCNV_MAX_CONVERTER_NAME_LENGTH+20;
+        UCNV_MAX_CONVERTER_NAME_اوږدتیا+20;
     p = static_cast<uint8_t*>(uprv_malloc(size));
-    if(p==nullptr) {
-        *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-        return false;
+    إذا(p==تش_اشاره) {
+        *p_Error_کوډ=U_حافظه_ویش_ERROR;
+        أرجع خطأ;
     }
 
     /* copy and modify the to-Unicode state table */
-    newStateTable = reinterpret_cast<int32_t(*)[256]>(p);
-    uprv_memcpy(newStateTable, mbcsTable->stateTable, mbcsTable->countStates*1024);
+    new_State_جدول = reinterpret_cast<int32_t(*)[256]>(p);
+    uprv_memcpy(new_State_جدول, mbcs_جدول->state_جدول, mbcs_جدول->شمېر_حالتونه*1024);
 
-    newStateTable[0][EBCDIC_LF]=MBCS_ENTRY_FINAL(0, MBCS_STATE_VALID_DIRECT_16, U_NL);
-    newStateTable[0][EBCDIC_NL]=MBCS_ENTRY_FINAL(0, MBCS_STATE_VALID_DIRECT_16, U_LF);
+    new_State_جدول[0][EBCDIC_LF]=MBCS_ثبت_FINAL(0, MBCS_STATE_VALID_مستقیم_16, U_NL);
+    new_State_جدول[0][EBCDIC_NL]=MBCS_ثبت_FINAL(0, MBCS_STATE_VALID_مستقیم_16, U_LF);
 
     /* copy and modify the from-Unicode result table */
-    newResults = reinterpret_cast<uint16_t*>(newStateTable[mbcsTable->countStates]);
-    uprv_memcpy(newResults, bytes, sizeofFromUBytes);
+    newResults = reinterpret_cast<uint16_t*>(new_State_جدول[mbcs_جدول->شمېر_حالتونه]);
+    uprv_memcpy(newResults, بایټونه, sizeofFromUBytes);
 
     /* conveniently, the table access macros work on the left side of expressions */
-    if(mbcsTable->outputType==MBCS_OUTPUT_1) {
-        MBCS_SINGLE_RESULT_FROM_U(table, newResults, U_LF)=EBCDIC_RT_NL;
-        MBCS_SINGLE_RESULT_FROM_U(table, newResults, U_NL)=EBCDIC_RT_LF;
-    } else /* MBCS_OUTPUT_2_SISO */ {
-        stage2Entry=MBCS_STAGE_2_FROM_U(table, U_LF);
-        MBCS_VALUE_2_FROM_STAGE_2(newResults, stage2Entry, U_LF)=EBCDIC_NL;
+    إذا(mbcs_جدول->outputType==MBCS_OUTPUT_1) {
+        MBCS_SINGLE_پایله_FROM_U(جدول, newResults, U_LF)=EBCDIC_RT_NL;
+        MBCS_SINGLE_پایله_FROM_U(جدول, newResults, U_NL)=EBCDIC_RT_LF;
+    } وإلا /* MBCS_OUTPUT_2_SISO */ {
+        stage2_ثبت=MBCS_STAGE_2_FROM_U(جدول, U_LF);
+        MBCS_ارزښت_2_FROM_STAGE_2(newResults, stage2_ثبت, U_LF)=EBCDIC_NL;
 
-        stage2Entry=MBCS_STAGE_2_FROM_U(table, U_NL);
-        MBCS_VALUE_2_FROM_STAGE_2(newResults, stage2Entry, U_NL)=EBCDIC_LF;
+        stage2_ثبت=MBCS_STAGE_2_FROM_U(جدول, U_NL);
+        MBCS_ارزښت_2_FROM_STAGE_2(newResults, stage2_ثبت, U_NL)=EBCDIC_LF;
     }
 
     /* set the canonical converter name */
-    name = reinterpret_cast<char*>(newResults) + sizeofFromUBytes;
-    uprv_strcpy(name, sharedData->staticData->name);
-    uprv_strcat(name, UCNV_SWAP_LFNL_OPTION_STRING);
+    name = reinterpret_cast<حرف*>(newResults) + sizeofFromUBytes;
+    uprv_strcpy(name, shared_معلومات->static_معلومات->name);
+    uprv_strcat(name, UCNV_بدلون_LFNL_OPTION_STRING);
 
     /* set the pointers */
-    icu::umtx_lock(nullptr);
-    if(mbcsTable->swapLFNLStateTable==nullptr) {
-        mbcsTable->swapLFNLStateTable=newStateTable;
-        mbcsTable->swapLFNLFromUnicodeBytes = reinterpret_cast<uint8_t*>(newResults);
-        mbcsTable->swapLFNLName=name;
+    icu::umtx_قلف(تش_اشاره);
+    إذا(mbcs_جدول->بدلون_LFNLState_جدول==تش_اشاره) {
+        mbcs_جدول->بدلون_LFNLState_جدول=new_State_جدول;
+        mbcs_جدول->بدلون_LFNLFrom_Unicode_بایټونه = reinterpret_cast<uint8_t*>(newResults);
+        mbcs_جدول->بدلون_LFNLName=name;
 
-        newStateTable=nullptr;
+        new_State_جدول=تش_اشاره;
     }
-    icu::umtx_unlock(nullptr);
+    icu::umtx_unlock(تش_اشاره);
 
     /* release the allocated memory if another thread beat us to it */
-    if(newStateTable!=nullptr) {
-        uprv_free(newStateTable);
+    إذا(new_State_جدول!=تش_اشاره) {
+        uprv_free(new_State_جدول);
     }
-    return true;
+    أرجع ریښتیا;
 }
 
 /* reconstitute omitted fromUnicode data ------------------------------------ */
 
 /* for details, compare with genmbcs.c MBCSAddFromUnicode() and transformEUC() */
-static UBool U_CALLCONV
-writeStage3Roundtrip(const void *context, uint32_t value, UChar32 codePoints[32]) {
-    UConverterMBCSTable *mbcsTable=(UConverterMBCSTable *)context;
-    const uint16_t *table;
+ساكن UBool U_CALLCONV
+writeStage3Roundtrip(ثابت فراغ *context, uint32_t value, UChar32 کوډ_Points[32]) {
+    UConverterMBCSTable *mbcs_جدول=(UConverterMBCSTable *)context;
+    ثابت uint16_t *جدول;
     uint32_t *stage2;
-    uint8_t *bytes, *p;
+    uint8_t *بایټونه, *p;
     UChar32 c;
     int32_t i, st3;
 
-    table=mbcsTable->fromUnicodeTable;
-    bytes = const_cast<uint8_t*>(mbcsTable->fromUnicodeBytes);
+    جدول=mbcs_جدول->from_Unicode_جدول;
+    بایټونه = const_cast<uint8_t*>(mbcs_جدول->from_Unicode_بایټونه);
 
     /* for EUC outputTypes, modify the value like genmbcs.c's transformEUC() */
-    switch(mbcsTable->outputType) {
-    case MBCS_OUTPUT_3_EUC:
-        if(value<=0xffff) {
+    بدل(mbcs_جدول->outputType) {
+    حالة MBCS_OUTPUT_3_EUC:
+        إذا(value<=0xffff) {
             /* short sequences are stored directly */
             /* code set 0 or 1 */
-        } else if(value<=0x8effff) {
+        } وإلا إذا(value<=0x8effff) {
             /* code set 2 */
             value&=0x7fff;
-        } else /* first byte is 0x8f */ {
+        } وإلا /* first byte is 0x8f */ {
             /* code set 3 */
             value&=0xff7f;
         }
-        break;
-    case MBCS_OUTPUT_4_EUC:
-        if(value<=0xffffff) {
+        اكسر;
+    حالة MBCS_OUTPUT_4_EUC:
+        إذا(value<=0xffffff) {
             /* short sequences are stored directly */
             /* code set 0 or 1 */
-        } else if(value<=0x8effffff) {
+        } وإلا إذا(value<=0x8effffff) {
             /* code set 2 */
             value&=0x7fffff;
-        } else /* first byte is 0x8f */ {
+        } وإلا /* first byte is 0x8f */ {
             /* code set 3 */
             value&=0xff7fff;
         }
-        break;
-    default:
-        break;
+        اكسر;
+    افتراضي:
+        اكسر;
     }
 
-    for(i=0; i<=0x1f; ++value, ++i) {
-        c=codePoints[i];
-        if(c<0) {
-            continue;
+    لكل(i=0; i<=0x1f; ++value, ++i) {
+        c=کوډ_Points[i];
+        إذا(c<0) {
+            استمر;
         }
 
         /* locate the stage 2 & 3 data */
-        stage2=((uint32_t *)table)+table[c>>10]+((c>>4)&0x3f);
-        p=bytes;
+        stage2=((uint32_t *)جدول)+جدول[c>>10]+((c>>4)&0x3f);
+        p=بایټونه;
         st3 = static_cast<int32_t>(static_cast<uint16_t>(*stage2)) * 16 + (c & 0xf);
 
         /* write the codepage bytes into stage 3 */
-        switch(mbcsTable->outputType) {
-        case MBCS_OUTPUT_3:
-        case MBCS_OUTPUT_4_EUC:
+        بدل(mbcs_جدول->outputType) {
+        حالة MBCS_OUTPUT_3:
+        حالة MBCS_OUTPUT_4_EUC:
             p+=st3*3;
             p[0] = static_cast<uint8_t>(value >> 16);
             p[1] = static_cast<uint8_t>(value >> 8);
             p[2] = static_cast<uint8_t>(value);
-            break;
-        case MBCS_OUTPUT_4:
+            اكسر;
+        حالة MBCS_OUTPUT_4:
             reinterpret_cast<uint32_t*>(p)[st3] = value;
-            break;
-        default:
+            اكسر;
+        افتراضي:
             /* 2 bytes per character */
             reinterpret_cast<uint16_t*>(p)[st3] = static_cast<uint16_t>(value);
-            break;
+            اكسر;
         }
 
         /* set the roundtrip flag */
         *stage2|=(1UL<<(16+(c&0xf)));
     }
-    return true;
+    أرجع ریښتیا;
  }
 
-static void
-reconstituteData(UConverterMBCSTable *mbcsTable,
-                 uint32_t stage1Length, uint32_t stage2Length,
-                 uint32_t fullStage2Length,  /* lengths are numbers of units, not bytes */
-                 UErrorCode *pErrorCode) {
+ساكن فراغ
+reconstitute_معلومات(UConverterMBCSTable *mbcs_جدول,
+                 uint32_t stage1_اوږدتیا, uint32_t stage2_اوږدتیا,
+                 uint32_t ډک_Stage2_اوږدتیا,  /* lengths are numbers of units, not bytes */
+                 UError_کوډ *p_Error_کوډ) {
     uint16_t *stage1;
     uint32_t *stage2;
-    uint32_t dataLength=stage1Length*2+fullStage2Length*4+mbcsTable->fromUBytesLength;
-    mbcsTable->reconstitutedData = static_cast<uint8_t*>(uprv_malloc(dataLength));
-    if(mbcsTable->reconstitutedData==nullptr) {
-        *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-        return;
+    uint32_t معلومات_اوږدتیا=stage1_اوږدتیا*2+ډک_Stage2_اوږدتیا*4+mbcs_جدول->from_UBytes_اوږدتیا;
+    mbcs_جدول->reconstituted_معلومات = static_cast<uint8_t*>(uprv_malloc(معلومات_اوږدتیا));
+    إذا(mbcs_جدول->reconstituted_معلومات==تش_اشاره) {
+        *p_Error_کوډ=U_حافظه_ویش_ERROR;
+        أرجع;
     }
-    uprv_memset(mbcsTable->reconstitutedData, 0, dataLength);
+    uprv_memset(mbcs_جدول->reconstituted_معلومات, 0, معلومات_اوږدتیا);
 
     /* copy existing data and reroute the pointers */
-    stage1 = reinterpret_cast<uint16_t*>(mbcsTable->reconstitutedData);
-    uprv_memcpy(stage1, mbcsTable->fromUnicodeTable, stage1Length*2);
+    stage1 = reinterpret_cast<uint16_t*>(mbcs_جدول->reconstituted_معلومات);
+    uprv_memcpy(stage1, mbcs_جدول->from_Unicode_جدول, stage1_اوږدتیا*2);
 
-    stage2 = reinterpret_cast<uint32_t*>(stage1 + stage1Length);
-    uprv_memcpy(stage2+(fullStage2Length-stage2Length),
-                mbcsTable->fromUnicodeTable+stage1Length,
-                stage2Length*4);
+    stage2 = reinterpret_cast<uint32_t*>(stage1 + stage1_اوږدتیا);
+    uprv_memcpy(stage2+(ډک_Stage2_اوږدتیا-stage2_اوږدتیا),
+                mbcs_جدول->from_Unicode_جدول+stage1_اوږدتیا,
+                stage2_اوږدتیا*4);
 
-    mbcsTable->fromUnicodeTable=stage1;
-    mbcsTable->fromUnicodeBytes = reinterpret_cast<uint8_t*>(stage2 + fullStage2Length);
+    mbcs_جدول->from_Unicode_جدول=stage1;
+    mbcs_جدول->from_Unicode_بایټونه = reinterpret_cast<uint8_t*>(stage2 + ډک_Stage2_اوږدتیا);
 
     /* indexes into stage 2 count from the bottom of the fromUnicodeTable */
     stage2 = reinterpret_cast<uint32_t*>(stage1);
 
     /* reconstitute the initial part of stage 2 from the mbcsIndex */
     {
-        int32_t stageUTF8Length = (static_cast<int32_t>(mbcsTable->maxFastUChar) + 1) >> 6;
-        int32_t stageUTF8Index=0;
+        int32_t stage_UTF8_اوږدتیا = (static_cast<int32_t>(mbcs_جدول->maxFastUChar) + 1) >> 6;
+        int32_t stage_UTF8_شاخص=0;
         int32_t st1, st2, st3, i;
 
-        for(st1=0; stageUTF8Index<stageUTF8Length; ++st1) {
+        لكل(st1=0; stage_UTF8_شاخص<stage_UTF8_اوږدتیا; ++st1) {
             st2=stage1[st1];
-            if (st2 != static_cast<int32_t>(stage1Length) / 2) {
+            إذا (st2 != static_cast<int32_t>(stage1_اوږدتیا) / 2) {
                 /* each stage 2 block has 64 entries corresponding to 16 entries in the mbcsIndex */
-                for(i=0; i<16; ++i) {
-                    st3=mbcsTable->mbcsIndex[stageUTF8Index++];
-                    if(st3!=0) {
+                لكل(i=0; i<16; ++i) {
+                    st3=mbcs_جدول->mbcs_شاخص[stage_UTF8_شاخص++];
+                    إذا(st3!=0) {
                         /* an stage 2 entry's index is per stage 3 16-block, not per stage 3 entry */
                         st3>>=4;
                         /*
@@ -1533,122 +1533,122 @@ reconstituteData(UConverterMBCSTable *mbcsTable,
                         stage2[st2++]=st3++;
                         stage2[st2++]=st3++;
                         stage2[st2++]=st3;
-                    } else {
+                    } وإلا {
                         /* no stage 3 block, skip */
                         st2+=4;
                     }
                 }
-            } else {
+            } وإلا {
                 /* no stage 2 block, skip */
-                stageUTF8Index+=16;
+                stage_UTF8_شاخص+=16;
             }
         }
     }
 
     /* reconstitute fromUnicodeBytes with roundtrips from toUnicode data */
-    ucnv_MBCSEnumToUnicode(mbcsTable, writeStage3Roundtrip, mbcsTable, pErrorCode);
+    ucnv_MBCSEnum_منزل_Unicode(mbcs_جدول, writeStage3Roundtrip, mbcs_جدول, p_Error_کوډ);
 }
 
 /* MBCS setup functions ----------------------------------------------------- */
 
-static void U_CALLCONV
-ucnv_MBCSLoad(UConverterSharedData *sharedData,
-          UConverterLoadArgs *pArgs,
-          const uint8_t *raw,
-          UErrorCode *pErrorCode) {
+ساكن فراغ U_CALLCONV
+ucnv_MBCSLoad(UConverter_Shared_معلومات *shared_معلومات,
+          UConverter_بارول_دلیلونه *p_دلیلونه,
+          ثابت uint8_t *raw,
+          UError_کوډ *p_Error_کوډ) {
     UDataInfo info;
-    UConverterMBCSTable *mbcsTable=&sharedData->mbcs;
-    _MBCSHeader *header=(_MBCSHeader *)raw;
-    uint32_t offset;
-    uint32_t headerLength;
-    UBool noFromU=false;
+    UConverterMBCSTable *mbcs_جدول=&shared_معلومات->mbcs;
+    _MBCSHeader *سرلیک=(_MBCSHeader *)raw;
+    uint32_t دننه_واټن;
+    uint32_t سرلیک_اوږدتیا;
+    UBool noFromU=خطأ;
 
-    if(header->version[0]==4) {
-        headerLength=MBCS_HEADER_V4_LENGTH;
-    } else if(header->version[0]==5 && header->version[1]>=3 &&
-              (header->options&MBCS_OPT_UNKNOWN_INCOMPATIBLE_MASK)==0) {
-        headerLength=header->options&MBCS_OPT_LENGTH_MASK;
-        noFromU = static_cast<UBool>((header->options & MBCS_OPT_NO_FROM_U) != 0);
-    } else {
-        *pErrorCode=U_INVALID_TABLE_FORMAT;
-        return;
+    إذا(سرلیک->نسخه[0]==4) {
+        سرلیک_اوږدتیا=MBCS_سرلیک_V4_اوږدتیا;
+    } وإلا إذا(سرلیک->نسخه[0]==5 && سرلیک->نسخه[1]>=3 &&
+              (سرلیک->options&MBCS_OPT_UNKNOWN_INCOMPATIBLE_ماسک)==0) {
+        سرلیک_اوږدتیا=سرلیک->options&MBCS_OPT_اوږدتیا_ماسک;
+        noFromU = static_cast<UBool>((سرلیک->options & MBCS_OPT_NO_FROM_U) != 0);
+    } وإلا {
+        *p_Error_کوډ=U_INVALID_جدول_FORMAT;
+        أرجع;
     }
 
-    mbcsTable->outputType = static_cast<uint8_t>(header->flags);
-    if(noFromU && mbcsTable->outputType==MBCS_OUTPUT_1) {
-        *pErrorCode=U_INVALID_TABLE_FORMAT;
-        return;
+    mbcs_جدول->outputType = static_cast<uint8_t>(سرلیک->flags);
+    إذا(noFromU && mbcs_جدول->outputType==MBCS_OUTPUT_1) {
+        *p_Error_کوډ=U_INVALID_جدول_FORMAT;
+        أرجع;
     }
 
     /* extension data, header version 4.2 and higher */
-    offset=header->flags>>8;
-    if(offset!=0) {
-        mbcsTable->extIndexes = reinterpret_cast<const int32_t*>(raw + offset);
+    دننه_واټن=سرلیک->flags>>8;
+    إذا(دننه_واټن!=0) {
+        mbcs_جدول->extIndexes = reinterpret_cast<ثابت int32_t*>(raw + دننه_واټن);
     }
 
-    if(mbcsTable->outputType==MBCS_OUTPUT_EXT_ONLY) {
-        UConverterLoadArgs args=UCNV_LOAD_ARGS_INITIALIZER;
-        UConverterSharedData *baseSharedData;
-        const int32_t *extIndexes;
-        const char *baseName;
+    إذا(mbcs_جدول->outputType==MBCS_OUTPUT_EXT_ONLY) {
+        UConverter_بارول_دلیلونه دلیلونه_2=UCNV_بارول_دلیلونه_INITIALIZER;
+        UConverter_Shared_معلومات *بنسټ_Shared_معلومات;
+        ثابت int32_t *extIndexes;
+        ثابت حرف *بنسټ_Name;
 
         /* extension-only file, load the base table and set values appropriately */
-        if((extIndexes=mbcsTable->extIndexes)==nullptr) {
+        إذا((extIndexes=mbcs_جدول->extIndexes)==تش_اشاره) {
             /* extension-only file without extension */
-            *pErrorCode=U_INVALID_TABLE_FORMAT;
-            return;
+            *p_Error_کوډ=U_INVALID_جدول_FORMAT;
+            أرجع;
         }
 
-        if(pArgs->nestedLoads!=1) {
+        إذا(p_دلیلونه->nestedLoads!=1) {
             /* an extension table must not be loaded as a base table */
-            *pErrorCode=U_INVALID_TABLE_FILE;
-            return;
+            *p_Error_کوډ=U_INVALID_جدول_FILE;
+            أرجع;
         }
 
         /* load the base table */
-        baseName = reinterpret_cast<const char*>(header) + headerLength * 4;
-        if(0==uprv_strcmp(baseName, sharedData->staticData->name)) {
+        بنسټ_Name = reinterpret_cast<ثابت حرف*>(سرلیک) + سرلیک_اوږدتیا * 4;
+        إذا(0==uprv_strcmp(بنسټ_Name, shared_معلومات->static_معلومات->name)) {
             /* forbid loading this same extension-only file */
-            *pErrorCode=U_INVALID_TABLE_FORMAT;
-            return;
+            *p_Error_کوډ=U_INVALID_جدول_FORMAT;
+            أرجع;
         }
 
         /* TODO parse package name out of the prefix of the base name in the extension .cnv file? */
-        args.size=sizeof(UConverterLoadArgs);
-        args.nestedLoads=2;
-        args.onlyTestIsLoadable=pArgs->onlyTestIsLoadable;
-        args.reserved=pArgs->reserved;
-        args.options=pArgs->options;
-        args.pkg=pArgs->pkg;
-        args.name=baseName;
-        baseSharedData=ucnv_load(&args, pErrorCode);
-        if(U_FAILURE(*pErrorCode)) {
-            return;
+        دلیلونه_2.size=حجم(UConverter_بارول_دلیلونه);
+        دلیلونه_2.nestedLoads=2;
+        دلیلونه_2.onlyTestIsLoadable=p_دلیلونه->onlyTestIsLoadable;
+        دلیلونه_2.reserved=p_دلیلونه->reserved;
+        دلیلونه_2.options=p_دلیلونه->options;
+        دلیلونه_2.pkg=p_دلیلونه->pkg;
+        دلیلونه_2.name=بنسټ_Name;
+        بنسټ_Shared_معلومات=ucnv_بارول(&دلیلونه_2, p_Error_کوډ);
+        إذا(U_FAILURE(*p_Error_کوډ)) {
+            أرجع;
         }
-        if( baseSharedData->staticData->conversionType!=UCNV_MBCS ||
-            baseSharedData->mbcs.baseSharedData!=nullptr
+        إذا( بنسټ_Shared_معلومات->static_معلومات->conversionType!=UCNV_MBCS ||
+            بنسټ_Shared_معلومات->mbcs.بنسټ_Shared_معلومات!=تش_اشاره
         ) {
-            ucnv_unload(baseSharedData);
-            *pErrorCode=U_INVALID_TABLE_FORMAT;
-            return;
+            ucnv_unload(بنسټ_Shared_معلومات);
+            *p_Error_کوډ=U_INVALID_جدول_FORMAT;
+            أرجع;
         }
-        if(pArgs->onlyTestIsLoadable) {
+        إذا(p_دلیلونه->onlyTestIsLoadable) {
             /*
              * Exit as soon as we know that we can load the converter
              * and the format is valid and supported.
              * The worst that can happen in the following code is a memory
              * allocation error.
              */
-            ucnv_unload(baseSharedData);
-            return;
+            ucnv_unload(بنسټ_Shared_معلومات);
+            أرجع;
         }
 
         /* copy the base table data */
-        uprv_memcpy(mbcsTable, &baseSharedData->mbcs, sizeof(UConverterMBCSTable));
+        uprv_memcpy(mbcs_جدول, &بنسټ_Shared_معلومات->mbcs, حجم(UConverterMBCSTable));
 
         /* overwrite values with relevant ones for the extension converter */
-        mbcsTable->baseSharedData=baseSharedData;
-        mbcsTable->extIndexes=extIndexes;
+        mbcs_جدول->بنسټ_Shared_معلومات=بنسټ_Shared_معلومات;
+        mbcs_جدول->extIndexes=extIndexes;
 
         /*
          * It would be possible to share the swapLFNL data with a base converter,
@@ -1657,78 +1657,78 @@ ucnv_MBCSLoad(UConverterSharedData *sharedData,
          * It is easier to just create the data for the extension converter
          * separately when it is requested.
          */
-        mbcsTable->swapLFNLStateTable=nullptr;
-        mbcsTable->swapLFNLFromUnicodeBytes=nullptr;
-        mbcsTable->swapLFNLName=nullptr;
+        mbcs_جدول->بدلون_LFNLState_جدول=تش_اشاره;
+        mbcs_جدول->بدلون_LFNLFrom_Unicode_بایټونه=تش_اشاره;
+        mbcs_جدول->بدلون_LFNLName=تش_اشاره;
 
         /*
          * The reconstitutedData must be deleted only when the base converter
          * is unloaded.
          */
-        mbcsTable->reconstitutedData=nullptr;
+        mbcs_جدول->reconstituted_معلومات=تش_اشاره;
 
         /*
          * Set a special, runtime-only outputType if the extension converter
          * is a DBCS version of a base converter that also maps single bytes.
          */
-        if( sharedData->staticData->conversionType==UCNV_DBCS ||
-                (sharedData->staticData->conversionType==UCNV_MBCS &&
-                 sharedData->staticData->minBytesPerChar>=2)
+        إذا( shared_معلومات->static_معلومات->conversionType==UCNV_DBCS ||
+                (shared_معلومات->static_معلومات->conversionType==UCNV_MBCS &&
+                 shared_معلومات->static_معلومات->min_بایټونه_فی_Char>=2)
         ) {
-            if(baseSharedData->mbcs.outputType==MBCS_OUTPUT_2_SISO) {
+            إذا(بنسټ_Shared_معلومات->mbcs.outputType==MBCS_OUTPUT_2_SISO) {
                 /* the base converter is SI/SO-stateful */
-                int32_t entry;
+                int32_t ثبت;
 
                 /* get the dbcs state from the state table entry for SO=0x0e */
-                entry=mbcsTable->stateTable[0][0xe];
-                if( MBCS_ENTRY_IS_FINAL(entry) &&
-                    MBCS_ENTRY_FINAL_ACTION(entry)==MBCS_STATE_CHANGE_ONLY &&
-                    MBCS_ENTRY_FINAL_STATE(entry)!=0
+                ثبت=mbcs_جدول->state_جدول[0][0xe];
+                إذا( MBCS_ثبت_IS_FINAL(ثبت) &&
+                    MBCS_ثبت_FINAL_ACTION(ثبت)==MBCS_STATE_CHANGE_ONLY &&
+                    MBCS_ثبت_FINAL_STATE(ثبت)!=0
                 ) {
-                    mbcsTable->dbcsOnlyState = static_cast<uint8_t>(MBCS_ENTRY_FINAL_STATE(entry));
+                    mbcs_جدول->dbcsOnlyState = static_cast<uint8_t>(MBCS_ثبت_FINAL_STATE(ثبت));
 
-                    mbcsTable->outputType=MBCS_OUTPUT_DBCS_ONLY;
+                    mbcs_جدول->outputType=MBCS_OUTPUT_DBCS_ONLY;
                 }
-            } else if(
-                baseSharedData->staticData->conversionType==UCNV_MBCS &&
-                baseSharedData->staticData->minBytesPerChar==1 &&
-                baseSharedData->staticData->maxBytesPerChar==2 &&
-                mbcsTable->countStates<=127
+            } وإلا إذا(
+                بنسټ_Shared_معلومات->static_معلومات->conversionType==UCNV_MBCS &&
+                بنسټ_Shared_معلومات->static_معلومات->min_بایټونه_فی_Char==1 &&
+                بنسټ_Shared_معلومات->static_معلومات->max_بایټونه_فی_Char==2 &&
+                mbcs_جدول->شمېر_حالتونه<=127
             ) {
                 /* non-stateful base converter, need to modify the state table */
-                int32_t (*newStateTable)[256];
+                int32_t (*new_State_جدول)[256];
                 int32_t *state;
                 int32_t i, count;
 
                 /* allocate a new state table and copy the base state table contents */
-                count=mbcsTable->countStates;
-                newStateTable = static_cast<int32_t(*)[256]>(uprv_malloc((count + 1) * 1024));
-                if(newStateTable==nullptr) {
-                    ucnv_unload(baseSharedData);
-                    *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-                    return;
+                count=mbcs_جدول->شمېر_حالتونه;
+                new_State_جدول = static_cast<int32_t(*)[256]>(uprv_malloc((count + 1) * 1024));
+                إذا(new_State_جدول==تش_اشاره) {
+                    ucnv_unload(بنسټ_Shared_معلومات);
+                    *p_Error_کوډ=U_حافظه_ویش_ERROR;
+                    أرجع;
                 }
 
-                uprv_memcpy(newStateTable, mbcsTable->stateTable, count*1024);
+                uprv_memcpy(new_State_جدول, mbcs_جدول->state_جدول, count*1024);
 
                 /* change all final single-byte entries to go to a new all-illegal state */
-                state=newStateTable[0];
-                for(i=0; i<256; ++i) {
-                    if(MBCS_ENTRY_IS_FINAL(state[i])) {
-                        state[i]=MBCS_ENTRY_TRANSITION(count, 0);
+                state=new_State_جدول[0];
+                لكل(i=0; i<256; ++i) {
+                    إذا(MBCS_ثبت_IS_FINAL(state[i])) {
+                        state[i]=MBCS_ثبت_TRANSITION(count, 0);
                     }
                 }
 
                 /* build the new all-illegal state */
-                state=newStateTable[count];
-                for(i=0; i<256; ++i) {
-                    state[i]=MBCS_ENTRY_FINAL(0, MBCS_STATE_ILLEGAL, 0);
+                state=new_State_جدول[count];
+                لكل(i=0; i<256; ++i) {
+                    state[i]=MBCS_ثبت_FINAL(0, MBCS_STATE_ILLEGAL, 0);
                 }
-                mbcsTable->stateTable=(const int32_t (*)[256])newStateTable;
-                mbcsTable->countStates = static_cast<uint8_t>(count + 1);
-                mbcsTable->stateTableOwned=true;
+                mbcs_جدول->state_جدول=(ثابت int32_t (*)[256])new_State_جدول;
+                mbcs_جدول->شمېر_حالتونه = static_cast<uint8_t>(count + 1);
+                mbcs_جدول->state_جدول_Owned=ریښتیا;
 
-                mbcsTable->outputType=MBCS_OUTPUT_DBCS_ONLY;
+                mbcs_جدول->outputType=MBCS_OUTPUT_DBCS_ONLY;
             }
         }
 
@@ -1739,55 +1739,55 @@ ucnv_MBCSLoad(UConverterSharedData *sharedData,
          * this is necessary because the static data unicodeMask, especially
          * the UCNV_HAS_SUPPLEMENTARY flag, is part of the base table data
          */
-    } else {
+    } وإلا {
         /* conversion file with a base table; an additional extension table is optional */
         /* make sure that the output type is known */
-        switch(mbcsTable->outputType) {
-        case MBCS_OUTPUT_1:
-        case MBCS_OUTPUT_2:
-        case MBCS_OUTPUT_3:
-        case MBCS_OUTPUT_4:
-        case MBCS_OUTPUT_3_EUC:
-        case MBCS_OUTPUT_4_EUC:
-        case MBCS_OUTPUT_2_SISO:
+        بدل(mbcs_جدول->outputType) {
+        حالة MBCS_OUTPUT_1:
+        حالة MBCS_OUTPUT_2:
+        حالة MBCS_OUTPUT_3:
+        حالة MBCS_OUTPUT_4:
+        حالة MBCS_OUTPUT_3_EUC:
+        حالة MBCS_OUTPUT_4_EUC:
+        حالة MBCS_OUTPUT_2_SISO:
             /* OK */
-            break;
-        default:
-            *pErrorCode=U_INVALID_TABLE_FORMAT;
-            return;
+            اكسر;
+        افتراضي:
+            *p_Error_کوډ=U_INVALID_جدول_FORMAT;
+            أرجع;
         }
-        if(pArgs->onlyTestIsLoadable) {
+        إذا(p_دلیلونه->onlyTestIsLoadable) {
             /*
              * Exit as soon as we know that we can load the converter
              * and the format is valid and supported.
              * The worst that can happen in the following code is a memory
              * allocation error.
              */
-            return;
+            أرجع;
         }
 
-        mbcsTable->countStates = static_cast<uint8_t>(header->countStates);
-        mbcsTable->countToUFallbacks=header->countToUFallbacks;
-        mbcsTable->stateTable = reinterpret_cast<const int32_t(*)[256]>(raw + headerLength * 4);
-        mbcsTable->toUFallbacks = reinterpret_cast<const _MBCSToUFallback*>(mbcsTable->stateTable + header->countStates);
-        mbcsTable->unicodeCodeUnits = reinterpret_cast<const uint16_t*>(raw + header->offsetToUCodeUnits);
+        mbcs_جدول->شمېر_حالتونه = static_cast<uint8_t>(سرلیک->شمېر_حالتونه);
+        mbcs_جدول->شمېر_منزل_UFallbacks=سرلیک->شمېر_منزل_UFallbacks;
+        mbcs_جدول->state_جدول = reinterpret_cast<ثابت int32_t(*)[256]>(raw + سرلیک_اوږدتیا * 4);
+        mbcs_جدول->منزل_UFallbacks = reinterpret_cast<ثابت _MBCSToUFallback*>(mbcs_جدول->state_جدول + سرلیک->شمېر_حالتونه);
+        mbcs_جدول->unicode_کوډ_Units = reinterpret_cast<ثابت uint16_t*>(raw + سرلیک->دننه_واټن_منزل_UCode_Units);
 
-        mbcsTable->fromUnicodeTable = reinterpret_cast<const uint16_t*>(raw + header->offsetFromUTable);
-        mbcsTable->fromUnicodeBytes = raw + header->offsetFromUBytes;
-        mbcsTable->fromUBytesLength=header->fromUBytesLength;
+        mbcs_جدول->from_Unicode_جدول = reinterpret_cast<ثابت uint16_t*>(raw + سرلیک->دننه_واټن_From_UTable);
+        mbcs_جدول->from_Unicode_بایټونه = raw + سرلیک->دننه_واټن_From_UBytes;
+        mbcs_جدول->from_UBytes_اوږدتیا=سرلیک->from_UBytes_اوږدتیا;
 
         /*
          * converter versions 6.1 and up contain a unicodeMask that is
          * used here to select the most efficient function implementations
          */
-        info.size=sizeof(UDataInfo);
-        udata_getInfo((UDataMemory *)sharedData->dataMemory, &info);
-        if(info.formatVersion[0]>6 || (info.formatVersion[0]==6 && info.formatVersion[1]>=1)) {
+        info.size=حجم(UDataInfo);
+        udata_getInfo((UData_حافظه *)shared_معلومات->معلومات_حافظه, &info);
+        إذا(info.format_نسخه[0]>6 || (info.format_نسخه[0]==6 && info.format_نسخه[1]>=1)) {
             /* mask off possible future extensions to be safe */
-            mbcsTable->unicodeMask = static_cast<uint8_t>(sharedData->staticData->unicodeMask & 3);
-        } else {
+            mbcs_جدول->unicode_ماسک = static_cast<uint8_t>(shared_معلومات->static_معلومات->unicode_ماسک & 3);
+        } وإلا {
             /* for older versions, assume worst case: contains anything possible (prevent over-optimizations) */
-            mbcsTable->unicodeMask=UCNV_HAS_SUPPLEMENTARY|UCNV_HAS_SURROGATES;
+            mbcs_جدول->unicode_ماسک=UCNV_HAS_SUPPLEMENTARY|UCNV_HAS_SURROGATES;
         }
 
         /*
@@ -1798,37 +1798,37 @@ ucnv_MBCSLoad(UConverterSharedData *sharedData,
          * The implementation does not handle mapping tables with entries for
          * unpaired surrogates.
          */
-        if( header->version[1]>=3 &&
-            (mbcsTable->unicodeMask&UCNV_HAS_SURROGATES)==0 &&
-            (mbcsTable->countStates==1 ?
-                (header->version[2]>=(SBCS_FAST_MAX>>8)) :
-                (header->version[2]>=(MBCS_FAST_MAX>>8))
+        إذا( سرلیک->نسخه[1]>=3 &&
+            (mbcs_جدول->unicode_ماسک&UCNV_HAS_SURROGATES)==0 &&
+            (mbcs_جدول->شمېر_حالتونه==1 ?
+                (سرلیک->نسخه[2]>=(SBCS_FAST_MAX>>8)) :
+                (سرلیک->نسخه[2]>=(MBCS_FAST_MAX>>8))
             )
         ) {
-            mbcsTable->utf8Friendly=true;
+            mbcs_جدول->utf8Friendly=ریښتیا;
 
-            if(mbcsTable->countStates==1) {
+            إذا(mbcs_جدول->شمېر_حالتونه==1) {
                 /*
                  * SBCS: Stage 3 is allocated in 64-entry blocks for U+0000..SBCS_FAST_MAX or higher.
                  * Build a table with indexes to each block, to be used instead of
                  * the regular stage 1/2 table.
                  */
                 int32_t i;
-                for(i=0; i<(SBCS_FAST_LIMIT>>6); ++i) {
-                    mbcsTable->sbcsIndex[i]=mbcsTable->fromUnicodeTable[mbcsTable->fromUnicodeTable[i>>4]+((i<<2)&0x3c)];
+                لكل(i=0; i<(SBCS_FAST_حد>>6); ++i) {
+                    mbcs_جدول->sbcs_شاخص[i]=mbcs_جدول->from_Unicode_جدول[mbcs_جدول->from_Unicode_جدول[i>>4]+((i<<2)&0x3c)];
                 }
                 /* set SBCS_FAST_MAX to reflect the reach of sbcsIndex[] even if header->version[2]>(SBCS_FAST_MAX>>8) */
-                mbcsTable->maxFastUChar=SBCS_FAST_MAX;
-            } else {
+                mbcs_جدول->maxFastUChar=SBCS_FAST_MAX;
+            } وإلا {
                 /*
                  * MBCS: Stage 3 is allocated in 64-entry blocks for U+0000..MBCS_FAST_MAX or higher.
                  * The .cnv file is prebuilt with an additional stage table with indexes
                  * to each block.
                  */
-                mbcsTable->mbcsIndex = reinterpret_cast<const uint16_t*>(
-                    mbcsTable->fromUnicodeBytes +
-                     (noFromU ? 0 : mbcsTable->fromUBytesLength));
-                mbcsTable->maxFastUChar = (static_cast<char16_t>(header->version[2]) << 8) | 0xff;
+                mbcs_جدول->mbcs_شاخص = reinterpret_cast<ثابت uint16_t*>(
+                    mbcs_جدول->from_Unicode_بایټونه +
+                     (noFromU ? 0 : mbcs_جدول->from_UBytes_اوږدتیا));
+                mbcs_جدول->maxFastUChar = (static_cast<char16_t>(سرلیک->نسخه[2]) << 8) | 0xff;
             }
         }
 
@@ -1837,234 +1837,234 @@ ucnv_MBCSLoad(UConverterSharedData *sharedData,
             uint32_t asciiRoundtrips=0xffffffff;
             int32_t i;
 
-            for(i=0; i<0x80; ++i) {
-                if(mbcsTable->stateTable[0][i]!=MBCS_ENTRY_FINAL(0, MBCS_STATE_VALID_DIRECT_16, i)) {
+            لكل(i=0; i<0x80; ++i) {
+                إذا(mbcs_جدول->state_جدول[0][i]!=MBCS_ثبت_FINAL(0, MBCS_STATE_VALID_مستقیم_16, i)) {
                     asciiRoundtrips &= ~(static_cast<uint32_t>(1) << (i >> 2));
                 }
             }
-            mbcsTable->asciiRoundtrips=asciiRoundtrips;
+            mbcs_جدول->asciiRoundtrips=asciiRoundtrips;
         }
 
-        if(noFromU) {
-            uint32_t stage1Length=
-                mbcsTable->unicodeMask&UCNV_HAS_SUPPLEMENTARY ?
+        إذا(noFromU) {
+            uint32_t stage1_اوږدتیا=
+                mbcs_جدول->unicode_ماسک&UCNV_HAS_SUPPLEMENTARY ?
                     0x440 : 0x40;
-            uint32_t stage2Length=
-                (header->offsetFromUBytes-header->offsetFromUTable)/4-
-                stage1Length/2;
-            reconstituteData(mbcsTable, stage1Length, stage2Length, header->fullStage2Length, pErrorCode);
+            uint32_t stage2_اوږدتیا=
+                (سرلیک->دننه_واټن_From_UBytes-سرلیک->دننه_واټن_From_UTable)/4-
+                stage1_اوږدتیا/2;
+            reconstitute_معلومات(mbcs_جدول, stage1_اوږدتیا, stage2_اوږدتیا, سرلیک->ډک_Stage2_اوږدتیا, p_Error_کوډ);
         }
     }
 
     /* Set the impl pointer here so that it is set for both extension-only and base tables. */
-    if(mbcsTable->utf8Friendly) {
-        if(mbcsTable->countStates==1) {
-            sharedData->impl=&_SBCSUTF8Impl;
-        } else {
-            if(mbcsTable->outputType==MBCS_OUTPUT_2) {
-                sharedData->impl=&_DBCSUTF8Impl;
+    إذا(mbcs_جدول->utf8Friendly) {
+        إذا(mbcs_جدول->شمېر_حالتونه==1) {
+            shared_معلومات->impl=&_SBCSUTF8Impl;
+        } وإلا {
+            إذا(mbcs_جدول->outputType==MBCS_OUTPUT_2) {
+                shared_معلومات->impl=&_DBCSUTF8Impl;
             }
         }
     }
 
-    if(mbcsTable->outputType==MBCS_OUTPUT_DBCS_ONLY || mbcsTable->outputType==MBCS_OUTPUT_2_SISO) {
+    إذا(mbcs_جدول->outputType==MBCS_OUTPUT_DBCS_ONLY || mbcs_جدول->outputType==MBCS_OUTPUT_2_SISO) {
         /*
          * MBCS_OUTPUT_DBCS_ONLY: No SBCS mappings, therefore ASCII does not roundtrip.
          * MBCS_OUTPUT_2_SISO: Bypass the ASCII fastpath to handle prevLength correctly.
          */
-        mbcsTable->asciiRoundtrips=0;
+        mbcs_جدول->asciiRoundtrips=0;
     }
 }
 
-static void U_CALLCONV
-ucnv_MBCSUnload(UConverterSharedData *sharedData) {
-    UConverterMBCSTable *mbcsTable=&sharedData->mbcs;
+ساكن فراغ U_CALLCONV
+ucnv_MBCSUnload(UConverter_Shared_معلومات *shared_معلومات) {
+    UConverterMBCSTable *mbcs_جدول=&shared_معلومات->mbcs;
 
-    if(mbcsTable->swapLFNLStateTable!=nullptr) {
-        uprv_free(mbcsTable->swapLFNLStateTable);
+    إذا(mbcs_جدول->بدلون_LFNLState_جدول!=تش_اشاره) {
+        uprv_free(mbcs_جدول->بدلون_LFNLState_جدول);
     }
-    if(mbcsTable->stateTableOwned) {
-        uprv_free((void *)mbcsTable->stateTable);
+    إذا(mbcs_جدول->state_جدول_Owned) {
+        uprv_free((فراغ *)mbcs_جدول->state_جدول);
     }
-    if(mbcsTable->baseSharedData!=nullptr) {
-        ucnv_unload(mbcsTable->baseSharedData);
+    إذا(mbcs_جدول->بنسټ_Shared_معلومات!=تش_اشاره) {
+        ucnv_unload(mbcs_جدول->بنسټ_Shared_معلومات);
     }
-    if(mbcsTable->reconstitutedData!=nullptr) {
-        uprv_free(mbcsTable->reconstitutedData);
+    إذا(mbcs_جدول->reconstituted_معلومات!=تش_اشاره) {
+        uprv_free(mbcs_جدول->reconstituted_معلومات);
     }
 }
 
-static void U_CALLCONV
+ساكن فراغ U_CALLCONV
 ucnv_MBCSOpen(UConverter *cnv,
-              UConverterLoadArgs *pArgs,
-              UErrorCode *pErrorCode) {
-    UConverterMBCSTable *mbcsTable;
-    const int32_t *extIndexes;
+              UConverter_بارول_دلیلونه *p_دلیلونه,
+              UError_کوډ *p_Error_کوډ) {
+    UConverterMBCSTable *mbcs_جدول;
+    ثابت int32_t *extIndexes;
     uint8_t outputType;
-    int8_t maxBytesPerUChar;
+    int8_t max_بایټونه_فی_UChar;
 
-    if(pArgs->onlyTestIsLoadable) {
-        return;
+    إذا(p_دلیلونه->onlyTestIsLoadable) {
+        أرجع;
     }
 
-    mbcsTable=&cnv->sharedData->mbcs;
-    outputType=mbcsTable->outputType;
+    mbcs_جدول=&cnv->shared_معلومات->mbcs;
+    outputType=mbcs_جدول->outputType;
 
-    if(outputType==MBCS_OUTPUT_DBCS_ONLY) {
+    إذا(outputType==MBCS_OUTPUT_DBCS_ONLY) {
         /* the swaplfnl option does not apply, remove it */
-        cnv->options=pArgs->options&=~UCNV_OPTION_SWAP_LFNL;
+        cnv->options=p_دلیلونه->options&=~UCNV_OPTION_بدلون_LFNL;
     }
 
-    if((pArgs->options&UCNV_OPTION_SWAP_LFNL)!=0) {
+    إذا((p_دلیلونه->options&UCNV_OPTION_بدلون_LFNL)!=0) {
         /* do this because double-checked locking is broken */
         UBool isCached;
 
-        icu::umtx_lock(nullptr);
-        isCached=mbcsTable->swapLFNLStateTable!=nullptr;
-        icu::umtx_unlock(nullptr);
+        icu::umtx_قلف(تش_اشاره);
+        isCached=mbcs_جدول->بدلون_LFNLState_جدول!=تش_اشاره;
+        icu::umtx_unlock(تش_اشاره);
 
-        if(!isCached) {
-            if(!_EBCDICSwapLFNL(cnv->sharedData, pErrorCode)) {
-                if(U_FAILURE(*pErrorCode)) {
-                    return; /* something went wrong */
+        إذا(!isCached) {
+            إذا(!_EBCDICSwapLFNL(cnv->shared_معلومات, p_Error_کوډ)) {
+                إذا(U_FAILURE(*p_Error_کوډ)) {
+                    أرجع; /* something went wrong */
                 }
 
                 /* the option does not apply, remove it */
-                cnv->options=pArgs->options&=~UCNV_OPTION_SWAP_LFNL;
+                cnv->options=p_دلیلونه->options&=~UCNV_OPTION_بدلون_LFNL;
             }
         }
     }
 
-    if(uprv_strstr(pArgs->name, "18030")!=nullptr) {
-        if(uprv_strstr(pArgs->name, "gb18030")!=nullptr || uprv_strstr(pArgs->name, "GB18030")!=nullptr) {
+    إذا(uprv_strstr(p_دلیلونه->name, "18030")!=تش_اشاره) {
+        إذا(uprv_strstr(p_دلیلونه->name, "gb18030")!=تش_اشاره || uprv_strstr(p_دلیلونه->name, "GB18030")!=تش_اشاره) {
             /* set a flag for GB 18030 mode, which changes the callback behavior */
             cnv->options|=_MBCS_OPTION_GB18030;
         }
-    } else if((uprv_strstr(pArgs->name, "KEIS")!=nullptr) || (uprv_strstr(pArgs->name, "keis")!=nullptr)) {
+    } وإلا إذا((uprv_strstr(p_دلیلونه->name, "KEIS")!=تش_اشاره) || (uprv_strstr(p_دلیلونه->name, "keis")!=تش_اشاره)) {
         /* set a flag for KEIS converter, which changes the SI/SO character sequence */
         cnv->options|=_MBCS_OPTION_KEIS;
-    } else if((uprv_strstr(pArgs->name, "JEF")!=nullptr) || (uprv_strstr(pArgs->name, "jef")!=nullptr)) {
+    } وإلا إذا((uprv_strstr(p_دلیلونه->name, "JEF")!=تش_اشاره) || (uprv_strstr(p_دلیلونه->name, "jef")!=تش_اشاره)) {
         /* set a flag for JEF converter, which changes the SI/SO character sequence */
         cnv->options|=_MBCS_OPTION_JEF;
-    } else if((uprv_strstr(pArgs->name, "JIPS")!=nullptr) || (uprv_strstr(pArgs->name, "jips")!=nullptr)) {
+    } وإلا إذا((uprv_strstr(p_دلیلونه->name, "JIPS")!=تش_اشاره) || (uprv_strstr(p_دلیلونه->name, "jips")!=تش_اشاره)) {
         /* set a flag for JIPS converter, which changes the SI/SO character sequence */
         cnv->options|=_MBCS_OPTION_JIPS;
     }
 
     /* fix maxBytesPerUChar depending on outputType and options etc. */
-    if(outputType==MBCS_OUTPUT_2_SISO) {
-        cnv->maxBytesPerUChar=3; /* SO+DBCS */
+    إذا(outputType==MBCS_OUTPUT_2_SISO) {
+        cnv->max_بایټونه_فی_UChar=3; /* SO+DBCS */
     }
 
-    extIndexes=mbcsTable->extIndexes;
-    if(extIndexes!=nullptr) {
-        maxBytesPerUChar = static_cast<int8_t>(UCNV_GET_MAX_BYTES_PER_UCHAR(extIndexes));
-        if(outputType==MBCS_OUTPUT_2_SISO) {
-            ++maxBytesPerUChar; /* SO + multiple DBCS */
+    extIndexes=mbcs_جدول->extIndexes;
+    إذا(extIndexes!=تش_اشاره) {
+        max_بایټونه_فی_UChar = static_cast<int8_t>(UCNV_GET_MAX_بایټونه_فی_UCHAR(extIndexes));
+        إذا(outputType==MBCS_OUTPUT_2_SISO) {
+            ++max_بایټونه_فی_UChar; /* SO + multiple DBCS */
         }
 
-        if(maxBytesPerUChar>cnv->maxBytesPerUChar) {
-            cnv->maxBytesPerUChar=maxBytesPerUChar;
+        إذا(max_بایټونه_فی_UChar>cnv->max_بایټونه_فی_UChar) {
+            cnv->max_بایټونه_فی_UChar=max_بایټونه_فی_UChar;
         }
     }
 
-#if 0
+#إذا 0
     /*
      * documentation of UConverter fields used for status
      * all of these fields are (re)set to 0 by ucnv_bld.c and ucnv_reset()
      */
 
     /* toUnicode */
-    cnv->toUnicodeStatus=0;     /* offset */
-    cnv->mode=0;                /* state */
-    cnv->toULength=0;           /* byteIndex */
+    cnv->منزل_Unicode_حالت=0;     /*دننه_واټن*/
+    cnv->ډېرپېښ=0;                /* state */
+    cnv->منزل_ULength=0;           /* byteIndex */
 
     /* fromUnicode */
     cnv->fromUChar32=0;
-    cnv->fromUnicodeStatus=1;   /* prevLength */
-#endif
+    cnv->from_Unicode_حالت=1;   /* prevLength */
+#د_که_پای
 }
 
 U_CDECL_BEGIN
 
-static const char* U_CALLCONV
-ucnv_MBCSGetName(const UConverter *cnv) {
-    if((cnv->options&UCNV_OPTION_SWAP_LFNL)!=0 && cnv->sharedData->mbcs.swapLFNLName!=nullptr) {
-        return cnv->sharedData->mbcs.swapLFNLName;
-    } else {
-        return cnv->sharedData->staticData->name;
+ساكن ثابت حرف* U_CALLCONV
+ucnv_MBCSGetName(ثابت UConverter *cnv) {
+    إذا((cnv->options&UCNV_OPTION_بدلون_LFNL)!=0 && cnv->shared_معلومات->mbcs.بدلون_LFNLName!=تش_اشاره) {
+        أرجع cnv->shared_معلومات->mbcs.بدلون_LFNLName;
+    } وإلا {
+        أرجع cnv->shared_معلومات->static_معلومات->name;
     }
 }
-U_CDECL_END
+U_CDECL_پای_ټکی
 
 
 /* MBCS-to-Unicode conversion functions ------------------------------------- */
 
-static UChar32 U_CALLCONV
-ucnv_MBCSGetFallback(UConverterMBCSTable *mbcsTable, uint32_t offset) {
-    const _MBCSToUFallback *toUFallbacks;
-    uint32_t i, start, limit;
+ساكن UChar32 U_CALLCONV
+ucnv_MBCSGetFallback(UConverterMBCSTable *mbcs_جدول, uint32_t دننه_واټن) {
+    ثابت _MBCSToUFallback *منزل_UFallbacks;
+    uint32_t i, پیل, حد;
 
-    limit=mbcsTable->countToUFallbacks;
-    if(limit>0) {
+    حد=mbcs_جدول->شمېر_منزل_UFallbacks;
+    إذا(حد>0) {
         /* do a binary search for the fallback mapping */
-        toUFallbacks=mbcsTable->toUFallbacks;
-        start=0;
-        while(start<limit-1) {
-            i=(start+limit)/2;
-            if(offset<toUFallbacks[i].offset) {
-                limit=i;
-            } else {
-                start=i;
+        منزل_UFallbacks=mbcs_جدول->منزل_UFallbacks;
+        پیل=0;
+        طالما(پیل<حد-1) {
+            i=(پیل+حد)/2;
+            إذا(دننه_واټن<منزل_UFallbacks[i].دننه_واټن) {
+                حد=i;
+            } وإلا {
+                پیل=i;
             }
         }
 
         /* did we really find it? */
-        if(offset==toUFallbacks[start].offset) {
-            return toUFallbacks[start].codePoint;
+        إذا(دننه_واټن==منزل_UFallbacks[پیل].دننه_واټن) {
+            أرجع منزل_UFallbacks[پیل].کوډ_ټکی;
         }
     }
 
-    return 0xfffe;
+    أرجع 0xfffe;
 }
 
 /* This version of ucnv_MBCSToUnicodeWithOffsets() is optimized for single-byte, single-state codepages. */
-static void
-ucnv_MBCSSingleToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
-                                UErrorCode *pErrorCode) {
+ساكن فراغ
+ucnv_MBCSSingle_منزل_Unicode_With_Offsets(UConverter_منزل_Unicode_دلیلونه *p_دلیلونه,
+                                UError_کوډ *p_Error_کوډ) {
     UConverter *cnv;
-    const uint8_t *source, *sourceLimit;
-    char16_t *target;
-    const char16_t *targetLimit;
+    ثابت uint8_t *سرچینه, *سرچینه_حد;
+    char16_t *موخه;
+    ثابت char16_t *موخه_حد;
     int32_t *offsets;
 
-    const int32_t (*stateTable)[256];
+    ثابت int32_t (*state_جدول)[256];
 
-    int32_t sourceIndex;
+    int32_t سرچینه_شاخص;
 
-    int32_t entry;
+    int32_t ثبت;
     char16_t c;
     uint8_t action;
 
     /* set up the local pointers */
-    cnv=pArgs->converter;
-    source = reinterpret_cast<const uint8_t*>(pArgs->source);
-    sourceLimit = reinterpret_cast<const uint8_t*>(pArgs->sourceLimit);
-    target=pArgs->target;
-    targetLimit=pArgs->targetLimit;
-    offsets=pArgs->offsets;
+    cnv=p_دلیلونه->converter;
+    سرچینه = reinterpret_cast<ثابت uint8_t*>(p_دلیلونه->سرچینه);
+    سرچینه_حد = reinterpret_cast<ثابت uint8_t*>(p_دلیلونه->سرچینه_حد);
+    موخه=p_دلیلونه->موخه;
+    موخه_حد=p_دلیلونه->موخه_حد;
+    offsets=p_دلیلونه->offsets;
 
-    if((cnv->options&UCNV_OPTION_SWAP_LFNL)!=0) {
-        stateTable=(const int32_t (*)[256])cnv->sharedData->mbcs.swapLFNLStateTable;
-    } else {
-        stateTable=cnv->sharedData->mbcs.stateTable;
+    إذا((cnv->options&UCNV_OPTION_بدلون_LFNL)!=0) {
+        state_جدول=(ثابت int32_t (*)[256])cnv->shared_معلومات->mbcs.بدلون_LFNLState_جدول;
+    } وإلا {
+        state_جدول=cnv->shared_معلومات->mbcs.state_جدول;
     }
 
     /* sourceIndex=-1 if the current character began in the previous buffer */
-    sourceIndex=0;
+    سرچینه_شاخص=0;
 
     /* conversion loop */
-    while(source<sourceLimit) {
+    طالما(سرچینه<سرچینه_حد) {
         /*
          * This following test is to see if available input would overflow the output.
          * It does not catch output of more than one code unit that
@@ -2073,106 +2073,106 @@ ucnv_MBCSSingleToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
          * Therefore, those situations also test for overflows and will
          * then break the loop, too.
          */
-        if(target>=targetLimit) {
+        إذا(موخه>=موخه_حد) {
             /* target is full */
-            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-            break;
+            *p_Error_کوډ=U_بفر_ډکېدنه_ERROR;
+            اكسر;
         }
 
-        entry=stateTable[0][*source++];
+        ثبت=state_جدول[0][*سرچینه++];
         /* MBCS_ENTRY_IS_FINAL(entry) */
 
         /* test the most common case first */
-        if(MBCS_ENTRY_FINAL_IS_VALID_DIRECT_16(entry)) {
+        إذا(MBCS_ثبت_FINAL_IS_VALID_مستقیم_16(ثبت)) {
             /* output BMP code point */
-            *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
-            if(offsets!=nullptr) {
-                *offsets++=sourceIndex;
+            *موخه++ = static_cast<char16_t>(MBCS_ثبت_FINAL_ارزښت_16(ثبت));
+            إذا(offsets!=تش_اشاره) {
+                *offsets++=سرچینه_شاخص;
             }
 
             /* normal end of action codes: prepare for a new character */
-            ++sourceIndex;
-            continue;
+            ++سرچینه_شاخص;
+            استمر;
         }
 
         /*
          * An if-else-if chain provides more reliable performance for
          * the most common cases compared to a switch.
          */
-        action = static_cast<uint8_t>(MBCS_ENTRY_FINAL_ACTION(entry));
-        if(action==MBCS_STATE_VALID_DIRECT_20 ||
-           (action==MBCS_STATE_FALLBACK_DIRECT_20 && UCNV_TO_U_USE_FALLBACK(cnv))
+        action = static_cast<uint8_t>(MBCS_ثبت_FINAL_ACTION(ثبت));
+        إذا(action==MBCS_STATE_VALID_مستقیم_20 ||
+           (action==MBCS_STATE_FALLBACK_مستقیم_20 && UCNV_منزل_U_USE_FALLBACK(cnv))
         ) {
-            entry=MBCS_ENTRY_FINAL_VALUE(entry);
+            ثبت=MBCS_ثبت_FINAL_ارزښت(ثبت);
             /* output surrogate pair */
-            *target++ = static_cast<char16_t>(0xd800 | static_cast<char16_t>(entry >> 10));
-            if(offsets!=nullptr) {
-                *offsets++=sourceIndex;
+            *موخه++ = static_cast<char16_t>(0xd800 | static_cast<char16_t>(ثبت >> 10));
+            إذا(offsets!=تش_اشاره) {
+                *offsets++=سرچینه_شاخص;
             }
-            c = static_cast<char16_t>(0xdc00 | static_cast<char16_t>(entry & 0x3ff));
-            if(target<targetLimit) {
-                *target++=c;
-                if(offsets!=nullptr) {
-                    *offsets++=sourceIndex;
+            c = static_cast<char16_t>(0xdc00 | static_cast<char16_t>(ثبت & 0x3ff));
+            إذا(موخه<موخه_حد) {
+                *موخه++=c;
+                إذا(offsets!=تش_اشاره) {
+                    *offsets++=سرچینه_شاخص;
                 }
-            } else {
+            } وإلا {
                 /* target overflow */
-                cnv->UCharErrorBuffer[0]=c;
-                cnv->UCharErrorBufferLength=1;
-                *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                break;
+                cnv->UChar_Error_بفر[0]=c;
+                cnv->UChar_Error_بفر_اوږدتیا=1;
+                *p_Error_کوډ=U_بفر_ډکېدنه_ERROR;
+                اكسر;
             }
 
-            ++sourceIndex;
-            continue;
-        } else if(action==MBCS_STATE_FALLBACK_DIRECT_16) {
-            if(UCNV_TO_U_USE_FALLBACK(cnv)) {
+            ++سرچینه_شاخص;
+            استمر;
+        } وإلا إذا(action==MBCS_STATE_FALLBACK_مستقیم_16) {
+            إذا(UCNV_منزل_U_USE_FALLBACK(cnv)) {
                 /* output BMP code point */
-                *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
-                if(offsets!=nullptr) {
-                    *offsets++=sourceIndex;
+                *موخه++ = static_cast<char16_t>(MBCS_ثبت_FINAL_ارزښت_16(ثبت));
+                إذا(offsets!=تش_اشاره) {
+                    *offsets++=سرچینه_شاخص;
                 }
 
-                ++sourceIndex;
-                continue;
+                ++سرچینه_شاخص;
+                استمر;
             }
-        } else if(action==MBCS_STATE_UNASSIGNED) {
+        } وإلا إذا(action==MBCS_STATE_UNASSIGNED) {
             /* just fall through */
-        } else if(action==MBCS_STATE_ILLEGAL) {
+        } وإلا إذا(action==MBCS_STATE_ILLEGAL) {
             /* callback(illegal) */
-            *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-        } else {
+            *p_Error_کوډ=U_ILLEGAL_CHAR_وموندل;
+        } وإلا {
             /* reserved, must never occur */
-            ++sourceIndex;
-            continue;
+            ++سرچینه_شاخص;
+            استمر;
         }
 
-        if(U_FAILURE(*pErrorCode)) {
+        إذا(U_FAILURE(*p_Error_کوډ)) {
             /* callback(illegal) */
-            break;
-        } else /* unassigned sequences indicated with byteIndex>0 */ {
+            اكسر;
+        } وإلا /* unassigned sequences indicated with byteIndex>0 */ {
             /* try an extension mapping */
-            pArgs->source = reinterpret_cast<const char*>(source);
-            cnv->toUBytes[0]=*(source-1);
-            cnv->toULength=_extToU(cnv, cnv->sharedData,
-                                    1, &source, sourceLimit,
-                                    &target, targetLimit,
-                                    &offsets, sourceIndex,
-                                    pArgs->flush,
-                                    pErrorCode);
-            sourceIndex += 1 + static_cast<int32_t>(source - reinterpret_cast<const uint8_t*>(pArgs->source));
+            p_دلیلونه->سرچینه = reinterpret_cast<ثابت حرف*>(سرچینه);
+            cnv->منزل_UBytes[0]=*(سرچینه-1);
+            cnv->منزل_ULength=ext_منزل_U(cnv, cnv->shared_معلومات,
+                                    1, &سرچینه, سرچینه_حد,
+                                    &موخه, موخه_حد,
+                                    &offsets, سرچینه_شاخص,
+                                    p_دلیلونه->flush,
+                                    p_Error_کوډ);
+            سرچینه_شاخص += 1 + static_cast<int32_t>(سرچینه - reinterpret_cast<ثابت uint8_t*>(p_دلیلونه->سرچینه));
 
-            if(U_FAILURE(*pErrorCode)) {
+            إذا(U_FAILURE(*p_Error_کوډ)) {
                 /* not mappable or buffer overflow */
-                break;
+                اكسر;
             }
         }
     }
 
     /* write back the updated pointers */
-    pArgs->source = reinterpret_cast<const char*>(source);
-    pArgs->target=target;
-    pArgs->offsets=offsets;
+    p_دلیلونه->سرچینه = reinterpret_cast<ثابت حرف*>(سرچینه);
+    p_دلیلونه->موخه=موخه;
+    p_دلیلونه->offsets=offsets;
 }
 
 /*
@@ -2181,263 +2181,263 @@ ucnv_MBCSSingleToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
  * In addition to single-byte optimizations, the offset calculations
  * become much easier.
  */
-static void
-ucnv_MBCSSingleToBMPWithOffsets(UConverterToUnicodeArgs *pArgs,
-                            UErrorCode *pErrorCode) {
+ساكن فراغ
+ucnv_MBCSSingle_منزل_BMPWith_Offsets(UConverter_منزل_Unicode_دلیلونه *p_دلیلونه,
+                            UError_کوډ *p_Error_کوډ) {
     UConverter *cnv;
-    const uint8_t *source, *sourceLimit, *lastSource;
-    char16_t *target;
-    int32_t targetCapacity, length;
+    ثابت uint8_t *سرچینه, *سرچینه_حد, *وروستی_سرچینه;
+    char16_t *موخه;
+    int32_t موخه_ظرفیت, length;
     int32_t *offsets;
 
-    const int32_t (*stateTable)[256];
+    ثابت int32_t (*state_جدول)[256];
 
-    int32_t sourceIndex;
+    int32_t سرچینه_شاخص;
 
-    int32_t entry;
+    int32_t ثبت;
     uint8_t action;
 
     /* set up the local pointers */
-    cnv=pArgs->converter;
-    source = reinterpret_cast<const uint8_t*>(pArgs->source);
-    sourceLimit = reinterpret_cast<const uint8_t*>(pArgs->sourceLimit);
-    target=pArgs->target;
-    targetCapacity = static_cast<int32_t>(pArgs->targetLimit - pArgs->target);
-    offsets=pArgs->offsets;
+    cnv=p_دلیلونه->converter;
+    سرچینه = reinterpret_cast<ثابت uint8_t*>(p_دلیلونه->سرچینه);
+    سرچینه_حد = reinterpret_cast<ثابت uint8_t*>(p_دلیلونه->سرچینه_حد);
+    موخه=p_دلیلونه->موخه;
+    موخه_ظرفیت = static_cast<int32_t>(p_دلیلونه->موخه_حد - p_دلیلونه->موخه);
+    offsets=p_دلیلونه->offsets;
 
-    if((cnv->options&UCNV_OPTION_SWAP_LFNL)!=0) {
-        stateTable=(const int32_t (*)[256])cnv->sharedData->mbcs.swapLFNLStateTable;
-    } else {
-        stateTable=cnv->sharedData->mbcs.stateTable;
+    إذا((cnv->options&UCNV_OPTION_بدلون_LFNL)!=0) {
+        state_جدول=(ثابت int32_t (*)[256])cnv->shared_معلومات->mbcs.بدلون_LFNLState_جدول;
+    } وإلا {
+        state_جدول=cnv->shared_معلومات->mbcs.state_جدول;
     }
 
     /* sourceIndex=-1 if the current character began in the previous buffer */
-    sourceIndex=0;
-    lastSource=source;
+    سرچینه_شاخص=0;
+    وروستی_سرچینه=سرچینه;
 
     /*
      * since the conversion here is 1:1 char16_t:uint8_t, we need only one counter
      * for the minimum of the sourceLength and targetCapacity
      */
-    length = static_cast<int32_t>(sourceLimit - source);
-    if(length<targetCapacity) {
-        targetCapacity=length;
+    length = static_cast<int32_t>(سرچینه_حد - سرچینه);
+    إذا(length<موخه_ظرفیت) {
+        موخه_ظرفیت=length;
     }
 
-#if MBCS_UNROLL_SINGLE_TO_BMP
+#إذا MBCS_UNROLL_SINGLE_منزل_BMP
     /* unrolling makes it faster on Pentium III/Windows 2000 */
     /* unroll the loop with the most common case */
 unrolled:
-    if(targetCapacity>=16) {
+    إذا(موخه_ظرفیت>=16) {
         int32_t count, loops, oredEntries;
 
-        loops=count=targetCapacity>>4;
-        do {
-            oredEntries=entry=stateTable[0][*source++];
-            *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
-            oredEntries|=entry=stateTable[0][*source++];
-            *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
-            oredEntries|=entry=stateTable[0][*source++];
-            *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
-            oredEntries|=entry=stateTable[0][*source++];
-            *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
-            oredEntries|=entry=stateTable[0][*source++];
-            *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
-            oredEntries|=entry=stateTable[0][*source++];
-            *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
-            oredEntries|=entry=stateTable[0][*source++];
-            *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
-            oredEntries|=entry=stateTable[0][*source++];
-            *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
-            oredEntries|=entry=stateTable[0][*source++];
-            *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
-            oredEntries|=entry=stateTable[0][*source++];
-            *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
-            oredEntries|=entry=stateTable[0][*source++];
-            *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
-            oredEntries|=entry=stateTable[0][*source++];
-            *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
-            oredEntries|=entry=stateTable[0][*source++];
-            *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
-            oredEntries|=entry=stateTable[0][*source++];
-            *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
-            oredEntries|=entry=stateTable[0][*source++];
-            *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
-            oredEntries|=entry=stateTable[0][*source++];
-            *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
+        loops=count=موخه_ظرفیت>>4;
+        افعل {
+            oredEntries=ثبت=state_جدول[0][*سرچینه++];
+            *موخه++ = static_cast<char16_t>(MBCS_ثبت_FINAL_ارزښت_16(ثبت));
+            oredEntries|=ثبت=state_جدول[0][*سرچینه++];
+            *موخه++ = static_cast<char16_t>(MBCS_ثبت_FINAL_ارزښت_16(ثبت));
+            oredEntries|=ثبت=state_جدول[0][*سرچینه++];
+            *موخه++ = static_cast<char16_t>(MBCS_ثبت_FINAL_ارزښت_16(ثبت));
+            oredEntries|=ثبت=state_جدول[0][*سرچینه++];
+            *موخه++ = static_cast<char16_t>(MBCS_ثبت_FINAL_ارزښت_16(ثبت));
+            oredEntries|=ثبت=state_جدول[0][*سرچینه++];
+            *موخه++ = static_cast<char16_t>(MBCS_ثبت_FINAL_ارزښت_16(ثبت));
+            oredEntries|=ثبت=state_جدول[0][*سرچینه++];
+            *موخه++ = static_cast<char16_t>(MBCS_ثبت_FINAL_ارزښت_16(ثبت));
+            oredEntries|=ثبت=state_جدول[0][*سرچینه++];
+            *موخه++ = static_cast<char16_t>(MBCS_ثبت_FINAL_ارزښت_16(ثبت));
+            oredEntries|=ثبت=state_جدول[0][*سرچینه++];
+            *موخه++ = static_cast<char16_t>(MBCS_ثبت_FINAL_ارزښت_16(ثبت));
+            oredEntries|=ثبت=state_جدول[0][*سرچینه++];
+            *موخه++ = static_cast<char16_t>(MBCS_ثبت_FINAL_ارزښت_16(ثبت));
+            oredEntries|=ثبت=state_جدول[0][*سرچینه++];
+            *موخه++ = static_cast<char16_t>(MBCS_ثبت_FINAL_ارزښت_16(ثبت));
+            oredEntries|=ثبت=state_جدول[0][*سرچینه++];
+            *موخه++ = static_cast<char16_t>(MBCS_ثبت_FINAL_ارزښت_16(ثبت));
+            oredEntries|=ثبت=state_جدول[0][*سرچینه++];
+            *موخه++ = static_cast<char16_t>(MBCS_ثبت_FINAL_ارزښت_16(ثبت));
+            oredEntries|=ثبت=state_جدول[0][*سرچینه++];
+            *موخه++ = static_cast<char16_t>(MBCS_ثبت_FINAL_ارزښت_16(ثبت));
+            oredEntries|=ثبت=state_جدول[0][*سرچینه++];
+            *موخه++ = static_cast<char16_t>(MBCS_ثبت_FINAL_ارزښت_16(ثبت));
+            oredEntries|=ثبت=state_جدول[0][*سرچینه++];
+            *موخه++ = static_cast<char16_t>(MBCS_ثبت_FINAL_ارزښت_16(ثبت));
+            oredEntries|=ثبت=state_جدول[0][*سرچینه++];
+            *موخه++ = static_cast<char16_t>(MBCS_ثبت_FINAL_ارزښت_16(ثبت));
 
             /* were all 16 entries really valid? */
-            if(!MBCS_ENTRY_FINAL_IS_VALID_DIRECT_16(oredEntries)) {
+            إذا(!MBCS_ثبت_FINAL_IS_VALID_مستقیم_16(oredEntries)) {
                 /* no, return to the first of these 16 */
-                source-=16;
-                target-=16;
-                break;
+                سرچینه-=16;
+                موخه-=16;
+                اكسر;
             }
-        } while(--count>0);
+        } طالما(--count>0);
         count=loops-count;
-        targetCapacity-=16*count;
+        موخه_ظرفیت-=16*count;
 
-        if(offsets!=nullptr) {
-            lastSource+=16*count;
-            while(count>0) {
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
+        إذا(offsets!=تش_اشاره) {
+            وروستی_سرچینه+=16*count;
+            طالما(count>0) {
+                *offsets++=سرچینه_شاخص++;
+                *offsets++=سرچینه_شاخص++;
+                *offsets++=سرچینه_شاخص++;
+                *offsets++=سرچینه_شاخص++;
+                *offsets++=سرچینه_شاخص++;
+                *offsets++=سرچینه_شاخص++;
+                *offsets++=سرچینه_شاخص++;
+                *offsets++=سرچینه_شاخص++;
+                *offsets++=سرچینه_شاخص++;
+                *offsets++=سرچینه_شاخص++;
+                *offsets++=سرچینه_شاخص++;
+                *offsets++=سرچینه_شاخص++;
+                *offsets++=سرچینه_شاخص++;
+                *offsets++=سرچینه_شاخص++;
+                *offsets++=سرچینه_شاخص++;
+                *offsets++=سرچینه_شاخص++;
                 --count;
             }
         }
     }
-#endif
+#د_که_پای
 
     /* conversion loop */
-    while(targetCapacity > 0 && source < sourceLimit) {
-        entry=stateTable[0][*source++];
+    طالما(موخه_ظرفیت > 0 && سرچینه < سرچینه_حد) {
+        ثبت=state_جدول[0][*سرچینه++];
         /* MBCS_ENTRY_IS_FINAL(entry) */
 
         /* test the most common case first */
-        if(MBCS_ENTRY_FINAL_IS_VALID_DIRECT_16(entry)) {
+        إذا(MBCS_ثبت_FINAL_IS_VALID_مستقیم_16(ثبت)) {
             /* output BMP code point */
-            *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
-            --targetCapacity;
-            continue;
+            *موخه++ = static_cast<char16_t>(MBCS_ثبت_FINAL_ارزښت_16(ثبت));
+            --موخه_ظرفیت;
+            استمر;
         }
 
         /*
          * An if-else-if chain provides more reliable performance for
          * the most common cases compared to a switch.
          */
-        action = static_cast<uint8_t>(MBCS_ENTRY_FINAL_ACTION(entry));
-        if(action==MBCS_STATE_FALLBACK_DIRECT_16) {
-            if(UCNV_TO_U_USE_FALLBACK(cnv)) {
+        action = static_cast<uint8_t>(MBCS_ثبت_FINAL_ACTION(ثبت));
+        إذا(action==MBCS_STATE_FALLBACK_مستقیم_16) {
+            إذا(UCNV_منزل_U_USE_FALLBACK(cnv)) {
                 /* output BMP code point */
-                *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
-                --targetCapacity;
-                continue;
+                *موخه++ = static_cast<char16_t>(MBCS_ثبت_FINAL_ارزښت_16(ثبت));
+                --موخه_ظرفیت;
+                استمر;
             }
-        } else if(action==MBCS_STATE_UNASSIGNED) {
+        } وإلا إذا(action==MBCS_STATE_UNASSIGNED) {
             /* just fall through */
-        } else if(action==MBCS_STATE_ILLEGAL) {
+        } وإلا إذا(action==MBCS_STATE_ILLEGAL) {
             /* callback(illegal) */
-            *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-        } else {
+            *p_Error_کوډ=U_ILLEGAL_CHAR_وموندل;
+        } وإلا {
             /* reserved, must never occur */
-            continue;
+            استمر;
         }
 
         /* set offsets since the start or the last extension */
-        if(offsets!=nullptr) {
-            int32_t count = static_cast<int32_t>(source - lastSource);
+        إذا(offsets!=تش_اشاره) {
+            int32_t count = static_cast<int32_t>(سرچینه - وروستی_سرچینه);
 
             /* predecrement: do not set the offset for the callback-causing character */
-            while(--count>0) {
-                *offsets++=sourceIndex++;
+            طالما(--count>0) {
+                *offsets++=سرچینه_شاخص++;
             }
             /* offset and sourceIndex are now set for the current character */
         }
 
-        if(U_FAILURE(*pErrorCode)) {
+        إذا(U_FAILURE(*p_Error_کوډ)) {
             /* callback(illegal) */
-            break;
-        } else /* unassigned sequences indicated with byteIndex>0 */ {
+            اكسر;
+        } وإلا /* unassigned sequences indicated with byteIndex>0 */ {
             /* try an extension mapping */
-            lastSource=source;
-            cnv->toUBytes[0]=*(source-1);
-            cnv->toULength=_extToU(cnv, cnv->sharedData,
-                                    1, &source, sourceLimit,
-                                    &target, pArgs->targetLimit,
-                                    &offsets, sourceIndex,
-                                    pArgs->flush,
-                                    pErrorCode);
-            sourceIndex += 1 + static_cast<int32_t>(source - lastSource);
+            وروستی_سرچینه=سرچینه;
+            cnv->منزل_UBytes[0]=*(سرچینه-1);
+            cnv->منزل_ULength=ext_منزل_U(cnv, cnv->shared_معلومات,
+                                    1, &سرچینه, سرچینه_حد,
+                                    &موخه, p_دلیلونه->موخه_حد,
+                                    &offsets, سرچینه_شاخص,
+                                    p_دلیلونه->flush,
+                                    p_Error_کوډ);
+            سرچینه_شاخص += 1 + static_cast<int32_t>(سرچینه - وروستی_سرچینه);
 
-            if(U_FAILURE(*pErrorCode)) {
+            إذا(U_FAILURE(*p_Error_کوډ)) {
                 /* not mappable or buffer overflow */
-                break;
+                اكسر;
             }
 
             /* recalculate the targetCapacity after an extension mapping */
-            targetCapacity = static_cast<int32_t>(pArgs->targetLimit - target);
-            length = static_cast<int32_t>(sourceLimit - source);
-            if(length<targetCapacity) {
-                targetCapacity=length;
+            موخه_ظرفیت = static_cast<int32_t>(p_دلیلونه->موخه_حد - موخه);
+            length = static_cast<int32_t>(سرچینه_حد - سرچینه);
+            إذا(length<موخه_ظرفیت) {
+                موخه_ظرفیت=length;
             }
         }
 
-#if MBCS_UNROLL_SINGLE_TO_BMP
+#إذا MBCS_UNROLL_SINGLE_منزل_BMP
         /* unrolling makes it faster on Pentium III/Windows 2000 */
-        goto unrolled;
-#endif
+        اذهب unrolled;
+#د_که_پای
     }
 
-    if(U_SUCCESS(*pErrorCode) && source<sourceLimit && target>=pArgs->targetLimit) {
+    إذا(U_SUCCESS(*p_Error_کوډ) && سرچینه<سرچینه_حد && موخه>=p_دلیلونه->موخه_حد) {
         /* target is full */
-        *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+        *p_Error_کوډ=U_بفر_ډکېدنه_ERROR;
     }
 
     /* set offsets since the start or the last callback */
-    if(offsets!=nullptr) {
-        size_t count=source-lastSource;
-        while(count>0) {
-            *offsets++=sourceIndex++;
+    إذا(offsets!=تش_اشاره) {
+        size_t count=سرچینه-وروستی_سرچینه;
+        طالما(count>0) {
+            *offsets++=سرچینه_شاخص++;
             --count;
         }
     }
 
     /* write back the updated pointers */
-    pArgs->source = reinterpret_cast<const char*>(source);
-    pArgs->target=target;
-    pArgs->offsets=offsets;
+    p_دلیلونه->سرچینه = reinterpret_cast<ثابت حرف*>(سرچینه);
+    p_دلیلونه->موخه=موخه;
+    p_دلیلونه->offsets=offsets;
 }
 
-static UBool
-hasValidTrailBytes(const int32_t (*stateTable)[256], uint8_t state) {
-    const int32_t *row=stateTable[state];
-    int32_t b, entry;
+ساكن UBool
+has_Valid_Trail_بایټونه(ثابت int32_t (*state_جدول)[256], uint8_t state) {
+    ثابت int32_t *لیکه=state_جدول[state];
+    int32_t b, ثبت;
     /* First test for final entries in this state for some commonly valid byte values. */
-    entry=row[0xa1];
-    if( !MBCS_ENTRY_IS_TRANSITION(entry) &&
-        MBCS_ENTRY_FINAL_ACTION(entry)!=MBCS_STATE_ILLEGAL
+    ثبت=لیکه[0xa1];
+    إذا( !MBCS_ثبت_IS_TRANSITION(ثبت) &&
+        MBCS_ثبت_FINAL_ACTION(ثبت)!=MBCS_STATE_ILLEGAL
     ) {
-        return true;
+        أرجع ریښتیا;
     }
-    entry=row[0x41];
-    if( !MBCS_ENTRY_IS_TRANSITION(entry) &&
-        MBCS_ENTRY_FINAL_ACTION(entry)!=MBCS_STATE_ILLEGAL
+    ثبت=لیکه[0x41];
+    إذا( !MBCS_ثبت_IS_TRANSITION(ثبت) &&
+        MBCS_ثبت_FINAL_ACTION(ثبت)!=MBCS_STATE_ILLEGAL
     ) {
-        return true;
+        أرجع ریښتیا;
     }
     /* Then test for final entries in this state. */
-    for(b=0; b<=0xff; ++b) {
-        entry=row[b];
-        if( !MBCS_ENTRY_IS_TRANSITION(entry) &&
-            MBCS_ENTRY_FINAL_ACTION(entry)!=MBCS_STATE_ILLEGAL
+    لكل(b=0; b<=0xff; ++b) {
+        ثبت=لیکه[b];
+        إذا( !MBCS_ثبت_IS_TRANSITION(ثبت) &&
+            MBCS_ثبت_FINAL_ACTION(ثبت)!=MBCS_STATE_ILLEGAL
         ) {
-            return true;
+            أرجع ریښتیا;
         }
     }
     /* Then recurse for transition entries. */
-    for(b=0; b<=0xff; ++b) {
-        entry=row[b];
-        if( MBCS_ENTRY_IS_TRANSITION(entry) &&
-            hasValidTrailBytes(stateTable, static_cast<uint8_t>(MBCS_ENTRY_TRANSITION_STATE(entry)))
+    لكل(b=0; b<=0xff; ++b) {
+        ثبت=لیکه[b];
+        إذا( MBCS_ثبت_IS_TRANSITION(ثبت) &&
+            has_Valid_Trail_بایټونه(state_جدول, static_cast<uint8_t>(MBCS_ثبت_TRANSITION_STATE(ثبت)))
         ) {
-            return true;
+            أرجع ریښتیا;
         }
     }
-    return false;
+    أرجع خطأ;
 }
 
 /*
@@ -2445,103 +2445,103 @@ hasValidTrailBytes(const int32_t (*stateTable)[256], uint8_t state) {
  * Recurse for transition states, because here we don't want to say that
  * b is a lead byte if all byte sequences that start with b are illegal.
  */
-static UBool
-isSingleOrLead(const int32_t (*stateTable)[256], uint8_t state, UBool isDBCSOnly, uint8_t b) {
-    const int32_t *row=stateTable[state];
-    int32_t entry=row[b];
-    if(MBCS_ENTRY_IS_TRANSITION(entry)) {   /* lead byte */
-        return hasValidTrailBytes(stateTable, static_cast<uint8_t>(MBCS_ENTRY_TRANSITION_STATE(entry)));
-    } else {
-        uint8_t action = static_cast<uint8_t>(MBCS_ENTRY_FINAL_ACTION(entry));
-        if(action==MBCS_STATE_CHANGE_ONLY && isDBCSOnly) {
-            return false;   /* SI/SO are illegal for DBCS-only conversion */
-        } else {
-            return action!=MBCS_STATE_ILLEGAL;
+ساكن UBool
+isSingleOrLead(ثابت int32_t (*state_جدول)[256], uint8_t state, UBool isDBCSOnly, uint8_t b) {
+    ثابت int32_t *لیکه=state_جدول[state];
+    int32_t ثبت=لیکه[b];
+    إذا(MBCS_ثبت_IS_TRANSITION(ثبت)) {   /* lead byte */
+        أرجع has_Valid_Trail_بایټونه(state_جدول, static_cast<uint8_t>(MBCS_ثبت_TRANSITION_STATE(ثبت)));
+    } وإلا {
+        uint8_t action = static_cast<uint8_t>(MBCS_ثبت_FINAL_ACTION(ثبت));
+        إذا(action==MBCS_STATE_CHANGE_ONLY && isDBCSOnly) {
+            أرجع خطأ;   /* SI/SO are illegal for DBCS-only conversion */
+        } وإلا {
+            أرجع action!=MBCS_STATE_ILLEGAL;
         }
     }
 }
 
-U_CFUNC void
-ucnv_MBCSToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
-                          UErrorCode *pErrorCode) {
+U_CFUNC فراغ
+ucnv_MBCSToUnicodeWithOffsets(UConverter_منزل_Unicode_دلیلونه *p_دلیلونه,
+                          UError_کوډ *p_Error_کوډ) {
     UConverter *cnv;
-    const uint8_t *source, *sourceLimit;
-    char16_t *target;
-    const char16_t *targetLimit;
+    ثابت uint8_t *سرچینه, *سرچینه_حد;
+    char16_t *موخه;
+    ثابت char16_t *موخه_حد;
     int32_t *offsets;
 
-    const int32_t (*stateTable)[256];
-    const uint16_t *unicodeCodeUnits;
+    ثابت int32_t (*state_جدول)[256];
+    ثابت uint16_t *unicode_کوډ_Units;
 
-    uint32_t offset;
+    uint32_t دننه_واټن;
     uint8_t state;
-    int8_t byteIndex;
-    uint8_t *bytes;
+    int8_t byte_شاخص;
+    uint8_t *بایټونه;
 
-    int32_t sourceIndex, nextSourceIndex;
+    int32_t سرچینه_شاخص, بل_سرچینه_شاخص;
 
-    int32_t entry;
+    int32_t ثبت;
     char16_t c;
     uint8_t action;
 
     /* use optimized function if possible */
-    cnv=pArgs->converter;
+    cnv=p_دلیلونه->converter;
 
-    if(cnv->preToULength>0) {
+    إذا(cnv->pre_منزل_ULength>0) {
         /*
          * pass sourceIndex=-1 because we continue from an earlier buffer
          * in the future, this may change with continuous offsets
          */
-        ucnv_extContinueMatchToU(cnv, pArgs, -1, pErrorCode);
+        ucnv_ext_Continue_سمون_منزل_U(cnv, p_دلیلونه, -1, p_Error_کوډ);
 
-        if(U_FAILURE(*pErrorCode) || cnv->preToULength<0) {
-            return;
+        إذا(U_FAILURE(*p_Error_کوډ) || cnv->pre_منزل_ULength<0) {
+            أرجع;
         }
     }
 
-    if(cnv->sharedData->mbcs.countStates==1) {
-        if(!(cnv->sharedData->mbcs.unicodeMask&UCNV_HAS_SUPPLEMENTARY)) {
-            ucnv_MBCSSingleToBMPWithOffsets(pArgs, pErrorCode);
-        } else {
-            ucnv_MBCSSingleToUnicodeWithOffsets(pArgs, pErrorCode);
+    إذا(cnv->shared_معلومات->mbcs.شمېر_حالتونه==1) {
+        إذا(!(cnv->shared_معلومات->mbcs.unicode_ماسک&UCNV_HAS_SUPPLEMENTARY)) {
+            ucnv_MBCSSingle_منزل_BMPWith_Offsets(p_دلیلونه, p_Error_کوډ);
+        } وإلا {
+            ucnv_MBCSSingle_منزل_Unicode_With_Offsets(p_دلیلونه, p_Error_کوډ);
         }
-        return;
+        أرجع;
     }
 
     /* set up the local pointers */
-    source=(const uint8_t *)pArgs->source;
-    sourceLimit=(const uint8_t *)pArgs->sourceLimit;
-    target=pArgs->target;
-    targetLimit=pArgs->targetLimit;
-    offsets=pArgs->offsets;
+    سرچینه=(ثابت uint8_t *)p_دلیلونه->سرچینه;
+    سرچینه_حد=(ثابت uint8_t *)p_دلیلونه->سرچینه_حد;
+    موخه=p_دلیلونه->موخه;
+    موخه_حد=p_دلیلونه->موخه_حد;
+    offsets=p_دلیلونه->offsets;
 
-    if((cnv->options&UCNV_OPTION_SWAP_LFNL)!=0) {
-        stateTable=(const int32_t (*)[256])cnv->sharedData->mbcs.swapLFNLStateTable;
-    } else {
-        stateTable=cnv->sharedData->mbcs.stateTable;
+    إذا((cnv->options&UCNV_OPTION_بدلون_LFNL)!=0) {
+        state_جدول=(ثابت int32_t (*)[256])cnv->shared_معلومات->mbcs.بدلون_LFNLState_جدول;
+    } وإلا {
+        state_جدول=cnv->shared_معلومات->mbcs.state_جدول;
     }
-    unicodeCodeUnits=cnv->sharedData->mbcs.unicodeCodeUnits;
+    unicode_کوډ_Units=cnv->shared_معلومات->mbcs.unicode_کوډ_Units;
 
     /* get the converter state from UConverter */
-    offset=cnv->toUnicodeStatus;
-    byteIndex=cnv->toULength;
-    bytes=cnv->toUBytes;
+    دننه_واټن=cnv->منزل_Unicode_حالت;
+    byte_شاخص=cnv->منزل_ULength;
+    بایټونه=cnv->منزل_UBytes;
 
     /*
      * if we are in the SBCS state for a DBCS-only converter,
      * then load the DBCS state from the MBCS data
      * (dbcsOnlyState==0 if it is not a DBCS-only converter)
      */
-    if((state=(uint8_t)(cnv->mode))==0) {
-        state=cnv->sharedData->mbcs.dbcsOnlyState;
+    إذا((state=(uint8_t)(cnv->ډېرپېښ))==0) {
+        state=cnv->shared_معلومات->mbcs.dbcsOnlyState;
     }
 
     /* sourceIndex=-1 if the current character began in the previous buffer */
-    sourceIndex=byteIndex==0 ? 0 : -1;
-    nextSourceIndex=0;
+    سرچینه_شاخص=byte_شاخص==0 ? 0 : -1;
+    بل_سرچینه_شاخص=0;
 
     /* conversion loop */
-    while(source<sourceLimit) {
+    طالما(سرچینه<سرچینه_حد) {
         /*
          * This following test is to see if available input would overflow the output.
          * It does not catch output of more than one code unit that
@@ -2550,230 +2550,230 @@ ucnv_MBCSToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
          * Therefore, those situations also test for overflows and will
          * then break the loop, too.
          */
-        if(target>=targetLimit) {
+        إذا(موخه>=موخه_حد) {
             /* target is full */
-            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-            break;
+            *p_Error_کوډ=U_بفر_ډکېدنه_ERROR;
+            اكسر;
         }
 
-        if(byteIndex==0) {
+        إذا(byte_شاخص==0) {
             /* optimized loop for 1/2-byte input and BMP output */
-            if(offsets==nullptr) {
-                do {
-                    entry=stateTable[state][*source];
-                    if(MBCS_ENTRY_IS_TRANSITION(entry)) {
-                        state=(uint8_t)MBCS_ENTRY_TRANSITION_STATE(entry);
-                        offset=MBCS_ENTRY_TRANSITION_OFFSET(entry);
+            إذا(offsets==تش_اشاره) {
+                افعل {
+                    ثبت=state_جدول[state][*سرچینه];
+                    إذا(MBCS_ثبت_IS_TRANSITION(ثبت)) {
+                        state=(uint8_t)MBCS_ثبت_TRANSITION_STATE(ثبت);
+                        دننه_واټن=MBCS_ثبت_TRANSITION_دننه_واټن(ثبت);
 
-                        ++source;
-                        if( source<sourceLimit &&
-                            MBCS_ENTRY_IS_FINAL(entry=stateTable[state][*source]) &&
-                            MBCS_ENTRY_FINAL_ACTION(entry)==MBCS_STATE_VALID_16 &&
-                            (c=unicodeCodeUnits[offset+MBCS_ENTRY_FINAL_VALUE_16(entry)])<0xfffe
+                        ++سرچینه;
+                        إذا( سرچینه<سرچینه_حد &&
+                            MBCS_ثبت_IS_FINAL(ثبت=state_جدول[state][*سرچینه]) &&
+                            MBCS_ثبت_FINAL_ACTION(ثبت)==MBCS_STATE_VALID_16 &&
+                            (c=unicode_کوډ_Units[دننه_واټن+MBCS_ثبت_FINAL_ارزښت_16(ثبت)])<0xfffe
                         ) {
-                            ++source;
-                            *target++=c;
-                            state=(uint8_t)MBCS_ENTRY_FINAL_STATE(entry); /* typically 0 */
-                            offset=0;
-                        } else {
+                            ++سرچینه;
+                            *موخه++=c;
+                            state=(uint8_t)MBCS_ثبت_FINAL_STATE(ثبت); /* typically 0 */
+                            دننه_واټن=0;
+                        } وإلا {
                             /* set the state and leave the optimized loop */
-                            bytes[0]=*(source-1);
-                            byteIndex=1;
-                            break;
+                            بایټونه[0]=*(سرچینه-1);
+                            byte_شاخص=1;
+                            اكسر;
                         }
-                    } else {
-                        if(MBCS_ENTRY_FINAL_IS_VALID_DIRECT_16(entry)) {
+                    } وإلا {
+                        إذا(MBCS_ثبت_FINAL_IS_VALID_مستقیم_16(ثبت)) {
                             /* output BMP code point */
-                            ++source;
-                            *target++=(char16_t)MBCS_ENTRY_FINAL_VALUE_16(entry);
-                            state=(uint8_t)MBCS_ENTRY_FINAL_STATE(entry); /* typically 0 */
-                        } else {
+                            ++سرچینه;
+                            *موخه++=(char16_t)MBCS_ثبت_FINAL_ارزښت_16(ثبت);
+                            state=(uint8_t)MBCS_ثبت_FINAL_STATE(ثبت); /* typically 0 */
+                        } وإلا {
                             /* leave the optimized loop */
-                            break;
+                            اكسر;
                         }
                     }
-                } while(source<sourceLimit && target<targetLimit);
-            } else /* offsets!=nullptr */ {
-                do {
-                    entry=stateTable[state][*source];
-                    if(MBCS_ENTRY_IS_TRANSITION(entry)) {
-                        state=(uint8_t)MBCS_ENTRY_TRANSITION_STATE(entry);
-                        offset=MBCS_ENTRY_TRANSITION_OFFSET(entry);
+                } طالما(سرچینه<سرچینه_حد && موخه<موخه_حد);
+            } وإلا /* offsets!=nullptr */ {
+                افعل {
+                    ثبت=state_جدول[state][*سرچینه];
+                    إذا(MBCS_ثبت_IS_TRANSITION(ثبت)) {
+                        state=(uint8_t)MBCS_ثبت_TRANSITION_STATE(ثبت);
+                        دننه_واټن=MBCS_ثبت_TRANSITION_دننه_واټن(ثبت);
 
-                        ++source;
-                        if( source<sourceLimit &&
-                            MBCS_ENTRY_IS_FINAL(entry=stateTable[state][*source]) &&
-                            MBCS_ENTRY_FINAL_ACTION(entry)==MBCS_STATE_VALID_16 &&
-                            (c=unicodeCodeUnits[offset+MBCS_ENTRY_FINAL_VALUE_16(entry)])<0xfffe
+                        ++سرچینه;
+                        إذا( سرچینه<سرچینه_حد &&
+                            MBCS_ثبت_IS_FINAL(ثبت=state_جدول[state][*سرچینه]) &&
+                            MBCS_ثبت_FINAL_ACTION(ثبت)==MBCS_STATE_VALID_16 &&
+                            (c=unicode_کوډ_Units[دننه_واټن+MBCS_ثبت_FINAL_ارزښت_16(ثبت)])<0xfffe
                         ) {
-                            ++source;
-                            *target++=c;
-                            if(offsets!=nullptr) {
-                                *offsets++=sourceIndex;
-                                sourceIndex=(nextSourceIndex+=2);
+                            ++سرچینه;
+                            *موخه++=c;
+                            إذا(offsets!=تش_اشاره) {
+                                *offsets++=سرچینه_شاخص;
+                                سرچینه_شاخص=(بل_سرچینه_شاخص+=2);
                             }
-                            state=(uint8_t)MBCS_ENTRY_FINAL_STATE(entry); /* typically 0 */
-                            offset=0;
-                        } else {
+                            state=(uint8_t)MBCS_ثبت_FINAL_STATE(ثبت); /* typically 0 */
+                            دننه_واټن=0;
+                        } وإلا {
                             /* set the state and leave the optimized loop */
-                            ++nextSourceIndex;
-                            bytes[0]=*(source-1);
-                            byteIndex=1;
-                            break;
+                            ++بل_سرچینه_شاخص;
+                            بایټونه[0]=*(سرچینه-1);
+                            byte_شاخص=1;
+                            اكسر;
                         }
-                    } else {
-                        if(MBCS_ENTRY_FINAL_IS_VALID_DIRECT_16(entry)) {
+                    } وإلا {
+                        إذا(MBCS_ثبت_FINAL_IS_VALID_مستقیم_16(ثبت)) {
                             /* output BMP code point */
-                            ++source;
-                            *target++=(char16_t)MBCS_ENTRY_FINAL_VALUE_16(entry);
-                            if(offsets!=nullptr) {
-                                *offsets++=sourceIndex;
-                                sourceIndex=++nextSourceIndex;
+                            ++سرچینه;
+                            *موخه++=(char16_t)MBCS_ثبت_FINAL_ارزښت_16(ثبت);
+                            إذا(offsets!=تش_اشاره) {
+                                *offsets++=سرچینه_شاخص;
+                                سرچینه_شاخص=++بل_سرچینه_شاخص;
                             }
-                            state=(uint8_t)MBCS_ENTRY_FINAL_STATE(entry); /* typically 0 */
-                        } else {
+                            state=(uint8_t)MBCS_ثبت_FINAL_STATE(ثبت); /* typically 0 */
+                        } وإلا {
                             /* leave the optimized loop */
-                            break;
+                            اكسر;
                         }
                     }
-                } while(source<sourceLimit && target<targetLimit);
+                } طالما(سرچینه<سرچینه_حد && موخه<موخه_حد);
             }
 
             /*
              * these tests and break statements could be put inside the loop
              * if C had "break outerLoop" like Java
              */
-            if(source>=sourceLimit) {
-                break;
+            إذا(سرچینه>=سرچینه_حد) {
+                اكسر;
             }
-            if(target>=targetLimit) {
+            إذا(موخه>=موخه_حد) {
                 /* target is full */
-                *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                break;
+                *p_Error_کوډ=U_بفر_ډکېدنه_ERROR;
+                اكسر;
             }
 
-            ++nextSourceIndex;
-            bytes[byteIndex++]=*source++;
-        } else /* byteIndex>0 */ {
-            ++nextSourceIndex;
-            entry=stateTable[state][bytes[byteIndex++]=*source++];
+            ++بل_سرچینه_شاخص;
+            بایټونه[byte_شاخص++]=*سرچینه++;
+        } وإلا /* byteIndex>0 */ {
+            ++بل_سرچینه_شاخص;
+            ثبت=state_جدول[state][بایټونه[byte_شاخص++]=*سرچینه++];
         }
 
-        if(MBCS_ENTRY_IS_TRANSITION(entry)) {
-            state=(uint8_t)MBCS_ENTRY_TRANSITION_STATE(entry);
-            offset+=MBCS_ENTRY_TRANSITION_OFFSET(entry);
-            continue;
+        إذا(MBCS_ثبت_IS_TRANSITION(ثبت)) {
+            state=(uint8_t)MBCS_ثبت_TRANSITION_STATE(ثبت);
+            دننه_واټن+=MBCS_ثبت_TRANSITION_دننه_واټن(ثبت);
+            استمر;
         }
 
         /* save the previous state for proper extension mapping with SI/SO-stateful converters */
-        cnv->mode=state;
+        cnv->ډېرپېښ=state;
 
         /* set the next state early so that we can reuse the entry variable */
-        state=(uint8_t)MBCS_ENTRY_FINAL_STATE(entry); /* typically 0 */
+        state=(uint8_t)MBCS_ثبت_FINAL_STATE(ثبت); /* typically 0 */
 
         /*
          * An if-else-if chain provides more reliable performance for
          * the most common cases compared to a switch.
          */
-        action=(uint8_t)(MBCS_ENTRY_FINAL_ACTION(entry));
-        if(action==MBCS_STATE_VALID_16) {
-            offset+=MBCS_ENTRY_FINAL_VALUE_16(entry);
-            c=unicodeCodeUnits[offset];
-            if(c<0xfffe) {
+        action=(uint8_t)(MBCS_ثبت_FINAL_ACTION(ثبت));
+        إذا(action==MBCS_STATE_VALID_16) {
+            دننه_واټن+=MBCS_ثبت_FINAL_ارزښت_16(ثبت);
+            c=unicode_کوډ_Units[دننه_واټن];
+            إذا(c<0xfffe) {
                 /* output BMP code point */
-                *target++=c;
-                if(offsets!=nullptr) {
-                    *offsets++=sourceIndex;
+                *موخه++=c;
+                إذا(offsets!=تش_اشاره) {
+                    *offsets++=سرچینه_شاخص;
                 }
-                byteIndex=0;
-            } else if(c==0xfffe) {
-                if(UCNV_TO_U_USE_FALLBACK(cnv) && (entry=(int32_t)ucnv_MBCSGetFallback(&cnv->sharedData->mbcs, offset))!=0xfffe) {
+                byte_شاخص=0;
+            } وإلا إذا(c==0xfffe) {
+                إذا(UCNV_منزل_U_USE_FALLBACK(cnv) && (ثبت=(int32_t)ucnv_MBCSGetFallback(&cnv->shared_معلومات->mbcs, دننه_واټن))!=0xfffe) {
                     /* output fallback BMP code point */
-                    *target++=(char16_t)entry;
-                    if(offsets!=nullptr) {
-                        *offsets++=sourceIndex;
+                    *موخه++=(char16_t)ثبت;
+                    إذا(offsets!=تش_اشاره) {
+                        *offsets++=سرچینه_شاخص;
                     }
-                    byteIndex=0;
+                    byte_شاخص=0;
                 }
-            } else {
+            } وإلا {
                 /* callback(illegal) */
-                *pErrorCode=U_ILLEGAL_CHAR_FOUND;
+                *p_Error_کوډ=U_ILLEGAL_CHAR_وموندل;
             }
-        } else if(action==MBCS_STATE_VALID_DIRECT_16) {
+        } وإلا إذا(action==MBCS_STATE_VALID_مستقیم_16) {
             /* output BMP code point */
-            *target++=(char16_t)MBCS_ENTRY_FINAL_VALUE_16(entry);
-            if(offsets!=nullptr) {
-                *offsets++=sourceIndex;
+            *موخه++=(char16_t)MBCS_ثبت_FINAL_ارزښت_16(ثبت);
+            إذا(offsets!=تش_اشاره) {
+                *offsets++=سرچینه_شاخص;
             }
-            byteIndex=0;
-        } else if(action==MBCS_STATE_VALID_16_PAIR) {
-            offset+=MBCS_ENTRY_FINAL_VALUE_16(entry);
-            c=unicodeCodeUnits[offset++];
-            if(c<0xd800) {
+            byte_شاخص=0;
+        } وإلا إذا(action==MBCS_STATE_VALID_16_PAIR) {
+            دننه_واټن+=MBCS_ثبت_FINAL_ارزښت_16(ثبت);
+            c=unicode_کوډ_Units[دننه_واټن++];
+            إذا(c<0xd800) {
                 /* output BMP code point below 0xd800 */
-                *target++=c;
-                if(offsets!=nullptr) {
-                    *offsets++=sourceIndex;
+                *موخه++=c;
+                إذا(offsets!=تش_اشاره) {
+                    *offsets++=سرچینه_شاخص;
                 }
-                byteIndex=0;
-            } else if(UCNV_TO_U_USE_FALLBACK(cnv) ? c<=0xdfff : c<=0xdbff) {
+                byte_شاخص=0;
+            } وإلا إذا(UCNV_منزل_U_USE_FALLBACK(cnv) ? c<=0xdfff : c<=0xdbff) {
                 /* output roundtrip or fallback surrogate pair */
-                *target++=(char16_t)(c&0xdbff);
-                if(offsets!=nullptr) {
-                    *offsets++=sourceIndex;
+                *موخه++=(char16_t)(c&0xdbff);
+                إذا(offsets!=تش_اشاره) {
+                    *offsets++=سرچینه_شاخص;
                 }
-                byteIndex=0;
-                if(target<targetLimit) {
-                    *target++=unicodeCodeUnits[offset];
-                    if(offsets!=nullptr) {
-                        *offsets++=sourceIndex;
+                byte_شاخص=0;
+                إذا(موخه<موخه_حد) {
+                    *موخه++=unicode_کوډ_Units[دننه_واټن];
+                    إذا(offsets!=تش_اشاره) {
+                        *offsets++=سرچینه_شاخص;
                     }
-                } else {
+                } وإلا {
                     /* target overflow */
-                    cnv->UCharErrorBuffer[0]=unicodeCodeUnits[offset];
-                    cnv->UCharErrorBufferLength=1;
-                    *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+                    cnv->UChar_Error_بفر[0]=unicode_کوډ_Units[دننه_واټن];
+                    cnv->UChar_Error_بفر_اوږدتیا=1;
+                    *p_Error_کوډ=U_بفر_ډکېدنه_ERROR;
 
-                    offset=0;
-                    break;
+                    دننه_واټن=0;
+                    اكسر;
                 }
-            } else if(UCNV_TO_U_USE_FALLBACK(cnv) ? (c&0xfffe)==0xe000 : c==0xe000) {
+            } وإلا إذا(UCNV_منزل_U_USE_FALLBACK(cnv) ? (c&0xfffe)==0xe000 : c==0xe000) {
                 /* output roundtrip BMP code point above 0xd800 or fallback BMP code point */
-                *target++=unicodeCodeUnits[offset];
-                if(offsets!=nullptr) {
-                    *offsets++=sourceIndex;
+                *موخه++=unicode_کوډ_Units[دننه_واټن];
+                إذا(offsets!=تش_اشاره) {
+                    *offsets++=سرچینه_شاخص;
                 }
-                byteIndex=0;
-            } else if(c==0xffff) {
+                byte_شاخص=0;
+            } وإلا إذا(c==0xffff) {
                 /* callback(illegal) */
-                *pErrorCode=U_ILLEGAL_CHAR_FOUND;
+                *p_Error_کوډ=U_ILLEGAL_CHAR_وموندل;
             }
-        } else if(action==MBCS_STATE_VALID_DIRECT_20 ||
-                  (action==MBCS_STATE_FALLBACK_DIRECT_20 && UCNV_TO_U_USE_FALLBACK(cnv))
+        } وإلا إذا(action==MBCS_STATE_VALID_مستقیم_20 ||
+                  (action==MBCS_STATE_FALLBACK_مستقیم_20 && UCNV_منزل_U_USE_FALLBACK(cnv))
         ) {
-            entry=MBCS_ENTRY_FINAL_VALUE(entry);
+            ثبت=MBCS_ثبت_FINAL_ارزښت(ثبت);
             /* output surrogate pair */
-            *target++=(char16_t)(0xd800|(char16_t)(entry>>10));
-            if(offsets!=nullptr) {
-                *offsets++=sourceIndex;
+            *موخه++=(char16_t)(0xd800|(char16_t)(ثبت>>10));
+            إذا(offsets!=تش_اشاره) {
+                *offsets++=سرچینه_شاخص;
             }
-            byteIndex=0;
-            c=(char16_t)(0xdc00|(char16_t)(entry&0x3ff));
-            if(target<targetLimit) {
-                *target++=c;
-                if(offsets!=nullptr) {
-                    *offsets++=sourceIndex;
+            byte_شاخص=0;
+            c=(char16_t)(0xdc00|(char16_t)(ثبت&0x3ff));
+            إذا(موخه<موخه_حد) {
+                *موخه++=c;
+                إذا(offsets!=تش_اشاره) {
+                    *offsets++=سرچینه_شاخص;
                 }
-            } else {
+            } وإلا {
                 /* target overflow */
-                cnv->UCharErrorBuffer[0]=c;
-                cnv->UCharErrorBufferLength=1;
-                *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+                cnv->UChar_Error_بفر[0]=c;
+                cnv->UChar_Error_بفر_اوږدتیا=1;
+                *p_Error_کوډ=U_بفر_ډکېدنه_ERROR;
 
-                offset=0;
-                break;
+                دننه_واټن=0;
+                اكسر;
             }
-        } else if(action==MBCS_STATE_CHANGE_ONLY) {
+        } وإلا إذا(action==MBCS_STATE_CHANGE_ONLY) {
             /*
              * This serves as a state change without any output.
              * It is useful for reading simple stateful encodings,
@@ -2781,174 +2781,174 @@ ucnv_MBCSToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
              * The 21 unused bits may later be used for more sophisticated
              * state transitions.
              */
-            if(cnv->sharedData->mbcs.dbcsOnlyState==0) {
-                byteIndex=0;
-            } else {
+            إذا(cnv->shared_معلومات->mbcs.dbcsOnlyState==0) {
+                byte_شاخص=0;
+            } وإلا {
                 /* SI/SO are illegal for DBCS-only conversion */
-                state=(uint8_t)(cnv->mode); /* restore the previous state */
+                state=(uint8_t)(cnv->ډېرپېښ); /* restore the previous state */
 
                 /* callback(illegal) */
-                *pErrorCode=U_ILLEGAL_CHAR_FOUND;
+                *p_Error_کوډ=U_ILLEGAL_CHAR_وموندل;
             }
-        } else if(action==MBCS_STATE_FALLBACK_DIRECT_16) {
-            if(UCNV_TO_U_USE_FALLBACK(cnv)) {
+        } وإلا إذا(action==MBCS_STATE_FALLBACK_مستقیم_16) {
+            إذا(UCNV_منزل_U_USE_FALLBACK(cnv)) {
                 /* output BMP code point */
-                *target++=(char16_t)MBCS_ENTRY_FINAL_VALUE_16(entry);
-                if(offsets!=nullptr) {
-                    *offsets++=sourceIndex;
+                *موخه++=(char16_t)MBCS_ثبت_FINAL_ارزښت_16(ثبت);
+                إذا(offsets!=تش_اشاره) {
+                    *offsets++=سرچینه_شاخص;
                 }
-                byteIndex=0;
+                byte_شاخص=0;
             }
-        } else if(action==MBCS_STATE_UNASSIGNED) {
+        } وإلا إذا(action==MBCS_STATE_UNASSIGNED) {
             /* just fall through */
-        } else if(action==MBCS_STATE_ILLEGAL) {
+        } وإلا إذا(action==MBCS_STATE_ILLEGAL) {
             /* callback(illegal) */
-            *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-        } else {
+            *p_Error_کوډ=U_ILLEGAL_CHAR_وموندل;
+        } وإلا {
             /* reserved, must never occur */
-            byteIndex=0;
+            byte_شاخص=0;
         }
 
         /* end of action codes: prepare for a new character */
-        offset=0;
+        دننه_واټن=0;
 
-        if(byteIndex==0) {
-            sourceIndex=nextSourceIndex;
-        } else if(U_FAILURE(*pErrorCode)) {
+        إذا(byte_شاخص==0) {
+            سرچینه_شاخص=بل_سرچینه_شاخص;
+        } وإلا إذا(U_FAILURE(*p_Error_کوډ)) {
             /* callback(illegal) */
-            if(byteIndex>1) {
+            إذا(byte_شاخص>1) {
                 /*
                  * Ticket 5691: consistent illegal sequences:
                  * - We include at least the first byte in the illegal sequence.
                  * - If any of the non-initial bytes could be the start of a character,
                  *   we stop the illegal sequence before the first one of those.
                  */
-                UBool isDBCSOnly = cnv->sharedData->mbcs.dbcsOnlyState != 0;
+                UBool isDBCSOnly = cnv->shared_معلومات->mbcs.dbcsOnlyState != 0;
                 int8_t i;
-                for(i=1;
-                    i<byteIndex && !isSingleOrLead(stateTable, state, isDBCSOnly, bytes[i]);
+                لكل(i=1;
+                    i<byte_شاخص && !isSingleOrLead(state_جدول, state, isDBCSOnly, بایټونه[i]);
                     ++i) {}
-                if(i<byteIndex) {
+                إذا(i<byte_شاخص) {
                     /* Back out some bytes. */
-                    int8_t backOutDistance=byteIndex-i;
-                    int32_t bytesFromThisBuffer=(int32_t)(source-(const uint8_t *)pArgs->source);
-                    byteIndex=i;  /* length of reported illegal byte sequence */
-                    if(backOutDistance<=bytesFromThisBuffer) {
-                        source-=backOutDistance;
-                    } else {
+                    int8_t شا_بهر_واټن=byte_شاخص-i;
+                    int32_t بایټونه_From_This_بفر=(int32_t)(سرچینه-(ثابت uint8_t *)p_دلیلونه->سرچینه);
+                    byte_شاخص=i;  /* length of reported illegal byte sequence */
+                    إذا(شا_بهر_واټن<=بایټونه_From_This_بفر) {
+                        سرچینه-=شا_بهر_واټن;
+                    } وإلا {
                         /* Back out bytes from the previous buffer: Need to replay them. */
-                        cnv->preToULength=(int8_t)(bytesFromThisBuffer-backOutDistance);
+                        cnv->pre_منزل_ULength=(int8_t)(بایټونه_From_This_بفر-شا_بهر_واټن);
                         /* preToULength is negative! */
-                        uprv_memcpy(cnv->preToU, bytes+i, -cnv->preToULength);
-                        source=(const uint8_t *)pArgs->source;
+                        uprv_memcpy(cnv->pre_منزل_U, بایټونه+i, -cnv->pre_منزل_ULength);
+                        سرچینه=(ثابت uint8_t *)p_دلیلونه->سرچینه;
                     }
                 }
             }
-            break;
-        } else /* unassigned sequences indicated with byteIndex>0 */ {
+            اكسر;
+        } وإلا /* unassigned sequences indicated with byteIndex>0 */ {
             /* try an extension mapping */
-            pArgs->source=(const char *)source;
-            byteIndex=_extToU(cnv, cnv->sharedData,
-                              byteIndex, &source, sourceLimit,
-                              &target, targetLimit,
-                              &offsets, sourceIndex,
-                              pArgs->flush,
-                              pErrorCode);
-            sourceIndex=nextSourceIndex+=(int32_t)(source-(const uint8_t *)pArgs->source);
+            p_دلیلونه->سرچینه=(ثابت حرف *)سرچینه;
+            byte_شاخص=ext_منزل_U(cnv, cnv->shared_معلومات,
+                              byte_شاخص, &سرچینه, سرچینه_حد,
+                              &موخه, موخه_حد,
+                              &offsets, سرچینه_شاخص,
+                              p_دلیلونه->flush,
+                              p_Error_کوډ);
+            سرچینه_شاخص=بل_سرچینه_شاخص+=(int32_t)(سرچینه-(ثابت uint8_t *)p_دلیلونه->سرچینه);
 
-            if(U_FAILURE(*pErrorCode)) {
+            إذا(U_FAILURE(*p_Error_کوډ)) {
                 /* not mappable or buffer overflow */
-                break;
+                اكسر;
             }
         }
     }
 
     /* set the converter state back into UConverter */
-    cnv->toUnicodeStatus=offset;
-    cnv->mode=state;
-    cnv->toULength=byteIndex;
+    cnv->منزل_Unicode_حالت=دننه_واټن;
+    cnv->ډېرپېښ=state;
+    cnv->منزل_ULength=byte_شاخص;
 
     /* write back the updated pointers */
-    pArgs->source=(const char *)source;
-    pArgs->target=target;
-    pArgs->offsets=offsets;
+    p_دلیلونه->سرچینه=(ثابت حرف *)سرچینه;
+    p_دلیلونه->موخه=موخه;
+    p_دلیلونه->offsets=offsets;
 }
 
 /*
  * This version of ucnv_MBCSGetNextUChar() is optimized for single-byte, single-state codepages.
  * We still need a conversion loop in case we find reserved action codes, which are to be ignored.
  */
-static UChar32
-ucnv_MBCSSingleGetNextUChar(UConverterToUnicodeArgs *pArgs,
-                        UErrorCode *pErrorCode) {
+ساكن UChar32
+ucnv_MBCSSingle_Get_بل_UChar(UConverter_منزل_Unicode_دلیلونه *p_دلیلونه,
+                        UError_کوډ *p_Error_کوډ) {
     UConverter *cnv;
-    const int32_t (*stateTable)[256];
-    const uint8_t *source, *sourceLimit;
+    ثابت int32_t (*state_جدول)[256];
+    ثابت uint8_t *سرچینه, *سرچینه_حد;
 
-    int32_t entry;
+    int32_t ثبت;
     uint8_t action;
 
     /* set up the local pointers */
-    cnv=pArgs->converter;
-    source = reinterpret_cast<const uint8_t*>(pArgs->source);
-    sourceLimit = reinterpret_cast<const uint8_t*>(pArgs->sourceLimit);
-    if((cnv->options&UCNV_OPTION_SWAP_LFNL)!=0) {
-        stateTable=(const int32_t (*)[256])cnv->sharedData->mbcs.swapLFNLStateTable;
-    } else {
-        stateTable=cnv->sharedData->mbcs.stateTable;
+    cnv=p_دلیلونه->converter;
+    سرچینه = reinterpret_cast<ثابت uint8_t*>(p_دلیلونه->سرچینه);
+    سرچینه_حد = reinterpret_cast<ثابت uint8_t*>(p_دلیلونه->سرچینه_حد);
+    إذا((cnv->options&UCNV_OPTION_بدلون_LFNL)!=0) {
+        state_جدول=(ثابت int32_t (*)[256])cnv->shared_معلومات->mbcs.بدلون_LFNLState_جدول;
+    } وإلا {
+        state_جدول=cnv->shared_معلومات->mbcs.state_جدول;
     }
 
     /* conversion loop */
-    while(source<sourceLimit) {
-        entry=stateTable[0][*source++];
+    طالما(سرچینه<سرچینه_حد) {
+        ثبت=state_جدول[0][*سرچینه++];
         /* MBCS_ENTRY_IS_FINAL(entry) */
 
         /* write back the updated pointer early so that we can return directly */
-        pArgs->source = reinterpret_cast<const char*>(source);
+        p_دلیلونه->سرچینه = reinterpret_cast<ثابت حرف*>(سرچینه);
 
-        if(MBCS_ENTRY_FINAL_IS_VALID_DIRECT_16(entry)) {
+        إذا(MBCS_ثبت_FINAL_IS_VALID_مستقیم_16(ثبت)) {
             /* output BMP code point */
-            return static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
+            أرجع static_cast<char16_t>(MBCS_ثبت_FINAL_ارزښت_16(ثبت));
         }
 
         /*
          * An if-else-if chain provides more reliable performance for
          * the most common cases compared to a switch.
          */
-        action = static_cast<uint8_t>(MBCS_ENTRY_FINAL_ACTION(entry));
-        if( action==MBCS_STATE_VALID_DIRECT_20 ||
-            (action==MBCS_STATE_FALLBACK_DIRECT_20 && UCNV_TO_U_USE_FALLBACK(cnv))
+        action = static_cast<uint8_t>(MBCS_ثبت_FINAL_ACTION(ثبت));
+        إذا( action==MBCS_STATE_VALID_مستقیم_20 ||
+            (action==MBCS_STATE_FALLBACK_مستقیم_20 && UCNV_منزل_U_USE_FALLBACK(cnv))
         ) {
             /* output supplementary code point */
-            return static_cast<UChar32>(MBCS_ENTRY_FINAL_VALUE(entry) + 0x10000);
-        } else if(action==MBCS_STATE_FALLBACK_DIRECT_16) {
-            if(UCNV_TO_U_USE_FALLBACK(cnv)) {
+            أرجع static_cast<UChar32>(MBCS_ثبت_FINAL_ارزښت(ثبت) + 0x10000);
+        } وإلا إذا(action==MBCS_STATE_FALLBACK_مستقیم_16) {
+            إذا(UCNV_منزل_U_USE_FALLBACK(cnv)) {
                 /* output BMP code point */
-                return static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
+                أرجع static_cast<char16_t>(MBCS_ثبت_FINAL_ارزښت_16(ثبت));
             }
-        } else if(action==MBCS_STATE_UNASSIGNED) {
+        } وإلا إذا(action==MBCS_STATE_UNASSIGNED) {
             /* just fall through */
-        } else if(action==MBCS_STATE_ILLEGAL) {
+        } وإلا إذا(action==MBCS_STATE_ILLEGAL) {
             /* callback(illegal) */
-            *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-        } else {
+            *p_Error_کوډ=U_ILLEGAL_CHAR_وموندل;
+        } وإلا {
             /* reserved, must never occur */
-            continue;
+            استمر;
         }
 
-        if(U_FAILURE(*pErrorCode)) {
+        إذا(U_FAILURE(*p_Error_کوډ)) {
             /* callback(illegal) */
-            break;
-        } else /* unassigned sequence */ {
+            اكسر;
+        } وإلا /* unassigned sequence */ {
             /* defer to the generic implementation */
-            pArgs->source = reinterpret_cast<const char*>(source) - 1;
-            return UCNV_GET_NEXT_UCHAR_USE_TO_U;
+            p_دلیلونه->سرچینه = reinterpret_cast<ثابت حرف*>(سرچینه) - 1;
+            أرجع UCNV_GET_بل_UCHAR_USE_منزل_U;
         }
     }
 
     /* no output because of empty input or only state changes */
-    *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-    return 0xffff;
+    *p_Error_کوډ=U_شاخص_OUTOFBOUNDS_ERROR;
+    أرجع 0xffff;
 }
 
 /*
@@ -2963,138 +2963,138 @@ ucnv_MBCSSingleGetNextUChar(UConverterToUnicodeArgs *pArgs,
  *
  * All normal mappings and errors are handled here.
  */
-static UChar32 U_CALLCONV
-ucnv_MBCSGetNextUChar(UConverterToUnicodeArgs *pArgs,
-                  UErrorCode *pErrorCode) {
+ساكن UChar32 U_CALLCONV
+ucnv_MBCSGet_بل_UChar(UConverter_منزل_Unicode_دلیلونه *p_دلیلونه,
+                  UError_کوډ *p_Error_کوډ) {
     UConverter *cnv;
-    const uint8_t *source, *sourceLimit, *lastSource;
+    ثابت uint8_t *سرچینه, *سرچینه_حد, *وروستی_سرچینه;
 
-    const int32_t (*stateTable)[256];
-    const uint16_t *unicodeCodeUnits;
+    ثابت int32_t (*state_جدول)[256];
+    ثابت uint16_t *unicode_کوډ_Units;
 
-    uint32_t offset;
+    uint32_t دننه_واټن;
     uint8_t state;
 
-    int32_t entry;
+    int32_t ثبت;
     UChar32 c;
     uint8_t action;
 
     /* use optimized function if possible */
-    cnv=pArgs->converter;
+    cnv=p_دلیلونه->converter;
 
-    if(cnv->preToULength>0) {
+    إذا(cnv->pre_منزل_ULength>0) {
         /* use the generic code in ucnv_getNextUChar() to continue with a partial match */
-        return UCNV_GET_NEXT_UCHAR_USE_TO_U;
+        أرجع UCNV_GET_بل_UCHAR_USE_منزل_U;
     }
 
-    if(cnv->sharedData->mbcs.unicodeMask&UCNV_HAS_SURROGATES) {
+    إذا(cnv->shared_معلومات->mbcs.unicode_ماسک&UCNV_HAS_SURROGATES) {
         /*
          * Using the generic ucnv_getNextUChar() code lets us deal correctly
          * with the rare case of a codepage that maps single surrogates
          * without adding the complexity to this already complicated function here.
          */
-        return UCNV_GET_NEXT_UCHAR_USE_TO_U;
-    } else if(cnv->sharedData->mbcs.countStates==1) {
-        return ucnv_MBCSSingleGetNextUChar(pArgs, pErrorCode);
+        أرجع UCNV_GET_بل_UCHAR_USE_منزل_U;
+    } وإلا إذا(cnv->shared_معلومات->mbcs.شمېر_حالتونه==1) {
+        أرجع ucnv_MBCSSingle_Get_بل_UChar(p_دلیلونه, p_Error_کوډ);
     }
 
     /* set up the local pointers */
-    source = lastSource = reinterpret_cast<const uint8_t*>(pArgs->source);
-    sourceLimit = reinterpret_cast<const uint8_t*>(pArgs->sourceLimit);
+    سرچینه = وروستی_سرچینه = reinterpret_cast<ثابت uint8_t*>(p_دلیلونه->سرچینه);
+    سرچینه_حد = reinterpret_cast<ثابت uint8_t*>(p_دلیلونه->سرچینه_حد);
 
-    if((cnv->options&UCNV_OPTION_SWAP_LFNL)!=0) {
-        stateTable=(const int32_t (*)[256])cnv->sharedData->mbcs.swapLFNLStateTable;
-    } else {
-        stateTable=cnv->sharedData->mbcs.stateTable;
+    إذا((cnv->options&UCNV_OPTION_بدلون_LFNL)!=0) {
+        state_جدول=(ثابت int32_t (*)[256])cnv->shared_معلومات->mbcs.بدلون_LFNLState_جدول;
+    } وإلا {
+        state_جدول=cnv->shared_معلومات->mbcs.state_جدول;
     }
-    unicodeCodeUnits=cnv->sharedData->mbcs.unicodeCodeUnits;
+    unicode_کوډ_Units=cnv->shared_معلومات->mbcs.unicode_کوډ_Units;
 
     /* get the converter state from UConverter */
-    offset=cnv->toUnicodeStatus;
+    دننه_واټن=cnv->منزل_Unicode_حالت;
 
     /*
      * if we are in the SBCS state for a DBCS-only converter,
      * then load the DBCS state from the MBCS data
      * (dbcsOnlyState==0 if it is not a DBCS-only converter)
      */
-    if ((state = static_cast<uint8_t>(cnv->mode)) == 0) {
-        state=cnv->sharedData->mbcs.dbcsOnlyState;
+    إذا ((state = static_cast<uint8_t>(cnv->ډېرپېښ)) == 0) {
+        state=cnv->shared_معلومات->mbcs.dbcsOnlyState;
     }
 
     /* conversion loop */
     c=U_SENTINEL;
-    while(source<sourceLimit) {
-        entry=stateTable[state][*source++];
-        if(MBCS_ENTRY_IS_TRANSITION(entry)) {
-            state = static_cast<uint8_t>(MBCS_ENTRY_TRANSITION_STATE(entry));
-            offset+=MBCS_ENTRY_TRANSITION_OFFSET(entry);
+    طالما(سرچینه<سرچینه_حد) {
+        ثبت=state_جدول[state][*سرچینه++];
+        إذا(MBCS_ثبت_IS_TRANSITION(ثبت)) {
+            state = static_cast<uint8_t>(MBCS_ثبت_TRANSITION_STATE(ثبت));
+            دننه_واټن+=MBCS_ثبت_TRANSITION_دننه_واټن(ثبت);
 
             /* optimization for 1/2-byte input and BMP output */
-            if( source<sourceLimit &&
-                MBCS_ENTRY_IS_FINAL(entry=stateTable[state][*source]) &&
-                MBCS_ENTRY_FINAL_ACTION(entry)==MBCS_STATE_VALID_16 &&
-                (c=unicodeCodeUnits[offset+MBCS_ENTRY_FINAL_VALUE_16(entry)])<0xfffe
+            إذا( سرچینه<سرچینه_حد &&
+                MBCS_ثبت_IS_FINAL(ثبت=state_جدول[state][*سرچینه]) &&
+                MBCS_ثبت_FINAL_ACTION(ثبت)==MBCS_STATE_VALID_16 &&
+                (c=unicode_کوډ_Units[دننه_واټن+MBCS_ثبت_FINAL_ارزښت_16(ثبت)])<0xfffe
             ) {
-                ++source;
-                state = static_cast<uint8_t>(MBCS_ENTRY_FINAL_STATE(entry)); /* typically 0 */
+                ++سرچینه;
+                state = static_cast<uint8_t>(MBCS_ثبت_FINAL_STATE(ثبت)); /* typically 0 */
                 /* output BMP code point */
-                break;
+                اكسر;
             }
-        } else {
+        } وإلا {
             /* save the previous state for proper extension mapping with SI/SO-stateful converters */
-            cnv->mode=state;
+            cnv->ډېرپېښ=state;
 
             /* set the next state early so that we can reuse the entry variable */
-            state = static_cast<uint8_t>(MBCS_ENTRY_FINAL_STATE(entry)); /* typically 0 */
+            state = static_cast<uint8_t>(MBCS_ثبت_FINAL_STATE(ثبت)); /* typically 0 */
 
             /*
              * An if-else-if chain provides more reliable performance for
              * the most common cases compared to a switch.
              */
-            action = static_cast<uint8_t>(MBCS_ENTRY_FINAL_ACTION(entry));
-            if(action==MBCS_STATE_VALID_DIRECT_16) {
+            action = static_cast<uint8_t>(MBCS_ثبت_FINAL_ACTION(ثبت));
+            إذا(action==MBCS_STATE_VALID_مستقیم_16) {
                 /* output BMP code point */
-                c = static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
-                break;
-            } else if(action==MBCS_STATE_VALID_16) {
-                offset+=MBCS_ENTRY_FINAL_VALUE_16(entry);
-                c=unicodeCodeUnits[offset];
-                if(c<0xfffe) {
+                c = static_cast<char16_t>(MBCS_ثبت_FINAL_ارزښت_16(ثبت));
+                اكسر;
+            } وإلا إذا(action==MBCS_STATE_VALID_16) {
+                دننه_واټن+=MBCS_ثبت_FINAL_ارزښت_16(ثبت);
+                c=unicode_کوډ_Units[دننه_واټن];
+                إذا(c<0xfffe) {
                     /* output BMP code point */
-                    break;
-                } else if(c==0xfffe) {
-                    if(UCNV_TO_U_USE_FALLBACK(cnv) && (c=ucnv_MBCSGetFallback(&cnv->sharedData->mbcs, offset))!=0xfffe) {
-                        break;
+                    اكسر;
+                } وإلا إذا(c==0xfffe) {
+                    إذا(UCNV_منزل_U_USE_FALLBACK(cnv) && (c=ucnv_MBCSGetFallback(&cnv->shared_معلومات->mbcs, دننه_واټن))!=0xfffe) {
+                        اكسر;
                     }
-                } else {
+                } وإلا {
                     /* callback(illegal) */
-                    *pErrorCode=U_ILLEGAL_CHAR_FOUND;
+                    *p_Error_کوډ=U_ILLEGAL_CHAR_وموندل;
                 }
-            } else if(action==MBCS_STATE_VALID_16_PAIR) {
-                offset+=MBCS_ENTRY_FINAL_VALUE_16(entry);
-                c=unicodeCodeUnits[offset++];
-                if(c<0xd800) {
+            } وإلا إذا(action==MBCS_STATE_VALID_16_PAIR) {
+                دننه_واټن+=MBCS_ثبت_FINAL_ارزښت_16(ثبت);
+                c=unicode_کوډ_Units[دننه_واټن++];
+                إذا(c<0xd800) {
                     /* output BMP code point below 0xd800 */
-                    break;
-                } else if(UCNV_TO_U_USE_FALLBACK(cnv) ? c<=0xdfff : c<=0xdbff) {
+                    اكسر;
+                } وإلا إذا(UCNV_منزل_U_USE_FALLBACK(cnv) ? c<=0xdfff : c<=0xdbff) {
                     /* output roundtrip or fallback supplementary code point */
-                    c=((c&0x3ff)<<10)+unicodeCodeUnits[offset]+(0x10000-0xdc00);
-                    break;
-                } else if(UCNV_TO_U_USE_FALLBACK(cnv) ? (c&0xfffe)==0xe000 : c==0xe000) {
+                    c=((c&0x3ff)<<10)+unicode_کوډ_Units[دننه_واټن]+(0x10000-0xdc00);
+                    اكسر;
+                } وإلا إذا(UCNV_منزل_U_USE_FALLBACK(cnv) ? (c&0xfffe)==0xe000 : c==0xe000) {
                     /* output roundtrip BMP code point above 0xd800 or fallback BMP code point */
-                    c=unicodeCodeUnits[offset];
-                    break;
-                } else if(c==0xffff) {
+                    c=unicode_کوډ_Units[دننه_واټن];
+                    اكسر;
+                } وإلا إذا(c==0xffff) {
                     /* callback(illegal) */
-                    *pErrorCode=U_ILLEGAL_CHAR_FOUND;
+                    *p_Error_کوډ=U_ILLEGAL_CHAR_وموندل;
                 }
-            } else if(action==MBCS_STATE_VALID_DIRECT_20 ||
-                      (action==MBCS_STATE_FALLBACK_DIRECT_20 && UCNV_TO_U_USE_FALLBACK(cnv))
+            } وإلا إذا(action==MBCS_STATE_VALID_مستقیم_20 ||
+                      (action==MBCS_STATE_FALLBACK_مستقیم_20 && UCNV_منزل_U_USE_FALLBACK(cnv))
             ) {
                 /* output supplementary code point */
-                c = static_cast<UChar32>(MBCS_ENTRY_FINAL_VALUE(entry) + 0x10000);
-                break;
-            } else if(action==MBCS_STATE_CHANGE_ONLY) {
+                c = static_cast<UChar32>(MBCS_ثبت_FINAL_ارزښت(ثبت) + 0x10000);
+                اكسر;
+            } وإلا إذا(action==MBCS_STATE_CHANGE_ONLY) {
                 /*
                  * This serves as a state change without any output.
                  * It is useful for reading simple stateful encodings,
@@ -3102,54 +3102,54 @@ ucnv_MBCSGetNextUChar(UConverterToUnicodeArgs *pArgs,
                  * The 21 unused bits may later be used for more sophisticated
                  * state transitions.
                  */
-                if(cnv->sharedData->mbcs.dbcsOnlyState!=0) {
+                إذا(cnv->shared_معلومات->mbcs.dbcsOnlyState!=0) {
                     /* SI/SO are illegal for DBCS-only conversion */
-                    state = static_cast<uint8_t>(cnv->mode); /* restore the previous state */
+                    state = static_cast<uint8_t>(cnv->ډېرپېښ); /* restore the previous state */
 
                     /* callback(illegal) */
-                    *pErrorCode=U_ILLEGAL_CHAR_FOUND;
+                    *p_Error_کوډ=U_ILLEGAL_CHAR_وموندل;
                 }
-            } else if(action==MBCS_STATE_FALLBACK_DIRECT_16) {
-                if(UCNV_TO_U_USE_FALLBACK(cnv)) {
+            } وإلا إذا(action==MBCS_STATE_FALLBACK_مستقیم_16) {
+                إذا(UCNV_منزل_U_USE_FALLBACK(cnv)) {
                     /* output BMP code point */
-                    c = static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
-                    break;
+                    c = static_cast<char16_t>(MBCS_ثبت_FINAL_ارزښت_16(ثبت));
+                    اكسر;
                 }
-            } else if(action==MBCS_STATE_UNASSIGNED) {
+            } وإلا إذا(action==MBCS_STATE_UNASSIGNED) {
                 /* just fall through */
-            } else if(action==MBCS_STATE_ILLEGAL) {
+            } وإلا إذا(action==MBCS_STATE_ILLEGAL) {
                 /* callback(illegal) */
-                *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-            } else {
+                *p_Error_کوډ=U_ILLEGAL_CHAR_وموندل;
+            } وإلا {
                 /* reserved (must never occur), or only state change */
-                offset=0;
-                lastSource=source;
-                continue;
+                دننه_واټن=0;
+                وروستی_سرچینه=سرچینه;
+                استمر;
             }
 
             /* end of action codes: prepare for a new character */
-            offset=0;
+            دننه_واټن=0;
 
-            if(U_FAILURE(*pErrorCode)) {
+            إذا(U_FAILURE(*p_Error_کوډ)) {
                 /* callback(illegal) */
-                break;
-            } else /* unassigned sequence */ {
+                اكسر;
+            } وإلا /* unassigned sequence */ {
                 /* defer to the generic implementation */
-                cnv->toUnicodeStatus=0;
-                cnv->mode=state;
-                pArgs->source = reinterpret_cast<const char*>(lastSource);
-                return UCNV_GET_NEXT_UCHAR_USE_TO_U;
+                cnv->منزل_Unicode_حالت=0;
+                cnv->ډېرپېښ=state;
+                p_دلیلونه->سرچینه = reinterpret_cast<ثابت حرف*>(وروستی_سرچینه);
+                أرجع UCNV_GET_بل_UCHAR_USE_منزل_U;
             }
         }
     }
 
-    if(c<0) {
-        if(U_SUCCESS(*pErrorCode) && source==sourceLimit && lastSource<source) {
+    إذا(c<0) {
+        إذا(U_SUCCESS(*p_Error_کوډ) && سرچینه==سرچینه_حد && وروستی_سرچینه<سرچینه) {
             /* incomplete character byte sequence */
-            cnv->toULength = static_cast<int8_t>(source - lastSource);
-            uprv_memcpy(cnv->toUBytes, lastSource, cnv->toULength);
-            *pErrorCode=U_TRUNCATED_CHAR_FOUND;
-        } else if(U_FAILURE(*pErrorCode)) {
+            cnv->منزل_ULength = static_cast<int8_t>(سرچینه - وروستی_سرچینه);
+            uprv_memcpy(cnv->منزل_UBytes, وروستی_سرچینه, cnv->منزل_ULength);
+            *p_Error_کوډ=U_TRUNCATED_CHAR_وموندل;
+        } وإلا إذا(U_FAILURE(*p_Error_کوډ)) {
             /* callback(illegal) */
             /*
              * Ticket 5691: consistent illegal sequences:
@@ -3157,39 +3157,39 @@ ucnv_MBCSGetNextUChar(UConverterToUnicodeArgs *pArgs,
              * - If any of the non-initial bytes could be the start of a character,
              *   we stop the illegal sequence before the first one of those.
              */
-            UBool isDBCSOnly = static_cast<UBool>(cnv->sharedData->mbcs.dbcsOnlyState != 0);
-            uint8_t *bytes=cnv->toUBytes;
-            *bytes++=*lastSource++;     /* first byte */
-            if(lastSource==source) {
-                cnv->toULength=1;
-            } else /* lastSource<source: multi-byte character */ {
+            UBool isDBCSOnly = static_cast<UBool>(cnv->shared_معلومات->mbcs.dbcsOnlyState != 0);
+            uint8_t *بایټونه=cnv->منزل_UBytes;
+            *بایټونه++=*وروستی_سرچینه++;     /* first byte */
+            إذا(وروستی_سرچینه==سرچینه) {
+                cnv->منزل_ULength=1;
+            } وإلا /* lastSource<source: multi-byte character */ {
                 int8_t i;
-                for(i=1;
-                    lastSource<source && !isSingleOrLead(stateTable, state, isDBCSOnly, *lastSource);
+                لكل(i=1;
+                    وروستی_سرچینه<سرچینه && !isSingleOrLead(state_جدول, state, isDBCSOnly, *وروستی_سرچینه);
                     ++i
                 ) {
-                    *bytes++=*lastSource++;
+                    *بایټونه++=*وروستی_سرچینه++;
                 }
-                cnv->toULength=i;
-                source=lastSource;
+                cnv->منزل_ULength=i;
+                سرچینه=وروستی_سرچینه;
             }
-        } else {
+        } وإلا {
             /* no output because of empty input or only state changes */
-            *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
+            *p_Error_کوډ=U_شاخص_OUTOFBOUNDS_ERROR;
         }
         c=0xffff;
     }
 
     /* set the converter state back into UConverter, ready for a new character */
-    cnv->toUnicodeStatus=0;
-    cnv->mode=state;
+    cnv->منزل_Unicode_حالت=0;
+    cnv->ډېرپېښ=state;
 
     /* write back the updated pointer */
-    pArgs->source = reinterpret_cast<const char*>(source);
-    return c;
+    p_دلیلونه->سرچینه = reinterpret_cast<ثابت حرف*>(سرچینه);
+    أرجع c;
 }
 
-#if 0
+#إذا 0
 /*
  * Code disabled 2002dec09 (ICU 2.4) because it is not currently used in ICU. markus
  * Removal improves code coverage.
@@ -3200,49 +3200,49 @@ ucnv_MBCSGetNextUChar(UConverterToUnicodeArgs *pArgs,
  * It does not handle conversion extensions (_extToU()).
  */
 U_CFUNC UChar32
-ucnv_MBCSSingleSimpleGetNextUChar(UConverterSharedData *sharedData,
+ucnv_MBCSSingle_Simple_Get_بل_UChar(UConverter_Shared_معلومات *shared_معلومات,
                               uint8_t b, UBool useFallback) {
-    int32_t entry;
+    int32_t ثبت;
     uint8_t action;
 
-    entry=sharedData->mbcs.stateTable[0][b];
+    ثبت=shared_معلومات->mbcs.state_جدول[0][b];
     /* MBCS_ENTRY_IS_FINAL(entry) */
 
-    if(MBCS_ENTRY_FINAL_IS_VALID_DIRECT_16(entry)) {
+    إذا(MBCS_ثبت_FINAL_IS_VALID_مستقیم_16(ثبت)) {
         /* output BMP code point */
-        return (char16_t)MBCS_ENTRY_FINAL_VALUE_16(entry);
+        أرجع (char16_t)MBCS_ثبت_FINAL_ارزښت_16(ثبت);
     }
 
     /*
      * An if-else-if chain provides more reliable performance for
      * the most common cases compared to a switch.
      */
-    action=(uint8_t)(MBCS_ENTRY_FINAL_ACTION(entry));
-    if(action==MBCS_STATE_VALID_DIRECT_20) {
+    action=(uint8_t)(MBCS_ثبت_FINAL_ACTION(ثبت));
+    إذا(action==MBCS_STATE_VALID_مستقیم_20) {
         /* output supplementary code point */
-        return 0x10000+MBCS_ENTRY_FINAL_VALUE(entry);
-    } else if(action==MBCS_STATE_FALLBACK_DIRECT_16) {
-        if(!TO_U_USE_FALLBACK(useFallback)) {
-            return 0xfffe;
+        أرجع 0x10000+MBCS_ثبت_FINAL_ارزښت(ثبت);
+    } وإلا إذا(action==MBCS_STATE_FALLBACK_مستقیم_16) {
+        إذا(!منزل_U_USE_FALLBACK(useFallback)) {
+            أرجع 0xfffe;
         }
         /* output BMP code point */
-        return (char16_t)MBCS_ENTRY_FINAL_VALUE_16(entry);
-    } else if(action==MBCS_STATE_FALLBACK_DIRECT_20) {
-        if(!TO_U_USE_FALLBACK(useFallback)) {
-            return 0xfffe;
+        أرجع (char16_t)MBCS_ثبت_FINAL_ارزښت_16(ثبت);
+    } وإلا إذا(action==MBCS_STATE_FALLBACK_مستقیم_20) {
+        إذا(!منزل_U_USE_FALLBACK(useFallback)) {
+            أرجع 0xfffe;
         }
         /* output supplementary code point */
-        return 0x10000+MBCS_ENTRY_FINAL_VALUE(entry);
-    } else if(action==MBCS_STATE_UNASSIGNED) {
-        return 0xfffe;
-    } else if(action==MBCS_STATE_ILLEGAL) {
-        return 0xffff;
-    } else {
+        أرجع 0x10000+MBCS_ثبت_FINAL_ارزښت(ثبت);
+    } وإلا إذا(action==MBCS_STATE_UNASSIGNED) {
+        أرجع 0xfffe;
+    } وإلا إذا(action==MBCS_STATE_ILLEGAL) {
+        أرجع 0xffff;
+    } وإلا {
         /* reserved, must never occur */
-        return 0xffff;
+        أرجع 0xffff;
     }
 }
-#endif
+#د_که_پای
 
 /*
  * This is a simple version of _MBCSGetNextUChar() that is used
@@ -3258,24 +3258,24 @@ ucnv_MBCSSingleSimpleGetNextUChar(UConverterSharedData *sharedData,
  * otherwise the Unicode code point
  */
 U_CFUNC UChar32
-ucnv_MBCSSimpleGetNextUChar(UConverterSharedData *sharedData,
-                        const char *source, int32_t length,
+ucnv_MBCSSimple_Get_بل_UChar(UConverter_Shared_معلومات *shared_معلومات,
+                        ثابت حرف *سرچینه, int32_t length,
                         UBool useFallback) {
-    const int32_t (*stateTable)[256];
-    const uint16_t *unicodeCodeUnits;
+    ثابت int32_t (*state_جدول)[256];
+    ثابت uint16_t *unicode_کوډ_Units;
 
-    uint32_t offset;
+    uint32_t دننه_واټن;
     uint8_t state, action;
 
     UChar32 c;
-    int32_t i, entry;
+    int32_t i, ثبت;
 
-    if(length<=0) {
+    إذا(length<=0) {
         /* no input at all: "illegal" */
-        return 0xffff;
+        أرجع 0xffff;
     }
 
-#if 0
+#إذا 0
 /*
  * Code disabled 2002dec09 (ICU 2.4) because it is not currently used in ICU. markus
  * TODO In future releases, verify that this function is never called for SBCS
@@ -3283,177 +3283,177 @@ ucnv_MBCSSimpleGetNextUChar(UConverterSharedData *sharedData,
  * Removal improves code coverage.
  */
     /* use optimized function if possible */
-    if(sharedData->mbcs.countStates==1) {
-        if(length==1) {
-            return ucnv_MBCSSingleSimpleGetNextUChar(sharedData, (uint8_t)*source, useFallback);
-        } else {
-            return 0xffff; /* illegal: more than a single byte for an SBCS converter */
+    إذا(shared_معلومات->mbcs.شمېر_حالتونه==1) {
+        إذا(length==1) {
+            أرجع ucnv_MBCSSingle_Simple_Get_بل_UChar(shared_معلومات, (uint8_t)*سرچینه, useFallback);
+        } وإلا {
+            أرجع 0xffff; /* illegal: more than a single byte for an SBCS converter */
         }
     }
-#endif
+#د_که_پای
 
     /* set up the local pointers */
-    stateTable=sharedData->mbcs.stateTable;
-    unicodeCodeUnits=sharedData->mbcs.unicodeCodeUnits;
+    state_جدول=shared_معلومات->mbcs.state_جدول;
+    unicode_کوډ_Units=shared_معلومات->mbcs.unicode_کوډ_Units;
 
     /* converter state */
-    offset=0;
-    state=sharedData->mbcs.dbcsOnlyState;
+    دننه_واټن=0;
+    state=shared_معلومات->mbcs.dbcsOnlyState;
 
     /* conversion loop */
-    for(i=0;;) {
-        entry=stateTable[state][(uint8_t)source[i++]];
-        if(MBCS_ENTRY_IS_TRANSITION(entry)) {
-            state=(uint8_t)MBCS_ENTRY_TRANSITION_STATE(entry);
-            offset+=MBCS_ENTRY_TRANSITION_OFFSET(entry);
+    لكل(i=0;;) {
+        ثبت=state_جدول[state][(uint8_t)سرچینه[i++]];
+        إذا(MBCS_ثبت_IS_TRANSITION(ثبت)) {
+            state=(uint8_t)MBCS_ثبت_TRANSITION_STATE(ثبت);
+            دننه_واټن+=MBCS_ثبت_TRANSITION_دننه_واټن(ثبت);
 
-            if(i==length) {
-                return 0xffff; /* truncated character */
+            إذا(i==length) {
+                أرجع 0xffff; /* truncated character */
             }
-        } else {
+        } وإلا {
             /*
              * An if-else-if chain provides more reliable performance for
              * the most common cases compared to a switch.
              */
-            action=(uint8_t)(MBCS_ENTRY_FINAL_ACTION(entry));
-            if(action==MBCS_STATE_VALID_16) {
-                offset+=MBCS_ENTRY_FINAL_VALUE_16(entry);
-                c=unicodeCodeUnits[offset];
-                if(c!=0xfffe) {
-                    /* done */
-                } else if(UCNV_TO_U_USE_FALLBACK(cnv)) {
-                    c=ucnv_MBCSGetFallback(&sharedData->mbcs, offset);
+            action=(uint8_t)(MBCS_ثبت_FINAL_ACTION(ثبت));
+            إذا(action==MBCS_STATE_VALID_16) {
+                دننه_واټن+=MBCS_ثبت_FINAL_ارزښت_16(ثبت);
+                c=unicode_کوډ_Units[دننه_واټن];
+                إذا(c!=0xfffe) {
+                    /*بشپړ*/
+                } وإلا إذا(UCNV_منزل_U_USE_FALLBACK(cnv)) {
+                    c=ucnv_MBCSGetFallback(&shared_معلومات->mbcs, دننه_واټن);
                 /* else done with 0xfffe */
                 }
-                break;
-            } else if(action==MBCS_STATE_VALID_DIRECT_16) {
+                اكسر;
+            } وإلا إذا(action==MBCS_STATE_VALID_مستقیم_16) {
                 /* output BMP code point */
-                c=(char16_t)MBCS_ENTRY_FINAL_VALUE_16(entry);
-                break;
-            } else if(action==MBCS_STATE_VALID_16_PAIR) {
-                offset+=MBCS_ENTRY_FINAL_VALUE_16(entry);
-                c=unicodeCodeUnits[offset++];
-                if(c<0xd800) {
+                c=(char16_t)MBCS_ثبت_FINAL_ارزښت_16(ثبت);
+                اكسر;
+            } وإلا إذا(action==MBCS_STATE_VALID_16_PAIR) {
+                دننه_واټن+=MBCS_ثبت_FINAL_ارزښت_16(ثبت);
+                c=unicode_کوډ_Units[دننه_واټن++];
+                إذا(c<0xd800) {
                     /* output BMP code point below 0xd800 */
-                } else if(UCNV_TO_U_USE_FALLBACK(cnv) ? c<=0xdfff : c<=0xdbff) {
+                } وإلا إذا(UCNV_منزل_U_USE_FALLBACK(cnv) ? c<=0xdfff : c<=0xdbff) {
                     /* output roundtrip or fallback supplementary code point */
-                    c=(UChar32)(((c&0x3ff)<<10)+unicodeCodeUnits[offset]+(0x10000-0xdc00));
-                } else if(UCNV_TO_U_USE_FALLBACK(cnv) ? (c&0xfffe)==0xe000 : c==0xe000) {
+                    c=(UChar32)(((c&0x3ff)<<10)+unicode_کوډ_Units[دننه_واټن]+(0x10000-0xdc00));
+                } وإلا إذا(UCNV_منزل_U_USE_FALLBACK(cnv) ? (c&0xfffe)==0xe000 : c==0xe000) {
                     /* output roundtrip BMP code point above 0xd800 or fallback BMP code point */
-                    c=unicodeCodeUnits[offset];
-                } else if(c==0xffff) {
-                    return 0xffff;
-                } else {
+                    c=unicode_کوډ_Units[دننه_واټن];
+                } وإلا إذا(c==0xffff) {
+                    أرجع 0xffff;
+                } وإلا {
                     c=0xfffe;
                 }
-                break;
-            } else if(action==MBCS_STATE_VALID_DIRECT_20) {
+                اكسر;
+            } وإلا إذا(action==MBCS_STATE_VALID_مستقیم_20) {
                 /* output supplementary code point */
-                c=0x10000+MBCS_ENTRY_FINAL_VALUE(entry);
-                break;
-            } else if(action==MBCS_STATE_FALLBACK_DIRECT_16) {
-                if(!TO_U_USE_FALLBACK(useFallback)) {
+                c=0x10000+MBCS_ثبت_FINAL_ارزښت(ثبت);
+                اكسر;
+            } وإلا إذا(action==MBCS_STATE_FALLBACK_مستقیم_16) {
+                إذا(!منزل_U_USE_FALLBACK(useFallback)) {
                     c=0xfffe;
-                    break;
+                    اكسر;
                 }
                 /* output BMP code point */
-                c=(char16_t)MBCS_ENTRY_FINAL_VALUE_16(entry);
-                break;
-            } else if(action==MBCS_STATE_FALLBACK_DIRECT_20) {
-                if(!TO_U_USE_FALLBACK(useFallback)) {
+                c=(char16_t)MBCS_ثبت_FINAL_ارزښت_16(ثبت);
+                اكسر;
+            } وإلا إذا(action==MBCS_STATE_FALLBACK_مستقیم_20) {
+                إذا(!منزل_U_USE_FALLBACK(useFallback)) {
                     c=0xfffe;
-                    break;
+                    اكسر;
                 }
                 /* output supplementary code point */
-                c=0x10000+MBCS_ENTRY_FINAL_VALUE(entry);
-                break;
-            } else if(action==MBCS_STATE_UNASSIGNED) {
+                c=0x10000+MBCS_ثبت_FINAL_ارزښت(ثبت);
+                اكسر;
+            } وإلا إذا(action==MBCS_STATE_UNASSIGNED) {
                 c=0xfffe;
-                break;
+                اكسر;
             }
 
             /*
              * forbid MBCS_STATE_CHANGE_ONLY for this function,
              * and MBCS_STATE_ILLEGAL and reserved action codes
              */
-            return 0xffff;
+            أرجع 0xffff;
         }
     }
 
-    if(i!=length) {
+    إذا(i!=length) {
         /* illegal for this function: not all input consumed */
-        return 0xffff;
+        أرجع 0xffff;
     }
 
-    if(c==0xfffe) {
+    إذا(c==0xfffe) {
         /* try an extension mapping */
-        const int32_t *cx=sharedData->mbcs.extIndexes;
-        if(cx!=nullptr) {
-            return ucnv_extSimpleMatchToU(cx, source, length, useFallback);
+        ثابت int32_t *cx=shared_معلومات->mbcs.extIndexes;
+        إذا(cx!=تش_اشاره) {
+            أرجع ucnv_ext_Simple_سمون_منزل_U(cx, سرچینه, length, useFallback);
         }
     }
 
-    return c;
+    أرجع c;
 }
 
 /* MBCS-from-Unicode conversion functions ----------------------------------- */
 
 /* This version of ucnv_MBCSFromUnicodeWithOffsets() is optimized for double-byte codepages. */
-static void
-ucnv_MBCSDoubleFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
-                                  UErrorCode *pErrorCode) {
+ساكن فراغ
+ucnv_MBCSDoubleFromUnicodeWithOffsets(UConverter_From_Unicode_دلیلونه *p_دلیلونه,
+                                  UError_کوډ *p_Error_کوډ) {
     UConverter *cnv;
-    const char16_t *source, *sourceLimit;
-    uint8_t *target;
-    int32_t targetCapacity;
+    ثابت char16_t *سرچینه, *سرچینه_حد;
+    uint8_t *موخه;
+    int32_t موخه_ظرفیت;
     int32_t *offsets;
 
-    const uint16_t *table;
-    const uint16_t *mbcsIndex;
-    const uint8_t *bytes;
+    ثابت uint16_t *جدول;
+    ثابت uint16_t *mbcs_شاخص;
+    ثابت uint8_t *بایټونه;
 
     UChar32 c;
 
-    int32_t sourceIndex, nextSourceIndex;
+    int32_t سرچینه_شاخص, بل_سرچینه_شاخص;
 
-    uint32_t stage2Entry;
+    uint32_t stage2_ثبت;
     uint32_t asciiRoundtrips;
     uint32_t value;
-    uint8_t unicodeMask;
+    uint8_t unicode_ماسک;
 
     /* use optimized function if possible */
-    cnv=pArgs->converter;
-    unicodeMask=cnv->sharedData->mbcs.unicodeMask;
+    cnv=p_دلیلونه->converter;
+    unicode_ماسک=cnv->shared_معلومات->mbcs.unicode_ماسک;
 
     /* set up the local pointers */
-    source=pArgs->source;
-    sourceLimit=pArgs->sourceLimit;
-    target = reinterpret_cast<uint8_t*>(pArgs->target);
-    targetCapacity = static_cast<int32_t>(pArgs->targetLimit - pArgs->target);
-    offsets=pArgs->offsets;
+    سرچینه=p_دلیلونه->سرچینه;
+    سرچینه_حد=p_دلیلونه->سرچینه_حد;
+    موخه = reinterpret_cast<uint8_t*>(p_دلیلونه->موخه);
+    موخه_ظرفیت = static_cast<int32_t>(p_دلیلونه->موخه_حد - p_دلیلونه->موخه);
+    offsets=p_دلیلونه->offsets;
 
-    table=cnv->sharedData->mbcs.fromUnicodeTable;
-    mbcsIndex=cnv->sharedData->mbcs.mbcsIndex;
-    if((cnv->options&UCNV_OPTION_SWAP_LFNL)!=0) {
-        bytes=cnv->sharedData->mbcs.swapLFNLFromUnicodeBytes;
-    } else {
-        bytes=cnv->sharedData->mbcs.fromUnicodeBytes;
+    جدول=cnv->shared_معلومات->mbcs.from_Unicode_جدول;
+    mbcs_شاخص=cnv->shared_معلومات->mbcs.mbcs_شاخص;
+    إذا((cnv->options&UCNV_OPTION_بدلون_LFNL)!=0) {
+        بایټونه=cnv->shared_معلومات->mbcs.بدلون_LFNLFrom_Unicode_بایټونه;
+    } وإلا {
+        بایټونه=cnv->shared_معلومات->mbcs.from_Unicode_بایټونه;
     }
-    asciiRoundtrips=cnv->sharedData->mbcs.asciiRoundtrips;
+    asciiRoundtrips=cnv->shared_معلومات->mbcs.asciiRoundtrips;
 
     /* get the converter state from UConverter */
     c=cnv->fromUChar32;
 
     /* sourceIndex=-1 if the current character began in the previous buffer */
-    sourceIndex= c==0 ? 0 : -1;
-    nextSourceIndex=0;
+    سرچینه_شاخص= c==0 ? 0 : -1;
+    بل_سرچینه_شاخص=0;
 
     /* conversion loop */
-    if(c!=0 && targetCapacity>0) {
-        goto getTrail;
+    إذا(c!=0 && موخه_ظرفیت>0) {
+        اذهب getTrail;
     }
 
-    while(source<sourceLimit) {
+    طالما(سرچینه<سرچینه_حد) {
         /*
          * This following test is to see if available input would overflow the output.
          * It does not catch output of more than one byte that
@@ -3462,86 +3462,86 @@ ucnv_MBCSDoubleFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
          * Therefore, those situations also test for overflows and will
          * then break the loop, too.
          */
-        if(targetCapacity>0) {
+        إذا(موخه_ظرفیت>0) {
             /*
              * Get a correct Unicode code point:
              * a single char16_t for a BMP code point or
              * a matched surrogate pair for a "supplementary code point".
              */
-            c=*source++;
-            ++nextSourceIndex;
-            if(c<=0x7f && IS_ASCII_ROUNDTRIP(c, asciiRoundtrips)) {
-                *target++ = static_cast<uint8_t>(c);
-                if(offsets!=nullptr) {
-                    *offsets++=sourceIndex;
-                    sourceIndex=nextSourceIndex;
+            c=*سرچینه++;
+            ++بل_سرچینه_شاخص;
+            إذا(c<=0x7f && IS_ASCII_ROUNDTRIP(c, asciiRoundtrips)) {
+                *موخه++ = static_cast<uint8_t>(c);
+                إذا(offsets!=تش_اشاره) {
+                    *offsets++=سرچینه_شاخص;
+                    سرچینه_شاخص=بل_سرچینه_شاخص;
                 }
-                --targetCapacity;
+                --موخه_ظرفیت;
                 c=0;
-                continue;
+                استمر;
             }
             /*
              * utf8Friendly table: Test for <=0xd7ff rather than <=MBCS_FAST_MAX
              * to avoid dealing with surrogates.
              * MBCS_FAST_MAX must be >=0xd7ff.
              */
-            if(c<=0xd7ff) {
-                value=DBCS_RESULT_FROM_MOST_BMP(mbcsIndex, (const uint16_t *)bytes, c);
+            إذا(c<=0xd7ff) {
+                value=DBCS_پایله_FROM_MOST_BMP(mbcs_شاخص, (ثابت uint16_t *)بایټونه, c);
                 /* There are only roundtrips (!=0) and no-mapping (==0) entries. */
-                if(value==0) {
-                    goto unassigned;
+                إذا(value==0) {
+                    اذهب unassigned;
                 }
                 /* output the value */
-            } else {
+            } وإلا {
                 /*
                  * This also tests if the codepage maps single surrogates.
                  * If it does, then surrogates are not paired but mapped separately.
                  * Note that in this case unmatched surrogates are not detected.
                  */
-                if(U16_IS_SURROGATE(c) && !(unicodeMask&UCNV_HAS_SURROGATES)) {
-                    if(U16_IS_SURROGATE_LEAD(c)) {
+                إذا(U16_IS_SURROGATE(c) && !(unicode_ماسک&UCNV_HAS_SURROGATES)) {
+                    إذا(U16_IS_SURROGATE_LEAD(c)) {
 getTrail:
-                        if(source<sourceLimit) {
+                        إذا(سرچینه<سرچینه_حد) {
                             /* test the following code unit */
-                            char16_t trail=*source;
-                            if(U16_IS_TRAIL(trail)) {
-                                ++source;
-                                ++nextSourceIndex;
+                            char16_t trail=*سرچینه;
+                            إذا(U16_IS_TRAIL(trail)) {
+                                ++سرچینه;
+                                ++بل_سرچینه_شاخص;
                                 c=U16_GET_SUPPLEMENTARY(c, trail);
-                                if(!(unicodeMask&UCNV_HAS_SUPPLEMENTARY)) {
+                                إذا(!(unicode_ماسک&UCNV_HAS_SUPPLEMENTARY)) {
                                     /* BMP-only codepages are stored without stage 1 entries for supplementary code points */
                                     /* callback(unassigned) */
-                                    goto unassigned;
+                                    اذهب unassigned;
                                 }
                                 /* convert this supplementary code point */
                                 /* exit this condition tree */
-                            } else {
+                            } وإلا {
                                 /* this is an unmatched lead code unit (1st surrogate) */
                                 /* callback(illegal) */
-                                *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                                break;
+                                *p_Error_کوډ=U_ILLEGAL_CHAR_وموندل;
+                                اكسر;
                             }
-                        } else {
+                        } وإلا {
                             /* no more input */
-                            break;
+                            اكسر;
                         }
-                    } else {
+                    } وإلا {
                         /* this is an unmatched trail code unit (2nd surrogate) */
                         /* callback(illegal) */
-                        *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                        break;
+                        *p_Error_کوډ=U_ILLEGAL_CHAR_وموندل;
+                        اكسر;
                     }
                 }
 
                 /* convert the Unicode code point in c into codepage bytes */
-                stage2Entry=MBCS_STAGE_2_FROM_U(table, c);
+                stage2_ثبت=MBCS_STAGE_2_FROM_U(جدول, c);
 
                 /* get the bytes and the length for the output */
                 /* MBCS_OUTPUT_2 */
-                value=MBCS_VALUE_2_FROM_STAGE_2(bytes, stage2Entry, c);
+                value=MBCS_ارزښت_2_FROM_STAGE_2(بایټونه, stage2_ثبت, c);
 
                 /* is this code point assigned, or do we use fallbacks? */
-                if(!(MBCS_FROM_U_IS_ROUNDTRIP(stage2Entry, c) ||
+                إذا(!(MBCS_FROM_U_IS_ROUNDTRIP(stage2_ثبت, c) ||
                      (UCNV_FROM_U_USE_FALLBACK(cnv, c) && value!=0))
                 ) {
                     /*
@@ -3552,72 +3552,72 @@ getTrail:
 
 unassigned:
                     /* try an extension mapping */
-                    pArgs->source=source;
-                    c=_extFromU(cnv, cnv->sharedData,
-                                c, &source, sourceLimit,
-                                &target, target+targetCapacity,
-                                &offsets, sourceIndex,
-                                pArgs->flush,
-                                pErrorCode);
-                    nextSourceIndex += static_cast<int32_t>(source - pArgs->source);
+                    p_دلیلونه->سرچینه=سرچینه;
+                    c=_extFromU(cnv, cnv->shared_معلومات,
+                                c, &سرچینه, سرچینه_حد,
+                                &موخه, موخه+موخه_ظرفیت,
+                                &offsets, سرچینه_شاخص,
+                                p_دلیلونه->flush,
+                                p_Error_کوډ);
+                    بل_سرچینه_شاخص += static_cast<int32_t>(سرچینه - p_دلیلونه->سرچینه);
 
-                    if(U_FAILURE(*pErrorCode)) {
+                    إذا(U_FAILURE(*p_Error_کوډ)) {
                         /* not mappable or buffer overflow */
-                        break;
-                    } else {
+                        اكسر;
+                    } وإلا {
                         /* a mapping was written to the target, continue */
 
                         /* recalculate the targetCapacity after an extension mapping */
-                        targetCapacity = static_cast<int32_t>(pArgs->targetLimit - reinterpret_cast<char*>(target));
+                        موخه_ظرفیت = static_cast<int32_t>(p_دلیلونه->موخه_حد - reinterpret_cast<حرف*>(موخه));
 
                         /* normal end of conversion: prepare for a new character */
-                        sourceIndex=nextSourceIndex;
-                        continue;
+                        سرچینه_شاخص=بل_سرچینه_شاخص;
+                        استمر;
                     }
                 }
             }
 
             /* write the output character bytes from value and length */
             /* from the first if in the loop we know that targetCapacity>0 */
-            if(value<=0xff) {
+            إذا(value<=0xff) {
                 /* this is easy because we know that there is enough space */
-                *target++ = static_cast<uint8_t>(value);
-                if(offsets!=nullptr) {
-                    *offsets++=sourceIndex;
+                *موخه++ = static_cast<uint8_t>(value);
+                إذا(offsets!=تش_اشاره) {
+                    *offsets++=سرچینه_شاخص;
                 }
-                --targetCapacity;
-            } else /* length==2 */ {
-                *target++ = static_cast<uint8_t>(value >> 8);
-                if(2<=targetCapacity) {
-                    *target++ = static_cast<uint8_t>(value);
-                    if(offsets!=nullptr) {
-                        *offsets++=sourceIndex;
-                        *offsets++=sourceIndex;
+                --موخه_ظرفیت;
+            } وإلا /* length==2 */ {
+                *موخه++ = static_cast<uint8_t>(value >> 8);
+                إذا(2<=موخه_ظرفیت) {
+                    *موخه++ = static_cast<uint8_t>(value);
+                    إذا(offsets!=تش_اشاره) {
+                        *offsets++=سرچینه_شاخص;
+                        *offsets++=سرچینه_شاخص;
                     }
-                    targetCapacity-=2;
-                } else {
-                    if(offsets!=nullptr) {
-                        *offsets++=sourceIndex;
+                    موخه_ظرفیت-=2;
+                } وإلا {
+                    إذا(offsets!=تش_اشاره) {
+                        *offsets++=سرچینه_شاخص;
                     }
-                    cnv->charErrorBuffer[0] = static_cast<char>(value);
-                    cnv->charErrorBufferLength=1;
+                    cnv->char_Error_بفر[0] = static_cast<حرف>(value);
+                    cnv->char_Error_بفر_اوږدتیا=1;
 
                     /* target overflow */
-                    targetCapacity=0;
-                    *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+                    موخه_ظرفیت=0;
+                    *p_Error_کوډ=U_بفر_ډکېدنه_ERROR;
                     c=0;
-                    break;
+                    اكسر;
                 }
             }
 
             /* normal end of conversion: prepare for a new character */
             c=0;
-            sourceIndex=nextSourceIndex;
-            continue;
-        } else {
+            سرچینه_شاخص=بل_سرچینه_شاخص;
+            استمر;
+        } وإلا {
             /* target is full */
-            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-            break;
+            *p_Error_کوډ=U_بفر_ډکېدنه_ERROR;
+            اكسر;
         }
     }
 
@@ -3625,68 +3625,68 @@ unassigned:
     cnv->fromUChar32=c;
 
     /* write back the updated pointers */
-    pArgs->source=source;
-    pArgs->target = reinterpret_cast<char*>(target);
-    pArgs->offsets=offsets;
+    p_دلیلونه->سرچینه=سرچینه;
+    p_دلیلونه->موخه = reinterpret_cast<حرف*>(موخه);
+    p_دلیلونه->offsets=offsets;
 }
 
 /* This version of ucnv_MBCSFromUnicodeWithOffsets() is optimized for single-byte codepages. */
-static void
-ucnv_MBCSSingleFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
-                                  UErrorCode *pErrorCode) {
+ساكن فراغ
+ucnv_MBCSSingleFromUnicodeWithOffsets(UConverter_From_Unicode_دلیلونه *p_دلیلونه,
+                                  UError_کوډ *p_Error_کوډ) {
     UConverter *cnv;
-    const char16_t *source, *sourceLimit;
-    uint8_t *target;
-    int32_t targetCapacity;
+    ثابت char16_t *سرچینه, *سرچینه_حد;
+    uint8_t *موخه;
+    int32_t موخه_ظرفیت;
     int32_t *offsets;
 
-    const uint16_t *table;
-    const uint16_t *results;
+    ثابت uint16_t *جدول;
+    ثابت uint16_t *results;
 
     UChar32 c;
 
-    int32_t sourceIndex, nextSourceIndex;
+    int32_t سرچینه_شاخص, بل_سرچینه_شاخص;
 
-    uint16_t value, minValue;
+    uint16_t value, min_ارزښت;
     UBool hasSupplementary;
 
     /* set up the local pointers */
-    cnv=pArgs->converter;
-    source=pArgs->source;
-    sourceLimit=pArgs->sourceLimit;
-    target = reinterpret_cast<uint8_t*>(pArgs->target);
-    targetCapacity = static_cast<int32_t>(pArgs->targetLimit - pArgs->target);
-    offsets=pArgs->offsets;
+    cnv=p_دلیلونه->converter;
+    سرچینه=p_دلیلونه->سرچینه;
+    سرچینه_حد=p_دلیلونه->سرچینه_حد;
+    موخه = reinterpret_cast<uint8_t*>(p_دلیلونه->موخه);
+    موخه_ظرفیت = static_cast<int32_t>(p_دلیلونه->موخه_حد - p_دلیلونه->موخه);
+    offsets=p_دلیلونه->offsets;
 
-    table=cnv->sharedData->mbcs.fromUnicodeTable;
-    if((cnv->options&UCNV_OPTION_SWAP_LFNL)!=0) {
-        results = reinterpret_cast<uint16_t*>(cnv->sharedData->mbcs.swapLFNLFromUnicodeBytes);
-    } else {
-        results=(uint16_t *)cnv->sharedData->mbcs.fromUnicodeBytes;
+    جدول=cnv->shared_معلومات->mbcs.from_Unicode_جدول;
+    إذا((cnv->options&UCNV_OPTION_بدلون_LFNL)!=0) {
+        results = reinterpret_cast<uint16_t*>(cnv->shared_معلومات->mbcs.بدلون_LFNLFrom_Unicode_بایټونه);
+    } وإلا {
+        results=(uint16_t *)cnv->shared_معلومات->mbcs.from_Unicode_بایټونه;
     }
 
-    if(cnv->useFallback) {
+    إذا(cnv->useFallback) {
         /* use all roundtrip and fallback results */
-        minValue=0x800;
-    } else {
+        min_ارزښت=0x800;
+    } وإلا {
         /* use only roundtrips and fallbacks from private-use characters */
-        minValue=0xc00;
+        min_ارزښت=0xc00;
     }
-    hasSupplementary = static_cast<UBool>(cnv->sharedData->mbcs.unicodeMask & UCNV_HAS_SUPPLEMENTARY);
+    hasSupplementary = static_cast<UBool>(cnv->shared_معلومات->mbcs.unicode_ماسک & UCNV_HAS_SUPPLEMENTARY);
 
     /* get the converter state from UConverter */
     c=cnv->fromUChar32;
 
     /* sourceIndex=-1 if the current character began in the previous buffer */
-    sourceIndex= c==0 ? 0 : -1;
-    nextSourceIndex=0;
+    سرچینه_شاخص= c==0 ? 0 : -1;
+    بل_سرچینه_شاخص=0;
 
     /* conversion loop */
-    if(c!=0 && targetCapacity>0) {
-        goto getTrail;
+    إذا(c!=0 && موخه_ظرفیت>0) {
+        اذهب getTrail;
     }
 
-    while(source<sourceLimit) {
+    طالما(سرچینه<سرچینه_حد) {
         /*
          * This following test is to see if available input would overflow the output.
          * It does not catch output of more than one byte that
@@ -3695,95 +3695,95 @@ ucnv_MBCSSingleFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
          * Therefore, those situations also test for overflows and will
          * then break the loop, too.
          */
-        if(targetCapacity>0) {
+        إذا(موخه_ظرفیت>0) {
             /*
              * Get a correct Unicode code point:
              * a single char16_t for a BMP code point or
              * a matched surrogate pair for a "supplementary code point".
              */
-            c=*source++;
-            ++nextSourceIndex;
-            if(U16_IS_SURROGATE(c)) {
-                if(U16_IS_SURROGATE_LEAD(c)) {
+            c=*سرچینه++;
+            ++بل_سرچینه_شاخص;
+            إذا(U16_IS_SURROGATE(c)) {
+                إذا(U16_IS_SURROGATE_LEAD(c)) {
 getTrail:
-                    if(source<sourceLimit) {
+                    إذا(سرچینه<سرچینه_حد) {
                         /* test the following code unit */
-                        char16_t trail=*source;
-                        if(U16_IS_TRAIL(trail)) {
-                            ++source;
-                            ++nextSourceIndex;
+                        char16_t trail=*سرچینه;
+                        إذا(U16_IS_TRAIL(trail)) {
+                            ++سرچینه;
+                            ++بل_سرچینه_شاخص;
                             c=U16_GET_SUPPLEMENTARY(c, trail);
-                            if(!hasSupplementary) {
+                            إذا(!hasSupplementary) {
                                 /* BMP-only codepages are stored without stage 1 entries for supplementary code points */
                                 /* callback(unassigned) */
-                                goto unassigned;
+                                اذهب unassigned;
                             }
                             /* convert this supplementary code point */
                             /* exit this condition tree */
-                        } else {
+                        } وإلا {
                             /* this is an unmatched lead code unit (1st surrogate) */
                             /* callback(illegal) */
-                            *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                            break;
+                            *p_Error_کوډ=U_ILLEGAL_CHAR_وموندل;
+                            اكسر;
                         }
-                    } else {
+                    } وإلا {
                         /* no more input */
-                        break;
+                        اكسر;
                     }
-                } else {
+                } وإلا {
                     /* this is an unmatched trail code unit (2nd surrogate) */
                     /* callback(illegal) */
-                    *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                    break;
+                    *p_Error_کوډ=U_ILLEGAL_CHAR_وموندل;
+                    اكسر;
                 }
             }
 
             /* convert the Unicode code point in c into codepage bytes */
-            value=MBCS_SINGLE_RESULT_FROM_U(table, results, c);
+            value=MBCS_SINGLE_پایله_FROM_U(جدول, results, c);
 
             /* is this code point assigned, or do we use fallbacks? */
-            if(value>=minValue) {
+            إذا(value>=min_ارزښت) {
                 /* assigned, write the output character bytes from value and length */
                 /* length==1 */
                 /* this is easy because we know that there is enough space */
-                *target++ = static_cast<uint8_t>(value);
-                if(offsets!=nullptr) {
-                    *offsets++=sourceIndex;
+                *موخه++ = static_cast<uint8_t>(value);
+                إذا(offsets!=تش_اشاره) {
+                    *offsets++=سرچینه_شاخص;
                 }
-                --targetCapacity;
+                --موخه_ظرفیت;
 
                 /* normal end of conversion: prepare for a new character */
                 c=0;
-                sourceIndex=nextSourceIndex;
-            } else { /* unassigned */
+                سرچینه_شاخص=بل_سرچینه_شاخص;
+            } وإلا { /* unassigned */
 unassigned:
                 /* try an extension mapping */
-                pArgs->source=source;
-                c=_extFromU(cnv, cnv->sharedData,
-                            c, &source, sourceLimit,
-                            &target, target+targetCapacity,
-                            &offsets, sourceIndex,
-                            pArgs->flush,
-                            pErrorCode);
-                nextSourceIndex += static_cast<int32_t>(source - pArgs->source);
+                p_دلیلونه->سرچینه=سرچینه;
+                c=_extFromU(cnv, cnv->shared_معلومات,
+                            c, &سرچینه, سرچینه_حد,
+                            &موخه, موخه+موخه_ظرفیت,
+                            &offsets, سرچینه_شاخص,
+                            p_دلیلونه->flush,
+                            p_Error_کوډ);
+                بل_سرچینه_شاخص += static_cast<int32_t>(سرچینه - p_دلیلونه->سرچینه);
 
-                if(U_FAILURE(*pErrorCode)) {
+                إذا(U_FAILURE(*p_Error_کوډ)) {
                     /* not mappable or buffer overflow */
-                    break;
-                } else {
+                    اكسر;
+                } وإلا {
                     /* a mapping was written to the target, continue */
 
                     /* recalculate the targetCapacity after an extension mapping */
-                    targetCapacity = static_cast<int32_t>(pArgs->targetLimit - reinterpret_cast<char*>(target));
+                    موخه_ظرفیت = static_cast<int32_t>(p_دلیلونه->موخه_حد - reinterpret_cast<حرف*>(موخه));
 
                     /* normal end of conversion: prepare for a new character */
-                    sourceIndex=nextSourceIndex;
+                    سرچینه_شاخص=بل_سرچینه_شاخص;
                 }
             }
-        } else {
+        } وإلا {
             /* target is full */
-            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-            break;
+            *p_Error_کوډ=U_بفر_ډکېدنه_ERROR;
+            اكسر;
         }
     }
 
@@ -3791,9 +3791,9 @@ unassigned:
     cnv->fromUChar32=c;
 
     /* write back the updated pointers */
-    pArgs->source=source;
-    pArgs->target = reinterpret_cast<char*>(target);
-    pArgs->offsets=offsets;
+    p_دلیلونه->سرچینه=سرچینه;
+    p_دلیلونه->موخه = reinterpret_cast<حرف*>(موخه);
+    p_دلیلونه->offsets=offsets;
 }
 
 /*
@@ -3807,241 +3807,241 @@ unassigned:
  * See SVN revision 21013 (2007-feb-06) for the last version with #if switches
  * for various MBCS and SBCS optimizations.
  */
-static void
-ucnv_MBCSSingleFromBMPWithOffsets(UConverterFromUnicodeArgs *pArgs,
-                              UErrorCode *pErrorCode) {
+ساكن فراغ
+ucnv_MBCSSingleFromBMPWithOffsets(UConverter_From_Unicode_دلیلونه *p_دلیلونه,
+                              UError_کوډ *p_Error_کوډ) {
     UConverter *cnv;
-    const char16_t *source, *sourceLimit, *lastSource;
-    uint8_t *target;
-    int32_t targetCapacity, length;
+    ثابت char16_t *سرچینه, *سرچینه_حد, *وروستی_سرچینه;
+    uint8_t *موخه;
+    int32_t موخه_ظرفیت, length;
     int32_t *offsets;
 
-    const uint16_t *table;
-    const uint16_t *results;
+    ثابت uint16_t *جدول;
+    ثابت uint16_t *results;
 
     UChar32 c;
 
-    int32_t sourceIndex;
+    int32_t سرچینه_شاخص;
 
     uint32_t asciiRoundtrips;
-    uint16_t value, minValue;
+    uint16_t value, min_ارزښت;
 
     /* set up the local pointers */
-    cnv=pArgs->converter;
-    source=pArgs->source;
-    sourceLimit=pArgs->sourceLimit;
-    target = reinterpret_cast<uint8_t*>(pArgs->target);
-    targetCapacity = static_cast<int32_t>(pArgs->targetLimit - pArgs->target);
-    offsets=pArgs->offsets;
+    cnv=p_دلیلونه->converter;
+    سرچینه=p_دلیلونه->سرچینه;
+    سرچینه_حد=p_دلیلونه->سرچینه_حد;
+    موخه = reinterpret_cast<uint8_t*>(p_دلیلونه->موخه);
+    موخه_ظرفیت = static_cast<int32_t>(p_دلیلونه->موخه_حد - p_دلیلونه->موخه);
+    offsets=p_دلیلونه->offsets;
 
-    table=cnv->sharedData->mbcs.fromUnicodeTable;
-    if((cnv->options&UCNV_OPTION_SWAP_LFNL)!=0) {
-        results = reinterpret_cast<uint16_t*>(cnv->sharedData->mbcs.swapLFNLFromUnicodeBytes);
-    } else {
-        results=(uint16_t *)cnv->sharedData->mbcs.fromUnicodeBytes;
+    جدول=cnv->shared_معلومات->mbcs.from_Unicode_جدول;
+    إذا((cnv->options&UCNV_OPTION_بدلون_LFNL)!=0) {
+        results = reinterpret_cast<uint16_t*>(cnv->shared_معلومات->mbcs.بدلون_LFNLFrom_Unicode_بایټونه);
+    } وإلا {
+        results=(uint16_t *)cnv->shared_معلومات->mbcs.from_Unicode_بایټونه;
     }
-    asciiRoundtrips=cnv->sharedData->mbcs.asciiRoundtrips;
+    asciiRoundtrips=cnv->shared_معلومات->mbcs.asciiRoundtrips;
 
-    if(cnv->useFallback) {
+    إذا(cnv->useFallback) {
         /* use all roundtrip and fallback results */
-        minValue=0x800;
-    } else {
+        min_ارزښت=0x800;
+    } وإلا {
         /* use only roundtrips and fallbacks from private-use characters */
-        minValue=0xc00;
+        min_ارزښت=0xc00;
     }
 
     /* get the converter state from UConverter */
     c=cnv->fromUChar32;
 
     /* sourceIndex=-1 if the current character began in the previous buffer */
-    sourceIndex= c==0 ? 0 : -1;
-    lastSource=source;
+    سرچینه_شاخص= c==0 ? 0 : -1;
+    وروستی_سرچینه=سرچینه;
 
     /*
      * since the conversion here is 1:1 char16_t:uint8_t, we need only one counter
      * for the minimum of the sourceLength and targetCapacity
      */
-    length = static_cast<int32_t>(sourceLimit - source);
-    if(length<targetCapacity) {
-        targetCapacity=length;
+    length = static_cast<int32_t>(سرچینه_حد - سرچینه);
+    إذا(length<موخه_ظرفیت) {
+        موخه_ظرفیت=length;
     }
 
     /* conversion loop */
-    if(c!=0 && targetCapacity>0) {
-        goto getTrail;
+    إذا(c!=0 && موخه_ظرفیت>0) {
+        اذهب getTrail;
     }
 
-#if MBCS_UNROLL_SINGLE_FROM_BMP
+#إذا MBCS_UNROLL_SINGLE_FROM_BMP
     /* unrolling makes it slower on Pentium III/Windows 2000?! */
     /* unroll the loop with the most common case */
 unrolled:
-    if(targetCapacity>=4) {
+    إذا(موخه_ظرفیت>=4) {
         int32_t count, loops;
-        uint16_t andedValues;
+        uint16_t anded_ارزښتونه;
 
-        loops=count=targetCapacity>>2;
-        do {
-            c=*source++;
-            andedValues=value=MBCS_SINGLE_RESULT_FROM_U(table, results, c);
-            *target++=(uint8_t)value;
-            c=*source++;
-            andedValues&=value=MBCS_SINGLE_RESULT_FROM_U(table, results, c);
-            *target++=(uint8_t)value;
-            c=*source++;
-            andedValues&=value=MBCS_SINGLE_RESULT_FROM_U(table, results, c);
-            *target++=(uint8_t)value;
-            c=*source++;
-            andedValues&=value=MBCS_SINGLE_RESULT_FROM_U(table, results, c);
-            *target++=(uint8_t)value;
+        loops=count=موخه_ظرفیت>>2;
+        افعل {
+            c=*سرچینه++;
+            anded_ارزښتونه=value=MBCS_SINGLE_پایله_FROM_U(جدول, results, c);
+            *موخه++=(uint8_t)value;
+            c=*سرچینه++;
+            anded_ارزښتونه&=value=MBCS_SINGLE_پایله_FROM_U(جدول, results, c);
+            *موخه++=(uint8_t)value;
+            c=*سرچینه++;
+            anded_ارزښتونه&=value=MBCS_SINGLE_پایله_FROM_U(جدول, results, c);
+            *موخه++=(uint8_t)value;
+            c=*سرچینه++;
+            anded_ارزښتونه&=value=MBCS_SINGLE_پایله_FROM_U(جدول, results, c);
+            *موخه++=(uint8_t)value;
 
             /* were all 4 entries really valid? */
-            if(andedValues<minValue) {
+            إذا(anded_ارزښتونه<min_ارزښت) {
                 /* no, return to the first of these 4 */
-                source-=4;
-                target-=4;
-                break;
+                سرچینه-=4;
+                موخه-=4;
+                اكسر;
             }
-        } while(--count>0);
+        } طالما(--count>0);
         count=loops-count;
-        targetCapacity-=4*count;
+        موخه_ظرفیت-=4*count;
 
-        if(offsets!=nullptr) {
-            lastSource+=4*count;
-            while(count>0) {
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
+        إذا(offsets!=تش_اشاره) {
+            وروستی_سرچینه+=4*count;
+            طالما(count>0) {
+                *offsets++=سرچینه_شاخص++;
+                *offsets++=سرچینه_شاخص++;
+                *offsets++=سرچینه_شاخص++;
+                *offsets++=سرچینه_شاخص++;
                 --count;
             }
         }
 
         c=0;
     }
-#endif
+#د_که_پای
 
-    while(targetCapacity>0) {
+    طالما(موخه_ظرفیت>0) {
         /*
          * Get a correct Unicode code point:
          * a single char16_t for a BMP code point or
          * a matched surrogate pair for a "supplementary code point".
          */
-        c=*source++;
+        c=*سرچینه++;
         /*
          * Do not immediately check for single surrogates:
          * Assume that they are unassigned and check for them in that case.
          * This speeds up the conversion of assigned characters.
          */
         /* convert the Unicode code point in c into codepage bytes */
-        if(c<=0x7f && IS_ASCII_ROUNDTRIP(c, asciiRoundtrips)) {
-            *target++ = static_cast<uint8_t>(c);
-            --targetCapacity;
+        إذا(c<=0x7f && IS_ASCII_ROUNDTRIP(c, asciiRoundtrips)) {
+            *موخه++ = static_cast<uint8_t>(c);
+            --موخه_ظرفیت;
             c=0;
-            continue;
+            استمر;
         }
-        value=MBCS_SINGLE_RESULT_FROM_U(table, results, c);
+        value=MBCS_SINGLE_پایله_FROM_U(جدول, results, c);
         /* is this code point assigned, or do we use fallbacks? */
-        if(value>=minValue) {
+        إذا(value>=min_ارزښت) {
             /* assigned, write the output character bytes from value and length */
             /* length==1 */
             /* this is easy because we know that there is enough space */
-            *target++ = static_cast<uint8_t>(value);
-            --targetCapacity;
+            *موخه++ = static_cast<uint8_t>(value);
+            --موخه_ظرفیت;
 
             /* normal end of conversion: prepare for a new character */
             c=0;
-            continue;
-        } else if(!U16_IS_SURROGATE(c)) {
+            استمر;
+        } وإلا إذا(!U16_IS_SURROGATE(c)) {
             /* normal, unassigned BMP character */
-        } else if(U16_IS_SURROGATE_LEAD(c)) {
+        } وإلا إذا(U16_IS_SURROGATE_LEAD(c)) {
 getTrail:
-            if(source<sourceLimit) {
+            إذا(سرچینه<سرچینه_حد) {
                 /* test the following code unit */
-                char16_t trail=*source;
-                if(U16_IS_TRAIL(trail)) {
-                    ++source;
+                char16_t trail=*سرچینه;
+                إذا(U16_IS_TRAIL(trail)) {
+                    ++سرچینه;
                     c=U16_GET_SUPPLEMENTARY(c, trail);
                     /* this codepage does not map supplementary code points */
                     /* callback(unassigned) */
-                } else {
+                } وإلا {
                     /* this is an unmatched lead code unit (1st surrogate) */
                     /* callback(illegal) */
-                    *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                    break;
+                    *p_Error_کوډ=U_ILLEGAL_CHAR_وموندل;
+                    اكسر;
                 }
-            } else {
+            } وإلا {
                 /* no more input */
-                if (pArgs->flush) {
-                    *pErrorCode=U_TRUNCATED_CHAR_FOUND;
+                إذا (p_دلیلونه->flush) {
+                    *p_Error_کوډ=U_TRUNCATED_CHAR_وموندل;
                 }
-                break;
+                اكسر;
             }
-        } else {
+        } وإلا {
             /* this is an unmatched trail code unit (2nd surrogate) */
             /* callback(illegal) */
-            *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-            break;
+            *p_Error_کوډ=U_ILLEGAL_CHAR_وموندل;
+            اكسر;
         }
 
         /* c does not have a mapping */
 
         /* get the number of code units for c to correctly advance sourceIndex */
-        length=U16_LENGTH(c);
+        length=U16_اوږدتیا(c);
 
         /* set offsets since the start or the last extension */
-        if(offsets!=nullptr) {
-            int32_t count = static_cast<int32_t>(source - lastSource);
+        إذا(offsets!=تش_اشاره) {
+            int32_t count = static_cast<int32_t>(سرچینه - وروستی_سرچینه);
 
             /* do not set the offset for this character */
             count-=length;
 
-            while(count>0) {
-                *offsets++=sourceIndex++;
+            طالما(count>0) {
+                *offsets++=سرچینه_شاخص++;
                 --count;
             }
             /* offsets and sourceIndex are now set for the current character */
         }
 
         /* try an extension mapping */
-        lastSource=source;
-        c=_extFromU(cnv, cnv->sharedData,
-                    c, &source, sourceLimit,
-                    &target, reinterpret_cast<const uint8_t*>(pArgs->targetLimit),
-                    &offsets, sourceIndex,
-                    pArgs->flush,
-                    pErrorCode);
-        sourceIndex += length + static_cast<int32_t>(source - lastSource);
-        lastSource=source;
+        وروستی_سرچینه=سرچینه;
+        c=_extFromU(cnv, cnv->shared_معلومات,
+                    c, &سرچینه, سرچینه_حد,
+                    &موخه, reinterpret_cast<ثابت uint8_t*>(p_دلیلونه->موخه_حد),
+                    &offsets, سرچینه_شاخص,
+                    p_دلیلونه->flush,
+                    p_Error_کوډ);
+        سرچینه_شاخص += length + static_cast<int32_t>(سرچینه - وروستی_سرچینه);
+        وروستی_سرچینه=سرچینه;
 
-        if(U_FAILURE(*pErrorCode)) {
+        إذا(U_FAILURE(*p_Error_کوډ)) {
             /* not mappable or buffer overflow */
-            break;
-        } else {
+            اكسر;
+        } وإلا {
             /* a mapping was written to the target, continue */
 
             /* recalculate the targetCapacity after an extension mapping */
-            targetCapacity = static_cast<int32_t>(pArgs->targetLimit - reinterpret_cast<char*>(target));
-            length = static_cast<int32_t>(sourceLimit - source);
-            if(length<targetCapacity) {
-                targetCapacity=length;
+            موخه_ظرفیت = static_cast<int32_t>(p_دلیلونه->موخه_حد - reinterpret_cast<حرف*>(موخه));
+            length = static_cast<int32_t>(سرچینه_حد - سرچینه);
+            إذا(length<موخه_ظرفیت) {
+                موخه_ظرفیت=length;
             }
         }
 
-#if MBCS_UNROLL_SINGLE_FROM_BMP
+#إذا MBCS_UNROLL_SINGLE_FROM_BMP
         /* unrolling makes it slower on Pentium III/Windows 2000?! */
-        goto unrolled;
-#endif
+        اذهب unrolled;
+#د_که_پای
     }
 
-    if(U_SUCCESS(*pErrorCode) && source<sourceLimit && target>=(uint8_t *)pArgs->targetLimit) {
+    إذا(U_SUCCESS(*p_Error_کوډ) && سرچینه<سرچینه_حد && موخه>=(uint8_t *)p_دلیلونه->موخه_حد) {
         /* target is full */
-        *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+        *p_Error_کوډ=U_بفر_ډکېدنه_ERROR;
     }
 
     /* set offsets since the start or the last callback */
-    if(offsets!=nullptr) {
-        size_t count=source-lastSource;
-        if (count > 0 && *pErrorCode == U_TRUNCATED_CHAR_FOUND) {
+    إذا(offsets!=تش_اشاره) {
+        size_t count=سرچینه-وروستی_سرچینه;
+        إذا (count > 0 && *p_Error_کوډ == U_TRUNCATED_CHAR_وموندل) {
             /*
             Caller gave us a partial supplementary character,
             which this function couldn't convert in any case.
@@ -4049,8 +4049,8 @@ getTrail:
             */
             count--;
         }
-        while(count>0) {
-            *offsets++=sourceIndex++;
+        طالما(count>0) {
+            *offsets++=سرچینه_شاخص++;
             --count;
         }
     }
@@ -4059,110 +4059,110 @@ getTrail:
     cnv->fromUChar32=c;
 
     /* write back the updated pointers */
-    pArgs->source=source;
-    pArgs->target = reinterpret_cast<char*>(target);
-    pArgs->offsets=offsets;
+    p_دلیلونه->سرچینه=سرچینه;
+    p_دلیلونه->موخه = reinterpret_cast<حرف*>(موخه);
+    p_دلیلونه->offsets=offsets;
 }
 
-U_CFUNC void
-ucnv_MBCSFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
-                            UErrorCode *pErrorCode) {
+U_CFUNC فراغ
+ucnv_MBCSFromUnicodeWithOffsets(UConverter_From_Unicode_دلیلونه *p_دلیلونه,
+                            UError_کوډ *p_Error_کوډ) {
     UConverter *cnv;
-    const char16_t *source, *sourceLimit;
-    uint8_t *target;
-    int32_t targetCapacity;
+    ثابت char16_t *سرچینه, *سرچینه_حد;
+    uint8_t *موخه;
+    int32_t موخه_ظرفیت;
     int32_t *offsets;
 
-    const uint16_t *table;
-    const uint16_t *mbcsIndex;
-    const uint8_t *p, *bytes;
+    ثابت uint16_t *جدول;
+    ثابت uint16_t *mbcs_شاخص;
+    ثابت uint8_t *p, *بایټونه;
     uint8_t outputType;
 
     UChar32 c;
 
-    int32_t prevSourceIndex, sourceIndex, nextSourceIndex;
+    int32_t prev_سرچینه_شاخص, سرچینه_شاخص, بل_سرچینه_شاخص;
 
-    uint32_t stage2Entry;
+    uint32_t stage2_ثبت;
     uint32_t asciiRoundtrips;
     uint32_t value;
     /* Shift-In and Shift-Out byte sequences differ by encoding scheme. */
-    uint8_t siBytes[2] = {0, 0};
-    uint8_t soBytes[2] = {0, 0};
-    uint8_t siLength, soLength;
-    int32_t length = 0, prevLength;
-    uint8_t unicodeMask;
+    uint8_t si_بایټونه[2] = {0, 0};
+    uint8_t so_بایټونه[2] = {0, 0};
+    uint8_t si_اوږدتیا, so_اوږدتیا;
+    int32_t length = 0, prev_اوږدتیا;
+    uint8_t unicode_ماسک;
 
-    cnv=pArgs->converter;
+    cnv=p_دلیلونه->converter;
 
-    if(cnv->preFromUFirstCP>=0) {
+    إذا(cnv->preFromUFirstCP>=0) {
         /*
          * pass sourceIndex=-1 because we continue from an earlier buffer
          * in the future, this may change with continuous offsets
          */
-        ucnv_extContinueMatchFromU(cnv, pArgs, -1, pErrorCode);
+        ucnv_ext_Continue_سمون_From_U(cnv, p_دلیلونه, -1, p_Error_کوډ);
 
-        if(U_FAILURE(*pErrorCode) || cnv->preFromULength<0) {
-            return;
+        إذا(U_FAILURE(*p_Error_کوډ) || cnv->preFromULength<0) {
+            أرجع;
         }
     }
 
     /* use optimized function if possible */
-    outputType=cnv->sharedData->mbcs.outputType;
-    unicodeMask=cnv->sharedData->mbcs.unicodeMask;
-    if(outputType==MBCS_OUTPUT_1 && !(unicodeMask&UCNV_HAS_SURROGATES)) {
-        if(!(unicodeMask&UCNV_HAS_SUPPLEMENTARY)) {
-            ucnv_MBCSSingleFromBMPWithOffsets(pArgs, pErrorCode);
-        } else {
-            ucnv_MBCSSingleFromUnicodeWithOffsets(pArgs, pErrorCode);
+    outputType=cnv->shared_معلومات->mbcs.outputType;
+    unicode_ماسک=cnv->shared_معلومات->mbcs.unicode_ماسک;
+    إذا(outputType==MBCS_OUTPUT_1 && !(unicode_ماسک&UCNV_HAS_SURROGATES)) {
+        إذا(!(unicode_ماسک&UCNV_HAS_SUPPLEMENTARY)) {
+            ucnv_MBCSSingleFromBMPWithOffsets(p_دلیلونه, p_Error_کوډ);
+        } وإلا {
+            ucnv_MBCSSingleFromUnicodeWithOffsets(p_دلیلونه, p_Error_کوډ);
         }
-        return;
-    } else if(outputType==MBCS_OUTPUT_2 && cnv->sharedData->mbcs.utf8Friendly) {
-        ucnv_MBCSDoubleFromUnicodeWithOffsets(pArgs, pErrorCode);
-        return;
+        أرجع;
+    } وإلا إذا(outputType==MBCS_OUTPUT_2 && cnv->shared_معلومات->mbcs.utf8Friendly) {
+        ucnv_MBCSDoubleFromUnicodeWithOffsets(p_دلیلونه, p_Error_کوډ);
+        أرجع;
     }
 
     /* set up the local pointers */
-    source=pArgs->source;
-    sourceLimit=pArgs->sourceLimit;
-    target=(uint8_t *)pArgs->target;
-    targetCapacity=(int32_t)(pArgs->targetLimit-pArgs->target);
-    offsets=pArgs->offsets;
+    سرچینه=p_دلیلونه->سرچینه;
+    سرچینه_حد=p_دلیلونه->سرچینه_حد;
+    موخه=(uint8_t *)p_دلیلونه->موخه;
+    موخه_ظرفیت=(int32_t)(p_دلیلونه->موخه_حد-p_دلیلونه->موخه);
+    offsets=p_دلیلونه->offsets;
 
-    table=cnv->sharedData->mbcs.fromUnicodeTable;
-    if(cnv->sharedData->mbcs.utf8Friendly) {
-        mbcsIndex=cnv->sharedData->mbcs.mbcsIndex;
-    } else {
-        mbcsIndex=nullptr;
+    جدول=cnv->shared_معلومات->mbcs.from_Unicode_جدول;
+    إذا(cnv->shared_معلومات->mbcs.utf8Friendly) {
+        mbcs_شاخص=cnv->shared_معلومات->mbcs.mbcs_شاخص;
+    } وإلا {
+        mbcs_شاخص=تش_اشاره;
     }
-    if((cnv->options&UCNV_OPTION_SWAP_LFNL)!=0) {
-        bytes=cnv->sharedData->mbcs.swapLFNLFromUnicodeBytes;
-    } else {
-        bytes=cnv->sharedData->mbcs.fromUnicodeBytes;
+    إذا((cnv->options&UCNV_OPTION_بدلون_LFNL)!=0) {
+        بایټونه=cnv->shared_معلومات->mbcs.بدلون_LFNLFrom_Unicode_بایټونه;
+    } وإلا {
+        بایټونه=cnv->shared_معلومات->mbcs.from_Unicode_بایټونه;
     }
-    asciiRoundtrips=cnv->sharedData->mbcs.asciiRoundtrips;
+    asciiRoundtrips=cnv->shared_معلومات->mbcs.asciiRoundtrips;
 
     /* get the converter state from UConverter */
     c=cnv->fromUChar32;
 
-    if(outputType==MBCS_OUTPUT_2_SISO) {
-        prevLength=cnv->fromUnicodeStatus;
-        if(prevLength==0) {
+    إذا(outputType==MBCS_OUTPUT_2_SISO) {
+        prev_اوږدتیا=cnv->from_Unicode_حالت;
+        إذا(prev_اوږدتیا==0) {
             /* set the real value */
-            prevLength=1;
+            prev_اوږدتیا=1;
         }
-    } else {
+    } وإلا {
         /* prevent fromUnicodeStatus from being set to something non-0 */
-        prevLength=0;
+        prev_اوږدتیا=0;
     }
 
     /* sourceIndex=-1 if the current character began in the previous buffer */
-    prevSourceIndex=-1;
-    sourceIndex= c==0 ? 0 : -1;
-    nextSourceIndex=0;
+    prev_سرچینه_شاخص=-1;
+    سرچینه_شاخص= c==0 ? 0 : -1;
+    بل_سرچینه_شاخص=0;
 
     /* Get the SI/SO character for the converter */
-    siLength = static_cast<uint8_t>(getSISOBytes(SI, cnv->options, siBytes));
-    soLength = static_cast<uint8_t>(getSISOBytes(SO, cnv->options, soBytes));
+    si_اوږدتیا = static_cast<uint8_t>(getSISOBytes(SI, cnv->options, si_بایټونه));
+    so_اوږدتیا = static_cast<uint8_t>(getSISOBytes(SO, cnv->options, so_بایټونه));
 
     /* conversion loop */
     /*
@@ -4178,11 +4178,11 @@ ucnv_MBCSFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
      *
      * Markus Scherer 2000-jul-19
      */
-    if(c!=0 && targetCapacity>0) {
-        goto getTrail;
+    إذا(c!=0 && موخه_ظرفیت>0) {
+        اذهب getTrail;
     }
 
-    while(source<sourceLimit) {
+    طالما(سرچینه<سرچینه_حد) {
         /*
          * This following test is to see if available input would overflow the output.
          * It does not catch output of more than one byte that
@@ -4191,49 +4191,49 @@ ucnv_MBCSFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
          * Therefore, those situations also test for overflows and will
          * then break the loop, too.
          */
-        if(targetCapacity>0) {
+        إذا(موخه_ظرفیت>0) {
             /*
              * Get a correct Unicode code point:
              * a single char16_t for a BMP code point or
              * a matched surrogate pair for a "supplementary code point".
              */
-            c=*source++;
-            ++nextSourceIndex;
-            if(c<=0x7f && IS_ASCII_ROUNDTRIP(c, asciiRoundtrips)) {
-                *target++=(uint8_t)c;
-                if(offsets!=nullptr) {
-                    *offsets++=sourceIndex;
-                    prevSourceIndex=sourceIndex;
-                    sourceIndex=nextSourceIndex;
+            c=*سرچینه++;
+            ++بل_سرچینه_شاخص;
+            إذا(c<=0x7f && IS_ASCII_ROUNDTRIP(c, asciiRoundtrips)) {
+                *موخه++=(uint8_t)c;
+                إذا(offsets!=تش_اشاره) {
+                    *offsets++=سرچینه_شاخص;
+                    prev_سرچینه_شاخص=سرچینه_شاخص;
+                    سرچینه_شاخص=بل_سرچینه_شاخص;
                 }
-                --targetCapacity;
+                --موخه_ظرفیت;
                 c=0;
-                continue;
+                استمر;
             }
             /*
              * utf8Friendly table: Test for <=0xd7ff rather than <=MBCS_FAST_MAX
              * to avoid dealing with surrogates.
              * MBCS_FAST_MAX must be >=0xd7ff.
              */
-            if(c<=0xd7ff && mbcsIndex!=nullptr) {
-                value=mbcsIndex[c>>6];
+            إذا(c<=0xd7ff && mbcs_شاخص!=تش_اشاره) {
+                value=mbcs_شاخص[c>>6];
 
                 /* get the bytes and the length for the output (copied from below and adapted for utf8Friendly data) */
                 /* There are only roundtrips (!=0) and no-mapping (==0) entries. */
-                switch(outputType) {
-                case MBCS_OUTPUT_2:
-                    value=((const uint16_t *)bytes)[value +(c&0x3f)];
-                    if(value<=0xff) {
-                        if(value==0) {
-                            goto unassigned;
-                        } else {
+                بدل(outputType) {
+                حالة MBCS_OUTPUT_2:
+                    value=((ثابت uint16_t *)بایټونه)[value +(c&0x3f)];
+                    إذا(value<=0xff) {
+                        إذا(value==0) {
+                            اذهب unassigned;
+                        } وإلا {
                             length=1;
                         }
-                    } else {
+                    } وإلا {
                         length=2;
                     }
-                    break;
-                case MBCS_OUTPUT_2_SISO:
+                    اكسر;
+                حالة MBCS_OUTPUT_2_SISO:
                     /* 1/2-byte stateful with Shift-In/Shift-Out */
                     /*
                      * Save the old state in the converter object
@@ -4244,125 +4244,125 @@ ucnv_MBCSFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
                      * However, the callback must still restore the state from the converter
                      * in case the callback function changed it for its output.
                      */
-                    cnv->fromUnicodeStatus=prevLength; /* save the old state */
-                    value=((const uint16_t *)bytes)[value +(c&0x3f)];
-                    if(value<=0xff) {
-                        if(value==0) {
-                            goto unassigned;
-                        } else if(prevLength<=1) {
+                    cnv->from_Unicode_حالت=prev_اوږدتیا; /* save the old state */
+                    value=((ثابت uint16_t *)بایټونه)[value +(c&0x3f)];
+                    إذا(value<=0xff) {
+                        إذا(value==0) {
+                            اذهب unassigned;
+                        } وإلا إذا(prev_اوږدتیا<=1) {
                             length=1;
-                        } else {
+                        } وإلا {
                             /* change from double-byte mode to single-byte */
-                            if (siLength == 1) {
-                                value|=(uint32_t)siBytes[0]<<8;
+                            إذا (si_اوږدتیا == 1) {
+                                value|=(uint32_t)si_بایټونه[0]<<8;
                                 length = 2;
-                            } else if (siLength == 2) {
-                                value|=(uint32_t)siBytes[1]<<8;
-                                value|=(uint32_t)siBytes[0]<<16;
+                            } وإلا إذا (si_اوږدتیا == 2) {
+                                value|=(uint32_t)si_بایټونه[1]<<8;
+                                value|=(uint32_t)si_بایټونه[0]<<16;
                                 length = 3;
                             }
-                            prevLength=1;
+                            prev_اوږدتیا=1;
                         }
-                    } else {
-                        if(prevLength==2) {
+                    } وإلا {
+                        إذا(prev_اوږدتیا==2) {
                             length=2;
-                        } else {
+                        } وإلا {
                             /* change from single-byte mode to double-byte */
-                            if (soLength == 1) {
-                                value|=(uint32_t)soBytes[0]<<16;
+                            إذا (so_اوږدتیا == 1) {
+                                value|=(uint32_t)so_بایټونه[0]<<16;
                                 length = 3;
-                            } else if (soLength == 2) {
-                                value|=(uint32_t)soBytes[1]<<16;
-                                value|=(uint32_t)soBytes[0]<<24;
+                            } وإلا إذا (so_اوږدتیا == 2) {
+                                value|=(uint32_t)so_بایټونه[1]<<16;
+                                value|=(uint32_t)so_بایټونه[0]<<24;
                                 length = 4;
                             }
-                            prevLength=2;
+                            prev_اوږدتیا=2;
                         }
                     }
-                    break;
-                case MBCS_OUTPUT_DBCS_ONLY:
+                    اكسر;
+                حالة MBCS_OUTPUT_DBCS_ONLY:
                     /* table with single-byte results, but only DBCS mappings used */
-                    value=((const uint16_t *)bytes)[value +(c&0x3f)];
-                    if(value<=0xff) {
+                    value=((ثابت uint16_t *)بایټونه)[value +(c&0x3f)];
+                    إذا(value<=0xff) {
                         /* no mapping or SBCS result, not taken for DBCS-only */
-                        goto unassigned;
-                    } else {
+                        اذهب unassigned;
+                    } وإلا {
                         length=2;
                     }
-                    break;
-                case MBCS_OUTPUT_3:
-                    p=bytes+(value+(c&0x3f))*3;
+                    اكسر;
+                حالة MBCS_OUTPUT_3:
+                    p=بایټونه+(value+(c&0x3f))*3;
                     value=((uint32_t)*p<<16)|((uint32_t)p[1]<<8)|p[2];
-                    if(value<=0xff) {
-                        if(value==0) {
-                            goto unassigned;
-                        } else {
+                    إذا(value<=0xff) {
+                        إذا(value==0) {
+                            اذهب unassigned;
+                        } وإلا {
                             length=1;
                         }
-                    } else if(value<=0xffff) {
+                    } وإلا إذا(value<=0xffff) {
                         length=2;
-                    } else {
+                    } وإلا {
                         length=3;
                     }
-                    break;
-                case MBCS_OUTPUT_4:
-                    value=((const uint32_t *)bytes)[value +(c&0x3f)];
-                    if(value<=0xff) {
-                        if(value==0) {
-                            goto unassigned;
-                        } else {
+                    اكسر;
+                حالة MBCS_OUTPUT_4:
+                    value=((ثابت uint32_t *)بایټونه)[value +(c&0x3f)];
+                    إذا(value<=0xff) {
+                        إذا(value==0) {
+                            اذهب unassigned;
+                        } وإلا {
                             length=1;
                         }
-                    } else if(value<=0xffff) {
+                    } وإلا إذا(value<=0xffff) {
                         length=2;
-                    } else if(value<=0xffffff) {
+                    } وإلا إذا(value<=0xffffff) {
                         length=3;
-                    } else {
+                    } وإلا {
                         length=4;
                     }
-                    break;
-                case MBCS_OUTPUT_3_EUC:
-                    value=((const uint16_t *)bytes)[value +(c&0x3f)];
+                    اكسر;
+                حالة MBCS_OUTPUT_3_EUC:
+                    value=((ثابت uint16_t *)بایټونه)[value +(c&0x3f)];
                     /* EUC 16-bit fixed-length representation */
-                    if(value<=0xff) {
-                        if(value==0) {
-                            goto unassigned;
-                        } else {
+                    إذا(value<=0xff) {
+                        إذا(value==0) {
+                            اذهب unassigned;
+                        } وإلا {
                             length=1;
                         }
-                    } else if((value&0x8000)==0) {
+                    } وإلا إذا((value&0x8000)==0) {
                         value|=0x8e8000;
                         length=3;
-                    } else if((value&0x80)==0) {
+                    } وإلا إذا((value&0x80)==0) {
                         value|=0x8f0080;
                         length=3;
-                    } else {
+                    } وإلا {
                         length=2;
                     }
-                    break;
-                case MBCS_OUTPUT_4_EUC:
-                    p=bytes+(value+(c&0x3f))*3;
+                    اكسر;
+                حالة MBCS_OUTPUT_4_EUC:
+                    p=بایټونه+(value+(c&0x3f))*3;
                     value=((uint32_t)*p<<16)|((uint32_t)p[1]<<8)|p[2];
                     /* EUC 16-bit fixed-length representation applied to the first two bytes */
-                    if(value<=0xff) {
-                        if(value==0) {
-                            goto unassigned;
-                        } else {
+                    إذا(value<=0xff) {
+                        إذا(value==0) {
+                            اذهب unassigned;
+                        } وإلا {
                             length=1;
                         }
-                    } else if(value<=0xffff) {
+                    } وإلا إذا(value<=0xffff) {
                         length=2;
-                    } else if((value&0x800000)==0) {
+                    } وإلا إذا((value&0x800000)==0) {
                         value|=0x8e800000;
                         length=4;
-                    } else if((value&0x8000)==0) {
+                    } وإلا إذا((value&0x8000)==0) {
                         value|=0x8f008000;
                         length=4;
-                    } else {
+                    } وإلا {
                         length=3;
                     }
-                    break;
-                default:
+                    اكسر;
+                افتراضي:
                     /* must not occur */
                     /*
                      * To avoid compiler warnings that value & length may be
@@ -4373,48 +4373,48 @@ ucnv_MBCSFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
                      */
                     value=0;
                     length=0;
-                    break;
+                    اكسر;
                 }
                 /* output the value */
-            } else {
+            } وإلا {
                 /*
                  * This also tests if the codepage maps single surrogates.
                  * If it does, then surrogates are not paired but mapped separately.
                  * Note that in this case unmatched surrogates are not detected.
                  */
-                if(U16_IS_SURROGATE(c) && !(unicodeMask&UCNV_HAS_SURROGATES)) {
-                    if(U16_IS_SURROGATE_LEAD(c)) {
+                إذا(U16_IS_SURROGATE(c) && !(unicode_ماسک&UCNV_HAS_SURROGATES)) {
+                    إذا(U16_IS_SURROGATE_LEAD(c)) {
 getTrail:
-                        if(source<sourceLimit) {
+                        إذا(سرچینه<سرچینه_حد) {
                             /* test the following code unit */
-                            char16_t trail=*source;
-                            if(U16_IS_TRAIL(trail)) {
-                                ++source;
-                                ++nextSourceIndex;
+                            char16_t trail=*سرچینه;
+                            إذا(U16_IS_TRAIL(trail)) {
+                                ++سرچینه;
+                                ++بل_سرچینه_شاخص;
                                 c=U16_GET_SUPPLEMENTARY(c, trail);
-                                if(!(unicodeMask&UCNV_HAS_SUPPLEMENTARY)) {
+                                إذا(!(unicode_ماسک&UCNV_HAS_SUPPLEMENTARY)) {
                                     /* BMP-only codepages are stored without stage 1 entries for supplementary code points */
-                                    cnv->fromUnicodeStatus=prevLength; /* save the old state */
+                                    cnv->from_Unicode_حالت=prev_اوږدتیا; /* save the old state */
                                     /* callback(unassigned) */
-                                    goto unassigned;
+                                    اذهب unassigned;
                                 }
                                 /* convert this supplementary code point */
                                 /* exit this condition tree */
-                            } else {
+                            } وإلا {
                                 /* this is an unmatched lead code unit (1st surrogate) */
                                 /* callback(illegal) */
-                                *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                                break;
+                                *p_Error_کوډ=U_ILLEGAL_CHAR_وموندل;
+                                اكسر;
                             }
-                        } else {
+                        } وإلا {
                             /* no more input */
-                            break;
+                            اكسر;
                         }
-                    } else {
+                    } وإلا {
                         /* this is an unmatched trail code unit (2nd surrogate) */
                         /* callback(illegal) */
-                        *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                        break;
+                        *p_Error_کوډ=U_ILLEGAL_CHAR_وموندل;
+                        اكسر;
                     }
                 }
 
@@ -4452,19 +4452,19 @@ getTrail:
                  * The data structure does not support zero byte output as a fallback,
                  * and also does not allow output of leading zeros.
                  */
-                stage2Entry=MBCS_STAGE_2_FROM_U(table, c);
+                stage2_ثبت=MBCS_STAGE_2_FROM_U(جدول, c);
 
                 /* get the bytes and the length for the output */
-                switch(outputType) {
-                case MBCS_OUTPUT_2:
-                    value=MBCS_VALUE_2_FROM_STAGE_2(bytes, stage2Entry, c);
-                    if(value<=0xff) {
+                بدل(outputType) {
+                حالة MBCS_OUTPUT_2:
+                    value=MBCS_ارزښت_2_FROM_STAGE_2(بایټونه, stage2_ثبت, c);
+                    إذا(value<=0xff) {
                         length=1;
-                    } else {
+                    } وإلا {
                         length=2;
                     }
-                    break;
-                case MBCS_OUTPUT_2_SISO:
+                    اكسر;
+                حالة MBCS_OUTPUT_2_SISO:
                     /* 1/2-byte stateful with Shift-In/Shift-Out */
                     /*
                      * Save the old state in the converter object
@@ -4475,111 +4475,111 @@ getTrail:
                      * However, the callback must still restore the state from the converter
                      * in case the callback function changed it for its output.
                      */
-                    cnv->fromUnicodeStatus=prevLength; /* save the old state */
-                    value=MBCS_VALUE_2_FROM_STAGE_2(bytes, stage2Entry, c);
-                    if(value<=0xff) {
-                        if(value==0 && MBCS_FROM_U_IS_ROUNDTRIP(stage2Entry, c)==0) {
+                    cnv->from_Unicode_حالت=prev_اوږدتیا; /* save the old state */
+                    value=MBCS_ارزښت_2_FROM_STAGE_2(بایټونه, stage2_ثبت, c);
+                    إذا(value<=0xff) {
+                        إذا(value==0 && MBCS_FROM_U_IS_ROUNDTRIP(stage2_ثبت, c)==0) {
                             /* no mapping, leave value==0 */
                             length=0;
-                        } else if(prevLength<=1) {
+                        } وإلا إذا(prev_اوږدتیا<=1) {
                             length=1;
-                        } else {
+                        } وإلا {
                             /* change from double-byte mode to single-byte */
-                            if (siLength == 1) {
-                                value|=(uint32_t)siBytes[0]<<8;
+                            إذا (si_اوږدتیا == 1) {
+                                value|=(uint32_t)si_بایټونه[0]<<8;
                                 length = 2;
-                            } else if (siLength == 2) {
-                                value|=(uint32_t)siBytes[1]<<8;
-                                value|=(uint32_t)siBytes[0]<<16;
+                            } وإلا إذا (si_اوږدتیا == 2) {
+                                value|=(uint32_t)si_بایټونه[1]<<8;
+                                value|=(uint32_t)si_بایټونه[0]<<16;
                                 length = 3;
                             }
-                            prevLength=1;
+                            prev_اوږدتیا=1;
                         }
-                    } else {
-                        if(prevLength==2) {
+                    } وإلا {
+                        إذا(prev_اوږدتیا==2) {
                             length=2;
-                        } else {
+                        } وإلا {
                             /* change from single-byte mode to double-byte */
-                            if (soLength == 1) {
-                                value|=(uint32_t)soBytes[0]<<16;
+                            إذا (so_اوږدتیا == 1) {
+                                value|=(uint32_t)so_بایټونه[0]<<16;
                                 length = 3;
-                            } else if (soLength == 2) {
-                                value|=(uint32_t)soBytes[1]<<16;
-                                value|=(uint32_t)soBytes[0]<<24;
+                            } وإلا إذا (so_اوږدتیا == 2) {
+                                value|=(uint32_t)so_بایټونه[1]<<16;
+                                value|=(uint32_t)so_بایټونه[0]<<24;
                                 length = 4;
                             }
-                            prevLength=2;
+                            prev_اوږدتیا=2;
                         }
                     }
-                    break;
-                case MBCS_OUTPUT_DBCS_ONLY:
+                    اكسر;
+                حالة MBCS_OUTPUT_DBCS_ONLY:
                     /* table with single-byte results, but only DBCS mappings used */
-                    value=MBCS_VALUE_2_FROM_STAGE_2(bytes, stage2Entry, c);
-                    if(value<=0xff) {
+                    value=MBCS_ارزښت_2_FROM_STAGE_2(بایټونه, stage2_ثبت, c);
+                    إذا(value<=0xff) {
                         /* no mapping or SBCS result, not taken for DBCS-only */
-                        value=stage2Entry=0; /* stage2Entry=0 to reset roundtrip flags */
+                        value=stage2_ثبت=0; /* stage2Entry=0 to reset roundtrip flags */
                         length=0;
-                    } else {
+                    } وإلا {
                         length=2;
                     }
-                    break;
-                case MBCS_OUTPUT_3:
-                    p=MBCS_POINTER_3_FROM_STAGE_2(bytes, stage2Entry, c);
+                    اكسر;
+                حالة MBCS_OUTPUT_3:
+                    p=MBCS_اشاره_ګر_3_FROM_STAGE_2(بایټونه, stage2_ثبت, c);
                     value=((uint32_t)*p<<16)|((uint32_t)p[1]<<8)|p[2];
-                    if(value<=0xff) {
+                    إذا(value<=0xff) {
                         length=1;
-                    } else if(value<=0xffff) {
+                    } وإلا إذا(value<=0xffff) {
                         length=2;
-                    } else {
+                    } وإلا {
                         length=3;
                     }
-                    break;
-                case MBCS_OUTPUT_4:
-                    value=MBCS_VALUE_4_FROM_STAGE_2(bytes, stage2Entry, c);
-                    if(value<=0xff) {
+                    اكسر;
+                حالة MBCS_OUTPUT_4:
+                    value=MBCS_ارزښت_4_FROM_STAGE_2(بایټونه, stage2_ثبت, c);
+                    إذا(value<=0xff) {
                         length=1;
-                    } else if(value<=0xffff) {
+                    } وإلا إذا(value<=0xffff) {
                         length=2;
-                    } else if(value<=0xffffff) {
+                    } وإلا إذا(value<=0xffffff) {
                         length=3;
-                    } else {
+                    } وإلا {
                         length=4;
                     }
-                    break;
-                case MBCS_OUTPUT_3_EUC:
-                    value=MBCS_VALUE_2_FROM_STAGE_2(bytes, stage2Entry, c);
+                    اكسر;
+                حالة MBCS_OUTPUT_3_EUC:
+                    value=MBCS_ارزښت_2_FROM_STAGE_2(بایټونه, stage2_ثبت, c);
                     /* EUC 16-bit fixed-length representation */
-                    if(value<=0xff) {
+                    إذا(value<=0xff) {
                         length=1;
-                    } else if((value&0x8000)==0) {
+                    } وإلا إذا((value&0x8000)==0) {
                         value|=0x8e8000;
                         length=3;
-                    } else if((value&0x80)==0) {
+                    } وإلا إذا((value&0x80)==0) {
                         value|=0x8f0080;
                         length=3;
-                    } else {
+                    } وإلا {
                         length=2;
                     }
-                    break;
-                case MBCS_OUTPUT_4_EUC:
-                    p=MBCS_POINTER_3_FROM_STAGE_2(bytes, stage2Entry, c);
+                    اكسر;
+                حالة MBCS_OUTPUT_4_EUC:
+                    p=MBCS_اشاره_ګر_3_FROM_STAGE_2(بایټونه, stage2_ثبت, c);
                     value=((uint32_t)*p<<16)|((uint32_t)p[1]<<8)|p[2];
                     /* EUC 16-bit fixed-length representation applied to the first two bytes */
-                    if(value<=0xff) {
+                    إذا(value<=0xff) {
                         length=1;
-                    } else if(value<=0xffff) {
+                    } وإلا إذا(value<=0xffff) {
                         length=2;
-                    } else if((value&0x800000)==0) {
+                    } وإلا إذا((value&0x800000)==0) {
                         value|=0x8e800000;
                         length=4;
-                    } else if((value&0x8000)==0) {
+                    } وإلا إذا((value&0x8000)==0) {
                         value|=0x8f008000;
                         length=4;
-                    } else {
+                    } وإلا {
                         length=3;
                     }
-                    break;
-                default:
+                    اكسر;
+                افتراضي:
                     /* must not occur */
                     /*
                      * To avoid compiler warnings that value & length may be
@@ -4588,13 +4588,13 @@ getTrail:
                      * Not having a default branch also causes warnings with
                      * some compilers.
                      */
-                    value=stage2Entry=0; /* stage2Entry=0 to reset roundtrip flags */
+                    value=stage2_ثبت=0; /* stage2Entry=0 to reset roundtrip flags */
                     length=0;
-                    break;
+                    اكسر;
                 }
 
                 /* is this code point assigned, or do we use fallbacks? */
-                if(!(MBCS_FROM_U_IS_ROUNDTRIP(stage2Entry, c)!=0 ||
+                إذا(!(MBCS_FROM_U_IS_ROUNDTRIP(stage2_ثبت, c)!=0 ||
                      (UCNV_FROM_U_USE_FALLBACK(cnv, c) && value!=0))
                 ) {
                     /*
@@ -4605,84 +4605,84 @@ getTrail:
 
 unassigned:
                     /* try an extension mapping */
-                    pArgs->source=source;
-                    c=_extFromU(cnv, cnv->sharedData,
-                                c, &source, sourceLimit,
-                                &target, target+targetCapacity,
-                                &offsets, sourceIndex,
-                                pArgs->flush,
-                                pErrorCode);
-                    nextSourceIndex+=(int32_t)(source-pArgs->source);
-                    prevLength=cnv->fromUnicodeStatus; /* restore SISO state */
+                    p_دلیلونه->سرچینه=سرچینه;
+                    c=_extFromU(cnv, cnv->shared_معلومات,
+                                c, &سرچینه, سرچینه_حد,
+                                &موخه, موخه+موخه_ظرفیت,
+                                &offsets, سرچینه_شاخص,
+                                p_دلیلونه->flush,
+                                p_Error_کوډ);
+                    بل_سرچینه_شاخص+=(int32_t)(سرچینه-p_دلیلونه->سرچینه);
+                    prev_اوږدتیا=cnv->from_Unicode_حالت; /* restore SISO state */
 
-                    if(U_FAILURE(*pErrorCode)) {
+                    إذا(U_FAILURE(*p_Error_کوډ)) {
                         /* not mappable or buffer overflow */
-                        break;
-                    } else {
+                        اكسر;
+                    } وإلا {
                         /* a mapping was written to the target, continue */
 
                         /* recalculate the targetCapacity after an extension mapping */
-                        targetCapacity=(int32_t)(pArgs->targetLimit-(char *)target);
+                        موخه_ظرفیت=(int32_t)(p_دلیلونه->موخه_حد-(حرف *)موخه);
 
                         /* normal end of conversion: prepare for a new character */
-                        if(offsets!=nullptr) {
-                            prevSourceIndex=sourceIndex;
-                            sourceIndex=nextSourceIndex;
+                        إذا(offsets!=تش_اشاره) {
+                            prev_سرچینه_شاخص=سرچینه_شاخص;
+                            سرچینه_شاخص=بل_سرچینه_شاخص;
                         }
-                        continue;
+                        استمر;
                     }
                 }
             }
 
             /* write the output character bytes from value and length */
             /* from the first if in the loop we know that targetCapacity>0 */
-            if(length<=targetCapacity) {
-                if(offsets==nullptr) {
-                    switch(length) {
+            إذا(length<=موخه_ظرفیت) {
+                إذا(offsets==تش_اشاره) {
+                    بدل(length) {
                         /* each branch falls through to the next one */
-                    case 4:
-                        *target++=(uint8_t)(value>>24);
+                    حالة 4:
+                        *موخه++=(uint8_t)(value>>24);
                         U_FALLTHROUGH;
-                    case 3:
-                        *target++=(uint8_t)(value>>16);
+                    حالة 3:
+                        *موخه++=(uint8_t)(value>>16);
                         U_FALLTHROUGH;
-                    case 2:
-                        *target++=(uint8_t)(value>>8);
+                    حالة 2:
+                        *موخه++=(uint8_t)(value>>8);
                         U_FALLTHROUGH;
-                    case 1:
-                        *target++=(uint8_t)value;
+                    حالة 1:
+                        *موخه++=(uint8_t)value;
                         U_FALLTHROUGH;
-                    default:
+                    افتراضي:
                         /* will never occur */
-                        break;
+                        اكسر;
                     }
-                } else {
-                    switch(length) {
+                } وإلا {
+                    بدل(length) {
                         /* each branch falls through to the next one */
-                    case 4:
-                        *target++=(uint8_t)(value>>24);
-                        *offsets++=sourceIndex;
+                    حالة 4:
+                        *موخه++=(uint8_t)(value>>24);
+                        *offsets++=سرچینه_شاخص;
                         U_FALLTHROUGH;
-                    case 3:
-                        *target++=(uint8_t)(value>>16);
-                        *offsets++=sourceIndex;
+                    حالة 3:
+                        *موخه++=(uint8_t)(value>>16);
+                        *offsets++=سرچینه_شاخص;
                         U_FALLTHROUGH;
-                    case 2:
-                        *target++=(uint8_t)(value>>8);
-                        *offsets++=sourceIndex;
+                    حالة 2:
+                        *موخه++=(uint8_t)(value>>8);
+                        *offsets++=سرچینه_شاخص;
                         U_FALLTHROUGH;
-                    case 1:
-                        *target++=(uint8_t)value;
-                        *offsets++=sourceIndex;
+                    حالة 1:
+                        *موخه++=(uint8_t)value;
+                        *offsets++=سرچینه_شاخص;
                         U_FALLTHROUGH;
-                    default:
+                    افتراضي:
                         /* will never occur */
-                        break;
+                        اكسر;
                     }
                 }
-                targetCapacity-=length;
-            } else {
-                uint8_t *charErrorBuffer;
+                موخه_ظرفیت-=length;
+            } وإلا {
+                uint8_t *char_Error_بفر;
 
                 /*
                  * We actually do this backwards here:
@@ -4691,70 +4691,70 @@ unassigned:
                  * regular target.
                  */
                 /* we know that 1<=targetCapacity<length<=4 */
-                length-=targetCapacity;
-                charErrorBuffer=(uint8_t *)cnv->charErrorBuffer;
-                switch(length) {
+                length-=موخه_ظرفیت;
+                char_Error_بفر=(uint8_t *)cnv->char_Error_بفر;
+                بدل(length) {
                     /* each branch falls through to the next one */
-                case 3:
-                    *charErrorBuffer++=(uint8_t)(value>>16);
+                حالة 3:
+                    *char_Error_بفر++=(uint8_t)(value>>16);
                     U_FALLTHROUGH;
-                case 2:
-                    *charErrorBuffer++=(uint8_t)(value>>8);
+                حالة 2:
+                    *char_Error_بفر++=(uint8_t)(value>>8);
                     U_FALLTHROUGH;
-                case 1:
-                    *charErrorBuffer=(uint8_t)value;
+                حالة 1:
+                    *char_Error_بفر=(uint8_t)value;
                     U_FALLTHROUGH;
-                default:
+                افتراضي:
                     /* will never occur */
-                    break;
+                    اكسر;
                 }
-                cnv->charErrorBufferLength=(int8_t)length;
+                cnv->char_Error_بفر_اوږدتیا=(int8_t)length;
 
                 /* now output what fits into the regular target */
                 value>>=8*length; /* length was reduced by targetCapacity */
-                switch(targetCapacity) {
+                بدل(موخه_ظرفیت) {
                     /* each branch falls through to the next one */
-                case 3:
-                    *target++=(uint8_t)(value>>16);
-                    if(offsets!=nullptr) {
-                        *offsets++=sourceIndex;
+                حالة 3:
+                    *موخه++=(uint8_t)(value>>16);
+                    إذا(offsets!=تش_اشاره) {
+                        *offsets++=سرچینه_شاخص;
                     }
                     U_FALLTHROUGH;
-                case 2:
-                    *target++=(uint8_t)(value>>8);
-                    if(offsets!=nullptr) {
-                        *offsets++=sourceIndex;
+                حالة 2:
+                    *موخه++=(uint8_t)(value>>8);
+                    إذا(offsets!=تش_اشاره) {
+                        *offsets++=سرچینه_شاخص;
                     }
                     U_FALLTHROUGH;
-                case 1:
-                    *target++=(uint8_t)value;
-                    if(offsets!=nullptr) {
-                        *offsets++=sourceIndex;
+                حالة 1:
+                    *موخه++=(uint8_t)value;
+                    إذا(offsets!=تش_اشاره) {
+                        *offsets++=سرچینه_شاخص;
                     }
                     U_FALLTHROUGH;
-                default:
+                افتراضي:
                     /* will never occur */
-                    break;
+                    اكسر;
                 }
 
                 /* target overflow */
-                targetCapacity=0;
-                *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+                موخه_ظرفیت=0;
+                *p_Error_کوډ=U_بفر_ډکېدنه_ERROR;
                 c=0;
-                break;
+                اكسر;
             }
 
             /* normal end of conversion: prepare for a new character */
             c=0;
-            if(offsets!=nullptr) {
-                prevSourceIndex=sourceIndex;
-                sourceIndex=nextSourceIndex;
+            إذا(offsets!=تش_اشاره) {
+                prev_سرچینه_شاخص=سرچینه_شاخص;
+                سرچینه_شاخص=بل_سرچینه_شاخص;
             }
-            continue;
-        } else {
+            استمر;
+        } وإلا {
             /* target is full */
-            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-            break;
+            *p_Error_کوډ=U_بفر_ډکېدنه_ERROR;
+            اكسر;
         }
     }
 
@@ -4768,46 +4768,46 @@ unassigned:
      *   EBCDIC_STATEFUL in DBCS mode
      *   end of input and no truncated input
      */
-    if( U_SUCCESS(*pErrorCode) &&
-        outputType==MBCS_OUTPUT_2_SISO && prevLength==2 &&
-        pArgs->flush && source>=sourceLimit && c==0
+    إذا( U_SUCCESS(*p_Error_کوډ) &&
+        outputType==MBCS_OUTPUT_2_SISO && prev_اوږدتیا==2 &&
+        p_دلیلونه->flush && سرچینه>=سرچینه_حد && c==0
     ) {
         /* EBCDIC_STATEFUL ending with DBCS: emit an SI to return the output stream to SBCS */
-        if(targetCapacity>0) {
-            *target++ = siBytes[0];
-            if (siLength == 2) {
-                if (targetCapacity<2) {
-                    cnv->charErrorBuffer[0] = siBytes[1];
-                    cnv->charErrorBufferLength=1;
-                    *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                } else {
-                    *target++ = siBytes[1];
+        إذا(موخه_ظرفیت>0) {
+            *موخه++ = si_بایټونه[0];
+            إذا (si_اوږدتیا == 2) {
+                إذا (موخه_ظرفیت<2) {
+                    cnv->char_Error_بفر[0] = si_بایټونه[1];
+                    cnv->char_Error_بفر_اوږدتیا=1;
+                    *p_Error_کوډ=U_بفر_ډکېدنه_ERROR;
+                } وإلا {
+                    *موخه++ = si_بایټونه[1];
                 }
             }
-            if(offsets!=nullptr) {
+            إذا(offsets!=تش_اشاره) {
                 /* set the last source character's index (sourceIndex points at sourceLimit now) */
-                *offsets++=prevSourceIndex;
+                *offsets++=prev_سرچینه_شاخص;
             }
-        } else {
+        } وإلا {
             /* target is full */
-            cnv->charErrorBuffer[0] = siBytes[0];
-            if (siLength == 2) {
-                cnv->charErrorBuffer[1] = siBytes[1];
+            cnv->char_Error_بفر[0] = si_بایټونه[0];
+            إذا (si_اوږدتیا == 2) {
+                cnv->char_Error_بفر[1] = si_بایټونه[1];
             }
-            cnv->charErrorBufferLength=siLength;
-            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+            cnv->char_Error_بفر_اوږدتیا=si_اوږدتیا;
+            *p_Error_کوډ=U_بفر_ډکېدنه_ERROR;
         }
-        prevLength=1; /* we switched into SBCS */
+        prev_اوږدتیا=1; /* we switched into SBCS */
     }
 
     /* set the converter state back into UConverter */
     cnv->fromUChar32=c;
-    cnv->fromUnicodeStatus=prevLength;
+    cnv->from_Unicode_حالت=prev_اوږدتیا;
 
     /* write back the updated pointers */
-    pArgs->source=source;
-    pArgs->target=(char *)target;
-    pArgs->offsets=offsets;
+    p_دلیلونه->سرچینه=سرچینه;
+    p_دلیلونه->موخه=(حرف *)موخه;
+    p_دلیلونه->offsets=offsets;
 }
 
 /*
@@ -4828,121 +4828,121 @@ unassigned:
  * Currently, the function assumes but does not check that 0<=c<=0x10ffff.
  */
 U_CFUNC int32_t
-ucnv_MBCSFromUChar32(UConverterSharedData *sharedData,
-                 UChar32 c, uint32_t *pValue,
+ucnv_MBCSFromUChar32(UConverter_Shared_معلومات *shared_معلومات,
+                 UChar32 c, uint32_t *p_ارزښت,
                  UBool useFallback) {
-    const int32_t *cx;
-    const uint16_t *table;
-#if 0
+    ثابت int32_t *cx;
+    ثابت uint16_t *جدول;
+#إذا 0
 /* #if 0 because this is not currently used in ICU - reduce code, increase code coverage */
-    const uint8_t *p;
-#endif
-    uint32_t stage2Entry;
+    ثابت uint8_t *p;
+#د_که_پای
+    uint32_t stage2_ثبت;
     uint32_t value;
     int32_t length;
 
     /* BMP-only codepages are stored without stage 1 entries for supplementary code points */
-    if(c<=0xffff || (sharedData->mbcs.unicodeMask&UCNV_HAS_SUPPLEMENTARY)) {
-        table=sharedData->mbcs.fromUnicodeTable;
+    إذا(c<=0xffff || (shared_معلومات->mbcs.unicode_ماسک&UCNV_HAS_SUPPLEMENTARY)) {
+        جدول=shared_معلومات->mbcs.from_Unicode_جدول;
 
         /* convert the Unicode code point in c into codepage bytes (same as in _MBCSFromUnicodeWithOffsets) */
-        if(sharedData->mbcs.outputType==MBCS_OUTPUT_1) {
-            value=MBCS_SINGLE_RESULT_FROM_U(table, (uint16_t *)sharedData->mbcs.fromUnicodeBytes, c);
+        إذا(shared_معلومات->mbcs.outputType==MBCS_OUTPUT_1) {
+            value=MBCS_SINGLE_پایله_FROM_U(جدول, (uint16_t *)shared_معلومات->mbcs.from_Unicode_بایټونه, c);
             /* is this code point assigned, or do we use fallbacks? */
-            if(useFallback ? value>=0x800 : value>=0xc00) {
-                *pValue=value&0xff;
-                return 1;
+            إذا(useFallback ? value>=0x800 : value>=0xc00) {
+                *p_ارزښت=value&0xff;
+                أرجع 1;
             }
-        } else /* outputType!=MBCS_OUTPUT_1 */ {
-            stage2Entry=MBCS_STAGE_2_FROM_U(table, c);
+        } وإلا /* outputType!=MBCS_OUTPUT_1 */ {
+            stage2_ثبت=MBCS_STAGE_2_FROM_U(جدول, c);
 
             /* get the bytes and the length for the output */
-            switch(sharedData->mbcs.outputType) {
-            case MBCS_OUTPUT_2:
-                value=MBCS_VALUE_2_FROM_STAGE_2(sharedData->mbcs.fromUnicodeBytes, stage2Entry, c);
-                if(value<=0xff) {
+            بدل(shared_معلومات->mbcs.outputType) {
+            حالة MBCS_OUTPUT_2:
+                value=MBCS_ارزښت_2_FROM_STAGE_2(shared_معلومات->mbcs.from_Unicode_بایټونه, stage2_ثبت, c);
+                إذا(value<=0xff) {
                     length=1;
-                } else {
+                } وإلا {
                     length=2;
                 }
-                break;
-#if 0
+                اكسر;
+#إذا 0
 /* #if 0 because this is not currently used in ICU - reduce code, increase code coverage */
-            case MBCS_OUTPUT_DBCS_ONLY:
+            حالة MBCS_OUTPUT_DBCS_ONLY:
                 /* table with single-byte results, but only DBCS mappings used */
-                value=MBCS_VALUE_2_FROM_STAGE_2(sharedData->mbcs.fromUnicodeBytes, stage2Entry, c);
-                if(value<=0xff) {
+                value=MBCS_ارزښت_2_FROM_STAGE_2(shared_معلومات->mbcs.from_Unicode_بایټونه, stage2_ثبت, c);
+                إذا(value<=0xff) {
                     /* no mapping or SBCS result, not taken for DBCS-only */
-                    value=stage2Entry=0; /* stage2Entry=0 to reset roundtrip flags */
+                    value=stage2_ثبت=0; /* stage2Entry=0 to reset roundtrip flags */
                     length=0;
-                } else {
+                } وإلا {
                     length=2;
                 }
-                break;
-            case MBCS_OUTPUT_3:
-                p=MBCS_POINTER_3_FROM_STAGE_2(sharedData->mbcs.fromUnicodeBytes, stage2Entry, c);
+                اكسر;
+            حالة MBCS_OUTPUT_3:
+                p=MBCS_اشاره_ګر_3_FROM_STAGE_2(shared_معلومات->mbcs.from_Unicode_بایټونه, stage2_ثبت, c);
                 value=((uint32_t)*p<<16)|((uint32_t)p[1]<<8)|p[2];
-                if(value<=0xff) {
+                إذا(value<=0xff) {
                     length=1;
-                } else if(value<=0xffff) {
+                } وإلا إذا(value<=0xffff) {
                     length=2;
-                } else {
+                } وإلا {
                     length=3;
                 }
-                break;
-            case MBCS_OUTPUT_4:
-                value=MBCS_VALUE_4_FROM_STAGE_2(sharedData->mbcs.fromUnicodeBytes, stage2Entry, c);
-                if(value<=0xff) {
+                اكسر;
+            حالة MBCS_OUTPUT_4:
+                value=MBCS_ارزښت_4_FROM_STAGE_2(shared_معلومات->mbcs.from_Unicode_بایټونه, stage2_ثبت, c);
+                إذا(value<=0xff) {
                     length=1;
-                } else if(value<=0xffff) {
+                } وإلا إذا(value<=0xffff) {
                     length=2;
-                } else if(value<=0xffffff) {
+                } وإلا إذا(value<=0xffffff) {
                     length=3;
-                } else {
+                } وإلا {
                     length=4;
                 }
-                break;
-            case MBCS_OUTPUT_3_EUC:
-                value=MBCS_VALUE_2_FROM_STAGE_2(sharedData->mbcs.fromUnicodeBytes, stage2Entry, c);
+                اكسر;
+            حالة MBCS_OUTPUT_3_EUC:
+                value=MBCS_ارزښت_2_FROM_STAGE_2(shared_معلومات->mbcs.from_Unicode_بایټونه, stage2_ثبت, c);
                 /* EUC 16-bit fixed-length representation */
-                if(value<=0xff) {
+                إذا(value<=0xff) {
                     length=1;
-                } else if((value&0x8000)==0) {
+                } وإلا إذا((value&0x8000)==0) {
                     value|=0x8e8000;
                     length=3;
-                } else if((value&0x80)==0) {
+                } وإلا إذا((value&0x80)==0) {
                     value|=0x8f0080;
                     length=3;
-                } else {
+                } وإلا {
                     length=2;
                 }
-                break;
-            case MBCS_OUTPUT_4_EUC:
-                p=MBCS_POINTER_3_FROM_STAGE_2(sharedData->mbcs.fromUnicodeBytes, stage2Entry, c);
+                اكسر;
+            حالة MBCS_OUTPUT_4_EUC:
+                p=MBCS_اشاره_ګر_3_FROM_STAGE_2(shared_معلومات->mbcs.from_Unicode_بایټونه, stage2_ثبت, c);
                 value=((uint32_t)*p<<16)|((uint32_t)p[1]<<8)|p[2];
                 /* EUC 16-bit fixed-length representation applied to the first two bytes */
-                if(value<=0xff) {
+                إذا(value<=0xff) {
                     length=1;
-                } else if(value<=0xffff) {
+                } وإلا إذا(value<=0xffff) {
                     length=2;
-                } else if((value&0x800000)==0) {
+                } وإلا إذا((value&0x800000)==0) {
                     value|=0x8e800000;
                     length=4;
-                } else if((value&0x8000)==0) {
+                } وإلا إذا((value&0x8000)==0) {
                     value|=0x8f008000;
                     length=4;
-                } else {
+                } وإلا {
                     length=3;
                 }
-                break;
-#endif
-            default:
+                اكسر;
+#د_که_پای
+            افتراضي:
                 /* must not occur */
-                return -1;
+                أرجع -1;
             }
 
             /* is this code point assigned, or do we use fallbacks? */
-            if( MBCS_FROM_U_IS_ROUNDTRIP(stage2Entry, c) ||
+            إذا( MBCS_FROM_U_IS_ROUNDTRIP(stage2_ثبت, c) ||
                 (FROM_U_USE_FALLBACK(useFallback, c) && value!=0)
             ) {
                 /*
@@ -4951,24 +4951,24 @@ ucnv_MBCSFromUChar32(UConverterSharedData *sharedData,
                  * to be a zero byte.
                  */
                 /* assigned */
-                *pValue=value;
-                return length;
+                *p_ارزښت=value;
+                أرجع length;
             }
         }
     }
 
-    cx=sharedData->mbcs.extIndexes;
-    if(cx!=nullptr) {
-        length=ucnv_extSimpleMatchFromU(cx, c, pValue, useFallback);
-        return length>=0 ? length : -length;  /* return abs(length); */
+    cx=shared_معلومات->mbcs.extIndexes;
+    إذا(cx!=تش_اشاره) {
+        length=ucnv_ext_Simple_سمون_From_U(cx, c, p_ارزښت, useFallback);
+        أرجع length>=0 ? length : -length;  /* return abs(length); */
     }
 
     /* unassigned */
-    return 0;
+    أرجع 0;
 }
 
 
-#if 0
+#إذا 0
 /*
  * This function has been moved to ucnv2022.c for inlining.
  * This implementation is here only for documentation purposes
@@ -4982,91 +4982,91 @@ ucnv_MBCSFromUChar32(UConverterSharedData *sharedData,
  * It returns the codepage byte for the code point, or -1 if it is unassigned.
  */
 U_CFUNC int32_t
-ucnv_MBCSSingleFromUChar32(UConverterSharedData *sharedData,
+ucnv_MBCSSingleFromUChar32(UConverter_Shared_معلومات *shared_معلومات,
                        UChar32 c,
                        UBool useFallback) {
-    const uint16_t *table;
+    ثابت uint16_t *جدول;
     int32_t value;
 
     /* BMP-only codepages are stored without stage 1 entries for supplementary code points */
-    if(c>=0x10000 && !(sharedData->mbcs.unicodeMask&UCNV_HAS_SUPPLEMENTARY)) {
-        return -1;
+    إذا(c>=0x10000 && !(shared_معلومات->mbcs.unicode_ماسک&UCNV_HAS_SUPPLEMENTARY)) {
+        أرجع -1;
     }
 
     /* convert the Unicode code point in c into codepage bytes (same as in _MBCSFromUnicodeWithOffsets) */
-    table=sharedData->mbcs.fromUnicodeTable;
+    جدول=shared_معلومات->mbcs.from_Unicode_جدول;
 
     /* get the byte for the output */
-    value=MBCS_SINGLE_RESULT_FROM_U(table, (uint16_t *)sharedData->mbcs.fromUnicodeBytes, c);
+    value=MBCS_SINGLE_پایله_FROM_U(جدول, (uint16_t *)shared_معلومات->mbcs.from_Unicode_بایټونه, c);
     /* is this code point assigned, or do we use fallbacks? */
-    if(useFallback ? value>=0x800 : value>=0xc00) {
-        return value&0xff;
-    } else {
-        return -1;
+    إذا(useFallback ? value>=0x800 : value>=0xc00) {
+        أرجع value&0xff;
+    } وإلا {
+        أرجع -1;
     }
 }
-#endif
+#د_که_پای
 
 /* MBCS-from-UTF-8 conversion functions ------------------------------------- */
 
 /* offsets for n-byte UTF-8 sequences that were calculated with ((lead<<6)+trail)<<6+trail... */
-static const UChar32
+ساكن ثابت UChar32
 utf8_offsets[5]={ 0, 0, 0x3080, 0xE2080, 0x3C82080 };
 
-static void U_CALLCONV
-ucnv_SBCSFromUTF8(UConverterFromUnicodeArgs *pFromUArgs,
-                  UConverterToUnicodeArgs *pToUArgs,
-                  UErrorCode *pErrorCode) {
+ساكن فراغ U_CALLCONV
+ucnv_SBCSFromUTF8(UConverter_From_Unicode_دلیلونه *pFromUArgs,
+                  UConverter_منزل_Unicode_دلیلونه *p_منزل_UArgs,
+                  UError_کوډ *p_Error_کوډ) {
     UConverter *utf8, *cnv;
-    const uint8_t *source, *sourceLimit;
-    uint8_t *target;
-    int32_t targetCapacity;
+    ثابت uint8_t *سرچینه, *سرچینه_حد;
+    uint8_t *موخه;
+    int32_t موخه_ظرفیت;
 
-    const uint16_t *table, *sbcsIndex;
-    const uint16_t *results;
+    ثابت uint16_t *جدول, *sbcs_شاخص;
+    ثابت uint16_t *results;
 
-    int8_t oldToULength, toULength, toULimit;
+    int8_t old_منزل_ULength, منزل_ULength, منزل_ULimit;
 
     UChar32 c;
     uint8_t b, t1, t2;
 
     uint32_t asciiRoundtrips;
-    uint16_t value, minValue = 0;
+    uint16_t value, min_ارزښت = 0;
     UBool hasSupplementary;
 
     /* set up the local pointers */
-    utf8=pToUArgs->converter;
+    utf8=p_منزل_UArgs->converter;
     cnv=pFromUArgs->converter;
-    source=(uint8_t *)pToUArgs->source;
-    sourceLimit=(uint8_t *)pToUArgs->sourceLimit;
-    target = reinterpret_cast<uint8_t*>(pFromUArgs->target);
-    targetCapacity = static_cast<int32_t>(pFromUArgs->targetLimit - pFromUArgs->target);
+    سرچینه=(uint8_t *)p_منزل_UArgs->سرچینه;
+    سرچینه_حد=(uint8_t *)p_منزل_UArgs->سرچینه_حد;
+    موخه = reinterpret_cast<uint8_t*>(pFromUArgs->موخه);
+    موخه_ظرفیت = static_cast<int32_t>(pFromUArgs->موخه_حد - pFromUArgs->موخه);
 
-    table=cnv->sharedData->mbcs.fromUnicodeTable;
-    sbcsIndex=cnv->sharedData->mbcs.sbcsIndex;
-    if((cnv->options&UCNV_OPTION_SWAP_LFNL)!=0) {
-        results = reinterpret_cast<uint16_t*>(cnv->sharedData->mbcs.swapLFNLFromUnicodeBytes);
-    } else {
-        results=(uint16_t *)cnv->sharedData->mbcs.fromUnicodeBytes;
+    جدول=cnv->shared_معلومات->mbcs.from_Unicode_جدول;
+    sbcs_شاخص=cnv->shared_معلومات->mbcs.sbcs_شاخص;
+    إذا((cnv->options&UCNV_OPTION_بدلون_LFNL)!=0) {
+        results = reinterpret_cast<uint16_t*>(cnv->shared_معلومات->mbcs.بدلون_LFNLFrom_Unicode_بایټونه);
+    } وإلا {
+        results=(uint16_t *)cnv->shared_معلومات->mbcs.from_Unicode_بایټونه;
     }
-    asciiRoundtrips=cnv->sharedData->mbcs.asciiRoundtrips;
+    asciiRoundtrips=cnv->shared_معلومات->mbcs.asciiRoundtrips;
 
-    if(cnv->useFallback) {
+    إذا(cnv->useFallback) {
         /* use all roundtrip and fallback results */
-        minValue=0x800;
-    } else {
+        min_ارزښت=0x800;
+    } وإلا {
         /* use only roundtrips and fallbacks from private-use characters */
-        minValue=0xc00;
+        min_ارزښت=0xc00;
     }
-    hasSupplementary = static_cast<UBool>(cnv->sharedData->mbcs.unicodeMask & UCNV_HAS_SUPPLEMENTARY);
+    hasSupplementary = static_cast<UBool>(cnv->shared_معلومات->mbcs.unicode_ماسک & UCNV_HAS_SUPPLEMENTARY);
 
     /* get the converter state from the UTF-8 UConverter */
-    if(utf8->toULength > 0) {
-        toULength=oldToULength=utf8->toULength;
-        toULimit = static_cast<int8_t>(utf8->mode);
-        c = static_cast<UChar32>(utf8->toUnicodeStatus);
-    } else {
-        toULength=oldToULength=toULimit=0;
+    إذا(utf8->منزل_ULength > 0) {
+        منزل_ULength=old_منزل_ULength=utf8->منزل_ULength;
+        منزل_ULimit = static_cast<int8_t>(utf8->ډېرپېښ);
+        c = static_cast<UChar32>(utf8->منزل_Unicode_حالت);
+    } وإلا {
+        منزل_ULength=old_منزل_ULength=منزل_ULimit=0;
         c = 0;
     }
 
@@ -5077,28 +5077,28 @@ ucnv_SBCSFromUTF8(UConverterFromUnicodeArgs *pFromUArgs,
     {
         // Do not go back into the bytes that will be read for finishing a partial
         // sequence from the previous buffer.
-        int32_t length = static_cast<int32_t>(sourceLimit - source) - (toULimit - oldToULength);
-        if(length>0) {
-            uint8_t b1=*(sourceLimit-1);
-            if(U8_IS_SINGLE(b1)) {
+        int32_t length = static_cast<int32_t>(سرچینه_حد - سرچینه) - (منزل_ULimit - old_منزل_ULength);
+        إذا(length>0) {
+            uint8_t b1=*(سرچینه_حد-1);
+            إذا(U8_IS_SINGLE(b1)) {
                 // common ASCII character
-            } else if(U8_IS_TRAIL(b1) && length>=2) {
-                uint8_t b2=*(sourceLimit-2);
-                if(0xe0<=b2 && b2<0xf0 && U8_IS_VALID_LEAD3_AND_T1(b2, b1)) {
+            } وإلا إذا(U8_IS_TRAIL(b1) && length>=2) {
+                uint8_t b2=*(سرچینه_حد-2);
+                إذا(0xe0<=b2 && b2<0xf0 && U8_IS_VALID_LEAD3_AND_T1(b2, b1)) {
                     // truncated 3-byte sequence
-                    sourceLimit-=2;
+                    سرچینه_حد-=2;
                 }
-            } else if(0xc2<=b1 && b1<0xf0) {
+            } وإلا إذا(0xc2<=b1 && b1<0xf0) {
                 // truncated 2- or 3-byte sequence
-                --sourceLimit;
+                --سرچینه_حد;
             }
         }
     }
 
-    if(c!=0 && targetCapacity>0) {
-        utf8->toUnicodeStatus=0;
-        utf8->toULength=0;
-        goto moreBytes;
+    إذا(c!=0 && موخه_ظرفیت>0) {
+        utf8->منزل_Unicode_حالت=0;
+        utf8->منزل_ULength=0;
+        اذهب نور_بایټونه;
         /*
          * Note: We could avoid the goto by duplicating some of the moreBytes
          * code, but only up to the point of collecting a complete UTF-8
@@ -5121,68 +5121,68 @@ ucnv_SBCSFromUTF8(UConverterFromUnicodeArgs *pFromUArgs,
     }
 
     /* conversion loop */
-    while(source<sourceLimit) {
-        if(targetCapacity>0) {
-            b=*source++;
-            if(U8_IS_SINGLE(b)) {
+    طالما(سرچینه<سرچینه_حد) {
+        إذا(موخه_ظرفیت>0) {
+            b=*سرچینه++;
+            إذا(U8_IS_SINGLE(b)) {
                 /* convert ASCII */
-                if(IS_ASCII_ROUNDTRIP(b, asciiRoundtrips)) {
-                    *target++ = b;
-                    --targetCapacity;
-                    continue;
-                } else {
+                إذا(IS_ASCII_ROUNDTRIP(b, asciiRoundtrips)) {
+                    *موخه++ = b;
+                    --موخه_ظرفیت;
+                    استمر;
+                } وإلا {
                     c=b;
-                    value=SBCS_RESULT_FROM_UTF8(sbcsIndex, results, 0, c);
+                    value=SBCS_پایله_FROM_UTF8(sbcs_شاخص, results, 0, c);
                 }
-            } else {
-                if(b<0xe0) {
-                    if( /* handle U+0080..U+07FF inline */
+            } وإلا {
+                إذا(b<0xe0) {
+                    إذا( /* handle U+0080..U+07FF inline */
                         b>=0xc2 &&
-                        (t1 = static_cast<uint8_t>(*source - 0x80)) <= 0x3f
+                        (t1 = static_cast<uint8_t>(*سرچینه - 0x80)) <= 0x3f
                     ) {
                         c=b&0x1f;
-                        ++source;
-                        value=SBCS_RESULT_FROM_UTF8(sbcsIndex, results, c, t1);
-                        if(value>=minValue) {
-                            *target++ = static_cast<uint8_t>(value);
-                            --targetCapacity;
-                            continue;
-                        } else {
+                        ++سرچینه;
+                        value=SBCS_پایله_FROM_UTF8(sbcs_شاخص, results, c, t1);
+                        إذا(value>=min_ارزښت) {
+                            *موخه++ = static_cast<uint8_t>(value);
+                            --موخه_ظرفیت;
+                            استمر;
+                        } وإلا {
                             c=(c<<6)|t1;
                         }
-                    } else {
+                    } وإلا {
                         c=-1;
                     }
-                } else if(b==0xe0) {
-                    if( /* handle U+0800..U+0FFF inline */
-                        (t1 = static_cast<uint8_t>(source[0] - 0x80)) <= 0x3f && t1 >= 0x20 &&
-                        (t2 = static_cast<uint8_t>(source[1] - 0x80)) <= 0x3f
+                } وإلا إذا(b==0xe0) {
+                    إذا( /* handle U+0800..U+0FFF inline */
+                        (t1 = static_cast<uint8_t>(سرچینه[0] - 0x80)) <= 0x3f && t1 >= 0x20 &&
+                        (t2 = static_cast<uint8_t>(سرچینه[1] - 0x80)) <= 0x3f
                     ) {
                         c=t1;
-                        source+=2;
-                        value=SBCS_RESULT_FROM_UTF8(sbcsIndex, results, c, t2);
-                        if(value>=minValue) {
-                            *target++ = static_cast<uint8_t>(value);
-                            --targetCapacity;
-                            continue;
-                        } else {
+                        سرچینه+=2;
+                        value=SBCS_پایله_FROM_UTF8(sbcs_شاخص, results, c, t2);
+                        إذا(value>=min_ارزښت) {
+                            *موخه++ = static_cast<uint8_t>(value);
+                            --موخه_ظرفیت;
+                            استمر;
+                        } وإلا {
                             c=(c<<6)|t2;
                         }
-                    } else {
+                    } وإلا {
                         c=-1;
                     }
-                } else {
+                } وإلا {
                     c=-1;
                 }
 
-                if(c<0) {
+                إذا(c<0) {
                     /* handle "complicated" and error cases, and continuing partial characters */
-                    oldToULength=0;
-                    toULength=1;
-                    toULimit=U8_COUNT_BYTES_NON_ASCII(b);
+                    old_منزل_ULength=0;
+                    منزل_ULength=1;
+                    منزل_ULimit=U8_شمېر_بایټونه_NON_ASCII(b);
                     c=b;
-moreBytes:
-                    while(toULength<toULimit) {
+نور_بایټونه:
+                    طالما(منزل_ULength<منزل_ULimit) {
                         /*
                          * The sourceLimit may have been adjusted before the conversion loop
                          * to stop before a truncated sequence.
@@ -5190,63 +5190,63 @@ moreBytes:
                          * sequences at the end.
                          * See ticket #7492.
                          */
-                        if(source<(uint8_t *)pToUArgs->sourceLimit) {
-                            b=*source;
-                            if(icu::UTF8::isValidTrail(c, b, toULength, toULimit)) {
-                                ++source;
-                                ++toULength;
+                        إذا(سرچینه<(uint8_t *)p_منزل_UArgs->سرچینه_حد) {
+                            b=*سرچینه;
+                            إذا(icu::UTF8::isValidTrail(c, b, منزل_ULength, منزل_ULimit)) {
+                                ++سرچینه;
+                                ++منزل_ULength;
                                 c=(c<<6)+b;
-                            } else {
-                                break; /* sequence too short, stop with toULength<toULimit */
+                            } وإلا {
+                                اكسر; /* sequence too short, stop with toULength<toULimit */
                             }
-                        } else {
+                        } وإلا {
                             /* store the partial UTF-8 character, compatible with the regular UTF-8 converter */
-                            source-=(toULength-oldToULength);
-                            while(oldToULength<toULength) {
-                                utf8->toUBytes[oldToULength++]=*source++;
+                            سرچینه-=(منزل_ULength-old_منزل_ULength);
+                            طالما(old_منزل_ULength<منزل_ULength) {
+                                utf8->منزل_UBytes[old_منزل_ULength++]=*سرچینه++;
                             }
-                            utf8->toUnicodeStatus=c;
-                            utf8->toULength=toULength;
-                            utf8->mode=toULimit;
-                            pToUArgs->source=(char *)source;
-                            pFromUArgs->target = reinterpret_cast<char*>(target);
-                            return;
+                            utf8->منزل_Unicode_حالت=c;
+                            utf8->منزل_ULength=منزل_ULength;
+                            utf8->ډېرپېښ=منزل_ULimit;
+                            p_منزل_UArgs->سرچینه=(حرف *)سرچینه;
+                            pFromUArgs->موخه = reinterpret_cast<حرف*>(موخه);
+                            أرجع;
                         }
                     }
 
-                    if(toULength==toULimit) {
-                        c-=utf8_offsets[toULength];
-                        if(toULength<=3) {  /* BMP */
-                            value=MBCS_SINGLE_RESULT_FROM_U(table, results, c);
-                        } else {
+                    إذا(منزل_ULength==منزل_ULimit) {
+                        c-=utf8_offsets[منزل_ULength];
+                        إذا(منزل_ULength<=3) {  /* BMP */
+                            value=MBCS_SINGLE_پایله_FROM_U(جدول, results, c);
+                        } وإلا {
                             /* supplementary code point */
-                            if(!hasSupplementary) {
+                            إذا(!hasSupplementary) {
                                 /* BMP-only codepages are stored without stage 1 entries for supplementary code points */
                                 value=0;
-                            } else {
-                                value=MBCS_SINGLE_RESULT_FROM_U(table, results, c);
+                            } وإلا {
+                                value=MBCS_SINGLE_پایله_FROM_U(جدول, results, c);
                             }
                         }
-                    } else {
+                    } وإلا {
                         /* error handling: illegal UTF-8 byte sequence */
-                        source-=(toULength-oldToULength);
-                        while(oldToULength<toULength) {
-                            utf8->toUBytes[oldToULength++]=*source++;
+                        سرچینه-=(منزل_ULength-old_منزل_ULength);
+                        طالما(old_منزل_ULength<منزل_ULength) {
+                            utf8->منزل_UBytes[old_منزل_ULength++]=*سرچینه++;
                         }
-                        utf8->toULength=toULength;
-                        pToUArgs->source=(char *)source;
-                        pFromUArgs->target = reinterpret_cast<char*>(target);
-                        *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                        return;
+                        utf8->منزل_ULength=منزل_ULength;
+                        p_منزل_UArgs->سرچینه=(حرف *)سرچینه;
+                        pFromUArgs->موخه = reinterpret_cast<حرف*>(موخه);
+                        *p_Error_کوډ=U_ILLEGAL_CHAR_وموندل;
+                        أرجع;
                     }
                 }
             }
 
-            if(value>=minValue) {
+            إذا(value>=min_ارزښت) {
                 /* output the mapping for c */
-                *target++ = static_cast<uint8_t>(value);
-                --targetCapacity;
-            } else {
+                *موخه++ = static_cast<uint8_t>(value);
+                --موخه_ظرفیت;
+            } وإلا {
                 /* value<minValue means c is unassigned (unmappable) */
                 /*
                  * Try an extension mapping.
@@ -5254,39 +5254,39 @@ moreBytes:
                  * If we have a partial match on c, we will return and revert
                  * to UTF-8->UTF-16->charset conversion.
                  */
-                static const char16_t nul=0;
-                const char16_t *noSource=&nul;
-                c=_extFromU(cnv, cnv->sharedData,
-                            c, &noSource, noSource,
-                            &target, target+targetCapacity,
-                            nullptr, -1,
+                ساكن ثابت char16_t nul=0;
+                ثابت char16_t *no_سرچینه=&nul;
+                c=_extFromU(cnv, cnv->shared_معلومات,
+                            c, &no_سرچینه, no_سرچینه,
+                            &موخه, موخه+موخه_ظرفیت,
+                            تش_اشاره, -1,
                             pFromUArgs->flush,
-                            pErrorCode);
+                            p_Error_کوډ);
 
-                if(U_FAILURE(*pErrorCode)) {
+                إذا(U_FAILURE(*p_Error_کوډ)) {
                     /* not mappable or buffer overflow */
                     cnv->fromUChar32=c;
-                    break;
-                } else if(cnv->preFromUFirstCP>=0) {
+                    اكسر;
+                } وإلا إذا(cnv->preFromUFirstCP>=0) {
                     /*
                      * Partial match, return and revert to pivoting.
                      * In normal from-UTF-16 conversion, we would just continue
                      * but then exit the loop because the extension match would
                      * have consumed the source.
                      */
-                    *pErrorCode=U_USING_DEFAULT_WARNING;
-                    break;
-                } else {
+                    *p_Error_کوډ=U_USING_DEFAULT_WARNING;
+                    اكسر;
+                } وإلا {
                     /* a mapping was written to the target, continue */
 
                     /* recalculate the targetCapacity after an extension mapping */
-                    targetCapacity = static_cast<int32_t>(pFromUArgs->targetLimit - reinterpret_cast<char*>(target));
+                    موخه_ظرفیت = static_cast<int32_t>(pFromUArgs->موخه_حد - reinterpret_cast<حرف*>(موخه));
                 }
             }
-        } else {
+        } وإلا {
             /* target is full */
-            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-            break;
+            *p_Error_کوډ=U_بفر_ډکېدنه_ERROR;
+            اكسر;
         }
     }
 
@@ -5295,74 +5295,74 @@ moreBytes:
      * to stop before a truncated sequence.
      * If so, then collect the truncated sequence now.
      */
-    if(U_SUCCESS(*pErrorCode) &&
+    إذا(U_SUCCESS(*p_Error_کوډ) &&
             cnv->preFromUFirstCP<0 &&
-            source<(sourceLimit=(uint8_t *)pToUArgs->sourceLimit)) {
-        c=utf8->toUBytes[0]=b=*source++;
-        toULength=1;
-        toULimit=U8_COUNT_BYTES(b);
-        while(source<sourceLimit) {
-            utf8->toUBytes[toULength++]=b=*source++;
+            سرچینه<(سرچینه_حد=(uint8_t *)p_منزل_UArgs->سرچینه_حد)) {
+        c=utf8->منزل_UBytes[0]=b=*سرچینه++;
+        منزل_ULength=1;
+        منزل_ULimit=U8_شمېر_بایټونه(b);
+        طالما(سرچینه<سرچینه_حد) {
+            utf8->منزل_UBytes[منزل_ULength++]=b=*سرچینه++;
             c=(c<<6)+b;
         }
-        utf8->toUnicodeStatus=c;
-        utf8->toULength=toULength;
-        utf8->mode=toULimit;
+        utf8->منزل_Unicode_حالت=c;
+        utf8->منزل_ULength=منزل_ULength;
+        utf8->ډېرپېښ=منزل_ULimit;
     }
 
     /* write back the updated pointers */
-    pToUArgs->source=(char *)source;
-    pFromUArgs->target = reinterpret_cast<char*>(target);
+    p_منزل_UArgs->سرچینه=(حرف *)سرچینه;
+    pFromUArgs->موخه = reinterpret_cast<حرف*>(موخه);
 }
 
-static void U_CALLCONV
-ucnv_DBCSFromUTF8(UConverterFromUnicodeArgs *pFromUArgs,
-                  UConverterToUnicodeArgs *pToUArgs,
-                  UErrorCode *pErrorCode) {
+ساكن فراغ U_CALLCONV
+ucnv_DBCSFromUTF8(UConverter_From_Unicode_دلیلونه *pFromUArgs,
+                  UConverter_منزل_Unicode_دلیلونه *p_منزل_UArgs,
+                  UError_کوډ *p_Error_کوډ) {
     UConverter *utf8, *cnv;
-    const uint8_t *source, *sourceLimit;
-    uint8_t *target;
-    int32_t targetCapacity;
+    ثابت uint8_t *سرچینه, *سرچینه_حد;
+    uint8_t *موخه;
+    int32_t موخه_ظرفیت;
 
-    const uint16_t *table, *mbcsIndex;
-    const uint16_t *results;
+    ثابت uint16_t *جدول, *mbcs_شاخص;
+    ثابت uint16_t *results;
 
-    int8_t oldToULength, toULength, toULimit;
+    int8_t old_منزل_ULength, منزل_ULength, منزل_ULimit;
 
     UChar32 c;
     uint8_t b, t1, t2;
 
-    uint32_t stage2Entry;
+    uint32_t stage2_ثبت;
     uint32_t asciiRoundtrips;
     uint16_t value = 0;
     UBool hasSupplementary;
 
     /* set up the local pointers */
-    utf8=pToUArgs->converter;
+    utf8=p_منزل_UArgs->converter;
     cnv=pFromUArgs->converter;
-    source=(uint8_t *)pToUArgs->source;
-    sourceLimit=(uint8_t *)pToUArgs->sourceLimit;
-    target = reinterpret_cast<uint8_t*>(pFromUArgs->target);
-    targetCapacity = static_cast<int32_t>(pFromUArgs->targetLimit - pFromUArgs->target);
+    سرچینه=(uint8_t *)p_منزل_UArgs->سرچینه;
+    سرچینه_حد=(uint8_t *)p_منزل_UArgs->سرچینه_حد;
+    موخه = reinterpret_cast<uint8_t*>(pFromUArgs->موخه);
+    موخه_ظرفیت = static_cast<int32_t>(pFromUArgs->موخه_حد - pFromUArgs->موخه);
 
-    table=cnv->sharedData->mbcs.fromUnicodeTable;
-    mbcsIndex=cnv->sharedData->mbcs.mbcsIndex;
-    if((cnv->options&UCNV_OPTION_SWAP_LFNL)!=0) {
-        results = reinterpret_cast<uint16_t*>(cnv->sharedData->mbcs.swapLFNLFromUnicodeBytes);
-    } else {
-        results=(uint16_t *)cnv->sharedData->mbcs.fromUnicodeBytes;
+    جدول=cnv->shared_معلومات->mbcs.from_Unicode_جدول;
+    mbcs_شاخص=cnv->shared_معلومات->mbcs.mbcs_شاخص;
+    إذا((cnv->options&UCNV_OPTION_بدلون_LFNL)!=0) {
+        results = reinterpret_cast<uint16_t*>(cnv->shared_معلومات->mbcs.بدلون_LFNLFrom_Unicode_بایټونه);
+    } وإلا {
+        results=(uint16_t *)cnv->shared_معلومات->mbcs.from_Unicode_بایټونه;
     }
-    asciiRoundtrips=cnv->sharedData->mbcs.asciiRoundtrips;
+    asciiRoundtrips=cnv->shared_معلومات->mbcs.asciiRoundtrips;
 
-    hasSupplementary = static_cast<UBool>(cnv->sharedData->mbcs.unicodeMask & UCNV_HAS_SUPPLEMENTARY);
+    hasSupplementary = static_cast<UBool>(cnv->shared_معلومات->mbcs.unicode_ماسک & UCNV_HAS_SUPPLEMENTARY);
 
     /* get the converter state from the UTF-8 UConverter */
-    if(utf8->toULength > 0) {
-        toULength=oldToULength=utf8->toULength;
-        toULimit = static_cast<int8_t>(utf8->mode);
-        c = static_cast<UChar32>(utf8->toUnicodeStatus);
-    } else {
-        toULength=oldToULength=toULimit=0;
+    إذا(utf8->منزل_ULength > 0) {
+        منزل_ULength=old_منزل_ULength=utf8->منزل_ULength;
+        منزل_ULimit = static_cast<int8_t>(utf8->ډېرپېښ);
+        c = static_cast<UChar32>(utf8->منزل_Unicode_حالت);
+    } وإلا {
+        منزل_ULength=old_منزل_ULength=منزل_ULimit=0;
         c = 0;
     }
 
@@ -5373,90 +5373,90 @@ ucnv_DBCSFromUTF8(UConverterFromUnicodeArgs *pFromUArgs,
     {
         // Do not go back into the bytes that will be read for finishing a partial
         // sequence from the previous buffer.
-        int32_t length = static_cast<int32_t>(sourceLimit - source) - (toULimit - oldToULength);
-        if(length>0) {
-            uint8_t b1=*(sourceLimit-1);
-            if(U8_IS_SINGLE(b1)) {
+        int32_t length = static_cast<int32_t>(سرچینه_حد - سرچینه) - (منزل_ULimit - old_منزل_ULength);
+        إذا(length>0) {
+            uint8_t b1=*(سرچینه_حد-1);
+            إذا(U8_IS_SINGLE(b1)) {
                 // common ASCII character
-            } else if(U8_IS_TRAIL(b1) && length>=2) {
-                uint8_t b2=*(sourceLimit-2);
-                if(0xe0<=b2 && b2<0xf0 && U8_IS_VALID_LEAD3_AND_T1(b2, b1)) {
+            } وإلا إذا(U8_IS_TRAIL(b1) && length>=2) {
+                uint8_t b2=*(سرچینه_حد-2);
+                إذا(0xe0<=b2 && b2<0xf0 && U8_IS_VALID_LEAD3_AND_T1(b2, b1)) {
                     // truncated 3-byte sequence
-                    sourceLimit-=2;
+                    سرچینه_حد-=2;
                 }
-            } else if(0xc2<=b1 && b1<0xf0) {
+            } وإلا إذا(0xc2<=b1 && b1<0xf0) {
                 // truncated 2- or 3-byte sequence
-                --sourceLimit;
+                --سرچینه_حد;
             }
         }
     }
 
-    if(c!=0 && targetCapacity>0) {
-        utf8->toUnicodeStatus=0;
-        utf8->toULength=0;
-        goto moreBytes;
+    إذا(c!=0 && موخه_ظرفیت>0) {
+        utf8->منزل_Unicode_حالت=0;
+        utf8->منزل_ULength=0;
+        اذهب نور_بایټونه;
         /* See note in ucnv_SBCSFromUTF8() about this goto. */
     }
 
     /* conversion loop */
-    while(source<sourceLimit) {
-        if(targetCapacity>0) {
-            b=*source++;
-            if(U8_IS_SINGLE(b)) {
+    طالما(سرچینه<سرچینه_حد) {
+        إذا(موخه_ظرفیت>0) {
+            b=*سرچینه++;
+            إذا(U8_IS_SINGLE(b)) {
                 /* convert ASCII */
-                if(IS_ASCII_ROUNDTRIP(b, asciiRoundtrips)) {
-                    *target++=b;
-                    --targetCapacity;
-                    continue;
-                } else {
-                    value=DBCS_RESULT_FROM_UTF8(mbcsIndex, results, 0, b);
-                    if(value==0) {
+                إذا(IS_ASCII_ROUNDTRIP(b, asciiRoundtrips)) {
+                    *موخه++=b;
+                    --موخه_ظرفیت;
+                    استمر;
+                } وإلا {
+                    value=DBCS_پایله_FROM_UTF8(mbcs_شاخص, results, 0, b);
+                    إذا(value==0) {
                         c=b;
-                        goto unassigned;
+                        اذهب unassigned;
                     }
                 }
-            } else {
-                if(b>=0xe0) {
-                    if( /* handle U+0800..U+D7FF inline */
+            } وإلا {
+                إذا(b>=0xe0) {
+                    إذا( /* handle U+0800..U+D7FF inline */
                         b<=0xed &&  // do not assume maxFastUChar>0xd7ff
-                        U8_IS_VALID_LEAD3_AND_T1(b, t1=source[0]) &&
-                        (t2 = static_cast<uint8_t>(source[1] - 0x80)) <= 0x3f
+                        U8_IS_VALID_LEAD3_AND_T1(b, t1=سرچینه[0]) &&
+                        (t2 = static_cast<uint8_t>(سرچینه[1] - 0x80)) <= 0x3f
                     ) {
                         c=((b&0xf)<<6)|(t1&0x3f);
-                        source+=2;
-                        value=DBCS_RESULT_FROM_UTF8(mbcsIndex, results, c, t2);
-                        if(value==0) {
+                        سرچینه+=2;
+                        value=DBCS_پایله_FROM_UTF8(mbcs_شاخص, results, c, t2);
+                        إذا(value==0) {
                             c=(c<<6)|t2;
-                            goto unassigned;
+                            اذهب unassigned;
                         }
-                    } else {
+                    } وإلا {
                         c=-1;
                     }
-                } else {
-                    if( /* handle U+0080..U+07FF inline */
+                } وإلا {
+                    إذا( /* handle U+0080..U+07FF inline */
                         b>=0xc2 &&
-                        (t1 = static_cast<uint8_t>(*source - 0x80)) <= 0x3f
+                        (t1 = static_cast<uint8_t>(*سرچینه - 0x80)) <= 0x3f
                     ) {
                         c=b&0x1f;
-                        ++source;
-                        value=DBCS_RESULT_FROM_UTF8(mbcsIndex, results, c, t1);
-                        if(value==0) {
+                        ++سرچینه;
+                        value=DBCS_پایله_FROM_UTF8(mbcs_شاخص, results, c, t1);
+                        إذا(value==0) {
                             c=(c<<6)|t1;
-                            goto unassigned;
+                            اذهب unassigned;
                         }
-                    } else {
+                    } وإلا {
                         c=-1;
                     }
                 }
 
-                if(c<0) {
+                إذا(c<0) {
                     /* handle "complicated" and error cases, and continuing partial characters */
-                    oldToULength=0;
-                    toULength=1;
-                    toULimit=U8_COUNT_BYTES_NON_ASCII(b);
+                    old_منزل_ULength=0;
+                    منزل_ULength=1;
+                    منزل_ULimit=U8_شمېر_بایټونه_NON_ASCII(b);
                     c=b;
-moreBytes:
-                    while(toULength<toULimit) {
+نور_بایټونه:
+                    طالما(منزل_ULength<منزل_ULimit) {
                         /*
                          * The sourceLimit may have been adjusted before the conversion loop
                          * to stop before a truncated sequence.
@@ -5464,90 +5464,90 @@ moreBytes:
                          * sequences at the end.
                          * See ticket #7492.
                          */
-                        if(source<(uint8_t *)pToUArgs->sourceLimit) {
-                            b=*source;
-                            if(icu::UTF8::isValidTrail(c, b, toULength, toULimit)) {
-                                ++source;
-                                ++toULength;
+                        إذا(سرچینه<(uint8_t *)p_منزل_UArgs->سرچینه_حد) {
+                            b=*سرچینه;
+                            إذا(icu::UTF8::isValidTrail(c, b, منزل_ULength, منزل_ULimit)) {
+                                ++سرچینه;
+                                ++منزل_ULength;
                                 c=(c<<6)+b;
-                            } else {
-                                break; /* sequence too short, stop with toULength<toULimit */
+                            } وإلا {
+                                اكسر; /* sequence too short, stop with toULength<toULimit */
                             }
-                        } else {
+                        } وإلا {
                             /* store the partial UTF-8 character, compatible with the regular UTF-8 converter */
-                            source-=(toULength-oldToULength);
-                            while(oldToULength<toULength) {
-                                utf8->toUBytes[oldToULength++]=*source++;
+                            سرچینه-=(منزل_ULength-old_منزل_ULength);
+                            طالما(old_منزل_ULength<منزل_ULength) {
+                                utf8->منزل_UBytes[old_منزل_ULength++]=*سرچینه++;
                             }
-                            utf8->toUnicodeStatus=c;
-                            utf8->toULength=toULength;
-                            utf8->mode=toULimit;
-                            pToUArgs->source=(char *)source;
-                            pFromUArgs->target = reinterpret_cast<char*>(target);
-                            return;
+                            utf8->منزل_Unicode_حالت=c;
+                            utf8->منزل_ULength=منزل_ULength;
+                            utf8->ډېرپېښ=منزل_ULimit;
+                            p_منزل_UArgs->سرچینه=(حرف *)سرچینه;
+                            pFromUArgs->موخه = reinterpret_cast<حرف*>(موخه);
+                            أرجع;
                         }
                     }
 
-                    if(toULength==toULimit) {
-                        c-=utf8_offsets[toULength];
-                        if(toULength<=3) {  /* BMP */
-                            stage2Entry=MBCS_STAGE_2_FROM_U(table, c);
-                        } else {
+                    إذا(منزل_ULength==منزل_ULimit) {
+                        c-=utf8_offsets[منزل_ULength];
+                        إذا(منزل_ULength<=3) {  /* BMP */
+                            stage2_ثبت=MBCS_STAGE_2_FROM_U(جدول, c);
+                        } وإلا {
                             /* supplementary code point */
-                            if(!hasSupplementary) {
+                            إذا(!hasSupplementary) {
                                 /* BMP-only codepages are stored without stage 1 entries for supplementary code points */
-                                stage2Entry=0;
-                            } else {
-                                stage2Entry=MBCS_STAGE_2_FROM_U(table, c);
+                                stage2_ثبت=0;
+                            } وإلا {
+                                stage2_ثبت=MBCS_STAGE_2_FROM_U(جدول, c);
                             }
                         }
-                    } else {
+                    } وإلا {
                         /* error handling: illegal UTF-8 byte sequence */
-                        source-=(toULength-oldToULength);
-                        while(oldToULength<toULength) {
-                            utf8->toUBytes[oldToULength++]=*source++;
+                        سرچینه-=(منزل_ULength-old_منزل_ULength);
+                        طالما(old_منزل_ULength<منزل_ULength) {
+                            utf8->منزل_UBytes[old_منزل_ULength++]=*سرچینه++;
                         }
-                        utf8->toULength=toULength;
-                        pToUArgs->source=(char *)source;
-                        pFromUArgs->target = reinterpret_cast<char*>(target);
-                        *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                        return;
+                        utf8->منزل_ULength=منزل_ULength;
+                        p_منزل_UArgs->سرچینه=(حرف *)سرچینه;
+                        pFromUArgs->موخه = reinterpret_cast<حرف*>(موخه);
+                        *p_Error_کوډ=U_ILLEGAL_CHAR_وموندل;
+                        أرجع;
                     }
 
                     /* get the bytes and the length for the output */
                     /* MBCS_OUTPUT_2 */
-                    value=MBCS_VALUE_2_FROM_STAGE_2(results, stage2Entry, c);
+                    value=MBCS_ارزښت_2_FROM_STAGE_2(results, stage2_ثبت, c);
 
                     /* is this code point assigned, or do we use fallbacks? */
-                    if(!(MBCS_FROM_U_IS_ROUNDTRIP(stage2Entry, c) ||
+                    إذا(!(MBCS_FROM_U_IS_ROUNDTRIP(stage2_ثبت, c) ||
                          (UCNV_FROM_U_USE_FALLBACK(cnv, c) && value!=0))
                     ) {
-                        goto unassigned;
+                        اذهب unassigned;
                     }
                 }
             }
 
             /* write the output character bytes from value and length */
             /* from the first if in the loop we know that targetCapacity>0 */
-            if(value<=0xff) {
+            إذا(value<=0xff) {
                 /* this is easy because we know that there is enough space */
-                *target++ = static_cast<uint8_t>(value);
-                --targetCapacity;
-            } else /* length==2 */ {
-                *target++ = static_cast<uint8_t>(value >> 8);
-                if(2<=targetCapacity) {
-                    *target++ = static_cast<uint8_t>(value);
-                    targetCapacity-=2;
-                } else {
-                    cnv->charErrorBuffer[0] = static_cast<char>(value);
-                    cnv->charErrorBufferLength=1;
+                *موخه++ = static_cast<uint8_t>(value);
+                --موخه_ظرفیت;
+            } وإلا /* length==2 */ {
+                *موخه++ = static_cast<uint8_t>(value >> 8);
+                إذا(2<=موخه_ظرفیت) {
+                    *موخه++ = static_cast<uint8_t>(value);
+                    موخه_ظرفیت-=2;
+                } وإلا {
+                    cnv->char_Error_بفر[0] = static_cast<حرف>(value);
+                    cnv->char_Error_بفر_اوږدتیا=1;
 
                     /* target overflow */
-                    *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                    break;
+                    *p_Error_کوډ=U_بفر_ډکېدنه_ERROR;
+                    اكسر;
                 }
             }
-            continue;
+            استمر;
 
 unassigned:
             {
@@ -5557,40 +5557,40 @@ unassigned:
                  * If we have a partial match on c, we will return and revert
                  * to UTF-8->UTF-16->charset conversion.
                  */
-                static const char16_t nul=0;
-                const char16_t *noSource=&nul;
-                c=_extFromU(cnv, cnv->sharedData,
-                            c, &noSource, noSource,
-                            &target, target+targetCapacity,
-                            nullptr, -1,
+                ساكن ثابت char16_t nul=0;
+                ثابت char16_t *no_سرچینه=&nul;
+                c=_extFromU(cnv, cnv->shared_معلومات,
+                            c, &no_سرچینه, no_سرچینه,
+                            &موخه, موخه+موخه_ظرفیت,
+                            تش_اشاره, -1,
                             pFromUArgs->flush,
-                            pErrorCode);
+                            p_Error_کوډ);
 
-                if(U_FAILURE(*pErrorCode)) {
+                إذا(U_FAILURE(*p_Error_کوډ)) {
                     /* not mappable or buffer overflow */
                     cnv->fromUChar32=c;
-                    break;
-                } else if(cnv->preFromUFirstCP>=0) {
+                    اكسر;
+                } وإلا إذا(cnv->preFromUFirstCP>=0) {
                     /*
                      * Partial match, return and revert to pivoting.
                      * In normal from-UTF-16 conversion, we would just continue
                      * but then exit the loop because the extension match would
                      * have consumed the source.
                      */
-                    *pErrorCode=U_USING_DEFAULT_WARNING;
-                    break;
-                } else {
+                    *p_Error_کوډ=U_USING_DEFAULT_WARNING;
+                    اكسر;
+                } وإلا {
                     /* a mapping was written to the target, continue */
 
                     /* recalculate the targetCapacity after an extension mapping */
-                    targetCapacity = static_cast<int32_t>(pFromUArgs->targetLimit - reinterpret_cast<char*>(target));
-                    continue;
+                    موخه_ظرفیت = static_cast<int32_t>(pFromUArgs->موخه_حد - reinterpret_cast<حرف*>(موخه));
+                    استمر;
                 }
             }
-        } else {
+        } وإلا {
             /* target is full */
-            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-            break;
+            *p_Error_کوډ=U_بفر_ډکېدنه_ERROR;
+            اكسر;
         }
     }
 
@@ -5599,39 +5599,39 @@ unassigned:
      * to stop before a truncated sequence.
      * If so, then collect the truncated sequence now.
      */
-    if(U_SUCCESS(*pErrorCode) &&
+    إذا(U_SUCCESS(*p_Error_کوډ) &&
             cnv->preFromUFirstCP<0 &&
-            source<(sourceLimit=(uint8_t *)pToUArgs->sourceLimit)) {
-        c=utf8->toUBytes[0]=b=*source++;
-        toULength=1;
-        toULimit=U8_COUNT_BYTES(b);
-        while(source<sourceLimit) {
-            utf8->toUBytes[toULength++]=b=*source++;
+            سرچینه<(سرچینه_حد=(uint8_t *)p_منزل_UArgs->سرچینه_حد)) {
+        c=utf8->منزل_UBytes[0]=b=*سرچینه++;
+        منزل_ULength=1;
+        منزل_ULimit=U8_شمېر_بایټونه(b);
+        طالما(سرچینه<سرچینه_حد) {
+            utf8->منزل_UBytes[منزل_ULength++]=b=*سرچینه++;
             c=(c<<6)+b;
         }
-        utf8->toUnicodeStatus=c;
-        utf8->toULength=toULength;
-        utf8->mode=toULimit;
+        utf8->منزل_Unicode_حالت=c;
+        utf8->منزل_ULength=منزل_ULength;
+        utf8->ډېرپېښ=منزل_ULimit;
     }
 
     /* write back the updated pointers */
-    pToUArgs->source=(char *)source;
-    pFromUArgs->target = reinterpret_cast<char*>(target);
+    p_منزل_UArgs->سرچینه=(حرف *)سرچینه;
+    pFromUArgs->موخه = reinterpret_cast<حرف*>(موخه);
 }
 
 /* miscellaneous ------------------------------------------------------------ */
 
-static void U_CALLCONV
-ucnv_MBCSGetStarters(const UConverter* cnv,
+ساكن فراغ U_CALLCONV
+ucnv_MBCSGetStarters(ثابت UConverter* cnv,
                  UBool starters[256],
-                 UErrorCode *) {
-    const int32_t *state0;
-    int i;
+                 UError_کوډ *) {
+    ثابت int32_t *state0;
+    صحيح i;
 
-    state0=cnv->sharedData->mbcs.stateTable[cnv->sharedData->mbcs.dbcsOnlyState];
-    for(i=0; i<256; ++i) {
+    state0=cnv->shared_معلومات->mbcs.state_جدول[cnv->shared_معلومات->mbcs.dbcsOnlyState];
+    لكل(i=0; i<256; ++i) {
         /* all bytes that cause a state transition from state 0 are lead bytes */
-        starters[i] = static_cast<UBool>(MBCS_ENTRY_IS_TRANSITION(state0[i]));
+        starters[i] = static_cast<UBool>(MBCS_ثبت_IS_TRANSITION(state0[i]));
     }
 }
 
@@ -5640,81 +5640,81 @@ ucnv_MBCSGetStarters(const UConverter* cnv,
  * to check whether a byte is a lead byte.
  */
 U_CFUNC UBool
-ucnv_MBCSIsLeadByte(UConverterSharedData *sharedData, char byte) {
-    return MBCS_ENTRY_IS_TRANSITION(sharedData->mbcs.stateTable[0][(uint8_t)byte]);
+ucnv_MBCSIsLeadByte(UConverter_Shared_معلومات *shared_معلومات, حرف byte) {
+    أرجع MBCS_ثبت_IS_TRANSITION(shared_معلومات->mbcs.state_جدول[0][(uint8_t)byte]);
 }
 
-static void U_CALLCONV
-ucnv_MBCSWriteSub(UConverterFromUnicodeArgs *pArgs,
-              int32_t offsetIndex,
-              UErrorCode *pErrorCode) {
-    UConverter *cnv=pArgs->converter;
-    char *p, *subchar;
-    char buffer[4];
+ساكن فراغ U_CALLCONV
+ucnv_MBCSWriteSub(UConverter_From_Unicode_دلیلونه *p_دلیلونه,
+              int32_t دننه_واټن_شاخص,
+              UError_کوډ *p_Error_کوډ) {
+    UConverter *cnv=p_دلیلونه->converter;
+    حرف *p, *subchar;
+    حرف بفر[4];
     int32_t length;
 
     /* first, select between subChar and subChar1 */
-    if( cnv->subChar1!=0 &&
-        (cnv->sharedData->mbcs.extIndexes!=nullptr ?
+    إذا( cnv->subChar1!=0 &&
+        (cnv->shared_معلومات->mbcs.extIndexes!=تش_اشاره ?
             cnv->useSubChar1 :
-            (cnv->invalidUCharBuffer[0]<=0xff))
+            (cnv->invalid_UChar_بفر[0]<=0xff))
     ) {
         /* select subChar1 if it is set (not 0) and the unmappable Unicode code point is up to U+00ff (IBM MBCS behavior) */
-        subchar = reinterpret_cast<char*>(&cnv->subChar1);
+        subchar = reinterpret_cast<حرف*>(&cnv->subChar1);
         length=1;
-    } else {
+    } وإلا {
         /* select subChar in all other cases */
-        subchar = reinterpret_cast<char*>(cnv->subChars);
+        subchar = reinterpret_cast<حرف*>(cnv->subChars);
         length=cnv->subCharLen;
     }
 
     /* reset the selector for the next code point */
-    cnv->useSubChar1=false;
+    cnv->useSubChar1=خطأ;
 
-    if (cnv->sharedData->mbcs.outputType == MBCS_OUTPUT_2_SISO) {
-        p=buffer;
+    إذا (cnv->shared_معلومات->mbcs.outputType == MBCS_OUTPUT_2_SISO) {
+        p=بفر;
 
         /* fromUnicodeStatus contains prevLength */
-        switch(length) {
-        case 1:
-            if(cnv->fromUnicodeStatus==2) {
+        بدل(length) {
+        حالة 1:
+            إذا(cnv->from_Unicode_حالت==2) {
                 /* DBCS mode and SBCS sub char: change to SBCS */
-                cnv->fromUnicodeStatus=1;
+                cnv->from_Unicode_حالت=1;
                 *p++=UCNV_SI;
             }
             *p++=subchar[0];
-            break;
-        case 2:
-            if(cnv->fromUnicodeStatus<=1) {
+            اكسر;
+        حالة 2:
+            إذا(cnv->from_Unicode_حالت<=1) {
                 /* SBCS mode and DBCS sub char: change to DBCS */
-                cnv->fromUnicodeStatus=2;
+                cnv->from_Unicode_حالت=2;
                 *p++=UCNV_SO;
             }
             *p++=subchar[0];
             *p++=subchar[1];
-            break;
-        default:
-            *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-            return;
+            اكسر;
+        افتراضي:
+            *p_Error_کوډ=U_ILLEGAL_دلیل_ERROR;
+            أرجع;
         }
-        subchar=buffer;
-        length = static_cast<int32_t>(p - buffer);
+        subchar=بفر;
+        length = static_cast<int32_t>(p - بفر);
     }
 
-    ucnv_cbFromUWriteBytes(pArgs, subchar, length, offsetIndex, pErrorCode);
+    ucnv_cb_From_UWrite_بایټونه(p_دلیلونه, subchar, length, دننه_واټن_شاخص, p_Error_کوډ);
 }
 
 U_CFUNC UConverterType
-ucnv_MBCSGetType(const UConverter* converter) {
+ucnv_MBCSGetType(ثابت UConverter* converter) {
     /* SBCS, DBCS, and EBCDIC_STATEFUL are replaced by MBCS, but here we cheat a little */
-    if(converter->sharedData->mbcs.countStates==1) {
-        return (UConverterType)UCNV_SBCS;
-    } else if((converter->sharedData->mbcs.outputType&0xff)==MBCS_OUTPUT_2_SISO) {
-        return (UConverterType)UCNV_EBCDIC_STATEFUL;
-    } else if(converter->sharedData->staticData->minBytesPerChar==2 && converter->sharedData->staticData->maxBytesPerChar==2) {
-        return (UConverterType)UCNV_DBCS;
+    إذا(converter->shared_معلومات->mbcs.شمېر_حالتونه==1) {
+        أرجع (UConverterType)UCNV_SBCS;
+    } وإلا إذا((converter->shared_معلومات->mbcs.outputType&0xff)==MBCS_OUTPUT_2_SISO) {
+        أرجع (UConverterType)UCNV_EBCDIC_STATEFUL;
+    } وإلا إذا(converter->shared_معلومات->static_معلومات->min_بایټونه_فی_Char==2 && converter->shared_معلومات->static_معلومات->max_بایټونه_فی_Char==2) {
+        أرجع (UConverterType)UCNV_DBCS;
     }
-    return (UConverterType)UCNV_MBCS;
+    أرجع (UConverterType)UCNV_MBCS;
 }
 
-#endif /* #if !UCONFIG_NO_LEGACY_CONVERSION */
+#د_که_پای /* #if !UCONFIG_NO_LEGACY_CONVERSION */

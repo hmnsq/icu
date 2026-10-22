@@ -14,14 +14,14 @@
 *   created by: Markus W. Scherer
 */
 
-#include "unicode/utypes.h"
-#include "unicode/unistr.h"
-#include "unicode/uscript.h"
-#include "unicode/utf16.h"
-#include "ustr_imp.h"
-#include "cmemory.h"
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/unistr.h"
+#ضمن "unicode/uscript.h"
+#ضمن "unicode/utf16.h"
+#ضمن "ustr_imp.h"
+#ضمن "cmemory.h"
 
-namespace {
+نطاق {
 
 // Script metadata (script properties).
 // See http://unicode.org/cldr/trac/browser/trunk/common/properties/scriptMetadata.txt
@@ -30,18 +30,18 @@ namespace {
 // Bits 20.. 0: sample character
 
 // Bits 23..21: usage
-const int32_t UNKNOWN = 1 << 21;
-const int32_t EXCLUSION = 2 << 21;
-const int32_t LIMITED_USE = 3 << 21;
+ثابت int32_t UNKNOWN = 1 << 21;
+ثابت int32_t EXCLUSION = 2 << 21;
+ثابت int32_t LIMITED_USE = 3 << 21;
 // st int32_t ASPIRATIONAL = 4 << 21; -- not used any more since Unicode 10
-const int32_t RECOMMENDED = 5 << 21;
+ثابت int32_t RECOMMENDED = 5 << 21;
 
 // Bits 31..24: Single-bit flags
-const int32_t RTL = 1 << 24;
-const int32_t LB_LETTERS = 1 << 25;
-const int32_t CASED = 1 << 26;
+ثابت int32_t RTL = 1 << 24;
+ثابت int32_t LB_LETTERS = 1 << 25;
+ثابت int32_t CASED = 1 << 26;
 
-const int32_t SCRIPT_PROPS[] = {
+ثابت int32_t SCRIPT_PROPS[] = {
     // Begin copy-paste output from
     // tools/trunk/unicode/py/parsescriptmetadata.py
     0x0040 | RECOMMENDED,  // Zyyy
@@ -262,63 +262,63 @@ const int32_t SCRIPT_PROPS[] = {
     // End copy-paste from parsescriptmetadata.py
 };
 
-int32_t getScriptProps(UScriptCode script) {
-    if (0 <= script && script < UPRV_LENGTHOF(SCRIPT_PROPS)) {
-        return SCRIPT_PROPS[script];
-    } else {
-        return 0;
+int32_t getScriptProps(UScript_کوډ script) {
+    إذا (0 <= script && script < UPRV_LENGTHOF(SCRIPT_PROPS)) {
+        أرجع SCRIPT_PROPS[script];
+    } وإلا {
+        أرجع 0;
     }
 }
 
 }  // namespace
 
 U_CAPI int32_t U_EXPORT2
-uscript_getSampleString(UScriptCode script, char16_t *dest, int32_t capacity, UErrorCode *pErrorCode) {
-    if(U_FAILURE(*pErrorCode)) { return 0; }
-    if(capacity < 0 || (capacity > 0 && dest == nullptr)) {
-        *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+uscript_getSampleString(UScript_کوډ script, char16_t *dest, int32_t capacity, UError_کوډ *p_Error_کوډ) {
+    إذا(U_FAILURE(*p_Error_کوډ)) { أرجع 0; }
+    إذا(capacity < 0 || (capacity > 0 && dest == تش_اشاره)) {
+        *p_Error_کوډ = U_ILLEGAL_دلیل_ERROR;
+        أرجع 0;
     }
     int32_t sampleChar = getScriptProps(script) & 0x1fffff;
     int32_t length;
-    if(sampleChar == 0) {
+    إذا(sampleChar == 0) {
         length = 0;
-    } else {
-        length = U16_LENGTH(sampleChar);
-        if(length <= capacity) {
+    } وإلا {
+        length = U16_اوږدتیا(sampleChar);
+        إذا(length <= capacity) {
             int32_t i = 0;
             U16_APPEND_UNSAFE(dest, i, sampleChar);
         }
     }
-    return u_terminateUChars(dest, capacity, length, pErrorCode);
+    أرجع u_terminateUChars(dest, capacity, length, p_Error_کوډ);
 }
 
 U_COMMON_API icu::UnicodeString U_EXPORT2
-uscript_getSampleUnicodeString(UScriptCode script) {
+uscript_getSampleUnicodeString(UScript_کوډ script) {
     icu::UnicodeString sample;
     int32_t sampleChar = getScriptProps(script) & 0x1fffff;
-    if(sampleChar != 0) {
+    إذا(sampleChar != 0) {
         sample.append(sampleChar);
     }
-    return sample;
+    أرجع sample;
 }
 
 U_CAPI UScriptUsage U_EXPORT2
-uscript_getUsage(UScriptCode script) {
-    return (UScriptUsage)((getScriptProps(script) >> 21) & 7);
+uscript_getUsage(UScript_کوډ script) {
+    أرجع (UScriptUsage)((getScriptProps(script) >> 21) & 7);
 }
 
 U_CAPI UBool U_EXPORT2
-uscript_isRightToLeft(UScriptCode script) {
-    return (getScriptProps(script) & RTL) != 0;
+uscript_is_ښی_منزل_کیڼ(UScript_کوډ script) {
+    أرجع (getScriptProps(script) & RTL) != 0;
 }
 
 U_CAPI UBool U_EXPORT2
-uscript_breaksBetweenLetters(UScriptCode script) {
-    return (getScriptProps(script) & LB_LETTERS) != 0;
+uscript_breaksBetweenLetters(UScript_کوډ script) {
+    أرجع (getScriptProps(script) & LB_LETTERS) != 0;
 }
 
 U_CAPI UBool U_EXPORT2
-uscript_isCased(UScriptCode script) {
-    return (getScriptProps(script) & CASED) != 0;
+uscript_isCased(UScript_کوډ script) {
+    أرجع (getScriptProps(script) & CASED) != 0;
 }

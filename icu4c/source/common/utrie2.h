@@ -16,19 +16,19 @@
 *   created by: Markus W. Scherer
 */
 
-#ifndef __UTRIE2_H__
-#define __UTRIE2_H__
+#که_نه_تعریف_شوی __UTRIE2_H__
+#تعریف_کړه __UTRIE2_H__
 
-#include "unicode/utypes.h"
-#include "unicode/utf8.h"
-#include "putilimp.h"
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/utf8.h"
+#ضمن "putilimp.h"
 
 U_CDECL_BEGIN
 
-struct UTrie;  /* forward declaration */
-#ifndef __UTRIE_H__
-typedef struct UTrie UTrie;
-#endif
+بنية UTrie;  /* forward declaration */
+#که_نه_تعریف_شوی __UTRIE_H__
+تعريفنوع بنية UTrie UTrie;
+#د_که_پای
 
 /**
  * \file
@@ -62,23 +62,23 @@ typedef struct UTrie UTrie;
  * Trie structure.
  * Use only with public API macros and functions.
  */
-struct UTrie2;
-typedef struct UTrie2 UTrie2;
+بنية UTrie2;
+تعريفنوع بنية UTrie2 UTrie2;
 
 /* Public UTrie2 API functions: read-only access ---------------------------- */
 
 /**
  * Selectors for the width of a UTrie2 data value.
  */
-enum UTrie2ValueBits {
+تعداد UTrie2_ارزښت_بټونه {
     /** 16 bits per UTrie2 data value. */
-    UTRIE2_16_VALUE_BITS,
+    UTRIE2_16_ارزښت_بټونه,
     /** 32 bits per UTrie2 data value. */
-    UTRIE2_32_VALUE_BITS,
+    UTRIE2_32_ارزښت_بټونه,
     /** Number of selectors for the width of UTrie2 data values. */
-    UTRIE2_COUNT_VALUE_BITS
+    UTRIE2_شمېر_ارزښت_بټونه
 };
-typedef enum UTrie2ValueBits UTrie2ValueBits;
+تعريفنوع تعداد UTrie2_ارزښت_بټونه UTrie2_ارزښت_بټونه;
 
 /**
  * Open a frozen trie from its serialized from, stored in 32-bit-aligned memory.
@@ -100,9 +100,9 @@ typedef enum UTrie2ValueBits UTrie2ValueBits;
  * @see utrie2_serialize
  */
 U_CAPI UTrie2 * U_EXPORT2
-utrie2_openFromSerialized(UTrie2ValueBits valueBits,
-                          const void *data, int32_t length, int32_t *pActualLength,
-                          UErrorCode *pErrorCode);
+utrie2_openFromSerialized(UTrie2_ارزښت_بټونه ارزښت_بټونه,
+                          ثابت فراغ *معلومات, int32_t اوږدتیا, int32_t *p_Actual_اوږدتیا,
+                          UError_کوډ *p_Error_کوډ);
 
 /**
  * Open a frozen, empty "dummy" trie.
@@ -126,9 +126,9 @@ utrie2_openFromSerialized(UTrie2ValueBits valueBits,
  * @see utrie2_open
  */
 U_CAPI UTrie2 * U_EXPORT2
-utrie2_openDummy(UTrie2ValueBits valueBits,
-                 uint32_t initialValue, uint32_t errorValue,
-                 UErrorCode *pErrorCode);
+utrie2_openDummy(UTrie2_ارزښت_بټونه ارزښت_بټونه,
+                 uint32_t initial_ارزښت, uint32_t error_ارزښت,
+                 UError_کوډ *p_Error_کوډ);
 
 /**
  * Get a value from a code point as stored in the trie.
@@ -141,7 +141,7 @@ utrie2_openDummy(UTrie2ValueBits valueBits,
  * @return the value
  */
 U_CAPI uint32_t U_EXPORT2
-utrie2_get32(const UTrie2 *trie, UChar32 c);
+utrie2_get32(ثابت UTrie2 *trie, UChar32 c);
 
 /* enumeration callback types */
 
@@ -153,8 +153,8 @@ utrie2_get32(const UTrie2 *trie, UChar32 c);
  * @param value a value from the trie
  * @return the value that is to be passed on to the UTrie2EnumRange function
  */
-typedef uint32_t U_CALLCONV
-UTrie2EnumValue(const void *context, uint32_t value);
+تعريفنوع uint32_t U_CALLCONV
+UTrie2_Enum_ارزښت(ثابت فراغ *context, uint32_t ارزښت_2);
 
 /**
  * Callback from utrie2_enum(), is called for each contiguous range
@@ -169,8 +169,8 @@ UTrie2EnumValue(const void *context, uint32_t value);
  * @param value the value that is set for all code points in [start..end]
  * @return false to stop the enumeration
  */
-typedef UBool U_CALLCONV
-UTrie2EnumRange(const void *context, UChar32 start, UChar32 end, uint32_t value);
+تعريفنوع UBool U_CALLCONV
+UTrie2EnumRange(ثابت فراغ *context, UChar32 پیل, UChar32 پای_ټکی, uint32_t ارزښت_2);
 
 /**
  * Enumerate efficiently all values in a trie.
@@ -190,9 +190,9 @@ UTrie2EnumRange(const void *context, UChar32 start, UChar32 end, uint32_t value)
  *                  of code points with the same (transformed) value
  * @param context an opaque pointer that is passed on to the callback functions
  */
-U_CAPI void U_EXPORT2
-utrie2_enum(const UTrie2 *trie,
-            UTrie2EnumValue *enumValue, UTrie2EnumRange *enumRange, const void *context);
+U_CAPI فراغ U_EXPORT2
+utrie2_enum(ثابت UTrie2 *trie,
+            UTrie2_Enum_ارزښت *enum_ارزښت, UTrie2EnumRange *enumRange, ثابت فراغ *context);
 
 /* Building a trie ---------------------------------------------------------- */
 
@@ -208,7 +208,7 @@ utrie2_enum(const UTrie2 *trie,
  * @return a pointer to the allocated and initialized new trie
  */
 U_CAPI UTrie2 * U_EXPORT2
-utrie2_open(uint32_t initialValue, uint32_t errorValue, UErrorCode *pErrorCode);
+utrie2_open(uint32_t initial_ارزښت, uint32_t error_ارزښت, UError_کوډ *p_Error_کوډ);
 
 /**
  * Clone a trie.
@@ -219,7 +219,7 @@ utrie2_open(uint32_t initialValue, uint32_t errorValue, UErrorCode *pErrorCode);
  * @return a pointer to the new trie clone
  */
 U_CAPI UTrie2 * U_EXPORT2
-utrie2_clone(const UTrie2 *other, UErrorCode *pErrorCode);
+utrie2_clone(ثابت UTrie2 *other, UError_کوډ *p_Error_کوډ);
 
 /**
  * Clone a trie. The clone will be mutable/writable even if the other trie
@@ -231,14 +231,14 @@ utrie2_clone(const UTrie2 *other, UErrorCode *pErrorCode);
  * @return a pointer to the new trie clone
  */
 U_CAPI UTrie2 * U_EXPORT2
-utrie2_cloneAsThawed(const UTrie2 *other, UErrorCode *pErrorCode);
+utrie2_cloneAsThawed(ثابت UTrie2 *other, UError_کوډ *p_Error_کوډ);
 
 /**
  * Close a trie and release associated memory.
  *
  * @param trie the trie
  */
-U_CAPI void U_EXPORT2
+U_CAPI فراغ U_EXPORT2
 utrie2_close(UTrie2 *trie);
 
 /**
@@ -250,8 +250,8 @@ utrie2_close(UTrie2 *trie);
  * @param pErrorCode an in/out ICU UErrorCode; among other possible error codes:
  * - U_NO_WRITE_PERMISSION if the trie is frozen
  */
-U_CAPI void U_EXPORT2
-utrie2_set32(UTrie2 *trie, UChar32 c, uint32_t value, UErrorCode *pErrorCode);
+U_CAPI فراغ U_EXPORT2
+utrie2_set32(UTrie2 *trie, UChar32 c, uint32_t ارزښت_2, UError_کوډ *p_Error_کوډ);
 
 /**
  * Set a value in a range of code points [start..end].
@@ -266,11 +266,11 @@ utrie2_set32(UTrie2 *trie, UChar32 c, uint32_t value, UErrorCode *pErrorCode);
  * @param pErrorCode an in/out ICU UErrorCode; among other possible error codes:
  * - U_NO_WRITE_PERMISSION if the trie is frozen
  */
-U_CAPI void U_EXPORT2
-utrie2_setRange32(UTrie2 *trie,
-                  UChar32 start, UChar32 end,
-                  uint32_t value, UBool overwrite,
-                  UErrorCode *pErrorCode);
+U_CAPI فراغ U_EXPORT2
+utrie2_سېټ_Range32(UTrie2 *trie,
+                  UChar32 پیل, UChar32 پای_ټکی,
+                  uint32_t ارزښت_2, UBool overwrite,
+                  UError_کوډ *p_Error_کوډ);
 
 /**
  * Freeze a trie. Make it immutable (read-only) and compact it,
@@ -291,8 +291,8 @@ utrie2_setRange32(UTrie2 *trie,
  *
  * @see utrie2_cloneAsThawed
  */
-U_CAPI void U_EXPORT2
-utrie2_freeze(UTrie2 *trie, UTrie2ValueBits valueBits, UErrorCode *pErrorCode);
+U_CAPI فراغ U_EXPORT2
+utrie2_freeze(UTrie2 *trie, UTrie2_ارزښت_بټونه ارزښت_بټونه, UError_کوډ *p_Error_کوډ);
 
 /**
  * Test if the trie is frozen. (See utrie2_freeze().)
@@ -302,7 +302,7 @@ utrie2_freeze(UTrie2 *trie, UTrie2ValueBits valueBits, UErrorCode *pErrorCode);
  *         and for use with fast macros
  */
 U_CAPI UBool U_EXPORT2
-utrie2_isFrozen(const UTrie2 *trie);
+utrie2_isFrozen(ثابت UTrie2 *trie);
 
 /**
  * Serialize a frozen trie into 32-bit aligned memory.
@@ -323,9 +323,9 @@ utrie2_isFrozen(const UTrie2 *trie);
  * @see utrie2_openFromSerialized()
  */
 U_CAPI int32_t U_EXPORT2
-utrie2_serialize(const UTrie2 *trie,
-                 void *data, int32_t capacity,
-                 UErrorCode *pErrorCode);
+utrie2_serialize(ثابت UTrie2 *trie,
+                 فراغ *معلومات, int32_t ظرفیت,
+                 UError_کوډ *p_Error_کوډ);
 
 /* Public UTrie2 API: miscellaneous functions ------------------------------- */
 
@@ -340,7 +340,7 @@ utrie2_serialize(const UTrie2 *trie,
  * @return The frozen UTrie2 with the same values as the UTrie.
  */
 U_CAPI UTrie2 * U_EXPORT2
-utrie2_fromUTrie(const UTrie *trie1, uint32_t errorValue, UErrorCode *pErrorCode);
+utrie2_fromUTrie(ثابت UTrie *trie1, uint32_t error_ارزښت, UError_کوډ *p_Error_کوډ);
 
 /* Public UTrie2 API macros ------------------------------------------------- */
 
@@ -357,7 +357,7 @@ utrie2_fromUTrie(const UTrie *trie1, uint32_t errorValue, UErrorCode *pErrorCode
  * @param c (UChar32, in) the input code point
  * @return (uint16_t) The code point's trie value.
  */
-#define UTRIE2_GET16(trie, c) _UTRIE2_GET((trie), index, (trie)->indexLength, (c))
+#تعریف_کړه UTRIE2_GET16(trie, c) _UTRIE2_GET((trie), شاخص, (trie)->شاخص_اوږدتیا, (c))
 
 /**
  * Return a 32-bit trie value from a code point, with range checking.
@@ -367,7 +367,7 @@ utrie2_fromUTrie(const UTrie *trie1, uint32_t errorValue, UErrorCode *pErrorCode
  * @param c (UChar32, in) the input code point
  * @return (uint32_t) The code point's trie value.
  */
-#define UTRIE2_GET32(trie, c) _UTRIE2_GET((trie), data32, 0, (c))
+#تعریف_کړه UTRIE2_GET32(trie, c) _UTRIE2_GET((trie), data32, 0, (c))
 
 /**
  * UTF-16: Get the next code point (UChar32 c, out), post-increment src,
@@ -379,7 +379,7 @@ utrie2_fromUTrie(const UTrie *trie1, uint32_t errorValue, UErrorCode *pErrorCode
  * @param c (UChar32, out) variable for the code point
  * @param result (uint16_t, out) uint16_t variable for the trie lookup result
  */
-#define UTRIE2_U16_NEXT16(trie, src, limit, c, result) _UTRIE2_U16_NEXT(trie, index, src, limit, c, result)
+#تعریف_کړه UTRIE2_U16_NEXT16(trie, src, حد, c, پایله) UTRIE2_U16_بل(trie, شاخص, src, حد, c, پایله)
 
 /**
  * UTF-16: Get the next code point (UChar32 c, out), post-increment src,
@@ -391,7 +391,7 @@ utrie2_fromUTrie(const UTrie *trie1, uint32_t errorValue, UErrorCode *pErrorCode
  * @param c (UChar32, out) variable for the code point
  * @param result (uint32_t, out) uint32_t variable for the trie lookup result
  */
-#define UTRIE2_U16_NEXT32(trie, src, limit, c, result) _UTRIE2_U16_NEXT(trie, data32, src, limit, c, result)
+#تعریف_کړه UTRIE2_U16_NEXT32(trie, src, حد, c, پایله) UTRIE2_U16_بل(trie, data32, src, حد, c, پایله)
 
 /**
  * UTF-16: Get the previous code point (UChar32 c, out), pre-decrement src,
@@ -403,7 +403,7 @@ utrie2_fromUTrie(const UTrie *trie1, uint32_t errorValue, UErrorCode *pErrorCode
  * @param c (UChar32, out) variable for the code point
  * @param result (uint16_t, out) uint16_t variable for the trie lookup result
  */
-#define UTRIE2_U16_PREV16(trie, start, src, c, result) _UTRIE2_U16_PREV(trie, index, start, src, c, result)
+#تعریف_کړه UTRIE2_U16_PREV16(trie, پیل, src, c, پایله) _UTRIE2_U16_PREV(trie, شاخص, پیل, src, c, پایله)
 
 /**
  * UTF-16: Get the previous code point (UChar32 c, out), pre-decrement src,
@@ -415,7 +415,7 @@ utrie2_fromUTrie(const UTrie *trie1, uint32_t errorValue, UErrorCode *pErrorCode
  * @param c (UChar32, out) variable for the code point
  * @param result (uint32_t, out) uint32_t variable for the trie lookup result
  */
-#define UTRIE2_U16_PREV32(trie, start, src, c, result) _UTRIE2_U16_PREV(trie, data32, start, src, c, result)
+#تعریف_کړه UTRIE2_U16_PREV32(trie, پیل, src, c, پایله) _UTRIE2_U16_PREV(trie, data32, پیل, src, c, پایله)
 
 /**
  * UTF-8: Post-increment src and get a 16-bit value from the trie.
@@ -425,8 +425,8 @@ utrie2_fromUTrie(const UTrie *trie1, uint32_t errorValue, UErrorCode *pErrorCode
  * @param limit (const char *, in) the limit pointer for the text (must not be NULL)
  * @param result (uint16_t, out) uint16_t variable for the trie lookup result
  */
-#define UTRIE2_U8_NEXT16(trie, src, limit, result)\
-    _UTRIE2_U8_NEXT(trie, data16, index, src, limit, result)
+#تعریف_کړه UTRIE2_U8_NEXT16(trie, src, حد, پایله)\
+    UTRIE2_U8_بل(trie, data16, شاخص, src, حد, پایله)
 
 /**
  * UTF-8: Post-increment src and get a 32-bit value from the trie.
@@ -436,8 +436,8 @@ utrie2_fromUTrie(const UTrie *trie1, uint32_t errorValue, UErrorCode *pErrorCode
  * @param limit (const char *, in) the limit pointer for the text (must not be NULL)
  * @param result (uint16_t, out) uint32_t variable for the trie lookup result
  */
-#define UTRIE2_U8_NEXT32(trie, src, limit, result) \
-    _UTRIE2_U8_NEXT(trie, data32, data32, src, limit, result)
+#تعریف_کړه UTRIE2_U8_NEXT32(trie, src, حد, پایله) \
+    UTRIE2_U8_بل(trie, data32, data32, src, حد, پایله)
 
 /**
  * UTF-8: Pre-decrement src and get a 16-bit value from the trie.
@@ -447,8 +447,8 @@ utrie2_fromUTrie(const UTrie *trie1, uint32_t errorValue, UErrorCode *pErrorCode
  * @param src (const char *, in/out) the source text pointer
  * @param result (uint16_t, out) uint16_t variable for the trie lookup result
  */
-#define UTRIE2_U8_PREV16(trie, start, src, result) \
-    _UTRIE2_U8_PREV(trie, data16, index, start, src, result)
+#تعریف_کړه UTRIE2_U8_PREV16(trie, پیل, src, پایله) \
+    _UTRIE2_U8_PREV(trie, data16, شاخص, پیل, src, پایله)
 
 /**
  * UTF-8: Pre-decrement src and get a 32-bit value from the trie.
@@ -458,8 +458,8 @@ utrie2_fromUTrie(const UTrie *trie1, uint32_t errorValue, UErrorCode *pErrorCode
  * @param src (const char *, in/out) the source text pointer
  * @param result (uint16_t, out) uint32_t variable for the trie lookup result
  */
-#define UTRIE2_U8_PREV32(trie, start, src, result) \
-    _UTRIE2_U8_PREV(trie, data32, data32, start, src, result)
+#تعریف_کړه UTRIE2_U8_PREV32(trie, پیل, src, پایله) \
+    _UTRIE2_U8_PREV(trie, data32, data32, پیل, src, پایله)
 
 /* Public UTrie2 API: optimized UTF-16 access ------------------------------- */
 
@@ -499,7 +499,7 @@ utrie2_fromUTrie(const UTrie *trie1, uint32_t errorValue, UErrorCode *pErrorCode
  * @return the value
  */
 U_CAPI uint32_t U_EXPORT2
-utrie2_get32FromLeadSurrogateCodeUnit(const UTrie2 *trie, UChar32 c);
+utrie2_get32_From_Lead_Surrogate_کوډ_Unit(ثابت UTrie2 *trie, UChar32 c);
 
 /**
  * Enumerate the trie values for the 1024=0x400 code points
@@ -526,10 +526,10 @@ utrie2_get32FromLeadSurrogateCodeUnit(const UTrie2 *trie, UChar32 c);
  *                  of code points with the same (transformed) value
  * @param context an opaque pointer that is passed on to the callback functions
  */
-U_CAPI void U_EXPORT2
-utrie2_enumForLeadSurrogate(const UTrie2 *trie, UChar32 lead,
-                            UTrie2EnumValue *enumValue, UTrie2EnumRange *enumRange,
-                            const void *context);
+U_CAPI فراغ U_EXPORT2
+utrie2_enumForLeadSurrogate(ثابت UTrie2 *trie, UChar32 lead,
+                            UTrie2_Enum_ارزښت *enum_ارزښت, UTrie2EnumRange *enumRange,
+                            ثابت فراغ *context);
 
 /**
  * Set a value for a lead surrogate code unit.
@@ -540,10 +540,10 @@ utrie2_enumForLeadSurrogate(const UTrie2 *trie, UChar32 lead,
  * @param pErrorCode an in/out ICU UErrorCode; among other possible error codes:
  * - U_NO_WRITE_PERMISSION if the trie is frozen
  */
-U_CAPI void U_EXPORT2
-utrie2_set32ForLeadSurrogateCodeUnit(UTrie2 *trie,
-                                     UChar32 lead, uint32_t value,
-                                     UErrorCode *pErrorCode);
+U_CAPI فراغ U_EXPORT2
+utrie2_set32_For_Lead_Surrogate_کوډ_Unit(UTrie2 *trie,
+                                     UChar32 lead, uint32_t ارزښت_2,
+                                     UError_کوډ *p_Error_کوډ);
 
 /**
  * Return a 16-bit trie value from a UTF-16 single/lead code unit (<=U+ffff).
@@ -554,7 +554,7 @@ utrie2_set32ForLeadSurrogateCodeUnit(UTrie2 *trie,
  * @param c (UChar32, in) the input code unit, must be 0<=c<=U+ffff
  * @return (uint16_t) The code unit's trie value.
  */
-#define UTRIE2_GET16_FROM_U16_SINGLE_LEAD(trie, c) _UTRIE2_GET_FROM_U16_SINGLE_LEAD((trie), index, c)
+#تعریف_کړه UTRIE2_GET16_FROM_U16_SINGLE_LEAD(trie, c) _UTRIE2_GET_FROM_U16_SINGLE_LEAD((trie), شاخص, c)
 
 /**
  * Return a 32-bit trie value from a UTF-16 single/lead code unit (<=U+ffff).
@@ -565,7 +565,7 @@ utrie2_set32ForLeadSurrogateCodeUnit(UTrie2 *trie,
  * @param c (UChar32, in) the input code unit, must be 0<=c<=U+ffff
  * @return (uint32_t) The code unit's trie value.
  */
-#define UTRIE2_GET32_FROM_U16_SINGLE_LEAD(trie, c) _UTRIE2_GET_FROM_U16_SINGLE_LEAD((trie), data32, c)
+#تعریف_کړه UTRIE2_GET32_FROM_U16_SINGLE_LEAD(trie, c) _UTRIE2_GET_FROM_U16_SINGLE_LEAD((trie), data32, c)
 
 /**
  * Return a 16-bit trie value from a supplementary code point (U+10000..U+10ffff).
@@ -574,7 +574,7 @@ utrie2_set32ForLeadSurrogateCodeUnit(UTrie2 *trie,
  * @param c (UChar32, in) the input code point, must be U+10000<=c<=U+10ffff
  * @return (uint16_t) The code point's trie value.
  */
-#define UTRIE2_GET16_FROM_SUPP(trie, c) _UTRIE2_GET_FROM_SUPP((trie), index, c)
+#تعریف_کړه UTRIE2_GET16_FROM_SUPP(trie, c) _UTRIE2_GET_FROM_SUPP((trie), شاخص, c)
 
 /**
  * Return a 32-bit trie value from a supplementary code point (U+10000..U+10ffff).
@@ -583,63 +583,63 @@ utrie2_set32ForLeadSurrogateCodeUnit(UTrie2 *trie,
  * @param c (UChar32, in) the input code point, must be U+10000<=c<=U+10ffff
  * @return (uint32_t) The code point's trie value.
  */
-#define UTRIE2_GET32_FROM_SUPP(trie, c) _UTRIE2_GET_FROM_SUPP((trie), data32, c)
+#تعریف_کړه UTRIE2_GET32_FROM_SUPP(trie, c) _UTRIE2_GET_FROM_SUPP((trie), data32, c)
 
-U_CDECL_END
+U_CDECL_پای_ټکی
 
 /* C++ convenience wrappers ------------------------------------------------- */
 
-#ifdef __cplusplus
+#که_تعریف_شوی __cplusplus
 
-#include "unicode/uobject.h"
-#include "unicode/utf.h"
+#ضمن "unicode/uobject.h"
+#ضمن "unicode/utf.h"
 
 U_NAMESPACE_BEGIN
 
 // Use the Forward/Backward subclasses below.
-class UTrie2StringIterator : public UMemory {
-public:
-    UTrie2StringIterator(const UTrie2 *t, const char16_t *p) :
-        trie(t), codePointStart(p), codePointLimit(p), codePoint(U_SENTINEL) {}
+class UTrie2StringIterator : عام UMemory {
+عام:
+    UTrie2StringIterator(ثابت UTrie2 *t, ثابت char16_t *p) :
+        trie(t), کوډ_ټکی_پیل(p), کوډ_ټکی_حد(p), کوډ_ټکی(U_SENTINEL) {}
 
-    const UTrie2 *trie;
-    const char16_t *codePointStart, *codePointLimit;
-    UChar32 codePoint;
+    ثابت UTrie2 *trie;
+    ثابت char16_t *کوډ_ټکی_پیل, *کوډ_ټکی_حد;
+    UChar32 کوډ_ټکی;
 };
 
-class BackwardUTrie2StringIterator : public UTrie2StringIterator {
-public:
-    BackwardUTrie2StringIterator(const UTrie2 *t, const char16_t *s, const char16_t *p) :
-        UTrie2StringIterator(t, p), start(s) {}
+class BackwardUTrie2StringIterator : عام UTrie2StringIterator {
+عام:
+    BackwardUTrie2StringIterator(ثابت UTrie2 *t, ثابت char16_t *s, ثابت char16_t *p) :
+        UTrie2StringIterator(t, p), پیل(s) {}
 
     uint16_t previous16();
 
-    const char16_t *start;
+    ثابت char16_t *پیل;
 };
 
-class ForwardUTrie2StringIterator : public UTrie2StringIterator {
-public:
+class ForwardUTrie2StringIterator : عام UTrie2StringIterator {
+عام:
     // Iteration limit l can be nullptr.
     // In that case, the caller must detect c==0 and stop.
-    ForwardUTrie2StringIterator(const UTrie2 *t, const char16_t *p, const char16_t *l) :
-        UTrie2StringIterator(t, p), limit(l) {}
+    ForwardUTrie2StringIterator(ثابت UTrie2 *t, ثابت char16_t *p, ثابت char16_t *l) :
+        UTrie2StringIterator(t, p), حد(l) {}
 
     uint16_t next16();
 
-    const char16_t *limit;
+    ثابت char16_t *حد;
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_پای_ټکی
 
-#endif
+#د_که_پای
 
 /* Internal definitions ----------------------------------------------------- */
 
 U_CDECL_BEGIN
 
 /** Build-time trie structure. */
-struct UNewTrie2;
-typedef struct UNewTrie2 UNewTrie2;
+بنية UNewTrie2;
+تعريفنوع بنية UNewTrie2 UNewTrie2;
 
 /*
  * Trie structure definition.
@@ -650,34 +650,34 @@ typedef struct UNewTrie2 UNewTrie2;
  *
  * Or the data table is 32 bits wide and accessed via the data32 pointer.
  */
-struct UTrie2 {
+بنية UTrie2 {
     /* protected: used by macros and functions for reading values */
-    const uint16_t *index;
-    const uint16_t *data16;     /* for fast UTF-8 ASCII access, if 16b data */
-    const uint32_t *data32;     /* NULL if 16b data is used via index */
+    ثابت uint16_t *شاخص;
+    ثابت uint16_t *data16;     /* for fast UTF-8 ASCII access, if 16b data */
+    ثابت uint32_t *data32;     /* NULL if 16b data is used via index */
 
-    int32_t indexLength, dataLength;
-    uint16_t index2NullOffset;  /* 0xffff if there is no dedicated index-2 null block */
-    uint16_t dataNullOffset;
-    uint32_t initialValue;
+    int32_t شاخص_اوږدتیا, معلومات_اوږدتیا;
+    uint16_t index2_Null_دننه_واټن;  /* 0xffff if there is no dedicated index-2 null block */
+    uint16_t معلومات_Null_دننه_واټن;
+    uint32_t initial_ارزښت;
     /** Value returned for out-of-range code points and illegal UTF-8. */
-    uint32_t errorValue;
+    uint32_t error_ارزښت;
 
     /* Start of the last range which ends at U+10ffff, and its value. */
-    UChar32 highStart;
-    int32_t highValueIndex;
+    UChar32 لوړ_پیل;
+    int32_t لوړ_ارزښت_شاخص;
 
     /* private: used by builder and unserialization functions */
-    void *memory;           /* serialized bytes; NULL if not frozen yet */
-    int32_t length;         /* number of serialized bytes at memory; 0 if not frozen yet */
-    UBool isMemoryOwned;    /* true if the trie owns the memory */
+    فراغ *حافظه;           /* serialized bytes; NULL if not frozen yet */
+    int32_t اوږدتیا;         /* number of serialized bytes at memory; 0 if not frozen yet */
+    UBool is_حافظه_Owned;    /* true if the trie owns the memory */
     UBool padding1;
     int16_t padding2;
     UNewTrie2 *newTrie;     /* builder object; NULL when frozen */
 
-#ifdef UTRIE2_DEBUG
-    const char *name;
-#endif
+#که_تعریف_شوی UTRIE2_DEBUG
+    ثابت حرف *name;
+#د_که_پای
 };
 
 /**
@@ -686,39 +686,39 @@ struct UTrie2 {
  * These are needed for the runtime macros but users can treat these as
  * implementation details and skip to the actual public API further below.
  */
-enum {
+تعداد {
     /** Shift size for getting the index-1 table offset. */
-    UTRIE2_SHIFT_1=6+5,
+    UTRIE2_ښويدنه_1=6+5,
 
     /** Shift size for getting the index-2 table offset. */
-    UTRIE2_SHIFT_2=5,
+    UTRIE2_ښويدنه_2=5,
 
     /**
      * Difference between the two shift sizes,
      * for getting an index-1 offset from an index-2 offset. 6=11-5
      */
-    UTRIE2_SHIFT_1_2=UTRIE2_SHIFT_1-UTRIE2_SHIFT_2,
+    UTRIE2_ښويدنه_1_2=UTRIE2_ښويدنه_1-UTRIE2_ښويدنه_2,
 
     /**
      * Number of index-1 entries for the BMP. 32=0x20
      * This part of the index-1 table is omitted from the serialized form.
      */
-    UTRIE2_OMITTED_BMP_INDEX_1_LENGTH=0x10000>>UTRIE2_SHIFT_1,
+    UTRIE2_OMITTED_BMP_شاخص_1_اوږدتیا=0x10000>>UTRIE2_ښويدنه_1,
 
     /** Number of code points per index-1 table entry. 2048=0x800 */
-    UTRIE2_CP_PER_INDEX_1_ENTRY=1<<UTRIE2_SHIFT_1,
+    UTRIE2_CP_فی_شاخص_1_ثبت=1<<UTRIE2_ښويدنه_1,
 
     /** Number of entries in an index-2 block. 64=0x40 */
-    UTRIE2_INDEX_2_BLOCK_LENGTH=1<<UTRIE2_SHIFT_1_2,
+    UTRIE2_شاخص_2_بلاک_اوږدتیا=1<<UTRIE2_ښويدنه_1_2,
 
     /** Mask for getting the lower bits for the in-index-2-block offset. */
-    UTRIE2_INDEX_2_MASK=UTRIE2_INDEX_2_BLOCK_LENGTH-1,
+    UTRIE2_شاخص_2_ماسک=UTRIE2_شاخص_2_بلاک_اوږدتیا-1,
 
     /** Number of entries in a data block. 32=0x20 */
-    UTRIE2_DATA_BLOCK_LENGTH=1<<UTRIE2_SHIFT_2,
+    UTRIE2_معلومات_بلاک_اوږدتیا=1<<UTRIE2_ښويدنه_2,
 
     /** Mask for getting the lower bits for the in-data-block offset. */
-    UTRIE2_DATA_MASK=UTRIE2_DATA_BLOCK_LENGTH-1,
+    UTRIE2_معلومات_ماسک=UTRIE2_معلومات_بلاک_اوږدتیا-1,
 
     /**
      * Shift size for shifting left the index array values.
@@ -726,10 +726,10 @@ enum {
      * of compactability.
      * This requires data blocks to be aligned by UTRIE2_DATA_GRANULARITY.
      */
-    UTRIE2_INDEX_SHIFT=2,
+    UTRIE2_شاخص_ښويدنه=2,
 
     /** The alignment size of a data block. Also the granularity for compaction. */
-    UTRIE2_DATA_GRANULARITY=1<<UTRIE2_INDEX_SHIFT,
+    UTRIE2_معلومات_GRANULARITY=1<<UTRIE2_شاخص_ښويدنه,
 
     /* Fixed layout of the first part of the index array. ------------------- */
 
@@ -737,7 +737,7 @@ enum {
      * The BMP part of the index-2 table is fixed and linear and starts at offset 0.
      * Length=2048=0x800=0x10000>>UTRIE2_SHIFT_2.
      */
-    UTRIE2_INDEX_2_OFFSET=0,
+    UTRIE2_شاخص_2_دننه_واټن=0,
 
     /**
      * The part of the index-2 table for U+D800..U+DBFF stores values for
@@ -745,18 +745,18 @@ enum {
      * Values for lead surrogate code _points_ are indexed with this portion of the table.
      * Length=32=0x20=0x400>>UTRIE2_SHIFT_2. (There are 1024=0x400 lead surrogates.)
      */
-    UTRIE2_LSCP_INDEX_2_OFFSET=0x10000>>UTRIE2_SHIFT_2,
-    UTRIE2_LSCP_INDEX_2_LENGTH=0x400>>UTRIE2_SHIFT_2,
+    UTRIE2_LSCP_شاخص_2_دننه_واټن=0x10000>>UTRIE2_ښويدنه_2,
+    UTRIE2_LSCP_شاخص_2_اوږدتیا=0x400>>UTRIE2_ښويدنه_2,
 
     /** Count the lengths of both BMP pieces. 2080=0x820 */
-    UTRIE2_INDEX_2_BMP_LENGTH=UTRIE2_LSCP_INDEX_2_OFFSET+UTRIE2_LSCP_INDEX_2_LENGTH,
+    UTRIE2_شاخص_2_BMP_اوږدتیا=UTRIE2_LSCP_شاخص_2_دننه_واټن+UTRIE2_LSCP_شاخص_2_اوږدتیا,
 
     /**
      * The 2-byte UTF-8 version of the index-2 table follows at offset 2080=0x820.
      * Length 32=0x20 for lead bytes C0..DF, regardless of UTRIE2_SHIFT_2.
      */
-    UTRIE2_UTF8_2B_INDEX_2_OFFSET=UTRIE2_INDEX_2_BMP_LENGTH,
-    UTRIE2_UTF8_2B_INDEX_2_LENGTH=0x800>>6,  /* U+0800 is the first code point after 2-byte UTF-8 */
+    UTRIE2_UTF8_2_B_شاخص_2_دننه_واټن=UTRIE2_شاخص_2_BMP_اوږدتیا,
+    UTRIE2_UTF8_2_B_شاخص_2_اوږدتیا=0x800>>6,  /* U+0800 is the first code point after 2-byte UTF-8 */
 
     /**
      * The index-1 table, only used for supplementary code points, at offset 2112=0x840.
@@ -770,8 +770,8 @@ enum {
      * Both the index-1 table and the following part of the index-2 table
      * are omitted completely if there is only BMP data.
      */
-    UTRIE2_INDEX_1_OFFSET=UTRIE2_UTF8_2B_INDEX_2_OFFSET+UTRIE2_UTF8_2B_INDEX_2_LENGTH,
-    UTRIE2_MAX_INDEX_1_LENGTH=0x100000>>UTRIE2_SHIFT_1,
+    UTRIE2_شاخص_1_دننه_واټن=UTRIE2_UTF8_2_B_شاخص_2_دننه_واټن+UTRIE2_UTF8_2_B_شاخص_2_اوږدتیا,
+    UTRIE2_MAX_شاخص_1_اوږدتیا=0x100000>>UTRIE2_ښويدنه_1,
 
     /*
      * Fixed layout of the first part of the data array. -----------------------
@@ -783,10 +783,10 @@ enum {
      * Used with linear access for single bytes 0..0xbf for simple error handling.
      * Length 64=0x40, not UTRIE2_DATA_BLOCK_LENGTH.
      */
-    UTRIE2_BAD_UTF8_DATA_OFFSET=0x80,
+    UTRIE2_BAD_UTF8_معلومات_دننه_واټن=0x80,
 
     /** The start of non-linear-ASCII data blocks, at offset 192=0xc0. */
-    UTRIE2_DATA_START_OFFSET=0xc0
+    UTRIE2_معلومات_پیل_دننه_واټن=0xc0
 };
 
 /* Internal functions and macros -------------------------------------------- */
@@ -797,8 +797,8 @@ enum {
  * @internal
  */
 U_CAPI int32_t U_EXPORT2
-utrie2_internalU8NextIndex(const UTrie2 *trie, UChar32 c,
-                           const uint8_t *src, const uint8_t *limit);
+utrie2_دننی_U8_بل_شاخص(ثابت UTrie2 *trie, UChar32 c,
+                           ثابت uint8_t *src, ثابت uint8_t *حد);
 
 /**
  * Internal function for part of the UTRIE2_U8_PREVxx() macro implementations.
@@ -806,150 +806,150 @@ utrie2_internalU8NextIndex(const UTrie2 *trie, UChar32 c,
  * @internal
  */
 U_CAPI int32_t U_EXPORT2
-utrie2_internalU8PrevIndex(const UTrie2 *trie, UChar32 c,
-                           const uint8_t *start, const uint8_t *src);
+utrie2_دننی_U8_Prev_شاخص(ثابت UTrie2 *trie, UChar32 c,
+                           ثابت uint8_t *پیل, ثابت uint8_t *src);
 
 
 /** Internal low-level trie getter. Returns a data index. */
-#define _UTRIE2_INDEX_RAW(offset, trieIndex, c) \
-    (((int32_t)((trieIndex)[(offset)+((c)>>UTRIE2_SHIFT_2)]) \
-    <<UTRIE2_INDEX_SHIFT)+ \
-    ((c)&UTRIE2_DATA_MASK))
+#تعریف_کړه UTRIE2_شاخص_RAW(دننه_واټن, trie_شاخص, c) \
+    (((int32_t)((trie_شاخص)[(دننه_واټن)+((c)>>UTRIE2_ښويدنه_2)]) \
+    <<UTRIE2_شاخص_ښويدنه)+ \
+    ((c)&UTRIE2_معلومات_ماسک))
 
 /** Internal trie getter from a UTF-16 single/lead code unit. Returns the data index. */
-#define _UTRIE2_INDEX_FROM_U16_SINGLE_LEAD(trieIndex, c) _UTRIE2_INDEX_RAW(0, trieIndex, c)
+#تعریف_کړه UTRIE2_شاخص_FROM_U16_SINGLE_LEAD(trie_شاخص, c) UTRIE2_شاخص_RAW(0, trie_شاخص, c)
 
 /** Internal trie getter from a lead surrogate code point (D800..DBFF). Returns the data index. */
-#define _UTRIE2_INDEX_FROM_LSCP(trieIndex, c) \
-    _UTRIE2_INDEX_RAW(UTRIE2_LSCP_INDEX_2_OFFSET-(0xd800>>UTRIE2_SHIFT_2), trieIndex, c)
+#تعریف_کړه UTRIE2_شاخص_FROM_LSCP(trie_شاخص, c) \
+    UTRIE2_شاخص_RAW(UTRIE2_LSCP_شاخص_2_دننه_واټن-(0xd800>>UTRIE2_ښويدنه_2), trie_شاخص, c)
 
 /** Internal trie getter from a BMP code point. Returns the data index. */
-#define _UTRIE2_INDEX_FROM_BMP(trieIndex, c) \
-    _UTRIE2_INDEX_RAW(U_IS_LEAD(c) ? UTRIE2_LSCP_INDEX_2_OFFSET-(0xd800>>UTRIE2_SHIFT_2) : 0, \
-                      trieIndex, c)
+#تعریف_کړه UTRIE2_شاخص_FROM_BMP(trie_شاخص, c) \
+    UTRIE2_شاخص_RAW(U_IS_LEAD(c) ? UTRIE2_LSCP_شاخص_2_دننه_واټن-(0xd800>>UTRIE2_ښويدنه_2) : 0, \
+                      trie_شاخص, c)
 
 /** Internal trie getter from a supplementary code point below highStart. Returns the data index. */
-#define _UTRIE2_INDEX_FROM_SUPP(trieIndex, c) \
-    (((int32_t)((trieIndex)[ \
-        (trieIndex)[(UTRIE2_INDEX_1_OFFSET-UTRIE2_OMITTED_BMP_INDEX_1_LENGTH)+ \
-                      ((c)>>UTRIE2_SHIFT_1)]+ \
-        (((c)>>UTRIE2_SHIFT_2)&UTRIE2_INDEX_2_MASK)]) \
-    <<UTRIE2_INDEX_SHIFT)+ \
-    ((c)&UTRIE2_DATA_MASK))
+#تعریف_کړه UTRIE2_شاخص_FROM_SUPP(trie_شاخص, c) \
+    (((int32_t)((trie_شاخص)[ \
+        (trie_شاخص)[(UTRIE2_شاخص_1_دننه_واټن-UTRIE2_OMITTED_BMP_شاخص_1_اوږدتیا)+ \
+                      ((c)>>UTRIE2_ښويدنه_1)]+ \
+        (((c)>>UTRIE2_ښويدنه_2)&UTRIE2_شاخص_2_ماسک)]) \
+    <<UTRIE2_شاخص_ښويدنه)+ \
+    ((c)&UTRIE2_معلومات_ماسک))
 
 /**
  * Internal trie getter from a code point, with checking that c is in 0..10FFFF.
  * Returns the data index.
  */
-#define _UTRIE2_INDEX_FROM_CP(trie, asciiOffset, c) \
+#تعریف_کړه UTRIE2_شاخص_FROM_CP(trie, ascii_دننه_واټن, c) \
     ((uint32_t)(c)<0xd800 ? \
-        _UTRIE2_INDEX_RAW(0, (trie)->index, c) : \
+        UTRIE2_شاخص_RAW(0, (trie)->شاخص, c) : \
         (uint32_t)(c)<=0xffff ? \
-            _UTRIE2_INDEX_RAW( \
-                (c)<=0xdbff ? UTRIE2_LSCP_INDEX_2_OFFSET-(0xd800>>UTRIE2_SHIFT_2) : 0, \
-                (trie)->index, c) : \
+            UTRIE2_شاخص_RAW( \
+                (c)<=0xdbff ? UTRIE2_LSCP_شاخص_2_دننه_واټن-(0xd800>>UTRIE2_ښويدنه_2) : 0, \
+                (trie)->شاخص, c) : \
             (uint32_t)(c)>0x10ffff ? \
-                (asciiOffset)+UTRIE2_BAD_UTF8_DATA_OFFSET : \
-                (c)>=(trie)->highStart ? \
-                    (trie)->highValueIndex : \
-                    _UTRIE2_INDEX_FROM_SUPP((trie)->index, c))
+                (ascii_دننه_واټن)+UTRIE2_BAD_UTF8_معلومات_دننه_واټن : \
+                (c)>=(trie)->لوړ_پیل ? \
+                    (trie)->لوړ_ارزښت_شاخص : \
+                    UTRIE2_شاخص_FROM_SUPP((trie)->شاخص, c))
 
 /** Internal trie getter from a UTF-16 single/lead code unit. Returns the data. */
-#define _UTRIE2_GET_FROM_U16_SINGLE_LEAD(trie, data, c) \
-    (trie)->data[_UTRIE2_INDEX_FROM_U16_SINGLE_LEAD((trie)->index, c)]
+#تعریف_کړه _UTRIE2_GET_FROM_U16_SINGLE_LEAD(trie, معلومات, c) \
+    (trie)->معلومات[UTRIE2_شاخص_FROM_U16_SINGLE_LEAD((trie)->شاخص, c)]
 
 /** Internal trie getter from a supplementary code point. Returns the data. */
-#define _UTRIE2_GET_FROM_SUPP(trie, data, c) \
-    (trie)->data[(c)>=(trie)->highStart ? (trie)->highValueIndex : \
-                 _UTRIE2_INDEX_FROM_SUPP((trie)->index, c)]
+#تعریف_کړه _UTRIE2_GET_FROM_SUPP(trie, معلومات, c) \
+    (trie)->معلومات[(c)>=(trie)->لوړ_پیل ? (trie)->لوړ_ارزښت_شاخص : \
+                 UTRIE2_شاخص_FROM_SUPP((trie)->شاخص, c)]
 
 /**
  * Internal trie getter from a code point, with checking that c is in 0..10FFFF.
  * Returns the data.
  */
-#define _UTRIE2_GET(trie, data, asciiOffset, c) \
-    (trie)->data[_UTRIE2_INDEX_FROM_CP(trie, asciiOffset, c)]
+#تعریف_کړه _UTRIE2_GET(trie, معلومات, ascii_دننه_واټن, c) \
+    (trie)->معلومات[UTRIE2_شاخص_FROM_CP(trie, ascii_دننه_واټن, c)]
 
 /** Internal next-post-increment: get the next code point (c) and its data. */
-#define _UTRIE2_U16_NEXT(trie, data, src, limit, c, result) UPRV_BLOCK_MACRO_BEGIN { \
+#تعریف_کړه UTRIE2_U16_بل(trie, معلومات, src, حد, c, پایله) UPRV_بلاک_MACRO_BEGIN { \
     { \
         uint16_t __c2; \
         (c)=*(src)++; \
-        if(!U16_IS_LEAD(c)) { \
-            (result)=_UTRIE2_GET_FROM_U16_SINGLE_LEAD(trie, data, c); \
-        } else if((src)==(limit) || !U16_IS_TRAIL(__c2=*(src))) { \
-            (result)=(trie)->data[_UTRIE2_INDEX_FROM_LSCP((trie)->index, c)]; \
-        } else { \
+        إذا(!U16_IS_LEAD(c)) { \
+            (پایله)=_UTRIE2_GET_FROM_U16_SINGLE_LEAD(trie, معلومات, c); \
+        } وإلا إذا((src)==(حد) || !U16_IS_TRAIL(__c2=*(src))) { \
+            (پایله)=(trie)->معلومات[UTRIE2_شاخص_FROM_LSCP((trie)->شاخص, c)]; \
+        } وإلا { \
             ++(src); \
             (c)=U16_GET_SUPPLEMENTARY((c), __c2); \
-            (result)=_UTRIE2_GET_FROM_SUPP((trie), data, (c)); \
+            (پایله)=_UTRIE2_GET_FROM_SUPP((trie), معلومات, (c)); \
         } \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_بلاک_MACRO_پای_ټکی
 
 /** Internal pre-decrement-previous: get the previous code point (c) and its data */
-#define _UTRIE2_U16_PREV(trie, data, start, src, c, result) UPRV_BLOCK_MACRO_BEGIN { \
+#تعریف_کړه _UTRIE2_U16_PREV(trie, معلومات, پیل, src, c, پایله) UPRV_بلاک_MACRO_BEGIN { \
     { \
         uint16_t __c2; \
         (c)=*--(src); \
-        if(!U16_IS_TRAIL(c) || (src)==(start) || !U16_IS_LEAD(__c2=*((src)-1))) { \
-            (result)=(trie)->data[_UTRIE2_INDEX_FROM_BMP((trie)->index, c)]; \
-        } else { \
+        إذا(!U16_IS_TRAIL(c) || (src)==(پیل) || !U16_IS_LEAD(__c2=*((src)-1))) { \
+            (پایله)=(trie)->معلومات[UTRIE2_شاخص_FROM_BMP((trie)->شاخص, c)]; \
+        } وإلا { \
             --(src); \
             (c)=U16_GET_SUPPLEMENTARY(__c2, (c)); \
-            (result)=_UTRIE2_GET_FROM_SUPP((trie), data, (c)); \
+            (پایله)=_UTRIE2_GET_FROM_SUPP((trie), معلومات, (c)); \
         } \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_بلاک_MACRO_پای_ټکی
 
 /** Internal UTF-8 next-post-increment: get the next code point's data. */
-#define _UTRIE2_U8_NEXT(trie, ascii, data, src, limit, result) UPRV_BLOCK_MACRO_BEGIN { \
+#تعریف_کړه UTRIE2_U8_بل(trie, ascii, معلومات, src, حد, پایله) UPRV_بلاک_MACRO_BEGIN { \
     uint8_t __lead=(uint8_t)*(src)++; \
-    if(U8_IS_SINGLE(__lead)) { \
-        (result)=(trie)->ascii[__lead]; \
-    } else { \
+    إذا(U8_IS_SINGLE(__lead)) { \
+        (پایله)=(trie)->ascii[__lead]; \
+    } وإلا { \
         uint8_t __t1, __t2; \
-        if( /* handle U+0800..U+FFFF inline */ \
-            0xe0<=__lead && __lead<0xf0 && ((src)+1)<(limit) && \
+        إذا( /* handle U+0800..U+FFFF inline */ \
+            0xe0<=__lead && __lead<0xf0 && ((src)+1)<(حد) && \
             U8_IS_VALID_LEAD3_AND_T1(__lead, __t1=(uint8_t)*(src)) && \
             (__t2=(uint8_t)(*((src)+1)-0x80))<= 0x3f \
         ) { \
             (src)+=2; \
-            (result)=(trie)->data[ \
-                ((int32_t)((trie)->index[((__lead-0xe0)<<(12-UTRIE2_SHIFT_2))+ \
-                                         ((__t1&0x3f)<<(6-UTRIE2_SHIFT_2))+(__t2>>UTRIE2_SHIFT_2)]) \
-                <<UTRIE2_INDEX_SHIFT)+ \
-                (__t2&UTRIE2_DATA_MASK)]; \
-        } else if( /* handle U+0080..U+07FF inline */ \
-            __lead<0xe0 && __lead>=0xc2 && (src)<(limit) && \
+            (پایله)=(trie)->معلومات[ \
+                ((int32_t)((trie)->شاخص[((__lead-0xe0)<<(12-UTRIE2_ښويدنه_2))+ \
+                                         ((__t1&0x3f)<<(6-UTRIE2_ښويدنه_2))+(__t2>>UTRIE2_ښويدنه_2)]) \
+                <<UTRIE2_شاخص_ښويدنه)+ \
+                (__t2&UTRIE2_معلومات_ماسک)]; \
+        } وإلا إذا( /* handle U+0080..U+07FF inline */ \
+            __lead<0xe0 && __lead>=0xc2 && (src)<(حد) && \
             (__t1=(uint8_t)(*(src)-0x80))<=0x3f \
         ) { \
             ++(src); \
-            (result)=(trie)->data[ \
-                (trie)->index[(UTRIE2_UTF8_2B_INDEX_2_OFFSET-0xc0)+__lead]+ \
+            (پایله)=(trie)->معلومات[ \
+                (trie)->شاخص[(UTRIE2_UTF8_2_B_شاخص_2_دننه_واټن-0xc0)+__lead]+ \
                 __t1]; \
-        } else { \
-            int32_t __index=utrie2_internalU8NextIndex((trie), __lead, (const uint8_t *)(src), \
-                                                                       (const uint8_t *)(limit)); \
+        } وإلا { \
+            int32_t __index=utrie2_دننی_U8_بل_شاخص((trie), __lead, (ثابت uint8_t *)(src), \
+                                                                       (ثابت uint8_t *)(حد)); \
             (src)+=__index&7; \
-            (result)=(trie)->data[__index>>3]; \
+            (پایله)=(trie)->معلومات[__index>>3]; \
         } \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_بلاک_MACRO_پای_ټکی
 
 /** Internal UTF-8 pre-decrement-previous: get the previous code point's data. */
-#define _UTRIE2_U8_PREV(trie, ascii, data, start, src, result) UPRV_BLOCK_MACRO_BEGIN { \
+#تعریف_کړه _UTRIE2_U8_PREV(trie, ascii, معلومات, پیل, src, پایله) UPRV_بلاک_MACRO_BEGIN { \
     uint8_t __b=(uint8_t)*--(src); \
-    if(U8_IS_SINGLE(__b)) { \
-        (result)=(trie)->ascii[__b]; \
-    } else { \
-        int32_t __index=utrie2_internalU8PrevIndex((trie), __b, (const uint8_t *)(start), \
-                                                                (const uint8_t *)(src)); \
+    إذا(U8_IS_SINGLE(__b)) { \
+        (پایله)=(trie)->ascii[__b]; \
+    } وإلا { \
+        int32_t __index=utrie2_دننی_U8_Prev_شاخص((trie), __b, (ثابت uint8_t *)(پیل), \
+                                                                (ثابت uint8_t *)(src)); \
         (src)-=__index&7; \
-        (result)=(trie)->data[__index>>3]; \
+        (پایله)=(trie)->معلومات[__index>>3]; \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_بلاک_MACRO_پای_ټکی
 
-U_CDECL_END
+U_CDECL_پای_ټکی
 
-#endif
+#د_که_پای

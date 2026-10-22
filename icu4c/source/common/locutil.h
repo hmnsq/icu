@@ -8,13 +8,13 @@
  *
  *******************************************************************************
  */
-#ifndef LOCUTIL_H
-#define LOCUTIL_H
+#که_نه_تعریف_شوی LOCUTIL_H
+#تعریف_کړه LOCUTIL_H
 
-#include "unicode/utypes.h"
-#include "hash.h"
+#ضمن "unicode/utypes.h"
+#ضمن "hash.h"
 
-#if !UCONFIG_NO_SERVICE || !UCONFIG_NO_TRANSLITERATION
+#إذا !UCONFIG_NO_SERVICE || !UCONFIG_NO_TRANSLITERATION
 
 
 U_NAMESPACE_BEGIN
@@ -23,17 +23,17 @@ U_NAMESPACE_BEGIN
 // in header so tests can also access them
 
 class U_COMMON_API LocaleUtility {
-public:
-  static UnicodeString& canonicalLocaleString(const UnicodeString* id, UnicodeString& result);
-  static Locale& initLocaleFromName(const UnicodeString& id, Locale& result);
-  static UnicodeString& initNameFromLocale(const Locale& locale, UnicodeString& result);
-  static const Hashtable* getAvailableLocaleNames(const UnicodeString& bundleID);
-  static bool isFallbackOf(const UnicodeString& root, const UnicodeString& child);
+عام:
+  ساكن UnicodeString& canonicalLocaleString(ثابت UnicodeString* id, UnicodeString& پایله);
+  ساكن Locale& initLocaleFromName(ثابت UnicodeString& id, Locale& پایله);
+  ساكن UnicodeString& initNameFromLocale(ثابت Locale& locale, UnicodeString& پایله);
+  ساكن ثابت Hashtable* get_شته_Locale_نومونه(ثابت UnicodeString& bundleID);
+  ساكن bool is_Fallback_د(ثابت UnicodeString& ریښه, ثابت UnicodeString& ماشوم);
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_پای_ټکی
 
 
-#endif
+#د_که_پای
 
-#endif
+#د_که_پای

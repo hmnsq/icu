@@ -16,19 +16,19 @@
  *   created by: Ram Viswanadha
  */
 
-#ifndef __UIDNA_H__
-#define __UIDNA_H__
+#که_نه_تعریف_شوی __UIDNA_H__
+#تعریف_کړه __UIDNA_H__
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if !UCONFIG_NO_IDNA
+#إذا !UCONFIG_NO_IDNA
 
-#include <stdbool.h>
-#include "unicode/parseerr.h"
+#ضمن <stdbool.h>
+#ضمن "unicode/parseerr.h"
 
-#if U_SHOW_CPLUSPLUS_API
-#include "unicode/localpointer.h"
-#endif   // U_SHOW_CPLUSPLUS_API
+#إذا U_SHOW_CPLUSPLUS_API
+#ضمن "unicode/localpointer.h"
+#د_که_پای   // U_SHOW_CPLUSPLUS_API
 
 /**
  * \file
@@ -47,7 +47,7 @@
 /*
  * IDNA option bit set values.
  */
-enum {
+تعداد {
     /**
      * Default options value: UTS #46 nontransitional processing.
      * For use in static worker and factory methods.
@@ -62,7 +62,7 @@ enum {
      * @stable ICU 2.6
      */
     UIDNA_DEFAULT=0x30,
-#ifndef U_HIDE_DEPRECATED_API
+#که_نه_تعریف_شوی U_HIDE_DEPRECATED_API
     /**
      * Option to allow unassigned code points in domain names and labels.
      * For use in static worker and factory methods.
@@ -71,7 +71,7 @@ enum {
      * @deprecated ICU 55 Use UTS #46 instead via uidna_openUTS46() or class IDNA.
      */
     UIDNA_ALLOW_UNASSIGNED=1,
-#endif  /* U_HIDE_DEPRECATED_API */
+#د_که_پای  /* U_HIDE_DEPRECATED_API */
     /**
      * Option to check whether the input conforms to the STD3 ASCII rules,
      * for example the restriction of labels to LDH characters
@@ -79,7 +79,7 @@ enum {
      * For use in static worker and factory methods.
      * @stable ICU 2.6
      */
-    UIDNA_USE_STD3_RULES=2,
+    UIDNA_USE_STD3_قواعد=2,
     /**
      * IDNA option to check for whether the input conforms to the BiDi rules.
      * For use in static worker and factory methods.
@@ -108,7 +108,7 @@ enum {
      * @stable ICU 4.6
      * @see UIDNA_DEFAULT
      */
-    UIDNA_NONTRANSITIONAL_TO_ASCII=0x10,
+    UIDNA_NONTRANSITIONAL_منزل_ASCII=0x10,
     /**
      * IDNA option for nontransitional processing in ToUnicode().
      * For use in static worker and factory methods.
@@ -121,7 +121,7 @@ enum {
      * @stable ICU 4.6
      * @see UIDNA_DEFAULT
      */
-    UIDNA_NONTRANSITIONAL_TO_UNICODE=0x20,
+    UIDNA_NONTRANSITIONAL_منزل_UNICODE=0x20,
     /**
      * IDNA option to check for whether the input conforms to the CONTEXTO rules.
      * For use in static worker and factory methods.
@@ -138,8 +138,8 @@ enum {
  * Opaque C service object type for the new IDNA API.
  * @stable ICU 4.6
  */
-struct UIDNA;
-typedef struct UIDNA UIDNA;  /**< C typedef for struct UIDNA. @stable ICU 4.6 */
+بنية UIDNA;
+تعريفنوع بنية UIDNA UIDNA;  /**< C typedef for struct UIDNA. @stable ICU 4.6 */
 
 /**
  * Returns a UIDNA instance which implements UTS #46.
@@ -161,17 +161,17 @@ typedef struct UIDNA UIDNA;  /**< C typedef for struct UIDNA. @stable ICU 4.6 */
  * @stable ICU 4.6
  */
 U_CAPI UIDNA * U_EXPORT2
-uidna_openUTS46(uint32_t options, UErrorCode *pErrorCode);
+uidna_openUTS46(uint32_t options, UError_کوډ *p_Error_کوډ);
 
 /**
  * Closes a UIDNA instance.
  * @param idna UIDNA instance to be closed
  * @stable ICU 4.6
  */
-U_CAPI void U_EXPORT2
+U_CAPI فراغ U_EXPORT2
 uidna_close(UIDNA *idna);
 
-#if U_SHOW_CPLUSPLUS_API
+#إذا U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -184,11 +184,11 @@ U_NAMESPACE_BEGIN
  * @see LocalPointer
  * @stable ICU 4.6
  */
-U_DEFINE_LOCAL_OPEN_POINTER(LocalUIDNAPointer, UIDNA, uidna_close);
+U_DEFINE_LOCAL_OPEN_اشاره_ګر(LocalUIDNAPointer, UIDNA, uidna_close);
 
-U_NAMESPACE_END
+U_NAMESPACE_پای_ټکی
 
-#endif
+#د_که_پای
 
 /**
  * Output container for IDNA processing errors.
@@ -200,9 +200,9 @@ U_NAMESPACE_END
  * \endcode
  * @stable ICU 4.6
  */
-typedef struct UIDNAInfo {
+تعريفنوع بنية UIDNAInfo {
     /** sizeof(UIDNAInfo) @stable ICU 4.6 */
-    int16_t size;
+    int16_t اندازه_2;
     /**
      * Set to true if transitional and nontransitional processing produce different results.
      * For details see C++ IDNAInfo::isTransitionalDifferent().
@@ -224,8 +224,8 @@ typedef struct UIDNAInfo {
  * Static initializer for a UIDNAInfo struct.
  * @stable ICU 4.6
  */
-#define UIDNA_INFO_INITIALIZER { \
-    (int16_t)sizeof(UIDNAInfo), \
+#تعریف_کړه UIDNA_INFO_INITIALIZER { \
+    (int16_t)حجم(UIDNAInfo), \
     false, false, \
     0, 0, 0 }
 
@@ -253,10 +253,10 @@ typedef struct UIDNAInfo {
  * @stable ICU 4.6
  */
 U_CAPI int32_t U_EXPORT2
-uidna_labelToASCII(const UIDNA *idna,
-                   const UChar *label, int32_t length,
-                   UChar *dest, int32_t capacity,
-                   UIDNAInfo *pInfo, UErrorCode *pErrorCode);
+uidna_label_منزل_ASCII(ثابت UIDNA *idna,
+                   ثابت UChar *label, int32_t اوږدتیا,
+                   UChar *dest, int32_t ظرفیت,
+                   UIDNAInfo *pInfo, UError_کوډ *p_Error_کوډ);
 
 /**
  * Converts a single domain name label into its Unicode form for human-readable display.
@@ -280,10 +280,10 @@ uidna_labelToASCII(const UIDNA *idna,
  * @stable ICU 4.6
  */
 U_CAPI int32_t U_EXPORT2
-uidna_labelToUnicode(const UIDNA *idna,
-                     const UChar *label, int32_t length,
-                     UChar *dest, int32_t capacity,
-                     UIDNAInfo *pInfo, UErrorCode *pErrorCode);
+uidna_label_منزل_Unicode(ثابت UIDNA *idna,
+                     ثابت UChar *label, int32_t اوږدتیا,
+                     UChar *dest, int32_t ظرفیت,
+                     UIDNAInfo *pInfo, UError_کوډ *p_Error_کوډ);
 
 /**
  * Converts a whole domain name into its ASCII form for DNS lookup.
@@ -309,10 +309,10 @@ uidna_labelToUnicode(const UIDNA *idna,
  * @stable ICU 4.6
  */
 U_CAPI int32_t U_EXPORT2
-uidna_nameToASCII(const UIDNA *idna,
-                  const UChar *name, int32_t length,
-                  UChar *dest, int32_t capacity,
-                  UIDNAInfo *pInfo, UErrorCode *pErrorCode);
+uidna_name_منزل_ASCII(ثابت UIDNA *idna,
+                  ثابت UChar *name, int32_t اوږدتیا,
+                  UChar *dest, int32_t ظرفیت,
+                  UIDNAInfo *pInfo, UError_کوډ *p_Error_کوډ);
 
 /**
  * Converts a whole domain name into its Unicode form for human-readable display.
@@ -336,10 +336,10 @@ uidna_nameToASCII(const UIDNA *idna,
  * @stable ICU 4.6
  */
 U_CAPI int32_t U_EXPORT2
-uidna_nameToUnicode(const UIDNA *idna,
-                    const UChar *name, int32_t length,
-                    UChar *dest, int32_t capacity,
-                    UIDNAInfo *pInfo, UErrorCode *pErrorCode);
+uidna_name_منزل_Unicode(ثابت UIDNA *idna,
+                    ثابت UChar *name, int32_t اوږدتیا,
+                    UChar *dest, int32_t ظرفیت,
+                    UIDNAInfo *pInfo, UError_کوډ *p_Error_کوډ);
 
 /* UTF-8 versions of the processing methods --------------------------------- */
 
@@ -361,10 +361,10 @@ uidna_nameToUnicode(const UIDNA *idna,
  * @stable ICU 4.6
  */
 U_CAPI int32_t U_EXPORT2
-uidna_labelToASCII_UTF8(const UIDNA *idna,
-                        const char *label, int32_t length,
-                        char *dest, int32_t capacity,
-                        UIDNAInfo *pInfo, UErrorCode *pErrorCode);
+uidna_label_منزل_ASCII_UTF8(ثابت UIDNA *idna,
+                        ثابت حرف *label, int32_t اوږدتیا,
+                        حرف *dest, int32_t ظرفیت,
+                        UIDNAInfo *pInfo, UError_کوډ *p_Error_کوډ);
 
 /**
  * Converts a single domain name label into its Unicode form for human-readable display.
@@ -384,10 +384,10 @@ uidna_labelToASCII_UTF8(const UIDNA *idna,
  * @stable ICU 4.6
  */
 U_CAPI int32_t U_EXPORT2
-uidna_labelToUnicodeUTF8(const UIDNA *idna,
-                         const char *label, int32_t length,
-                         char *dest, int32_t capacity,
-                         UIDNAInfo *pInfo, UErrorCode *pErrorCode);
+uidna_label_منزل_Unicode_UTF8(ثابت UIDNA *idna,
+                         ثابت حرف *label, int32_t اوږدتیا,
+                         حرف *dest, int32_t ظرفیت,
+                         UIDNAInfo *pInfo, UError_کوډ *p_Error_کوډ);
 
 /**
  * Converts a whole domain name into its ASCII form for DNS lookup.
@@ -407,10 +407,10 @@ uidna_labelToUnicodeUTF8(const UIDNA *idna,
  * @stable ICU 4.6
  */
 U_CAPI int32_t U_EXPORT2
-uidna_nameToASCII_UTF8(const UIDNA *idna,
-                       const char *name, int32_t length,
-                       char *dest, int32_t capacity,
-                       UIDNAInfo *pInfo, UErrorCode *pErrorCode);
+uidna_name_منزل_ASCII_UTF8(ثابت UIDNA *idna,
+                       ثابت حرف *name, int32_t اوږدتیا,
+                       حرف *dest, int32_t ظرفیت,
+                       UIDNAInfo *pInfo, UError_کوډ *p_Error_کوډ);
 
 /**
  * Converts a whole domain name into its Unicode form for human-readable display.
@@ -430,22 +430,22 @@ uidna_nameToASCII_UTF8(const UIDNA *idna,
  * @stable ICU 4.6
  */
 U_CAPI int32_t U_EXPORT2
-uidna_nameToUnicodeUTF8(const UIDNA *idna,
-                        const char *name, int32_t length,
-                        char *dest, int32_t capacity,
-                        UIDNAInfo *pInfo, UErrorCode *pErrorCode);
+uidna_name_منزل_Unicode_UTF8(ثابت UIDNA *idna,
+                        ثابت حرف *name, int32_t اوږدتیا,
+                        حرف *dest, int32_t ظرفیت,
+                        UIDNAInfo *pInfo, UError_کوډ *p_Error_کوډ);
 
 /*
  * IDNA error bit set values.
  * When a domain name or label fails a processing step or does not meet the
  * validity criteria, then one or more of these error bits are set.
  */
-enum {
+تعداد {
     /**
      * A non-final domain name label (or the whole domain name) is empty.
      * @stable ICU 4.6
      */
-    UIDNA_ERROR_EMPTY_LABEL=1,
+    UIDNA_ERROR_تشه_LABEL=1,
     /**
      * A domain name label is longer than 63 bytes.
      * (See STD13/RFC1034 3.1. Name space specifications and terminology.)
@@ -531,7 +531,7 @@ enum {
     UIDNA_ERROR_CONTEXTO_DIGITS=0x4000
 };
 
-#ifndef U_HIDE_DEPRECATED_API
+#که_نه_تعریف_شوی U_HIDE_DEPRECATED_API
 
 /* IDNA2003 API ------------------------------------------------------------- */
 
@@ -595,11 +595,11 @@ enum {
  * @deprecated ICU 55 Use UTS #46 instead via uidna_openUTS46() or class IDNA.
  */
 U_DEPRECATED int32_t U_EXPORT2
-uidna_toASCII(const UChar* src, int32_t srcLength, 
-              UChar* dest, int32_t destCapacity,
+uidna_منزل_ASCII(ثابت UChar* src, int32_t src_اوږدتیا, 
+              UChar* dest, int32_t dest_ظرفیت,
               int32_t options,
               UParseError* parseError,
-              UErrorCode* status);
+              UError_کوډ* حالت);
 
 
 /**
@@ -643,11 +643,11 @@ uidna_toASCII(const UChar* src, int32_t srcLength,
  * @deprecated ICU 55 Use UTS #46 instead via uidna_openUTS46() or class IDNA.
  */
 U_DEPRECATED int32_t U_EXPORT2
-uidna_toUnicode(const UChar* src, int32_t srcLength,
-                UChar* dest, int32_t destCapacity,
+uidna_منزل_Unicode(ثابت UChar* src, int32_t src_اوږدتیا,
+                UChar* dest, int32_t dest_ظرفیت,
                 int32_t options,
                 UParseError* parseError,
-                UErrorCode* status);
+                UError_کوډ* حالت);
 
 
 /**
@@ -694,11 +694,11 @@ uidna_toUnicode(const UChar* src, int32_t srcLength,
  * @deprecated ICU 55 Use UTS #46 instead via uidna_openUTS46() or class IDNA.
  */
 U_DEPRECATED int32_t U_EXPORT2
-uidna_IDNToASCII(  const UChar* src, int32_t srcLength,
-                   UChar* dest, int32_t destCapacity,
+uidna_IDNToASCII(  ثابت UChar* src, int32_t src_اوږدتیا,
+                   UChar* dest, int32_t dest_ظرفیت,
                    int32_t options,
                    UParseError* parseError,
-                   UErrorCode* status);
+                   UError_کوډ* حالت);
 
 /**
  * IDNA2003: Convenience function that implements the IDNToUnicode operation as defined in the IDNA RFC.
@@ -741,11 +741,11 @@ uidna_IDNToASCII(  const UChar* src, int32_t srcLength,
  * @deprecated ICU 55 Use UTS #46 instead via uidna_openUTS46() or class IDNA.
  */
 U_DEPRECATED int32_t U_EXPORT2
-uidna_IDNToUnicode(  const UChar* src, int32_t srcLength,
-                     UChar* dest, int32_t destCapacity,
+uidna_IDNToUnicode(  ثابت UChar* src, int32_t src_اوږدتیا,
+                     UChar* dest, int32_t dest_ظرفیت,
                      int32_t options,
                      UParseError* parseError,
-                     UErrorCode* status);
+                     UError_کوډ* حالت);
 
 /**
  * IDNA2003: Compare two IDN strings for equivalence.
@@ -782,13 +782,13 @@ uidna_IDNToUnicode(  const UChar* src, int32_t srcLength,
  * @deprecated ICU 55 Use UTS #46 instead via uidna_openUTS46() or class IDNA.
  */
 U_DEPRECATED int32_t U_EXPORT2
-uidna_compare(  const UChar *s1, int32_t length1,
-                const UChar *s2, int32_t length2,
+uidna_compare(  ثابت UChar *s1, int32_t length1,
+                ثابت UChar *s2, int32_t length2,
                 int32_t options,
-                UErrorCode* status);
+                UError_کوډ* حالت);
 
-#endif  /* U_HIDE_DEPRECATED_API */
+#د_که_پای  /* U_HIDE_DEPRECATED_API */
 
-#endif /* #if !UCONFIG_NO_IDNA */
+#د_که_پای /* #if !UCONFIG_NO_IDNA */
 
-#endif
+#د_که_پای

@@ -7,20 +7,20 @@
 ***************************************************************************
 */
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#إذا !UCONFIG_NO_BREAK_ITERATION
 
-#include "unicode/ucptrie.h"
-#include "unicode/utypes.h"
-#include "rbbidata.h"
-#include "rbbirb.h"
-#include "udatamem.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "umutex.h"
+#ضمن "unicode/ucptrie.h"
+#ضمن "unicode/utypes.h"
+#ضمن "rbbidata.h"
+#ضمن "rbbirb.h"
+#ضمن "udatamem.h"
+#ضمن "cmemory.h"
+#ضمن "cstring.h"
+#ضمن "umutex.h"
 
-#include "uassert.h"
+#ضمن "uassert.h"
 
 
 U_NAMESPACE_BEGIN
@@ -30,44 +30,44 @@ U_NAMESPACE_BEGIN
 //    Constructors.
 //
 //-----------------------------------------------------------------------------
-RBBIDataWrapper::RBBIDataWrapper(const RBBIDataHeader *data, UErrorCode &status) {
+RBBIDataWrapper::RBBIDataWrapper(ثابت RBBIData_سرلیک *معلومات, UError_کوډ &حالت) {
     init0();
-    init(data, status);
+    init(معلومات, حالت);
 }
 
-RBBIDataWrapper::RBBIDataWrapper(const RBBIDataHeader *data, enum EDontAdopt, UErrorCode &status) {
+RBBIDataWrapper::RBBIDataWrapper(ثابت RBBIData_سرلیک *معلومات, تعداد EDontAdopt, UError_کوډ &حالت) {
     init0();
-    init(data, status);
-    fDontFreeData = true;
+    init(معلومات, حالت);
+    f_Dont_Free_معلومات = ریښتیا;
 }
 
-RBBIDataWrapper::RBBIDataWrapper(UDataMemory* udm, UErrorCode &status) {
+RBBIDataWrapper::RBBIDataWrapper(UData_حافظه* udm, UError_کوډ &حالت) {
     init0();
-    if (U_FAILURE(status)) {
-        return;
+    إذا (U_FAILURE(حالت)) {
+        أرجع;
     }
-    const DataHeader *dh = udm->pHeader;
-    int32_t headerSize = dh->dataHeader.headerSize;
-    if (  !(headerSize >= 20 &&
+    ثابت معلومات_سرلیک *dh = udm->p_سرلیک;
+    int32_t سرلیک_اندازه = dh->معلومات_سرلیک_2.سرلیک_اندازه;
+    إذا (  !(سرلیک_اندازه >= 20 &&
             dh->info.isBigEndian == U_IS_BIG_ENDIAN &&
             dh->info.charsetFamily == U_CHARSET_FAMILY &&
-            dh->info.dataFormat[0] == 0x42 &&  // dataFormat="Brk "
-            dh->info.dataFormat[1] == 0x72 &&
-            dh->info.dataFormat[2] == 0x6b &&
-            dh->info.dataFormat[3] == 0x20 &&
-            isDataVersionAcceptable(dh->info.formatVersion))
+            dh->info.معلومات_Format[0] == 0x42 &&  // dataFormat="Brk "
+            dh->info.معلومات_Format[1] == 0x72 &&
+            dh->info.معلومات_Format[2] == 0x6b &&
+            dh->info.معلومات_Format[3] == 0x20 &&
+            is_معلومات_نسخه_Acceptable(dh->info.format_نسخه))
         ) {
-        status = U_INVALID_FORMAT_ERROR;
-        return;
+        حالت = U_INVALID_FORMAT_ERROR;
+        أرجع;
     }
-    const char *dataAsBytes = reinterpret_cast<const char *>(dh);
-    const RBBIDataHeader *rbbidh = reinterpret_cast<const RBBIDataHeader *>(dataAsBytes + headerSize);
-    init(rbbidh, status);
+    ثابت حرف *معلومات_As_بایټونه = reinterpret_cast<ثابت حرف *>(dh);
+    ثابت RBBIData_سرلیک *rbbidh = reinterpret_cast<ثابت RBBIData_سرلیک *>(معلومات_As_بایټونه + سرلیک_اندازه);
+    init(rbbidh, حالت);
     fUDataMem = udm;
 }
 
-UBool RBBIDataWrapper::isDataVersionAcceptable(const UVersionInfo version) {
-    return RBBI_DATA_FORMAT_VERSION[0] == version[0];
+UBool RBBIDataWrapper::is_معلومات_نسخه_Acceptable(ثابت UVersionInfo نسخه) {
+    أرجع RBBI_معلومات_FORMAT_نسخه[0] == نسخه[0];
 }
 
 
@@ -77,68 +77,68 @@ UBool RBBIDataWrapper::isDataVersionAcceptable(const UVersionInfo version) {
 //              constructors.
 //
 //-----------------------------------------------------------------------------
-void RBBIDataWrapper::init0() {
-    fHeader = nullptr;
-    fForwardTable = nullptr;
-    fReverseTable = nullptr;
-    fRuleSource   = nullptr;
-    fRuleStatusTable = nullptr;
-    fTrie         = nullptr;
-    fUDataMem     = nullptr;
-    fRefCount     = 0;
-    fDontFreeData = true;
+فراغ RBBIDataWrapper::init0() {
+    f_سرلیک = تش_اشاره;
+    f_Forward_جدول = تش_اشاره;
+    f_سرچپه_جدول = تش_اشاره;
+    f_قاعده_سرچینه   = تش_اشاره;
+    f_قاعده_حالت_جدول = تش_اشاره;
+    fTrie         = تش_اشاره;
+    fUDataMem     = تش_اشاره;
+    f_Ref_شمېر     = 0;
+    f_Dont_Free_معلومات = ریښتیا;
 }
 
-void RBBIDataWrapper::init(const RBBIDataHeader *data, UErrorCode &status) {
-    if (U_FAILURE(status)) {
-        return;
+فراغ RBBIDataWrapper::init(ثابت RBBIData_سرلیک *معلومات, UError_کوډ &حالت) {
+    إذا (U_FAILURE(حالت)) {
+        أرجع;
     }
-    fHeader = data;
-    if (fHeader->fMagic != 0xb1a0 || !isDataVersionAcceptable(fHeader->fFormatVersion)) {
-        status = U_INVALID_FORMAT_ERROR;
-        return;
+    f_سرلیک = معلومات;
+    إذا (f_سرلیک->fMagic != 0xb1a0 || !is_معلومات_نسخه_Acceptable(f_سرلیک->f_Format_نسخه)) {
+        حالت = U_INVALID_FORMAT_ERROR;
+        أرجع;
     }
     // Note: in ICU version 3.2 and earlier, there was a formatVersion 1
     //       that is no longer supported.  At that time fFormatVersion was
     //       an int32_t field, rather than an array of 4 bytes.
 
-    fDontFreeData = false;
-    if (data->fFTableLen != 0) {
-        fForwardTable = reinterpret_cast<const RBBIStateTable*>(reinterpret_cast<const char*>(data) + fHeader->fFTable);
+    f_Dont_Free_معلومات = خطأ;
+    إذا (معلومات->fFTableLen != 0) {
+        f_Forward_جدول = reinterpret_cast<ثابت RBBIState_جدول*>(reinterpret_cast<ثابت حرف*>(معلومات) + f_سرلیک->fFTable);
     }
-    if (data->fRTableLen != 0) {
-        fReverseTable = reinterpret_cast<const RBBIStateTable*>(reinterpret_cast<const char*>(data) + fHeader->fRTable);
-    }
-
-    fTrie = ucptrie_openFromBinary(UCPTRIE_TYPE_FAST,
-                                   UCPTRIE_VALUE_BITS_ANY,
-                                   (uint8_t *)data + fHeader->fTrie,
-                                   fHeader->fTrieLen,
-                                   nullptr,           // *actual length
-                                   &status);
-    if (U_FAILURE(status)) {
-        return;
+    إذا (معلومات->fRTableLen != 0) {
+        f_سرچپه_جدول = reinterpret_cast<ثابت RBBIState_جدول*>(reinterpret_cast<ثابت حرف*>(معلومات) + f_سرلیک->fRTable);
     }
 
-    UCPTrieValueWidth width = ucptrie_getValueWidth(fTrie);
-    if (!(width == UCPTRIE_VALUE_BITS_8 || width == UCPTRIE_VALUE_BITS_16)) {
-        status = U_INVALID_FORMAT_ERROR;
-        return;
+    fTrie = ucptrie_open_From_دوګونی(UCPTRIE_TYPE_FAST,
+                                   UCPTRIE_ارزښت_بټونه_ANY,
+                                   (uint8_t *)معلومات + f_سرلیک->fTrie,
+                                   f_سرلیک->fTrieLen,
+                                   تش_اشاره,           // *actual length
+                                   &حالت);
+    إذا (U_FAILURE(حالت)) {
+        أرجع;
     }
 
-    fRuleSource   = ((char *)data + fHeader->fRuleSource);
-    fRuleString = UnicodeString::fromUTF8(StringPiece(fRuleSource, fHeader->fRuleSourceLen));
-    U_ASSERT(data->fRuleSourceLen > 0);
+    UCPTrie_ارزښت_پلنوالی پلنوالی = ucptrie_get_ارزښت_پلنوالی(fTrie);
+    إذا (!(پلنوالی == UCPTRIE_ارزښت_بټونه_8 || پلنوالی == UCPTRIE_ارزښت_بټونه_16)) {
+        حالت = U_INVALID_FORMAT_ERROR;
+        أرجع;
+    }
 
-    fRuleStatusTable = reinterpret_cast<const int32_t*>(reinterpret_cast<const char*>(data) + fHeader->fStatusTable);
-    fStatusMaxIdx    = data->fStatusTableLen / sizeof(int32_t);
+    f_قاعده_سرچینه   = ((حرف *)معلومات + f_سرلیک->f_قاعده_سرچینه);
+    f_قاعده_String = UnicodeString::fromUTF8(StringPiece(f_قاعده_سرچینه, f_سرلیک->f_قاعده_سرچینه_Len));
+    U_ASSERT(معلومات->f_قاعده_سرچینه_Len > 0);
 
-    fRefCount = 1;
+    f_قاعده_حالت_جدول = reinterpret_cast<ثابت int32_t*>(reinterpret_cast<ثابت حرف*>(معلومات) + f_سرلیک->f_حالت_جدول);
+    f_حالت_Max_Idx    = معلومات->f_حالت_جدول_Len / حجم(int32_t);
 
-#ifdef RBBI_DEBUG
-    char *debugEnv = getenv("U_RBBIDEBUG");
-    if (debugEnv && uprv_strstr(debugEnv, "data")) {this->printData();}
-#endif
+    f_Ref_شمېر = 1;
+
+#که_تعریف_شوی RBBI_DEBUG
+    حرف *debugEnv = getenv("U_RBBIDEBUG");
+    إذا (debugEnv && uprv_strstr(debugEnv, "data")) {هذا->print_معلومات();}
+#د_که_پای
 }
 
 
@@ -148,13 +148,13 @@ void RBBIDataWrapper::init(const RBBIDataHeader *data, UErrorCode &status) {
 //
 //-----------------------------------------------------------------------------
 RBBIDataWrapper::~RBBIDataWrapper() {
-    U_ASSERT(fRefCount == 0);
+    U_ASSERT(f_Ref_شمېر == 0);
     ucptrie_close(fTrie);
-    fTrie = nullptr;
-    if (fUDataMem) {
+    fTrie = تش_اشاره;
+    إذا (fUDataMem) {
         udata_close(fUDataMem);
-    } else if (!fDontFreeData) {
-        uprv_free((void *)fHeader);
+    } وإلا إذا (!f_Dont_Free_معلومات) {
+        uprv_free((فراغ *)f_سرلیک);
     }
 }
 
@@ -170,21 +170,21 @@ RBBIDataWrapper::~RBBIDataWrapper() {
 //                  should still be ==.
 //
 //-----------------------------------------------------------------------------
-bool RBBIDataWrapper::operator ==(const RBBIDataWrapper &other) const {
-    if (fHeader == other.fHeader) {
-        return true;
+منطقي RBBIDataWrapper::چلوونکی ==(ثابت RBBIDataWrapper &other) ثابت {
+    إذا (f_سرلیک == other.f_سرلیک) {
+        أرجع ریښتیا;
     }
-    if (fHeader->fLength != other.fHeader->fLength) {
-        return false;
+    إذا (f_سرلیک->f_اوږدتیا != other.f_سرلیک->f_اوږدتیا) {
+        أرجع خطأ;
     }
-    if (uprv_memcmp(fHeader, other.fHeader, fHeader->fLength) == 0) {
-        return true;
+    إذا (uprv_memcmp(f_سرلیک, other.f_سرلیک, f_سرلیک->f_اوږدتیا) == 0) {
+        أرجع ریښتیا;
     }
-    return false;
+    أرجع خطأ;
 }
 
-int32_t  RBBIDataWrapper::hashCode() {
-    return fHeader->fFTableLen;
+int32_t  RBBIDataWrapper::hash_کوډ() {
+    أرجع f_سرلیک->fFTableLen;
 }
 
 
@@ -196,16 +196,16 @@ int32_t  RBBIDataWrapper::hashCode() {
 //                          referencing the same data.
 //
 //-----------------------------------------------------------------------------
-void RBBIDataWrapper::removeReference() {
-    if (umtx_atomic_dec(&fRefCount) == 0) {
-        delete this;
+فراغ RBBIDataWrapper::removeReference() {
+    إذا (umtx_atomic_dec(&f_Ref_شمېر) == 0) {
+        ړنګول هذا;
     }
 }
 
 
-RBBIDataWrapper *RBBIDataWrapper::addReference() {
-   umtx_atomic_inc(&fRefCount);
-   return this;
+RBBIDataWrapper *RBBIDataWrapper::جمع_کړه_Reference() {
+   umtx_atomic_inc(&f_Ref_شمېر);
+   أرجع هذا;
 }
 
 
@@ -215,8 +215,8 @@ RBBIDataWrapper *RBBIDataWrapper::addReference() {
 //  getRuleSourceString
 //
 //-----------------------------------------------------------------------------
-const UnicodeString &RBBIDataWrapper::getRuleSourceString() const {
-    return fRuleString;
+ثابت UnicodeString &RBBIDataWrapper::get_قاعده_سرچینه_String() ثابت {
+    أرجع f_قاعده_String;
 }
 
 
@@ -225,73 +225,73 @@ const UnicodeString &RBBIDataWrapper::getRuleSourceString() const {
 //  print   -  debugging function to dump the runtime data tables.
 //
 //-----------------------------------------------------------------------------
-#ifdef RBBI_DEBUG
-void  RBBIDataWrapper::printTable(const char *heading, const RBBIStateTable *table) {
+#که_تعریف_شوی RBBI_DEBUG
+فراغ  RBBIDataWrapper::print_جدول(ثابت حرف *heading, ثابت RBBIState_جدول *جدول) {
     uint32_t   c;
     uint32_t   s;
 
     RBBIDebugPrintf("%s\n", heading);
 
-    RBBIDebugPrintf("   fDictCategoriesStart: %d\n", table->fDictCategoriesStart);
-    RBBIDebugPrintf("   fLookAheadResultsSize: %d\n", table->fLookAheadResultsSize);
+    RBBIDebugPrintf("   fDictCategoriesStart: %d\n", جدول->f_Dict_Categories_پیل);
+    RBBIDebugPrintf("   fLookAheadResultsSize: %d\n", جدول->f_Look_Ahead_Results_اندازه);
     RBBIDebugPrintf("   Flags: %4x RBBI_LOOKAHEAD_HARD_BREAK=%s RBBI_8BITS_ROWS=%s\n",
-                    table->fFlags,
-                    table->fFlags & RBBI_LOOKAHEAD_HARD_BREAK ? "T" : "F",
-                    table->fFlags & RBBI_8BITS_ROWS ? "T" : "F");
+                    جدول->fFlags,
+                    جدول->fFlags & RBBI_LOOKAHEAD_HARD_BREAK ? "T" : "F",
+                    جدول->fFlags & RBBI_8_بټونه_لیکې ? "T" : "F");
     RBBIDebugPrintf("\nState |  Acc  LA TagIx");
-    for (c=0; c<fHeader->fCatCount; c++) {RBBIDebugPrintf("%3d ", c);}
-    RBBIDebugPrintf("\n------|---------------"); for (c=0;c<fHeader->fCatCount; c++) {
+    لكل (c=0; c<f_سرلیک->f_Cat_شمېر; c++) {RBBIDebugPrintf("%3d ", c);}
+    RBBIDebugPrintf("\n------|---------------"); لكل (c=0;c<f_سرلیک->f_Cat_شمېر; c++) {
         RBBIDebugPrintf("----");
     }
     RBBIDebugPrintf("\n");
 
-    if (table == nullptr) {
+    إذا (جدول == تش_اشاره) {
         RBBIDebugPrintf("         N U L L   T A B L E\n\n");
-        return;
+        أرجع;
     }
-    UBool use8Bits = table->fFlags & RBBI_8BITS_ROWS;
-    for (s=0; s<table->fNumStates; s++) {
-        RBBIStateTableRow *row = (RBBIStateTableRow *)
-                                  (table->fTableData + (table->fRowLen * s));
-        if (use8Bits) {
-            RBBIDebugPrintf("%4d  |  %3d %3d %3d ", s, row->r8.fAccepting, row->r8.fLookAhead, row->r8.fTagsIdx);
-            for (c=0; c<fHeader->fCatCount; c++)  {
-                RBBIDebugPrintf("%3d ", row->r8.fNextState[c]);
+    UBool use8_بټونه = جدول->fFlags & RBBI_8_بټونه_لیکې;
+    لكل (s=0; s<جدول->f_عدد_حالتونه; s++) {
+        RBBIState_جدول_لیکه *لیکه = (RBBIState_جدول_لیکه *)
+                                  (جدول->f_جدول_معلومات + (جدول->f_لیکه_Len * s));
+        إذا (use8_بټونه) {
+            RBBIDebugPrintf("%4d  |  %3d %3d %3d ", s, لیکه->r8.fAccepting, لیکه->r8.fLookAhead, لیکه->r8.f_نښانونه_Idx);
+            لكل (c=0; c<f_سرلیک->f_Cat_شمېر; c++)  {
+                RBBIDebugPrintf("%3d ", لیکه->r8.f_بل_State[c]);
             }
-        } else {
-            RBBIDebugPrintf("%4d  |  %3d %3d %3d ", s, row->r16.fAccepting, row->r16.fLookAhead, row->r16.fTagsIdx);
-            for (c=0; c<fHeader->fCatCount; c++)  {
-                RBBIDebugPrintf("%3d ", row->r16.fNextState[c]);
+        } وإلا {
+            RBBIDebugPrintf("%4d  |  %3d %3d %3d ", s, لیکه->r16.fAccepting, لیکه->r16.fLookAhead, لیکه->r16.f_نښانونه_Idx);
+            لكل (c=0; c<f_سرلیک->f_Cat_شمېر; c++)  {
+                RBBIDebugPrintf("%3d ", لیکه->r16.f_بل_State[c]);
             }
         }
         RBBIDebugPrintf("\n");
     }
     RBBIDebugPrintf("\n");
 }
-#endif
+#د_که_پای
 
 
-void  RBBIDataWrapper::printData() {
-#ifdef RBBI_DEBUG
-    RBBIDebugPrintf("RBBI Data at %p\n", (void *)fHeader);
-    RBBIDebugPrintf("   Version = {%d %d %d %d}\n", fHeader->fFormatVersion[0], fHeader->fFormatVersion[1],
-                                                    fHeader->fFormatVersion[2], fHeader->fFormatVersion[3]);
-    RBBIDebugPrintf("   total length of data  = %d\n", fHeader->fLength);
-    RBBIDebugPrintf("   number of character categories = %d\n\n", fHeader->fCatCount);
+فراغ  RBBIDataWrapper::print_معلومات() {
+#که_تعریف_شوی RBBI_DEBUG
+    RBBIDebugPrintf("RBBI Data at %p\n", (فراغ *)f_سرلیک);
+    RBBIDebugPrintf("   Version = {%d %d %d %d}\n", f_سرلیک->f_Format_نسخه[0], f_سرلیک->f_Format_نسخه[1],
+                                                    f_سرلیک->f_Format_نسخه[2], f_سرلیک->f_Format_نسخه[3]);
+    RBBIDebugPrintf("   total length of data  = %d\n", f_سرلیک->f_اوږدتیا);
+    RBBIDebugPrintf("   number of character categories = %d\n\n", f_سرلیک->f_Cat_شمېر);
 
-    printTable("Forward State Transition Table", fForwardTable);
-    printTable("Reverse State Transition Table", fReverseTable);
+    print_جدول("Forward State Transition Table", f_Forward_جدول);
+    print_جدول("Reverse State Transition Table", f_سرچپه_جدول);
 
     RBBIDebugPrintf("\nOriginal Rules source:\n");
-    for (int32_t c=0; fRuleSource[c] != 0; c++) {
-        RBBIDebugPrintf("%c", fRuleSource[c]);
+    لكل (int32_t c=0; f_قاعده_سرچینه[c] != 0; c++) {
+        RBBIDebugPrintf("%c", f_قاعده_سرچینه[c]);
     }
     RBBIDebugPrintf("\n\n");
-#endif
+#د_که_پای
 }
 
 
-U_NAMESPACE_END
+U_NAMESPACE_پای_ټکی
 U_NAMESPACE_USE
 
 //-----------------------------------------------------------------------------
@@ -301,33 +301,33 @@ U_NAMESPACE_USE
 //-----------------------------------------------------------------------------
 
 U_CAPI int32_t U_EXPORT2
-ubrk_swap(const UDataSwapper *ds, const void *inData, int32_t length, void *outData,
-           UErrorCode *status) {
+ubrk_بدلون(ثابت UDataSwapper *ds, ثابت فراغ *دننه_معلومات, int32_t length, فراغ *بهر_معلومات,
+           UError_کوډ *حالت) {
 
-    if (status == nullptr || U_FAILURE(*status)) {
-        return 0;
+    إذا (حالت == تش_اشاره || U_FAILURE(*حالت)) {
+        أرجع 0;
     }
-    if(ds==nullptr || inData==nullptr || length<-1 || (length>0 && outData==nullptr)) {
-        *status=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    إذا(ds==تش_اشاره || دننه_معلومات==تش_اشاره || length<-1 || (length>0 && بهر_معلومات==تش_اشاره)) {
+        *حالت=U_ILLEGAL_دلیل_ERROR;
+        أرجع 0;
     }
 
     //
     //  Check that the data header is for for break data.
     //    (Header contents are defined in genbrk.cpp)
     //
-    const UDataInfo *pInfo = (const UDataInfo *)((const char *)inData+4);
-    if(!(  pInfo->dataFormat[0]==0x42 &&   /* dataFormat="Brk " */
-           pInfo->dataFormat[1]==0x72 &&
-           pInfo->dataFormat[2]==0x6b &&
-           pInfo->dataFormat[3]==0x20 &&
-           RBBIDataWrapper::isDataVersionAcceptable(pInfo->formatVersion) )) {
+    ثابت UDataInfo *pInfo = (ثابت UDataInfo *)((ثابت حرف *)دننه_معلومات+4);
+    إذا(!(  pInfo->معلومات_Format[0]==0x42 &&   /* dataFormat="Brk " */
+           pInfo->معلومات_Format[1]==0x72 &&
+           pInfo->معلومات_Format[2]==0x6b &&
+           pInfo->معلومات_Format[3]==0x20 &&
+           RBBIDataWrapper::is_معلومات_نسخه_Acceptable(pInfo->format_نسخه) )) {
         udata_printError(ds, "ubrk_swap(): data format %02x.%02x.%02x.%02x (format version %02x) is not recognized\n",
-                         pInfo->dataFormat[0], pInfo->dataFormat[1],
-                         pInfo->dataFormat[2], pInfo->dataFormat[3],
-                         pInfo->formatVersion[0]);
-        *status=U_UNSUPPORTED_ERROR;
-        return 0;
+                         pInfo->معلومات_Format[0], pInfo->معلومات_Format[1],
+                         pInfo->معلومات_Format[2], pInfo->معلومات_Format[3],
+                         pInfo->format_نسخه[0]);
+        *حالت=U_UNSUPPORTED_ERROR;
+        أرجع 0;
     }
 
     //
@@ -336,39 +336,39 @@ ubrk_swap(const UDataSwapper *ds, const void *inData, int32_t length, void *outD
     //                         the size of the ICU d.h., which lets us locate the start
     //                         of the RBBI specific data.
     //
-    int32_t headerSize=udata_swapDataHeader(ds, inData, length, outData, status);
+    int32_t سرلیک_اندازه=udata_بدلون_معلومات_سرلیک(ds, دننه_معلومات, length, بهر_معلومات, حالت);
 
 
     //
     // Get the RRBI Data Header, and check that it appears to be OK.
     //
-    const uint8_t  *inBytes =(const uint8_t *)inData+headerSize;
-    RBBIDataHeader *rbbiDH = (RBBIDataHeader *)inBytes;
-    if (ds->readUInt32(rbbiDH->fMagic) != 0xb1a0 || 
-            !RBBIDataWrapper::isDataVersionAcceptable(rbbiDH->fFormatVersion) ||
-            ds->readUInt32(rbbiDH->fLength)  <  sizeof(RBBIDataHeader)) {
+    ثابت uint8_t  *دننه_بایټونه =(ثابت uint8_t *)دننه_معلومات+سرلیک_اندازه;
+    RBBIData_سرلیک *rbbiDH = (RBBIData_سرلیک *)دننه_بایټونه;
+    إذا (ds->readUInt32(rbbiDH->fMagic) != 0xb1a0 || 
+            !RBBIDataWrapper::is_معلومات_نسخه_Acceptable(rbbiDH->f_Format_نسخه) ||
+            ds->readUInt32(rbbiDH->f_اوږدتیا)  <  حجم(RBBIData_سرلیک)) {
         udata_printError(ds, "ubrk_swap(): RBBI Data header is invalid.\n");
-        *status=U_UNSUPPORTED_ERROR;
-        return 0;
+        *حالت=U_UNSUPPORTED_ERROR;
+        أرجع 0;
     }
 
     //
     // Prefight operation?  Just return the size
     //
-    int32_t breakDataLength = ds->readUInt32(rbbiDH->fLength);
-    int32_t totalSize = headerSize + breakDataLength;
-    if (length < 0) {
-        return totalSize;
+    int32_t break_معلومات_اوږدتیا = ds->readUInt32(rbbiDH->f_اوږدتیا);
+    int32_t ټول_اندازه = سرلیک_اندازه + break_معلومات_اوږدتیا;
+    إذا (length < 0) {
+        أرجع ټول_اندازه;
     }
 
     //
     // Check that length passed in is consistent with length from RBBI data header.
     //
-    if (length < totalSize) {
+    إذا (length < ټول_اندازه) {
         udata_printError(ds, "ubrk_swap(): too few bytes (%d after ICU Data header) for break data.\n",
-                            breakDataLength);
-        *status=U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0;
+                            break_معلومات_اوږدتیا);
+        *حالت=U_شاخص_OUTOFBOUNDS_ERROR;
+        أرجع 0;
         }
 
 
@@ -377,99 +377,99 @@ ubrk_swap(const UDataSwapper *ds, const void *inData, int32_t length, void *outD
     //                 we need to reference the header to locate the data, and an
     //                 inplace swap of the header leaves it unusable.
     //
-    uint8_t         *outBytes = (uint8_t *)outData + headerSize;
-    RBBIDataHeader  *outputDH = (RBBIDataHeader *)outBytes;
+    uint8_t         *بهر_بایټونه = (uint8_t *)بهر_معلومات + سرلیک_اندازه;
+    RBBIData_سرلیک  *outputDH = (RBBIData_سرلیک *)بهر_بایټونه;
 
-    int32_t   tableStartOffset;
-    int32_t   tableLength;
+    int32_t   جدول_پیل_دننه_واټن;
+    int32_t   جدول_اوږدتیا;
 
     //
     // If not swapping in place, zero out the output buffer before starting.
     //    Individual tables and other data items within are aligned to 8 byte boundaries
     //    when originally created.  Any unused space between items needs to be zero.
     //
-    if (inBytes != outBytes) {
-        uprv_memset(outBytes, 0, breakDataLength);
+    إذا (دننه_بایټونه != بهر_بایټونه) {
+        uprv_memset(بهر_بایټونه, 0, break_معلومات_اوږدتیا);
     }
 
     //
     // Each state table begins with several 32 bit fields.  Calculate the size
     //   in bytes of these.
     //
-    int32_t         topSize = offsetof(RBBIStateTable, fTableData);
+    int32_t         سر_اندازه = offsetof(RBBIState_جدول, f_جدول_معلومات);
 
     // Forward state table.
-    tableStartOffset = ds->readUInt32(rbbiDH->fFTable);
-    tableLength      = ds->readUInt32(rbbiDH->fFTableLen);
+    جدول_پیل_دننه_واټن = ds->readUInt32(rbbiDH->fFTable);
+    جدول_اوږدتیا      = ds->readUInt32(rbbiDH->fFTableLen);
 
-    if (tableLength > 0) {
-        RBBIStateTable *rbbiST = (RBBIStateTable *)(inBytes+tableStartOffset);
-        UBool use8Bits = ds->readUInt32(rbbiST->fFlags) & RBBI_8BITS_ROWS;
+    إذا (جدول_اوږدتیا > 0) {
+        RBBIState_جدول *rbbiST = (RBBIState_جدول *)(دننه_بایټونه+جدول_پیل_دننه_واټن);
+        UBool use8_بټونه = ds->readUInt32(rbbiST->fFlags) & RBBI_8_بټونه_لیکې;
 
-        ds->swapArray32(ds, inBytes+tableStartOffset, topSize,
-                            outBytes+tableStartOffset, status);
+        ds->بدلون_Array32(ds, دننه_بایټونه+جدول_پیل_دننه_واټن, سر_اندازه,
+                            بهر_بایټونه+جدول_پیل_دننه_واټن, حالت);
 
         // Swap the state table if the table is in 16 bits.
-        if (use8Bits) {
-            if (outBytes != inBytes) {
-                uprv_memmove(outBytes+tableStartOffset+topSize,
-                             inBytes+tableStartOffset+topSize,
-                             tableLength-topSize);
+        إذا (use8_بټونه) {
+            إذا (بهر_بایټونه != دننه_بایټونه) {
+                uprv_memmove(بهر_بایټونه+جدول_پیل_دننه_واټن+سر_اندازه,
+                             دننه_بایټونه+جدول_پیل_دننه_واټن+سر_اندازه,
+                             جدول_اوږدتیا-سر_اندازه);
             }
-        } else {
-            ds->swapArray16(ds, inBytes+tableStartOffset+topSize, tableLength-topSize,
-                                outBytes+tableStartOffset+topSize, status);
+        } وإلا {
+            ds->بدلون_Array16(ds, دننه_بایټونه+جدول_پیل_دننه_واټن+سر_اندازه, جدول_اوږدتیا-سر_اندازه,
+                                بهر_بایټونه+جدول_پیل_دننه_واټن+سر_اندازه, حالت);
         }
     }
 
     // Reverse state table.  Same layout as forward table, above.
-    tableStartOffset = ds->readUInt32(rbbiDH->fRTable);
-    tableLength      = ds->readUInt32(rbbiDH->fRTableLen);
+    جدول_پیل_دننه_واټن = ds->readUInt32(rbbiDH->fRTable);
+    جدول_اوږدتیا      = ds->readUInt32(rbbiDH->fRTableLen);
 
-    if (tableLength > 0) {
-        RBBIStateTable *rbbiST = (RBBIStateTable *)(inBytes+tableStartOffset);
-        UBool use8Bits = ds->readUInt32(rbbiST->fFlags) & RBBI_8BITS_ROWS;
+    إذا (جدول_اوږدتیا > 0) {
+        RBBIState_جدول *rbbiST = (RBBIState_جدول *)(دننه_بایټونه+جدول_پیل_دننه_واټن);
+        UBool use8_بټونه = ds->readUInt32(rbbiST->fFlags) & RBBI_8_بټونه_لیکې;
 
-        ds->swapArray32(ds, inBytes+tableStartOffset, topSize,
-                            outBytes+tableStartOffset, status);
+        ds->بدلون_Array32(ds, دننه_بایټونه+جدول_پیل_دننه_واټن, سر_اندازه,
+                            بهر_بایټونه+جدول_پیل_دننه_واټن, حالت);
 
         // Swap the state table if the table is in 16 bits.
-        if (use8Bits) {
-            if (outBytes != inBytes) {
-                uprv_memmove(outBytes+tableStartOffset+topSize,
-                             inBytes+tableStartOffset+topSize,
-                             tableLength-topSize);
+        إذا (use8_بټونه) {
+            إذا (بهر_بایټونه != دننه_بایټونه) {
+                uprv_memmove(بهر_بایټونه+جدول_پیل_دننه_واټن+سر_اندازه,
+                             دننه_بایټونه+جدول_پیل_دننه_واټن+سر_اندازه,
+                             جدول_اوږدتیا-سر_اندازه);
             }
-        } else {
-            ds->swapArray16(ds, inBytes+tableStartOffset+topSize, tableLength-topSize,
-                                outBytes+tableStartOffset+topSize, status);
+        } وإلا {
+            ds->بدلون_Array16(ds, دننه_بایټونه+جدول_پیل_دننه_واټن+سر_اندازه, جدول_اوږدتیا-سر_اندازه,
+                                بهر_بایټونه+جدول_پیل_دننه_واټن+سر_اندازه, حالت);
         }
     }
 
     // Trie table for character categories
-    ucptrie_swap(ds, inBytes+ds->readUInt32(rbbiDH->fTrie), ds->readUInt32(rbbiDH->fTrieLen),
-                     outBytes+ds->readUInt32(rbbiDH->fTrie), status);
+    ucptrie_بدلون(ds, دننه_بایټونه+ds->readUInt32(rbbiDH->fTrie), ds->readUInt32(rbbiDH->fTrieLen),
+                     بهر_بایټونه+ds->readUInt32(rbbiDH->fTrie), حالت);
 
     // Source Rules Text.  It's UTF8 data
-    if (outBytes != inBytes) {
-        uprv_memmove(outBytes+ds->readUInt32(rbbiDH->fRuleSource),
-                     inBytes+ds->readUInt32(rbbiDH->fRuleSource),
-                     ds->readUInt32(rbbiDH->fRuleSourceLen));
+    إذا (بهر_بایټونه != دننه_بایټونه) {
+        uprv_memmove(بهر_بایټونه+ds->readUInt32(rbbiDH->f_قاعده_سرچینه),
+                     دننه_بایټونه+ds->readUInt32(rbbiDH->f_قاعده_سرچینه),
+                     ds->readUInt32(rbbiDH->f_قاعده_سرچینه_Len));
     }
 
     // Table of rule status values.  It's all int_32 values
-    ds->swapArray32(ds, inBytes+ds->readUInt32(rbbiDH->fStatusTable), ds->readUInt32(rbbiDH->fStatusTableLen),
-                        outBytes+ds->readUInt32(rbbiDH->fStatusTable), status);
+    ds->بدلون_Array32(ds, دننه_بایټونه+ds->readUInt32(rbbiDH->f_حالت_جدول), ds->readUInt32(rbbiDH->f_حالت_جدول_Len),
+                        بهر_بایټونه+ds->readUInt32(rbbiDH->f_حالت_جدول), حالت);
 
     // And, last, the header.
     //   It is all int32_t values except for fFormataVersion, which is an array of four bytes.
     //   Swap the whole thing as int32_t, then re-swap the one field.
     //
-    ds->swapArray32(ds, inBytes, sizeof(RBBIDataHeader), outBytes, status);
-    ds->swapArray32(ds, outputDH->fFormatVersion, 4, outputDH->fFormatVersion, status);
+    ds->بدلون_Array32(ds, دننه_بایټونه, حجم(RBBIData_سرلیک), بهر_بایټونه, حالت);
+    ds->بدلون_Array32(ds, outputDH->f_Format_نسخه, 4, outputDH->f_Format_نسخه, حالت);
 
-    return totalSize;
+    أرجع ټول_اندازه;
 }
 
 
-#endif /* #if !UCONFIG_NO_BREAK_ITERATION */
+#د_که_پای /* #if !UCONFIG_NO_BREAK_ITERATION */

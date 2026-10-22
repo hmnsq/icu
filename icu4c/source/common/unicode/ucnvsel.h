@@ -18,21 +18,21 @@
  * Started 09-April-2008
  */
 
-#ifndef __ICU_UCNV_SEL_H__
-#define __ICU_UCNV_SEL_H__
+#که_نه_تعریف_شوی __ICU_UCNV_SEL_H__
+#تعریف_کړه __ICU_UCNV_SEL_H__
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#إذا !UCONFIG_NO_CONVERSION
 
-#include "unicode/uset.h"
-#include "unicode/utf16.h"
-#include "unicode/uenum.h"
-#include "unicode/ucnv.h"
+#ضمن "unicode/uset.h"
+#ضمن "unicode/utf16.h"
+#ضمن "unicode/uenum.h"
+#ضمن "unicode/ucnv.h"
 
-#if U_SHOW_CPLUSPLUS_API
-#include "unicode/localpointer.h"
-#endif   // U_SHOW_CPLUSPLUS_API
+#إذا U_SHOW_CPLUSPLUS_API
+#ضمن "unicode/localpointer.h"
+#د_که_پای   // U_SHOW_CPLUSPLUS_API
 
 /**
  * \file
@@ -46,12 +46,12 @@
  * from the serialized form.
  */
 
-struct UConverterSelector;
+بنية UConverterSelector;
 /**
  * @{
  * Typedef for selector data structure.
  */
-typedef struct UConverterSelector UConverterSelector;
+تعريفنوع بنية UConverterSelector UConverterSelector;
 /** @} */
 
 /**
@@ -77,9 +77,9 @@ typedef struct UConverterSelector UConverterSelector;
  * @stable ICU 4.2
  */
 U_CAPI UConverterSelector* U_EXPORT2
-ucnvsel_open(const char* const*  converterList, int32_t converterListSize,
-             const USet* excludedCodePoints,
-             const UConverterUnicodeSet whichSet, UErrorCode* status);
+ucnvsel_open(ثابت حرف* ثابت*  converterList, int32_t converter_List_اندازه,
+             ثابت USet* excluded_کوډ_Points,
+             ثابت UConverter_Unicode_سېټ which_سېټ, UError_کوډ* حالت);
 
 /**
  * Closes a selector.
@@ -94,10 +94,10 @@ ucnvsel_open(const char* const*  converterList, int32_t converterListSize,
  *
  * @stable ICU 4.2
  */
-U_CAPI void U_EXPORT2
+U_CAPI فراغ U_EXPORT2
 ucnvsel_close(UConverterSelector *sel);
 
-#if U_SHOW_CPLUSPLUS_API
+#إذا U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -110,11 +110,11 @@ U_NAMESPACE_BEGIN
  * @see LocalPointer
  * @stable ICU 4.4
  */
-U_DEFINE_LOCAL_OPEN_POINTER(LocalUConverterSelectorPointer, UConverterSelector, ucnvsel_close);
+U_DEFINE_LOCAL_OPEN_اشاره_ګر(Local_UConverter_Selector_اشاره_ګر, UConverterSelector, ucnvsel_close);
 
-U_NAMESPACE_END
+U_NAMESPACE_پای_ټکی
 
-#endif
+#د_که_پای
 
 /**
  * Open a selector from its serialized form.
@@ -132,7 +132,7 @@ U_NAMESPACE_END
  * @stable ICU 4.2
  */
 U_CAPI UConverterSelector* U_EXPORT2
-ucnvsel_openFromSerialized(const void* buffer U_LIFETIME_BOUND, int32_t length, UErrorCode* status);
+ucnvsel_openFromSerialized(ثابت فراغ* بفر U_LIFETIME_BOUND, int32_t اوږدتیا, UError_کوډ* حالت);
 
 /**
  * Serialize a selector into a linear buffer.
@@ -149,8 +149,8 @@ ucnvsel_openFromSerialized(const void* buffer U_LIFETIME_BOUND, int32_t length, 
  * @stable ICU 4.2
  */
 U_CAPI int32_t U_EXPORT2
-ucnvsel_serialize(const UConverterSelector* sel,
-                  void* buffer, int32_t bufferCapacity, UErrorCode* status);
+ucnvsel_serialize(ثابت UConverterSelector* sel,
+                  فراغ* بفر, int32_t بفر_ظرفیت, UError_کوډ* حالت);
 
 /**
  * Select converters that can map all characters in a UTF-16 string,
@@ -167,10 +167,10 @@ ucnvsel_serialize(const UConverterSelector* sel,
  * @stable ICU 4.2
  */
 U_CAPI UEnumeration* U_EXPORT2
-ucnvsel_selectForString(const UConverterSelector* sel U_LIFETIME_BOUND,
-                        const UChar* s,
-                        int32_t length,
-                        UErrorCode* status);
+ucnvsel_selectForString(ثابت UConverterSelector* sel U_LIFETIME_BOUND,
+                        ثابت UChar* s,
+                        int32_t اوږدتیا,
+                        UError_کوډ* حالت);
 
 /**
  * Select converters that can map all characters in a UTF-8 string,
@@ -187,11 +187,11 @@ ucnvsel_selectForString(const UConverterSelector* sel U_LIFETIME_BOUND,
  * @stable ICU 4.2
  */
 U_CAPI UEnumeration* U_EXPORT2
-ucnvsel_selectForUTF8(const UConverterSelector* sel U_LIFETIME_BOUND,
-                      const char* s,
-                      int32_t length,
-                      UErrorCode* status);
+ucnvsel_selectForUTF8(ثابت UConverterSelector* sel U_LIFETIME_BOUND,
+                      ثابت حرف* s,
+                      int32_t اوږدتیا,
+                      UError_کوډ* حالت);
 
-#endif  /* !UCONFIG_NO_CONVERSION */
+#د_که_پای  /* !UCONFIG_NO_CONVERSION */
 
-#endif  /* __ICU_UCNV_SEL_H__ */
+#د_که_پای  /* __ICU_UCNV_SEL_H__ */

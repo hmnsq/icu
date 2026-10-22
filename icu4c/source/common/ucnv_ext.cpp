@@ -18,42 +18,42 @@
 *   Conversion extensions
 */
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION && !UCONFIG_NO_LEGACY_CONVERSION
+#إذا !UCONFIG_NO_CONVERSION && !UCONFIG_NO_LEGACY_CONVERSION
 
-#include "unicode/uset.h"
-#include "unicode/ustring.h"
-#include "ucnv_bld.h"
-#include "ucnv_cnv.h"
-#include "ucnv_ext.h"
-#include "cmemory.h"
-#include "uassert.h"
+#ضمن "unicode/uset.h"
+#ضمن "unicode/ustring.h"
+#ضمن "ucnv_bld.h"
+#ضمن "ucnv_cnv.h"
+#ضمن "ucnv_ext.h"
+#ضمن "cmemory.h"
+#ضمن "uassert.h"
 
 /* to Unicode --------------------------------------------------------------- */
 
 /*
  * @return lookup value for the byte, if found; else 0
  */
-static inline uint32_t
-ucnv_extFindToU(const uint32_t *toUSection, int32_t length, uint8_t byte) {
-    uint32_t word0, word;
-    int32_t i, start, limit;
+ساكن مضمن uint32_t
+ucnv_ext_پیدا_کړه_منزل_U(ثابت uint32_t *منزل_USection, int32_t length, uint8_t byte) {
+    uint32_t word0, کلمه;
+    int32_t i, پیل, حد;
 
     /* check the input byte against the lowest and highest section bytes */
-    start = static_cast<int32_t>(UCNV_EXT_TO_U_GET_BYTE(toUSection[0]));
-    limit = static_cast<int32_t>(UCNV_EXT_TO_U_GET_BYTE(toUSection[length - 1]));
-    if(byte<start || limit<byte) {
-        return 0; /* the byte is out of range */
+    پیل = static_cast<int32_t>(UCNV_EXT_منزل_U_GET_BYTE(منزل_USection[0]));
+    حد = static_cast<int32_t>(UCNV_EXT_منزل_U_GET_BYTE(منزل_USection[length - 1]));
+    إذا(byte<پیل || حد<byte) {
+        أرجع 0; /* the byte is out of range */
     }
 
-    if(length==((limit-start)+1)) {
+    إذا(length==((حد-پیل)+1)) {
         /* direct access on a linear array */
-        return UCNV_EXT_TO_U_GET_VALUE(toUSection[byte-start]); /* could be 0 */
+        أرجع UCNV_EXT_منزل_U_GET_ارزښت(منزل_USection[byte-پیل]); /* could be 0 */
     }
 
     /* word0 is suitable for <=toUSection[] comparison, word for <toUSection[] */
-    word0=UCNV_EXT_TO_U_MAKE_WORD(byte, 0);
+    word0=UCNV_EXT_منزل_U_MAKE_کلمه(byte, 0);
 
     /*
      * Shift byte once instead of each section word and add 0xffffff.
@@ -63,47 +63,47 @@ ucnv_extFindToU(const uint32_t *toUSection, int32_t length, uint8_t byte) {
      * for all v=0..f
      * so we need not mask off the lower 24 bits of each section word.
      */
-    word=word0|UCNV_EXT_TO_U_VALUE_MASK;
+    کلمه=word0|UCNV_EXT_منزل_U_ارزښت_ماسک;
 
     /* binary search */
-    start=0;
-    limit=length;
-    for(;;) {
-        i=limit-start;
-        if(i<=1) {
-            break; /* done */
+    پیل=0;
+    حد=length;
+    لكل(;;) {
+        i=حد-پیل;
+        إذا(i<=1) {
+            اكسر; /*بشپړ*/
         }
         /* start<limit-1 */
 
-        if(i<=4) {
+        إذا(i<=4) {
             /* linear search for the last part */
-            if(word0<=toUSection[start]) {
-                break;
+            إذا(word0<=منزل_USection[پیل]) {
+                اكسر;
             }
-            if(++start<limit && word0<=toUSection[start]) {
-                break;
+            إذا(++پیل<حد && word0<=منزل_USection[پیل]) {
+                اكسر;
             }
-            if(++start<limit && word0<=toUSection[start]) {
-                break;
+            إذا(++پیل<حد && word0<=منزل_USection[پیل]) {
+                اكسر;
             }
             /* always break at start==limit-1 */
-            ++start;
-            break;
+            ++پیل;
+            اكسر;
         }
 
-        i=(start+limit)/2;
-        if(word<toUSection[i]) {
-            limit=i;
-        } else {
-            start=i;
+        i=(پیل+حد)/2;
+        إذا(کلمه<منزل_USection[i]) {
+            حد=i;
+        } وإلا {
+            پیل=i;
         }
     }
 
     /* did we really find it? */
-    if(start<limit && byte==UCNV_EXT_TO_U_GET_BYTE(word=toUSection[start])) {
-        return UCNV_EXT_TO_U_GET_VALUE(word); /* never 0 */
-    } else {
-        return 0; /* not found */
+    إذا(پیل<حد && byte==UCNV_EXT_منزل_U_GET_BYTE(کلمه=منزل_USection[پیل])) {
+        أرجع UCNV_EXT_منزل_U_GET_ارزښت(کلمه); /* never 0 */
+    } وإلا {
+        أرجع 0; /* not found */
     }
 }
 
@@ -111,8 +111,8 @@ ucnv_extFindToU(const uint32_t *toUSection, int32_t length, uint8_t byte) {
  * true if not an SI/SO stateful converter,
  * or if the match length fits with the current converter state
  */
-#define UCNV_EXT_TO_U_VERIFY_SISO_MATCH(sisoState, match) \
-    ((sisoState)<0 || ((sisoState)==0) == (match==1))
+#تعریف_کړه UCNV_EXT_منزل_U_VERIFY_SISO_سمون(sisoState, سمون) \
+    ((sisoState)<0 || ((sisoState)==0) == (سمون==1))
 
 /*
  * this works like ucnv_extMatchFromU() except
@@ -120,143 +120,143 @@ ucnv_extFindToU(const uint32_t *toUSection, int32_t length, uint8_t byte) {
  * - no trie is used
  * - the returned matchLength is not offset by 2
  */
-static int32_t
-ucnv_extMatchToU(const int32_t *cx, int8_t sisoState,
-                 const char *pre, int32_t preLength,
-                 const char *src, int32_t srcLength,
-                 uint32_t *pMatchValue,
+ساكن int32_t
+ucnv_ext_سمون_منزل_U(ثابت int32_t *cx, int8_t sisoState,
+                 ثابت حرف *pre, int32_t pre_اوږدتیا,
+                 ثابت حرف *src, int32_t src_اوږدتیا,
+                 uint32_t *p_سمون_ارزښت,
                  UBool /*useFallback*/, UBool flush) {
-    const uint32_t *toUTable, *toUSection;
+    ثابت uint32_t *منزل_UTable, *منزل_USection;
 
-    uint32_t value, matchValue;
-    int32_t i, j, idx, length, matchLength;
+    uint32_t value, سمون_ارزښت;
+    int32_t i, j, idx, length, سمون_اوږدتیا;
     uint8_t b;
 
-    if(cx==nullptr || cx[UCNV_EXT_TO_U_LENGTH]<=0) {
-        return 0; /* no extension data, no match */
+    إذا(cx==تش_اشاره || cx[UCNV_EXT_منزل_U_اوږدتیا]<=0) {
+        أرجع 0; /* no extension data, no match */
     }
 
     /* initialize */
-    toUTable=UCNV_EXT_ARRAY(cx, UCNV_EXT_TO_U_INDEX, uint32_t);
+    منزل_UTable=UCNV_EXT_ARRAY(cx, UCNV_EXT_منزل_U_شاخص, uint32_t);
     idx=0;
 
-    matchValue=0;
-    i=j=matchLength=0;
+    سمون_ارزښت=0;
+    i=j=سمون_اوږدتیا=0;
 
-    if(sisoState==0) {
+    إذا(sisoState==0) {
         /* SBCS state of an SI/SO stateful converter, look at only exactly 1 byte */
-        if(preLength>1) {
-            return 0; /* no match of a DBCS sequence in SBCS mode */
-        } else if(preLength==1) {
-            srcLength=0;
-        } else /* preLength==0 */ {
-            if(srcLength>1) {
-                srcLength=1;
+        إذا(pre_اوږدتیا>1) {
+            أرجع 0; /* no match of a DBCS sequence in SBCS mode */
+        } وإلا إذا(pre_اوږدتیا==1) {
+            src_اوږدتیا=0;
+        } وإلا /* preLength==0 */ {
+            إذا(src_اوږدتیا>1) {
+                src_اوږدتیا=1;
             }
         }
-        flush=true;
+        flush=ریښتیا;
     }
 
     /* we must not remember fallback matches when not using fallbacks */
 
     /* match input units until there is a full match or the input is consumed */
-    for(;;) {
+    لكل(;;) {
         /* go to the next section */
-        toUSection=toUTable+idx;
+        منزل_USection=منزل_UTable+idx;
 
         /* read first pair of the section */
-        value=*toUSection++;
-        length=UCNV_EXT_TO_U_GET_BYTE(value);
-        value=UCNV_EXT_TO_U_GET_VALUE(value);
-        if( value!=0 &&
-            (UCNV_EXT_TO_U_IS_ROUNDTRIP(value) ||
-             TO_U_USE_FALLBACK(useFallback)) &&
-            UCNV_EXT_TO_U_VERIFY_SISO_MATCH(sisoState, i+j)
+        value=*منزل_USection++;
+        length=UCNV_EXT_منزل_U_GET_BYTE(value);
+        value=UCNV_EXT_منزل_U_GET_ارزښت(value);
+        إذا( value!=0 &&
+            (UCNV_EXT_منزل_U_IS_ROUNDTRIP(value) ||
+             منزل_U_USE_FALLBACK(useFallback)) &&
+            UCNV_EXT_منزل_U_VERIFY_SISO_سمون(sisoState, i+j)
         ) {
             /* remember longest match so far */
-            matchValue=value;
-            matchLength=i+j;
+            سمون_ارزښت=value;
+            سمون_اوږدتیا=i+j;
         }
 
         /* match pre[] then src[] */
-        if(i<preLength) {
+        إذا(i<pre_اوږدتیا) {
             b = static_cast<uint8_t>(pre[i++]);
-        } else if(j<srcLength) {
+        } وإلا إذا(j<src_اوږدتیا) {
             b = static_cast<uint8_t>(src[j++]);
-        } else {
+        } وإلا {
             /* all input consumed, partial match */
-            if(flush || (length=(i+j))>UCNV_EXT_MAX_BYTES) {
+            إذا(flush || (length=(i+j))>UCNV_EXT_MAX_بایټونه) {
                 /*
                  * end of the entire input stream, stop with the longest match so far
                  * or: partial match must not be longer than UCNV_EXT_MAX_BYTES
                  * because it must fit into state buffers
                  */
-                break;
-            } else {
+                اكسر;
+            } وإلا {
                 /* continue with more input next time */
-                return -length;
+                أرجع -length;
             }
         }
 
         /* search for the current char16_t */
-        value=ucnv_extFindToU(toUSection, length, b);
-        if(value==0) {
+        value=ucnv_ext_پیدا_کړه_منزل_U(منزل_USection, length, b);
+        إذا(value==0) {
             /* no match here, stop with the longest match so far */
-            break;
-        } else {
-            if(UCNV_EXT_TO_U_IS_PARTIAL(value)) {
+            اكسر;
+        } وإلا {
+            إذا(UCNV_EXT_منزل_U_IS_PARTIAL(value)) {
                 /* partial match, continue */
-                idx = static_cast<int32_t>(UCNV_EXT_TO_U_GET_PARTIAL_INDEX(value));
-            } else {
-                if( (UCNV_EXT_TO_U_IS_ROUNDTRIP(value) ||
-                     TO_U_USE_FALLBACK(useFallback)) &&
-                    UCNV_EXT_TO_U_VERIFY_SISO_MATCH(sisoState, i+j)
+                idx = static_cast<int32_t>(UCNV_EXT_منزل_U_GET_PARTIAL_شاخص(value));
+            } وإلا {
+                إذا( (UCNV_EXT_منزل_U_IS_ROUNDTRIP(value) ||
+                     منزل_U_USE_FALLBACK(useFallback)) &&
+                    UCNV_EXT_منزل_U_VERIFY_SISO_سمون(sisoState, i+j)
                 ) {
                     /* full match, stop with result */
-                    matchValue=value;
-                    matchLength=i+j;
-                } else {
+                    سمون_ارزښت=value;
+                    سمون_اوږدتیا=i+j;
+                } وإلا {
                     /* full match on fallback not taken, stop with the longest match so far */
                 }
-                break;
+                اكسر;
             }
         }
     }
 
-    if(matchLength==0) {
+    إذا(سمون_اوږدتیا==0) {
         /* no match at all */
-        return 0;
+        أرجع 0;
     }
 
     /* return result */
-    *pMatchValue=UCNV_EXT_TO_U_MASK_ROUNDTRIP(matchValue);
-    return matchLength;
+    *p_سمون_ارزښت=UCNV_EXT_منزل_U_ماسک_ROUNDTRIP(سمون_ارزښت);
+    أرجع سمون_اوږدتیا;
 }
 
-static inline void
-ucnv_extWriteToU(UConverter *cnv, const int32_t *cx,
+ساكن مضمن فراغ
+ucnv_ext_Write_منزل_U(UConverter *cnv, ثابت int32_t *cx,
                  uint32_t value,
-                 char16_t **target, const char16_t *targetLimit,
-                 int32_t **offsets, int32_t srcIndex,
-                 UErrorCode *pErrorCode) {
+                 char16_t **موخه, ثابت char16_t *موخه_حد,
+                 int32_t **offsets, int32_t src_شاخص,
+                 UError_کوډ *p_Error_کوډ) {
     /* output the result */
-    if(UCNV_EXT_TO_U_IS_CODE_POINT(value)) {
+    إذا(UCNV_EXT_منزل_U_IS_کوډ_ټکی(value)) {
         /* output a single code point */
-        ucnv_toUWriteCodePoint(
-            cnv, UCNV_EXT_TO_U_GET_CODE_POINT(value),
-            target, targetLimit,
-            offsets, srcIndex,
-            pErrorCode);
-    } else {
+        ucnv_منزل_UWrite_کوډ_ټکی(
+            cnv, UCNV_EXT_منزل_U_GET_کوډ_ټکی(value),
+            موخه, موخه_حد,
+            offsets, src_شاخص,
+            p_Error_کوډ);
+    } وإلا {
         /* output a string - with correct data we have resultLength>0 */
-        ucnv_toUWriteUChars(
+        ucnv_منزل_UWrite_UChars(
             cnv,
-            UCNV_EXT_ARRAY(cx, UCNV_EXT_TO_U_UCHARS_INDEX, char16_t)+
-                UCNV_EXT_TO_U_GET_INDEX(value),
-            UCNV_EXT_TO_U_GET_LENGTH(value),
-            target, targetLimit,
-            offsets, srcIndex,
-            pErrorCode);
+            UCNV_EXT_ARRAY(cx, UCNV_EXT_منزل_U_UCHARS_شاخص, char16_t)+
+                UCNV_EXT_منزل_U_GET_شاخص(value),
+            UCNV_EXT_منزل_U_GET_اوږدتیا(value),
+            موخه, موخه_حد,
+            offsets, src_شاخص,
+            p_Error_کوډ);
     }
 }
 
@@ -268,88 +268,88 @@ ucnv_extWriteToU(UConverter *cnv, const int32_t *cx,
  * Note: For SI/SO stateful converters getting here,
  * cnv->mode==0 is equivalent to firstLength==1.
  */
-#define UCNV_SISO_STATE(cnv) \
-    ((cnv)->sharedData->mbcs.outputType==MBCS_OUTPUT_2_SISO ? (int8_t)(cnv)->mode : \
-     (cnv)->sharedData->mbcs.outputType==MBCS_OUTPUT_DBCS_ONLY ? 1 : -1)
+#تعریف_کړه UCNV_SISO_STATE(cnv) \
+    ((cnv)->shared_معلومات->mbcs.outputType==MBCS_OUTPUT_2_SISO ? (int8_t)(cnv)->ډېرپېښ : \
+     (cnv)->shared_معلومات->mbcs.outputType==MBCS_OUTPUT_DBCS_ONLY ? 1 : -1)
 
 /*
  * target<targetLimit; set error code for overflow
  */
 U_CFUNC UBool
-ucnv_extInitialMatchToU(UConverter *cnv, const int32_t *cx,
-                        int32_t firstLength,
-                        const char **src, const char *srcLimit,
-                        char16_t **target, const char16_t *targetLimit,
-                        int32_t **offsets, int32_t srcIndex,
+ucnv_ext_Initial_سمون_منزل_U(UConverter *cnv, ثابت int32_t *cx,
+                        int32_t لومړی_اوږدتیا,
+                        ثابت حرف **src, ثابت حرف *src_حد,
+                        char16_t **موخه, ثابت char16_t *موخه_حد,
+                        int32_t **offsets, int32_t src_شاخص,
                         UBool flush,
-                        UErrorCode *pErrorCode) {
+                        UError_کوډ *p_Error_کوډ) {
     uint32_t value = 0;  /* initialize output-only param to 0 to silence gcc */
-    int32_t match;
+    int32_t سمون;
 
     /* try to match */
-    match=ucnv_extMatchToU(cx, (int8_t)UCNV_SISO_STATE(cnv),
-                           (const char *)cnv->toUBytes, firstLength,
-                           *src, (int32_t)(srcLimit-*src),
+    سمون=ucnv_ext_سمون_منزل_U(cx, (int8_t)UCNV_SISO_STATE(cnv),
+                           (ثابت حرف *)cnv->منزل_UBytes, لومړی_اوږدتیا,
+                           *src, (int32_t)(src_حد-*src),
                            &value,
                            cnv->useFallback, flush);
-    if(match>0) {
+    إذا(سمون>0) {
         /* advance src pointer for the consumed input */
-        *src+=match-firstLength;
+        *src+=سمون-لومړی_اوږدتیا;
 
         /* write result to target */
-        ucnv_extWriteToU(cnv, cx,
+        ucnv_ext_Write_منزل_U(cnv, cx,
                          value,
-                         target, targetLimit,
-                         offsets, srcIndex,
-                         pErrorCode);
-        return true;
-    } else if(match<0) {
+                         موخه, موخه_حد,
+                         offsets, src_شاخص,
+                         p_Error_کوډ);
+        أرجع ریښتیا;
+    } وإلا إذا(سمون<0) {
         /* save state for partial match */
-        const char *s;
+        ثابت حرف *s;
         int32_t j;
 
         /* copy the first code point */
-        s=(const char *)cnv->toUBytes;
-        cnv->preToUFirstLength=(int8_t)firstLength;
-        for(j=0; j<firstLength; ++j) {
-            cnv->preToU[j]=*s++;
+        s=(ثابت حرف *)cnv->منزل_UBytes;
+        cnv->pre_منزل_UFirst_اوږدتیا=(int8_t)لومړی_اوږدتیا;
+        لكل(j=0; j<لومړی_اوږدتیا; ++j) {
+            cnv->pre_منزل_U[j]=*s++;
         }
 
         /* now copy the newly consumed input */
         s=*src;
-        match=-match;
-        for(; j<match; ++j) {
-            cnv->preToU[j]=*s++;
+        سمون=-سمون;
+        لكل(; j<سمون; ++j) {
+            cnv->pre_منزل_U[j]=*s++;
         }
         *src=s; /* same as *src=srcLimit; because we reached the end of input */
-        cnv->preToULength=(int8_t)match;
-        return true;
-    } else /* match==0 no match */ {
-        return false;
+        cnv->pre_منزل_ULength=(int8_t)سمون;
+        أرجع ریښتیا;
+    } وإلا /* match==0 no match */ {
+        أرجع خطأ;
     }
 }
 
 U_CFUNC UChar32
-ucnv_extSimpleMatchToU(const int32_t *cx,
-                       const char *source, int32_t length,
+ucnv_ext_Simple_سمون_منزل_U(ثابت int32_t *cx,
+                       ثابت حرف *سرچینه, int32_t length,
                        UBool useFallback) {
     uint32_t value = 0;  /* initialize output-only param to 0 to silence gcc */
-    int32_t match;
+    int32_t سمون;
 
-    if(length<=0) {
-        return 0xffff;
+    إذا(length<=0) {
+        أرجع 0xffff;
     }
 
     /* try to match */
-    match=ucnv_extMatchToU(cx, -1,
-                           source, length,
-                           nullptr, 0,
+    سمون=ucnv_ext_سمون_منزل_U(cx, -1,
+                           سرچینه, length,
+                           تش_اشاره, 0,
                            &value,
-                           useFallback, true);
-    if(match==length) {
+                           useFallback, ریښتیا);
+    إذا(سمون==length) {
         /* write result for simple, single-character conversion */
-        if(UCNV_EXT_TO_U_IS_CODE_POINT(value)) {
-            return UCNV_EXT_TO_U_GET_CODE_POINT(value);
+        إذا(UCNV_EXT_منزل_U_IS_کوډ_ټکی(value)) {
+            أرجع UCNV_EXT_منزل_U_GET_کوډ_ټکی(value);
         }
     }
 
@@ -360,57 +360,57 @@ ucnv_extSimpleMatchToU(const int32_t *cx,
      * - match==0: no match found in the first place
      * - match<0: partial match, not supported for simple conversion (and flush==true)
      */
-    return 0xfffe;
+    أرجع 0xfffe;
 }
 
 /*
  * continue partial match with new input
  * never called for simple, single-character conversion
  */
-U_CFUNC void
-ucnv_extContinueMatchToU(UConverter *cnv,
-                         UConverterToUnicodeArgs *pArgs, int32_t srcIndex,
-                         UErrorCode *pErrorCode) {
+U_CFUNC فراغ
+ucnv_ext_Continue_سمون_منزل_U(UConverter *cnv,
+                         UConverter_منزل_Unicode_دلیلونه *p_دلیلونه, int32_t src_شاخص,
+                         UError_کوډ *p_Error_کوډ) {
     uint32_t value = 0;  /* initialize output-only param to 0 to silence gcc */
-    int32_t match, length;
+    int32_t سمون, length;
 
-    match=ucnv_extMatchToU(cnv->sharedData->mbcs.extIndexes, (int8_t)UCNV_SISO_STATE(cnv),
-                           cnv->preToU, cnv->preToULength,
-                           pArgs->source, (int32_t)(pArgs->sourceLimit-pArgs->source),
+    سمون=ucnv_ext_سمون_منزل_U(cnv->shared_معلومات->mbcs.extIndexes, (int8_t)UCNV_SISO_STATE(cnv),
+                           cnv->pre_منزل_U, cnv->pre_منزل_ULength,
+                           p_دلیلونه->سرچینه, (int32_t)(p_دلیلونه->سرچینه_حد-p_دلیلونه->سرچینه),
                            &value,
-                           cnv->useFallback, pArgs->flush);
-    if(match>0) {
-        if(match>=cnv->preToULength) {
+                           cnv->useFallback, p_دلیلونه->flush);
+    إذا(سمون>0) {
+        إذا(سمون>=cnv->pre_منزل_ULength) {
             /* advance src pointer for the consumed input */
-            pArgs->source+=match-cnv->preToULength;
-            cnv->preToULength=0;
-        } else {
+            p_دلیلونه->سرچینه+=سمون-cnv->pre_منزل_ULength;
+            cnv->pre_منزل_ULength=0;
+        } وإلا {
             /* the match did not use all of preToU[] - keep the rest for replay */
-            length=cnv->preToULength-match;
-            uprv_memmove(cnv->preToU, cnv->preToU+match, length);
-            cnv->preToULength=(int8_t)-length;
+            length=cnv->pre_منزل_ULength-سمون;
+            uprv_memmove(cnv->pre_منزل_U, cnv->pre_منزل_U+سمون, length);
+            cnv->pre_منزل_ULength=(int8_t)-length;
         }
 
         /* write result */
-        ucnv_extWriteToU(cnv, cnv->sharedData->mbcs.extIndexes,
+        ucnv_ext_Write_منزل_U(cnv, cnv->shared_معلومات->mbcs.extIndexes,
                          value,
-                         &pArgs->target, pArgs->targetLimit,
-                         &pArgs->offsets, srcIndex,
-                         pErrorCode);
-    } else if(match<0) {
+                         &p_دلیلونه->موخه, p_دلیلونه->موخه_حد,
+                         &p_دلیلونه->offsets, src_شاخص,
+                         p_Error_کوډ);
+    } وإلا إذا(سمون<0) {
         /* save state for partial match */
-        const char *s;
+        ثابت حرف *s;
         int32_t j;
 
         /* just _append_ the newly consumed input to preToU[] */
-        s=pArgs->source;
-        match=-match;
-        for(j=cnv->preToULength; j<match; ++j) {
-            cnv->preToU[j]=*s++;
+        s=p_دلیلونه->سرچینه;
+        سمون=-سمون;
+        لكل(j=cnv->pre_منزل_ULength; j<سمون; ++j) {
+            cnv->pre_منزل_U[j]=*s++;
         }
-        pArgs->source=s; /* same as *src=srcLimit; because we reached the end of input */
-        cnv->preToULength=(int8_t)match;
-    } else /* match==0 */ {
+        p_دلیلونه->سرچینه=s; /* same as *src=srcLimit; because we reached the end of input */
+        cnv->pre_منزل_ULength=(int8_t)سمون;
+    } وإلا /* match==0 */ {
         /*
          * no match
          *
@@ -430,80 +430,80 @@ ucnv_extContinueMatchToU(UConverter *cnv,
          */
 
         /* move the first codepage character to the error field */
-        uprv_memcpy(cnv->toUBytes, cnv->preToU, cnv->preToUFirstLength);
-        cnv->toULength=cnv->preToUFirstLength;
+        uprv_memcpy(cnv->منزل_UBytes, cnv->pre_منزل_U, cnv->pre_منزل_UFirst_اوږدتیا);
+        cnv->منزل_ULength=cnv->pre_منزل_UFirst_اوږدتیا;
 
         /* move the rest up inside the buffer */
-        length=cnv->preToULength-cnv->preToUFirstLength;
-        if(length>0) {
-            uprv_memmove(cnv->preToU, cnv->preToU+cnv->preToUFirstLength, length);
+        length=cnv->pre_منزل_ULength-cnv->pre_منزل_UFirst_اوږدتیا;
+        إذا(length>0) {
+            uprv_memmove(cnv->pre_منزل_U, cnv->pre_منزل_U+cnv->pre_منزل_UFirst_اوږدتیا, length);
         }
 
         /* mark preToU for replay */
-        cnv->preToULength=(int8_t)-length;
+        cnv->pre_منزل_ULength=(int8_t)-length;
 
         /* set the error code for unassigned */
-        *pErrorCode=U_INVALID_CHAR_FOUND;
+        *p_Error_کوډ=U_INVALID_CHAR_وموندل;
     }
 }
 
 /* from Unicode ------------------------------------------------------------- */
 
 // Use roundtrips, "good one-way" mappings, and some normal fallbacks.
-static inline UBool
-extFromUUseMapping(UBool useFallback, uint32_t value, UChar32 firstCP) {
-    return
-        ((value&UCNV_EXT_FROM_U_STATUS_MASK)!=0 ||
-            FROM_U_USE_FALLBACK(useFallback, firstCP)) &&
-        (value&UCNV_EXT_FROM_U_RESERVED_MASK)==0;
+ساكن مضمن UBool
+extFromUUseMapping(UBool useFallback, uint32_t value, UChar32 لومړی_CP) {
+    أرجع
+        ((value&UCNV_EXT_FROM_U_حالت_ماسک)!=0 ||
+            FROM_U_USE_FALLBACK(useFallback, لومړی_CP)) &&
+        (value&UCNV_EXT_FROM_U_RESERVED_ماسک)==0;
 }
 
 /*
  * @return index of the char16_t, if found; else <0
  */
-static inline int32_t
-ucnv_extFindFromU(const char16_t *fromUSection, int32_t length, char16_t u) {
-    int32_t i, start, limit;
+ساكن مضمن int32_t
+ucnv_ext_پیدا_کړه_From_U(ثابت char16_t *fromUSection, int32_t length, char16_t u) {
+    int32_t i, پیل, حد;
 
     /* binary search */
-    start=0;
-    limit=length;
-    for(;;) {
-        i=limit-start;
-        if(i<=1) {
-            break; /* done */
+    پیل=0;
+    حد=length;
+    لكل(;;) {
+        i=حد-پیل;
+        إذا(i<=1) {
+            اكسر; /*بشپړ*/
         }
         /* start<limit-1 */
 
-        if(i<=4) {
+        إذا(i<=4) {
             /* linear search for the last part */
-            if(u<=fromUSection[start]) {
-                break;
+            إذا(u<=fromUSection[پیل]) {
+                اكسر;
             }
-            if(++start<limit && u<=fromUSection[start]) {
-                break;
+            إذا(++پیل<حد && u<=fromUSection[پیل]) {
+                اكسر;
             }
-            if(++start<limit && u<=fromUSection[start]) {
-                break;
+            إذا(++پیل<حد && u<=fromUSection[پیل]) {
+                اكسر;
             }
             /* always break at start==limit-1 */
-            ++start;
-            break;
+            ++پیل;
+            اكسر;
         }
 
-        i=(start+limit)/2;
-        if(u<fromUSection[i]) {
-            limit=i;
-        } else {
-            start=i;
+        i=(پیل+حد)/2;
+        إذا(u<fromUSection[i]) {
+            حد=i;
+        } وإلا {
+            پیل=i;
         }
     }
 
     /* did we really find it? */
-    if(start<limit && u==fromUSection[start]) {
-        return start;
-    } else {
-        return -1; /* not found */
+    إذا(پیل<حد && u==fromUSection[پیل]) {
+        أرجع پیل;
+    } وإلا {
+        أرجع -1; /* not found */
     }
 }
 
@@ -527,41 +527,41 @@ ucnv_extFindFromU(const char16_t *fromUSection, int32_t length, char16_t u) {
  *         the matchLength is 2 if only firstCP matched, and >2 if firstCP and
  *         further code units matched
  */
-static int32_t
-ucnv_extMatchFromU(const int32_t *cx,
-                   UChar32 firstCP,
-                   const char16_t *pre, int32_t preLength,
-                   const char16_t *src, int32_t srcLength,
-                   uint32_t *pMatchValue,
+ساكن int32_t
+ucnv_ext_سمون_From_U(ثابت int32_t *cx,
+                   UChar32 لومړی_CP,
+                   ثابت char16_t *pre, int32_t pre_اوږدتیا,
+                   ثابت char16_t *src, int32_t src_اوږدتیا,
+                   uint32_t *p_سمون_ارزښت,
                    UBool useFallback, UBool flush) {
-    const uint16_t *stage12, *stage3;
-    const uint32_t *stage3b;
+    ثابت uint16_t *stage12, *stage3;
+    ثابت uint32_t *stage3b;
 
-    const char16_t *fromUTableUChars, *fromUSectionUChars;
-    const uint32_t *fromUTableValues, *fromUSectionValues;
+    ثابت char16_t *fromUTableUChars, *fromUSectionUChars;
+    ثابت uint32_t *from_UTable_ارزښتونه, *from_USection_ارزښتونه;
 
-    uint32_t value, matchValue;
-    int32_t i, j, idx, length, matchLength;
+    uint32_t value, سمون_ارزښت;
+    int32_t i, j, idx, length, سمون_اوږدتیا;
     char16_t c;
 
-    if(cx==nullptr) {
-        return 0; /* no extension data, no match */
+    إذا(cx==تش_اشاره) {
+        أرجع 0; /* no extension data, no match */
     }
 
     /* trie lookup of firstCP */
-    idx=firstCP>>10; /* stage 1 index */
-    if(idx>=cx[UCNV_EXT_FROM_U_STAGE_1_LENGTH]) {
-        return 0; /* the first code point is outside the trie */
+    idx=لومړی_CP>>10; /* stage 1 index */
+    إذا(idx>=cx[UCNV_EXT_FROM_U_STAGE_1_اوږدتیا]) {
+        أرجع 0; /* the first code point is outside the trie */
     }
 
-    stage12=UCNV_EXT_ARRAY(cx, UCNV_EXT_FROM_U_STAGE_12_INDEX, uint16_t);
-    stage3=UCNV_EXT_ARRAY(cx, UCNV_EXT_FROM_U_STAGE_3_INDEX, uint16_t);
-    idx=UCNV_EXT_FROM_U(stage12, stage3, idx, firstCP);
+    stage12=UCNV_EXT_ARRAY(cx, UCNV_EXT_FROM_U_STAGE_12_شاخص, uint16_t);
+    stage3=UCNV_EXT_ARRAY(cx, UCNV_EXT_FROM_U_STAGE_3_شاخص, uint16_t);
+    idx=UCNV_EXT_FROM_U(stage12, stage3, idx, لومړی_CP);
 
-    stage3b=UCNV_EXT_ARRAY(cx, UCNV_EXT_FROM_U_STAGE_3B_INDEX, uint32_t);
+    stage3b=UCNV_EXT_ARRAY(cx, UCNV_EXT_FROM_U_STAGE_3_B_شاخص, uint32_t);
     value=stage3b[idx];
-    if(value==0) {
-        return 0;
+    إذا(value==0) {
+        أرجع 0;
     }
 
     /*
@@ -570,218 +570,218 @@ ucnv_extMatchFromU(const int32_t *cx,
      * and do not even remember intermediate results with reserved bits used.
      */
 
-    if(UCNV_EXT_TO_U_IS_PARTIAL(value)) {
+    إذا(UCNV_EXT_منزل_U_IS_PARTIAL(value)) {
         /* partial match, enter the loop below */
-        idx = static_cast<int32_t>(UCNV_EXT_FROM_U_GET_PARTIAL_INDEX(value));
+        idx = static_cast<int32_t>(UCNV_EXT_FROM_U_GET_PARTIAL_شاخص(value));
 
         /* initialize */
-        fromUTableUChars=UCNV_EXT_ARRAY(cx, UCNV_EXT_FROM_U_UCHARS_INDEX, char16_t);
-        fromUTableValues=UCNV_EXT_ARRAY(cx, UCNV_EXT_FROM_U_VALUES_INDEX, uint32_t);
+        fromUTableUChars=UCNV_EXT_ARRAY(cx, UCNV_EXT_FROM_U_UCHARS_شاخص, char16_t);
+        from_UTable_ارزښتونه=UCNV_EXT_ARRAY(cx, UCNV_EXT_FROM_U_ارزښتونه_شاخص, uint32_t);
 
-        matchValue=0;
-        i=j=matchLength=0;
+        سمون_ارزښت=0;
+        i=j=سمون_اوږدتیا=0;
 
         /* we must not remember fallback matches when not using fallbacks */
 
         /* match input units until there is a full match or the input is consumed */
-        for(;;) {
+        لكل(;;) {
             /* go to the next section */
             fromUSectionUChars=fromUTableUChars+idx;
-            fromUSectionValues=fromUTableValues+idx;
+            from_USection_ارزښتونه=from_UTable_ارزښتونه+idx;
 
             /* read first pair of the section */
             length=*fromUSectionUChars++;
-            value=*fromUSectionValues++;
-            if(value!=0 && extFromUUseMapping(useFallback, value, firstCP)) {
+            value=*from_USection_ارزښتونه++;
+            إذا(value!=0 && extFromUUseMapping(useFallback, value, لومړی_CP)) {
                 /* remember longest match so far */
-                matchValue=value;
-                matchLength=2+i+j;
+                سمون_ارزښت=value;
+                سمون_اوږدتیا=2+i+j;
             }
 
             /* match pre[] then src[] */
-            if(i<preLength) {
+            إذا(i<pre_اوږدتیا) {
                 c=pre[i++];
-            } else if(j<srcLength) {
+            } وإلا إذا(j<src_اوږدتیا) {
                 c=src[j++];
-            } else {
+            } وإلا {
                 /* all input consumed, partial match */
-                if(flush || (length=(i+j))>UCNV_EXT_MAX_UCHARS) {
+                إذا(flush || (length=(i+j))>UCNV_EXT_MAX_UCHARS) {
                     /*
                      * end of the entire input stream, stop with the longest match so far
                      * or: partial match must not be longer than UCNV_EXT_MAX_UCHARS
                      * because it must fit into state buffers
                      */
-                    break;
-                } else {
+                    اكسر;
+                } وإلا {
                     /* continue with more input next time */
-                    return -(2+length);
+                    أرجع -(2+length);
                 }
             }
 
             /* search for the current char16_t */
-            idx=ucnv_extFindFromU(fromUSectionUChars, length, c);
-            if(idx<0) {
+            idx=ucnv_ext_پیدا_کړه_From_U(fromUSectionUChars, length, c);
+            إذا(idx<0) {
                 /* no match here, stop with the longest match so far */
-                break;
-            } else {
-                value=fromUSectionValues[idx];
-                if(UCNV_EXT_FROM_U_IS_PARTIAL(value)) {
+                اكسر;
+            } وإلا {
+                value=from_USection_ارزښتونه[idx];
+                إذا(UCNV_EXT_FROM_U_IS_PARTIAL(value)) {
                     /* partial match, continue */
-                    idx = static_cast<int32_t>(UCNV_EXT_FROM_U_GET_PARTIAL_INDEX(value));
-                } else {
-                    if(extFromUUseMapping(useFallback, value, firstCP)) {
+                    idx = static_cast<int32_t>(UCNV_EXT_FROM_U_GET_PARTIAL_شاخص(value));
+                } وإلا {
+                    إذا(extFromUUseMapping(useFallback, value, لومړی_CP)) {
                         /* full match, stop with result */
-                        matchValue=value;
-                        matchLength=2+i+j;
-                    } else {
+                        سمون_ارزښت=value;
+                        سمون_اوږدتیا=2+i+j;
+                    } وإلا {
                         /* full match on fallback not taken, stop with the longest match so far */
                     }
-                    break;
+                    اكسر;
                 }
             }
         }
 
-        if(matchLength==0) {
+        إذا(سمون_اوږدتیا==0) {
             /* no match at all */
-            return 0;
+            أرجع 0;
         }
-    } else /* result from firstCP trie lookup */ {
-        if(extFromUUseMapping(useFallback, value, firstCP)) {
+    } وإلا /* result from firstCP trie lookup */ {
+        إذا(extFromUUseMapping(useFallback, value, لومړی_CP)) {
             /* full match, stop with result */
-            matchValue=value;
-            matchLength=2;
-        } else {
+            سمون_ارزښت=value;
+            سمون_اوږدتیا=2;
+        } وإلا {
             /* fallback not taken */
-            return 0;
+            أرجع 0;
         }
     }
 
     /* return result */
-    if(matchValue==UCNV_EXT_FROM_U_SUBCHAR1) {
-        return 1; /* assert matchLength==2 */
+    إذا(سمون_ارزښت==UCNV_EXT_FROM_U_SUBCHAR1) {
+        أرجع 1; /* assert matchLength==2 */
     }
 
-    *pMatchValue=matchValue;
-    return matchLength;
+    *p_سمون_ارزښت=سمون_ارزښت;
+    أرجع سمون_اوږدتیا;
 }
 
 /*
  * @param value fromUnicode mapping table value; ignores roundtrip and reserved bits
  */
-static inline void
-ucnv_extWriteFromU(UConverter *cnv, const int32_t *cx,
+ساكن مضمن فراغ
+ucnv_extWriteFromU(UConverter *cnv, ثابت int32_t *cx,
                    uint32_t value,
-                   char **target, const char *targetLimit,
-                   int32_t **offsets, int32_t srcIndex,
-                   UErrorCode *pErrorCode) {
-    uint8_t buffer[1+UCNV_EXT_MAX_BYTES];
-    const uint8_t *result;
-    int32_t length, prevLength;
+                   حرف **موخه, ثابت حرف *موخه_حد,
+                   int32_t **offsets, int32_t src_شاخص,
+                   UError_کوډ *p_Error_کوډ) {
+    uint8_t بفر[1+UCNV_EXT_MAX_بایټونه];
+    ثابت uint8_t *پایله;
+    int32_t length, prev_اوږدتیا;
 
-    length=UCNV_EXT_FROM_U_GET_LENGTH(value);
-    value = UCNV_EXT_FROM_U_GET_DATA(value);
+    length=UCNV_EXT_FROM_U_GET_اوږدتیا(value);
+    value = UCNV_EXT_FROM_U_GET_معلومات(value);
 
     /* output the result */
-    if(length<=UCNV_EXT_FROM_U_MAX_DIRECT_LENGTH) {
+    إذا(length<=UCNV_EXT_FROM_U_MAX_مستقیم_اوږدتیا) {
         /*
          * Generate a byte array and then write it below.
          * This is not the fastest possible way, but it should be ok for
          * extension mappings, and it is much simpler.
          * Offset and overflow handling are only done once this way.
          */
-        uint8_t *p=buffer+1; /* reserve buffer[0] for shiftByte below */
-        switch(length) {
-        case 3:
+        uint8_t *p=بفر+1; /* reserve buffer[0] for shiftByte below */
+        بدل(length) {
+        حالة 3:
             *p++ = static_cast<uint8_t>(value >> 16);
             U_FALLTHROUGH;
-        case 2:
+        حالة 2:
             *p++ = static_cast<uint8_t>(value >> 8);
             U_FALLTHROUGH;
-        case 1:
+        حالة 1:
             *p++ = static_cast<uint8_t>(value);
             U_FALLTHROUGH;
-        default:
-            break; /* will never occur */
+        افتراضي:
+            اكسر; /* will never occur */
         }
-        result=buffer+1;
-    } else {
-        result=UCNV_EXT_ARRAY(cx, UCNV_EXT_FROM_U_BYTES_INDEX, uint8_t)+value;
+        پایله=بفر+1;
+    } وإلا {
+        پایله=UCNV_EXT_ARRAY(cx, UCNV_EXT_FROM_U_بایټونه_شاخص, uint8_t)+value;
     }
 
     /* with correct data we have length>0 */
 
-    if((prevLength=cnv->fromUnicodeStatus)!=0) {
+    إذا((prev_اوږدتیا=cnv->from_Unicode_حالت)!=0) {
         /* handle SI/SO stateful output */
-        uint8_t shiftByte;
+        uint8_t ښويدنه_Byte;
 
-        if(prevLength>1 && length==1) {
+        إذا(prev_اوږدتیا>1 && length==1) {
             /* change from double-byte mode to single-byte */
-            shiftByte = static_cast<uint8_t>(UCNV_SI);
-            cnv->fromUnicodeStatus=1;
-        } else if(prevLength==1 && length>1) {
+            ښويدنه_Byte = static_cast<uint8_t>(UCNV_SI);
+            cnv->from_Unicode_حالت=1;
+        } وإلا إذا(prev_اوږدتیا==1 && length>1) {
             /* change from single-byte mode to double-byte */
-            shiftByte = static_cast<uint8_t>(UCNV_SO);
-            cnv->fromUnicodeStatus=2;
-        } else {
-            shiftByte=0;
+            ښويدنه_Byte = static_cast<uint8_t>(UCNV_SO);
+            cnv->from_Unicode_حالت=2;
+        } وإلا {
+            ښويدنه_Byte=0;
         }
 
-        if(shiftByte!=0) {
+        إذا(ښويدنه_Byte!=0) {
             /* prepend the shift byte to the result bytes */
-            buffer[0]=shiftByte;
-            if(result!=buffer+1) {
-                uprv_memcpy(buffer+1, result, length);
+            بفر[0]=ښويدنه_Byte;
+            إذا(پایله!=بفر+1) {
+                uprv_memcpy(بفر+1, پایله, length);
             }
-            result=buffer;
+            پایله=بفر;
             ++length;
         }
     }
 
-    ucnv_fromUWriteBytes(cnv, reinterpret_cast<const char*>(result), length,
-                         target, targetLimit,
-                         offsets, srcIndex,
-                         pErrorCode);
+    ucnv_from_UWrite_بایټونه(cnv, reinterpret_cast<ثابت حرف*>(پایله), length,
+                         موخه, موخه_حد,
+                         offsets, src_شاخص,
+                         p_Error_کوډ);
 }
 
 /*
  * target<targetLimit; set error code for overflow
  */
 U_CFUNC UBool
-ucnv_extInitialMatchFromU(UConverter *cnv, const int32_t *cx,
+ucnv_ext_Initial_سمون_From_U(UConverter *cnv, ثابت int32_t *cx,
                           UChar32 cp,
-                          const char16_t **src, const char16_t *srcLimit,
-                          char **target, const char *targetLimit,
-                          int32_t **offsets, int32_t srcIndex,
+                          ثابت char16_t **src, ثابت char16_t *src_حد,
+                          حرف **موخه, ثابت حرف *موخه_حد,
+                          int32_t **offsets, int32_t src_شاخص,
                           UBool flush,
-                          UErrorCode *pErrorCode) {
+                          UError_کوډ *p_Error_کوډ) {
     uint32_t value = 0;  /* initialize output-only param to 0 to silence gcc */
-    int32_t match;
+    int32_t سمون;
 
     /* try to match */
-    match=ucnv_extMatchFromU(cx, cp,
-                             nullptr, 0,
-                             *src, (int32_t)(srcLimit-*src),
+    سمون=ucnv_ext_سمون_From_U(cx, cp,
+                             تش_اشاره, 0,
+                             *src, (int32_t)(src_حد-*src),
                              &value,
                              cnv->useFallback, flush);
 
     /* reject a match if the result is a single byte for DBCS-only */
-    if( match>=2 &&
-        !(UCNV_EXT_FROM_U_GET_LENGTH(value)==1 &&
-          cnv->sharedData->mbcs.outputType==MBCS_OUTPUT_DBCS_ONLY)
+    إذا( سمون>=2 &&
+        !(UCNV_EXT_FROM_U_GET_اوږدتیا(value)==1 &&
+          cnv->shared_معلومات->mbcs.outputType==MBCS_OUTPUT_DBCS_ONLY)
     ) {
         /* advance src pointer for the consumed input */
-        *src+=match-2; /* remove 2 for the initial code point */
+        *src+=سمون-2; /* remove 2 for the initial code point */
 
         /* write result to target */
         ucnv_extWriteFromU(cnv, cx,
                            value,
-                           target, targetLimit,
-                           offsets, srcIndex,
-                           pErrorCode);
-        return true;
-    } else if(match<0) {
+                           موخه, موخه_حد,
+                           offsets, src_شاخص,
+                           p_Error_کوډ);
+        أرجع ریښتیا;
+    } وإلا إذا(سمون<0) {
         /* save state for partial match */
-        const char16_t *s;
+        ثابت char16_t *s;
         int32_t j;
 
         /* copy the first code point */
@@ -789,19 +789,19 @@ ucnv_extInitialMatchFromU(UConverter *cnv, const int32_t *cx,
 
         /* now copy the newly consumed input */
         s=*src;
-        match=-match-2; /* remove 2 for the initial code point */
-        for(j=0; j<match; ++j) {
+        سمون=-سمون-2; /* remove 2 for the initial code point */
+        لكل(j=0; j<سمون; ++j) {
             cnv->preFromU[j]=*s++;
         }
         *src=s; /* same as *src=srcLimit; because we reached the end of input */
-        cnv->preFromULength=(int8_t)match;
-        return true;
-    } else if(match==1) {
+        cnv->preFromULength=(int8_t)سمون;
+        أرجع ریښتیا;
+    } وإلا إذا(سمون==1) {
         /* matched, no mapping but request for <subchar1> */
-        cnv->useSubChar1=true;
-        return false;
-    } else /* match==0 no match */ {
-        return false;
+        cnv->useSubChar1=ریښتیا;
+        أرجع خطأ;
+    } وإلا /* match==0 no match */ {
+        أرجع خطأ;
     }
 }
 
@@ -810,42 +810,42 @@ ucnv_extInitialMatchFromU(UConverter *cnv, const int32_t *cx,
  * @return number of bytes in *pValue; negative number if fallback; 0 for no mapping
  */
 U_CFUNC int32_t
-ucnv_extSimpleMatchFromU(const int32_t *cx,
-                         UChar32 cp, uint32_t *pValue,
+ucnv_ext_Simple_سمون_From_U(ثابت int32_t *cx,
+                         UChar32 cp, uint32_t *p_ارزښت,
                          UBool useFallback) {
     uint32_t value;
-    int32_t match;
+    int32_t سمون;
 
     /* try to match */
-    match=ucnv_extMatchFromU(cx,
+    سمون=ucnv_ext_سمون_From_U(cx,
                              cp,
-                             nullptr, 0,
-                             nullptr, 0,
+                             تش_اشاره, 0,
+                             تش_اشاره, 0,
                              &value,
-                             useFallback, true);
-    if(match>=2) {
+                             useFallback, ریښتیا);
+    إذا(سمون>=2) {
         /* write result for simple, single-character conversion */
         int32_t length;
-        int isRoundtrip;
+        صحيح isRoundtrip;
 
         isRoundtrip=UCNV_EXT_FROM_U_IS_ROUNDTRIP(value);
-        length=UCNV_EXT_FROM_U_GET_LENGTH(value);
-        value = UCNV_EXT_FROM_U_GET_DATA(value);
+        length=UCNV_EXT_FROM_U_GET_اوږدتیا(value);
+        value = UCNV_EXT_FROM_U_GET_معلومات(value);
 
-        if(length<=UCNV_EXT_FROM_U_MAX_DIRECT_LENGTH) {
-            *pValue=value;
-            return isRoundtrip ? length : -length;
-#if 0 /* not currently used */
-        } else if(length==4) {
+        إذا(length<=UCNV_EXT_FROM_U_MAX_مستقیم_اوږدتیا) {
+            *p_ارزښت=value;
+            أرجع isRoundtrip ? length : -length;
+#إذا 0 /* not currently used */
+        } وإلا إذا(length==4) {
             /* de-serialize a 4-byte result */
-            const uint8_t *result=UCNV_EXT_ARRAY(cx, UCNV_EXT_FROM_U_BYTES_INDEX, uint8_t)+value;
-            *pValue=
-                ((uint32_t)result[0]<<24)|
-                ((uint32_t)result[1]<<16)|
-                ((uint32_t)result[2]<<8)|
-                result[3];
-            return isRoundtrip ? 4 : -4;
-#endif
+            ثابت uint8_t *پایله=UCNV_EXT_ARRAY(cx, UCNV_EXT_FROM_U_بایټونه_شاخص, uint8_t)+value;
+            *p_ارزښت=
+                ((uint32_t)پایله[0]<<24)|
+                ((uint32_t)پایله[1]<<16)|
+                ((uint32_t)پایله[2]<<8)|
+                پایله[3];
+            أرجع isRoundtrip ? 4 : -4;
+#د_که_پای
         }
     }
 
@@ -856,37 +856,37 @@ ucnv_extSimpleMatchFromU(const int32_t *cx,
      * - match==0: no match found in the first place
      * - match<0: partial match, not supported for simple conversion (and flush==true)
      */
-    return 0;
+    أرجع 0;
 }
 
 /*
  * continue partial match with new input, requires cnv->preFromUFirstCP>=0
  * never called for simple, single-character conversion
  */
-U_CFUNC void
-ucnv_extContinueMatchFromU(UConverter *cnv,
-                           UConverterFromUnicodeArgs *pArgs, int32_t srcIndex,
-                           UErrorCode *pErrorCode) {
+U_CFUNC فراغ
+ucnv_ext_Continue_سمون_From_U(UConverter *cnv,
+                           UConverter_From_Unicode_دلیلونه *p_دلیلونه, int32_t src_شاخص,
+                           UError_کوډ *p_Error_کوډ) {
     uint32_t value = 0;  /* initialize output-only param to 0 to silence gcc */
-    int32_t match;
+    int32_t سمون;
 
-    match=ucnv_extMatchFromU(cnv->sharedData->mbcs.extIndexes,
+    سمون=ucnv_ext_سمون_From_U(cnv->shared_معلومات->mbcs.extIndexes,
                              cnv->preFromUFirstCP,
                              cnv->preFromU, cnv->preFromULength,
-                             pArgs->source, (int32_t)(pArgs->sourceLimit-pArgs->source),
+                             p_دلیلونه->سرچینه, (int32_t)(p_دلیلونه->سرچینه_حد-p_دلیلونه->سرچینه),
                              &value,
-                             cnv->useFallback, pArgs->flush);
-    if(match>=2) {
-        match-=2; /* remove 2 for the initial code point */
+                             cnv->useFallback, p_دلیلونه->flush);
+    إذا(سمون>=2) {
+        سمون-=2; /* remove 2 for the initial code point */
 
-        if(match>=cnv->preFromULength) {
+        إذا(سمون>=cnv->preFromULength) {
             /* advance src pointer for the consumed input */
-            pArgs->source+=match-cnv->preFromULength;
+            p_دلیلونه->سرچینه+=سمون-cnv->preFromULength;
             cnv->preFromULength=0;
-        } else {
+        } وإلا {
             /* the match did not use all of preFromU[] - keep the rest for replay */
-            int32_t length=cnv->preFromULength-match;
-            u_memmove(cnv->preFromU, cnv->preFromU+match, length);
+            int32_t length=cnv->preFromULength-سمون;
+            u_memmove(cnv->preFromU, cnv->preFromU+سمون, length);
             cnv->preFromULength=(int8_t)-length;
         }
 
@@ -894,26 +894,26 @@ ucnv_extContinueMatchFromU(UConverter *cnv,
         cnv->preFromUFirstCP=U_SENTINEL;
 
         /* write result */
-        ucnv_extWriteFromU(cnv, cnv->sharedData->mbcs.extIndexes,
+        ucnv_extWriteFromU(cnv, cnv->shared_معلومات->mbcs.extIndexes,
                            value,
-                           &pArgs->target, pArgs->targetLimit,
-                           &pArgs->offsets, srcIndex,
-                           pErrorCode);
-    } else if(match<0) {
+                           &p_دلیلونه->موخه, p_دلیلونه->موخه_حد,
+                           &p_دلیلونه->offsets, src_شاخص,
+                           p_Error_کوډ);
+    } وإلا إذا(سمون<0) {
         /* save state for partial match */
-        const char16_t *s;
+        ثابت char16_t *s;
         int32_t j;
 
         /* just _append_ the newly consumed input to preFromU[] */
-        s=pArgs->source;
-        match=-match-2; /* remove 2 for the initial code point */
-        for(j=cnv->preFromULength; j<match; ++j) {
+        s=p_دلیلونه->سرچینه;
+        سمون=-سمون-2; /* remove 2 for the initial code point */
+        لكل(j=cnv->preFromULength; j<سمون; ++j) {
             U_ASSERT(j>=0);
             cnv->preFromU[j]=*s++;
         }
-        pArgs->source=s; /* same as *src=srcLimit; because we reached the end of input */
-        cnv->preFromULength=(int8_t)match;
-    } else /* match==0 or 1 */ {
+        p_دلیلونه->سرچینه=s; /* same as *src=srcLimit; because we reached the end of input */
+        cnv->preFromULength=(int8_t)سمون;
+    } وإلا /* match==0 or 1 */ {
         /*
          * no match
          *
@@ -932,9 +932,9 @@ ucnv_extContinueMatchFromU(UConverter *cnv,
          *    The replay will be handled by the ucnv.c conversion code.
          */
 
-        if(match==1) {
+        إذا(سمون==1) {
             /* matched, no mapping but request for <subchar1> */
-            cnv->useSubChar1=true;
+            cnv->useSubChar1=ریښتیا;
         }
 
         /* move the first code point to the error field */
@@ -945,13 +945,13 @@ ucnv_extContinueMatchFromU(UConverter *cnv,
         cnv->preFromULength=-cnv->preFromULength;
 
         /* set the error code for unassigned */
-        *pErrorCode=U_INVALID_CHAR_FOUND;
+        *p_Error_کوډ=U_INVALID_CHAR_وموندل;
     }
 }
 
-static UBool
-extSetUseMapping(UConverterUnicodeSet which, int32_t minLength, uint32_t value) {
-    if(which==UCNV_ROUNDTRIP_SET) {
+ساكن UBool
+ext_سېټ_Use_Mapping(UConverter_Unicode_سېټ which, int32_t min_اوږدتیا, uint32_t value) {
+    إذا(which==UCNV_ROUNDTRIP_سېټ) {
         // Add only code points for which the roundtrip flag is set.
         // Do not add any fallbacks, even if ucnv_fromUnicode() would use them
         // (fallbacks from PUA). See the API docs for ucnv_getUnicodeSet().
@@ -959,185 +959,185 @@ extSetUseMapping(UConverterUnicodeSet which, int32_t minLength, uint32_t value) 
         // By analogy, also do not add "good one-way" mappings.
         //
         // Do not add entries with reserved bits set.
-        if(((value&(UCNV_EXT_FROM_U_ROUNDTRIP_FLAG|UCNV_EXT_FROM_U_RESERVED_MASK))!=
+        إذا(((value&(UCNV_EXT_FROM_U_ROUNDTRIP_FLAG|UCNV_EXT_FROM_U_RESERVED_ماسک))!=
                 UCNV_EXT_FROM_U_ROUNDTRIP_FLAG)) {
-            return false;
+            أرجع خطأ;
         }
-    } else /* UCNV_ROUNDTRIP_AND_FALLBACK_SET */ {
+    } وإلا /* UCNV_ROUNDTRIP_AND_FALLBACK_SET */ {
         // Do not add entries with reserved bits set.
-        if((value&UCNV_EXT_FROM_U_RESERVED_MASK)!=0) {
-            return false;
+        إذا((value&UCNV_EXT_FROM_U_RESERVED_ماسک)!=0) {
+            أرجع خطأ;
         }
     }
     // Do not add <subchar1> entries or other (future?) pseudo-entries
     // with an output length of 0.
-    return UCNV_EXT_FROM_U_GET_LENGTH(value)>=minLength;
+    أرجع UCNV_EXT_FROM_U_GET_اوږدتیا(value)>=min_اوږدتیا;
 }
 
-static void
-ucnv_extGetUnicodeSetString(const UConverterSharedData *sharedData,
-                            const int32_t *cx,
-                            const USetAdder *sa,
-                            UConverterUnicodeSet which,
-                            int32_t minLength,
-                            UChar32 firstCP,
+ساكن فراغ
+ucnv_ext_Get_Unicode_سېټ_String(ثابت UConverter_Shared_معلومات *shared_معلومات,
+                            ثابت int32_t *cx,
+                            ثابت USetAdder *sa,
+                            UConverter_Unicode_سېټ which,
+                            int32_t min_اوږدتیا,
+                            UChar32 لومړی_CP,
                             char16_t s[UCNV_EXT_MAX_UCHARS], int32_t length,
-                            int32_t sectionIndex,
-                            UErrorCode *pErrorCode) {
-    const char16_t *fromUSectionUChars;
-    const uint32_t *fromUSectionValues;
+                            int32_t section_شاخص,
+                            UError_کوډ *p_Error_کوډ) {
+    ثابت char16_t *fromUSectionUChars;
+    ثابت uint32_t *from_USection_ارزښتونه;
 
     uint32_t value;
     int32_t i, count;
 
-    fromUSectionUChars=UCNV_EXT_ARRAY(cx, UCNV_EXT_FROM_U_UCHARS_INDEX, char16_t)+sectionIndex;
-    fromUSectionValues=UCNV_EXT_ARRAY(cx, UCNV_EXT_FROM_U_VALUES_INDEX, uint32_t)+sectionIndex;
+    fromUSectionUChars=UCNV_EXT_ARRAY(cx, UCNV_EXT_FROM_U_UCHARS_شاخص, char16_t)+section_شاخص;
+    from_USection_ارزښتونه=UCNV_EXT_ARRAY(cx, UCNV_EXT_FROM_U_ارزښتونه_شاخص, uint32_t)+section_شاخص;
 
     /* read first pair of the section */
     count=*fromUSectionUChars++;
-    value=*fromUSectionValues++;
+    value=*from_USection_ارزښتونه++;
 
-    if(extSetUseMapping(which, minLength, value)) {
-        if(length==U16_LENGTH(firstCP)) {
+    إذا(ext_سېټ_Use_Mapping(which, min_اوږدتیا, value)) {
+        إذا(length==U16_اوږدتیا(لومړی_CP)) {
             /* add the initial code point */
-            sa->add(sa->set, firstCP);
-        } else {
+            sa->جمع_کړه(sa->سېټ, لومړی_CP);
+        } وإلا {
             /* add the string so far */
-            sa->addString(sa->set, s, length);
+            sa->جمع_کړه_String(sa->سېټ, s, length);
         }
     }
 
-    for(i=0; i<count; ++i) {
+    لكل(i=0; i<count; ++i) {
         /* append this code unit and recurse or add the string */
         s[length]=fromUSectionUChars[i];
-        value=fromUSectionValues[i];
+        value=from_USection_ارزښتونه[i];
 
-        if(value==0) {
+        إذا(value==0) {
             /* no mapping, do nothing */
-        } else if(UCNV_EXT_FROM_U_IS_PARTIAL(value)) {
-            ucnv_extGetUnicodeSetString(
-                sharedData, cx, sa, which, minLength,
-                firstCP, s, length+1,
-                static_cast<int32_t>(UCNV_EXT_FROM_U_GET_PARTIAL_INDEX(value)),
-                pErrorCode);
-        } else if(extSetUseMapping(which, minLength, value)) {
-            sa->addString(sa->set, s, length+1);
+        } وإلا إذا(UCNV_EXT_FROM_U_IS_PARTIAL(value)) {
+            ucnv_ext_Get_Unicode_سېټ_String(
+                shared_معلومات, cx, sa, which, min_اوږدتیا,
+                لومړی_CP, s, length+1,
+                static_cast<int32_t>(UCNV_EXT_FROM_U_GET_PARTIAL_شاخص(value)),
+                p_Error_کوډ);
+        } وإلا إذا(ext_سېټ_Use_Mapping(which, min_اوږدتیا, value)) {
+            sa->جمع_کړه_String(sa->سېټ, s, length+1);
         }
     }
 }
 
-U_CFUNC void
-ucnv_extGetUnicodeSet(const UConverterSharedData *sharedData,
-                      const USetAdder *sa,
-                      UConverterUnicodeSet which,
-                      UConverterSetFilter filter,
-                      UErrorCode *pErrorCode) {
-    const int32_t *cx;
-    const uint16_t *stage12, *stage3, *ps2, *ps3;
-    const uint32_t *stage3b;
+U_CFUNC فراغ
+ucnv_ext_Get_Unicode_سېټ(ثابت UConverter_Shared_معلومات *shared_معلومات,
+                      ثابت USetAdder *sa,
+                      UConverter_Unicode_سېټ which,
+                      UConverter_سېټ_Filter filter,
+                      UError_کوډ *p_Error_کوډ) {
+    ثابت int32_t *cx;
+    ثابت uint16_t *stage12, *stage3, *ps2, *ps3;
+    ثابت uint32_t *stage3b;
 
     uint32_t value;
-    int32_t st1, stage1Length, st2, st3, minLength;
+    int32_t st1, stage1_اوږدتیا, st2, st3, min_اوږدتیا;
 
     char16_t s[UCNV_EXT_MAX_UCHARS];
     UChar32 c;
     int32_t length;
 
-    cx=sharedData->mbcs.extIndexes;
-    if(cx==nullptr) {
-        return;
+    cx=shared_معلومات->mbcs.extIndexes;
+    إذا(cx==تش_اشاره) {
+        أرجع;
     }
 
-    stage12=UCNV_EXT_ARRAY(cx, UCNV_EXT_FROM_U_STAGE_12_INDEX, uint16_t);
-    stage3=UCNV_EXT_ARRAY(cx, UCNV_EXT_FROM_U_STAGE_3_INDEX, uint16_t);
-    stage3b=UCNV_EXT_ARRAY(cx, UCNV_EXT_FROM_U_STAGE_3B_INDEX, uint32_t);
+    stage12=UCNV_EXT_ARRAY(cx, UCNV_EXT_FROM_U_STAGE_12_شاخص, uint16_t);
+    stage3=UCNV_EXT_ARRAY(cx, UCNV_EXT_FROM_U_STAGE_3_شاخص, uint16_t);
+    stage3b=UCNV_EXT_ARRAY(cx, UCNV_EXT_FROM_U_STAGE_3_B_شاخص, uint32_t);
 
-    stage1Length=cx[UCNV_EXT_FROM_U_STAGE_1_LENGTH];
+    stage1_اوږدتیا=cx[UCNV_EXT_FROM_U_STAGE_1_اوږدتیا];
 
     /* enumerate the from-Unicode trie table */
     c=0; /* keep track of the current code point while enumerating */
 
-    if(filter==UCNV_SET_FILTER_2022_CN) {
-        minLength=3;
-    } else if( sharedData->mbcs.outputType==MBCS_OUTPUT_DBCS_ONLY ||
-               filter!=UCNV_SET_FILTER_NONE
+    إذا(filter==UCNV_سېټ_FILTER_2022_CN) {
+        min_اوږدتیا=3;
+    } وإلا إذا( shared_معلومات->mbcs.outputType==MBCS_OUTPUT_DBCS_ONLY ||
+               filter!=UCNV_سېټ_FILTER_NONE
     ) {
         /* DBCS-only, ignore single-byte results */
-        minLength=2;
-    } else {
-        minLength=1;
+        min_اوږدتیا=2;
+    } وإلا {
+        min_اوږدتیا=1;
     }
 
     /*
      * the trie enumeration is almost the same as
      * in MBCSGetUnicodeSet() for MBCS_OUTPUT_1
      */
-    for(st1=0; st1<stage1Length; ++st1) {
+    لكل(st1=0; st1<stage1_اوږدتیا; ++st1) {
         st2=stage12[st1];
-        if(st2>stage1Length) {
+        إذا(st2>stage1_اوږدتیا) {
             ps2=stage12+st2;
-            for(st2=0; st2<64; ++st2) {
-                if((st3=(int32_t)ps2[st2]<<UCNV_EXT_STAGE_2_LEFT_SHIFT)!=0) {
+            لكل(st2=0; st2<64; ++st2) {
+                إذا((st3=(int32_t)ps2[st2]<<UCNV_EXT_STAGE_2_کیڼ_ښويدنه)!=0) {
                     /* read the stage 3 block */
                     ps3=stage3+st3;
 
-                    do {
+                    افعل {
                         value=stage3b[*ps3++];
-                        if(value==0) {
+                        إذا(value==0) {
                             /* no mapping, do nothing */
-                        } else if(UCNV_EXT_FROM_U_IS_PARTIAL(value)) {
+                        } وإلا إذا(UCNV_EXT_FROM_U_IS_PARTIAL(value)) {
                             // Recurse for partial results.
                             length=0;
                             U16_APPEND_UNSAFE(s, length, c);
-                            ucnv_extGetUnicodeSetString(
-                                sharedData, cx, sa, which, minLength,
+                            ucnv_ext_Get_Unicode_سېټ_String(
+                                shared_معلومات, cx, sa, which, min_اوږدتیا,
                                 c, s, length,
-                                (int32_t)UCNV_EXT_FROM_U_GET_PARTIAL_INDEX(value),
-                                pErrorCode);
-                        } else if(extSetUseMapping(which, minLength, value)) {
-                            switch(filter) {
-                            case UCNV_SET_FILTER_2022_CN:
-                                if(!(UCNV_EXT_FROM_U_GET_LENGTH(value)==3 && UCNV_EXT_FROM_U_GET_DATA(value)<=0x82ffff)) {
-                                    continue;
+                                (int32_t)UCNV_EXT_FROM_U_GET_PARTIAL_شاخص(value),
+                                p_Error_کوډ);
+                        } وإلا إذا(ext_سېټ_Use_Mapping(which, min_اوږدتیا, value)) {
+                            بدل(filter) {
+                            حالة UCNV_سېټ_FILTER_2022_CN:
+                                إذا(!(UCNV_EXT_FROM_U_GET_اوږدتیا(value)==3 && UCNV_EXT_FROM_U_GET_معلومات(value)<=0x82ffff)) {
+                                    استمر;
                                 }
-                                break;
-                            case UCNV_SET_FILTER_SJIS:
-                                if(!(UCNV_EXT_FROM_U_GET_LENGTH(value)==2 && (value=UCNV_EXT_FROM_U_GET_DATA(value))>=0x8140 && value<=0xeffc)) {
-                                    continue;
+                                اكسر;
+                            حالة UCNV_سېټ_FILTER_SJIS:
+                                إذا(!(UCNV_EXT_FROM_U_GET_اوږدتیا(value)==2 && (value=UCNV_EXT_FROM_U_GET_معلومات(value))>=0x8140 && value<=0xeffc)) {
+                                    استمر;
                                 }
-                                break;
-                            case UCNV_SET_FILTER_GR94DBCS:
-                                if(!(UCNV_EXT_FROM_U_GET_LENGTH(value)==2 &&
-                                     (uint16_t)((value=UCNV_EXT_FROM_U_GET_DATA(value))-0xa1a1)<=(0xfefe - 0xa1a1) &&
+                                اكسر;
+                            حالة UCNV_سېټ_FILTER_GR94_DBCS:
+                                إذا(!(UCNV_EXT_FROM_U_GET_اوږدتیا(value)==2 &&
+                                     (uint16_t)((value=UCNV_EXT_FROM_U_GET_معلومات(value))-0xa1a1)<=(0xfefe - 0xa1a1) &&
                                      (uint8_t)(value-0xa1)<=(0xfe - 0xa1))) {
-                                    continue;
+                                    استمر;
                                 }
-                                break;
-                            case UCNV_SET_FILTER_HZ:
-                                if(!(UCNV_EXT_FROM_U_GET_LENGTH(value)==2 &&
-                                     (uint16_t)((value=UCNV_EXT_FROM_U_GET_DATA(value))-0xa1a1)<=(0xfdfe - 0xa1a1) &&
+                                اكسر;
+                            حالة UCNV_سېټ_FILTER_HZ:
+                                إذا(!(UCNV_EXT_FROM_U_GET_اوږدتیا(value)==2 &&
+                                     (uint16_t)((value=UCNV_EXT_FROM_U_GET_معلومات(value))-0xa1a1)<=(0xfdfe - 0xa1a1) &&
                                      (uint8_t)(value-0xa1)<=(0xfe - 0xa1))) {
-                                    continue;
+                                    استمر;
                                 }
-                                break;
-                            default:
+                                اكسر;
+                            افتراضي:
                                 /*
                                  * UCNV_SET_FILTER_NONE,
                                  * or UCNV_SET_FILTER_DBCS_ONLY which is handled via minLength
                                  */
-                                break;
+                                اكسر;
                             }
-                            sa->add(sa->set, c);
+                            sa->جمع_کړه(sa->سېټ, c);
                         }
-                    } while((++c&0xf)!=0);
-                } else {
+                    } طالما((++c&0xf)!=0);
+                } وإلا {
                     c+=16; /* empty stage 3 block */
                 }
             }
-        } else {
+        } وإلا {
             c+=1024; /* empty stage 2 block */
         }
     }
 }
 
-#endif /* #if !UCONFIG_NO_LEGACY_CONVERSION */
+#د_که_پای /* #if !UCONFIG_NO_LEGACY_CONVERSION */

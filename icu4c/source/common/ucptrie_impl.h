@@ -4,24 +4,24 @@
 // ucptrie_impl.h (modified from utrie2_impl.h)
 // created: 2017dec29 Markus W. Scherer
 
-#ifndef __UCPTRIE_IMPL_H__
-#define __UCPTRIE_IMPL_H__
+#که_نه_تعریف_شوی __UCPTRIE_IMPL_H__
+#تعریف_کړه __UCPTRIE_IMPL_H__
 
-#include "unicode/ucptrie.h"
-#ifdef UCPTRIE_DEBUG
-#include "unicode/umutablecptrie.h"
-#endif
+#ضمن "unicode/ucptrie.h"
+#که_تعریف_شوی UCPTRIE_DEBUG
+#ضمن "unicode/umutablecptrie.h"
+#د_که_پای
 
 // UCPTrie signature values, in platform endianness and opposite endianness.
 // The UCPTrie signature ASCII byte values spell "Tri3".
-#define UCPTRIE_SIG     0x54726933
-#define UCPTRIE_OE_SIG  0x33697254
+#تعریف_کړه UCPTRIE_SIG     0x54726933
+#تعریف_کړه UCPTRIE_OE_SIG  0x33697254
 
 /**
  * Header data for the binary, memory-mappable representation of a UCPTrie/CodePointTrie.
  * @internal
  */
-struct UCPTrieHeader {
+بنية UCPTrie_سرلیک {
     /** "Tri3" in big-endian US-ASCII (0x54726933) */
     uint32_t signature;
 
@@ -36,111 +36,111 @@ struct UCPTrieHeader {
     uint16_t options;
 
     /** Total length of the index tables. */
-    uint16_t indexLength;
+    uint16_t شاخص_اوږدتیا;
 
     /** Data length bits 15..0. */
-    uint16_t dataLength;
+    uint16_t معلومات_اوږدتیا;
 
     /** Index-3 null block offset, 0x7fff or 0xffff if none. */
-    uint16_t index3NullOffset;
+    uint16_t index3_Null_دننه_واټن;
 
     /** Data null block offset bits 15..0, 0xfffff if none. */
-    uint16_t dataNullOffset;
+    uint16_t معلومات_Null_دننه_واټن;
 
     /**
      * First code point of the single-value range ending with U+10ffff,
      * rounded up and then shifted right by UCPTRIE_SHIFT_2.
      */
-    uint16_t shiftedHighStart;
+    uint16_t shifted_لوړ_پیل;
 };
 
 // Constants for use with UCPTrieHeader.options.
-constexpr uint16_t UCPTRIE_OPTIONS_DATA_LENGTH_MASK = 0xf000;
-constexpr uint16_t UCPTRIE_OPTIONS_DATA_NULL_OFFSET_MASK = 0xf00;
-constexpr uint16_t UCPTRIE_OPTIONS_RESERVED_MASK = 0x38;
-constexpr uint16_t UCPTRIE_OPTIONS_VALUE_BITS_MASK = 7;
+constexpr uint16_t UCPTRIE_OPTIONS_معلومات_اوږدتیا_ماسک = 0xf000;
+constexpr uint16_t UCPTRIE_OPTIONS_معلومات_NULL_دننه_واټن_ماسک = 0xf00;
+constexpr uint16_t UCPTRIE_OPTIONS_RESERVED_ماسک = 0x38;
+constexpr uint16_t UCPTRIE_OPTIONS_ارزښت_بټونه_ماسک = 7;
 
 /**
  * Value for index3NullOffset which indicates that there is no index-3 null block.
  * Bit 15 is unused for this value because this bit is used if the index-3 contains
  * 18-bit indexes.
  */
-constexpr int32_t UCPTRIE_NO_INDEX3_NULL_OFFSET = 0x7fff;
-constexpr int32_t UCPTRIE_NO_DATA_NULL_OFFSET = 0xfffff;
+constexpr int32_t UCPTRIE_NO_INDEX3_NULL_دننه_واټن = 0x7fff;
+constexpr int32_t UCPTRIE_NO_معلومات_NULL_دننه_واټن = 0xfffff;
 
 // Internal constants.
 
 /** The length of the BMP index table. 1024=0x400 */
-constexpr int32_t UCPTRIE_BMP_INDEX_LENGTH = 0x10000 >> UCPTRIE_FAST_SHIFT;
+constexpr int32_t UCPTRIE_BMP_شاخص_اوږدتیا = 0x10000 >> UCPTRIE_FAST_ښويدنه;
 
-constexpr int32_t UCPTRIE_SMALL_LIMIT = 0x1000;
-constexpr int32_t UCPTRIE_SMALL_INDEX_LENGTH = UCPTRIE_SMALL_LIMIT >> UCPTRIE_FAST_SHIFT;
+constexpr int32_t UCPTRIE_SMALL_حد = 0x1000;
+constexpr int32_t UCPTRIE_SMALL_شاخص_اوږدتیا = UCPTRIE_SMALL_حد >> UCPTRIE_FAST_ښويدنه;
 
 /** Shift size for getting the index-3 table offset. */
-constexpr int32_t UCPTRIE_SHIFT_3 = 4;
+constexpr int32_t UCPTRIE_ښويدنه_3 = 4;
 
 /** Shift size for getting the index-2 table offset. */
-constexpr int32_t UCPTRIE_SHIFT_2 = 5 + UCPTRIE_SHIFT_3;
+constexpr int32_t UCPTRIE_ښويدنه_2 = 5 + UCPTRIE_ښويدنه_3;
 
 /** Shift size for getting the index-1 table offset. */
-constexpr int32_t UCPTRIE_SHIFT_1 = 5 + UCPTRIE_SHIFT_2;
+constexpr int32_t UCPTRIE_ښويدنه_1 = 5 + UCPTRIE_ښويدنه_2;
 
 /**
  * Difference between two shift sizes,
  * for getting an index-2 offset from an index-3 offset. 5=9-4
  */
-constexpr int32_t UCPTRIE_SHIFT_2_3 = UCPTRIE_SHIFT_2 - UCPTRIE_SHIFT_3;
+constexpr int32_t UCPTRIE_ښويدنه_2_3 = UCPTRIE_ښويدنه_2 - UCPTRIE_ښويدنه_3;
 
 /**
  * Difference between two shift sizes,
  * for getting an index-1 offset from an index-2 offset. 5=14-9
  */
-constexpr int32_t UCPTRIE_SHIFT_1_2 = UCPTRIE_SHIFT_1 - UCPTRIE_SHIFT_2;
+constexpr int32_t UCPTRIE_ښويدنه_1_2 = UCPTRIE_ښويدنه_1 - UCPTRIE_ښويدنه_2;
 
 /**
  * Number of index-1 entries for the BMP. (4)
  * This part of the index-1 table is omitted from the serialized form.
  */
-constexpr int32_t UCPTRIE_OMITTED_BMP_INDEX_1_LENGTH = 0x10000 >> UCPTRIE_SHIFT_1;
+constexpr int32_t UCPTRIE_OMITTED_BMP_شاخص_1_اوږدتیا = 0x10000 >> UCPTRIE_ښويدنه_1;
 
 /** Number of entries in an index-2 block. 32=0x20 */
-constexpr int32_t UCPTRIE_INDEX_2_BLOCK_LENGTH = 1 << UCPTRIE_SHIFT_1_2;
+constexpr int32_t UCPTRIE_شاخص_2_بلاک_اوږدتیا = 1 << UCPTRIE_ښويدنه_1_2;
 
 /** Mask for getting the lower bits for the in-index-2-block offset. */
-constexpr int32_t UCPTRIE_INDEX_2_MASK = UCPTRIE_INDEX_2_BLOCK_LENGTH - 1;
+constexpr int32_t UCPTRIE_شاخص_2_ماسک = UCPTRIE_شاخص_2_بلاک_اوږدتیا - 1;
 
 /** Number of code points per index-2 table entry. 512=0x200 */
-constexpr int32_t UCPTRIE_CP_PER_INDEX_2_ENTRY = 1 << UCPTRIE_SHIFT_2;
+constexpr int32_t UCPTRIE_CP_فی_شاخص_2_ثبت = 1 << UCPTRIE_ښويدنه_2;
 
 /** Number of entries in an index-3 block. 32=0x20 */
-constexpr int32_t UCPTRIE_INDEX_3_BLOCK_LENGTH = 1 << UCPTRIE_SHIFT_2_3;
+constexpr int32_t UCPTRIE_شاخص_3_بلاک_اوږدتیا = 1 << UCPTRIE_ښويدنه_2_3;
 
 /** Mask for getting the lower bits for the in-index-3-block offset. */
-constexpr int32_t UCPTRIE_INDEX_3_MASK = UCPTRIE_INDEX_3_BLOCK_LENGTH - 1;
+constexpr int32_t UCPTRIE_شاخص_3_ماسک = UCPTRIE_شاخص_3_بلاک_اوږدتیا - 1;
 
 /** Number of entries in a small data block. 16=0x10 */
-constexpr int32_t UCPTRIE_SMALL_DATA_BLOCK_LENGTH = 1 << UCPTRIE_SHIFT_3;
+constexpr int32_t UCPTRIE_SMALL_معلومات_بلاک_اوږدتیا = 1 << UCPTRIE_ښويدنه_3;
 
 /** Mask for getting the lower bits for the in-small-data-block offset. */
-constexpr int32_t UCPTRIE_SMALL_DATA_MASK = UCPTRIE_SMALL_DATA_BLOCK_LENGTH - 1;
+constexpr int32_t UCPTRIE_SMALL_معلومات_ماسک = UCPTRIE_SMALL_معلومات_بلاک_اوږدتیا - 1;
 
 
-typedef UChar32
-UCPTrieGetRange(const void *trie, UChar32 start,
-                UCPMapValueFilter *filter, const void *context, uint32_t *pValue);
+تعريفنوع UChar32
+UCPTrieGetRange(ثابت فراغ *trie, UChar32 پیل,
+                UCPMap_ارزښت_Filter *filter, ثابت فراغ *context, uint32_t *p_ارزښت);
 
 U_CFUNC UChar32
-ucptrie_internalGetRange(UCPTrieGetRange *getRange,
-                         const void *trie, UChar32 start,
-                         UCPMapRangeOption option, uint32_t surrogateValue,
-                         UCPMapValueFilter *filter, const void *context, uint32_t *pValue);
+ucptrie_دننی_Get_Range(UCPTrieGetRange *getRange,
+                         ثابت فراغ *trie, UChar32 پیل,
+                         UCPMapRangeOption option, uint32_t surrogate_ارزښت,
+                         UCPMap_ارزښت_Filter *filter, ثابت فراغ *context, uint32_t *p_ارزښت);
 
-#ifdef UCPTRIE_DEBUG
-U_CFUNC void
-ucptrie_printLengths(const UCPTrie *trie, const char *which);
+#که_تعریف_شوی UCPTRIE_DEBUG
+U_CFUNC فراغ
+ucptrie_printLengths(ثابت UCPTrie *trie, ثابت حرف *which);
 
-U_CFUNC void umutablecptrie_setName(UMutableCPTrie *builder, const char *name);
-#endif
+U_CFUNC فراغ umutablecptrie_سېټ_Name(UMutableCPTrie *builder, ثابت حرف *name);
+#د_که_پای
 
 /*
  * Format of the binary, memory-mappable representation of a UCPTrie/CodePointTrie.
@@ -282,4 +282,4 @@ U_CFUNC void umutablecptrie_setName(UMutableCPTrie *builder, const char *name);
  * normally UCPTRIE_NO_DATA_NULL_OFFSET or UCPTRIE_NO_INDEX3_NULL_OFFSET respectively.
  */
 
-#endif
+#د_که_پای

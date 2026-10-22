@@ -14,14 +14,14 @@
 *   created by: Markus W. Scherer
 */
 
-#ifndef __STRINGTRIEBUILDER_H__
-#define __STRINGTRIEBUILDER_H__
+#که_نه_تعریف_شوی __STRINGTRIEBUILDER_H__
+#تعریف_کړه __STRINGTRIEBUILDER_H__
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#إذا U_SHOW_CPLUSPLUS_API
 
-#include "unicode/uobject.h"
+#ضمن "unicode/uobject.h"
 
 /**
  * \file
@@ -30,15 +30,15 @@
 
 // Forward declaration.
 /// \cond
-struct UHashtable;
-typedef struct UHashtable UHashtable;
+بنية UHashtable;
+تعريفنوع بنية UHashtable UHashtable;
 /// \endcond
 
 /**
  * Build options for BytesTrieBuilder and CharsTrieBuilder.
  * @stable ICU 4.8
  */
-enum UStringTrieBuildOption {
+تعداد UStringTrieBuildOption {
     /**
      * Builds a trie quickly.
      * @stable ICU 4.8
@@ -65,93 +65,93 @@ U_NAMESPACE_BEGIN
  * This class is not intended for public subclassing.
  * @stable ICU 4.8
  */
-class U_COMMON_API StringTrieBuilder : public UObject {
-public:
-#ifndef U_HIDE_INTERNAL_API
+class U_COMMON_API StringTrieBuilder : عام UObject {
+عام:
+#که_نه_تعریف_شوی U_HIDE_دننی_API
     /** @internal */
-    static int32_t hashNode(const void *node);
+    ساكن int32_t hash_غوټه(ثابت فراغ *غوټه);
     /** @internal */
-    static UBool equalNodes(const void *left, const void *right);
-#endif  /* U_HIDE_INTERNAL_API */
+    ساكن UBool equalNodes(ثابت فراغ *کیڼ_2, ثابت فراغ *ښی_2);
+#د_که_پای  /* U_HIDE_INTERNAL_API */
 
-protected:
+محمي:
     // Do not enclose the protected default constructor with #ifndef U_HIDE_INTERNAL_API
     // or else the compiler will create a public default constructor.
     /** @internal */
     StringTrieBuilder();
     /** @internal */
-    virtual ~StringTrieBuilder();
+    مجازي ~StringTrieBuilder();
 
-#ifndef U_HIDE_INTERNAL_API
+#که_نه_تعریف_شوی U_HIDE_دننی_API
     /** @internal */
-    void createCompactBuilder(int32_t sizeGuess, UErrorCode &errorCode);
+    فراغ createCompactBuilder(int32_t اندازه_Guess, UError_کوډ &error_کوډ);
     /** @internal */
-    void deleteCompactBuilder();
-
-    /** @internal */
-    void build(UStringTrieBuildOption buildOption, int32_t elementsLength, UErrorCode &errorCode);
+    فراغ deleteCompactBuilder();
 
     /** @internal */
-    int32_t writeNode(int32_t start, int32_t limit, int32_t unitIndex);
-    /** @internal */
-    int32_t writeBranchSubNode(int32_t start, int32_t limit, int32_t unitIndex, int32_t length);
-#endif  /* U_HIDE_INTERNAL_API */
-
-    class Node;
-
-#ifndef U_HIDE_INTERNAL_API
-    /** @internal */
-    Node* makeNode(int32_t start,
-                   int32_t limit,
-                   int32_t unitIndex,
-                   UErrorCode& errorCode) U_LIFETIME_BOUND;
-    /** @internal */
-    Node* makeBranchSubNode(int32_t start,
-                            int32_t limit,
-                            int32_t unitIndex,
-                            int32_t length,
-                            UErrorCode& errorCode) U_LIFETIME_BOUND;
-#endif  /* U_HIDE_INTERNAL_API */
+    فراغ build(UStringTrieBuildOption buildOption, int32_t elements_اوږدتیا, UError_کوډ &error_کوډ);
 
     /** @internal */
-    virtual int32_t getElementStringLength(int32_t i) const = 0;
+    int32_t write_غوټه(int32_t پیل, int32_t حد, int32_t unit_شاخص);
     /** @internal */
-    virtual char16_t getElementUnit(int32_t i, int32_t unitIndex) const = 0;
+    int32_t write_Branch_Sub_غوټه(int32_t پیل, int32_t حد, int32_t unit_شاخص, int32_t اوږدتیا);
+#د_که_پای  /* U_HIDE_INTERNAL_API */
+
+    class غوټه_2;
+
+#که_نه_تعریف_شوی U_HIDE_دننی_API
     /** @internal */
-    virtual int32_t getElementValue(int32_t i) const = 0;
+    غوټه_2* make_غوټه(int32_t پیل,
+                   int32_t حد,
+                   int32_t unit_شاخص,
+                   UError_کوډ& error_کوډ) U_LIFETIME_BOUND;
+    /** @internal */
+    غوټه_2* make_Branch_Sub_غوټه(int32_t پیل,
+                            int32_t حد,
+                            int32_t unit_شاخص,
+                            int32_t اوږدتیا,
+                            UError_کوډ& error_کوډ) U_LIFETIME_BOUND;
+#د_که_پای  /* U_HIDE_INTERNAL_API */
+
+    /** @internal */
+    مجازي int32_t get_Element_String_اوږدتیا(int32_t i) ثابت = 0;
+    /** @internal */
+    مجازي char16_t getElementUnit(int32_t i, int32_t unit_شاخص) ثابت = 0;
+    /** @internal */
+    مجازي int32_t get_Element_ارزښت(int32_t i) ثابت = 0;
 
     // Finds the first unit index after this one where
     // the first and last element have different units again.
     /** @internal */
-    virtual int32_t getLimitOfLinearMatch(int32_t first, int32_t last, int32_t unitIndex) const = 0;
+    مجازي int32_t get_حد_د_خطي_سمون(int32_t لومړی, int32_t وروستی, int32_t unit_شاخص) ثابت = 0;
 
     // Number of different units at unitIndex.
     /** @internal */
-    virtual int32_t countElementUnits(int32_t start, int32_t limit, int32_t unitIndex) const = 0;
+    مجازي int32_t شمېر_Element_Units(int32_t پیل, int32_t حد, int32_t unit_شاخص) ثابت = 0;
     /** @internal */
-    virtual int32_t skipElementsBySomeUnits(int32_t i, int32_t unitIndex, int32_t count) const = 0;
+    مجازي int32_t skipElementsBySomeUnits(int32_t i, int32_t unit_شاخص, int32_t شمېر) ثابت = 0;
     /** @internal */
-    virtual int32_t indexOfElementWithNextUnit(int32_t i, int32_t unitIndex, char16_t unit) const = 0;
+    مجازي int32_t شاخص_د_Element_With_بل_Unit(int32_t i, int32_t unit_شاخص, char16_t unit) ثابت = 0;
 
     /** @internal */
-    virtual UBool matchNodesCanHaveValues() const = 0;
+    مجازي UBool سمون_Nodes_Can_Have_ارزښتونه() ثابت = 0;
 
     /** @internal */
-    virtual int32_t getMaxBranchLinearSubNodeLength() const = 0;
+    مجازي int32_t get_Max_Branch_خطي_Sub_غوټه_اوږدتیا() ثابت = 0;
     /** @internal */
-    virtual int32_t getMinLinearMatch() const = 0;
+    مجازي int32_t get_Min_خطي_سمون() ثابت = 0;
     /** @internal */
-    virtual int32_t getMaxLinearMatchLength() const = 0;
+    مجازي int32_t get_Max_خطي_سمون_اوږدتیا() ثابت = 0;
 
-#ifndef U_HIDE_INTERNAL_API
+#که_نه_تعریف_شوی U_HIDE_دننی_API
     // max(BytesTrie::kMaxBranchLinearSubNodeLength, UCharsTrie::kMaxBranchLinearSubNodeLength).
     /** @internal */
-    static const int32_t kMaxBranchLinearSubNodeLength=5;
+    ساكن ثابت int32_t k_Max_Branch_خطي_Sub_غوټه_اوږدتیا=5;
 
     // Maximum number of nested split-branch levels for a branch on all 2^16 possible char16_t units.
     // log2(2^16/kMaxBranchLinearSubNodeLength) rounded up.
     /** @internal */
-    static const int32_t kMaxSplitBranchLevels=14;
+    ساكن ثابت int32_t k_Max_وېشل_Branch_پوړونه=14;
 
     /**
      * Makes sure that there is only one unique node registered that is
@@ -163,7 +163,7 @@ protected:
      *         an equivalent node if newNode is a duplicate.
      * @internal
      */
-    Node* registerNode(Node* newNode, UErrorCode& errorCode) U_LIFETIME_BOUND;
+    غوټه_2* ثبتوونکی_غوټه(غوټه_2* new_غوټه, UError_کوډ& error_کوډ) U_LIFETIME_BOUND;
     /**
      * Makes sure that there is only one unique FinalValueNode registered
      * with this value.
@@ -174,8 +174,8 @@ protected:
      * @return A FinalValueNode with the given value.
      * @internal
      */
-    Node* registerFinalValue(int32_t value, UErrorCode& errorCode) U_LIFETIME_BOUND;
-#endif  /* U_HIDE_INTERNAL_API */
+    غوټه_2* ثبتوونکی_Final_ارزښت(int32_t ارزښت_2, UError_کوډ& error_کوډ) U_LIFETIME_BOUND;
+#د_که_پای  /* U_HIDE_INTERNAL_API */
 
     /*
      * C++ note:
@@ -203,15 +203,15 @@ protected:
      * @internal
      * \cond
      */
-    class Node : public UObject {
-    public:
-        Node(int32_t initialHash) : hash(initialHash), offset(0) {}
-        inline int32_t hashCode() const { return hash; }
+    class غوټه_2 : عام UObject {
+    عام:
+        غوټه_2(int32_t initialHash) : hash(initialHash), دننه_واټن(0) {}
+        مضمن int32_t hash_کوډ() ثابت { أرجع hash; }
         // Handles node==nullptr.
-        static inline int32_t hashCode(const Node *node) { return node==nullptr ? 0 : node->hashCode(); }
+        ساكن مضمن int32_t hash_کوډ(ثابت غوټه_2 *غوټه) { أرجع غوټه==nullptr ? 0 : غوټه->hash_کوډ(); }
         // Base class operator==() compares the actual class types.
-        virtual bool operator==(const Node &other) const;
-        inline bool operator!=(const Node &other) const { return !operator==(other); }
+        مجازي bool چلوونکی==(ثابت غوټه_2 &other) ثابت;
+        مضمن bool چلوونکی!=(ثابت غوټه_2 &other) ثابت { أرجع !چلوونکی==(other); }
         /**
          * Traverses the Node graph and numbers branch edges, with rightmost edges first.
          * This is to avoid writing a duplicate node twice.
@@ -239,28 +239,28 @@ protected:
          * @return An edge number that is at least the maximum-negative
          *         of the input edge number and the numbers of this node and all of its sub-nodes.
          */
-        virtual int32_t markRightEdgesFirst(int32_t edgeNumber);
+        مجازي int32_t mark_ښی_څنډې_لومړی(int32_t څنډه_شمېره);
         // write() must set the offset to a positive value.
-        virtual void write(StringTrieBuilder &builder) = 0;
+        مجازي فراغ اكتب(StringTrieBuilder &builder) = 0;
         // See markRightEdgesFirst.
-        inline void writeUnlessInsideRightEdge(int32_t firstRight, int32_t lastRight,
+        مضمن فراغ write_Unless_Inside_ښی_څنډه(int32_t لومړی_ښی, int32_t وروستی_ښی,
                                                StringTrieBuilder &builder) {
             // Note: Edge numbers are negative, lastRight<=firstRight.
             // If offset>0 then this node and its sub-nodes have been written already
             // and we need not write them again.
             // If this node is part of the unwritten right branch edge,
             // then we wait until that is written.
-            if(offset<0 && (offset<lastRight || firstRight<offset)) {
-                write(builder);
+            إذا(دننه_واټن<0 && (دننه_واټن<وروستی_ښی || لومړی_ښی<دننه_واټن)) {
+                اكتب(builder);
             }
         }
-        inline int32_t getOffset() const { return offset; }
-    protected:
+        مضمن int32_t get_دننه_واټن() ثابت { أرجع دننه_واټن; }
+    محمي:
         int32_t hash;
-        int32_t offset;
+        int32_t دننه_واټن;
     };
 
-#ifndef U_HIDE_INTERNAL_API
+#که_نه_تعریف_شوی U_HIDE_دننی_API
     // This class should not be overridden because
     // registerFinalValue() compares a stack-allocated FinalValueNode
     // (stack-allocated so that we don't unnecessarily create lots of duplicate nodes)
@@ -268,165 +268,165 @@ protected:
     // !Node::operator==(other) used inside FinalValueNode::operator==(other)
     // will be false if the typeid's are different.
     /** @internal */
-    class FinalValueNode : public Node {
-    public:
-        FinalValueNode(int32_t v) : Node(0x111111u*37u+v), value(v) {}
-        virtual bool operator==(const Node &other) const override;
-        virtual void write(StringTrieBuilder &builder) override;
-    protected:
-        int32_t value;
+    class Final_ارزښت_غوټه : عام غوټه_2 {
+    عام:
+        Final_ارزښت_غوټه(int32_t v) : غوټه_2(0x111111u*37u+v), ارزښت_2(v) {}
+        مجازي bool چلوونکی==(ثابت غوټه_2 &other) ثابت override;
+        مجازي فراغ اكتب(StringTrieBuilder &builder) override;
+    محمي:
+        int32_t ارزښت_2;
     };
-#endif  /* U_HIDE_INTERNAL_API */
+#د_که_پای  /* U_HIDE_INTERNAL_API */
 
     // Do not conditionalize the following with #ifndef U_HIDE_INTERNAL_API,
     // it is needed for layout of other objects.
     /**
      * @internal 
      */
-    class ValueNode : public Node {
-    public:
-        ValueNode(int32_t initialHash) : Node(initialHash), hasValue(false), value(0) {}
-        virtual bool operator==(const Node &other) const override;
-        void setValue(int32_t v) {
-            hasValue=true;
-            value=v;
+    class ارزښت_غوټه : عام غوټه_2 {
+    عام:
+        ارزښت_غوټه(int32_t initialHash) : غوټه_2(initialHash), has_ارزښت(false), ارزښت_2(0) {}
+        مجازي bool چلوونکی==(ثابت غوټه_2 &other) ثابت override;
+        فراغ سېټ_ارزښت(int32_t v) {
+            has_ارزښت=true;
+            ارزښت_2=v;
             hash=hash*37u+v;
         }
-    protected:
-        UBool hasValue;
-        int32_t value;
+    محمي:
+        UBool has_ارزښت;
+        int32_t ارزښت_2;
     };
 
-#ifndef U_HIDE_INTERNAL_API
+#که_نه_تعریف_شوی U_HIDE_دننی_API
     /** 
      * @internal 
      */
-    class IntermediateValueNode : public ValueNode {
-    public:
-        IntermediateValueNode(int32_t v, Node *nextNode)
-                : ValueNode(0x222222u*37u+hashCode(nextNode)), next(nextNode) { setValue(v); }
-        virtual bool operator==(const Node &other) const override;
-        virtual int32_t markRightEdgesFirst(int32_t edgeNumber) override;
-        virtual void write(StringTrieBuilder &builder) override;
-    protected:
-        Node *next;
+    class Intermediate_ارزښت_غوټه : عام ارزښت_غوټه {
+    عام:
+        Intermediate_ارزښت_غوټه(int32_t v, غوټه_2 *بل_غوټه)
+                : ارزښت_غوټه(0x222222u*37u+hash_کوډ(بل_غوټه)), بل(بل_غوټه) { سېټ_ارزښت(v); }
+        مجازي bool چلوونکی==(ثابت غوټه_2 &other) ثابت override;
+        مجازي int32_t mark_ښی_څنډې_لومړی(int32_t څنډه_شمېره) override;
+        مجازي فراغ اكتب(StringTrieBuilder &builder) override;
+    محمي:
+        غوټه_2 *بل;
     };
-#endif  /* U_HIDE_INTERNAL_API */
+#د_که_پای  /* U_HIDE_INTERNAL_API */
 
     // Do not conditionalize the following with #ifndef U_HIDE_INTERNAL_API,
     // it is needed for layout of other objects.
     /**
      * @internal 
      */
-    class LinearMatchNode : public ValueNode {
-    public:
-        LinearMatchNode(int32_t len, Node *nextNode)
-                : ValueNode((0x333333u*37u+len)*37u+hashCode(nextNode)),
-                  length(len), next(nextNode) {}
-        virtual bool operator==(const Node &other) const override;
-        virtual int32_t markRightEdgesFirst(int32_t edgeNumber) override;
-    protected:
-        int32_t length;
-        Node *next;
+    class خطي_سمون_غوټه : عام ارزښت_غوټه {
+    عام:
+        خطي_سمون_غوټه(int32_t len, غوټه_2 *بل_غوټه)
+                : ارزښت_غوټه((0x333333u*37u+len)*37u+hash_کوډ(بل_غوټه)),
+                  اوږدتیا(len), بل(بل_غوټه) {}
+        مجازي bool چلوونکی==(ثابت غوټه_2 &other) ثابت override;
+        مجازي int32_t mark_ښی_څنډې_لومړی(int32_t څنډه_شمېره) override;
+    محمي:
+        int32_t اوږدتیا;
+        غوټه_2 *بل;
     };
 
-#ifndef U_HIDE_INTERNAL_API
+#که_نه_تعریف_شوی U_HIDE_دننی_API
     /**
      * @internal 
      */
-    class BranchNode : public Node {
-    public:
-        BranchNode(int32_t initialHash) : Node(initialHash) {}
-    protected:
-        int32_t firstEdgeNumber;
+    class Branch_غوټه : عام غوټه_2 {
+    عام:
+        Branch_غوټه(int32_t initialHash) : غوټه_2(initialHash) {}
+    محمي:
+        int32_t لومړی_څنډه_شمېره;
     };
 
     /**
      * @internal 
      */
-    class ListBranchNode : public BranchNode {
-    public:
-        ListBranchNode() : BranchNode(0x444444), length(0) {}
-        virtual bool operator==(const Node &other) const override;
-        virtual int32_t markRightEdgesFirst(int32_t edgeNumber) override;
-        virtual void write(StringTrieBuilder &builder) override;
+    class List_Branch_غوټه : عام Branch_غوټه {
+    عام:
+        List_Branch_غوټه() : Branch_غوټه(0x444444), اوږدتیا(0) {}
+        مجازي bool چلوونکی==(ثابت غوټه_2 &other) ثابت override;
+        مجازي int32_t mark_ښی_څنډې_لومړی(int32_t څنډه_شمېره) override;
+        مجازي فراغ اكتب(StringTrieBuilder &builder) override;
         // Adds a unit with a final value.
-        void add(int32_t c, int32_t value) {
-            units[length] = static_cast<char16_t>(c);
-            equal[length]=nullptr;
-            values[length]=value;
-            ++length;
-            hash=(hash*37u+c)*37u+value;
+        فراغ جمع_کړه(int32_t c, int32_t ارزښت_2) {
+            units[اوږدتیا] = static_cast<char16_t>(c);
+            equal[اوږدتیا]=nullptr;
+            ارزښتونه[اوږدتیا]=ارزښت_2;
+            ++اوږدتیا;
+            hash=(hash*37u+c)*37u+ارزښت_2;
         }
         // Adds a unit which leads to another match node.
-        void add(int32_t c, Node *node) {
-            units[length] = static_cast<char16_t>(c);
-            equal[length]=node;
-            values[length]=0;
-            ++length;
-            hash=(hash*37u+c)*37u+hashCode(node);
+        فراغ جمع_کړه(int32_t c, غوټه_2 *غوټه) {
+            units[اوږدتیا] = static_cast<char16_t>(c);
+            equal[اوږدتیا]=غوټه;
+            ارزښتونه[اوږدتیا]=0;
+            ++اوږدتیا;
+            hash=(hash*37u+c)*37u+hash_کوډ(غوټه);
         }
-    protected:
-        Node *equal[kMaxBranchLinearSubNodeLength];  // nullptr means "has final value".
-        int32_t length;
-        int32_t values[kMaxBranchLinearSubNodeLength];
-        char16_t units[kMaxBranchLinearSubNodeLength];
+    محمي:
+        غوټه_2 *equal[k_Max_Branch_خطي_Sub_غوټه_اوږدتیا];  // nullptr means "has final value".
+        int32_t اوږدتیا;
+        int32_t ارزښتونه[k_Max_Branch_خطي_Sub_غوټه_اوږدتیا];
+        char16_t units[k_Max_Branch_خطي_Sub_غوټه_اوږدتیا];
     };
 
     /**
      * @internal 
      */
-    class SplitBranchNode : public BranchNode {
-    public:
-        SplitBranchNode(char16_t middleUnit, Node *lessThanNode, Node *greaterOrEqualNode)
-                : BranchNode(((0x555555u*37u+middleUnit)*37u+
-                              hashCode(lessThanNode))*37u+hashCode(greaterOrEqualNode)),
-                  unit(middleUnit), lessThan(lessThanNode), greaterOrEqual(greaterOrEqualNode) {}
-        virtual bool operator==(const Node &other) const override;
-        virtual int32_t markRightEdgesFirst(int32_t edgeNumber) override;
-        virtual void write(StringTrieBuilder &builder) override;
-    protected:
+    class وېشل_Branch_غوټه : عام Branch_غوټه {
+    عام:
+        وېشل_Branch_غوټه(char16_t منځ_Unit, غوټه_2 *less_Than_غوټه, غوټه_2 *greater_Or_Equal_غوټه)
+                : Branch_غوټه(((0x555555u*37u+منځ_Unit)*37u+
+                              hash_کوډ(less_Than_غوټه))*37u+hash_کوډ(greater_Or_Equal_غوټه)),
+                  unit(منځ_Unit), lessThan(less_Than_غوټه), greaterOrEqual(greater_Or_Equal_غوټه) {}
+        مجازي bool چلوونکی==(ثابت غوټه_2 &other) ثابت override;
+        مجازي int32_t mark_ښی_څنډې_لومړی(int32_t څنډه_شمېره) override;
+        مجازي فراغ اكتب(StringTrieBuilder &builder) override;
+    محمي:
         char16_t unit;
-        Node *lessThan;
-        Node *greaterOrEqual;
+        غوټه_2 *lessThan;
+        غوټه_2 *greaterOrEqual;
     };
 
     // Branch head node, for writing the actual node lead unit.
     /** @internal */
-    class BranchHeadNode : public ValueNode {
-    public:
-        BranchHeadNode(int32_t len, Node *subNode)
-                : ValueNode((0x666666u*37u+len)*37u+hashCode(subNode)),
-                  length(len), next(subNode) {}
-        virtual bool operator==(const Node &other) const override;
-        virtual int32_t markRightEdgesFirst(int32_t edgeNumber) override;
-        virtual void write(StringTrieBuilder &builder) override;
-    protected:
-        int32_t length;
-        Node *next;  // A branch sub-node.
+    class Branch_سر_غوټه : عام ارزښت_غوټه {
+    عام:
+        Branch_سر_غوټه(int32_t len, غوټه_2 *sub_غوټه)
+                : ارزښت_غوټه((0x666666u*37u+len)*37u+hash_کوډ(sub_غوټه)),
+                  اوږدتیا(len), بل(sub_غوټه) {}
+        مجازي bool چلوونکی==(ثابت غوټه_2 &other) ثابت override;
+        مجازي int32_t mark_ښی_څنډې_لومړی(int32_t څنډه_شمېره) override;
+        مجازي فراغ اكتب(StringTrieBuilder &builder) override;
+    محمي:
+        int32_t اوږدتیا;
+        غوټه_2 *بل;  // A branch sub-node.
     };
 
-#endif  /* U_HIDE_INTERNAL_API */
+#د_که_پای  /* U_HIDE_INTERNAL_API */
     /// \endcond
 
     /** @internal */
-    virtual Node *createLinearMatchNode(int32_t i, int32_t unitIndex, int32_t length,
-                                        Node *nextNode) const = 0;
+    مجازي غوټه_2 *create_خطي_سمون_غوټه(int32_t i, int32_t unit_شاخص, int32_t اوږدتیا,
+                                        غوټه_2 *بل_غوټه) ثابت = 0;
 
     /** @internal */
-    virtual int32_t write(int32_t unit) = 0;
+    مجازي int32_t اكتب(int32_t unit) = 0;
     /** @internal */
-    virtual int32_t writeElementUnits(int32_t i, int32_t unitIndex, int32_t length) = 0;
+    مجازي int32_t writeElementUnits(int32_t i, int32_t unit_شاخص, int32_t اوږدتیا) = 0;
     /** @internal */
-    virtual int32_t writeValueAndFinal(int32_t i, UBool isFinal) = 0;
+    مجازي int32_t write_ارزښت_And_Final(int32_t i, UBool isFinal) = 0;
     /** @internal */
-    virtual int32_t writeValueAndType(UBool hasValue, int32_t value, int32_t node) = 0;
+    مجازي int32_t write_ارزښت_And_Type(UBool has_ارزښت, int32_t ارزښت_2, int32_t غوټه) = 0;
     /** @internal */
-    virtual int32_t writeDeltaTo(int32_t jumpTarget) = 0;
+    مجازي int32_t write_Delta_منزل(int32_t jump_موخه) = 0;
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_پای_ټکی
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#د_که_پای /* U_SHOW_CPLUSPLUS_API */
 
-#endif  // __STRINGTRIEBUILDER_H__
+#د_که_پای  // __STRINGTRIEBUILDER_H__

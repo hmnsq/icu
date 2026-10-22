@@ -20,389 +20,389 @@
 *   to the Unicode Character Database (uprops.dat).
 */
 
-#include "unicode/utypes.h"
-#include "unicode/brkiter.h"
-#include "unicode/casemap.h"
-#include "unicode/edits.h"
-#include "unicode/stringoptions.h"
-#include "unicode/ustring.h"
-#include "unicode/ucasemap.h"
-#include "unicode/ubrk.h"
-#include "unicode/utf.h"
-#include "unicode/utf16.h"
-#include "cmemory.h"
-#include "ucase.h"
-#include "ucasemap_imp.h"
-#include "ustr_imp.h"
-#include "uassert.h"
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/brkiter.h"
+#ضمن "unicode/casemap.h"
+#ضمن "unicode/edits.h"
+#ضمن "unicode/stringoptions.h"
+#ضمن "unicode/ustring.h"
+#ضمن "unicode/ucasemap.h"
+#ضمن "unicode/ubrk.h"
+#ضمن "unicode/utf.h"
+#ضمن "unicode/utf16.h"
+#ضمن "cmemory.h"
+#ضمن "ucase.h"
+#ضمن "ucasemap_imp.h"
+#ضمن "ustr_imp.h"
+#ضمن "uassert.h"
 
 /**
  * Code point for COMBINING ACUTE ACCENT
  * @internal
  */
-#define ACUTE u'\u0301'
+#تعریف_کړه ACUTE u'\u0301'
 
 U_NAMESPACE_BEGIN
 
-namespace {
+نطاق {
 
-int32_t checkOverflowAndEditsError(int32_t destIndex, int32_t destCapacity,
-                                   Edits *edits, UErrorCode &errorCode) {
-    if (U_SUCCESS(errorCode)) {
-        if (destIndex > destCapacity) {
-            errorCode = U_BUFFER_OVERFLOW_ERROR;
-        } else if (edits != nullptr) {
-            edits->copyErrorTo(errorCode);
+int32_t check_ډکېدنه_And_Edits_Error(int32_t dest_شاخص, int32_t dest_ظرفیت,
+                                   Edits *edits, UError_کوډ &error_کوډ) {
+    إذا (U_SUCCESS(error_کوډ)) {
+        إذا (dest_شاخص > dest_ظرفیت) {
+            error_کوډ = U_بفر_ډکېدنه_ERROR;
+        } وإلا إذا (edits != تش_اشاره) {
+            edits->copy_Error_منزل(error_کوډ);
         }
     }
-    return destIndex;
+    أرجع dest_شاخص;
 }
 
 /* Appends a full case mapping result, see UCASE_MAX_STRING_LENGTH. */
-inline int32_t
-appendResult(char16_t *dest, int32_t destIndex, int32_t destCapacity,
-             int32_t result, const char16_t *s,
-             int32_t cpLength, uint32_t options, icu::Edits *edits) {
+مضمن int32_t
+append_پایله(char16_t *dest, int32_t dest_شاخص, int32_t dest_ظرفیت,
+             int32_t پایله, ثابت char16_t *s,
+             int32_t cp_اوږدتیا, uint32_t options, icu::Edits *edits) {
     UChar32 c;
     int32_t length;
 
     /* decode the result */
-    if(result<0) {
+    إذا(پایله<0) {
         /* (not) original code point */
-        if(edits!=nullptr) {
-            edits->addUnchanged(cpLength);
+        إذا(edits!=تش_اشاره) {
+            edits->جمع_کړه_Unchanged(cp_اوږدتیا);
         }
-        if(options & U_OMIT_UNCHANGED_TEXT) {
-            return destIndex;
+        إذا(options & U_OMIT_UNCHANGED_متن) {
+            أرجع dest_شاخص;
         }
-        c=~result;
-        if(destIndex<destCapacity && c<=0xffff) {  // BMP slightly-fastpath
-            dest[destIndex++] = static_cast<char16_t>(c);
-            return destIndex;
+        c=~پایله;
+        إذا(dest_شاخص<dest_ظرفیت && c<=0xffff) {  // BMP slightly-fastpath
+            dest[dest_شاخص++] = static_cast<char16_t>(c);
+            أرجع dest_شاخص;
         }
-        length=cpLength;
-    } else {
-        if(result<=UCASE_MAX_STRING_LENGTH) {
+        length=cp_اوږدتیا;
+    } وإلا {
+        إذا(پایله<=UCASE_MAX_STRING_اوږدتیا) {
             c=U_SENTINEL;
-            length=result;
-        } else if(destIndex<destCapacity && result<=0xffff) {  // BMP slightly-fastpath
-            dest[destIndex++] = static_cast<char16_t>(result);
-            if(edits!=nullptr) {
-                edits->addReplace(cpLength, 1);
+            length=پایله;
+        } وإلا إذا(dest_شاخص<dest_ظرفیت && پایله<=0xffff) {  // BMP slightly-fastpath
+            dest[dest_شاخص++] = static_cast<char16_t>(پایله);
+            إذا(edits!=تش_اشاره) {
+                edits->جمع_کړه_Replace(cp_اوږدتیا, 1);
             }
-            return destIndex;
-        } else {
-            c=result;
-            length=U16_LENGTH(c);
+            أرجع dest_شاخص;
+        } وإلا {
+            c=پایله;
+            length=U16_اوږدتیا(c);
         }
-        if(edits!=nullptr) {
-            edits->addReplace(cpLength, length);
+        إذا(edits!=تش_اشاره) {
+            edits->جمع_کړه_Replace(cp_اوږدتیا, length);
         }
     }
-    if(length>(INT32_MAX-destIndex)) {
-        return -1;  // integer overflow
+    إذا(length>(INT32_MAX-dest_شاخص)) {
+        أرجع -1;  // integer overflow
     }
 
-    if(destIndex<destCapacity) {
+    إذا(dest_شاخص<dest_ظرفیت) {
         /* append the result */
-        if(c>=0) {
+        إذا(c>=0) {
             /* code point */
-            UBool isError=false;
-            U16_APPEND(dest, destIndex, destCapacity, c, isError);
-            if(isError) {
+            UBool isError=خطأ;
+            U16_APPEND(dest, dest_شاخص, dest_ظرفیت, c, isError);
+            إذا(isError) {
                 /* overflow, nothing written */
-                destIndex+=length;
+                dest_شاخص+=length;
             }
-        } else {
+        } وإلا {
             /* string */
-            if((destIndex+length)<=destCapacity) {
-                while(length>0) {
-                    dest[destIndex++]=*s++;
+            إذا((dest_شاخص+length)<=dest_ظرفیت) {
+                طالما(length>0) {
+                    dest[dest_شاخص++]=*s++;
                     --length;
                 }
-            } else {
-                /* overflow */
-                destIndex+=length;
+            } وإلا {
+                /*ډکېدنه*/
+                dest_شاخص+=length;
             }
         }
-    } else {
+    } وإلا {
         /* preflight */
-        destIndex+=length;
+        dest_شاخص+=length;
     }
-    return destIndex;
+    أرجع dest_شاخص;
 }
 
-inline int32_t
-appendUChar(char16_t *dest, int32_t destIndex, int32_t destCapacity, char16_t c) {
-    if(destIndex<destCapacity) {
-        dest[destIndex]=c;
-    } else if(destIndex==INT32_MAX) {
-        return -1;  // integer overflow
+مضمن int32_t
+appendUChar(char16_t *dest, int32_t dest_شاخص, int32_t dest_ظرفیت, char16_t c) {
+    إذا(dest_شاخص<dest_ظرفیت) {
+        dest[dest_شاخص]=c;
+    } وإلا إذا(dest_شاخص==INT32_MAX) {
+        أرجع -1;  // integer overflow
     }
-    return destIndex+1;
+    أرجع dest_شاخص+1;
 }
 
 int32_t
-appendNonEmptyUnchanged(char16_t *dest, int32_t destIndex, int32_t destCapacity,
-                        const char16_t *s, int32_t length, uint32_t options, icu::Edits *edits) {
-    if(edits!=nullptr) {
-        edits->addUnchanged(length);
+append_Non_تشه_Unchanged(char16_t *dest, int32_t dest_شاخص, int32_t dest_ظرفیت,
+                        ثابت char16_t *s, int32_t length, uint32_t options, icu::Edits *edits) {
+    إذا(edits!=تش_اشاره) {
+        edits->جمع_کړه_Unchanged(length);
     }
-    if(options & U_OMIT_UNCHANGED_TEXT) {
-        return destIndex;
+    إذا(options & U_OMIT_UNCHANGED_متن) {
+        أرجع dest_شاخص;
     }
-    if(length>(INT32_MAX-destIndex)) {
-        return -1;  // integer overflow
+    إذا(length>(INT32_MAX-dest_شاخص)) {
+        أرجع -1;  // integer overflow
     }
-    if((destIndex+length)<=destCapacity) {
-        u_memcpy(dest+destIndex, s, length);
+    إذا((dest_شاخص+length)<=dest_ظرفیت) {
+        u_memcpy(dest+dest_شاخص, s, length);
     }
-    return destIndex + length;
+    أرجع dest_شاخص + length;
 }
 
-inline int32_t
-appendUnchanged(char16_t *dest, int32_t destIndex, int32_t destCapacity,
-                const char16_t *s, int32_t length, uint32_t options, icu::Edits *edits) {
-    if (length <= 0) {
-        return destIndex;
+مضمن int32_t
+appendUnchanged(char16_t *dest, int32_t dest_شاخص, int32_t dest_ظرفیت,
+                ثابت char16_t *s, int32_t length, uint32_t options, icu::Edits *edits) {
+    إذا (length <= 0) {
+        أرجع dest_شاخص;
     }
-    return appendNonEmptyUnchanged(dest, destIndex, destCapacity, s, length, options, edits);
+    أرجع append_Non_تشه_Unchanged(dest, dest_شاخص, dest_ظرفیت, s, length, options, edits);
 }
 
 UChar32 U_CALLCONV
-utf16_caseContextIterator(void *context, int8_t dir) {
+utf16_caseContextIterator(فراغ *context, int8_t dir) {
     UCaseContext* csc = static_cast<UCaseContext*>(context);
     UChar32 c;
 
-    if(dir<0) {
+    إذا(dir<0) {
         /* reset for backward iteration */
-        csc->index=csc->cpStart;
+        csc->شاخص=csc->cp_پیل;
         csc->dir=dir;
-    } else if(dir>0) {
+    } وإلا إذا(dir>0) {
         /* reset for forward iteration */
-        csc->index=csc->cpLimit;
+        csc->شاخص=csc->cp_حد;
         csc->dir=dir;
-    } else {
+    } وإلا {
         /* continue current iteration direction */
         dir=csc->dir;
     }
 
-    if(dir<0) {
-        if(csc->start<csc->index) {
-            U16_PREV((const char16_t *)csc->p, csc->start, csc->index, c);
-            return c;
+    إذا(dir<0) {
+        إذا(csc->پیل<csc->شاخص) {
+            U16_PREV((ثابت char16_t *)csc->p, csc->پیل, csc->شاخص, c);
+            أرجع c;
         }
-    } else {
-        if(csc->index<csc->limit) {
-            U16_NEXT((const char16_t *)csc->p, csc->index, csc->limit, c);
-            return c;
+    } وإلا {
+        إذا(csc->شاخص<csc->حد) {
+            U16_بل((ثابت char16_t *)csc->p, csc->شاخص, csc->حد, c);
+            أرجع c;
         }
     }
-    return U_SENTINEL;
+    أرجع U_SENTINEL;
 }
 
 /**
  * caseLocale >= 0: Lowercases [srcStart..srcLimit[ but takes context [0..srcLength[ into account.
  * caseLocale < 0: Case-folds [srcStart..srcLimit[.
  */
-int32_t toLower(int32_t caseLocale, uint32_t options,
-                char16_t *dest, int32_t destCapacity,
-                const char16_t *src, UCaseContext *csc, int32_t srcStart, int32_t srcLimit,
-                icu::Edits *edits, UErrorCode &errorCode) {
-    const int8_t *latinToLower;
-    if (caseLocale == UCASE_LOC_ROOT ||
+int32_t منزل_ښکتنی(int32_t caseLocale, uint32_t options,
+                char16_t *dest, int32_t dest_ظرفیت,
+                ثابت char16_t *src, UCaseContext *csc, int32_t src_پیل, int32_t src_حد,
+                icu::Edits *edits, UError_کوډ &error_کوډ) {
+    ثابت int8_t *latin_منزل_ښکتنی;
+    إذا (caseLocale == UCASE_LOC_ریښه ||
             (caseLocale >= 0 ?
                 !(caseLocale == UCASE_LOC_TURKISH || caseLocale == UCASE_LOC_LITHUANIAN) :
-                (options & _FOLD_CASE_OPTIONS_MASK) == U_FOLD_CASE_DEFAULT)) {
-        latinToLower = LatinCase::TO_LOWER_NORMAL;
-    } else {
-        latinToLower = LatinCase::TO_LOWER_TR_LT;
+                (options & FOLD_CASE_OPTIONS_ماسک) == U_FOLD_CASE_DEFAULT)) {
+        latin_منزل_ښکتنی = LatinCase::منزل_ښکتنی_نورمال;
+    } وإلا {
+        latin_منزل_ښکتنی = LatinCase::منزل_ښکتنی_TR_LT;
     }
-    const UTrie2 *trie = ucase_getTrie();
-    int32_t destIndex = 0;
-    int32_t prev = srcStart;
-    int32_t srcIndex = srcStart;
-    for (;;) {
+    ثابت UTrie2 *trie = ucase_getTrie();
+    int32_t dest_شاخص = 0;
+    int32_t prev = src_پیل;
+    int32_t src_شاخص = src_پیل;
+    لكل (;;) {
         // fast path for simple cases
         char16_t lead = 0;
-        while (srcIndex < srcLimit) {
-            lead = src[srcIndex];
+        طالما (src_شاخص < src_حد) {
+            lead = src[src_شاخص];
             int32_t delta;
-            if (lead < LatinCase::LONG_S) {
-                int8_t d = latinToLower[lead];
-                if (d == LatinCase::EXC) { break; }
-                ++srcIndex;
-                if (d == 0) { continue; }
+            إذا (lead < LatinCase::LONG_S) {
+                int8_t d = latin_منزل_ښکتنی[lead];
+                إذا (d == LatinCase::EXC) { اكسر; }
+                ++src_شاخص;
+                إذا (d == 0) { استمر; }
                 delta = d;
-            } else if (lead >= 0xd800) {
-                break;  // surrogate or higher
-            } else {
+            } وإلا إذا (lead >= 0xd800) {
+                اكسر;  // surrogate or higher
+            } وإلا {
                 uint16_t props = UTRIE2_GET16_FROM_U16_SINGLE_LEAD(trie, lead);
-                if (UCASE_HAS_EXCEPTION(props)) { break; }
-                ++srcIndex;
-                if (!UCASE_IS_UPPER_OR_TITLE(props) || (delta = UCASE_GET_DELTA(props)) == 0) {
-                    continue;
+                إذا (UCASE_HAS_EXCEPTION(props)) { اكسر; }
+                ++src_شاخص;
+                إذا (!UCASE_IS_پاسنی_OR_TITLE(props) || (delta = UCASE_GET_DELTA(props)) == 0) {
+                    استمر;
                 }
             }
             lead += static_cast<char16_t>(delta);
-            destIndex = appendUnchanged(dest, destIndex, destCapacity,
-                                        src + prev, srcIndex - 1 - prev, options, edits);
-            if (destIndex >= 0) {
-                destIndex = appendUChar(dest, destIndex, destCapacity, lead);
-                if (edits != nullptr) {
-                    edits->addReplace(1, 1);
+            dest_شاخص = appendUnchanged(dest, dest_شاخص, dest_ظرفیت,
+                                        src + prev, src_شاخص - 1 - prev, options, edits);
+            إذا (dest_شاخص >= 0) {
+                dest_شاخص = appendUChar(dest, dest_شاخص, dest_ظرفیت, lead);
+                إذا (edits != تش_اشاره) {
+                    edits->جمع_کړه_Replace(1, 1);
                 }
             }
-            if (destIndex < 0) {
-                errorCode = U_INDEX_OUTOFBOUNDS_ERROR;
-                return 0;
+            إذا (dest_شاخص < 0) {
+                error_کوډ = U_شاخص_OUTOFBOUNDS_ERROR;
+                أرجع 0;
             }
-            prev = srcIndex;
+            prev = src_شاخص;
         }
-        if (srcIndex >= srcLimit) {
-            break;
+        إذا (src_شاخص >= src_حد) {
+            اكسر;
         }
         // slow path
-        int32_t cpStart = srcIndex++;
+        int32_t cp_پیل = src_شاخص++;
         char16_t trail;
         UChar32 c;
-        if (U16_IS_LEAD(lead) && srcIndex < srcLimit && U16_IS_TRAIL(trail = src[srcIndex])) {
+        إذا (U16_IS_LEAD(lead) && src_شاخص < src_حد && U16_IS_TRAIL(trail = src[src_شاخص])) {
             c = U16_GET_SUPPLEMENTARY(lead, trail);
-            ++srcIndex;
-        } else {
+            ++src_شاخص;
+        } وإلا {
             c = lead;
         }
-        const char16_t *s = nullptr;
-        if (caseLocale >= 0) {
-            csc->cpStart = cpStart;
-            csc->cpLimit = srcIndex;
-            c = ucase_toFullLower(c, utf16_caseContextIterator, csc, &s, caseLocale);
-        } else {
-            c = ucase_toFullFolding(c, &s, options);
+        ثابت char16_t *s = تش_اشاره;
+        إذا (caseLocale >= 0) {
+            csc->cp_پیل = cp_پیل;
+            csc->cp_حد = src_شاخص;
+            c = ucase_منزل_ډک_ښکتنی(c, utf16_caseContextIterator, csc, &s, caseLocale);
+        } وإلا {
+            c = ucase_منزل_ډک_Folding(c, &s, options);
         }
-        if (c >= 0) {
-            destIndex = appendUnchanged(dest, destIndex, destCapacity,
-                                        src + prev, cpStart - prev, options, edits);
-            if (destIndex >= 0) {
-                destIndex = appendResult(dest, destIndex, destCapacity, c, s,
-                                         srcIndex - cpStart, options, edits);
+        إذا (c >= 0) {
+            dest_شاخص = appendUnchanged(dest, dest_شاخص, dest_ظرفیت,
+                                        src + prev, cp_پیل - prev, options, edits);
+            إذا (dest_شاخص >= 0) {
+                dest_شاخص = append_پایله(dest, dest_شاخص, dest_ظرفیت, c, s,
+                                         src_شاخص - cp_پیل, options, edits);
             }
-            if (destIndex < 0) {
-                errorCode = U_INDEX_OUTOFBOUNDS_ERROR;
-                return 0;
+            إذا (dest_شاخص < 0) {
+                error_کوډ = U_شاخص_OUTOFBOUNDS_ERROR;
+                أرجع 0;
             }
-            prev = srcIndex;
+            prev = src_شاخص;
         }
     }
-    destIndex = appendUnchanged(dest, destIndex, destCapacity,
-                                src + prev, srcIndex - prev, options, edits);
-    if (destIndex < 0) {
-        errorCode = U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0;
+    dest_شاخص = appendUnchanged(dest, dest_شاخص, dest_ظرفیت,
+                                src + prev, src_شاخص - prev, options, edits);
+    إذا (dest_شاخص < 0) {
+        error_کوډ = U_شاخص_OUTOFBOUNDS_ERROR;
+        أرجع 0;
     }
-    return destIndex;
+    أرجع dest_شاخص;
 }
 
-int32_t toUpper(int32_t caseLocale, uint32_t options,
-                char16_t *dest, int32_t destCapacity,
-                const char16_t *src, UCaseContext *csc, int32_t srcLength,
-                icu::Edits *edits, UErrorCode &errorCode) {
-    const int8_t *latinToUpper;
-    if (caseLocale == UCASE_LOC_TURKISH) {
-        latinToUpper = LatinCase::TO_UPPER_TR;
-    } else {
-        latinToUpper = LatinCase::TO_UPPER_NORMAL;
+int32_t منزل_پاسنی(int32_t caseLocale, uint32_t options,
+                char16_t *dest, int32_t dest_ظرفیت,
+                ثابت char16_t *src, UCaseContext *csc, int32_t src_اوږدتیا,
+                icu::Edits *edits, UError_کوډ &error_کوډ) {
+    ثابت int8_t *latin_منزل_پاسنی;
+    إذا (caseLocale == UCASE_LOC_TURKISH) {
+        latin_منزل_پاسنی = LatinCase::منزل_پاسنی_TR;
+    } وإلا {
+        latin_منزل_پاسنی = LatinCase::منزل_پاسنی_نورمال;
     }
-    const UTrie2 *trie = ucase_getTrie();
-    int32_t destIndex = 0;
+    ثابت UTrie2 *trie = ucase_getTrie();
+    int32_t dest_شاخص = 0;
     int32_t prev = 0;
-    int32_t srcIndex = 0;
-    for (;;) {
+    int32_t src_شاخص = 0;
+    لكل (;;) {
         // fast path for simple cases
         char16_t lead = 0;
-        while (srcIndex < srcLength) {
-            lead = src[srcIndex];
+        طالما (src_شاخص < src_اوږدتیا) {
+            lead = src[src_شاخص];
             int32_t delta;
-            if (lead < LatinCase::LONG_S) {
-                int8_t d = latinToUpper[lead];
-                if (d == LatinCase::EXC) { break; }
-                ++srcIndex;
-                if (d == 0) { continue; }
+            إذا (lead < LatinCase::LONG_S) {
+                int8_t d = latin_منزل_پاسنی[lead];
+                إذا (d == LatinCase::EXC) { اكسر; }
+                ++src_شاخص;
+                إذا (d == 0) { استمر; }
                 delta = d;
-            } else if (lead >= 0xd800) {
-                break;  // surrogate or higher
-            } else {
+            } وإلا إذا (lead >= 0xd800) {
+                اكسر;  // surrogate or higher
+            } وإلا {
                 uint16_t props = UTRIE2_GET16_FROM_U16_SINGLE_LEAD(trie, lead);
-                if (UCASE_HAS_EXCEPTION(props)) { break; }
-                ++srcIndex;
-                if (UCASE_GET_TYPE(props) != UCASE_LOWER || (delta = UCASE_GET_DELTA(props)) == 0) {
-                    continue;
+                إذا (UCASE_HAS_EXCEPTION(props)) { اكسر; }
+                ++src_شاخص;
+                إذا (UCASE_GET_TYPE(props) != UCASE_ښکتنی || (delta = UCASE_GET_DELTA(props)) == 0) {
+                    استمر;
                 }
             }
             lead += static_cast<char16_t>(delta);
-            destIndex = appendUnchanged(dest, destIndex, destCapacity,
-                                        src + prev, srcIndex - 1 - prev, options, edits);
-            if (destIndex >= 0) {
-                destIndex = appendUChar(dest, destIndex, destCapacity, lead);
-                if (edits != nullptr) {
-                    edits->addReplace(1, 1);
+            dest_شاخص = appendUnchanged(dest, dest_شاخص, dest_ظرفیت,
+                                        src + prev, src_شاخص - 1 - prev, options, edits);
+            إذا (dest_شاخص >= 0) {
+                dest_شاخص = appendUChar(dest, dest_شاخص, dest_ظرفیت, lead);
+                إذا (edits != تش_اشاره) {
+                    edits->جمع_کړه_Replace(1, 1);
                 }
             }
-            if (destIndex < 0) {
-                errorCode = U_INDEX_OUTOFBOUNDS_ERROR;
-                return 0;
+            إذا (dest_شاخص < 0) {
+                error_کوډ = U_شاخص_OUTOFBOUNDS_ERROR;
+                أرجع 0;
             }
-            prev = srcIndex;
+            prev = src_شاخص;
         }
-        if (srcIndex >= srcLength) {
-            break;
+        إذا (src_شاخص >= src_اوږدتیا) {
+            اكسر;
         }
         // slow path
-        int32_t cpStart;
-        csc->cpStart = cpStart = srcIndex++;
+        int32_t cp_پیل;
+        csc->cp_پیل = cp_پیل = src_شاخص++;
         char16_t trail;
         UChar32 c;
-        if (U16_IS_LEAD(lead) && srcIndex < srcLength && U16_IS_TRAIL(trail = src[srcIndex])) {
+        إذا (U16_IS_LEAD(lead) && src_شاخص < src_اوږدتیا && U16_IS_TRAIL(trail = src[src_شاخص])) {
             c = U16_GET_SUPPLEMENTARY(lead, trail);
-            ++srcIndex;
-        } else {
+            ++src_شاخص;
+        } وإلا {
             c = lead;
         }
-        csc->cpLimit = srcIndex;
-        const char16_t *s = nullptr;
-        c = ucase_toFullUpper(c, utf16_caseContextIterator, csc, &s, caseLocale);
-        if (c >= 0) {
-            destIndex = appendUnchanged(dest, destIndex, destCapacity,
-                                        src + prev, cpStart - prev, options, edits);
-            if (destIndex >= 0) {
-                destIndex = appendResult(dest, destIndex, destCapacity, c, s,
-                                         srcIndex - cpStart, options, edits);
+        csc->cp_حد = src_شاخص;
+        ثابت char16_t *s = تش_اشاره;
+        c = ucase_منزل_ډک_پاسنی(c, utf16_caseContextIterator, csc, &s, caseLocale);
+        إذا (c >= 0) {
+            dest_شاخص = appendUnchanged(dest, dest_شاخص, dest_ظرفیت,
+                                        src + prev, cp_پیل - prev, options, edits);
+            إذا (dest_شاخص >= 0) {
+                dest_شاخص = append_پایله(dest, dest_شاخص, dest_ظرفیت, c, s,
+                                         src_شاخص - cp_پیل, options, edits);
             }
-            if (destIndex < 0) {
-                errorCode = U_INDEX_OUTOFBOUNDS_ERROR;
-                return 0;
+            إذا (dest_شاخص < 0) {
+                error_کوډ = U_شاخص_OUTOFBOUNDS_ERROR;
+                أرجع 0;
             }
-            prev = srcIndex;
+            prev = src_شاخص;
         }
     }
-    destIndex = appendUnchanged(dest, destIndex, destCapacity,
-                                src + prev, srcIndex - prev, options, edits);
-    if (destIndex < 0) {
-        errorCode = U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0;
+    dest_شاخص = appendUnchanged(dest, dest_شاخص, dest_ظرفیت,
+                                src + prev, src_شاخص - prev, options, edits);
+    إذا (dest_شاخص < 0) {
+        error_کوډ = U_شاخص_OUTOFBOUNDS_ERROR;
+        أرجع 0;
     }
-    return destIndex;
+    أرجع dest_شاخص;
 }
 
 }  // namespace
 
-U_NAMESPACE_END
+U_NAMESPACE_پای_ټکی
 
 U_NAMESPACE_USE
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#إذا !UCONFIG_NO_BREAK_ITERATION
 
-namespace {
+نطاق {
 
 /**
  * Input: c is a letter I with or without acute accent.
@@ -413,113 +413,113 @@ namespace {
  *
  * @return the src index after the titlecased sequence, or the start index if no Dutch IJ
  */
-int32_t maybeTitleDutchIJ(const char16_t *src, UChar32 c, int32_t start, int32_t segmentLimit,
-                          char16_t *dest, int32_t &destIndex, int32_t destCapacity, uint32_t options,
+int32_t maybeTitleDutchIJ(ثابت char16_t *src, UChar32 c, int32_t پیل, int32_t segment_حد,
+                          char16_t *dest, int32_t &dest_شاخص, int32_t dest_ظرفیت, uint32_t options,
                           icu::Edits *edits) {
-    U_ASSERT(start < segmentLimit);
+    U_ASSERT(پیل < segment_حد);
 
-    int32_t index = start;
-    bool withAcute = false;
+    int32_t شاخص = پیل;
+    منطقي withAcute = خطأ;
 
     // If the conditions are met, then the following variables tell us what to output.
     int32_t unchanged1 = 0;  // code units before the j, or the whole sequence (0..3)
-    bool doTitleJ = false;  // true if the j needs to be titlecased
+    منطقي doTitleJ = خطأ;  // true if the j needs to be titlecased
     int32_t unchanged2 = 0;  // after the j (0 or 1)
 
     // next character after the first letter
-    char16_t c2 = src[index++];
+    char16_t c2 = src[شاخص++];
 
     // Is the first letter an i/I with accent?
-    if (c == u'I') {
-        if (c2 == ACUTE) {
-            withAcute = true;
+    إذا (c == u'I') {
+        إذا (c2 == ACUTE) {
+            withAcute = ریښتیا;
             unchanged1 = 1;
-            if (index == segmentLimit) { return start; }
-            c2 = src[index++];
+            إذا (شاخص == segment_حد) { أرجع پیل; }
+            c2 = src[شاخص++];
         }
-    } else {  // Í
-        withAcute = true;
+    } وإلا {  // Í
+        withAcute = ریښتیا;
     }
 
     // Is the next character a j/J?
-    if (c2 == u'j') {
-        doTitleJ = true;
-    } else if (c2 == u'J') {
+    إذا (c2 == u'j') {
+        doTitleJ = ریښتیا;
+    } وإلا إذا (c2 == u'J') {
         ++unchanged1;
-    } else {
-        return start;
+    } وإلا {
+        أرجع پیل;
     }
 
     // A plain i/I must be followed by a plain j/J.
     // An i/I with acute must be followed by a j/J with acute.
-    if (withAcute) {
-        if (index == segmentLimit || src[index++] != ACUTE) { return start; }
-        if (doTitleJ) {
+    إذا (withAcute) {
+        إذا (شاخص == segment_حد || src[شاخص++] != ACUTE) { أرجع پیل; }
+        إذا (doTitleJ) {
             unchanged2 = 1;
-        } else {
+        } وإلا {
             ++unchanged1;
         }
     }
 
     // There must not be another combining mark.
-    if (index < segmentLimit) {
+    إذا (شاخص < segment_حد) {
         int32_t cp;
-        int32_t i = index;
-        U16_NEXT(src, i, segmentLimit, cp);
-        uint32_t typeMask = U_GET_GC_MASK(cp);
-        if ((typeMask & U_GC_M_MASK) != 0) {
-            return start;
+        int32_t i = شاخص;
+        U16_بل(src, i, segment_حد, cp);
+        uint32_t type_ماسک = U_GET_GC_ماسک(cp);
+        إذا ((type_ماسک & U_GC_M_ماسک) != 0) {
+            أرجع پیل;
         }
     }
 
     // Output the rest of the Dutch IJ.
-    destIndex = appendUnchanged(dest, destIndex, destCapacity, src + start, unchanged1, options, edits);
-    start += unchanged1;
-    if (doTitleJ) {
-        destIndex = appendUChar(dest, destIndex, destCapacity, u'J');
-        if (edits != nullptr) {
-            edits->addReplace(1, 1);
+    dest_شاخص = appendUnchanged(dest, dest_شاخص, dest_ظرفیت, src + پیل, unchanged1, options, edits);
+    پیل += unchanged1;
+    إذا (doTitleJ) {
+        dest_شاخص = appendUChar(dest, dest_شاخص, dest_ظرفیت, u'J');
+        إذا (edits != تش_اشاره) {
+            edits->جمع_کړه_Replace(1, 1);
         }
-        ++start;
+        ++پیل;
     }
-    destIndex = appendUnchanged(dest, destIndex, destCapacity, src + start, unchanged2, options, edits);
+    dest_شاخص = appendUnchanged(dest, dest_شاخص, dest_ظرفیت, src + پیل, unchanged2, options, edits);
 
-    U_ASSERT(start + unchanged2 == index);
-    return index;
+    U_ASSERT(پیل + unchanged2 == شاخص);
+    أرجع شاخص;
 }
 
 }  // namespace
 
 U_CFUNC int32_t U_CALLCONV
-ustrcase_internalToTitle(int32_t caseLocale, uint32_t options, BreakIterator *iter,
-                         char16_t *dest, int32_t destCapacity,
-                         const char16_t *src, int32_t srcLength,
+ustrcase_دننی_منزل_Title(int32_t caseLocale, uint32_t options, BreakIterator *iter,
+                         char16_t *dest, int32_t dest_ظرفیت,
+                         ثابت char16_t *src, int32_t src_اوږدتیا,
                          icu::Edits *edits,
-                         UErrorCode &errorCode) {
-    if (!ustrcase_checkTitleAdjustmentOptions(options, errorCode)) {
-        return 0;
+                         UError_کوډ &error_کوډ) {
+    إذا (!ustrcase_checkTitleAdjustmentOptions(options, error_کوډ)) {
+        أرجع 0;
     }
 
     /* set up local variables */
     UCaseContext csc=UCASECONTEXT_INITIALIZER;
-    csc.p=(void *)src;
-    csc.limit=srcLength;
-    int32_t destIndex=0;
+    csc.p=(فراغ *)src;
+    csc.حد=src_اوږدتیا;
+    int32_t dest_شاخص=0;
     int32_t prev=0;
-    bool isFirstIndex=true;
+    منطقي is_لومړی_شاخص=ریښتیا;
 
     /* titlecasing loop */
-    while(prev<srcLength) {
+    طالما(prev<src_اوږدتیا) {
         /* find next index where to titlecase */
-        int32_t index;
-        if(isFirstIndex) {
-            isFirstIndex=false;
-            index=iter->first();
-        } else {
-            index=iter->next();
+        int32_t شاخص;
+        إذا(is_لومړی_شاخص) {
+            is_لومړی_شاخص=خطأ;
+            شاخص=iter->first();
+        } وإلا {
+            شاخص=iter->next();
         }
-        if(index==UBRK_DONE || index>srcLength) {
-            index=srcLength;
+        إذا(شاخص==UBRK_بشپړ || شاخص>src_اوږدتیا) {
+            شاخص=src_اوږدتیا;
         }
 
         /*
@@ -528,107 +528,107 @@ ustrcase_internalToTitle(int32_t caseLocale, uint32_t options, BreakIterator *it
          * b) first letter (titlecase)              [titleStart..titleLimit[
          * c) subsequent characters (lowercase)                 [titleLimit..index[
          */
-        if(prev<index) {
+        إذا(prev<شاخص) {
             // Find and copy skipped characters [prev..titleStart[
-            int32_t titleStart=prev;
-            int32_t titleLimit=prev;
+            int32_t title_پیل=prev;
+            int32_t title_حد=prev;
             UChar32 c;
-            U16_NEXT(src, titleLimit, index, c);
-            if ((options&U_TITLECASE_NO_BREAK_ADJUSTMENT)==0) {
+            U16_بل(src, title_حد, شاخص, c);
+            إذا ((options&U_TITLECASE_NO_BREAK_ADJUSTMENT)==0) {
                 // Adjust the titlecasing index to the next cased character,
                 // or to the next letter/number/symbol/private use.
                 // Stop with titleStart<titleLimit<=index
                 // if there is a character to be titlecased,
                 // or else stop with titleStart==titleLimit==index.
-                bool toCased = (options&U_TITLECASE_ADJUST_TO_CASED) != 0;
-                while (toCased ? UCASE_NONE==ucase_getType(c) : !ustrcase_isLNS(c)) {
-                    titleStart=titleLimit;
-                    if(titleLimit==index) {
-                        break;
+                منطقي منزل_Cased = (options&U_TITLECASE_ADJUST_منزل_CASED) != 0;
+                طالما (منزل_Cased ? UCASE_NONE==ucase_getType(c) : !ustrcase_isLNS(c)) {
+                    title_پیل=title_حد;
+                    إذا(title_حد==شاخص) {
+                        اكسر;
                     }
-                    U16_NEXT(src, titleLimit, index, c);
+                    U16_بل(src, title_حد, شاخص, c);
                 }
-                if (prev < titleStart) {
-                    destIndex=appendUnchanged(dest, destIndex, destCapacity,
-                                              src+prev, titleStart-prev, options, edits);
-                    if(destIndex<0) {
-                        errorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-                        return 0;
+                إذا (prev < title_پیل) {
+                    dest_شاخص=appendUnchanged(dest, dest_شاخص, dest_ظرفیت,
+                                              src+prev, title_پیل-prev, options, edits);
+                    إذا(dest_شاخص<0) {
+                        error_کوډ=U_شاخص_OUTOFBOUNDS_ERROR;
+                        أرجع 0;
                     }
                 }
             }
 
-            if(titleStart<titleLimit) {
+            إذا(title_پیل<title_حد) {
                 /* titlecase c which is from [titleStart..titleLimit[ */
-                csc.cpStart=titleStart;
-                csc.cpLimit=titleLimit;
-                const char16_t *s;
-                c=ucase_toFullTitle(c, utf16_caseContextIterator, &csc, &s, caseLocale);
-                destIndex=appendResult(dest, destIndex, destCapacity, c, s,
-                                       titleLimit-titleStart, options, edits);
-                if(destIndex<0) {
-                    errorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-                    return 0;
+                csc.cp_پیل=title_پیل;
+                csc.cp_حد=title_حد;
+                ثابت char16_t *s;
+                c=ucase_منزل_ډک_Title(c, utf16_caseContextIterator, &csc, &s, caseLocale);
+                dest_شاخص=append_پایله(dest, dest_شاخص, dest_ظرفیت, c, s,
+                                       title_حد-title_پیل, options, edits);
+                إذا(dest_شاخص<0) {
+                    error_کوډ=U_شاخص_OUTOFBOUNDS_ERROR;
+                    أرجع 0;
                 }
 
                 /* Special case Dutch IJ titlecasing */
-                if (titleStart+1 < index &&
+                إذا (title_پیل+1 < شاخص &&
                         caseLocale == UCASE_LOC_DUTCH) {
-                    if (c < 0) {
+                    إذا (c < 0) {
                         c = ~c;
                     }
 
-                    if (c == u'I' || c == u'Í') {
-                        titleLimit = maybeTitleDutchIJ(src, c, titleStart + 1, index,
-                                                       dest, destIndex, destCapacity, options,
+                    إذا (c == u'I' || c == u'Í') {
+                        title_حد = maybeTitleDutchIJ(src, c, title_پیل + 1, شاخص,
+                                                       dest, dest_شاخص, dest_ظرفیت, options,
                                                        edits);
                     }
                 }
 
                 /* lowercase [titleLimit..index[ */
-                if(titleLimit<index) {
-                    if((options&U_TITLECASE_NO_LOWERCASE)==0) {
+                إذا(title_حد<شاخص) {
+                    إذا((options&U_TITLECASE_NO_LOWERCASE)==0) {
                         /* Normal operation: Lowercase the rest of the word. */
-                        destIndex+=
-                            toLower(
+                        dest_شاخص+=
+                            منزل_ښکتنی(
                                 caseLocale, options,
-                                (dest==nullptr) ? nullptr: dest+destIndex, destCapacity-destIndex,
-                                src, &csc, titleLimit, index,
-                                edits, errorCode);
-                        if(errorCode==U_BUFFER_OVERFLOW_ERROR) {
-                            errorCode=U_ZERO_ERROR;
+                                (dest==تش_اشاره) ? تش_اشاره: dest+dest_شاخص, dest_ظرفیت-dest_شاخص,
+                                src, &csc, title_حد, شاخص,
+                                edits, error_کوډ);
+                        إذا(error_کوډ==U_بفر_ډکېدنه_ERROR) {
+                            error_کوډ=U_ZERO_ERROR;
                         }
-                        if(U_FAILURE(errorCode)) {
-                            return destIndex;
+                        إذا(U_FAILURE(error_کوډ)) {
+                            أرجع dest_شاخص;
                         }
-                    } else {
+                    } وإلا {
                         /* Optionally just copy the rest of the word unchanged. */
-                        destIndex=appendUnchanged(dest, destIndex, destCapacity,
-                                                  src+titleLimit, index-titleLimit, options, edits);
-                        if(destIndex<0) {
-                            errorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-                            return 0;
+                        dest_شاخص=appendUnchanged(dest, dest_شاخص, dest_ظرفیت,
+                                                  src+title_حد, شاخص-title_حد, options, edits);
+                        إذا(dest_شاخص<0) {
+                            error_کوډ=U_شاخص_OUTOFBOUNDS_ERROR;
+                            أرجع 0;
                         }
                     }
                 }
             }
         }
 
-        prev=index;
+        prev=شاخص;
     }
 
-    return checkOverflowAndEditsError(destIndex, destCapacity, edits, errorCode);
+    أرجع check_ډکېدنه_And_Edits_Error(dest_شاخص, dest_ظرفیت, edits, error_کوډ);
 }
 
-#endif  // !UCONFIG_NO_BREAK_ITERATION
+#د_که_پای  // !UCONFIG_NO_BREAK_ITERATION
 
 U_NAMESPACE_BEGIN
-namespace GreekUpper {
+نطاق Greek_پاسنی {
 
 // Data generated by prototype code, see
 // https://icu.unicode.org/design/case/greek-upper
 // TODO: Move this data into ucase.icu.
-static const uint16_t data0370[] = {
+ساكن ثابت uint16_t data0370[] = {
     // U+0370..03FF
     0x0370,
     0x0370,
@@ -776,7 +776,7 @@ static const uint16_t data0370[] = {
     0x03FF,
 };
 
-static const uint16_t data1F00[] = {
+ساكن ثابت uint16_t data1F00[] = {
     // U+1F00..1FFF
     0x0391 | HAS_VOWEL,
     0x0391 | HAS_VOWEL,
@@ -1037,62 +1037,62 @@ static const uint16_t data1F00[] = {
 };
 
 // U+2126 Ohm sign
-static const uint16_t data2126 = 0x03A9 | HAS_VOWEL;
+ساكن ثابت uint16_t data2126 = 0x03A9 | HAS_VOWEL;
 
-uint32_t getLetterData(UChar32 c) {
-    if (c < 0x370 || 0x2126 < c || (0x3ff < c && c < 0x1f00)) {
-        return 0;
-    } else if (c <= 0x3ff) {
-        return data0370[c - 0x370];
-    } else if (c <= 0x1fff) {
-        return data1F00[c - 0x1f00];
-    } else if (c == 0x2126) {
-        return data2126;
-    } else {
-        return 0;
+uint32_t get_Letter_معلومات(UChar32 c) {
+    إذا (c < 0x370 || 0x2126 < c || (0x3ff < c && c < 0x1f00)) {
+        أرجع 0;
+    } وإلا إذا (c <= 0x3ff) {
+        أرجع data0370[c - 0x370];
+    } وإلا إذا (c <= 0x1fff) {
+        أرجع data1F00[c - 0x1f00];
+    } وإلا إذا (c == 0x2126) {
+        أرجع data2126;
+    } وإلا {
+        أرجع 0;
     }
 }
 
-uint32_t getDiacriticData(UChar32 c) {
-    switch (c) {
-    case 0x0300:  // varia
-    case 0x0301:  // tonos = oxia
-    case 0x0342:  // perispomeni
-    case 0x0302:  // circumflex can look like perispomeni
-    case 0x0303:  // tilde can look like perispomeni
-    case 0x0311:  // inverted breve can look like perispomeni
-        return HAS_ACCENT;
-    case 0x0308:  // dialytika = diaeresis
-        return HAS_COMBINING_DIALYTIKA;
-    case 0x0344:  // dialytika tonos
-        return HAS_COMBINING_DIALYTIKA | HAS_ACCENT;
-    case 0x0345:  // ypogegrammeni = iota subscript
-        return HAS_YPOGEGRAMMENI;
-    case 0x0304:  // macron
-    case 0x0306:  // breve
-    case 0x0313:  // comma above
-    case 0x0314:  // reversed comma above
-    case 0x0343:  // koronis
-        return HAS_OTHER_GREEK_DIACRITIC;
-    default:
-        return 0;
+uint32_t get_Diacritic_معلومات(UChar32 c) {
+    بدل (c) {
+    حالة 0x0300:  // varia
+    حالة 0x0301:  // tonos = oxia
+    حالة 0x0342:  // perispomeni
+    حالة 0x0302:  // circumflex can look like perispomeni
+    حالة 0x0303:  // tilde can look like perispomeni
+    حالة 0x0311:  // inverted breve can look like perispomeni
+        أرجع HAS_ACCENT;
+    حالة 0x0308:  // dialytika = diaeresis
+        أرجع HAS_COMBINING_DIALYTIKA;
+    حالة 0x0344:  // dialytika tonos
+        أرجع HAS_COMBINING_DIALYTIKA | HAS_ACCENT;
+    حالة 0x0345:  // ypogegrammeni = iota subscript
+        أرجع HAS_YPOGEGRAMMENI;
+    حالة 0x0304:  // macron
+    حالة 0x0306:  // breve
+    حالة 0x0313:  // comma above
+    حالة 0x0314:  // reversed comma above
+    حالة 0x0343:  // koronis
+        أرجع HAS_OTHER_GREEK_DIACRITIC;
+    افتراضي:
+        أرجع 0;
     }
 }
 
-UBool isFollowedByCasedLetter(const char16_t *s, int32_t i, int32_t length) {
-    while (i < length) {
+UBool isFollowedByCasedLetter(ثابت char16_t *s, int32_t i, int32_t length) {
+    طالما (i < length) {
         UChar32 c;
-        U16_NEXT(s, i, length, c);
+        U16_بل(s, i, length, c);
         int32_t type = ucase_getTypeOrIgnorable(c);
-        if ((type & UCASE_IGNORABLE) != 0) {
+        إذا ((type & UCASE_IGNORABLE) != 0) {
             // Case-ignorable, continue with the loop.
-        } else if (type != UCASE_NONE) {
-            return true;  // Followed by cased letter.
-        } else {
-            return false;  // Uncased and not case-ignorable.
+        } وإلا إذا (type != UCASE_NONE) {
+            أرجع ریښتیا;  // Followed by cased letter.
+        } وإلا {
+            أرجع خطأ;  // Uncased and not case-ignorable.
         }
     }
-    return false;  // Not followed by cased letter.
+    أرجع خطأ;  // Not followed by cased letter.
 }
 
 /**
@@ -1101,351 +1101,351 @@ UBool isFollowedByCasedLetter(const char16_t *s, int32_t i, int32_t length) {
  * for each character.
  * TODO: Try to re-consolidate one way or another with the non-Greek function.
  */
-int32_t toUpper(uint32_t options,
-                char16_t *dest, int32_t destCapacity,
-                const char16_t *src, int32_t srcLength,
+int32_t منزل_پاسنی(uint32_t options,
+                char16_t *dest, int32_t dest_ظرفیت,
+                ثابت char16_t *src, int32_t src_اوږدتیا,
                 Edits *edits,
-                UErrorCode &errorCode) {
-    int32_t destIndex=0;
+                UError_کوډ &error_کوډ) {
+    int32_t dest_شاخص=0;
     uint32_t state = 0;
-    for (int32_t i = 0; i < srcLength;) {
-        int32_t nextIndex = i;
+    لكل (int32_t i = 0; i < src_اوږدتیا;) {
+        int32_t بل_شاخص = i;
         UChar32 c;
-        U16_NEXT(src, nextIndex, srcLength, c);
-        uint32_t nextState = 0;
+        U16_بل(src, بل_شاخص, src_اوږدتیا, c);
+        uint32_t بل_State = 0;
         int32_t type = ucase_getTypeOrIgnorable(c);
-        if ((type & UCASE_IGNORABLE) != 0) {
+        إذا ((type & UCASE_IGNORABLE) != 0) {
             // c is case-ignorable
-            nextState |= (state & AFTER_CASED);
-        } else if (type != UCASE_NONE) {
+            بل_State |= (state & AFTER_CASED);
+        } وإلا إذا (type != UCASE_NONE) {
             // c is cased
-            nextState |= AFTER_CASED;
+            بل_State |= AFTER_CASED;
         }
-        uint32_t data = getLetterData(c);
-        if (data > 0) {
-            uint32_t upper = data & UPPER_MASK;
+        uint32_t معلومات = get_Letter_معلومات(c);
+        إذا (معلومات > 0) {
+            uint32_t upper = معلومات & پاسنی_ماسک;
             // Add a dialytika to this iota or ypsilon vowel
             // if we removed a tonos from the previous vowel,
             // and that previous vowel did not also have (or gain) a dialytika.
             // Adding one only to the final vowel in a longer sequence
             // (which does not occur in normal writing) would require lookahead.
             // Set the same flag as for preserving an existing dialytika.
-            if ((data & HAS_VOWEL) != 0 &&
+            إذا ((معلومات & HAS_VOWEL) != 0 &&
                 (state & (AFTER_VOWEL_WITH_PRECOMPOSED_ACCENT | AFTER_VOWEL_WITH_COMBINING_ACCENT)) !=
                     0 &&
                 (upper == 0x399 || upper == 0x3A5)) {
-                data |= (state & AFTER_VOWEL_WITH_PRECOMPOSED_ACCENT) ? HAS_DIALYTIKA
+                معلومات |= (state & AFTER_VOWEL_WITH_PRECOMPOSED_ACCENT) ? HAS_DIALYTIKA
                                                                       : HAS_COMBINING_DIALYTIKA;
             }
-            int32_t numYpogegrammeni = 0;  // Map each one to a trailing, spacing, capital iota.
-            if ((data & HAS_YPOGEGRAMMENI) != 0) {
-                numYpogegrammeni = 1;
+            int32_t عدد_Ypogegrammeni = 0;  // Map each one to a trailing, spacing, capital iota.
+            إذا ((معلومات & HAS_YPOGEGRAMMENI) != 0) {
+                عدد_Ypogegrammeni = 1;
             }
-            const UBool hasPrecomposedAccent = (data & HAS_ACCENT) != 0;
+            ثابت UBool hasPrecomposedAccent = (معلومات & HAS_ACCENT) != 0;
             // Skip combining diacritics after this Greek letter.
-            while (nextIndex < srcLength) {
-                uint32_t diacriticData = getDiacriticData(src[nextIndex]);
-                if (diacriticData != 0) {
-                    data |= diacriticData;
-                    if ((diacriticData & HAS_YPOGEGRAMMENI) != 0) {
-                        ++numYpogegrammeni;
+            طالما (بل_شاخص < src_اوږدتیا) {
+                uint32_t diacritic_معلومات = get_Diacritic_معلومات(src[بل_شاخص]);
+                إذا (diacritic_معلومات != 0) {
+                    معلومات |= diacritic_معلومات;
+                    إذا ((diacritic_معلومات & HAS_YPOGEGRAMMENI) != 0) {
+                        ++عدد_Ypogegrammeni;
                     }
-                    ++nextIndex;
-                } else {
-                    break;  // not a Greek diacritic
+                    ++بل_شاخص;
+                } وإلا {
+                    اكسر;  // not a Greek diacritic
                 }
             }
-            if ((data & HAS_VOWEL_AND_ACCENT_AND_DIALYTIKA) == HAS_VOWEL_AND_ACCENT) {
-                nextState |= hasPrecomposedAccent ? AFTER_VOWEL_WITH_PRECOMPOSED_ACCENT
+            إذا ((معلومات & HAS_VOWEL_AND_ACCENT_AND_DIALYTIKA) == HAS_VOWEL_AND_ACCENT) {
+                بل_State |= hasPrecomposedAccent ? AFTER_VOWEL_WITH_PRECOMPOSED_ACCENT
                                                   : AFTER_VOWEL_WITH_COMBINING_ACCENT;
             }
             // Map according to Greek rules.
-            UBool addTonos = false;
-            if (upper == 0x397 &&
-                    (data & HAS_ACCENT) != 0 &&
-                    numYpogegrammeni == 0 &&
+            UBool جمع_کړه_Tonos = خطأ;
+            إذا (upper == 0x397 &&
+                    (معلومات & HAS_ACCENT) != 0 &&
+                    عدد_Ypogegrammeni == 0 &&
                     (state & AFTER_CASED) == 0 &&
-                    !isFollowedByCasedLetter(src, nextIndex, srcLength)) {
+                    !isFollowedByCasedLetter(src, بل_شاخص, src_اوږدتیا)) {
                 // Keep disjunctive "or" with (only) a tonos.
                 // We use the same "word boundary" conditions as for the Final_Sigma test.
-                if (hasPrecomposedAccent) {
+                إذا (hasPrecomposedAccent) {
                     upper = 0x389;  // Preserve the precomposed form.
-                } else {
-                    addTonos = true;
+                } وإلا {
+                    جمع_کړه_Tonos = ریښتیا;
                 }
-            } else if ((data & HAS_DIALYTIKA) != 0) {
+            } وإلا إذا ((معلومات & HAS_DIALYTIKA) != 0) {
                 // Preserve a vowel with dialytika in precomposed form if it exists.
-                if (upper == 0x399) {
+                إذا (upper == 0x399) {
                     upper = 0x3AA;
-                    data &= ~HAS_EITHER_DIALYTIKA;
-                } else if (upper == 0x3A5) {
+                    معلومات &= ~HAS_EITHER_DIALYTIKA;
+                } وإلا إذا (upper == 0x3A5) {
                     upper = 0x3AB;
-                    data &= ~HAS_EITHER_DIALYTIKA;
+                    معلومات &= ~HAS_EITHER_DIALYTIKA;
                 }
             }
 
             UBool change;
-            if (edits == nullptr && (options & U_OMIT_UNCHANGED_TEXT) == 0) {
-                change = true;  // common, simple usage
-            } else {
+            إذا (edits == تش_اشاره && (options & U_OMIT_UNCHANGED_متن) == 0) {
+                change = ریښتیا;  // common, simple usage
+            } وإلا {
                 // Find out first whether we are changing the text.
-                change = src[i] != upper || numYpogegrammeni > 0;
+                change = src[i] != upper || عدد_Ypogegrammeni > 0;
                 int32_t i2 = i + 1;
-                if ((data & HAS_EITHER_DIALYTIKA) != 0) {
-                    change |= i2 >= nextIndex || src[i2] != 0x308;
+                إذا ((معلومات & HAS_EITHER_DIALYTIKA) != 0) {
+                    change |= i2 >= بل_شاخص || src[i2] != 0x308;
                     ++i2;
                 }
-                if (addTonos) {
-                    change |= i2 >= nextIndex || src[i2] != 0x301;
+                إذا (جمع_کړه_Tonos) {
+                    change |= i2 >= بل_شاخص || src[i2] != 0x301;
                     ++i2;
                 }
-                int32_t oldLength = nextIndex - i;
-                int32_t newLength = (i2 - i) + numYpogegrammeni;
-                change |= oldLength != newLength;
-                if (change) {
-                    if (edits != nullptr) {
-                        edits->addReplace(oldLength, newLength);
+                int32_t old_اوږدتیا = بل_شاخص - i;
+                int32_t new_اوږدتیا = (i2 - i) + عدد_Ypogegrammeni;
+                change |= old_اوږدتیا != new_اوږدتیا;
+                إذا (change) {
+                    إذا (edits != تش_اشاره) {
+                        edits->جمع_کړه_Replace(old_اوږدتیا, new_اوږدتیا);
                     }
-                } else {
-                    if (edits != nullptr) {
-                        edits->addUnchanged(oldLength);
+                } وإلا {
+                    إذا (edits != تش_اشاره) {
+                        edits->جمع_کړه_Unchanged(old_اوږدتیا);
                     }
                     // Write unchanged text?
-                    change = (options & U_OMIT_UNCHANGED_TEXT) == 0;
+                    change = (options & U_OMIT_UNCHANGED_متن) == 0;
                 }
             }
 
-            if (change) {
-                destIndex = appendUChar(dest, destIndex, destCapacity, static_cast<char16_t>(upper));
-                if (destIndex >= 0 && (data & HAS_EITHER_DIALYTIKA) != 0) {
-                    destIndex=appendUChar(dest, destIndex, destCapacity, 0x308);  // restore or add a dialytika
+            إذا (change) {
+                dest_شاخص = appendUChar(dest, dest_شاخص, dest_ظرفیت, static_cast<char16_t>(upper));
+                إذا (dest_شاخص >= 0 && (معلومات & HAS_EITHER_DIALYTIKA) != 0) {
+                    dest_شاخص=appendUChar(dest, dest_شاخص, dest_ظرفیت, 0x308);  // restore or add a dialytika
                 }
-                if (destIndex >= 0 && addTonos) {
-                    destIndex=appendUChar(dest, destIndex, destCapacity, 0x301);
+                إذا (dest_شاخص >= 0 && جمع_کړه_Tonos) {
+                    dest_شاخص=appendUChar(dest, dest_شاخص, dest_ظرفیت, 0x301);
                 }
-                while (destIndex >= 0 && numYpogegrammeni > 0) {
-                    destIndex=appendUChar(dest, destIndex, destCapacity, 0x399);
-                    --numYpogegrammeni;
+                طالما (dest_شاخص >= 0 && عدد_Ypogegrammeni > 0) {
+                    dest_شاخص=appendUChar(dest, dest_شاخص, dest_ظرفیت, 0x399);
+                    --عدد_Ypogegrammeni;
                 }
-                if(destIndex<0) {
-                    errorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-                    return 0;
+                إذا(dest_شاخص<0) {
+                    error_کوډ=U_شاخص_OUTOFBOUNDS_ERROR;
+                    أرجع 0;
                 }
             }
-        } else {
-            const char16_t *s;
-            c=ucase_toFullUpper(c, nullptr, nullptr, &s, UCASE_LOC_GREEK);
-            destIndex = appendResult(dest, destIndex, destCapacity, c, s,
-                                     nextIndex - i, options, edits);
-            if (destIndex < 0) {
-                errorCode = U_INDEX_OUTOFBOUNDS_ERROR;
-                return 0;
+        } وإلا {
+            ثابت char16_t *s;
+            c=ucase_منزل_ډک_پاسنی(c, تش_اشاره, تش_اشاره, &s, UCASE_LOC_GREEK);
+            dest_شاخص = append_پایله(dest, dest_شاخص, dest_ظرفیت, c, s,
+                                     بل_شاخص - i, options, edits);
+            إذا (dest_شاخص < 0) {
+                error_کوډ = U_شاخص_OUTOFBOUNDS_ERROR;
+                أرجع 0;
             }
         }
-        i = nextIndex;
-        state = nextState;
+        i = بل_شاخص;
+        state = بل_State;
     }
 
-    return destIndex;
+    أرجع dest_شاخص;
 }
 
 }  // namespace GreekUpper
-U_NAMESPACE_END
+U_NAMESPACE_پای_ټکی
 
 /* functions available in the common library (for unistr_case.cpp) */
 
 U_CFUNC int32_t U_CALLCONV
-ustrcase_internalToLower(int32_t caseLocale, uint32_t options, UCASEMAP_BREAK_ITERATOR_UNUSED
-                         char16_t *dest, int32_t destCapacity,
-                         const char16_t *src, int32_t srcLength,
+ustrcase_دننی_منزل_ښکتنی(int32_t caseLocale, uint32_t options, UCASEMAP_BREAK_ITERATOR_ناکارول_شوی
+                         char16_t *dest, int32_t dest_ظرفیت,
+                         ثابت char16_t *src, int32_t src_اوږدتیا,
                          icu::Edits *edits,
-                         UErrorCode &errorCode) {
+                         UError_کوډ &error_کوډ) {
     UCaseContext csc=UCASECONTEXT_INITIALIZER;
-    csc.p=(void *)src;
-    csc.limit=srcLength;
-    int32_t destIndex = toLower(
+    csc.p=(فراغ *)src;
+    csc.حد=src_اوږدتیا;
+    int32_t dest_شاخص = منزل_ښکتنی(
         caseLocale, options,
-        dest, destCapacity,
-        src, &csc, 0, srcLength,
-        edits, errorCode);
-    return checkOverflowAndEditsError(destIndex, destCapacity, edits, errorCode);
+        dest, dest_ظرفیت,
+        src, &csc, 0, src_اوږدتیا,
+        edits, error_کوډ);
+    أرجع check_ډکېدنه_And_Edits_Error(dest_شاخص, dest_ظرفیت, edits, error_کوډ);
 }
 
 U_CFUNC int32_t U_CALLCONV
-ustrcase_internalToUpper(int32_t caseLocale, uint32_t options, UCASEMAP_BREAK_ITERATOR_UNUSED
-                         char16_t *dest, int32_t destCapacity,
-                         const char16_t *src, int32_t srcLength,
+ustrcase_دننی_منزل_پاسنی(int32_t caseLocale, uint32_t options, UCASEMAP_BREAK_ITERATOR_ناکارول_شوی
+                         char16_t *dest, int32_t dest_ظرفیت,
+                         ثابت char16_t *src, int32_t src_اوږدتیا,
                          icu::Edits *edits,
-                         UErrorCode &errorCode) {
-    int32_t destIndex;
-    if (caseLocale == UCASE_LOC_GREEK) {
-        destIndex = GreekUpper::toUpper(options, dest, destCapacity,
-                                        src, srcLength, edits, errorCode);
-    } else {
+                         UError_کوډ &error_کوډ) {
+    int32_t dest_شاخص;
+    إذا (caseLocale == UCASE_LOC_GREEK) {
+        dest_شاخص = Greek_پاسنی::منزل_پاسنی(options, dest, dest_ظرفیت,
+                                        src, src_اوږدتیا, edits, error_کوډ);
+    } وإلا {
         UCaseContext csc=UCASECONTEXT_INITIALIZER;
-        csc.p=(void *)src;
-        csc.limit=srcLength;
-        destIndex = toUpper(
+        csc.p=(فراغ *)src;
+        csc.حد=src_اوږدتیا;
+        dest_شاخص = منزل_پاسنی(
             caseLocale, options,
-            dest, destCapacity,
-            src, &csc, srcLength,
-            edits, errorCode);
+            dest, dest_ظرفیت,
+            src, &csc, src_اوږدتیا,
+            edits, error_کوډ);
     }
-    return checkOverflowAndEditsError(destIndex, destCapacity, edits, errorCode);
+    أرجع check_ډکېدنه_And_Edits_Error(dest_شاخص, dest_ظرفیت, edits, error_کوډ);
 }
 
 U_CFUNC int32_t U_CALLCONV
-ustrcase_internalFold(int32_t /* caseLocale */, uint32_t options, UCASEMAP_BREAK_ITERATOR_UNUSED
-                      char16_t *dest, int32_t destCapacity,
-                      const char16_t *src, int32_t srcLength,
+ustrcase_دننی_Fold(int32_t /* caseLocale */, uint32_t options, UCASEMAP_BREAK_ITERATOR_ناکارول_شوی
+                      char16_t *dest, int32_t dest_ظرفیت,
+                      ثابت char16_t *src, int32_t src_اوږدتیا,
                       icu::Edits *edits,
-                      UErrorCode &errorCode) {
-    int32_t destIndex = toLower(
+                      UError_کوډ &error_کوډ) {
+    int32_t dest_شاخص = منزل_ښکتنی(
         -1, options,
-        dest, destCapacity,
-        src, nullptr, 0, srcLength,
-        edits, errorCode);
-    return checkOverflowAndEditsError(destIndex, destCapacity, edits, errorCode);
+        dest, dest_ظرفیت,
+        src, تش_اشاره, 0, src_اوږدتیا,
+        edits, error_کوډ);
+    أرجع check_ډکېدنه_And_Edits_Error(dest_شاخص, dest_ظرفیت, edits, error_کوډ);
 }
 
 U_CFUNC int32_t
 ustrcase_map(int32_t caseLocale, uint32_t options, UCASEMAP_BREAK_ITERATOR_PARAM
-             char16_t *dest, int32_t destCapacity,
-             const char16_t *src, int32_t srcLength,
+             char16_t *dest, int32_t dest_ظرفیت,
+             ثابت char16_t *src, int32_t src_اوږدتیا,
              UStringCaseMapper *stringCaseMapper,
              icu::Edits *edits,
-             UErrorCode &errorCode) {
-    int32_t destLength;
+             UError_کوډ &error_کوډ) {
+    int32_t dest_اوږدتیا;
 
     /* check argument values */
-    if(U_FAILURE(errorCode)) {
-        return 0;
+    إذا(U_FAILURE(error_کوډ)) {
+        أرجع 0;
     }
-    if( destCapacity<0 ||
-        (dest==nullptr && destCapacity>0) ||
-        src==nullptr ||
-        srcLength<-1
+    إذا( dest_ظرفیت<0 ||
+        (dest==تش_اشاره && dest_ظرفیت>0) ||
+        src==تش_اشاره ||
+        src_اوږدتیا<-1
     ) {
-        errorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        error_کوډ=U_ILLEGAL_دلیل_ERROR;
+        أرجع 0;
     }
 
     /* get the string length */
-    if(srcLength==-1) {
-        srcLength=u_strlen(src);
+    إذا(src_اوږدتیا==-1) {
+        src_اوږدتیا=u_strlen(src);
     }
 
     /* check for overlapping source and destination */
-    if( dest!=nullptr &&
-        ((src>=dest && src<(dest+destCapacity)) ||
-         (dest>=src && dest<(src+srcLength)))
+    إذا( dest!=تش_اشاره &&
+        ((src>=dest && src<(dest+dest_ظرفیت)) ||
+         (dest>=src && dest<(src+src_اوږدتیا)))
     ) {
-        errorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        error_کوډ=U_ILLEGAL_دلیل_ERROR;
+        أرجع 0;
     }
 
-    if (edits != nullptr && (options & U_EDITS_NO_RESET) == 0) {
+    إذا (edits != تش_اشاره && (options & U_EDITS_NO_RESET) == 0) {
         edits->reset();
     }
-    destLength=stringCaseMapper(caseLocale, options, UCASEMAP_BREAK_ITERATOR
-                                dest, destCapacity, src, srcLength, edits, errorCode);
-    return u_terminateUChars(dest, destCapacity, destLength, &errorCode);
+    dest_اوږدتیا=stringCaseMapper(caseLocale, options, UCASEMAP_BREAK_ITERATOR
+                                dest, dest_ظرفیت, src, src_اوږدتیا, edits, error_کوډ);
+    أرجع u_terminateUChars(dest, dest_ظرفیت, dest_اوږدتیا, &error_کوډ);
 }
 
 U_CFUNC int32_t
 ustrcase_mapWithOverlap(int32_t caseLocale, uint32_t options, UCASEMAP_BREAK_ITERATOR_PARAM
-                        char16_t *dest, int32_t destCapacity,
-                        const char16_t *src, int32_t srcLength,
+                        char16_t *dest, int32_t dest_ظرفیت,
+                        ثابت char16_t *src, int32_t src_اوږدتیا,
                         UStringCaseMapper *stringCaseMapper,
-                        UErrorCode &errorCode) {
-    char16_t buffer[300];
-    char16_t *temp;
+                        UError_کوډ &error_کوډ) {
+    char16_t بفر[300];
+    char16_t *لنډمهاله;
 
-    int32_t destLength;
+    int32_t dest_اوږدتیا;
 
     /* check argument values */
-    if(U_FAILURE(errorCode)) {
-        return 0;
+    إذا(U_FAILURE(error_کوډ)) {
+        أرجع 0;
     }
-    if( destCapacity<0 ||
-        (dest==nullptr && destCapacity>0) ||
-        src==nullptr ||
-        srcLength<-1
+    إذا( dest_ظرفیت<0 ||
+        (dest==تش_اشاره && dest_ظرفیت>0) ||
+        src==تش_اشاره ||
+        src_اوږدتیا<-1
     ) {
-        errorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        error_کوډ=U_ILLEGAL_دلیل_ERROR;
+        أرجع 0;
     }
 
     /* get the string length */
-    if(srcLength==-1) {
-        srcLength=u_strlen(src);
+    إذا(src_اوږدتیا==-1) {
+        src_اوږدتیا=u_strlen(src);
     }
 
     /* check for overlapping source and destination */
-    if( dest!=nullptr &&
-        ((src>=dest && src<(dest+destCapacity)) ||
-         (dest>=src && dest<(src+srcLength)))
+    إذا( dest!=تش_اشاره &&
+        ((src>=dest && src<(dest+dest_ظرفیت)) ||
+         (dest>=src && dest<(src+src_اوږدتیا)))
     ) {
         /* overlap: provide a temporary destination buffer and later copy the result */
-        if(destCapacity<=UPRV_LENGTHOF(buffer)) {
+        إذا(dest_ظرفیت<=UPRV_LENGTHOF(بفر)) {
             /* the stack buffer is large enough */
-            temp=buffer;
-        } else {
+            لنډمهاله=بفر;
+        } وإلا {
             /* allocate a buffer */
-            temp=(char16_t *)uprv_malloc(destCapacity*U_SIZEOF_UCHAR);
-            if(temp==nullptr) {
-                errorCode=U_MEMORY_ALLOCATION_ERROR;
-                return 0;
+            لنډمهاله=(char16_t *)uprv_malloc(dest_ظرفیت*U_SIZEOF_UCHAR);
+            إذا(لنډمهاله==تش_اشاره) {
+                error_کوډ=U_حافظه_ویش_ERROR;
+                أرجع 0;
             }
         }
-    } else {
-        temp=dest;
+    } وإلا {
+        لنډمهاله=dest;
     }
 
-    destLength=stringCaseMapper(caseLocale, options, UCASEMAP_BREAK_ITERATOR
-                                temp, destCapacity, src, srcLength, nullptr, errorCode);
-    if(temp!=dest) {
+    dest_اوږدتیا=stringCaseMapper(caseLocale, options, UCASEMAP_BREAK_ITERATOR
+                                لنډمهاله, dest_ظرفیت, src, src_اوږدتیا, تش_اشاره, error_کوډ);
+    إذا(لنډمهاله!=dest) {
         /* copy the result string to the destination buffer */
-        if (U_SUCCESS(errorCode) && 0 < destLength && destLength <= destCapacity) {
-            u_memmove(dest, temp, destLength);
+        إذا (U_SUCCESS(error_کوډ) && 0 < dest_اوږدتیا && dest_اوږدتیا <= dest_ظرفیت) {
+            u_memmove(dest, لنډمهاله, dest_اوږدتیا);
         }
-        if(temp!=buffer) {
-            uprv_free(temp);
+        إذا(لنډمهاله!=بفر) {
+            uprv_free(لنډمهاله);
         }
     }
 
-    return u_terminateUChars(dest, destCapacity, destLength, &errorCode);
+    أرجع u_terminateUChars(dest, dest_ظرفیت, dest_اوږدتیا, &error_کوډ);
 }
 
 /* public API functions */
 
 U_CAPI int32_t U_EXPORT2
-u_strFoldCase(char16_t *dest, int32_t destCapacity,
-              const char16_t *src, int32_t srcLength,
+u_strFoldCase(char16_t *dest, int32_t dest_ظرفیت,
+              ثابت char16_t *src, int32_t src_اوږدتیا,
               uint32_t options,
-              UErrorCode *pErrorCode) {
-    return ustrcase_mapWithOverlap(
-        UCASE_LOC_ROOT, options, UCASEMAP_BREAK_ITERATOR_NULL
-        dest, destCapacity,
-        src, srcLength,
-        ustrcase_internalFold, *pErrorCode);
+              UError_کوډ *p_Error_کوډ) {
+    أرجع ustrcase_mapWithOverlap(
+        UCASE_LOC_ریښه, options, UCASEMAP_BREAK_ITERATOR_NULL
+        dest, dest_ظرفیت,
+        src, src_اوږدتیا,
+        ustrcase_دننی_Fold, *p_Error_کوډ);
 }
 
 U_NAMESPACE_BEGIN
 
 int32_t CaseMap::fold(
         uint32_t options,
-        const char16_t *src, int32_t srcLength,
-        char16_t *dest, int32_t destCapacity, Edits *edits,
-        UErrorCode &errorCode) {
-    return ustrcase_map(
-        UCASE_LOC_ROOT, options, UCASEMAP_BREAK_ITERATOR_NULL
-        dest, destCapacity,
-        src, srcLength,
-        ustrcase_internalFold, edits, errorCode);
+        ثابت char16_t *src, int32_t src_اوږدتیا,
+        char16_t *dest, int32_t dest_ظرفیت, Edits *edits,
+        UError_کوډ &error_کوډ) {
+    أرجع ustrcase_map(
+        UCASE_LOC_ریښه, options, UCASEMAP_BREAK_ITERATOR_NULL
+        dest, dest_ظرفیت,
+        src, src_اوږدتیا,
+        ustrcase_دننی_Fold, edits, error_کوډ);
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_پای_ټکی
 
 /* case-insensitive string comparisons -------------------------------------- */
 
@@ -1459,10 +1459,10 @@ U_NAMESPACE_END
  */
 
 /* stack element for previous-level source/decomposition pointers */
-struct CmpEquivLevel {
-    const char16_t *start, *s, *limit;
+بنية CmpEquivLevel {
+    ثابت char16_t *پیل, *s, *حد;
 };
-typedef struct CmpEquivLevel CmpEquivLevel;
+تعريفنوع بنية CmpEquivLevel CmpEquivLevel;
 
 /**
  * Internal implementation code comparing string with case fold.
@@ -1478,32 +1478,32 @@ typedef struct CmpEquivLevel CmpEquivLevel;
  * @param pErrorCode    receives error status
  * @return The result of comparison
  */
-static int32_t _cmpFold(
-            const char16_t *s1, int32_t length1,
-            const char16_t *s2, int32_t length2,
+ساكن int32_t _cmpFold(
+            ثابت char16_t *s1, int32_t length1,
+            ثابت char16_t *s2, int32_t length2,
             uint32_t options,
-            int32_t *matchLen1, int32_t *matchLen2,
-            UErrorCode *pErrorCode) {
+            int32_t *سمون_Len1, int32_t *سمون_Len2,
+            UError_کوډ *p_Error_کوډ) {
     int32_t cmpRes = 0;
 
     /* current-level start/limit - s1/s2 as current */
-    const char16_t *start1, *start2, *limit1, *limit2;
+    ثابت char16_t *start1, *start2, *limit1, *limit2;
 
     /* points to the original start address */
-    const char16_t *org1, *org2;
+    ثابت char16_t *org1, *org2;
 
     /* points to the end of match + 1 */
-    const char16_t *m1, *m2;
+    ثابت char16_t *m1, *m2;
 
     /* case folding variables */
-    const char16_t *p;
+    ثابت char16_t *p;
     int32_t length;
 
     /* stacks of previous-level start/current/limit */
     CmpEquivLevel stack1[2], stack2[2];
 
     /* case folding buffers, only use current-level start/limit */
-    char16_t fold1[UCASE_MAX_STRING_LENGTH+1], fold2[UCASE_MAX_STRING_LENGTH+1];
+    char16_t fold1[UCASE_MAX_STRING_اوږدتیا+1], fold2[UCASE_MAX_STRING_اوږدتیا+1];
 
     /* track which is the current level per string */
     int32_t level1, level2;
@@ -1517,28 +1517,28 @@ static int32_t _cmpFold(
      * assume that at least the option U_COMPARE_IGNORE_CASE is set
      * otherwise this function would have to behave exactly as uprv_strCompare()
      */
-    if(U_FAILURE(*pErrorCode)) {
-        return 0;
+    إذا(U_FAILURE(*p_Error_کوډ)) {
+        أرجع 0;
     }
 
     /* initialize */
-    if(matchLen1) {
-        U_ASSERT(matchLen2 !=nullptr);
-        *matchLen1=0;
-        *matchLen2=0;
+    إذا(سمون_Len1) {
+        U_ASSERT(سمون_Len2 !=تش_اشاره);
+        *سمون_Len1=0;
+        *سمون_Len2=0;
     }
 
     start1=m1=org1=s1;
-    if(length1==-1) {
-        limit1=nullptr;
-    } else {
+    إذا(length1==-1) {
+        limit1=تش_اشاره;
+    } وإلا {
         limit1=s1+length1;
     }
 
     start2=m2=org2=s2;
-    if(length2==-1) {
-        limit2=nullptr;
-    } else {
+    إذا(length2==-1) {
+        limit2=تش_اشاره;
+    } وإلا {
         limit2=s2+length2;
     }
 
@@ -1546,55 +1546,55 @@ static int32_t _cmpFold(
     c1=c2=-1;
 
     /* comparison loop */
-    for(;;) {
+    لكل(;;) {
         /*
          * here a code unit value of -1 means "get another code unit"
          * below it will mean "this source is finished"
          */
 
-        if(c1<0) {
+        إذا(c1<0) {
             /* get next code unit from string 1, post-increment */
-            for(;;) {
-                if(s1==limit1 || ((c1=*s1)==0 && (limit1==nullptr || (options&_STRNCMP_STYLE)))) {
-                    if(level1==0) {
+            لكل(;;) {
+                إذا(s1==limit1 || ((c1=*s1)==0 && (limit1==تش_اشاره || (options&_STRNCMP_STYLE)))) {
+                    إذا(level1==0) {
                         c1=-1;
-                        break;
+                        اكسر;
                     }
-                } else {
+                } وإلا {
                     ++s1;
-                    break;
+                    اكسر;
                 }
 
                 /* reached end of level buffer, pop one level */
-                do {
+                افعل {
                     --level1;
-                    start1=stack1[level1].start;    /*Not uninitialized*/
-                } while(start1==nullptr);
+                    start1=stack1[level1].پیل;    /*Not uninitialized*/
+                } طالما(start1==تش_اشاره);
                 s1=stack1[level1].s;                /*Not uninitialized*/
-                limit1=stack1[level1].limit;        /*Not uninitialized*/
+                limit1=stack1[level1].حد;        /*Not uninitialized*/
             }
         }
 
-        if(c2<0) {
+        إذا(c2<0) {
             /* get next code unit from string 2, post-increment */
-            for(;;) {
-                if(s2==limit2 || ((c2=*s2)==0 && (limit2==nullptr || (options&_STRNCMP_STYLE)))) {
-                    if(level2==0) {
+            لكل(;;) {
+                إذا(s2==limit2 || ((c2=*s2)==0 && (limit2==تش_اشاره || (options&_STRNCMP_STYLE)))) {
+                    إذا(level2==0) {
                         c2=-1;
-                        break;
+                        اكسر;
                     }
-                } else {
+                } وإلا {
                     ++s2;
-                    break;
+                    اكسر;
                 }
 
                 /* reached end of level buffer, pop one level */
-                do {
+                افعل {
                     --level2;
-                    start2=stack2[level2].start;    /*Not uninitialized*/
-                } while(start2==nullptr);
+                    start2=stack2[level2].پیل;    /*Not uninitialized*/
+                } طالما(start2==تش_اشاره);
                 s2=stack2[level2].s;                /*Not uninitialized*/
-                limit2=stack2[level2].limit;        /*Not uninitialized*/
+                limit2=stack2[level2].حد;        /*Not uninitialized*/
             }
         }
 
@@ -1602,12 +1602,12 @@ static int32_t _cmpFold(
          * compare c1 and c2
          * either variable c1, c2 is -1 only if the corresponding string is finished
          */
-        if(c1==c2) {
-            const char16_t *next1, *next2;
+        إذا(c1==c2) {
+            ثابت char16_t *next1, *next2;
 
-            if(c1<0) {
+            إذا(c1<0) {
                 cmpRes=0;   /* c1==c2==-1 indicating end of strings */
-                break;
+                اكسر;
             }
 
             /*
@@ -1619,10 +1619,10 @@ static int32_t _cmpFold(
              *      has no matching code point in s1, so this implementation returns
              *      2 as the prefix match length ("Fu").
              */
-            next1=next2=nullptr;
-            if(level1==0) {
+            next1=next2=تش_اشاره;
+            إذا(level1==0) {
                 next1=s1;
-            } else if(s1==limit1) {
+            } وإلا إذا(s1==limit1) {
                 /* Note: This implementation only use a single level of stack.
                  *      If this code needs to be changed to use multiple levels
                  *      of stacks, the code above should check if the current
@@ -1634,59 +1634,59 @@ static int32_t _cmpFold(
                 next1=stack1[0].s;
             }
 
-            if (next1!=nullptr) {
-                if(level2==0) {
+            إذا (next1!=تش_اشاره) {
+                إذا(level2==0) {
                     next2=s2;
-                } else if(s2==limit2) {
+                } وإلا إذا(s2==limit2) {
                     U_ASSERT(level2==1);
 
                     /* is s2 at the end of the current stack? */
                     next2=stack2[0].s;
                 }
-                if(next2!=nullptr) {
+                إذا(next2!=تش_اشاره) {
                     m1=next1;
                     m2=next2;
                 }
             }
             c1=c2=-1;       /* make us fetch new code units */
-            continue;
-        } else if(c1<0) {
+            استمر;
+        } وإلا إذا(c1<0) {
             cmpRes=-1;      /* string 1 ends before string 2 */
-            break;
-        } else if(c2<0) {
+            اكسر;
+        } وإلا إذا(c2<0) {
             cmpRes=1;       /* string 2 ends before string 1 */
-            break;
+            اكسر;
         }
         /* c1!=c2 && c1>=0 && c2>=0 */
 
         /* get complete code points for c1, c2 for lookups if either is a surrogate */
         cp1=c1;
-        if(U_IS_SURROGATE(c1)) {
+        إذا(U_IS_SURROGATE(c1)) {
             char16_t c;
 
-            if(U_IS_SURROGATE_LEAD(c1)) {
-                if(s1!=limit1 && U16_IS_TRAIL(c=*s1)) {
+            إذا(U_IS_SURROGATE_LEAD(c1)) {
+                إذا(s1!=limit1 && U16_IS_TRAIL(c=*s1)) {
                     /* advance ++s1; only below if cp1 decomposes/case-folds */
                     cp1=U16_GET_SUPPLEMENTARY(c1, c);
                 }
-            } else /* isTrail(c1) */ {
-                if(start1<=(s1-2) && U16_IS_LEAD(c=*(s1-2))) {
+            } وإلا /* isTrail(c1) */ {
+                إذا(start1<=(s1-2) && U16_IS_LEAD(c=*(s1-2))) {
                     cp1=U16_GET_SUPPLEMENTARY(c, c1);
                 }
             }
         }
 
         cp2=c2;
-        if(U_IS_SURROGATE(c2)) {
+        إذا(U_IS_SURROGATE(c2)) {
             char16_t c;
 
-            if(U_IS_SURROGATE_LEAD(c2)) {
-                if(s2!=limit2 && U16_IS_TRAIL(c=*s2)) {
+            إذا(U_IS_SURROGATE_LEAD(c2)) {
+                إذا(s2!=limit2 && U16_IS_TRAIL(c=*s2)) {
                     /* advance ++s2; only below if cp2 decomposes/case-folds */
                     cp2=U16_GET_SUPPLEMENTARY(c2, c);
                 }
-            } else /* isTrail(c2) */ {
-                if(start2<=(s2-2) && U16_IS_LEAD(c=*(s2-2))) {
+            } وإلا /* isTrail(c2) */ {
+                إذا(start2<=(s2-2) && U16_IS_LEAD(c=*(s2-2))) {
                     cp2=U16_GET_SUPPLEMENTARY(c, c2);
                 }
             }
@@ -1697,15 +1697,15 @@ static int32_t _cmpFold(
          * continue with the main loop as soon as there is a real change
          */
 
-        if( level1==0 &&
-            (length = ucase_toFullFolding(cp1, &p, options)) >= 0
+        إذا( level1==0 &&
+            (length = ucase_منزل_ډک_Folding(cp1, &p, options)) >= 0
         ) {
             /* cp1 case-folds to the code point "length" or to p[length] */
-            if(U_IS_SURROGATE(c1)) {
-                if(U_IS_SURROGATE_LEAD(c1)) {
+            إذا(U_IS_SURROGATE(c1)) {
+                إذا(U_IS_SURROGATE_LEAD(c1)) {
                     /* advance beyond source surrogate pair if it case-folds */
                     ++s1;
-                } else /* isTrail(c1) */ {
+                } وإلا /* isTrail(c1) */ {
                     /*
                      * we got a supplementary code point when hitting its trail surrogate,
                      * therefore the lead surrogate must have been the same as in the other string;
@@ -1720,15 +1720,15 @@ static int32_t _cmpFold(
             }
 
             /* push current level pointers */
-            stack1[0].start=start1;
+            stack1[0].پیل=start1;
             stack1[0].s=s1;
-            stack1[0].limit=limit1;
+            stack1[0].حد=limit1;
             ++level1;
 
             /* copy the folding result to fold1[] */
-            if(length<=UCASE_MAX_STRING_LENGTH) {
+            إذا(length<=UCASE_MAX_STRING_اوږدتیا) {
                 u_memcpy(fold1, p, length);
-            } else {
+            } وإلا {
                 int32_t i=0;
                 U16_APPEND_UNSAFE(fold1, i, length);
                 length=i;
@@ -1740,18 +1740,18 @@ static int32_t _cmpFold(
 
             /* get ready to read from decomposition, continue with loop */
             c1=-1;
-            continue;
+            استمر;
         }
 
-        if( level2==0 &&
-            (length = ucase_toFullFolding(cp2, &p, options)) >= 0
+        إذا( level2==0 &&
+            (length = ucase_منزل_ډک_Folding(cp2, &p, options)) >= 0
         ) {
             /* cp2 case-folds to the code point "length" or to p[length] */
-            if(U_IS_SURROGATE(c2)) {
-                if(U_IS_SURROGATE_LEAD(c2)) {
+            إذا(U_IS_SURROGATE(c2)) {
+                إذا(U_IS_SURROGATE_LEAD(c2)) {
                     /* advance beyond source surrogate pair if it case-folds */
                     ++s2;
-                } else /* isTrail(c2) */ {
+                } وإلا /* isTrail(c2) */ {
                     /*
                      * we got a supplementary code point when hitting its trail surrogate,
                      * therefore the lead surrogate must have been the same as in the other string;
@@ -1766,15 +1766,15 @@ static int32_t _cmpFold(
             }
 
             /* push current level pointers */
-            stack2[0].start=start2;
+            stack2[0].پیل=start2;
             stack2[0].s=s2;
-            stack2[0].limit=limit2;
+            stack2[0].حد=limit2;
             ++level2;
 
             /* copy the folding result to fold2[] */
-            if(length<=UCASE_MAX_STRING_LENGTH) {
+            إذا(length<=UCASE_MAX_STRING_اوږدتیا) {
                 u_memcpy(fold2, p, length);
-            } else {
+            } وإلا {
                 int32_t i=0;
                 U16_APPEND_UNSAFE(fold2, i, length);
                 length=i;
@@ -1786,7 +1786,7 @@ static int32_t _cmpFold(
 
             /* get ready to read from decomposition, continue with loop */
             c2=-1;
-            continue;
+            استمر;
         }
 
         /*
@@ -1806,100 +1806,100 @@ static int32_t _cmpFold(
          * so we have slightly different pointer/start/limit comparisons here
          */
 
-        if(c1>=0xd800 && c2>=0xd800 && (options&U_COMPARE_CODE_POINT_ORDER)) {
+        إذا(c1>=0xd800 && c2>=0xd800 && (options&U_COMPARE_کوډ_ټکی_ترتیب)) {
             /* subtract 0x2800 from BMP code points to make them smaller than supplementary ones */
-            if(
+            إذا(
                 (c1<=0xdbff && s1!=limit1 && U16_IS_TRAIL(*s1)) ||
                 (U16_IS_TRAIL(c1) && start1!=(s1-1) && U16_IS_LEAD(*(s1-2)))
             ) {
                 /* part of a surrogate pair, leave >=d800 */
-            } else {
+            } وإلا {
                 /* BMP code point - may be surrogate code point - make <d800 */
                 c1-=0x2800;
             }
 
-            if(
+            إذا(
                 (c2<=0xdbff && s2!=limit2 && U16_IS_TRAIL(*s2)) ||
                 (U16_IS_TRAIL(c2) && start2!=(s2-1) && U16_IS_LEAD(*(s2-2)))
             ) {
                 /* part of a surrogate pair, leave >=d800 */
-            } else {
+            } وإلا {
                 /* BMP code point - may be surrogate code point - make <d800 */
                 c2-=0x2800;
             }
         }
 
         cmpRes=c1-c2;
-        break;
+        اكسر;
     }
 
-    if(matchLen1) {
-        *matchLen1=static_cast<int32_t>(m1-org1);
-        *matchLen2=static_cast<int32_t>(m2-org2);
+    إذا(سمون_Len1) {
+        *سمون_Len1=static_cast<int32_t>(m1-org1);
+        *سمون_Len2=static_cast<int32_t>(m2-org2);
     }
-    return cmpRes;
+    أرجع cmpRes;
 }
 
 /* internal function */
 U_CFUNC int32_t
-u_strcmpFold(const char16_t *s1, int32_t length1,
-             const char16_t *s2, int32_t length2,
+u_strcmpFold(ثابت char16_t *s1, int32_t length1,
+             ثابت char16_t *s2, int32_t length2,
              uint32_t options,
-             UErrorCode *pErrorCode) {
-    return _cmpFold(s1, length1, s2, length2, options, nullptr, nullptr, pErrorCode);
+             UError_کوډ *p_Error_کوډ) {
+    أرجع _cmpFold(s1, length1, s2, length2, options, تش_اشاره, تش_اشاره, p_Error_کوډ);
 }
 
 /* public API functions */
 
 U_CAPI int32_t U_EXPORT2
-u_strCaseCompare(const char16_t *s1, int32_t length1,
-                 const char16_t *s2, int32_t length2,
+u_strCaseCompare(ثابت char16_t *s1, int32_t length1,
+                 ثابت char16_t *s2, int32_t length2,
                  uint32_t options,
-                 UErrorCode *pErrorCode) {
+                 UError_کوډ *p_Error_کوډ) {
     /* argument checking */
-    if (pErrorCode == nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    إذا (p_Error_کوډ == تش_اشاره || U_FAILURE(*p_Error_کوډ)) {
+        أرجع 0;
     }
-    if(s1==nullptr || length1<-1 || s2==nullptr || length2<-1) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    إذا(s1==تش_اشاره || length1<-1 || s2==تش_اشاره || length2<-1) {
+        *p_Error_کوډ=U_ILLEGAL_دلیل_ERROR;
+        أرجع 0;
     }
-    return u_strcmpFold(s1, length1, s2, length2,
+    أرجع u_strcmpFold(s1, length1, s2, length2,
                         options|U_COMPARE_IGNORE_CASE,
-                        pErrorCode);
+                        p_Error_کوډ);
 }
 
 U_CAPI int32_t U_EXPORT2
-u_strcasecmp(const char16_t *s1, const char16_t *s2, uint32_t options) {
-    UErrorCode errorCode=U_ZERO_ERROR;
-    return u_strcmpFold(s1, -1, s2, -1,
+u_strcasecmp(ثابت char16_t *s1, ثابت char16_t *s2, uint32_t options) {
+    UError_کوډ error_کوډ=U_ZERO_ERROR;
+    أرجع u_strcmpFold(s1, -1, s2, -1,
                         options|U_COMPARE_IGNORE_CASE,
-                        &errorCode);
+                        &error_کوډ);
 }
 
 U_CAPI int32_t U_EXPORT2
-u_memcasecmp(const char16_t *s1, const char16_t *s2, int32_t length, uint32_t options) {
-    UErrorCode errorCode=U_ZERO_ERROR;
-    return u_strcmpFold(s1, length, s2, length,
+u_memcasecmp(ثابت char16_t *s1, ثابت char16_t *s2, int32_t length, uint32_t options) {
+    UError_کوډ error_کوډ=U_ZERO_ERROR;
+    أرجع u_strcmpFold(s1, length, s2, length,
                         options|U_COMPARE_IGNORE_CASE,
-                        &errorCode);
+                        &error_کوډ);
 }
 
 U_CAPI int32_t U_EXPORT2
-u_strncasecmp(const char16_t *s1, const char16_t *s2, int32_t n, uint32_t options) {
-    UErrorCode errorCode=U_ZERO_ERROR;
-    return u_strcmpFold(s1, n, s2, n,
+u_strncasecmp(ثابت char16_t *s1, ثابت char16_t *s2, int32_t n, uint32_t options) {
+    UError_کوډ error_کوډ=U_ZERO_ERROR;
+    أرجع u_strcmpFold(s1, n, s2, n,
                         options|(U_COMPARE_IGNORE_CASE|_STRNCMP_STYLE),
-                        &errorCode);
+                        &error_کوډ);
 }
 
 /* internal API - detect length of shared prefix */
-U_CAPI void
-u_caseInsensitivePrefixMatch(const char16_t *s1, int32_t length1,
-                             const char16_t *s2, int32_t length2,
+U_CAPI فراغ
+u_case_Insensitive_مختاړی_سمون(ثابت char16_t *s1, int32_t length1,
+                             ثابت char16_t *s2, int32_t length2,
                              uint32_t options,
-                             int32_t *matchLen1, int32_t *matchLen2,
-                             UErrorCode *pErrorCode) {
+                             int32_t *سمون_Len1, int32_t *سمون_Len2,
+                             UError_کوډ *p_Error_کوډ) {
     _cmpFold(s1, length1, s2, length2, options,
-        matchLen1, matchLen2, pErrorCode);
+        سمون_Len1, سمون_Len2, p_Error_کوډ);
 }

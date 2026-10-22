@@ -8,60 +8,60 @@
  *
  *******************************************************************************
  */
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if !UCONFIG_NO_SERVICE
+#إذا !UCONFIG_NO_SERVICE
 
-#include "unicode/resbund.h"
-#include "uresimp.h"
-#include "cmemory.h"
-#include "servloc.h"
-#include "ustrfmt.h"
-#include "uhash.h"
-#include "charstr.h"
-#include "uassert.h"
+#ضمن "unicode/resbund.h"
+#ضمن "uresimp.h"
+#ضمن "cmemory.h"
+#ضمن "servloc.h"
+#ضمن "ustrfmt.h"
+#ضمن "uhash.h"
+#ضمن "charstr.h"
+#ضمن "uassert.h"
 
-#define UNDERSCORE_CHAR ((char16_t)0x005f)
-#define AT_SIGN_CHAR    ((char16_t)64)
-#define PERIOD_CHAR     ((char16_t)46)
+#تعریف_کړه UNDERSCORE_CHAR ((char16_t)0x005f)
+#تعریف_کړه AT_SIGN_CHAR    ((char16_t)64)
+#تعریف_کړه PERIOD_CHAR     ((char16_t)46)
 
 U_NAMESPACE_BEGIN
 
-LocaleKey*
-LocaleKey::createWithCanonicalFallback(const UnicodeString* primaryID,
-                                       const UnicodeString* canonicalFallbackID,
-                                       UErrorCode& status)
+Locale_کلی*
+Locale_کلی::createWithCanonicalFallback(ثابت UnicodeString* primaryID,
+                                       ثابت UnicodeString* canonicalFallbackID,
+                                       UError_کوډ& حالت)
 {
-    return LocaleKey::createWithCanonicalFallback(primaryID, canonicalFallbackID, KIND_ANY, status);
+    أرجع Locale_کلی::createWithCanonicalFallback(primaryID, canonicalFallbackID, ډول_ANY, حالت);
 }
 
-LocaleKey*
-LocaleKey::createWithCanonicalFallback(const UnicodeString* primaryID,
-                                       const UnicodeString* canonicalFallbackID,
-                                       int32_t kind,
-                                       UErrorCode& status)
+Locale_کلی*
+Locale_کلی::createWithCanonicalFallback(ثابت UnicodeString* primaryID,
+                                       ثابت UnicodeString* canonicalFallbackID,
+                                       int32_t ډول,
+                                       UError_کوډ& حالت)
 {
-    if (primaryID == nullptr || U_FAILURE(status)) {
-        return nullptr;
+    إذا (primaryID == تش_اشاره || U_FAILURE(حالت)) {
+        أرجع تش_اشاره;
     }
     UnicodeString canonicalPrimaryID;
     LocaleUtility::canonicalLocaleString(primaryID, canonicalPrimaryID);
-    return new LocaleKey(*primaryID, canonicalPrimaryID, canonicalFallbackID, kind);
+    أرجع جديد Locale_کلی(*primaryID, canonicalPrimaryID, canonicalFallbackID, ډول);
 }
 
-LocaleKey::LocaleKey(const UnicodeString& primaryID,
-                     const UnicodeString& canonicalPrimaryID,
-                     const UnicodeString* canonicalFallbackID,
-                     int32_t kind)
-  : ICUServiceKey(primaryID)
-  , _kind(kind)
+Locale_کلی::Locale_کلی(ثابت UnicodeString& primaryID,
+                     ثابت UnicodeString& canonicalPrimaryID,
+                     ثابت UnicodeString* canonicalFallbackID,
+                     int32_t ډول)
+  : ICUService_کلی(primaryID)
+  , ډول_2(ډول)
   , _primaryID(canonicalPrimaryID)
   , _fallbackID()
   , _currentID()
 {
-    _fallbackID.setToBogus();
-    if (_primaryID.length() != 0) {
-        if (canonicalFallbackID != nullptr && _primaryID != *canonicalFallbackID) {
+    _fallbackID.سېټ_منزل_Bogus();
+    إذا (_primaryID.length() != 0) {
+        إذا (canonicalFallbackID != تش_اشاره && _primaryID != *canonicalFallbackID) {
             _fallbackID = *canonicalFallbackID;
         }
     }
@@ -69,120 +69,120 @@ LocaleKey::LocaleKey(const UnicodeString& primaryID,
     _currentID = _primaryID;
 }
 
-LocaleKey::~LocaleKey() {}
+Locale_کلی::~Locale_کلی() {}
 
 UnicodeString&
-LocaleKey::prefix(UnicodeString& result) const {
-    if (_kind != KIND_ANY) {
-        char16_t buffer[64];
-        uprv_itou(buffer, 64, _kind, 10, 0);
-        UnicodeString temp(buffer);
-        result.append(temp);
+Locale_کلی::مختاړی(UnicodeString& پایله) ثابت {
+    إذا (ډول_2 != ډول_ANY) {
+        char16_t بفر[64];
+        uprv_itou(بفر, 64, ډول_2, 10, 0);
+        UnicodeString لنډمهاله(بفر);
+        پایله.append(لنډمهاله);
     }
-    return result;
+    أرجع پایله;
 }
 
 int32_t
-LocaleKey::kind() const {
-    return _kind;
+Locale_کلی::ډول() ثابت {
+    أرجع ډول_2;
 }
 
 UnicodeString&
-LocaleKey::canonicalID(UnicodeString& result) const {
-    return result.append(_primaryID);
+Locale_کلی::canonicalID(UnicodeString& پایله) ثابت {
+    أرجع پایله.append(_primaryID);
 }
 
 UnicodeString&
-LocaleKey::currentID(UnicodeString& result) const {
-    if (!_currentID.isBogus()) {
-        result.append(_currentID);
+Locale_کلی::currentID(UnicodeString& پایله) ثابت {
+    إذا (!_currentID.isBogus()) {
+        پایله.append(_currentID);
     }
-    return result;
+    أرجع پایله;
 }
 
 UnicodeString&
-LocaleKey::currentDescriptor(UnicodeString& result) const {
-    if (!_currentID.isBogus()) {
-        prefix(result).append(PREFIX_DELIMITER).append(_currentID);
-    } else {
-        result.setToBogus();
+Locale_کلی::currentDescriptor(UnicodeString& پایله) ثابت {
+    إذا (!_currentID.isBogus()) {
+        مختاړی(پایله).append(مختاړی_DELIMITER).append(_currentID);
+    } وإلا {
+        پایله.سېټ_منزل_Bogus();
     }
-    return result;
+    أرجع پایله;
 }
 
 Locale&
-LocaleKey::canonicalLocale(Locale& result) const {
-    return LocaleUtility::initLocaleFromName(_primaryID, result);
+Locale_کلی::canonicalLocale(Locale& پایله) ثابت {
+    أرجع LocaleUtility::initLocaleFromName(_primaryID, پایله);
 }
 
 Locale&
-LocaleKey::currentLocale(Locale& result) const {
-    return LocaleUtility::initLocaleFromName(_currentID, result);
+Locale_کلی::currentLocale(Locale& پایله) ثابت {
+    أرجع LocaleUtility::initLocaleFromName(_currentID, پایله);
 }
 
 UBool
-LocaleKey::fallback() {
-    if (!_currentID.isBogus()) {
-        int x = _currentID.lastIndexOf(UNDERSCORE_CHAR);
-        if (x != -1) {
+Locale_کلی::fallback() {
+    إذا (!_currentID.isBogus()) {
+        صحيح x = _currentID.وروستی_شاخص_د(UNDERSCORE_CHAR);
+        إذا (x != -1) {
             _currentID.remove(x); // truncate current or fallback, whichever we're pointing to
-            return true;
+            أرجع ریښتیا;
         }
 
-        if (!_fallbackID.isBogus()) {
+        إذا (!_fallbackID.isBogus()) {
             _currentID = _fallbackID;
-            _fallbackID.setToBogus();
-            return true;
+            _fallbackID.سېټ_منزل_Bogus();
+            أرجع ریښتیا;
         }
 
-        if (_currentID.length() > 0) {
+        إذا (_currentID.length() > 0) {
             _currentID.remove(0); // completely truncate
-            return true;
+            أرجع ریښتیا;
         }
 
-        _currentID.setToBogus();
+        _currentID.سېټ_منزل_Bogus();
     }
 
-    return false;
+    أرجع خطأ;
 }
 
 UBool
-LocaleKey::isFallbackOf(const UnicodeString& id) const {
-    UnicodeString temp(id);
-    parseSuffix(temp);
-    return temp.indexOf(_primaryID) == 0 &&
-        (temp.length() == _primaryID.length() ||
-        temp.charAt(_primaryID.length()) == UNDERSCORE_CHAR);
+Locale_کلی::is_Fallback_د(ثابت UnicodeString& id) ثابت {
+    UnicodeString لنډمهاله(id);
+    parseSuffix(لنډمهاله);
+    أرجع لنډمهاله.شاخص_د(_primaryID) == 0 &&
+        (لنډمهاله.length() == _primaryID.length() ||
+        لنډمهاله.charAt(_primaryID.length()) == UNDERSCORE_CHAR);
 }
 
-#ifdef SERVICE_DEBUG
+#که_تعریف_شوی SERVICE_DEBUG
 UnicodeString&
-LocaleKey::debug(UnicodeString& result) const
+Locale_کلی::debug(UnicodeString& پایله) ثابت
 {
-    ICUServiceKey::debug(result);
-    result.append((UnicodeString)" kind: ");
-    result.append(_kind);
-    result.append((UnicodeString)" primaryID: ");
-    result.append(_primaryID);
-    result.append((UnicodeString)" fallbackID: ");
-    result.append(_fallbackID);
-    result.append((UnicodeString)" currentID: ");
-    result.append(_currentID);
-    return result;
+    ICUService_کلی::debug(پایله);
+    پایله.append((UnicodeString)" kind: ");
+    پایله.append(ډول_2);
+    پایله.append((UnicodeString)" primaryID: ");
+    پایله.append(_primaryID);
+    پایله.append((UnicodeString)" fallbackID: ");
+    پایله.append(_fallbackID);
+    پایله.append((UnicodeString)" currentID: ");
+    پایله.append(_currentID);
+    أرجع پایله;
 }
 
 UnicodeString&
-LocaleKey::debugClass(UnicodeString& result) const
+Locale_کلی::debugClass(UnicodeString& پایله) ثابت
 {
-    return result.append((UnicodeString)"LocaleKey ");
+    أرجع پایله.append((UnicodeString)"LocaleKey ");
 }
-#endif
+#د_که_پای
 
-UOBJECT_DEFINE_RTTI_IMPLEMENTATION(LocaleKey)
+UOBJECT_DEFINE_RTTI_IMPLEMENTATION(Locale_کلی)
 
-U_NAMESPACE_END
+U_NAMESPACE_پای_ټکی
 
 /* !UCONFIG_NO_SERVICE */
-#endif
+#د_که_پای
 
 

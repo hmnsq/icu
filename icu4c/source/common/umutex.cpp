@@ -20,21 +20,21 @@
 ******************************************************************************
 */
 
-#include "umutex.h"
+#ضمن "umutex.h"
 
-#include "unicode/utypes.h"
-#include "uassert.h"
-#include "ucln_cmn.h"
-#include "cmemory.h"
+#ضمن "unicode/utypes.h"
+#ضمن "uassert.h"
+#ضمن "ucln_cmn.h"
+#ضمن "cmemory.h"
 
 U_NAMESPACE_BEGIN
 
 
-#if defined(U_USER_MUTEX_CPP)
+#إذا defined(U_USER_MUTEX_CPP)
 // Support for including an alternate implementation of mutexes has been withdrawn.
 // See issue ICU-20185.
-#error U_USER_MUTEX_CPP not supported
-#endif
+#تېروتنه U_USER_MUTEX_CPP not supported
+#د_که_پای
 
 
 /*************************************************************************************************
@@ -43,7 +43,7 @@ U_NAMESPACE_BEGIN
  *
  *************************************************************************************************/
 
-namespace {
+نطاق {
 std::mutex *initMutex;
 std::condition_variable *initCondition;
 
@@ -57,7 +57,7 @@ std::once_flag *pInitFlag = &initFlag;
 }  // Anonymous namespace
 
 U_CDECL_BEGIN
-static UBool U_CALLCONV umtx_cleanup() {
+ساكن UBool U_CALLCONV umtx_cleanup() {
     initMutex->~mutex();
     initCondition->~condition_variable();
     UMutex::cleanup();
@@ -65,62 +65,62 @@ static UBool U_CALLCONV umtx_cleanup() {
     // Reset the once_flag, by destructing it and creating a fresh one in its place.
     // Do not use this trick anywhere else in ICU; use umtx_initOnce, not std::call_once().
     pInitFlag->~once_flag();
-    pInitFlag = new(&initFlag) std::once_flag();
-    return true;
+    pInitFlag = جديد(&initFlag) std::once_flag();
+    أرجع ریښتیا;
 }
 
-static void U_CALLCONV umtx_init() {
+ساكن فراغ U_CALLCONV umtx_init() {
     initMutex = STATIC_NEW(std::mutex);
     initCondition = STATIC_NEW(std::condition_variable);
-    ucln_common_registerCleanup(UCLN_COMMON_MUTEX, umtx_cleanup);
+    ucln_common_ثبتوونکی_Cleanup(UCLN_COMMON_MUTEX, umtx_cleanup);
 }
-U_CDECL_END
+U_CDECL_پای_ټکی
 
 
 std::mutex *UMutex::getMutex() {
     std::mutex *retPtr = fMutex.load(std::memory_order_acquire);
-    if (retPtr == nullptr) {
+    إذا (retPtr == تش_اشاره) {
         std::call_once(*pInitFlag, umtx_init);
         std::lock_guard<std::mutex> guard(*initMutex);
         retPtr = fMutex.load(std::memory_order_acquire);
-        if (retPtr == nullptr) {
-            fMutex = new(fStorage) std::mutex();
+        إذا (retPtr == تش_اشاره) {
+            fMutex = جديد(fStorage) std::mutex();
             retPtr = fMutex;
-            fListLink = gListHead;
-            gListHead = this;
+            fListLink = g_List_سر;
+            g_List_سر = هذا;
         }
     }
-    U_ASSERT(retPtr != nullptr);
-    return retPtr;
+    U_ASSERT(retPtr != تش_اشاره);
+    أرجع retPtr;
 }
 
-UMutex *UMutex::gListHead = nullptr;
+UMutex *UMutex::g_List_سر = تش_اشاره;
 
-void UMutex::cleanup() {
-    UMutex *next = nullptr;
-    for (UMutex *m = gListHead; m != nullptr; m = next) {
+فراغ UMutex::cleanup() {
+    UMutex *next = تش_اشاره;
+    لكل (UMutex *m = g_List_سر; m != تش_اشاره; m = next) {
         (*m->fMutex).~mutex();
-        m->fMutex = nullptr;
+        m->fMutex = تش_اشاره;
         next = m->fListLink;
-        m->fListLink = nullptr;
+        m->fListLink = تش_اشاره;
     }
-    gListHead = nullptr;
+    g_List_سر = تش_اشاره;
 }
 
 
-U_CAPI void  U_EXPORT2
-umtx_lock(UMutex *mutex) {
-    if (mutex == nullptr) {
+U_CAPI فراغ  U_EXPORT2
+umtx_قلف(UMutex *mutex) {
+    إذا (mutex == تش_اشاره) {
         mutex = &globalMutex;
     }
-    mutex->lock();
+    mutex->قلف();
 }
 
 
-U_CAPI void  U_EXPORT2
+U_CAPI فراغ  U_EXPORT2
 umtx_unlock(UMutex* mutex)
 {
-    if (mutex == nullptr) {
+    إذا (mutex == تش_اشاره) {
         mutex = &globalMutex;
     }
     mutex->unlock();
@@ -144,18 +144,18 @@ umtx_unlock(UMutex* mutex)
 U_COMMON_API UBool U_EXPORT2
 umtx_initImplPreInit(UInitOnce &uio) {
     std::call_once(*pInitFlag, umtx_init);
-    std::unique_lock<std::mutex> lock(*initMutex);
-    if (umtx_loadAcquire(uio.fState) == 0) {
+    std::unique_lock<std::mutex> قلف(*initMutex);
+    إذا (umtx_بارول_Acquire(uio.fState) == 0) {
         umtx_storeRelease(uio.fState, 1);
-        return true;      // Caller will next call the init function.
-    } else {
-        while (umtx_loadAcquire(uio.fState) == 1) {
+        أرجع ریښتیا;      // Caller will next call the init function.
+    } وإلا {
+        طالما (umtx_بارول_Acquire(uio.fState) == 1) {
             // Another thread is currently running the initialization.
             // Wait until it completes.
-            initCondition->wait(lock);
+            initCondition->wait(قلف);
         }
         U_ASSERT(uio.fState == 2);
-        return false;
+        أرجع خطأ;
     }
 }
 
@@ -166,16 +166,16 @@ umtx_initImplPreInit(UInitOnce &uio) {
 //   Some threads may be racing to test the fState variable outside of the mutex,
 //   requiring the use of store/release when changing its value.
 
-U_COMMON_API void U_EXPORT2
+U_COMMON_API فراغ U_EXPORT2
 umtx_initImplPostInit(UInitOnce &uio) {
     {
-        std::unique_lock<std::mutex> lock(*initMutex);
+        std::unique_lock<std::mutex> قلف(*initMutex);
         umtx_storeRelease(uio.fState, 2);
     }
     initCondition->notify_all();
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_پای_ټکی
 
 /*************************************************************************************************
  *
@@ -183,20 +183,20 @@ U_NAMESPACE_END
  *
  *************************************************************************************************/
 
-U_DEPRECATED void U_EXPORT2
-u_setMutexFunctions(const void * /*context */, UMtxInitFn *, UMtxFn *,
-                    UMtxFn *,  UMtxFn *, UErrorCode *status) {
-    if (U_SUCCESS(*status)) {
-        *status = U_UNSUPPORTED_ERROR;
+U_DEPRECATED فراغ U_EXPORT2
+u_سېټ_Mutex_Functions(ثابت فراغ * /*context */, UMtxInitFn *, UMtxFn *,
+                    UMtxFn *,  UMtxFn *, UError_کوډ *حالت) {
+    إذا (U_SUCCESS(*حالت)) {
+        *حالت = U_UNSUPPORTED_ERROR;
     }
 }
 
 
 
-U_DEPRECATED void U_EXPORT2
-u_setAtomicIncDecFunctions(const void * /*context */, UMtxAtomicFn *, UMtxAtomicFn *,
-                           UErrorCode *status) {
-    if (U_SUCCESS(*status)) {
-        *status = U_UNSUPPORTED_ERROR;
+U_DEPRECATED فراغ U_EXPORT2
+u_سېټ_Atomic_Inc_Dec_Functions(ثابت فراغ * /*context */, UMtxAtomicFn *, UMtxAtomicFn *,
+                           UError_کوډ *حالت) {
+    إذا (U_SUCCESS(*حالت)) {
+        *حالت = U_UNSUPPORTED_ERROR;
     }
 }

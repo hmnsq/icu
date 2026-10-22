@@ -17,29 +17,29 @@
 //         Code using it is expected to directly access fields much of the time.
 //
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#إذا !UCONFIG_NO_BREAK_ITERATION
 
-#include "unicode/unistr.h"
-#include "unicode/uniset.h"
-#include "unicode/uchar.h"
-#include "unicode/parsepos.h"
+#ضمن "unicode/unistr.h"
+#ضمن "unicode/uniset.h"
+#ضمن "unicode/uchar.h"
+#ضمن "unicode/parsepos.h"
 
-#include "cstr.h"
-#include "uvector.h"
+#ضمن "cstr.h"
+#ضمن "uvector.h"
 
-#include "rbbirb.h"
-#include "rbbinode.h"
+#ضمن "rbbirb.h"
+#ضمن "rbbinode.h"
 
-#include "uassert.h"
+#ضمن "uassert.h"
 
 
 U_NAMESPACE_BEGIN
 
-#ifdef RBBI_DEBUG
-static int  gLastSerial = 0;
-#endif
+#که_تعریف_شوی RBBI_DEBUG
+ساكن صحيح  g_وروستی_Serial = 0;
+#د_که_پای
 
 
 //-------------------------------------------------------------------------
@@ -47,68 +47,68 @@ static int  gLastSerial = 0;
 //    Constructor.   Just set the fields to reasonable default values.
 //
 //-------------------------------------------------------------------------
-RBBINode::RBBINode(NodeType t, UErrorCode& status) : UMemory() {
-    if (U_FAILURE(status)) {
-        return;
+RBBINode::RBBINode(غوټه_Type t, UError_کوډ& حالت) : UMemory() {
+    إذا (U_FAILURE(حالت)) {
+        أرجع;
     }
-#ifdef RBBI_DEBUG
-    fSerialNum    = ++gLastSerial;
-#endif
+#که_تعریف_شوی RBBI_DEBUG
+    f_Serial_عدد    = ++g_وروستی_Serial;
+#د_که_پای
     fType         = t;
-    fParent       = nullptr;
-    fLeftChild    = nullptr;
-    fRightChild   = nullptr;
-    fInputSet     = nullptr;
-    fFirstPos     = 0;
-    fLastPos      = 0;
-    fNullable     = false;
-    fLookAheadEnd = false;
-    fRuleRoot     = false;
-    fChainIn      = false;
+    f_پلار       = تش_اشاره;
+    f_کیڼ_ماشوم    = تش_اشاره;
+    f_ښی_ماشوم   = تش_اشاره;
+    f_ننوت_سېټ     = تش_اشاره;
+    f_لومړی_Pos     = 0;
+    f_وروستی_Pos      = 0;
+    fNullable     = خطأ;
+    f_Look_Ahead_پای_ټکی = خطأ;
+    f_قاعده_ریښه     = خطأ;
+    f_Chain_دننه      = خطأ;
     fVal          = 0;
     fPrecedence   = precZero;
 
-    fFirstPosSet  = new UVector(status);
-    fLastPosSet   = new UVector(status);
-    fFollowPos    = new UVector(status);
-    if (U_SUCCESS(status) &&
-        (fFirstPosSet == nullptr || fLastPosSet == nullptr || fFollowPos == nullptr)) {
-        status =  U_MEMORY_ALLOCATION_ERROR;
+    f_لومړی_Pos_سېټ  = جديد UVector(حالت);
+    f_وروستی_Pos_سېټ   = جديد UVector(حالت);
+    fFollowPos    = جديد UVector(حالت);
+    إذا (U_SUCCESS(حالت) &&
+        (f_لومړی_Pos_سېټ == تش_اشاره || f_وروستی_Pos_سېټ == تش_اشاره || fFollowPos == تش_اشاره)) {
+        حالت =  U_حافظه_ویش_ERROR;
     }
-    if      (t==opCat)    {fPrecedence = precOpCat;}
-    else if (t==opOr)     {fPrecedence = precOpOr;}
-    else if (t==opStart)  {fPrecedence = precStart;}
-    else if (t==opLParen) {fPrecedence = precLParen;}
+    إذا      (t==opCat)    {fPrecedence = precOpCat;}
+    وإلا إذا (t==opOr)     {fPrecedence = precOpOr;}
+    وإلا إذا (t==op_پیل)  {fPrecedence = prec_پیل;}
+    وإلا إذا (t==opLParen) {fPrecedence = precLParen;}
 
 }
 
 
-RBBINode::RBBINode(const RBBINode &other, UErrorCode& status) : UMemory(other) {
-    if (U_FAILURE(status)) {
-        return;
+RBBINode::RBBINode(ثابت RBBINode &other, UError_کوډ& حالت) : UMemory(other) {
+    إذا (U_FAILURE(حالت)) {
+        أرجع;
     }
-#ifdef RBBI_DEBUG
-    fSerialNum   = ++gLastSerial;
-#endif
+#که_تعریف_شوی RBBI_DEBUG
+    f_Serial_عدد   = ++g_وروستی_Serial;
+#د_که_پای
     fType        = other.fType;
-    fParent      = nullptr;
-    fLeftChild   = nullptr;
-    fRightChild  = nullptr;
-    fInputSet    = other.fInputSet;
+    f_پلار      = تش_اشاره;
+    f_کیڼ_ماشوم   = تش_اشاره;
+    f_ښی_ماشوم  = تش_اشاره;
+    f_ننوت_سېټ    = other.f_ننوت_سېټ;
     fPrecedence  = other.fPrecedence;
-    fText        = other.fText;
-    fFirstPos    = other.fFirstPos;
-    fLastPos     = other.fLastPos;
+    f_متن        = other.f_متن;
+    f_لومړی_Pos    = other.f_لومړی_Pos;
+    f_وروستی_Pos     = other.f_وروستی_Pos;
     fNullable    = other.fNullable;
     fVal         = other.fVal;
-    fRuleRoot    = false;
-    fChainIn     = other.fChainIn;
-    fFirstPosSet = new UVector(status);   // TODO - get a real status from somewhere
-    fLastPosSet  = new UVector(status);
-    fFollowPos   = new UVector(status);
-    if (U_SUCCESS(status) &&
-        (fFirstPosSet == nullptr || fLastPosSet == nullptr || fFollowPos == nullptr)) {
-        status =  U_MEMORY_ALLOCATION_ERROR;
+    f_قاعده_ریښه    = خطأ;
+    f_Chain_دننه     = other.f_Chain_دننه;
+    f_لومړی_Pos_سېټ = جديد UVector(حالت);   // TODO - get a real status from somewhere
+    f_وروستی_Pos_سېټ  = جديد UVector(حالت);
+    fFollowPos   = جديد UVector(حالت);
+    إذا (U_SUCCESS(حالت) &&
+        (f_لومړی_Pos_سېټ == تش_اشاره || f_وروستی_Pos_سېټ == تش_اشاره || fFollowPos == تش_اشاره)) {
+        حالت =  U_حافظه_ویش_ERROR;
     }
 }
 
@@ -124,30 +124,30 @@ RBBINode::RBBINode(const RBBINode &other, UErrorCode& status) : UMemory(other) {
 //-------------------------------------------------------------------------
 RBBINode::~RBBINode() {
     // printf("deleting node %8x   serial %4d\n", this, this->fSerialNum);
-    delete fInputSet;
-    fInputSet = nullptr;
+    ړنګول f_ننوت_سېټ;
+    f_ننوت_سېټ = تش_اشاره;
 
-    switch (this->fType) {
-    case varRef:
-    case setRef:
+    بدل (هذا->fType) {
+    حالة varRef:
+    حالة سېټ_Ref:
         // for these node types, multiple instances point to the same "children"
         // Storage ownership of children handled elsewhere.  Don't delete here.
-        break;
+        اكسر;
 
-    default:
+    افتراضي:
         // Avoid using a recursive implementation because of stack overflow problems.
         // See bug ICU-22584.
         // delete        fLeftChild;
-        NRDeleteNode(fLeftChild);
-        fLeftChild =   nullptr;
+        NRDelete_غوټه(f_کیڼ_ماشوم);
+        f_کیڼ_ماشوم =   تش_اشاره;
         // delete        fRightChild;
-        NRDeleteNode(fRightChild);
-        fRightChild = nullptr;
+        NRDelete_غوټه(f_ښی_ماشوم);
+        f_ښی_ماشوم = تش_اشاره;
     }
 
-    delete fFirstPosSet;
-    delete fLastPosSet;
-    delete fFollowPos;
+    ړنګول f_لومړی_Pos_سېټ;
+    ړنګول f_وروستی_Pos_سېټ;
+    ړنګول fFollowPos;
 }
 
 /**
@@ -155,43 +155,43 @@ RBBINode::~RBBINode() {
  * instead of the more obvious recursive implementation to avoid problems with
  * stack overflow with some perverse test rule data (from fuzzing).
  */
-void RBBINode::NRDeleteNode(RBBINode *node) {
-    if (node == nullptr) {
-        return;
+فراغ RBBINode::NRDelete_غوټه(RBBINode *غوټه) {
+    إذا (غوټه == تش_اشاره) {
+        أرجع;
     }
 
-    RBBINode *stopNode = node->fParent;
-    RBBINode *nextNode = node;
-    while (nextNode != stopNode && nextNode != nullptr) {
-        RBBINode *currentNode = nextNode;
+    RBBINode *stop_غوټه = غوټه->f_پلار;
+    RBBINode *بل_غوټه = غوټه;
+    طالما (بل_غوټه != stop_غوټه && بل_غوټه != تش_اشاره) {
+        RBBINode *current_غوټه = بل_غوټه;
 
-        if ((currentNode->fLeftChild == nullptr && currentNode->fRightChild == nullptr) ||
-                currentNode->fType == varRef ||      // varRef and setRef nodes do not
-                currentNode->fType == setRef) {      // own their children nodes.
+        إذا ((current_غوټه->f_کیڼ_ماشوم == تش_اشاره && current_غوټه->f_ښی_ماشوم == تش_اشاره) ||
+                current_غوټه->fType == varRef ||      // varRef and setRef nodes do not
+                current_غوټه->fType == سېټ_Ref) {      // own their children nodes.
             // CurrentNode is effectively a leaf node; it's safe to go ahead and delete it.
-            nextNode = currentNode->fParent;
-            if (nextNode) {
-                if (nextNode->fLeftChild == currentNode) {
-                    nextNode->fLeftChild = nullptr;
-                } else if (nextNode->fRightChild == currentNode) {
-                    nextNode->fRightChild = nullptr;
+            بل_غوټه = current_غوټه->f_پلار;
+            إذا (بل_غوټه) {
+                إذا (بل_غوټه->f_کیڼ_ماشوم == current_غوټه) {
+                    بل_غوټه->f_کیڼ_ماشوم = تش_اشاره;
+                } وإلا إذا (بل_غوټه->f_ښی_ماشوم == current_غوټه) {
+                    بل_غوټه->f_ښی_ماشوم = تش_اشاره;
                 }
             }
-            delete currentNode;
-        } else if (currentNode->fLeftChild) {
-            nextNode = currentNode->fLeftChild;
-            if (nextNode->fParent == nullptr) {
-                nextNode->fParent = currentNode;
+            ړنګول current_غوټه;
+        } وإلا إذا (current_غوټه->f_کیڼ_ماشوم) {
+            بل_غوټه = current_غوټه->f_کیڼ_ماشوم;
+            إذا (بل_غوټه->f_پلار == تش_اشاره) {
+                بل_غوټه->f_پلار = current_غوټه;
                 // fParent isn't always set; do it now if not.
             }
-            U_ASSERT(nextNode->fParent == currentNode);
-        } else if (currentNode->fRightChild) {
-            nextNode = currentNode->fRightChild;
-            if (nextNode->fParent == nullptr) {
-                nextNode->fParent = currentNode;
+            U_ASSERT(بل_غوټه->f_پلار == current_غوټه);
+        } وإلا إذا (current_غوټه->f_ښی_ماشوم) {
+            بل_غوټه = current_غوټه->f_ښی_ماشوم;
+            إذا (بل_غوټه->f_پلار == تش_اشاره) {
+                بل_غوټه->f_پلار = current_غوټه;
                 // fParent isn't always set; do it now if not.
             }
-            U_ASSERT(nextNode->fParent == currentNode);
+            U_ASSERT(بل_غوټه->f_پلار == current_غوټه);
         }
     }
 }
@@ -205,57 +205,57 @@ void RBBINode::NRDeleteNode(RBBINode *node) {
 //                  references in preparation for generating the DFA tables.
 //
 //-------------------------------------------------------------------------
-constexpr int kRecursiveDepthLimit = 3500;
-RBBINode *RBBINode::cloneTree(UErrorCode &status, int depth) {
-    if (U_FAILURE(status)) {
-        return nullptr;
+constexpr صحيح k_Recursive_ژوروالی_حد = 3500;
+RBBINode *RBBINode::clone_ونه(UError_کوډ &حالت, صحيح ژوروالی) {
+    إذا (U_FAILURE(حالت)) {
+        أرجع تش_اشاره;
     }
     // If the depth of the stack is too deep, we return U_INPUT_TOO_LONG_ERROR
     // to avoid stack overflow crash.
-    if (depth > kRecursiveDepthLimit) {
-        status = U_INPUT_TOO_LONG_ERROR;
-        return nullptr;
+    إذا (ژوروالی > k_Recursive_ژوروالی_حد) {
+        حالت = U_ننوت_TOO_LONG_ERROR;
+        أرجع تش_اشاره;
     }
     RBBINode    *n;
 
-    if (fType == RBBINode::varRef) {
+    إذا (fType == RBBINode::varRef) {
         // If the current node is a variable reference, skip over it
         //   and clone the definition of the variable instead.
-        n = fLeftChild->cloneTree(status, depth+1);
-        if (U_FAILURE(status)) {
-            return nullptr;
+        n = f_کیڼ_ماشوم->clone_ونه(حالت, ژوروالی+1);
+        إذا (U_FAILURE(حالت)) {
+            أرجع تش_اشاره;
         }
-    } else if (fType == RBBINode::uset) {
-        n = this;
-    } else {
-        n = new RBBINode(*this, status);
-        if (U_FAILURE(status)) {
-            delete n;
-            return nullptr;
+    } وإلا إذا (fType == RBBINode::uset) {
+        n = هذا;
+    } وإلا {
+        n = جديد RBBINode(*هذا, حالت);
+        إذا (U_FAILURE(حالت)) {
+            ړنګول n;
+            أرجع تش_اشاره;
         }
         // Check for null pointer.
-        if (n == nullptr) {
-            status =  U_MEMORY_ALLOCATION_ERROR;
-            return nullptr;
+        إذا (n == تش_اشاره) {
+            حالت =  U_حافظه_ویش_ERROR;
+            أرجع تش_اشاره;
         }
-        if (fLeftChild != nullptr) {
-            n->fLeftChild          = fLeftChild->cloneTree(status, depth+1);
-            if (U_FAILURE(status)) {
-                delete n;
-                return nullptr;
+        إذا (f_کیڼ_ماشوم != تش_اشاره) {
+            n->f_کیڼ_ماشوم          = f_کیڼ_ماشوم->clone_ونه(حالت, ژوروالی+1);
+            إذا (U_FAILURE(حالت)) {
+                ړنګول n;
+                أرجع تش_اشاره;
             }
-            n->fLeftChild->fParent = n;
+            n->f_کیڼ_ماشوم->f_پلار = n;
         }
-        if (fRightChild != nullptr) {
-            n->fRightChild          = fRightChild->cloneTree(status, depth+1);
-            if (U_FAILURE(status)) {
-                delete n;
-                return nullptr;
+        إذا (f_ښی_ماشوم != تش_اشاره) {
+            n->f_ښی_ماشوم          = f_ښی_ماشوم->clone_ونه(حالت, ژوروالی+1);
+            إذا (U_FAILURE(حالت)) {
+                ړنګول n;
+                أرجع تش_اشاره;
             }
-            n->fRightChild->fParent = n;
+            n->f_ښی_ماشوم->f_پلار = n;
         }
     }
-    return n;
+    أرجع n;
 }
 
 
@@ -278,48 +278,48 @@ RBBINode *RBBINode::cloneTree(UErrorCode &status, int depth) {
 //                      nested references are handled by cloneTree(), not here.
 //
 //-------------------------------------------------------------------------
-RBBINode *RBBINode::flattenVariables(UErrorCode& status, int depth) {
-    if (U_FAILURE(status)) {
-        return this;
+RBBINode *RBBINode::flattenVariables(UError_کوډ& حالت, صحيح ژوروالی) {
+    إذا (U_FAILURE(حالت)) {
+        أرجع هذا;
     }
     // If the depth of the stack is too deep, we return U_INPUT_TOO_LONG_ERROR
     // to avoid stack overflow crash.
-    if (depth > kRecursiveDepthLimit) {
-        status = U_INPUT_TOO_LONG_ERROR;
-        return this;
+    إذا (ژوروالی > k_Recursive_ژوروالی_حد) {
+        حالت = U_ننوت_TOO_LONG_ERROR;
+        أرجع هذا;
     }
-    if (fType == varRef) {
-        RBBINode *retNode  = fLeftChild->cloneTree(status, depth+1);
-        if (U_FAILURE(status)) {
-            return this;
+    إذا (fType == varRef) {
+        RBBINode *ret_غوټه  = f_کیڼ_ماشوم->clone_ونه(حالت, ژوروالی+1);
+        إذا (U_FAILURE(حالت)) {
+            أرجع هذا;
         }
-        retNode->fRuleRoot = this->fRuleRoot;
-        retNode->fChainIn  = this->fChainIn;
-        delete this;   // TODO: undefined behavior. Fix.
-        return retNode;
+        ret_غوټه->f_قاعده_ریښه = هذا->f_قاعده_ریښه;
+        ret_غوټه->f_Chain_دننه  = هذا->f_Chain_دننه;
+        ړنګول هذا;   // TODO: undefined behavior. Fix.
+        أرجع ret_غوټه;
     }
 
-    if (fLeftChild != nullptr) {
-        fLeftChild = fLeftChild->flattenVariables(status, depth+1);
-        if (fLeftChild == nullptr) {
-            status = U_MEMORY_ALLOCATION_ERROR;
+    إذا (f_کیڼ_ماشوم != تش_اشاره) {
+        f_کیڼ_ماشوم = f_کیڼ_ماشوم->flattenVariables(حالت, ژوروالی+1);
+        إذا (f_کیڼ_ماشوم == تش_اشاره) {
+            حالت = U_حافظه_ویش_ERROR;
         }
-        if (U_FAILURE(status)) {
-            return this;
+        إذا (U_FAILURE(حالت)) {
+            أرجع هذا;
         }
-        fLeftChild->fParent  = this;
+        f_کیڼ_ماشوم->f_پلار  = هذا;
     }
-    if (fRightChild != nullptr) {
-        fRightChild = fRightChild->flattenVariables(status, depth+1);
-        if (fRightChild == nullptr) {
-            status = U_MEMORY_ALLOCATION_ERROR;
+    إذا (f_ښی_ماشوم != تش_اشاره) {
+        f_ښی_ماشوم = f_ښی_ماشوم->flattenVariables(حالت, ژوروالی+1);
+        إذا (f_ښی_ماشوم == تش_اشاره) {
+            حالت = U_حافظه_ویش_ERROR;
         }
-        if (U_FAILURE(status)) {
-            return this;
+        إذا (U_FAILURE(حالت)) {
+            أرجع هذا;
         }
-        fRightChild->fParent = this;
+        f_ښی_ماشوم->f_پلار = هذا;
     }
-    return this;
+    أرجع هذا;
 }
 
 
@@ -331,49 +331,49 @@ RBBINode *RBBINode::flattenVariables(UErrorCode& status, int depth) {
 //                 the left child of the uset node.
 //
 //-------------------------------------------------------------------------
-void RBBINode::flattenSets(UErrorCode &status, int depth) {
-    if (U_FAILURE(status)) {
-        return;
+فراغ RBBINode::flattenSets(UError_کوډ &حالت, صحيح ژوروالی) {
+    إذا (U_FAILURE(حالت)) {
+        أرجع;
     }
     // If the depth of the stack is too deep, we return U_INPUT_TOO_LONG_ERROR
     // to avoid stack overflow crash.
-    if (depth > kRecursiveDepthLimit) {
-        status = U_INPUT_TOO_LONG_ERROR;
-        return;
+    إذا (ژوروالی > k_Recursive_ژوروالی_حد) {
+        حالت = U_ننوت_TOO_LONG_ERROR;
+        أرجع;
     }
-    U_ASSERT(fType != setRef);
+    U_ASSERT(fType != سېټ_Ref);
 
-    if (fLeftChild != nullptr) {
-        if (fLeftChild->fType==setRef) {
-            RBBINode *setRefNode = fLeftChild;
-            RBBINode *usetNode   = setRefNode->fLeftChild;
-            RBBINode *replTree   = usetNode->fLeftChild;
-            fLeftChild           = replTree->cloneTree(status, depth+1);
-            if (U_FAILURE(status)) {
-                delete setRefNode;
-                return;
+    إذا (f_کیڼ_ماشوم != تش_اشاره) {
+        إذا (f_کیڼ_ماشوم->fType==سېټ_Ref) {
+            RBBINode *سېټ_Ref_غوټه = f_کیڼ_ماشوم;
+            RBBINode *uset_غوټه   = سېټ_Ref_غوټه->f_کیڼ_ماشوم;
+            RBBINode *repl_ونه   = uset_غوټه->f_کیڼ_ماشوم;
+            f_کیڼ_ماشوم           = repl_ونه->clone_ونه(حالت, ژوروالی+1);
+            إذا (U_FAILURE(حالت)) {
+                ړنګول سېټ_Ref_غوټه;
+                أرجع;
             }
-            fLeftChild->fParent  = this;
-            delete setRefNode;
-        } else {
-            fLeftChild->flattenSets(status, depth+1);
+            f_کیڼ_ماشوم->f_پلار  = هذا;
+            ړنګول سېټ_Ref_غوټه;
+        } وإلا {
+            f_کیڼ_ماشوم->flattenSets(حالت, ژوروالی+1);
         }
     }
 
-    if (fRightChild != nullptr) {
-        if (fRightChild->fType==setRef) {
-            RBBINode *setRefNode = fRightChild;
-            RBBINode *usetNode   = setRefNode->fLeftChild;
-            RBBINode *replTree   = usetNode->fLeftChild;
-            fRightChild           = replTree->cloneTree(status, depth+1);
-            if (U_FAILURE(status)) {
-                delete setRefNode;
-                return;
+    إذا (f_ښی_ماشوم != تش_اشاره) {
+        إذا (f_ښی_ماشوم->fType==سېټ_Ref) {
+            RBBINode *سېټ_Ref_غوټه = f_ښی_ماشوم;
+            RBBINode *uset_غوټه   = سېټ_Ref_غوټه->f_کیڼ_ماشوم;
+            RBBINode *repl_ونه   = uset_غوټه->f_کیڼ_ماشوم;
+            f_ښی_ماشوم           = repl_ونه->clone_ونه(حالت, ژوروالی+1);
+            إذا (U_FAILURE(حالت)) {
+                ړنګول سېټ_Ref_غوټه;
+                أرجع;
             }
-            fRightChild->fParent  = this;
-            delete setRefNode;
-        } else {
-            fRightChild->flattenSets(status, depth+1);
+            f_ښی_ماشوم->f_پلار  = هذا;
+            ړنګول سېټ_Ref_غوټه;
+        } وإلا {
+            f_ښی_ماشوم->flattenSets(حالت, ژوروالی+1);
         }
     }
 }
@@ -386,20 +386,20 @@ void RBBINode::flattenSets(UErrorCode &status, int depth) {
 //                   at the specified root.
 //
 //-------------------------------------------------------------------------
-void   RBBINode::findNodes(UVector *dest, RBBINode::NodeType kind, UErrorCode &status) {
+فراغ   RBBINode::پیدا_کړه_Nodes(UVector *dest, RBBINode::غوټه_Type ډول, UError_کوډ &حالت) {
     /* test for buffer overflows */
-    if (U_FAILURE(status)) {
-        return;
+    إذا (U_FAILURE(حالت)) {
+        أرجع;
     }
     U_ASSERT(!dest->hasDeleter());
-    if (fType == kind) {
-        dest->addElement(this, status);
+    إذا (fType == ډول) {
+        dest->جمع_کړه_Element(هذا, حالت);
     }
-    if (fLeftChild != nullptr) {
-        fLeftChild->findNodes(dest, kind, status);
+    إذا (f_کیڼ_ماشوم != تش_اشاره) {
+        f_کیڼ_ماشوم->پیدا_کړه_Nodes(dest, ډول, حالت);
     }
-    if (fRightChild != nullptr) {
-        fRightChild->findNodes(dest, kind, status);
+    إذا (f_ښی_ماشوم != تش_اشاره) {
+        f_ښی_ماشوم->پیدا_کړه_Nodes(dest, ډول, حالت);
     }
 }
 
@@ -409,15 +409,15 @@ void   RBBINode::findNodes(UVector *dest, RBBINode::NodeType kind, UErrorCode &s
 //    print.         Print out a single node, for debugging.
 //
 //-------------------------------------------------------------------------
-#ifdef RBBI_DEBUG
+#که_تعریف_شوی RBBI_DEBUG
 
-static int32_t serial(const RBBINode *node) {
-    return (node == nullptr? -1 : node->fSerialNum);
+ساكن int32_t serial(ثابت RBBINode *غوټه) {
+    أرجع (غوټه == تش_اشاره? -1 : غوټه->f_Serial_عدد);
 }
 
 
-void RBBINode::printNode(const RBBINode *node) {
-    static const char * const nodeTypeNames[] = {
+فراغ RBBINode::print_غوټه(ثابت RBBINode *غوټه) {
+    ساكن ثابت حرف * ثابت غوټه_Type_نومونه[] = {
                 "setRef",
                 "uset",
                 "varRef",
@@ -436,28 +436,28 @@ void RBBINode::printNode(const RBBINode *node) {
                 "opLParen"
     };
 
-    if (node==nullptr) {
-        RBBIDebugPrintf("%10p", (void *)node);
-    } else {
+    إذا (غوټه==تش_اشاره) {
+        RBBIDebugPrintf("%10p", (فراغ *)غوټه);
+    } وإلا {
         RBBIDebugPrintf("%10p %5d %12s %c%c  %5d       %5d     %5d       %6d     %d ",
-            (void *)node, node->fSerialNum, nodeTypeNames[node->fType],
-            node->fRuleRoot?'R':' ', node->fChainIn?'C':' ',
-            serial(node->fLeftChild), serial(node->fRightChild), serial(node->fParent),
-            node->fFirstPos, node->fVal);
-        if (node->fType == varRef) {
-            RBBI_DEBUG_printUnicodeString(node->fText);
+            (فراغ *)غوټه, غوټه->f_Serial_عدد, غوټه_Type_نومونه[غوټه->fType],
+            غوټه->f_قاعده_ریښه?'R':' ', غوټه->f_Chain_دننه?'C':' ',
+            serial(غوټه->f_کیڼ_ماشوم), serial(غوټه->f_ښی_ماشوم), serial(غوټه->f_پلار),
+            غوټه->f_لومړی_Pos, غوټه->fVal);
+        إذا (غوټه->fType == varRef) {
+            RBBI_DEBUG_printUnicodeString(غوټه->f_متن);
         }
     }
     RBBIDebugPrintf("\n");
 }
-#endif
+#د_که_پای
 
 
-#ifdef RBBI_DEBUG
-U_CFUNC void RBBI_DEBUG_printUnicodeString(const UnicodeString &s, int minWidth) {
-    RBBIDebugPrintf("%*s", minWidth, CStr(s)());
+#که_تعریف_شوی RBBI_DEBUG
+U_CFUNC فراغ RBBI_DEBUG_printUnicodeString(ثابت UnicodeString &s, صحيح min_پلنوالی) {
+    RBBIDebugPrintf("%*s", min_پلنوالی, CStr(s)());
 }
-#endif
+#د_که_پای
 
 
 //-------------------------------------------------------------------------
@@ -465,34 +465,34 @@ U_CFUNC void RBBI_DEBUG_printUnicodeString(const UnicodeString &s, int minWidth)
 //    print.         Print out the tree of nodes rooted at "this"
 //
 //-------------------------------------------------------------------------
-#ifdef RBBI_DEBUG
-void RBBINode::printNodeHeader() {
+#که_تعریف_شوی RBBI_DEBUG
+فراغ RBBINode::print_غوټه_سرلیک() {
     RBBIDebugPrintf(" Address   serial        type     LeftChild  RightChild   Parent   position value\n");
 }
     
-void RBBINode::printTree(const RBBINode *node, UBool printHeading) {
-    if (printHeading) {
-        printNodeHeader();
+فراغ RBBINode::print_ونه(ثابت RBBINode *غوټه, UBool printHeading) {
+    إذا (printHeading) {
+        print_غوټه_سرلیک();
     }
-    printNode(node);
-    if (node != nullptr) {
+    print_غوټه(غوټه);
+    إذا (غوټه != تش_اشاره) {
         // Only dump the definition under a variable reference if asked to.
         // Unconditionally dump children of all other node types.
-        if (node->fType != varRef) {
-            if (node->fLeftChild != nullptr) {
-                printTree(node->fLeftChild, false);
+        إذا (غوټه->fType != varRef) {
+            إذا (غوټه->f_کیڼ_ماشوم != تش_اشاره) {
+                print_ونه(غوټه->f_کیڼ_ماشوم, خطأ);
             }
             
-            if (node->fRightChild != nullptr) {
-                printTree(node->fRightChild, false);
+            إذا (غوټه->f_ښی_ماشوم != تش_اشاره) {
+                print_ونه(غوټه->f_ښی_ماشوم, خطأ);
             }
         }
     }
 }
-#endif
+#د_که_پای
 
 
 
-U_NAMESPACE_END
+U_NAMESPACE_پای_ټکی
 
-#endif /* #if !UCONFIG_NO_BREAK_ITERATION */
+#د_که_پای /* #if !UCONFIG_NO_BREAK_ITERATION */

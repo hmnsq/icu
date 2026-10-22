@@ -1,24 +1,24 @@
 // © 2022 and later: Unicode, Inc. and others.
 // License & terms of use: http://www.unicode.org/copyright.html
 
-#ifndef MLBREAKENGINE_H
-#define MLBREAKENGINE_H
+#که_نه_تعریف_شوی MLBREAKENGINE_H
+#تعریف_کړه MLBREAKENGINE_H
 
-#include "hash.h"
-#include "unicode/resbund.h"
-#include "unicode/uniset.h"
-#include "unicode/utext.h"
-#include "uvectr32.h"
+#ضمن "hash.h"
+#ضمن "unicode/resbund.h"
+#ضمن "unicode/uniset.h"
+#ضمن "unicode/utext.h"
+#ضمن "uvectr32.h"
 
 U_NAMESPACE_BEGIN
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#إذا !UCONFIG_NO_BREAK_ITERATION
 
 /**
  * A machine learning break engine for the phrase breaking in Japanese.
  */
-class MlBreakEngine : public UMemory {
-   public:
+class MlBreakEngine : عام UMemory {
+   عام:
     /**
      * Constructor.
      *
@@ -27,15 +27,15 @@ class MlBreakEngine : public UMemory {
      * @param closePunctuationSet An UnicodeSet with close punctuation.
      * @param status Information on any errors encountered.
      */
-    MlBreakEngine(const UnicodeSet &digitOrOpenPunctuationOrAlphabetSet,
-                  const UnicodeSet &closePunctuationSet, UErrorCode &status);
+    MlBreakEngine(ثابت Unicode_سېټ &digit_Or_Open_Punctuation_Or_Alphabet_سېټ,
+                  ثابت Unicode_سېټ &close_Punctuation_سېټ, UError_کوډ &حالت);
 
     /**
      * Virtual destructor.
      */
-    virtual ~MlBreakEngine();
+    مجازي ~MlBreakEngine();
 
-   public:
+   عام:
     /**
      * Divide up a range of characters handled by this break engine.
      *
@@ -48,17 +48,17 @@ class MlBreakEngine : public UMemory {
      * @param status Information on any errors encountered.
      * @return The number of breaks found
      */
-    int32_t divideUpRange(UText *inText, int32_t rangeStart, int32_t rangeEnd,
-                          UVector32 &foundBreaks, const UnicodeString &inString,
-                          const LocalPointer<UVector32> &inputMap, UErrorCode &status) const;
+    int32_t divide_پورته_Range(UText *دننه_متن, int32_t range_پیل, int32_t range_پای_ټکی,
+                          UVector32 &وموندل_Breaks, ثابت UnicodeString &دننه_String,
+                          ثابت Local_اشاره_ګر<UVector32> &ننوت_Map, UError_کوډ &حالت) ثابت;
 
-   private:
+   خاص:
     /**
      * Load the machine learning's model file.
      *
      * @param error Information on any errors encountered.
      */
-    void loadMLModel(UErrorCode &error);
+    فراغ بارول_MLModel(UError_کوډ &error);
 
     /**
      * In the machine learning's model file, specify the name of the key and value to load the
@@ -70,8 +70,8 @@ class MlBreakEngine : public UMemory {
      * @param model A hashtable to store the pairs of the feature and its score.
      * @param error Information on any errors encountered.
      */
-    void initKeyValue(UResourceBundle *rb, const char *keyName, const char *valueName,
-                      Hashtable &model, UErrorCode &error);
+    فراغ init_کلی_ارزښت(UResourceBundle *rb, ثابت حرف *کلی_Name, ثابت حرف *ارزښت_Name,
+                      Hashtable &model, UError_کوډ &error);
 
     /**
      * Initialize the index list from the input string.
@@ -81,8 +81,8 @@ class MlBreakEngine : public UMemory {
      * @param status Information on any errors encountered.
      * @return The number of code units of the first four characters in inString.
      */
-    int32_t initIndexList(const UnicodeString &inString, int32_t *indexList,
-                          UErrorCode &status) const;
+    int32_t init_شاخص_List(ثابت UnicodeString &دننه_String, int32_t *شاخص_List,
+                          UError_کوډ &حالت) ثابت;
 
     /**
      * Evaluate whether the index is a potential breakpoint.
@@ -96,21 +96,21 @@ class MlBreakEngine : public UMemory {
      * @param status Information on any errors encountered.
      * @return The number of breakpoints
      */
-    int32_t evaluateBreakpoint(const UnicodeString &inString, int32_t *indexList, int32_t startIdx,
-                               int32_t numCodeUnits, int32_t numBreaks, UVector32 &boundary,
-                               UErrorCode &status) const;
+    int32_t evaluateBreakpoint(ثابت UnicodeString &دننه_String, int32_t *شاخص_List, int32_t پیل_Idx,
+                               int32_t عدد_کوډ_Units, int32_t عدد_Breaks, UVector32 &boundary,
+                               UError_کوډ &حالت) ثابت;
 
-    void printUnicodeString(const UnicodeString &s) const;
+    فراغ printUnicodeString(ثابت UnicodeString &s) ثابت;
 
-    UnicodeSet fDigitOrOpenPunctuationOrAlphabetSet;
-    UnicodeSet fClosePunctuationSet;
+    Unicode_سېټ f_Digit_Or_Open_Punctuation_Or_Alphabet_سېټ;
+    Unicode_سېټ f_Close_Punctuation_سېټ;
     Hashtable fModel[13];  // {UW1, UW2, ... UW6, BW1, ... BW3, TW1, TW2, ... TW4} 6+3+4= 13
-    int32_t fNegativeSum;
+    int32_t f_Negative_مجموعه;
 };
 
-#endif
+#د_که_پای
 
-U_NAMESPACE_END
+U_NAMESPACE_پای_ټکی
 
 /* MLBREAKENGINE_H */
-#endif
+#د_که_پای

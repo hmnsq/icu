@@ -15,20 +15,20 @@
  * \brief C API: access to ICU Data Version number
  */
 
-#ifndef __ICU_DATA_VER_H__
-#define __ICU_DATA_VER_H__
+#که_نه_تعریف_شوی __ICU_DATA_VER_H__
+#تعریف_کړه __ICU_DATA_VER_H__
 
-#include "unicode/utypes.h"
-
-/**
- * @stable ICU 49
- */
-#define U_ICU_VERSION_BUNDLE "icuver"
+#ضمن "unicode/utypes.h"
 
 /**
  * @stable ICU 49
  */
-#define U_ICU_DATA_KEY "DataVersion"
+#تعریف_کړه U_ICU_نسخه_BUNDLE "icuver"
+
+/**
+ * @stable ICU 49
+ */
+#تعریف_کړه U_ICU_معلومات_کلی "DataVersion"
 
 /**
  * Retrieves the data version from icuver and stores it in dataVersionFillin.
@@ -38,6 +38,6 @@
  * 
  * @stable ICU 49
  */
-U_CAPI void U_EXPORT2 u_getDataVersion(UVersionInfo dataVersionFillin, UErrorCode *status);
+U_CAPI فراغ U_EXPORT2 u_get_معلومات_نسخه(UVersionInfo معلومات_نسخه_Fillin, UError_کوډ *حالت);
 
-#endif
+#د_که_پای

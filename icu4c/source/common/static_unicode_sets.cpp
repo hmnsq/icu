@@ -1,126 +1,126 @@
 // © 2018 and later: Unicode, Inc. and others.
 // License & terms of use: http://www.unicode.org/copyright.html
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if !UCONFIG_NO_FORMATTING
+#إذا !UCONFIG_NO_FORMATTING
 
 // Allow implicit conversion from char16_t* to UnicodeString for this file:
 // Helpful in toString methods and elsewhere.
-#define UNISTR_FROM_STRING_EXPLICIT
+#تعریف_کړه UNISTR_FROM_STRING_EXPLICIT
 
-#include "static_unicode_sets.h"
-#include "umutex.h"
-#include "ucln_cmn.h"
-#include "unicode/uniset.h"
-#include "uresimp.h"
-#include "cstring.h"
-#include "uassert.h"
+#ضمن "static_unicode_sets.h"
+#ضمن "umutex.h"
+#ضمن "ucln_cmn.h"
+#ضمن "unicode/uniset.h"
+#ضمن "uresimp.h"
+#ضمن "cstring.h"
+#ضمن "uassert.h"
 
-using namespace icu;
-using namespace icu::unisets;
+کارول نطاق icu;
+کارول نطاق icu::unisets;
 
 
-namespace {
+نطاق {
 
-UnicodeSet* gUnicodeSets[UNISETS_KEY_COUNT] = {};
+Unicode_سېټ* gUnicodeSets[UNISETS_کلی_شمېر] = {};
 
 // Save the empty instance in static memory to have well-defined behavior if a
 // regular UnicodeSet cannot be allocated.
-alignas(UnicodeSet)
-char gEmptyUnicodeSet[sizeof(UnicodeSet)];
+alignas(Unicode_سېټ)
+حرف g_تشه_Unicode_سېټ[حجم(Unicode_سېټ)];
 
 // Whether the gEmptyUnicodeSet is initialized and ready to use.
-UBool gEmptyUnicodeSetInitialized = false;
+UBool g_تشه_Unicode_سېټ_Initialized = خطأ;
 
-inline UnicodeSet* getImpl(Key key) {
-    UnicodeSet* candidate = gUnicodeSets[key];
-    if (candidate == nullptr) {
-        return reinterpret_cast<UnicodeSet*>(gEmptyUnicodeSet);
+مضمن Unicode_سېټ* getImpl(کلی_2 کلی) {
+    Unicode_سېټ* candidate = gUnicodeSets[کلی];
+    إذا (candidate == تش_اشاره) {
+        أرجع reinterpret_cast<Unicode_سېټ*>(g_تشه_Unicode_سېټ);
     }
-    return candidate;
+    أرجع candidate;
 }
 
-UnicodeSet* computeUnion(Key k1, Key k2) {
-    UnicodeSet* result = new UnicodeSet();
-    if (result == nullptr) {
-        return nullptr;
+Unicode_سېټ* computeUnion(کلی_2 k1, کلی_2 k2) {
+    Unicode_سېټ* پایله = جديد Unicode_سېټ();
+    إذا (پایله == تش_اشاره) {
+        أرجع تش_اشاره;
     }
-    result->addAll(*getImpl(k1));
-    result->addAll(*getImpl(k2));
-    result->freeze();
-    return result;
+    پایله->جمع_کړه_All(*getImpl(k1));
+    پایله->جمع_کړه_All(*getImpl(k2));
+    پایله->freeze();
+    أرجع پایله;
 }
 
-UnicodeSet* computeUnion(Key k1, Key k2, Key k3) {
-    UnicodeSet* result = new UnicodeSet();
-    if (result == nullptr) {
-        return nullptr;
+Unicode_سېټ* computeUnion(کلی_2 k1, کلی_2 k2, کلی_2 k3) {
+    Unicode_سېټ* پایله = جديد Unicode_سېټ();
+    إذا (پایله == تش_اشاره) {
+        أرجع تش_اشاره;
     }
-    result->addAll(*getImpl(k1));
-    result->addAll(*getImpl(k2));
-    result->addAll(*getImpl(k3));
-    result->freeze();
-    return result;
+    پایله->جمع_کړه_All(*getImpl(k1));
+    پایله->جمع_کړه_All(*getImpl(k2));
+    پایله->جمع_کړه_All(*getImpl(k3));
+    پایله->freeze();
+    أرجع پایله;
 }
 
 
-void saveSet(Key key, const UnicodeString& unicodeSetPattern, UErrorCode& status) {
+فراغ save_سېټ(کلی_2 کلی, ثابت UnicodeString& unicode_سېټ_نمونه, UError_کوډ& حالت) {
     // assert unicodeSets.get(key) == null;
-    gUnicodeSets[key] = new UnicodeSet(unicodeSetPattern, status);
+    gUnicodeSets[کلی] = جديد Unicode_سېټ(unicode_سېټ_نمونه, حالت);
 }
 
-class ParseDataSink : public ResourceSink {
-  public:
-    void put(const char* key, ResourceValue& value, UBool /*noFallback*/, UErrorCode& status) override {
-        ResourceTable contextsTable = value.getTable(status);
-        if (U_FAILURE(status)) { return; }
-        for (int i = 0; contextsTable.getKeyAndValue(i, key, value); i++) {
-            if (uprv_strcmp(key, "date") == 0) {
+صنف Parse_معلومات_Sink : عام ResourceSink {
+  عام:
+    فراغ put(ثابت حرف* کلی, Resource_ارزښت& value, UBool /*noFallback*/, UError_کوډ& حالت) override {
+        Resource_جدول contexts_جدول = value.get_جدول(حالت);
+        إذا (U_FAILURE(حالت)) { أرجع; }
+        لكل (صحيح i = 0; contexts_جدول.get_کلی_And_ارزښت(i, کلی, value); i++) {
+            إذا (uprv_strcmp(کلی, "date") == 0) {
                 // ignore
-            } else {
-                ResourceTable strictnessTable = value.getTable(status);
-                if (U_FAILURE(status)) { return; }
-                for (int j = 0; strictnessTable.getKeyAndValue(j, key, value); j++) {
-                    bool isLenient = (uprv_strcmp(key, "lenient") == 0);
-                    ResourceArray array = value.getArray(status);
-                    if (U_FAILURE(status)) { return; }
-                    for (int k = 0; k < array.getSize(); k++) {
-                        array.getValue(k, value);
-                        UnicodeString str = value.getUnicodeString(status);
-                        if (U_FAILURE(status)) { return; }
+            } وإلا {
+                Resource_جدول strictness_جدول = value.get_جدول(حالت);
+                إذا (U_FAILURE(حالت)) { أرجع; }
+                لكل (صحيح j = 0; strictness_جدول.get_کلی_And_ارزښت(j, کلی, value); j++) {
+                    منطقي isLenient = (uprv_strcmp(کلی, "lenient") == 0);
+                    ResourceArray array = value.getArray(حالت);
+                    إذا (U_FAILURE(حالت)) { أرجع; }
+                    لكل (صحيح k = 0; k < array.get_اندازه(); k++) {
+                        array.get_ارزښت(k, value);
+                        UnicodeString str = value.getUnicodeString(حالت);
+                        إذا (U_FAILURE(حالت)) { أرجع; }
                         // There is both lenient and strict data for comma/period,
                         // but not for any of the other symbols.
-                        if (str.indexOf(u'.') != -1) {
-                            saveSet(isLenient ? PERIOD : STRICT_PERIOD, str, status);
-                        } else if (str.indexOf(u',') != -1) {
-                            saveSet(isLenient ? COMMA : STRICT_COMMA, str, status);
-                        } else if (str.indexOf(u'+') != -1) {
-                            saveSet(PLUS_SIGN, str, status);
-                        } else if (str.indexOf(u'-') != -1) {
-                            saveSet(MINUS_SIGN, str, status);
-                        } else if (str.indexOf(u'$') != -1) {
-                            saveSet(DOLLAR_SIGN, str, status);
-                        } else if (str.indexOf(u'£') != -1) {
-                            saveSet(POUND_SIGN, str, status);
-                        } else if (str.indexOf(u'₹') != -1) {
-                            saveSet(RUPEE_SIGN, str, status);
-                        } else if (str.indexOf(u'¥') != -1) {
-                            saveSet(YEN_SIGN, str, status);
-                        } else if (str.indexOf(u'₩') != -1) {
-                            saveSet(WON_SIGN, str, status);
-                        } else if (str.indexOf(u'%') != -1) {
-                            saveSet(PERCENT_SIGN, str, status);
-                        } else if (str.indexOf(u'‰') != -1) {
-                            saveSet(PERMILLE_SIGN, str, status);
-                        } else if (str.indexOf(u'’') != -1) {
-                            saveSet(APOSTROPHE_SIGN, str, status);
-                        } else {
+                        إذا (str.شاخص_د(u'.') != -1) {
+                            save_سېټ(isLenient ? PERIOD : STRICT_PERIOD, str, حالت);
+                        } وإلا إذا (str.شاخص_د(u',') != -1) {
+                            save_سېټ(isLenient ? COMMA : STRICT_COMMA, str, حالت);
+                        } وإلا إذا (str.شاخص_د(u'+') != -1) {
+                            save_سېټ(PLUS_SIGN, str, حالت);
+                        } وإلا إذا (str.شاخص_د(u'-') != -1) {
+                            save_سېټ(MINUS_SIGN, str, حالت);
+                        } وإلا إذا (str.شاخص_د(u'$') != -1) {
+                            save_سېټ(DOLLAR_SIGN, str, حالت);
+                        } وإلا إذا (str.شاخص_د(u'£') != -1) {
+                            save_سېټ(POUND_SIGN, str, حالت);
+                        } وإلا إذا (str.شاخص_د(u'₹') != -1) {
+                            save_سېټ(RUPEE_SIGN, str, حالت);
+                        } وإلا إذا (str.شاخص_د(u'¥') != -1) {
+                            save_سېټ(YEN_SIGN, str, حالت);
+                        } وإلا إذا (str.شاخص_د(u'₩') != -1) {
+                            save_سېټ(WON_SIGN, str, حالت);
+                        } وإلا إذا (str.شاخص_د(u'%') != -1) {
+                            save_سېټ(PERCENT_SIGN, str, حالت);
+                        } وإلا إذا (str.شاخص_د(u'‰') != -1) {
+                            save_سېټ(PERMILLE_SIGN, str, حالت);
+                        } وإلا إذا (str.شاخص_د(u'’') != -1) {
+                            save_سېټ(APOSTROPHE_SIGN, str, حالت);
+                        } وإلا {
                             // Unknown class of parse lenients
                             // TODO(ICU-20428): Make ICU automatically accept new classes?
-                            U_ASSERT(false);
+                            U_ASSERT(خطأ);
                         }
-                        if (U_FAILURE(status)) { return; }
+                        إذا (U_FAILURE(حالت)) { أرجع; }
                     }
                 }
             }
@@ -129,86 +129,86 @@ class ParseDataSink : public ResourceSink {
 };
 
 
-icu::UInitOnce gNumberParseUniSetsInitOnce {};
+icu::UInitOnce g_شمېره_Parse_Uni_Sets_Init_Once {};
 
-UBool U_CALLCONV cleanupNumberParseUniSets() {
-    if (gEmptyUnicodeSetInitialized) {
-        reinterpret_cast<UnicodeSet*>(gEmptyUnicodeSet)->~UnicodeSet();
-        gEmptyUnicodeSetInitialized = false;
+UBool U_CALLCONV cleanup_شمېره_Parse_Uni_Sets() {
+    إذا (g_تشه_Unicode_سېټ_Initialized) {
+        reinterpret_cast<Unicode_سېټ*>(g_تشه_Unicode_سېټ)->~Unicode_سېټ();
+        g_تشه_Unicode_سېټ_Initialized = خطأ;
     }
-    for (int32_t i = 0; i < UNISETS_KEY_COUNT; i++) {
-        delete gUnicodeSets[i];
-        gUnicodeSets[i] = nullptr;
+    لكل (int32_t i = 0; i < UNISETS_کلی_شمېر; i++) {
+        ړنګول gUnicodeSets[i];
+        gUnicodeSets[i] = تش_اشاره;
     }
-    gNumberParseUniSetsInitOnce.reset();
-    return true;
+    g_شمېره_Parse_Uni_Sets_Init_Once.reset();
+    أرجع ریښتیا;
 }
 
-void U_CALLCONV initNumberParseUniSets(UErrorCode& status) {
-    ucln_common_registerCleanup(UCLN_COMMON_NUMPARSE_UNISETS, cleanupNumberParseUniSets);
+فراغ U_CALLCONV init_شمېره_Parse_Uni_Sets(UError_کوډ& حالت) {
+    ucln_common_ثبتوونکی_Cleanup(UCLN_COMMON_NUMPARSE_UNISETS, cleanup_شمېره_Parse_Uni_Sets);
 
     // Initialize the empty instance for well-defined fallback behavior
-    new(gEmptyUnicodeSet) UnicodeSet();
-    reinterpret_cast<UnicodeSet*>(gEmptyUnicodeSet)->freeze();
-    gEmptyUnicodeSetInitialized = true;
+    جديد(g_تشه_Unicode_سېټ) Unicode_سېټ();
+    reinterpret_cast<Unicode_سېټ*>(g_تشه_Unicode_سېټ)->freeze();
+    g_تشه_Unicode_سېټ_Initialized = ریښتیا;
 
     // These sets were decided after discussion with icu-design@. See tickets #13084 and #13309.
     // Zs+TAB is "horizontal whitespace" according to UTS #18 (blank property).
-    gUnicodeSets[DEFAULT_IGNORABLES] = new UnicodeSet(
-            u"[[:Zs:][\\u0009][:Bidi_Control:][:Variation_Selector:]]", status);
-    gUnicodeSets[STRICT_IGNORABLES] = new UnicodeSet(u"[[:Bidi_Control:]]", status);
+    gUnicodeSets[DEFAULT_IGNORABLES] = جديد Unicode_سېټ(
+            u"[[:Zs:][\\u0009][:Bidi_Control:][:Variation_Selector:]]", حالت);
+    gUnicodeSets[STRICT_IGNORABLES] = جديد Unicode_سېټ(u"[[:Bidi_Control:]]", حالت);
 
-    LocalUResourceBundlePointer rb(ures_open(nullptr, "root", &status));
-    if (U_FAILURE(status)) { return; }
-    ParseDataSink sink;
-    ures_getAllItemsWithFallback(rb.getAlias(), "parse", sink, status);
-    if (U_FAILURE(status)) { return; }
+    Local_UResource_Bundle_اشاره_ګر rb(ures_open(تش_اشاره, "root", &حالت));
+    إذا (U_FAILURE(حالت)) { أرجع; }
+    Parse_معلومات_Sink sink;
+    ures_get_All_توکي_With_Fallback(rb.getAlias(), "parse", sink, حالت);
+    إذا (U_FAILURE(حالت)) { أرجع; }
 
     // NOTE: It is OK for these assertions to fail if there was a no-data build.
-    U_ASSERT(gUnicodeSets[COMMA] != nullptr);
-    U_ASSERT(gUnicodeSets[STRICT_COMMA] != nullptr);
-    U_ASSERT(gUnicodeSets[PERIOD] != nullptr);
-    U_ASSERT(gUnicodeSets[STRICT_PERIOD] != nullptr);
-    U_ASSERT(gUnicodeSets[APOSTROPHE_SIGN] != nullptr);
+    U_ASSERT(gUnicodeSets[COMMA] != تش_اشاره);
+    U_ASSERT(gUnicodeSets[STRICT_COMMA] != تش_اشاره);
+    U_ASSERT(gUnicodeSets[PERIOD] != تش_اشاره);
+    U_ASSERT(gUnicodeSets[STRICT_PERIOD] != تش_اشاره);
+    U_ASSERT(gUnicodeSets[APOSTROPHE_SIGN] != تش_اشاره);
 
-    LocalPointer<UnicodeSet> otherGrouping(new UnicodeSet(
+    Local_اشاره_ګر<Unicode_سېټ> otherGrouping(جديد Unicode_سېټ(
         u"[٬‘\\u0020\\u00A0\\u2000-\\u200A\\u202F\\u205F\\u3000]",
-        status
-    ), status);
-    if (U_FAILURE(status)) { return; }
-    otherGrouping->addAll(*gUnicodeSets[APOSTROPHE_SIGN]);
+        حالت
+    ), حالت);
+    إذا (U_FAILURE(حالت)) { أرجع; }
+    otherGrouping->جمع_کړه_All(*gUnicodeSets[APOSTROPHE_SIGN]);
     gUnicodeSets[OTHER_GROUPING_SEPARATORS] = otherGrouping.orphan();
     gUnicodeSets[ALL_SEPARATORS] = computeUnion(COMMA, PERIOD, OTHER_GROUPING_SEPARATORS);
     gUnicodeSets[STRICT_ALL_SEPARATORS] = computeUnion(
             STRICT_COMMA, STRICT_PERIOD, OTHER_GROUPING_SEPARATORS);
 
-    U_ASSERT(gUnicodeSets[MINUS_SIGN] != nullptr);
-    U_ASSERT(gUnicodeSets[PLUS_SIGN] != nullptr);
-    U_ASSERT(gUnicodeSets[PERCENT_SIGN] != nullptr);
-    U_ASSERT(gUnicodeSets[PERMILLE_SIGN] != nullptr);
+    U_ASSERT(gUnicodeSets[MINUS_SIGN] != تش_اشاره);
+    U_ASSERT(gUnicodeSets[PLUS_SIGN] != تش_اشاره);
+    U_ASSERT(gUnicodeSets[PERCENT_SIGN] != تش_اشاره);
+    U_ASSERT(gUnicodeSets[PERMILLE_SIGN] != تش_اشاره);
 
     // The following don't currently have parseLenients in data.
-    U_ASSERT(gUnicodeSets[INFINITY_SIGN] == nullptr);
-    gUnicodeSets[INFINITY_SIGN] = new UnicodeSet(u"[∞]", status);
-    U_ASSERT(gUnicodeSets[APPROXIMATELY_SIGN] == nullptr);
+    U_ASSERT(gUnicodeSets[INFINITY_SIGN] == تش_اشاره);
+    gUnicodeSets[INFINITY_SIGN] = جديد Unicode_سېټ(u"[∞]", حالت);
+    U_ASSERT(gUnicodeSets[APPROXIMATELY_SIGN] == تش_اشاره);
     // This set of characters was manually curated from the
     // values of the approximatelySign element of CLDR common/main/*.xml files.
-    gUnicodeSets[APPROXIMATELY_SIGN] = new UnicodeSet(u"[∼~≈≃約]", status);
-    if (U_FAILURE(status)) { return; }
+    gUnicodeSets[APPROXIMATELY_SIGN] = جديد Unicode_سېټ(u"[∼~≈≃約]", حالت);
+    إذا (U_FAILURE(حالت)) { أرجع; }
 
-    U_ASSERT(gUnicodeSets[DOLLAR_SIGN] != nullptr);
-    U_ASSERT(gUnicodeSets[POUND_SIGN] != nullptr);
-    U_ASSERT(gUnicodeSets[RUPEE_SIGN] != nullptr);
-    U_ASSERT(gUnicodeSets[YEN_SIGN] != nullptr);
-    U_ASSERT(gUnicodeSets[WON_SIGN] != nullptr);
+    U_ASSERT(gUnicodeSets[DOLLAR_SIGN] != تش_اشاره);
+    U_ASSERT(gUnicodeSets[POUND_SIGN] != تش_اشاره);
+    U_ASSERT(gUnicodeSets[RUPEE_SIGN] != تش_اشاره);
+    U_ASSERT(gUnicodeSets[YEN_SIGN] != تش_اشاره);
+    U_ASSERT(gUnicodeSets[WON_SIGN] != تش_اشاره);
 
-    gUnicodeSets[DIGITS] = new UnicodeSet(u"[:digit:]", status);
-    if (U_FAILURE(status)) { return; }
+    gUnicodeSets[DIGITS] = جديد Unicode_سېټ(u"[:digit:]", حالت);
+    إذا (U_FAILURE(حالت)) { أرجع; }
     gUnicodeSets[DIGITS_OR_ALL_SEPARATORS] = computeUnion(DIGITS, ALL_SEPARATORS);
     gUnicodeSets[DIGITS_OR_STRICT_ALL_SEPARATORS] = computeUnion(DIGITS, STRICT_ALL_SEPARATORS);
 
-    for (auto* uniset : gUnicodeSets) {
-        if (uniset != nullptr) {
+    لكل (خپلکاری* uniset : gUnicodeSets) {
+        إذا (uniset != تش_اشاره) {
             uniset->freeze();
         }
     }
@@ -216,21 +216,21 @@ void U_CALLCONV initNumberParseUniSets(UErrorCode& status) {
 
 }
 
-const UnicodeSet* unisets::get(Key key) {
-    UErrorCode localStatus = U_ZERO_ERROR;
-    umtx_initOnce(gNumberParseUniSetsInitOnce, &initNumberParseUniSets, localStatus);
-    if (U_FAILURE(localStatus)) {
-        return reinterpret_cast<UnicodeSet*>(gEmptyUnicodeSet);
+ثابت Unicode_سېټ* unisets::get(کلی_2 کلی) {
+    UError_کوډ local_حالت = U_ZERO_ERROR;
+    umtx_initOnce(g_شمېره_Parse_Uni_Sets_Init_Once, &init_شمېره_Parse_Uni_Sets, local_حالت);
+    إذا (U_FAILURE(local_حالت)) {
+        أرجع reinterpret_cast<Unicode_سېټ*>(g_تشه_Unicode_سېټ);
     }
-    return getImpl(key);
+    أرجع getImpl(کلی);
 }
 
-Key unisets::chooseFrom(UnicodeString str, Key key1) {
-    return get(key1)->contains(str) ? key1 : NONE;
+کلی_2 unisets::ټاکنه_From(UnicodeString str, کلی_2 key1) {
+    أرجع get(key1)->لري(str) ? key1 : NONE;
 }
 
-Key unisets::chooseFrom(UnicodeString str, Key key1, Key key2) {
-    return get(key1)->contains(str) ? key1 : chooseFrom(str, key2);
+کلی_2 unisets::ټاکنه_From(UnicodeString str, کلی_2 key1, کلی_2 key2) {
+    أرجع get(key1)->لري(str) ? key1 : ټاکنه_From(str, key2);
 }
 
 //Key unisets::chooseCurrency(UnicodeString str) {
@@ -248,4 +248,4 @@ Key unisets::chooseFrom(UnicodeString str, Key key1, Key key2) {
 //}
 
 
-#endif /* #if !UCONFIG_NO_FORMATTING */
+#د_که_پای /* #if !UCONFIG_NO_FORMATTING */
