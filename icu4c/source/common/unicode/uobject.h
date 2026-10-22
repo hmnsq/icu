@@ -19,11 +19,11 @@
 #ifndef __UOBJECT_H__
 #define __UOBJECT_H__
 
-#include "unicode/utypes.h"
+#अन्तर्भाव "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#यदि U_SHOW_CPLUSPLUS_API
 
-#include "unicode/platform.h"
+#अन्तर्भाव "unicode/platform.h"
 
 /**
  * \file
@@ -93,7 +93,7 @@
  * \endcode
  * @stable ICU 2.0
  */
-typedef void* UClassID;
+प्रकारनिर्देश शून्य* UClassID;
 
 U_NAMESPACE_BEGIN
 
@@ -113,16 +113,16 @@ U_NAMESPACE_BEGIN
  * @stable ICU 2.4
  */
 class U_COMMON_API UMemory {
-public:
+सार्वजनिक:
 
 /* test versions for debugging shaper heap memory problems */
 #ifdef SHAPER_MEMORY_DEBUG  
-    static void * NewArray(int size, int count);
-    static void * GrowArray(void * array, int newSize );
-    static void   FreeArray(void * array );
+    स्थिर शून्य * NewArray(पूर्णाङ्क size, पूर्णाङ्क मोजणी);
+    स्थिर शून्य * GrowArray(शून्य * array, पूर्णाङ्क newSize );
+    स्थिर शून्य   FreeArray(शून्य * array );
 #endif
 
-#if U_OVERRIDE_CXX_ALLOCATION
+#यदि U_OVERRIDE_CXX_ALLOCATION
     /**
      * Override for ICU4C C++ memory management.
      * simple, non-class types are allocated using the macros in common/cmemory.h
@@ -131,14 +131,14 @@ public:
      * for ICU4C C++ classes
      * @stable ICU 2.4
      */
-    static void * U_EXPORT2 operator new(size_t size) noexcept;
+    स्थिर शून्य * U_EXPORT2 operator new(size_t size) noexcept;
 
     /**
      * Override for ICU4C C++ memory management.
      * See new().
      * @stable ICU 2.4
      */
-    static void * U_EXPORT2 operator new[](size_t size) noexcept;
+    स्थिर शून्य * U_EXPORT2 operator new[](size_t size) noexcept;
 
     /**
      * Override for ICU4C C++ memory management.
@@ -148,30 +148,30 @@ public:
      * for ICU4C C++ classes
      * @stable ICU 2.4
      */
-    static void U_EXPORT2 operator delete(void *p) noexcept;
+    स्थिर शून्य U_EXPORT2 operator delete(शून्य *p) noexcept;
 
     /**
      * Override for ICU4C C++ memory management.
      * See delete().
      * @stable ICU 2.4
      */
-    static void U_EXPORT2 operator delete[](void *p) noexcept;
+    स्थिर शून्य U_EXPORT2 operator delete[](शून्य *p) noexcept;
 
     /**
      * Override for ICU4C C++ memory management for STL.
      * See new().
      * @stable ICU 2.6
      */
-    static inline void * U_EXPORT2 operator new(size_t, void *ptr) noexcept { return ptr; }
+    स्थिर अन्तःस्थ शून्य * U_EXPORT2 operator new(size_t, शून्य *ptr) noexcept { प्रत्यागम ptr; }
 
     /**
      * Override for ICU4C C++ memory management for STL.
      * See delete().
      * @stable ICU 2.6
      */
-    static inline void U_EXPORT2 operator delete(void *, void *) noexcept {}
+    स्थिर अन्तःस्थ शून्य U_EXPORT2 operator delete(शून्य *, शून्य *) noexcept {}
 
-#if U_HAVE_DEBUG_LOCATION_NEW
+#यदि U_HAVE_DEBUG_LOCATION_NEW
     /**
       * This method overrides the MFC debug version of the operator new
       * 
@@ -179,7 +179,7 @@ public:
       * @param file   The file where the allocation was requested
       * @param line   The line where the allocation was requested 
       */ 
-    static void * U_EXPORT2 operator new(size_t size, const char* file, int line) noexcept;
+    स्थिर शून्य * U_EXPORT2 operator new(size_t size, ध्रुव वर्ण* file, पूर्णाङ्क ओळ) noexcept;
     /**
       * This method provides a matching delete for the MFC debug new
       * 
@@ -187,7 +187,7 @@ public:
       * @param file   The file where the allocation was requested
       * @param line   The line where the allocation was requested 
       */ 
-    static void U_EXPORT2 operator delete(void* p, const char* file, int line) noexcept;
+    स्थिर शून्य U_EXPORT2 operator delete(शून्य* p, ध्रुव वर्ण* file, पूर्णाङ्क ओळ) noexcept;
 #endif /* U_HAVE_DEBUG_LOCATION_NEW */
 #endif /* U_OVERRIDE_CXX_ALLOCATION */
 
@@ -219,14 +219,14 @@ public:
  *
  * @stable ICU 2.2
  */
-class U_COMMON_API UObject : public UMemory {
-public:
+class U_COMMON_API UObject : सार्वजनिक UMemory {
+सार्वजनिक:
     /**
      * Destructor.
      *
      * @stable ICU 2.2
      */
-    virtual ~UObject();
+    आभास ~UObject();
 
     /**
      * ICU4C "poor man's RTTI", returns a UClassID for the actual ICU class.
@@ -237,9 +237,9 @@ public:
      *
      * @stable ICU 2.2
      */
-    virtual UClassID getDynamicClassID() const;
+    आभास UClassID getDynamicClassID() ध्रुव;
 
-protected:
+रक्षित:
     // the following functions are protected to prevent instantiation and
     // direct use of UObject itself
 
@@ -249,7 +249,7 @@ protected:
     // copy constructor
     // inline UObject(const UObject &other) {}
 
-#if 0
+#यदि 0
     // TODO Sometime in the future. Implement operator==().
     // (This comment inserted in 2.2)
     // some or all of the following "boilerplate" functions may be made public
@@ -261,8 +261,8 @@ protected:
     // UObject &operator=(const UObject &other) { return *this; }
 
     // comparison operators
-    virtual inline bool operator==(const UObject &other) const { return this==&other; }
-    inline bool operator!=(const UObject &other) const { return !operator==(other); }
+    आभास अन्तःस्थ bool operator==(ध्रुव UObject &other) ध्रुव { प्रत्यागम this==&other; }
+    अन्तःस्थ bool operator!=(ध्रुव UObject &other) ध्रुव { प्रत्यागम !operator==(other); }
 
     // clone() commented out from the base class:
     // some compilers do not support co-variant return types
@@ -293,11 +293,11 @@ protected:
  */
 #define UOBJECT_DEFINE_RTTI_IMPLEMENTATION(myClass) \
     UClassID U_EXPORT2 myClass::getStaticClassID() { \
-        static char classID = 0; \
-        return (UClassID)&classID; \
+        स्थिर वर्ण classID = 0; \
+        प्रत्यागम (UClassID)&classID; \
     } \
-    UClassID myClass::getDynamicClassID() const \
-    { return myClass::getStaticClassID(); }
+    UClassID myClass::getDynamicClassID() ध्रुव \
+    { प्रत्यागम myClass::getStaticClassID(); }
 
 
 /**
@@ -310,8 +310,8 @@ protected:
  */
 #define UOBJECT_DEFINE_ABSTRACT_RTTI_IMPLEMENTATION(myClass) \
     UClassID U_EXPORT2 myClass::getStaticClassID() { \
-        static char classID = 0; \
-        return (UClassID)&classID; \
+        स्थिर वर्ण classID = 0; \
+        प्रत्यागम (UClassID)&classID; \
     }
 
 #endif  /* U_HIDE_INTERNAL_API */

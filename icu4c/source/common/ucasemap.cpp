@@ -18,29 +18,29 @@
 *   Case mapping service object and functions using it.
 */
 
-#include "unicode/utypes.h"
-#include "unicode/brkiter.h"
-#include "unicode/bytestream.h"
-#include "unicode/casemap.h"
-#include "unicode/edits.h"
-#include "unicode/stringoptions.h"
-#include "unicode/stringpiece.h"
-#include "unicode/ubrk.h"
-#include "unicode/uloc.h"
-#include "unicode/ustring.h"
-#include "unicode/ucasemap.h"
-#if !UCONFIG_NO_BREAK_ITERATION
-#include "unicode/utext.h"
+#अन्तर्भाव "unicode/utypes.h"
+#अन्तर्भाव "unicode/brkiter.h"
+#अन्तर्भाव "unicode/bytestream.h"
+#अन्तर्भाव "unicode/casemap.h"
+#अन्तर्भाव "unicode/edits.h"
+#अन्तर्भाव "unicode/stringoptions.h"
+#अन्तर्भाव "unicode/stringpiece.h"
+#अन्तर्भाव "unicode/ubrk.h"
+#अन्तर्भाव "unicode/uloc.h"
+#अन्तर्भाव "unicode/ustring.h"
+#अन्तर्भाव "unicode/ucasemap.h"
+#यदि !UCONFIG_NO_BREAK_ITERATION
+#अन्तर्भाव "unicode/utext.h"
 #endif
-#include "unicode/utf.h"
-#include "unicode/utf8.h"
-#include "unicode/utf16.h"
-#include "bytesinkutil.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "uassert.h"
-#include "ucase.h"
-#include "ucasemap_imp.h"
+#अन्तर्भाव "unicode/utf.h"
+#अन्तर्भाव "unicode/utf8.h"
+#अन्तर्भाव "unicode/utf16.h"
+#अन्तर्भाव "bytesinkutil.h"
+#अन्तर्भाव "cmemory.h"
+#अन्तर्भाव "cstring.h"
+#अन्तर्भाव "uassert.h"
+#अन्तर्भाव "ucase.h"
+#अन्तर्भाव "ucasemap_imp.h"
 
 U_NAMESPACE_USE
 
@@ -51,16 +51,16 @@ U_NAMESPACE_USE
 
 U_NAMESPACE_BEGIN
 
-UCaseMapImpl::UCaseMapImpl(const char *localeID, uint32_t opts, UErrorCode *pErrorCode) :
-#if !UCONFIG_NO_BREAK_ITERATION
+UCaseMapImpl::UCaseMapImpl(ध्रुव वर्ण *localeID, uint32_t opts, UErrorCode *pErrorCode) :
+#यदि !UCONFIG_NO_BREAK_ITERATION
         iter(nullptr),
 #endif
         caseLocale(UCASE_LOC_UNKNOWN), options(opts) {
-    ucasemap_setLocale(reinterpret_cast<UCaseMap *>(this), localeID, pErrorCode);
+    ucasemap_setLocale(reinterpret_cast<UCaseMap *>(एतत्), localeID, pErrorCode);
 }
 
 UCaseMapImpl::~UCaseMapImpl() {
-#if !UCONFIG_NO_BREAK_ITERATION
+#यदि !UCONFIG_NO_BREAK_ITERATION
     delete iter;
 #endif
 }
@@ -68,72 +68,72 @@ UCaseMapImpl::~UCaseMapImpl() {
 U_NAMESPACE_END
 
 U_CAPI UCaseMap * U_EXPORT2
-ucasemap_open(const char *locale, uint32_t options, UErrorCode *pErrorCode) {
-    if(U_FAILURE(*pErrorCode)) {
-        return nullptr;
+ucasemap_open(ध्रुव वर्ण *locale, uint32_t options, UErrorCode *pErrorCode) {
+    यदि(U_FAILURE(*pErrorCode)) {
+        प्रत्यागम nullptr;
     }
-    UCaseMapImpl *csm = new UCaseMapImpl(locale, options, pErrorCode);
-    if(csm==nullptr) {
+    UCaseMapImpl *csm = नूतन UCaseMapImpl(locale, options, pErrorCode);
+    यदि(csm==nullptr) {
         *pErrorCode = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
-    } else if (U_FAILURE(*pErrorCode)) {
+        प्रत्यागम nullptr;
+    } अन्यथा यदि (U_FAILURE(*pErrorCode)) {
         delete csm;
-        return nullptr;
+        प्रत्यागम nullptr;
     }
-    return reinterpret_cast<UCaseMap *>(csm);
+    प्रत्यागम reinterpret_cast<UCaseMap *>(csm);
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI शून्य U_EXPORT2
 ucasemap_close(UCaseMap *csm) {
     delete reinterpret_cast<UCaseMapImpl *>(csm);
 }
 
-U_CAPI const char* U_EXPORT2
-ucasemap_getLocale(const UCaseMap* csm U_LIFETIME_BOUND) {
-    return reinterpret_cast<const UCaseMapImpl *>(csm)->locale;
+U_CAPI ध्रुव वर्ण* U_EXPORT2
+ucasemap_getLocale(ध्रुव UCaseMap* csm U_LIFETIME_BOUND) {
+    प्रत्यागम reinterpret_cast<ध्रुव UCaseMapImpl *>(csm)->locale;
 }
 
 U_CAPI uint32_t U_EXPORT2
-ucasemap_getOptions(const UCaseMap *csm) {
-    return reinterpret_cast<const UCaseMapImpl *>(csm)->options;
+ucasemap_getOptions(ध्रुव UCaseMap *csm) {
+    प्रत्यागम reinterpret_cast<ध्रुव UCaseMapImpl *>(csm)->options;
 }
 
-U_CAPI void U_EXPORT2
-ucasemap_setLocale(UCaseMap *csm, const char *locale, UErrorCode *pErrorCode) {
-    if(U_FAILURE(*pErrorCode)) {
-        return;
+U_CAPI शून्य U_EXPORT2
+ucasemap_setLocale(UCaseMap *csm, ध्रुव वर्ण *locale, UErrorCode *pErrorCode) {
+    यदि(U_FAILURE(*pErrorCode)) {
+        प्रत्यागम;
     }
     auto *impl = reinterpret_cast<UCaseMapImpl *>(csm);
-    if (locale != nullptr && *locale == 0) {
+    यदि (locale != nullptr && *locale == 0) {
         impl->locale[0] = 0;
-        impl->caseLocale = UCASE_LOC_ROOT;
-        return;
+        impl->caseLocale = UCASE_LOC_मूळ;
+        प्रत्यागम;
     }
 
     UErrorCode bufferStatus = U_ZERO_ERROR;
-    int32_t length=uloc_getName(locale, impl->locale, (int32_t)sizeof(impl->locale), &bufferStatus);
-    if(bufferStatus==U_BUFFER_OVERFLOW_ERROR || (U_SUCCESS(bufferStatus) && length==sizeof(impl->locale))) {
+    int32_t length=uloc_getName(locale, impl->locale, (int32_t)परिमाण(impl->locale), &bufferStatus);
+    यदि(bufferStatus==U_BUFFER_OVERFLOW_ERROR || (U_SUCCESS(bufferStatus) && length==परिमाण(impl->locale))) {
         bufferStatus = U_ZERO_ERROR;
         /* we only really need the language code for case mappings */
-        length=uloc_getLanguage(locale, impl->locale, (int32_t)sizeof(impl->locale), &bufferStatus);
+        length=uloc_getLanguage(locale, impl->locale, (int32_t)परिमाण(impl->locale), &bufferStatus);
     }
-    if(U_FAILURE(bufferStatus)) {
+    यदि(U_FAILURE(bufferStatus)) {
         *pErrorCode=bufferStatus;
-    } else if(length==sizeof(impl->locale)) {
+    } अन्यथा यदि(length==परिमाण(impl->locale)) {
         *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
     }
-    if(U_SUCCESS(*pErrorCode)) {     
+    यदि(U_SUCCESS(*pErrorCode)) {     
         impl->caseLocale = ucase_getCaseLocale(impl->locale);
-    } else {
+    } अन्यथा {
         impl->locale[0]=0;
-        impl->caseLocale = UCASE_LOC_ROOT;
+        impl->caseLocale = UCASE_LOC_मूळ;
     }
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI शून्य U_EXPORT2
 ucasemap_setOptions(UCaseMap *csm, uint32_t options, UErrorCode *pErrorCode) {
-    if(U_FAILURE(*pErrorCode)) {
-        return;
+    यदि(U_FAILURE(*pErrorCode)) {
+        प्रत्यागम;
     }
     reinterpret_cast<UCaseMapImpl *>(csm)->options=options;
 }
@@ -142,175 +142,175 @@ ucasemap_setOptions(UCaseMap *csm, uint32_t options, UErrorCode *pErrorCode) {
 
 /* TODO(markus): Move to a new, separate utf8case.cpp file. */
 
-namespace {
+नामाकाश {
 
 /* append a full case mapping result, see UCASE_MAX_STRING_LENGTH */
-inline UBool
-appendResult(int32_t cpLength, int32_t result, const char16_t *s,
+अन्तःस्थ UBool
+appendResult(int32_t cpLength, int32_t result, ध्रुव char16_t *s,
              ByteSink &sink, uint32_t options, icu::Edits *edits, UErrorCode &errorCode) {
     U_ASSERT(U_SUCCESS(errorCode));
 
     /* decode the result */
-    if(result<0) {
+    यदि(result<0) {
         /* (not) original code point */
-        if(edits!=nullptr) {
+        यदि(edits!=nullptr) {
             edits->addUnchanged(cpLength);
         }
-        if((options & U_OMIT_UNCHANGED_TEXT) == 0) {
+        यदि((options & U_OMIT_UNCHANGED_TEXT) == 0) {
             ByteSinkUtil::appendCodePoint(cpLength, ~result, sink);
         }
-    } else {
-        if(result<=UCASE_MAX_STRING_LENGTH) {
+    } अन्यथा {
+        यदि(result<=UCASE_MAX_STRING_LENGTH) {
             // string: "result" is the UTF-16 length
-            return ByteSinkUtil::appendChange(cpLength, s, result, sink, edits, errorCode);
-        } else {
+            प्रत्यागम ByteSinkUtil::appendChange(cpLength, s, result, sink, edits, errorCode);
+        } अन्यथा {
             ByteSinkUtil::appendCodePoint(cpLength, result, sink, edits);
         }
     }
-    return true;
+    प्रत्यागम सत्य;
 }
 
 // See unicode/utf8.h U8_APPEND_UNSAFE().
-inline uint8_t getTwoByteLead(UChar32 c) { return static_cast<uint8_t>((c >> 6) | 0xc0); }
-inline uint8_t getTwoByteTrail(UChar32 c) { return static_cast<uint8_t>((c & 0x3f) | 0x80); }
+अन्तःस्थ uint8_t getTwoByteLead(UChar32 c) { प्रत्यागम static_cast<uint8_t>((c >> 6) | 0xc0); }
+अन्तःस्थ uint8_t getTwoByteTrail(UChar32 c) { प्रत्यागम static_cast<uint8_t>((c & 0x3f) | 0x80); }
 
 UChar32 U_CALLCONV
-utf8_caseContextIterator(void *context, int8_t dir) {
+utf8_caseContextIterator(शून्य *context, int8_t dir) {
     UCaseContext* csc = static_cast<UCaseContext*>(context);
     UChar32 c;
 
-    if(dir<0) {
+    यदि(dir<0) {
         /* reset for backward iteration */
         csc->index=csc->cpStart;
         csc->dir=dir;
-    } else if(dir>0) {
+    } अन्यथा यदि(dir>0) {
         /* reset for forward iteration */
         csc->index=csc->cpLimit;
         csc->dir=dir;
-    } else {
+    } अन्यथा {
         /* continue current iteration direction */
         dir=csc->dir;
     }
 
-    if(dir<0) {
-        if(csc->start<csc->index) {
-            U8_PREV((const uint8_t *)csc->p, csc->start, csc->index, c);
-            return c;
+    यदि(dir<0) {
+        यदि(csc->start<csc->index) {
+            U8_PREV((ध्रुव uint8_t *)csc->p, csc->start, csc->index, c);
+            प्रत्यागम c;
         }
-    } else {
-        if(csc->index<csc->limit) {
-            U8_NEXT((const uint8_t *)csc->p, csc->index, csc->limit, c);
-            return c;
+    } अन्यथा {
+        यदि(csc->index<csc->limit) {
+            U8_NEXT((ध्रुव uint8_t *)csc->p, csc->index, csc->limit, c);
+            प्रत्यागम c;
         }
     }
-    return U_SENTINEL;
+    प्रत्यागम U_SENTINEL;
 }
 
 /**
  * caseLocale >= 0: Lowercases [srcStart..srcLimit[ but takes context [0..srcLength[ into account.
  * caseLocale < 0: Case-folds [srcStart..srcLimit[.
  */
-void toLower(int32_t caseLocale, uint32_t options,
-             const uint8_t *src, UCaseContext *csc, int32_t srcStart, int32_t srcLimit,
+शून्य toLower(int32_t caseLocale, uint32_t options,
+             ध्रुव uint8_t *src, UCaseContext *csc, int32_t srcStart, int32_t srcLimit,
              icu::ByteSink &sink, icu::Edits *edits, UErrorCode &errorCode) {
-    const int8_t *latinToLower;
-    if (caseLocale == UCASE_LOC_ROOT ||
+    ध्रुव int8_t *latinToLower;
+    यदि (caseLocale == UCASE_LOC_मूळ ||
             (caseLocale >= 0 ?
                 !(caseLocale == UCASE_LOC_TURKISH || caseLocale == UCASE_LOC_LITHUANIAN) :
                 (options & _FOLD_CASE_OPTIONS_MASK) == U_FOLD_CASE_DEFAULT)) {
         latinToLower = LatinCase::TO_LOWER_NORMAL;
-    } else {
+    } अन्यथा {
         latinToLower = LatinCase::TO_LOWER_TR_LT;
     }
-    const UTrie2 *trie = ucase_getTrie();
+    ध्रुव UTrie2 *trie = ucase_getTrie();
     int32_t prev = srcStart;
     int32_t srcIndex = srcStart;
-    for (;;) {
+    प्रति (;;) {
         // fast path for simple cases
         int32_t cpStart;
         UChar32 c;
-        for (;;) {
-            if (U_FAILURE(errorCode) || srcIndex >= srcLimit) {
+        प्रति (;;) {
+            यदि (U_FAILURE(errorCode) || srcIndex >= srcLimit) {
                 c = U_SENTINEL;
-                break;
+                भङ्ग;
             }
             uint8_t lead = src[srcIndex++];
-            if (lead <= 0x7f) {
+            यदि (lead <= 0x7f) {
                 int8_t d = latinToLower[lead];
-                if (d == LatinCase::EXC) {
+                यदि (d == LatinCase::EXC) {
                     cpStart = srcIndex - 1;
                     c = lead;
-                    break;
+                    भङ्ग;
                 }
-                if (d == 0) { continue; }
+                यदि (d == 0) { अनुवर्त; }
                 ByteSinkUtil::appendUnchanged(src + prev, srcIndex - 1 - prev,
                                               sink, options, edits, errorCode);
-                char ascii = static_cast<char>(lead + d);
+                वर्ण ascii = static_cast<वर्ण>(lead + d);
                 sink.Append(&ascii, 1);
-                if (edits != nullptr) {
+                यदि (edits != nullptr) {
                     edits->addReplace(1, 1);
                 }
                 prev = srcIndex;
-                continue;
-            } else if (lead < 0xe3) {
+                अनुवर्त;
+            } अन्यथा यदि (lead < 0xe3) {
                 uint8_t t;
-                if (0xc2 <= lead && lead <= 0xc5 && srcIndex < srcLimit &&
+                यदि (0xc2 <= lead && lead <= 0xc5 && srcIndex < srcLimit &&
                         (t = src[srcIndex] - 0x80) <= 0x3f) {
                     // U+0080..U+017F
                     ++srcIndex;
                     c = ((lead - 0xc0) << 6) | t;
                     int8_t d = latinToLower[c];
-                    if (d == LatinCase::EXC) {
+                    यदि (d == LatinCase::EXC) {
                         cpStart = srcIndex - 2;
-                        break;
+                        भङ्ग;
                     }
-                    if (d == 0) { continue; }
+                    यदि (d == 0) { अनुवर्त; }
                     ByteSinkUtil::appendUnchanged(src + prev, srcIndex - 2 - prev,
                                                   sink, options, edits, errorCode);
                     ByteSinkUtil::appendTwoBytes(c + d, sink);
-                    if (edits != nullptr) {
+                    यदि (edits != nullptr) {
                         edits->addReplace(2, 2);
                     }
                     prev = srcIndex;
-                    continue;
+                    अनुवर्त;
                 }
-            } else if ((lead <= 0xe9 || lead == 0xeb || lead == 0xec) &&
+            } अन्यथा यदि ((lead <= 0xe9 || lead == 0xeb || lead == 0xec) &&
                     (srcIndex + 2) <= srcLimit &&
                     U8_IS_TRAIL(src[srcIndex]) && U8_IS_TRAIL(src[srcIndex + 1])) {
                 // most of CJK: no case mappings
                 srcIndex += 2;
-                continue;
+                अनुवर्त;
             }
             cpStart = --srcIndex;
             U8_NEXT(src, srcIndex, srcLimit, c);
-            if (c < 0) {
+            यदि (c < 0) {
                 // ill-formed UTF-8
-                continue;
+                अनुवर्त;
             }
             uint16_t props = UTRIE2_GET16(trie, c);
-            if (UCASE_HAS_EXCEPTION(props)) { break; }
+            यदि (UCASE_HAS_EXCEPTION(props)) { भङ्ग; }
             int32_t delta;
-            if (!UCASE_IS_UPPER_OR_TITLE(props) || (delta = UCASE_GET_DELTA(props)) == 0) {
-                continue;
+            यदि (!UCASE_IS_UPPER_OR_TITLE(props) || (delta = UCASE_GET_DELTA(props)) == 0) {
+                अनुवर्त;
             }
             ByteSinkUtil::appendUnchanged(src + prev, cpStart - prev,
                                           sink, options, edits, errorCode);
             ByteSinkUtil::appendCodePoint(srcIndex - cpStart, c + delta, sink, edits);
             prev = srcIndex;
         }
-        if (c < 0) {
-            break;
+        यदि (c < 0) {
+            भङ्ग;
         }
         // slow path
-        const char16_t *s;
-        if (caseLocale >= 0) {
+        ध्रुव char16_t *s;
+        यदि (caseLocale >= 0) {
             csc->cpStart = cpStart;
             csc->cpLimit = srcIndex;
             c = ucase_toFullLower(c, utf8_caseContextIterator, csc, &s, caseLocale);
-        } else {
+        } अन्यथा {
             c = ucase_toFullFolding(c, &s, options);
         }
-        if (c >= 0) {
+        यदि (c >= 0) {
             ByteSinkUtil::appendUnchanged(src + prev, cpStart - prev,
                                           sink, options, edits, errorCode);
             appendResult(srcIndex - cpStart, c, s, sink, options, edits, errorCode);
@@ -321,100 +321,100 @@ void toLower(int32_t caseLocale, uint32_t options,
                                   sink, options, edits, errorCode);
 }
 
-void toUpper(int32_t caseLocale, uint32_t options,
-             const uint8_t *src, UCaseContext *csc, int32_t srcLength,
+शून्य toUpper(int32_t caseLocale, uint32_t options,
+             ध्रुव uint8_t *src, UCaseContext *csc, int32_t srcLength,
              icu::ByteSink &sink, icu::Edits *edits, UErrorCode &errorCode) {
-    const int8_t *latinToUpper;
-    if (caseLocale == UCASE_LOC_TURKISH) {
+    ध्रुव int8_t *latinToUpper;
+    यदि (caseLocale == UCASE_LOC_TURKISH) {
         latinToUpper = LatinCase::TO_UPPER_TR;
-    } else {
+    } अन्यथा {
         latinToUpper = LatinCase::TO_UPPER_NORMAL;
     }
-    const UTrie2 *trie = ucase_getTrie();
+    ध्रुव UTrie2 *trie = ucase_getTrie();
     int32_t prev = 0;
     int32_t srcIndex = 0;
-    for (;;) {
+    प्रति (;;) {
         // fast path for simple cases
         int32_t cpStart;
         UChar32 c;
-        for (;;) {
-            if (U_FAILURE(errorCode) || srcIndex >= srcLength) {
+        प्रति (;;) {
+            यदि (U_FAILURE(errorCode) || srcIndex >= srcLength) {
                 c = U_SENTINEL;
-                break;
+                भङ्ग;
             }
             uint8_t lead = src[srcIndex++];
-            if (lead <= 0x7f) {
+            यदि (lead <= 0x7f) {
                 int8_t d = latinToUpper[lead];
-                if (d == LatinCase::EXC) {
+                यदि (d == LatinCase::EXC) {
                     cpStart = srcIndex - 1;
                     c = lead;
-                    break;
+                    भङ्ग;
                 }
-                if (d == 0) { continue; }
+                यदि (d == 0) { अनुवर्त; }
                 ByteSinkUtil::appendUnchanged(src + prev, srcIndex - 1 - prev,
                                               sink, options, edits, errorCode);
-                char ascii = static_cast<char>(lead + d);
+                वर्ण ascii = static_cast<वर्ण>(lead + d);
                 sink.Append(&ascii, 1);
-                if (edits != nullptr) {
+                यदि (edits != nullptr) {
                     edits->addReplace(1, 1);
                 }
                 prev = srcIndex;
-                continue;
-            } else if (lead < 0xe3) {
+                अनुवर्त;
+            } अन्यथा यदि (lead < 0xe3) {
                 uint8_t t;
-                if (0xc2 <= lead && lead <= 0xc5 && srcIndex < srcLength &&
+                यदि (0xc2 <= lead && lead <= 0xc5 && srcIndex < srcLength &&
                         (t = src[srcIndex] - 0x80) <= 0x3f) {
                     // U+0080..U+017F
                     ++srcIndex;
                     c = ((lead - 0xc0) << 6) | t;
                     int8_t d = latinToUpper[c];
-                    if (d == LatinCase::EXC) {
+                    यदि (d == LatinCase::EXC) {
                         cpStart = srcIndex - 2;
-                        break;
+                        भङ्ग;
                     }
-                    if (d == 0) { continue; }
+                    यदि (d == 0) { अनुवर्त; }
                     ByteSinkUtil::appendUnchanged(src + prev, srcIndex - 2 - prev,
                                                   sink, options, edits, errorCode);
                     ByteSinkUtil::appendTwoBytes(c + d, sink);
-                    if (edits != nullptr) {
+                    यदि (edits != nullptr) {
                         edits->addReplace(2, 2);
                     }
                     prev = srcIndex;
-                    continue;
+                    अनुवर्त;
                 }
-            } else if ((lead <= 0xe9 || lead == 0xeb || lead == 0xec) &&
+            } अन्यथा यदि ((lead <= 0xe9 || lead == 0xeb || lead == 0xec) &&
                     (srcIndex + 2) <= srcLength &&
                     U8_IS_TRAIL(src[srcIndex]) && U8_IS_TRAIL(src[srcIndex + 1])) {
                 // most of CJK: no case mappings
                 srcIndex += 2;
-                continue;
+                अनुवर्त;
             }
             cpStart = --srcIndex;
             U8_NEXT(src, srcIndex, srcLength, c);
-            if (c < 0) {
+            यदि (c < 0) {
                 // ill-formed UTF-8
-                continue;
+                अनुवर्त;
             }
             uint16_t props = UTRIE2_GET16(trie, c);
-            if (UCASE_HAS_EXCEPTION(props)) { break; }
+            यदि (UCASE_HAS_EXCEPTION(props)) { भङ्ग; }
             int32_t delta;
-            if (UCASE_GET_TYPE(props) != UCASE_LOWER || (delta = UCASE_GET_DELTA(props)) == 0) {
-                continue;
+            यदि (UCASE_GET_TYPE(props) != UCASE_LOWER || (delta = UCASE_GET_DELTA(props)) == 0) {
+                अनुवर्त;
             }
             ByteSinkUtil::appendUnchanged(src + prev, cpStart - prev,
                                           sink, options, edits, errorCode);
             ByteSinkUtil::appendCodePoint(srcIndex - cpStart, c + delta, sink, edits);
             prev = srcIndex;
         }
-        if (c < 0) {
-            break;
+        यदि (c < 0) {
+            भङ्ग;
         }
         // slow path
         csc->cpStart = cpStart;
         csc->cpLimit = srcIndex;
-        const char16_t *s;
+        ध्रुव char16_t *s;
         c = ucase_toFullUpper(c, utf8_caseContextIterator, csc, &s, caseLocale);
-        if (c >= 0) {
+        यदि (c >= 0) {
             ByteSinkUtil::appendUnchanged(src + prev, cpStart - prev,
                                           sink, options, edits, errorCode);
             appendResult(srcIndex - cpStart, c, s, sink, options, edits, errorCode);
@@ -427,9 +427,9 @@ void toUpper(int32_t caseLocale, uint32_t options,
 
 }  // namespace
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#यदि !UCONFIG_NO_BREAK_ITERATION
 
-namespace {
+नामाकाश {
 
 constexpr uint8_t ACUTE_BYTE0 = u8"\u0301"[0];
 
@@ -444,16 +444,16 @@ constexpr uint8_t ACUTE_BYTE1 = u8"\u0301"[1];
  *
  * @return the src index after the titlecased sequence, or the start index if no Dutch IJ
  */
-int32_t maybeTitleDutchIJ(const uint8_t *src, UChar32 c, int32_t start, int32_t segmentLimit,
+int32_t maybeTitleDutchIJ(ध्रुव uint8_t *src, UChar32 c, int32_t start, int32_t segmentLimit,
                           ByteSink &sink, uint32_t options, icu::Edits *edits, UErrorCode &errorCode) {
     U_ASSERT(start < segmentLimit);
 
     int32_t index = start;
-    bool withAcute = false;
+    तार्किक withAcute = असत्य;
 
     // If the conditions are met, then the following variables tell us what to output.
     int32_t unchanged1 = 0;  // code units before the j, or the whole sequence (0..3)
-    bool doTitleJ = false;  // true if the j needs to be titlecased
+    तार्किक doTitleJ = असत्य;  // true if the j needs to be titlecased
     int32_t unchanged2 = 0;  // after the j (0 or 1)
 
     // next character after the first letter
@@ -461,93 +461,93 @@ int32_t maybeTitleDutchIJ(const uint8_t *src, UChar32 c, int32_t start, int32_t 
     c2 = src[index++];
 
     // Is the first letter an i/I with accent?
-    if (c == u'I') {
-        if (c2 == ACUTE_BYTE0 && index < segmentLimit && src[index++] == ACUTE_BYTE1) {
-            withAcute = true;
+    यदि (c == u'I') {
+        यदि (c2 == ACUTE_BYTE0 && index < segmentLimit && src[index++] == ACUTE_BYTE1) {
+            withAcute = सत्य;
             unchanged1 = 2;  // ACUTE is 2 code units in UTF-8
-            if (index == segmentLimit) { return start; }
+            यदि (index == segmentLimit) { प्रत्यागम start; }
             c2 = src[index++];
         }
-    } else {  // Í
-        withAcute = true;
+    } अन्यथा {  // Í
+        withAcute = सत्य;
     }
 
     // Is the next character a j/J?
-    if (c2 == u'j') {
-        doTitleJ = true;
-    } else if (c2 == u'J') {
+    यदि (c2 == u'j') {
+        doTitleJ = सत्य;
+    } अन्यथा यदि (c2 == u'J') {
         ++unchanged1;
-    } else {
-        return start;
+    } अन्यथा {
+        प्रत्यागम start;
     }
 
     // A plain i/I must be followed by a plain j/J.
     // An i/I with acute must be followed by a j/J with acute.
-    if (withAcute) {
-        if ((index + 1) >= segmentLimit || src[index++] != ACUTE_BYTE0 || src[index++] != ACUTE_BYTE1) {
-            return start;
+    यदि (withAcute) {
+        यदि ((index + 1) >= segmentLimit || src[index++] != ACUTE_BYTE0 || src[index++] != ACUTE_BYTE1) {
+            प्रत्यागम start;
         }
-        if (doTitleJ) {
+        यदि (doTitleJ) {
             unchanged2 = 2;  // ACUTE is 2 code units in UTF-8
-        } else {
+        } अन्यथा {
             unchanged1 = unchanged1 + 2;    // ACUTE is 2 code units in UTF-8
         }
     }
 
     // There must not be another combining mark.
-    if (index < segmentLimit) {
+    यदि (index < segmentLimit) {
         int32_t cp;
         int32_t i = index;
         U8_NEXT(src, i, segmentLimit, cp);
         uint32_t typeMask = U_GET_GC_MASK(cp);
-        if ((typeMask & U_GC_M_MASK) != 0) {
-            return start;
+        यदि ((typeMask & U_GC_M_MASK) != 0) {
+            प्रत्यागम start;
         }
     }
 
     // Output the rest of the Dutch IJ.
     ByteSinkUtil::appendUnchanged(src + start, unchanged1, sink, options, edits, errorCode);
     start += unchanged1;
-    if (doTitleJ) {
+    यदि (doTitleJ) {
         ByteSinkUtil::appendCodePoint(1, u'J', sink, edits);
         ++start;
     }
     ByteSinkUtil::appendUnchanged(src + start, unchanged2, sink, options, edits, errorCode);
 
     U_ASSERT(start + unchanged2 == index);
-    return index;
+    प्रत्यागम index;
 }
 
 }  // namespace
 
-U_CFUNC void U_CALLCONV
+U_CFUNC शून्य U_CALLCONV
 ucasemap_internalUTF8ToTitle(
         int32_t caseLocale, uint32_t options, BreakIterator *iter,
-        const uint8_t *src, int32_t srcLength,
+        ध्रुव uint8_t *src, int32_t srcLength,
         ByteSink &sink, icu::Edits *edits,
         UErrorCode &errorCode) {
-    if (!ustrcase_checkTitleAdjustmentOptions(options, errorCode)) {
-        return;
+    यदि (!ustrcase_checkTitleAdjustmentOptions(options, errorCode)) {
+        प्रत्यागम;
     }
 
     /* set up local variables */
     UCaseContext csc=UCASECONTEXT_INITIALIZER;
-    csc.p=(void *)src;
+    csc.p=(शून्य *)src;
     csc.limit=srcLength;
     int32_t prev=0;
-    UBool isFirstIndex=true;
+    UBool isFirstIndex=सत्य;
 
     /* titlecasing loop */
-    while(prev<srcLength) {
+    यावत्(prev<srcLength) {
         /* find next index where to titlecase */
         int32_t index;
-        if(isFirstIndex) {
-            isFirstIndex=false;
+        यदि(isFirstIndex) {
+            isFirstIndex=असत्य;
             index=iter->first();
-        } else {
+        } अन्यथा {
             index=iter->next();
         }
-        if(index==UBRK_DONE || index>srcLength) {
+        यदि(index==UBRK_DONE || index>srcLength) {
             index=srcLength;
         }
 
@@ -557,79 +557,79 @@ ucasemap_internalUTF8ToTitle(
          * b) first letter (titlecase)              [titleStart..titleLimit[
          * c) subsequent characters (lowercase)                 [titleLimit..index[
          */
-        if(prev<index) {
+        यदि(prev<index) {
             /* find and copy skipped characters [prev..titleStart[ */
             int32_t titleStart=prev;
             int32_t titleLimit=prev;
             UChar32 c;
             U8_NEXT(src, titleLimit, index, c);
-            if ((options&U_TITLECASE_NO_BREAK_ADJUSTMENT)==0) {
+            यदि ((options&U_TITLECASE_NO_BREAK_ADJUSTMENT)==0) {
                 // Adjust the titlecasing index to the next cased character,
                 // or to the next letter/number/symbol/private use.
                 // Stop with titleStart<titleLimit<=index
                 // if there is a character to be titlecased,
                 // or else stop with titleStart==titleLimit==index.
                 UBool toCased = (options&U_TITLECASE_ADJUST_TO_CASED) != 0;
-                while (toCased ? UCASE_NONE==ucase_getType(c) : !ustrcase_isLNS(c)) {
+                यावत् (toCased ? UCASE_NONE==ucase_getType(c) : !ustrcase_isLNS(c)) {
                     titleStart=titleLimit;
-                    if(titleLimit==index) {
-                        break;
+                    यदि(titleLimit==index) {
+                        भङ्ग;
                     }
                     U8_NEXT(src, titleLimit, index, c);
                 }
-                if (prev < titleStart) {
-                    if (!ByteSinkUtil::appendUnchanged(src+prev, titleStart-prev,
+                यदि (prev < titleStart) {
+                    यदि (!ByteSinkUtil::appendUnchanged(src+prev, titleStart-prev,
                                                        sink, options, edits, errorCode)) {
-                        return;
+                        प्रत्यागम;
                     }
                 }
             }
 
-            if(titleStart<titleLimit) {
+            यदि(titleStart<titleLimit) {
                 /* titlecase c which is from [titleStart..titleLimit[ */
-                if(c>=0) {
+                यदि(c>=0) {
                     csc.cpStart=titleStart;
                     csc.cpLimit=titleLimit;
-                    const char16_t *s;
+                    ध्रुव char16_t *s;
                     c=ucase_toFullTitle(c, utf8_caseContextIterator, &csc, &s, caseLocale);
-                    if (!appendResult(titleLimit-titleStart, c, s, sink, options, edits, errorCode)) {
-                        return;
+                    यदि (!appendResult(titleLimit-titleStart, c, s, sink, options, edits, errorCode)) {
+                        प्रत्यागम;
                     }
-                } else {
+                } अन्यथा {
                     // Malformed UTF-8.
-                    if (!ByteSinkUtil::appendUnchanged(src+titleStart, titleLimit-titleStart,
+                    यदि (!ByteSinkUtil::appendUnchanged(src+titleStart, titleLimit-titleStart,
                                                        sink, options, edits, errorCode)) {
-                        return;
+                        प्रत्यागम;
                     }
                 }
 
                 /* Special case Dutch IJ titlecasing */
-                if (titleLimit < index &&
+                यदि (titleLimit < index &&
                     caseLocale == UCASE_LOC_DUTCH) {
-                    if (c < 0) {
+                    यदि (c < 0) {
                         c = ~c;
                     }
 
-                    if (c == u'I' || c == u'Í') {
+                    यदि (c == u'I' || c == u'Í') {
                         titleLimit = maybeTitleDutchIJ(src, c, titleLimit, index, sink, options, edits, errorCode);
                     }
                 }
 
                 /* lowercase [titleLimit..index[ */
-                if(titleLimit<index) {
-                    if((options&U_TITLECASE_NO_LOWERCASE)==0) {
+                यदि(titleLimit<index) {
+                    यदि((options&U_TITLECASE_NO_LOWERCASE)==0) {
                         /* Normal operation: Lowercase the rest of the word. */
                         toLower(caseLocale, options,
                                 src, &csc, titleLimit, index,
                                 sink, edits, errorCode);
-                        if(U_FAILURE(errorCode)) {
-                            return;
+                        यदि(U_FAILURE(errorCode)) {
+                            प्रत्यागम;
                         }
-                    } else {
+                    } अन्यथा {
                         /* Optionally just copy the rest of the word unchanged. */
-                        if (!ByteSinkUtil::appendUnchanged(src+titleLimit, index-titleLimit,
+                        यदि (!ByteSinkUtil::appendUnchanged(src+titleLimit, index-titleLimit,
                                                            sink, options, edits, errorCode)) {
-                            return;
+                            प्रत्यागम;
                         }
                     }
                 }
@@ -643,45 +643,45 @@ ucasemap_internalUTF8ToTitle(
 #endif
 
 U_NAMESPACE_BEGIN
-namespace GreekUpper {
+नामाकाश GreekUpper {
 
-UBool isFollowedByCasedLetter(const uint8_t *s, int32_t i, int32_t length) {
-    while (i < length) {
+UBool isFollowedByCasedLetter(ध्रुव uint8_t *s, int32_t i, int32_t length) {
+    यावत् (i < length) {
         UChar32 c;
         U8_NEXT(s, i, length, c);
         int32_t type = ucase_getTypeOrIgnorable(c);
-        if ((type & UCASE_IGNORABLE) != 0) {
+        यदि ((type & UCASE_IGNORABLE) != 0) {
             // Case-ignorable, continue with the loop.
-        } else if (type != UCASE_NONE) {
-            return true;  // Followed by cased letter.
-        } else {
-            return false;  // Uncased and not case-ignorable.
+        } अन्यथा यदि (type != UCASE_NONE) {
+            प्रत्यागम सत्य;  // Followed by cased letter.
+        } अन्यथा {
+            प्रत्यागम असत्य;  // Uncased and not case-ignorable.
         }
     }
-    return false;  // Not followed by cased letter.
+    प्रत्यागम असत्य;  // Not followed by cased letter.
 }
 
 // Keep this consistent with the UTF-16 version in ustrcase.cpp and the Java version in CaseMap.java.
-void toUpper(uint32_t options,
-             const uint8_t *src, int32_t srcLength,
+शून्य toUpper(uint32_t options,
+             ध्रुव uint8_t *src, int32_t srcLength,
              ByteSink &sink, Edits *edits,
              UErrorCode &errorCode) {
     uint32_t state = 0;
-    for (int32_t i = 0; i < srcLength;) {
+    प्रति (int32_t i = 0; i < srcLength;) {
         int32_t nextIndex = i;
         UChar32 c;
         U8_NEXT(src, nextIndex, srcLength, c);
         uint32_t nextState = 0;
         int32_t type = ucase_getTypeOrIgnorable(c);
-        if ((type & UCASE_IGNORABLE) != 0) {
+        यदि ((type & UCASE_IGNORABLE) != 0) {
             // c is case-ignorable
             nextState |= (state & AFTER_CASED);
-        } else if (type != UCASE_NONE) {
+        } अन्यथा यदि (type != UCASE_NONE) {
             // c is cased
             nextState |= AFTER_CASED;
         }
         uint32_t data = getLetterData(c);
-        if (data > 0) {
+        यदि (data > 0) {
             uint32_t upper = data & UPPER_MASK;
             // Add a dialytika to this iota or ypsilon vowel
             // if we removed a tonos from the previous vowel,
@@ -689,94 +689,94 @@ void toUpper(uint32_t options,
             // Adding one only to the final vowel in a longer sequence
             // (which does not occur in normal writing) would require lookahead.
             // Set the same flag as for preserving an existing dialytika.
-            if ((data & HAS_VOWEL) != 0 &&
+            यदि ((data & HAS_VOWEL) != 0 &&
                 (state & (AFTER_VOWEL_WITH_PRECOMPOSED_ACCENT | AFTER_VOWEL_WITH_COMBINING_ACCENT)) !=
                     0 &&
                 (upper == 0x399 || upper == 0x3A5)) {
                 data |= (state & AFTER_VOWEL_WITH_PRECOMPOSED_ACCENT) != 0 ? HAS_DIALYTIKA
                                                                            : HAS_COMBINING_DIALYTIKA;
             }
-            int32_t numYpogegrammeni = 0;  // Map each one to a trailing, spacing, capital iota.
-            if ((data & HAS_YPOGEGRAMMENI) != 0) {
-                numYpogegrammeni = 1;
+            int32_t अंक_Ypogegrammeni = 0;  // Map each one to a trailing, spacing, capital iota.
+            यदि ((data & HAS_YPOGEGRAMMENI) != 0) {
+                अंक_Ypogegrammeni = 1;
             }
-            const UBool hasPrecomposedAccent = (data & HAS_ACCENT) != 0;
+            ध्रुव UBool hasPrecomposedAccent = (data & HAS_ACCENT) != 0;
             // Skip combining diacritics after this Greek letter.
             int32_t nextNextIndex = nextIndex;
-            while (nextIndex < srcLength) {
+            यावत् (nextIndex < srcLength) {
                 UChar32 c2;
                 U8_NEXT(src, nextNextIndex, srcLength, c2);
                 uint32_t diacriticData = getDiacriticData(c2);
-                if (diacriticData != 0) {
+                यदि (diacriticData != 0) {
                     data |= diacriticData;
-                    if ((diacriticData & HAS_YPOGEGRAMMENI) != 0) {
-                        ++numYpogegrammeni;
+                    यदि ((diacriticData & HAS_YPOGEGRAMMENI) != 0) {
+                        ++अंक_Ypogegrammeni;
                     }
                     nextIndex = nextNextIndex;
-                } else {
-                    break;  // not a Greek diacritic
+                } अन्यथा {
+                    भङ्ग;  // not a Greek diacritic
                 }
             }
-            if ((data & HAS_VOWEL_AND_ACCENT_AND_DIALYTIKA) == HAS_VOWEL_AND_ACCENT) {
+            यदि ((data & HAS_VOWEL_AND_ACCENT_AND_DIALYTIKA) == HAS_VOWEL_AND_ACCENT) {
                 nextState |= hasPrecomposedAccent ? AFTER_VOWEL_WITH_PRECOMPOSED_ACCENT
                                                   : AFTER_VOWEL_WITH_COMBINING_ACCENT;
             }
             // Map according to Greek rules.
-            UBool addTonos = false;
-            if (upper == 0x397 &&
+            UBool addTonos = असत्य;
+            यदि (upper == 0x397 &&
                     (data & HAS_ACCENT) != 0 &&
-                    numYpogegrammeni == 0 &&
+                    अंक_Ypogegrammeni == 0 &&
                     (state & AFTER_CASED) == 0 &&
                     !isFollowedByCasedLetter(src, nextIndex, srcLength)) {
                 // Keep disjunctive "or" with (only) a tonos.
                 // We use the same "word boundary" conditions as for the Final_Sigma test.
-                if (hasPrecomposedAccent) {
+                यदि (hasPrecomposedAccent) {
                     upper = 0x389;  // Preserve the precomposed form.
-                } else {
-                    addTonos = true;
+                } अन्यथा {
+                    addTonos = सत्य;
                 }
-            } else if ((data & HAS_DIALYTIKA) != 0) {
+            } अन्यथा यदि ((data & HAS_DIALYTIKA) != 0) {
                 // Preserve a vowel with dialytika in precomposed form if it exists.
-                if (upper == 0x399) {
+                यदि (upper == 0x399) {
                     upper = 0x3AA;
                     data &= ~HAS_EITHER_DIALYTIKA;
-                } else if (upper == 0x3A5) {
+                } अन्यथा यदि (upper == 0x3A5) {
                     upper = 0x3AB;
                     data &= ~HAS_EITHER_DIALYTIKA;
                 }
             }
 
             UBool change;
-            if (edits == nullptr && (options & U_OMIT_UNCHANGED_TEXT) == 0) {
-                change = true;  // common, simple usage
-            } else {
+            यदि (edits == nullptr && (options & U_OMIT_UNCHANGED_TEXT) == 0) {
+                change = सत्य;  // common, simple usage
+            } अन्यथा {
                 // Find out first whether we are changing the text.
                 U_ASSERT(0x370 <= upper && upper <= 0x3ff);  // 2-byte UTF-8, main Greek block
                 change = (i + 2) > nextIndex ||
                         src[i] != getTwoByteLead(upper) || src[i + 1] != getTwoByteTrail(upper) ||
-                        numYpogegrammeni > 0;
+                        अंक_Ypogegrammeni > 0;
                 int32_t i2 = i + 2;
-                if ((data & HAS_EITHER_DIALYTIKA) != 0) {
+                यदि ((data & HAS_EITHER_DIALYTIKA) != 0) {
                     change |= (i2 + 2) > nextIndex ||
                             src[i2] != static_cast<uint8_t>(u8"\u0308"[0]) ||
                             src[i2 + 1] != static_cast<uint8_t>(u8"\u0308"[1]);
                     i2 += 2;
                 }
-                if (addTonos) {
+                यदि (addTonos) {
                     change |= (i2 + 2) > nextIndex ||
                             src[i2] != static_cast<uint8_t>(u8"\u0301"[0]) ||
                             src[i2 + 1] != static_cast<uint8_t>(u8"\u0301"[1]);
                     i2 += 2;
                 }
                 int32_t oldLength = nextIndex - i;
-                int32_t newLength = (i2 - i) + numYpogegrammeni * 2;  // 2 bytes per U+0399
+                int32_t newLength = (i2 - i) + अंक_Ypogegrammeni * 2;  // 2 bytes per U+0399
                 change |= oldLength != newLength;
-                if (change) {
-                    if (edits != nullptr) {
+                यदि (change) {
+                    यदि (edits != nullptr) {
                         edits->addReplace(oldLength, newLength);
                     }
-                } else {
-                    if (edits != nullptr) {
+                } अन्यथा {
+                    यदि (edits != nullptr) {
                         edits->addUnchanged(oldLength);
                     }
                     // Write unchanged text?
@@ -784,30 +784,30 @@ void toUpper(uint32_t options,
                 }
             }
 
-            if (change) {
+            यदि (change) {
                 ByteSinkUtil::appendTwoBytes(upper, sink);
-                if ((data & HAS_EITHER_DIALYTIKA) != 0) {
+                यदि ((data & HAS_EITHER_DIALYTIKA) != 0) {
                     sink.AppendU8(u8"\u0308", 2);  // restore or add a dialytika
                 }
-                if (addTonos) {
+                यदि (addTonos) {
                     sink.AppendU8(u8"\u0301", 2);
                 }
-                while (numYpogegrammeni > 0) {
+                यावत् (अंक_Ypogegrammeni > 0) {
                     sink.AppendU8(u8"\u0399", 2);
-                    --numYpogegrammeni;
+                    --अंक_Ypogegrammeni;
                 }
             }
-        } else if(c>=0) {
-            const char16_t *s;
+        } अन्यथा यदि(c>=0) {
+            ध्रुव char16_t *s;
             c=ucase_toFullUpper(c, nullptr, nullptr, &s, UCASE_LOC_GREEK);
-            if (!appendResult(nextIndex - i, c, s, sink, options, edits, errorCode)) {
-                return;
+            यदि (!appendResult(nextIndex - i, c, s, sink, options, edits, errorCode)) {
+                प्रत्यागम;
             }
-        } else {
+        } अन्यथा {
             // Malformed UTF-8.
-            if (!ByteSinkUtil::appendUnchanged(src+i, nextIndex-i,
+            यदि (!ByteSinkUtil::appendUnchanged(src+i, nextIndex-i,
                                                sink, options, edits, errorCode)) {
-                return;
+                प्रत्यागम;
             }
         }
         i = nextIndex;
@@ -818,13 +818,13 @@ void toUpper(uint32_t options,
 }  // namespace GreekUpper
 U_NAMESPACE_END
 
-static void U_CALLCONV
+स्थिर शून्य U_CALLCONV
 ucasemap_internalUTF8ToLower(int32_t caseLocale, uint32_t options, UCASEMAP_BREAK_ITERATOR_UNUSED
-                             const uint8_t *src, int32_t srcLength,
+                             ध्रुव uint8_t *src, int32_t srcLength,
                              icu::ByteSink &sink, icu::Edits *edits,
                              UErrorCode &errorCode) {
     UCaseContext csc=UCASECONTEXT_INITIALIZER;
-    csc.p=(void *)src;
+    csc.p=(शून्य *)src;
     csc.limit=srcLength;
     toLower(
         caseLocale, options,
@@ -832,16 +832,16 @@ ucasemap_internalUTF8ToLower(int32_t caseLocale, uint32_t options, UCASEMAP_BREA
         sink, edits, errorCode);
 }
 
-static void U_CALLCONV
+स्थिर शून्य U_CALLCONV
 ucasemap_internalUTF8ToUpper(int32_t caseLocale, uint32_t options, UCASEMAP_BREAK_ITERATOR_UNUSED
-                             const uint8_t *src, int32_t srcLength,
+                             ध्रुव uint8_t *src, int32_t srcLength,
                              icu::ByteSink &sink, icu::Edits *edits,
                              UErrorCode &errorCode) {
-    if (caseLocale == UCASE_LOC_GREEK) {
+    यदि (caseLocale == UCASE_LOC_GREEK) {
         GreekUpper::toUpper(options, src, srcLength, sink, edits, errorCode);
-    } else {
+    } अन्यथा {
         UCaseContext csc=UCASECONTEXT_INITIALIZER;
-        csc.p=(void *)src;
+        csc.p=(शून्य *)src;
         csc.limit=srcLength;
         toUpper(
             caseLocale, options,
@@ -850,9 +850,9 @@ ucasemap_internalUTF8ToUpper(int32_t caseLocale, uint32_t options, UCASEMAP_BREA
     }
 }
 
-static void U_CALLCONV
+स्थिर शून्य U_CALLCONV
 ucasemap_internalUTF8Fold(int32_t /* caseLocale */, uint32_t options, UCASEMAP_BREAK_ITERATOR_UNUSED
-                          const uint8_t *src, int32_t srcLength,
+                          ध्रुव uint8_t *src, int32_t srcLength,
                           icu::ByteSink &sink, icu::Edits *edits,
                           UErrorCode &errorCode) {
     toLower(
@@ -861,34 +861,34 @@ ucasemap_internalUTF8Fold(int32_t /* caseLocale */, uint32_t options, UCASEMAP_B
         sink, edits, errorCode);
 }
 
-void
+शून्य
 ucasemap_mapUTF8(int32_t caseLocale, uint32_t options, UCASEMAP_BREAK_ITERATOR_PARAM
-                 const char *src, int32_t srcLength,
+                 ध्रुव वर्ण *src, int32_t srcLength,
                  UTF8CaseMapper *stringCaseMapper,
                  icu::ByteSink &sink, icu::Edits *edits,
                  UErrorCode &errorCode) {
     /* check argument values */
-    if (U_FAILURE(errorCode)) {
-        return;
+    यदि (U_FAILURE(errorCode)) {
+        प्रत्यागम;
     }
-    if ((src == nullptr && srcLength != 0) || srcLength < -1) {
+    यदि ((src == nullptr && srcLength != 0) || srcLength < -1) {
         errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        प्रत्यागम;
     }
 
     // Get the string length.
-    if (srcLength == -1) {
+    यदि (srcLength == -1) {
         srcLength = static_cast<int32_t>(uprv_strlen(src));
     }
 
-    if (edits != nullptr && (options & U_EDITS_NO_RESET) == 0) {
+    यदि (edits != nullptr && (options & U_EDITS_NO_RESET) == 0) {
         edits->reset();
     }
     stringCaseMapper(caseLocale, options, UCASEMAP_BREAK_ITERATOR
-                     reinterpret_cast<const uint8_t*>(src), srcLength, sink, edits, errorCode);
+                     reinterpret_cast<ध्रुव uint8_t*>(src), srcLength, sink, edits, errorCode);
     sink.Flush();
-    if (U_SUCCESS(errorCode)) {
-        if (edits != nullptr) {
+    यदि (U_SUCCESS(errorCode)) {
+        यदि (edits != nullptr) {
             edits->copyErrorTo(errorCode);
         }
     }
@@ -896,62 +896,62 @@ ucasemap_mapUTF8(int32_t caseLocale, uint32_t options, UCASEMAP_BREAK_ITERATOR_P
 
 int32_t
 ucasemap_mapUTF8(int32_t caseLocale, uint32_t options, UCASEMAP_BREAK_ITERATOR_PARAM
-                 char *dest, int32_t destCapacity,
-                 const char *src, int32_t srcLength,
+                 वर्ण *dest, int32_t destCapacity,
+                 ध्रुव वर्ण *src, int32_t srcLength,
                  UTF8CaseMapper *stringCaseMapper,
                  icu::Edits *edits,
                  UErrorCode &errorCode) {
     /* check argument values */
-    if(U_FAILURE(errorCode)) {
-        return 0;
+    यदि(U_FAILURE(errorCode)) {
+        प्रत्यागम 0;
     }
-    if( destCapacity<0 ||
+    यदि( destCapacity<0 ||
         (dest==nullptr && destCapacity>0) ||
         (src==nullptr && srcLength!=0) || srcLength<-1
     ) {
         errorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        प्रत्यागम 0;
     }
 
     /* get the string length */
-    if(srcLength==-1) {
+    यदि(srcLength==-1) {
         srcLength = static_cast<int32_t>(uprv_strlen(src));
     }
 
     /* check for overlapping source and destination */
-    if( dest!=nullptr &&
+    यदि( dest!=nullptr &&
         ((src>=dest && src<(dest+destCapacity)) ||
          (dest>=src && dest<(src+srcLength)))
     ) {
         errorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        प्रत्यागम 0;
     }
 
-    if (edits != nullptr && (options & U_EDITS_NO_RESET) == 0) {
+    यदि (edits != nullptr && (options & U_EDITS_NO_RESET) == 0) {
         edits->reset();
     }
     int32_t reslen = ByteSinkUtil::viaByteSinkToTerminatedChars(
         dest, destCapacity,
         [&](ByteSink& sink, UErrorCode& status) {
             stringCaseMapper(caseLocale, options, UCASEMAP_BREAK_ITERATOR
-                             reinterpret_cast<const uint8_t*>(src), srcLength, sink, edits, status);
+                             reinterpret_cast<ध्रुव uint8_t*>(src), srcLength, sink, edits, status);
         },
         errorCode);
-    if (U_SUCCESS(errorCode) && edits != nullptr) {
+    यदि (U_SUCCESS(errorCode) && edits != nullptr) {
         edits->copyErrorTo(errorCode);
     }
-    return reslen;
+    प्रत्यागम reslen;
 }
 
 /* public API functions */
 
 U_CAPI int32_t U_EXPORT2
-ucasemap_utf8ToLower(const UCaseMap *csm,
-                     char *dest, int32_t destCapacity,
-                     const char *src, int32_t srcLength,
+ucasemap_utf8ToLower(ध्रुव UCaseMap *csm,
+                     वर्ण *dest, int32_t destCapacity,
+                     ध्रुव वर्ण *src, int32_t srcLength,
                      UErrorCode *pErrorCode) {
-    auto *impl = reinterpret_cast<const UCaseMapImpl *>(csm);
-    return ucasemap_mapUTF8(
+    auto *impl = reinterpret_cast<ध्रुव UCaseMapImpl *>(csm);
+    प्रत्यागम ucasemap_mapUTF8(
         impl->caseLocale, impl->options, UCASEMAP_BREAK_ITERATOR_NULL
         dest, destCapacity,
         src, srcLength,
@@ -959,12 +959,12 @@ ucasemap_utf8ToLower(const UCaseMap *csm,
 }
 
 U_CAPI int32_t U_EXPORT2
-ucasemap_utf8ToUpper(const UCaseMap *csm,
-                     char *dest, int32_t destCapacity,
-                     const char *src, int32_t srcLength,
+ucasemap_utf8ToUpper(ध्रुव UCaseMap *csm,
+                     वर्ण *dest, int32_t destCapacity,
+                     ध्रुव वर्ण *src, int32_t srcLength,
                      UErrorCode *pErrorCode) {
-    auto *impl = reinterpret_cast<const UCaseMapImpl *>(csm);
-    return ucasemap_mapUTF8(
+    auto *impl = reinterpret_cast<ध्रुव UCaseMapImpl *>(csm);
+    प्रत्यागम ucasemap_mapUTF8(
         impl->caseLocale, impl->options, UCASEMAP_BREAK_ITERATOR_NULL
         dest, destCapacity,
         src, srcLength,
@@ -972,13 +972,13 @@ ucasemap_utf8ToUpper(const UCaseMap *csm,
 }
 
 U_CAPI int32_t U_EXPORT2
-ucasemap_utf8FoldCase(const UCaseMap *csm,
-                      char *dest, int32_t destCapacity,
-                      const char *src, int32_t srcLength,
+ucasemap_utf8FoldCase(ध्रुव UCaseMap *csm,
+                      वर्ण *dest, int32_t destCapacity,
+                      ध्रुव वर्ण *src, int32_t srcLength,
                       UErrorCode *pErrorCode) {
-    auto *impl = reinterpret_cast<const UCaseMapImpl *>(csm);
-    return ucasemap_mapUTF8(
-        UCASE_LOC_ROOT, impl->options, UCASEMAP_BREAK_ITERATOR_NULL
+    auto *impl = reinterpret_cast<ध्रुव UCaseMapImpl *>(csm);
+    प्रत्यागम ucasemap_mapUTF8(
+        UCASE_LOC_मूळ, impl->options, UCASEMAP_BREAK_ITERATOR_NULL
         dest, destCapacity,
         src, srcLength,
         ucasemap_internalUTF8Fold, nullptr, *pErrorCode);
@@ -986,8 +986,8 @@ ucasemap_utf8FoldCase(const UCaseMap *csm,
 
 U_NAMESPACE_BEGIN
 
-void CaseMap::utf8ToLower(
-        const char *locale, uint32_t options,
+शून्य CaseMap::utf8ToLower(
+        ध्रुव वर्ण *locale, uint32_t options,
         StringPiece src, ByteSink &sink, Edits *edits,
         UErrorCode &errorCode) {
     ucasemap_mapUTF8(
@@ -996,8 +996,8 @@ void CaseMap::utf8ToLower(
         ucasemap_internalUTF8ToLower, sink, edits, errorCode);
 }
 
-void CaseMap::utf8ToUpper(
-        const char *locale, uint32_t options,
+शून्य CaseMap::utf8ToUpper(
+        ध्रुव वर्ण *locale, uint32_t options,
         StringPiece src, ByteSink &sink, Edits *edits,
         UErrorCode &errorCode) {
     ucasemap_mapUTF8(
@@ -1006,22 +1006,22 @@ void CaseMap::utf8ToUpper(
         ucasemap_internalUTF8ToUpper, sink, edits, errorCode);
 }
 
-void CaseMap::utf8Fold(
+शून्य CaseMap::utf8Fold(
         uint32_t options,
         StringPiece src, ByteSink &sink, Edits *edits,
         UErrorCode &errorCode) {
     ucasemap_mapUTF8(
-        UCASE_LOC_ROOT, options, UCASEMAP_BREAK_ITERATOR_NULL
+        UCASE_LOC_मूळ, options, UCASEMAP_BREAK_ITERATOR_NULL
         src.data(), src.length(),
         ucasemap_internalUTF8Fold, sink, edits, errorCode);
 }
 
 int32_t CaseMap::utf8ToLower(
-        const char *locale, uint32_t options,
-        const char *src, int32_t srcLength,
-        char *dest, int32_t destCapacity, Edits *edits,
+        ध्रुव वर्ण *locale, uint32_t options,
+        ध्रुव वर्ण *src, int32_t srcLength,
+        वर्ण *dest, int32_t destCapacity, Edits *edits,
         UErrorCode &errorCode) {
-    return ucasemap_mapUTF8(
+    प्रत्यागम ucasemap_mapUTF8(
         ustrcase_getCaseLocale(locale), options, UCASEMAP_BREAK_ITERATOR_NULL
         dest, destCapacity,
         src, srcLength,
@@ -1029,11 +1029,11 @@ int32_t CaseMap::utf8ToLower(
 }
 
 int32_t CaseMap::utf8ToUpper(
-        const char *locale, uint32_t options,
-        const char *src, int32_t srcLength,
-        char *dest, int32_t destCapacity, Edits *edits,
+        ध्रुव वर्ण *locale, uint32_t options,
+        ध्रुव वर्ण *src, int32_t srcLength,
+        वर्ण *dest, int32_t destCapacity, Edits *edits,
         UErrorCode &errorCode) {
-    return ucasemap_mapUTF8(
+    प्रत्यागम ucasemap_mapUTF8(
         ustrcase_getCaseLocale(locale), options, UCASEMAP_BREAK_ITERATOR_NULL
         dest, destCapacity,
         src, srcLength,
@@ -1042,11 +1042,11 @@ int32_t CaseMap::utf8ToUpper(
 
 int32_t CaseMap::utf8Fold(
         uint32_t options,
-        const char *src, int32_t srcLength,
-        char *dest, int32_t destCapacity, Edits *edits,
+        ध्रुव वर्ण *src, int32_t srcLength,
+        वर्ण *dest, int32_t destCapacity, Edits *edits,
         UErrorCode &errorCode) {
-    return ucasemap_mapUTF8(
-        UCASE_LOC_ROOT, options, UCASEMAP_BREAK_ITERATOR_NULL
+    प्रत्यागम ucasemap_mapUTF8(
+        UCASE_LOC_मूळ, options, UCASEMAP_BREAK_ITERATOR_NULL
         dest, destCapacity,
         src, srcLength,
         ucasemap_internalUTF8Fold, edits, errorCode);

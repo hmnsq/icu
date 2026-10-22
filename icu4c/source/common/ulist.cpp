@@ -7,43 +7,43 @@
 ******************************************************************************
 */
 
-#include "ulist.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "uenumimp.h"
+#अन्तर्भाव "ulist.h"
+#अन्तर्भाव "cmemory.h"
+#अन्तर्भाव "cstring.h"
+#अन्तर्भाव "uenumimp.h"
 
-typedef struct UListNode UListNode;
-struct UListNode {
-    void *data;
+प्रकारनिर्देश संरचना UList_गाठ UList_गाठ;
+संरचना UList_गाठ {
+    शून्य *data;
     
-    UListNode *next;
-    UListNode *previous;
+    UList_गाठ *next;
+    UList_गाठ *previous;
     
     /* When data is created with uprv_malloc, needs to be freed during deleteList function. */
     UBool forceDelete;
 };
 
-struct UList {
-    UListNode *curr;
-    UListNode *head;
-    UListNode *tail;
+संरचना UList {
+    UList_गाठ *curr;
+    UList_गाठ *head;
+    UList_गाठ *tail;
     
     int32_t size;
 };
 
-static void ulist_addFirstItem(UList *list, UListNode *newItem);
+स्थिर शून्य ulist_addFirstItem(UList *list, UList_गाठ *newItem);
 
 U_CAPI UList *U_EXPORT2 ulist_createEmptyList(UErrorCode *status) {
     UList *newList = nullptr;
     
-    if (U_FAILURE(*status)) {
-        return nullptr;
+    यदि (U_FAILURE(*status)) {
+        प्रत्यागम nullptr;
     }
     
-    newList = (UList *)uprv_malloc(sizeof(UList));
-    if (newList == nullptr) {
+    newList = (UList *)uprv_malloc(परिमाण(UList));
+    यदि (newList == nullptr) {
         *status = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        प्रत्यागम nullptr;
     }
     
     newList->curr = nullptr;
@@ -51,67 +51,67 @@ U_CAPI UList *U_EXPORT2 ulist_createEmptyList(UErrorCode *status) {
     newList->tail = nullptr;
     newList->size = 0;
     
-    return newList;
+    प्रत्यागम newList;
 }
 
 /*
  * Function called by addItemEndList or addItemBeginList when the first item is added to the list.
  * This function properly sets the pointers for the first item added.
  */
-static void ulist_addFirstItem(UList *list, UListNode *newItem) {
+स्थिर शून्य ulist_addFirstItem(UList *list, UList_गाठ *newItem) {
     newItem->next = nullptr;
     newItem->previous = nullptr;
     list->head = newItem;
     list->tail = newItem;
 }
 
-static void ulist_removeItem(UList *list, UListNode *p) {
-    if (p->previous == nullptr) {
+स्थिर शून्य ulist_removeItem(UList *list, UList_गाठ *p) {
+    यदि (p->previous == nullptr) {
         // p is the list head.
         list->head = p->next;
-    } else {
+    } अन्यथा {
         p->previous->next = p->next;
     }
-    if (p->next == nullptr) {
+    यदि (p->next == nullptr) {
         // p is the list tail.
         list->tail = p->previous;
-    } else {
+    } अन्यथा {
         p->next->previous = p->previous;
     }
-    if (p == list->curr) {
+    यदि (p == list->curr) {
         list->curr = p->next;
     }
     --list->size;
-    if (p->forceDelete) {
+    यदि (p->forceDelete) {
         uprv_free(p->data);
     }
     uprv_free(p);
 }
 
-U_CAPI void U_EXPORT2 ulist_addItemEndList(UList *list, const void *data, UBool forceDelete, UErrorCode *status) {
-    UListNode *newItem = nullptr;
+U_CAPI शून्य U_EXPORT2 ulist_addItemEndList(UList *list, ध्रुव शून्य *data, UBool forceDelete, UErrorCode *status) {
+    UList_गाठ *newItem = nullptr;
     
-    if (U_FAILURE(*status) || list == nullptr || data == nullptr) {
-        if (forceDelete) {
-            uprv_free((void *)data);
+    यदि (U_FAILURE(*status) || list == nullptr || data == nullptr) {
+        यदि (forceDelete) {
+            uprv_free((शून्य *)data);
         }
-        return;
+        प्रत्यागम;
     }
     
-    newItem = (UListNode *)uprv_malloc(sizeof(UListNode));
-    if (newItem == nullptr) {
-        if (forceDelete) {
-            uprv_free((void *)data);
+    newItem = (UList_गाठ *)uprv_malloc(परिमाण(UList_गाठ));
+    यदि (newItem == nullptr) {
+        यदि (forceDelete) {
+            uprv_free((शून्य *)data);
         }
         *status = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        प्रत्यागम;
     }
-    newItem->data = (void *)(data);
+    newItem->data = (शून्य *)(data);
     newItem->forceDelete = forceDelete;
     
-    if (list->size == 0) {
+    यदि (list->size == 0) {
         ulist_addFirstItem(list, newItem);
-    } else {
+    } अन्यथा {
         newItem->next = nullptr;
         newItem->previous = list->tail;
         list->tail->next = newItem;
@@ -121,30 +121,30 @@ U_CAPI void U_EXPORT2 ulist_addItemEndList(UList *list, const void *data, UBool 
     list->size++;
 }
 
-U_CAPI void U_EXPORT2 ulist_addItemBeginList(UList *list, const void *data, UBool forceDelete, UErrorCode *status) {
-    UListNode *newItem = nullptr;
+U_CAPI शून्य U_EXPORT2 ulist_addItemBeginList(UList *list, ध्रुव शून्य *data, UBool forceDelete, UErrorCode *status) {
+    UList_गाठ *newItem = nullptr;
     
-    if (U_FAILURE(*status) || list == nullptr || data == nullptr) {
-        if (forceDelete) {
-            uprv_free((void *)data);
+    यदि (U_FAILURE(*status) || list == nullptr || data == nullptr) {
+        यदि (forceDelete) {
+            uprv_free((शून्य *)data);
         }
-        return;
+        प्रत्यागम;
     }
     
-    newItem = (UListNode *)uprv_malloc(sizeof(UListNode));
-    if (newItem == nullptr) {
-        if (forceDelete) {
-            uprv_free((void *)data);
+    newItem = (UList_गाठ *)uprv_malloc(परिमाण(UList_गाठ));
+    यदि (newItem == nullptr) {
+        यदि (forceDelete) {
+            uprv_free((शून्य *)data);
         }
         *status = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        प्रत्यागम;
     }
-    newItem->data = (void *)(data);
+    newItem->data = (शून्य *)(data);
     newItem->forceDelete = forceDelete;
     
-    if (list->size == 0) {
+    यदि (list->size == 0) {
         ulist_addFirstItem(list, newItem);
-    } else {
+    } अन्यथा {
         newItem->previous = nullptr;
         newItem->next = list->head;
         list->head->previous = newItem;
@@ -154,70 +154,70 @@ U_CAPI void U_EXPORT2 ulist_addItemBeginList(UList *list, const void *data, UBoo
     list->size++;
 }
 
-U_CAPI UBool U_EXPORT2 ulist_containsString(const UList *list, const char *data, int32_t length) {
-    if (list != nullptr) {
-        const UListNode *pointer;
-        for (pointer = list->head; pointer != nullptr; pointer = pointer->next) {
-            if (length == (int32_t)uprv_strlen((const char *)pointer->data)) {
-                if (uprv_memcmp(data, pointer->data, length) == 0) {
-                    return true;
+U_CAPI UBool U_EXPORT2 ulist_containsString(ध्रुव UList *list, ध्रुव वर्ण *data, int32_t length) {
+    यदि (list != nullptr) {
+        ध्रुव UList_गाठ *pointer;
+        प्रति (pointer = list->head; pointer != nullptr; pointer = pointer->next) {
+            यदि (length == (int32_t)uprv_strlen((ध्रुव वर्ण *)pointer->data)) {
+                यदि (uprv_memcmp(data, pointer->data, length) == 0) {
+                    प्रत्यागम सत्य;
                 }
             }
         }
     }
-    return false;
+    प्रत्यागम असत्य;
 }
 
-U_CAPI UBool U_EXPORT2 ulist_removeString(UList *list, const char *data) {
-    if (list != nullptr) {
-        UListNode *pointer;
-        for (pointer = list->head; pointer != nullptr; pointer = pointer->next) {
-            if (uprv_strcmp(data, (const char *)pointer->data) == 0) {
+U_CAPI UBool U_EXPORT2 ulist_removeString(UList *list, ध्रुव वर्ण *data) {
+    यदि (list != nullptr) {
+        UList_गाठ *pointer;
+        प्रति (pointer = list->head; pointer != nullptr; pointer = pointer->next) {
+            यदि (uprv_strcmp(data, (ध्रुव वर्ण *)pointer->data) == 0) {
                 ulist_removeItem(list, pointer);
                 // Remove only the first occurrence, like Java LinkedList.remove(Object).
-                return true;
+                प्रत्यागम सत्य;
             }
         }
     }
-    return false;
+    प्रत्यागम असत्य;
 }
 
-U_CAPI void *U_EXPORT2 ulist_getNext(UList *list) {
-    UListNode *curr = nullptr;
+U_CAPI शून्य *U_EXPORT2 ulist_getNext(UList *list) {
+    UList_गाठ *curr = nullptr;
     
-    if (list == nullptr || list->curr == nullptr) {
-        return nullptr;
+    यदि (list == nullptr || list->curr == nullptr) {
+        प्रत्यागम nullptr;
     }
     
     curr = list->curr;
     list->curr = curr->next;
     
-    return curr->data;
+    प्रत्यागम curr->data;
 }
 
-U_CAPI int32_t U_EXPORT2 ulist_getListSize(const UList *list) {
-    if (list != nullptr) {
-        return list->size;
+U_CAPI int32_t U_EXPORT2 ulist_getListSize(ध्रुव UList *list) {
+    यदि (list != nullptr) {
+        प्रत्यागम list->size;
     }
     
-    return -1;
+    प्रत्यागम -1;
 }
 
-U_CAPI void U_EXPORT2 ulist_resetList(UList *list) {
-    if (list != nullptr) {
+U_CAPI शून्य U_EXPORT2 ulist_resetList(UList *list) {
+    यदि (list != nullptr) {
         list->curr = list->head;
     }
 }
 
-U_CAPI void U_EXPORT2 ulist_deleteList(UList *list) {
-    UListNode *listHead = nullptr;
+U_CAPI शून्य U_EXPORT2 ulist_deleteList(UList *list) {
+    UList_गाठ *listHead = nullptr;
 
-    if (list != nullptr) {
+    यदि (list != nullptr) {
         listHead = list->head;
-        while (listHead != nullptr) {
-            UListNode *listPointer = listHead->next;
+        यावत् (listHead != nullptr) {
+            UList_गाठ *listPointer = listHead->next;
 
-            if (listHead->forceDelete) {
+            यदि (listHead->forceDelete) {
                 uprv_free(listHead->data);
             }
 
@@ -229,42 +229,42 @@ U_CAPI void U_EXPORT2 ulist_deleteList(UList *list) {
     }
 }
 
-U_CAPI void U_EXPORT2 ulist_close_keyword_values_iterator(UEnumeration *en) {
-    if (en != nullptr) {
+U_CAPI शून्य U_EXPORT2 ulist_close_keyword_मूल्ये_iterator(UEnumeration *en) {
+    यदि (en != nullptr) {
         ulist_deleteList((UList *)(en->context));
         uprv_free(en);
     }
 }
 
-U_CAPI int32_t U_EXPORT2 ulist_count_keyword_values(UEnumeration *en, UErrorCode *status) {
-    if (U_FAILURE(*status)) {
-        return -1;
+U_CAPI int32_t U_EXPORT2 ulist_मोजणी_keyword_मूल्ये(UEnumeration *en, UErrorCode *status) {
+    यदि (U_FAILURE(*status)) {
+        प्रत्यागम -1;
     }
     
-    return ulist_getListSize((UList *)(en->context));
+    प्रत्यागम ulist_getListSize((UList *)(en->context));
 }
 
-U_CAPI const char * U_EXPORT2 ulist_next_keyword_value(UEnumeration *en, int32_t *resultLength, UErrorCode *status) {
-    const char *s;
-    if (U_FAILURE(*status)) {
-        return nullptr;
+U_CAPI ध्रुव वर्ण * U_EXPORT2 ulist_next_keyword_मूल्य(UEnumeration *en, int32_t *resultLength, UErrorCode *status) {
+    ध्रुव वर्ण *s;
+    यदि (U_FAILURE(*status)) {
+        प्रत्यागम nullptr;
     }
 
-    s = (const char *)ulist_getNext((UList *)(en->context));
-    if (s != nullptr && resultLength != nullptr) {
+    s = (ध्रुव वर्ण *)ulist_getNext((UList *)(en->context));
+    यदि (s != nullptr && resultLength != nullptr) {
         *resultLength = static_cast<int32_t>(uprv_strlen(s));
     }
-    return s;
+    प्रत्यागम s;
 }
 
-U_CAPI void U_EXPORT2 ulist_reset_keyword_values_iterator(UEnumeration *en, UErrorCode *status) {
-    if (U_FAILURE(*status)) {
-        return ;
+U_CAPI शून्य U_EXPORT2 ulist_reset_keyword_मूल्ये_iterator(UEnumeration *en, UErrorCode *status) {
+    यदि (U_FAILURE(*status)) {
+        प्रत्यागम ;
     }
     
     ulist_resetList((UList *)(en->context));
 }
 
 U_CAPI UList * U_EXPORT2 ulist_getListFromEnum(UEnumeration *en) {
-    return (UList *)(en->context);
+    प्रत्यागम (UList *)(en->context);
 }

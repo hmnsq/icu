@@ -10,39 +10,39 @@
 * Since: ICU 2.8
 **********************************************************************
 */
-#include "locbased.h"
-#include "uresimp.h"
+#अन्तर्भाव "locbased.h"
+#अन्तर्भाव "uresimp.h"
 
 U_NAMESPACE_BEGIN
 
-const Locale& LocaleBased::getLocale(const Locale& valid U_LIFETIME_BOUND,
-                                     const Locale& actual U_LIFETIME_BOUND,
+ध्रुव Locale& LocaleBased::getLocale(ध्रुव Locale& valid U_LIFETIME_BOUND,
+                                     ध्रुव Locale& actual U_LIFETIME_BOUND,
                                      ULocDataLocaleType type,
                                      UErrorCode& status) {
-    if (U_FAILURE(status)) {
-        return Locale::getRoot();
+    यदि (U_FAILURE(status)) {
+        प्रत्यागम Locale::get_मूळ();
     }
 
-    switch(type) {
-    case ULOC_VALID_LOCALE:
-        return valid;
-    case ULOC_ACTUAL_LOCALE:
-        return actual;
-    default:
+    विकल्प(type) {
+    पक्ष ULOC_VALID_LOCALE:
+        प्रत्यागम valid;
+    पक्ष ULOC_ACTUAL_LOCALE:
+        प्रत्यागम actual;
+    स्वभाव:
         status = U_ILLEGAL_ARGUMENT_ERROR;
-        return Locale::getRoot();
+        प्रत्यागम Locale::get_मूळ();
     }
 }
 
-const char* LocaleBased::getLocaleID(const Locale& valid, const Locale& actual,
+ध्रुव वर्ण* LocaleBased::getLocaleID(ध्रुव Locale& valid, ध्रुव Locale& actual,
                                      ULocDataLocaleType type, UErrorCode& status) {
-    const Locale& locale = getLocale(valid, actual, type, status);
+    ध्रुव Locale& locale = getLocale(valid, actual, type, status);
 
-    if (U_FAILURE(status)) {
-        return nullptr;
+    यदि (U_FAILURE(status)) {
+        प्रत्यागम nullptr;
     }
 
-    return locale == Locale::getRoot() ? kRootLocaleName : locale.getName();
+    प्रत्यागम locale == Locale::get_मूळ() ? k_मूळ_Locale_Name : locale.getName();
 }
 
 U_NAMESPACE_END

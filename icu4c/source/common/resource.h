@@ -25,16 +25,16 @@
 // We use the Resource prefix for C++ classes, as usual.
 // The UResource prefix would be used for C types.
 
-#include "unicode/utypes.h"
-#include "unicode/unistr.h"
-#include "unicode/ures.h"
-#include "restrace.h"
+#अन्तर्भाव "unicode/utypes.h"
+#अन्तर्भाव "unicode/unistr.h"
+#अन्तर्भाव "unicode/ures.h"
+#अन्तर्भाव "restrace.h"
 
-struct ResourceData;
+संरचना ResourceData;
 
 U_NAMESPACE_BEGIN
 
-class ResourceValue;
+class Resource_मूल्य;
 
 // Note: In C++, we use const char * pointers for keys,
 // rather than an abstraction like Java UResource.Key.
@@ -43,33 +43,33 @@ class ResourceValue;
  * Interface for iterating over a resource bundle array resource.
  */
 class U_COMMON_API ResourceArray {
-public:
+सार्वजनिक:
     /** Constructs an empty array object. */
     ResourceArray() : items16(nullptr), items32(nullptr), length(0) {}
 
     /** Only for implementation use. @internal */
-    ResourceArray(const uint16_t *i16, const uint32_t *i32, int32_t len,
-                  const ResourceTracer& traceInfo) :
+    ResourceArray(ध्रुव uint16_t *i16, ध्रुव uint32_t *i32, int32_t len,
+                  ध्रुव ResourceTracer& traceInfo) :
             items16(i16), items32(i32), length(len),
             fTraceInfo(traceInfo) {}
 
     /**
      * @return The number of items in the array resource.
      */
-    int32_t getSize() const { return length; }
+    int32_t getSize() ध्रुव { प्रत्यागम length; }
     /**
      * @param i Array item index.
      * @param value Output-only, receives the value of the i'th item.
      * @return true if i is non-negative and less than getSize().
      */
-    UBool getValue(int32_t i, ResourceValue &value) const;
+    UBool get_मूल्य(int32_t i, Resource_मूल्य &मूल्य_2) ध्रुव;
 
     /** Only for implementation use. @internal */
-    uint32_t internalGetResource(const ResourceData *pResData, int32_t i) const;
+    uint32_t internalGetResource(ध्रुव ResourceData *pResData, int32_t i) ध्रुव;
 
-private:
-    const uint16_t *items16;
-    const uint32_t *items32;
+गुप्त:
+    ध्रुव uint16_t *items16;
+    ध्रुव uint32_t *items32;
     int32_t length;
     ResourceTracer fTraceInfo;
 };
@@ -78,41 +78,41 @@ private:
  * Interface for iterating over a resource bundle table resource.
  */
 class U_COMMON_API ResourceTable {
-public:
+सार्वजनिक:
     /** Constructs an empty table object. */
     ResourceTable() : keys16(nullptr), keys32(nullptr), items16(nullptr), items32(nullptr), length(0) {}
 
     /** Only for implementation use. @internal */
-    ResourceTable(const uint16_t *k16, const int32_t *k32,
-                  const uint16_t *i16, const uint32_t *i32, int32_t len,
-                  const ResourceTracer& traceInfo) :
+    ResourceTable(ध्रुव uint16_t *k16, ध्रुव int32_t *k32,
+                  ध्रुव uint16_t *i16, ध्रुव uint32_t *i32, int32_t len,
+                  ध्रुव ResourceTracer& traceInfo) :
             keys16(k16), keys32(k32), items16(i16), items32(i32), length(len),
             fTraceInfo(traceInfo) {}
 
     /**
      * @return The number of items in the array resource.
      */
-    int32_t getSize() const { return length; }
+    int32_t getSize() ध्रुव { प्रत्यागम length; }
     /**
      * @param i Table item index.
      * @param key Output-only, receives the key of the i'th item.
      * @param value Output-only, receives the value of the i'th item.
      * @return true if i is non-negative and less than getSize().
      */
-    UBool getKeyAndValue(int32_t i, const char *&key, ResourceValue &value) const;
+    UBool get_किल्ली_And_मूल्य(int32_t i, ध्रुव वर्ण *&किल्ली, Resource_मूल्य &मूल्य_2) ध्रुव;
 
     /**
      * @param key Key string to find in the table.
      * @param value Output-only, receives the value of the item with that key.
      * @return true if the table contains the key.
      */
-    UBool findValue(const char *key, ResourceValue &value) const;
+    UBool find_मूल्य(ध्रुव वर्ण *किल्ली, Resource_मूल्य &मूल्य_2) ध्रुव;
 
-private:
-    const uint16_t *keys16;
-    const int32_t *keys32;
-    const uint16_t *items16;
-    const uint32_t *items32;
+गुप्त:
+    ध्रुव uint16_t *keys16;
+    ध्रुव int32_t *keys32;
+    ध्रुव uint16_t *items16;
+    ध्रुव uint32_t *items32;
     int32_t length;
     ResourceTracer fTraceInfo;
 };
@@ -122,37 +122,37 @@ private:
  * Avoids object creations as much as possible.
  * Mutable, not thread-safe.
  */
-class U_COMMON_API ResourceValue : public UObject {
-public:
-    virtual ~ResourceValue();
+class U_COMMON_API Resource_मूल्य : सार्वजनिक UObject {
+सार्वजनिक:
+    आभास ~Resource_मूल्य();
 
     /**
      * @return ICU resource type, for example, URES_STRING
      */
-    virtual UResType getType() const = 0;
+    आभास UResType getType() ध्रुव = 0;
 
     /**
      * Sets U_RESOURCE_TYPE_MISMATCH if this is not a string resource.
      *
      * @see ures_getString()
      */
-    virtual const char16_t *getString(int32_t &length, UErrorCode &errorCode) const = 0;
+    आभास ध्रुव char16_t *getString(int32_t &length, UErrorCode &errorCode) ध्रुव = 0;
 
-    inline UnicodeString getUnicodeString(UErrorCode &errorCode) const {
+    अन्तःस्थ UnicodeString getUnicodeString(UErrorCode &errorCode) ध्रुव {
         int32_t len = 0;
-        const char16_t *r = getString(len, errorCode);
-        return UnicodeString(true, r, len);
+        ध्रुव char16_t *r = getString(len, errorCode);
+        प्रत्यागम UnicodeString(true, r, len);
     }
 
     /**
      * Sets U_RESOURCE_TYPE_MISMATCH if this is not an alias resource.
      */
-    virtual const char16_t *getAliasString(int32_t &length, UErrorCode &errorCode) const = 0;
+    आभास ध्रुव char16_t *getAliasString(int32_t &length, UErrorCode &errorCode) ध्रुव = 0;
 
-    inline UnicodeString getAliasUnicodeString(UErrorCode &errorCode) const {
+    अन्तःस्थ UnicodeString getAliasUnicodeString(UErrorCode &errorCode) ध्रुव {
         int32_t len = 0;
-        const char16_t *r = getAliasString(len, errorCode);
-        return UnicodeString(true, r, len);
+        ध्रुव char16_t *r = getAliasString(len, errorCode);
+        प्रत्यागम UnicodeString(true, r, len);
     }
 
     /**
@@ -160,38 +160,38 @@ public:
      *
      * @see ures_getInt()
      */
-    virtual int32_t getInt(UErrorCode &errorCode) const = 0;
+    आभास int32_t getInt(UErrorCode &errorCode) ध्रुव = 0;
 
     /**
      * Sets U_RESOURCE_TYPE_MISMATCH if this is not an integer resource.
      *
      * @see ures_getUInt()
      */
-    virtual uint32_t getUInt(UErrorCode &errorCode) const = 0;
+    आभास uint32_t getUInt(UErrorCode &errorCode) ध्रुव = 0;
 
     /**
      * Sets U_RESOURCE_TYPE_MISMATCH if this is not an intvector resource.
      *
      * @see ures_getIntVector()
      */
-    virtual const int32_t *getIntVector(int32_t &length, UErrorCode &errorCode) const = 0;
+    आभास ध्रुव int32_t *getIntVector(int32_t &length, UErrorCode &errorCode) ध्रुव = 0;
 
     /**
      * Sets U_RESOURCE_TYPE_MISMATCH if this is not a binary-blob resource.
      *
      * @see ures_getBinary()
      */
-    virtual const uint8_t *getBinary(int32_t &length, UErrorCode &errorCode) const = 0;
+    आभास ध्रुव uint8_t *get_द्विमान(int32_t &length, UErrorCode &errorCode) ध्रुव = 0;
 
     /**
      * Sets U_RESOURCE_TYPE_MISMATCH if this is not an array resource
      */
-    virtual ResourceArray getArray(UErrorCode &errorCode) const = 0;
+    आभास ResourceArray getArray(UErrorCode &errorCode) ध्रुव = 0;
 
     /**
      * Sets U_RESOURCE_TYPE_MISMATCH if this is not a table resource
      */
-    virtual ResourceTable getTable(UErrorCode &errorCode) const = 0;
+    आभास ResourceTable getTable(UErrorCode &errorCode) ध्रुव = 0;
 
     /**
      * Is this a no-fallback/no-inheritance marker string?
@@ -201,7 +201,7 @@ public:
      *
      * @return true if this is a no-inheritance marker string
      */
-    virtual UBool isNoInheritanceMarker() const = 0;
+    आभास UBool isNoInheritanceMarker() ध्रुव = 0;
 
     /**
      * Sets the dest strings from the string values in this array resource.
@@ -212,8 +212,8 @@ public:
      * Sets U_RESOURCE_TYPE_MISMATCH if this is not an array resource
      *     or if any of the array items is not a string
      */
-    virtual int32_t getStringArray(UnicodeString *dest, int32_t capacity,
-                                   UErrorCode &errorCode) const = 0;
+    आभास int32_t getStringArray(UnicodeString *dest, int32_t capacity,
+                                   UErrorCode &errorCode) ध्रुव = 0;
 
     /**
      * Same as
@@ -230,8 +230,8 @@ public:
      * @see getString()
      * @see getStringArray()
      */
-    virtual int32_t getStringArrayOrStringAsArray(UnicodeString *dest, int32_t capacity,
-                                                  UErrorCode &errorCode) const = 0;
+    आभास int32_t getStringArrayOrStringAsArray(UnicodeString *dest, int32_t capacity,
+                                                  UErrorCode &errorCode) ध्रुव = 0;
 
     /**
      * Same as
@@ -248,23 +248,23 @@ public:
      * @see getString()
      * @see getStringArray()
      */
-    virtual UnicodeString getStringOrFirstOfArray(UErrorCode &errorCode) const = 0;
+    आभास UnicodeString getStringOrFirstOfArray(UErrorCode &errorCode) ध्रुव = 0;
 
-protected:
-    ResourceValue() {}
+रक्षित:
+    Resource_मूल्य() {}
 
-private:
-    ResourceValue(const ResourceValue &);  // no copy constructor
-    ResourceValue &operator=(const ResourceValue &);  // no assignment operator
+गुप्त:
+    Resource_मूल्य(ध्रुव Resource_मूल्य &);  // no copy constructor
+    Resource_मूल्य &operator=(ध्रुव Resource_मूल्य &);  // no assignment operator
 };
 
 /**
  * Sink for ICU resource bundle contents.
  */
-class U_COMMON_API ResourceSink : public UObject {
-public:
+class U_COMMON_API ResourceSink : सार्वजनिक UObject {
+सार्वजनिक:
     ResourceSink() {}
-    virtual ~ResourceSink();
+    आभास ~ResourceSink();
 
     /**
      * Called once for each bundle (child-parent-...-root).
@@ -282,12 +282,12 @@ public:
      *     that is, its top-level table has the nofallback attribute,
      *     or it is the root bundle of a locale tree.
      */
-    virtual void put(const char *key, ResourceValue &value, UBool noFallback,
+    आभास शून्य put(ध्रुव वर्ण *किल्ली, Resource_मूल्य &मूल्य_2, UBool noFallback,
                      UErrorCode &errorCode) = 0;
 
-private:
-    ResourceSink(const ResourceSink &) = delete;  // no copy constructor
-    ResourceSink &operator=(const ResourceSink &) = delete;  // no assignment operator
+गुप्त:
+    ResourceSink(ध्रुव ResourceSink &) = delete;  // no copy constructor
+    ResourceSink &operator=(ध्रुव ResourceSink &) = delete;  // no assignment operator
 };
 
 U_NAMESPACE_END

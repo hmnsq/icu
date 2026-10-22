@@ -7,27 +7,27 @@
 *******************************************************************************
 */
 
-#include "unicode/utypes.h"
+#अन्तर्भाव "unicode/utypes.h"
 
-#if !UCONFIG_NO_FORMATTING
+#यदि !UCONFIG_NO_FORMATTING
 
-#include "unicode/locdspnm.h"
-#include "unicode/simpleformatter.h"
-#include "unicode/ucasemap.h"
-#include "unicode/ures.h"
-#include "unicode/udisplaycontext.h"
-#include "unicode/brkiter.h"
-#include "unicode/ucurr.h"
-#include "bytesinkutil.h"
-#include "charstr.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "mutex.h"
-#include "uassert.h"
-#include "ulocimp.h"
-#include "umutex.h"
-#include "ureslocs.h"
-#include "uresimp.h"
+#अन्तर्भाव "unicode/locdspnm.h"
+#अन्तर्भाव "unicode/simpleformatter.h"
+#अन्तर्भाव "unicode/ucasemap.h"
+#अन्तर्भाव "unicode/ures.h"
+#अन्तर्भाव "unicode/udisplaycontext.h"
+#अन्तर्भाव "unicode/brkiter.h"
+#अन्तर्भाव "unicode/ucurr.h"
+#अन्तर्भाव "bytesinkutil.h"
+#अन्तर्भाव "charstr.h"
+#अन्तर्भाव "cmemory.h"
+#अन्तर्भाव "cstring.h"
+#अन्तर्भाव "mutex.h"
+#अन्तर्भाव "uassert.h"
+#अन्तर्भाव "ulocimp.h"
+#अन्तर्भाव "umutex.h"
+#अन्तर्भाव "ureslocs.h"
+#अन्तर्भाव "uresimp.h"
 
 U_NAMESPACE_BEGIN
 
@@ -35,79 +35,79 @@ U_NAMESPACE_BEGIN
 
 // Access resource data for locale components.
 // Wrap code in uloc.c for now.
-class ICUDataTable {
-    const char* const path;
+वर्ग ICUDataTable {
+    ध्रुव वर्ण* ध्रुव path;
     Locale locale;
 
-public:
+सार्वजनिक:
     // Note: path should be a pointer to a statically allocated string.
-    ICUDataTable(const char* path, const Locale& locale);
-    ~ICUDataTable() = default;
+    ICUDataTable(ध्रुव वर्ण* path, ध्रुव Locale& locale);
+    ~ICUDataTable() = स्वभाव;
 
-    const Locale& getLocale() U_LIFETIME_BOUND;
+    ध्रुव Locale& getLocale() U_LIFETIME_BOUND;
 
-    UnicodeString& get(const char* tableKey, const char* itemKey,
-                       UnicodeString& result U_LIFETIME_BOUND) const;
-    UnicodeString& get(const char* tableKey, const char* subTableKey, const char* itemKey,
-                       UnicodeString& result U_LIFETIME_BOUND) const;
+    UnicodeString& get(ध्रुव वर्ण* table_किल्ली, ध्रुव वर्ण* item_किल्ली,
+                       UnicodeString& result U_LIFETIME_BOUND) ध्रुव;
+    UnicodeString& get(ध्रुव वर्ण* table_किल्ली, ध्रुव वर्ण* sub_Table_किल्ली, ध्रुव वर्ण* item_किल्ली,
+                       UnicodeString& result U_LIFETIME_BOUND) ध्रुव;
 
-    UnicodeString& getNoFallback(const char* tableKey, const char* itemKey,
-                                 UnicodeString& result U_LIFETIME_BOUND) const;
-    UnicodeString& getNoFallback(const char* tableKey, const char* subTableKey, const char* itemKey,
-                                 UnicodeString& result U_LIFETIME_BOUND) const;
+    UnicodeString& getNoFallback(ध्रुव वर्ण* table_किल्ली, ध्रुव वर्ण* item_किल्ली,
+                                 UnicodeString& result U_LIFETIME_BOUND) ध्रुव;
+    UnicodeString& getNoFallback(ध्रुव वर्ण* table_किल्ली, ध्रुव वर्ण* sub_Table_किल्ली, ध्रुव वर्ण* item_किल्ली,
+                                 UnicodeString& result U_LIFETIME_BOUND) ध्रुव;
 };
 
-inline UnicodeString& ICUDataTable::get(const char* tableKey, const char* itemKey,
-                                        UnicodeString& result U_LIFETIME_BOUND) const {
-    return get(tableKey, nullptr, itemKey, result);
+अन्तःस्थ UnicodeString& ICUDataTable::get(ध्रुव वर्ण* table_किल्ली, ध्रुव वर्ण* item_किल्ली,
+                                        UnicodeString& result U_LIFETIME_BOUND) ध्रुव {
+    प्रत्यागम get(table_किल्ली, nullptr, item_किल्ली, result);
 }
 
-inline UnicodeString& ICUDataTable::getNoFallback(const char* tableKey, const char* itemKey,
-                                                  UnicodeString& result U_LIFETIME_BOUND) const {
-    return getNoFallback(tableKey, nullptr, itemKey, result);
+अन्तःस्थ UnicodeString& ICUDataTable::getNoFallback(ध्रुव वर्ण* table_किल्ली, ध्रुव वर्ण* item_किल्ली,
+                                                  UnicodeString& result U_LIFETIME_BOUND) ध्रुव {
+    प्रत्यागम getNoFallback(table_किल्ली, nullptr, item_किल्ली, result);
 }
 
-ICUDataTable::ICUDataTable(const char* path, const Locale& locale)
+ICUDataTable::ICUDataTable(ध्रुव वर्ण* path, ध्रुव Locale& locale)
     : path(path), locale(locale)
 {
     U_ASSERT(path != nullptr);
 }
 
-const Locale&
+ध्रुव Locale&
 ICUDataTable::getLocale() U_LIFETIME_BOUND {
-  return locale;
+  प्रत्यागम locale;
 }
 
 UnicodeString&
-ICUDataTable::get(const char* tableKey, const char* subTableKey, const char* itemKey,
-                  UnicodeString &result U_LIFETIME_BOUND) const {
+ICUDataTable::get(ध्रुव वर्ण* table_किल्ली, ध्रुव वर्ण* sub_Table_किल्ली, ध्रुव वर्ण* item_किल्ली,
+                  UnicodeString &result U_LIFETIME_BOUND) ध्रुव {
   UErrorCode status = U_ZERO_ERROR;
   int32_t len = 0;
 
-  const char16_t *s = uloc_getTableStringWithFallback(path, locale.getName(),
-                                                   tableKey, subTableKey, itemKey,
+  ध्रुव char16_t *s = uloc_getTableStringWithFallback(path, locale.getName(),
+                                                   table_किल्ली, sub_Table_किल्ली, item_किल्ली,
                                                    &len, &status);
-  if (U_SUCCESS(status) && len > 0) {
-    return result.setTo(s, len);
+  यदि (U_SUCCESS(status) && len > 0) {
+    प्रत्यागम result.setTo(s, len);
   }
-  return result.setTo(UnicodeString(itemKey, -1, US_INV));
+  प्रत्यागम result.setTo(UnicodeString(item_किल्ली, -1, US_INV));
 }
 
 UnicodeString&
-ICUDataTable::getNoFallback(const char* tableKey, const char* subTableKey, const char* itemKey,
-                            UnicodeString& result U_LIFETIME_BOUND) const {
+ICUDataTable::getNoFallback(ध्रुव वर्ण* table_किल्ली, ध्रुव वर्ण* sub_Table_किल्ली, ध्रुव वर्ण* item_किल्ली,
+                            UnicodeString& result U_LIFETIME_BOUND) ध्रुव {
   UErrorCode status = U_ZERO_ERROR;
   int32_t len = 0;
 
-  const char16_t *s = uloc_getTableStringWithFallback(path, locale.getName(),
-                                                   tableKey, subTableKey, itemKey,
+  ध्रुव char16_t *s = uloc_getTableStringWithFallback(path, locale.getName(),
+                                                   table_किल्ली, sub_Table_किल्ली, item_किल्ली,
                                                    &len, &status);
-  if (U_SUCCESS(status)) {
-    return result.setTo(s, len);
+  यदि (U_SUCCESS(status)) {
+    प्रत्यागम result.setTo(s, len);
   }
 
   result.setToBogus();
-  return result;
+  प्रत्यागम result;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -116,39 +116,39 @@ LocaleDisplayNames::~LocaleDisplayNames() {}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-#if 0  // currently unused
+#यदि 0  // currently unused
 
-class DefaultLocaleDisplayNames : public LocaleDisplayNames {
+वर्ग DefaultLocaleDisplayNames : सार्वजनिक LocaleDisplayNames {
   UDialectHandling dialectHandling;
 
-public:
+सार्वजनिक:
   // constructor
   DefaultLocaleDisplayNames(UDialectHandling dialectHandling);
 
-  virtual ~DefaultLocaleDisplayNames();
+  आभास ~DefaultLocaleDisplayNames();
 
-  virtual const Locale& getLocale() const U_LIFETIME_BOUND;
-  virtual UDialectHandling getDialectHandling() const;
+  आभास ध्रुव Locale& getLocale() ध्रुव U_LIFETIME_BOUND;
+  आभास UDialectHandling getDialectHandling() ध्रुव;
 
-  virtual UnicodeString& localeDisplayName(const Locale& locale,
-                                           UnicodeString& result U_LIFETIME_BOUND) const;
-  virtual UnicodeString& localeDisplayName(const char* localeId,
-                                           UnicodeString& result U_LIFETIME_BOUND) const;
-  virtual UnicodeString& languageDisplayName(const char* lang,
-                                             UnicodeString& result U_LIFETIME_BOUND) const;
-  virtual UnicodeString& scriptDisplayName(const char* script,
-                                           UnicodeString& result U_LIFETIME_BOUND) const;
-  virtual UnicodeString& scriptDisplayName(UScriptCode scriptCode,
-                                           UnicodeString& result U_LIFETIME_BOUND) const;
-  virtual UnicodeString& regionDisplayName(const char* region,
-                                           UnicodeString& result U_LIFETIME_BOUND) const;
-  virtual UnicodeString& variantDisplayName(const char* variant,
-                                            UnicodeString& result U_LIFETIME_BOUND) const;
-  virtual UnicodeString& keyDisplayName(const char* key,
-                                        UnicodeString& result U_LIFETIME_BOUND) const;
-  virtual UnicodeString& keyValueDisplayName(const char* key,
-                                             const char* value,
-                                             UnicodeString& result U_LIFETIME_BOUND) const;
+  आभास UnicodeString& localeDisplayName(ध्रुव Locale& locale,
+                                           UnicodeString& result U_LIFETIME_BOUND) ध्रुव;
+  आभास UnicodeString& localeDisplayName(ध्रुव वर्ण* localeId,
+                                           UnicodeString& result U_LIFETIME_BOUND) ध्रुव;
+  आभास UnicodeString& languageDisplayName(ध्रुव वर्ण* lang,
+                                             UnicodeString& result U_LIFETIME_BOUND) ध्रुव;
+  आभास UnicodeString& scriptDisplayName(ध्रुव वर्ण* script,
+                                           UnicodeString& result U_LIFETIME_BOUND) ध्रुव;
+  आभास UnicodeString& scriptDisplayName(UScriptCode scriptCode,
+                                           UnicodeString& result U_LIFETIME_BOUND) ध्रुव;
+  आभास UnicodeString& regionDisplayName(ध्रुव वर्ण* region,
+                                           UnicodeString& result U_LIFETIME_BOUND) ध्रुव;
+  आभास UnicodeString& variantDisplayName(ध्रुव वर्ण* variant,
+                                            UnicodeString& result U_LIFETIME_BOUND) ध्रुव;
+  आभास UnicodeString& किल्ली_Display_Name(ध्रुव वर्ण* किल्ली,
+                                        UnicodeString& result U_LIFETIME_BOUND) ध्रुव;
+  आभास UnicodeString& किल्ली_मूल्य_Display_Name(ध्रुव वर्ण* किल्ली,
+                                             ध्रुव वर्ण* value,
+                                             UnicodeString& result U_LIFETIME_BOUND) ध्रुव;
 };
 
 DefaultLocaleDisplayNames::DefaultLocaleDisplayNames(UDialectHandling dialectHandling)
@@ -158,91 +158,91 @@ DefaultLocaleDisplayNames::DefaultLocaleDisplayNames(UDialectHandling dialectHan
 DefaultLocaleDisplayNames::~DefaultLocaleDisplayNames() {
 }
 
-const Locale&
-DefaultLocaleDisplayNames::getLocale() const U_LIFETIME_BOUND {
-  return Locale::getRoot();
+ध्रुव Locale&
+DefaultLocaleDisplayNames::getLocale() ध्रुव U_LIFETIME_BOUND {
+  प्रत्यागम Locale::get_मूळ();
 }
 
 UDialectHandling
-DefaultLocaleDisplayNames::getDialectHandling() const {
-  return dialectHandling;
+DefaultLocaleDisplayNames::getDialectHandling() ध्रुव {
+  प्रत्यागम dialectHandling;
 }
 
 UnicodeString&
-DefaultLocaleDisplayNames::localeDisplayName(const Locale& locale,
-                                             UnicodeString& result U_LIFETIME_BOUND) const {
-  return result = UnicodeString(locale.getName(), -1, US_INV);
+DefaultLocaleDisplayNames::localeDisplayName(ध्रुव Locale& locale,
+                                             UnicodeString& result U_LIFETIME_BOUND) ध्रुव {
+  प्रत्यागम result = UnicodeString(locale.getName(), -1, US_INV);
 }
 
 UnicodeString&
-DefaultLocaleDisplayNames::localeDisplayName(const char* localeId,
-                                             UnicodeString& result U_LIFETIME_BOUND) const {
-  return result = UnicodeString(localeId, -1, US_INV);
+DefaultLocaleDisplayNames::localeDisplayName(ध्रुव वर्ण* localeId,
+                                             UnicodeString& result U_LIFETIME_BOUND) ध्रुव {
+  प्रत्यागम result = UnicodeString(localeId, -1, US_INV);
 }
 
 UnicodeString&
-DefaultLocaleDisplayNames::languageDisplayName(const char* lang,
-                                               UnicodeString& result U_LIFETIME_BOUND) const {
-  return result = UnicodeString(lang, -1, US_INV);
+DefaultLocaleDisplayNames::languageDisplayName(ध्रुव वर्ण* lang,
+                                               UnicodeString& result U_LIFETIME_BOUND) ध्रुव {
+  प्रत्यागम result = UnicodeString(lang, -1, US_INV);
 }
 
 UnicodeString&
-DefaultLocaleDisplayNames::scriptDisplayName(const char* script,
-                                             UnicodeString& result U_LIFETIME_BOUND) const {
-  return result = UnicodeString(script, -1, US_INV);
+DefaultLocaleDisplayNames::scriptDisplayName(ध्रुव वर्ण* script,
+                                             UnicodeString& result U_LIFETIME_BOUND) ध्रुव {
+  प्रत्यागम result = UnicodeString(script, -1, US_INV);
 }
 
 UnicodeString&
 DefaultLocaleDisplayNames::scriptDisplayName(UScriptCode scriptCode,
-                                             UnicodeString& result U_LIFETIME_BOUND) const {
-  const char* name = uscript_getName(scriptCode);
-  if (name) {
-    return result = UnicodeString(name, -1, US_INV);
+                                             UnicodeString& result U_LIFETIME_BOUND) ध्रुव {
+  ध्रुव वर्ण* name = uscript_getName(scriptCode);
+  यदि (name) {
+    प्रत्यागम result = UnicodeString(name, -1, US_INV);
   }
-  return result.remove();
+  प्रत्यागम result.remove();
 }
 
 UnicodeString&
-DefaultLocaleDisplayNames::regionDisplayName(const char* region,
-                                             UnicodeString& result U_LIFETIME_BOUND) const {
-  return result = UnicodeString(region, -1, US_INV);
+DefaultLocaleDisplayNames::regionDisplayName(ध्रुव वर्ण* region,
+                                             UnicodeString& result U_LIFETIME_BOUND) ध्रुव {
+  प्रत्यागम result = UnicodeString(region, -1, US_INV);
 }
 
 UnicodeString&
-DefaultLocaleDisplayNames::variantDisplayName(const char* variant,
-                                              UnicodeString& result U_LIFETIME_BOUND) const {
-  return result = UnicodeString(variant, -1, US_INV);
+DefaultLocaleDisplayNames::variantDisplayName(ध्रुव वर्ण* variant,
+                                              UnicodeString& result U_LIFETIME_BOUND) ध्रुव {
+  प्रत्यागम result = UnicodeString(variant, -1, US_INV);
 }
 
 UnicodeString&
-DefaultLocaleDisplayNames::keyDisplayName(const char* key,
-                                          UnicodeString& result U_LIFETIME_BOUND) const {
-  return result = UnicodeString(key, -1, US_INV);
+DefaultLocaleDisplayNames::किल्ली_Display_Name(ध्रुव वर्ण* किल्ली,
+                                          UnicodeString& result U_LIFETIME_BOUND) ध्रुव {
+  प्रत्यागम result = UnicodeString(किल्ली, -1, US_INV);
 }
 
 UnicodeString&
-DefaultLocaleDisplayNames::keyValueDisplayName(const char* /* key */,
-                                               const char* value,
-                                               UnicodeString& result U_LIFETIME_BOUND) const {
-  return result = UnicodeString(value, -1, US_INV);
+DefaultLocaleDisplayNames::किल्ली_मूल्य_Display_Name(ध्रुव वर्ण* /*किल्ली*/,
+                                               ध्रुव वर्ण* value,
+                                               UnicodeString& result U_LIFETIME_BOUND) ध्रुव {
+  प्रत्यागम result = UnicodeString(value, -1, US_INV);
 }
 
 #endif  // currently unused class DefaultLocaleDisplayNames
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-class LocaleDisplayNamesImpl : public LocaleDisplayNames {
+वर्ग LocaleDisplayNamesImpl : सार्वजनिक LocaleDisplayNames {
     Locale locale;
     UDialectHandling dialectHandling;
     ICUDataTable langData;
     ICUDataTable regionData;
     SimpleFormatter separatorFormat;
     SimpleFormatter format;
-    SimpleFormatter keyTypeFormat;
+    SimpleFormatter किल्ली_Type_Format;
     UDisplayContext capitalizationContext;
-#if !UCONFIG_NO_BREAK_ITERATION
+#यदि !UCONFIG_NO_BREAK_ITERATION
     BreakIterator* capitalizationBrkIter;
-#else
+#अन्यथा
     UObject* capitalizationBrkIter;
 #endif
     UnicodeString formatOpenParen;
@@ -253,73 +253,73 @@ class LocaleDisplayNamesImpl : public LocaleDisplayNames {
     UDisplayContext substitute;
 
     // Constants for capitalization context usage types.
-    enum CapContextUsage {
+    गणना CapContextUsage {
         kCapContextUsageLanguage,
         kCapContextUsageScript,
         kCapContextUsageTerritory,
         kCapContextUsageVariant,
-        kCapContextUsageKey,
-        kCapContextUsageKeyValue,
-        kCapContextUsageCount
+        k_Cap_Context_Usage_किल्ली,
+        k_Cap_Context_Usage_किल्ली_मूल्य,
+        k_Cap_Context_Usage_मोजणी
     };
     // Capitalization transforms. For each usage type, indicates whether to titlecase for
     // the context specified in capitalizationContext (which we know at construction time)
-     bool fCapitalization[kCapContextUsageCount];
+     तार्किक fCapitalization[k_Cap_Context_Usage_मोजणी];
 
-public:
+सार्वजनिक:
     // constructor
-    LocaleDisplayNamesImpl(const Locale& locale, UDialectHandling dialectHandling);
-    LocaleDisplayNamesImpl(const Locale& locale, UDisplayContext *contexts, int32_t length);
-    virtual ~LocaleDisplayNamesImpl();
+    LocaleDisplayNamesImpl(ध्रुव Locale& locale, UDialectHandling dialectHandling);
+    LocaleDisplayNamesImpl(ध्रुव Locale& locale, UDisplayContext *contexts, int32_t length);
+    आभास ~LocaleDisplayNamesImpl();
 
-    virtual const Locale& getLocale() const U_LIFETIME_BOUND override;
-    virtual UDialectHandling getDialectHandling() const override;
-    virtual UDisplayContext getContext(UDisplayContextType type) const override;
+    आभास ध्रुव Locale& getLocale() ध्रुव U_LIFETIME_BOUND override;
+    आभास UDialectHandling getDialectHandling() ध्रुव override;
+    आभास UDisplayContext getContext(UDisplayContextType type) ध्रुव override;
 
-    virtual UnicodeString& localeDisplayName(const Locale& locale,
-                                             UnicodeString& result U_LIFETIME_BOUND) const override;
-    virtual UnicodeString& localeDisplayName(const char* localeId,
-                                             UnicodeString& result U_LIFETIME_BOUND) const override;
-    virtual UnicodeString&
-    languageDisplayName(const char* lang, UnicodeString& result U_LIFETIME_BOUND) const override;
-    virtual UnicodeString& scriptDisplayName(const char* script,
-                                             UnicodeString& result U_LIFETIME_BOUND) const override;
-    virtual UnicodeString& scriptDisplayName(UScriptCode scriptCode,
-                                             UnicodeString& result U_LIFETIME_BOUND) const override;
-    virtual UnicodeString& regionDisplayName(const char* region,
-                                             UnicodeString& result U_LIFETIME_BOUND) const override;
-    virtual UnicodeString&
-    variantDisplayName(const char* variant, UnicodeString& result U_LIFETIME_BOUND) const override;
-    virtual UnicodeString& keyDisplayName(const char* key,
-                                          UnicodeString& result U_LIFETIME_BOUND) const override;
-    virtual UnicodeString&
-    keyValueDisplayName(const char* key, const char* value,
-                        UnicodeString& result U_LIFETIME_BOUND) const override;
+    आभास UnicodeString& localeDisplayName(ध्रुव Locale& locale,
+                                             UnicodeString& result U_LIFETIME_BOUND) ध्रुव override;
+    आभास UnicodeString& localeDisplayName(ध्रुव वर्ण* localeId,
+                                             UnicodeString& result U_LIFETIME_BOUND) ध्रुव override;
+    आभास UnicodeString&
+    languageDisplayName(ध्रुव वर्ण* lang, UnicodeString& result U_LIFETIME_BOUND) ध्रुव override;
+    आभास UnicodeString& scriptDisplayName(ध्रुव वर्ण* script,
+                                             UnicodeString& result U_LIFETIME_BOUND) ध्रुव override;
+    आभास UnicodeString& scriptDisplayName(UScriptCode scriptCode,
+                                             UnicodeString& result U_LIFETIME_BOUND) ध्रुव override;
+    आभास UnicodeString& regionDisplayName(ध्रुव वर्ण* region,
+                                             UnicodeString& result U_LIFETIME_BOUND) ध्रुव override;
+    आभास UnicodeString&
+    variantDisplayName(ध्रुव वर्ण* variant, UnicodeString& result U_LIFETIME_BOUND) ध्रुव override;
+    आभास UnicodeString& किल्ली_Display_Name(ध्रुव वर्ण* किल्ली,
+                                          UnicodeString& result U_LIFETIME_BOUND) ध्रुव override;
+    आभास UnicodeString&
+    किल्ली_मूल्य_Display_Name(ध्रुव वर्ण* किल्ली, ध्रुव वर्ण* value,
+                        UnicodeString& result U_LIFETIME_BOUND) ध्रुव override;
 
-private:
-    UnicodeString& localeIdName(const char* localeId, UnicodeString& result U_LIFETIME_BOUND,
-                                bool substitute) const;
+गुप्त:
+    UnicodeString& localeIdName(ध्रुव वर्ण* localeId, UnicodeString& result U_LIFETIME_BOUND,
+                                तार्किक substitute) ध्रुव;
     UnicodeString& appendWithSep(UnicodeString& buffer U_LIFETIME_BOUND,
-                                 const UnicodeString& src) const;
+                                 ध्रुव UnicodeString& src) ध्रुव;
     UnicodeString& adjustForUsageAndContext(CapContextUsage usage,
-                                            UnicodeString& result U_LIFETIME_BOUND) const;
-    UnicodeString& scriptDisplayName(const char* script, UnicodeString& result U_LIFETIME_BOUND,
-                                     bool skipAdjust) const;
-    UnicodeString& regionDisplayName(const char* region, UnicodeString& result U_LIFETIME_BOUND,
-                                     bool skipAdjust) const;
-    UnicodeString& variantDisplayName(const char* variant, UnicodeString& result U_LIFETIME_BOUND,
-                                      bool skipAdjust) const;
-    UnicodeString& keyDisplayName(const char* key, UnicodeString& result U_LIFETIME_BOUND,
-                                  bool skipAdjust) const;
-    UnicodeString& keyValueDisplayName(const char* key, const char* value,
+                                            UnicodeString& result U_LIFETIME_BOUND) ध्रुव;
+    UnicodeString& scriptDisplayName(ध्रुव वर्ण* script, UnicodeString& result U_LIFETIME_BOUND,
+                                     तार्किक skipAdjust) ध्रुव;
+    UnicodeString& regionDisplayName(ध्रुव वर्ण* region, UnicodeString& result U_LIFETIME_BOUND,
+                                     तार्किक skipAdjust) ध्रुव;
+    UnicodeString& variantDisplayName(ध्रुव वर्ण* variant, UnicodeString& result U_LIFETIME_BOUND,
+                                      तार्किक skipAdjust) ध्रुव;
+    UnicodeString& किल्ली_Display_Name(ध्रुव वर्ण* किल्ली, UnicodeString& result U_LIFETIME_BOUND,
+                                  तार्किक skipAdjust) ध्रुव;
+    UnicodeString& किल्ली_मूल्य_Display_Name(ध्रुव वर्ण* किल्ली, ध्रुव वर्ण* value,
                                        UnicodeString& result U_LIFETIME_BOUND,
-                                       bool skipAdjust) const;
-    void initialize();
+                                       तार्किक skipAdjust) ध्रुव;
+    शून्य initialize();
 
-    struct CapitalizationContextSink;
+    संरचना CapitalizationContextSink;
 };
 
-LocaleDisplayNamesImpl::LocaleDisplayNamesImpl(const Locale& locale,
+LocaleDisplayNamesImpl::LocaleDisplayNamesImpl(ध्रुव Locale& locale,
                                                UDialectHandling dialectHandling)
     : dialectHandling(dialectHandling)
     , langData(U_ICUDATA_LANG, locale)
@@ -332,7 +332,7 @@ LocaleDisplayNamesImpl::LocaleDisplayNamesImpl(const Locale& locale,
     initialize();
 }
 
-LocaleDisplayNamesImpl::LocaleDisplayNamesImpl(const Locale& locale,
+LocaleDisplayNamesImpl::LocaleDisplayNamesImpl(ध्रुव Locale& locale,
                                                UDisplayContext *contexts, int32_t length)
     : dialectHandling(ULDN_STANDARD_NAMES)
     , langData(U_ICUDATA_LANG, locale)
@@ -342,71 +342,71 @@ LocaleDisplayNamesImpl::LocaleDisplayNamesImpl(const Locale& locale,
     , nameLength(UDISPCTX_LENGTH_FULL)
     , substitute(UDISPCTX_SUBSTITUTE)
 {
-    while (length-- > 0) {
+    यावत् (length-- > 0) {
         UDisplayContext value = *contexts++;
         UDisplayContextType selector =
             static_cast<UDisplayContextType>(static_cast<uint32_t>(value) >> 8);
-        switch (selector) {
-            case UDISPCTX_TYPE_DIALECT_HANDLING:
+        विकल्प (selector) {
+            पक्ष UDISPCTX_TYPE_DIALECT_HANDLING:
                 dialectHandling = static_cast<UDialectHandling>(value);
-                break;
-            case UDISPCTX_TYPE_CAPITALIZATION:
+                भङ्ग;
+            पक्ष UDISPCTX_TYPE_CAPITALIZATION:
                 capitalizationContext = value;
-                break;
-            case UDISPCTX_TYPE_DISPLAY_LENGTH:
+                भङ्ग;
+            पक्ष UDISPCTX_TYPE_DISPLAY_LENGTH:
                 nameLength = value;
-                break;
-            case UDISPCTX_TYPE_SUBSTITUTE_HANDLING:
+                भङ्ग;
+            पक्ष UDISPCTX_TYPE_SUBSTITUTE_HANDLING:
                 substitute = value;
-                break;
-            default:
-                break;
+                भङ्ग;
+            स्वभाव:
+                भङ्ग;
         }
     }
     initialize();
 }
 
-struct LocaleDisplayNamesImpl::CapitalizationContextSink : public ResourceSink {
-    bool hasCapitalizationUsage;
+संरचना LocaleDisplayNamesImpl::CapitalizationContextSink : सार्वजनिक ResourceSink {
+    तार्किक hasCapitalizationUsage;
     LocaleDisplayNamesImpl& parent;
 
     CapitalizationContextSink(LocaleDisplayNamesImpl& _parent)
-      : hasCapitalizationUsage(false), parent(_parent) {}
-    virtual ~CapitalizationContextSink();
+      : hasCapitalizationUsage(असत्य), parent(_parent) {}
+    आभास ~CapitalizationContextSink();
 
-    virtual void put(const char *key, ResourceValue &value, UBool /*noFallback*/,
+    आभास शून्य put(ध्रुव वर्ण *किल्ली, Resource_मूल्य &value, UBool /*noFallback*/,
             UErrorCode &errorCode) override {
         ResourceTable contexts = value.getTable(errorCode);
-        if (U_FAILURE(errorCode)) { return; }
-        for (int i = 0; contexts.getKeyAndValue(i, key, value); ++i) {
+        यदि (U_FAILURE(errorCode)) { प्रत्यागम; }
+        प्रति (पूर्णाङ्क i = 0; contexts.get_किल्ली_And_मूल्य(i, किल्ली, value); ++i) {
 
             CapContextUsage usageEnum;
-            if (uprv_strcmp(key, "key") == 0) {
-                usageEnum = kCapContextUsageKey;
-            } else if (uprv_strcmp(key, "keyValue") == 0) {
-                usageEnum = kCapContextUsageKeyValue;
-            } else if (uprv_strcmp(key, "languages") == 0) {
+            यदि (uprv_strcmp(किल्ली, "key") == 0) {
+                usageEnum = k_Cap_Context_Usage_किल्ली;
+            } अन्यथा यदि (uprv_strcmp(किल्ली, "keyValue") == 0) {
+                usageEnum = k_Cap_Context_Usage_किल्ली_मूल्य;
+            } अन्यथा यदि (uprv_strcmp(किल्ली, "languages") == 0) {
                 usageEnum = kCapContextUsageLanguage;
-            } else if (uprv_strcmp(key, "script") == 0) {
+            } अन्यथा यदि (uprv_strcmp(किल्ली, "script") == 0) {
                 usageEnum = kCapContextUsageScript;
-            } else if (uprv_strcmp(key, "territory") == 0) {
+            } अन्यथा यदि (uprv_strcmp(किल्ली, "territory") == 0) {
                 usageEnum = kCapContextUsageTerritory;
-            } else if (uprv_strcmp(key, "variant") == 0) {
+            } अन्यथा यदि (uprv_strcmp(किल्ली, "variant") == 0) {
                 usageEnum = kCapContextUsageVariant;
-            } else {
-                continue;
+            } अन्यथा {
+                अनुवर्त;
             }
 
             int32_t len = 0;
-            const int32_t* intVector = value.getIntVector(len, errorCode);
-            if (U_FAILURE(errorCode)) { return; }
-            if (len < 2) { continue; }
+            ध्रुव int32_t* intVector = value.getIntVector(len, errorCode);
+            यदि (U_FAILURE(errorCode)) { प्रत्यागम; }
+            यदि (len < 2) { अनुवर्त; }
 
             int32_t titlecaseInt = (parent.capitalizationContext == UDISPCTX_CAPITALIZATION_FOR_UI_LIST_OR_MENU) ? intVector[0] : intVector[1];
-            if (titlecaseInt == 0) { continue; }
+            यदि (titlecaseInt == 0) { अनुवर्त; }
 
-            parent.fCapitalization[usageEnum] = true;
-            hasCapitalizationUsage = true;
+            parent.fCapitalization[usageEnum] = सत्य;
+            hasCapitalizationUsage = सत्य;
         }
     }
 };
@@ -414,16 +414,16 @@ struct LocaleDisplayNamesImpl::CapitalizationContextSink : public ResourceSink {
 // Virtual destructors must be defined out of line.
 LocaleDisplayNamesImpl::CapitalizationContextSink::~CapitalizationContextSink() {}
 
-void
+शून्य
 LocaleDisplayNamesImpl::initialize() {
-    LocaleDisplayNamesImpl* nonConstThis = this;
-    nonConstThis->locale = langData.getLocale() == Locale::getRoot()
+    LocaleDisplayNamesImpl* nonConstThis = एतत्;
+    nonConstThis->locale = langData.getLocale() == Locale::get_मूळ()
         ? regionData.getLocale()
         : langData.getLocale();
 
     UnicodeString sep;
     langData.getNoFallback("localeDisplayPattern", "separator", sep);
-    if (sep.isBogus()) {
+    यदि (sep.isBogus()) {
         sep = UnicodeString("{0}, {1}", -1, US_INV);
     }
     UErrorCode status = U_ZERO_ERROR;
@@ -431,16 +431,16 @@ LocaleDisplayNamesImpl::initialize() {
 
     UnicodeString pattern;
     langData.getNoFallback("localeDisplayPattern", "pattern", pattern);
-    if (pattern.isBogus()) {
+    यदि (pattern.isBogus()) {
         pattern = UnicodeString("{0} ({1})", -1, US_INV);
     }
     format.applyPatternMinMaxArguments(pattern, 2, 2, status);
-    if (pattern.indexOf(static_cast<char16_t>(0xFF08)) >= 0) {
+    यदि (pattern.indexOf(static_cast<char16_t>(0xFF08)) >= 0) {
         formatOpenParen.setTo(static_cast<char16_t>(0xFF08));         // fullwidth (
         formatReplaceOpenParen.setTo(static_cast<char16_t>(0xFF3B));  // fullwidth [
         formatCloseParen.setTo(static_cast<char16_t>(0xFF09));        // fullwidth )
         formatReplaceCloseParen.setTo(static_cast<char16_t>(0xFF3D)); // fullwidth ]
-    } else {
+    } अन्यथा {
         formatOpenParen.setTo(static_cast<char16_t>(0x0028));         // (
         formatReplaceOpenParen.setTo(static_cast<char16_t>(0x005B));  // [
         formatCloseParen.setTo(static_cast<char16_t>(0x0029));        // )
@@ -449,34 +449,34 @@ LocaleDisplayNamesImpl::initialize() {
 
     UnicodeString ktPattern;
     langData.get("localeDisplayPattern", "keyTypePattern", ktPattern);
-    if (ktPattern.isBogus()) {
+    यदि (ktPattern.isBogus()) {
         ktPattern = UnicodeString("{0}={1}", -1, US_INV);
     }
-    keyTypeFormat.applyPatternMinMaxArguments(ktPattern, 2, 2, status);
+    किल्ली_Type_Format.applyPatternMinMaxArguments(ktPattern, 2, 2, status);
 
-    uprv_memset(fCapitalization, 0, sizeof(fCapitalization));
-#if !UCONFIG_NO_BREAK_ITERATION
+    uprv_memset(fCapitalization, 0, परिमाण(fCapitalization));
+#यदि !UCONFIG_NO_BREAK_ITERATION
     // Only get the context data if we need it! This is a const object so we know now...
     // Also check whether we will need a break iterator (depends on the data)
-    bool needBrkIter = false;
-    if (capitalizationContext == UDISPCTX_CAPITALIZATION_FOR_UI_LIST_OR_MENU || capitalizationContext == UDISPCTX_CAPITALIZATION_FOR_STANDALONE) {
+    तार्किक needBrkIter = असत्य;
+    यदि (capitalizationContext == UDISPCTX_CAPITALIZATION_FOR_UI_LIST_OR_MENU || capitalizationContext == UDISPCTX_CAPITALIZATION_FOR_STANDALONE) {
         LocalUResourceBundlePointer resource(ures_open(nullptr, locale.getName(), &status));
-        if (U_FAILURE(status)) { return; }
-        CapitalizationContextSink sink(*this);
-        ures_getAllItemsWithFallback(resource.getAlias(), "contextTransforms", sink, status);
-        if (status == U_MISSING_RESOURCE_ERROR) {
+        यदि (U_FAILURE(status)) { प्रत्यागम; }
+        CapitalizationContextSink sink(*एतत्);
+        ures_get_All_वस्तुसंच_With_Fallback(resource.getAlias(), "contextTransforms", sink, status);
+        यदि (status == U_MISSING_RESOURCE_ERROR) {
             // Silently ignore.  Not every locale has contextTransforms.
             status = U_ZERO_ERROR;
-        } else if (U_FAILURE(status)) {
-            return;
+        } अन्यथा यदि (U_FAILURE(status)) {
+            प्रत्यागम;
         }
         needBrkIter = sink.hasCapitalizationUsage;
     }
     // Get a sentence break iterator if we will need it
-    if (needBrkIter || capitalizationContext == UDISPCTX_CAPITALIZATION_FOR_BEGINNING_OF_SENTENCE) {
+    यदि (needBrkIter || capitalizationContext == UDISPCTX_CAPITALIZATION_FOR_BEGINNING_OF_SENTENCE) {
         status = U_ZERO_ERROR;
         capitalizationBrkIter = BreakIterator::createSentenceInstance(locale, status);
-        if (U_FAILURE(status)) {
+        यदि (U_FAILURE(status)) {
             delete capitalizationBrkIter;
             capitalizationBrkIter = nullptr;
         }
@@ -485,125 +485,125 @@ LocaleDisplayNamesImpl::initialize() {
 }
 
 LocaleDisplayNamesImpl::~LocaleDisplayNamesImpl() {
-#if !UCONFIG_NO_BREAK_ITERATION
+#यदि !UCONFIG_NO_BREAK_ITERATION
     delete capitalizationBrkIter;
 #endif
 }
 
-const Locale&
-LocaleDisplayNamesImpl::getLocale() const U_LIFETIME_BOUND {
-    return locale;
+ध्रुव Locale&
+LocaleDisplayNamesImpl::getLocale() ध्रुव U_LIFETIME_BOUND {
+    प्रत्यागम locale;
 }
 
 UDialectHandling
-LocaleDisplayNamesImpl::getDialectHandling() const {
-    return dialectHandling;
+LocaleDisplayNamesImpl::getDialectHandling() ध्रुव {
+    प्रत्यागम dialectHandling;
 }
 
 UDisplayContext
-LocaleDisplayNamesImpl::getContext(UDisplayContextType type) const {
-    switch (type) {
-        case UDISPCTX_TYPE_DIALECT_HANDLING:
-            return static_cast<UDisplayContext>(dialectHandling);
-        case UDISPCTX_TYPE_CAPITALIZATION:
-            return capitalizationContext;
-        case UDISPCTX_TYPE_DISPLAY_LENGTH:
-            return nameLength;
-        case UDISPCTX_TYPE_SUBSTITUTE_HANDLING:
-            return substitute;
-        default:
-            break;
+LocaleDisplayNamesImpl::getContext(UDisplayContextType type) ध्रुव {
+    विकल्प (type) {
+        पक्ष UDISPCTX_TYPE_DIALECT_HANDLING:
+            प्रत्यागम static_cast<UDisplayContext>(dialectHandling);
+        पक्ष UDISPCTX_TYPE_CAPITALIZATION:
+            प्रत्यागम capitalizationContext;
+        पक्ष UDISPCTX_TYPE_DISPLAY_LENGTH:
+            प्रत्यागम nameLength;
+        पक्ष UDISPCTX_TYPE_SUBSTITUTE_HANDLING:
+            प्रत्यागम substitute;
+        स्वभाव:
+            भङ्ग;
     }
-    return static_cast<UDisplayContext>(0);
+    प्रत्यागम static_cast<UDisplayContext>(0);
 }
 
 UnicodeString&
 LocaleDisplayNamesImpl::adjustForUsageAndContext(CapContextUsage usage,
-                                                 UnicodeString& result U_LIFETIME_BOUND) const {
-#if !UCONFIG_NO_BREAK_ITERATION
+                                                 UnicodeString& result U_LIFETIME_BOUND) ध्रुव {
+#यदि !UCONFIG_NO_BREAK_ITERATION
     // check to see whether we need to titlecase result
-    if ( result.length() > 0 && u_islower(result.char32At(0)) && capitalizationBrkIter!= nullptr &&
+    यदि ( result.length() > 0 && u_islower(result.char32At(0)) && capitalizationBrkIter!= nullptr &&
           ( capitalizationContext==UDISPCTX_CAPITALIZATION_FOR_BEGINNING_OF_SENTENCE || fCapitalization[usage] ) ) {
         // note fCapitalization[usage] won't be set unless capitalizationContext is UI_LIST_OR_MENU or STANDALONE
-        static UMutex capitalizationBrkIterLock;
+        स्थिर UMutex capitalizationBrkIterLock;
         Mutex lock(&capitalizationBrkIterLock);
         result.toTitle(capitalizationBrkIter, locale, U_TITLECASE_NO_LOWERCASE | U_TITLECASE_NO_BREAK_ADJUSTMENT);
     }
 #endif
-    return result;
+    प्रत्यागम result;
 }
 
 UnicodeString&
-LocaleDisplayNamesImpl::localeDisplayName(const Locale& loc,
-                                          UnicodeString& result U_LIFETIME_BOUND) const {
-  if (loc.isBogus()) {
+LocaleDisplayNamesImpl::localeDisplayName(ध्रुव Locale& loc,
+                                          UnicodeString& result U_LIFETIME_BOUND) ध्रुव {
+  यदि (loc.isBogus()) {
     result.setToBogus();
-    return result;
+    प्रत्यागम result;
   }
   UnicodeString resultName;
 
-  const char* lang = loc.getLanguage();
-  if (uprv_strlen(lang) == 0) {
+  ध्रुव वर्ण* lang = loc.getLanguage();
+  यदि (uprv_strlen(lang) == 0) {
     lang = "root";
   }
-  const char* script = loc.getScript();
-  const char* country = loc.getCountry();
-  const char* variant = loc.getVariant();
+  ध्रुव वर्ण* script = loc.getScript();
+  ध्रुव वर्ण* country = loc.getCountry();
+  ध्रुव वर्ण* variant = loc.getVariant();
 
-  bool hasScript = uprv_strlen(script) > 0;
-  bool hasCountry = uprv_strlen(country) > 0;
-  bool hasVariant = uprv_strlen(variant) > 0;
+  तार्किक hasScript = uprv_strlen(script) > 0;
+  तार्किक hasCountry = uprv_strlen(country) > 0;
+  तार्किक hasVariant = uprv_strlen(variant) > 0;
 
-  if (dialectHandling == ULDN_DIALECT_NAMES) {
+  यदि (dialectHandling == ULDN_DIALECT_NAMES) {
     UErrorCode status = U_ZERO_ERROR;
     CharString buffer;
-    do { // loop construct is so we can break early out of search
-      if (hasScript && hasCountry) {
+    कुरु { // loop construct is so we can break early out of search
+      यदि (hasScript && hasCountry) {
         buffer.append(lang, status)
               .append('_', status)
               .append(script, status)
               .append('_', status)
               .append(country, status);
-        if (U_SUCCESS(status)) {
-          localeIdName(buffer.data(), resultName, false);
-          if (!resultName.isBogus()) {
-            hasScript = false;
-            hasCountry = false;
-            break;
+        यदि (U_SUCCESS(status)) {
+          localeIdName(buffer.data(), resultName, असत्य);
+          यदि (!resultName.isBogus()) {
+            hasScript = असत्य;
+            hasCountry = असत्य;
+            भङ्ग;
           }
         }
       }
-      if (hasScript) {
+      यदि (hasScript) {
         buffer.append(lang, status)
               .append('_', status)
               .append(script, status);
-        if (U_SUCCESS(status)) {
-          localeIdName(buffer.data(), resultName, false);
-          if (!resultName.isBogus()) {
-            hasScript = false;
-            break;
+        यदि (U_SUCCESS(status)) {
+          localeIdName(buffer.data(), resultName, असत्य);
+          यदि (!resultName.isBogus()) {
+            hasScript = असत्य;
+            भङ्ग;
           }
         }
       }
-      if (hasCountry) {
+      यदि (hasCountry) {
         buffer.append(lang, status)
               .append('_', status)
               .append(country, status);
-        if (U_SUCCESS(status)) {
-          localeIdName(buffer.data(), resultName, false);
-          if (!resultName.isBogus()) {
-            hasCountry = false;
-            break;
+        यदि (U_SUCCESS(status)) {
+          localeIdName(buffer.data(), resultName, असत्य);
+          यदि (!resultName.isBogus()) {
+            hasCountry = असत्य;
+            भङ्ग;
           }
         }
       }
-    } while (false);
+    } यावत् (असत्य);
   }
-  if (resultName.isBogus() || resultName.isEmpty()) {
+  यदि (resultName.isBogus() || resultName.isEmpty()) {
     localeIdName(lang, resultName, substitute == UDISPCTX_SUBSTITUTE);
-    if (resultName.isBogus()) {
+    यदि (resultName.isBogus()) {
       result.setToBogus();
-      return result;
+      प्रत्यागम result;
     }
   }
 
@@ -611,27 +611,27 @@ LocaleDisplayNamesImpl::localeDisplayName(const Locale& loc,
   UnicodeString temp;
   UErrorCode status = U_ZERO_ERROR;
 
-  if (hasScript) {
-    UnicodeString script_str = scriptDisplayName(script, temp, true);
-    if (script_str.isBogus()) {
+  यदि (hasScript) {
+    UnicodeString script_str = scriptDisplayName(script, temp, सत्य);
+    यदि (script_str.isBogus()) {
       result.setToBogus();
-      return result;
+      प्रत्यागम result;
     }
     resultRemainder.append(script_str);
   }
-  if (hasCountry) {
-    UnicodeString region_str = regionDisplayName(country, temp, true);
-    if (region_str.isBogus()) {
+  यदि (hasCountry) {
+    UnicodeString region_str = regionDisplayName(country, temp, सत्य);
+    यदि (region_str.isBogus()) {
       result.setToBogus();
-      return result;
+      प्रत्यागम result;
     }
     appendWithSep(resultRemainder, region_str);
   }
-  if (hasVariant) {
-    UnicodeString variant_str = variantDisplayName(variant, temp, true);
-    if (variant_str.isBogus()) {
+  यदि (hasVariant) {
+    UnicodeString variant_str = variantDisplayName(variant, temp, सत्य);
+    यदि (variant_str.isBogus()) {
       result.setToBogus();
-      return result;
+      प्रत्यागम result;
     }
     appendWithSep(resultRemainder, variant_str);
   }
@@ -639,27 +639,27 @@ LocaleDisplayNamesImpl::localeDisplayName(const Locale& loc,
   resultRemainder.findAndReplace(formatCloseParen, formatReplaceCloseParen);
 
   LocalPointer<StringEnumeration> e(loc.createKeywords(status));
-  if (e.isValid() && U_SUCCESS(status)) {
+  यदि (e.isValid() && U_SUCCESS(status)) {
     UnicodeString temp2;
-    const char* key;
-    while ((key = e->next((int32_t*)nullptr, status)) != nullptr) {
-        auto value = loc.getKeywordValue<CharString>(key, status);
-        if (U_FAILURE(status)) {
-            return result;
+    ध्रुव वर्ण* किल्ली;
+    यावत् ((किल्ली = e->next((int32_t*)nullptr, status)) != nullptr) {
+        auto value = loc.get_Keyword_मूल्य<CharString>(किल्ली, status);
+        यदि (U_FAILURE(status)) {
+            प्रत्यागम result;
       }
-      keyDisplayName(key, temp, true);
+      किल्ली_Display_Name(किल्ली, temp, सत्य);
       temp.findAndReplace(formatOpenParen, formatReplaceOpenParen);
       temp.findAndReplace(formatCloseParen, formatReplaceCloseParen);
-      keyValueDisplayName(key, value.data(), temp2, true);
+      किल्ली_मूल्य_Display_Name(किल्ली, value.data(), temp2, सत्य);
       temp2.findAndReplace(formatOpenParen, formatReplaceOpenParen);
       temp2.findAndReplace(formatCloseParen, formatReplaceCloseParen);
-      if (temp2 != UnicodeString(value.data(), -1, US_INV)) {
+      यदि (temp2 != UnicodeString(value.data(), -1, US_INV)) {
         appendWithSep(resultRemainder, temp2);
-      } else if (temp != UnicodeString(key, -1, US_INV)) {
+      } अन्यथा यदि (temp != UnicodeString(किल्ली, -1, US_INV)) {
         UnicodeString temp3;
-        keyTypeFormat.format(temp, temp2, temp3, status);
+        किल्ली_Type_Format.format(temp, temp2, temp3, status);
         appendWithSep(resultRemainder, temp3);
-      } else {
+      } अन्यथा {
         appendWithSep(resultRemainder, temp)
           .append(static_cast<char16_t>(0x3d) /* = */)
           .append(temp2);
@@ -667,246 +667,246 @@ LocaleDisplayNamesImpl::localeDisplayName(const Locale& loc,
     }
   }
 
-  if (!resultRemainder.isEmpty()) {
+  यदि (!resultRemainder.isEmpty()) {
     format.format(resultName, resultRemainder, result.remove(), status);
-    return adjustForUsageAndContext(kCapContextUsageLanguage, result);
+    प्रत्यागम adjustForUsageAndContext(kCapContextUsageLanguage, result);
   }
 
   result = resultName;
-  return adjustForUsageAndContext(kCapContextUsageLanguage, result);
+  प्रत्यागम adjustForUsageAndContext(kCapContextUsageLanguage, result);
 }
 
 UnicodeString&
-LocaleDisplayNamesImpl::appendWithSep(UnicodeString& buffer U_LIFETIME_BOUND, const UnicodeString& src) const {
-    if (buffer.isEmpty()) {
+LocaleDisplayNamesImpl::appendWithSep(UnicodeString& buffer U_LIFETIME_BOUND, ध्रुव UnicodeString& src) ध्रुव {
+    यदि (buffer.isEmpty()) {
         buffer.setTo(src);
-    } else {
-        const UnicodeString *values[2] = { &buffer, &src };
+    } अन्यथा {
+        ध्रुव UnicodeString *मूल्ये[2] = { &buffer, &src };
         UErrorCode status = U_ZERO_ERROR;
-        separatorFormat.formatAndReplace(values, 2, buffer, nullptr, 0, status);
+        separatorFormat.formatAndReplace(मूल्ये, 2, buffer, nullptr, 0, status);
     }
-    return buffer;
+    प्रत्यागम buffer;
 }
 
 UnicodeString&
-LocaleDisplayNamesImpl::localeDisplayName(const char* localeId,
-                                          UnicodeString& result U_LIFETIME_BOUND) const {
-    return localeDisplayName(Locale(localeId), result);
+LocaleDisplayNamesImpl::localeDisplayName(ध्रुव वर्ण* localeId,
+                                          UnicodeString& result U_LIFETIME_BOUND) ध्रुव {
+    प्रत्यागम localeDisplayName(Locale(localeId), result);
 }
 
 // private
 UnicodeString&
-LocaleDisplayNamesImpl::localeIdName(const char* localeId,
-                                     UnicodeString& result U_LIFETIME_BOUND, bool substitute) const {
-    if (nameLength == UDISPCTX_LENGTH_SHORT) {
+LocaleDisplayNamesImpl::localeIdName(ध्रुव वर्ण* localeId,
+                                     UnicodeString& result U_LIFETIME_BOUND, तार्किक substitute) ध्रुव {
+    यदि (nameLength == UDISPCTX_LENGTH_SHORT) {
         langData.getNoFallback("Languages%short", localeId, result);
-        if (!result.isBogus()) {
-            return result;
+        यदि (!result.isBogus()) {
+            प्रत्यागम result;
         }
     }
     langData.getNoFallback("Languages", localeId, result);
-    if (result.isBogus() && uprv_strchr(localeId, '_') == nullptr) {
+    यदि (result.isBogus() && uprv_strchr(localeId, '_') == nullptr) {
         // Canonicalize lang and try again, ICU-20870
         // (only for language codes without script or region)
         Locale canonLocale = Locale::createCanonical(localeId);
-        const char* canonLocId = canonLocale.getName();
-        if (nameLength == UDISPCTX_LENGTH_SHORT) {
+        ध्रुव वर्ण* canonLocId = canonLocale.getName();
+        यदि (nameLength == UDISPCTX_LENGTH_SHORT) {
             langData.getNoFallback("Languages%short", canonLocId, result);
-            if (!result.isBogus()) {
-                return result;
+            यदि (!result.isBogus()) {
+                प्रत्यागम result;
             }
         }
         langData.getNoFallback("Languages", canonLocId, result);
     }
-    if (result.isBogus() && substitute) {
+    यदि (result.isBogus() && substitute) {
         // use key, this is what langData.get (with fallback) falls back to.
         result.setTo(UnicodeString(localeId, -1, US_INV)); // use key (
     }
-    return result;
+    प्रत्यागम result;
 }
 
 UnicodeString&
-LocaleDisplayNamesImpl::languageDisplayName(const char* lang,
-                                            UnicodeString& result U_LIFETIME_BOUND) const {
-    if (uprv_strcmp("root", lang) == 0 || uprv_strchr(lang, '_') != nullptr) {
-        return result = UnicodeString(lang, -1, US_INV);
+LocaleDisplayNamesImpl::languageDisplayName(ध्रुव वर्ण* lang,
+                                            UnicodeString& result U_LIFETIME_BOUND) ध्रुव {
+    यदि (uprv_strcmp("root", lang) == 0 || uprv_strchr(lang, '_') != nullptr) {
+        प्रत्यागम result = UnicodeString(lang, -1, US_INV);
     }
-    if (nameLength == UDISPCTX_LENGTH_SHORT) {
+    यदि (nameLength == UDISPCTX_LENGTH_SHORT) {
         langData.getNoFallback("Languages%short", lang, result);
-        if (!result.isBogus()) {
-            return adjustForUsageAndContext(kCapContextUsageLanguage, result);
+        यदि (!result.isBogus()) {
+            प्रत्यागम adjustForUsageAndContext(kCapContextUsageLanguage, result);
         }
     }
     langData.getNoFallback("Languages", lang, result);
-    if (result.isBogus()) {
+    यदि (result.isBogus()) {
         // Canonicalize lang and try again, ICU-20870
         Locale canonLocale = Locale::createCanonical(lang);
-        const char* canonLocId = canonLocale.getName();
-        if (nameLength == UDISPCTX_LENGTH_SHORT) {
+        ध्रुव वर्ण* canonLocId = canonLocale.getName();
+        यदि (nameLength == UDISPCTX_LENGTH_SHORT) {
             langData.getNoFallback("Languages%short", canonLocId, result);
-            if (!result.isBogus()) {
-                return adjustForUsageAndContext(kCapContextUsageLanguage, result);
+            यदि (!result.isBogus()) {
+                प्रत्यागम adjustForUsageAndContext(kCapContextUsageLanguage, result);
             }
         }
         langData.getNoFallback("Languages", canonLocId, result);
     }
-    if (result.isBogus() && substitute == UDISPCTX_SUBSTITUTE) {
+    यदि (result.isBogus() && substitute == UDISPCTX_SUBSTITUTE) {
         // use key, this is what langData.get (with fallback) falls back to.
         result.setTo(UnicodeString(lang, -1, US_INV)); // use key (
     }
-    return adjustForUsageAndContext(kCapContextUsageLanguage, result);
+    प्रत्यागम adjustForUsageAndContext(kCapContextUsageLanguage, result);
 }
 
 UnicodeString&
-LocaleDisplayNamesImpl::scriptDisplayName(const char* script,
+LocaleDisplayNamesImpl::scriptDisplayName(ध्रुव वर्ण* script,
                                           UnicodeString& result U_LIFETIME_BOUND,
-                                          bool skipAdjust) const {
-    if (nameLength == UDISPCTX_LENGTH_SHORT) {
+                                          तार्किक skipAdjust) ध्रुव {
+    यदि (nameLength == UDISPCTX_LENGTH_SHORT) {
         langData.getNoFallback("Scripts%short", script, result);
-        if (!result.isBogus()) {
-            return skipAdjust? result: adjustForUsageAndContext(kCapContextUsageScript, result);
+        यदि (!result.isBogus()) {
+            प्रत्यागम skipAdjust? result: adjustForUsageAndContext(kCapContextUsageScript, result);
         }
     }
-    if (substitute == UDISPCTX_SUBSTITUTE) {
+    यदि (substitute == UDISPCTX_SUBSTITUTE) {
         langData.get("Scripts", script, result);
-    } else {
+    } अन्यथा {
         langData.getNoFallback("Scripts", script, result);
     }
-    return skipAdjust? result: adjustForUsageAndContext(kCapContextUsageScript, result);
+    प्रत्यागम skipAdjust? result: adjustForUsageAndContext(kCapContextUsageScript, result);
 }
 
 UnicodeString&
-LocaleDisplayNamesImpl::scriptDisplayName(const char* script,
-                                          UnicodeString& result U_LIFETIME_BOUND) const {
-    return scriptDisplayName(script, result, false);
+LocaleDisplayNamesImpl::scriptDisplayName(ध्रुव वर्ण* script,
+                                          UnicodeString& result U_LIFETIME_BOUND) ध्रुव {
+    प्रत्यागम scriptDisplayName(script, result, असत्य);
 }
 
 UnicodeString&
 LocaleDisplayNamesImpl::scriptDisplayName(UScriptCode scriptCode,
-                                          UnicodeString& result U_LIFETIME_BOUND) const {
-    return scriptDisplayName(uscript_getName(scriptCode), result, false);
+                                          UnicodeString& result U_LIFETIME_BOUND) ध्रुव {
+    प्रत्यागम scriptDisplayName(uscript_getName(scriptCode), result, असत्य);
 }
 
 UnicodeString&
-LocaleDisplayNamesImpl::regionDisplayName(const char* region,
+LocaleDisplayNamesImpl::regionDisplayName(ध्रुव वर्ण* region,
                                           UnicodeString& result U_LIFETIME_BOUND,
-                                          bool skipAdjust) const {
-    if (nameLength == UDISPCTX_LENGTH_SHORT) {
+                                          तार्किक skipAdjust) ध्रुव {
+    यदि (nameLength == UDISPCTX_LENGTH_SHORT) {
          regionData.getNoFallback("Countries%short", region, result);
-        if (!result.isBogus()) {
-            return skipAdjust? result: adjustForUsageAndContext(kCapContextUsageTerritory, result);
+        यदि (!result.isBogus()) {
+            प्रत्यागम skipAdjust? result: adjustForUsageAndContext(kCapContextUsageTerritory, result);
         }
     }
-    if (substitute == UDISPCTX_SUBSTITUTE) {
+    यदि (substitute == UDISPCTX_SUBSTITUTE) {
         regionData.get("Countries", region, result);
-    } else {
+    } अन्यथा {
         regionData.getNoFallback("Countries", region, result);
     }
-    return skipAdjust? result: adjustForUsageAndContext(kCapContextUsageTerritory, result);
+    प्रत्यागम skipAdjust? result: adjustForUsageAndContext(kCapContextUsageTerritory, result);
 }
 
 UnicodeString&
-LocaleDisplayNamesImpl::regionDisplayName(const char* region,
-                                          UnicodeString& result U_LIFETIME_BOUND) const {
-    return regionDisplayName(region, result, false);
+LocaleDisplayNamesImpl::regionDisplayName(ध्रुव वर्ण* region,
+                                          UnicodeString& result U_LIFETIME_BOUND) ध्रुव {
+    प्रत्यागम regionDisplayName(region, result, असत्य);
 }
 
 
 UnicodeString&
-LocaleDisplayNamesImpl::variantDisplayName(const char* variant,
+LocaleDisplayNamesImpl::variantDisplayName(ध्रुव वर्ण* variant,
                                            UnicodeString& result U_LIFETIME_BOUND,
-                                           bool skipAdjust) const {
+                                           तार्किक skipAdjust) ध्रुव {
     // don't have a resource for short variant names
-    if (substitute == UDISPCTX_SUBSTITUTE) {
+    यदि (substitute == UDISPCTX_SUBSTITUTE) {
         langData.get("Variants", variant, result);
-    } else {
+    } अन्यथा {
         langData.getNoFallback("Variants", variant, result);
     }
-    return skipAdjust? result: adjustForUsageAndContext(kCapContextUsageVariant, result);
+    प्रत्यागम skipAdjust? result: adjustForUsageAndContext(kCapContextUsageVariant, result);
 }
 
 UnicodeString&
-LocaleDisplayNamesImpl::variantDisplayName(const char* variant,
-                                           UnicodeString& result U_LIFETIME_BOUND) const {
-    return variantDisplayName(variant, result, false);
+LocaleDisplayNamesImpl::variantDisplayName(ध्रुव वर्ण* variant,
+                                           UnicodeString& result U_LIFETIME_BOUND) ध्रुव {
+    प्रत्यागम variantDisplayName(variant, result, असत्य);
 }
 
 UnicodeString&
-LocaleDisplayNamesImpl::keyDisplayName(const char* key,
+LocaleDisplayNamesImpl::किल्ली_Display_Name(ध्रुव वर्ण* किल्ली,
                                        UnicodeString& result U_LIFETIME_BOUND,
-                                       bool skipAdjust) const {
+                                       तार्किक skipAdjust) ध्रुव {
     // don't have a resource for short key names
-    if (substitute == UDISPCTX_SUBSTITUTE) {
-        langData.get("Keys", key, result);
-    } else {
-        langData.getNoFallback("Keys", key, result);
+    यदि (substitute == UDISPCTX_SUBSTITUTE) {
+        langData.get("Keys", किल्ली, result);
+    } अन्यथा {
+        langData.getNoFallback("Keys", किल्ली, result);
     }
-    return skipAdjust? result: adjustForUsageAndContext(kCapContextUsageKey, result);
+    प्रत्यागम skipAdjust? result: adjustForUsageAndContext(k_Cap_Context_Usage_किल्ली, result);
 }
 
 UnicodeString&
-LocaleDisplayNamesImpl::keyDisplayName(const char* key,
-                                       UnicodeString& result U_LIFETIME_BOUND) const {
-    return keyDisplayName(key, result, false);
+LocaleDisplayNamesImpl::किल्ली_Display_Name(ध्रुव वर्ण* किल्ली,
+                                       UnicodeString& result U_LIFETIME_BOUND) ध्रुव {
+    प्रत्यागम किल्ली_Display_Name(किल्ली, result, असत्य);
 }
 
 UnicodeString&
-LocaleDisplayNamesImpl::keyValueDisplayName(const char* key,
-                                            const char* value,
+LocaleDisplayNamesImpl::किल्ली_मूल्य_Display_Name(ध्रुव वर्ण* किल्ली,
+                                            ध्रुव वर्ण* value,
                                             UnicodeString& result U_LIFETIME_BOUND,
-                                            bool skipAdjust) const {
-    if (uprv_strcmp(key, "currency") == 0) {
+                                            तार्किक skipAdjust) ध्रुव {
+    यदि (uprv_strcmp(किल्ली, "currency") == 0) {
         // ICU4C does not have ICU4J CurrencyDisplayInfo equivalent for now.
         UErrorCode sts = U_ZERO_ERROR;
-        UnicodeString ustrValue(value, -1, US_INV);
+        UnicodeString ustr_मूल्य(value, -1, US_INV);
         int32_t len;
-        const char16_t *currencyName = ucurr_getName(ustrValue.getTerminatedBuffer(),
+        ध्रुव char16_t *currencyName = ucurr_getName(ustr_मूल्य.getTerminatedBuffer(),
             locale.getBaseName(), UCURR_LONG_NAME, nullptr /* isChoiceFormat */, &len, &sts);
-        if (U_FAILURE(sts)) {
+        यदि (U_FAILURE(sts)) {
             // Return the value as is on failure
-            result = ustrValue;
-            return result;
+            result = ustr_मूल्य;
+            प्रत्यागम result;
         }
         result.setTo(currencyName, len);
-        return skipAdjust? result: adjustForUsageAndContext(kCapContextUsageKeyValue, result);
+        प्रत्यागम skipAdjust? result: adjustForUsageAndContext(k_Cap_Context_Usage_किल्ली_मूल्य, result);
     }
 
-    if (nameLength == UDISPCTX_LENGTH_SHORT) {
-        langData.getNoFallback("Types%short", key, value, result);
-        if (!result.isBogus()) {
-            return skipAdjust? result: adjustForUsageAndContext(kCapContextUsageKeyValue, result);
+    यदि (nameLength == UDISPCTX_LENGTH_SHORT) {
+        langData.getNoFallback("Types%short", किल्ली, value, result);
+        यदि (!result.isBogus()) {
+            प्रत्यागम skipAdjust? result: adjustForUsageAndContext(k_Cap_Context_Usage_किल्ली_मूल्य, result);
         }
     }
-    if (substitute == UDISPCTX_SUBSTITUTE) {
-        langData.get("Types", key, value, result);
-    } else {
-        langData.getNoFallback("Types", key, value, result);
+    यदि (substitute == UDISPCTX_SUBSTITUTE) {
+        langData.get("Types", किल्ली, value, result);
+    } अन्यथा {
+        langData.getNoFallback("Types", किल्ली, value, result);
     }
-    return skipAdjust? result: adjustForUsageAndContext(kCapContextUsageKeyValue, result);
+    प्रत्यागम skipAdjust? result: adjustForUsageAndContext(k_Cap_Context_Usage_किल्ली_मूल्य, result);
 }
 
 UnicodeString&
-LocaleDisplayNamesImpl::keyValueDisplayName(const char* key,
-                                            const char* value,
-                                            UnicodeString& result U_LIFETIME_BOUND) const {
-    return keyValueDisplayName(key, value, result, false);
+LocaleDisplayNamesImpl::किल्ली_मूल्य_Display_Name(ध्रुव वर्ण* किल्ली,
+                                            ध्रुव वर्ण* value,
+                                            UnicodeString& result U_LIFETIME_BOUND) ध्रुव {
+    प्रत्यागम किल्ली_मूल्य_Display_Name(किल्ली, value, result, असत्य);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 LocaleDisplayNames*
-LocaleDisplayNames::createInstance(const Locale& locale,
+LocaleDisplayNames::createInstance(ध्रुव Locale& locale,
                                    UDialectHandling dialectHandling) {
-    return new LocaleDisplayNamesImpl(locale, dialectHandling);
+    प्रत्यागम नूतन LocaleDisplayNamesImpl(locale, dialectHandling);
 }
 
 LocaleDisplayNames*
-LocaleDisplayNames::createInstance(const Locale& locale,
+LocaleDisplayNames::createInstance(ध्रुव Locale& locale,
                                    UDisplayContext *contexts, int32_t length) {
-    if (contexts == nullptr) {
+    यदि (contexts == nullptr) {
         length = 0;
     }
-    return new LocaleDisplayNamesImpl(locale, contexts, length);
+    प्रत्यागम नूतन LocaleDisplayNamesImpl(locale, contexts, length);
 }
 
 U_NAMESPACE_END
@@ -916,202 +916,202 @@ U_NAMESPACE_END
 U_NAMESPACE_USE
 
 U_CAPI ULocaleDisplayNames * U_EXPORT2
-uldn_open(const char * locale,
+uldn_open(ध्रुव वर्ण * locale,
           UDialectHandling dialectHandling,
           UErrorCode *pErrorCode) {
-  if (U_FAILURE(*pErrorCode)) {
-    return nullptr;
+  यदि (U_FAILURE(*pErrorCode)) {
+    प्रत्यागम nullptr;
   }
-  if (locale == nullptr) {
+  यदि (locale == nullptr) {
     locale = uloc_getDefault();
   }
-  return (ULocaleDisplayNames *)LocaleDisplayNames::createInstance(Locale(locale), dialectHandling);
+  प्रत्यागम (ULocaleDisplayNames *)LocaleDisplayNames::createInstance(Locale(locale), dialectHandling);
 }
 
 U_CAPI ULocaleDisplayNames * U_EXPORT2
-uldn_openForContext(const char * locale,
+uldn_openForContext(ध्रुव वर्ण * locale,
                     UDisplayContext *contexts, int32_t length,
                     UErrorCode *pErrorCode) {
-  if (U_FAILURE(*pErrorCode)) {
-    return nullptr;
+  यदि (U_FAILURE(*pErrorCode)) {
+    प्रत्यागम nullptr;
   }
-  if (locale == nullptr) {
+  यदि (locale == nullptr) {
     locale = uloc_getDefault();
   }
-  return (ULocaleDisplayNames *)LocaleDisplayNames::createInstance(Locale(locale), contexts, length);
+  प्रत्यागम (ULocaleDisplayNames *)LocaleDisplayNames::createInstance(Locale(locale), contexts, length);
 }
 
 
-U_CAPI void U_EXPORT2
+U_CAPI शून्य U_EXPORT2
 uldn_close(ULocaleDisplayNames *ldn) {
   delete (LocaleDisplayNames *)ldn;
 }
 
-U_CAPI const char* U_EXPORT2
-uldn_getLocale(const ULocaleDisplayNames* ldn U_LIFETIME_BOUND) {
-  if (ldn) {
-    return ((const LocaleDisplayNames *)ldn)->getLocale().getName();
+U_CAPI ध्रुव वर्ण* U_EXPORT2
+uldn_getLocale(ध्रुव ULocaleDisplayNames* ldn U_LIFETIME_BOUND) {
+  यदि (ldn) {
+    प्रत्यागम ((ध्रुव LocaleDisplayNames *)ldn)->getLocale().getName();
   }
-  return nullptr;
+  प्रत्यागम nullptr;
 }
 
 U_CAPI UDialectHandling U_EXPORT2
-uldn_getDialectHandling(const ULocaleDisplayNames *ldn) {
-  if (ldn) {
-    return ((const LocaleDisplayNames *)ldn)->getDialectHandling();
+uldn_getDialectHandling(ध्रुव ULocaleDisplayNames *ldn) {
+  यदि (ldn) {
+    प्रत्यागम ((ध्रुव LocaleDisplayNames *)ldn)->getDialectHandling();
   }
-  return ULDN_STANDARD_NAMES;
+  प्रत्यागम ULDN_STANDARD_NAMES;
 }
 
 U_CAPI UDisplayContext U_EXPORT2
-uldn_getContext(const ULocaleDisplayNames *ldn,
+uldn_getContext(ध्रुव ULocaleDisplayNames *ldn,
               UDisplayContextType type,
               UErrorCode *pErrorCode) {
-  if (U_FAILURE(*pErrorCode)) {
-    return (UDisplayContext)0;
+  यदि (U_FAILURE(*pErrorCode)) {
+    प्रत्यागम (UDisplayContext)0;
   }
-  return ((const LocaleDisplayNames *)ldn)->getContext(type);
+  प्रत्यागम ((ध्रुव LocaleDisplayNames *)ldn)->getContext(type);
 }
 
 U_CAPI int32_t U_EXPORT2
-uldn_localeDisplayName(const ULocaleDisplayNames *ldn,
-                       const char *locale,
+uldn_localeDisplayName(ध्रुव ULocaleDisplayNames *ldn,
+                       ध्रुव वर्ण *locale,
                        char16_t *result,
                        int32_t maxResultSize,
                        UErrorCode *pErrorCode) {
-  if (U_FAILURE(*pErrorCode)) {
-    return 0;
+  यदि (U_FAILURE(*pErrorCode)) {
+    प्रत्यागम 0;
   }
-  if (ldn == nullptr || locale == nullptr || (result == nullptr && maxResultSize > 0) || maxResultSize < 0) {
+  यदि (ldn == nullptr || locale == nullptr || (result == nullptr && maxResultSize > 0) || maxResultSize < 0) {
     *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-    return 0;
+    प्रत्यागम 0;
   }
   UnicodeString temp(result, 0, maxResultSize);
-  ((const LocaleDisplayNames *)ldn)->localeDisplayName(locale, temp);
-  if (temp.isBogus()) {
+  ((ध्रुव LocaleDisplayNames *)ldn)->localeDisplayName(locale, temp);
+  यदि (temp.isBogus()) {
     *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-    return 0;
+    प्रत्यागम 0;
   }
-  return temp.extract(result, maxResultSize, *pErrorCode);
+  प्रत्यागम temp.extract(result, maxResultSize, *pErrorCode);
 }
 
 U_CAPI int32_t U_EXPORT2
-uldn_languageDisplayName(const ULocaleDisplayNames *ldn,
-                         const char *lang,
+uldn_languageDisplayName(ध्रुव ULocaleDisplayNames *ldn,
+                         ध्रुव वर्ण *lang,
                          char16_t *result,
                          int32_t maxResultSize,
                          UErrorCode *pErrorCode) {
-  if (U_FAILURE(*pErrorCode)) {
-    return 0;
+  यदि (U_FAILURE(*pErrorCode)) {
+    प्रत्यागम 0;
   }
-  if (ldn == nullptr || lang == nullptr || (result == nullptr && maxResultSize > 0) || maxResultSize < 0) {
+  यदि (ldn == nullptr || lang == nullptr || (result == nullptr && maxResultSize > 0) || maxResultSize < 0) {
     *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-    return 0;
+    प्रत्यागम 0;
   }
   UnicodeString temp(result, 0, maxResultSize);
-  ((const LocaleDisplayNames *)ldn)->languageDisplayName(lang, temp);
-  return temp.extract(result, maxResultSize, *pErrorCode);
+  ((ध्रुव LocaleDisplayNames *)ldn)->languageDisplayName(lang, temp);
+  प्रत्यागम temp.extract(result, maxResultSize, *pErrorCode);
 }
 
 U_CAPI int32_t U_EXPORT2
-uldn_scriptDisplayName(const ULocaleDisplayNames *ldn,
-                       const char *script,
+uldn_scriptDisplayName(ध्रुव ULocaleDisplayNames *ldn,
+                       ध्रुव वर्ण *script,
                        char16_t *result,
                        int32_t maxResultSize,
                        UErrorCode *pErrorCode) {
-  if (U_FAILURE(*pErrorCode)) {
-    return 0;
+  यदि (U_FAILURE(*pErrorCode)) {
+    प्रत्यागम 0;
   }
-  if (ldn == nullptr || script == nullptr || (result == nullptr && maxResultSize > 0) || maxResultSize < 0) {
+  यदि (ldn == nullptr || script == nullptr || (result == nullptr && maxResultSize > 0) || maxResultSize < 0) {
     *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-    return 0;
+    प्रत्यागम 0;
   }
   UnicodeString temp(result, 0, maxResultSize);
-  ((const LocaleDisplayNames *)ldn)->scriptDisplayName(script, temp);
-  return temp.extract(result, maxResultSize, *pErrorCode);
+  ((ध्रुव LocaleDisplayNames *)ldn)->scriptDisplayName(script, temp);
+  प्रत्यागम temp.extract(result, maxResultSize, *pErrorCode);
 }
 
 U_CAPI int32_t U_EXPORT2
-uldn_scriptCodeDisplayName(const ULocaleDisplayNames *ldn,
+uldn_scriptCodeDisplayName(ध्रुव ULocaleDisplayNames *ldn,
                            UScriptCode scriptCode,
                            char16_t *result,
                            int32_t maxResultSize,
                            UErrorCode *pErrorCode) {
-  return uldn_scriptDisplayName(ldn, uscript_getName(scriptCode), result, maxResultSize, pErrorCode);
+  प्रत्यागम uldn_scriptDisplayName(ldn, uscript_getName(scriptCode), result, maxResultSize, pErrorCode);
 }
 
 U_CAPI int32_t U_EXPORT2
-uldn_regionDisplayName(const ULocaleDisplayNames *ldn,
-                       const char *region,
+uldn_regionDisplayName(ध्रुव ULocaleDisplayNames *ldn,
+                       ध्रुव वर्ण *region,
                        char16_t *result,
                        int32_t maxResultSize,
                        UErrorCode *pErrorCode) {
-  if (U_FAILURE(*pErrorCode)) {
-    return 0;
+  यदि (U_FAILURE(*pErrorCode)) {
+    प्रत्यागम 0;
   }
-  if (ldn == nullptr || region == nullptr || (result == nullptr && maxResultSize > 0) || maxResultSize < 0) {
+  यदि (ldn == nullptr || region == nullptr || (result == nullptr && maxResultSize > 0) || maxResultSize < 0) {
     *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-    return 0;
+    प्रत्यागम 0;
   }
   UnicodeString temp(result, 0, maxResultSize);
-  ((const LocaleDisplayNames *)ldn)->regionDisplayName(region, temp);
-  return temp.extract(result, maxResultSize, *pErrorCode);
+  ((ध्रुव LocaleDisplayNames *)ldn)->regionDisplayName(region, temp);
+  प्रत्यागम temp.extract(result, maxResultSize, *pErrorCode);
 }
 
 U_CAPI int32_t U_EXPORT2
-uldn_variantDisplayName(const ULocaleDisplayNames *ldn,
-                        const char *variant,
+uldn_variantDisplayName(ध्रुव ULocaleDisplayNames *ldn,
+                        ध्रुव वर्ण *variant,
                         char16_t *result,
                         int32_t maxResultSize,
                         UErrorCode *pErrorCode) {
-  if (U_FAILURE(*pErrorCode)) {
-    return 0;
+  यदि (U_FAILURE(*pErrorCode)) {
+    प्रत्यागम 0;
   }
-  if (ldn == nullptr || variant == nullptr || (result == nullptr && maxResultSize > 0) || maxResultSize < 0) {
+  यदि (ldn == nullptr || variant == nullptr || (result == nullptr && maxResultSize > 0) || maxResultSize < 0) {
     *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-    return 0;
+    प्रत्यागम 0;
   }
   UnicodeString temp(result, 0, maxResultSize);
-  ((const LocaleDisplayNames *)ldn)->variantDisplayName(variant, temp);
-  return temp.extract(result, maxResultSize, *pErrorCode);
+  ((ध्रुव LocaleDisplayNames *)ldn)->variantDisplayName(variant, temp);
+  प्रत्यागम temp.extract(result, maxResultSize, *pErrorCode);
 }
 
 U_CAPI int32_t U_EXPORT2
-uldn_keyDisplayName(const ULocaleDisplayNames *ldn,
-                    const char *key,
+uldn_किल्ली_Display_Name(ध्रुव ULocaleDisplayNames *ldn,
+                    ध्रुव वर्ण *किल्ली,
                     char16_t *result,
                     int32_t maxResultSize,
                     UErrorCode *pErrorCode) {
-  if (U_FAILURE(*pErrorCode)) {
-    return 0;
+  यदि (U_FAILURE(*pErrorCode)) {
+    प्रत्यागम 0;
   }
-  if (ldn == nullptr || key == nullptr || (result == nullptr && maxResultSize > 0) || maxResultSize < 0) {
+  यदि (ldn == nullptr || किल्ली == nullptr || (result == nullptr && maxResultSize > 0) || maxResultSize < 0) {
     *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-    return 0;
+    प्रत्यागम 0;
   }
   UnicodeString temp(result, 0, maxResultSize);
-  ((const LocaleDisplayNames *)ldn)->keyDisplayName(key, temp);
-  return temp.extract(result, maxResultSize, *pErrorCode);
+  ((ध्रुव LocaleDisplayNames *)ldn)->किल्ली_Display_Name(किल्ली, temp);
+  प्रत्यागम temp.extract(result, maxResultSize, *pErrorCode);
 }
 
 U_CAPI int32_t U_EXPORT2
-uldn_keyValueDisplayName(const ULocaleDisplayNames *ldn,
-                         const char *key,
-                         const char *value,
+uldn_किल्ली_मूल्य_Display_Name(ध्रुव ULocaleDisplayNames *ldn,
+                         ध्रुव वर्ण *किल्ली,
+                         ध्रुव वर्ण *value,
                          char16_t *result,
                          int32_t maxResultSize,
                          UErrorCode *pErrorCode) {
-  if (U_FAILURE(*pErrorCode)) {
-    return 0;
+  यदि (U_FAILURE(*pErrorCode)) {
+    प्रत्यागम 0;
   }
-  if (ldn == nullptr || key == nullptr || value == nullptr || (result == nullptr && maxResultSize > 0)
+  यदि (ldn == nullptr || किल्ली == nullptr || value == nullptr || (result == nullptr && maxResultSize > 0)
       || maxResultSize < 0) {
     *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-    return 0;
+    प्रत्यागम 0;
   }
   UnicodeString temp(result, 0, maxResultSize);
-  ((const LocaleDisplayNames *)ldn)->keyValueDisplayName(key, value, temp);
-  return temp.extract(result, maxResultSize, *pErrorCode);
+  ((ध्रुव LocaleDisplayNames *)ldn)->किल्ली_मूल्य_Display_Name(किल्ली, value, temp);
+  प्रत्यागम temp.extract(result, maxResultSize, *pErrorCode);
 }
 
 #endif

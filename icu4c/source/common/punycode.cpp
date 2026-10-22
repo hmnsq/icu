@@ -44,18 +44,18 @@ Disclaimer and license
  * - UTF-16 handling
  */
 
-#include "unicode/utypes.h"
+#अन्तर्भाव "unicode/utypes.h"
 
-#if !UCONFIG_NO_IDNA
+#यदि !UCONFIG_NO_IDNA
 
-#include "unicode/ustring.h"
-#include "unicode/utf.h"
-#include "unicode/utf16.h"
-#include "ustr_imp.h"
-#include "cstring.h"
-#include "cmemory.h"
-#include "punycode.h"
-#include "uassert.h"
+#अन्तर्भाव "unicode/ustring.h"
+#अन्तर्भाव "unicode/utf.h"
+#अन्तर्भाव "unicode/utf16.h"
+#अन्तर्भाव "ustr_imp.h"
+#अन्तर्भाव "cstring.h"
+#अन्तर्भाव "cmemory.h"
+#अन्तर्भाव "punycode.h"
+#अन्तर्भाव "uassert.h"
 
 
 /* Punycode ----------------------------------------------------------------- */
@@ -91,18 +91,18 @@ Disclaimer and license
  * range 0 to BASE-1. The lowercase form is used unless the uppercase flag is
  * nonzero, in which case the uppercase form is used.
  */
-static inline char
+स्थिर अन्तःस्थ वर्ण
 digitToBasic(int32_t digit, UBool uppercase) {
     /*  0..25 map to ASCII a..z or A..Z */
     /* 26..35 map to ASCII 0..9         */
-    if(digit<26) {
-        if(uppercase) {
-            return static_cast<char>(_CAPITAL_A + digit);
-        } else {
-            return static_cast<char>(_SMALL_A + digit);
+    यदि(digit<26) {
+        यदि(uppercase) {
+            प्रत्यागम static_cast<वर्ण>(_CAPITAL_A + digit);
+        } अन्यथा {
+            प्रत्यागम static_cast<वर्ण>(_SMALL_A + digit);
         }
-    } else {
-        return static_cast<char>((_ZERO_ - 26) + digit);
+    } अन्यथा {
+        प्रत्यागम static_cast<वर्ण>((_ZERO_ - 26) + digit);
     }
 }
 
@@ -110,36 +110,36 @@ digitToBasic(int32_t digit, UBool uppercase) {
  * @return the numeric value of a basic code point (for use in representing integers)
  *         in the range 0 to BASE-1, or a negative value if cp is invalid.
  */
-static int32_t decodeDigit(int32_t cp) {
-    if(cp<=u'Z') {
-        if(cp<=u'9') {
-            if(cp<u'0') {
-                return -1;
-            } else {
-                return cp-u'0'+26;  // 0..9 -> 26..35
+स्थिर int32_t decodeDigit(int32_t cp) {
+    यदि(cp<=u'Z') {
+        यदि(cp<=u'9') {
+            यदि(cp<u'0') {
+                प्रत्यागम -1;
+            } अन्यथा {
+                प्रत्यागम cp-u'0'+26;  // 0..9 -> 26..35
             }
-        } else {
-            return cp-u'A';  // A-Z -> 0..25
+        } अन्यथा {
+            प्रत्यागम cp-u'A';  // A-Z -> 0..25
         }
-    } else if(cp<=u'z') {
-        return cp-'a';  // a..z -> 0..25
-    } else {
-        return -1;
+    } अन्यथा यदि(cp<=u'z') {
+        प्रत्यागम cp-'a';  // a..z -> 0..25
+    } अन्यथा {
+        प्रत्यागम -1;
     }
 }
 
-static inline char
-asciiCaseMap(char b, UBool uppercase) {
-    if(uppercase) {
-        if(_SMALL_A<=b && b<=_SMALL_Z) {
+स्थिर अन्तःस्थ वर्ण
+asciiCaseMap(वर्ण b, UBool uppercase) {
+    यदि(uppercase) {
+        यदि(_SMALL_A<=b && b<=_SMALL_Z) {
             b-=(_SMALL_A-_CAPITAL_A);
         }
-    } else {
-        if(_CAPITAL_A<=b && b<=_CAPITAL_Z) {
+    } अन्यथा {
+        यदि(_CAPITAL_A<=b && b<=_CAPITAL_Z) {
             b+=(_SMALL_A-_CAPITAL_A);
         }
     }
-    return b;
+    प्रत्यागम b;
 }
 
 /* Punycode-specific Bootstring code ---------------------------------------- */
@@ -150,25 +150,25 @@ asciiCaseMap(char b, UBool uppercase) {
  */
 
 /* Bias adaptation function. */
-static int32_t
+स्थिर int32_t
 adaptBias(int32_t delta, int32_t length, UBool firstTime) {
     int32_t count;
 
-    if(firstTime) {
+    यदि(firstTime) {
         delta/=DAMP;
-    } else {
+    } अन्यथा {
         delta/=2;
     }
 
     delta+=delta/length;
-    for(count=0; delta>((BASE-TMIN)*TMAX)/2; count+=BASE) {
+    प्रति(count=0; delta>((BASE-TMIN)*TMAX)/2; count+=BASE) {
         delta/=(BASE-TMIN);
     }
 
-    return count+(((BASE-TMIN+1)*delta)/(delta+SKEW));
+    प्रत्यागम count+(((BASE-TMIN+1)*delta)/(delta+SKEW));
 }
 
-namespace {
+नामाकाश {
 
 // ICU-13727: Limit input length for n^2 algorithm
 // where well-formed strings are at most 59 characters long.
@@ -179,9 +179,9 @@ constexpr int32_t DECODE_MAX_CHARS=2000;
 
 // encode
 U_CAPI int32_t
-u_strToPunycode(const char16_t *src, int32_t srcLength,
+u_strToPunycode(ध्रुव char16_t *src, int32_t srcLength,
                 char16_t *dest, int32_t destCapacity,
-                const UBool *caseFlags,
+                ध्रुव UBool *caseFlags,
                 UErrorCode *pErrorCode) {
 
     int32_t cpBuffer[ENCODE_MAX_CODE_UNITS];
@@ -189,17 +189,17 @@ u_strToPunycode(const char16_t *src, int32_t srcLength,
     char16_t c, c2;
 
     /* argument checking */
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    यदि(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
+        प्रत्यागम 0;
     }
 
-    if(src==nullptr || srcLength<-1 || destCapacity<0 || (dest==nullptr && destCapacity!=0)) {
+    यदि(src==nullptr || srcLength<-1 || destCapacity<0 || (dest==nullptr && destCapacity!=0)) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        प्रत्यागम 0;
     }
-    if (srcLength>ENCODE_MAX_CODE_UNITS) {
-        *pErrorCode=U_INPUT_TOO_LONG_ERROR;
-        return 0;
+    यदि (srcLength>ENCODE_MAX_CODE_UNITS) {
+        *pErrorCode=U_आदान_TOO_LONG_ERROR;
+        प्रत्यागम 0;
     }
 
     /*
@@ -207,64 +207,64 @@ u_strToPunycode(const char16_t *src, int32_t srcLength,
      * convert extended ones to UTF-32 in cpBuffer (caseFlag in sign bit):
      */
     srcCPCount=destLength=0;
-    if(srcLength==-1) {
+    यदि(srcLength==-1) {
         /* NUL-terminated input */
-        for(j=0; /* no condition */; ++j) {
-            if((c=src[j])==0) {
-                break;
+        प्रति(j=0; /* no condition */; ++j) {
+            यदि((c=src[j])==0) {
+                भङ्ग;
             }
-            if(j>=ENCODE_MAX_CODE_UNITS) {
-                *pErrorCode=U_INPUT_TOO_LONG_ERROR;
-                return 0;
+            यदि(j>=ENCODE_MAX_CODE_UNITS) {
+                *pErrorCode=U_आदान_TOO_LONG_ERROR;
+                प्रत्यागम 0;
             }
-            if(IS_BASIC(c)) {
+            यदि(IS_BASIC(c)) {
                 cpBuffer[srcCPCount++]=0;
-                if(destLength<destCapacity) {
+                यदि(destLength<destCapacity) {
                     dest[destLength]=
                         caseFlags!=nullptr ?
-                            asciiCaseMap((char)c, caseFlags[j]) :
-                            (char)c;
+                            asciiCaseMap((वर्ण)c, caseFlags[j]) :
+                            (वर्ण)c;
                 }
                 ++destLength;
-            } else {
+            } अन्यथा {
                 n=(caseFlags!=nullptr && caseFlags[j])<<31L;
-                if(U16_IS_SINGLE(c)) {
+                यदि(U16_IS_SINGLE(c)) {
                     n|=c;
-                } else if(U16_IS_LEAD(c) && U16_IS_TRAIL(c2=src[j+1])) {
+                } अन्यथा यदि(U16_IS_LEAD(c) && U16_IS_TRAIL(c2=src[j+1])) {
                     ++j;
                     n|=(int32_t)U16_GET_SUPPLEMENTARY(c, c2);
-                } else {
+                } अन्यथा {
                     /* error: unmatched surrogate */
                     *pErrorCode=U_INVALID_CHAR_FOUND;
-                    return 0;
+                    प्रत्यागम 0;
                 }
                 cpBuffer[srcCPCount++]=n;
             }
         }
-    } else {
+    } अन्यथा {
         /* length-specified input */
-        for(j=0; j<srcLength; ++j) {
+        प्रति(j=0; j<srcLength; ++j) {
             c=src[j];
-            if(IS_BASIC(c)) {
+            यदि(IS_BASIC(c)) {
                 cpBuffer[srcCPCount++]=0;
-                if(destLength<destCapacity) {
+                यदि(destLength<destCapacity) {
                     dest[destLength]=
                         caseFlags!=nullptr ?
-                            asciiCaseMap((char)c, caseFlags[j]) :
-                            (char)c;
+                            asciiCaseMap((वर्ण)c, caseFlags[j]) :
+                            (वर्ण)c;
                 }
                 ++destLength;
-            } else {
+            } अन्यथा {
                 n=(caseFlags!=nullptr && caseFlags[j])<<31L;
-                if(U16_IS_SINGLE(c)) {
+                यदि(U16_IS_SINGLE(c)) {
                     n|=c;
-                } else if(U16_IS_LEAD(c) && (j+1)<srcLength && U16_IS_TRAIL(c2=src[j+1])) {
+                } अन्यथा यदि(U16_IS_LEAD(c) && (j+1)<srcLength && U16_IS_TRAIL(c2=src[j+1])) {
                     ++j;
                     n|=(int32_t)U16_GET_SUPPLEMENTARY(c, c2);
-                } else {
+                } अन्यथा {
                     /* error: unmatched surrogate */
                     *pErrorCode=U_INVALID_CHAR_FOUND;
-                    return 0;
+                    प्रत्यागम 0;
                 }
                 cpBuffer[srcCPCount++]=n;
             }
@@ -273,8 +273,8 @@ u_strToPunycode(const char16_t *src, int32_t srcLength,
 
     /* Finish the basic string - if it is not empty - with a delimiter. */
     basicLength=destLength;
-    if(basicLength>0) {
-        if(destLength<destCapacity) {
+    यदि(basicLength>0) {
+        यदि(destLength<destCapacity) {
             dest[destLength]=DELIMITER;
         }
         ++destLength;
@@ -292,14 +292,14 @@ u_strToPunycode(const char16_t *src, int32_t srcLength,
     bias=INITIAL_BIAS;
 
     /* Main encoding loop: */
-    for(handledCPCount=basicLength; handledCPCount<srcCPCount; /* no op */) {
+    प्रति(handledCPCount=basicLength; handledCPCount<srcCPCount; /* no op */) {
         /*
          * All non-basic code points < n have been handled already.
          * Find the next larger one:
          */
-        for(m=0x7fffffff, j=0; j<srcCPCount; ++j) {
+        प्रति(m=0x7fffffff, j=0; j<srcCPCount; ++j) {
             q=cpBuffer[j]&0x7fffffff; /* remove case flag from the sign bit */
-            if(n<=q && q<m) {
+            यदि(n<=q && q<m) {
                 m=q;
             }
         }
@@ -308,21 +308,21 @@ u_strToPunycode(const char16_t *src, int32_t srcLength,
          * Increase delta enough to advance the decoder's
          * <n,i> state to <m,0>, but guard against overflow:
          */
-        if(m-n>(0x7fffffff-handledCPCount-delta)/(handledCPCount+1)) {
+        यदि(m-n>(0x7fffffff-handledCPCount-delta)/(handledCPCount+1)) {
             *pErrorCode=U_INTERNAL_PROGRAM_ERROR;
-            return 0;
+            प्रत्यागम 0;
         }
         delta+=(m-n)*(handledCPCount+1);
         n=m;
 
         /* Encode a sequence of same code points n */
-        for(j=0; j<srcCPCount; ++j) {
+        प्रति(j=0; j<srcCPCount; ++j) {
             q=cpBuffer[j]&0x7fffffff; /* remove case flag from the sign bit */
-            if(q<n) {
+            यदि(q<n) {
                 ++delta;
-            } else if(q==n) {
+            } अन्यथा यदि(q==n) {
                 /* Represent delta as a generalized variable-length integer: */
-                for(q=delta, k=BASE; /* no condition */; k+=BASE) {
+                प्रति(q=delta, k=BASE; /* no condition */; k+=BASE) {
 
                     /** RAM: comment out the old code for conformance with draft-ietf-idn-punycode-03.txt
 
@@ -335,24 +335,24 @@ u_strToPunycode(const char16_t *src, int32_t srcLength,
                     */
 
                     t=k-bias;
-                    if(t<TMIN) {
+                    यदि(t<TMIN) {
                         t=TMIN;
-                    } else if(k>=(bias+TMAX)) {
+                    } अन्यथा यदि(k>=(bias+TMAX)) {
                         t=TMAX;
                     }
 
-                    if(q<t) {
-                        break;
+                    यदि(q<t) {
+                        भङ्ग;
                     }
 
-                    if(destLength<destCapacity) {
+                    यदि(destLength<destCapacity) {
                         dest[destLength]=digitToBasic(t+(q-t)%(BASE-t), 0);
                     }
                     ++destLength;
                     q=(q-t)/(BASE-t);
                 }
 
-                if(destLength<destCapacity) {
+                यदि(destLength<destCapacity) {
                     dest[destLength] = digitToBasic(q, cpBuffer[j] < 0);
                 }
                 ++destLength;
@@ -366,12 +366,12 @@ u_strToPunycode(const char16_t *src, int32_t srcLength,
         ++n;
     }
 
-    return u_terminateUChars(dest, destCapacity, destLength, pErrorCode);
+    प्रत्यागम u_terminateUChars(dest, destCapacity, destLength, pErrorCode);
 }
 
 // decode
 U_CAPI int32_t
-u_strFromPunycode(const char16_t *src, int32_t srcLength,
+u_strFromPunycode(ध्रुव char16_t *src, int32_t srcLength,
                   char16_t *dest, int32_t destCapacity,
                   UBool *caseFlags,
                   UErrorCode *pErrorCode) {
@@ -380,21 +380,21 @@ u_strFromPunycode(const char16_t *src, int32_t srcLength,
     char16_t b;
 
     /* argument checking */
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    यदि(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
+        प्रत्यागम 0;
     }
 
-    if(src==nullptr || srcLength<-1 || (dest==nullptr && destCapacity!=0)) {
+    यदि(src==nullptr || srcLength<-1 || (dest==nullptr && destCapacity!=0)) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        प्रत्यागम 0;
     }
 
-    if(srcLength==-1) {
+    यदि(srcLength==-1) {
         srcLength=u_strlen(src);
     }
-    if (srcLength>DECODE_MAX_CHARS) {
-        *pErrorCode=U_INPUT_TOO_LONG_ERROR;
-        return 0;
+    यदि (srcLength>DECODE_MAX_CHARS) {
+        *pErrorCode=U_आदान_TOO_LONG_ERROR;
+        प्रत्यागम 0;
     }
 
     /*
@@ -405,25 +405,25 @@ u_strFromPunycode(const char16_t *src, int32_t srcLength,
      *
      * The two following loops iterate backward.
      */
-    for(j=srcLength; j>0;) {
-        if(src[--j]==DELIMITER) {
-            break;
+    प्रति(j=srcLength; j>0;) {
+        यदि(src[--j]==DELIMITER) {
+            भङ्ग;
         }
     }
     destLength=basicLength=destCPCount=j;
     U_ASSERT(destLength>=0);
 
-    while(j>0) {
+    यावत्(j>0) {
         b=src[--j];
-        if(!IS_BASIC(b)) {
+        यदि(!IS_BASIC(b)) {
             *pErrorCode=U_INVALID_CHAR_FOUND;
-            return 0;
+            प्रत्यागम 0;
         }
 
-        if(j<destCapacity) {
+        यदि(j<destCapacity) {
             dest[j] = b;
 
-            if(caseFlags!=nullptr) {
+            यदि(caseFlags!=nullptr) {
                 caseFlags[j]=IS_BASIC_UPPERCASE(b);
             }
         }
@@ -440,7 +440,7 @@ u_strFromPunycode(const char16_t *src, int32_t srcLength,
      * Start just after the last delimiter if any
      * basic code points were copied; start at the beginning otherwise.
      */
-    for(in=basicLength>0 ? basicLength+1 : 0; in<srcLength; /* no op */) {
+    प्रति(in=basicLength>0 ? basicLength+1 : 0; in<srcLength; /* no op */) {
         /*
          * in is the index of the next character to be consumed, and
          * destCPCount is the number of code points in the output array.
@@ -450,21 +450,21 @@ u_strFromPunycode(const char16_t *src, int32_t srcLength,
          * if we increase i as we go, then subtract off its starting
          * value at the end to obtain delta.
          */
-        for(oldi=i, w=1, k=BASE; /* no condition */; k+=BASE) {
-            if(in>=srcLength) {
+        प्रति(oldi=i, w=1, k=BASE; /* no condition */; k+=BASE) {
+            यदि(in>=srcLength) {
                 *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                return 0;
+                प्रत्यागम 0;
             }
 
             digit=decodeDigit(src[in++]);
-            if(digit<0) {
+            यदि(digit<0) {
                 *pErrorCode=U_INVALID_CHAR_FOUND;
-                return 0;
+                प्रत्यागम 0;
             }
-            if(digit>(0x7fffffff-i)/w) {
+            यदि(digit>(0x7fffffff-i)/w) {
                 /* integer overflow */
                 *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                return 0;
+                प्रत्यागम 0;
             }
 
             i+=digit*w;
@@ -477,19 +477,19 @@ u_strFromPunycode(const char16_t *src, int32_t srcLength,
             }
             */
             t=k-bias;
-            if(t<TMIN) {
+            यदि(t<TMIN) {
                 t=TMIN;
-            } else if(k>=(bias+TMAX)) {
+            } अन्यथा यदि(k>=(bias+TMAX)) {
                 t=TMAX;
             }
-            if(digit<t) {
-                break;
+            यदि(digit<t) {
+                भङ्ग;
             }
 
-            if(w>0x7fffffff/(BASE-t)) {
+            यदि(w>0x7fffffff/(BASE-t)) {
                 /* integer overflow */
                 *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                return 0;
+                प्रत्यागम 0;
             }
             w*=BASE-t;
         }
@@ -506,10 +506,10 @@ u_strFromPunycode(const char16_t *src, int32_t srcLength,
          * i was supposed to wrap around from (incremented) destCPCount to 0,
          * incrementing n each time, so we'll fix that now:
          */
-        if(i/destCPCount>(0x7fffffff-n)) {
+        यदि(i/destCPCount>(0x7fffffff-n)) {
             /* integer overflow */
             *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-            return 0;
+            प्रत्यागम 0;
         }
 
         n+=i/destCPCount;
@@ -517,15 +517,15 @@ u_strFromPunycode(const char16_t *src, int32_t srcLength,
         /* not needed for Punycode: */
         /* if (decode_digit(n) <= BASE) return punycode_invalid_input; */
 
-        if(n>0x10ffff || U_IS_SURROGATE(n)) {
+        यदि(n>0x10ffff || U_IS_SURROGATE(n)) {
             /* Unicode code point overflow */
             *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-            return 0;
+            प्रत्यागम 0;
         }
 
         /* Insert n at position i of the output: */
         cpLength=U16_LENGTH(n);
-        if(dest!=nullptr && ((destLength+cpLength)<=destCapacity)) {
+        यदि(dest!=nullptr && ((destLength+cpLength)<=destCapacity)) {
             int32_t codeUnitIndex;
 
             /*
@@ -538,42 +538,42 @@ u_strFromPunycode(const char16_t *src, int32_t srcLength,
              * Only the rare cases with supplementary code points are handled
              * more slowly - but not too bad since this is an insertion anyway.
              */
-            if(i<=firstSupplementaryIndex) {
+            यदि(i<=firstSupplementaryIndex) {
                 codeUnitIndex=i;
-                if(cpLength>1) {
+                यदि(cpLength>1) {
                     firstSupplementaryIndex=codeUnitIndex;
-                } else {
+                } अन्यथा {
                     ++firstSupplementaryIndex;
                 }
-            } else {
+            } अन्यथा {
                 codeUnitIndex=firstSupplementaryIndex;
                 U16_FWD_N(dest, codeUnitIndex, destLength, i-codeUnitIndex);
             }
 
             /* use the char16_t index codeUnitIndex instead of the code point index i */
-            if(codeUnitIndex<destLength) {
+            यदि(codeUnitIndex<destLength) {
                 uprv_memmove(dest+codeUnitIndex+cpLength,
                              dest+codeUnitIndex,
                              (destLength-codeUnitIndex)*U_SIZEOF_UCHAR);
-                if(caseFlags!=nullptr) {
+                यदि(caseFlags!=nullptr) {
                     uprv_memmove(caseFlags+codeUnitIndex+cpLength,
                                  caseFlags+codeUnitIndex,
                                  destLength-codeUnitIndex);
                 }
             }
-            if(cpLength==1) {
+            यदि(cpLength==1) {
                 /* BMP, insert one code unit */
                 dest[codeUnitIndex]=(char16_t)n;
-            } else {
+            } अन्यथा {
                 /* supplementary character, insert two code units */
                 dest[codeUnitIndex]=U16_LEAD(n);
                 dest[codeUnitIndex+1]=U16_TRAIL(n);
             }
-            if(caseFlags!=nullptr) {
+            यदि(caseFlags!=nullptr) {
                 /* Case of last character determines uppercase flag: */
                 caseFlags[codeUnitIndex]=IS_BASIC_UPPERCASE(src[in-1]);
-                if(cpLength==2) {
-                    caseFlags[codeUnitIndex+1]=false;
+                यदि(cpLength==2) {
+                    caseFlags[codeUnitIndex+1]=असत्य;
                 }
             }
         }
@@ -582,7 +582,7 @@ u_strFromPunycode(const char16_t *src, int32_t srcLength,
         ++i;
     }
 
-    return u_terminateUChars(dest, destCapacity, destLength, pErrorCode);
+    प्रत्यागम u_terminateUChars(dest, destCapacity, destLength, pErrorCode);
 }
 
 /* ### check notes on overflow handling - only necessary if not IDNA? are these Punycode functions to be public? */

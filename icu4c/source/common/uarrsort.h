@@ -21,7 +21,7 @@
 #ifndef __UARRSORT_H__
 #define __UARRSORT_H__
 
-#include "unicode/utypes.h"
+#अन्तर्भाव "unicode/utypes.h"
 
 U_CDECL_BEGIN
 /**
@@ -38,8 +38,8 @@ U_CDECL_BEGIN
  *
  * @internal
  */
-typedef int32_t U_CALLCONV
-UComparator(const void *context, const void *left, const void *right);
+प्रकारनिर्देश int32_t U_CALLCONV
+UComparator(ध्रुव शून्य *context, ध्रुव शून्य *डावा, ध्रुव शून्य *उजवा);
 U_CDECL_END
 
 /**
@@ -57,9 +57,9 @@ U_CDECL_END
  *
  * @internal
  */
-U_CAPI void U_EXPORT2
-uprv_sortArray(void *array, int32_t length, int32_t itemSize,
-               UComparator *cmp, const void *context,
+U_CAPI शून्य U_EXPORT2
+uprv_sortArray(शून्य *array, int32_t length, int32_t itemSize,
+               UComparator *cmp, ध्रुव शून्य *context,
                UBool sortStable, UErrorCode *pErrorCode);
 
 /**
@@ -67,21 +67,21 @@ uprv_sortArray(void *array, int32_t length, int32_t itemSize,
  * @internal
  */
 U_CAPI int32_t U_EXPORT2
-uprv_uint16Comparator(const void *context, const void *left, const void *right);
+uprv_uint16Comparator(ध्रुव शून्य *context, ध्रुव शून्य *डावा, ध्रुव शून्य *उजवा);
 
 /**
  * Convenience UComparator implementation for int32_t arrays.
  * @internal
  */
 U_CAPI int32_t U_EXPORT2
-uprv_int32Comparator(const void *context, const void *left, const void *right);
+uprv_int32Comparator(ध्रुव शून्य *context, ध्रुव शून्य *डावा, ध्रुव शून्य *उजवा);
 
 /**
  * Convenience UComparator implementation for uint32_t arrays.
  * @internal
  */
 U_CAPI int32_t U_EXPORT2
-uprv_uint32Comparator(const void *context, const void *left, const void *right);
+uprv_uint32Comparator(ध्रुव शून्य *context, ध्रुव शून्य *डावा, ध्रुव शून्य *उजवा);
 
 /**
  * Much like Java Collections.binarySearch(list, key, comparator).
@@ -97,7 +97,7 @@ uprv_uint32Comparator(const void *context, const void *left, const void *right);
  *         or the index<0 for inserting the item at ~index in sorted order
  */
 U_CAPI int32_t U_EXPORT2
-uprv_stableBinarySearch(char *array, int32_t length, void *item, int32_t itemSize,
-                        UComparator *cmp, const void *context);
+uprv_stable_द्विमान_शोध(वर्ण *array, int32_t length, शून्य *item, int32_t itemSize,
+                        UComparator *cmp, ध्रुव शून्य *context);
 
 #endif
