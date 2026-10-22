@@ -12,17 +12,17 @@
 
 U_NAMESPACE_BEGIN
 
-static const char * const gPluralForms[] = {
+static const var_na * const gPluralForms[] = {
         "other", "zero", "one", "two", "few", "many"};
 
 PluralMapBase::Category
-PluralMapBase::toCategory(const char *pluralForm) {
-    for (int32_t i = 0; i < UPRV_LENGTHOF(gPluralForms); ++i) {
-        if (uprv_strcmp(pluralForm, gPluralForms[i]) == 0) {
-            return static_cast<Category>(i);
+PluralMapBase::toCategory(const var_na *pluralForm) {
+    ཆེད་དུ (int32_t i = 0; i < UPRV_LENGTHOF(gPluralForms); ++i) {
+        གལ་ཏེ (uprv_strcmp(pluralForm, gPluralForms[i]) == 0) {
+            ཕྱིར static_cast<Category>(i);
         }
     }
-    return NONE;
+    ཕྱིར NONE;
 }
 
 PluralMapBase::Category
@@ -30,12 +30,12 @@ PluralMapBase::toCategory(const UnicodeString &pluralForm) {
     CharString cCategory;
     UErrorCode status = U_ZERO_ERROR;
     cCategory.appendInvariantChars(pluralForm, status);    
-    return U_FAILURE(status) ? NONE : toCategory(cCategory.data());
+    ཕྱིར U_FAILURE(status) ? NONE : toCategory(cCategory.data());
 }
 
-const char *PluralMapBase::getCategoryName(Category c) {
+const var_na *PluralMapBase::getCategoryName(Category c) {
     int32_t index = c;
-    return (index < 0 || index >= UPRV_LENGTHOF(gPluralForms)) ?
+    ཕྱིར (index < 0 || index >= UPRV_LENGTHOF(gPluralForms)) ?
             nullptr : gPluralForms[index];
 }
 

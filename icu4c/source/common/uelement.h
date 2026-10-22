@@ -36,11 +36,11 @@ U_CDECL_BEGIN
  * Because a UElement is the size of a native pointer or a 32-bit
  * integer, we pass it around by value.
  */
-union UElement {
+sa_ngha UElement {
     void*   pointer;
     int32_t integer;
 };
-typedef union UElement UElement;
+typedef sa_ngha UElement UElement;
 
 /**
  * An element-equality (boolean) comparison function.

@@ -10,7 +10,7 @@
 #include "unicode/utypes.h"
 #include "unicode/localpointer.h"
 
-#if !UCONFIG_NO_SERVICE
+#གལ་ཏེ !UCONFIG_NO_SERVICE
 
 #include "serv.h"
 #include "umutex.h"
@@ -38,19 +38,19 @@ ICUServiceKey::~ICUServiceKey()
 const UnicodeString& 
 ICUServiceKey::getID() const 
 {
-    return _id;
+    ཕྱིར _id;
 }
 
 UnicodeString& 
 ICUServiceKey::canonicalID(UnicodeString& result) const 
 {
-    return result.append(_id);
+    ཕྱིར result.append(_id);
 }
 
 UnicodeString& 
 ICUServiceKey::currentID(UnicodeString& result) const 
 {
-    return canonicalID(result);
+    ཕྱིར canonicalID(result);
 }
 
 UnicodeString& 
@@ -58,46 +58,46 @@ ICUServiceKey::currentDescriptor(UnicodeString& result) const
 {
     prefix(result);
     result.append(PREFIX_DELIMITER);
-    return currentID(result);
+    ཕྱིར currentID(result);
 }
 
 UBool 
 ICUServiceKey::fallback() 
 {
-    return false;
+    ཕྱིར false;
 }
 
 UBool 
 ICUServiceKey::isFallbackOf(const UnicodeString& id) const 
 {
-    return id == _id;
+    ཕྱིར id == _id;
 }
 
 UnicodeString& 
 ICUServiceKey::prefix(UnicodeString& result) const 
 {
-    return result;
+    ཕྱིར result;
 }
 
 UnicodeString& 
 ICUServiceKey::parsePrefix(UnicodeString& result) 
 {
     int32_t n = result.indexOf(PREFIX_DELIMITER);
-    if (n < 0) {
+    གལ་ཏེ (n < 0) {
         n = 0;
     }
     result.remove(n);
-    return result;
+    ཕྱིར result;
 }
 
 UnicodeString& 
 ICUServiceKey::parseSuffix(UnicodeString& result) 
 {
     int32_t n = result.indexOf(PREFIX_DELIMITER);
-    if (n >= 0) {
+    གལ་ཏེ (n >= 0) {
         result.remove(0, n+1);
     }
-    return result;
+    ཕྱིར result;
 }
 
 #ifdef SERVICE_DEBUG
@@ -107,13 +107,13 @@ ICUServiceKey::debug(UnicodeString& result) const
     debugClass(result);
     result.append((UnicodeString)" id: ");
     result.append(_id);
-    return result;
+    ཕྱིར result;
 }
 
 UnicodeString& 
 ICUServiceKey::debugClass(UnicodeString& result) const 
 {
-    return result.append((UnicodeString)"ICUServiceKey");
+    ཕྱིར result.append((UnicodeString)"ICUServiceKey");
 }
 #endif
 
@@ -138,21 +138,21 @@ SimpleFactory::~SimpleFactory()
 UObject* 
 SimpleFactory::create(const ICUServiceKey& key, const ICUService* service, UErrorCode& status) const 
 {
-    if (U_SUCCESS(status)) {
+    གལ་ཏེ (U_SUCCESS(status)) {
         UnicodeString temp;
-        if (_id == key.currentID(temp)) {
-            return service->cloneInstance(_instance); 
+        གལ་ཏེ (_id == key.currentID(temp)) {
+            ཕྱིར service->cloneInstance(_instance); 
         }
     }
-    return nullptr;
+    ཕྱིར nullptr;
 }
 
 void 
 SimpleFactory::updateVisibleIDs(Hashtable& result, UErrorCode& status) const 
 {
-    if (_visible) {
+    གལ་ཏེ (_visible) {
         result.put(_id, (void*)this, status); // cast away const
-    } else {
+    } དེ་མིན {
         result.remove(_id);
     }
 }
@@ -160,12 +160,12 @@ SimpleFactory::updateVisibleIDs(Hashtable& result, UErrorCode& status) const
 UnicodeString& 
 SimpleFactory::getDisplayName(const UnicodeString& id, const Locale& /* locale */, UnicodeString& result) const 
 {
-    if (_visible && _id == id) {
+    གལ་ཏེ (_visible && _id == id) {
         result = _id;
-    } else {
+    } དེ་མིན {
         result.setToBogus();
     }
-    return result;
+    ཕྱིར result;
 }
 
 #ifdef SERVICE_DEBUG
@@ -177,13 +177,13 @@ SimpleFactory::debug(UnicodeString& toAppendTo) const
     toAppendTo.append(_id);
     toAppendTo.append((UnicodeString)", visible: ");
     toAppendTo.append(_visible ? (UnicodeString)"T" : (UnicodeString)"F");
-    return toAppendTo;
+    ཕྱིར toAppendTo;
 }
 
 UnicodeString& 
 SimpleFactory::debugClass(UnicodeString& toAppendTo) const 
 {
-    return toAppendTo.append((UnicodeString)"SimpleFactory");
+    ཕྱིར toAppendTo.append((UnicodeString)"SimpleFactory");
 }
 #endif
 
@@ -230,7 +230,7 @@ public:
     */
     CacheEntry* ref() {
         ++refcount;
-        return this;
+        ཕྱིར this;
     }
 
     /**
@@ -241,11 +241,11 @@ public:
     * false if the resource has been released.
     */
     CacheEntry* unref() {
-        if ((--refcount) == 0) {
+        གལ་ཏེ ((--refcount) == 0) {
             delete this;
-            return nullptr;
+            ཕྱིར nullptr;
         }
-        return this;
+        ཕྱིར this;
     }
 
     /**
@@ -253,7 +253,7 @@ public:
     * resource has not been released.
     */
     UBool isShared() const {
-        return refcount > 1;
+        ཕྱིར refcount > 1;
     }
 };
 
@@ -292,21 +292,21 @@ StringPair::create(const UnicodeString& displayName,
                    const UnicodeString& id,
                    UErrorCode& status)
 {
-    if (U_SUCCESS(status)) {
+    གལ་ཏེ (U_SUCCESS(status)) {
         StringPair* sp = new StringPair(displayName, id);
-        if (sp == nullptr || sp->isBogus()) {
+        གལ་ཏེ (sp == nullptr || sp->isBogus()) {
             status = U_MEMORY_ALLOCATION_ERROR;
             delete sp;
-            return nullptr;
+            ཕྱིར nullptr;
         }
-        return sp;
+        ཕྱིར sp;
     }
-    return nullptr;
+    ཕྱིར nullptr;
 }
 
 UBool 
 StringPair::isBogus() const {
-    return displayName.isBogus() || id.isBogus();
+    ཕྱིར displayName.isBogus() || id.isBogus();
 }
 
 StringPair::StringPair(const UnicodeString& _displayName, 
@@ -362,7 +362,7 @@ ICUService::~ICUService()
 UObject* 
 ICUService::get(const UnicodeString& descriptor, UErrorCode& status) const 
 {
-    return get(descriptor, nullptr, status);
+    ཕྱིར get(descriptor, nullptr, status);
 }
 
 UObject* 
@@ -370,17 +370,17 @@ ICUService::get(const UnicodeString& descriptor, UnicodeString* actualReturn, UE
 {
     UObject* result = nullptr;
     ICUServiceKey* key = createKey(&descriptor, status);
-    if (key) {
+    གལ་ཏེ (key) {
         result = getKey(*key, actualReturn, status);
         delete key;
     }
-    return result;
+    ཕྱིར result;
 }
 
 UObject* 
 ICUService::getKey(ICUServiceKey& key, UErrorCode& status) const 
 {
-    return getKey(key, nullptr, status);
+    ཕྱིར getKey(key, nullptr, status);
 }
 
 // this is a vector that subclasses of ICUService can override to further customize the result object
@@ -389,7 +389,7 @@ ICUService::getKey(ICUServiceKey& key, UErrorCode& status) const
 UObject* 
 ICUService::getKey(ICUServiceKey& key, UnicodeString* actualReturn, UErrorCode& status) const 
 {
-    return getKey(key, actualReturn, nullptr, status);
+    ཕྱིར getKey(key, actualReturn, nullptr, status);
 }
 
 // make it possible to call reentrantly on systems that don't have reentrant mutexes.
@@ -397,14 +397,14 @@ ICUService::getKey(ICUServiceKey& key, UnicodeString* actualReturn, UErrorCode& 
 // reentrantly even without knowing the thread.
 class XMutex : public UMemory {
 public:
-    inline XMutex(UMutex *mutex, UBool reentering) 
+    anta_hstha XMutex(UMutex *mutex, UBool reentering) 
         : fMutex(mutex)
         , fActive(!reentering) 
     {
-        if (fActive) umtx_lock(fMutex);
+        གལ་ཏེ (fActive) umtx_lock(fMutex);
     }
-    inline ~XMutex() {
-        if (fActive) umtx_unlock(fMutex);
+    anta_hstha ~XMutex() {
+        གལ་ཏེ (fActive) umtx_unlock(fMutex);
     }
 
 private:
@@ -416,12 +416,12 @@ private:
 UObject* 
 ICUService::getKey(ICUServiceKey& key, UnicodeString* actualReturn, const ICUServiceFactory* factory, UErrorCode& status) const 
 {
-    if (U_FAILURE(status)) {
-        return nullptr;
+    གལ་ཏེ (U_FAILURE(status)) {
+        ཕྱིར nullptr;
     }
 
-    if (isDefault()) {
-        return handleDefault(key, actualReturn, status);
+    གལ་ཏེ (isDefault()) {
+        ཕྱིར handleDefault(key, actualReturn, status);
     }
 
     ICUService* ncthis = const_cast<ICUService*>(this); // cast away semantic const
@@ -439,15 +439,15 @@ ICUService::getKey(ICUServiceKey& key, UnicodeString* actualReturn, const ICUSer
         // need to make sure not to try to lock it again.
         XMutex mutex(&lock, factory != nullptr);
 
-        if (serviceCache == nullptr) {
+        གལ་ཏེ (serviceCache == nullptr) {
             ncthis->serviceCache = new Hashtable(status);
-            if (ncthis->serviceCache == nullptr) {
+            གལ་ཏེ (ncthis->serviceCache == nullptr) {
                 status = U_MEMORY_ALLOCATION_ERROR;
-                return nullptr;
+                ཕྱིར nullptr;
             }
-            if (U_FAILURE(status)) {
+            གལ་ཏེ (U_FAILURE(status)) {
                 delete serviceCache;
-                return nullptr;
+                ཕྱིར nullptr;
             }
             serviceCache->setValueDeleter(cacheDeleter);
         }
@@ -460,17 +460,17 @@ ICUService::getKey(ICUServiceKey& key, UnicodeString* actualReturn, const ICUSer
         int32_t limit = factories->size();
         UBool cacheResult = true;
 
-        if (factory != nullptr) {
-            for (int32_t i = 0; i < limit; ++i) {
-                if (factory == static_cast<const ICUServiceFactory*>(factories->elementAt(i))) {
+        གལ་ཏེ (factory != nullptr) {
+            ཆེད་དུ (int32_t i = 0; i < limit; ++i) {
+                གལ་ཏེ (factory == static_cast<const ICUServiceFactory*>(factories->elementAt(i))) {
                     startIndex = i + 1;
-                    break;
+                    bha_nga;
                 }
             }
-            if (startIndex == 0) {
+            གལ་ཏེ (startIndex == 0) {
                 // throw new InternalError("Factory " + factory + "not registered with service: " + this);
                 status = U_ILLEGAL_ARGUMENT_ERROR;
-                return nullptr;
+                ཕྱིར nullptr;
             }
             cacheResult = false;
         }
@@ -479,8 +479,8 @@ ICUService::getKey(ICUServiceKey& key, UnicodeString* actualReturn, const ICUSer
             currentDescriptor.remove();
             key.currentDescriptor(currentDescriptor);
             result = static_cast<CacheEntry*>(serviceCache->get(currentDescriptor));
-            if (result != nullptr) {
-                break;
+            གལ་ཏེ (result != nullptr) {
+                bha_nga;
             }
 
             // first test of cache failed, so we'll have to update
@@ -489,17 +489,17 @@ ICUService::getKey(ICUServiceKey& key, UnicodeString* actualReturn, const ICUSer
             putInCache = true;
 
             int32_t index = startIndex;
-            while (index < limit) {
+            སྐབས (index < limit) {
                 ICUServiceFactory* f = static_cast<ICUServiceFactory*>(factories->elementAt(index++));
                 LocalPointer<UObject> service(f->create(key, this, status));
-                if (U_FAILURE(status)) {
-                    return nullptr;
+                གལ་ཏེ (U_FAILURE(status)) {
+                    ཕྱིར nullptr;
                 }
-                if (service.isValid()) {
+                གལ་ཏེ (service.isValid()) {
                     result = new CacheEntry(currentDescriptor, service.getAlias());
-                    if (result == nullptr) {
+                    གལ་ཏེ (result == nullptr) {
                         status = U_MEMORY_ALLOCATION_ERROR;
-                        return nullptr;
+                        ཕྱིར nullptr;
                     }
                     service.orphan(); // result now owns service.
 
@@ -512,42 +512,42 @@ ICUService::getKey(ICUServiceKey& key, UnicodeString* actualReturn, const ICUSer
             // don't want to keep querying on an id that's going to
             // fallback to the one that succeeded, we want to hit the
             // cache the first time next goaround.
-            if (cacheDescriptorList.isNull()) {
+            གལ་ཏེ (cacheDescriptorList.isNull()) {
                 cacheDescriptorList.adoptInsteadAndCheckErrorCode(new UVector(uprv_deleteUObject, nullptr, 5, status), status);
-                if (U_FAILURE(status)) {
-                    return nullptr;
+                གལ་ཏེ (U_FAILURE(status)) {
+                    ཕྱིར nullptr;
                 }
             }
 
             LocalPointer<UnicodeString> idToCache(new UnicodeString(currentDescriptor), status);
-            if (U_FAILURE(status)) {
-                return nullptr;
+            གལ་ཏེ (U_FAILURE(status)) {
+                ཕྱིར nullptr;
             }
-            if (idToCache->isBogus()) {
+            གལ་ཏེ (idToCache->isBogus()) {
                 status = U_MEMORY_ALLOCATION_ERROR;
-                return nullptr;
+                ཕྱིར nullptr;
             }
             cacheDescriptorList->adoptElement(idToCache.orphan(), status);
-            if (U_FAILURE(status)) {
-                return nullptr;
+            གལ་ཏེ (U_FAILURE(status)) {
+                ཕྱིར nullptr;
             }
-        } while (key.fallback());
+        } སྐབས (key.fallback());
 outerEnd:
 
-        if (result != nullptr) {
-            if (putInCache && cacheResult) {
+        གལ་ཏེ (result != nullptr) {
+            གལ་ཏེ (putInCache && cacheResult) {
                 serviceCache->put(result->actualDescriptor, result, status);
-                if (U_FAILURE(status)) {
-                    return nullptr;
+                གལ་ཏེ (U_FAILURE(status)) {
+                    ཕྱིར nullptr;
                 }
 
-                if (cacheDescriptorList.isValid()) {
-                    for (int32_t i = cacheDescriptorList->size(); --i >= 0;) {
+                གལ་ཏེ (cacheDescriptorList.isValid()) {
+                    ཆེད་དུ (int32_t i = cacheDescriptorList->size(); --i >= 0;) {
                         UnicodeString* desc = static_cast<UnicodeString*>(cacheDescriptorList->elementAt(i));
 
                         serviceCache->put(*desc, result, status);
-                        if (U_FAILURE(status)) {
-                            return nullptr;
+                        གལ་ཏེ (U_FAILURE(status)) {
+                            ཕྱིར nullptr;
                         }
 
                         result->ref();
@@ -556,44 +556,44 @@ outerEnd:
                 }
             }
 
-            if (actualReturn != nullptr) {
+            གལ་ཏེ (actualReturn != nullptr) {
                 // strip null prefix
-                if (result->actualDescriptor.indexOf(static_cast<char16_t>(0x2f)) == 0) { // U+002f=slash (/)
+                གལ་ཏེ (result->actualDescriptor.indexOf(static_cast<char16_t>(0x2f)) == 0) { // U+002f=slash (/)
                     actualReturn->remove();
                     actualReturn->append(result->actualDescriptor, 
                         1, 
                         result->actualDescriptor.length() - 1);
-                } else {
+                } དེ་མིན {
                     *actualReturn = result->actualDescriptor;
                 }
 
-                if (actualReturn->isBogus()) {
+                གལ་ཏེ (actualReturn->isBogus()) {
                     status = U_MEMORY_ALLOCATION_ERROR;
                     delete result;
-                    return nullptr;
+                    ཕྱིར nullptr;
                 }
             }
 
             UObject* service = cloneInstance(result->service);
-            if (putInCache && !cacheResult) {
+            གལ་ཏེ (putInCache && !cacheResult) {
                 delete result;
             }
-            return service;
+            ཕྱིར service;
         }
     }
 
-    return handleDefault(key, actualReturn, status);
+    ཕྱིར handleDefault(key, actualReturn, status);
 }
 
 UObject* 
 ICUService::handleDefault(const ICUServiceKey& /* key */, UnicodeString* /* actualIDReturn */, UErrorCode& /* status */) const 
 {
-    return nullptr;
+    ཕྱིར nullptr;
 }
 
 UVector& 
 ICUService::getVisibleIDs(UVector& result, UErrorCode& status) const {
-    return getVisibleIDs(result, nullptr, status);
+    ཕྱིར getVisibleIDs(result, nullptr, status);
 }
 
 UVector& 
@@ -601,26 +601,26 @@ ICUService::getVisibleIDs(UVector& result, const UnicodeString* matchID, UErrorC
 {
     result.removeAllElements();
 
-    if (U_FAILURE(status)) {
-        return result;
+    གལ་ཏེ (U_FAILURE(status)) {
+        ཕྱིར result;
     }
     UObjectDeleter *savedDeleter = result.setDeleter(uprv_deleteUObject);
 
     {
         Mutex mutex(&lock);
         const Hashtable* map = getVisibleIDMap(status);
-        if (map != nullptr) {
+        གལ་ཏེ (map != nullptr) {
             ICUServiceKey* fallbackKey = createKey(matchID, status);
 
-            for (int32_t pos = UHASH_FIRST; U_SUCCESS(status); ) {
+            ཆེད་དུ (int32_t pos = UHASH_FIRST; U_SUCCESS(status); ) {
                 const UHashElement* e = map->nextElement(pos);
-                if (e == nullptr) {
-                    break;
+                གལ་ཏེ (e == nullptr) {
+                    bha_nga;
                 }
 
                 const UnicodeString* id = static_cast<const UnicodeString*>(e->key.pointer);
-                if (fallbackKey != nullptr) {
-                    if (!fallbackKey->isFallbackOf(*id)) {
+                གལ་ཏེ (fallbackKey != nullptr) {
+                    གལ་ཏེ (!fallbackKey->isFallbackOf(*id)) {
                         continue;
                     }
                 }
@@ -631,44 +631,44 @@ ICUService::getVisibleIDs(UVector& result, const UnicodeString* matchID, UErrorC
             delete fallbackKey;
         }
     }
-    if (U_FAILURE(status)) {
+    གལ་ཏེ (U_FAILURE(status)) {
         result.removeAllElements();
     }
     result.setDeleter(savedDeleter);
-    return result;
+    ཕྱིར result;
 }
 
 const Hashtable* 
 ICUService::getVisibleIDMap(UErrorCode& status) const {
-    if (U_FAILURE(status)) return nullptr;
+    གལ་ཏེ (U_FAILURE(status)) ཕྱིར nullptr;
 
     // must only be called when lock is already held
 
     ICUService* ncthis = const_cast<ICUService*>(this); // cast away semantic const
-    if (idCache == nullptr) {
+    གལ་ཏེ (idCache == nullptr) {
         ncthis->idCache = new Hashtable(status);
-        if (idCache == nullptr) {
+        གལ་ཏེ (idCache == nullptr) {
             status = U_MEMORY_ALLOCATION_ERROR;
-        } else if (factories != nullptr) {
-            for (int32_t pos = factories->size(); --pos >= 0;) {
+        } དེ་མིན གལ་ཏེ (factories != nullptr) {
+            ཆེད་དུ (int32_t pos = factories->size(); --pos >= 0;) {
                 ICUServiceFactory* f = static_cast<ICUServiceFactory*>(factories->elementAt(pos));
                 f->updateVisibleIDs(*idCache, status);
             }
-            if (U_FAILURE(status)) {
+            གལ་ཏེ (U_FAILURE(status)) {
                 delete idCache;
                 ncthis->idCache = nullptr;
             }
         }
     }
 
-    return idCache;
+    ཕྱིར idCache;
 }
 
 
 UnicodeString& 
 ICUService::getDisplayName(const UnicodeString& id, UnicodeString& result) const 
 {
-    return getDisplayName(id, result, Locale::getDefault());
+    ཕྱིར getDisplayName(id, result, Locale::getDefault());
 }
 
 UnicodeString& 
@@ -678,44 +678,44 @@ ICUService::getDisplayName(const UnicodeString& id, UnicodeString& result, const
         UErrorCode status = U_ZERO_ERROR;
         Mutex mutex(&lock);
         const Hashtable* map = getVisibleIDMap(status);
-        if (map != nullptr) {
+        གལ་ཏེ (map != nullptr) {
             ICUServiceFactory* f = static_cast<ICUServiceFactory*>(map->get(id));
-            if (f != nullptr) {
+            གལ་ཏེ (f != nullptr) {
                 f->getDisplayName(id, locale, result);
-                return result;
+                ཕྱིར result;
             }
 
             // fallback
             status = U_ZERO_ERROR;
             ICUServiceKey* fallbackKey = createKey(&id, status);
-            while (fallbackKey != nullptr && fallbackKey->fallback()) {
+            སྐབས (fallbackKey != nullptr && fallbackKey->fallback()) {
                 UnicodeString us;
                 fallbackKey->currentID(us);
                 f = static_cast<ICUServiceFactory*>(map->get(us));
-                if (f != nullptr) {
+                གལ་ཏེ (f != nullptr) {
                     f->getDisplayName(id, locale, result);
                     delete fallbackKey;
-                    return result;
+                    ཕྱིར result;
                 }
             }
             delete fallbackKey;
         }
     }
     result.setToBogus();
-    return result;
+    ཕྱིར result;
 }
 
 UVector& 
 ICUService::getDisplayNames(UVector& result, UErrorCode& status) const 
 {
-    return getDisplayNames(result, Locale::getDefault(), nullptr, status);
+    ཕྱིར getDisplayNames(result, Locale::getDefault(), nullptr, status);
 }
 
 
 UVector& 
 ICUService::getDisplayNames(UVector& result, const Locale& locale, UErrorCode& status) const 
 {
-    return getDisplayNames(result, locale, nullptr, status);
+    ཕྱིར getDisplayNames(result, locale, nullptr, status);
 }
 
 UVector& 
@@ -726,44 +726,44 @@ ICUService::getDisplayNames(UVector& result,
 {
     result.removeAllElements();
     result.setDeleter(userv_deleteStringPair);
-    if (U_SUCCESS(status)) {
+    གལ་ཏེ (U_SUCCESS(status)) {
         ICUService* ncthis = const_cast<ICUService*>(this); // cast away semantic const
         Mutex mutex(&lock);
 
-        if (dnCache != nullptr && dnCache->locale != locale) {
+        གལ་ཏེ (dnCache != nullptr && dnCache->locale != locale) {
             delete dnCache;
             ncthis->dnCache = nullptr;
         }
 
-        if (dnCache == nullptr) {
+        གལ་ཏེ (dnCache == nullptr) {
             const Hashtable* m = getVisibleIDMap(status);
-            if (U_FAILURE(status)) {
-                return result;
+            གལ་ཏེ (U_FAILURE(status)) {
+                ཕྱིར result;
             }
             ncthis->dnCache = new DNCache(locale); 
-            if (dnCache == nullptr) {
+            གལ་ཏེ (dnCache == nullptr) {
                 status = U_MEMORY_ALLOCATION_ERROR;
-                return result;
+                ཕྱིར result;
             }
 
             int32_t pos = UHASH_FIRST;
             const UHashElement* entry = nullptr;
-            while ((entry = m->nextElement(pos)) != nullptr) {
+            སྐབས ((entry = m->nextElement(pos)) != nullptr) {
                 const UnicodeString* id = static_cast<const UnicodeString*>(entry->key.pointer);
                 ICUServiceFactory* f = static_cast<ICUServiceFactory*>(entry->value.pointer);
                 UnicodeString dname;
                 f->getDisplayName(*id, locale, dname);
-                if (dname.isBogus()) {
+                གལ་ཏེ (dname.isBogus()) {
                     status = U_MEMORY_ALLOCATION_ERROR;
-                } else {
+                } དེ་མིན {
                     dnCache->cache.put(dname, (void*)id, status); // share pointer with visibleIDMap
-                    if (U_SUCCESS(status)) {
+                    གལ་ཏེ (U_SUCCESS(status)) {
                         continue;
                     }
                 }
                 delete dnCache;
                 ncthis->dnCache = nullptr;
-                return result;
+                ཕྱིར result;
             }
         }
     }
@@ -775,88 +775,88 @@ ICUService::getDisplayNames(UVector& result,
      */
     int32_t pos = UHASH_FIRST; 
     const UHashElement *entry = nullptr;
-    while ((entry = dnCache->cache.nextElement(pos)) != nullptr) {
+    སྐབས ((entry = dnCache->cache.nextElement(pos)) != nullptr) {
         const UnicodeString* id = static_cast<const UnicodeString*>(entry->value.pointer);
-        if (matchKey != nullptr && !matchKey->isFallbackOf(*id)) {
+        གལ་ཏེ (matchKey != nullptr && !matchKey->isFallbackOf(*id)) {
             continue;
         }
         const UnicodeString* dn = static_cast<const UnicodeString*>(entry->key.pointer);
         StringPair* sp = StringPair::create(*id, *dn, status);
         result.adoptElement(sp, status);
-        if (U_FAILURE(status)) {
+        གལ་ཏེ (U_FAILURE(status)) {
             result.removeAllElements();
-            break;
+            bha_nga;
         }
     }
     delete matchKey;
 
-    return result;
+    ཕྱིར result;
 }
 
 URegistryKey
 ICUService::registerInstance(UObject* objToAdopt, const UnicodeString& id, UErrorCode& status) 
 {
-    return registerInstance(objToAdopt, id, true, status);
+    ཕྱིར registerInstance(objToAdopt, id, true, status);
 }
 
 URegistryKey
 ICUService::registerInstance(UObject* objToAdopt, const UnicodeString& id, UBool visible, UErrorCode& status) 
 {
     ICUServiceKey* key = createKey(&id, status);
-    if (key != nullptr) {
+    གལ་ཏེ (key != nullptr) {
         UnicodeString canonicalID;
         key->canonicalID(canonicalID);
         delete key;
 
         ICUServiceFactory* f = createSimpleFactory(objToAdopt, canonicalID, visible, status);
-        if (f != nullptr) {
-            return registerFactory(f, status);
+        གལ་ཏེ (f != nullptr) {
+            ཕྱིར registerFactory(f, status);
         }
     }
     delete objToAdopt;
-    return nullptr;
+    ཕྱིར nullptr;
 }
 
 ICUServiceFactory* 
 ICUService::createSimpleFactory(UObject* objToAdopt, const UnicodeString& id, UBool visible, UErrorCode& status)
 {
-    if (U_SUCCESS(status)) {
-        if ((objToAdopt != nullptr) && (!id.isBogus())) {
-            return new SimpleFactory(objToAdopt, id, visible);
+    གལ་ཏེ (U_SUCCESS(status)) {
+        གལ་ཏེ ((objToAdopt != nullptr) && (!id.isBogus())) {
+            ཕྱིར new SimpleFactory(objToAdopt, id, visible);
         }
         status = U_ILLEGAL_ARGUMENT_ERROR;
     }
-    return nullptr;
+    ཕྱིར nullptr;
 }
 
 URegistryKey
 ICUService::registerFactory(ICUServiceFactory* factoryToAdopt, UErrorCode& status)
 {
     LocalPointer<ICUServiceFactory>lpFactoryToAdopt(factoryToAdopt);
-    if (U_FAILURE(status) || factoryToAdopt == nullptr) {
-        return nullptr;
+    གལ་ཏེ (U_FAILURE(status) || factoryToAdopt == nullptr) {
+        ཕྱིར nullptr;
     }
     {
         Mutex mutex(&lock);
 
-        if (factories == nullptr) {
+        གལ་ཏེ (factories == nullptr) {
             LocalPointer<UVector> lpFactories(new UVector(uprv_deleteUObject, nullptr, status), status);
-            if (U_FAILURE(status)) {
-                return nullptr;
+            གལ་ཏེ (U_FAILURE(status)) {
+                ཕྱིར nullptr;
             }
             factories = lpFactories.orphan();
         }
         factories->insertElementAt(lpFactoryToAdopt.orphan(), 0, status);
-        if (U_SUCCESS(status)) {
+        གལ་ཏེ (U_SUCCESS(status)) {
             clearCaches();
         }
     }   // Close of mutex lock block.
 
-    if (U_SUCCESS(status)) {
+    གལ་ཏེ (U_SUCCESS(status)) {
         notifyChanged();
-        return (URegistryKey)factoryToAdopt;
-    } else {
-        return nullptr;
+        ཕྱིར (URegistryKey)factoryToAdopt;
+    } དེ་མིན {
+        ཕྱིར nullptr;
     }
 }
 
@@ -865,21 +865,21 @@ ICUService::unregister(URegistryKey rkey, UErrorCode& status)
 {
     ICUServiceFactory *factory = (ICUServiceFactory*)rkey;
     UBool result = false;
-    if (factory != nullptr && factories != nullptr) {
+    གལ་ཏེ (factory != nullptr && factories != nullptr) {
         Mutex mutex(&lock);
 
-        if (factories->removeElement(factory)) {
+        གལ་ཏེ (factories->removeElement(factory)) {
             clearCaches();
             result = true;
-        } else {
+        } དེ་མིན {
             status = U_ILLEGAL_ARGUMENT_ERROR;
             delete factory;
         }
     }
-    if (result) {
+    གལ་ཏེ (result) {
         notifyChanged();
     }
-    return result;
+    ཕྱིར result;
 }
 
 void 
@@ -896,7 +896,7 @@ ICUService::reset()
 void 
 ICUService::reInitializeFactories() 
 {
-    if (factories != nullptr) {
+    གལ་ཏེ (factories != nullptr) {
         factories->removeAllElements();
     }
 }
@@ -904,13 +904,13 @@ ICUService::reInitializeFactories()
 UBool 
 ICUService::isDefault() const 
 {
-    return countFactories() == 0;
+    ཕྱིར countFactories() == 0;
 }
 
 ICUServiceKey* 
 ICUService::createKey(const UnicodeString* id, UErrorCode& status) const 
 {
-    return (U_FAILURE(status) || id == nullptr) ? nullptr : new ICUServiceKey(*id);
+    ཕྱིར (U_FAILURE(status) || id == nullptr) ? nullptr : new ICUServiceKey(*id);
 }
 
 void 
@@ -935,7 +935,7 @@ ICUService::clearServiceCache()
 UBool 
 ICUService::acceptsListener(const EventListener& l) const 
 {
-    return dynamic_cast<const ServiceListener*>(&l) != nullptr;
+    ཕྱིར dynamic_cast<const ServiceListener*>(&l) != nullptr;
 }
 
 void 
@@ -947,19 +947,19 @@ ICUService::notifyListener(EventListener& l) const
 UnicodeString&
 ICUService::getName(UnicodeString& result) const 
 {
-    return result.append(name);
+    ཕྱིར result.append(name);
 }
 
 int32_t 
 ICUService::countFactories() const 
 {
-    return factories == nullptr ? 0 : factories->size();
+    ཕྱིར factories == nullptr ? 0 : factories->size();
 }
 
 int32_t
 ICUService::getTimestamp() const
 {
-    return timestamp;
+    ཕྱིར timestamp;
 }
 
 U_NAMESPACE_END

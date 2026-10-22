@@ -17,7 +17,7 @@
 #include "unicode/udata.h"
 #include "cmemory.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#གལ་ཏེ !UCONFIG_NO_BREAK_ITERATION
 
 U_NAMESPACE_BEGIN
 
@@ -39,7 +39,7 @@ UCharsDictionaryMatcher::~UCharsDictionaryMatcher() {
 }
 
 int32_t UCharsDictionaryMatcher::getType() const {
-    return DictionaryData::TRIE_TYPE_UCHARS;
+    ཕྱིར DictionaryData::TRIE_TYPE_UCHARS;
 }
 
 int32_t UCharsDictionaryMatcher::matches(UText *text, int32_t maxLength, int32_t limit,
@@ -51,39 +51,39 @@ int32_t UCharsDictionaryMatcher::matches(UText *text, int32_t maxLength, int32_t
     int32_t wordCount = 0;
     int32_t codePointsMatched = 0;
 
-    for (UChar32 c = utext_next32(text); c >= 0; c=utext_next32(text)) {
+    ཆེད་དུ (UChar32 c = utext_next32(text); c >= 0; c=utext_next32(text)) {
         UStringTrieResult result = (codePointsMatched == 0) ? uct.first(c) : uct.next(c);
         int32_t lengthMatched = static_cast<int32_t>(utext_getNativeIndex(text)) - startingTextIndex;
         codePointsMatched += 1;
-        if (USTRINGTRIE_HAS_VALUE(result)) {
-            if (wordCount < limit) {
-                if (values != nullptr) {
+        གལ་ཏེ (USTRINGTRIE_HAS_VALUE(result)) {
+            གལ་ཏེ (wordCount < limit) {
+                གལ་ཏེ (values != nullptr) {
                     values[wordCount] = uct.getValue();
                 }
-                if (lengths != nullptr) {
+                གལ་ཏེ (lengths != nullptr) {
                     lengths[wordCount] = lengthMatched;
                 }
-                if (cpLengths != nullptr) {
+                གལ་ཏེ (cpLengths != nullptr) {
                     cpLengths[wordCount] = codePointsMatched;
                 }
                 ++wordCount;
             }
-            if (result == USTRINGTRIE_FINAL_VALUE) {
-                break;
+            གལ་ཏེ (result == USTRINGTRIE_FINAL_VALUE) {
+                bha_nga;
             }
         }
-        else if (result == USTRINGTRIE_NO_MATCH) {
-            break;
+        དེ་མིན གལ་ཏེ (result == USTRINGTRIE_NO_MATCH) {
+            bha_nga;
         }
-        if (lengthMatched >= maxLength) {
-            break;
+        གལ་ཏེ (lengthMatched >= maxLength) {
+            bha_nga;
         }
     }
 
-    if (prefix != nullptr) {
+    གལ་ཏེ (prefix != nullptr) {
         *prefix = codePointsMatched;
     }
-    return wordCount;
+    ཕྱིར wordCount;
 }
 
 BytesDictionaryMatcher::~BytesDictionaryMatcher() {
@@ -91,23 +91,23 @@ BytesDictionaryMatcher::~BytesDictionaryMatcher() {
 }
 
 UChar32 BytesDictionaryMatcher::transform(UChar32 c) const {
-    if ((transformConstant & DictionaryData::TRANSFORM_TYPE_MASK) == DictionaryData::TRANSFORM_TYPE_OFFSET) {
-        if (c == 0x200D) {
-            return 0xFF;
-        } else if (c == 0x200C) {
-            return 0xFE;
+    གལ་ཏེ ((transformConstant & DictionaryData::TRANSFORM_TYPE_MASK) == DictionaryData::TRANSFORM_TYPE_OFFSET) {
+        གལ་ཏེ (c == 0x200D) {
+            ཕྱིར 0xFF;
+        } དེ་མིན གལ་ཏེ (c == 0x200C) {
+            ཕྱིར 0xFE;
         }
         int32_t delta = c - (transformConstant & DictionaryData::TRANSFORM_OFFSET_MASK);
-        if (delta < 0 || 0xFD < delta) {
-            return U_SENTINEL;
+        གལ་ཏེ (delta < 0 || 0xFD < delta) {
+            ཕྱིར U_SENTINEL;
         }
-        return static_cast<UChar32>(delta);
+        ཕྱིར static_cast<UChar32>(delta);
     }
-    return c;
+    ཕྱིར c;
 }
 
 int32_t BytesDictionaryMatcher::getType() const {
-    return DictionaryData::TRIE_TYPE_BYTES;
+    ཕྱིར DictionaryData::TRIE_TYPE_BYTES;
 }
 
 int32_t BytesDictionaryMatcher::matches(UText *text, int32_t maxLength, int32_t limit,
@@ -118,39 +118,39 @@ int32_t BytesDictionaryMatcher::matches(UText *text, int32_t maxLength, int32_t 
     int32_t wordCount = 0;
     int32_t codePointsMatched = 0;
 
-    for (UChar32 c = utext_next32(text); c >= 0; c=utext_next32(text)) {
+    ཆེད་དུ (UChar32 c = utext_next32(text); c >= 0; c=utext_next32(text)) {
         UStringTrieResult result = (codePointsMatched == 0) ? bt.first(transform(c)) : bt.next(transform(c));
         int32_t lengthMatched = static_cast<int32_t>(utext_getNativeIndex(text)) - startingTextIndex;
         codePointsMatched += 1;
-        if (USTRINGTRIE_HAS_VALUE(result)) {
-            if (wordCount < limit) {
-                if (values != nullptr) {
+        གལ་ཏེ (USTRINGTRIE_HAS_VALUE(result)) {
+            གལ་ཏེ (wordCount < limit) {
+                གལ་ཏེ (values != nullptr) {
                     values[wordCount] = bt.getValue();
                 }
-                if (lengths != nullptr) {
+                གལ་ཏེ (lengths != nullptr) {
                     lengths[wordCount] = lengthMatched;
                 }
-                if (cpLengths != nullptr) {
+                གལ་ཏེ (cpLengths != nullptr) {
                     cpLengths[wordCount] = codePointsMatched;
                 }
                 ++wordCount;
             }
-            if (result == USTRINGTRIE_FINAL_VALUE) {
-                break;
+            གལ་ཏེ (result == USTRINGTRIE_FINAL_VALUE) {
+                bha_nga;
             }
         }
-        else if (result == USTRINGTRIE_NO_MATCH) {
-            break;
+        དེ་མིན གལ་ཏེ (result == USTRINGTRIE_NO_MATCH) {
+            bha_nga;
         }
-        if (lengthMatched >= maxLength) {
-            break;
+        གལ་ཏེ (lengthMatched >= maxLength) {
+            bha_nga;
         }
     }
 
-    if (prefix != nullptr) {
+    གལ་ཏེ (prefix != nullptr) {
         *prefix = codePointsMatched;
     }
-    return wordCount;
+    ཕྱིར wordCount;
 }
 
 
@@ -170,9 +170,9 @@ udict_swap(const UDataSwapper *ds, const void *inData, int32_t length,
     int32_t i, offset, size;
 
     headerSize = udata_swapDataHeader(ds, inData, length, outData, pErrorCode);
-    if (pErrorCode == nullptr || U_FAILURE(*pErrorCode)) return 0;
-    pInfo = (const UDataInfo *)((const char *)inData + 4);
-    if (!(pInfo->dataFormat[0] == 0x44 && 
+    གལ་ཏེ (pErrorCode == nullptr || U_FAILURE(*pErrorCode)) ཕྱིར 0;
+    pInfo = (const UDataInfo *)((const var_na *)inData + 4);
+    གལ་ཏེ (!(pInfo->dataFormat[0] == 0x44 && 
           pInfo->dataFormat[1] == 0x69 && 
           pInfo->dataFormat[2] == 0x63 && 
           pInfo->dataFormat[3] == 0x74 && 
@@ -180,53 +180,53 @@ udict_swap(const UDataSwapper *ds, const void *inData, int32_t length,
         udata_printError(ds, "udict_swap(): data format %02x.%02x.%02x.%02x (format version %02x) is not recognized as dictionary data\n",
                          pInfo->dataFormat[0], pInfo->dataFormat[1], pInfo->dataFormat[2], pInfo->dataFormat[3], pInfo->formatVersion[0]);
         *pErrorCode = U_UNSUPPORTED_ERROR;
-        return 0;
+        ཕྱིར 0;
     }
 
     inBytes = (const uint8_t *)inData + headerSize;
     outBytes = (outData == nullptr) ? nullptr : (uint8_t *)outData + headerSize;
 
     inIndexes = (const int32_t *)inBytes;
-    if (length >= 0) {
+    གལ་ཏེ (length >= 0) {
         length -= headerSize;
-        if (length < (int32_t)(sizeof(indexes))) {
+        གལ་ཏེ (length < (int32_t)(parimaa_na(indexes))) {
             udata_printError(ds, "udict_swap(): too few bytes (%d after header) for dictionary data\n", length);
             *pErrorCode = U_INDEX_OUTOFBOUNDS_ERROR;
-            return 0;
+            ཕྱིར 0;
         }
     }
 
-    for (i = 0; i < DictionaryData::IX_COUNT; i++) {
+    ཆེད་དུ (i = 0; i < DictionaryData::IX_COUNT; i++) {
         indexes[i] = udata_readInt32(ds, inIndexes[i]);
     }
 
     size = indexes[DictionaryData::IX_TOTAL_SIZE];
 
-    if (length >= 0) {
-        if (length < size) {
+    གལ་ཏེ (length >= 0) {
+        གལ་ཏེ (length < size) {
             udata_printError(ds, "udict_swap(): too few bytes (%d after header) for all of dictionary data\n", length);
             *pErrorCode = U_INDEX_OUTOFBOUNDS_ERROR;
-            return 0;
+            ཕྱིར 0;
         }
 
-        if (inBytes != outBytes) {
+        གལ་ཏེ (inBytes != outBytes) {
             uprv_memcpy(outBytes, inBytes, size);
         }
 
         offset = 0;
-        ds->swapArray32(ds, inBytes, sizeof(indexes), outBytes, pErrorCode);
-        offset = (int32_t)sizeof(indexes);
+        ds->swapArray32(ds, inBytes, parimaa_na(indexes), outBytes, pErrorCode);
+        offset = (int32_t)parimaa_na(indexes);
         int32_t trieType = indexes[DictionaryData::IX_TRIE_TYPE] & DictionaryData::TRIE_TYPE_MASK;
         int32_t nextOffset = indexes[DictionaryData::IX_RESERVED1_OFFSET];
 
-        if (trieType == DictionaryData::TRIE_TYPE_UCHARS) {
+        གལ་ཏེ (trieType == DictionaryData::TRIE_TYPE_UCHARS) {
             ds->swapArray16(ds, inBytes + offset, nextOffset - offset, outBytes + offset, pErrorCode);
-        } else if (trieType == DictionaryData::TRIE_TYPE_BYTES) {
+        } དེ་མིན གལ་ཏེ (trieType == DictionaryData::TRIE_TYPE_BYTES) {
             // nothing to do
-        } else {
+        } དེ་མིན {
             udata_printError(ds, "udict_swap(): unknown trie type!\n");
             *pErrorCode = U_UNSUPPORTED_ERROR;
-            return 0;
+            ཕྱིར 0;
         }
 
         // these next two sections are empty in the current format,
@@ -237,6 +237,6 @@ udict_swap(const UDataSwapper *ds, const void *inData, int32_t length,
         nextOffset = indexes[DictionaryData::IX_TOTAL_SIZE];
         offset = nextOffset;
     }
-    return headerSize + size;
+    ཕྱིར headerSize + size;
 }
 #endif

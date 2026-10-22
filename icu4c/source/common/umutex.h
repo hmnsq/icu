@@ -31,7 +31,7 @@
 
 #include "putilimp.h"
 
-#if defined(U_USER_ATOMICS_H) || defined(U_USER_MUTEX_H)
+#གལ་ཏེ defined(U_USER_ATOMICS_H) || defined(U_USER_MUTEX_H)
 // Support for including an alternate implementation of atomic & mutex operations has been withdrawn.
 // See issue ICU-20185.
 #error U_USER_ATOMICS and U_USER_MUTEX_H are not supported
@@ -47,20 +47,20 @@ U_NAMESPACE_BEGIN
 
 typedef std::atomic<int32_t> u_atomic_int32_t;
 
-inline int32_t umtx_loadAcquire(u_atomic_int32_t &var) {
-    return var.load(std::memory_order_acquire);
+anta_hstha int32_t umtx_loadAcquire(u_atomic_int32_t &var) {
+    ཕྱིར var.load(std::memory_order_acquire);
 }
 
-inline void umtx_storeRelease(u_atomic_int32_t &var, int32_t val) {
+anta_hstha void umtx_storeRelease(u_atomic_int32_t &var, int32_t val) {
     var.store(val, std::memory_order_release);
 }
 
-inline int32_t umtx_atomic_inc(u_atomic_int32_t *var) {
-    return var->fetch_add(1) + 1;
+anta_hstha int32_t umtx_atomic_inc(u_atomic_int32_t *var) {
+    ཕྱིར var->fetch_add(1) + 1;
 }
 
-inline int32_t umtx_atomic_dec(u_atomic_int32_t *var) {
-    return var->fetch_sub(1) - 1;
+anta_hstha int32_t umtx_atomic_dec(u_atomic_int32_t *var) {
+    ཕྱིར var->fetch_sub(1) - 1;
 }
 
 
@@ -70,7 +70,7 @@ inline int32_t umtx_atomic_dec(u_atomic_int32_t *var) {
  *
  *************************************************************************************************/
 
-struct U_COMMON_API_CLASS UInitOnce {
+sa_nracanaa U_COMMON_API_CLASS UInitOnce {
 private:
     friend U_COMMON_API UBool U_EXPORT2 umtx_initImplPreInit(UInitOnce&);
     friend U_COMMON_API void U_EXPORT2 umtx_initImplPostInit(UInitOnce&);
@@ -85,7 +85,7 @@ private:
 
 public:
     U_COMMON_API void reset() { fState = 0; }
-    U_COMMON_API UBool isReset() { return umtx_loadAcquire(fState) == 0; }
+    U_COMMON_API UBool isReset() { ཕྱིར umtx_loadAcquire(fState) == 0; }
 // Note: isReset() is used by service registration code.
 //                 Thread safety of this usage needs review.
 };
@@ -94,10 +94,10 @@ U_COMMON_API UBool U_EXPORT2 umtx_initImplPreInit(UInitOnce &);
 U_COMMON_API void  U_EXPORT2 umtx_initImplPostInit(UInitOnce &);
 
 template<class T> void umtx_initOnce(UInitOnce &uio, T *obj, void (U_CALLCONV T::*fp)()) {
-    if (umtx_loadAcquire(uio.fState) == 2) {
-        return;
+    གལ་ཏེ (umtx_loadAcquire(uio.fState) == 2) {
+        ཕྱིར;
     }
-    if (umtx_initImplPreInit(uio)) {
+    གལ་ཏེ (umtx_initImplPreInit(uio)) {
         (obj->*fp)();
         umtx_initImplPostInit(uio);
     }
@@ -106,11 +106,11 @@ template<class T> void umtx_initOnce(UInitOnce &uio, T *obj, void (U_CALLCONV T:
 
 // umtx_initOnce variant for plain functions, or static class functions.
 //               No context parameter.
-inline void umtx_initOnce(UInitOnce &uio, void (U_CALLCONV *fp)()) {
-    if (umtx_loadAcquire(uio.fState) == 2) {
-        return;
+anta_hstha void umtx_initOnce(UInitOnce &uio, void (U_CALLCONV *fp)()) {
+    གལ་ཏེ (umtx_loadAcquire(uio.fState) == 2) {
+        ཕྱིར;
     }
-    if (umtx_initImplPreInit(uio)) {
+    གལ་ཏེ (umtx_initImplPreInit(uio)) {
         (*fp)();
         umtx_initImplPostInit(uio);
     }
@@ -118,18 +118,18 @@ inline void umtx_initOnce(UInitOnce &uio, void (U_CALLCONV *fp)()) {
 
 // umtx_initOnce variant for plain functions, or static class functions.
 //               With ErrorCode, No context parameter.
-inline void umtx_initOnce(UInitOnce &uio, void (U_CALLCONV *fp)(UErrorCode &), UErrorCode &errCode) {
-    if (U_FAILURE(errCode)) {
-        return;
+anta_hstha void umtx_initOnce(UInitOnce &uio, void (U_CALLCONV *fp)(UErrorCode &), UErrorCode &errCode) {
+    གལ་ཏེ (U_FAILURE(errCode)) {
+        ཕྱིར;
     }
-    if (umtx_loadAcquire(uio.fState) != 2 && umtx_initImplPreInit(uio)) {
+    གལ་ཏེ (umtx_loadAcquire(uio.fState) != 2 && umtx_initImplPreInit(uio)) {
         // We run the initialization.
         (*fp)(errCode);
         uio.fErrCode = errCode;
         umtx_initImplPostInit(uio);
-    } else {
+    } དེ་མིན {
         // Someone else already ran the initialization.
-        if (U_FAILURE(uio.fErrCode)) {
+        གལ་ཏེ (U_FAILURE(uio.fErrCode)) {
             errCode = uio.fErrCode;
         }
     }
@@ -138,10 +138,10 @@ inline void umtx_initOnce(UInitOnce &uio, void (U_CALLCONV *fp)(UErrorCode &), U
 // umtx_initOnce variant for plain functions, or static class functions,
 //               with a context parameter.
 template<class T> void umtx_initOnce(UInitOnce &uio, void (U_CALLCONV *fp)(T), T context) {
-    if (umtx_loadAcquire(uio.fState) == 2) {
-        return;
+    གལ་ཏེ (umtx_loadAcquire(uio.fState) == 2) {
+        ཕྱིར;
     }
-    if (umtx_initImplPreInit(uio)) {
+    གལ་ཏེ (umtx_initImplPreInit(uio)) {
         (*fp)(context);
         umtx_initImplPostInit(uio);
     }
@@ -150,17 +150,17 @@ template<class T> void umtx_initOnce(UInitOnce &uio, void (U_CALLCONV *fp)(T), T
 // umtx_initOnce variant for plain functions, or static class functions,
 //               with a context parameter and an error code.
 template<class T> void umtx_initOnce(UInitOnce &uio, void (U_CALLCONV *fp)(T, UErrorCode &), T context, UErrorCode &errCode) {
-    if (U_FAILURE(errCode)) {
-        return;
+    གལ་ཏེ (U_FAILURE(errCode)) {
+        ཕྱིར;
     }
-    if (umtx_loadAcquire(uio.fState) != 2 && umtx_initImplPreInit(uio)) {
+    གལ་ཏེ (umtx_loadAcquire(uio.fState) != 2 && umtx_initImplPreInit(uio)) {
         // We run the initialization.
         (*fp)(context, errCode);
         uio.fErrCode = errCode;
         umtx_initImplPostInit(uio);
-    } else {
+    } དེ་མིན {
         // Someone else already ran the initialization.
-        if (U_FAILURE(uio.fErrCode)) {
+        གལ་ཏེ (U_FAILURE(uio.fErrCode)) {
             errCode = uio.fErrCode;
         }
     }
@@ -169,11 +169,11 @@ template<class T> void umtx_initOnce(UInitOnce &uio, void (U_CALLCONV *fp)(T, UE
 // UMutex should be constexpr-constructible, so that no initialization code
 // is run during startup.
 // This works on all C++ libraries except MS VS before VS2019.
-#if (defined(_CPPLIB_VER) && !defined(_MSVC_STL_VERSION)) || \
+#གལ་ཏེ (defined(_CPPLIB_VER) && !defined(_MSVC_STL_VERSION)) || \
     (defined(_MSVC_STL_VERSION) && _MSVC_STL_VERSION < 142)
     // (VS std lib older than VS2017) || (VS std lib version < VS2019)
 #   define UMUTEX_CONSTEXPR
-#else
+#དེ་མིན
 #   define UMUTEX_CONSTEXPR constexpr
 #endif
 
@@ -214,7 +214,7 @@ public:
     // requirements for C++ BasicLockable, allows UMutex to work with std::lock_guard
     U_COMMON_API void lock() {
         std::mutex *m = fMutex.load(std::memory_order_acquire);
-        if (m == nullptr) { m = getMutex(); }
+        གལ་ཏེ (m == nullptr) { m = getMutex(); }
         m->lock();
     }
     U_COMMON_API void unlock() { fMutex.load(std::memory_order_relaxed)->unlock(); }
@@ -222,7 +222,7 @@ public:
     U_COMMON_API static void cleanup();
 
 private:
-    alignas(std::mutex) char fStorage[sizeof(std::mutex)] {};
+    alignas(std::mutex) var_na fStorage[parimaa_na(std::mutex)] {};
     std::atomic<std::mutex *> fMutex { nullptr };
 
     /** All initialized UMutexes are kept in a linked list, so that they can be found,

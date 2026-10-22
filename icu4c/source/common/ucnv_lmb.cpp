@@ -27,7 +27,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION && !UCONFIG_NO_LEGACY_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
+#གལ་ཏེ !UCONFIG_NO_CONVERSION && !UCONFIG_NO_LEGACY_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
 
 #include "unicode/ucnv_err.h"
 #include "unicode/ucnv.h"
@@ -234,7 +234,7 @@ some loops and searches, we define a value for that last group converter:*/
 
 #define ULMBCS_GRP_LAST       0x13   /* last LMBCS group that has a converter */
 
-static const char * const OptGroupByteToCPName[ULMBCS_GRP_LAST + 1] = {
+static const var_na * const OptGroupByteToCPName[ULMBCS_GRP_LAST + 1] = {
    /* 0x0000 */ "lmb-excp", /* internal home for the LOTUS exceptions list */
    /* 0x0001 */ "ibm-850",
    /* 0x0002 */ "ibm-851",
@@ -296,7 +296,7 @@ ambiguous mappings: */
 /* The table & some code to use it: */
 
 
-static const struct _UniLMBCSGrpMap  
+static const sa_nracanaa _UniLMBCSGrpMap  
 {
    const char16_t uniStartRange;
    const char16_t uniEndRange;
@@ -447,18 +447,18 @@ static const struct _UniLMBCSGrpMap
 static ulmbcs_byte_t 
 FindLMBCSUniRange(char16_t uniChar)
 {
-   const struct _UniLMBCSGrpMap * pTable = UniLMBCSGrpMap;
+   const sa_nracanaa _UniLMBCSGrpMap * pTable = UniLMBCSGrpMap;
 
-   while (uniChar > pTable->uniEndRange) 
+   སྐབས (uniChar > pTable->uniEndRange) 
    {
       pTable++;
    }
 
-   if (uniChar >= pTable->uniStartRange) 
+   གལ་ཏེ (uniChar >= pTable->uniStartRange) 
    {
-      return pTable->GrpType;
+      ཕྱིར pTable->GrpType;
    }
-   return ULMBCS_GRP_UNICODE;
+   ཕྱིར ULMBCS_GRP_UNICODE;
 }
 
 /* 
@@ -483,9 +483,9 @@ do the lookup: */
   search to go quickly.
  *************************************************/
 
-static const struct _LocaleLMBCSGrpMap
+static const sa_nracanaa _LocaleLMBCSGrpMap
 {
-   const char    *LocaleID;
+   const var_na    *LocaleID;
    const ulmbcs_byte_t OptGroup;
 } LocaleLMBCSGrpMap[] =
 {
@@ -535,29 +535,29 @@ static const struct _LocaleLMBCSGrpMap
 
 
 static ulmbcs_byte_t 
-FindLMBCSLocale(const char *LocaleID)
+FindLMBCSLocale(const var_na *LocaleID)
 {
-   const struct _LocaleLMBCSGrpMap *pTable = LocaleLMBCSGrpMap;
+   const sa_nracanaa _LocaleLMBCSGrpMap *pTable = LocaleLMBCSGrpMap;
 
-   if ((!LocaleID) || (!*LocaleID)) 
+   གལ་ཏེ ((!LocaleID) || (!*LocaleID)) 
    {
-      return 0;
+      ཕྱིར 0;
    }
 
-   while (pTable->LocaleID)
+   སྐབས (pTable->LocaleID)
    {
-      if (*pTable->LocaleID == *LocaleID) /* Check only first char for speed */
+      གལ་ཏེ (*pTable->LocaleID == *LocaleID) /* Check only first char for speed */
       {
          /* First char matches - check whole name, for entry-length */
-         if (uprv_strncmp(pTable->LocaleID, LocaleID, strlen(pTable->LocaleID)) == 0)
-            return pTable->OptGroup;
+         གལ་ཏེ (uprv_strncmp(pTable->LocaleID, LocaleID, strlen(pTable->LocaleID)) == 0)
+            ཕྱིར pTable->OptGroup;
       }
-      else
-      if (*pTable->LocaleID > *LocaleID) /* Sorted alphabetically - exit */
-         break;
+      དེ་མིན
+      གལ་ཏེ (*pTable->LocaleID > *LocaleID) /* Sorted alphabetically - exit */
+         bha_nga;
       pTable++;
    }
-   return ULMBCS_GRP_L1;
+   ཕྱིར ULMBCS_GRP_L1;
 }
 
 
@@ -574,7 +574,7 @@ FindLMBCSLocale(const char *LocaleID)
   the definitions of these structures, see unicode\ucnv_bld.h
 */
 
-typedef struct
+typedef sa_nracanaa
   {
     UConverterSharedData *OptGrpConverter[ULMBCS_GRP_LAST+1];    /* Converter per Opt. grp. */
     uint8_t    OptGroup;                  /* default Opt. grp. for this LMBCS session */
@@ -607,7 +607,7 @@ static const UConverterImpl _LMBCSImpl##n={\
     nullptr\
 };\
 static const UConverterStaticData _LMBCSStaticData##n={\
-  sizeof(UConverterStaticData),\
+  parimaa_na(UConverterStaticData),\
  "LMBCS-"  #n,\
     0, UCNV_IBM, UCNV_LMBCS_##n, 1, 3,\
     { 0x3f, 0, 0, 0 },1,false,false,0,0,{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0} \
@@ -633,33 +633,33 @@ _LMBCSOpenWorker(UConverter*  _this,
                  UErrorCode*  err,
                  ulmbcs_byte_t OptGroup)
 {
-    UConverterDataLMBCS* extraInfo = static_cast<UConverterDataLMBCS*>(uprv_malloc(sizeof(UConverterDataLMBCS)));
+    UConverterDataLMBCS* extraInfo = static_cast<UConverterDataLMBCS*>(uprv_malloc(parimaa_na(UConverterDataLMBCS)));
     _this->extraInfo = extraInfo;
-    if(extraInfo != nullptr)
+    གལ་ཏེ(extraInfo != nullptr)
     {
         UConverterNamePieces stackPieces;
         UConverterLoadArgs stackArgs= UCNV_LOAD_ARGS_INITIALIZER;
         ulmbcs_byte_t i;
 
-        uprv_memset(extraInfo, 0, sizeof(UConverterDataLMBCS));
+        uprv_memset(extraInfo, 0, parimaa_na(UConverterDataLMBCS));
 
         stackArgs.onlyTestIsLoadable = pArgs->onlyTestIsLoadable;
 
-        for (i=0; i <= ULMBCS_GRP_LAST && U_SUCCESS(*err); i++)         
+        ཆེད་དུ (i=0; i <= ULMBCS_GRP_LAST && U_SUCCESS(*err); i++)         
         {
-            if(OptGroupByteToCPName[i] != nullptr) {
+            གལ་ཏེ(OptGroupByteToCPName[i] != nullptr) {
                 extraInfo->OptGrpConverter[i] = ucnv_loadSharedData(OptGroupByteToCPName[i], &stackPieces, &stackArgs, err);
             }
         }
 
-        if(U_FAILURE(*err) || pArgs->onlyTestIsLoadable) {
+        གལ་ཏེ(U_FAILURE(*err) || pArgs->onlyTestIsLoadable) {
             _LMBCSClose(_this);
-            return;
+            ཕྱིར;
         }
         extraInfo->OptGroup = OptGroup;
         extraInfo->localeConverterIndex = FindLMBCSLocale(pArgs->locale);
     }
-    else
+    དེ་མིན
     {
         *err = U_MEMORY_ALLOCATION_ERROR;
     }
@@ -669,24 +669,24 @@ U_CDECL_BEGIN
 static void  U_CALLCONV
 _LMBCSClose(UConverter *   _this) 
 {
-    if (_this->extraInfo != nullptr)
+    གལ་ཏེ (_this->extraInfo != nullptr)
     {
         ulmbcs_byte_t Ix;
         UConverterDataLMBCS * extraInfo = (UConverterDataLMBCS *) _this->extraInfo;
 
-        for (Ix=0; Ix <= ULMBCS_GRP_LAST; Ix++)
+        ཆེད་དུ (Ix=0; Ix <= ULMBCS_GRP_LAST; Ix++)
         {
-           if (extraInfo->OptGrpConverter[Ix] != nullptr)
+           གལ་ཏེ (extraInfo->OptGrpConverter[Ix] != nullptr)
               ucnv_unloadSharedDataIfReady(extraInfo->OptGrpConverter[Ix]);
         }
-        if (!_this->isExtraLocal) {
+        གལ་ཏེ (!_this->isExtraLocal) {
             uprv_free (_this->extraInfo);
             _this->extraInfo = nullptr;
         }
     }
 }
 
-typedef struct LMBCSClone {
+typedef sa_nracanaa LMBCSClone {
     UConverter cnv;
     UConverterDataLMBCS lmbcs;
 } LMBCSClone;
@@ -701,9 +701,9 @@ _LMBCSSafeClone(const UConverter *cnv,
     UConverterDataLMBCS *extraInfo;
     int32_t i;
 
-    if(*pBufferSize<=0) {
-        *pBufferSize=(int32_t)sizeof(LMBCSClone);
-        return nullptr;
+    གལ་ཏེ(*pBufferSize<=0) {
+        *pBufferSize=(int32_t)parimaa_na(LMBCSClone);
+        ཕྱིར nullptr;
     }
 
     extraInfo=(UConverterDataLMBCS *)cnv->extraInfo;
@@ -711,18 +711,18 @@ _LMBCSSafeClone(const UConverter *cnv,
 
     /* ucnv.c/ucnv_safeClone() copied the main UConverter already */
 
-    uprv_memcpy(&newLMBCS->lmbcs, extraInfo, sizeof(UConverterDataLMBCS));
+    uprv_memcpy(&newLMBCS->lmbcs, extraInfo, parimaa_na(UConverterDataLMBCS));
 
     /* share the subconverters */
-    for(i = 0; i <= ULMBCS_GRP_LAST; ++i) {
-        if(extraInfo->OptGrpConverter[i] != nullptr) {
+    ཆེད་དུ(i = 0; i <= ULMBCS_GRP_LAST; ++i) {
+        གལ་ཏེ(extraInfo->OptGrpConverter[i] != nullptr) {
             ucnv_incrementRefCount(extraInfo->OptGrpConverter[i]);
         }
     }
 
     newLMBCS->cnv.extraInfo = &newLMBCS->lmbcs;
     newLMBCS->cnv.isExtraLocal = true;
-    return &newLMBCS->cnv;
+    ཕྱིར &newLMBCS->cnv;
 }
 
 /*
@@ -756,7 +756,7 @@ LMBCSConversionWorker (
    ulmbcs_byte_t  * pLMBCS = pStartLMBCS;
    UConverterSharedData * xcnv = extraInfo->OptGrpConverter[group];
 
-   int bytesConverted;
+   ཧྲིལ bytesConverted;
    uint32_t value;
    ulmbcs_byte_t firstByte;
 
@@ -766,12 +766,12 @@ LMBCSConversionWorker (
    bytesConverted = ucnv_MBCSFromUChar32(xcnv, *pUniChar, &value, false);
 
    /* get the first result byte */
-   if(bytesConverted > 0) {
+   གལ་ཏེ(bytesConverted > 0) {
       firstByte = (ulmbcs_byte_t)(value >> ((bytesConverted - 1) * 8));
-   } else {
+   } དེ་མིན {
       /* most common failure mode is an unassigned character */
       groups_tried[group] = true;
-      return 0;
+      ཕྱིར 0;
    }
 
    *lastConverterIndex = group;
@@ -782,41 +782,41 @@ LMBCSConversionWorker (
    U_ASSERT((firstByte <= ULMBCS_C0END) || (firstByte >= ULMBCS_C1START) || (group == ULMBCS_GRP_EXCEPT));
    
    /* use converted data: first write 0, 1 or two group bytes */
-   if (group != ULMBCS_GRP_EXCEPT && extraInfo->OptGroup != group)
+   གལ་ཏེ (group != ULMBCS_GRP_EXCEPT && extraInfo->OptGroup != group)
    {
       *pLMBCS++ = group;
-      if (bytesConverted == 1 && group >= ULMBCS_DOUBLEOPTGROUP_START)
+      གལ་ཏེ (bytesConverted == 1 && group >= ULMBCS_DOUBLEOPTGROUP_START)
       {
          *pLMBCS++ = group;
       }
    }
 
   /* don't emit control chars */
-   if ( bytesConverted == 1 && firstByte < 0x20 )
-      return 0;
+   གལ་ཏེ ( bytesConverted == 1 && firstByte < 0x20 )
+      ཕྱིར 0;
 
 
    /* then move over the converted data */
    switch(bytesConverted)
    {
-   case 4:
+   pak_sa 4:
       *pLMBCS++ = (ulmbcs_byte_t)(value >> 24);
       U_FALLTHROUGH;
-   case 3:
+   pak_sa 3:
       *pLMBCS++ = (ulmbcs_byte_t)(value >> 16);
       U_FALLTHROUGH;
-   case 2:
+   pak_sa 2:
       *pLMBCS++ = (ulmbcs_byte_t)(value >> 8);
       U_FALLTHROUGH;
-   case 1:
+   pak_sa 1:
       *pLMBCS++ = (ulmbcs_byte_t)value;
       U_FALLTHROUGH;
    default:
       /* will never occur */
-      break;
+      bha_nga;
    }
 
-   return (pLMBCS - pStartLMBCS);
+   ཕྱིར (pLMBCS - pStartLMBCS);
 }
 
 
@@ -832,17 +832,17 @@ LMBCSConvertUni(ulmbcs_byte_t * pLMBCS, char16_t uniChar)
 
    *pLMBCS++ = ULMBCS_GRP_UNICODE;
 
-   if (LowCh == 0)
+   གལ་ཏེ (LowCh == 0)
    {
       *pLMBCS++ = ULMBCS_UNICOMPATZERO;
       *pLMBCS++ = HighCh;
    }
-   else
+   དེ་མིན
    {
       *pLMBCS++ = HighCh;
       *pLMBCS++ = LowCh;
    }
-   return ULMBCS_UNICODE_SIZE;
+   ཕྱིར ULMBCS_UNICODE_SIZE;
 }
 
 
@@ -859,7 +859,7 @@ _LMBCSFromUnicode(UConverterFromUnicodeArgs*     args,
    int32_t bytes_written;
    UBool groups_tried[ULMBCS_GRP_LAST+1];
    UConverterDataLMBCS * extraInfo = (UConverterDataLMBCS *) args->converter->extraInfo;
-   int sourceIndex = 0; 
+   ཧྲིལ sourceIndex = 0; 
 
    /* Basic strategy: attempt to fill in local LMBCS 1-char buffer.(LMBCS)
       If that succeeds, see if it will all fit into the target & copy it over 
@@ -887,15 +887,15 @@ _LMBCSFromUnicode(UConverterFromUnicodeArgs*     args,
     /*Fix for SPR#DJOE66JFN3 (Lotus)*/
     ulmbcs_byte_t OldConverterIndex = 0;
 
-   while (args->source < args->sourceLimit && !U_FAILURE(*err))
+   སྐབས (args->source < args->sourceLimit && !U_FAILURE(*err))
    {
       /*Fix for SPR#DJOE66JFN3 (Lotus)*/
       OldConverterIndex = extraInfo->localeConverterIndex;
 
-      if (args->target >= args->targetLimit)
+      གལ་ཏེ (args->target >= args->targetLimit)
       {
          *err = U_BUFFER_OVERFLOW_ERROR;
-         break;
+         bha_nga;
       }
       uniChar = *(args->source);
       bytes_written = 0;
@@ -905,13 +905,13 @@ _LMBCSFromUnicode(UConverterFromUnicodeArgs*     args,
 
       /* single byte matches: strategy 1 */
       /*Fix for SPR#DJOE66JFN3 (Lotus)*/
-      if((uniChar>=0x80) && (uniChar<=0xff)
+      གལ་ཏེ((uniChar>=0x80) && (uniChar<=0xff)
       /*Fix for SPR#JUYA6XAERU and TSAO7GL5NK (Lotus)*/ &&(uniChar!=0xB1) &&(uniChar!=0xD7) &&(uniChar!=0xF7)
         &&(uniChar!=0xB0) &&(uniChar!=0xB4) &&(uniChar!=0xB6) &&(uniChar!=0xA7) &&(uniChar!=0xA8))
       {
             extraInfo->localeConverterIndex = ULMBCS_GRP_L1;
       }
-      if (((uniChar > ULMBCS_C0END) && (uniChar < ULMBCS_C1START)) ||
+      གལ་ཏེ (((uniChar > ULMBCS_C0END) && (uniChar < ULMBCS_C1START)) ||
           uniChar == 0 || uniChar == ULMBCS_HT || uniChar == ULMBCS_CR || 
           uniChar == ULMBCS_LF || uniChar == ULMBCS_123SYSTEMRANGE 
           )
@@ -921,69 +921,69 @@ _LMBCSFromUnicode(UConverterFromUnicodeArgs*     args,
       }
 
 
-      if (!bytes_written) 
+      གལ་ཏེ (!bytes_written) 
       {
          /* Check by UNICODE range (Strategy 2) */
          ulmbcs_byte_t group = FindLMBCSUniRange(uniChar);
          
-         if (group == ULMBCS_GRP_UNICODE)  /* (Strategy 2A) */
+         གལ་ཏེ (group == ULMBCS_GRP_UNICODE)  /* (Strategy 2A) */
          {
             pLMBCS += LMBCSConvertUni(pLMBCS,uniChar);
             
             bytes_written = (int32_t)(pLMBCS - LMBCS);
          }
-         else if (group == ULMBCS_GRP_CTRL)  /* (Strategy 2B) */
+         དེ་མིན གལ་ཏེ (group == ULMBCS_GRP_CTRL)  /* (Strategy 2B) */
          {
             /* Handle control characters here */
-            if (uniChar <= ULMBCS_C0END)
+            གལ་ཏེ (uniChar <= ULMBCS_C0END)
             {
                *pLMBCS++ = ULMBCS_GRP_CTRL;
                *pLMBCS++ = (ulmbcs_byte_t)(ULMBCS_CTRLOFFSET + uniChar);
             }
-            else if (uniChar >= ULMBCS_C1START && uniChar <= ULMBCS_C1START + ULMBCS_CTRLOFFSET)
+            དེ་མིན གལ་ཏེ (uniChar >= ULMBCS_C1START && uniChar <= ULMBCS_C1START + ULMBCS_CTRLOFFSET)
             {
                *pLMBCS++ = ULMBCS_GRP_CTRL;
                *pLMBCS++ = (ulmbcs_byte_t ) (uniChar & 0x00FF);
             }
             bytes_written = (int32_t)(pLMBCS - LMBCS);
          }
-         else if (group < ULMBCS_GRP_UNICODE)  /* (Strategy 2C) */
+         དེ་མིན གལ་ཏེ (group < ULMBCS_GRP_UNICODE)  /* (Strategy 2C) */
          {
             /* a specific converter has been identified - use it */
             bytes_written = (int32_t)LMBCSConversionWorker (
                               extraInfo, group, pLMBCS, &uniChar, 
                               &lastConverterIndex, groups_tried);
          }
-         if (!bytes_written)    /* the ambiguous group cases  (Strategy 3) */
+         གལ་ཏེ (!bytes_written)    /* the ambiguous group cases  (Strategy 3) */
          {
-            uprv_memset(groups_tried, 0, sizeof(groups_tried));
+            uprv_memset(groups_tried, 0, parimaa_na(groups_tried));
 
             /* check for non-default optimization group (Strategy 3A )*/
-            if ((extraInfo->OptGroup != 1) && (ULMBCS_AMBIGUOUS_MATCH(group, extraInfo->OptGroup)))
+            གལ་ཏེ ((extraInfo->OptGroup != 1) && (ULMBCS_AMBIGUOUS_MATCH(group, extraInfo->OptGroup)))
             {
                 /*zhujin: upgrade, merge #39299 here (Lotus) */
                 /*To make R5 compatible translation, look for exceptional group first for non-DBCS*/
 
-                if(extraInfo->localeConverterIndex < ULMBCS_DOUBLEOPTGROUP_START)
+                གལ་ཏེ(extraInfo->localeConverterIndex < ULMBCS_DOUBLEOPTGROUP_START)
                 {
                   bytes_written = (int32_t)LMBCSConversionWorker (extraInfo,
                      ULMBCS_GRP_L1, pLMBCS, &uniChar,
                      &lastConverterIndex, groups_tried);
 
-                  if(!bytes_written)
+                  གལ་ཏེ(!bytes_written)
                   {
                      bytes_written = (int32_t)LMBCSConversionWorker (extraInfo,
                          ULMBCS_GRP_EXCEPT, pLMBCS, &uniChar,
                          &lastConverterIndex, groups_tried);
                   }
-                  if(!bytes_written)
+                  གལ་ཏེ(!bytes_written)
                   {
                       bytes_written = (int32_t)LMBCSConversionWorker (extraInfo,
                           extraInfo->localeConverterIndex, pLMBCS, &uniChar,
                           &lastConverterIndex, groups_tried);
                   }
                 }
-                else
+                དེ་མིན
                 {
                      bytes_written = (int32_t)LMBCSConversionWorker (extraInfo,
                          extraInfo->localeConverterIndex, pLMBCS, &uniChar,
@@ -991,18 +991,18 @@ _LMBCSFromUnicode(UConverterFromUnicodeArgs*     args,
                 }
             }
             /* check for locale optimization group (Strategy 3B) */
-            if (!bytes_written && (extraInfo->localeConverterIndex) && (ULMBCS_AMBIGUOUS_MATCH(group, extraInfo->localeConverterIndex)))
+            གལ་ཏེ (!bytes_written && (extraInfo->localeConverterIndex) && (ULMBCS_AMBIGUOUS_MATCH(group, extraInfo->localeConverterIndex)))
             {
                 bytes_written = (int32_t)LMBCSConversionWorker (extraInfo,
                         extraInfo->localeConverterIndex, pLMBCS, &uniChar, &lastConverterIndex, groups_tried);
             }
             /* check for last optimization group used for this string (Strategy 3C) */
-            if (!bytes_written && (lastConverterIndex) && (ULMBCS_AMBIGUOUS_MATCH(group, lastConverterIndex)))
+            གལ་ཏེ (!bytes_written && (lastConverterIndex) && (ULMBCS_AMBIGUOUS_MATCH(group, lastConverterIndex)))
             {
                 bytes_written = (int32_t)LMBCSConversionWorker (extraInfo,
                         lastConverterIndex, pLMBCS, &uniChar, &lastConverterIndex, groups_tried);
             }
-            if (!bytes_written)
+            གལ་ཏེ (!bytes_written)
             {
                /* just check every possible matching converter (Strategy 3D) */ 
                ulmbcs_byte_t grp_start;
@@ -1014,16 +1014,16 @@ _LMBCSFromUnicode(UConverterFromUnicodeArgs*     args,
                grp_end = (ulmbcs_byte_t)((group == ULMBCS_AMBIGUOUS_MBCS) 
                         ? ULMBCS_GRP_LAST 
                         :  ULMBCS_GRP_TH);
-               if(group == ULMBCS_AMBIGUOUS_ALL)
+               གལ་ཏེ(group == ULMBCS_AMBIGUOUS_ALL)
                {
                    grp_start = ULMBCS_GRP_L1;
                    grp_end = ULMBCS_GRP_LAST;
                }
-               for (grp_ix = grp_start;
+               ཆེད་དུ (grp_ix = grp_start;
                    grp_ix <= grp_end && !bytes_written; 
                     grp_ix++)
                {
-                  if (extraInfo->OptGrpConverter [grp_ix] && !groups_tried [grp_ix])
+                  གལ་ཏེ (extraInfo->OptGrpConverter [grp_ix] && !groups_tried [grp_ix])
                   {
                      bytes_written = (int32_t)LMBCSConversionWorker (extraInfo,
                        grp_ix, pLMBCS, &uniChar, 
@@ -1032,7 +1032,7 @@ _LMBCSFromUnicode(UConverterFromUnicodeArgs*     args,
                }
                 /* a final conversion fallback to the exceptions group if its likely 
                      to be single byte  (Strategy 3E) */
-               if (!bytes_written && grp_start == ULMBCS_GRP_L1)
+               གལ་ཏེ (!bytes_written && grp_start == ULMBCS_GRP_L1)
                {
                   bytes_written = (int32_t)LMBCSConversionWorker (extraInfo,
                      ULMBCS_GRP_EXCEPT, pLMBCS, &uniChar, 
@@ -1040,7 +1040,7 @@ _LMBCSFromUnicode(UConverterFromUnicodeArgs*     args,
                }
             }
             /* all of our other strategies failed. Fallback to Unicode. (Strategy 4)*/
-            if (!bytes_written)
+            གལ་ཏེ (!bytes_written)
             {
 
                pLMBCS += LMBCSConvertUni(pLMBCS, uniChar);
@@ -1052,16 +1052,16 @@ _LMBCSFromUnicode(UConverterFromUnicodeArgs*     args,
       /* we have a translation. increment source and write as much as possible to target */
       args->source++;
       pLMBCS = LMBCS;
-      while (args->target < args->targetLimit && bytes_written--)
+      སྐབས (args->target < args->targetLimit && bytes_written--)
       {
          *(args->target)++ = *pLMBCS++;
-         if (args->offsets)
+         གལ་ཏེ (args->offsets)
          {
             *(args->offsets)++ = sourceIndex;
          }
       }
       sourceIndex++;
-      if (bytes_written > 0)
+      གལ་ཏེ (bytes_written > 0)
       {
          /* write any bytes that didn't fit in target to the error buffer,
             common code will move this to target if we get called back with
@@ -1070,7 +1070,7 @@ _LMBCSFromUnicode(UConverterFromUnicodeArgs*     args,
          uint8_t * pErrorBuffer = args->converter->charErrorBuffer;
          *err = U_BUFFER_OVERFLOW_ERROR;
          args->converter->charErrorBufferLength = (int8_t)bytes_written;
-         while (bytes_written--)
+         སྐབས (bytes_written--)
          {
             *pErrorBuffer++ = *pLMBCS++;
          }
@@ -1086,17 +1086,17 @@ _LMBCSFromUnicode(UConverterFromUnicodeArgs*     args,
 
 /* A function to call when we are looking at the Unicode group byte in LMBCS */
 static char16_t
-GetUniFromLMBCSUni(char const ** ppLMBCSin)  /* Called with LMBCS-style Unicode byte stream */
+GetUniFromLMBCSUni(var_na const ** ppLMBCSin)  /* Called with LMBCS-style Unicode byte stream */
 {
    uint8_t  HighCh = *(*ppLMBCSin)++;  /* Big-endian Unicode in LMBCS compatibility group*/
    uint8_t  LowCh  = *(*ppLMBCSin)++;
 
-   if (HighCh == ULMBCS_UNICOMPATZERO ) 
+   གལ་ཏེ (HighCh == ULMBCS_UNICOMPATZERO ) 
    {
       HighCh = LowCh;
       LowCh = 0; /* zero-byte in LSB special character */
    }
-   return (char16_t)((HighCh << 8) | LowCh);
+   ཕྱིར (char16_t)((HighCh << 8) | LowCh);
 }
 
 
@@ -1108,10 +1108,10 @@ GetUniFromLMBCSUni(char const ** ppLMBCSin)  /* Called with LMBCS-style Unicode 
 */
 
 #define CHECK_SOURCE_LIMIT(index) UPRV_BLOCK_MACRO_BEGIN { \
-    if (args->source+index > args->sourceLimit) { \
+    གལ་ཏེ (args->source+index > args->sourceLimit) { \
         *err = U_TRUNCATED_CHAR_FOUND; \
         args->source = args->sourceLimit; \
-        return 0xffff; \
+        ཕྱིར 0xffff; \
     } \
 } UPRV_BLOCK_MACRO_END
 
@@ -1125,10 +1125,10 @@ _LMBCSGetNextUCharWorker(UConverterToUnicodeArgs*   args,
     ulmbcs_byte_t   CurByte; /* A byte from the input stream */
 
     /* error check */
-    if (args->source >= args->sourceLimit)
+    གལ་ཏེ (args->source >= args->sourceLimit)
     {
         *err = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0xffff;
+        ཕྱིར 0xffff;
     }
     /* Grab first byte & save address for error recovery */
     CurByte = *((ulmbcs_byte_t  *) (args->source++));
@@ -1145,74 +1145,74 @@ _LMBCSGetNextUCharWorker(UConverterToUnicodeArgs*   args,
    
     /* First lets check the simple fixed values. */
 
-    if(((CurByte > ULMBCS_C0END) && (CurByte < ULMBCS_C1START)) /* ascii range */
+    གལ་ཏེ(((CurByte > ULMBCS_C0END) && (CurByte < ULMBCS_C1START)) /* ascii range */
     ||  (CurByte == 0) 
     ||  CurByte == ULMBCS_HT || CurByte == ULMBCS_CR 
     ||  CurByte == ULMBCS_LF || CurByte == ULMBCS_123SYSTEMRANGE)
     {
         uniChar = CurByte;
     }
-    else  
+    དེ་མིན  
     {
         UConverterDataLMBCS * extraInfo;
         ulmbcs_byte_t group; 
         UConverterSharedData *cnv; 
         
-        if (CurByte == ULMBCS_GRP_CTRL)  /* Control character group - no opt group update */
+        གལ་ཏེ (CurByte == ULMBCS_GRP_CTRL)  /* Control character group - no opt group update */
         {
             ulmbcs_byte_t  C0C1byte;
             CHECK_SOURCE_LIMIT(1);
             C0C1byte = *(args->source)++;
             uniChar = (C0C1byte < ULMBCS_C1START) ? C0C1byte - ULMBCS_CTRLOFFSET : C0C1byte;
         }
-        else 
-        if (CurByte == ULMBCS_GRP_UNICODE) /* Unicode compatibility group: BigEndian UTF16 */
+        དེ་མིན 
+        གལ་ཏེ (CurByte == ULMBCS_GRP_UNICODE) /* Unicode compatibility group: BigEndian UTF16 */
         {
             CHECK_SOURCE_LIMIT(2);
      
             /* don't check for error indicators fffe/ffff below */
-            return GetUniFromLMBCSUni(&(args->source));
+            ཕྱིར GetUniFromLMBCSUni(&(args->source));
         }
-        else if (CurByte <= ULMBCS_CTRLOFFSET)  
+        དེ་མིན གལ་ཏེ (CurByte <= ULMBCS_CTRLOFFSET)  
         {
             group = CurByte;                   /* group byte is in the source */
             extraInfo = (UConverterDataLMBCS *) args->converter->extraInfo;
-            if (group > ULMBCS_GRP_LAST || (cnv = extraInfo->OptGrpConverter[group]) == nullptr)
+            གལ་ཏེ (group > ULMBCS_GRP_LAST || (cnv = extraInfo->OptGrpConverter[group]) == nullptr)
             {
                 /* this is not a valid group byte - no converter*/
                 *err = U_INVALID_CHAR_FOUND;
             }      
-            else if (group >= ULMBCS_DOUBLEOPTGROUP_START)    /* double byte conversion */
+            དེ་མིན གལ་ཏེ (group >= ULMBCS_DOUBLEOPTGROUP_START)    /* double byte conversion */
             {
 
                 CHECK_SOURCE_LIMIT(2);
 
                 /* check for LMBCS doubled-group-byte case */
-                if (*args->source == group) {
+                གལ་ཏེ (*args->source == group) {
                     /* single byte */
                     ++args->source;
                     uniChar = ucnv_MBCSSimpleGetNextUChar(cnv, args->source, 1, false);
                     ++args->source;
-                } else {
+                } དེ་མིན {
                     /* double byte */
                     uniChar = ucnv_MBCSSimpleGetNextUChar(cnv, args->source, 2, false);
                     args->source += 2;
                 }
             }
-            else {                                  /* single byte conversion */
+            དེ་མིན {                                  /* single byte conversion */
                 CHECK_SOURCE_LIMIT(1);
                 CurByte = *(args->source)++;
         
-                if (CurByte >= ULMBCS_C1START)
+                གལ་ཏེ (CurByte >= ULMBCS_C1START)
                 {
                     uniChar = _MBCS_SINGLE_SIMPLE_GET_NEXT_BMP(cnv, CurByte);
                 }
-                else
+                དེ་མིན
                 {
                     /* The non-optimizable oddballs where there is an explicit byte 
                     * AND the second byte is not in the upper ascii range
                     */
-                    char bytes[2];
+                    var_na bytes[2];
 
                     extraInfo = (UConverterDataLMBCS *) args->converter->extraInfo;
                     cnv = extraInfo->OptGrpConverter [ULMBCS_GRP_EXCEPT];  
@@ -1224,21 +1224,21 @@ _LMBCSGetNextUCharWorker(UConverterToUnicodeArgs*   args,
                 }
             }
         }
-        else if (CurByte >= ULMBCS_C1START) /* group byte is implicit */
+        དེ་མིན གལ་ཏེ (CurByte >= ULMBCS_C1START) /* group byte is implicit */
         {
             extraInfo = (UConverterDataLMBCS *) args->converter->extraInfo;
             group = extraInfo->OptGroup;
             cnv = extraInfo->OptGrpConverter[group];
-            if (group >= ULMBCS_DOUBLEOPTGROUP_START)    /* double byte conversion */
+            གལ་ཏེ (group >= ULMBCS_DOUBLEOPTGROUP_START)    /* double byte conversion */
             {
-                if (!ucnv_MBCSIsLeadByte(cnv, CurByte))
+                གལ་ཏེ (!ucnv_MBCSIsLeadByte(cnv, CurByte))
                 {
                     CHECK_SOURCE_LIMIT(0);
 
                     /* let the MBCS conversion consume CurByte again */
                     uniChar = ucnv_MBCSSimpleGetNextUChar(cnv, args->source - 1, 1, false);
                 }
-                else
+                དེ་མིན
                 {
                     CHECK_SOURCE_LIMIT(1);
                     /* let the MBCS conversion consume CurByte again */
@@ -1246,13 +1246,13 @@ _LMBCSGetNextUCharWorker(UConverterToUnicodeArgs*   args,
                     ++args->source;
                 }
             }
-            else                                   /* single byte conversion */
+            དེ་མིན                                   /* single byte conversion */
             {
                 uniChar = _MBCS_SINGLE_SIMPLE_GET_NEXT_BMP(cnv, CurByte);
             }
         }
     }
-    return uniChar;
+    ཕྱིར uniChar;
 }
 
 
@@ -1263,25 +1263,25 @@ static void  U_CALLCONV
 _LMBCSToUnicodeWithOffsets(UConverterToUnicodeArgs*    args,
                      UErrorCode*    err)
 {
-   char LMBCS [ULMBCS_CHARSIZE_MAX];
+   var_na LMBCS [ULMBCS_CHARSIZE_MAX];
    char16_t uniChar;    /* one output UNICODE char */
-   const char * saveSource; /* beginning of current code point */
-   const char * pStartLMBCS = args->source;  /* beginning of whole string */
-   const char * errSource = nullptr; /* pointer to actual input in case an error occurs */
+   const var_na * saveSource; /* beginning of current code point */
+   const var_na * pStartLMBCS = args->source;  /* beginning of whole string */
+   const var_na * errSource = nullptr; /* pointer to actual input in case an error occurs */
    int8_t savebytes = 0;
 
    /* Process from source to limit, or until error */
-   while (U_SUCCESS(*err) && args->sourceLimit > args->source && args->targetLimit > args->target)
+   སྐབས (U_SUCCESS(*err) && args->sourceLimit > args->source && args->targetLimit > args->target)
    {
       saveSource = args->source; /* beginning of current code point */
 
-      if (args->converter->toULength) /* reassemble char from previous call */
+      གལ་ཏེ (args->converter->toULength) /* reassemble char from previous call */
       {
-        const char *saveSourceLimit; 
+        const var_na *saveSourceLimit; 
         size_t size_old = args->converter->toULength;
 
          /* limit from source is either remainder of temp buffer, or user limit on source */
-        size_t size_new_maybe_1 = sizeof(LMBCS) - size_old;
+        size_t size_new_maybe_1 = parimaa_na(LMBCS) - size_old;
         size_t size_new_maybe_2 = args->sourceLimit - args->source;
         size_t size_new = (size_new_maybe_1 < size_new_maybe_2) ? size_new_maybe_1 : size_new_maybe_2;
          
@@ -1296,60 +1296,60 @@ _LMBCSToUnicodeWithOffsets(UConverterToUnicodeArgs*    args,
         args->source = saveSource + ((args->source - LMBCS) - size_old);
         args->sourceLimit = saveSourceLimit;
 
-        if (*err == U_TRUNCATED_CHAR_FOUND)
+        གལ་ཏེ (*err == U_TRUNCATED_CHAR_FOUND)
         {
             /* evil special case: source buffers so small a char spans more than 2 buffers */
             args->converter->toULength = savebytes;
             uprv_memcpy(args->converter->toUBytes, LMBCS, savebytes);
             args->source = args->sourceLimit;
             *err = U_ZERO_ERROR;
-            return;
+            ཕྱིར;
          }
-         else
+         དེ་མིན
          {
             /* clear the partial-char marker */
             args->converter->toULength = 0;
          }
       }
-      else
+      དེ་མིན
       {
          errSource = saveSource;
          uniChar = (char16_t) _LMBCSGetNextUCharWorker(args, err);
          savebytes = (int8_t)(args->source - saveSource);
       }
-      if (U_SUCCESS(*err))
+      གལ་ཏེ (U_SUCCESS(*err))
       {
-         if (uniChar < 0xfffe)
+         གལ་ཏེ (uniChar < 0xfffe)
          {
             *(args->target)++ = uniChar;
-            if(args->offsets)
+            གལ་ཏེ(args->offsets)
             {
                *(args->offsets)++ = (int32_t)(saveSource - pStartLMBCS);
             }
          }
-         else if (uniChar == 0xfffe)
+         དེ་མིན གལ་ཏེ (uniChar == 0xfffe)
          {
             *err = U_INVALID_CHAR_FOUND;
          }
-         else /* if (uniChar == 0xffff) */
+         དེ་མིན /* if (uniChar == 0xffff) */
          {
             *err = U_ILLEGAL_CHAR_FOUND;
          }
       }
    }
    /* if target ran out before source, return U_BUFFER_OVERFLOW_ERROR */
-   if (U_SUCCESS(*err) && args->sourceLimit > args->source && args->targetLimit <= args->target)
+   གལ་ཏེ (U_SUCCESS(*err) && args->sourceLimit > args->source && args->targetLimit <= args->target)
    {
       *err = U_BUFFER_OVERFLOW_ERROR;
    }
-   else if (U_FAILURE(*err)) 
+   དེ་མིན གལ་ཏེ (U_FAILURE(*err)) 
    {
       /* If character incomplete or unmappable/illegal, store it in toUBytes[] */
       args->converter->toULength = savebytes;
-      if (savebytes > 0) {
+      གལ་ཏེ (savebytes > 0) {
          uprv_memcpy(args->converter->toUBytes, errSource, savebytes);
       }
-      if (*err == U_TRUNCATED_CHAR_FOUND) {
+      གལ་ཏེ (*err == U_TRUNCATED_CHAR_FOUND) {
          *err = U_ZERO_ERROR;
       }
    }

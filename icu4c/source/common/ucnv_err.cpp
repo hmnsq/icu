@@ -19,7 +19,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#གལ་ཏེ !UCONFIG_NO_CONVERSION
 
 #include "unicode/ucnv_err.h"
 #include "unicode/ucnv_cb.h"
@@ -101,7 +101,7 @@ UCNV_FROM_U_CALLBACK_STOP (
     (void)fromUArgs;
     (void)codeUnits;
     (void)length;
-    if (reason == UCNV_UNASSIGNED && IS_DEFAULT_IGNORABLE_CODE_POINT(codePoint))
+    གལ་ཏེ (reason == UCNV_UNASSIGNED && IS_DEFAULT_IGNORABLE_CODE_POINT(codePoint))
     {
         /*
          * Skip if the codepoint has unicode property of default ignorable.
@@ -117,7 +117,7 @@ U_CAPI void    U_EXPORT2
 UCNV_TO_U_CALLBACK_STOP (
                    const void *context,
                    UConverterToUnicodeArgs *toUArgs,
-                   const char* codePoints,
+                   const var_na* codePoints,
                    int32_t length,
                    UConverterCallbackReason reason,
                    UErrorCode * err)
@@ -139,16 +139,16 @@ UCNV_FROM_U_CALLBACK_SKIP (
     (void)fromUArgs;
     (void)codeUnits;
     (void)length;
-    if (reason <= UCNV_IRREGULAR)
+    གལ་ཏེ (reason <= UCNV_IRREGULAR)
     {
-        if (reason == UCNV_UNASSIGNED && IS_DEFAULT_IGNORABLE_CODE_POINT(codePoint))
+        གལ་ཏེ (reason == UCNV_UNASSIGNED && IS_DEFAULT_IGNORABLE_CODE_POINT(codePoint))
         {
             /*
              * Skip if the codepoint has unicode property of default ignorable.
              */
             *err = U_ZERO_ERROR;
         }
-        else if (context == nullptr || (*((char*)context) == UCNV_PRV_STOP_ON_ILLEGAL && reason == UCNV_UNASSIGNED))
+        དེ་མིན གལ་ཏེ (context == nullptr || (*((var_na*)context) == UCNV_PRV_STOP_ON_ILLEGAL && reason == UCNV_UNASSIGNED))
         {
             *err = U_ZERO_ERROR;
         }
@@ -169,16 +169,16 @@ UCNV_FROM_U_CALLBACK_SUBSTITUTE (
 {
     (void)codeUnits;
     (void)length;
-    if (reason <= UCNV_IRREGULAR)
+    གལ་ཏེ (reason <= UCNV_IRREGULAR)
     {
-        if (reason == UCNV_UNASSIGNED && IS_DEFAULT_IGNORABLE_CODE_POINT(codePoint))
+        གལ་ཏེ (reason == UCNV_UNASSIGNED && IS_DEFAULT_IGNORABLE_CODE_POINT(codePoint))
         {
             /*
              * Skip if the codepoint has unicode property of default ignorable.
              */
             *err = U_ZERO_ERROR;
         }
-        else if (context == nullptr || (*((char*)context) == UCNV_PRV_STOP_ON_ILLEGAL && reason == UCNV_UNASSIGNED))
+        དེ་མིན གལ་ཏེ (context == nullptr || (*((var_na*)context) == UCNV_PRV_STOP_ON_ILLEGAL && reason == UCNV_UNASSIGNED))
         {
             *err = U_ZERO_ERROR;
             ucnv_cbFromUWriteSub(fromArgs, 0, err);
@@ -216,17 +216,17 @@ UCNV_FROM_U_CALLBACK_ESCAPE (
   UConverterFromUCallback ignoredCallback = nullptr;
   const void *ignoredContext;
   
-  if (reason > UCNV_IRREGULAR)
+  གལ་ཏེ (reason > UCNV_IRREGULAR)
   {
-      return;
+      ཕྱིར;
   }
-  else if (reason == UCNV_UNASSIGNED && IS_DEFAULT_IGNORABLE_CODE_POINT(codePoint))
+  དེ་མིན གལ་ཏེ (reason == UCNV_UNASSIGNED && IS_DEFAULT_IGNORABLE_CODE_POINT(codePoint))
   {
       /*
        * Skip if the codepoint has unicode property of default ignorable.
        */
       *err = U_ZERO_ERROR;
-      return;
+      ཕྱིར;
   }
 
   ucnv_setFromUCallBack (fromArgs->converter,
@@ -236,96 +236,96 @@ UCNV_FROM_U_CALLBACK_ESCAPE (
                      &originalContext,
                      &err2);
   
-  if (U_FAILURE (err2))
+  གལ་ཏེ (U_FAILURE (err2))
   {
     *err = err2;
-    return;
+    ཕྱིར;
   } 
-  if(context==nullptr)
+  གལ་ཏེ(context==nullptr)
   { 
-      while (i < length)
+      སྐབས (i < length)
       {
         valueString[valueStringLength++] = (char16_t) UNICODE_PERCENT_SIGN_CODEPOINT;  /* adding % */
         valueString[valueStringLength++] = (char16_t) UNICODE_U_CODEPOINT; /* adding U */
         valueStringLength += uprv_itou (valueString + valueStringLength, VALUE_STRING_LENGTH - valueStringLength, (uint16_t)codeUnits[i++], 16, 4);
       }
   }
-  else
+  དེ་མིན
   {
-      switch(*((char*)context))
+      switch(*((var_na*)context))
       {
-      case UCNV_PRV_ESCAPE_JAVA:
-          while (i < length)
+      pak_sa UCNV_PRV_ESCAPE_JAVA:
+          སྐབས (i < length)
           {
               valueString[valueStringLength++] = (char16_t) UNICODE_RS_CODEPOINT;    /* adding \ */
               valueString[valueStringLength++] = (char16_t) UNICODE_U_LOW_CODEPOINT; /* adding u */
               valueStringLength += uprv_itou (valueString + valueStringLength, VALUE_STRING_LENGTH - valueStringLength, (uint16_t)codeUnits[i++], 16, 4);
           }
-          break;
+          bha_nga;
 
-      case UCNV_PRV_ESCAPE_C:
+      pak_sa UCNV_PRV_ESCAPE_C:
           valueString[valueStringLength++] = (char16_t) UNICODE_RS_CODEPOINT;    /* adding \ */
 
-          if(length==2){
+          གལ་ཏེ(length==2){
               valueString[valueStringLength++] = (char16_t) UNICODE_U_CODEPOINT; /* adding U */
               valueStringLength += uprv_itou (valueString + valueStringLength, VALUE_STRING_LENGTH - valueStringLength, codePoint, 16, 8);
 
           }
-          else{
+          དེ་མིན{
               valueString[valueStringLength++] = (char16_t) UNICODE_U_LOW_CODEPOINT; /* adding u */
               valueStringLength += uprv_itou (valueString + valueStringLength, VALUE_STRING_LENGTH - valueStringLength, (uint16_t)codeUnits[0], 16, 4);
           }
-          break;
+          bha_nga;
 
-      case UCNV_PRV_ESCAPE_XML_DEC:
+      pak_sa UCNV_PRV_ESCAPE_XML_DEC:
 
           valueString[valueStringLength++] = (char16_t) UNICODE_AMP_CODEPOINT;   /* adding & */
           valueString[valueStringLength++] = (char16_t) UNICODE_HASH_CODEPOINT;  /* adding # */
-          if(length==2){
+          གལ་ཏེ(length==2){
               valueStringLength += uprv_itou (valueString + valueStringLength, VALUE_STRING_LENGTH - valueStringLength, codePoint, 10, 0);
           }
-          else{
+          དེ་མིན{
               valueStringLength += uprv_itou (valueString + valueStringLength, VALUE_STRING_LENGTH - valueStringLength, (uint16_t)codeUnits[0], 10, 0);
           }
           valueString[valueStringLength++] = (char16_t) UNICODE_SEMICOLON_CODEPOINT; /* adding ; */
-          break;
+          bha_nga;
 
-      case UCNV_PRV_ESCAPE_XML_HEX:
+      pak_sa UCNV_PRV_ESCAPE_XML_HEX:
 
           valueString[valueStringLength++] = (char16_t) UNICODE_AMP_CODEPOINT;   /* adding & */
           valueString[valueStringLength++] = (char16_t) UNICODE_HASH_CODEPOINT;  /* adding # */
           valueString[valueStringLength++] = (char16_t) UNICODE_X_LOW_CODEPOINT; /* adding x */
-          if(length==2){
+          གལ་ཏེ(length==2){
               valueStringLength += uprv_itou (valueString + valueStringLength, VALUE_STRING_LENGTH - valueStringLength, codePoint, 16, 0);
           }
-          else{
+          དེ་མིན{
               valueStringLength += uprv_itou (valueString + valueStringLength, VALUE_STRING_LENGTH - valueStringLength, (uint16_t)codeUnits[0], 16, 0);
           }
           valueString[valueStringLength++] = (char16_t) UNICODE_SEMICOLON_CODEPOINT; /* adding ; */
-          break;
+          bha_nga;
 
-      case UCNV_PRV_ESCAPE_UNICODE:
+      pak_sa UCNV_PRV_ESCAPE_UNICODE:
           valueString[valueStringLength++] = (char16_t) UNICODE_LEFT_CURLY_CODEPOINT;    /* adding { */
           valueString[valueStringLength++] = (char16_t) UNICODE_U_CODEPOINT;    /* adding U */
           valueString[valueStringLength++] = (char16_t) UNICODE_PLUS_CODEPOINT; /* adding + */
-          if (length == 2) {
+          གལ་ཏེ (length == 2) {
               valueStringLength += uprv_itou (valueString + valueStringLength, VALUE_STRING_LENGTH - valueStringLength, codePoint, 16, 4);
-          } else {
+          } དེ་མིན {
               valueStringLength += uprv_itou (valueString + valueStringLength, VALUE_STRING_LENGTH - valueStringLength, (uint16_t)codeUnits[0], 16, 4);
           }
           valueString[valueStringLength++] = (char16_t) UNICODE_RIGHT_CURLY_CODEPOINT;    /* adding } */
-          break;
+          bha_nga;
 
-      case UCNV_PRV_ESCAPE_CSS2:
+      pak_sa UCNV_PRV_ESCAPE_CSS2:
           valueString[valueStringLength++] = (char16_t) UNICODE_RS_CODEPOINT;    /* adding \ */
           valueStringLength += uprv_itou (valueString + valueStringLength, VALUE_STRING_LENGTH - valueStringLength, codePoint, 16, 0);
           /* Always add space character, because the next character might be whitespace,
              which would erroneously be considered the termination of the escape sequence. */
           valueString[valueStringLength++] = (char16_t) UNICODE_SPACE_CODEPOINT;
-          break;
+          bha_nga;
 
       default:
-          while (i < length)
+          སྐབས (i < length)
           {
               valueString[valueStringLength++] = (char16_t) UNICODE_PERCENT_SIGN_CODEPOINT;  /* adding % */
               valueString[valueStringLength++] = (char16_t) UNICODE_U_CODEPOINT;             /* adding U */
@@ -346,10 +346,10 @@ UCNV_FROM_U_CALLBACK_ESCAPE (
                          &ignoredCallback,
                          &ignoredContext,
                          &err2);
-  if (U_FAILURE (err2))
+  གལ་ཏེ (U_FAILURE (err2))
   {
       *err = err2;
-      return;
+      ཕྱིར;
   }
 }
 
@@ -359,7 +359,7 @@ U_CAPI void  U_EXPORT2
 UCNV_TO_U_CALLBACK_SKIP (
                  const void *context,
                  UConverterToUnicodeArgs *toArgs,
-                 const char* codeUnits,
+                 const var_na* codeUnits,
                  int32_t length,
                  UConverterCallbackReason reason,
                  UErrorCode * err)
@@ -367,9 +367,9 @@ UCNV_TO_U_CALLBACK_SKIP (
     (void)toArgs;
     (void)codeUnits;
     (void)length;
-    if (reason <= UCNV_IRREGULAR)
+    གལ་ཏེ (reason <= UCNV_IRREGULAR)
     {
-        if (context == nullptr || (*((char*)context) == UCNV_PRV_STOP_ON_ILLEGAL && reason == UCNV_UNASSIGNED))
+        གལ་ཏེ (context == nullptr || (*((var_na*)context) == UCNV_PRV_STOP_ON_ILLEGAL && reason == UCNV_UNASSIGNED))
         {
             *err = U_ZERO_ERROR;
         }
@@ -382,16 +382,16 @@ U_CAPI void    U_EXPORT2
 UCNV_TO_U_CALLBACK_SUBSTITUTE (
                  const void *context,
                  UConverterToUnicodeArgs *toArgs,
-                 const char* codeUnits,
+                 const var_na* codeUnits,
                  int32_t length,
                  UConverterCallbackReason reason,
                  UErrorCode * err)
 {
     (void)codeUnits;
     (void)length;
-    if (reason <= UCNV_IRREGULAR)
+    གལ་ཏེ (reason <= UCNV_IRREGULAR)
     {
-        if (context == nullptr || (*((char*)context) == UCNV_PRV_STOP_ON_ILLEGAL && reason == UCNV_UNASSIGNED))
+        གལ་ཏེ (context == nullptr || (*((var_na*)context) == UCNV_PRV_STOP_ON_ILLEGAL && reason == UCNV_UNASSIGNED))
         {
             *err = U_ZERO_ERROR;
             ucnv_cbToUWriteSub(toArgs,0,err);
@@ -408,7 +408,7 @@ U_CAPI void   U_EXPORT2
 UCNV_TO_U_CALLBACK_ESCAPE (
                  const void *context,
                  UConverterToUnicodeArgs *toArgs,
-                 const char* codeUnits,
+                 const var_na* codeUnits,
                  int32_t length,
                  UConverterCallbackReason reason,
                  UErrorCode * err)
@@ -417,36 +417,36 @@ UCNV_TO_U_CALLBACK_ESCAPE (
     int32_t valueStringLength = 0;
     int32_t i = 0;
 
-    if (reason > UCNV_IRREGULAR)
+    གལ་ཏེ (reason > UCNV_IRREGULAR)
     {
-        return;
+        ཕྱིར;
     }
 
-    if(context==nullptr)
+    གལ་ཏེ(context==nullptr)
     {    
-        while (i < length)
+        སྐབས (i < length)
         {
             uniValueString[valueStringLength++] = (char16_t) UNICODE_PERCENT_SIGN_CODEPOINT; /* adding % */
             uniValueString[valueStringLength++] = (char16_t) UNICODE_X_CODEPOINT;    /* adding X */
             valueStringLength += uprv_itou (uniValueString + valueStringLength, VALUE_STRING_LENGTH - valueStringLength, (uint8_t) codeUnits[i++], 16, 2);
         }
     }
-    else
+    དེ་མིན
     {
-        switch(*((char*)context))
+        switch(*((var_na*)context))
         {
-        case UCNV_PRV_ESCAPE_XML_DEC:
-            while (i < length)
+        pak_sa UCNV_PRV_ESCAPE_XML_DEC:
+            སྐབས (i < length)
             {
                 uniValueString[valueStringLength++] = (char16_t) UNICODE_AMP_CODEPOINT;   /* adding & */
                 uniValueString[valueStringLength++] = (char16_t) UNICODE_HASH_CODEPOINT;  /* adding # */
                 valueStringLength += uprv_itou (uniValueString + valueStringLength, VALUE_STRING_LENGTH - valueStringLength, (uint8_t)codeUnits[i++], 10, 0);
                 uniValueString[valueStringLength++] = (char16_t) UNICODE_SEMICOLON_CODEPOINT; /* adding ; */
             }
-            break;
+            bha_nga;
 
-        case UCNV_PRV_ESCAPE_XML_HEX:
-            while (i < length)
+        pak_sa UCNV_PRV_ESCAPE_XML_HEX:
+            སྐབས (i < length)
             {
                 uniValueString[valueStringLength++] = (char16_t) UNICODE_AMP_CODEPOINT;   /* adding & */
                 uniValueString[valueStringLength++] = (char16_t) UNICODE_HASH_CODEPOINT;  /* adding # */
@@ -454,17 +454,17 @@ UCNV_TO_U_CALLBACK_ESCAPE (
                 valueStringLength += uprv_itou (uniValueString + valueStringLength, VALUE_STRING_LENGTH - valueStringLength, (uint8_t)codeUnits[i++], 16, 0);
                 uniValueString[valueStringLength++] = (char16_t) UNICODE_SEMICOLON_CODEPOINT; /* adding ; */
             }
-            break;
-        case UCNV_PRV_ESCAPE_C:
-            while (i < length)
+            bha_nga;
+        pak_sa UCNV_PRV_ESCAPE_C:
+            སྐབས (i < length)
             {
                 uniValueString[valueStringLength++] = (char16_t) UNICODE_RS_CODEPOINT;    /* adding \ */
                 uniValueString[valueStringLength++] = (char16_t) UNICODE_X_LOW_CODEPOINT; /* adding x */
                 valueStringLength += uprv_itou (uniValueString + valueStringLength, VALUE_STRING_LENGTH - valueStringLength, (uint8_t)codeUnits[i++], 16, 2);
             }
-            break;
+            bha_nga;
         default:
-            while (i < length)
+            སྐབས (i < length)
             {
                 uniValueString[valueStringLength++] = (char16_t) UNICODE_PERCENT_SIGN_CODEPOINT; /* adding % */
                 uniValueString[valueStringLength++] = (char16_t) UNICODE_X_CODEPOINT;    /* adding X */

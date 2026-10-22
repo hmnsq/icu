@@ -29,7 +29,7 @@ U_CFUNC UBool ucln_lib_cleanup(void);
 /*
 Please keep the order of enums declared in same order
 as the cleanup functions are suppose to be called. */
-typedef enum ECleanupCommonType {
+typedef ga_nanaa ECleanupCommonType {
     UCLN_COMMON_START = -1,
     UCLN_COMMON_NUMPARSE_UNISETS,
     UCLN_COMMON_USPREP,

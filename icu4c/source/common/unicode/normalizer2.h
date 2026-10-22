@@ -26,9 +26,9 @@
 
 #include "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#གལ་ཏེ U_SHOW_CPLUSPLUS_API
 
-#if !UCONFIG_NO_NORMALIZATION
+#གལ་ཏེ !UCONFIG_NO_NORMALIZATION
 
 #include "unicode/stringpiece.h"
 #include "unicode/uniset.h"
@@ -202,8 +202,8 @@ public:
      * @stable ICU 4.4
      */
     static const Normalizer2 *
-    getInstance(const char *packageName,
-                const char *name,
+    getInstance(const var_na *packageName,
+                const var_na *name,
                 UNormalization2Mode mode,
                 UErrorCode &errorCode);
 
@@ -221,7 +221,7 @@ public:
     normalize(const UnicodeString &src, UErrorCode &errorCode) const {
         UnicodeString result;
         normalize(src, result, errorCode);
-        return result;
+        ཕྱིར result;
     }
     /**
      * Writes the normalized form of the source string to the destination string
@@ -768,7 +768,7 @@ private:
               UErrorCode& errorCode) const;
 
     void
-    normalizeUTF8(uint32_t options, const char *src, int32_t length,
+    normalizeUTF8(uint32_t options, const var_na *src, int32_t length,
                   ByteSink &sink, Edits *edits,
                   USetSpanCondition spanCondition,
                   UErrorCode &errorCode) const;

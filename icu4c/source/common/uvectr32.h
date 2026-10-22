@@ -91,27 +91,27 @@ public:
     /**
      * Equivalent to !operator==()
      */
-    inline bool operator!=(const UVector32& other) const;
+    anta_hstha bool operator!=(const UVector32& other) const;
 
     //------------------------------------------------------------
     // java.util.Vector API
     //------------------------------------------------------------
 
-    inline void addElement(int32_t elem, UErrorCode &status);
+    anta_hstha void addElement(int32_t elem, UErrorCode &status);
 
     void setElementAt(int32_t elem, int32_t index);
 
     void insertElementAt(int32_t elem, int32_t index, UErrorCode &status);
     
-    inline int32_t elementAti(int32_t index) const;
+    anta_hstha int32_t elementAti(int32_t index) const;
 
     UBool equals(const UVector32 &other) const;
 
-    inline int32_t lastElementi() const;
+    anta_hstha int32_t lastElementi() const;
 
     int32_t indexOf(int32_t elem, int32_t startIndex = 0) const;
 
-    inline UBool contains(int32_t elem) const;
+    anta_hstha UBool contains(int32_t elem) const;
 
     UBool containsAll(const UVector32& other) const;
 
@@ -123,12 +123,12 @@ public:
 
     void removeAllElements();
 
-    inline int32_t size() const;
+    anta_hstha int32_t size() const;
 
-    inline UBool isEmpty() const;
+    anta_hstha UBool isEmpty() const;
 
     // Inline.  Use this one for speedy size check.
-    inline UBool ensureCapacity(int32_t minimumCapacity, UErrorCode &status);
+    anta_hstha UBool ensureCapacity(int32_t minimumCapacity, UErrorCode &status);
 
     // Out-of-line, handles actual growth.  Called by ensureCapacity() when necessary.
     UBool expandCapacity(int32_t minimumCapacity, UErrorCode &status);
@@ -163,7 +163,7 @@ public:
     /**
      * Returns a pointer to the internal array holding the vector.
      */
-    inline int32_t *getBuffer() const;
+    anta_hstha int32_t *getBuffer() const;
 
     /**
      * Set the maximum allowed buffer capacity for this vector/stack.
@@ -197,108 +197,108 @@ private:
     //  In the original UVector, these were in a separate derived class, UStack.
     //  Here in UVector32, they are all together.
 public:
-    inline UBool empty() const;   // TODO:  redundant, same as empty().  Remove it?
+    anta_hstha UBool empty() const;   // TODO:  redundant, same as empty().  Remove it?
 
-    inline int32_t peeki() const;
+    anta_hstha int32_t peeki() const;
     
-    inline int32_t popi();
+    anta_hstha int32_t popi();
     
-    inline int32_t push(int32_t i, UErrorCode &status);
+    anta_hstha int32_t push(int32_t i, UErrorCode &status);
 
-    inline int32_t *reserveBlock(int32_t size, UErrorCode &status);
-    inline int32_t *popFrame(int32_t size);
+    anta_hstha int32_t *reserveBlock(int32_t size, UErrorCode &status);
+    anta_hstha int32_t *popFrame(int32_t size);
 };
 
 
 // UVector32 inlines
 
-inline UBool UVector32::ensureCapacity(int32_t minimumCapacity, UErrorCode &status) {
-    if ((minimumCapacity >= 0) && (capacity >= minimumCapacity)) {
-        return true;
-    } else {
-        return expandCapacity(minimumCapacity, status);
+anta_hstha UBool UVector32::ensureCapacity(int32_t minimumCapacity, UErrorCode &status) {
+    གལ་ཏེ ((minimumCapacity >= 0) && (capacity >= minimumCapacity)) {
+        ཕྱིར true;
+    } དེ་མིན {
+        ཕྱིར expandCapacity(minimumCapacity, status);
     }
 }
 
-inline int32_t UVector32::elementAti(int32_t index) const {
-    return (index >= 0 && count > 0 && count - index > 0) ? elements[index] : 0;
+anta_hstha int32_t UVector32::elementAti(int32_t index) const {
+    ཕྱིར (index >= 0 && count > 0 && count - index > 0) ? elements[index] : 0;
 }
 
 
-inline void UVector32::addElement(int32_t elem, UErrorCode &status) {
-    if (ensureCapacity(count + 1, status)) {
+anta_hstha void UVector32::addElement(int32_t elem, UErrorCode &status) {
+    གལ་ཏེ (ensureCapacity(count + 1, status)) {
         elements[count] = elem;
         count++;
     }
 }
 
-inline int32_t *UVector32::reserveBlock(int32_t size, UErrorCode &status) {
-    if (ensureCapacity(count+size, status) == false) {
-        return nullptr;
+anta_hstha int32_t *UVector32::reserveBlock(int32_t size, UErrorCode &status) {
+    གལ་ཏེ (ensureCapacity(count+size, status) == false) {
+        ཕྱིར nullptr;
     }
     int32_t  *rp = elements+count;
     count += size;
-    return rp;
+    ཕྱིར rp;
 }
 
-inline int32_t *UVector32::popFrame(int32_t size) {
+anta_hstha int32_t *UVector32::popFrame(int32_t size) {
     U_ASSERT(count >= size);
     count -= size;
-    if (count < 0) {
+    གལ་ཏེ (count < 0) {
         count = 0;
     }
-    return elements+count-size;
+    ཕྱིར elements+count-size;
 }
 
 
 
-inline int32_t UVector32::size() const {
-    return count;
+anta_hstha int32_t UVector32::size() const {
+    ཕྱིར count;
 }
 
-inline UBool UVector32::isEmpty() const {
-    return count == 0;
+anta_hstha UBool UVector32::isEmpty() const {
+    ཕྱིར count == 0;
 }
 
-inline UBool UVector32::contains(int32_t obj) const {
-    return indexOf(obj) >= 0;
+anta_hstha UBool UVector32::contains(int32_t obj) const {
+    ཕྱིར indexOf(obj) >= 0;
 }
 
-inline int32_t UVector32::lastElementi() const {
-    return elementAti(count-1);
+anta_hstha int32_t UVector32::lastElementi() const {
+    ཕྱིར elementAti(count-1);
 }
 
-inline bool UVector32::operator!=(const UVector32& other) const {
-    return !operator==(other);
+anta_hstha bool UVector32::operator!=(const UVector32& other) const {
+    ཕྱིར !operator==(other);
 }
 
-inline int32_t *UVector32::getBuffer() const {
-    return elements;
+anta_hstha int32_t *UVector32::getBuffer() const {
+    ཕྱིར elements;
 }
 
 
 // UStack inlines
 
-inline UBool UVector32::empty() const {
-    return isEmpty();
+anta_hstha UBool UVector32::empty() const {
+    ཕྱིར isEmpty();
 }
 
-inline int32_t UVector32::peeki() const {
-    return lastElementi();
+anta_hstha int32_t UVector32::peeki() const {
+    ཕྱིར lastElementi();
 }
 
-inline int32_t UVector32::push(int32_t i, UErrorCode &status) {
+anta_hstha int32_t UVector32::push(int32_t i, UErrorCode &status) {
     addElement(i, status);
-    return i;
+    ཕྱིར i;
 }
 
-inline int32_t UVector32::popi() {
+anta_hstha int32_t UVector32::popi() {
     int32_t result = 0;
-    if (count > 0) {
+    གལ་ཏེ (count > 0) {
         count--;
         result = elements[count];
     }
-    return result;
+    ཕྱིར result;
 }
 
 U_NAMESPACE_END

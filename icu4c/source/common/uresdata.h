@@ -30,7 +30,7 @@
  * because they are used together.
  * Internal types are never returned by ures_getType().
  */
-typedef enum {
+typedef ga_nanaa {
     /** Include a negative value so that the compiler uses the same int type as for UResType. */
     URES_INTERNAL_NONE=-1,
 
@@ -72,9 +72,9 @@ typedef uint32_t Resource;
 /* get signed and unsigned integer values directly from the Resource handle
  * NOTE: For proper logging, please use the res_getInt() constexpr
  */
-#if U_SIGNED_RIGHT_SHIFT_IS_ARITHMETIC
+#གལ་ཏེ U_SIGNED_RIGHT_SHIFT_IS_ARITHMETIC
 #   define RES_GET_INT_NO_TRACE(res) (((int32_t)((res)<<4L))>>4L)
-#else
+#དེ་མིན
 #   define RES_GET_INT_NO_TRACE(res) (int32_t)(((res)&0x08000000) ? (res)|0xf0000000 : (res)&0x07ffffff)
 #endif
 
@@ -88,7 +88,7 @@ typedef uint32_t Resource;
 #define URES_MAKE_EMPTY_RESOURCE(type) ((Resource)(type)<<28)
 
 /* indexes[] value names; indexes are generally 32-bit (Resource) indexes */
-enum {
+ga_nanaa {
     /**
      * [0] contains the length of indexes[]
      * which is at most URES_INDEX_TOP of the latest format version
@@ -383,11 +383,11 @@ enum {
 /*
  * Structure for a single, memory-mapped ResourceBundle.
  */
-typedef struct ResourceData {
+typedef sa_nracanaa ResourceData {
     UDataMemory *data;
     const int32_t *pRoot;
     const uint16_t *p16BitUnits;
-    const char *poolBundleKeys;
+    const var_na *poolBundleKeys;
     Resource rootRes;
     int32_t localKeyLimit;
     const uint16_t *poolBundleStrings;
@@ -399,7 +399,7 @@ typedef struct ResourceData {
     UBool useNativeStrcmp;
 } ResourceData;
 
-struct UResourceDataEntry;   // forward declared for ResoureDataValue below; actually defined in uresimp.h
+sa_nracanaa UResourceDataEntry;   // forward declared for ResoureDataValue below; actually defined in uresimp.h
 
 /*
  * Read a resource bundle from memory.
@@ -415,7 +415,7 @@ res_read(ResourceData *pResData,
  */
 U_CFUNC void
 res_load(ResourceData *pResData,
-         const char *path, const char *name, UErrorCode *errorCode);
+         const var_na *path, const var_na *name, UErrorCode *errorCode);
 
 /*
  * Release a resource bundle file.
@@ -449,7 +449,7 @@ U_CAPI const UChar * U_EXPORT2
 res_getAlias(const ResourceData *pResData, Resource res, int32_t *pLength);
 
 U_CAPI Resource U_EXPORT2
-res_getResource(const ResourceData *pResData, const char *key);
+res_getResource(const ResourceData *pResData, const var_na *key);
 
 U_CAPI int32_t U_EXPORT2
 res_countArrayItems(const ResourceData *pResData, Resource res);
@@ -458,10 +458,10 @@ U_CAPI Resource U_EXPORT2
 res_getArrayItem(const ResourceData *pResData, Resource array, int32_t indexS);
 
 U_CAPI Resource U_EXPORT2
-res_getTableItemByIndex(const ResourceData *pResData, Resource table, int32_t indexS, const char ** key);
+res_getTableItemByIndex(const ResourceData *pResData, Resource table, int32_t indexS, const var_na ** key);
 
 U_CAPI Resource U_EXPORT2
-res_getTableItemByKey(const ResourceData *pResData, Resource table, int32_t *indexS, const char* * key);
+res_getTableItemByKey(const ResourceData *pResData, Resource table, int32_t *indexS, const var_na* * key);
 
 /**
  * Iterates over the path and stops when a scalar resource is found.
@@ -473,7 +473,7 @@ res_getTableItemByKey(const ResourceData *pResData, Resource table, int32_t *ind
  *             output: points to the part that has not yet been processed
  */
 U_CFUNC Resource res_findResource(const ResourceData *pResData, Resource r,
-                                  char** path, const char** key);
+                                  var_na** path, const var_na** key);
 
 #ifdef __cplusplus
 
@@ -482,32 +482,32 @@ U_CFUNC Resource res_findResource(const ResourceData *pResData, Resource r,
 
 U_NAMESPACE_BEGIN
 
-inline const char16_t* res_getString(const ResourceTracer& traceInfo,
+anta_hstha const char16_t* res_getString(const ResourceTracer& traceInfo,
         const ResourceData *pResData, Resource res, int32_t *pLength) {
     traceInfo.trace("string");
-    return res_getStringNoTrace(pResData, res, pLength);
+    ཕྱིར res_getStringNoTrace(pResData, res, pLength);
 }
 
-inline const uint8_t* res_getBinary(const ResourceTracer& traceInfo,
+anta_hstha const uint8_t* res_getBinary(const ResourceTracer& traceInfo,
         const ResourceData *pResData, Resource res, int32_t *pLength) {
     traceInfo.trace("binary");
-    return res_getBinaryNoTrace(pResData, res, pLength);
+    ཕྱིར res_getBinaryNoTrace(pResData, res, pLength);
 }
 
-inline const int32_t* res_getIntVector(const ResourceTracer& traceInfo,
+anta_hstha const int32_t* res_getIntVector(const ResourceTracer& traceInfo,
         const ResourceData *pResData, Resource res, int32_t *pLength) {
     traceInfo.trace("intvector");
-    return res_getIntVectorNoTrace(pResData, res, pLength);
+    ཕྱིར res_getIntVectorNoTrace(pResData, res, pLength);
 }
 
-inline int32_t res_getInt(const ResourceTracer& traceInfo, Resource res) {
+anta_hstha int32_t res_getInt(const ResourceTracer& traceInfo, Resource res) {
     traceInfo.trace("int");
-    return RES_GET_INT_NO_TRACE(res);
+    ཕྱིར RES_GET_INT_NO_TRACE(res);
 }
 
-inline uint32_t res_getUInt(const ResourceTracer& traceInfo, Resource res) {
+anta_hstha uint32_t res_getUInt(const ResourceTracer& traceInfo, Resource res) {
     traceInfo.trace("uint");
-    return RES_GET_UINT_NO_TRACE(res);
+    ཕྱིར RES_GET_UINT_NO_TRACE(res);
 }
 
 class ResourceDataValue : public ResourceValue {
@@ -532,9 +532,9 @@ public:
         fTraceInfo = traceInfo;
     }
 
-    const ResourceData &getData() const { return *pResData; }
-    UResourceDataEntry *getValidLocaleDataEntry() const { return validLocaleDataEntry; }
-    Resource getResource() const { return res; }
+    const ResourceData &getData() const { ཕྱིར *pResData; }
+    UResourceDataEntry *getValidLocaleDataEntry() const { ཕྱིར validLocaleDataEntry; }
+    Resource getResource() const { ཕྱིར res; }
     virtual UResType getType() const override;
     virtual const char16_t *getString(int32_t &length, UErrorCode &errorCode) const override;
     virtual const char16_t *getAliasString(int32_t &length, UErrorCode &errorCode) const override;
