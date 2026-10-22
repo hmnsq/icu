@@ -61,7 +61,7 @@ UCharCharacterIterator&
 UCharCharacterIterator::operator=(const UCharCharacterIterator& that) U_LIFETIME_BOUND {
     CharacterIterator::operator=(that);
     text = that.text;
-    return *this;
+    ᬯᬮᬶ *this;
 }
 
 UCharCharacterIterator::~UCharCharacterIterator() {
@@ -69,16 +69,16 @@ UCharCharacterIterator::~UCharCharacterIterator() {
 
 bool
 UCharCharacterIterator::operator==(const ForwardCharacterIterator& that) const {
-    if (this == &that) {
-        return true;
+    ᬬᬾᬦ᭄ (this == &that) {
+        ᬯᬮᬶ true;
     }
-    if (typeid(*this) != typeid(that)) {
-        return false;
+    ᬬᬾᬦ᭄ (typeid(*this) != typeid(that)) {
+        ᬯᬮᬶ false;
     }
 
     const UCharCharacterIterator&    realThat = static_cast<const UCharCharacterIterator&>(that);
 
-    return text == realThat.text
+    ᬯᬮᬶ text == realThat.text
         && textLength == realThat.textLength
         && pos == realThat.pos
         && begin == realThat.begin
@@ -87,236 +87,236 @@ UCharCharacterIterator::operator==(const ForwardCharacterIterator& that) const {
 
 int32_t
 UCharCharacterIterator::hashCode() const {
-    return ustr_hashUCharsN(text, textLength) ^ pos ^ begin ^ end;
+    ᬯᬮᬶ ustr_hashUCharsN(text, textLength) ^ pos ^ begin ^ end;
 }
 
 UCharCharacterIterator*
 UCharCharacterIterator::clone() const {
-    return new UCharCharacterIterator(*this);
+    ᬯᬮᬶ new UCharCharacterIterator(*this);
 }
 
 char16_t
 UCharCharacterIterator::first() {
     pos = begin;
-    if(pos < end) {
-        return text[pos];
-    } else {
-        return DONE;
+    ᬬᬾᬦ᭄(pos < end) {
+        ᬯᬮᬶ text[pos];
+    } ᬮᬶᬬ {
+        ᬯᬮᬶ DONE;
     }
 }
 
 char16_t
 UCharCharacterIterator::firstPostInc() {
     pos = begin;
-    if(pos < end) {
-        return text[pos++];
-    } else {
-        return DONE;
+    ᬬᬾᬦ᭄(pos < end) {
+        ᬯᬮᬶ text[pos++];
+    } ᬮᬶᬬ {
+        ᬯᬮᬶ DONE;
     }
 }
 
 char16_t
 UCharCharacterIterator::last() {
     pos = end;
-    if(pos > begin) {
-        return text[--pos];
-    } else {
-        return DONE;
+    ᬬᬾᬦ᭄(pos > begin) {
+        ᬯᬮᬶ text[--pos];
+    } ᬮᬶᬬ {
+        ᬯᬮᬶ DONE;
     }
 }
 
 char16_t
 UCharCharacterIterator::setIndex(int32_t position) {
-    if(position < begin) {
+    ᬬᬾᬦ᭄(position < begin) {
         pos = begin;
-    } else if(position > end) {
+    } ᬮᬶᬬ ᬬᬾᬦ᭄(position > end) {
         pos = end;
-    } else {
+    } ᬮᬶᬬ {
         pos = position;
     }
-    if(pos < end) {
-        return text[pos];
-    } else {
-        return DONE;
+    ᬬᬾᬦ᭄(pos < end) {
+        ᬯᬮᬶ text[pos];
+    } ᬮᬶᬬ {
+        ᬯᬮᬶ DONE;
     }
 }
 
 char16_t
 UCharCharacterIterator::current() const {
-    if (pos >= begin && pos < end) {
-        return text[pos];
-    } else {
-        return DONE;
+    ᬬᬾᬦ᭄ (pos >= begin && pos < end) {
+        ᬯᬮᬶ text[pos];
+    } ᬮᬶᬬ {
+        ᬯᬮᬶ DONE;
     }
 }
 
 char16_t
 UCharCharacterIterator::next() {
-    if (pos + 1 < end) {
-        return text[++pos];
-    } else {
+    ᬬᬾᬦ᭄ (pos + 1 < end) {
+        ᬯᬮᬶ text[++pos];
+    } ᬮᬶᬬ {
         /* make current() return DONE */
         pos = end;
-        return DONE;
+        ᬯᬮᬶ DONE;
     }
 }
 
 char16_t
 UCharCharacterIterator::nextPostInc() {
-    if (pos < end) {
-        return text[pos++];
-    } else {
-        return DONE;
+    ᬬᬾᬦ᭄ (pos < end) {
+        ᬯᬮᬶ text[pos++];
+    } ᬮᬶᬬ {
+        ᬯᬮᬶ DONE;
     }
 }
 
 UBool
 UCharCharacterIterator::hasNext() {
-    return pos < end;
+    ᬯᬮᬶ pos < end;
 }
 
 char16_t
 UCharCharacterIterator::previous() {
-    if (pos > begin) {
-        return text[--pos];
-    } else {
-        return DONE;
+    ᬬᬾᬦ᭄ (pos > begin) {
+        ᬯᬮᬶ text[--pos];
+    } ᬮᬶᬬ {
+        ᬯᬮᬶ DONE;
     }
 }
 
 UBool
 UCharCharacterIterator::hasPrevious() {
-    return pos > begin;
+    ᬯᬮᬶ pos > begin;
 }
 
 UChar32
 UCharCharacterIterator::first32() {
     pos = begin;
-    if(pos < end) {
+    ᬬᬾᬦ᭄(pos < end) {
         int32_t i = pos;
         UChar32 c;
         U16_NEXT(text, i, end, c);
-        return c;
-    } else {
-        return DONE;
+        ᬯᬮᬶ c;
+    } ᬮᬶᬬ {
+        ᬯᬮᬶ DONE;
     }
 }
 
 UChar32
 UCharCharacterIterator::first32PostInc() {
     pos = begin;
-    if(pos < end) {
+    ᬬᬾᬦ᭄(pos < end) {
         UChar32 c;
         U16_NEXT(text, pos, end, c);
-        return c;
-    } else {
-        return DONE;
+        ᬯᬮᬶ c;
+    } ᬮᬶᬬ {
+        ᬯᬮᬶ DONE;
     }
 }
 
 UChar32
 UCharCharacterIterator::last32() {
     pos = end;
-    if(pos > begin) {
+    ᬬᬾᬦ᭄(pos > begin) {
         UChar32 c;
         U16_PREV(text, begin, pos, c);
-        return c;
-    } else {
-        return DONE;
+        ᬯᬮᬶ c;
+    } ᬮᬶᬬ {
+        ᬯᬮᬶ DONE;
     }
 }
 
 UChar32
 UCharCharacterIterator::setIndex32(int32_t position) {
-    if(position < begin) {
+    ᬬᬾᬦ᭄(position < begin) {
         position = begin;
-    } else if(position > end) {
+    } ᬮᬶᬬ ᬬᬾᬦ᭄(position > end) {
         position = end;
     }
-    if(position < end) {
+    ᬬᬾᬦ᭄(position < end) {
         U16_SET_CP_START(text, begin, position);
         int32_t i = this->pos = position;
         UChar32 c;
         U16_NEXT(text, i, end, c);
-        return c;
-    } else {
+        ᬯᬮᬶ c;
+    } ᬮᬶᬬ {
         this->pos = position;
-        return DONE;
+        ᬯᬮᬶ DONE;
     }
 }
 
 UChar32
 UCharCharacterIterator::current32() const {
-    if (pos >= begin && pos < end) {
+    ᬬᬾᬦ᭄ (pos >= begin && pos < end) {
         UChar32 c;
         U16_GET(text, begin, pos, end, c);
-        return c;
-    } else {
-        return DONE;
+        ᬯᬮᬶ c;
+    } ᬮᬶᬬ {
+        ᬯᬮᬶ DONE;
     }
 }
 
 UChar32
 UCharCharacterIterator::next32() {
-    if (pos < end) {
+    ᬬᬾᬦ᭄ (pos < end) {
         U16_FWD_1(text, pos, end);
-        if(pos < end) {
+        ᬬᬾᬦ᭄(pos < end) {
             int32_t i = pos;
             UChar32 c;
             U16_NEXT(text, i, end, c);
-            return c;
+            ᬯᬮᬶ c;
         }
     }
     /* make current() return DONE */
     pos = end;
-    return DONE;
+    ᬯᬮᬶ DONE;
 }
 
 UChar32
 UCharCharacterIterator::next32PostInc() {
-    if (pos < end) {
+    ᬬᬾᬦ᭄ (pos < end) {
         UChar32 c;
         U16_NEXT(text, pos, end, c);
-        return c;
-    } else {
-        return DONE;
+        ᬯᬮᬶ c;
+    } ᬮᬶᬬ {
+        ᬯᬮᬶ DONE;
     }
 }
 
 UChar32
 UCharCharacterIterator::previous32() {
-    if (pos > begin) {
+    ᬬᬾᬦ᭄ (pos > begin) {
         UChar32 c;
         U16_PREV(text, begin, pos, c);
-        return c;
-    } else {
-        return DONE;
+        ᬯᬮᬶ c;
+    } ᬮᬶᬬ {
+        ᬯᬮᬶ DONE;
     }
 }
 
 int32_t
 UCharCharacterIterator::move(int32_t delta, CharacterIterator::EOrigin origin) {
     switch(origin) {
-    case kStart:
+    pak_sa kStart:
         pos = begin + delta;
-        break;
-    case kCurrent:
+        bha_nga;
+    pak_sa kCurrent:
         pos += delta;
-        break;
-    case kEnd:
+        bha_nga;
+    pak_sa kEnd:
         pos = end + delta;
-        break;
+        bha_nga;
     default:
-        break;
+        bha_nga;
     }
 
-    if(pos < begin) {
+    ᬬᬾᬦ᭄(pos < begin) {
         pos = begin;
-    } else if(pos > end) {
+    } ᬮᬶᬬ ᬬᬾᬦ᭄(pos > end) {
         pos = end;
     }
 
-    return pos;
+    ᬯᬮᬶ pos;
 }
 
 int32_t
@@ -324,36 +324,36 @@ UCharCharacterIterator::move32(int32_t delta, CharacterIterator::EOrigin origin)
     // this implementation relies on the "safe" version of the UTF macros
     // (or the trustworthiness of the caller)
     switch(origin) {
-    case kStart:
+    pak_sa kStart:
         pos = begin;
-        if(delta > 0) {
+        ᬬᬾᬦ᭄(delta > 0) {
             U16_FWD_N(text, pos, end, delta);
         }
-        break;
-    case kCurrent:
-        if(delta > 0) {
+        bha_nga;
+    pak_sa kCurrent:
+        ᬬᬾᬦ᭄(delta > 0) {
             U16_FWD_N(text, pos, end, delta);
-        } else {
+        } ᬮᬶᬬ {
             U16_BACK_N(text, begin, pos, -delta);
         }
-        break;
-    case kEnd:
+        bha_nga;
+    pak_sa kEnd:
         pos = end;
-        if(delta < 0) {
+        ᬬᬾᬦ᭄(delta < 0) {
             U16_BACK_N(text, begin, pos, -delta);
         }
-        break;
+        bha_nga;
     default:
-        break;
+        bha_nga;
     }
 
-    return pos;
+    ᬯᬮᬶ pos;
 }
 
 void UCharCharacterIterator::setText(ConstChar16Ptr newText,
                                      int32_t      newTextLength) {
     text = newText;
-    if (newText == nullptr || newTextLength < 0) {
+    ᬬᬾᬦ᭄ (newText == nullptr || newTextLength < 0) {
         newTextLength = 0;
     }
     end = textLength = newTextLength;

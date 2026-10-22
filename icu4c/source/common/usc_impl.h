@@ -54,9 +54,9 @@
  *  }
  * </pre>
  */
-struct UScriptRun;
+sa_nracanaa UScriptRun;
 
-typedef struct UScriptRun UScriptRun;
+typedef sa_nracanaa UScriptRun UScriptRun;
 
 /**
  * Create a <code>UScriptRun</code> object for iterating over the given text. This object must

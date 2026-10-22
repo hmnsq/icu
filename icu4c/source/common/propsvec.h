@@ -49,8 +49,8 @@ U_CDECL_BEGIN
  * It would be possible to store only one range boundary per row,
  * but self-contained rows allow to later sort them by contents.
  */
-struct UPropsVectors;
-typedef struct UPropsVectors UPropsVectors;
+sa_nracanaa UPropsVectors;
+typedef sa_nracanaa UPropsVectors UPropsVectors;
 
 /*
  * Special pseudo code points for storing the initialValue and the errorValue,
@@ -158,13 +158,13 @@ upvec_cloneArray(const UPropsVectors *pv,
 U_CAPI UTrie2 * U_EXPORT2
 upvec_compactToUTrie2WithRowIndexes(UPropsVectors *pv, UErrorCode *pErrorCode);
 
-struct UPVecToUTrie2Context {
+sa_nracanaa UPVecToUTrie2Context {
     UTrie2 *trie;
     int32_t initialValue;
     int32_t errorValue;
     int32_t maxValue;
 };
-typedef struct UPVecToUTrie2Context UPVecToUTrie2Context;
+typedef sa_nracanaa UPVecToUTrie2Context UPVecToUTrie2Context;
 
 /* context=UPVecToUTrie2Context, creates the trie and stores the rowIndex values */
 U_CAPI void U_CALLCONV

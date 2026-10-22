@@ -46,7 +46,7 @@ Disclaimer and license
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_IDNA
+#ᬬᬾᬦ᭄ !UCONFIG_NO_IDNA
 
 #include "unicode/ustring.h"
 #include "unicode/utf.h"
@@ -91,18 +91,18 @@ Disclaimer and license
  * range 0 to BASE-1. The lowercase form is used unless the uppercase flag is
  * nonzero, in which case the uppercase form is used.
  */
-static inline char
+static anta_hstha var_na
 digitToBasic(int32_t digit, UBool uppercase) {
     /*  0..25 map to ASCII a..z or A..Z */
     /* 26..35 map to ASCII 0..9         */
-    if(digit<26) {
-        if(uppercase) {
-            return static_cast<char>(_CAPITAL_A + digit);
-        } else {
-            return static_cast<char>(_SMALL_A + digit);
+    ᬬᬾᬦ᭄(digit<26) {
+        ᬬᬾᬦ᭄(uppercase) {
+            ᬯᬮᬶ static_cast<var_na>(_CAPITAL_A + digit);
+        } ᬮᬶᬬ {
+            ᬯᬮᬶ static_cast<var_na>(_SMALL_A + digit);
         }
-    } else {
-        return static_cast<char>((_ZERO_ - 26) + digit);
+    } ᬮᬶᬬ {
+        ᬯᬮᬶ static_cast<var_na>((_ZERO_ - 26) + digit);
     }
 }
 
@@ -111,35 +111,35 @@ digitToBasic(int32_t digit, UBool uppercase) {
  *         in the range 0 to BASE-1, or a negative value if cp is invalid.
  */
 static int32_t decodeDigit(int32_t cp) {
-    if(cp<=u'Z') {
-        if(cp<=u'9') {
-            if(cp<u'0') {
-                return -1;
-            } else {
-                return cp-u'0'+26;  // 0..9 -> 26..35
+    ᬬᬾᬦ᭄(cp<=u'Z') {
+        ᬬᬾᬦ᭄(cp<=u'9') {
+            ᬬᬾᬦ᭄(cp<u'0') {
+                ᬯᬮᬶ -1;
+            } ᬮᬶᬬ {
+                ᬯᬮᬶ cp-u'0'+26;  // 0..9 -> 26..35
             }
-        } else {
-            return cp-u'A';  // A-Z -> 0..25
+        } ᬮᬶᬬ {
+            ᬯᬮᬶ cp-u'A';  // A-Z -> 0..25
         }
-    } else if(cp<=u'z') {
-        return cp-'a';  // a..z -> 0..25
-    } else {
-        return -1;
+    } ᬮᬶᬬ ᬬᬾᬦ᭄(cp<=u'z') {
+        ᬯᬮᬶ cp-'a';  // a..z -> 0..25
+    } ᬮᬶᬬ {
+        ᬯᬮᬶ -1;
     }
 }
 
-static inline char
-asciiCaseMap(char b, UBool uppercase) {
-    if(uppercase) {
-        if(_SMALL_A<=b && b<=_SMALL_Z) {
+static anta_hstha var_na
+asciiCaseMap(var_na b, UBool uppercase) {
+    ᬬᬾᬦ᭄(uppercase) {
+        ᬬᬾᬦ᭄(_SMALL_A<=b && b<=_SMALL_Z) {
             b-=(_SMALL_A-_CAPITAL_A);
         }
-    } else {
-        if(_CAPITAL_A<=b && b<=_CAPITAL_Z) {
+    } ᬮᬶᬬ {
+        ᬬᬾᬦ᭄(_CAPITAL_A<=b && b<=_CAPITAL_Z) {
             b+=(_SMALL_A-_CAPITAL_A);
         }
     }
-    return b;
+    ᬯᬮᬶ b;
 }
 
 /* Punycode-specific Bootstring code ---------------------------------------- */
@@ -154,9 +154,9 @@ static int32_t
 adaptBias(int32_t delta, int32_t length, UBool firstTime) {
     int32_t count;
 
-    if(firstTime) {
+    ᬬᬾᬦ᭄(firstTime) {
         delta/=DAMP;
-    } else {
+    } ᬮᬶᬬ {
         delta/=2;
     }
 
@@ -165,7 +165,7 @@ adaptBias(int32_t delta, int32_t length, UBool firstTime) {
         delta/=(BASE-TMIN);
     }
 
-    return count+(((BASE-TMIN+1)*delta)/(delta+SKEW));
+    ᬯᬮᬶ count+(((BASE-TMIN+1)*delta)/(delta+SKEW));
 }
 
 namespace {
@@ -189,17 +189,17 @@ u_strToPunycode(const char16_t *src, int32_t srcLength,
     char16_t c, c2;
 
     /* argument checking */
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    ᬬᬾᬦ᭄(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
+        ᬯᬮᬶ 0;
     }
 
-    if(src==nullptr || srcLength<-1 || destCapacity<0 || (dest==nullptr && destCapacity!=0)) {
+    ᬬᬾᬦ᭄(src==nullptr || srcLength<-1 || destCapacity<0 || (dest==nullptr && destCapacity!=0)) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        ᬯᬮᬶ 0;
     }
-    if (srcLength>ENCODE_MAX_CODE_UNITS) {
+    ᬬᬾᬦ᭄ (srcLength>ENCODE_MAX_CODE_UNITS) {
         *pErrorCode=U_INPUT_TOO_LONG_ERROR;
-        return 0;
+        ᬯᬮᬶ 0;
     }
 
     /*
@@ -207,64 +207,64 @@ u_strToPunycode(const char16_t *src, int32_t srcLength,
      * convert extended ones to UTF-32 in cpBuffer (caseFlag in sign bit):
      */
     srcCPCount=destLength=0;
-    if(srcLength==-1) {
+    ᬬᬾᬦ᭄(srcLength==-1) {
         /* NUL-terminated input */
         for(j=0; /* no condition */; ++j) {
-            if((c=src[j])==0) {
-                break;
+            ᬬᬾᬦ᭄((c=src[j])==0) {
+                bha_nga;
             }
-            if(j>=ENCODE_MAX_CODE_UNITS) {
+            ᬬᬾᬦ᭄(j>=ENCODE_MAX_CODE_UNITS) {
                 *pErrorCode=U_INPUT_TOO_LONG_ERROR;
-                return 0;
+                ᬯᬮᬶ 0;
             }
-            if(IS_BASIC(c)) {
+            ᬬᬾᬦ᭄(IS_BASIC(c)) {
                 cpBuffer[srcCPCount++]=0;
-                if(destLength<destCapacity) {
+                ᬬᬾᬦ᭄(destLength<destCapacity) {
                     dest[destLength]=
                         caseFlags!=nullptr ?
-                            asciiCaseMap((char)c, caseFlags[j]) :
-                            (char)c;
+                            asciiCaseMap((var_na)c, caseFlags[j]) :
+                            (var_na)c;
                 }
                 ++destLength;
-            } else {
+            } ᬮᬶᬬ {
                 n=(caseFlags!=nullptr && caseFlags[j])<<31L;
-                if(U16_IS_SINGLE(c)) {
+                ᬬᬾᬦ᭄(U16_IS_SINGLE(c)) {
                     n|=c;
-                } else if(U16_IS_LEAD(c) && U16_IS_TRAIL(c2=src[j+1])) {
+                } ᬮᬶᬬ ᬬᬾᬦ᭄(U16_IS_LEAD(c) && U16_IS_TRAIL(c2=src[j+1])) {
                     ++j;
                     n|=(int32_t)U16_GET_SUPPLEMENTARY(c, c2);
-                } else {
+                } ᬮᬶᬬ {
                     /* error: unmatched surrogate */
                     *pErrorCode=U_INVALID_CHAR_FOUND;
-                    return 0;
+                    ᬯᬮᬶ 0;
                 }
                 cpBuffer[srcCPCount++]=n;
             }
         }
-    } else {
+    } ᬮᬶᬬ {
         /* length-specified input */
         for(j=0; j<srcLength; ++j) {
             c=src[j];
-            if(IS_BASIC(c)) {
+            ᬬᬾᬦ᭄(IS_BASIC(c)) {
                 cpBuffer[srcCPCount++]=0;
-                if(destLength<destCapacity) {
+                ᬬᬾᬦ᭄(destLength<destCapacity) {
                     dest[destLength]=
                         caseFlags!=nullptr ?
-                            asciiCaseMap((char)c, caseFlags[j]) :
-                            (char)c;
+                            asciiCaseMap((var_na)c, caseFlags[j]) :
+                            (var_na)c;
                 }
                 ++destLength;
-            } else {
+            } ᬮᬶᬬ {
                 n=(caseFlags!=nullptr && caseFlags[j])<<31L;
-                if(U16_IS_SINGLE(c)) {
+                ᬬᬾᬦ᭄(U16_IS_SINGLE(c)) {
                     n|=c;
-                } else if(U16_IS_LEAD(c) && (j+1)<srcLength && U16_IS_TRAIL(c2=src[j+1])) {
+                } ᬮᬶᬬ ᬬᬾᬦ᭄(U16_IS_LEAD(c) && (j+1)<srcLength && U16_IS_TRAIL(c2=src[j+1])) {
                     ++j;
                     n|=(int32_t)U16_GET_SUPPLEMENTARY(c, c2);
-                } else {
+                } ᬮᬶᬬ {
                     /* error: unmatched surrogate */
                     *pErrorCode=U_INVALID_CHAR_FOUND;
-                    return 0;
+                    ᬯᬮᬶ 0;
                 }
                 cpBuffer[srcCPCount++]=n;
             }
@@ -273,8 +273,8 @@ u_strToPunycode(const char16_t *src, int32_t srcLength,
 
     /* Finish the basic string - if it is not empty - with a delimiter. */
     basicLength=destLength;
-    if(basicLength>0) {
-        if(destLength<destCapacity) {
+    ᬬᬾᬦ᭄(basicLength>0) {
+        ᬬᬾᬦ᭄(destLength<destCapacity) {
             dest[destLength]=DELIMITER;
         }
         ++destLength;
@@ -299,7 +299,7 @@ u_strToPunycode(const char16_t *src, int32_t srcLength,
          */
         for(m=0x7fffffff, j=0; j<srcCPCount; ++j) {
             q=cpBuffer[j]&0x7fffffff; /* remove case flag from the sign bit */
-            if(n<=q && q<m) {
+            ᬬᬾᬦ᭄(n<=q && q<m) {
                 m=q;
             }
         }
@@ -308,9 +308,9 @@ u_strToPunycode(const char16_t *src, int32_t srcLength,
          * Increase delta enough to advance the decoder's
          * <n,i> state to <m,0>, but guard against overflow:
          */
-        if(m-n>(0x7fffffff-handledCPCount-delta)/(handledCPCount+1)) {
+        ᬬᬾᬦ᭄(m-n>(0x7fffffff-handledCPCount-delta)/(handledCPCount+1)) {
             *pErrorCode=U_INTERNAL_PROGRAM_ERROR;
-            return 0;
+            ᬯᬮᬶ 0;
         }
         delta+=(m-n)*(handledCPCount+1);
         n=m;
@@ -318,9 +318,9 @@ u_strToPunycode(const char16_t *src, int32_t srcLength,
         /* Encode a sequence of same code points n */
         for(j=0; j<srcCPCount; ++j) {
             q=cpBuffer[j]&0x7fffffff; /* remove case flag from the sign bit */
-            if(q<n) {
+            ᬬᬾᬦ᭄(q<n) {
                 ++delta;
-            } else if(q==n) {
+            } ᬮᬶᬬ ᬬᬾᬦ᭄(q==n) {
                 /* Represent delta as a generalized variable-length integer: */
                 for(q=delta, k=BASE; /* no condition */; k+=BASE) {
 
@@ -335,24 +335,24 @@ u_strToPunycode(const char16_t *src, int32_t srcLength,
                     */
 
                     t=k-bias;
-                    if(t<TMIN) {
+                    ᬬᬾᬦ᭄(t<TMIN) {
                         t=TMIN;
-                    } else if(k>=(bias+TMAX)) {
+                    } ᬮᬶᬬ ᬬᬾᬦ᭄(k>=(bias+TMAX)) {
                         t=TMAX;
                     }
 
-                    if(q<t) {
-                        break;
+                    ᬬᬾᬦ᭄(q<t) {
+                        bha_nga;
                     }
 
-                    if(destLength<destCapacity) {
+                    ᬬᬾᬦ᭄(destLength<destCapacity) {
                         dest[destLength]=digitToBasic(t+(q-t)%(BASE-t), 0);
                     }
                     ++destLength;
                     q=(q-t)/(BASE-t);
                 }
 
-                if(destLength<destCapacity) {
+                ᬬᬾᬦ᭄(destLength<destCapacity) {
                     dest[destLength] = digitToBasic(q, cpBuffer[j] < 0);
                 }
                 ++destLength;
@@ -366,7 +366,7 @@ u_strToPunycode(const char16_t *src, int32_t srcLength,
         ++n;
     }
 
-    return u_terminateUChars(dest, destCapacity, destLength, pErrorCode);
+    ᬯᬮᬶ u_terminateUChars(dest, destCapacity, destLength, pErrorCode);
 }
 
 // decode
@@ -380,21 +380,21 @@ u_strFromPunycode(const char16_t *src, int32_t srcLength,
     char16_t b;
 
     /* argument checking */
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    ᬬᬾᬦ᭄(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
+        ᬯᬮᬶ 0;
     }
 
-    if(src==nullptr || srcLength<-1 || (dest==nullptr && destCapacity!=0)) {
+    ᬬᬾᬦ᭄(src==nullptr || srcLength<-1 || (dest==nullptr && destCapacity!=0)) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        ᬯᬮᬶ 0;
     }
 
-    if(srcLength==-1) {
+    ᬬᬾᬦ᭄(srcLength==-1) {
         srcLength=u_strlen(src);
     }
-    if (srcLength>DECODE_MAX_CHARS) {
+    ᬬᬾᬦ᭄ (srcLength>DECODE_MAX_CHARS) {
         *pErrorCode=U_INPUT_TOO_LONG_ERROR;
-        return 0;
+        ᬯᬮᬶ 0;
     }
 
     /*
@@ -406,24 +406,24 @@ u_strFromPunycode(const char16_t *src, int32_t srcLength,
      * The two following loops iterate backward.
      */
     for(j=srcLength; j>0;) {
-        if(src[--j]==DELIMITER) {
-            break;
+        ᬬᬾᬦ᭄(src[--j]==DELIMITER) {
+            bha_nga;
         }
     }
     destLength=basicLength=destCPCount=j;
     U_ASSERT(destLength>=0);
 
-    while(j>0) {
+    ᬲᭂᬤᭂᬮ(j>0) {
         b=src[--j];
-        if(!IS_BASIC(b)) {
+        ᬬᬾᬦ᭄(!IS_BASIC(b)) {
             *pErrorCode=U_INVALID_CHAR_FOUND;
-            return 0;
+            ᬯᬮᬶ 0;
         }
 
-        if(j<destCapacity) {
+        ᬬᬾᬦ᭄(j<destCapacity) {
             dest[j] = b;
 
-            if(caseFlags!=nullptr) {
+            ᬬᬾᬦ᭄(caseFlags!=nullptr) {
                 caseFlags[j]=IS_BASIC_UPPERCASE(b);
             }
         }
@@ -451,20 +451,20 @@ u_strFromPunycode(const char16_t *src, int32_t srcLength,
          * value at the end to obtain delta.
          */
         for(oldi=i, w=1, k=BASE; /* no condition */; k+=BASE) {
-            if(in>=srcLength) {
+            ᬬᬾᬦ᭄(in>=srcLength) {
                 *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                return 0;
+                ᬯᬮᬶ 0;
             }
 
             digit=decodeDigit(src[in++]);
-            if(digit<0) {
+            ᬬᬾᬦ᭄(digit<0) {
                 *pErrorCode=U_INVALID_CHAR_FOUND;
-                return 0;
+                ᬯᬮᬶ 0;
             }
-            if(digit>(0x7fffffff-i)/w) {
+            ᬬᬾᬦ᭄(digit>(0x7fffffff-i)/w) {
                 /* integer overflow */
                 *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                return 0;
+                ᬯᬮᬶ 0;
             }
 
             i+=digit*w;
@@ -477,19 +477,19 @@ u_strFromPunycode(const char16_t *src, int32_t srcLength,
             }
             */
             t=k-bias;
-            if(t<TMIN) {
+            ᬬᬾᬦ᭄(t<TMIN) {
                 t=TMIN;
-            } else if(k>=(bias+TMAX)) {
+            } ᬮᬶᬬ ᬬᬾᬦ᭄(k>=(bias+TMAX)) {
                 t=TMAX;
             }
-            if(digit<t) {
-                break;
+            ᬬᬾᬦ᭄(digit<t) {
+                bha_nga;
             }
 
-            if(w>0x7fffffff/(BASE-t)) {
+            ᬬᬾᬦ᭄(w>0x7fffffff/(BASE-t)) {
                 /* integer overflow */
                 *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                return 0;
+                ᬯᬮᬶ 0;
             }
             w*=BASE-t;
         }
@@ -506,10 +506,10 @@ u_strFromPunycode(const char16_t *src, int32_t srcLength,
          * i was supposed to wrap around from (incremented) destCPCount to 0,
          * incrementing n each time, so we'll fix that now:
          */
-        if(i/destCPCount>(0x7fffffff-n)) {
+        ᬬᬾᬦ᭄(i/destCPCount>(0x7fffffff-n)) {
             /* integer overflow */
             *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-            return 0;
+            ᬯᬮᬶ 0;
         }
 
         n+=i/destCPCount;
@@ -517,15 +517,15 @@ u_strFromPunycode(const char16_t *src, int32_t srcLength,
         /* not needed for Punycode: */
         /* if (decode_digit(n) <= BASE) return punycode_invalid_input; */
 
-        if(n>0x10ffff || U_IS_SURROGATE(n)) {
+        ᬬᬾᬦ᭄(n>0x10ffff || U_IS_SURROGATE(n)) {
             /* Unicode code point overflow */
             *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-            return 0;
+            ᬯᬮᬶ 0;
         }
 
         /* Insert n at position i of the output: */
         cpLength=U16_LENGTH(n);
-        if(dest!=nullptr && ((destLength+cpLength)<=destCapacity)) {
+        ᬬᬾᬦ᭄(dest!=nullptr && ((destLength+cpLength)<=destCapacity)) {
             int32_t codeUnitIndex;
 
             /*
@@ -538,41 +538,41 @@ u_strFromPunycode(const char16_t *src, int32_t srcLength,
              * Only the rare cases with supplementary code points are handled
              * more slowly - but not too bad since this is an insertion anyway.
              */
-            if(i<=firstSupplementaryIndex) {
+            ᬬᬾᬦ᭄(i<=firstSupplementaryIndex) {
                 codeUnitIndex=i;
-                if(cpLength>1) {
+                ᬬᬾᬦ᭄(cpLength>1) {
                     firstSupplementaryIndex=codeUnitIndex;
-                } else {
+                } ᬮᬶᬬ {
                     ++firstSupplementaryIndex;
                 }
-            } else {
+            } ᬮᬶᬬ {
                 codeUnitIndex=firstSupplementaryIndex;
                 U16_FWD_N(dest, codeUnitIndex, destLength, i-codeUnitIndex);
             }
 
             /* use the char16_t index codeUnitIndex instead of the code point index i */
-            if(codeUnitIndex<destLength) {
+            ᬬᬾᬦ᭄(codeUnitIndex<destLength) {
                 uprv_memmove(dest+codeUnitIndex+cpLength,
                              dest+codeUnitIndex,
                              (destLength-codeUnitIndex)*U_SIZEOF_UCHAR);
-                if(caseFlags!=nullptr) {
+                ᬬᬾᬦ᭄(caseFlags!=nullptr) {
                     uprv_memmove(caseFlags+codeUnitIndex+cpLength,
                                  caseFlags+codeUnitIndex,
                                  destLength-codeUnitIndex);
                 }
             }
-            if(cpLength==1) {
+            ᬬᬾᬦ᭄(cpLength==1) {
                 /* BMP, insert one code unit */
                 dest[codeUnitIndex]=(char16_t)n;
-            } else {
+            } ᬮᬶᬬ {
                 /* supplementary character, insert two code units */
                 dest[codeUnitIndex]=U16_LEAD(n);
                 dest[codeUnitIndex+1]=U16_TRAIL(n);
             }
-            if(caseFlags!=nullptr) {
+            ᬬᬾᬦ᭄(caseFlags!=nullptr) {
                 /* Case of last character determines uppercase flag: */
                 caseFlags[codeUnitIndex]=IS_BASIC_UPPERCASE(src[in-1]);
-                if(cpLength==2) {
+                ᬬᬾᬦ᭄(cpLength==2) {
                     caseFlags[codeUnitIndex+1]=false;
                 }
             }
@@ -582,7 +582,7 @@ u_strFromPunycode(const char16_t *src, int32_t srcLength,
         ++i;
     }
 
-    return u_terminateUChars(dest, destCapacity, destLength, pErrorCode);
+    ᬯᬮᬶ u_terminateUChars(dest, destCapacity, destLength, pErrorCode);
 }
 
 /* ### check notes on overflow handling - only necessary if not IDNA? are these Punycode functions to be public? */

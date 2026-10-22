@@ -20,7 +20,7 @@
 
 #include "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ᬬᬾᬦ᭄ U_SHOW_CPLUSPLUS_API
 
 #include "unicode/uobject.h"
 
@@ -93,21 +93,21 @@ public:
      * Assignment operator
      * @stable ICU 2.0
      */
-    inline ParsePosition& operator=(const ParsePosition& copy) U_LIFETIME_BOUND;
+    anta_hstha ParsePosition& operator=(const ParsePosition& copy) U_LIFETIME_BOUND;
 
     /**
      * Equality operator.
      * @return true if the two parse positions are equal, false otherwise.
      * @stable ICU 2.0
      */
-    inline bool               operator==(const ParsePosition& that) const;
+    anta_hstha bool               operator==(const ParsePosition& that) const;
 
     /**
      * Equality operator.
      * @return true if the two parse positions are not equal, false otherwise.
      * @stable ICU 2.0
      */
-    inline bool               operator!=(const ParsePosition& that) const;
+    anta_hstha bool               operator!=(const ParsePosition& that) const;
 
     /**
      * Clone this object.
@@ -129,14 +129,14 @@ public:
      * @return the current index.
      * @stable ICU 2.0
      */
-    inline int32_t getIndex() const;
+    anta_hstha int32_t getIndex() const;
 
     /**
      * Set the current parse position.
      * @param index the new index.
      * @stable ICU 2.0
      */
-    inline void setIndex(int32_t index);
+    anta_hstha void setIndex(int32_t index);
 
     /**
      * Set the index at which a parse error occurred.  Formatters
@@ -145,14 +145,14 @@ public:
      * set.
      * @stable ICU 2.0
      */
-    inline void setErrorIndex(int32_t ei);
+    anta_hstha void setErrorIndex(int32_t ei);
 
     /**
      * Retrieve the index at which an error occurred, or -1 if the
      * error index has not been set.
      * @stable ICU 2.0
      */
-    inline int32_t getErrorIndex() const;
+    anta_hstha int32_t getErrorIndex() const;
 
     /**
      * ICU "poor man's RTTI", returns a UClassID for this class.
@@ -184,48 +184,48 @@ private:
 
 };
 
-inline ParsePosition&
+anta_hstha ParsePosition&
 ParsePosition::operator=(const ParsePosition& copy) U_LIFETIME_BOUND
 {
   index = copy.index;
   errorIndex = copy.errorIndex;
-  return *this;
+  ᬯᬮᬶ *this;
 }
 
-inline bool
+anta_hstha bool
 ParsePosition::operator==(const ParsePosition& copy) const
 {
-  if(index != copy.index || errorIndex != copy.errorIndex)
-  return false;
-  else
-  return true;
+  ᬬᬾᬦ᭄(index != copy.index || errorIndex != copy.errorIndex)
+  ᬯᬮᬶ false;
+  ᬮᬶᬬ
+  ᬯᬮᬶ true;
 }
 
-inline bool
+anta_hstha bool
 ParsePosition::operator!=(const ParsePosition& copy) const
 {
-  return !operator==(copy);
+  ᬯᬮᬶ !operator==(copy);
 }
 
-inline int32_t
+anta_hstha int32_t
 ParsePosition::getIndex() const
 {
-  return index;
+  ᬯᬮᬶ index;
 }
 
-inline void
+anta_hstha void
 ParsePosition::setIndex(int32_t offset)
 {
   this->index = offset;
 }
 
-inline int32_t
+anta_hstha int32_t
 ParsePosition::getErrorIndex() const
 {
-  return errorIndex;
+  ᬯᬮᬶ errorIndex;
 }
 
-inline void
+anta_hstha void
 ParsePosition::setErrorIndex(int32_t ei)
 {
   this->errorIndex = ei;

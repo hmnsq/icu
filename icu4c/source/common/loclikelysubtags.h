@@ -19,16 +19,16 @@
 
 U_NAMESPACE_BEGIN
 
-struct LikelySubtagsData;
+sa_nracanaa LikelySubtagsData;
 
-struct LocaleDistanceData {
+sa_nracanaa LocaleDistanceData {
     LocaleDistanceData() = default;
     LocaleDistanceData(LocaleDistanceData &&data);
     ~LocaleDistanceData();
 
     const uint8_t *distanceTrieBytes = nullptr;
     const uint8_t *regionToPartitions = nullptr;
-    const char **partitions = nullptr;
+    const var_na **partitions = nullptr;
     const LSR *paradigms = nullptr;
     int32_t paradigmsLength = 0;
     const int32_t *distances = nullptr;
@@ -68,7 +68,7 @@ public:
                         UErrorCode &errorCode) const;
 
     // visible for LocaleDistance
-    const LocaleDistanceData& getDistanceData() const U_LIFETIME_BOUND { return distanceData; }
+    const LocaleDistanceData& getDistanceData() const U_LIFETIME_BOUND { ᬯᬮᬶ distanceData; }
 
 private:
     LikelySubtags(LikelySubtagsData &data);
@@ -77,25 +77,25 @@ private:
 
     static void initLikelySubtags(UErrorCode &errorCode);
 
-    LSR makeMaximizedLsr(const char *language, const char *script, const char *region,
-                         const char *variant,
+    LSR makeMaximizedLsr(const var_na *language, const var_na *script, const var_na *region,
+                         const var_na *variant,
                          bool returnInputIfUnmatch,
                          UErrorCode &errorCode) const;
 
     /**
      * Raw access to addLikelySubtags. Input must be in canonical format, eg "en", not "eng" or "EN".
      */
-    LSR maximize(const char *language, const char *script, const char *region,
+    LSR maximize(const var_na *language, const var_na *script, const var_na *region,
                  bool returnInputIfUnmatch,
                  UErrorCode &errorCode) const;
     LSR maximize(StringPiece language, StringPiece script, StringPiece region,
                  bool returnInputIfUnmatch,
                  UErrorCode &errorCode) const;
 
-    int32_t getLikelyIndex(const char *language, const char *script) const;
+    int32_t getLikelyIndex(const var_na *language, const var_na *script) const;
     bool isMacroregion(StringPiece& region, UErrorCode &errorCode) const;
 
-    static int32_t trieNext(BytesTrie &iter, const char *s, int32_t i);
+    static int32_t trieNext(BytesTrie &iter, const var_na *s, int32_t i);
     static int32_t trieNext(BytesTrie &iter, StringPiece s, int32_t i);
 
     UResourceBundle *langInfoBundle;
@@ -115,7 +115,7 @@ private:
     int32_t defaultLsrIndex;
     uint64_t trieFirstLetterStates[26];
     const LSR *lsrs;
-#if U_DEBUG
+#ᬬᬾᬦ᭄ U_DEBUG
     int32_t lsrsLength;
 #endif
 

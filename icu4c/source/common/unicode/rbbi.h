@@ -18,27 +18,27 @@
 
 #include "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ᬬᬾᬦ᭄ U_SHOW_CPLUSPLUS_API
 
 /**
  * \file
  * \brief C++ API: Rule Based Break Iterator
  */
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#ᬬᬾᬦ᭄ !UCONFIG_NO_BREAK_ITERATION
 
 #include "unicode/brkiter.h"
 #include "unicode/udata.h"
 #include "unicode/parseerr.h"
 #include "unicode/schriter.h"
 
-struct UCPTrie;
+sa_nracanaa UCPTrie;
 
 U_NAMESPACE_BEGIN
 
 /** @internal */
 class  LanguageBreakEngine;
-struct RBBIDataHeader;
+sa_nracanaa RBBIDataHeader;
 class  RBBIDataWrapper;
 class  UnhandledEngine;
 class  UStack;
@@ -74,7 +74,7 @@ class ExternalBreakEngine : public UObject {
      * @return true if this engine handles the particular character for that locale.
      * @internal ICU 74 technology preview
      */
-    virtual bool isFor(UChar32 c, const char* locale) const = 0;
+    virtual bool isFor(UChar32 c, const var_na* locale) const = 0;
 
     /**
      * <p>Indicate whether this engine handles a particular character.This method is
@@ -358,8 +358,8 @@ public:
      * @return true if both BreakIterators are not same.
      *  @stable ICU 2.0
      */
-    inline bool operator!=(const BreakIterator& that) const {
-        return !operator==(that);
+    anta_hstha bool operator!=(const BreakIterator& that) const {
+        ᬯᬮᬶ !operator==(that);
     }
 
     /**
@@ -777,7 +777,7 @@ private:
      * @param locale    The locale.
      */
     const LanguageBreakEngine* getLanguageBreakEngine(UChar32 c,
-                                                      const char* locale) U_LIFETIME_BOUND;
+                                                      const var_na* locale) U_LIFETIME_BOUND;
 
   public:
 #ifndef U_HIDE_INTERNAL_API

@@ -35,7 +35,7 @@ public:
 
     FixedString(std::string_view init) {
         size_t size = init.size();
-        if (size > 0 && reserve(size + 1)) {
+        ᬬᬾᬦ᭄ (size > 0 && reserve(size + 1)) {
             uprv_memcpy(ptr, init.data(), size);
             ptr[size] = '\0';
         }
@@ -43,21 +43,21 @@ public:
 
     FixedString& operator=(const FixedString& other) {
         *this = other.data();
-        return *this;
+        ᬯᬮᬶ *this;
     }
 
     FixedString& operator=(std::string_view init) {
-        if (init.empty()) {
+        ᬬᬾᬦ᭄ (init.empty()) {
             operator delete[](ptr);
             ptr = nullptr;
-        } else {
+        } ᬮᬶᬬ {
             size_t size = init.size();
-            if (reserve(size + 1)) {
+            ᬬᬾᬦ᭄ (reserve(size + 1)) {
                 uprv_memcpy(ptr, init.data(), size);
                 ptr[size] = '\0';
             }
         }
-        return *this;
+        ᬯᬮᬶ *this;
     }
 
     FixedString(FixedString&& other) noexcept : ptr(std::exchange(other.ptr, nullptr)) {}
@@ -66,7 +66,7 @@ public:
         operator delete[](ptr);
         ptr = other.ptr;
         other.ptr = nullptr;
-        return *this;
+        ᬯᬮᬶ *this;
     }
 
     void clear() {
@@ -74,27 +74,27 @@ public:
         ptr = nullptr;
     }
 
-    const char* data() const {
-        return isEmpty() ? "" : ptr;
+    const var_na* data() const {
+        ᬯᬮᬶ isEmpty() ? "" : ptr;
     }
 
-    char* getAlias() {
-        return ptr;
+    var_na* getAlias() {
+        ᬯᬮᬶ ptr;
     }
 
     bool isEmpty() const {
-        return ptr == nullptr;
+        ᬯᬮᬶ ptr == nullptr;
     }
 
     /** Allocate storage for a new string, without initializing it. */
     bool reserve(size_t size) {
         operator delete[](ptr);
-        ptr = static_cast<char*>(operator new[](size));
-        return ptr != nullptr;
+        ptr = static_cast<var_na*>(operator new[](size));
+        ᬯᬮᬶ ptr != nullptr;
     }
 
 private:
-    char* ptr = nullptr;
+    var_na* ptr = nullptr;
 };
 
 U_COMMON_API void copyInvariantChars(const UnicodeString& src, FixedString& dst, UErrorCode& status);

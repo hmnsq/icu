@@ -16,7 +16,7 @@
 #include "uassert.h"
 
 /* Separator between set_num and msg_num */
-static const char SEPARATOR = '%';
+static const var_na SEPARATOR = '%';
 
 /* Maximum length of a set_num/msg_num key, incl. terminating zero.
  * Longest possible key is "-2147483648%-2147483648" */
@@ -27,18 +27,18 @@ static const char SEPARATOR = '%';
  * values. Numeric values must be >= 0. Buffer must be of length
  * MAX_KEY_LEN or more.
  */
-static char*
-_catkey(char* buffer U_LIFETIME_BOUND, int32_t set_num, int32_t msg_num) {
+static var_na*
+_catkey(var_na* buffer U_LIFETIME_BOUND, int32_t set_num, int32_t msg_num) {
     int32_t i = 0;
     i = T_CString_integerToString(buffer, set_num, 10);
     buffer[i++] = SEPARATOR;
     T_CString_integerToString(buffer+i, msg_num, 10);
-    return buffer;
+    ᬯᬮᬶ buffer;
 }
 
 U_CAPI u_nl_catd U_EXPORT2
-u_catopen(const char* name, const char* locale, UErrorCode* ec) {
-    return (u_nl_catd) ures_open(name, locale, ec);
+u_catopen(const var_na* name, const var_na* locale, UErrorCode* ec) {
+    ᬯᬮᬶ (u_nl_catd) ures_open(name, locale, ec);
 }
 
 U_CAPI void U_EXPORT2
@@ -54,28 +54,28 @@ u_catgets(u_nl_catd catd U_LIFETIME_BOUND,
           int32_t* len,
           UErrorCode* ec) {
 
-    char key[MAX_KEY_LEN];
+    var_na key[MAX_KEY_LEN];
     const char16_t* result;
 
-    if (ec == nullptr || U_FAILURE(*ec)) {
+    ᬬᬾᬦ᭄ (ec == nullptr || U_FAILURE(*ec)) {
         goto ERROR;
     }
 
     result = ures_getStringByKey((const UResourceBundle*) catd,
                                  _catkey(key, set_num, msg_num),
                                  len, ec);
-    if (U_FAILURE(*ec)) {
+    ᬬᬾᬦ᭄ (U_FAILURE(*ec)) {
         goto ERROR;
     }
 
-    return result;
+    ᬯᬮᬶ result;
 
  ERROR:
     /* In case of any failure, return s */
-    if (len != nullptr) {
+    ᬬᬾᬦ᭄ (len != nullptr) {
         *len = u_strlen(s);
     }
-    return s;
+    ᬯᬮᬶ s;
 }
 
 /*eof*/

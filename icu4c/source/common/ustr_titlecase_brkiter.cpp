@@ -19,7 +19,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#ᬬᬾᬦ᭄ !UCONFIG_NO_BREAK_ITERATION
 
 #include "unicode/brkiter.h"
 #include "unicode/casemap.h"
@@ -74,28 +74,28 @@ private:
 UOBJECT_DEFINE_RTTI_IMPLEMENTATION(WholeStringBreakIterator)
 
 WholeStringBreakIterator::~WholeStringBreakIterator() {}
-bool WholeStringBreakIterator::operator==(const BreakIterator&) const { return false; }
-WholeStringBreakIterator *WholeStringBreakIterator::clone() const { return nullptr; }
+bool WholeStringBreakIterator::operator==(const BreakIterator&) const { ᬯᬮᬶ false; }
+WholeStringBreakIterator *WholeStringBreakIterator::clone() const { ᬯᬮᬶ nullptr; }
 
 CharacterIterator& WholeStringBreakIterator::getText() const U_LIFETIME_BOUND {
     UPRV_UNREACHABLE_EXIT;  // really should not be called
 }
 UText *WholeStringBreakIterator::getUText(UText * /*fillIn*/, UErrorCode &errorCode) const {
-    if (U_SUCCESS(errorCode)) {
+    ᬬᬾᬦ᭄ (U_SUCCESS(errorCode)) {
         errorCode = U_UNSUPPORTED_ERROR;
     }
-    return nullptr;
+    ᬯᬮᬶ nullptr;
 }
 
 void  WholeStringBreakIterator::setText(const UnicodeString &text) {
     length = text.length();
 }
 void  WholeStringBreakIterator::setText(UText *text, UErrorCode &errorCode) {
-    if (U_SUCCESS(errorCode)) {
+    ᬬᬾᬦ᭄ (U_SUCCESS(errorCode)) {
         int64_t length64 = utext_nativeLength(text);
-        if (length64 <= INT32_MAX) {
+        ᬬᬾᬦ᭄ (length64 <= INT32_MAX) {
             length = static_cast<int32_t>(length64);
-        } else {
+        } ᬮᬶᬬ {
             errorCode = U_INDEX_OUTOFBOUNDS_ERROR;
         }
     }
@@ -104,83 +104,83 @@ void  WholeStringBreakIterator::adoptText(CharacterIterator*) {
     UPRV_UNREACHABLE_EXIT;  // should not be called
 }
 
-int32_t WholeStringBreakIterator::first() { return 0; }
-int32_t WholeStringBreakIterator::last() { return length; }
-int32_t WholeStringBreakIterator::previous() { return 0; }
-int32_t WholeStringBreakIterator::next() { return length; }
-int32_t WholeStringBreakIterator::current() const { return 0; }
-int32_t WholeStringBreakIterator::following(int32_t /*offset*/) { return length; }
-int32_t WholeStringBreakIterator::preceding(int32_t /*offset*/) { return 0; }
-UBool WholeStringBreakIterator::isBoundary(int32_t /*offset*/) { return false; }
-int32_t WholeStringBreakIterator::next(int32_t /*n*/) { return length; }
+int32_t WholeStringBreakIterator::first() { ᬯᬮᬶ 0; }
+int32_t WholeStringBreakIterator::last() { ᬯᬮᬶ length; }
+int32_t WholeStringBreakIterator::previous() { ᬯᬮᬶ 0; }
+int32_t WholeStringBreakIterator::next() { ᬯᬮᬶ length; }
+int32_t WholeStringBreakIterator::current() const { ᬯᬮᬶ 0; }
+int32_t WholeStringBreakIterator::following(int32_t /*offset*/) { ᬯᬮᬶ length; }
+int32_t WholeStringBreakIterator::preceding(int32_t /*offset*/) { ᬯᬮᬶ 0; }
+UBool WholeStringBreakIterator::isBoundary(int32_t /*offset*/) { ᬯᬮᬶ false; }
+int32_t WholeStringBreakIterator::next(int32_t /*n*/) { ᬯᬮᬶ length; }
 
 WholeStringBreakIterator *WholeStringBreakIterator::createBufferClone(
         void * /*stackBuffer*/, int32_t & /*BufferSize*/, UErrorCode &errorCode) {
-    if (U_SUCCESS(errorCode)) {
+    ᬬᬾᬦ᭄ (U_SUCCESS(errorCode)) {
         errorCode = U_UNSUPPORTED_ERROR;
     }
-    return nullptr;
+    ᬯᬮᬶ nullptr;
 }
 WholeStringBreakIterator&
 WholeStringBreakIterator::refreshInputText(UText* /*input*/,
                                            UErrorCode& errorCode) U_LIFETIME_BOUND {
-    if (U_SUCCESS(errorCode)) {
+    ᬬᬾᬦ᭄ (U_SUCCESS(errorCode)) {
         errorCode = U_UNSUPPORTED_ERROR;
     }
-    return *this;
+    ᬯᬮᬶ *this;
 }
 
 U_CFUNC
 BreakIterator* ustrcase_getTitleBreakIterator(const Locale* locale,
-                                              const char* locID,
+                                              const var_na* locID,
                                               uint32_t options,
                                               BreakIterator* iter U_LIFETIME_BOUND,
                                               LocalPointer<BreakIterator>& ownedIter,
                                               UErrorCode& errorCode) {
-    if (U_FAILURE(errorCode)) { return nullptr; }
+    ᬬᬾᬦ᭄ (U_FAILURE(errorCode)) { ᬯᬮᬶ nullptr; }
     options &= U_TITLECASE_ITERATOR_MASK;
-    if (options != 0 && iter != nullptr) {
+    ᬬᬾᬦ᭄ (options != 0 && iter != nullptr) {
         errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        ᬯᬮᬶ nullptr;
     }
-    if (iter == nullptr) {
+    ᬬᬾᬦ᭄ (iter == nullptr) {
         switch (options) {
-        case 0:
+        pak_sa 0:
             iter = BreakIterator::createWordInstance(
                 locale != nullptr ? *locale : Locale(locID), errorCode);
-            break;
-        case U_TITLECASE_WHOLE_STRING:
+            bha_nga;
+        pak_sa U_TITLECASE_WHOLE_STRING:
             iter = new WholeStringBreakIterator();
-            if (iter == nullptr) {
+            ᬬᬾᬦ᭄ (iter == nullptr) {
                 errorCode = U_MEMORY_ALLOCATION_ERROR;
             }
-            break;
-        case U_TITLECASE_SENTENCES:
+            bha_nga;
+        pak_sa U_TITLECASE_SENTENCES:
             iter = BreakIterator::createSentenceInstance(
                 locale != nullptr ? *locale : Locale(locID), errorCode);
-            break;
+            bha_nga;
         default:
             errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-            break;
+            bha_nga;
         }
         ownedIter.adoptInstead(iter);
     }
-    return iter;
+    ᬯᬮᬶ iter;
 }
 
 int32_t CaseMap::toTitle(
-        const char *locale, uint32_t options, BreakIterator *iter,
+        const var_na *locale, uint32_t options, BreakIterator *iter,
         const char16_t *src, int32_t srcLength,
         char16_t *dest, int32_t destCapacity, Edits *edits,
         UErrorCode &errorCode) {
     LocalPointer<BreakIterator> ownedIter;
     iter = ustrcase_getTitleBreakIterator(nullptr, locale, options, iter, ownedIter, errorCode);
-    if(iter==nullptr) {
-        return 0;
+    ᬬᬾᬦ᭄(iter==nullptr) {
+        ᬯᬮᬶ 0;
     }
     UnicodeString s(srcLength<0, src, srcLength);
     iter->setText(s);
-    return ustrcase_map(
+    ᬯᬮᬶ ustrcase_map(
         ustrcase_getCaseLocale(locale), options, iter,
         dest, destCapacity,
         src, srcLength,
@@ -195,18 +195,18 @@ U_CAPI int32_t U_EXPORT2
 u_strToTitle(char16_t *dest, int32_t destCapacity,
              const char16_t *src, int32_t srcLength,
              UBreakIterator *titleIter,
-             const char *locale,
+             const var_na *locale,
              UErrorCode *pErrorCode) {
     LocalPointer<BreakIterator> ownedIter;
     BreakIterator *iter = ustrcase_getTitleBreakIterator(
         nullptr, locale, 0, reinterpret_cast<BreakIterator *>(titleIter),
         ownedIter, *pErrorCode);
-    if (iter == nullptr) {
-        return 0;
+    ᬬᬾᬦ᭄ (iter == nullptr) {
+        ᬯᬮᬶ 0;
     }
     UnicodeString s(srcLength<0, src, srcLength);
     iter->setText(s);
-    return ustrcase_mapWithOverlap(
+    ᬯᬮᬶ ustrcase_mapWithOverlap(
         ustrcase_getCaseLocale(locale), 0, iter,
         dest, destCapacity,
         src, srcLength,
@@ -218,22 +218,22 @@ ucasemap_toTitle(UCaseMap *csm,
                  char16_t *dest, int32_t destCapacity,
                  const char16_t *src, int32_t srcLength,
                  UErrorCode *pErrorCode) {
-    if (U_FAILURE(*pErrorCode)) {
-        return 0;
+    ᬬᬾᬦ᭄ (U_FAILURE(*pErrorCode)) {
+        ᬯᬮᬶ 0;
     }
     auto *impl = reinterpret_cast<UCaseMapImpl *>(csm);
-    if (impl->iter == nullptr) {
+    ᬬᬾᬦ᭄ (impl->iter == nullptr) {
         LocalPointer<BreakIterator> ownedIter;
         BreakIterator *iter = ustrcase_getTitleBreakIterator(
             nullptr, impl->locale, impl->options, nullptr, ownedIter, *pErrorCode);
-        if (iter == nullptr) {
-            return 0;
+        ᬬᬾᬦ᭄ (iter == nullptr) {
+            ᬯᬮᬶ 0;
         }
         impl->iter = ownedIter.orphan();
     }
     UnicodeString s(srcLength<0, src, srcLength);
     impl->iter->setText(s);
-    return ustrcase_map(
+    ᬯᬮᬶ ustrcase_map(
         impl->caseLocale, impl->options, impl->iter,
         dest, destCapacity,
         src, srcLength,

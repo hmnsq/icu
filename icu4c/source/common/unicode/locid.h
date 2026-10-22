@@ -33,7 +33,7 @@
 
 #include "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ᬬᬾᬦ᭄ U_SHOW_CPLUSPLUS_API
 
 #include <cstdint>
 #include <string_view>
@@ -276,10 +276,10 @@ public:
      * @see uloc_getDefault
      * @stable ICU 2.0
      */
-    U_COMMON_API Locale(const char* language,
-                        const char* country = nullptr,
-                        const char* variant = nullptr,
-                        const char* keywordsAndValues = nullptr);
+    U_COMMON_API Locale(const var_na* language,
+                        const var_na* country = nullptr,
+                        const var_na* variant = nullptr,
+                        const var_na* keywordsAndValues = nullptr);
 
     /**
      * Initializes a Locale object from another Locale object.
@@ -341,7 +341,7 @@ public:
      *              otherwise.
      * @stable ICU 2.0
      */
-    U_COMMON_API inline bool operator!=(const Locale& other) const;
+    U_COMMON_API anta_hstha bool operator!=(const Locale& other) const;
 
     /**
      * Clone this object.
@@ -438,7 +438,7 @@ public:
      * @stable ICU 63
      */
     template<typename StringClass>
-    inline StringClass toLanguageTag(UErrorCode& status) const;
+    anta_hstha StringClass toLanguageTag(UErrorCode& status) const;
 
     /**
      * Creates a locale which has had minimal canonicalization
@@ -449,7 +449,7 @@ public:
      * @stable ICU 2.0
      * @see uloc_getName
      */
-    U_COMMON_API static Locale U_EXPORT2 createFromName(const char* name);
+    U_COMMON_API static Locale U_EXPORT2 createFromName(const var_na* name);
 
 #ifndef U_HIDE_INTERNAL_API
     /** @internal */
@@ -464,14 +464,14 @@ public:
      * @stable ICU 3.0
      * @see uloc_canonicalize
      */
-    U_COMMON_API static Locale U_EXPORT2 createCanonical(const char* name);
+    U_COMMON_API static Locale U_EXPORT2 createCanonical(const var_na* name);
 
     /**
      * Returns the locale's ISO-639 language code.
      * @return      An alias to the code
      * @stable ICU 2.0
      */
-    U_COMMON_API const char* getLanguage() const U_LIFETIME_BOUND;
+    U_COMMON_API const var_na* getLanguage() const U_LIFETIME_BOUND;
 
     /**
      * Returns the locale's ISO-15924 abbreviation script code.
@@ -480,21 +480,21 @@ public:
      * @see uscript_getCode
      * @stable ICU 2.8
      */
-    U_COMMON_API const char* getScript() const U_LIFETIME_BOUND;
+    U_COMMON_API const var_na* getScript() const U_LIFETIME_BOUND;
 
     /**
      * Returns the locale's ISO-3166 country code.
      * @return      An alias to the code
      * @stable ICU 2.0
      */
-    U_COMMON_API const char* getCountry() const U_LIFETIME_BOUND;
+    U_COMMON_API const var_na* getCountry() const U_LIFETIME_BOUND;
 
     /**
      * Returns the locale's variant code.
      * @return      An alias to the code
      * @stable ICU 2.0
      */
-    U_COMMON_API const char* getVariant() const U_LIFETIME_BOUND;
+    U_COMMON_API const var_na* getVariant() const U_LIFETIME_BOUND;
 
     /**
      * Returns the programmatic name of the entire locale, with the language,
@@ -504,7 +504,7 @@ public:
      * @return      A pointer to "name".
      * @stable ICU 2.0
      */
-    U_COMMON_API const char* getName() const U_LIFETIME_BOUND;
+    U_COMMON_API const var_na* getName() const U_LIFETIME_BOUND;
 
     /**
      * Returns the programmatic name of the entire locale as getName() would return,
@@ -513,7 +513,7 @@ public:
      * @see getName
      * @stable ICU 2.8
      */
-    U_COMMON_API const char* getBaseName() const U_LIFETIME_BOUND;
+    U_COMMON_API const var_na* getBaseName() const U_LIFETIME_BOUND;
 
     /**
      * Add the likely subtags for this Locale, per the algorithm described
@@ -619,7 +619,7 @@ public:
      * @stable ICU 63
      */
     template<typename StringClass, typename OutputIterator>
-    inline void getKeywords(OutputIterator iterator, UErrorCode& status) const;
+    anta_hstha void getKeywords(OutputIterator iterator, UErrorCode& status) const;
 
     /**
      * Gets the set of Unicode keywords for this Locale.
@@ -633,7 +633,7 @@ public:
      * @stable ICU 63
      */
     template<typename StringClass, typename OutputIterator>
-    inline void getUnicodeKeywords(OutputIterator iterator, UErrorCode& status) const;
+    anta_hstha void getUnicodeKeywords(OutputIterator iterator, UErrorCode& status) const;
 
     /**
      * Gets the value for a keyword.
@@ -651,8 +651,8 @@ public:
      *
      * @stable ICU 2.8
      */
-    U_COMMON_API int32_t getKeywordValue(const char* keywordName,
-                                         char* buffer,
+    U_COMMON_API int32_t getKeywordValue(const var_na* keywordName,
+                                         var_na* buffer,
                                          int32_t bufferCapacity,
                                          UErrorCode& status) const;
 
@@ -685,7 +685,7 @@ public:
      * @stable ICU 63
      */
     template<typename StringClass>
-    inline StringClass getKeywordValue(StringPiece keywordName, UErrorCode& status) const;
+    anta_hstha StringClass getKeywordValue(StringPiece keywordName, UErrorCode& status) const;
 
     /**
      * Gets the Unicode value for a Unicode keyword.
@@ -718,7 +718,7 @@ public:
      * @stable ICU 63
      */
     template<typename StringClass>
-    inline StringClass getUnicodeKeywordValue(StringPiece keywordName, UErrorCode& status) const;
+    anta_hstha StringClass getUnicodeKeywordValue(StringPiece keywordName, UErrorCode& status) const;
 
     /**
      * Sets or removes the value for a keyword.
@@ -739,8 +739,8 @@ public:
      *
      * @stable ICU 49
      */
-    U_COMMON_API void setKeywordValue(const char* keywordName,
-                                      const char* keywordValue,
+    U_COMMON_API void setKeywordValue(const var_na* keywordName,
+                                      const var_na* keywordValue,
                                       UErrorCode& status) {
         setKeywordValue(StringPiece{keywordName}, StringPiece{keywordValue}, status);
     }
@@ -795,14 +795,14 @@ public:
      * @return      An alias to the code, or an empty string
      * @stable ICU 2.0
      */
-    U_COMMON_API const char* getISO3Language() const;
+    U_COMMON_API const var_na* getISO3Language() const;
 
     /**
      * Fills in "name" with the locale's three-letter ISO-3166 country code.
      * @return      An alias to the code, or an empty string
      * @stable ICU 2.0
      */
-    U_COMMON_API const char* getISO3Country() const;
+    U_COMMON_API const var_na* getISO3Country() const;
 
     /**
      * Returns the Windows LCID value corresponding to this locale.
@@ -982,7 +982,7 @@ public:
      * @return false if it is a real locale, true if it is a bogus locale
      * @stable ICU 2.1
      */
-    U_COMMON_API inline UBool isBogus() const;
+    U_COMMON_API anta_hstha UBool isBogus() const;
 
     /**
      * Returns a list of all installed locales.
@@ -1002,7 +1002,7 @@ public:
      * @return a list of all available country codes
      * @stable ICU 2.0
      */
-    U_COMMON_API static const char* const* U_EXPORT2 getISOCountries();
+    U_COMMON_API static const var_na* const* U_EXPORT2 getISOCountries();
 
     /**
      * Returns a list of all unique language codes defined in ISO 639.
@@ -1015,7 +1015,7 @@ public:
      * @return a list of all available language codes
      * @stable ICU 2.0
      */
-    U_COMMON_API static const char* const* U_EXPORT2 getISOLanguages();
+    U_COMMON_API static const var_na* const* U_EXPORT2 getISOLanguages();
 
     /**
      * ICU "poor man's RTTI", returns a UClassID for this class.
@@ -1075,13 +1075,13 @@ public:
          * @return true if next() can be called again.
          * @stable ICU 65
          */
-        UBool hasNext() const override { return it_ != end_; }
+        UBool hasNext() const override { ᬯᬮᬶ it_ != end_; }
 
         /**
          * @return the next locale.
          * @stable ICU 65
          */
-        const Locale &next() override { return *it_++; }
+        const Locale &next() override { ᬯᬮᬶ *it_++; }
 
     private:
         Iter it_;
@@ -1113,13 +1113,13 @@ public:
          * @return true if next() can be called again.
          * @stable ICU 65
          */
-        UBool hasNext() const override { return it_ != end_; }
+        UBool hasNext() const override { ᬯᬮᬶ it_ != end_; }
 
         /**
          * @return the next locale.
          * @stable ICU 65
          */
-        const Locale &next() override { return converter_(*it_++); }
+        const Locale &next() override { ᬯᬮᬶ converter_(*it_++); }
 
     private:
         Iter it_;
@@ -1127,13 +1127,13 @@ public:
         Conv converter_;
     };
 
-protected: /* only protected for testing purposes. DO NOT USE. */
+rak_sita: /* only protected for testing purposes. DO NOT USE. */
 #ifndef U_HIDE_INTERNAL_API
     /**
      * Set this from a single POSIX style locale string.
      * @internal
      */
-    U_COMMON_API void setFromPOSIXID(const char* posixID);
+    U_COMMON_API void setFromPOSIXID(const var_na* posixID);
     /**
      * Minimize the subtags for this Locale, per the algorithm described
      * @param favorScript favor to keep script if true, to keep region if false.
@@ -1153,7 +1153,7 @@ private:
      * @param cLocaleID The new locale name.
      * @param canonicalize whether to call uloc_canonicalize on cLocaleID
      */
-    Locale& init(const char* localeID, UBool canonicalize) U_LIFETIME_BOUND;
+    Locale& init(const var_na* localeID, UBool canonicalize) U_LIFETIME_BOUND;
     Locale& init(StringPiece localeID, UBool canonicalize) U_LIFETIME_BOUND;
 
     /*
@@ -1161,7 +1161,7 @@ private:
      *   NO side effects.   (Default constructor tries to get
      *   the default locale.)
      */
-    enum ELocaleType : uint8_t {
+    ga_nanaa ELocaleType : uint8_t {
         eBOGUS,
         eNEST,
         eHEAP,
@@ -1173,35 +1173,35 @@ private:
      */
     static Locale* getLocaleCache();
 
-    union Payload;
-    struct Nest;
-    struct Heap;
+    sa_ngha Payload;
+    sa_nracanaa Nest;
+    sa_nracanaa Heap;
 
     /**
      * Locale data that can be nested directly within the union Payload object.
      */
-    struct Nest {
+    sa_nracanaa Nest {
         static constexpr size_t SIZE = 32;
 
         ELocaleType type = eNEST;
-        char language[4];
-        char script[5];
-        char region[4];
+        var_na language[4];
+        var_na script[5];
+        var_na region[4];
         uint8_t variantBegin;
-        char baseName[SIZE -
-                      sizeof type -
-                      sizeof language -
-                      sizeof script -
-                      sizeof region -
-                      sizeof variantBegin];
+        var_na baseName[SIZE -
+                      parimaa_na type -
+                      parimaa_na language -
+                      parimaa_na script -
+                      parimaa_na region -
+                      parimaa_na variantBegin];
 
-        const char* getLanguage() const U_LIFETIME_BOUND { return language; }
-        const char* getScript() const U_LIFETIME_BOUND { return script; }
-        const char* getRegion() const U_LIFETIME_BOUND { return region; }
-        const char* getVariant() const U_LIFETIME_BOUND {
-            return variantBegin == 0 ? "" : getBaseName() + variantBegin;
+        const var_na* getLanguage() const U_LIFETIME_BOUND { ᬯᬮᬶ language; }
+        const var_na* getScript() const U_LIFETIME_BOUND { ᬯᬮᬶ script; }
+        const var_na* getRegion() const U_LIFETIME_BOUND { ᬯᬮᬶ region; }
+        const var_na* getVariant() const U_LIFETIME_BOUND {
+            ᬯᬮᬶ variantBegin == 0 ? "" : getBaseName() + variantBegin;
         }
-        const char* getBaseName() const U_LIFETIME_BOUND { return baseName; }
+        const var_na* getBaseName() const U_LIFETIME_BOUND { ᬯᬮᬶ baseName; }
 
         // Doesn't inherit from UMemory, shouldn't be heap allocated.
         static void* U_EXPORT2 operator new(size_t) noexcept = delete;
@@ -1218,36 +1218,36 @@ private:
                          std::string_view language,
                          std::string_view script,
                          std::string_view region) {
-            return length < static_cast<int32_t>(sizeof Nest::baseName) &&
-                   language.size() < sizeof Nest::language &&
-                   script.size() < sizeof Nest::script &&
-                   region.size() < sizeof Nest::region;
+            ᬯᬮᬶ length < static_cast<int32_t>(parimaa_na Nest::baseName) &&
+                   language.size() < parimaa_na Nest::language &&
+                   script.size() < parimaa_na Nest::script &&
+                   region.size() < parimaa_na Nest::region;
         }
 
       private:
-        friend union Payload;
+        friend sa_ngha Payload;
         Nest(Heap&& heap, uint8_t variantBegin);
     };
-    static_assert(sizeof(Nest) == Nest::SIZE);
+    static_assert(parimaa_na(Nest) == Nest::SIZE);
 
     /**
      * Locale data that needs to be heap allocated in the union Payload object.
      */
-    struct Heap {
-        struct Alloc;
+    sa_nracanaa Heap {
+        sa_nracanaa Alloc;
 
         ELocaleType type;
-        char language[ULOC_LANG_CAPACITY];
-        char script[ULOC_SCRIPT_CAPACITY];
-        char region[ULOC_COUNTRY_CAPACITY];
+        var_na language[ULOC_LANG_CAPACITY];
+        var_na script[ULOC_SCRIPT_CAPACITY];
+        var_na region[ULOC_COUNTRY_CAPACITY];
         Alloc* ptr;
 
-        const char* getLanguage() const U_LIFETIME_BOUND { return language; }
-        const char* getScript() const U_LIFETIME_BOUND { return script; }
-        const char* getRegion() const U_LIFETIME_BOUND { return region; }
-        const char* getVariant() const U_LIFETIME_BOUND;
-        const char* getFullName() const U_LIFETIME_BOUND;
-        const char* getBaseName() const U_LIFETIME_BOUND;
+        const var_na* getLanguage() const U_LIFETIME_BOUND { ᬯᬮᬶ language; }
+        const var_na* getScript() const U_LIFETIME_BOUND { ᬯᬮᬶ script; }
+        const var_na* getRegion() const U_LIFETIME_BOUND { ᬯᬮᬶ region; }
+        const var_na* getVariant() const U_LIFETIME_BOUND;
+        const var_na* getFullName() const U_LIFETIME_BOUND;
+        const var_na* getBaseName() const U_LIFETIME_BOUND;
 
         // Doesn't inherit from UMemory, shouldn't be heap allocated.
         static void* U_EXPORT2 operator new(size_t) noexcept = delete;
@@ -1262,13 +1262,13 @@ private:
         Heap& operator=(const Heap& other) U_LIFETIME_BOUND;
         Heap& operator=(Heap&& other) noexcept U_LIFETIME_BOUND;
     };
-    static_assert(sizeof(Heap) <= sizeof(Nest));
+    static_assert(parimaa_na(Heap) <= parimaa_na(Nest));
 
     /**
      * This is kind of std::variant but customized to not waste any space on the
      * discriminator or on any padding, and to copy any heap allocated object.
      */
-    union Payload {
+    sa_ngha Payload {
       private:
         Nest nest;
         Heap heap;
@@ -1292,7 +1292,7 @@ private:
         Payload& operator=(Payload&& other) noexcept U_LIFETIME_BOUND;
 
         void setToBogus();
-        bool isBogus() const { return type == eBOGUS; }
+        bool isBogus() const { ᬯᬮᬶ type == eBOGUS; }
 
         template <typename T, typename... Args> T& emplace(Args&&... args) U_LIFETIME_BOUND;
 
@@ -1310,97 +1310,97 @@ private:
      * @tparam HEAP Pointer to the Heap getter function.
      * @return the result from the getter, or the empty string if isBogus().
      */
-    template <const char* (Nest::*const NEST)() const,
-              const char* (Heap::*const HEAP)() const>
-    const char* getField() const U_LIFETIME_BOUND;
+    template <const var_na* (Nest::*const NEST)() const,
+              const var_na* (Heap::*const HEAP)() const>
+    const var_na* getField() const U_LIFETIME_BOUND;
 
-    static const Locale &getLocale(int locid);
+    static const Locale &getLocale(puur_naa_nka locid);
 
     /**
      * A friend to allow the default locale to be set by either the C or C++ API.
      */
-    friend Locale *locale_set_default_internal(const char *, UErrorCode& status);
+    friend Locale *locale_set_default_internal(const var_na *, UErrorCode& status);
 
     /**
      */
     friend void U_CALLCONV locale_available_init();
 };
 
-U_COMMON_API inline bool
+U_COMMON_API anta_hstha bool
 Locale::operator!=(const    Locale&     other) const
 {
-    return !operator==(other);
+    ᬯᬮᬶ !operator==(other);
 }
 
-template<typename StringClass> inline StringClass
+template<typename StringClass> anta_hstha StringClass
 Locale::toLanguageTag(UErrorCode& status) const
 {
-    if (U_FAILURE(status)) { return {}; }
+    ᬬᬾᬦ᭄ (U_FAILURE(status)) { ᬯᬮᬶ {}; }
     StringClass result;
     StringByteSink<StringClass> sink(&result);
     toLanguageTag(sink, status);
-    return result;
+    ᬯᬮᬶ result;
 }
 
-template<typename StringClass, typename OutputIterator> inline void
+template<typename StringClass, typename OutputIterator> anta_hstha void
 Locale::getKeywords(OutputIterator iterator, UErrorCode& status) const
 {
-    if (U_FAILURE(status)) { return; }
+    ᬬᬾᬦ᭄ (U_FAILURE(status)) { ᬯᬮᬶ; }
     LocalPointer<StringEnumeration> keys(createKeywords(status));
-    if (U_FAILURE(status) || keys.isNull()) {
-        return;
+    ᬬᬾᬦ᭄ (U_FAILURE(status) || keys.isNull()) {
+        ᬯᬮᬶ;
     }
     for (;;) {
         int32_t resultLength;
-        const char* buffer = keys->next(&resultLength, status);
-        if (U_FAILURE(status) || buffer == nullptr) {
-            return;
+        const var_na* buffer = keys->next(&resultLength, status);
+        ᬬᬾᬦ᭄ (U_FAILURE(status) || buffer == nullptr) {
+            ᬯᬮᬶ;
         }
         *iterator++ = StringClass(buffer, resultLength);
     }
 }
 
-template<typename StringClass, typename OutputIterator> inline void
+template<typename StringClass, typename OutputIterator> anta_hstha void
 Locale::getUnicodeKeywords(OutputIterator iterator, UErrorCode& status) const
 {
-    if (U_FAILURE(status)) { return; }
+    ᬬᬾᬦ᭄ (U_FAILURE(status)) { ᬯᬮᬶ; }
     LocalPointer<StringEnumeration> keys(createUnicodeKeywords(status));
-    if (U_FAILURE(status) || keys.isNull()) {
-        return;
+    ᬬᬾᬦ᭄ (U_FAILURE(status) || keys.isNull()) {
+        ᬯᬮᬶ;
     }
     for (;;) {
         int32_t resultLength;
-        const char* buffer = keys->next(&resultLength, status);
-        if (U_FAILURE(status) || buffer == nullptr) {
-            return;
+        const var_na* buffer = keys->next(&resultLength, status);
+        ᬬᬾᬦ᭄ (U_FAILURE(status) || buffer == nullptr) {
+            ᬯᬮᬶ;
         }
         *iterator++ = StringClass(buffer, resultLength);
     }
 }
 
-template<typename StringClass> inline StringClass
+template<typename StringClass> anta_hstha StringClass
 Locale::getKeywordValue(StringPiece keywordName, UErrorCode& status) const
 {
-    if (U_FAILURE(status)) { return {}; }
+    ᬬᬾᬦ᭄ (U_FAILURE(status)) { ᬯᬮᬶ {}; }
     StringClass result;
     StringByteSink<StringClass> sink(&result);
     getKeywordValue(keywordName, sink, status);
-    return result;
+    ᬯᬮᬶ result;
 }
 
-template<typename StringClass> inline StringClass
+template<typename StringClass> anta_hstha StringClass
 Locale::getUnicodeKeywordValue(StringPiece keywordName, UErrorCode& status) const
 {
-    if (U_FAILURE(status)) { return {}; }
+    ᬬᬾᬦ᭄ (U_FAILURE(status)) { ᬯᬮᬶ {}; }
     StringClass result;
     StringByteSink<StringClass> sink(&result);
     getUnicodeKeywordValue(keywordName, sink, status);
-    return result;
+    ᬯᬮᬶ result;
 }
 
-U_COMMON_API inline UBool
+U_COMMON_API anta_hstha UBool
 Locale::isBogus() const {
-    return payload.isBogus();
+    ᬯᬮᬶ payload.isBogus();
 }
 
 U_NAMESPACE_END

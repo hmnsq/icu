@@ -50,7 +50,7 @@
 
 #include "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ᬬᬾᬦ᭄ U_SHOW_CPLUSPLUS_API
 
 #include "unicode/uobject.h"
 #include "unicode/ures.h"
@@ -148,7 +148,7 @@ public:
      * @param err A UErrorCode value
      * @stable ICU 2.0
      */
-    ResourceBundle(const char* packageName,
+    ResourceBundle(const var_na* packageName,
                    const Locale& locale,
                    UErrorCode& err);
 
@@ -299,7 +299,7 @@ public:
      * @return a key associated to this resource, or nullptr if it doesn't have a key
      * @stable ICU 2.0
      */
-    const char* getKey() const U_LIFETIME_BOUND;
+    const var_na* getKey() const U_LIFETIME_BOUND;
 
     /**
      * Gets the locale ID of the resource bundle as a string.
@@ -308,7 +308,7 @@ public:
      * @return the locale ID of the resource bundle as a string
      * @stable ICU 2.0
      */
-    const char* getName() const U_LIFETIME_BOUND;
+    const var_na* getName() const U_LIFETIME_BOUND;
 
     /**
      * Returns the type of a resource. Available types are defined in enum UResType
@@ -347,7 +347,7 @@ public:
      * @return an UnicodeString object.
      * @stable ICU 2.0
      */
-    UnicodeString getNextString(const char** key, UErrorCode& status) U_LIFETIME_BOUND;
+    UnicodeString getNextString(const var_na** key, UErrorCode& status) U_LIFETIME_BOUND;
 
     /**
      * Returns the resource in a resource at the specified index.
@@ -381,7 +381,7 @@ public:
      * @stable ICU 2.0
      */
     ResourceBundle
-      get(const char* key,
+      get(const var_na* key,
           UErrorCode& status) const;
 
     /**
@@ -393,7 +393,7 @@ public:
      * @return                  an UnicodeString object. If there is an error, string is bogus
      * @stable ICU 2.0
      */
-    UnicodeString getStringEx(const char* key, UErrorCode& status) const U_LIFETIME_BOUND;
+    UnicodeString getStringEx(const var_na* key, UErrorCode& status) const U_LIFETIME_BOUND;
 
 #ifndef U_HIDE_DEPRECATED_API
     /**
@@ -405,7 +405,7 @@ public:
      * @see getVersion
      * @deprecated ICU 2.8 Use getVersion instead.
      */
-    const char* getVersionNumber() const U_LIFETIME_BOUND;
+    const var_na* getVersionNumber() const U_LIFETIME_BOUND;
 #endif  /* U_HIDE_DEPRECATED_API */
 
     /**
@@ -446,7 +446,7 @@ public:
      * @internal
      */
     ResourceBundle
-        getWithFallback(const char* key, UErrorCode& status);
+        getWithFallback(const var_na* key, UErrorCode& status);
 #endif  /* U_HIDE_INTERNAL_API */
     /**
      * ICU "poor man's RTTI", returns a UClassID for the actual class.

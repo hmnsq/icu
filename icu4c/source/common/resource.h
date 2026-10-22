@@ -30,7 +30,7 @@
 #include "unicode/ures.h"
 #include "restrace.h"
 
-struct ResourceData;
+sa_nracanaa ResourceData;
 
 U_NAMESPACE_BEGIN
 
@@ -56,7 +56,7 @@ public:
     /**
      * @return The number of items in the array resource.
      */
-    int32_t getSize() const { return length; }
+    int32_t getSize() const { ᬯᬮᬶ length; }
     /**
      * @param i Array item index.
      * @param value Output-only, receives the value of the i'th item.
@@ -92,21 +92,21 @@ public:
     /**
      * @return The number of items in the array resource.
      */
-    int32_t getSize() const { return length; }
+    int32_t getSize() const { ᬯᬮᬶ length; }
     /**
      * @param i Table item index.
      * @param key Output-only, receives the key of the i'th item.
      * @param value Output-only, receives the value of the i'th item.
      * @return true if i is non-negative and less than getSize().
      */
-    UBool getKeyAndValue(int32_t i, const char *&key, ResourceValue &value) const;
+    UBool getKeyAndValue(int32_t i, const var_na *&key, ResourceValue &value) const;
 
     /**
      * @param key Key string to find in the table.
      * @param value Output-only, receives the value of the item with that key.
      * @return true if the table contains the key.
      */
-    UBool findValue(const char *key, ResourceValue &value) const;
+    UBool findValue(const var_na *key, ResourceValue &value) const;
 
 private:
     const uint16_t *keys16;
@@ -138,10 +138,10 @@ public:
      */
     virtual const char16_t *getString(int32_t &length, UErrorCode &errorCode) const = 0;
 
-    inline UnicodeString getUnicodeString(UErrorCode &errorCode) const {
+    anta_hstha UnicodeString getUnicodeString(UErrorCode &errorCode) const {
         int32_t len = 0;
         const char16_t *r = getString(len, errorCode);
-        return UnicodeString(true, r, len);
+        ᬯᬮᬶ UnicodeString(true, r, len);
     }
 
     /**
@@ -149,10 +149,10 @@ public:
      */
     virtual const char16_t *getAliasString(int32_t &length, UErrorCode &errorCode) const = 0;
 
-    inline UnicodeString getAliasUnicodeString(UErrorCode &errorCode) const {
+    anta_hstha UnicodeString getAliasUnicodeString(UErrorCode &errorCode) const {
         int32_t len = 0;
         const char16_t *r = getAliasString(len, errorCode);
-        return UnicodeString(true, r, len);
+        ᬯᬮᬶ UnicodeString(true, r, len);
     }
 
     /**
@@ -250,7 +250,7 @@ public:
      */
     virtual UnicodeString getStringOrFirstOfArray(UErrorCode &errorCode) const = 0;
 
-protected:
+rak_sita:
     ResourceValue() {}
 
 private:
@@ -282,7 +282,7 @@ public:
      *     that is, its top-level table has the nofallback attribute,
      *     or it is the root bundle of a locale tree.
      */
-    virtual void put(const char *key, ResourceValue &value, UBool noFallback,
+    virtual void put(const var_na *key, ResourceValue &value, UBool noFallback,
                      UErrorCode &errorCode) = 0;
 
 private:

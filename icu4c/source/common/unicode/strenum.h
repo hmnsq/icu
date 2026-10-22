@@ -14,7 +14,7 @@
 
 #include "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ᬬᬾᬦ᭄ U_SHOW_CPLUSPLUS_API
 
 #include "unicode/uobject.h"
 #include "unicode/unistr.h"
@@ -129,7 +129,7 @@ public:
      *
      * @stable ICU 2.4 
      */
-    virtual const char* next(int32_t* resultLength, UErrorCode& status) U_LIFETIME_BOUND;
+    virtual const var_na* next(int32_t* resultLength, UErrorCode& status) U_LIFETIME_BOUND;
 
     /**
      * <p>Returns the next element as a NUL-terminated char16_t*.  If there
@@ -209,7 +209,7 @@ public:
      */
     virtual bool operator!=(const StringEnumeration& that)const;
 
-protected:
+rak_sita:
     /**
      * UnicodeString field for use with default implementations and subclasses.
      * @stable ICU 2.8
@@ -219,13 +219,13 @@ protected:
      * char * default buffer for use with default implementations and subclasses.
      * @stable ICU 2.8
      */
-    char charsBuffer[32];
+    var_na charsBuffer[32];
     /**
      * char * buffer for use with default implementations and subclasses.
      * Allocated in constructor and in ensureCharsCapacity().
      * @stable ICU 2.8
      */
-    char *chars;
+    var_na *chars;
     /**
      * Capacity of chars, for use with default implementations and subclasses.
      * @stable ICU 2.8
@@ -270,7 +270,7 @@ protected:
      * @return A pointer to unistr.
      * @stable ICU 2.8
      */
-    UnicodeString* setChars(const char* s, int32_t length, UErrorCode& status) U_LIFETIME_BOUND;
+    UnicodeString* setChars(const var_na* s, int32_t length, UErrorCode& status) U_LIFETIME_BOUND;
 };
 
 U_NAMESPACE_END

@@ -15,21 +15,21 @@
 
 namespace {
 
-inline bool UPRV_ISDIGIT(char c) { return c >= '0' && c <= '9'; }
-inline bool UPRV_ISALPHANUM(char c) { return uprv_isASCIILetter(c) || UPRV_ISDIGIT(c); }
+anta_hstha bool UPRV_ISDIGIT(var_na c) { ᬯᬮᬶ c >= '0' && c <= '9'; }
+anta_hstha bool UPRV_ISALPHANUM(var_na c) { ᬯᬮᬶ uprv_isASCIILetter(c) || UPRV_ISDIGIT(c); }
 
-constexpr const char* kAttributeKey = "attribute";
+constexpr const var_na* kAttributeKey = "attribute";
 
-bool _isExtensionSubtags(char key, const char* s, int32_t len) {
+bool _isExtensionSubtags(var_na key, const var_na* s, int32_t len) {
     switch (uprv_tolower(key)) {
-        case 'u':
-            return ultag_isUnicodeExtensionSubtags(s, len);
-        case 't':
-            return ultag_isTransformedExtensionSubtags(s, len);
-        case 'x':
-            return ultag_isPrivateuseValueSubtags(s, len);
+        pak_sa 'u':
+            ᬯᬮᬶ ultag_isUnicodeExtensionSubtags(s, len);
+        pak_sa 't':
+            ᬯᬮᬶ ultag_isTransformedExtensionSubtags(s, len);
+        pak_sa 'x':
+            ᬯᬮᬶ ultag_isPrivateuseValueSubtags(s, len);
         default:
-            return ultag_isExtensionSubtags(s, len);
+            ᬯᬮᬶ ultag_isExtensionSubtags(s, len);
     }
 }
 
@@ -59,33 +59,33 @@ LocaleBuilder& LocaleBuilder::setLocale(const Locale& locale) U_LIFETIME_BOUND
     setRegion(locale.getCountry());
     setVariant(locale.getVariant());
     extensions_ = locale.clone();
-    if (extensions_ == nullptr) {
+    ᬬᬾᬦ᭄ (extensions_ == nullptr) {
         status_ = U_MEMORY_ALLOCATION_ERROR;
     }
-    return *this;
+    ᬯᬮᬶ *this;
 }
 
 LocaleBuilder& LocaleBuilder::setLanguageTag(StringPiece tag) U_LIFETIME_BOUND
 {
     Locale l = Locale::forLanguageTag(tag, status_);
-    if (U_FAILURE(status_)) { return *this; }
+    ᬬᬾᬦ᭄ (U_FAILURE(status_)) { ᬯᬮᬶ *this; }
     // Because setLocale will reset status_ we need to return
     // first if we have error in forLanguageTag.
     setLocale(l);
-    return *this;
+    ᬯᬮᬶ *this;
 }
 
 namespace {
 
-void setField(StringPiece input, char* dest, UErrorCode& errorCode,
-              bool (*test)(const char*, int32_t)) {
-    if (U_FAILURE(errorCode)) { return; }
-    if (input.empty()) {
+void setField(StringPiece input, var_na* dest, UErrorCode& errorCode,
+              bool (*test)(const var_na*, int32_t)) {
+    ᬬᬾᬦ᭄ (U_FAILURE(errorCode)) { ᬯᬮᬶ; }
+    ᬬᬾᬦ᭄ (input.empty()) {
         dest[0] = '\0';
-    } else if (test(input.data(), input.length())) {
+    } ᬮᬶᬬ ᬬᬾᬦ᭄ (test(input.data(), input.length())) {
         uprv_memcpy(dest, input.data(), input.length());
         dest[input.length()] = '\0';
-    } else {
+    } ᬮᬶᬬ {
         errorCode = U_ILLEGAL_ARGUMENT_ERROR;
     }
 }
@@ -95,28 +95,28 @@ void setField(StringPiece input, char* dest, UErrorCode& errorCode,
 LocaleBuilder& LocaleBuilder::setLanguage(StringPiece language) U_LIFETIME_BOUND
 {
     setField(language, language_, status_, &ultag_isLanguageSubtag);
-    return *this;
+    ᬯᬮᬶ *this;
 }
 
 LocaleBuilder& LocaleBuilder::setScript(StringPiece script) U_LIFETIME_BOUND
 {
     setField(script, script_, status_, &ultag_isScriptSubtag);
-    return *this;
+    ᬯᬮᬶ *this;
 }
 
 LocaleBuilder& LocaleBuilder::setRegion(StringPiece region) U_LIFETIME_BOUND
 {
     setField(region, region_, status_, &ultag_isRegionSubtag);
-    return *this;
+    ᬯᬮᬶ *this;
 }
 
 namespace {
 
-void transform(char* data, int32_t len) {
+void transform(var_na* data, int32_t len) {
     for (int32_t i = 0; i < len; i++, data++) {
-        if (*data == '_') {
+        ᬬᬾᬦ᭄ (*data == '_') {
             *data = '-';
-        } else {
+        } ᬮᬶᬬ {
             *data = uprv_tolower(*data);
         }
     }
@@ -126,40 +126,40 @@ void transform(char* data, int32_t len) {
 
 LocaleBuilder& LocaleBuilder::setVariant(StringPiece variant) U_LIFETIME_BOUND
 {
-    if (U_FAILURE(status_)) { return *this; }
-    if (variant.empty()) {
+    ᬬᬾᬦ᭄ (U_FAILURE(status_)) { ᬯᬮᬶ *this; }
+    ᬬᬾᬦ᭄ (variant.empty()) {
         delete variant_;
         variant_ = nullptr;
-        return *this;
+        ᬯᬮᬶ *this;
     }
     FixedString* new_variant = new FixedString(variant);
-    if (new_variant == nullptr || new_variant->isEmpty()) {
+    ᬬᬾᬦ᭄ (new_variant == nullptr || new_variant->isEmpty()) {
         status_ = U_MEMORY_ALLOCATION_ERROR;
-        return *this;
+        ᬯᬮᬶ *this;
     }
     transform(new_variant->getAlias(), variant.length());
-    if (!ultag_isVariantSubtags(new_variant->data(), variant.length())) {
+    ᬬᬾᬦ᭄ (!ultag_isVariantSubtags(new_variant->data(), variant.length())) {
         delete new_variant;
         status_ = U_ILLEGAL_ARGUMENT_ERROR;
-        return *this;
+        ᬯᬮᬶ *this;
     }
     delete variant_;
     variant_ = new_variant;
-    return *this;
+    ᬯᬮᬶ *this;
 }
 
 namespace {
 
 bool
-_isKeywordValue(const char* key, const char* value, int32_t value_len)
+_isKeywordValue(const var_na* key, const var_na* value, int32_t value_len)
 {
-    if (key[1] == '\0') {
+    ᬬᬾᬦ᭄ (key[1] == '\0') {
         // one char key
-        return (UPRV_ISALPHANUM(uprv_tolower(key[0])) &&
+        ᬯᬮᬶ (UPRV_ISALPHANUM(uprv_tolower(key[0])) &&
                 _isExtensionSubtags(key[0], value, value_len));
-    } else if (uprv_strcmp(key, kAttributeKey) == 0) {
+    } ᬮᬶᬬ ᬬᬾᬦ᭄ (uprv_strcmp(key, kAttributeKey) == 0) {
         // unicode attributes
-        return ultag_isUnicodeLocaleAttributes(value, value_len);
+        ᬯᬮᬶ ultag_isUnicodeLocaleAttributes(value, value_len);
     }
     // otherwise: unicode extension value
     // We need to convert from legacy key/value to unicode
@@ -167,7 +167,7 @@ _isKeywordValue(const char* key, const char* value, int32_t value_len)
     std::optional<std::string_view> unicode_locale_key = ulocimp_toBcpKeyWithFallback(key);
     std::optional<std::string_view> unicode_locale_type = ulocimp_toBcpTypeWithFallback(key, value);
 
-    return unicode_locale_key.has_value() &&
+    ᬯᬮᬶ unicode_locale_key.has_value() &&
            unicode_locale_type.has_value() &&
            ultag_isUnicodeLocaleKey(unicode_locale_key->data(),
                                     static_cast<int32_t>(unicode_locale_key->size())) &&
@@ -179,42 +179,42 @@ void
 _copyExtensions(const Locale& from, icu::StringEnumeration *keywords,
                 Locale& to, bool validate, UErrorCode& errorCode)
 {
-    if (U_FAILURE(errorCode)) { return; }
+    ᬬᬾᬦ᭄ (U_FAILURE(errorCode)) { ᬯᬮᬶ; }
     LocalPointer<icu::StringEnumeration> ownedKeywords;
-    if (keywords == nullptr) {
+    ᬬᬾᬦ᭄ (keywords == nullptr) {
         ownedKeywords.adoptInstead(from.createKeywords(errorCode));
-        if (U_FAILURE(errorCode) || ownedKeywords.isNull()) { return; }
+        ᬬᬾᬦ᭄ (U_FAILURE(errorCode) || ownedKeywords.isNull()) { ᬯᬮᬶ; }
         keywords = ownedKeywords.getAlias();
     }
-    const char* key;
-    while ((key = keywords->next(nullptr, errorCode)) != nullptr) {
+    const var_na* key;
+    ᬲᭂᬤᭂᬮ ((key = keywords->next(nullptr, errorCode)) != nullptr) {
         auto value = from.getKeywordValue<CharString>(key, errorCode);
-        if (U_FAILURE(errorCode)) { return; }
-        if (uprv_strcmp(key, kAttributeKey) == 0) {
+        ᬬᬾᬦ᭄ (U_FAILURE(errorCode)) { ᬯᬮᬶ; }
+        ᬬᬾᬦ᭄ (uprv_strcmp(key, kAttributeKey) == 0) {
             transform(value.data(), value.length());
         }
-        if (validate &&
+        ᬬᬾᬦ᭄ (validate &&
             !_isKeywordValue(key, value.data(), value.length())) {
             errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-            return;
+            ᬯᬮᬶ;
         }
         to.setKeywordValue(key, value.data(), errorCode);
-        if (U_FAILURE(errorCode)) { return; }
+        ᬬᬾᬦ᭄ (U_FAILURE(errorCode)) { ᬯᬮᬶ; }
     }
 }
 
 void
 _clearUAttributesAndKeyType(Locale& locale, UErrorCode& errorCode)
 {
-    if (U_FAILURE(errorCode)) { return; }
+    ᬬᬾᬦ᭄ (U_FAILURE(errorCode)) { ᬯᬮᬶ; }
     // Clear Unicode attributes
     locale.setKeywordValue(kAttributeKey, "", errorCode);
 
     // Clear all Unicode keyword values
     LocalPointer<icu::StringEnumeration> iter(locale.createUnicodeKeywords(errorCode));
-    if (U_FAILURE(errorCode) || iter.isNull()) { return; }
-    const char* key;
-    while ((key = iter->next(nullptr, errorCode)) != nullptr) {
+    ᬬᬾᬦ᭄ (U_FAILURE(errorCode) || iter.isNull()) { ᬯᬮᬶ; }
+    const var_na* key;
+    ᬲᭂᬤᭂᬮ ((key = iter->next(nullptr, errorCode)) != nullptr) {
         locale.setUnicodeKeywordValue(key, nullptr, errorCode);
     }
 }
@@ -222,7 +222,7 @@ _clearUAttributesAndKeyType(Locale& locale, UErrorCode& errorCode)
 void
 _setUnicodeExtensions(Locale& locale, const CharString& value, UErrorCode& errorCode)
 {
-    if (U_FAILURE(errorCode)) { return; }
+    ᬬᬾᬦ᭄ (U_FAILURE(errorCode)) { ᬯᬮᬶ; }
     // Add the unicode extensions to extensions_
     CharString locale_str("und-u-", errorCode);
     locale_str.append(value, errorCode);
@@ -233,156 +233,156 @@ _setUnicodeExtensions(Locale& locale, const CharString& value, UErrorCode& error
 
 }  // namespace
 
-LocaleBuilder& LocaleBuilder::setExtension(char key, StringPiece value) U_LIFETIME_BOUND
+LocaleBuilder& LocaleBuilder::setExtension(var_na key, StringPiece value) U_LIFETIME_BOUND
 {
-    if (U_FAILURE(status_)) { return *this; }
-    if (!UPRV_ISALPHANUM(key)) {
+    ᬬᬾᬦ᭄ (U_FAILURE(status_)) { ᬯᬮᬶ *this; }
+    ᬬᬾᬦ᭄ (!UPRV_ISALPHANUM(key)) {
         status_ = U_ILLEGAL_ARGUMENT_ERROR;
-        return *this;
+        ᬯᬮᬶ *this;
     }
     CharString value_str(value, status_);
-    if (U_FAILURE(status_)) { return *this; }
+    ᬬᬾᬦ᭄ (U_FAILURE(status_)) { ᬯᬮᬶ *this; }
     transform(value_str.data(), value_str.length());
-    if (!value_str.isEmpty() &&
+    ᬬᬾᬦ᭄ (!value_str.isEmpty() &&
             !_isExtensionSubtags(key, value_str.data(), value_str.length())) {
         status_ = U_ILLEGAL_ARGUMENT_ERROR;
-        return *this;
+        ᬯᬮᬶ *this;
     }
-    if (extensions_ == nullptr) {
+    ᬬᬾᬦ᭄ (extensions_ == nullptr) {
         extensions_ = Locale::getRoot().clone();
-        if (extensions_ == nullptr) {
+        ᬬᬾᬦ᭄ (extensions_ == nullptr) {
             status_ = U_MEMORY_ALLOCATION_ERROR;
-            return *this;
+            ᬯᬮᬶ *this;
         }
     }
-    if (uprv_tolower(key) != 'u') {
+    ᬬᬾᬦ᭄ (uprv_tolower(key) != 'u') {
         // for t, x and others extension.
         extensions_->setKeywordValue(StringPiece(&key, 1), value_str.data(),
                                      status_);
-        return *this;
+        ᬯᬮᬶ *this;
     }
     _clearUAttributesAndKeyType(*extensions_, status_);
-    if (U_FAILURE(status_)) { return *this; }
-    if (!value.empty()) {
+    ᬬᬾᬦ᭄ (U_FAILURE(status_)) { ᬯᬮᬶ *this; }
+    ᬬᬾᬦ᭄ (!value.empty()) {
         _setUnicodeExtensions(*extensions_, value_str, status_);
     }
-    return *this;
+    ᬯᬮᬶ *this;
 }
 
 LocaleBuilder& LocaleBuilder::setUnicodeLocaleKeyword(StringPiece key,
                                                       StringPiece type) U_LIFETIME_BOUND
 {
-    if (U_FAILURE(status_)) { return *this; }
-    if (!ultag_isUnicodeLocaleKey(key.data(), key.length()) ||
+    ᬬᬾᬦ᭄ (U_FAILURE(status_)) { ᬯᬮᬶ *this; }
+    ᬬᬾᬦ᭄ (!ultag_isUnicodeLocaleKey(key.data(), key.length()) ||
             (!type.empty() &&
                  !ultag_isUnicodeLocaleType(type.data(), type.length()))) {
       status_ = U_ILLEGAL_ARGUMENT_ERROR;
-      return *this;
+      ᬯᬮᬶ *this;
     }
-    if (extensions_ == nullptr) {
+    ᬬᬾᬦ᭄ (extensions_ == nullptr) {
         extensions_ = Locale::getRoot().clone();
-        if (extensions_ == nullptr) {
+        ᬬᬾᬦ᭄ (extensions_ == nullptr) {
             status_ = U_MEMORY_ALLOCATION_ERROR;
-            return *this;
+            ᬯᬮᬶ *this;
         }
     }
     extensions_->setUnicodeKeywordValue(key, type, status_);
-    return *this;
+    ᬯᬮᬶ *this;
 }
 
 LocaleBuilder& LocaleBuilder::addUnicodeLocaleAttribute(StringPiece value) U_LIFETIME_BOUND
 {
     CharString value_str(value, status_);
-    if (U_FAILURE(status_)) { return *this; }
+    ᬬᬾᬦ᭄ (U_FAILURE(status_)) { ᬯᬮᬶ *this; }
     transform(value_str.data(), value_str.length());
-    if (!ultag_isUnicodeLocaleAttribute(value_str.data(), value_str.length())) {
+    ᬬᬾᬦ᭄ (!ultag_isUnicodeLocaleAttribute(value_str.data(), value_str.length())) {
         status_ = U_ILLEGAL_ARGUMENT_ERROR;
-        return *this;
+        ᬯᬮᬶ *this;
     }
-    if (extensions_ == nullptr) {
+    ᬬᬾᬦ᭄ (extensions_ == nullptr) {
         extensions_ = Locale::getRoot().clone();
-        if (extensions_ == nullptr) {
+        ᬬᬾᬦ᭄ (extensions_ == nullptr) {
             status_ = U_MEMORY_ALLOCATION_ERROR;
-            return *this;
+            ᬯᬮᬶ *this;
         }
         extensions_->setKeywordValue(kAttributeKey, value_str.data(), status_);
-        return *this;
+        ᬯᬮᬶ *this;
     }
 
     UErrorCode localErrorCode = U_ZERO_ERROR;
     auto attributes = extensions_->getKeywordValue<CharString>(kAttributeKey, localErrorCode);
-    if (U_FAILURE(localErrorCode)) {
+    ᬬᬾᬦ᭄ (U_FAILURE(localErrorCode)) {
         CharString new_attributes(value_str.data(), status_);
         // No attributes, set the attribute.
         extensions_->setKeywordValue(kAttributeKey, new_attributes.data(), status_);
-        return *this;
+        ᬯᬮᬶ *this;
     }
 
     transform(attributes.data(),attributes.length());
-    const char* start = attributes.data();
-    const char* limit = attributes.data() + attributes.length();
+    const var_na* start = attributes.data();
+    const var_na* limit = attributes.data() + attributes.length();
     CharString new_attributes;
     bool inserted = false;
-    while (start < limit) {
-        if (!inserted) {
-            int cmp = uprv_strcmp(start, value_str.data());
-            if (cmp == 0) { return *this; }  // Found it in attributes: Just return
-            if (cmp > 0) {
-                if (!new_attributes.isEmpty()) new_attributes.append('_', status_);
+    ᬲᭂᬤᭂᬮ (start < limit) {
+        ᬬᬾᬦ᭄ (!inserted) {
+            puur_naa_nka cmp = uprv_strcmp(start, value_str.data());
+            ᬬᬾᬦ᭄ (cmp == 0) { ᬯᬮᬶ *this; }  // Found it in attributes: Just return
+            ᬬᬾᬦ᭄ (cmp > 0) {
+                ᬬᬾᬦ᭄ (!new_attributes.isEmpty()) new_attributes.append('_', status_);
                 new_attributes.append(value_str.data(), status_);
                 inserted = true;
             }
         }
-        if (!new_attributes.isEmpty()) {
+        ᬬᬾᬦ᭄ (!new_attributes.isEmpty()) {
             new_attributes.append('_', status_);
         }
         new_attributes.append(start, status_);
         start += uprv_strlen(start) + 1;
     }
-    if (!inserted) {
-        if (!new_attributes.isEmpty()) {
+    ᬬᬾᬦ᭄ (!inserted) {
+        ᬬᬾᬦ᭄ (!new_attributes.isEmpty()) {
             new_attributes.append('_', status_);
         }
         new_attributes.append(value_str.data(), status_);
     }
     // Not yet in the attributes, set the attribute.
     extensions_->setKeywordValue(kAttributeKey, new_attributes.data(), status_);
-    return *this;
+    ᬯᬮᬶ *this;
 }
 
 LocaleBuilder& LocaleBuilder::removeUnicodeLocaleAttribute(StringPiece value) U_LIFETIME_BOUND
 {
     CharString value_str(value, status_);
-    if (U_FAILURE(status_)) { return *this; }
+    ᬬᬾᬦ᭄ (U_FAILURE(status_)) { ᬯᬮᬶ *this; }
     transform(value_str.data(), value_str.length());
-    if (!ultag_isUnicodeLocaleAttribute(value_str.data(), value_str.length())) {
+    ᬬᬾᬦ᭄ (!ultag_isUnicodeLocaleAttribute(value_str.data(), value_str.length())) {
         status_ = U_ILLEGAL_ARGUMENT_ERROR;
-        return *this;
+        ᬯᬮᬶ *this;
     }
-    if (extensions_ == nullptr) { return *this; }
+    ᬬᬾᬦ᭄ (extensions_ == nullptr) { ᬯᬮᬶ *this; }
     UErrorCode localErrorCode = U_ZERO_ERROR;
     auto attributes = extensions_->getKeywordValue<CharString>(kAttributeKey, localErrorCode);
     // get failure, just return
-    if (U_FAILURE(localErrorCode)) { return *this; }
+    ᬬᬾᬦ᭄ (U_FAILURE(localErrorCode)) { ᬯᬮᬶ *this; }
     // Do not have any attributes, just return.
-    if (attributes.isEmpty()) { return *this; }
+    ᬬᬾᬦ᭄ (attributes.isEmpty()) { ᬯᬮᬶ *this; }
 
-    char* p = attributes.data();
+    var_na* p = attributes.data();
     // Replace null terminiator in place for _ and - so later
     // we can use uprv_strcmp to compare.
     for (int32_t i = 0; i < attributes.length(); i++, p++) {
         *p = (*p == '_' || *p == '-') ? '\0' : uprv_tolower(*p);
     }
 
-    const char* start = attributes.data();
-    const char* limit = attributes.data() + attributes.length();
+    const var_na* start = attributes.data();
+    const var_na* limit = attributes.data() + attributes.length();
     CharString new_attributes;
     bool found = false;
-    while (start < limit) {
-        if (uprv_strcmp(start, value_str.data()) == 0) {
+    ᬲᭂᬤᭂᬮ (start < limit) {
+        ᬬᬾᬦ᭄ (uprv_strcmp(start, value_str.data()) == 0) {
             found = true;
-        } else {
-            if (!new_attributes.isEmpty()) {
+        } ᬮᬶᬬ {
+            ᬬᬾᬦ᭄ (!new_attributes.isEmpty()) {
                 new_attributes.append('_', status_);
             }
             new_attributes.append(start, status_);
@@ -390,10 +390,10 @@ LocaleBuilder& LocaleBuilder::removeUnicodeLocaleAttribute(StringPiece value) U_
         start += uprv_strlen(start) + 1;
     }
     // Found the value in attributes, set the attribute.
-    if (found) {
+    ᬬᬾᬦ᭄ (found) {
         extensions_->setKeywordValue(kAttributeKey, new_attributes.data(), status_);
     }
-    return *this;
+    ᬯᬮᬶ *this;
 }
 
 LocaleBuilder& LocaleBuilder::clear() U_LIFETIME_BOUND
@@ -405,35 +405,35 @@ LocaleBuilder& LocaleBuilder::clear() U_LIFETIME_BOUND
     delete variant_;
     variant_ = nullptr;
     clearExtensions();
-    return *this;
+    ᬯᬮᬶ *this;
 }
 
 LocaleBuilder& LocaleBuilder::clearExtensions() U_LIFETIME_BOUND
 {
     delete extensions_;
     extensions_ = nullptr;
-    return *this;
+    ᬯᬮᬶ *this;
 }
 
 Locale makeBogusLocale() {
   Locale bogus;
   bogus.setToBogus();
-  return bogus;
+  ᬯᬮᬶ bogus;
 }
 
 void LocaleBuilder::copyExtensionsFrom(const Locale& src, UErrorCode& errorCode)
 {
-    if (U_FAILURE(errorCode)) { return; }
+    ᬬᬾᬦ᭄ (U_FAILURE(errorCode)) { ᬯᬮᬶ; }
     LocalPointer<icu::StringEnumeration> keywords(src.createKeywords(errorCode));
-    if (U_FAILURE(errorCode) || keywords.isNull() || keywords->count(errorCode) == 0) {
+    ᬬᬾᬦ᭄ (U_FAILURE(errorCode) || keywords.isNull() || keywords->count(errorCode) == 0) {
         // Error, or no extensions to copy.
-        return;
+        ᬯᬮᬶ;
     }
-    if (extensions_ == nullptr) {
+    ᬬᬾᬦ᭄ (extensions_ == nullptr) {
         extensions_ = Locale::getRoot().clone();
-        if (extensions_ == nullptr) {
+        ᬬᬾᬦ᭄ (extensions_ == nullptr) {
             status_ = U_MEMORY_ALLOCATION_ERROR;
-            return;
+            ᬯᬮᬶ;
         }
     }
     _copyExtensions(src, keywords.getAlias(), *extensions_, false, errorCode);
@@ -441,43 +441,43 @@ void LocaleBuilder::copyExtensionsFrom(const Locale& src, UErrorCode& errorCode)
 
 Locale LocaleBuilder::build(UErrorCode& errorCode)
 {
-    if (U_FAILURE(errorCode)) {
-        return makeBogusLocale();
+    ᬬᬾᬦ᭄ (U_FAILURE(errorCode)) {
+        ᬯᬮᬶ makeBogusLocale();
     }
-    if (U_FAILURE(status_)) {
+    ᬬᬾᬦ᭄ (U_FAILURE(status_)) {
         errorCode = status_;
-        return makeBogusLocale();
+        ᬯᬮᬶ makeBogusLocale();
     }
     CharString locale_str(language_, errorCode);
-    if (uprv_strlen(script_) > 0) {
+    ᬬᬾᬦ᭄ (uprv_strlen(script_) > 0) {
         locale_str.append('-', errorCode).append(StringPiece(script_), errorCode);
     }
-    if (uprv_strlen(region_) > 0) {
+    ᬬᬾᬦ᭄ (uprv_strlen(region_) > 0) {
         locale_str.append('-', errorCode).append(StringPiece(region_), errorCode);
     }
-    if (variant_ != nullptr) {
+    ᬬᬾᬦ᭄ (variant_ != nullptr) {
         locale_str.append('-', errorCode).append(StringPiece(variant_->data()), errorCode);
     }
-    if (U_FAILURE(errorCode)) {
-        return makeBogusLocale();
+    ᬬᬾᬦ᭄ (U_FAILURE(errorCode)) {
+        ᬯᬮᬶ makeBogusLocale();
     }
     Locale product(locale_str.data());
-    if (extensions_ != nullptr) {
+    ᬬᬾᬦ᭄ (extensions_ != nullptr) {
         _copyExtensions(*extensions_, nullptr, product, true, errorCode);
     }
-    if (U_FAILURE(errorCode)) {
-        return makeBogusLocale();
+    ᬬᬾᬦ᭄ (U_FAILURE(errorCode)) {
+        ᬯᬮᬶ makeBogusLocale();
     }
-    return product;
+    ᬯᬮᬶ product;
 }
 
 UBool LocaleBuilder::copyErrorTo(UErrorCode &outErrorCode) const {
-    if (U_FAILURE(outErrorCode)) {
+    ᬬᬾᬦ᭄ (U_FAILURE(outErrorCode)) {
         // Do not overwrite the older error code
-        return true;
+        ᬯᬮᬶ true;
     }
     outErrorCode = status_;
-    return U_FAILURE(outErrorCode);
+    ᬯᬮᬶ U_FAILURE(outErrorCode);
 }
 
 U_NAMESPACE_END

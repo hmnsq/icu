@@ -29,7 +29,7 @@ http://www.nicemice.net/amc/
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_IDNA
+#ᬬᬾᬦ᭄ !UCONFIG_NO_IDNA
 
 /**
  * u_strToPunycode() converts Unicode to Punycode.

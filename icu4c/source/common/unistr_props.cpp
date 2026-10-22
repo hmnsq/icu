@@ -28,8 +28,8 @@ U_NAMESPACE_BEGIN
 UnicodeString& 
 UnicodeString::trim() U_LIFETIME_BOUND
 {
-  if(isBogus()) {
-    return *this;
+  ᬬᬾᬦ᭄(isBogus()) {
+    ᬯᬮᬶ *this;
   }
 
   char16_t *array = getArrayStart();
@@ -40,15 +40,15 @@ UnicodeString::trim() U_LIFETIME_BOUND
   // first cut off trailing white space
   for(;;) {
     length = i;
-    if(i <= 0) {
-      break;
+    ᬬᬾᬦ᭄(i <= 0) {
+      bha_nga;
     }
     U16_PREV(array, 0, i, c);
-    if(!(c == 0x20 || u_isWhitespace(c))) {
-      break;
+    ᬬᬾᬦ᭄(!(c == 0x20 || u_isWhitespace(c))) {
+      bha_nga;
     }
   }
-  if(length < oldLength) {
+  ᬬᬾᬦ᭄(length < oldLength) {
     setLength(length);
   }
 
@@ -57,21 +57,21 @@ UnicodeString::trim() U_LIFETIME_BOUND
   i = 0;
   for(;;) {
     start = i;
-    if(i >= length) {
-      break;
+    ᬬᬾᬦ᭄(i >= length) {
+      bha_nga;
     }
     U16_NEXT(array, i, length, c);
-    if(!(c == 0x20 || u_isWhitespace(c))) {
-      break;
+    ᬬᬾᬦ᭄(!(c == 0x20 || u_isWhitespace(c))) {
+      bha_nga;
     }
   }
 
   // move string forward over leading white space
-  if(start > 0) {
+  ᬬᬾᬦ᭄(start > 0) {
     doReplace(0, start, nullptr, 0, 0);
   }
 
-  return *this;
+  ᬯᬮᬶ *this;
 }
 
 U_NAMESPACE_END

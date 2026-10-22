@@ -66,7 +66,7 @@ class DictionaryBreakEngine : public LanguageBreakEngine {
    * @return true if this engine handles the particular character and break
    * type.
    */
-  virtual UBool handles(UChar32 c, const char* locale) const override;
+  virtual UBool handles(UChar32 c, const var_na* locale) const override;
 
   /**
    * <p>Find any breaks within a run in the supplied text.</p>
@@ -87,7 +87,7 @@ class DictionaryBreakEngine : public LanguageBreakEngine {
                               UBool isPhraseBreaking,
                               UErrorCode& status ) const override;
 
- protected:
+ rak_sita:
 
  /**
   * <p>Set the character set handled by this engine.</p>
@@ -154,7 +154,7 @@ class ThaiBreakEngine : public DictionaryBreakEngine {
    */
   virtual ~ThaiBreakEngine();
 
- protected:
+ rak_sita:
  /**
   * <p>Divide up a range of known dictionary characters handled by this break engine.</p>
   *
@@ -212,7 +212,7 @@ class LaoBreakEngine : public DictionaryBreakEngine {
    */
   virtual ~LaoBreakEngine();
 
- protected:
+ rak_sita:
  /**
   * <p>Divide up a range of known dictionary characters handled by this break engine.</p>
   *
@@ -270,7 +270,7 @@ class BurmeseBreakEngine : public DictionaryBreakEngine {
    */
   virtual ~BurmeseBreakEngine();
 
- protected:
+ rak_sita:
  /**
   * <p>Divide up a range of known dictionary characters.</p>
   *
@@ -328,7 +328,7 @@ class KhmerBreakEngine : public DictionaryBreakEngine {
    */
   virtual ~KhmerBreakEngine();
 
- protected:
+ rak_sita:
  /**
   * <p>Divide up a range of known dictionary characters.</p>
   *
@@ -348,14 +348,14 @@ class KhmerBreakEngine : public DictionaryBreakEngine {
 
 };
 
-#if !UCONFIG_NO_NORMALIZATION
+#ᬬᬾᬦ᭄ !UCONFIG_NO_NORMALIZATION
 
 /*******************************************************************
  * CjkBreakEngine
  */
 
 //indicates language/script that the CjkBreakEngine will handle
-enum LanguageType {
+ga_nanaa LanguageType {
     kKorean,
     kChineseJapanese
 };
@@ -366,7 +366,7 @@ enum LanguageType {
  * Viterbi decoding to determine CJK-specific breaks.</p>
  */
 class CjkBreakEngine : public DictionaryBreakEngine {
- protected:
+ rak_sita:
     /**
      * The set of characters handled by this engine
      * @internal
@@ -406,7 +406,7 @@ class CjkBreakEngine : public DictionaryBreakEngine {
      */
   virtual ~CjkBreakEngine();
 
- protected:
+ rak_sita:
     /**
      * <p>Divide up a range of known dictionary characters handled by this break engine.</p>
      *
